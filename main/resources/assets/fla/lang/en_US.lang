@@ -1,0 +1,76 @@
+tile.ore_copper:0.name=Cuprite Ore
+tile.ore_copper:1.name=Native Copper Ore
+tile.ore_copper:2.name=Malachite Ore
+tile.ore_copper:3.name=Azurite Ore
+tile.ore_copper:4.name=Chalococite Ore
+tile.ore_copper:5.name=Tenorite Ore
+
+tile.cobble:0.name=Flint Block
+
+tile.polishTable.name=Polish Table
+
+item.debug.name=Debug
+item.logs:0.name=Oak Log
+item.logs:1.name=Spruce Log
+item.logs:2.name=Birch Log
+item.logs:3.name=Jungle Log
+item.logs:4.name=Acacia Log
+item.logs:5.name=Dark Oak Log
+item.fla:bark_oak.name=Oak Bark
+item.fla:bark_spruce.name=Spruce Bark
+item.fla:bark_birch.name=Birch Bark
+item.fla:bark_jungle.name=Jungle Bark
+item.fla:bark_acacia.name=Acacia Bark
+item.fla:bark_darkoak.name=Dark Oak Bark
+item.fla:branch_oak.name=Oak Branch
+item.fla:branch_spruce.name=Spruce Branch
+item.fla:branch_birch.name=Birch Branch
+item.fla:branch_jungle.name=Jungle Branch
+item.fla:branch_acacia.name=Acacia Branch
+item.fla:branch_darkoak.name=Dark Oak Branch
+item.fla:branch_bush.name=Branch
+item.fla:seed_oak.name=Acorn
+item.fla:seed_spruce.name=Spruce Cone
+item.fla:seed_birch.name=Birch Fruit
+item.fla:seed_jungle.name=Jungle Wood Seed
+item.fla:seed_acacia.name=Acacia Seed
+item.fla:seed_darkoak.name=Dark Acorn
+item.fla:leaves.name=Leaves
+item.fla:leaves_dry.name=Dry Leaves
+item.fla:flint_a.name=Flint Chip
+item.fla:flint_b.name=Small Flint
+item.fla:flint_c.name=Sharp Flint
+item.fla:stone_a.name=Stone Chip
+item.fla:stone_b.name=Stone
+
+item.fla:tinder.name=Tinder
+item.fla:lipocere.name=Lipocere
+
+item.fla:flint_axe.name=Flint Axe Head
+item.fla:flint_shovel.name=Flint Shovel Head
+item.fla:flint_hammer.name=Flint Hammer Head
+item.fla:flint_gaff.name=Flint Gaff Head
+item.fla:stone_axe.name=Stone Axe Head
+item.fla:stone_shovel.name=Stone Shovel Head
+item.fla:stone_hammer.name=Stone Hammer Head
+item.fla:stone_gaff.name=Stone Gaff Head
+item.fla:stone_spear.name=Stone Spear Head
+item.fla:stone_chisel.name=Stone Chisel Head
+item.fla:stone_sickle.name=Stone Sickle Head
+item.fla:stone_spade_hoe.name=Stone Spade-Hoe Head
+
+item.rough_flint_axe.name=Small Flint Axe
+item.wooden_hammer.name=Wooden Hammer
+item.wooden_drilling_firing.name=Wood Drilling Firing
+item.flint_hammer.name=Flint Hammer
+item.stone_hammer.name=Stone Hammer
+item.flint_axe.name=Flint Axe
+item.stone_axe.name=Stone Axe
+item.flint_shovel.name=Flint Shovel
+item.stone_shovel.name=Stone Shovel
+item.whetstone.name=Whetstone
+item.oil_lamp:0.name=Stone Oil Lamp
+
+info.log.length=Length
+
+key.fla=Place(For some item)

@@ -1,0 +1,401 @@
+package fla.core.gui.base;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+import fla.api.recipe.IItemChecker;
+import fla.api.util.FlaValue;
+
+public class RecipeHelper 
+{
+	public static boolean matchItemStack(IInventory inv, int matchSlot, IItemChecker ic)
+	{
+		return inv.getStackInSlot(matchSlot) != null ? ic.match(inv.getStackInSlot(matchSlot)) : ic == null;
+	}
+	public static boolean matchShapedInventory(IInventory inv, int startSlot, int endSlot, IItemChecker[] ic)
+	{
+		int uStartSlot = endSlot - ic.length;
+		if(uStartSlot <= 0) throw new RuntimeException();
+		for(int sMove = 0; sMove < uStartSlot; ++sMove)
+		{
+			boolean flag = true;
+			for(int i = startSlot + sMove; i < startSlot + sMove + uStartSlot; ++i)
+			{
+				if(!matchItemStack(inv, i, ic[i]))
+				{
+					flag = false;
+					break;
+				}
+			}
+			if(flag) return true;
+		}
+		return false;
+	}
+	public static boolean matchShapelessInventory(IInventory inv, int startSlot, int endSlot, IItemChecker[] ic)
+	{
+		List<IItemChecker> list = new ArrayList();
+		list.addAll(Arrays.asList(ic));
+		
+		for(int i = startSlot; i < endSlot; ++i)
+		{
+			boolean flag = false;
+			ItemStack stack = inv.getStackInSlot(i);
+			if(stack == null) continue;
+			Iterator<IItemChecker> itr = list.iterator();
+			while(itr.hasNext())
+			{
+				IItemChecker checker = itr.next();
+				if(checker.match(stack))
+				{
+					flag = true;
+					list.remove(checker);
+					break;
+				}
+			}
+			if(!flag) return false;
+		}
+		return list.isEmpty();
+	}
+
+	public static boolean matchOutput(IInventory inv, int outputSlot, ItemStack output)
+	{
+		return inv.getStackInSlot(outputSlot) == null ? true : output == null ? true : ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && output.isItemEqual(inv.getStackInSlot(outputSlot)) && inv.getStackInSlot(outputSlot).stackSize + output.stackSize <= output.getMaxStackSize();
+	}
+	public static boolean matchOutput(IInventory inv, int startSlot, int endSlot, ItemStack output)
+	{
+		if(output == null) return true;
+		ItemStack stack = output.copy();
+		for(int i = startSlot; i < endSlot; ++i)
+		{
+			int a = addIn(false, inv, i, stack);
+			stack.stackSize -= a;
+			if(stack.stackSize == 0) return true;
+		}
+		return stack.stackSize == 0;
+	}
+	public static boolean matchOutput(IInventory inv, int startSlot, int endSlot, ItemStack[] output)
+	{
+		FakeInventory inv1 = new FakeInventory(inv);
+		for(int i = 0; i < output.length; ++i)
+		{
+			if(output[i] == null) continue;
+			ItemStack stack = output[i].copy();
+			for(int j = startSlot; j < endSlot; ++j)
+			{
+				int a = addIn(true, inv1, j, stack);
+				stack.stackSize -= a;
+				if(stack.stackSize == 0) break;
+			}
+			if(stack.stackSize != 0) return false;
+		}
+		return true;
+	}
+	private static int addIn(boolean doAdd, IInventory inv, int outputSlot, ItemStack output)
+	{
+		if(!doAdd)
+		{
+			return inv.getStackInSlot(outputSlot) == null ? output.stackSize : ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && output.isItemEqual(inv.getStackInSlot(outputSlot)) ? Math.min(output.stackSize, output.getMaxStackSize() - inv.getStackInSlot(outputSlot).stackSize) : 0;
+		}
+		else if(inv.getStackInSlot(outputSlot) == null) 
+		{
+			inv.setInventorySlotContents(outputSlot, output);
+			return output.stackSize;
+		}
+		else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && output.isItemEqual(inv.getStackInSlot(outputSlot)))
+		{
+			int add = Math.min(output.stackSize, output.getMaxStackSize() - inv.getStackInSlot(outputSlot).stackSize);
+			inv.getStackInSlot(outputSlot).stackSize += add;
+			return add;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	public static void onInputItemStack(IInventory inv, int slotSlot) 
+	{
+		inv.decrStackSize(slotSlot, 1);
+	}
+	public static void onInputShapedInventory(IInventory inv, int startSlot, int endSlot, IItemChecker[] ic) 
+	{
+		int uStartSlot = endSlot - ic.length;
+		for(int sMove = 0; sMove < uStartSlot; ++sMove)
+		{
+			boolean flag = true;
+			for(int i = startSlot + sMove; i < startSlot + sMove + uStartSlot; ++i)
+			{
+				if(!matchItemStack(inv, i, ic[i]))
+				{
+					flag = false;
+					break;
+				}
+			}
+			if(flag)
+			{
+				for(int i = startSlot + sMove; i < startSlot + sMove + uStartSlot; ++i)
+				{
+					inv.decrStackSize(i, 1);
+				}
+				break;
+			}
+		}
+	}
+	public static void onInputShaelessInventory(IInventory inv, int startSlot, int endSlot, IItemChecker[] ic) 
+	{
+		List<IItemChecker> list = new ArrayList();
+		list.addAll(Arrays.asList(ic));
+		
+		for(int i = startSlot; i < endSlot; ++i)
+		{
+			boolean flag = false;
+			ItemStack stack = inv.getStackInSlot(i);
+			if(stack == null) continue;
+			Iterator<IItemChecker> itr = list.iterator();
+			while(itr.hasNext())
+			{
+				IItemChecker checker = itr.next();
+				if(checker.match(stack))
+				{
+					flag = true;
+					inv.decrStackSize(i, 1);
+					list.remove(checker);
+					break;
+				}
+			}
+		}
+	}
+	
+	public static void onOutputItemStack(IInventory inv, int outputSlot, ItemStack output)
+	{
+		if(inv.getStackInSlot(outputSlot) == null) inv.setInventorySlotContents(outputSlot, output);
+		else inv.getStackInSlot(outputSlot).stackSize += output.stackSize;
+	}
+	public static void onOutputShapelessStack(IInventory inv, int startSlot, int endSlot, ItemStack output)
+	{
+		if(output == null) return;
+		ItemStack stack = output.copy();
+		for(int i = startSlot; i < endSlot; ++i)
+		{
+			int a = addIn(true, inv, i, stack);
+			stack.stackSize -= a;
+			if(stack.stackSize == 0) return;
+		}
+	}
+	public static void onOutputShapelessStacks(IInventory inv, int startSlot, int endSlot, ItemStack[] output)
+	{
+		for(int i = 0; i < output.length; ++i)
+			onOutputShapelessStack(inv, startSlot, endSlot, output[i]);
+	}
+	
+	public static class FakeCraftingInventory extends InventoryCrafting
+	{
+		private final ItemStack[] itemstacks;
+		private int xSize;
+		private int ySize;
+		
+		public static FakeCraftingInventory init(Object...recipe)
+		{
+	        String shape = "";
+	        int idx = 0;
+	        int xSize = 0;
+	        int ySize = 0;
+	        ItemStack[] itemstacks;
+
+	        if (recipe[idx] instanceof String[])
+	        {
+	            String[] parts = ((String[])recipe[idx++]);
+
+	            for (String s : parts)
+	            {
+	                xSize = s.length();
+	                shape += s;
+	            }
+
+	            ySize = parts.length;
+	        }
+	        else
+	        {
+	            while (recipe[idx] instanceof String)
+	            {
+	                String s = (String)recipe[idx++];
+	                shape += s;
+	                xSize = s.length();
+	                ySize++;
+	            }
+	        }
+
+	        if (xSize * ySize != shape.length())
+	        {
+	            String ret = "Invalid shaped fake inventory: ";
+	            for (Object tmp :  recipe)
+	            {
+	                ret += tmp + ", ";
+	            }
+	            throw new RuntimeException(ret);
+	        }
+
+	        HashMap<Character, ItemStack> itemMap = new HashMap();
+
+	        for (; idx < recipe.length; idx += 2)
+	        {
+	            Character chr = (Character)recipe[idx];
+	            Object in = recipe[idx + 1];
+
+	            if (in instanceof ItemStack)
+	            {
+	                itemMap.put(chr, ((ItemStack)in).copy());
+	            }
+	            else if (in instanceof Item)
+	            {
+	                itemMap.put(chr, new ItemStack((Item)in));
+	            }
+	            else if (in instanceof Block)
+	            {
+	                itemMap.put(chr, new ItemStack((Block)in, 1, OreDictionary.WILDCARD_VALUE));
+	            }
+	            else if (in instanceof String)
+	            {
+	            	if(!OreDictionary.getOres((String)in).isEmpty())
+	            	{
+	            		ItemStack stack = OreDictionary.getOres((String)in).get(0);
+	            		if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+	            			stack.setItemDamage(0);
+	            		itemMap.put(chr, stack);
+	            	}
+	            	else
+	            	{
+	            		itemMap.put(chr, new ItemStack(Blocks.air));
+	            	}
+	            }
+	            else
+	            {
+	                String ret = "Invalid shaped ore recipe: ";
+	                for (Object tmp :  recipe)
+	                {
+	                    ret += tmp + ", ";
+	                }
+	                throw new RuntimeException(ret);
+	            }
+	        }
+
+	        itemstacks = new ItemStack[xSize * ySize];
+	        int x = 0;
+	        for (char chr : shape.toCharArray())
+	        {
+	            itemstacks[x++] = itemMap.get(chr);
+	        }
+
+			return new FakeCraftingInventory(xSize, ySize, itemstacks);
+		}
+		private FakeCraftingInventory(int xSize, int ySize, ItemStack...stacks)
+		{
+			super(null, xSize, ySize);
+			this.itemstacks = stacks;
+			this.xSize = xSize;
+			this.ySize = ySize;
+		}
+
+	    public ItemStack getStackInRowAndColumn(int x, int y)
+	    {
+	        if (x >= 0 && x < xSize && y >= 0 && y < ySize)
+	        {
+	            int k = x + y * xSize;
+	            return this.getStackInSlot(k);
+	        }
+	        else
+	        {
+	            return null;
+	        }
+	    }
+
+		public int getSizeInventory() {return itemstacks.length;}
+
+		public ItemStack getStackInSlot(int i) {return itemstacks[i];}
+
+		public ItemStack decrStackSize(int i, int size) 
+		{
+			if(itemstacks[i] == null) return null;
+			ItemStack ret = itemstacks[i].copy();
+			int a = ret.stackSize;
+			itemstacks[i].stackSize -= size;
+			if(itemstacks[i].stackSize < 1) itemstacks[i] = null;
+			ret.stackSize = Math.min(size, ret.stackSize);
+			return ret;
+		}
+
+		public ItemStack getStackInSlotOnClosing(int i) {return decrStackSize(i, getInventoryStackLimit());}
+
+		public void setInventorySlotContents(int i, ItemStack itemstack) 
+		{
+			if(itemstack != null) itemstacks[i] = itemstack.copy();
+		}
+
+		public String getInventoryName() {return null;}
+		public boolean hasCustomInventoryName() {return false;}
+		public int getInventoryStackLimit() {return FlaValue.MAX_STACK_SIZE;}
+		public void markDirty() {}
+		public boolean isUseableByPlayer(EntityPlayer player) {return true;}
+		public void openInventory() {}
+		public void closeInventory() {}
+		public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) { return true;}
+		
+		
+	}
+	
+	private static class FakeInventory implements IInventory
+	{
+		private final ItemStack[] itemstacks;
+		private FakeInventory(ItemStack[] stacks) 
+		{
+			this.itemstacks = stacks;
+		}
+		private FakeInventory(IInventory inventory) 
+		{
+			this.itemstacks = new ItemStack[inventory.getSizeInventory()];
+		}
+
+		public int getSizeInventory() {return itemstacks.length;}
+
+		public ItemStack getStackInSlot(int i) {return itemstacks[i];}
+
+		public ItemStack decrStackSize(int i, int size) 
+		{
+			if(itemstacks[i] == null) return null;
+			ItemStack ret = itemstacks[i].copy();
+			int a = ret.stackSize;
+			itemstacks[i].stackSize -= size;
+			if(itemstacks[i].stackSize < 1) itemstacks[i] = null;
+			ret.stackSize = Math.min(size, ret.stackSize);
+			return ret;
+		}
+
+		public ItemStack getStackInSlotOnClosing(int i) {return decrStackSize(i, getInventoryStackLimit());}
+
+		public void setInventorySlotContents(int i, ItemStack itemstack) 
+		{
+			if(itemstack != null) itemstacks[i] = itemstack.copy();
+		}
+
+		public String getInventoryName() {return null;}
+		public boolean hasCustomInventoryName() {return false;}
+		public int getInventoryStackLimit() {return FlaValue.MAX_STACK_SIZE;}
+		public void markDirty() {}
+		public boolean isUseableByPlayer(EntityPlayer player) {return true;}
+		public void openInventory() {}
+		public void closeInventory() {}
+		public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) { return true;}
+		
+	}
+}
