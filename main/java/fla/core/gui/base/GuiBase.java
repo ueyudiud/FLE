@@ -1,6 +1,7 @@
 package fla.core.gui.base;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -34,7 +35,8 @@ public abstract class GuiBase extends GuiContainer
 	
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		fontRendererObj.drawString(getName(), (xSize - fontRendererObj.getStringWidth(getName())) / 2, 6, 0x404040);
+		String str = I18n.format(getName(), new Object[0]);
+		fontRendererObj.drawString(str, (xSize - fontRendererObj.getStringWidth(str)) / 2, 6, 0x404040);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)

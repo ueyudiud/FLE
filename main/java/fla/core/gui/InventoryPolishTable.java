@@ -18,7 +18,7 @@ public class InventoryPolishTable extends InventoryTileCraftable<TileEntityPolis
 	
 	public InventoryPolishTable()
 	{
-		super("polishTable", 3);
+		super("inventory.polishTable", 3);
 	}
 	
 	@Override

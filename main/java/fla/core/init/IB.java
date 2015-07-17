@@ -5,6 +5,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fla.api.util.FlaValue;
 import fla.core.FlaBlocks;
@@ -17,6 +18,7 @@ import fla.core.block.cobble.BlockCobble1;
 import fla.core.block.item.ItemSubBlock;
 import fla.core.block.ore.BlockOre1;
 import fla.core.item.ItemDebug;
+import fla.core.item.ItemExtinguishTorch;
 import fla.core.item.ItemFlaSeed;
 import fla.core.item.ItemLog;
 import fla.core.item.ItemSub;
@@ -35,6 +37,7 @@ public class IB
 	public static void reloadIB()
 	{
 		Blocks.torch.setLightLevel(0.5F);
+		Item.getItemFromBlock(Blocks.torch).setMaxStackSize(16);
 		Blocks.fire.setLightLevel(0.625F);
 	}
 	
@@ -55,6 +58,7 @@ public class IB
     	FlaItems.stone_shovel = registerItem(new ItemFlaShovel(FlaValue.stone_b).setUnlocalizedName("stone_shovel").setTextureName(FlaValue.TEXT_FILE_NAME + ":tools/stone/stone_shovel"), "stone_shovel");
     	FlaItems.stone_oil_lamp = (ItemOilLamp) registerItem(new ItemOilLamp().setUnlocalizedName("oil_lamp").setTextureName(FlaValue.TEXT_FILE_NAME + ":tools/stone/lamp/lamp"), "stone_oil_lamp");
     	FlaItems.whetstone = registerItem(new ItemWhetstone(32).setUnlocalizedName("whetstone").setTextureName(FlaValue.TEXT_FILE_NAME + ":tools/stone/whetstone"), "whetstone");
+    	FlaItems.extinguishTorch = registerItem(new ItemExtinguishTorch().setUnlocalizedName("extinguish_torch").setTextureName(FlaValue.TEXT_FILE_NAME + ":tools/1"), "extinguishTorch");
     	FlaBlocks.crops = registerBlock(new BlockFlaCrop(), "crops");
     	FlaItems.seeds = registerItem(new ItemFlaSeed(FlaBlocks.crops, Blocks.farmland).setUnlocalizedName("seeds"), "seed");
     	FlaBlocks.ore1 = registerBlock(new BlockOre1().setBlockName("ore_copper"), ItemSubBlock.class, "ore1");

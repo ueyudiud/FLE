@@ -8,6 +8,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -32,6 +33,9 @@ public class FlaRecipe
 	public static void reloadRecipe()
 	{
 		registerRemovedCrafting(FakeCraftingInventory.init("xx", "xx", 'x', "plankWood"));
+		registerRemovedCrafting(FakeCraftingInventory.init("x", "x", 'x', "plankWood"));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 0), 'x', "stickWood"));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 1), 'x', "stickWood"));
 		
 		List list = new ArrayList(CraftingManager.getInstance().getRecipeList());
 		for(Object rawTarget : list)
@@ -85,6 +89,10 @@ public class FlaRecipe
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaItems.wooden_hammer), new Object[]{"x", "o", 'x', "logWood", 'o', Items.stick}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaBlocks.polishTable), new Object[]{"x", "o", 'x', "logWood", 'o', Blocks.gravel}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaItems.whetstone), new Object[]{"xx", "xx", 'x', ItemSub.a("stone_b")}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaItems.wooden_firestarter), new Object[]{" s", "wl", 's', "stickWood", 'w', "logWood", 'l', ItemSub.a("leaves_dry")}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ItemSub.a("ramie_rope", 3), new Object[]{"xx", "xx", 'x', ItemSub.a("ramie_fiber_dry")}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ItemSub.a("ramie_bundle_rope"), new Object[]{"xx", "xx", 'x', ItemSub.a("ramie_rope")}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ItemSub.a("ramie_rope", 4), new Object[]{"x", 'x', ItemSub.a("ramie_bundle_rope")}));
 		
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ItemSub.a("branch_bush"), "branch"));
 	}

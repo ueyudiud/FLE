@@ -20,7 +20,7 @@ public class InventoryDryingTable extends InventoryTileCraftable<TileEntityDryin
 	
 	public InventoryDryingTable() 
 	{
-		super("dryingTable", 2);
+		super("inventory.dryingTable", 2);
 	}
 	
 	@Override

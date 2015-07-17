@@ -23,4 +23,5 @@ public class FlaItems
 	public static ItemOilLamp stone_oil_lamp;
 	public static Item wooden_firestarter;
 	public static Item seeds;
+	public static Item extinguishTorch;
 }

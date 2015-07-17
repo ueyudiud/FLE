@@ -168,7 +168,6 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		case 1 : return new ContainerPolishTable(player.inventory, (TileEntityPolishTable) world.getTileEntity(x, y, z));
 		case 2 : return new ContainerDryingTable(player.inventory, (TileEntityDryingTable) world.getTileEntity(x, y, z));
 		case 101 : return new ContainerWashing(player.inventory);
-		case 201 : ;
 		}
 		return null;
 	}
@@ -182,7 +181,6 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		case 1 : return new GuiPolishTable(player, (TileEntityPolishTable) world.getTileEntity(x, y, z));
 		case 2 : return new GuiDryingTable(player, (TileEntityDryingTable) world.getTileEntity(x, y, z));
 		case 101 : return new GuiWashing(new ContainerWashing(player.inventory));
-		case 201 : ;
 		}
 		return null;
 	}

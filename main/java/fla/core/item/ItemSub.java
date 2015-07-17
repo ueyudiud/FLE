@@ -53,6 +53,9 @@ public class ItemSub extends ItemBase implements IPlaceableItem
 		register(401, "ramie_fiber", "crop/ramie_fiber");
 		register(1001, "leaves_dry", "tree/1001");
 		register(1002, "tinder", "tree/1002");
+		register(1003, "ramie_fiber_dry", "crop/ramie_fiber_dry");
+		register(1004, "ramie_rope", "crop/ramie_rope");
+		register(1005, "ramie_bundle_rope", "crop/ramie_bundle_rope");
 		register(2001, "lipocere", "resource/1");
 		
 		register(10001, "flint_axe", "tools/head/flint/flint_axe");

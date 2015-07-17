@@ -7,7 +7,7 @@ public class InventoryWashing extends InventoryCraftable
 {
 	public InventoryWashing(ContainerWashing container)
 	{
-		super("gui.washing", container, 10);
+		super("inventory.washing", container, 10);
 	}
 
 	@Override

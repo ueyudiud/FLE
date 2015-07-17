@@ -8,6 +8,7 @@ tile.ore_copper:5.name=黑铜矿石
 tile.cobble:0.name=燧石块
 
 tile.polishTable.name=打磨台
+tile.dryTable=晾晒台
 
 item.debug.name=调试工具
 item.logs:0.name=橡树树干
@@ -45,6 +46,10 @@ item.fla:stone_b.name=大石子
 
 item.fla:tinder.name=火绒
 item.fla:lipocere.name=尸蜡
+item.fla:ramie_fiber.name=苎麻纤维
+item.fla:ramie_fiber_dry.name=干苎麻纤维
+item.fla:ramie_rope.name=麻绳
+item.fla:ramie_bundle_rope=麻绳捆
 
 item.fla:flint_axe.name=燧石斧头
 item.fla:flint_shovel.name=燧石铲头
@@ -59,9 +64,13 @@ item.fla:stone_chisel.name=石凿头
 item.fla:stone_sickle.name=石镰头
 item.fla:stone_spade_hoe.name=石耜头
 
+item.seeds:soybean.name=大豆
+item.seeds:ramie.name=苎麻种子
+
 item.rough_flint_axe.name=小型燧石斧
 item.wooden_hammer.name=木槌
 item.wooden_drilling_firing.name=木燧
+item.flint_awl.name=燧石锥
 item.flint_hammer.name=燧石锤
 item.stone_hammer.name=石锤
 item.flint_axe.name=燧石斧
@@ -70,6 +79,10 @@ item.flint_shovel.name=燧石铲
 item.stone_shovel.name=石铲
 item.whetstone.name=砥石
 item.oil_lamp:0.name=石油灯
+
+inventory.polishTable=打磨台
+inventory.dryingTable=晾晒台
+inventory.washing=淘洗
 
 info.log.length=长度
 

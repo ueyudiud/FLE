@@ -55,16 +55,4 @@ public class FlaPlayerHandler
 				}
 			}
 	}
-
-	@SubscribeEvent
-	public void onPlayerUpdate(LivingUpdateEvent evt)
-	{
-		if(evt.entityLiving instanceof EntityPlayer)
-		{
-			if(Fla.fla.km.get().isTechKeyDown((EntityPlayer) evt.entityLiving))
-			{
-				((EntityPlayer) evt.entityLiving).openGui(Fla.MODID, 201, evt.entityLiving.worldObj, 0, 0, 0);
-			}
-		}
-	}
 }

@@ -5,7 +5,6 @@ public class RenderDryingTable extends RenderBase
 	@Override
 	public void renderBlock() 
 	{
-		if(isItem()) return;
 		setTexture(block);
 		double d1 = 0.325D;
 		double d2 = 0.375D;

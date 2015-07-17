@@ -8,6 +8,7 @@ tile.ore_copper:5.name=Tenorite Ore
 tile.cobble:0.name=Flint Block
 
 tile.polishTable.name=Polish Table
+tile.dryTable=Drying Table
 
 item.debug.name=Debug
 item.logs:0.name=Oak Log
@@ -45,6 +46,10 @@ item.fla:stone_b.name=Stone
 
 item.fla:tinder.name=Tinder
 item.fla:lipocere.name=Lipocere
+item.fla:ramie_fiber.name=Ramie Fiber
+item.fla:ramie_fiber_dry.name=Dry Ramie Fiber
+item.fla:ramie_rope.name=Ramie Rope
+item.fla:ramie_bundle_rope=Ramie Bundle Rope
 
 item.fla:flint_axe.name=Flint Axe Head
 item.fla:flint_shovel.name=Flint Shovel Head
@@ -59,9 +64,13 @@ item.fla:stone_chisel.name=Stone Chisel Head
 item.fla:stone_sickle.name=Stone Sickle Head
 item.fla:stone_spade_hoe.name=Stone Spade-Hoe Head
 
+item.seeds:soybean.name=Soybean
+item.seeds:ramie.name=Ramie Seed
+
 item.rough_flint_axe.name=Small Flint Axe
 item.wooden_hammer.name=Wooden Hammer
 item.wooden_drilling_firing.name=Wood Drilling Firing
+item.flint_awl.name=Flint Awl
 item.flint_hammer.name=Flint Hammer
 item.stone_hammer.name=Stone Hammer
 item.flint_axe.name=Flint Axe
@@ -70,6 +79,10 @@ item.flint_shovel.name=Flint Shovel
 item.stone_shovel.name=Stone Shovel
 item.whetstone.name=Whetstone
 item.oil_lamp:0.name=Stone Oil Lamp
+
+inventory.polishTable=Polish Table
+inventory.dryingTable=Drying Table
+inventory.washing=Washing
 
 info.log.length=Length
 

@@ -51,7 +51,7 @@ public class GuiWashing extends GuiBase
 	@Override
 	public String getName() 
 	{
-		return "Washing";
+		return container.inv.getInventoryName();
 	}
 
 	@Override

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 public abstract class ContainerBase extends Container
 {
 	public InventoryPlayer player;
-	protected IInventory inv;
+	public IInventory inv;
 	protected Map<String, Integer> list;
 
 	public ContainerBase(InventoryPlayer player, IInventory inventory) 
