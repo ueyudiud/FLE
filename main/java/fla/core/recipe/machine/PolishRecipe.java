@@ -36,11 +36,14 @@ public class PolishRecipe
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_b")), "ppp   ppp", new ItemStack(FlaItems.whetstone)));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_b")), " h hhh h ", ItemSub.a("stone_a", 2)));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_b")), "php p p p", new ItemStack(FlaItems.stone_oil_lamp)));
+		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("limestone_a")), "mmmmmmmmm", ItemSub.a("dust_limestone")));
 		
 		ItemState.StateManager.register(new ItemChecker(Items.flint), ItemState.Hit);
 		ItemState.StateManager.register(new ItemChecker(FlaItems.flint_awl, OreDictionary.WILDCARD_VALUE), ItemState.Crush);
 		ItemState.StateManager.register(new ItemChecker(FlaItems.wooden_hammer, OreDictionary.WILDCARD_VALUE), ItemState.Hit);
 		ItemState.StateManager.register(new ItemChecker(FlaItems.whetstone, OreDictionary.WILDCARD_VALUE), ItemState.Polish);
+		ItemState.StateManager.register(new ItemChecker(FlaItems.flint_hammer, OreDictionary.WILDCARD_VALUE), ItemState.Main_Hit);
+		ItemState.StateManager.register(new ItemChecker(FlaItems.stone_hammer, OreDictionary.WILDCARD_VALUE), ItemState.Main_Hit);
 	}
 	
 	public static void registerRecipe(PolishRecipe recipe)

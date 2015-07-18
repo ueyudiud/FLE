@@ -1,18 +1,21 @@
 package fla.core.item.tool;
 
+import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
+import fla.api.item.IPolishTool;
 import fla.api.item.tool.IStoneHammer;
 import fla.api.item.tool.ItemDamageResource;
 import fla.api.util.FlaValue;
 import fla.core.tool.StoneHammerManager;
 
-public class ItemStoneHammer extends ItemFlaDigableTool implements IStoneHammer
+public class ItemStoneHammer extends ItemFlaDigableTool implements IStoneHammer, IPolishTool
 {
 	protected float digSpeed;
 
@@ -35,6 +38,7 @@ public class ItemStoneHammer extends ItemFlaDigableTool implements IStoneHammer
 			ItemDamageResource resource) 
 	{
 		stack.damageItem(1, entity);
+		if(getToolDamage(stack) == getToolMaxDamage(stack)) --stack.stackSize;
 	}
 
 	@Override
@@ -79,5 +83,32 @@ public class ItemStoneHammer extends ItemFlaDigableTool implements IStoneHammer
 	public String getToolType(ItemStack stack) 
 	{
 		return FlaValue.hammer_rock;
+	}
+	
+	private Random rand = new Random();
+
+	@Override
+	public ItemStack getOutput(EntityPlayer player, ItemStack input) 
+	{
+		if(rand.nextInt(64) == 0)
+		{
+			int a = input.getItemDamage() + rand.nextInt(5) + 5;
+			if(a >= input.getMaxDamage())
+			{
+				return null;
+			}
+			input.setItemDamage(a);
+		}
+		else
+		{
+			if(rand.nextInt(4) != 0) return input;
+			int a = input.getItemDamage() + 1;
+			if(a >= input.getMaxDamage())
+			{
+				return null;
+			}
+			input.setItemDamage(a);
+		}
+		return input;
 	}
 }

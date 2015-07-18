@@ -2,11 +2,15 @@ package fla.core.world;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.energy.heat.IHeatManager;
 import fla.api.energy.heat.IHeatTileEntity;
 import fla.api.world.BlockPos;
+import fla.core.Fla;
 
 public class HeatManager implements IHeatManager
 {
@@ -50,21 +54,28 @@ public class HeatManager implements IHeatManager
 	}
 
 	@Override
-	public void emmitHeat(BlockPos pos, ForgeDirection to, int pkg) 
+	public void emmitHeat(World world, BlockPos pos, ForgeDirection to, int pkg) 
 	{
-		ForgeDirection a = ForgeDirection.VALID_DIRECTIONS[ForgeDirection.OPPOSITES[to.flag]];
+		Fla.fla.nwm.get().initiateHeatUpdate(world.provider.dimensionId, pos, to, pkg);
+		ForgeDirection a = to.getOpposite();
 		BlockPos pos1 = pos.toPos(to);
 		int ask = getHeatAsk(pos1);
 
-		((IHeatTileEntity) pos.getBlockTile()).catchHeat(to, -pkg);
-		
 		if(pos.getBlockTile() instanceof IHeatTileEntity)
 		{
-			((IHeatTileEntity) pos.getBlockTile()).catchHeat(to, pkg - 1);
+			((IHeatTileEntity) pos.getBlockTile()).catchHeat(to, -pkg);
 		}
-		if(pos.getBlockTile() instanceof TileEntityFurnace)
+		if(pos1.getBlockTile() instanceof IHeatTileEntity)
 		{
-			++((TileEntityFurnace) pos.getBlockTile()).furnaceBurnTime;
+			((IHeatTileEntity) pos1.getBlockTile()).catchHeat(a, pkg - 1);
+		}
+		if(pos1.getBlockTile() instanceof TileEntityFurnace)
+		{
+			if(pkg > 1)
+			{
+				((TileEntityFurnace) pos1.getBlockTile()).currentItemBurnTime = 200;
+				((TileEntityFurnace) pos1.getBlockTile()).furnaceBurnTime += pkg / 10;
+			}
 		}
 	}
 }

@@ -11,13 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.util.FlaValue;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.tileentity.TileEntityDryingTable;
-import fla.core.tileentity.TileEntityPolishTable;
 
 public class BlockDryingTable extends BlockBaseHasTile
 {
@@ -150,6 +150,27 @@ public class BlockDryingTable extends BlockBaseHasTile
 	protected boolean canRecolour(World world, BlockPos pos,
 			ForgeDirection side, int colour) 
 	{
-		return false;
+		return true;
+	}
+	
+	@Override
+	protected void onRecolor(World world, BlockPos pos, ForgeDirection dir,
+			int colour) 
+	{
+		if(pos.getBlockTile() instanceof TileEntityDryingTable)
+		{
+			((TileEntityDryingTable) pos.getBlockTile()).setBlockColour(colour);
+		}
+	}
+	
+	@Override
+	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
+	{
+		TileEntityDryingTable tile = (TileEntityDryingTable) access.getTileEntity(x, y, z);
+		if(tile != null)
+		{
+			return tile.getBlockColour();
+		}
+		return 0xFFFFFF;
 	}
 }

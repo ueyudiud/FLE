@@ -17,10 +17,12 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import fla.api.network.IListenerContainer;
 import fla.api.recipe.ErrorType;
+import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.network.FlaPacket.FlaGuiPacket;
 import fla.core.network.FlaPacket.FlaKeyPacket;
@@ -31,6 +33,12 @@ public class NetWorkClient extends NetWorkManager
 	public void initiateKeyPress(int key)
 	{
 		new FlaKeyPacket(key).sendPacket();
+	}
+	
+	@Override
+	public void initiateHeatUpdate(int dimId, BlockPos pos, ForgeDirection dir, int pkg) 
+	{
+		;
 	}
 	
 	@Override
@@ -74,6 +82,7 @@ public class NetWorkClient extends NetWorkManager
 			switch(id)
 			{
 			case FlaPacket.guiPacketType :
+			{
 				if(player.openContainer instanceof IListenerContainer)
 				{
 					int x = is.readInt();
@@ -84,7 +93,9 @@ public class NetWorkClient extends NetWorkManager
 					((IListenerContainer) player.openContainer).onPacketData(x, y, z, b, contain);
 				}
 			break;
+			}
 			case FlaPacket.tileUpdatePacketType :
+			{
 				World world = Fla.fla.p.get().getWorld(is.readInt());
 				int x = is.readInt();
 				int y = is.readInt();
@@ -123,6 +134,18 @@ public class NetWorkClient extends NetWorkManager
 				}
 				default : return;
 				}
+			break;
+			}
+			case FlaPacket.heatUpdatePacketType : 
+			{
+				int dimId = is.readInt();
+				int x = is.readInt();
+				int y = is.readInt();
+				int z = is.readInt();
+				byte dir = is.readByte();
+				Fla.fla.hm.emmitHeat(Fla.fla.p.get().getWorld(dimId), new BlockPos(Fla.fla.p.get().getWorld(dimId), x, y, z), ForgeDirection.values()[dir], is.readInt());
+			}
+			break;
 			}
 			return;
 		}

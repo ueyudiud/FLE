@@ -49,6 +49,7 @@ import fla.core.render.RenderOre;
 import fla.core.tech.TechManager;
 import fla.core.tileentity.TileEntityCrops;
 import fla.core.tileentity.TileEntityDryingTable;
+import fla.core.tileentity.TileEntityFirewood;
 import fla.core.tileentity.TileEntityOilLamp;
 import fla.core.tileentity.TileEntityPolishTable;
 import fla.core.tool.AxeManager;
@@ -61,6 +62,7 @@ import fla.core.util.SideGateway;
 import fla.core.world.FWM;
 import fla.core.world.FlaWorldGen;
 import fla.core.world.FlaWorldHandler;
+import fla.core.world.HeatManager;
 
 @Mod(modid = Fla.MODID, name = Fla.NAME, version = Fla.VERSION, dependencies = "after:NotEnoughItems; after:gregtech; after:IC2")
 public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
@@ -94,6 +96,7 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
     	FlaAPI.registry = new FlaRecipeRegistry();
     	FlaAPI.techManager = new TechManager();
     	wm = new FWM();
+    	hm = new HeatManager();
     	cmm = new ColorMapManager();
     	nwm = new SideGateway("fla.core.network.NetWorkManager", "fla.core.network.NetWorkClient");
     	p = new SideGateway("fla.core.Platform", "fla.core.PlatformClient");
@@ -146,6 +149,7 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		GameRegistry.registerTileEntity(TileEntityOilLamp.class, "oilLamp");
 		GameRegistry.registerTileEntity(TileEntityCrops.class, "crop");
 		GameRegistry.registerTileEntity(TileEntityDryingTable.class, "dryingTable");
+		GameRegistry.registerTileEntity(TileEntityFirewood.class, "firewood");
 		loadClient();
     }
 

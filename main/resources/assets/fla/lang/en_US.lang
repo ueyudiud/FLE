@@ -8,7 +8,7 @@ tile.ore_copper:5.name=Tenorite Ore
 tile.cobble:0.name=Flint Block
 
 tile.polishTable.name=Polish Table
-tile.dryTable=Drying Table
+tile.dryTable.name=Drying Table
 
 item.debug.name=Debug
 item.logs:0.name=Oak Log
@@ -49,7 +49,7 @@ item.fla:lipocere.name=Lipocere
 item.fla:ramie_fiber.name=Ramie Fiber
 item.fla:ramie_fiber_dry.name=Dry Ramie Fiber
 item.fla:ramie_rope.name=Ramie Rope
-item.fla:ramie_bundle_rope=Ramie Bundle Rope
+item.fla:ramie_bundle_rope.name=Ramie Bundle Rope
 
 item.fla:flint_axe.name=Flint Axe Head
 item.fla:flint_shovel.name=Flint Shovel Head

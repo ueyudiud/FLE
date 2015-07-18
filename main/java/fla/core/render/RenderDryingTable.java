@@ -1,5 +1,7 @@
 package fla.core.render;
 
+import fla.core.tileentity.TileEntityDryingTable;
+
 public class RenderDryingTable extends RenderBase
 {
 	@Override

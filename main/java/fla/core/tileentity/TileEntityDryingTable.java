@@ -12,6 +12,7 @@ import fla.core.world.FWM;
 public class TileEntityDryingTable extends TileEntityInventory<TileEntityDryingTable>
 {
 	private int levelCheckBuffer;
+	private int colour = 0xFFFFFF;
 	private double tem;
 	private double water;
 	
@@ -67,5 +68,15 @@ public class TileEntityDryingTable extends TileEntityInventory<TileEntityDryingT
 	public int getRecipeProgressBar(int i) 
 	{
 		return ((InventoryDryingTable) inv).getProgressBar(i);
+	}
+
+	public void setBlockColour(int colour) 
+	{
+		this.colour = colour;
+	}
+	
+	public int getBlockColour()
+	{
+		return colour;
 	}
 }

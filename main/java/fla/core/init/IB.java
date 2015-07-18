@@ -5,18 +5,19 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fla.api.util.FlaValue;
 import fla.core.FlaBlocks;
 import fla.core.FlaItems;
 import fla.core.block.BlockDryingTable;
+import fla.core.block.BlockFirewood;
 import fla.core.block.BlockFlaCrop;
 import fla.core.block.BlockOilLamp;
 import fla.core.block.BlockPolishTable;
 import fla.core.block.cobble.BlockCobble1;
 import fla.core.block.item.ItemSubBlock;
 import fla.core.block.ore.BlockOre1;
+import fla.core.block.rock.BlockLimestone;
 import fla.core.item.ItemDebug;
 import fla.core.item.ItemExtinguishTorch;
 import fla.core.item.ItemFlaSeed;
@@ -61,11 +62,13 @@ public class IB
     	FlaItems.extinguishTorch = registerItem(new ItemExtinguishTorch().setUnlocalizedName("extinguish_torch").setTextureName(FlaValue.TEXT_FILE_NAME + ":tools/1"), "extinguishTorch");
     	FlaBlocks.crops = registerBlock(new BlockFlaCrop(), "crops");
     	FlaItems.seeds = registerItem(new ItemFlaSeed(FlaBlocks.crops, Blocks.farmland).setUnlocalizedName("seeds"), "seed");
+    	FlaBlocks.rock1 = registerBlock(new BlockLimestone().setBlockName("limestone").setBlockTextureName(FlaValue.TEXT_FILE_NAME + ":rock/limestone"), "rock1");
     	FlaBlocks.ore1 = registerBlock(new BlockOre1().setBlockName("ore_copper"), ItemSubBlock.class, "ore1");
     	FlaBlocks.cobble1 = registerBlock(new BlockCobble1().setBlockName("cobble1"), ItemSubBlock.class, "cobble1");
     	FlaBlocks.polishTable = registerBlock(new BlockPolishTable().setBlockName("polishTable").setBlockTextureName(FlaValue.TEXT_FILE_NAME + ":machine/polish"), "polishTable");
     	FlaBlocks.oilLamp = registerBlock(new BlockOilLamp().setBlockName("oilLamp"), "oil_lamp");
     	FlaBlocks.dryingTable = registerBlock(new BlockDryingTable().setBlockName("dryTable").setBlockTextureName(FlaValue.TEXT_FILE_NAME + ":machine/drying_table"), "drying_table");
+    	FlaBlocks.firewood = registerBlock(new BlockFirewood().setBlockName("firewood").setBlockTextureName(FlaValue.TEXT_FILE_NAME + ":wood/firewood/firewood_oak").setCreativeTab(CreativeTabs.tabBlock), "firewood");
 	}
 
 	private static Item registerItem(Item item, String name)

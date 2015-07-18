@@ -8,7 +8,7 @@ tile.ore_copper:5.name=黑铜矿石
 tile.cobble:0.name=燧石块
 
 tile.polishTable.name=打磨台
-tile.dryTable=晾晒台
+tile.dryTable.name=晾晒台
 
 item.debug.name=调试工具
 item.logs:0.name=橡树树干
@@ -49,7 +49,7 @@ item.fla:lipocere.name=尸蜡
 item.fla:ramie_fiber.name=苎麻纤维
 item.fla:ramie_fiber_dry.name=干苎麻纤维
 item.fla:ramie_rope.name=麻绳
-item.fla:ramie_bundle_rope=麻绳捆
+item.fla:ramie_bundle_rope.name=麻绳捆
 
 item.fla:flint_axe.name=燧石斧头
 item.fla:flint_shovel.name=燧石铲头

@@ -30,6 +30,14 @@ public class DropInfo
 	{
 		this(4, dust, drop);
 	}
+	public DropInfo(IItemChecker dust, ItemStack drop)
+	{
+		this.d = dust;
+		Map<ItemStack, Integer> map = new HashMap();
+		map.put(drop, 1);
+		this.drops = map;
+		this.dropSize = 1;
+	}
 	public DropInfo(ItemStack drop)
 	{
 		this.d = null;

@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import fla.api.recipe.DropInfo;
 import fla.api.recipe.IItemChecker.ItemChecker;
+import fla.core.FlaBlocks;
 import fla.core.item.ItemSub;
 
 public class StoneHammerManager 
@@ -23,6 +24,10 @@ public class StoneHammerManager
 		map.put(ItemSub.a("stone_a"), 8);
 		map.put(ItemSub.a("stone_b"), 2);
 		registryDust(new DropInfo(new ItemChecker(Blocks.stone), map));
+		map.clear();
+		map.put(ItemSub.a("limestone_a"), 1);
+		registryDust(new DropInfo(new ItemChecker(FlaBlocks.rock1), map));
+		
 	}
 	
 	public static void registryDust(DropInfo info)

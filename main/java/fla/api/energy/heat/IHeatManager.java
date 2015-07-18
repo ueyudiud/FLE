@@ -1,5 +1,6 @@
 package fla.api.energy.heat;
 
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.world.BlockPos;
 
@@ -9,5 +10,5 @@ public interface IHeatManager
 	
 	public int getHeatAsk(BlockPos pos);
 	
-	public void emmitHeat(BlockPos pos, ForgeDirection to, int pkg);
+	public void emmitHeat(World world, BlockPos pos, ForgeDirection to, int pkg);
 }

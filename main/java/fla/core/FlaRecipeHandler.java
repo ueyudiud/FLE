@@ -1,8 +1,10 @@
 package fla.core;
 
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import fla.api.item.IHammerItem;
 import fla.core.tool.AxeManager;
 
 public class FlaRecipeHandler 
@@ -29,8 +31,11 @@ public class FlaRecipeHandler
 					}
 					continue;
 				}
+				if(stack.getItem() instanceof IHammerItem)
+				{
+					evt.craftMatrix.setInventorySlotContents(i, ((IHammerItem) stack.getItem()).getCraftResult(stack, null));
+				}
 			}
 		}
 	}
-
 }

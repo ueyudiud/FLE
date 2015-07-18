@@ -12,9 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import fla.api.world.BlockPos;
 import fla.core.Fla;
 
 public abstract class FlaPacket
@@ -22,6 +24,7 @@ public abstract class FlaPacket
 	static final int guiPacketType = 1;
 	static final int keyPacketType = 2;
 	static final int tileUpdatePacketType = 3;
+	static final int heatUpdatePacketType = 4;
 	
 	static FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel(Fla.MODID);
 	private FMLProxyPacket pkt;
@@ -151,6 +154,34 @@ public abstract class FlaPacket
 			}
 		}
 	}
+	
+	public static class FlaHeatUpdatePacket extends FlaPacket
+	{
+		public FlaHeatUpdatePacket(int dimId, BlockPos pos, ForgeDirection dir, int size) 
+		{
+			super(dimId, pos.x, pos.y, pos.z, (byte) dir.ordinal(), size);
+		}
+
+		@Override
+		protected void setup(DataOutputStream os, Object[] objects) 
+		{
+			try 
+			{
+				os.write(heatUpdatePacketType);
+				os.writeInt((Integer) objects[0]);
+				os.writeInt((Integer) objects[1]);
+				os.writeInt((Integer) objects[2]);
+				os.writeInt((Integer) objects[3]);
+				os.writeByte((Byte) objects[4]);
+				os.writeInt((Integer) objects[5]);
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static class FlaGuiPacket extends FlaPacket
 	{
 		public FlaGuiPacket(int x, int y, int z, byte type, short contain) 
@@ -174,7 +205,6 @@ public abstract class FlaPacket
 			{
 				e.printStackTrace();
 			}
-			
 		}
 	}
 	

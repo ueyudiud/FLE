@@ -10,4 +10,6 @@ public class FlaBlocks
 	public static Block oilLamp;
 	public static Block crops;
 	public static Block dryingTable;
+	public static Block rock1;
+	public static Block firewood;
 }

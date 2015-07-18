@@ -13,12 +13,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import fla.api.network.IListenerContainer;
 import fla.api.recipe.ErrorType;
+import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.network.FlaPacket.FlaGuiPacket;
+import fla.core.network.FlaPacket.FlaHeatUpdatePacket;
 import fla.core.network.FlaPacket.FlaTileUpdatePacket;
 
 public class NetWorkManager 
@@ -33,6 +36,11 @@ public class NetWorkManager
 		NBTTagCompound nbt = new NBTTagCompound();
 		tile.writeToNBT(nbt);
 		new FlaTileUpdatePacket(tile, nbt).sendPacket();
+	}
+	
+	public void initiateHeatUpdate(int dimId, BlockPos pos, ForgeDirection dir, int pkg)
+	{
+		new FlaHeatUpdatePacket(dimId, pos, dir, pkg);
 	}
 	
 	public void updateInventoryTileSlot(TileEntity tile, int slotId, ItemStack stack)

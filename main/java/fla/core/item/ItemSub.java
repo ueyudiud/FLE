@@ -30,6 +30,7 @@ public class ItemSub extends ItemBase implements IPlaceableItem
 		register(2, "flint_c", "stones/3");
 		register(10, "stone_a", "stones/201");
 		register(11, "stone_b", "stones/202");
+		register(31, "limestone_a", "stones/1001");
 		register(101, "bark_oak", "tree/1");
 		register(102, "bark_spruce", "tree/2");
 		register(103, "bark_birch", "tree/3");
@@ -57,6 +58,8 @@ public class ItemSub extends ItemBase implements IPlaceableItem
 		register(1004, "ramie_rope", "crop/ramie_rope");
 		register(1005, "ramie_bundle_rope", "crop/ramie_bundle_rope");
 		register(2001, "lipocere", "resource/1");
+
+		register(3001, "dust_limestone", "stones/11001");
 		
 		register(10001, "flint_axe", "tools/head/flint/flint_axe");
 		register(10002, "flint_shovel", "tools/head/flint/flint_shovel");

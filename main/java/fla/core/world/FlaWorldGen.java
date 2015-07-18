@@ -36,6 +36,13 @@ public class FlaWorldGen implements IWorldGenerator
 
 	public void generateSurface(Random random, int x, int z, World world)
 	{
+		if((x & 1) != 0 || (z & 1) != 0) return;
+		this.genOre(random, world, x, z, 180, 50, 0.5D, 100, Blocks.stone, FlaBlocks.rock1, 0);
+		this.genOre(random, world, x, z, 180, 50, 0.5D, 100, Blocks.glass, FlaBlocks.rock1, 0);
+		if((x & 3) != 0 || (z & 3) != 0) return;
+		if((x & 7) != 0 || (z & 7) != 0) return;
+		if((x & 15) != 0 || (z & 15) != 0) return;
+		if((x & 31) != 0 || (z & 31) != 0) return;
 		this.genOre(random, world, x, z, 180, 10, 0.3D, 60, Blocks.stone, new WorldMinableInfo(FlaBlocks.ore1, 3, 0), new WorldMinableInfo(FlaBlocks.ore1, 18, 1).setCoreGen(-1D, 0.8D), new WorldMinableInfo(FlaBlocks.ore1, 10, 2), new WorldMinableInfo(FlaBlocks.ore1, 3, 3), new WorldMinableInfo(FlaBlocks.ore1, 6, 4), new WorldMinableInfo(FlaBlocks.ore1, 2, 5));
 		this.genOre(random, world, x, z, 180, 10, 0.3D, 60, Blocks.glass, new WorldMinableInfo(FlaBlocks.ore1, 3, 0), new WorldMinableInfo(FlaBlocks.ore1, 10, 1).setCoreGen(-1D, 0.8D), new WorldMinableInfo(FlaBlocks.ore1, 10, 2), new WorldMinableInfo(FlaBlocks.ore1, 3, 3), new WorldMinableInfo(FlaBlocks.ore1, 6, 4), new WorldMinableInfo(FlaBlocks.ore1, 2, 5));
 	}
@@ -45,6 +52,31 @@ public class FlaWorldGen implements IWorldGenerator
 		
 	}
 
+	public boolean genOre(Random rand, World world, int x, int z, int maxY, int minY, double chance, int size, Block base, Block block, int meta)
+	{
+		int i = 0;
+		int j = 0;
+		if(rand.nextGaussian() < chance)
+		{
+			int X = x + rand.nextInt(16);
+			int Y = minY + rand.nextInt(maxY - minY);
+			int Z = z + rand.nextInt(16);
+			int s = (int) Math.round(Math.sqrt(size) * rand.nextGaussian() + size / 2);
+			if(Y >= world.getTopSolidOrLiquidBlock(X, Z))
+			{
+				return false;
+			}
+			if(base.isReplaceableOreGen(world, X, Y, Z, base))
+			{
+				new net.minecraft.world.gen.feature.WorldGenMinable(block, meta, size, base).generate(world, rand, X, Y, Z);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 	public boolean genOre(Random rand, World world, int x, int z, int maxY, int minY, double chance, int size, Block base, WorldMinableInfo...info)
 	{
 		int i = 0;

@@ -27,6 +27,7 @@ public enum ItemState
 		}
 	},
 	Crush('c', 1, 1),
+	Main_Hit('m', 2, 1),
 	Polish('p', 0, 2),
 	Smooth('s', 1, 2);
 	
