@@ -67,13 +67,28 @@ public class FlaRecipe
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(Items.golden_axe, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(Items.diamond_axe, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(FlaItems.rough_flint_axe, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("craftingToolAxe", new ItemStack(FlaItems.flint_axe, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("craftingToolAxe", new ItemStack(FlaItems.stone_axe, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("wick", new ItemStack(Items.string));
+		OreDictionary.registerOre("dustLimestone", ItemSub.a("dust_limestone"));
+		OreDictionary.registerOre("oreCuprite", new ItemStack(FlaBlocks.ore1, 1, 0));
+		OreDictionary.registerOre("oreCopper", new ItemStack(FlaBlocks.ore1, 1, 1));
+		OreDictionary.registerOre("oreMalachite", new ItemStack(FlaBlocks.ore1, 1, 2));
+		OreDictionary.registerOre("oreAzurite", new ItemStack(FlaBlocks.ore1, 1, 3));
+		OreDictionary.registerOre("oreChalococite", new ItemStack(FlaBlocks.ore1, 1, 4));
+		OreDictionary.registerOre("oreTenorite", new ItemStack(FlaBlocks.ore1, 1, 5));
+		OreDictionary.registerOre("oreChalcopyrite", new ItemStack(FlaBlocks.ore1, 1, 6));
+		OreDictionary.registerOre("oreBornite", new ItemStack(FlaBlocks.ore1, 1, 7));
+		OreDictionary.registerOre("oreTetrahedrite", new ItemStack(FlaBlocks.ore1, 1, 8));
+		OreDictionary.registerOre("oreCovellite", new ItemStack(FlaBlocks.ore1, 1, 9));
+		OreDictionary.registerOre("oreEnargite", new ItemStack(FlaBlocks.ore1, 1, 10));
 		GameRegistry.addRecipe(new TreeCuttingRecipe(new ItemStack(Blocks.log, 1, 0), new ItemStack(FlaItems.log, 1, 0)));
 		GameRegistry.addRecipe(new TreeCuttingRecipe(new ItemStack(Blocks.log, 1, 1), new ItemStack(FlaItems.log, 1, 1)));
 		GameRegistry.addRecipe(new TreeCuttingRecipe(new ItemStack(Blocks.log, 1, 2), new ItemStack(FlaItems.log, 1, 2)));
 		GameRegistry.addRecipe(new TreeCuttingRecipe(new ItemStack(Blocks.log, 1, 3), new ItemStack(FlaItems.log, 1, 3)));
 		GameRegistry.addRecipe(new TreeCuttingRecipe(new ItemStack(Blocks.log2, 1, 0), new ItemStack(FlaItems.log, 1, 4)));
 		GameRegistry.addRecipe(new TreeCuttingRecipe(new ItemStack(Blocks.log2, 1, 1), new ItemStack(FlaItems.log, 1, 5)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaBlocks.firewood), new Object[]{"x", "o", 'x', "craftingToolAxe", 'o', "logWood"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(FlaItems.stone_oil_lamp, 1), new ItemStack(FlaItems.stone_oil_lamp, 1, OreDictionary.WILDCARD_VALUE)));
 		GameRegistry.addRecipe(new OilLampRecipe(new FuelStack(Fuels.lipocere, 400), Items.rotten_flesh));
 		GameRegistry.addRecipe(new OilLampRecipe(new FuelStack(Fuels.fat, 400), Items.beef));
@@ -89,11 +104,14 @@ public class FlaRecipe
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaItems.wooden_hammer), new Object[]{"x", "o", 'x', "logWood", 'o', Items.stick}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaBlocks.polishTable), new Object[]{"x", "o", 'x', "logWood", 'o', Blocks.gravel}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaItems.whetstone), new Object[]{"xx", "xx", 'x', ItemSub.a("stone_b")}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaItems.wooden_firestarter), new Object[]{" s", "wl", 's', "stickWood", 'w', "logWood", 'l', ItemSub.a("leaves_dry")}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(FlaItems.wooden_firestarter), new Object[]{" s", "wl", 's', "stickWood", 'w', "logWood", 'l', ItemSub.a("tinder")}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ItemSub.a("ramie_rope", 3), new Object[]{"xx", "xx", 'x', ItemSub.a("ramie_fiber_dry")}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ItemSub.a("ramie_bundle_rope"), new Object[]{"xx", "xx", 'x', ItemSub.a("ramie_rope")}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ItemSub.a("ramie_rope", 4), new Object[]{"x", 'x', ItemSub.a("ramie_bundle_rope")}));
-		
+		GameRegistry.addRecipe(new ShapedOreRecipe(FlaBlocks.charcoal, new Object[]{"xx", "xx", 'x', ItemSub.a("charred_log")}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ItemSub.a("tinder"), new Object[]{"xx", "xx", 'x', ItemSub.a("leaves_dry")}));
+
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ItemSub.a("argil_ball", 3), new Object[]{Items.clay_ball, Items.clay_ball, Blocks.sand, "dustLimestone"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ItemSub.a("branch_bush"), "branch"));
 	}
 }

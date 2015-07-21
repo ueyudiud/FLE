@@ -1,29 +1,32 @@
 package fla.core;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
+import net.minecraft.inventory.ContainerPlayer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import fla.api.item.IPlaceableItem;
-import fla.core.util.Keyboard;
 
 public class FlaPlayerHandler 
-{
+{	
+	@SubscribeEvent
+	public void openGui(PlayerOpenContainerEvent event)
+	{
+		
+	}
+	
+	@SubscribeEvent
+	public void renderHUD(RenderGameOverlayEvent.Pre event)
+	{
+		if(event.type == ElementType.EXPERIENCE)
+		{
+			//event.setCanceled(true);
+		}
+	}
+	
 	@SubscribeEvent
 	public void onPlayerUseItem(PlaceEvent evt)
 	{

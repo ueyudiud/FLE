@@ -10,6 +10,7 @@ import fla.core.FlaCrops;
 import fla.core.block.crop.CropRamie;
 import fla.core.block.crop.CropSoybean;
 import fla.core.item.ItemFlaSeed;
+import fla.core.item.ItemSub;
 
 public class C 
 {
@@ -26,9 +27,11 @@ public class C
 		Map<ItemStack, Integer> dropMap = new HashMap();
 		dropMap.put(ItemFlaSeed.a("soybean"), 1);
 		FlaCrops.soybean.setSeed(ItemFlaSeed.a("soybean")).setHaverstDrop(3, dropMap);
-		dropMap.clear();
-		dropMap.put(ItemFlaSeed.a("ramie"), 1);
+		dropMap = new HashMap();
+		
+		dropMap.put(ItemSub.a("ramie_fiber"), 1);
 		FlaCrops.ramie.setSeed(ItemFlaSeed.a("ramie")).setHaverstDrop(3, dropMap);
+		
 		MinecraftForge.addGrassSeed(ItemFlaSeed.a("soybean"), 3);
 		MinecraftForge.addGrassSeed(ItemFlaSeed.a("ramie"), 3);
 	}

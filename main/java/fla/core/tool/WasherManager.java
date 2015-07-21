@@ -16,7 +16,6 @@ import fla.api.recipe.IItemChecker.ItemChecker;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.item.ItemSub;
-import fla.core.world.biome.FlaBiome;
 
 public class WasherManager 
 {
@@ -49,7 +48,7 @@ public class WasherManager
 					{
 						BlockPos pos = new BlockPos(evt.world, evt.x + x1, evt.y + y1, evt.z + z1);
 						if(pos.getBlock() == Blocks.water) ++waterCount;
-						if(pos.getBiome() == FlaBiome.ocean || pos.getBiome() == BiomeGenBase.ocean || pos.getBiome() == BiomeGenBase.river) ++waterCount;
+						if(pos.getBiome() == BiomeGenBase.ocean || pos.getBiome() == BiomeGenBase.river) ++waterCount;
 					}
 			if(waterCount > 80)
 			{

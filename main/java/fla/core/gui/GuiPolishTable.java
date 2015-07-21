@@ -10,11 +10,13 @@ import fla.api.util.FlaValue;
 import fla.core.Fla;
 import fla.core.gui.base.GuiBase;
 import fla.core.gui.base.GuiIconButton;
+import fla.core.gui.base.GuiIconButton.ButtonSize;
 import fla.core.tileentity.TileEntityPolishTable;
 
 @SideOnly(Side.CLIENT)
 public class GuiPolishTable extends GuiBase
 {
+	protected static final ResourceLocation locate = new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/polish.png");
 	private EntityPlayer player;
 	private TileEntityPolishTable tile;
 	
@@ -46,9 +48,9 @@ public class GuiPolishTable extends GuiBase
 		super.initGui();
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
-		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 17, 18, 18, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 16, 0));
-		buttonList.add(new GuiIconButton(1, xoffset + 25, yoffset + 51, 18, 18, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 32, 0));
-		buttonList.add(new GuiIconButton(2, xoffset + 103, yoffset + 48, 18, 18, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 48, 0));
+		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 17, ButtonSize.Standard, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 16, 0));
+		buttonList.add(new GuiIconButton(1, xoffset + 25, yoffset + 51, ButtonSize.Standard, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 32, 0));
+		buttonList.add(new GuiIconButton(2, xoffset + 103, yoffset + 48, ButtonSize.Standard, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 48, 0));
 	}
 	
 	protected void actionPerformed(GuiButton guibutton)
@@ -75,7 +77,6 @@ public class GuiPolishTable extends GuiBase
 	@Override
 	public ResourceLocation getResourceLocation() 
 	{
-		return new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/polish.png");
+		return locate;
 	}
-
 }

@@ -23,6 +23,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.recipe.Fuel;
 import fla.api.recipe.IItemChecker.OreChecker;
 import fla.api.util.FlaValue;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 import fla.core.FlaItems;
 import fla.core.tileentity.TileEntityBaseWithFacing;
@@ -35,7 +36,7 @@ public class BlockOilLamp extends BlockBaseHasTile
 	
 	public BlockOilLamp() 
 	{
-		super(Material.piston);
+		super(Material.piston, SubTag.BLOCK_FLE_RENDER, SubTag.BLOCK_NOT_SOILD);
 		setStepSound(soundTypeStone);
 		setBlockBounds(0.3F, 0F, 0.3F, 0.7F, 0.25F, 0.7F);
 	}
@@ -117,27 +118,10 @@ public class BlockOilLamp extends BlockBaseHasTile
 	}
 	
 	@Override
-	public int getRenderType() 
-	{
-		return FlaValue.ALL_RENDER_ID;
-	}
-
-	@Override
-	public boolean isNormalCube() 
+	public boolean isOpaqueCube() 
 	{
 		return false;
 	}
-
-	@Override
-	public boolean renderAsNormalBlock() 
-	{
-		return false;
-	}
-	
-	public boolean isOpaqueCube()
-    {
-        return false;
-    }
 	
 	@Override
 	public boolean hasSubs() 

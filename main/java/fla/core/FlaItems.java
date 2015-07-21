@@ -24,4 +24,6 @@ public class FlaItems
 	public static Item wooden_firestarter;
 	public static Item seeds;
 	public static Item extinguishTorch;
+	public static Item argil_unsmelted;
+	public static Item argil_smelted;
 }

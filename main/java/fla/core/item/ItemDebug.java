@@ -6,10 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.world.BlockPos;
 import fla.api.world.BlockPos.ChunkPos;
-import fla.core.world.generate.FlaWorldGenerateHelper;
 
 public class ItemDebug extends Item
 {

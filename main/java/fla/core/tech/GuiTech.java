@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import fla.api.util.FlaValue;
 import fla.core.gui.base.GuiIconButton;
+import fla.core.gui.base.GuiIconButton.ButtonSize;
 
 public class GuiTech extends GuiScreen
 {
@@ -36,6 +37,6 @@ public class GuiTech extends GuiScreen
     	super.initGui();
 		int xoffset = (width - xSize) / 2;
 		int yoffset = (height - ySize) / 2;
-		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 17, 18, 18, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 16, 0));
+		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 17, ButtonSize.Standard, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 16, 0));
     }
 }

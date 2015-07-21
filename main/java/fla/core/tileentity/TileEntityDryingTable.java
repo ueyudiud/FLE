@@ -9,7 +9,7 @@ import fla.api.world.BlockPos;
 import fla.core.gui.InventoryDryingTable;
 import fla.core.world.FWM;
 
-public class TileEntityDryingTable extends TileEntityInventory<TileEntityDryingTable>
+public class TileEntityDryingTable extends TileEntityInventory<InventoryDryingTable>
 {
 	private int levelCheckBuffer;
 	private int colour = 0xFFFFFF;
@@ -67,7 +67,7 @@ public class TileEntityDryingTable extends TileEntityInventory<TileEntityDryingT
 	@SideOnly(Side.CLIENT)
 	public int getRecipeProgressBar(int i) 
 	{
-		return ((InventoryDryingTable) inv).getProgressBar(i);
+		return inv.getProgressBar(i);
 	}
 
 	public void setBlockColour(int colour) 

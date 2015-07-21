@@ -41,7 +41,7 @@ public class TileEntityCrops extends TileEntityBase implements ICropTile
 	{
 		this.card = card;
 		this.age = 0;
-		this.buffer = 0;
+		this.buffer = 0D;
 		this.cushion = 0;
 	}
 
@@ -67,6 +67,7 @@ public class TileEntityCrops extends TileEntityBase implements ICropTile
 	{
 		if(card != null)
 		{
+			if(buffer < 0) buffer = 0D;
 			if(age >= 256) return;
 			++cushion;
 			if(cushion > 20)
@@ -75,15 +76,12 @@ public class TileEntityCrops extends TileEntityBase implements ICropTile
 				if(card.canCropGrow(this))
 				{
 					double d = MathHelper.randomFloatClamp(worldObj.rand, 0.8F, 1.2F) * Math.log10(card.getGrowSpeed(this));
-					buffer += d;
+					if(d > 0)
+						buffer += d;
 					if(buffer > card.getGrowTick())
 					{
 						++age;
 						buffer = 0;
-					}
-					else
-					{
-						++buffer;
 					}
 				}
 				Fla.fla.nwm.get().updateTileNBT(this);

@@ -5,9 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,14 +14,16 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import fla.api.block.BlockBaseContainer;
 import fla.api.block.IFacing;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 
-public abstract class BlockBaseHasTile extends BlockContainer implements IFacing
+public abstract class BlockBaseHasTile extends BlockBaseContainer implements IFacing
 {
-	protected BlockBaseHasTile(Material material)
+	protected BlockBaseHasTile(Material material, SubTag...tags)
 	{
-		super(material);
+		super(material, tags);
 	}
 	
 	@Override
@@ -48,7 +47,7 @@ public abstract class BlockBaseHasTile extends BlockContainer implements IFacing
     	{
     		setBlockFacing(pos, getPointFacing(world, x, y, z, null, xPos, yPos, zPos));
     	}
-    	return meta;
+    	return hasSubs() ? meta : world.getBlockMetadata(x, y, z);
 	}
 
 	@Override
@@ -68,12 +67,6 @@ public abstract class BlockBaseHasTile extends BlockContainer implements IFacing
 	public abstract IIcon getIcon(BlockPos pos, ForgeDirection side);
 
 	public abstract IIcon getIcon(int meta, ForgeDirection side);
-
-	@Override
-	public abstract int getRenderType();
-	
-	@Override
-	public abstract boolean isNormalCube();
 	
 	public boolean canSetDirection(World world, BlockPos pos)
 	{
@@ -89,8 +82,6 @@ public abstract class BlockBaseHasTile extends BlockContainer implements IFacing
 	{
 		return ForgeDirection.UNKNOWN;
 	}
-
-	public abstract boolean hasSubs();
 	
 	@Override
 	public int damageDropped(int meta) 

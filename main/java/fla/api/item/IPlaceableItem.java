@@ -10,4 +10,6 @@ public interface IPlaceableItem
 	public int canItemPlace(ItemStack stack);
 	
 	public ItemStack setPlacedBlock(EntityPlayer player);
+
+	public ItemStack setPlacedBlock(ItemStack stack);
 }

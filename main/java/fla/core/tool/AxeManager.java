@@ -125,6 +125,12 @@ public class AxeManager
 				return;
 			}
 		}
+		if(new OreChecker("treeSapling").match(new ItemStack(evt.block, 1, evt.blockMetadata)))
+		{
+			evt.drops.clear();
+			evt.drops.add(ItemSub.a("branch_bush"));
+			return;
+		}
 		if(isUsingAxe)
 		{
 			return;

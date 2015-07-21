@@ -1,6 +1,7 @@
 package fla.core.gui;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -8,13 +9,16 @@ import fla.api.util.FlaValue;
 import fla.core.Fla;
 import fla.core.gui.base.GuiBase;
 import fla.core.gui.base.GuiIconButton;
+import fla.core.gui.base.GuiIconButton.ButtonSize;
 
 @SideOnly(Side.CLIENT)
 public class GuiWashing extends GuiBase
 {
-	public GuiWashing(ContainerWashing container) 
+	protected static final ResourceLocation locate = new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/ore_washing.png");
+	
+	public GuiWashing(EntityPlayer player) 
 	{
-		super(container);
+		super(new ContainerWashing(player.inventory));
 	}
 	
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
@@ -37,7 +41,7 @@ public class GuiWashing extends GuiBase
 		super.initGui();
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
-		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 18, 18, 18, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 0, 0));
+		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 18, ButtonSize.Standard, new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/button.png"), 0, 0));
 	}
 	
 	protected void actionPerformed(GuiButton guibutton)
@@ -57,7 +61,6 @@ public class GuiWashing extends GuiBase
 	@Override
 	public ResourceLocation getResourceLocation() 
 	{
-		return new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/ore_washing.png");
+		return locate;
 	}
-
 }

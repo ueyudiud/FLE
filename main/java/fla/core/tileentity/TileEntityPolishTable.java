@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fla.api.world.BlockPos;
 import fla.core.gui.InventoryPolishTable;
 
-public class TileEntityPolishTable extends TileEntityInventory<TileEntityPolishTable>
+public class TileEntityPolishTable extends TileEntityInventory<InventoryPolishTable>
 {
 	public TileEntityPolishTable() 
 	{
@@ -18,28 +18,28 @@ public class TileEntityPolishTable extends TileEntityInventory<TileEntityPolishT
 
 	public void clearMap()
 	{
-		((InventoryPolishTable) inv).clearMap(this);
+		inv.clearMap(this);
 	}
 	
 	public void craftedOnce(EntityPlayer player)
 	{
-		((InventoryPolishTable) inv).craftedOnce(this, player);
+		inv.craftedOnce(this, player);
 	}
 	
 	public void changeSelect()
 	{
-		((InventoryPolishTable) inv).changeSelect(this);
+		inv.changeSelect(this);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public char[] getStates()
 	{
-		return ((InventoryPolishTable) inv).inputMap;
+		return inv.inputMap;
 	}
 	
 	public void initSelectSlot()
 	{
-		((InventoryPolishTable) inv).selectState = 0;
+		inv.selectState = 0;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class TileEntityPolishTable extends TileEntityInventory<TileEntityPolishT
 	@SideOnly(Side.CLIENT)
 	public int getSelectID() 
 	{
-		return ((InventoryPolishTable) inv).selectState;
+		return inv.selectState;
 	}
 
 }

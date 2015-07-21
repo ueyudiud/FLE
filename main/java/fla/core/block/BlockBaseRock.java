@@ -3,7 +3,6 @@ package fla.core.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -13,16 +12,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.ForgeEventFactory;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
+import fla.core.FlaCreativeTab;
 
 public abstract class BlockBaseRock extends BlockBaseSub
 {
-	protected BlockBaseRock(Material material) 
+	protected BlockBaseRock(Material material, SubTag...tags) 
 	{
-		super(material);
+		super(material, tags);
+		setCreativeTab(FlaCreativeTab.fla_other_tab);
 	}
 	
 	protected abstract int getMaxDamage();
@@ -35,9 +36,9 @@ public abstract class BlockBaseRock extends BlockBaseSub
 
 	@Override
 	public abstract int getRenderType();
-
+	
 	@Override
-	public boolean isNormalCube() 
+	public boolean isOpaqueCube() 
 	{
 		return true;
 	}

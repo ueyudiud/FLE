@@ -15,6 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.util.FlaValue;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.tileentity.TileEntityDryingTable;
@@ -23,7 +24,7 @@ public class BlockDryingTable extends BlockBaseHasTile
 {
 	public BlockDryingTable()
 	{
-		super(Material.wood);
+		super(Material.wood, SubTag.BLOCK_FLE_RENDER, SubTag.BLOCK_NOT_SOILD);
 		setCreativeTab(CreativeTabs.tabDecorations);
 	}
 	
@@ -121,27 +122,9 @@ public class BlockDryingTable extends BlockBaseHasTile
 	{
 		return blockIcon;
 	}
-
-	@Override
-	public int getRenderType() 
-	{
-		return FlaValue.ALL_RENDER_ID;
-	}
-
-	@Override
-	public boolean isNormalCube() 
-	{
-		return false;
-	}
 	
 	@Override
 	public boolean isOpaqueCube() 
-	{
-		return false;
-	}
-
-	@Override
-	public boolean hasSubs() 
 	{
 		return false;
 	}

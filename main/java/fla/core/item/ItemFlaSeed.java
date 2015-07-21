@@ -19,6 +19,7 @@ import fla.api.crop.CropCard;
 import fla.api.crop.CropRegistry;
 import fla.api.crop.ICropSeed;
 import fla.api.util.Registry;
+import fla.core.FlaCreativeTab;
 import fla.core.FlaItems;
 import fla.core.tileentity.TileEntityCrops;
 
@@ -36,7 +37,8 @@ public class ItemFlaSeed extends ItemBase implements IPlantable, ICropSeed
     {
         this.plantBlock = plant;
         this.soilBlock = soil;
-        this.setCreativeTab(CreativeTabs.tabMaterials);
+        this.setCreativeTab(FlaCreativeTab.fla_other_tab);
+        this.setHasSubtypes(true);
     }
     
     public static void registerCrop(CropCard crop, String seedTexture)

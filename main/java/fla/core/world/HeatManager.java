@@ -56,7 +56,6 @@ public class HeatManager implements IHeatManager
 	@Override
 	public void emmitHeat(World world, BlockPos pos, ForgeDirection to, int pkg) 
 	{
-		Fla.fla.nwm.get().initiateHeatUpdate(world.provider.dimensionId, pos, to, pkg);
 		ForgeDirection a = to.getOpposite();
 		BlockPos pos1 = pos.toPos(to);
 		int ask = getHeatAsk(pos1);
@@ -71,10 +70,13 @@ public class HeatManager implements IHeatManager
 		}
 		if(pos1.getBlockTile() instanceof TileEntityFurnace)
 		{
-			if(pkg > 1)
+			if(!((TileEntityFurnace) pos1.getBlockTile()).isBurning())
 			{
-				((TileEntityFurnace) pos1.getBlockTile()).currentItemBurnTime = 200;
-				((TileEntityFurnace) pos1.getBlockTile()).furnaceBurnTime += pkg / 10;
+				if(((TileEntityFurnace) pos1.getBlockTile()).currentItemBurnTime == 0)
+				{
+					((TileEntityFurnace) pos1.getBlockTile()).currentItemBurnTime = 100;
+				}
+				((TileEntityFurnace) pos1.getBlockTile()).furnaceBurnTime += Math.max(2, pkg / 10 - 5);
 			}
 		}
 	}

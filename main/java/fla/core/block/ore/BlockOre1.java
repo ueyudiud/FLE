@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fla.api.util.FlaValue;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 import fla.core.block.BlockBaseOre;
 
@@ -14,20 +15,24 @@ public class BlockOre1 extends BlockBaseOre
 {	
 	public BlockOre1()
 	{
+		super(SubTag.BLOCK_HARDNESS.copy(2.0F), SubTag.BLOCK_RESISTANCE.copy(2.0F));
 		this.setStepSound(soundTypeStone);
-		this.setHardness(2.0F);
-		this.setResistance(2.0F);
 		this.setHarvestLevel("pickaxe", 1, 0);
 		this.setHarvestLevel("pickaxe", 2, 1);
 		this.setHarvestLevel("pickaxe", 0, 2);
 		this.setHarvestLevel("pickaxe", 0, 3);
 		this.setHarvestLevel("pickaxe", 2, 4);
 		this.setHarvestLevel("pickaxe", 1, 5);
+		this.setHarvestLevel("pickaxe", 1, 6);
+		this.setHarvestLevel("pickaxe", 2, 7);
+		this.setHarvestLevel("pickaxe", 1, 8);
+		this.setHarvestLevel("pickaxe", 2, 9);
+		this.setHarvestLevel("pickaxe", 1, 10);
 	}
 
 	protected int getMaxDamage()
 	{
-		return 6;
+		return 11;
 	}
 	
 	@Override

@@ -28,11 +28,15 @@ import fla.api.energy.heat.IHeatManager;
 import fla.api.util.FlaValue;
 import fla.api.util.IColorMapManager;
 import fla.api.world.IWorldManager;
+import fla.core.gui.ContainerClayModel;
 import fla.core.gui.ContainerDryingTable;
 import fla.core.gui.ContainerPolishTable;
+import fla.core.gui.ContainerTerrine;
 import fla.core.gui.ContainerWashing;
+import fla.core.gui.GuiClayModel;
 import fla.core.gui.GuiDryingTable;
 import fla.core.gui.GuiPolishTable;
+import fla.core.gui.GuiTerrine;
 import fla.core.gui.GuiWashing;
 import fla.core.init.C;
 import fla.core.init.FlaRecipe;
@@ -41,17 +45,21 @@ import fla.core.init.IB;
 import fla.core.network.NetWorkManager;
 import fla.core.proxy.CommonProxy;
 import fla.core.recipe.FlaRecipeRegistry;
+import fla.core.render.RenderAsh;
 import fla.core.render.RenderCrop;
 import fla.core.render.RenderDryingTable;
 import fla.core.render.RenderHandler;
 import fla.core.render.RenderOilLamp;
 import fla.core.render.RenderOre;
+import fla.core.render.RenderUnsmeltedArgil;
 import fla.core.tech.TechManager;
+import fla.core.tileentity.TileEntityArgilUnsmelted;
 import fla.core.tileentity.TileEntityCrops;
 import fla.core.tileentity.TileEntityDryingTable;
 import fla.core.tileentity.TileEntityFirewood;
 import fla.core.tileentity.TileEntityOilLamp;
 import fla.core.tileentity.TileEntityPolishTable;
+import fla.core.tileentity.argil.TileEntityTerrine;
 import fla.core.tool.AxeManager;
 import fla.core.tool.ShovelManager;
 import fla.core.tool.ToolManager;
@@ -150,6 +158,8 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		GameRegistry.registerTileEntity(TileEntityCrops.class, "crop");
 		GameRegistry.registerTileEntity(TileEntityDryingTable.class, "dryingTable");
 		GameRegistry.registerTileEntity(TileEntityFirewood.class, "firewood");
+		GameRegistry.registerTileEntity(TileEntityArgilUnsmelted.class, "argil_unsmelted");
+		GameRegistry.registerTileEntity(TileEntityTerrine.class, "terrine");
 		loadClient();
     }
 
@@ -161,6 +171,9 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		RenderHandler.register(FlaBlocks.ore1, OreDictionary.WILDCARD_VALUE, RenderOre.class);
 		RenderHandler.register(FlaBlocks.oilLamp, OreDictionary.WILDCARD_VALUE, RenderOilLamp.class);
         RenderHandler.register(FlaBlocks.dryingTable, OreDictionary.WILDCARD_VALUE, RenderDryingTable.class);
+        RenderHandler.register(FlaBlocks.plantAsh, OreDictionary.WILDCARD_VALUE, RenderAsh.class);
+        RenderHandler.register(FlaBlocks.argil_unsmelted, OreDictionary.WILDCARD_VALUE, RenderUnsmeltedArgil.class);
+        RenderHandler.register(FlaBlocks.argil_smelted, OreDictionary.WILDCARD_VALUE, RenderUnsmeltedArgil.class);
     	RenderingRegistry.registerBlockHandler(new RenderHandler());
     }
     
@@ -171,7 +184,16 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		{
 		case 1 : return new ContainerPolishTable(player.inventory, (TileEntityPolishTable) world.getTileEntity(x, y, z));
 		case 2 : return new ContainerDryingTable(player.inventory, (TileEntityDryingTable) world.getTileEntity(x, y, z));
+		case 3 :
+		{
+			switch(world.getBlockMetadata(x, y, z))
+			{
+			case 0 : return new ContainerTerrine(player.inventory, (TileEntityTerrine) world.getTileEntity(x, y, z));
+			default : return null;
+			}
+		}
 		case 101 : return new ContainerWashing(player.inventory);
+		case 102 : return new ContainerClayModel(world, x, y, z, player.inventory);
 		}
 		return null;
 	}
@@ -184,7 +206,16 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		{
 		case 1 : return new GuiPolishTable(player, (TileEntityPolishTable) world.getTileEntity(x, y, z));
 		case 2 : return new GuiDryingTable(player, (TileEntityDryingTable) world.getTileEntity(x, y, z));
-		case 101 : return new GuiWashing(new ContainerWashing(player.inventory));
+		case 3 :
+		{
+			switch(world.getBlockMetadata(x, y, z))
+			{
+			case 0 : return new GuiTerrine(player, (TileEntityTerrine) world.getTileEntity(x, y, z));
+			default : return null;
+			}
+		}
+		case 101 : return new GuiWashing(player);
+		case 102 : return new GuiClayModel(world, x, y, z, player);
 		}
 		return null;
 	}

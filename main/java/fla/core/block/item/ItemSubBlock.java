@@ -19,7 +19,8 @@ public class ItemSubBlock extends ItemBlock
 	public ItemSubBlock(Block block)
 	{
 		super(block);
-		this.block = (BlockBase) block;
+		if(block instanceof BlockBase)
+			this.block = (BlockBase) block;
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}
@@ -27,7 +28,7 @@ public class ItemSubBlock extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
-		return block.getUnlocalizedName() + ":" + itemstack.getItemDamage();
+		return super.getUnlocalizedName() + ":" + itemstack.getItemDamage();
 	}
 
     /**
@@ -36,7 +37,7 @@ public class ItemSubBlock extends ItemBlock
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage)
     {
-        return this.block.getIcon(2, damage);
+        return block != null ? this.block.getIcon(2, damage) : super.getIconFromDamage(damage);
     }
 
     /**
@@ -50,6 +51,7 @@ public class ItemSubBlock extends ItemBlock
     @Override
     public void addInformation(ItemStack item, EntityPlayer player,	List list, boolean b) 
     {
-    	this.block.getBlockInfomation(item, player.isSneaking(), Fla.fla.km.get().isSneakKeyDown(player), list);
+    	if(block != null)
+    		this.block.getBlockInfomation(item, player.isSneaking(), Fla.fla.km.get().isSneakKeyDown(player), list);
     }
 }

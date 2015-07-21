@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,13 +15,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.block.IFacing;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 
-public abstract class BlockBase extends Block implements IFacing
+public abstract class BlockBase extends fla.api.block.BlockBase implements IFacing
 {
-	protected BlockBase(Material material)
+	protected BlockBase(Material material, SubTag...tags)
 	{
-		super(material);
+		super(material, tags);
 	}
 	
 	@Override
@@ -45,9 +45,6 @@ public abstract class BlockBase extends Block implements IFacing
 	public abstract int getRenderType();
 	
 	@Override
-	public abstract boolean isNormalCube();
-	
-	@Override
 	public abstract int onBlockPlaced(World world, int x, int y, int z, int side, 
 			float xPos, float yPos, float zPos,	int meta);
 	
@@ -65,8 +62,6 @@ public abstract class BlockBase extends Block implements IFacing
 	{
 		return ForgeDirection.UNKNOWN;
 	}
-
-	public abstract boolean hasSubs();
 	
 	@Override
 	public int damageDropped(int meta) 

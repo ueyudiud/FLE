@@ -1,34 +1,25 @@
 package fla.core.block;
 
-import java.util.ArrayList;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.ForgeEventFactory;
 import fla.api.util.FlaValue;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 
 public abstract class BlockBaseOre extends BlockBaseRock
 {
 	protected IIcon[] icons;
-	protected BlockBaseOre()
+	protected BlockBaseOre(SubTag...tags)
 	{
-		super(Material.rock);
-		this.setCreativeTab(CreativeTabs.tabBlock);
+		super(Material.rock, tags);
 		this.setHarvestLevel("unknown", 999);
 	}
 

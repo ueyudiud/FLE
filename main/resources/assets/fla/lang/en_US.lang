@@ -4,8 +4,17 @@ tile.ore_copper:2.name=Malachite Ore
 tile.ore_copper:3.name=Azurite Ore
 tile.ore_copper:4.name=Chalococite Ore
 tile.ore_copper:5.name=Tenorite Ore
+tile.ore_copper:6.name=Chalcopyrite Ore
+tile.ore_copper:7.name=Bornite Ore
+tile.ore_copper:8.name=Tetrahedrite Ore
+tile.ore_copper:9.name=Covellite Ore
+tile.ore_copper:10.name=Enargite Ore
 
 tile.cobble:0.name=Flint Block
+
+tile.firewood.name=Firewood
+tile.charcoal.name=Charcoal
+tile.ash_plant:0.name=Plant Ash
 
 tile.polishTable.name=Polish Table
 tile.dryTable.name=Drying Table
@@ -43,7 +52,12 @@ item.fla:flint_b.name=Small Flint
 item.fla:flint_c.name=Sharp Flint
 item.fla:stone_a.name=Stone Chip
 item.fla:stone_b.name=Stone
+item.fla:limestone_a.name=Limestone Chip
 
+item.fla:charred_log.name=Charred Log
+item.fla:argil_ball.name=Argil Ball
+item.fla:argil_brick.name=Argil Brick
+item.fla:argil_plate.name=Argil Plate
 item.fla:tinder.name=Tinder
 item.fla:lipocere.name=Lipocere
 item.fla:ramie_fiber.name=Ramie Fiber
@@ -64,8 +78,8 @@ item.fla:stone_chisel.name=Stone Chisel Head
 item.fla:stone_sickle.name=Stone Sickle Head
 item.fla:stone_spade_hoe.name=Stone Spade-Hoe Head
 
-item.seeds:soybean.name=Soybean
-item.seeds:ramie.name=Ramie Seed
+item.seeds:0:soybean.name=Soybean
+item.seeds:1:ramie.name=Ramie Seed
 
 item.rough_flint_axe.name=Small Flint Axe
 item.wooden_hammer.name=Wooden Hammer
@@ -78,12 +92,25 @@ item.stone_axe.name=Stone Axe
 item.flint_shovel.name=Flint Shovel
 item.stone_shovel.name=Stone Shovel
 item.whetstone.name=Whetstone
+item.extinguish_torch.name=Torch
 item.oil_lamp:0.name=Stone Oil Lamp
+item.argil_un:0.name=Terrine (Unsmelted)
+item.argil:0.name=Terrine
+
+itemGroup.fla_other_age=Other
+itemGroup.fla_old_stone_age=Old Stone Age
+itemGroup.fla_new_stone_age=New Stone Age
+itemGroup.fla_copper_age=Copper Age
+itemGroup.fla_bronze_age=Bronze Age
+itemGroup.fla_iron_age=Iron Age
 
 inventory.polishTable=Polish Table
 inventory.dryingTable=Drying Table
 inventory.washing=Washing
 
 info.log.length=Length
+info.item.inventory.contain=Contain
+info.item.inventory.itemstack=ItemStacks Contain
+info.item.inventory.fluidstack=Fluid Contain
 
 key.fla=Place(For some item)

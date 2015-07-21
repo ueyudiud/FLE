@@ -2,10 +2,13 @@ package fla.core.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fla.api.util.FlaValue;
 import fla.core.gui.base.GuiBase;
 import fla.core.tileentity.TileEntityDryingTable;
 
+@SideOnly(Side.CLIENT)
 public class GuiDryingTable extends GuiBase
 {
 	private static final ResourceLocation locate = new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/drying_table.png");

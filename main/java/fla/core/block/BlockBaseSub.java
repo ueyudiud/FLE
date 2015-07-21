@@ -1,18 +1,19 @@
 package fla.core.block;
 
-import fla.api.world.BlockPos;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import fla.api.util.SubTag;
+import fla.api.world.BlockPos;
 
 public abstract class BlockBaseSub extends BlockBase
 {
 	protected IIcon[] icons = new IIcon[16];
 	
-	protected BlockBaseSub(Material material)
+	protected BlockBaseSub(Material material, SubTag...tags)
 	{
-		super(material);
+		super(material, tags);
 	}
 	
 	protected abstract int getMaxDamage();

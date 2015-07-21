@@ -4,21 +4,13 @@ import java.util.HashMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.event.world.ChunkDataEvent.Load;
-import net.minecraftforge.event.world.ChunkDataEvent.Save;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -26,14 +18,11 @@ import fla.api.recipe.IItemChecker.OreChecker;
 import fla.api.world.BlockPos;
 import fla.api.world.BlockPos.ChunkPos;
 import fla.api.world.IWorldManager;
-import fla.core.world.generate.FlaWorldProvider;
-import fla.core.world.generate.FlaWorldType;
 
 public class FWM implements IWorldManager
 {
 	public static void init()
 	{
-		FlaWorldType.FARLAND = new FlaWorldType("FARLAND");
 		
 		//DimensionManager.unregisterDimension(0);
 		//DimensionManager.unregisterProviderType(0);

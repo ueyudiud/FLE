@@ -28,6 +28,7 @@ public class PolishRecipe
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("flint_a")), "phhh  h  ", ItemSub.a("flint_gaff")));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("flint_a")), "hhp  h  h", ItemSub.a("flint_gaff")));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("flint_a")), "   h hh h", new ItemStack(FlaItems.flint_awl)));
+		registerRecipe(new PolishRecipe(new ItemChecker(Items.flint), "   h hh h", new ItemStack(FlaItems.flint_awl)));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "h phhphhh", ItemSub.a("stone_axe")));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "p hphhhhh", ItemSub.a("stone_axe")));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "hphh hhhh", ItemSub.a("stone_shovel")));

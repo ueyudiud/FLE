@@ -2,23 +2,21 @@ package fla.core.block;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fla.api.util.FlaValue;
+import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 
 public abstract class BlockCobbleRock extends BlockBaseSub
 {
-	protected BlockCobbleRock()
+	protected BlockCobbleRock(SubTag...tags)
 	{
-		super(Material.clay);
+		super(Material.clay, tags);
 	}
 
 	@Override
@@ -76,5 +74,10 @@ public abstract class BlockCobbleRock extends BlockBaseSub
 	protected void registerItem(int meta, ItemStack i)
 	{
 		correctItem[meta] = i.copy();
+	}
+	
+	public boolean isOpaqueCube() 
+	{
+		return true;
 	}
 }

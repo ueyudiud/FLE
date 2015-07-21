@@ -120,7 +120,7 @@ public abstract class CropFla implements CropCard
 	@Override
 	public boolean canHarvestCrop(ICropTile tile)
 	{
-		return tile.getStage() > maturation;
+		return tile.getStage() <= maturation - 1;
 	}
 
 	@Override

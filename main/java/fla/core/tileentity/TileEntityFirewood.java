@@ -1,16 +1,36 @@
 package fla.core.tileentity;
 
-import fla.core.Fla;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import fla.api.world.BlockPos;
+import fla.core.Fla;
+import fla.core.FlaBlocks;
 
 public class TileEntityFirewood extends TileEntityBase
 {
+	private boolean isCharcoal;
 	private boolean isBurning1;
 	private boolean isBurning2;
 	private int carbonLevel;
-	private int carbonContain = 1000;
+	private int carbonContain;
+	
+	public TileEntityFirewood(boolean isCoal)
+	{
+		isCharcoal = isCoal;
+		carbonContain = isCoal ? 4000 : 1000;
+	}
+	public TileEntityFirewood() 
+	{
+		isCharcoal = false;
+		carbonContain = 1000;
+	}
+	
+	public int getCharcoalContain()
+	{
+		return (int) Math.floor(carbonContain / 1000);
+	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
@@ -18,6 +38,7 @@ public class TileEntityFirewood extends TileEntityBase
 		super.readFromNBT(nbt);
 		isBurning1 = nbt.getBoolean("IsSmolder");
 		isBurning2 = nbt.getBoolean("IsBurning");
+		isCharcoal = nbt.getBoolean("IsCharcoal");
 		carbonLevel = nbt.getShort("CarbonLevel");
 		carbonContain = nbt.getShort("CarbonContain");
 	}
@@ -28,6 +49,7 @@ public class TileEntityFirewood extends TileEntityBase
 		super.writeToNBT(nbt);
 		nbt.setBoolean("IsSmolder", isBurning1);
 		nbt.setBoolean("IsBurning", isBurning2);
+		nbt.setBoolean("IsCharcoal", isCharcoal);
 		nbt.setShort("CarbonLevel", (short) carbonLevel);
 		nbt.setShort("CarbonContain", (short) carbonContain);
 	}
@@ -36,58 +58,111 @@ public class TileEntityFirewood extends TileEntityBase
 	public void updateEntity() 
 	{
 		boolean flag = false;
-		if(getBlockPos().toPos(ForgeDirection.UP).getBlock() == Blocks.fire && rand.nextInt(8) == 0)
+		boolean flag1 = false;
+		if(!worldObj.isRemote)
 		{
-			isBurning1 = true;
-			flag = true;
-		}
-		if(!canABurning()) isBurning1 = false;
-		if(canBBurning() && rand.nextInt(32) == 0) isBurning2 = true;
-		if(!canBBurning()) isBurning2 = false;
-		if(isBurning1)
-		{
-			if(carbonLevel < 1000)
+			if(updateFirewoodBurning())
 			{
-				++carbonLevel;
-			}
-			else if(rand.nextInt(16) == 0)
-			{
-				isBurning1 = false;
 				flag = true;
 			}
 		}
-		if(isBurning2)
+		if(isCharcoal)
 		{
-			--carbonContain;
-			for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
+			if(isBurning2)
 			{
-				ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
-				Fla.fla.hm.emmitHeat(worldObj, getBlockPos(), dir, carbonLevel / 10);
+				burningFirewood();
 			}
-			if(carbonContain == 0)
+		}
+		else
+		{
+			if(isBurning1)
 			{
-				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-				worldObj.removeTileEntity(xCoord, yCoord, zCoord);
-			}
-			if(worldObj.getBlock(xCoord, yCoord + 1, zCoord) == Blocks.air)
-			{
-				worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire);
-			}
-			else
-			{
-				if(worldObj.getBlock(xCoord, yCoord + 1, zCoord).isFlammable(worldObj, xCoord, yCoord, zCoord, ForgeDirection.UP) && rand.nextInt(16) == 0)
+				if(carbonLevel < 6000)
 				{
-					if(worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null)
-					{
-						worldObj.removeTileEntity(xCoord, yCoord + 1, zCoord);
-					}
-					worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire);
+					++carbonLevel;
 				}
+				else if(!worldObj.isRemote)
+				{
+					isCharcoal = true;
+					isBurning1 = false;
+					isBurning2 = false;
+					flag = flag1 = true;
+				}
+			}
+			if(isBurning2)
+			{
+				burningFirewood();
 			}
 		}
 		if(flag)
 		{
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, isBurning1 ? 1 : 0, 2);
+			if(flag1)
+			{
+				worldObj.setBlock(xCoord, yCoord, zCoord, FlaBlocks.charcoal, 0, 2);
+				carbonContain = 4000;
+				carbonLevel = -1;
+			}
+		}
+	}
+	
+	private boolean updateFirewoodBurning()
+	{
+		if(getBlockPos().toPos(ForgeDirection.UP).getBlock() == Blocks.fire && rand.nextInt(8) == 0)
+		{
+			isBurning1 = true;
+			return true;
+		}
+		else if(!isBurning1)
+		{
+			for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
+			{
+				BlockPos pos = getBlockPos().toPos(ForgeDirection.VALID_DIRECTIONS[i]);
+				if(pos.getBlock().isBurning(worldObj, pos.x, pos.y, pos.z))
+				{
+					isBurning1 = true;
+					return true;
+				}
+			}
+		}
+		if(!canABurning()) 
+			isBurning1 = false;
+		if(canBBurning() && rand.nextInt(32) == 0) 
+			isBurning2 = true;
+		if(!canBBurning()) 
+			isBurning2 = false;
+		 return false;
+	}
+	
+	private void burningFirewood()
+	{
+		--carbonContain;
+		if(carbonContain <= 0)
+		{
+			isBurning1 = false;
+			worldObj.removeTileEntity(xCoord, yCoord, zCoord);
+			worldObj.setBlock(xCoord, yCoord, zCoord, FlaBlocks.plantAsh);
+			return;
+		}
+		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
+		{
+			ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
+			Fla.fla.hm.emmitHeat(worldObj, getBlockPos(), dir, isCharcoal ? 100 : 20);
+		}
+		if(worldObj.getBlock(xCoord, yCoord + 1, zCoord) == Blocks.air)
+		{
+			worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire);
+		}
+		else
+		{
+			if(worldObj.getBlock(xCoord, yCoord + 1, zCoord).isFlammable(worldObj, xCoord, yCoord, zCoord, ForgeDirection.UP) && rand.nextInt(16) == 0)
+			{
+				if(worldObj.getTileEntity(xCoord, yCoord + 1, zCoord) != null)
+				{
+					worldObj.removeTileEntity(xCoord, yCoord + 1, zCoord);
+				}
+				worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire);
+			}
 		}
 	}
 	
@@ -103,6 +178,18 @@ public class TileEntityFirewood extends TileEntityBase
 						++blockCount;
 					}
 				}
+		if(worldObj.isRaining())
+		{
+			boolean flag = true;
+			for(int i = yCoord + 1; i < 256; ++i)
+			{
+				if(!worldObj.getBlock(xCoord, i, zCoord).isSideSolid(worldObj, xCoord, i, zCoord, ForgeDirection.UP))
+				{
+					flag = false;
+				}
+			}
+			if(flag) return false;
+		}
 		return blockCount != 27;
 	}
 	
@@ -119,5 +206,9 @@ public class TileEntityFirewood extends TileEntityBase
 		}
 		return blockCount != 6 && isBurning1;
 	}
-
+	
+	public boolean isBurning() 
+	{
+		return isBurning2;
+	}
 }

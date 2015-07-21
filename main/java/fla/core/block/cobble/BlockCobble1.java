@@ -3,6 +3,7 @@ package fla.core.block.cobble;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import fla.api.util.FlaValue;
+import fla.api.util.SubTag;
 import fla.core.block.BlockCobbleRock;
 import fla.core.item.ItemSub;
 
@@ -10,10 +11,8 @@ public class BlockCobble1 extends BlockCobbleRock
 {
 	public BlockCobble1() 
 	{
-		setHardness(0.1F);
-		setResistance(1.0F);
+		super(SubTag.BLOCK_HARDNESS.copy(0.5F), SubTag.BLOCK_RESISTANCE.copy(1.0F));
 		registerItem(0, ItemSub.a("flint_a", 4));
-		setCreativeTab(CreativeTabs.tabBlock);
 	}
 	
 	@Override

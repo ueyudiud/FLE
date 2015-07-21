@@ -13,12 +13,59 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.oredict.OreDictionary;
+import fla.api.recipe.ErrorType;
 import fla.api.recipe.IItemChecker;
 import fla.api.util.FlaValue;
 
 public class RecipeHelper 
 {
+	public static boolean fillOrDrainInventoryTank(IInventory inv, IFluidTank tank, int inputSlot, int outputSlot)
+	{
+		ItemStack input = inv.getStackInSlot(inputSlot);
+		ItemStack output = inv.getStackInSlot(outputSlot);
+		if(FluidContainerRegistry.isContainer(input))
+		{
+			if(output != null)
+			{
+				return false;
+			}
+			else
+			{
+				ItemStack stack;
+				if(FluidContainerRegistry.isEmptyContainer(input))
+				{
+					int i = FluidContainerRegistry.getContainerCapacity(tank.getFluid(), input);
+					stack = FluidContainerRegistry.fillFluidContainer(tank.getFluid(), input);
+					if(stack == null) return true;
+					tank.drain(i, true);
+					inv.decrStackSize(inputSlot, 1);
+					inv.setInventorySlotContents(outputSlot, stack);
+					return true;
+				}
+				else if(FluidContainerRegistry.isFilledContainer(input))
+				{
+					FluidStack contain = FluidContainerRegistry.getFluidForFilledItem(input);
+					if(tank.fill(contain, false) != 0)
+					{
+						stack = FluidContainerRegistry.drainFluidContainer(input);
+						tank.fill(contain, true);
+						inv.decrStackSize(inputSlot, 1);
+						inv.setInventorySlotContents(outputSlot, stack);
+						return true;
+					}
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public static boolean matchItemStack(IInventory inv, int matchSlot, IItemChecker ic)
 	{
 		return inv.getStackInSlot(matchSlot) != null ? ic.match(inv.getStackInSlot(matchSlot)) : ic == null;

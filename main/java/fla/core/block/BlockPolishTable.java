@@ -184,15 +184,9 @@ public class BlockPolishTable extends BlockBaseHasTile
 	{
 		return 0;
 	}
-
-	@Override
-	public boolean isNormalCube() 
-	{
-		return true;
-	}
 	
 	@Override
-	public boolean renderAsNormalBlock() 
+	public boolean isOpaqueCube() 
 	{
 		return true;
 	}

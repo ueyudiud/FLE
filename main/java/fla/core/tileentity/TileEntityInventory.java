@@ -7,11 +7,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import fla.api.block.IInventoryTile;
 
-public abstract class TileEntityInventory<T extends TileEntity> extends TileEntityBaseWithFacing implements IInventory
+public abstract class TileEntityInventory<T extends IInventoryTile<?>> extends TileEntityBaseWithFacing implements IInventory
 {
-	protected IInventoryTile<T> inv;
+	protected T inv;
 	
-	protected TileEntityInventory(IInventoryTile<T> inv)
+	protected TileEntityInventory(T inv)
 	{
 		this.inv = inv;
 	}

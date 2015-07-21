@@ -36,15 +36,22 @@ public class FlaWorldGen implements IWorldGenerator
 
 	public void generateSurface(Random random, int x, int z, World world)
 	{
-		if((x & 1) != 0 || (z & 1) != 0) return;
-		this.genOre(random, world, x, z, 180, 50, 0.5D, 100, Blocks.stone, FlaBlocks.rock1, 0);
-		this.genOre(random, world, x, z, 180, 50, 0.5D, 100, Blocks.glass, FlaBlocks.rock1, 0);
-		if((x & 3) != 0 || (z & 3) != 0) return;
-		if((x & 7) != 0 || (z & 7) != 0) return;
-		if((x & 15) != 0 || (z & 15) != 0) return;
-		if((x & 31) != 0 || (z & 31) != 0) return;
-		this.genOre(random, world, x, z, 180, 10, 0.3D, 60, Blocks.stone, new WorldMinableInfo(FlaBlocks.ore1, 3, 0), new WorldMinableInfo(FlaBlocks.ore1, 18, 1).setCoreGen(-1D, 0.8D), new WorldMinableInfo(FlaBlocks.ore1, 10, 2), new WorldMinableInfo(FlaBlocks.ore1, 3, 3), new WorldMinableInfo(FlaBlocks.ore1, 6, 4), new WorldMinableInfo(FlaBlocks.ore1, 2, 5));
-		this.genOre(random, world, x, z, 180, 10, 0.3D, 60, Blocks.glass, new WorldMinableInfo(FlaBlocks.ore1, 3, 0), new WorldMinableInfo(FlaBlocks.ore1, 10, 1).setCoreGen(-1D, 0.8D), new WorldMinableInfo(FlaBlocks.ore1, 10, 2), new WorldMinableInfo(FlaBlocks.ore1, 3, 3), new WorldMinableInfo(FlaBlocks.ore1, 6, 4), new WorldMinableInfo(FlaBlocks.ore1, 2, 5));
+		int a = random.nextInt(10);
+		if(a == 0 || a == 1 || a == 2) 
+		{
+			this.genOre(random, world, x, z, 180, 50, 0.5D, 120, Blocks.stone, FlaBlocks.rock1, 0);
+			this.genOre(random, world, x, z, 180, 50, 0.5D, 120, Blocks.glass, FlaBlocks.rock1, 0);
+		}
+		if(a == 4)
+		{
+			this.genOre(random, world, x, z, 180, 10, 0.3D, 70, Blocks.stone, new WorldMinableInfo(FlaBlocks.ore1, 3, 0), new WorldMinableInfo(FlaBlocks.ore1, 18, 1).setCoreGen(-1D, 0.8D), new WorldMinableInfo(FlaBlocks.ore1, 10, 2), new WorldMinableInfo(FlaBlocks.ore1, 3, 3), new WorldMinableInfo(FlaBlocks.ore1, 6, 4), new WorldMinableInfo(FlaBlocks.ore1, 2, 5));
+			this.genOre(random, world, x, z, 180, 10, 0.3D, 70, Blocks.glass, new WorldMinableInfo(FlaBlocks.ore1, 3, 0), new WorldMinableInfo(FlaBlocks.ore1, 18, 1).setCoreGen(-1D, 0.8D), new WorldMinableInfo(FlaBlocks.ore1, 10, 2), new WorldMinableInfo(FlaBlocks.ore1, 3, 3), new WorldMinableInfo(FlaBlocks.ore1, 6, 4), new WorldMinableInfo(FlaBlocks.ore1, 2, 5));
+		}
+		if(a == 5)
+		{
+			this.genOre(random, world, x, z, 60, 10, 0.3D, 70, Blocks.stone, new WorldMinableInfo(FlaBlocks.ore1, 12, 6), new WorldMinableInfo(FlaBlocks.ore1, 9, 4), new WorldMinableInfo(FlaBlocks.ore1, 7, 7), new WorldMinableInfo(FlaBlocks.ore1, 5, 8), new WorldMinableInfo(FlaBlocks.ore1, 1, 9), new WorldMinableInfo(FlaBlocks.ore1, 8, 10));
+			this.genOre(random, world, x, z, 60, 10, 0.3D, 70, Blocks.glass, new WorldMinableInfo(FlaBlocks.ore1, 12, 6), new WorldMinableInfo(FlaBlocks.ore1, 9, 4), new WorldMinableInfo(FlaBlocks.ore1, 7, 7), new WorldMinableInfo(FlaBlocks.ore1, 5, 8), new WorldMinableInfo(FlaBlocks.ore1, 1, 9), new WorldMinableInfo(FlaBlocks.ore1, 8, 10));
+		}
 	}
 	
 	public void generateNether(Random random, int x, int z, World world)
