@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
+import fla.api.recipe.ErrorType;
 import fla.core.gui.base.InventoryTileCraftable;
 import fla.core.gui.base.RecipeHelper;
 import fla.core.recipe.machine.DryingRecipe;
@@ -68,9 +69,18 @@ public class InventoryDryingTable extends InventoryTileCraftable<TileEntityDryin
 			recipeTime += speed;
 			if(recipeTime >= DryingRecipe.getRecipeTime(recipeName))
 			{
-				RecipeHelper.onOutputItemStack(this, 1, DryingRecipe.getRecipeResult(recipeName));
-				recipeName = null;
-				recipeTime = 0;
+				if(RecipeHelper.matchOutput(this, 1, DryingRecipe.getRecipeResult(recipeName)))
+				{
+					RecipeHelper.onOutputItemStack(this, 1, DryingRecipe.getRecipeResult(recipeName));
+					recipeName = null;
+					recipeTime = 0;
+					tile.type = ErrorType.DEFAULT;
+				}
+				else
+				{
+					recipeTime = DryingRecipe.getRecipeTime(recipeName);
+					tile.type = ErrorType.CAN_NOT_OUTPUT;
+				}
 			}
 		}
 	}

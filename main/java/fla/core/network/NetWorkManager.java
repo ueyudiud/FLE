@@ -18,10 +18,12 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import fla.api.network.IListenerContainer;
 import fla.api.recipe.ErrorType;
+import fla.api.tech.Technology;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.network.FlaPacket.FlaGuiPacket;
 import fla.core.network.FlaPacket.FlaHeatUpdatePacket;
+import fla.core.network.FlaPacket.FlaTechPacket;
 import fla.core.network.FlaPacket.FlaTileUpdatePacket;
 
 public class NetWorkManager 
@@ -61,6 +63,11 @@ public class NetWorkManager
 	public void initiateGuiButtonPress(GuiContainer container, EntityPlayer player, int x, int y, int z, int buttonId)
 	{
 		;
+	}
+	
+	public void initatePlayerTechupdate(EntityPlayerMP player, Technology tech, byte state)
+	{
+		new FlaTechPacket(tech, state).sendPacket(player);
 	}
 
 	@SubscribeEvent

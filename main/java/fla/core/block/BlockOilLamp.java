@@ -26,8 +26,8 @@ import fla.api.util.FlaValue;
 import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
 import fla.core.FlaItems;
-import fla.core.tileentity.TileEntityBaseWithFacing;
 import fla.core.tileentity.TileEntityOilLamp;
+import fla.core.tileentity.base.TileEntityBaseWithFacing;
 
 public class BlockOilLamp extends BlockBaseHasTile
 {

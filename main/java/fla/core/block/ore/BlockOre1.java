@@ -1,18 +1,38 @@
 package fla.core.block.ore;
 
+import java.util.Random;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fla.api.chem.OreInfo;
 import fla.api.util.FlaValue;
 import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
+import fla.core.FlaItems;
 import fla.core.block.BlockBaseOre;
 
 public class BlockOre1 extends BlockBaseOre
 {	
+	public static final OreInfo[] oreInfo = 
+		{
+		OreInfo.Cuprite,
+		OreInfo.NativeCopper,
+		OreInfo.Malachite,
+		OreInfo.Azurite,
+		OreInfo.Chalcocite,
+		OreInfo.Tenorite,
+		OreInfo.Chalcopyrite,
+		OreInfo.Bornite,
+		OreInfo.Tetrahedrite,
+		OreInfo.Covellite,
+		OreInfo.Enargite
+		};
+	
 	public BlockOre1()
 	{
 		super(SubTag.BLOCK_HARDNESS.copy(2.0F), SubTag.BLOCK_RESISTANCE.copy(2.0F));
@@ -49,5 +69,11 @@ public class BlockOre1 extends BlockBaseOre
     public int colorMultiplier(IBlockAccess access, int x, int y, int z)
     {
     	return this.getRenderColor(access.getBlockMetadata(x, y, z));
+    }
+    
+    @Override
+    public int damageDropped(int meta) 
+    {
+    	return meta;
     }
 }

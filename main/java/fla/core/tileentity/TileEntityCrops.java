@@ -13,6 +13,7 @@ import fla.api.crop.CropRegistry;
 import fla.api.crop.ICropTile;
 import fla.api.recipe.IItemChecker.OreChecker;
 import fla.core.Fla;
+import fla.core.tileentity.base.TileEntityBase;
 import fla.core.world.FWM;
 
 public class TileEntityCrops extends TileEntityBase implements ICropTile

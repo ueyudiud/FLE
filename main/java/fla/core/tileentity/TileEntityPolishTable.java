@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fla.api.world.BlockPos;
 import fla.core.gui.InventoryPolishTable;
+import fla.core.tileentity.base.TileEntityInventory;
 
 public class TileEntityPolishTable extends TileEntityInventory<InventoryPolishTable>
 {

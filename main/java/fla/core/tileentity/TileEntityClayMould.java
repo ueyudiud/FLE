@@ -4,10 +4,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.energy.heat.IHeatTileEntity;
 import fla.api.util.InfoBuilder;
 import fla.api.world.BlockPos;
+import fla.core.tileentity.base.TileEntityBase;
 
 public class TileEntityClayMould extends TileEntityBase implements IHeatTileEntity
 {
-
 	@Override
 	public InfoBuilder<BlockPos> getInformation() {
 		// TODO Auto-generated method stub

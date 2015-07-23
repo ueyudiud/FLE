@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.FlaBlocks;
+import fla.core.tileentity.base.TileEntityBase;
 
 public class TileEntityFirewood extends TileEntityBase
 {

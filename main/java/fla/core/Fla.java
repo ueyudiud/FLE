@@ -2,11 +2,14 @@ package fla.core;
 
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.IFuelHandler;
@@ -52,6 +55,8 @@ import fla.core.render.RenderHandler;
 import fla.core.render.RenderOilLamp;
 import fla.core.render.RenderOre;
 import fla.core.render.RenderUnsmeltedArgil;
+import fla.core.render.TESRDryingTable;
+import fla.core.tech.PlayerTechLearningHandler;
 import fla.core.tech.TechManager;
 import fla.core.tileentity.TileEntityArgilUnsmelted;
 import fla.core.tileentity.TileEntityCrops;
@@ -77,10 +82,9 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 {	
     public static final String MODID = "fla";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.01d";
+    public static final String VERSION = "2.01h";
 
 	public static boolean IC2Loading = false;
-    public static boolean TCLoading = false;
     public static boolean RCLoading = false;
 	public static boolean GTLoading = false;
 	public static boolean NEILoading = false;
@@ -90,6 +94,7 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
     
     public IWorldManager wm;
     public IHeatManager hm;
+    @SideOnly(Side.CLIENT)
     public IColorMapManager cmm;
     public SideGateway<Platform> p;
     public SideGateway<NetWorkManager> nwm;
@@ -127,9 +132,11 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
     	IB.init();
     	Fuels.init();
     	GameRegistry.registerWorldGenerator(new FlaWorldGen(), 1);
+    	((TechManager) FlaAPI.techManager).init();
     	FlaRecipe.init();
     	C.postInit();
     	FWM.init();
+		loadClient();
     }
     
     @EventHandler
@@ -143,6 +150,7 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		MinecraftForge.EVENT_BUS.register(new WasherManager());
 		MinecraftForge.ORE_GEN_BUS.register(new FlaWorldHandler());
 		MinecraftForge.EVENT_BUS.register(new FlaPlayerHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerTechLearningHandler());
 		MinecraftForge.EVENT_BUS.register(new FlaRecipeHandler());
 		MinecraftForge.EVENT_BUS.register(new FlaTickHandler());
 		FMLCommonHandler.instance().bus().register(new AxeManager());
@@ -160,13 +168,13 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
 		GameRegistry.registerTileEntity(TileEntityFirewood.class, "firewood");
 		GameRegistry.registerTileEntity(TileEntityArgilUnsmelted.class, "argil_unsmelted");
 		GameRegistry.registerTileEntity(TileEntityTerrine.class, "terrine");
-		loadClient();
     }
 
 	@SideOnly(Side.CLIENT)
     public void loadClient()
     {
         FlaValue.ALL_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDryingTable.class, new TESRDryingTable());
         RenderHandler.register(FlaBlocks.crops, OreDictionary.WILDCARD_VALUE, RenderCrop.class);
 		RenderHandler.register(FlaBlocks.ore1, OreDictionary.WILDCARD_VALUE, RenderOre.class);
 		RenderHandler.register(FlaBlocks.oilLamp, OreDictionary.WILDCARD_VALUE, RenderOilLamp.class);
@@ -175,6 +183,8 @@ public class Fla implements IGuiHandler, IFuelHandler, fla.api.Mod
         RenderHandler.register(FlaBlocks.argil_unsmelted, OreDictionary.WILDCARD_VALUE, RenderUnsmeltedArgil.class);
         RenderHandler.register(FlaBlocks.argil_smelted, OreDictionary.WILDCARD_VALUE, RenderUnsmeltedArgil.class);
     	RenderingRegistry.registerBlockHandler(new RenderHandler());
+    	IReloadableResourceManager irrm = (IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager();
+		irrm.registerReloadListener(cmm);
     }
     
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,

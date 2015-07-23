@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import fla.api.recipe.ErrorType;
 import fla.api.world.BlockPos;
 import fla.core.gui.InventoryTerrine;
-import fla.core.tileentity.TileEntityInventory;
+import fla.core.tileentity.base.TileEntityInventory;
 
 public class TileEntityTerrine extends TileEntityInventory<InventoryTerrine> implements IFluidTank, IFluidHandler
 {

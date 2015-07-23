@@ -12,6 +12,7 @@ import fla.api.recipe.FuelOilLamp;
 import fla.api.recipe.FuelStack;
 import fla.api.util.FlaValue;
 import fla.api.world.BlockPos;
+import fla.core.tileentity.base.TileEntityBaseWithFacing;
 
 public class TileEntityOilLamp extends TileEntityBaseWithFacing
 {

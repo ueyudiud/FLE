@@ -191,7 +191,7 @@ public class ItemSub extends ItemBase implements IPlaceableItem
 	}
 	public static ItemStack a(String name, int size)
 	{
-		int meta = FlaItems.subs.registry.serial(name);
+		int meta = registry.serial(name);
 		ItemStack ret = new ItemStack(FlaItems.subs, size, meta);
 		FlaItems.subs.setDamage(ret, meta);
 		return ret;

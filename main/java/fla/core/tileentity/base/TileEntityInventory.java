@@ -1,4 +1,4 @@
-package fla.core.tileentity;
+package fla.core.tileentity.base;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

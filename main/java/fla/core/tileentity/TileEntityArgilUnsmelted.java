@@ -3,12 +3,14 @@ package fla.core.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.energy.heat.IHeatTileEntity;
 import fla.api.util.InfoBuilder;
 import fla.api.world.BlockPos;
 import fla.core.FlaBlocks;
+import fla.core.tileentity.base.TileEntityBase;
 
 public class TileEntityArgilUnsmelted extends TileEntityBase implements IHeatTileEntity
 {
@@ -69,6 +71,10 @@ public class TileEntityArgilUnsmelted extends TileEntityBase implements IHeatTil
 	@Override
 	public void catchHeat(ForgeDirection d, int pkg) 
 	{
+		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
+		{
+			if(getBlockPos().toPos(ForgeDirection.VALID_DIRECTIONS[i]).getBlock() == Blocks.air) return;
+		}
 		if(pkg > 50) ++smeltedTick;
 	}
 	

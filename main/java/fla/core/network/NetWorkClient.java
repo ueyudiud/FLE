@@ -20,8 +20,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
+import fla.api.FlaAPI;
 import fla.api.network.IListenerContainer;
 import fla.api.recipe.ErrorType;
+import fla.api.tech.Technology;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.network.FlaPacket.FlaGuiPacket;
@@ -63,6 +65,13 @@ public class NetWorkClient extends NetWorkManager
 	public void initiateGuiButtonPress(GuiContainer container, EntityPlayer player, int x, int y, int z, int buttonId)
 	{
 		new FlaGuiPacket(x, y, z, (byte)1, (byte)buttonId).sendPacket();
+	}
+	
+	@Override
+	public void initatePlayerTechupdate(EntityPlayerMP player, Technology tech,
+			byte state) 
+	{
+		;
 	}
 
 	@SubscribeEvent
@@ -146,6 +155,21 @@ public class NetWorkClient extends NetWorkManager
 				Fla.fla.hm.emmitHeat(Fla.fla.p.get().getWorld(dimId), new BlockPos(Fla.fla.p.get().getWorld(dimId), x, y, z), ForgeDirection.values()[dir], is.readInt());
 			}
 			break;
+			case FlaPacket.techUpdatePacketType :
+			{
+				Technology tech = FlaAPI.techManager.getTechFromId(is.readUTF());
+				if(tech != null)
+				{
+					switch((byte) is.readByte())
+					{
+					case 0 : FlaAPI.techManager.getPlayerInfo(player).setTech(tech);
+					break;
+					case 1 : FlaAPI.techManager.getPlayerInfo(player).removeTech(tech);
+					break;
+					}
+					return;
+				}
+			}
 			}
 			return;
 		}

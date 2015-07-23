@@ -1,14 +1,26 @@
-﻿tile.ore_copper:0.name=赤铜矿石
+﻿item.oreChip.name=未知矿石
+tile.ore_copper:0.name=赤铜矿石
+item.oreChip:Cuprite.name=赤铜矿石
 tile.ore_copper:1.name=原生铜矿石
+item.oreChip:NativeCopper.name=原生铜矿石
 tile.ore_copper:2.name=孔雀绿矿石
+item.oreChip:Malachite.name=孔雀绿矿石
 tile.ore_copper:3.name=蓝铜矿石
+tile.oreChip:Azurite.name=蓝铜矿石
 tile.ore_copper:4.name=辉铜矿石
+item.oreChip:Chalcocite.name=辉铜矿石
 tile.ore_copper:5.name=黑铜矿石
+item.oreChip:Tenorite.name=黑铜矿石
 tile.ore_copper:6.name=Chalcopyrite Ore
+item.oreChip:Chalcopyrite.name=Chalcopyrite Chip
 tile.ore_copper:7.name=Bornite Ore
+item.oreChip:Bornite.name=Bornite Chip
 tile.ore_copper:8.name=Tetrahedrite Ore
+item.oreChip:Tetrahedrite.name=Tetrahedrite Chip
 tile.ore_copper:9.name=Covellite Ore
+item.oreChip:Covellite.name=Covellite Chip
 tile.ore_copper:10.name=Enargite Ore
+item.oreChip:Enargite.name=Enargite Chip
 
 tile.cobble:0.name=燧石块
 
@@ -53,6 +65,7 @@ item.fla:flint_c.name=尖燧石
 item.fla:stone_a.name=石子
 item.fla:stone_b.name=大石子
 item.fla:limestone_a.name=石灰石块
+item.fla:dust_limestone.name=石灰石粉
 
 item.fla:charred_log.name=木炭
 item.fla:argil_ball.name=陶土球
@@ -91,6 +104,7 @@ item.flint_axe.name=燧石斧
 item.stone_axe.name=石斧
 item.flint_shovel.name=燧石铲
 item.stone_shovel.name=石铲
+item.stone_spade_hoe.name=石耜
 item.whetstone.name=砥石
 item.extinguish_torch.name=火把
 item.oil_lamp:0.name=石质油灯

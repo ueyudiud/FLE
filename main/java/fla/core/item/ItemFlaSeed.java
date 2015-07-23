@@ -15,12 +15,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
+import fla.api.FlaAPI;
 import fla.api.crop.CropCard;
 import fla.api.crop.CropRegistry;
 import fla.api.crop.ICropSeed;
 import fla.api.util.Registry;
+import fla.core.Fla;
 import fla.core.FlaCreativeTab;
 import fla.core.FlaItems;
+import fla.core.tech.TechManager;
 import fla.core.tileentity.TileEntityCrops;
 
 public class ItemFlaSeed extends ItemBase implements IPlantable, ICropSeed
@@ -55,6 +58,12 @@ public class ItemFlaSeed extends ItemBase implements IPlantable, ICropSeed
     {
     	return new ItemStack(FlaItems.seeds, size, register.serial(cropName));
     }
+	
+	@Override
+	public String getUnlocalizedNameInefficiently(ItemStack itemstack) 
+	{
+		return FlaAPI.techManager.getPlayerInfo(Fla.fla.p.get().getPlayerInstance()).isPlayerKnowTech(TechManager.agricultureTire1) ? super.getUnlocalizedNameInefficiently(itemstack) : super.getUnlocalizedName();
+	}
     
     @Override
     public String getUnlocalizedName(ItemStack stack) 

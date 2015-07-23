@@ -1,6 +1,10 @@
 package fla.core.gui.base;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
@@ -13,9 +17,12 @@ import org.lwjgl.opengl.GL11;
 
 import fla.api.recipe.ErrorType;
 import fla.api.recipe.ItemState;
+import fla.api.util.FlaValue;
 
 public abstract class GuiBase extends GuiContainer
 {
+	private static final ResourceLocation voidTexture = new ResourceLocation(FlaValue.TEXT_FILE_NAME, "textures/gui/void.png");
+	
 	public ContainerBase container;
 	protected int xoffset;
 	protected int yoffset;
@@ -146,5 +153,81 @@ public abstract class GuiBase extends GuiContainer
 		}
 
 		tessellator.draw();
+	}
+
+	protected void drawAreaTooltip(int mouseX, int mouseY, String tooltip, int x, int y, int u, int v)
+	{
+		if (mouseX >= x && mouseX <= (x + u) && mouseY >= y && mouseY <= (y + v))
+			drawTooltip(x, y, tooltip);
+	}
+
+	protected void drawTooltip(int x, int y, String tooltip)
+	{
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		GL11.glDisable(32826);
+		RenderHelper.disableStandardItemLighting();
+		GL11.glDisable(2896);
+		GL11.glDisable(2929);
+		x -= fontRenderer.getStringWidth(tooltip) / 2;
+		y -= 12;
+		int width = fontRenderer.getStringWidth(tooltip) + 8;
+		int height = 8;
+		int backgroundColor = 255;
+		int borderColor = 0xbababaff;
+		GL11.glDisable(3553);
+		GL11.glEnable(3042);
+		GL11.glDisable(3008);
+		GL11.glBlendFunc(770, 771);
+		GL11.glShadeModel(7425);
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		drawRectangle(tessellator, x - 3, y - 4, x + width + 3, y - 3, backgroundColor);
+		drawRectangle(tessellator, x - 3, y + height + 3, x + width + 3, y + height + 4, backgroundColor);
+		drawRectangle(tessellator, x - 3, y - 3, x + width + 3, y + height + 3, backgroundColor);
+		drawRectangle(tessellator, x - 4, y - 3, x - 3, y + height + 3, backgroundColor);
+		drawRectangle(tessellator, x + width + 3, y - 3, x + width + 4, y + height + 3, backgroundColor);
+		drawRectangle(tessellator, x - 3, (y - 3) + 1, (x - 3) + 1, (y + height + 3) - 1, borderColor);
+		drawRectangle(tessellator, x + width + 2, (y - 3) + 1, x + width + 3, (y + height + 3) - 1, borderColor);
+		drawRectangle(tessellator, x - 3, y - 3, x + width + 3, (y - 3) + 1, borderColor);
+		drawRectangle(tessellator, x - 3, y + height + 2, x + width + 3, y + height + 3, borderColor);
+		tessellator.draw();
+		GL11.glShadeModel(7424);
+		GL11.glDisable(3042);
+		GL11.glEnable(3008);
+		GL11.glEnable(3553);
+		fontRenderer.drawStringWithShadow(tooltip, x + 4, y, -2);
+		GL11.glEnable(2896);
+		GL11.glEnable(2929);
+	}
+
+	private void drawRectangle(Tessellator tessellator, int x1, int y1, int x2, int y2, int color)
+	{
+		tessellator.setColorRGBA(color >>> 24 & 0xff, color >>> 16 & 0xff, color >>> 8 & 0xff, color & 0xff);
+		tessellator.addVertex(x2, y1, 300D);
+		tessellator.addVertex(x1, y1, 300D);
+		tessellator.addVertex(x1, y2, 300D);
+		tessellator.addVertex(x2, y2, 300D);
+	}
+	
+	protected void drawR(int x, int y, int u, int v, int color)
+	{
+		mc.renderEngine.bindTexture(voidTexture);
+        float f = (float)(color >> 16 & 255) / 255.0F;
+        float f1 = (float)(color >> 8 & 255) / 255.0F;
+        float f2 = (float)(color & 255) / 255.0F;
+        Tessellator tessellator = Tessellator.instance;
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GL11.glColor4f(f, f1, f2, 1.0F);
+        tessellator.startDrawingQuads();
+        tessellator.addVertex((double)x, (double)y + v, 0.0D);
+        tessellator.addVertex((double)x + u, (double)y + v, 0.0D);
+        tessellator.addVertex((double)x + u, (double)y, 0.0D);
+        tessellator.addVertex((double)x, (double)y, 0.0D);
+        tessellator.draw();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+        mc.renderEngine.bindTexture(getResourceLocation());
 	}
 }

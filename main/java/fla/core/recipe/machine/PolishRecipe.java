@@ -34,6 +34,8 @@ public class PolishRecipe
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "hphh hhhh", ItemSub.a("stone_shovel")));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "      hhh", ItemSub.a("stone_hammer")));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "pphp hhhh", ItemSub.a("stone_spear")));
+		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "p h     p", ItemSub.a("stone_spade_hoe")));
+		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_a")), "h p   p  ", ItemSub.a("stone_spade_hoe")));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_b")), "ppp   ppp", new ItemStack(FlaItems.whetstone)));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_b")), " h hhh h ", ItemSub.a("stone_a", 2)));
 		registerRecipe(new PolishRecipe(new ItemChecker(ItemSub.a("stone_b")), "php p p p", new ItemStack(FlaItems.stone_oil_lamp)));

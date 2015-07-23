@@ -3,7 +3,7 @@ package fla.core.gui.base;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import fla.core.Fla;
-import fla.core.tileentity.TileEntityInventory;
+import fla.core.tileentity.base.TileEntityInventory;
 
 public abstract class InventoryTileCraftable<T extends TileEntityInventory> extends InventoryTileBase<T>
 {

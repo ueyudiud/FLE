@@ -18,8 +18,8 @@ import fla.api.util.FlaValue;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 import fla.core.recipe.machine.PolishRecipe;
-import fla.core.tileentity.TileEntityBaseWithFacing;
 import fla.core.tileentity.TileEntityPolishTable;
+import fla.core.tileentity.base.TileEntityBaseWithFacing;
 
 public class BlockPolishTable extends BlockBaseHasTile
 {
@@ -174,24 +174,6 @@ public class BlockPolishTable extends BlockBaseHasTile
 	}
 	
 	@Override
-	public int getRenderBlockPass() 
-	{
-		return 0;
-	}
-
-	@Override
-	public int getRenderType() 
-	{
-		return 0;
-	}
-	
-	@Override
-	public boolean isOpaqueCube() 
-	{
-		return true;
-	}
-
-	@Override
 	public boolean hasSubs() 
 	{
 		return false;
@@ -220,5 +202,11 @@ public class BlockPolishTable extends BlockBaseHasTile
 	public TileEntity createNewTileEntity(World world, int meta) 
 	{
 		return tile;
+	}
+
+	@Override
+	public boolean isOpaqueCube() 
+	{
+		return true;
 	}
 }

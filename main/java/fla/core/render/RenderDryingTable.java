@@ -1,13 +1,12 @@
 package fla.core.render;
 
-import fla.core.tileentity.TileEntityDryingTable;
 
 public class RenderDryingTable extends RenderBase
 {
 	@Override
 	public void renderBlock() 
 	{
-		setTexture(block);
+        setTexture(block);
 		double d1 = 0.325D;
 		double d2 = 0.375D;
 		double d3 = 0.625D;

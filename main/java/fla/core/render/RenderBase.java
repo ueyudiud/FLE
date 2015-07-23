@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemCloth;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -29,6 +30,7 @@ import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fla.core.Fla;
 
 @SideOnly(Side.CLIENT)
 public abstract class RenderBase 
@@ -357,27 +359,5 @@ public abstract class RenderBase
 		render.setOverrideBlockTexture(icon);
 		render.renderStandardBlock(block, x, y, z);
 		render.clearOverrideBlockTexture();
-	}
-
-	protected void renderItemStack(ItemStack itemstack)
-	{
-		if(isItem()) throw new NullPointerException();
-
-        if (itemstack != null && world instanceof World)
-        {
-            EntityItem entityitem = new EntityItem((World) world, x, y, z, itemstack);
-            Item item = entityitem.getEntityItem().getItem();
-            entityitem.getEntityItem().stackSize = 1;
-            entityitem.hoverStart = 0.0F;
-            GL11.glPushMatrix();
-            //GL11.glTranslatef(-0.453125F * (float)Direction.offsetX[p_82402_1_.hangingDirection], -0.18F, -0.453125F * (float)Direction.offsetZ[p_82402_1_.hangingDirection]);
-            //GL11.glRotatef(180.0F + p_82402_1_.rotationYaw, 0.0F, 1.0F, 0.0F);
-            //GL11.glRotatef((float)(-90 * p_82402_1_.getRotation()), 0.0F, 0.0F, 1.0F);
-            
-            RenderItem.renderInFrame = true;
-            RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-            RenderItem.renderInFrame = false;
-        }
-        GL11.glPopMatrix();
 	}
 }

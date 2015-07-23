@@ -16,6 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import fla.api.tech.Technology;
 import fla.api.world.BlockPos;
 import fla.core.Fla;
 
@@ -25,6 +26,7 @@ public abstract class FlaPacket
 	static final int keyPacketType = 2;
 	static final int tileUpdatePacketType = 3;
 	static final int heatUpdatePacketType = 4;
+	static final int techUpdatePacketType = 5;
 	
 	static FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel(Fla.MODID);
 	private FMLProxyPacket pkt;
@@ -222,6 +224,29 @@ public abstract class FlaPacket
 			{
 				os.write(keyPacketType);
 				os.writeInt((Integer) objects[0]);
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static class FlaTechPacket extends FlaPacket
+	{
+		public FlaTechPacket(Technology tech, byte type) 
+		{
+			super(tech.getName(), type);
+		}
+
+		@Override
+		protected void setup(DataOutputStream os, Object[] objects) 
+		{
+			try 
+			{
+				os.write(techUpdatePacketType);
+				os.writeUTF((String) objects[0]);
+				os.writeByte((Byte) objects[1]);
 			} 
 			catch (IOException e) 
 			{

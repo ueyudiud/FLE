@@ -6,6 +6,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import fla.api.FlaAPI;
+import fla.api.chem.Matter;
+import fla.api.tech.Technology;
 import fla.api.world.BlockPos;
 import fla.api.world.BlockPos.ChunkPos;
 
@@ -24,6 +27,12 @@ public class ItemDebug extends Item
         	p.addChatMessage(new ChatComponentText("Block name is " + pos.getBlock().getUnlocalizedName() + ", by id " + Block.getIdFromBlock(pos.getBlock()) + "."));
         	p.addChatMessage(new ChatComponentText("Metadata: " + pos.getBlockMeta() + "."));
         	p.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(w, x, y, z) + "."));
+
+        	p.addChatMessage(new ChatComponentText("T:"));
+        	for(Technology tech : FlaAPI.techManager.getPlayerInfo(p).getPlayerTechList())
+        	{
+        		p.addChatMessage(new ChatComponentText(tech.getName()));
+        	}
     	}
     	return false;
     }

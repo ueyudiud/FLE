@@ -19,6 +19,7 @@ public class FlaItems
 	public static Item stone_hammer;
 	public static Item flint_shovel;
 	public static Item stone_shovel;
+	public static Item stone_spade_hoe;
 	public static Item whetstone;
 	public static ItemOilLamp stone_oil_lamp;
 	public static Item wooden_firestarter;
@@ -26,4 +27,5 @@ public class FlaItems
 	public static Item extinguishTorch;
 	public static Item argil_unsmelted;
 	public static Item argil_smelted;
+	public static Item ore_chip;
 }

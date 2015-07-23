@@ -1,44 +1,38 @@
 package fla.core.util;
 
-import java.awt.image.BufferedImage;
-
 import fla.api.util.IColorMap;
 
 public class ColorMap implements IColorMap
 {
-	private BufferedImage img;
-	
-	public ColorMap(BufferedImage img)
+	private int[] rgb;
+
+	public ColorMap()
 	{
-		this.img = img;
+		
+	}
+	public ColorMap(int[] img)
+	{
+		this.rgb = img;
 	}
 	
 	public int getColor(int x, int y)
 	{
-		if(img == null)
+		if(rgb == null)
 		{
 			return 0xFFFFFF;
 		}
-		return img.getRGB(x, y) & 0xFFFFFF;
+		return rgb[x * 256 + y];
 	}
 
 	@Override
 	public int getWidth() 
 	{
-		if(img == null)
-		{
-			return 256;
-		}
-		return img.getWidth();
+		return 256;
 	}
 
 	@Override
 	public int getHeight() 
 	{
-		if(img == null)
-		{
-			return 256;
-		}
-		return img.getHeight();
+		return 256;
 	}
 }

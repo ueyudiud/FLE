@@ -28,6 +28,15 @@ public class GuiPolishTable extends GuiBase
 	}
 	
 	@Override
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) 
+	{
+		super.drawGuiContainerForegroundLayer(par1, par2);
+		xoffset = (width - xSize) / 2;
+		yoffset = (height - ySize) / 2;
+		//drawAreaTooltip(par1, par2, "Show the state of item.", xoffset + 45, yoffset + 18, 17 * 3, 17 * 3);
+	}
+	
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) 
 	{
 		super.drawGuiContainerBackgroundLayer(f, x, y);

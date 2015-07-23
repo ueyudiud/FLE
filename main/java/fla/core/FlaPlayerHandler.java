@@ -1,14 +1,16 @@
 package fla.core;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.ContainerPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import fla.api.FlaAPI;
+import fla.api.tech.Technology;
 
 public class FlaPlayerHandler 
 {	
@@ -26,16 +28,16 @@ public class FlaPlayerHandler
 			//event.setCanceled(true);
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onPlayerUseItem(PlaceEvent evt)
+	public void onPlayerLogIn(PlayerLoggedInEvent evt)
 	{
-		if(evt.block == Blocks.log || evt.block == Blocks.log2)
+		if(evt.player instanceof EntityPlayerMP)
 		{
-			evt.setCanceled(true);
+			for(Technology tech : FlaAPI.techManager.getPlayerInfo(evt.player).getPlayerTechList())
+				Fla.fla.nwm.get().initatePlayerTechupdate((EntityPlayerMP) evt.player, tech, (byte) 0);
 		}
 	}
-
 	
 	@SubscribeEvent
 	public void onPlayerLogOut(PlayerLoggedOutEvent evt)

@@ -5,8 +5,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fla.api.recipe.ErrorType;
 import fla.api.world.BlockPos;
 import fla.core.gui.InventoryDryingTable;
+import fla.core.tileentity.base.TileEntityInventory;
 import fla.core.world.FWM;
 
 public class TileEntityDryingTable extends TileEntityInventory<InventoryDryingTable>
@@ -15,6 +17,7 @@ public class TileEntityDryingTable extends TileEntityInventory<InventoryDryingTa
 	private int colour = 0xFFFFFF;
 	private double tem;
 	private double water;
+	public ErrorType type;
 	
 	public TileEntityDryingTable() 
 	{

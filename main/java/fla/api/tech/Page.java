@@ -24,11 +24,5 @@ public abstract class Page
 		return locate;
 	}
 	
-	public abstract IInventory getStacks();
-	
-	public abstract int getXPosFromId(int id);
-	
-	public abstract int getYPosFromId(int id);
-	
 	public abstract void drawOther(IPageGui gui);
 }

@@ -1,4 +1,4 @@
-package fla.core.tileentity;
+package fla.core.tileentity.base;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

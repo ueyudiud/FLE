@@ -1,9 +1,12 @@
 package fla.core.block;
 
+import java.util.Random;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
@@ -13,6 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fla.api.util.FlaValue;
 import fla.api.util.SubTag;
 import fla.api.world.BlockPos;
+import fla.core.FlaItems;
 
 public abstract class BlockBaseOre extends BlockBaseRock
 {
@@ -80,4 +84,18 @@ public abstract class BlockBaseOre extends BlockBaseRock
 	{
 		return this.getBlockTextureFromSide(false, meta);
 	}
+	
+    public abstract int damageDropped(int meta);
+    
+    @Override
+    public int quantityDropped(int meta, int fortune, Random random) 
+    {
+    	return 2;
+    }
+    
+    @Override
+    public Item getItemDropped(int meta, Random rand, int fortune) 
+    {
+    	return FlaItems.ore_chip;
+    }
 }

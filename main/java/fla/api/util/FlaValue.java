@@ -34,6 +34,7 @@ public class FlaValue
 	public static final String whetstone = "whetstone";
 	public static final String oil_lamp = "lamp";
 	public static final String drilling_firing = "drillingFiring";
+	public static final String spade_hoe = "spadeHoe";
 	public static final String awl = "awl";
 	//Tool material.
 	public static final ToolMaterial flint_a = EnumHelper.addToolMaterial("flint_hard", 0, 6, 1.2F, 1.5F, 3);
@@ -44,4 +45,6 @@ public class FlaValue
 	public static final int CAPACITY_OIL_LAMP = 1000;
 	
 	public static int ALL_RENDER_ID;
+
+	public static final int Water_Freeze_Tempreture = 273;
 }

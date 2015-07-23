@@ -1,14 +1,26 @@
+item.oreChip.name=Unknown Ore Chip
 tile.ore_copper:0.name=Cuprite Ore
+item.oreChip:Cuprite.name=Cuprite Chip
 tile.ore_copper:1.name=Native Copper Ore
+item.oreChip:NativeCopper.name=Native Copper Chip
 tile.ore_copper:2.name=Malachite Ore
+item.oreChip:Malachite.name=Malachite Chip
 tile.ore_copper:3.name=Azurite Ore
+tile.oreChip:Azurite.name=Azurite Chip
 tile.ore_copper:4.name=Chalococite Ore
+item.oreChip:Chalcocite.name=Chalcocite Chip
 tile.ore_copper:5.name=Tenorite Ore
+item.oreChip:Tenorite.name=Tenorite Chip
 tile.ore_copper:6.name=Chalcopyrite Ore
+item.oreChip:Chalcopyrite.name=Chalcopyrite Chip
 tile.ore_copper:7.name=Bornite Ore
+item.oreChip:Bornite.name=Bornite Chip
 tile.ore_copper:8.name=Tetrahedrite Ore
+item.oreChip:Tetrahedrite.name=Tetrahedrite Chip
 tile.ore_copper:9.name=Covellite Ore
+item.oreChip:Covellite.name=Covellite Chip
 tile.ore_copper:10.name=Enargite Ore
+item.oreChip:Enargite.name=Enargite Chip
 
 tile.cobble:0.name=Flint Block
 
@@ -53,6 +65,7 @@ item.fla:flint_c.name=Sharp Flint
 item.fla:stone_a.name=Stone Chip
 item.fla:stone_b.name=Stone
 item.fla:limestone_a.name=Limestone Chip
+item.fla:dust_limestone.name=Limestone Dust
 
 item.fla:charred_log.name=Charred Log
 item.fla:argil_ball.name=Argil Ball
@@ -91,6 +104,7 @@ item.flint_axe.name=Flint Axe
 item.stone_axe.name=Stone Axe
 item.flint_shovel.name=Flint Shovel
 item.stone_shovel.name=Stone Shovel
+item.stone_spade_hoe.name=Stone Spade Hoe
 item.whetstone.name=Whetstone
 item.extinguish_torch.name=Torch
 item.oil_lamp:0.name=Stone Oil Lamp

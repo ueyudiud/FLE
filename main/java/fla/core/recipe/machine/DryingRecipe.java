@@ -17,8 +17,8 @@ public class DryingRecipe
 	
 	static
 	{
-		registerRecipe(new DryingRecipe(new ItemChecker(ItemSub.a("leaves")), 5000, ItemSub.a("leaves_dry")));
-		registerRecipe(new DryingRecipe(new ItemChecker(ItemSub.a("ramie_fiber")), 3000, ItemSub.a("ramie_fiber_dry")));
+		registerRecipe(new DryingRecipe(new ItemChecker(ItemSub.a("leaves")), 50000, ItemSub.a("leaves_dry")));
+		registerRecipe(new DryingRecipe(new ItemChecker(ItemSub.a("ramie_fiber")), 30000, ItemSub.a("ramie_fiber_dry")));
 	}
 	public static void registerRecipe(DryingRecipe recipe)
 	{

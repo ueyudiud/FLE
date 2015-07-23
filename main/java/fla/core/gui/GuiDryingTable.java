@@ -4,9 +4,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fla.api.recipe.ErrorType;
 import fla.api.util.FlaValue;
 import fla.core.gui.base.GuiBase;
 import fla.core.tileentity.TileEntityDryingTable;
+import fla.core.util.ColorUtil;
+import fla.core.util.HeatUtil;
+import fla.core.world.HeatManager;
 
 @SideOnly(Side.CLIENT)
 public class GuiDryingTable extends GuiBase
@@ -26,10 +30,10 @@ public class GuiDryingTable extends GuiBase
 		super.drawGuiContainerBackgroundLayer(f, x, y);
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
-		double a1 = tile.getWaterLevel() / 100D;
-		double a2 = tile.getTempretureLevel();
-		drawTexturedModalRect(xoffset + 25, yoffset + 17 + (int) (52 * (1 - a2)), 176 + (int) (49 * a1), (int) (52 * (1 - a2)), 3, (int) (52 * a2));
 		drawTexturedModalRect(xoffset + 88, yoffset + 33, 176, 52, tile.getRecipeProgressBar(26), 19);
+		if(tile.type != ErrorType.DEFAULT) drawError(92, 53, tile.type);
+		int a = (int) (HeatUtil.getFTempretureToInteger(tile.getTempretureLevel()) / 400D * 52);
+		drawR(xoffset + 25, yoffset + 17 + 52 - a, 3, a, ColorUtil.getColorWithTdWd(tile.getTempretureLevel(), tile.getWaterLevel() / 100D));
 	}
 
 	@Override
