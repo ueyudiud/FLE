@@ -1,6 +1,7 @@
 package fle.api.net;
 
 import fle.api.FleAPI;
+import fle.api.util.FleDataOutputStream;
 import io.netty.buffer.Unpooled;
 
 import java.io.ByteArrayOutputStream;
@@ -29,7 +30,7 @@ public abstract class FleAbstractPacket<I extends PacketInfo> extends FlePacket<
 	private byte[] init(I aInfo)
 	{
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		DataOutputStream os = new DataOutputStream(buffer);
+		FleDataOutputStream os = new FleDataOutputStream(new DataOutputStream(buffer));
 		createPacket(os, aInfo);
 		try
 		{
@@ -42,7 +43,7 @@ public abstract class FleAbstractPacket<I extends PacketInfo> extends FlePacket<
 		return buffer.toByteArray();
 	}
 	
-	public abstract void createPacket(DataOutputStream aStream, I aInfo);
+	public abstract void createPacket(FleDataOutputStream aStream, I aInfo);
 
 	@Override
 	public void sendPacket() 
