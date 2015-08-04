@@ -22,6 +22,7 @@ public final class PropertyInfo
 	 * Get color value of matter.
 	 * see {@link net.minecraft.item.Item}
 	 */
+	private int colors[] = {0xFFFFFF};
 	private float reflectRedLight = 1.0F;
 	private float reflectGreenLight = 1.0F;
 	private float reflectBlueLight = 1.0F;
@@ -77,6 +78,13 @@ public final class PropertyInfo
 	 */
 	private float toughness = 1.0F;
 	/**
+     * Denseness of the solid, this value is not show quality of item!
+     *
+     * Higher denseness means that a solid is compact, like iron.
+     * Lower denseness means that a solid is loose, like rust. 
+	 */
+	private float denseness = 1.0F;
+	/**
      * Brittleness of the solid - completely arbitrary; negative values are not permissible.
      *
      * Higher toughness means that a solid can break easily, like rock.
@@ -124,23 +132,44 @@ public final class PropertyInfo
 	 */
 	private int maxUses = 1;
 
-	public PropertyInfo(int aColor, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int aColor, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
 	{
-		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
 	}
-	public PropertyInfo(int aMaxUse, float aHardness, float aThoughness, float aBrittleness, int aShearStrength)
+	public PropertyInfo(int[] aColor, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
 	{
-		this(0xFFFFFF, aMaxUse, aHardness, aThoughness, aBrittleness, aShearStrength, -1F, 0.1F);
+		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
 	}
-	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
-		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+		this(0xFFFFFF, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength);
 	}
-	public PropertyInfo(int aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
-        reflectRedLight = (aColor >> 16 & 255) / 255.0F;
-        reflectGreenLight = (aColor >> 8 & 255) / 255.0F;
-        reflectBlueLight = (aColor & 255) / 255.0F;
+		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F);
+	}
+	public PropertyInfo(int[] aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
+	{
+		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F);
+	}
+	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	{
+		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+	}
+	public PropertyInfo(int[] aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	{
+		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+	}
+	public PropertyInfo(int aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	{
+		this(new int[]{aColor, aColor}, aMaxUse, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+	}
+	public PropertyInfo(int[] aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	{
+		colors = aColor;
+        reflectRedLight = (aColor[0] >> 16 & 255) / 255.0F;
+        reflectGreenLight = (aColor[0] >> 8 & 255) / 255.0F;
+        reflectBlueLight = (aColor[0] & 255) / 255.0F;
         maxUses = aMaxUse;
 		meltingPoint = aMeltingPoint;
 		boilingPoint = aBoilingPoint;
@@ -150,10 +179,16 @@ public final class PropertyInfo
 		viscosity = aViscosity;
 		hardness = aHardness;
 		toughness = aThoughness;
+		denseness = aDenseness;
 		shearStrength = Math.log10(aShearStrength);
 		resistance = aResistance;
 		thermalConductivity = aThermalConductivity;
 		brittleness = aBrittleness;
+	}
+	
+	public int[] getColors() 
+	{
+		return colors.clone();
 	}
 	
 	public float[] getReflectLights() 
@@ -204,9 +239,19 @@ public final class PropertyInfo
 		return toughness;
 	}
 	
+	public float getDenseness()
+	{
+		return denseness;
+	}
+	
 	public float getBrittleness() 
 	{
 		return brittleness;
+	}
+	
+	public double getShearStrength()
+	{
+		return shearStrength;
 	}
 	
 	public int getViscosity()

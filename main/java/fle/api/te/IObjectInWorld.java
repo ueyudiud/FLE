@@ -8,6 +8,4 @@ public interface IObjectInWorld
 	public World getWorldObj();
 	
 	public BlockPos getBlockPos();
-	
-	public boolean openGUI();
 }

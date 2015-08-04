@@ -7,10 +7,19 @@ import fle.api.gui.GuiCondition;
 
 public class CraftingState extends GuiCondition
 {
-	private static Map<Character, CraftingState> map = new HashMap();
+	private static final Map<Integer, CraftingState> colorMap = new HashMap();
+	private static final Map<Character, CraftingState> map = new HashMap();
+	public static CraftingState DEFAULT;
+	public static CraftingState CRUSH;
+	public static CraftingState POLISH;
 	
 	private final char c;
+	public final int color;
 
+	public static CraftingState getState(int colorIndex)
+	{
+		return colorMap.get(colorIndex) == null ? DEFAULT : colorMap.get(colorIndex);
+	}
 	public static CraftingState[] getStates(String aString)
 	{
 		return getStates(aString.toCharArray());
@@ -28,20 +37,33 @@ public class CraftingState extends GuiCondition
 	
 	public static CraftingState getState(char aChar)
 	{
-		CraftingState state = map.get(aChar);
-		return state != null ? state : null;
+		return map.get(aChar) != null ? map.get(aChar) : DEFAULT;
 	}
 	
-	public CraftingState(char aChar, String aName) 
+	public CraftingState(char aChar, String aName, int colorIndex) 
 	{
 		super(aName);
-		if(map.containsKey(new Character(aChar))) throw new RuntimeException();
+		if(map.containsKey(aChar)) throw new RuntimeException();
 		c = aChar;
 		map.put(new Character(aChar), this);
+		colorMap.put(colorIndex, this);
+		color = colorIndex;
 	}
 	
 	public CraftingState onStateAdd(CraftingState aState)
 	{
 		return aState;
+	}
+	
+	@Override
+	public CraftingState setTextureName(String aTextureName)
+	{
+		textureName = aTextureName;
+		return this;
+	}
+	
+	public char getCharIndex()
+	{
+		return c;
 	}
 }

@@ -13,11 +13,13 @@ import fle.api.FleValue;
 
 public class GuiIconButton extends GuiButton
 {
+	private static final ResourceLocation void_texture = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/" + FleValue.VOID_ICON_FILE + ".png");
 	private static final ResourceLocation back_ground_texture = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button_1.png");
 	
 	public static enum ButtonSize
 	{
 		Standard(18),
+		Slot(16),
 		Small(10);
 		
 		final int size;
@@ -35,7 +37,13 @@ public class GuiIconButton extends GuiButton
 	private ItemStack itemStack;
 	private boolean drawQuantity;
 	private RenderItem renderItem;
+	private boolean emptyDraw = false;
 
+	public GuiIconButton(int id1, int x, int y, ButtonSize aSize)
+	{
+		super(id1, x, y, aSize.size, aSize.size, "");
+		emptyDraw = true;
+	}
 	public GuiIconButton(int id1, int x, int y, ButtonSize aSize, int u, int v)
 	{
 		super(id1, x, y, aSize.size, aSize.size, "");
@@ -72,13 +80,21 @@ public class GuiIconButton extends GuiButton
 	{
 		if(visible)
 		{
-            minecraft.getTextureManager().bindTexture(back_ground_texture);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.field_146123_n = i >= this.xPosition && j >= this.yPosition && i < this.xPosition + this.width && j < this.yPosition + this.height;
+			this.field_146123_n = i >= this.xPosition && j >= this.yPosition && i < this.xPosition + this.width && j < this.yPosition + this.height;
             int k = this.getHoverState(this.field_146123_n);
+			minecraft.getTextureManager().bindTexture(back_ground_texture);
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			if(emptyDraw)
+			{
+				if(k != 2) return;
+				minecraft.getTextureManager().bindTexture(void_texture);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.3F);
+				drawTexturedModalRect(xPosition, yPosition, 0, 0, width, height);
+				return;
+			}
             switch(size)
             {
 			case Standard:

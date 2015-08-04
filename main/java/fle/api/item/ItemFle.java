@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -46,7 +47,7 @@ public abstract class ItemFle extends Item
 	@Override
 	public String getUnlocalizedName(ItemStack aStack)
 	{
-		return hasSubtypes ? super.getUnlocalizedName(aStack) + ":" + getMetaUnlocalizedName(aStack.getItemDamage()) : super.getUnlocalizedName(aStack);
+		return hasSubtypes ? getUnlocalizedName() + ":" + getMetaUnlocalizedName(aStack.getItemDamage()) : getUnlocalizedName();
 	}
 
 	public ItemStack onDispense(IBlockSource aSource, ItemStack aStack)
@@ -73,7 +74,7 @@ public abstract class ItemFle extends Item
 		return true;
 	}
 
-	protected abstract void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource);
+	protected abstract void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource, int aDamage);
 	
 	@Override
 	public int getDamage(ItemStack aStack) 
@@ -102,7 +103,7 @@ public abstract class ItemFle extends Item
 	@Override
 	public boolean showDurabilityBar(ItemStack aStack)
 	{
-		return hasSubs() ? isMetaDamagable(getDisplayDamage(aStack)) : true;
+		return hasSubtypes ? false : getDisplayDamage(aStack) != 0;
 	}
 	
 	protected boolean isMetaDamagable(int aShowMeta)
@@ -119,5 +120,13 @@ public abstract class ItemFle extends Item
 	public short[] getRGBa(ItemStack aStack)
 	{
 		return new short[]{255, 255, 255, 255};
+	}
+	
+	public NBTTagCompound setupNBT(ItemStack aStack)
+	{
+		if(aStack == null) return new NBTTagCompound();
+		if(!aStack.hasTagCompound())
+			aStack.setTagCompound(new NBTTagCompound());
+		return aStack.getTagCompound();
 	}
 }

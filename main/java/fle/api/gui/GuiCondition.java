@@ -7,7 +7,7 @@ import fle.api.util.Register;
 
 public class GuiCondition implements IDataChecker<IConditionContainer>
 {
-	private static Register<GuiCondition> register = new Register();
+	public static Register<GuiCondition> register = new Register();
 	
 	public GuiCondition(String aName) 
 	{
@@ -22,6 +22,12 @@ public class GuiCondition implements IDataChecker<IConditionContainer>
 	public final String getName() 
 	{
 		return name;
+	}
+	
+	public GuiCondition setTextureName(String textureName)
+	{
+		this.textureName = textureName;
+		return this;
 	}
 	
 	public String getTextureName()

@@ -2,7 +2,6 @@ package fle.api.util;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
@@ -12,9 +11,13 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import cpw.mods.fml.common.registry.GameData;
+import fle.api.gui.GuiCondition;
+import fle.api.gui.GuiError;
+import fle.api.world.BlockPos;
 
 public class FleDataOutputStream 
 {
@@ -136,6 +139,20 @@ public class FleDataOutputStream
 		stream.writeInt(world.provider.dimensionId);
 	}
 
+	public void writeBlockPos(int x, int y, int z) throws IOException
+	{
+		stream.writeInt(x);
+		stream.writeShort(y);
+		stream.writeInt(z);
+	}
+
+	public void writeBlockPos(BlockPos pos) throws IOException
+	{
+		stream.writeInt(pos.x);
+		stream.writeShort(pos.y);
+		stream.writeInt(pos.z);
+	}
+
 	public void writeTileEntity(TileEntity tile) throws IOException 
 	{
 		if(tile == null)
@@ -149,6 +166,91 @@ public class FleDataOutputStream
 			stream.writeInt(tile.xCoord);
 			stream.writeShort(tile.yCoord);
 			stream.writeInt(tile.zCoord);
+		}
+	}
+
+	public void write(Object contain) throws IOException
+	{
+		write(contain, true);
+	}
+
+	public void write(Object contain, boolean writeType) throws IOException
+	{
+		if(contain == null && writeType) writeByte(Byte.MAX_VALUE); 
+		if(contain instanceof Boolean)
+		{
+			if(writeType) writeByte((byte) 0);
+			writeBoolean(new Boolean((Boolean) contain).booleanValue());
+		}
+		else if(contain instanceof Byte)
+		{
+			if(writeType) writeByte((byte) 1);
+			writeByte(new Byte((Byte) contain).byteValue());
+		}
+		else if(contain instanceof Short)
+		{
+			if(writeType) writeByte((byte) 2);
+			writeShort(new Short((Short) contain).shortValue());
+		}
+		else if(contain instanceof Integer)
+		{
+			if(writeType) writeByte((byte) 3);
+			writeInt(new Integer((Integer) contain).intValue());
+		}
+		else if(contain instanceof Long)
+		{
+			if(writeType) writeByte((byte) 4);
+			writeLong(new Long((Long) contain).longValue());
+		}
+		else if(contain instanceof Float)
+		{
+			if(writeType) writeByte((byte) 5);
+			writeFloat(new Float((Float) contain).floatValue());
+		}
+		else if(contain instanceof Double)
+		{
+			if(writeType) writeByte((byte) 6);
+			writeDouble(new Double((Double) contain).doubleValue());
+		}
+		else if(contain instanceof String)
+		{
+			if(writeType) writeByte((byte) 7);
+			writeString((String) contain);
+		}
+		else if(contain instanceof NBTTagCompound)
+		{
+			if(writeType) writeByte((byte) 8);
+			writeNBT((NBTTagCompound) contain);
+		}
+		else if(contain instanceof ItemStack)
+		{
+			if(writeType) writeByte((byte) 9);
+			writeItemStack((ItemStack) contain);
+		}
+		else if(contain instanceof Item)
+		{
+			if(writeType) writeByte((byte) 10);
+			writeItem((Item) contain);
+		}
+		else if(contain instanceof Block)
+		{
+			if(writeType) writeByte((byte) 11);
+			writeBlock((Block) contain);
+		}
+		else if(contain instanceof World)
+		{
+			if(writeType) writeByte((byte) 12);
+			writeWorld((World) contain);
+		}
+		else if(contain instanceof BiomeGenBase)
+		{
+			if(writeType) writeByte((byte) 13);
+			writeInt(((BiomeGenBase) contain).biomeID);
+		}
+		else if(contain instanceof GuiCondition)
+		{
+			if(writeType) writeByte((byte) 14);
+			writeString(((GuiCondition) contain).getName());
 		}
 	}
 	

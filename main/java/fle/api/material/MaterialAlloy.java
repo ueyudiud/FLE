@@ -22,10 +22,11 @@ public class MaterialAlloy extends MaterialAbstract
 	
 	private AlloyHelper helper;
 	
-	public MaterialAlloy(Matter aMatter, PropertyInfo aInfo, AlloyHelper aHelper, SubTag...aTag) 
+	public MaterialAlloy(String aName, Matter aMatter, PropertyInfo aInfo, AlloyHelper aHelper, SubTag...aTag) 
 	{
-		super(aMatter, aInfo, aTag);
+		super(aName, aMatter, aInfo, aTag);
 		helper = aHelper;
+		register.register(this, aName);
 	}
 	
 	public boolean matchProportion(WeightHelper<EnumAtoms> aHelper)

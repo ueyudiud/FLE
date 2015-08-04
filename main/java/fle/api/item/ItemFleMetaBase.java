@@ -4,28 +4,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleValue;
+
+import com.google.common.collect.Multimap;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.enums.EnumDamageResource;
+import fle.api.util.IBlockTextureManager;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
 
 public class ItemFleMetaBase extends ItemFle
 {
-	private final Register<IItemBehaviour<ItemFleMetaBase>> itemBehaviors = new Register();
+	protected final Register<IItemBehaviour<ItemFleMetaBase>> itemBehaviors = new Register();
 	private Map<String, ITextureLocation> textureLocations = new HashMap();
 	private Map<String, IIcon[]> icons = new HashMap();
 	
@@ -140,6 +146,74 @@ public class ItemFleMetaBase extends ItemFle
 	    }
 	    return false;
 	}
+	
+	@Override
+	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) 
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(itemstack)));
+		try
+	    {
+	    	return tBehavior.getDigSpeed(this, itemstack, block, metadata);
+	    }
+	    catch (Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return 1.0F;
+	}
+	
+	@Override
+	public boolean onBlockDestroyed(ItemStack aStack, World aWorld,
+			Block aBlock, int aX, int aY,
+			int aZ, EntityLivingBase aEntity)
+	{
+		use(aStack, 0.0D, aEntity);
+		isItemStackUsable(aStack);
+	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+	    try
+	    {
+	    	if (tBehavior.onItemDamageBlock(this, aStack, aBlock, aEntity, aWorld, aX, aY, aZ))
+	    	{
+	            return true;
+	        }
+	    }
+	    catch (Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return false;
+	}
+	
+	@Override
+	public boolean onEntityItemUpdate(EntityItem aItem) 
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aItem.getEntityItem())));
+		try
+	    {
+	    	return tBehavior.onEntityItemUpdate(this, aItem);
+	    }
+	    catch (Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return false;
+	}
+	
+	public boolean canHarvestBlock(EntityPlayer player, Block aBlock, ItemStack aStack) 
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+			MovingObjectPosition aPos = getMovingObjectPositionFromPlayer(player.worldObj, player, false);
+			int tMeta = player.worldObj.getBlockMetadata(aPos.blockX, aPos.blockY, aPos.blockZ);
+	    	return tBehavior.canHarvestBlock(this, aBlock, tMeta, aStack);
+	    }
+	    catch (Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return false;
+	}
 
 	public ItemStack onItemRightClick(ItemStack aStack, World aWorld, EntityPlayer aPlayer)
 	{
@@ -191,7 +265,7 @@ public class ItemFleMetaBase extends ItemFle
 	
 	public int getItemStackLimit(ItemStack aStack)
 	{
-	    return 64;
+	    return maxStackSize;
 	}
 	  
 	public int getItemEnchantability()
@@ -210,11 +284,16 @@ public class ItemFleMetaBase extends ItemFle
 	}
 
 	@Override
-	public void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource) 
+	public void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource, int aDamage) 
 	{
-		stack.damageItem(1, aUser);
+		stack.damageItem(aDamage, aUser);
 	}
-	
+
+	@Override
+    public Multimap getAttributeModifiers(ItemStack stack)
+    {
+		return super.getAttributeModifiers(stack);
+    }
 
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item aItem, CreativeTabs aCreativeTab, List aList)
@@ -226,6 +305,7 @@ public class ItemFleMetaBase extends ItemFle
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister aRegister)
 	{
 		for(IItemBehaviour tBehavior : itemBehaviors)
@@ -242,6 +322,12 @@ public class ItemFleMetaBase extends ItemFle
 			}
 			icons.put(itemBehaviors.name(tBehavior), tIcons);
 		}
+	}
+	
+	@Override
+	public IIcon getIcon(ItemStack stack, int pass) 
+	{
+		return icons.get(itemBehaviors.name(getDamage(stack)))[pass];
 	}
 	
 	@Override

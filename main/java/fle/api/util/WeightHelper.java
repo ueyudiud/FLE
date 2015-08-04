@@ -116,6 +116,11 @@ public class WeightHelper<T>
 		return list.toArray(ts);
 	}
 	
+	public T randomGet(Random rand)
+	{
+		return (T) ts[rand.nextInt(ts.length)];
+	}
+	
 	public T randomGet()
 	{
 		return (T) ts[rand.nextInt(ts.length)];
@@ -129,6 +134,12 @@ public class WeightHelper<T>
 	public Object[] getList() 
 	{
 		return ts.clone();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return sts.toString();
 	}
 	
 	public static class Stack<T>
@@ -151,6 +162,12 @@ public class WeightHelper<T>
 		public void addStackIn(int aS)
 		{
 			size += aS;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return target.toString() + "x" + size;
 		}
 	}
 }

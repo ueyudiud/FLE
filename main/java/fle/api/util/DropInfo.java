@@ -13,16 +13,26 @@ public class DropInfo
 	private boolean init = false;
 	private final int minSize;
 	private final int maxSize;
+	private final float chance;
 	
 	public WeightHelper<ItemStack> drops;
 	
 	private static final Random rand = new Random();
 
-	public DropInfo(int aSize1, int aSize2, Map<ItemStack, Integer> aDrop)
+	public DropInfo(int aSize1, int aSize2, float aChance, Map<ItemStack, Integer> aDrop)
 	{
 		drops = new WeightHelper(aDrop);
 		minSize = Math.min(aSize1, aSize2);
 		maxSize = Math.max(aSize1, aSize2);
+		chance = aChance;
+	}
+	public DropInfo(int aSize1, int aSize2, Map<ItemStack, Integer> aDrop)
+	{
+		this(aSize1, aSize2, 1.0F, aDrop);
+	}
+	public DropInfo(float chance, Map<ItemStack, Integer> aDrop)
+	{
+		this(1, 1, chance, aDrop);
 	}
 	public DropInfo(Map<ItemStack, Integer> aDrop)
 	{
@@ -33,6 +43,7 @@ public class DropInfo
 		this.drops = new WeightHelper(aDrop);
 		minSize = Math.min(aSize1, aSize2);
 		maxSize = Math.max(aSize1, aSize2);
+		chance = 1.0F;
 	}
 	public DropInfo(int aSize, ItemStack aDrop)
 	{
@@ -52,14 +63,14 @@ public class DropInfo
 	public ArrayList<ItemStack> getDrops()
 	{
 		ArrayList<ItemStack> ret = new ArrayList();
-		if(drops != null)
+		if(drops != null && rand.nextDouble() < chance)
 		{
 			int size;
 			if(maxSize != minSize) size = rand.nextInt(maxSize - minSize) + minSize;
 			else size = minSize;
 			for(int i = 0; i < size; ++i)
 			{
-				ret.add(drops.randomGet());
+				ret.add(drops.randomGet().copy());
 			}
 		}
 		return ret;

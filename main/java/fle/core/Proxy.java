@@ -1,6 +1,8 @@
 package fle.core;
 
-public abstract class Proxy
+import cpw.mods.fml.common.network.IGuiHandler;
+
+public abstract class Proxy implements IGuiHandler
 {
 	public abstract void onPreload();
 	
@@ -9,4 +11,6 @@ public abstract class Proxy
 	public abstract void onPostload();
 	
 	public abstract void onCompleteLoad();
+	
+	public void onIconRegister(){}
 }

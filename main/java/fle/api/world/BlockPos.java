@@ -6,6 +6,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import fle.api.FleAPI;
 import fle.api.te.IObjectInWorld;
 
 public final class BlockPos implements IObjectInWorld
@@ -49,7 +51,7 @@ public final class BlockPos implements IObjectInWorld
 	
 	public ChunkPos getChunkPos()
 	{
-		return new ChunkPos(x >> 4, z >> 4);
+		return new ChunkPos(x / 16, z / 16);
 	}
 	
 	public Block getBlock()
@@ -95,6 +97,27 @@ public final class BlockPos implements IObjectInWorld
 		}
 	}
 
+	@Override
+	public int hashCode() 
+	{
+		int code = y;
+        code = 255 * code + x;
+        code = 0xFFFFFF * code + z;
+        if(access instanceof World)
+        	code = 31 * code + ((World) access).provider.dimensionId;
+        else if(FleAPI.mod.getPlatform().getPlayerInstance() != null)
+        {
+        	try
+        	{
+        		code = 31 * code + FleAPI.mod.getPlatform().getPlayerInstance().worldObj.provider.dimensionId;
+        	}
+        	catch(Throwable e)
+        	{
+        		e.printStackTrace();
+        	}
+        }
+		return code;
+	}
 	
 	@Override
 	public World getWorldObj() 
@@ -106,11 +129,5 @@ public final class BlockPos implements IObjectInWorld
 	public BlockPos getBlockPos() 
 	{
 		return this;
-	}
-	
-	@Override
-	public boolean openGUI() 
-	{
-		return false;
 	}
 }

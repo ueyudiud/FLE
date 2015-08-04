@@ -115,4 +115,14 @@ public class Register<T> implements Iterable<T>
 		idMap.remove(target);
 		return objs.remove(target);
 	}
+
+	public boolean isEmpty() 
+	{
+		return objMap.size() == 0;
+	}
+
+	public boolean contain(String aName) 
+	{
+		return names.contains(aName);
+	}
 }

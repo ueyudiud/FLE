@@ -16,7 +16,6 @@ public class ShapelessFleRecipe implements IRecipe
 {
     private Object output = null;
     private ArrayList<Object> inputs = new ArrayList<Object>();
-    private SingleInputRecipe targetRecipe = null;
     
 	public ShapelessFleRecipe(Object aOutput, Object...aInput) 
 	{
@@ -34,13 +33,12 @@ public class ShapelessFleRecipe implements IRecipe
 					output = new SingleFillFluidRecipe(new ItemFluidContainerStack(false, (FluidStack) aOutput));
 				else if(aOutput instanceof SingleInputRecipe)
 					output = aOutput;
-				else throw new NullPointerException();
 			}
-			else throw new NullPointerException();
 			setup(aInput);
         }
 		catch(Throwable e)
 		{
+			e.printStackTrace();
 	        String ret = "Invalid shapeless fle recipe: ";
 	        for (Object tmp : aInput)
 	        {
@@ -56,15 +54,15 @@ public class ShapelessFleRecipe implements IRecipe
         {
             if (in instanceof ItemStack)
             {
-                inputs.add(new fle.api.recipe.ItemStack(((ItemStack)in).copy()));
+                inputs.add(new ItemBaseStack(((ItemStack)in).copy()));
             }
             else if (in instanceof Item)
             {
-                inputs.add(new fle.api.recipe.ItemStack((Item)in));
+                inputs.add(new ItemBaseStack((Item)in));
             }
             else if (in instanceof Block)
             {
-                inputs.add(new fle.api.recipe.ItemStack((Block)in));
+                inputs.add(new ItemBaseStack((Block)in));
             }
             else if (in instanceof String)
             {
@@ -81,19 +79,22 @@ public class ShapelessFleRecipe implements IRecipe
             else if (in instanceof SingleInputRecipe)
             {
             	inputs.add(in);
-            	if(targetRecipe == null)
-            		targetRecipe = (SingleInputRecipe) in;
+            	if(output == null)
+            		output = (SingleInputRecipe) in;
             	else throw new NullPointerException();
             }
             else throw new NullPointerException();
         }
+        if(output == null)
+        	throw new NullPointerException();
 	}
 
 	@Override
     public boolean matches(InventoryCrafting aInv, World aWorld)
     {
         ArrayList<Object> required = new ArrayList<Object>(inputs);
-
+        boolean flag = !(output instanceof SingleInputRecipe);
+        
         for (int x = 0; x < aInv.getSizeInventory(); x++)
         {
             ItemStack slot = aInv.getStackInSlot(x);
@@ -103,6 +104,11 @@ public class ShapelessFleRecipe implements IRecipe
                 boolean inRecipe = false;
                 Iterator<Object> req = required.iterator();
 
+                if(!flag)
+                {
+                	if(((SingleInputRecipe) output).match(slot.copy()))
+                		flag = true;
+                }
                 while (req.hasNext())
                 {
                     boolean match = false;
@@ -133,7 +139,7 @@ public class ShapelessFleRecipe implements IRecipe
             }
         }
 
-        return required.isEmpty();
+        return required.isEmpty() && flag;
     }
 
 	@Override

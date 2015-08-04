@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.IFluidTank;
 
 import org.lwjgl.opengl.GL11;
 
+import fle.api.FleAPI;
 import fle.api.FleValue;
 
 public abstract class GuiContainerBase extends GuiContainer
@@ -75,7 +76,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	{
 		if(type != null)
 		{
-			mc.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+			mc.getTextureManager().bindTexture(FleAPI.conditionLocate);
 
 			xoffset = (width - xSize) / 2;
 			yoffset = (height - ySize) / 2;

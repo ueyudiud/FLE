@@ -12,28 +12,23 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 
-public abstract class FleAbstractPacket<I extends PacketInfo> extends FlePacket<I>
+public final class FleAbstractPacket
 {
-	private FMLProxyPacket pkt;
-	private EntityPlayerMP player;
+	public FMLProxyPacket pkt;
 
-	protected FleAbstractPacket(EntityPlayerMP aPlayer, I aInfo) 
+	public FleAbstractPacket(IFlePacketCoder aCoder) 
 	{
-		player = aPlayer;
-		pkt = new FMLProxyPacket(Unpooled.wrappedBuffer(init(aInfo)), FleAPI.MODID);
-	}
-	protected FleAbstractPacket(I aInfo) 
-	{
-		pkt = new FMLProxyPacket(Unpooled.wrappedBuffer(init(aInfo)), FleAPI.MODID);
+		pkt = new FMLProxyPacket(Unpooled.wrappedBuffer(init(aCoder)), FleAPI.MODID);
 	}
 
-	private byte[] init(I aInfo)
+	private byte[] init(IFlePacketCoder aCoder)
 	{
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		FleDataOutputStream os = new FleDataOutputStream(new DataOutputStream(buffer));
-		createPacket(os, aInfo);
 		try
 		{
+			os.writeInt(aCoder.getCoderID());
+			aCoder.createPacket(os);
 			os.close();
 		}
 		catch (IOException e) 
@@ -41,28 +36,5 @@ public abstract class FleAbstractPacket<I extends PacketInfo> extends FlePacket<
 			e.printStackTrace();
 		}
 		return buffer.toByteArray();
-	}
-	
-	public abstract void createPacket(FleDataOutputStream aStream, I aInfo);
-
-	@Override
-	public void sendPacket() 
-	{
-		if (FleAPI.mod.getPlatform().isSimulating())
-			FleAPI.mod.getNetworkHandler().getChannel().sendToAll(pkt);
-		else
-			FleAPI.mod.getNetworkHandler().getChannel().sendToServer(pkt);
-	}
-
-	@Override
-	public void sendPacket(EntityPlayerMP player) 
-	{
-		FleAPI.mod.getNetworkHandler().getChannel().sendTo(pkt, player);
-	}
-
-	@Override
-	public void sendToAllAround(TargetPoint aParamTargetPoint) 
-	{
-		FleAPI.mod.getNetworkHandler().getChannel().sendToAllAround(pkt, aParamTargetPoint);
 	}
 }

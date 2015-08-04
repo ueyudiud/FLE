@@ -4,17 +4,19 @@ import fle.api.crop.CropRegister;
 import fle.api.energy.RotationNet;
 import fle.api.energy.ThermalNet;
 import fle.api.net.FleNetworkHandler;
+import fle.api.tech.ITechManager;
+import fle.api.util.IColorMapHandler;
 import fle.api.util.IPlatform;
+import fle.api.world.IWorldManager;
 
 public interface FleModHandler 
 {
-	public IPlatform getPlatform();
-	
-	public FleNetworkHandler getNetworkHandler();
-	
-	public ThermalNet getThermalNet();
-	
-	public RotationNet getRotationNet();
-	
-	public CropRegister getCropRegister();
+	IPlatform getPlatform();
+	FleNetworkHandler getNetworkHandler();
+	ThermalNet getThermalNet();
+	RotationNet getRotationNet();
+	CropRegister getCropRegister();
+	IColorMapHandler getColorMapHandler();
+	IWorldManager getWorldManager();
+	ITechManager getTechManager();
 }

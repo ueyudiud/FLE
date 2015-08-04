@@ -1,8 +1,10 @@
 package fle.api.material;
 
-import static fle.api.enums.EnumIons.*;
+import static fle.api.enums.CompoundType.Alloy;
+import static fle.api.enums.CompoundType.Ionic;
+import static fle.api.enums.CompoundType.Molecular;
 import static fle.api.enums.EnumAtoms.*;
-import static fle.api.enums.CompoundType.*;
+import static fle.api.enums.EnumIons.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +40,8 @@ public class Matter implements IAtoms
 	public static final Matter mCu10Fe2Sb4S13 = new Matter(Ionic, new AtomStack(Cu1, 10), new AtomStack(Fe2, 2), new AtomStack(Sb3, 4), new AtomStack(S_2, 13));
 
 	public static final Matter mC = new Matter(Molecular, new AtomStack(EnumAtoms.C, 1));
+
+	public static final Matter mSiO2 = new Matter(Molecular, new AtomStack(Si4, 1), new AtomStack(O_2, 2));
 	
 	public static final Matter mNH3 = new Matter(Molecular, new AtomStack(N_3, 1), new AtomStack(H1, 3));
 	public static final Matter mH2O = new Matter(Molecular, new AtomStack(H1, 2), new AtomStack(O_2));

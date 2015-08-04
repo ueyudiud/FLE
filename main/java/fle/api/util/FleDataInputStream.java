@@ -11,12 +11,15 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import cpw.mods.fml.common.registry.GameData;
 import fle.FLE;
+import fle.api.gui.GuiCondition;
+import fle.api.world.BlockPos;
 
 public class FleDataInputStream 
 {
@@ -84,7 +87,7 @@ public class FleDataInputStream
 		return GameData.getItemRegistry().getObject(stream.readUTF());
 	}
 	
-	public Block readBlock(Block block) throws IOException
+	public Block readBlock() throws IOException
 	{
 		return GameData.getBlockRegistry().getObject(stream.readUTF());
 	}
@@ -134,6 +137,39 @@ public class FleDataInputStream
 	public World readWorld() throws IOException
 	{
 		return FLE.fle.getPlatform().getWorldInstance(stream.readInt());
+	}
+
+	public BlockPos readBlockPos() throws IOException
+	{
+		int x = readInt();
+		int y = readShort();
+		int z = readInt();
+		return new BlockPos(null, x, y, z);
+	}
+	
+	public Object read() throws IOException
+	{
+		byte type = stream.readByte();
+		switch(type)
+		{
+		case Byte.MAX_VALUE : return null;
+		case 0 : return new Boolean(readBoolean());
+		case 1 : return new Byte(readByte());
+		case 2 : return new Short(readShort());
+		case 3 : return new Integer(readInt());
+		case 4 : return new Long(readLong());
+		case 5 : return new Float(readFloat());
+		case 6 : return new Double(readDouble());
+		case 7 : return readString();
+		case 8 : return readNBT();
+		case 9 : return readItemStack();
+		case 10 : return readItem();
+		case 11 : return readBlock();
+		case 12 : return readWorld();
+		case 13 : return BiomeGenBase.getBiomeGenArray()[readInt()];
+		case 14 : return GuiCondition.register.get(readString());
+		default : return null;
+		}
 	}
 
 	public TileEntity readTileEntity() throws IOException 

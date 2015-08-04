@@ -21,9 +21,9 @@ public class ShapedFleRecipe implements IRecipe
 	protected int height;
 	protected int targetID = -1;
 	protected boolean mirrored = false;
-	protected Object output;
+	private Object output;
 	protected ItemAbstractStack[] inputs;
-
+	
 	public ShapedFleRecipe(Object aOutput, Object...aRecipe) 
 	{
 		try
@@ -31,15 +31,15 @@ public class ShapedFleRecipe implements IRecipe
 			if(aOutput != null)
 			{
 				if(aOutput instanceof ItemStack)
-					output = ((ItemStack) aOutput).copy();
+					setOutput(((ItemStack) aOutput).copy());
 				else if(aOutput instanceof Item)
-					output = new ItemStack((Item) aOutput, 1, OreDictionary.WILDCARD_VALUE);
+					setOutput(new ItemStack((Item) aOutput, 1, OreDictionary.WILDCARD_VALUE));
 				else if(aOutput instanceof Block)
-					output = new ItemStack((Block) aOutput, 1, OreDictionary.WILDCARD_VALUE);
+					setOutput(new ItemStack((Block) aOutput, 1, OreDictionary.WILDCARD_VALUE));
 				else if(aOutput instanceof FluidStack)
-					output = new SingleFillFluidRecipe(new ItemFluidContainerStack(false, (FluidStack) aOutput));
+					setOutput(new SingleFillFluidRecipe(new ItemFluidContainerStack(false, (FluidStack) aOutput)));
 				else if(aOutput instanceof SingleInputRecipe)
-					output = aOutput;
+					setOutput(aOutput);
 				else throw new NullPointerException();
 			}
 			else throw new NullPointerException();
@@ -118,15 +118,15 @@ public class ShapedFleRecipe implements IRecipe
 
             if (in instanceof ItemStack)
             {
-                itemMap.put(chr, new fle.api.recipe.ItemStack((ItemStack) in));
+                itemMap.put(chr, new ItemBaseStack((ItemStack) in));
             }
             else if (in instanceof Item)
             {
-                itemMap.put(chr, new fle.api.recipe.ItemStack((Item) in));
+                itemMap.put(chr, new ItemBaseStack((Item) in));
             }
             else if (in instanceof Block)
             {
-                itemMap.put(chr, new fle.api.recipe.ItemStack((Block) in));
+                itemMap.put(chr, new ItemBaseStack((Block) in));
             }
             else if (in instanceof String)
             {
@@ -202,8 +202,10 @@ public class ShapedFleRecipe implements IRecipe
 
                 ItemStack slot = aInv.getStackInRowAndColumn(x, y);
 
-                if (target == null && slot != null)
-                    return false;
+                if (target == null && slot == null)
+                	continue;
+                else if((target == null && slot != null) || (target != null && slot == null))
+                	return false;
                 else if(!target.isStackEqul(slot))
                 	return false;
             }
@@ -248,5 +250,25 @@ public class ShapedFleRecipe implements IRecipe
 	{
 		return output instanceof ItemStack ? (ItemStack) output : 
 			output instanceof SingleInputRecipe ? ((SingleFillFluidRecipe) output).getResult(null) : null;
+	}
+	
+	public int getXSize()
+	{
+		return width;
+	}
+	
+	public int getYSize()
+	{
+		return height;
+	}
+	
+	public ItemAbstractStack[] getInputs()
+	{
+		return inputs;
+	}
+	
+	private void setOutput(Object output)
+	{
+		this.output = output;
 	}
 }

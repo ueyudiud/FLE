@@ -5,7 +5,19 @@ import java.util.HashSet;
 
 public class SubTag implements IDataChecker<ISubTagContainer>
 {
-	private static Register<SubTag> subTags = new Register();
+	private static final Register<SubTag> subTags = new Register();
+	
+	public static final SubTag ORE_native = getNewSubTag("ORE_NATIVE");
+	public static final SubTag ORE_oxide = getNewSubTag("ORE_OXIDE");
+	public static final SubTag ORE_hydroxide = getNewSubTag("ORE_HYDROXIDE");
+	public static final SubTag ORE_sulfide = getNewSubTag("ORE_SULFIDE");
+	public static final SubTag ORE_gem = getNewSubTag("ORE_GEM");
+	public static final SubTag ORE_gem_only = getNewSubTag("ORE_GEM_ONLY");
+	public static final SubTag TOOL_wood = getNewSubTag("TOOL_WOOD");
+	public static final SubTag TOOL_stone = getNewSubTag("TOOL_STONE");
+	public static final SubTag TOOL_flint = getNewSubTag("TOOL_FLINT");
+	public static final SubTag TOOL_stone_real = getNewSubTag("TOOL_STONE_REAL");
+	public static final SubTag TOOL_metal = getNewSubTag("TOOL_METAL");
 	
 	public static SubTag getNewSubTag(String aName)
 	{

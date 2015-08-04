@@ -1,28 +1,114 @@
 package fle.core;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import fle.FLE;
+import fle.api.block.IGuiBlock;
+import fle.api.item.ItemFleMetaBase;
+import fle.core.gui.ContainerWashing;
+import fle.core.gui.GuiWashing;
+import fle.core.handler.PlayerHandler;
+import fle.core.handler.RecipeHandler;
+import fle.core.handler.WorldHandler;
+import fle.core.init.Conditions;
+import fle.core.init.IB;
+import fle.core.init.Materials;
+import fle.core.init.Rs;
+import fle.core.te.TileEntityPolish;
+import fle.core.tool.AxeHandler;
+import fle.core.tool.StoneHammerHandler;
+import fle.core.world.FleWorldGen;
+
 public class CommonProxy extends Proxy
 {
 	@Override
 	public void onPreload() 
 	{
-		
+		Conditions.init();
+		FLE.fle.getNetworkHandler().init();
+		MinecraftForge.EVENT_BUS.register(FLE.fle.getWorldManager());
+		FMLCommonHandler.instance().bus().register(FLE.fle.getWorldManager());		
+		Materials.init();
+		IB.reloadIB();
+		Rs.reloadRecipe();
 	}
 
 	@Override
 	public void onLoad() 
 	{
-		
+		IB.init();
+		Rs.init();
 	}
 
 	@Override
 	public void onPostload() 
 	{
+		GameRegistry.registerTileEntity(TileEntityPolish.class, "polish");
 		
+		GameRegistry.registerWorldGenerator(new FleWorldGen(), 1);
+		NetworkRegistry.INSTANCE.registerGuiHandler(FLE.MODID, this);
+		MinecraftForge.EVENT_BUS.register(new AxeHandler());
+		MinecraftForge.EVENT_BUS.register(new StoneHammerHandler());
+		MinecraftForge.EVENT_BUS.register(new RecipeHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
+		MinecraftForge.EVENT_BUS.register(new WorldHandler());
+		FMLCommonHandler.instance().bus().register(new AxeHandler());
+		FMLCommonHandler.instance().bus().register(new StoneHammerHandler());
+		FMLCommonHandler.instance().bus().register(new RecipeHandler());
+		FMLCommonHandler.instance().bus().register(new PlayerHandler());
+		FMLCommonHandler.instance().bus().register(new WorldHandler());
 	}
 
 	@Override
 	public void onCompleteLoad() 
 	{
 		
+	}
+	
+	@SubscribeEvent
+	public void checkCanHarvest(HarvestCheck evt)
+	{
+		if(evt.entityPlayer.getCurrentEquippedItem() != null)
+		{
+			ItemStack item = evt.entityPlayer.getCurrentEquippedItem();
+			if(item.getItem() instanceof ItemFleMetaBase)
+			{
+				if(((ItemFleMetaBase) item.getItem()).canHarvestBlock(evt.entityPlayer, evt.block, evt.entityPlayer.getCurrentEquippedItem()))
+					evt.success = true;
+			}
+		}
+	}
+
+	@Override
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
+			int x, int y, int z) 
+	{
+		switch(ID)
+		{
+		case -1 : return new ContainerWashing(player.inventory);
+		}
+		if(world.getBlock(x, y, z) instanceof IGuiBlock)
+			return ((IGuiBlock) world.getBlock(x, y, z)).openContainer(world, x, y, z, player);
+		return null;
+	}
+
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
+			int x, int y, int z) 
+	{
+		switch(ID)
+		{
+		case -1 : return new GuiWashing(player);
+		}
+		if(world.getBlock(x, y, z) instanceof IGuiBlock)
+			return ((IGuiBlock) world.getBlock(x, y, z)).openGui(world, x, y, z, player);
+		return null;
 	}
 }
