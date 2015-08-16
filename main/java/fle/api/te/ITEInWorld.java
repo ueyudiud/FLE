@@ -9,4 +9,6 @@ public interface ITEInWorld extends IObjectInWorld
 	public int getLightValue();
 	
 	public boolean isRedStoneEmmit();
+	
+	public boolean isCatchRain();
 }

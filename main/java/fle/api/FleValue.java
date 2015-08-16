@@ -1,5 +1,7 @@
 package fle.api;
 
+import fle.api.material.Matter;
+
 public class FleValue 
 {
 	public static final String TEXTURE_FILE = "fle";
@@ -18,8 +20,10 @@ public class FleValue
 			};
 	
 	public static final int is[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728, 268435456, 536870912, 1073741824, -2147483648};
+	public static final int CAPACITY[] = {250, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000, 12000, 16000, 24000, 30000, 36000, 40000, 48000, 64000, 80000, 128000, 160000};
 
+	public static int FLE_NOINV_RENDER_ID;
 	public static int FLE_RENDER_ID;
-
+	
 	public static final int WATER_FREEZE_POINT = 273;
 }

@@ -31,6 +31,7 @@ import fle.core.net.FlePackets.CoderFWMUpdate;
 import fle.core.net.FlePackets.CoderGuiUpdate;
 import fle.core.net.FlePackets.CoderInventorUpdate;
 import fle.core.net.FlePackets.CoderKeyType;
+import fle.core.net.FlePackets.CoderNBTUpdate;
 import fle.core.net.FlePackets.CoderPTUpdate;
 import fle.core.net.FlePackets.CoderTileUpdate;
 
@@ -61,6 +62,7 @@ public class NetWorkHandler implements FleNetworkHandler
 		registerCoder(CoderInventorUpdate.class);
 		registerCoder(CoderFWMUpdate.class);
 		registerCoder(CoderPTUpdate.class);
+		registerCoder(CoderNBTUpdate.class);
 	}
 
 	public void registerCoder(Class<? extends IFlePacketHandler> clazz)

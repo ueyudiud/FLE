@@ -51,4 +51,10 @@ public class FleCropRegister extends CropRegister
 	{
 		return cropRegister.iterator();
 	}
+
+	@Override
+	public int getCropID(CropCard crop)
+	{
+		return cropRegister.serial(crop);
+	}
 }

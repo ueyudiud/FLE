@@ -17,7 +17,7 @@ public class BehaviorWoodHammer extends BehaviorTool implements ISubPolishTool<I
 	public boolean onLeftClickEntity(ItemFleMetaBase item, ItemStack itemstack,
 			EntityPlayer player, Entity entity) 
 	{
-		item.damageItem(itemstack, player, EnumDamageResource.HitEntity, 2);
+		item.damageItem(itemstack, player, EnumDamageResource.HitEntity, 1.25F);
 		return super.onLeftClickEntity(item, itemstack, player, entity);
 	}
 	

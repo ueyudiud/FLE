@@ -8,6 +8,7 @@ public interface IWorldManager
 	
 	public void setData(BlockPos pos, int dataType, int data);
 
-	public void removeData(BlockPos pos);
-	public void removeData(BlockPos pos, int type);
+	public int[] removeData(BlockPos pos);
+	
+	public int removeData(BlockPos pos, int type);
 }

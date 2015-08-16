@@ -42,4 +42,10 @@ public class ItemOreStack extends ItemAbstractStack
 	{
 		return OreDictionary.getOres(target, false);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "stack.ore." + target;
+	}
 }

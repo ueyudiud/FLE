@@ -1,15 +1,11 @@
 package fle.api.gui;
 
-import javax.lang.model.type.ErrorType;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.IIcon;
@@ -21,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.fluid.FluidBase;
 
 public abstract class GuiContainerBase extends GuiContainer
 {
@@ -103,7 +100,13 @@ public abstract class GuiContainerBase extends GuiContainer
 				mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				double liquidHeight = lay ? height : (double) (info.fluid.amount * height) / (double)info.capacity;
 				double liquidWidth = lay ? (double) (info.fluid.amount * width) / (double) info.capacity : width;
+		        int color = info.fluid.getFluid().getColor(info.fluid);
+		        float red = (color >> 16 & 255) / 255.0F;
+		        float green = (color >> 8 & 255) / 255.0F;
+		        float blue = (color & 255) / 255.0F;
+				GL11.glColor4f(red, green, blue, 1.0F);
 				drawRepeated(fluidIcon, xoffset + x + width - liquidWidth, yoffset + y + height - liquidHeight, liquidWidth, liquidHeight, zLevel);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				mc.renderEngine.bindTexture(getResourceLocation());
 			}
 		}
@@ -130,9 +133,7 @@ public abstract class GuiContainerBase extends GuiContainer
 				tessellator.addVertexWithUV(maxX, cy, z, maxU, icon.getMinV());
 				tessellator.addVertexWithUV(cx, cy, z, icon.getMinU(), icon.getMinV());
 			}
-
 		}
-
 		tessellator.draw();
 	}
 

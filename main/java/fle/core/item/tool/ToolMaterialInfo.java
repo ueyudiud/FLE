@@ -16,6 +16,7 @@ public class ToolMaterialInfo
 	
 	public ToolMaterialInfo(NBTTagCompound nbt) 
 	{
+		if(nbt == null) return;
 		materialBase = MaterialAbstract.getMaterialRegistry().get(nbt.getString("BaseMaterial"));
 		materialSurface = MaterialAbstract.getMaterialRegistry().get(nbt.getString("SurfaceMaterial"));
 		coverLevel = nbt.getFloat("SurfaceCoverLevel");

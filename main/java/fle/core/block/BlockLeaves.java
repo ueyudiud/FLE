@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
+import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
 import fle.api.world.BlockPos;
 import fle.api.world.TreeInfo;
@@ -56,7 +57,14 @@ public class BlockLeaves extends BlockHasSub
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		return iconMap.get(BlockLog.trees.name(meta))[BlockLog.trees.get(meta).getDefaultLeavesIconID()];
+		try
+		{
+			return iconMap.get(BlockLog.trees.name(meta))[BlockLog.trees.get(meta).getDefaultLeavesIconID()];
+		}
+		catch(Throwable e)
+		{
+			return blockIcon;
+		}
 	}
 	
 	@Override
@@ -70,6 +78,7 @@ public class BlockLeaves extends BlockHasSub
 	@Override
 	public void registerBlockIcons(IIconRegister aRegister)
 	{
+		blockIcon = aRegister.registerIcon(FleValue.TEXTURE_FILE + ":" + FleValue.VOID_ICON_FILE);
 		iconMap = new HashMap();
 		for(TreeInfo tree : BlockLog.trees)
 		{

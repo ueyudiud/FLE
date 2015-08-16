@@ -1,9 +1,12 @@
 package fle.api.block;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemFleBlock extends ItemBlock
 {
@@ -17,11 +20,38 @@ public class ItemFleBlock extends ItemBlock
 			block = (BlockFle) aBlock;
 		}
 	}
+	
+	@Override
+	public void addInformation(ItemStack aStack, EntityPlayer aPlayer,
+			List aList, boolean aFlag)
+	{
+		if(block != null)
+		{
+			block.addInformation(aStack, aList, aPlayer);
+		}
+	}
 
 	@Override
 	public ItemFleBlock setMaxStackSize(int aSize)
 	{
+		if(block == null) return (ItemFleBlock) super.setMaxStackSize(aSize);
 		block.setMaxStackSize(maxStackSize = aSize);
 		return this;
+	}
+	
+	@Override
+	public int getItemStackLimit(ItemStack stack) 
+	{
+		if(block == null) return super.getItemStackLimit(stack);
+		return block.maxStackSize;
+	}
+	
+	protected static NBTTagCompound setupNBT(ItemStack aStack)
+	{
+		if(!aStack.hasTagCompound())
+		{
+			aStack.setTagCompound(new NBTTagCompound());
+		}
+		return aStack.stackTagCompound;
 	}
 }

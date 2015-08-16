@@ -16,6 +16,10 @@ public abstract class BlockHasTile extends BlockFle implements ITileEntityProvid
 	{
 		super(aItemClass, aName, aMaterial);
 	}
+	protected BlockHasTile(String aName, Material aMaterial)
+	{
+		super(aName, aMaterial);
+	}
 
 	@Override
 	public abstract TileEntity createNewTileEntity(World aWorld, int aMeta);
@@ -30,7 +34,7 @@ public abstract class BlockHasTile extends BlockFle implements ITileEntityProvid
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
 			int metadata, int fortune) 
 	{
-		TileEntity tile = thread.get();
+		TileEntity tile = tileThread.get();
 		if(tile != null)
 			return getDrops(world, x, y, z, tile, metadata, fortune);
 		return super.getDrops(world, x, y, z, metadata, fortune);

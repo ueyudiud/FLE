@@ -4,5 +4,5 @@ public interface IMetadataTile
 {
 	public void setMetadata(short meta);
 	
-	public int getMetadata();
+	public short getMetadata();
 }

@@ -8,13 +8,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import fle.api.FleValue;
 
-public abstract class InventoryBase implements IInventory
+public abstract class InventoryBase<T extends Container> implements IInventory
 {
 	protected final Random rand = new Random();
-	protected Container container;
+	protected T container;
 	protected final ItemStack[] stacks;
 	
-	public InventoryBase(Container container, int i)
+	public InventoryBase(T container, int i)
 	{
 		stacks = new ItemStack[i];
 		this.container = container;

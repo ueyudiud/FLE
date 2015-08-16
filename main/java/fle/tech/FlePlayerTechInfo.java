@@ -12,6 +12,12 @@ import fle.api.tech.PlayerTechInfo;
 import fle.api.tech.Technology;
 import fle.core.net.FlePackets.CoderPTUpdate;
 
+/**
+ * This system have not complete yet.
+ * @author ueyudiud
+ *
+ */
+@Deprecated
 public class FlePlayerTechInfo extends PlayerTechInfo
 {
 	public FlePlayerTechInfo(EntityPlayer aPlayer) 

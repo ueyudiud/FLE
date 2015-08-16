@@ -14,6 +14,7 @@ import fle.api.net.IFlePacketHandler;
 import fle.api.net.INetEventHandler;
 import fle.api.net.INetEventListener;
 import fle.api.te.IObjectInWorld;
+import fle.api.te.ITEInWorld;
 import fle.api.tech.Technology;
 import fle.api.util.FleDataInputStream;
 import fle.api.util.FleDataOutputStream;
@@ -122,6 +123,15 @@ public class FlePackets
 		{
 			
 		}
+		public CoderFWMUpdate(int aDimID, BlockPos aPos, int aType) 
+		{
+			dimID = aDimID;
+			x = aPos.x;
+			y = aPos.y;
+			z = aPos.z;
+			type = aType;
+			data = 0;
+		}
 		public CoderFWMUpdate(int aDimID, BlockPos aPos, int aType, int aData) 
 		{
 			dimID = aDimID;
@@ -182,7 +192,7 @@ public class FlePackets
 		public CoderGuiUpdate(byte aType, int aContain)
 		{
 			type = aType;
-			contain = new Short((short) aContain);
+			contain = new Integer((int) aContain);
 		}
 		
 		public CoderGuiUpdate(byte aType, Object aContain)
@@ -309,8 +319,6 @@ public class FlePackets
 	
 	public static class CoderTileUpdate implements IFlePacketHandler
 	{
-		public static CoderTileUpdate instance = new CoderTileUpdate();
-		
 		private int dimID;
 		private int x;
 		private short y;
@@ -393,6 +401,58 @@ public class FlePackets
 				}
 				FLE.fle.getPlatform().getWorldInstance(dimID).markBlockForUpdate(x, y, z);
 			}
+		}
+	}
+	
+	public static class CoderNBTUpdate implements IFlePacketHandler
+	{		
+		private int dimID;
+		private BlockPos pos;
+		private NBTTagCompound nbt;
+		
+		public CoderNBTUpdate() {}
+		
+		public CoderNBTUpdate(ITEInWorld tile) 
+		{
+			dimID = tile.getWorldObj().provider.dimensionId;
+			pos = tile.getBlockPos();
+			tile.getTileEntity().writeToNBT(nbt = new NBTTagCompound());
+		}
+
+		@Override
+		public int getCoderID() 
+		{
+			return NetWorkHandler.tileUpdateID;
+		}
+
+		@Override
+		public void createPacket(FleDataOutputStream aStream) throws IOException 
+		{
+			try
+			{
+				aStream.writeInt(dimID);
+				aStream.writeBlockPos(pos);
+				aStream.writeNBT(nbt);
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void decode(FleDataInputStream aStream) throws IOException 
+		{
+			dimID = aStream.readInt();
+			pos = aStream.readBlockPos();
+			nbt = aStream.readNBT();
+		}
+
+		@Override
+		public void process(Side aSide, EntityPlayer player) 
+		{
+			if(FLE.fle.getPlatform().getWorldInstance(dimID).getTileEntity(pos.x, pos.y, pos.z) != null)
+				FLE.fle.getPlatform().getWorldInstance(dimID).getTileEntity(pos.x, pos.y, pos.z).readFromNBT(nbt);
 		}
 	}
 }

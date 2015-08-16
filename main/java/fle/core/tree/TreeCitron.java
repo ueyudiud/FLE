@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
@@ -37,6 +38,8 @@ public class TreeCitron extends TreeInfo
 	@Override
 	public boolean generate(World world, int x, int y, int z, Random rand) 
 	{
+		if(!world.getBlock(x, y, z).canSustainPlant(world, x, y, z, ForgeDirection.UP, this))
+			return false;
 		Block woodBlock = IB.log;
 		Block leavesBlock = IB.leaf;
 		int height = getGrowHeight(world, x, y, z);
@@ -175,5 +178,11 @@ public class TreeCitron extends TreeInfo
 	public void onLogUpdate(World world, int x, int y, int z, Random rand)
 	{
 		
+	}
+
+	@Override
+	public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z)
+	{
+		return EnumPlantType.Plains;
 	}
 }

@@ -99,4 +99,11 @@ public class BehaviorBase implements IItemBehaviour<ItemFleMetaBase>
 	{
 		return false;
 	}
+
+	@Override
+	public boolean isValidArmor(ItemFleMetaBase item, ItemStack aStack,
+			int ammorType, Entity aEntity)
+	{
+		return false;
+	}
 }

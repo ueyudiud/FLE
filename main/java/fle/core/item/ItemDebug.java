@@ -15,6 +15,7 @@ import fle.api.FleAPI;
 import fle.api.block.IDebugableBlock;
 import fle.api.enums.EnumDamageResource;
 import fle.api.item.ItemFle;
+import fle.api.util.FleLog;
 import fle.api.world.BlockPos;
 import fle.api.world.BlockPos.ChunkPos;
 
@@ -41,7 +42,11 @@ public class ItemDebug extends ItemFle
         	aPlayer.addChatMessage(new ChatComponentText("Block name is " + pos.getBlock().getUnlocalizedName() + ", by id " + Block.getIdFromBlock(pos.getBlock()) + "."));
         	aPlayer.addChatMessage(new ChatComponentText("Metadata: " + pos.getBlockMeta() + "."));
         	aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + "."));
-    		if(aWorld.getBlock(x, y, z) instanceof IDebugableBlock)
+    		String str1 = "";
+        	for(int i = 0; i < 8; ++i)
+    			str1 += FLE.fle.getWorldManager().getData(pos, i) + " ";
+        	aPlayer.addChatMessage(new ChatComponentText("FWM: " + str1 + "."));
+        	if(aWorld.getBlock(x, y, z) instanceof IDebugableBlock)
     		{
     			List<String> tList = new ArrayList();
     			((IDebugableBlock) aWorld.getBlock(x, y, z)).addInfomationToList(aWorld, x, y, z, tList);
@@ -51,19 +56,42 @@ public class ItemDebug extends ItemFle
     			}
     		}
     	}
-		return true;
-	}
+    	else
+    	{
+        	BlockPos pos = new BlockPos(aWorld, x, y, z);
+        	ChunkPos pos1 = pos.getChunkPos();
 
-	@Override
-	protected void damageItem(ItemStack stack, EntityLivingBase aUser,
-			EnumDamageResource aReource, int aDamage) 
-	{
-		
+        	FleLog.logger.debug("Block TYPE is " + pos.getBlock().getClass() + ".");
+        	FleLog.logger.info("Block name is " + pos.getBlock().getUnlocalizedName() + ", by id " + Block.getIdFromBlock(pos.getBlock()) + ".");
+        	FleLog.logger.debug("Metadata: " + pos.getBlockMeta() + ".");
+        	FleLog.logger.debug("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + ".");
+    		String str1 = "";
+        	for(int i = 0; i < 8; ++i)
+    			str1 += FLE.fle.getWorldManager().getData(pos, i) + " ";
+        	FleLog.logger.info("FWM: " + str1 + ".");
+        	if(aWorld.getBlock(x, y, z) instanceof IDebugableBlock)
+    		{
+    			List<String> tList = new ArrayList();
+    			((IDebugableBlock) aWorld.getBlock(x, y, z)).addInfomationToList(aWorld, x, y, z, tList);
+    			for(String str : tList)
+    			{
+    				FleLog.logger.info(str);
+    			}
+    		}
+        }
+		return true;
 	}
 	
 	@Override
 	public void registerIcons(IIconRegister register)
 	{
 		super.registerIcons(register);
+	}
+
+	@Override
+	public void damageItem(ItemStack stack, EntityLivingBase aUser,
+			EnumDamageResource aReource, float aDamage)
+	{
+		
 	}
 }

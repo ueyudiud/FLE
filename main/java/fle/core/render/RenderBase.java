@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,6 +15,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.block.IFacingBlock;
+import fle.api.world.BlockPos;
 
 @SideOnly(Side.CLIENT)
 public abstract class RenderBase 
@@ -29,6 +32,7 @@ public abstract class RenderBase
     public Block block;
     public int meta;
     public boolean isItem;
+    public boolean isTESR;
     public int brightness = -1;
     public float rgb_red = 1.0F;
     public float rgb_green = 1.0F;
@@ -36,11 +40,31 @@ public abstract class RenderBase
 
     public RenderBase() {}
 
+    public boolean render(TileEntity tile)
+    {
+    	isItem = false;
+    	isTESR = true;
+    	this.render = RenderBlocks.getInstance();
+    	render.blockAccess = this.world = tile.getWorldObj();
+    	this.x = tile.xCoord;
+    	this.y = tile.yCoord;
+    	this.z = tile.zCoord;
+    	this.meta = tile.getBlockMetadata();
+    	block = tile.getBlockType();
+    	init();
+    	if(tile instanceof IFacingBlock)
+    	{
+    		dir = ((IFacingBlock) tile).getDirction(new BlockPos(world, x, y, z));
+    	}
+    	render();
+    	return true;
+    }
 
     //World Based Rendering
     public boolean render(RenderBlocks render, IBlockAccess world, int x, int y, int z) 
     {
         isItem = false;
+        isTESR = false;
         this.render = render;
         this.world = world;
         this.x = x;
@@ -57,6 +81,7 @@ public abstract class RenderBase
     public void render(RenderBlocks render, Block block, int meta) 
     {
         isItem = true;
+        isTESR = false;
         this.render = render;
         this.block = block;
         this.meta = meta;
@@ -97,6 +122,11 @@ public abstract class RenderBase
     {
         return isItem;
     }
+    
+    public boolean isTESR()
+    {
+		return isTESR;
+	}
 
     protected void setTexture(IIcon texture) 
     {

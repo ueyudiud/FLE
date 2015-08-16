@@ -5,8 +5,10 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.oredict.OreDictionary;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,6 +18,12 @@ import fle.api.FleValue;
 public class RenderHandler implements ISimpleBlockRenderingHandler
 {
 	private static final Map<String, RenderBase> renders = new HashMap();
+	private final boolean isNoInvRendering;
+	
+	public RenderHandler(boolean a) 
+	{
+		isNoInvRendering = a;
+	}
 
 	public static void register(Block block, int meta, Class clazz)
 	{
@@ -61,12 +69,12 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) 
 	{
-		return true;
+		return !isNoInvRendering;
 	}
 
 	@Override
 	public int getRenderId() 
 	{
-		return FleValue.FLE_RENDER_ID;
+		return isNoInvRendering ? FleValue.FLE_NOINV_RENDER_ID : FleValue.FLE_RENDER_ID;
 	}
 }

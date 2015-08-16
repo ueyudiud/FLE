@@ -2,6 +2,7 @@ package fle.core.init;
 
 import fle.api.material.MaterialAbstract;
 import fle.api.material.MaterialOre;
+import fle.api.material.MaterialRock;
 import fle.api.material.Matter;
 import fle.api.material.PropertyInfo;
 import fle.api.util.SubTag;
@@ -20,9 +21,15 @@ public class Materials
 	public static MaterialOre Chalcopyrite;
 	public static MaterialOre Bornite;
 
+	public static MaterialAbstract SoftWood;
 	public static MaterialAbstract HardWood;
 	public static MaterialAbstract Flint;
 	public static MaterialAbstract Obsidian;
+	public static MaterialAbstract Argil;
+	
+	public static MaterialRock Stone;
+	public static MaterialRock CompactStone;
+	public static MaterialRock Limestone;
 	
 	public static void init()
 	{
@@ -39,6 +46,11 @@ public class Materials
 		Bornite = new MaterialOre("Bornite", Matter.mCu5FeS4, new PropertyInfo(new int[]{0xDCBC74, 0x9D7797}, 9, 1.4F, 0.4F, 1.0F, 0.8F, 9200), SubTag.ORE_sulfide);
 		Flint = new MaterialAbstract("Flint", Matter.mSiO2, new PropertyInfo(0x5A5A5A, 12, 0.6F, 0.0F, 1.1F, 1.5F, 13500), SubTag.TOOL_stone, SubTag.TOOL_flint);
 		Obsidian = new MaterialAbstract("Obsidian", Matter.mSiO2, new PropertyInfo(0x33344F, 16, 2.1F, 0.0F, 1.0F, 3.0F, 7500), SubTag.TOOL_stone, SubTag.TOOL_flint);
-		HardWood = new MaterialAbstract("HardWood", new PropertyInfo(0x7F643D, 20, 0.4F, 1.0F, 0.1F, 0.1F, 4600), SubTag.TOOL_wood);
+		HardWood = new MaterialAbstract("HardWood", new PropertyInfo(0x7F643D, 20, 0.4F, 1.0F, 0.1F, 0.1F, 4600, -1F, 0.5F, 2.0F), SubTag.TOOL_wood);
+		SoftWood = new MaterialAbstract("SoftWood", new PropertyInfo(0x8F744D, 6, 0.2F, 1.1F, 0.05F, 0.07F, 2800, -1F, 0.3F, 1.9F));
+		Argil = new MaterialAbstract("Argil", new PropertyInfo(0xAE9789, 29, 0.7F, 0.0F, 1.0F, 1.9F, 10800, 59.1F, 0.5F, 2.3F));
+		Stone = new MaterialRock("Stone", new PropertyInfo(0x626262, 16, 1.0F, 0.0F, 1.0F, 1.4F, 10000), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
+		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868, 21, 1.2F, 0.1F, 2.0F, 1.3F, 12800), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
+		Limestone = new MaterialRock("Limestone", new PropertyInfo(0xE4E4E5, 2, 1.0F, 0.2F, 1.0F, 1.8F, 5600));
 	}
 }

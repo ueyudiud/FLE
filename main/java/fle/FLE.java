@@ -19,6 +19,7 @@ import fle.api.crop.CropRegister;
 import fle.api.energy.RotationNet;
 import fle.api.util.ColorMap;
 import fle.api.util.FleLog;
+import fle.api.util.IAirConditionProvider;
 import fle.api.util.IColorMapHandler;
 import fle.api.util.IPlatform;
 import fle.core.CommonProxy;
@@ -27,6 +28,7 @@ import fle.core.energy.FleThermalNet;
 import fle.core.net.NetWorkHandler;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleCropRegister;
+import fle.core.util.FluidDictionary;
 import fle.core.util.Keyboard;
 import fle.core.util.SideGateway;
 import fle.core.world.FWM;
@@ -55,6 +57,7 @@ public class FLE implements FleModHandler
     public FLE() 
     {
     	FleAPI.mod = fle = this;
+    	FleAPI.fluidDictionary = new FluidDictionary();
     	p = new SideGateway<IPlatform>("fle.core.PlatformCommon", "fle.core.PlatformClient");
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
     	nw = new NetWorkHandler();
@@ -72,14 +75,14 @@ public class FLE implements FleModHandler
 	}
 
     @EventHandler
-    public void preLoad(FMLInitializationEvent event)
+    public void load(FMLInitializationEvent event)
     {
     	FleLog.logger.info("Far Land Era start load.");
     	proxy.onLoad();
 	}
 
     @EventHandler
-    public void preLoad(FMLPostInitializationEvent event)
+    public void postLoad(FMLPostInitializationEvent event)
     {
     	FleLog.logger.info("Far Land Era start post load.");
     	NetworkRegistry.INSTANCE.registerGuiHandler(MODID, proxy);
@@ -158,5 +161,11 @@ public class FLE implements FleModHandler
 	public Keyboard getKeyboard()
 	{
 		return k.get();
+	}
+
+	@Override
+	public FWM getAirConditionProvider()
+	{
+		return wm;
 	}
 }

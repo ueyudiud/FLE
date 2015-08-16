@@ -14,6 +14,10 @@ import fle.core.item.tool.ToolMaterialInfo;
 
 public class StoneToolCraftingRecipe extends ShapelessFleRecipe
 {
+	public StoneToolCraftingRecipe(String aTool, int size, Object stick, Object other)
+	{
+		super(null, new Object[]{new ToolRecipe(aTool, size), stick, other});
+	}
 	public StoneToolCraftingRecipe(String aTool, Object stick)
 	{
 		super(null, new Object[]{new ToolRecipe(aTool), stick});
@@ -28,10 +32,16 @@ public class StoneToolCraftingRecipe extends ShapelessFleRecipe
 	private static class ToolRecipe implements SingleInputRecipe
 	{
 		private String toolName;
-		
+		private int size = 1;
+
 		public ToolRecipe(String aToolName) 
 		{
 			toolName = aToolName;
+		}
+		public ToolRecipe(String aToolName, int aSize) 
+		{
+			toolName = aToolName;
+			size = aSize;
 		}
 
 		@Override
@@ -45,7 +55,7 @@ public class StoneToolCraftingRecipe extends ShapelessFleRecipe
 		{
 			if(aInput == null)
 				return new ItemStack(Blocks.stone);
-			ItemStack ret = new ItemStack(IB.tool, 1, aInput.getItemDamage());
+			ItemStack ret = new ItemStack(IB.tool, size, aInput.getItemDamage());
 			if(aInput.hasTagCompound())
 			{
 				ret.stackTagCompound = new ToolMaterialInfo(aInput.getTagCompound()).writeToNBT(new NBTTagCompound());

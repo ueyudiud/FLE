@@ -24,7 +24,9 @@ import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.FleValue;
 import fle.api.enums.EnumDamageResource;
+import fle.api.util.FleLog;
 import fle.api.util.IBlockTextureManager;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
@@ -40,6 +42,7 @@ public class ItemFleMetaBase extends ItemFle
 		super(aUnlocalized, aUnlocalizedTooltip);
 		setHasSubtypes(true);
 		setMaxDamage(0);
+		setTextureName(FleValue.TEXTURE_FILE + ":" + FleValue.VOID_ICON_FILE);
 	}
 	
 	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
@@ -284,9 +287,9 @@ public class ItemFleMetaBase extends ItemFle
 	}
 
 	@Override
-	public void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource, int aDamage) 
+	public void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource, float aDamage) 
 	{
-		stack.damageItem(aDamage, aUser);
+		stack.damageItem((int) Math.ceil(aDamage), aUser);
 	}
 
 	@Override
@@ -308,6 +311,7 @@ public class ItemFleMetaBase extends ItemFle
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister aRegister)
 	{
+		super.registerIcons(aRegister);
 		for(IItemBehaviour tBehavior : itemBehaviors)
 		{
 			int meta = itemBehaviors.serial(tBehavior);
@@ -327,7 +331,15 @@ public class ItemFleMetaBase extends ItemFle
 	@Override
 	public IIcon getIcon(ItemStack stack, int pass) 
 	{
-		return icons.get(itemBehaviors.name(getDamage(stack)))[pass];
+		try
+		{
+			return icons.get(itemBehaviors.name(getDamage(stack)))[pass];
+		}
+		catch(Throwable e)
+		{
+			FleLog.logger.info("Fail to get icon of item " + getUnlocalizedName(stack) + " please check your mod pack.");
+			return itemIcon;
+		}
 	}
 	
 	@Override
@@ -339,16 +351,37 @@ public class ItemFleMetaBase extends ItemFle
 	@Override
 	public int getRenderPasses(int aMeta)
 	{
-		return textureLocations.get(itemBehaviors.name(aMeta)).getLocateSize();
+		try
+		{
+			return textureLocations.get(itemBehaviors.name(aMeta)).getLocateSize();
+		}
+		catch(Throwable e)
+		{
+			return 1;
+		}
 	}
 	
 	public String getTextureFileName(int aMeta, int pass)
 	{
-		return textureLocations.get(itemBehaviors.name(aMeta)).getTextureFileName(pass);
+		try
+		{
+			return textureLocations.get(itemBehaviors.name(aMeta)).getTextureFileName(pass);
+		}
+		catch(Throwable e)
+		{
+			return FleValue.TEXTURE_FILE;
+		}
 	}
 	
 	public String getTextureName(int aMeta, int pass)
 	{
-		return textureLocations.get(itemBehaviors.name(aMeta)).getTextureName(pass);
+		try
+		{
+			return textureLocations.get(itemBehaviors.name(aMeta)).getTextureName(pass);
+		}
+		catch(Throwable e)
+		{
+			return FleValue.VOID_ICON_FILE;
+		}
 	}
 }

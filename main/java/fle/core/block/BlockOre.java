@@ -17,15 +17,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
-import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
 import fle.api.block.IDebugableBlock;
 import fle.api.material.MaterialOre;
+import fle.api.material.MaterialRock;
+import fle.api.util.FleLog;
+import fle.api.util.FluidIconRegisterEvent;
 import fle.api.world.BlockPos;
 
 public class BlockOre extends BlockHasSub implements IDebugableBlock
@@ -34,6 +37,13 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	{
 		super(ItemOre.class, "blockores", Material.rock);
 		setStepSound(soundTypeStone);
+	}
+	
+	@Override
+	public int onBlockPlaced(World aWorld, int x, int y, int z, int side,
+			float xPos, float yPos, float zPos, int meta)
+	{
+		return getHarvestLevel((int) Math.ceil(MaterialOre.getOreFromID(meta).getPropertyInfo().getHardness()));
 	}
 	  
 	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
@@ -58,12 +68,26 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	  
 	public float getBlockHardness(World aWorld, int aX, int aY, int aZ)
 	{
-		return 1.0F + getHarvestLevel(aWorld.getBlockMetadata(aX, aY, aZ)) * 1.0F;
+		try
+		{
+			return 1.0F + MaterialOre.getOreFromID(getOre(aWorld, aX, aY, aZ)).getPropertyInfo().getHardness() * 1.5F;
+		}
+		catch(Throwable e)
+		{
+			return 1.0F + getHarvestLevel(getMetadata(aWorld, aX, aY, aZ)) * 1.0F;
+		}
 	}
 	  
 	public float getExplosionResistance(Entity par1Entity, World aWorld, int aX, int aY, int aZ, double explosionX, double explosionY, double explosionZ)
 	{
-		return 1.0F + getHarvestLevel(aWorld.getBlockMetadata(aX, aY, aZ)) * 1.0F;
+		try
+		{
+			return 1.0F + MaterialOre.getOreFromID(getOre(aWorld, aX, aY, aZ)).getPropertyInfo().getDenseness() * 5.0F;
+		}
+		catch(Throwable e)
+		{
+			return 1.0F + getHarvestLevel(getMetadata(aWorld, aX, aY, aZ)) * 1.0F;
+		}
 	}
 	  
 	protected boolean canSilkHarvest()
@@ -90,11 +114,6 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	{
 		return true;
 	}
-	  
-	public boolean hasTileEntity(int aMeta)
-	{
-		return true;
-	}
 
 	public boolean renderAsNormalBlock()
 	{
@@ -115,20 +134,20 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	  
 	public IIcon getIcon(int aSide, int aMeta)
 	{
-	    return iconMap.get(MaterialOre.getOreFromID(aMeta).getOreName());
+		return iconMap.get(MaterialOre.getOreFromID(aMeta).getOreName());
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister aIconRegister) 
 	{
+		FleLog.logger.info("Far Land Era start loading fluid icon.");
+		MinecraftForge.EVENT_BUS.post(new FluidIconRegisterEvent(aIconRegister));
 		iconMap = new HashMap();
 		for(MaterialOre tOre : MaterialOre.getOres())
 		{
 			iconMap.put(tOre.getOreName(), aIconRegister.registerIcon(FleValue.TEXTURE_FILE + ":ore/" + tOre.getOreName().toLowerCase()));
 		}
 	}
-	
-	private ThreadLocal<Integer> thread = new ThreadLocal();
 	  
 	public int getDamageValue(World aWorld, int aX, int aY, int aZ)
 	{
@@ -138,7 +157,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	public void breakBlock(World aWorld, int aX, int aY, int aZ, Block par5, int par6)
 	{
 		BlockPos tPos = new BlockPos(aWorld, aX, aY, aZ);
-		thread.set(FLE.fle.getWorldManager().getData(tPos, 0));
+		metaThread.set(FLE.fle.getWorldManager().getData(tPos, 0));
 		super.breakBlock(aWorld, aX, aY, aZ, par5, par6);
 		FLE.fle.getWorldManager().removeData(tPos);
 	}
@@ -148,9 +167,9 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	public ArrayList<ItemStack> getDrops(World aWorld, int aX, int aY, int aZ, int aMeta, int aFortune)
 	{
 		ArrayList<ItemStack> list = new ArrayList();
-		if(thread.get() != null)
+		if(metaThread.get() != null)
 		{
-			list.add(new ItemStack(this, 1, thread.get()));
+			list.add(new ItemStack(this, 1, metaThread.get()));
 		}
 		else
 		{
@@ -182,7 +201,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	
 	public static void setData(BlockPos aPos, int meta)
 	{
-		setData(aPos, Blocks.stone, 0, meta);;
+		setData(aPos, Blocks.stone, 0, meta);
 	}
 	
 	public static void setData(BlockPos aPos, Block baseRock, int baseMeta, int meta)

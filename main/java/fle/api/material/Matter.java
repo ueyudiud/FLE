@@ -1,8 +1,6 @@
 package fle.api.material;
 
-import static fle.api.enums.CompoundType.Alloy;
-import static fle.api.enums.CompoundType.Ionic;
-import static fle.api.enums.CompoundType.Molecular;
+import static fle.api.enums.CompoundType.*;
 import static fle.api.enums.EnumAtoms.*;
 import static fle.api.enums.EnumIons.*;
 
@@ -12,6 +10,7 @@ import java.util.List;
 
 import fle.api.enums.CompoundType;
 import fle.api.enums.EnumAtoms;
+import fle.api.enums.EnumIons;
 import fle.api.util.WeightHelper;
 
 public class Matter implements IAtoms
@@ -45,6 +44,9 @@ public class Matter implements IAtoms
 	
 	public static final Matter mNH3 = new Matter(Molecular, new AtomStack(N_3, 1), new AtomStack(H1, 3));
 	public static final Matter mH2O = new Matter(Molecular, new AtomStack(H1, 2), new AtomStack(O_2));
+	public static final Matter mCO = new Matter(Molecular, new AtomStack(C2), new AtomStack(O_2));
+	public static final Matter mCO2 = new Matter(Molecular, new AtomStack(C4), new AtomStack(O_2, 2));
+	public static final Matter mSO2 = new Matter(Molecular, new AtomStack(S4), new AtomStack(O_2, 2));
 	public static final Matter mH2S = new Matter(Molecular, new AtomStack(H1, 2), new AtomStack(S_2));
 	public static final Matter mHF = new Matter(Molecular, new AtomStack(H1), new AtomStack(F_1));
 	public static final Matter mHCl = new Matter(Molecular, new AtomStack(H1), new AtomStack(Cl_1));
@@ -55,6 +57,10 @@ public class Matter implements IAtoms
 	public static final Matter mH3PO4 = new Matter(Molecular, new AtomStack(H1), new AtomStack(Dihydrogen_Phosphate));
 	public static final Matter mH2SO3 = new Matter(Molecular, new AtomStack(H1), new AtomStack(Hydrogen_Sulfite));
 	public static final Matter mH2SO4 = new Matter(Molecular, new AtomStack(H1, 2), new AtomStack(Sulfate));
+
+	public static final Matter mN2 = new Matter(Molecular, new AtomStack(N, 2));
+	public static final Matter mO2 = new Matter(Molecular, new AtomStack(O, 2));
+	public static final Matter mAir = new Matter(Mix, new AtomStack(mN2, 4), new AtomStack(mO2));
 	
 	protected CompoundType ct;
 	protected AtomStack[] ions;
@@ -68,11 +74,23 @@ public class Matter implements IAtoms
 	@Override
 	public String toString()
 	{
-		String s = "";
-		s += ions[0].toString();
-		for(int i = 1; i < ions.length; ++i) 
+		if(ions.length == 1)
 		{
-			s += ions[i].toString();
+			return ions.toString();
+		}
+		String s = "";
+		for(int i = 0; i < ions.length; ++i) 
+		{
+			if(ions[i].ion.isRadical() && (ions.length > 1 || ions[i].size != 1))
+			{
+				s += "(" + ions[i].toString() + ")";
+				if(ions[i].size != 1)
+					s += ions[i].size;
+			}
+			else
+			{
+				s += ions[i].toString();
+			}
 		}
 		return s;
 	}
@@ -133,6 +151,7 @@ public class Matter implements IAtoms
 	}
 	
 	private WeightHelper<EnumAtoms> wh;
+	private WeightHelper<IAtoms> iwh;
 	
 	private void initCaculater()
 	{
@@ -143,22 +162,37 @@ public class Matter implements IAtoms
 			size += ions[i].size;
 		}
 		EnumAtoms[][] ea = new EnumAtoms[size][];
+		IAtoms[][] ea1 = new IAtoms[size][];
 		int r = 0;
 		for(i = 0; i < ions.length; ++i)
 		{
 			for(int j = 0; j < ions[i].size; ++j)
 			{
 				ea[r] = ions[i].get().getElementAtoms();
+				ea1[r] = ions[i].get().getIonContain();
 				++r;
 			}
 		}
 		wh = new WeightHelper<EnumAtoms>(ea);
+		iwh = new WeightHelper<IAtoms>(ea1);
+	}
+
+	public WeightHelper<IAtoms> getIonHelper()
+	{
+		if(iwh == null) initCaculater();
+		return iwh;
 	}
 
 	public WeightHelper<EnumAtoms> getHelper()
 	{
 		if(wh == null) initCaculater();
 		return wh;
+	}
+	
+	public double getIconContain(IAtoms e) 
+	{
+		if(iwh == null) initCaculater();
+		return iwh.getContain(e);
 	}
 	
 	@Override

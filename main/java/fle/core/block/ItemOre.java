@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import fle.FLE;
 import fle.api.block.ItemSubBlock;
 import fle.api.material.MaterialOre;
 import fle.api.world.BlockPos;
@@ -27,15 +26,15 @@ public class ItemOre extends ItemSubBlock
 	{
 		short tDamage = (short)getDamage(aStack);
 
-    	if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, 0, 3))
+    	if (!aWorld.setBlock(aX, aY, aZ, field_150939_a, field_150939_a.onBlockPlaced(aWorld, aX, aY, aZ, side, hitY, hitY, hitZ, tDamage), 3))
     	{
     		return false;
     	}
-    	BlockOre.setData(new BlockPos(aWorld, aX, aY, aZ), tDamage);
-	    if (aWorld.getBlock(aX, aY, aZ) == this.field_150939_a)
+	    if (aWorld.getBlock(aX, aY, aZ) == field_150939_a)
 	    {
-	    	this.field_150939_a.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);
-	    	this.field_150939_a.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
+	    	BlockOre.setData(new BlockPos(aWorld, aX, aY, aZ), tDamage);
+	    	field_150939_a.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);
+	    	field_150939_a.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
 	    }
 	    return true;
 	}

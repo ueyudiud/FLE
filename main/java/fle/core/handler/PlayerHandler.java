@@ -1,8 +1,10 @@
 package fle.core.handler;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.util.FoodStats;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -10,10 +12,9 @@ import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import fle.FLE;
-import fle.api.world.BlockPos;
 import fle.core.init.IB;
 import fle.core.tool.WasherManager;
+import fle.core.util.FleFoodStats;
 
 public class PlayerHandler
 {
@@ -25,7 +26,21 @@ public class PlayerHandler
 	@SubscribeEvent
 	public void onLogin(PlayerLoggedInEvent evt)
 	{
-		
+		if(!(evt.player.getFoodStats() instanceof FleFoodStats))
+		{
+	        try
+	        {
+	        	Class<?> clazz = EntityPlayer.class;
+	            Field field = clazz.getDeclaredField("foodStats");
+	            field.setAccessible(true);
+	            FoodStats stats = (FoodStats) field.get(evt.player);
+	            field.set(evt.player, new FleFoodStats(stats));
+	        }
+	        catch(Throwable e)
+	        {
+	            e.printStackTrace();
+	        }
+		}
 	}
 	
 	@SubscribeEvent
@@ -58,7 +73,7 @@ public class PlayerHandler
 	
 
 	@SubscribeEvent
-	public void onWashItem(LivingUpdateEvent evt)
+	public void onPlayerUpdate(LivingUpdateEvent evt)
 	{
 		if(evt.entityLiving instanceof EntityPlayer)
 		{

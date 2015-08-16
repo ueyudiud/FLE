@@ -10,6 +10,12 @@ import fle.api.tech.PlayerTechInfo;
 import fle.api.tech.TechClass;
 import fle.api.tech.Technology;
 
+/**
+ * This system have not complete yet.
+ * @author ueyudiud
+ *
+ */
+@Deprecated
 public class FlaTechnology extends Technology
 {
 	private final String name;

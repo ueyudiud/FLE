@@ -15,4 +15,6 @@ public abstract class CropRegister
 	public abstract ICropSeed getCropFromSeed(CropCard crop);
 	
 	public abstract Iterator<CropCard> getCrops();
+
+	public abstract int getCropID(CropCard crop);
 }

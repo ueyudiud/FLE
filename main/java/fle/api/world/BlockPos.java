@@ -1,10 +1,13 @@
 package fle.api.world;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import fle.api.FleAPI;
@@ -64,15 +67,40 @@ public final class BlockPos implements IObjectInWorld
 	{
 		if(obj instanceof BlockPos)
 		{
-			return ((BlockPos) obj).x == x && ((BlockPos) obj).y == y && ((BlockPos) obj).z == z;
+			BlockPos tPos = (BlockPos) obj;
+			return tPos.getDim() == getDim() && tPos.x == x && tPos.y == y && tPos.z == z;
 		}
 		return super.equals(obj);
+	}
+	
+	public int getDim()
+	{
+        if(access instanceof World) return ((World) access).provider.dimensionId;
+        else if(FleAPI.mod.getPlatform().getPlayerInstance() != null) return FleAPI.mod.getPlatform().getPlayerInstance().worldObj.provider.dimensionId;
+        else return 0;
+	}
+	
+	@Override
+	public World getWorldObj() 
+	{
+		return (World) (access instanceof World ? access : null);
+	}
+	
+	@Override
+	public BlockPos getBlockPos() 
+	{
+		return this;
 	}
 	
 	public static final class ChunkPos
 	{
 		public final long x, z;
-		
+
+		public ChunkPos(Chunk aChunk)
+		{
+			x = aChunk.xPosition;
+			z = aChunk.zPosition;
+		}
 		public ChunkPos(long x, long z)
 		{
 			this.x = x;
@@ -93,7 +121,7 @@ public final class BlockPos implements IObjectInWorld
 		@Override
 		public int hashCode()
 		{
-			return (int) (x << 20 + z);//For zPos more than 1024 * 1024 / 2 may have somethings wrong.
+			return (int) (x << 20 + z);
 		}
 	}
 
@@ -103,31 +131,19 @@ public final class BlockPos implements IObjectInWorld
 		int code = y;
         code = 255 * code + x;
         code = 0xFFFFFF * code + z;
-        if(access instanceof World)
-        	code = 31 * code + ((World) access).provider.dimensionId;
-        else if(FleAPI.mod.getPlatform().getPlayerInstance() != null)
-        {
-        	try
-        	{
-        		code = 31 * code + FleAPI.mod.getPlatform().getPlayerInstance().worldObj.provider.dimensionId;
-        	}
-        	catch(Throwable e)
-        	{
-        		e.printStackTrace();
-        	}
-        }
 		return code;
 	}
-	
-	@Override
-	public World getWorldObj() 
+
+	public boolean isAir()
 	{
-		return (World) (access instanceof World ? access : null);
+		return getBlock().isAir(access, x, y, z);
 	}
-	
-	@Override
-	public BlockPos getBlockPos() 
+
+	public boolean isReplacable()
 	{
-		return this;
+		Block tBlock = getBlock();
+		if(tBlock == Blocks.fire || tBlock == Blocks.air)
+			return true;
+		return getBlock().isReplaceable(access, x, y, z) && !(tBlock.getMaterial() == Material.water || tBlock.getMaterial() == Material.lava);
 	}
 }

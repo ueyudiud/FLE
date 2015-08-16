@@ -17,6 +17,12 @@ import fle.FLE;
 import fle.api.tech.Technology;
 import fle.api.tech.Technology.LearningType;
 
+/**
+ * This system have not complete yet.
+ * @author ueyudiud
+ *
+ */
+@Deprecated
 public class PlayerTechLearningHandler 
 {
 	private static Map<LearningType, List<Technology>> techLearningList = new HashMap();

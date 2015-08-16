@@ -4,11 +4,11 @@ import net.minecraft.item.ItemStack;
 import fle.core.gui.base.ContainerCraftable;
 import fle.core.gui.base.InventoryBase;
 
-public abstract class InventoryCraftable extends InventoryBase
+public abstract class InventoryCraftable<T extends ContainerCraftable> extends InventoryBase<T>
 {
 	private String name;
 
-	public InventoryCraftable(String name, ContainerCraftable container, int i) 
+	public InventoryCraftable(String name, T container, int i) 
 	{
 		super(container, i);
 		this.name = name;

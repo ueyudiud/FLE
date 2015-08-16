@@ -14,5 +14,6 @@ public class Conditions
 		GuiError.DEFAULT = new GuiError("default").setTextureName(FleValue.TEXTURE_FILE + ":default");
 		GuiError.CAN_NOT_OUTPUT = new GuiError("cant_output").setTextureName(FleValue.TEXTURE_FILE + ":output_error");
 		GuiError.CAN_NOT_INPUT = new GuiError("cant_input").setTextureName(FleValue.TEXTURE_FILE + ":input_error");
+		GuiError.RAINING = new GuiError("raining").setTextureName(FleValue.TEXTURE_FILE + ":rain_error");
 	}
 }

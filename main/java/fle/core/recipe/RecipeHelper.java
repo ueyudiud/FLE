@@ -168,6 +168,15 @@ public class RecipeHelper
 		}
 	}
 
+	public static void onInputItemStack(EntityPlayer aPlayer)
+	{
+		if(aPlayer.capabilities.isCreativeMode) return;
+		--aPlayer.getCurrentEquippedItem().stackSize;
+		if(aPlayer.getCurrentEquippedItem().stackSize <= 0)
+		{
+			aPlayer.destroyCurrentEquippedItem();
+		}
+	}
 	public static void onInputItemStack(IInventory inv, int slotSlot) 
 	{
 		inv.decrStackSize(slotSlot, 1);

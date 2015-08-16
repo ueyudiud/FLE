@@ -2,15 +2,18 @@ package fle.api.world;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 import fle.api.util.ITextureLocation;
 
-public abstract class TreeInfo 
+public abstract class TreeInfo implements IPlantable
 {
 	protected final String name;
 	
@@ -57,5 +60,17 @@ public abstract class TreeInfo
 	public String getName() 
 	{
 		return name;
+	}
+
+	@Override
+	public Block getPlant(IBlockAccess world, int x, int y, int z)
+	{
+		return Blocks.sapling;
+	}
+
+	@Override
+	public int getPlantMetadata(IBlockAccess world, int x, int y, int z)
+	{
+		return 0;
 	}
 }

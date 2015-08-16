@@ -1,0 +1,150 @@
+package fle.core.te;
+
+import java.util.ArrayList;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
+import fle.FLE;
+import fle.api.crop.CropCard;
+import fle.api.crop.ICropTile;
+import fle.core.net.FlePackets.CoderNBTUpdate;
+import fle.core.te.base.TEBase;
+import fle.core.util.WorldUtil;
+
+public class TileEntityCrop extends TEBase implements ICropTile
+{
+	public TileEntityCrop copy()
+	{
+		return new TileEntityCrop(card, age, buffer, cushion);
+	}
+	
+	public TileEntityCrop(){}
+	
+	private TileEntityCrop(CropCard card, int a, double b, int c) 
+	{
+		this.card = card;
+		this.age = a;
+		this.buffer = b;
+		this.cushion = c;
+	}
+	
+	private int cushion;
+	private double buffer;
+	private CropCard card;
+	private int age;
+	
+	public void setupCrop(CropCard card)
+	{
+		this.card = card;
+		this.age = 0;
+		this.buffer = 0D;
+		this.cushion = 0;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) 
+	{
+		super.readFromNBT(nbt);
+		age = nbt.getShort("Age");
+		card = FLE.fle.getCropRegister().getCropFromName(nbt.getString("CropName"));
+		buffer = nbt.getDouble("Buffer");
+	}
+	
+	public void writeToNBT(NBTTagCompound nbt) 
+	{
+		super.writeToNBT(nbt);
+		nbt.setShort("Age", (short) age);
+		nbt.setDouble("Buffer", buffer);
+		nbt.setString("CropName", card.getCropName());
+	}
+
+	@Override
+	public void updateEntity() 
+	{
+		if(card != null)
+		{
+			if(buffer < 0) buffer = 0D;
+			if(age >= 256) return;
+			++cushion;
+			if(cushion > 20)
+			{
+ 				cushion = 0;
+				if(card.canCropGrow(this))
+				{
+					double d = MathHelper.randomFloatClamp(worldObj.rand, 0.8F, 1.2F) * Math.log10(card.getGrowSpeed(this));
+					if(d > 0)
+						buffer += d;
+					if(buffer > card.getGrowTick())
+					{
+						++age;
+						buffer = 0;
+					}
+				}
+				worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
+				FLE.fle.getNetworkHandler().sendTo(new CoderNBTUpdate(this));
+			}
+		}
+	}
+
+	public ArrayList<ItemStack> getCropHarvestDrop() 
+	{
+		ArrayList<ItemStack> list = new ArrayList();
+		if(card != null)
+		{
+			list.addAll(card.getSeedDropsInfo(this).getDrops());
+			if(card.canHarvestCrop(this))
+			{
+				list.addAll(card.getHarvestDropsInfo(this).getDrops());
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public int getStage()
+	{
+		return age;
+	}
+
+	@Override
+	public boolean isBlockUnder(Block target) 
+	{
+		return worldObj.getBlock(xCoord, yCoord - 1, zCoord).isReplaceableOreGen(worldObj, xCoord, yCoord - 1, zCoord, target);
+	}
+
+	@Override
+	public double getAirLevel() 
+	{
+		return 10D - Math.log(FLE.fle.getAirConditionProvider().getPolluteLevel(getBlockPos()) + 1D);
+	}
+
+	@Override
+	public double getWaterLevel() 
+	{
+		return WorldUtil.getWaterLevel(worldObj, xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public double getTempretureLevel() 
+	{
+		return WorldUtil.getTempretureLevel(worldObj, xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public int getLightValue() 
+	{
+		return worldObj.getBlockLightValue(xCoord, yCoord + 1, zCoord);
+	}
+
+	public CropCard getCrop() 
+	{
+		return card;
+	}
+
+	public int getCropAge() 
+	{
+		return age;
+	}
+}

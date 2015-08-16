@@ -6,9 +6,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.gui.GuiCondition;
 import fle.core.gui.InventoryPolish;
-import fle.core.te.base.TileEntityInventory;
+import fle.core.te.base.TEInventory;
 
-public class TileEntityPolish extends TileEntityInventory<InventoryPolish>
+public class TileEntityPolish extends TEInventory<InventoryPolish>
 {
 	public TileEntityPolish()
 	{

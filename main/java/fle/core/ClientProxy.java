@@ -1,28 +1,38 @@
 package fle.core;
 
-import java.io.IOException;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.fluid.FluidBase;
 import fle.api.gui.GuiCondition;
 import fle.api.util.ColorMap;
+import fle.api.util.FluidIconRegisterEvent;
 import fle.api.util.IColorMapHandler;
+import fle.core.entity.EntityFleArrow;
 import fle.core.init.IB;
+import fle.core.init.Renders;
+import fle.core.render.RenderArgil;
+import fle.core.render.RenderAsh;
+import fle.core.render.RenderDryingTable;
+import fle.core.render.RenderFleArrow;
 import fle.core.render.RenderHandler;
+import fle.core.render.RenderOilLamp;
 import fle.core.render.RenderOre;
+import fle.core.render.RenderRock;
+import fle.core.render.TESRDryingTable;
+import fle.core.te.TileEntityDryingTable;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleTextureMap;
 
@@ -31,6 +41,11 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 {
 	@SideOnly(Side.CLIENT)
 	private IResourceManager resourceManager;
+	
+	public ClientProxy() 
+	{
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 	
 	@Override
 	public void onPreload() 
@@ -43,9 +58,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public void onPostload() 
 	{
 		super.onPostload();
-        FleValue.FLE_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
-        RenderHandler.register(IB.ore, OreDictionary.WILDCARD_VALUE, RenderOre.class);
-    	RenderingRegistry.registerBlockHandler(new RenderHandler());
+		Renders.init();
 	}
 	
 	@Override
@@ -86,6 +99,15 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		catch(Throwable e)
 		{
 			return new FleColorMap();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onFluidIconRegister(FluidIconRegisterEvent evt)
+	{
+		for(FluidBase tFluid : FluidBase.register)
+		{
+			tFluid.registerIcon(evt.register);
 		}
 	}
 }

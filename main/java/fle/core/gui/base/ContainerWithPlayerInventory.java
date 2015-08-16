@@ -12,7 +12,11 @@ public abstract class ContainerWithPlayerInventory extends ContainerBase
 	protected final TransLocation locatePlayerBag = new TransLocation("player_bag", 0, 27);
 	protected final TransLocation locatePlayerHand = new TransLocation("player_hand", 27, 36);
 	protected final TransLocation locatePlayer = new TransLocation("player", 0, 36);
-	
+
+	public ContainerWithPlayerInventory(InventoryPlayer player,	IInventory inventory) 
+	{
+		super(player, inventory);
+	}
 	public ContainerWithPlayerInventory(InventoryPlayer player,
 			IInventory inventory, int playerInvUpos, int playerInvVpos) 
 	{

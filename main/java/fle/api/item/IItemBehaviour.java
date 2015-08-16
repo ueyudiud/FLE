@@ -38,4 +38,6 @@ public abstract interface IItemBehaviour<E extends Item>
 	public abstract boolean canHarvestBlock(E item,	Block aBlock, int aMetadata, ItemStack aStack);
 
 	public abstract boolean onEntityItemUpdate(E item, EntityItem aItem);
+	
+	public abstract boolean isValidArmor(E item, ItemStack aStack, int ammorType, Entity aEntity);
 }

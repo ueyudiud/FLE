@@ -134,11 +134,11 @@ public final class PropertyInfo
 
 	public PropertyInfo(int aColor, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
 	{
-		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, 1.0F);
 	}
 	public PropertyInfo(int[] aColor, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
 	{
-		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, 1.0F);
 	}
 	public PropertyInfo(int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
@@ -146,25 +146,29 @@ public final class PropertyInfo
 	}
 	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
-		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F);
+		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F, 1.0F);
 	}
 	public PropertyInfo(int[] aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
-		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F);
+		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F, 1.0F);
 	}
-	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
-		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
-	public PropertyInfo(int[] aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int[] aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
-		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
-	public PropertyInfo(int aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int aColor, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
-		this(new int[]{aColor, aColor}, aMaxUse, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity);
+		this(new int[]{aColor, aColor}, 0, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, 0.0F, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
-	public PropertyInfo(int[] aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
+	{
+		this(new int[]{aColor, aColor}, aMaxUse, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
+	}
+	public PropertyInfo(int[] aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
 		colors = aColor;
         reflectRedLight = (aColor[0] >> 16 & 255) / 255.0F;
@@ -183,6 +187,7 @@ public final class PropertyInfo
 		shearStrength = Math.log10(aShearStrength);
 		resistance = aResistance;
 		thermalConductivity = aThermalConductivity;
+		specificHeat = aSpecificHeat;
 		brittleness = aBrittleness;
 	}
 	
@@ -272,5 +277,10 @@ public final class PropertyInfo
 	public float getThermalConductivity() 
 	{
 		return thermalConductivity;
+	}
+	
+	public double getSpecificHeat()
+	{
+		return specificHeat;
 	}
 }

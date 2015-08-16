@@ -74,7 +74,7 @@ public abstract class ItemFle extends Item
 		return true;
 	}
 
-	protected abstract void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource, int aDamage);
+	public abstract void damageItem(ItemStack stack, EntityLivingBase aUser, EnumDamageResource aReource, float aDamage);
 	
 	@Override
 	public int getDamage(ItemStack aStack) 

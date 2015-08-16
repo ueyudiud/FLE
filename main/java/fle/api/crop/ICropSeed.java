@@ -5,9 +5,7 @@ import net.minecraft.util.IIcon;
 
 public interface ICropSeed
 {
-	public String getCropSeedName();
+	public String getCropSeedName(ItemStack stack);
 	
 	public CropCard getCrop(ItemStack stack);
-	
-	public IIcon getIconFromCropCard();
 }

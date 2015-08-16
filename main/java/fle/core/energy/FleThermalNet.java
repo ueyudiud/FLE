@@ -18,7 +18,7 @@ public class FleThermalNet extends ThermalNet
 	{
 		BiomeGenBase biome = pos.getBiome();
 		float bioTem = biome.getFloatTemperature(pos.x, pos.y, pos.z);
-		int ret = (int) ((Math.pow(bioTem, 0.5D) / Math.pow(40D, 0.5D)) * 40 + FleValue.WATER_FREEZE_POINT);
+		int ret = (int) ((Math.pow(bioTem, 0.5D) * 40) + FleValue.WATER_FREEZE_POINT);
 		if(FLE.fle.getRotationNet() != null)
 		{
 			ret -= FLE.fle.getRotationNet().getWindSpeed() / 5;
@@ -48,19 +48,19 @@ public class FleThermalNet extends ThermalNet
 		return ret;
 	}
 	
-	private int getBlockMaterialSpecificHeat(Material material)
+	private double getBlockMaterialSpecificHeat(Material material)
 	{
-		if(material == Material.air) return 10;
-		if(material == Material.water) return 420;
-		if(material == Material.wood) return 200;
-		if(material == Material.clay) return 75;
-		if(material == Material.ice) return 210;
-		if(material == Material.sand) return 54;
-		if(material == Material.glass) return 84;
-		if(material == Material.rock) return 38;
-		if(material == Material.snow) return 35;
-		if(material == Material.ground) return 42;
-		return 100;
+		if(material == Material.air) return 1.0D;
+		if(material == Material.water) return 4.2D;
+		if(material == Material.wood) return 2.0D;
+		if(material == Material.clay) return 0.75D;
+		if(material == Material.ice) return 3.4D;
+		if(material == Material.sand) return 0.54D;
+		if(material == Material.glass) return 0.84D;
+		if(material == Material.rock) return 0.38D;
+		if(material == Material.snow) return 3.5D;
+		if(material == Material.ground) return 0.84D;
+		return 0.9D;
 	}
 
 	@Override
@@ -99,13 +99,18 @@ public class FleThermalNet extends ThermalNet
 			{
 				if(te.getTemperature(dir) > getEnvironmentTemperature(pos) + 1)
 				{
-					te.onHeatEmmit(dir, (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * te.getThermalConductivity(dir));
+					te.onHeatEmmit(dir, (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * Math.min(te.getThermalConductivity(dir), getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())));
 				}
 				else if(te.getTemperature(dir) < getEnvironmentTemperature(pos) - 1)
 				{
-					te.onHeatReceive(dir, (getEnvironmentTemperature(pos) - te.getTemperature(dir)) * te.getThermalConductivity(dir));
+					te.onHeatReceive(dir, (getEnvironmentTemperature(pos) - te.getTemperature(dir)) * Math.min(te.getThermalConductivity(dir), getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())));
 				}
 			}
 		}
+	}
+
+	public static int getFTempretureToInteger(double tempreture)
+	{
+		return (int) (Math.pow(tempreture, 0.5D) / Math.pow(40D, 0.5D) * 40) + FleValue.WATER_FREEZE_POINT;
 	}
 }

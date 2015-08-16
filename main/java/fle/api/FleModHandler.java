@@ -5,6 +5,7 @@ import fle.api.energy.RotationNet;
 import fle.api.energy.ThermalNet;
 import fle.api.net.FleNetworkHandler;
 import fle.api.tech.ITechManager;
+import fle.api.util.IAirConditionProvider;
 import fle.api.util.IColorMapHandler;
 import fle.api.util.IPlatform;
 import fle.api.world.IWorldManager;
@@ -19,4 +20,5 @@ public interface FleModHandler
 	IColorMapHandler getColorMapHandler();
 	IWorldManager getWorldManager();
 	ITechManager getTechManager();
+	IAirConditionProvider getAirConditionProvider();
 }

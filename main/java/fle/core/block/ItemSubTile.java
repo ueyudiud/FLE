@@ -28,18 +28,19 @@ public class ItemSubTile extends ItemFleBlock
      */
     public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
     {
-    	FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 0, metadata);
-       if (!world.setBlock(x, y, z, field_150939_a, metadata, 3))
-       {
-           return false;
-       }
+    	short tDamage = (short) getDamage(stack);
+    	FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 0, tDamage);
+    	if (!world.setBlock(x, y, z, field_150939_a, tDamage, 3))
+    	{
+    		return false;
+    	}
 
-       if (world.getBlock(x, y, z) == field_150939_a)
-       {
-           field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
-           field_150939_a.onPostBlockPlaced(world, x, y, z, metadata);
-       }
+    	if (world.getBlock(x, y, z) == field_150939_a)
+    	{
+    		field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
+    		field_150939_a.onPostBlockPlaced(world, x, y, z, tDamage);
+    	}
 
-       return true;
+    	return true;
     }
 }

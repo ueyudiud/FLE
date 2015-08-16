@@ -7,6 +7,12 @@ import fle.api.tech.TechClass;
 import fle.api.tech.Technology;
 import fle.api.util.Register;
 
+/**
+ * This system have not complete yet.
+ * @author ueyudiud
+ *
+ */
+@Deprecated
 public class FleTechManager extends ITechManager
 {
 	private final Register<Technology> register1 = new Register();

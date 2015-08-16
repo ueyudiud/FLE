@@ -1,19 +1,31 @@
 package fle.core.item;
 
-import net.minecraft.block.Block;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import fle.FLE;
+import fle.api.enums.EnumCraftingType;
+import fle.api.item.IBagable;
 import fle.api.item.IItemBehaviour;
-import fle.api.item.ITreeLog;
+import fle.api.item.IPolishTool;
+import fle.api.item.ISubPolishTool;
 import fle.api.item.ItemFleMetaBase;
+import fle.api.recipe.CraftingState;
+import fle.api.util.FleLog;
 import fle.api.util.ITextureLocation;
 import fle.core.init.IB;
+import fle.core.item.behavior.BehaviorArrowBag;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.BehaviorBlockable;
+import fle.core.item.behavior.BehaviorCeramics;
+import fle.core.item.behavior.BehaviorFlintChip;
 import fle.core.util.TextureLocation;
 
-public class ItemFleSub extends ItemSub
+public class ItemFleSub extends ItemSub implements IPolishTool, IBagable
 {
 	public ItemFleSub(String aUnlocalized, String aUnlocalizedTooltip)
 	{
@@ -23,11 +35,14 @@ public class ItemFleSub extends ItemSub
 	public ItemFleSub init()
 	{
 		addSubItem(0, "flint_a", "stones/1");
-		addSubItem(1, "flint_b", "stones/2");
+		addSubItem(1, "flint_b", "stones/2", new BehaviorFlintChip());
 		addSubItem(2, "flint_c", "stones/3");
 		addSubItem(10, "stone_a", "stones/201");
 		addSubItem(11, "stone_b", "stones/202");
-		addSubItem(31, "limestone_a", "stones/1001");
+		addSubItem(31, "limestone", "stones/1001");
+		addSubItem(32, "sandstone", "stones/1002");
+		addSubItem(33, "netherstone", "stones/1003");
+		addSubItem(34, "chip_obsidian", "stones/2001");
 		addSubItem(101, "bark_oak", "tree/1");
 		addSubItem(102, "bark_spruce", "tree/2");
 		addSubItem(103, "bark_birch", "tree/3");
@@ -54,15 +69,19 @@ public class ItemFleSub extends ItemSub
 		addSubItem(1003, "ramie_fiber_dry", "crop/ramie_fiber_dry");
 		addSubItem(1004, "ramie_rope", "crop/ramie_rope");
 		addSubItem(1005, "ramie_bundle_rope", "crop/ramie_bundle_rope");
-		addSubItem(1006, "charred_log", "tree/1003");
+		addSubItem(1006, "charred_log", "tree/1003", new BehaviorBlockable(4, IB.charcoal));
 		addSubItem(2001, "lipocere", "resource/1");
 		addSubItem(3001, "dust_limestone", "stones/11001");
-		addSubItem(3002, "plant_ash", "resource/3");
+		addSubItem(3002, "plant_ash", "resource/3", new BehaviorBlockable(IB.ash));
+		addSubItem(3003, "argil_ball", "resource/2", new BehaviorCeramics());
 		addSubItem(5001, "argil_brick", "clay/101");
 		addSubItem(6002, "argil_plate", "clay/102");
+		addSubItem(10001, "arrow_bag", "tools/arrow_bag", new BehaviorArrowBag());
+		stackLimitList.add(10001);
 		return this;
 	}
-
+	
+	private List<Integer> stackLimitList = new ArrayList();
 
 	public static ItemStack a(String name)
 	{
@@ -70,10 +89,20 @@ public class ItemFleSub extends ItemSub
 	}
 	public static ItemStack a(String name, int size)
 	{
-		int meta = ((ItemFleSub) IB.subItem).itemBehaviors.serial(name);
-		ItemStack ret = new ItemStack(IB.subItem, size, meta);
-		IB.subItem.setDamage(ret, meta);
-		return ret;
+		try
+		{
+			int meta = ((ItemFleSub) IB.subItem).itemBehaviors.serial(name);
+			ItemStack ret = new ItemStack(IB.subItem, size, meta);
+			IB.subItem.setDamage(ret, meta);
+			return ret;
+		}
+		catch(Throwable e)
+		{
+			//Use a null item.
+			FleLog.logger.catching(new RuntimeException("Fle: some mod use empty item id, please check your fle-addon "
+					+ "had already update, or report this bug to mod editer."));
+			return null; //Return null.
+		}
 	}
 
 	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, String aLocate)
@@ -90,8 +119,135 @@ public class ItemFleSub extends ItemSub
 	}
 	
 	@Override
-	public boolean showDurabilityBar(ItemStack aStack) 
+	public int getItemStackLimit(ItemStack aStack)
 	{
+		return stackLimitList.contains(getDamage(aStack)) ? 1 : super.getItemStackLimit(aStack);
+	}
+
+	@Override
+	public ItemStack getOutput(EntityPlayer player, ItemStack aStack) 
+	{
+	    isItemStackUsable(aStack);
+	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+	    try
+	    {
+	    	if (tBehavior instanceof ISubPolishTool)
+	    	{
+	            return ((ISubPolishTool) tBehavior).getOutput(this, aStack, player);
+	        }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return aStack;
+	}
+
+	@Override
+	public CraftingState getState(ItemStack aStack, EnumCraftingType aType, CraftingState aState) 
+	{
+	    isItemStackUsable(aStack);
+	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+	    try
+	    {
+	    	if (tBehavior instanceof ISubPolishTool)
+	    	{
+	            return ((ISubPolishTool) tBehavior).getState(this, aStack, aType, aState);
+	        }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return aState;
+	}
+
+	@Override
+	public int getSize(ItemStack aStack)
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+	    	if (tBehavior instanceof IBagable)
+	    	{
+	            return ((IBagable) tBehavior).getSize(aStack);
+	        }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return 0;
+	}
+
+	@Override
+	public ItemStack getItemContain(ItemStack aStack, int i)
+	{
+		isItemStackUsable(aStack);
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+	    	if (tBehavior instanceof IBagable)
+	    	{
+	            return ((IBagable) tBehavior).getItemContain(aStack, i);
+	        }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return null;
+	}
+
+	@Override
+	public void setItemContain(ItemStack aStack, int i, ItemStack aInput)
+	{
+		isItemStackUsable(aStack);
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+	    	if (tBehavior instanceof IBagable)
+	    	{
+	            ((IBagable) tBehavior).setItemContain(aStack, i, aInput);
+	        }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+	}
+
+	@Override
+	public boolean isItemValid(ItemStack aStack, ItemStack aInput)
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+	    	if (tBehavior instanceof IBagable)
+	    	{
+	            return ((IBagable) tBehavior).isItemValid(aStack, aInput);
+	        }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
 		return false;
+	}
+	
+	@Override
+	public boolean isValidArmor(ItemStack aStack, int armorType, Entity entity)
+	{
+		isItemStackUsable(aStack);
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+	    	return tBehavior.isValidArmor(this, aStack, armorType, entity);
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return super.isValidArmor(aStack, armorType, entity);
 	}
 }

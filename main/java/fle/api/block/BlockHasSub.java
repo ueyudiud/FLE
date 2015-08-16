@@ -17,4 +17,10 @@ public abstract class BlockHasSub extends BlockFle implements IWorldNBT
 	{
 		super(aItemClass, aName, aMaterial);
 	}
+	
+	@Override
+	public boolean hasSubs()
+	{
+		return true;
+	}
 }

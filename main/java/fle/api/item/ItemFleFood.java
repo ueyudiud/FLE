@@ -18,7 +18,7 @@ public class ItemFleFood extends ItemFleMetaBase
 	    setHasSubtypes(true);
 	    setMaxDamage(0);
 	}
-	  
+	
 	public final ItemFleFood addSubItem(int aMetaValue, String name, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior, IFoodStat<ItemFleFood> aFoodBehavior)
 	{
 		if ((aMetaValue < 0) || (aMetaValue >= OreDictionary.WILDCARD_VALUE ))
@@ -26,7 +26,8 @@ public class ItemFleFood extends ItemFleMetaBase
 			return this;
 	    }
 		this.addSubItem(aMetaValue, name, aLocate, aBehavior);
-		foodStats.register(Short.valueOf((short)aMetaValue), aFoodBehavior, name);
+		if(aFoodBehavior != null)
+			foodStats.register(Short.valueOf((short)aMetaValue), aFoodBehavior, name);
 	    return this;
 	}
 

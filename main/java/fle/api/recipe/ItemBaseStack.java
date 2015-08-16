@@ -60,4 +60,10 @@ public class ItemBaseStack extends ItemAbstractStack
 			tList.add(stack.copy());
 		return tList;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "stack.base." + stack.getUnlocalizedName() + "x" + stack.stackSize;
+	}
 }

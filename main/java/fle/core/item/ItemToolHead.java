@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.FleValue;
 import fle.api.item.IItemBehaviour;
 import fle.api.material.MaterialAbstract;
 import fle.api.util.IDataChecker;
@@ -23,6 +24,12 @@ import fle.core.util.TextureLocation;
 
 public class ItemToolHead extends ItemSub
 {
+	public static ItemStack a(String toolTip, int size, MaterialAbstract base)
+	{
+		ItemStack ret = a(toolTip, base);
+		ret.stackSize = size;
+		return ret;
+	}
 	public static ItemStack a(String toolTip, MaterialAbstract base)
 	{
 		return a(toolTip, base, 0);
@@ -52,6 +59,8 @@ public class ItemToolHead extends ItemSub
 				new TextureLocation(new String[]{"tools/head/flint_hammer_head", "tools/head/flint_hammer_rust"}));
 		addSubItem(5, "stone_hammer", 
 				new TextureLocation(new String[]{"tools/head/stone_hammer_head", "tools/head/stone_hammer_rust"}));
+		addSubItem(10, "flint_arrow", 
+				new TextureLocation(new String[]{"tools/head/flint_arrow_head", FleValue.VOID_ICON_FILE}));
 		return this;
 	}
 	

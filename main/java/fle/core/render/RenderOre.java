@@ -13,7 +13,6 @@ public class RenderOre extends RenderBase
 		boolean breaking = render.overrideBlockTexture != null;
 		if(breaking)
 		{
-			init();
 			renderBlock(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
 			return;
 		}

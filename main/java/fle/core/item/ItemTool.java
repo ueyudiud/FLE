@@ -3,6 +3,7 @@ package fle.core.item;
 import static net.minecraft.entity.SharedMonsterAttributes.attackDamage;
 import static net.minecraft.entity.SharedMonsterAttributes.knockbackResistance;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,9 @@ import fle.api.FleValue;
 import fle.api.enums.EnumCraftingType;
 import fle.api.enums.EnumDamageResource;
 import fle.api.enums.EnumTool;
+import fle.api.item.IArrowItem;
 import fle.api.item.ICrushableTool;
+import fle.api.item.IDestoryCheck;
 import fle.api.item.IItemBehaviour;
 import fle.api.item.IPolishTool;
 import fle.api.item.ISubPolishTool;
@@ -46,14 +49,18 @@ import fle.api.util.ITextureLocation;
 import fle.api.util.SubTag;
 import fle.core.init.IB;
 import fle.core.init.Materials;
+import fle.core.item.behavior.BehaviorArrow;
+import fle.core.item.behavior.BehaviorAwl;
 import fle.core.item.behavior.BehaviorAxe;
+import fle.core.item.behavior.BehaviorFirestarter;
 import fle.core.item.behavior.BehaviorShovel;
 import fle.core.item.behavior.BehaviorStoneHammer;
+import fle.core.item.behavior.BehaviorWhetstone;
 import fle.core.item.behavior.BehaviorWoodHammer;
 import fle.core.item.tool.ToolMaterialInfo;
 import fle.core.util.TextureLocation;
 
-public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrushableTool, IPolishTool
+public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrushableTool, IPolishTool, IArrowItem
 {
 	static final Set<MaterialAbstract> materials = new HashSet();
 
@@ -61,10 +68,16 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	{
 		return ((ItemTool) IB.tool).itemBehaviors.serial(toolName);
 	}
-	
+
 	public static ItemStack a(String toolTip, MaterialAbstract base)
 	{
 		return a(toolTip, base, 0);
+	}
+	public static ItemStack a(String toolTip, int size, MaterialAbstract base)
+	{
+		ItemStack ret = a(toolTip, base);
+		ret.stackSize = size;
+		return ret;
 	}
 	public static ItemStack a(String toolTip, MaterialAbstract base, int damage)
 	{
@@ -84,6 +97,8 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		addToolMaterial(Materials.Flint);
 		addToolMaterial(Materials.Obsidian);
 		addToolMaterial(Materials.HardWood);
+		addToolMaterial(Materials.Stone);
+		addToolMaterial(Materials.CompactStone);
 		addSubItem(1, "rough_stone_axe", SubTag.TOOL_stone, 
 				new String[]{EnumTool.axe.toString()},
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
@@ -105,7 +120,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new TextureLocation("tools/hammer/flint_hammer_head", "tools/hammer/flint_hammer_rust", FleValue.VOID_ICON_FILE, "tools/hammer/flint_hammer_stick", "tools/hammer/flint_hammer_tie"), 
 				new BehaviorStoneHammer(1, 0.7F));
 		addSubItem(5, "stone_hammer", SubTag.TOOL_stone_real, 
-				new String[]{EnumTool.stone_hammer.name()}, 
+				new String[]{EnumTool.stone_hammer.name(), EnumTool.abstract_hammer.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 2.0F)},
 				new TextureLocation("tools/hammer/stone_hammer_head", "tools/hammer/stone_hammer_rust", FleValue.VOID_ICON_FILE, "tools/hammer/stone_hammer_stick", "tools/hammer/stone_hammer_tie"), 
 				new BehaviorStoneHammer(2, 0.9F));
@@ -114,6 +129,24 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new AttributesInfo[]{new AttributesInfo(knockbackResistance, 0.1F)},
 				new TextureLocation(FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/hammer/wood_hammer"), 
 				new BehaviorWoodHammer());
+		addSubItem(7, "wooden_drilling_firing", SubTag.TOOL_wood, 
+				new String[]{EnumTool.firestarter.name()},
+				new TextureLocation(FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/firestarter/wood_drilling_firing"), 
+				new BehaviorFirestarter(0.3F));
+		addSubItem(8, "whetstone", SubTag.TOOL_stone_real, 
+				new String[]{EnumTool.whetstone.name()},
+				new TextureLocation("tools/whetstone/whetstone", "tools/whetstone/whetstone_rust", FleValue.VOID_ICON_FILE), 
+				new BehaviorWhetstone());
+		addSubItem(9, "flint_awl", SubTag.TOOL_flint, 
+				new String[]{EnumTool.awl.name()},
+				new TextureLocation("tools/awl/awl", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
+				new BehaviorAwl());
+		addSubItem(10, "flint_arrow", SubTag.TOOL_flint, 
+				new String[]{EnumTool.arrow.name()},
+				new TextureLocation("tools/arrow/flint_arrow_head", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/arrow/flint_arrow_stick"), 
+				new BehaviorArrow());
+		heightLightList.add(8);
+		stackLimitList.add(10);
 		return this;
 	}
 	
@@ -122,6 +155,8 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		materials.add(aMaterial);
 	}
 	
+	private List<Integer> stackLimitList = new ArrayList();
+	
 	public ItemTool(String aUnlocalized, String aUnlocalizedTooltip) 
 	{
 		super(aUnlocalized, aUnlocalizedTooltip);
@@ -129,9 +164,15 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	}
 	
 	@Override
+	public int getItemStackLimit(ItemStack aStack)
+	{
+		return stackLimitList.contains(getDamage(aStack)) ? 16 : 1;
+	}
+	
+	@Override
 	public int getMaxDamage(ItemStack aStack) 
 	{
-		return new ToolMaterialInfo(setupNBT(aStack)).getMaxUse();
+		return new ToolMaterialInfo(setupNBT(aStack)).getMaxUse() * 100;
 	}
 	
 	@Override
@@ -153,31 +194,51 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	
 	@Override
 	public void damageItem(ItemStack aStack, EntityLivingBase aUser,
-			EnumDamageResource aReource, int aDamage) 
+			EnumDamageResource aReource, float aDamage) 
 	{
 		ToolMaterialInfo info = new ToolMaterialInfo(setupNBT(aStack));
         if (!(aUser instanceof EntityPlayer) || !((EntityPlayer) aUser).capabilities.isCreativeMode)
         {
-        	int tDamage = aDamage;
-        	float hardness = info.getMaterialBase().getPropertyInfo().getHardness();
-        	float birttleness = info.getMaterialBase().getPropertyInfo().getBrittleness();
-        	float toughness = info.getMaterialBase().getPropertyInfo().getToughness();
-        	float denseness = info.getMaterialBase().getPropertyInfo().getDenseness();
-        	if(itemRand.nextDouble() < 1F - birttleness / 10F)
+        	int tDamage = (int) (aDamage * 100);
+        	if(aReource != EnumDamageResource.UseTool)
         	{
-        		tDamage *= (5 - Math.log(toughness + 1.0F));
+            	float hardness = info.getMaterialBase().getPropertyInfo().getHardness();
+            	float birttleness = info.getMaterialBase().getPropertyInfo().getBrittleness();
+            	float toughness = info.getMaterialBase().getPropertyInfo().getToughness();
+            	float denseness = info.getMaterialBase().getPropertyInfo().getDenseness();
+            	if(itemRand.nextDouble() < 1F - birttleness / 10F)
+            	{
+            		tDamage *= (5 - Math.log(toughness + 1.0F));
+            	}
         	}
         	int aMax = getMaxDamage(aStack);
         	int retDamage = getDisplayDamage(aStack) + tDamage;
         	if(retDamage >= aMax)
         	{
         		aStack.stackSize--;
+        		onToolDestoryed(aStack, (EntityPlayer) aUser);
         	}
         	else
         	{
         		setDisplayDamage(aStack, retDamage);
         	}
         }
+	}
+	
+	public void onToolDestoryed(ItemStack aTool, EntityPlayer aPlayer)
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aTool)));
+	    try
+	    {
+	    	if (tBehavior instanceof IDestoryCheck)
+	    	{
+	            ((IDestoryCheck) tBehavior).onToolDestoryed(aPlayer.worldObj, aTool, aPlayer);
+	        }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
 	}
 
 	public final ItemTool addSubItem(int aMetaValue, String aTagName, IDataChecker<ISubTagContainer> aTag, String[] aToolClass, AttributesInfo[] aInfo, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
@@ -239,28 +300,41 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		}
 	}
 	
+	List<Integer> heightLightList = new ArrayList();
+	
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack aStack, int pass)
     {
     	ToolMaterialInfo tInfo = new ToolMaterialInfo(setupNBT(aStack));
+    	int colorIndex = 0xFFFFFF;
     	switch(pass)
     	{
     	case 0 :
-    		return tInfo.getMaterialBase().getPropertyInfo().getColors()[0];
+    		colorIndex = tInfo.getMaterialBase().getPropertyInfo().getColors()[0];
+    		break;
     	case 1 :
     		if(tInfo.getCoverLevel() < 0.3F)
     		{
-    			return tInfo.getMaterialBase().getPropertyInfo().getColors()[1];
+    			colorIndex = tInfo.getMaterialBase().getPropertyInfo().getColors()[1];
     		}
     		else if(tInfo.getMaterialSurface() != null)
     		{
-    			return tInfo.getMaterialSurface().getPropertyInfo().getColors()[0];
+    			colorIndex = tInfo.getMaterialSurface().getPropertyInfo().getColors()[0];
     		}
-    		else return 0xFFFFFF;
+    		break;
     	case 2 : 
-    		return tInfo.getMaterialMosaic() == null ? 0xFFFFFF : tInfo.getMaterialMosaic().getPropertyInfo().getColors()[0];
+    		colorIndex = tInfo.getMaterialMosaic() == null ? 0xFFFFFF : tInfo.getMaterialMosaic().getPropertyInfo().getColors()[0];
+    		break;
     	default : return 0xFFFFFF;
     	}
+    	if(heightLightList.contains(getDamage(aStack)))
+    	{
+            int r = ((colorIndex >> 16 & 255) + 0xFF) / 2;
+            int g = ((colorIndex >> 8 & 255) + 0xFF) / 2;
+            int b = ((colorIndex & 255) + 0xFF) / 2;
+            return (r << 16) + (g << 8) + b;
+    	}
+    	return colorIndex;
     }
 	
 	@Override
@@ -460,5 +534,30 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	    	e.printStackTrace();
 	    }
 		return aState;
+	}
+
+	@Override
+	public boolean isShootable(ItemStack aTool, ItemStack aStack)
+	{
+		isItemStackUsable(aStack);
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+		{
+			if (tBehavior instanceof IArrowItem)
+			{
+				return ((IArrowItem) tBehavior).isShootable(aTool, aStack);
+			}
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public Entity onShoot(EntityLivingBase aEntity)
+	{
+		return null;
 	}
 }

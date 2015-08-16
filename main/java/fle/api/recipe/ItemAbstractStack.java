@@ -14,4 +14,11 @@ public abstract class ItemAbstractStack
 	public abstract boolean isStackEqul(ItemAbstractStack stack);
 	
 	public abstract List<ItemStack> toArray();
+	
+	@Override
+	public String toString()
+	{
+		ItemStack tStack = toArray().get(0);
+		return "stack.abstract." + tStack.getUnlocalizedName() + "x" + tStack.stackSize;
+	}
 }

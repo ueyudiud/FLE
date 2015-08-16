@@ -51,7 +51,7 @@ public abstract class ContainerCraftable extends ContainerWithPlayerInventory
 		{
 			if(!this.locateRecipeInput.mergeItemStack(itemstack, false))
 			{
-				if(!this.locatePlayerBag.mergeItemStack(itemstack, false))
+				if(!this.locatePlayerBag.mergeItemStack(itemstack, true))
 				{
 					return true;
 				}

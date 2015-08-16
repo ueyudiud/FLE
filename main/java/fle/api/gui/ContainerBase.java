@@ -89,7 +89,7 @@ public abstract class ContainerBase extends Container
 	
 	public abstract boolean transferStackInSlot(Slot slot, ItemStack baseItemStack, ItemStack itemstack, int locate);
 	
-	protected class TransLocation
+	public class TransLocation
 	{
 		String name;
 		int startId;

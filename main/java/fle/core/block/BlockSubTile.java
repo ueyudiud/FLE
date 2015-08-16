@@ -36,16 +36,30 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock
 	protected final Register<IBlockWithTileBehaviour<BlockSubTile>> blockBehaviors = new Register();
 	protected Map<String, IBlockTextureManager> textureNameMap = new HashMap();
 	private Map<String, IIcon[]> iconMap;
-	
+
 	protected BlockSubTile(String aName, Material aMaterial)
 	{
 		super(ItemSubTile.class, aName, aMaterial);
+	}
+	protected BlockSubTile(Class<? extends ItemSubTile> clazz, String aName, Material aMaterial)
+	{
+		super(clazz, aName, aMaterial);
 	}
 	
 	public void registerSub(int index, String aName, IBlockTextureManager locate, IBlockWithTileBehaviour<BlockSubTile> blockBehavior)
 	{
 		blockBehaviors.register(index, blockBehavior, aName);
 		textureNameMap.put(aName, locate);
+	}
+	
+	public Register<IBlockWithTileBehaviour<BlockSubTile>> getRegister()
+	{
+		return blockBehaviors;
+	}
+	
+	public IBlockTextureManager getTextureName(String meta)
+	{
+		return textureNameMap.get(meta);
 	}
 	
 	@Override
@@ -96,7 +110,8 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock
 	@Override
 	public int getDamageValue(World aWorld, int x, int y, int z)
 	{
-		return FLE.fle.getWorldManager().getData(new BlockPos(aWorld, x, y, z), 0);
+		int value =  FLE.fle.getWorldManager().getData(new BlockPos(aWorld, x, y, z), 0);
+		return value == 0 ? aWorld.getBlockMetadata(x, y, z) : value;
 	}
 	
 	@Override

@@ -3,7 +3,9 @@ package fle.api.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,7 +22,13 @@ public class BlockFle extends Block
 {
 	protected int maxStackSize = 64;
 	protected final String unlocalizedName;
-	  
+
+	protected BlockFle(String aName, Material aMaterial)
+	{
+		super(aMaterial);
+		setBlockName(unlocalizedName = aName);
+	    GameRegistry.registerBlock(this, ItemFleBlock.class, getUnlocalizedName());
+	}
 	protected BlockFle(Class<? extends ItemFleBlock> aItemClass, String aName, Material aMaterial)
 	{
 		super(aMaterial);
@@ -96,10 +104,10 @@ public class BlockFle extends Block
 
         switch(l)
         {
-        case 0 : return ForgeDirection.NORTH;
-        case 1 : return ForgeDirection.EAST;
-        case 2 : return ForgeDirection.SOUTH;
-        case 3 : return ForgeDirection.WEST;
+        case 0 : return ForgeDirection.SOUTH;
+        case 1 : return ForgeDirection.WEST;
+        case 2 : return ForgeDirection.NORTH;
+        case 3 : return ForgeDirection.EAST;
         default : return ForgeDirection.UNKNOWN;
         }
     }
@@ -139,17 +147,66 @@ public class BlockFle extends Block
     	return dir;
     }
 	
-	protected ThreadLocal<TileEntity> thread = new ThreadLocal();
+	protected ThreadLocal<TileEntity> tileThread = new ThreadLocal();
 	protected ThreadLocal<Integer> metaThread = new ThreadLocal();
 	
 	@Override
 	public void breakBlock(World aWorld, int x, int y, int z, Block aBlock, int aMeta)
 	{
 		if(aWorld.getTileEntity(x, y, z) != null)
-			thread.set(aWorld.getTileEntity(x, y, z));
+			tileThread.set(aWorld.getTileEntity(x, y, z));
 		BlockPos tPos = new BlockPos(aWorld, x, y, z);
 		metaThread.set(new Integer(FLE.fle.getWorldManager().getData(tPos, 0)));
 		super.breakBlock(aWorld, x, y, z, aBlock, aMeta);
 		FLE.fle.getWorldManager().removeData(tPos);
+	}
+	
+	private MapColor mapColor = null;
+	
+	public BlockFle setMapColor(MapColor aColor)
+	{
+		mapColor = aColor;
+		return this;
+	}
+	
+	@Override
+	public BlockFle setBlockTextureName(String aName)
+	{
+		super.setBlockTextureName(aName);
+		return this;
+	}
+	
+	@Override
+	public BlockFle setHardness(float aH)
+	{
+		super.setHardness(aH);
+		return this;
+	}
+	
+	@Override
+	public BlockFle setResistance(float aR)
+	{
+		super.setResistance(aR);
+		return this;
+	}
+	
+	@Override
+	public BlockFle setCreativeTab(CreativeTabs aTab)
+	{
+		super.setCreativeTab(aTab);
+		return this;
+	}
+	
+	@Override
+	public BlockFle setStepSound(SoundType aSound)
+	{
+		super.setStepSound(aSound);
+		return this;
+	}
+	
+	@Override
+	public MapColor getMapColor(int metadata)
+	{
+		return mapColor == null ? super.getMapColor(metadata) : mapColor;
 	}
 }
