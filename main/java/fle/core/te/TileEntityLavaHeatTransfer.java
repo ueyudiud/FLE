@@ -49,6 +49,8 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 		tick = nbt.getInteger("Tick");
 	}
 	
+	int syncTick = 0;
+	
 	@Override
 	public void updateEntity()
 	{
@@ -69,12 +71,9 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 							}
 						}
 			}
-			FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(this, (byte) 1, tc.getHeat()), new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 4.0F));
 		}
 		if(tc.getTempreture() < 1000)
 		{
-			if(!worldObj.isRemote)
-				FLE.fle.getNetworkHandler().sendToNearBy(new CoderTankUpdate(getBlockPos()), new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 4.0F));				
 			if(buf == 0)
 			{
 				if(tank.drain(1, true) != null)
@@ -82,6 +81,10 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 					buf += 10;
 					tick += rand.nextInt(5);
 					if(tick > 1000) tick = 1000;
+					if(!worldObj.isRemote)
+					{
+						FLE.fle.getNetworkHandler().sendToNearBy(new CoderTankUpdate(getBlockPos()), new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 16.0F));
+					}
 				}
 			}
 			if(buf > 0)
@@ -91,6 +94,12 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 			}
 		}
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
+		if(!worldObj.isRemote && syncTick == 20)
+		{
+			syncTick = 0;
+			FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(this, (byte) 1, tc.getHeat()), new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 4.0F));
+		}
+		else ++syncTick;
 	}
 	
 	@Override

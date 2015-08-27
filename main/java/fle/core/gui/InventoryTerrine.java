@@ -4,11 +4,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import fle.FLE;
 import fle.api.gui.GuiCondition;
 import fle.api.gui.GuiError;
 import fle.api.gui.InventoryWithFluidTank;
 import fle.api.material.Matter.AtomStack;
 import fle.api.material.MatterDictionary;
+import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.argil.TileEntityTerrine;
 
@@ -61,6 +64,10 @@ public class InventoryTerrine extends InventoryWithFluidTank<TileEntityTerrine>
 		break;
 		case 1 :
 		{
+			if(tile.getWorldObj().isRemote)
+			{
+				return;
+			}
 			if(MatterDictionary.getMelting(stacks[0]) != null && stacks[1] == null)
 			{
 				AtomStack stack = MatterDictionary.getMatter(stacks[0]);
@@ -80,13 +87,18 @@ public class InventoryTerrine extends InventoryWithFluidTank<TileEntityTerrine>
 						}
 						else
 						{
-							fill(resource, true);
-							type = GuiError.DEFAULT;
+							if(!tile.getWorldObj().isRemote)
+							{
+								fill(resource, true);
+							}
 							recipeTime = 0;
 							decrStackSize(0, 1);
+							type = GuiError.DEFAULT;
 						}
 						syncTank(tile);
 					}
+					if(!tile.getWorldObj().isRemote)
+						FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Double) recipeTime), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
 				}
 			}
 			else

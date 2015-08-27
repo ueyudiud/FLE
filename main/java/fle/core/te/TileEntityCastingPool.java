@@ -54,7 +54,7 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return false;
+		return super.canDrain(from, fluid) && from != ForgeDirection.UP && from != ForgeDirection.DOWN;
 	}
 
 	@Override

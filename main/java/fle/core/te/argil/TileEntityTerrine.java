@@ -11,12 +11,13 @@ import fle.FLE;
 import fle.api.FleValue;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.gui.GuiCondition;
+import fle.api.net.INetEventListener;
 import fle.api.te.TEIT;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.gui.InventoryTerrine;
 import fle.core.init.Materials;
 
-public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidTank, IFluidHandler, IThermalTileEntity
+public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidTank, IFluidHandler, IThermalTileEntity, INetEventListener
 {
 	private ThermalTileHelper heatCurrect = new ThermalTileHelper(Materials.Argil);
 	public int mode;
@@ -24,7 +25,6 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	public TileEntityTerrine() 
 	{
 		super(new InventoryTerrine());
-		this.mode = 0;
 	}
 	
 	@Override
@@ -168,5 +168,14 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	public double getProgress()
 	{
 		return inv.getProgress();
+	}
+
+	@Override
+	public void onReseave(byte type, Object contain)
+	{
+		if(type == 1)
+		{
+			inv.recipeTime = (Double) contain;
+		}
 	}
 }

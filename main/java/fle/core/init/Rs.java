@@ -97,7 +97,7 @@ public class Rs
 				OreDictionary.registerOre("ingot" + atom.getName(), ItemFleSub.a("ingot_" + atom.name().toLowerCase()));
 		}
 		
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), Matter.mCu, 44, 750, 160000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), Matter.mCu, 88, 750, 160000);
 		MatterDictionary.registerFluid(IB.copper, Matter.mCu);
 		
 		FleAPI.fluidDictionary.registerFluid("oilAnimal", IB.animalOil);

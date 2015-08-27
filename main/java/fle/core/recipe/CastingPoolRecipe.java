@@ -3,6 +3,7 @@ package fle.core.recipe;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import fle.api.FleValue;
 import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
 import fle.core.gui.InventoryCastingPool;
@@ -13,7 +14,7 @@ public class CastingPoolRecipe implements IFreezingRecipe
 {
 	public static void init()
 	{
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, 100), "xxxx xxxx", ItemFleSub.a("ingot_cu")));
+		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3), "xxxx xxxx", ItemFleSub.a("ingot_cu")));
 	}
 	
 	FluidStack input;

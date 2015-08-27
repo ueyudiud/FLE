@@ -37,15 +37,20 @@ public class InventoryCastingPool extends InventoryWithFluidTank<TileEntityCasti
 		nbt.setInteger("Buf", buf);
 	}
 	
+	int syncTick = 0;
+	
 	@Override
 	public void updateEntity(TileEntityCastingPool tile)
 	{
 		super.updateEntity(tile);
-		syncTank(tile);
-		if(RecipeHelper.fillOrDrainInventoryTank(this, tank, 9, 10))
+		if(syncTick == 20)
 		{
-			tile.getWorldObj().markBlockRangeForRenderUpdate(tile.xCoord, tile.yCoord, tile.zCoord, tile.xCoord, tile.yCoord, tile.zCoord);
+			if(RecipeHelper.fillOrDrainInventoryTank(this, tank, 9, 10))
+			{
+				tile.getWorldObj().markBlockRangeForRenderUpdate(tile.xCoord, tile.yCoord, tile.zCoord, tile.xCoord, tile.yCoord, tile.zCoord);
+			}
 		}
+		else ++syncTick;
 		IFreezingRecipe recipe = MatterDictionary.getFreeze(getFluid(), this);
 		if(recipe != null && !tile.getWorldObj().isRemote)
 		{
@@ -79,6 +84,10 @@ public class InventoryCastingPool extends InventoryWithFluidTank<TileEntityCasti
 				syncTank(tile);
 				FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
 			}
+		}
+		else if(recipe == null && !tile.getWorldObj().isRemote)
+		{
+			buf = 0;
 		}
 	}
 

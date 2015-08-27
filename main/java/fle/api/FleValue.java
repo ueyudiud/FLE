@@ -27,6 +27,7 @@ public class FleValue
 	public static int FLE_RENDER_ID;
 	
 	public static final int WATER_FREEZE_POINT = 273;
+	public static final int ingot_mol = 36;
 
 	public static final FleDecimalFormat format_MJ = new FleDecimalFormat(EnumChatFormatting.LIGHT_PURPLE, "############0MJ");
 	public static final FleDecimalFormat format_K = new FleDecimalFormat(EnumChatFormatting.YELLOW, "############0K");

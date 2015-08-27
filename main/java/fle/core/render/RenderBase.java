@@ -271,11 +271,12 @@ public abstract class RenderBase
         int z2 = z + zPlus;
 
         Tessellator tessellator = Tessellator.instance;
-        int color = block.colorMultiplier(world, x2, y2, z2);
+        int color = fluid.getFluid().getColor(fluid);
         float red = (color >> 16 & 255) / 255.0F;
         float green = (color >> 8 & 255) / 255.0F;
         float blue = (color & 255) / 255.0F;
 
+        GL11.glColor4f(red, green, blue, 1.0F);
         double extra = (double) fluid.amount / max * scale;
         double height = extra;
         IIcon iconStill = fluid.getFluid().getIcon();
@@ -301,6 +302,7 @@ public abstract class RenderBase
 
         render.renderMinY = 0;
         render.renderMaxY = 1;
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     protected void renderFluidBlock(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) 
