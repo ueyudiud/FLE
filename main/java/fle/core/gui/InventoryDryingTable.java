@@ -2,7 +2,6 @@ package fle.core.gui;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.gui.GuiError;
@@ -10,8 +9,6 @@ import fle.api.gui.InventoryTileCraftable;
 import fle.core.recipe.DryingRecipe;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.TileEntityDryingTable;
-import fle.core.util.WorldUtil;
-import fle.core.world.FWM;
 
 public class InventoryDryingTable extends InventoryTileCraftable<TileEntityDryingTable>
 {

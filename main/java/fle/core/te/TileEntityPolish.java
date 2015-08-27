@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.gui.GuiCondition;
+import fle.api.te.TEInventory;
 import fle.core.gui.InventoryPolish;
-import fle.core.te.base.TEInventory;
 
 public class TileEntityPolish extends TEInventory<InventoryPolish>
 {

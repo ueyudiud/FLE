@@ -10,10 +10,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import fle.api.gui.ContainerCraftable;
 import fle.api.gui.GuiCondition;
 import fle.api.gui.SlotOutput;
 import fle.api.net.INetEventListener;
-import fle.core.gui.base.ContainerCraftable;
 import fle.core.recipe.CeramicsRecipe;
 
 public class ContainerCeramics extends ContainerCraftable implements INetEventListener
@@ -112,11 +112,5 @@ public class ContainerCeramics extends ContainerCraftable implements INetEventLi
 	public void onContainerClosed(EntityPlayer player) 
 	{
 		super.onContainerClosed(player);
-	}
-
-	@Override
-	public List getNetWorkField() 
-	{
-		return null;
 	}
 }

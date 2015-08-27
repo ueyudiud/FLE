@@ -13,7 +13,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.block.IGuiBlock;
+import fle.api.gui.ContainerEmpty;
 import fle.api.item.ItemFleMetaBase;
+import fle.cg.GuiBook;
 import fle.core.entity.EntityFleArrow;
 import fle.core.entity.EntityFleFallingBlock;
 import fle.core.gui.ContainerCeramics;
@@ -33,7 +35,9 @@ import fle.core.init.Rs;
 import fle.core.te.TileEntityCrop;
 import fle.core.te.TileEntityDryingTable;
 import fle.core.te.TileEntityFirewood;
+import fle.core.te.TileEntityLavaHeatTransfer;
 import fle.core.te.TileEntityOilLamp;
+import fle.core.te.TileEntityOreCobble;
 import fle.core.te.TileEntityPolish;
 import fle.core.te.argil.TileEntityArgilUnsmelted;
 import fle.core.te.argil.TileEntityTerrine;
@@ -71,11 +75,7 @@ public class CommonProxy extends Proxy
 		FleAPI.registerFuelHandler(new FleFuelHandler());
 		
 		GameRegistry.registerTileEntity(TileEntityOilLamp.class, "oilLamp");
-		GameRegistry.registerTileEntity(TileEntityPolish.class, "polish");
-		GameRegistry.registerTileEntity(TileEntityDryingTable.class, "dryingTable");
 		GameRegistry.registerTileEntity(TileEntityFirewood.class, "firewood");
-		GameRegistry.registerTileEntity(TileEntityArgilUnsmelted.class, "argilUnsmelted");
-		GameRegistry.registerTileEntity(TileEntityTerrine.class, "argilTerrine");
 		GameRegistry.registerTileEntity(TileEntityCrop.class, "fleCrop");
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(FLE.MODID, this);
@@ -125,6 +125,7 @@ public class CommonProxy extends Proxy
 		case -1 : return new ContainerWashing(player.inventory);
 		case -2 : return new ContainerItemBagable(player.inventory, player.inventory.currentItem);
 		case -3 : return new ContainerCeramics(world, x, y, z, player.inventory);
+		case -4 : return new ContainerEmpty();
 		}
 		if(world.getBlock(x, y, z) instanceof IGuiBlock)
 			return ((IGuiBlock) world.getBlock(x, y, z)).openContainer(world, x, y, z, player);
@@ -140,6 +141,7 @@ public class CommonProxy extends Proxy
 		case -1 : return new GuiWashing(player);
 		case -2 : return new GuiItemBagable(player);
 		case -3 : return new GuiCeramics(world, x, y, z, player);
+		case -4 : return new GuiBook();
 		}
 		if(world.getBlock(x, y, z) instanceof IGuiBlock)
 			return ((IGuiBlock) world.getBlock(x, y, z)).openGui(world, x, y, z, player);

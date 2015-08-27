@@ -1,4 +1,4 @@
-package fle.core.te.base;
+package fle.api.te;
 
 import java.util.Random;
 
@@ -8,7 +8,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.block.IFacingBlock;
-import fle.api.te.ITEInWorld;
 import fle.api.world.BlockPos;
 
 public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock

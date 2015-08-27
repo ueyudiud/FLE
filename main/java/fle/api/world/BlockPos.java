@@ -81,12 +81,6 @@ public final class BlockPos implements IObjectInWorld
 	}
 	
 	@Override
-	public World getWorldObj() 
-	{
-		return (World) (access instanceof World ? access : null);
-	}
-	
-	@Override
 	public BlockPos getBlockPos() 
 	{
 		return this;

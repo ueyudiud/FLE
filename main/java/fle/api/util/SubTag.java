@@ -7,6 +7,9 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 {
 	private static final Register<SubTag> subTags = new Register();
 
+	public static final SubTag ATOM_metal = getNewSubTag("ATOM_METAL");
+	public static final SubTag ATOM_nonmetal = getNewSubTag("ATOM_NONMETAL");
+	
 	public static final SubTag ORE_TYPE_alloy = getNewSubTag("ORE_TYPE_ALLOY");
 	public static final SubTag ORE_TYPE_gem = getNewSubTag("ORE_TYPE_GEM");
 	public static final SubTag ORE_TYPE_salt = getNewSubTag("ORE_TYPE_SALT");

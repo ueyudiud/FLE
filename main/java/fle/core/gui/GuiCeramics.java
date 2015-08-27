@@ -11,7 +11,7 @@ import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.core.net.FlePackets.CoderGuiUpdate;
+import fle.api.net.FlePackets.CoderGuiUpdate;
 
 @SideOnly(Side.CLIENT)
 public class GuiCeramics extends GuiContainerBase

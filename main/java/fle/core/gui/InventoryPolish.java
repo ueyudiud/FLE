@@ -12,11 +12,11 @@ import fle.api.enums.EnumCraftingType;
 import fle.api.gui.GuiCondition;
 import fle.api.gui.GuiError;
 import fle.api.gui.IConditionContainer;
+import fle.api.gui.InventoryTileBase;
 import fle.api.item.IPolishTool;
 import fle.api.net.INetEventListener;
+import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.recipe.CraftingState;
-import fle.core.gui.base.InventoryTileBase;
-import fle.core.net.FlePackets.CoderTileUpdate;
 import fle.core.recipe.PolishRecipe;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.TileEntityPolish;
@@ -61,8 +61,6 @@ public class InventoryPolish extends InventoryTileBase<TileEntityPolish> impleme
 		input = null;
 		stacks[2] = null;
 		inputMap = "         ".toCharArray();
-		if(tile != null)
-			syncSlot(tile);
 	}
 
 	public void craftedOnce(TileEntityPolish tile, int selectState, EntityPlayer player)
@@ -96,7 +94,6 @@ public class InventoryPolish extends InventoryTileBase<TileEntityPolish> impleme
 					else stacks[2] = null;
 				}
 				condition = GuiError.DEFAULT;
-				syncSlot(tile);
 			}
 			else
 			{

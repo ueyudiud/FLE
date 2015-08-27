@@ -27,21 +27,9 @@ public class ContainerWithTile<T extends TileEntity> extends ContainerBase imple
 	}
 	
 	@Override
-	public World getWorldObj() 
-	{
-		return inventoryTile.getWorldObj();
-	}
-	
-	@Override
 	public BlockPos getBlockPos() 
 	{
 		return new BlockPos(inventoryTile.getWorldObj(), inventoryTile.xCoord, inventoryTile.yCoord, inventoryTile.zCoord);
-	}
-	
-	@Override
-	public List getNetWorkField() 
-	{
-		return null;
 	}
 	
 	@Override

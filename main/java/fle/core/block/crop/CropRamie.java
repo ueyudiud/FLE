@@ -10,7 +10,7 @@ public class CropRamie extends CropBase
 		setCropLevel(1);
 		setMaturationStage(7);
 		setTextureName("crop/ramie");
-		setGrowTick(750);
+		setGrowTick(1100);
 		setCropRender(O_LIKE);
 	}
 }

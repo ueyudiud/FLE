@@ -1,4 +1,4 @@
-package fle.core.te.base;
+package fle.api.te;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

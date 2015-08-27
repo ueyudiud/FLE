@@ -5,7 +5,5 @@ import fle.api.world.BlockPos;
 
 public interface IObjectInWorld 
 {
-	public World getWorldObj();
-	
 	public BlockPos getBlockPos();
 }

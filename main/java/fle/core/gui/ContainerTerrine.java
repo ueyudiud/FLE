@@ -1,13 +1,13 @@
 package fle.core.gui;
 
-import java.util.List;
-
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.IFluidContainerItem;
+import fle.api.gui.ContainerWithPlayerInventory;
+import fle.api.material.MatterDictionary;
 import fle.api.net.INetEventListener;
-import fle.core.gui.base.ContainerWithPlayerInventory;
 import fle.core.te.argil.TileEntityTerrine;
 
 public class ContainerTerrine extends ContainerWithPlayerInventory implements INetEventListener
@@ -22,9 +22,14 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 			@Override
 			public boolean isItemValid(ItemStack item) 
 			{
-				return ((TileEntityTerrine) inventory).mode == 0 ? true : 
+				return ((TileEntityTerrine) inventory).mode == 1 ? false : 
 					((TileEntityTerrine) inventory).getFluidAmount() == 0 ? true :
-					FluidContainerRegistry.isContainer(item);
+					FluidContainerRegistry.isContainer(item) || MatterDictionary.getMelting(item) != null || item.getItem() instanceof IFluidContainerItem;
+			}
+			@Override
+			public ItemStack decrStackSize(int par1)
+			{
+				return super.decrStackSize(par1);
 			}
 		});
 		addSlotToContainer(new Slot(tile, 1, 89, 46)
@@ -32,8 +37,17 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 			@Override
 			public boolean isItemValid(ItemStack item) 
 			{
-				return ((TileEntityTerrine) inventory).mode == 0 ? true : 
+				return ((TileEntityTerrine) inventory).mode == 1 ? false : 
 					((TileEntityTerrine) inventory).getFluidAmount() == 0;
+			}
+			@Override
+			public ItemStack decrStackSize(int par1)
+			{
+				if (((TileEntityTerrine) inventory).mode == 1)
+				{
+					return null;
+			    }
+				return super.decrStackSize(par1);
 			}
 		});
 		locateContainer = new TransLocation("container", 36);
@@ -96,11 +110,5 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 				((TileEntityTerrine) this.inv).setClose();
 			}
 		}
-	}
-
-	@Override
-	public List getNetWorkField()
-	{
-		return null;
 	}
 }

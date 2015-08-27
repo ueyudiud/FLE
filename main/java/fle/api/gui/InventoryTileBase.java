@@ -1,4 +1,4 @@
-package fle.core.gui.base;
+package fle.api.gui;
 
 import java.util.Random;
 
@@ -6,14 +6,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.FleValue;
-import fle.api.gui.IInventoryTile;
-import fle.core.net.FlePackets.CoderInventorUpdate;
+import fle.api.net.FlePackets.CoderInventoryUpdate;
+import fle.api.te.TEBase;
+import fle.api.te.TEInventory;
 
-public abstract class InventoryTileBase<T extends TileEntity> implements IInventoryTile<T>
+public abstract class InventoryTileBase<T extends TEInventory> implements IInventoryTile<T>
 {
 	protected final Random rand = new Random();
 	protected final ItemStack[] stacks;
@@ -58,10 +58,16 @@ public abstract class InventoryTileBase<T extends TileEntity> implements IInvent
 	{
 		if(!tile.getWorldObj().isRemote)
 		{
-			for(int i = 0; i < getSizeInventory(); ++i)
-			{
-				FLE.fle.getNetworkHandler().sendTo(new CoderInventorUpdate(tile.getWorldObj(), tile.xCoord, (short) tile.yCoord, tile.zCoord));
-			}
+			FleAPI.mod.getNetworkHandler().sendTo(new CoderInventoryUpdate(tile.getWorldObj(), tile.xCoord, (short) tile.yCoord, tile.zCoord));
+		}
+	}
+	
+	public void syncSlot(T tile, int startID, int endID) 
+	{
+		if(!tile.getWorldObj().isRemote)
+		{
+			for(int i = startID; i < endID; ++i)
+				FleAPI.mod.getNetworkHandler().sendTo(new CoderInventoryUpdate(tile.getBlockPos(), i));
 		}
 	}
 

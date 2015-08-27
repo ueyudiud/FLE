@@ -2,6 +2,7 @@ package fle.api.recipe;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -167,5 +168,16 @@ public class ShapelessFleRecipe implements IRecipe
 	{
 		return output instanceof ItemStack ? ((ItemStack) output).copy() :
 			output instanceof SingleInputRecipe ? ((SingleInputRecipe) output).getResult(null) : null;
+	}
+	
+	public ItemAbstractStack[] getInputs()
+	{
+		List<ItemAbstractStack> ret = new ArrayList();
+		for(Object obj : inputs)
+		{
+			if(obj instanceof ItemAbstractStack)
+				ret.add((ItemAbstractStack) obj);
+		}
+		return ret.toArray(new ItemAbstractStack[ret.size()]);
 	}
 }

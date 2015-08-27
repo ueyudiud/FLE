@@ -1,7 +1,11 @@
 package fle.api.util;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
@@ -16,16 +20,18 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.GameData;
 import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.gui.GuiCondition;
 import fle.api.world.BlockPos;
 
 public class FleDataInputStream 
 {
-	private DataInputStream stream;
+	private ByteBuf stream;
 	
-	public FleDataInputStream(DataInputStream aStream)
+	public FleDataInputStream(ByteBuf aStream)
 	{
 		stream = aStream;
 	}
@@ -67,14 +73,24 @@ public class FleDataInputStream
 
 	public String readString() throws IOException
 	{
-		return stream.readUTF();
+		return ByteBufUtils.readUTF8String(stream);
+	}
+
+	public int[] readIntArray() throws IOException
+	{
+		int length = readInt();
+		int[] t = new int[length];
+		for(int i = 0; i < length; ++i)
+			t[i] = readInt();
+		return t;
 	}
 
 	public NBTTagCompound readNBT() throws IOException
 	{
 		if(stream.readBoolean())
 		{
-			return CompressedStreamTools.read(stream);
+			InputStream is = new ByteBufInputStream(stream);
+			return CompressedStreamTools.readCompressed(is);
 		}
 		else
 		{
@@ -84,12 +100,12 @@ public class FleDataInputStream
 	
 	public Item readItem() throws IOException
 	{
-		return GameData.getItemRegistry().getObject(stream.readUTF());
+		return GameData.getItemRegistry().getObject(readString());
 	}
 	
 	public Block readBlock() throws IOException
 	{
-		return GameData.getBlockRegistry().getObject(stream.readUTF());
+		return GameData.getBlockRegistry().getObject(readString());
 	}
 
 	public ItemStack readItemStack() throws IOException
@@ -141,10 +157,11 @@ public class FleDataInputStream
 
 	public BlockPos readBlockPos() throws IOException
 	{
+		int dimID = readInt();
 		int x = readInt();
 		int y = readShort();
 		int z = readInt();
-		return new BlockPos(null, x, y, z);
+		return new BlockPos(FleAPI.mod.getPlatform().getWorldInstance(dimID), x, y, z);
 	}
 	
 	public Object read() throws IOException

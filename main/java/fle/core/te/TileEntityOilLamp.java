@@ -14,9 +14,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.net.FlePackets.CoderNBTUpdate;
+import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
-import fle.core.net.FlePackets.CoderNBTUpdate;
-import fle.core.te.base.TEBase;
 
 public class TileEntityOilLamp extends TEBase
 {

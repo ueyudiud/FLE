@@ -23,6 +23,7 @@ import fle.api.util.IColorMapHandler;
 import fle.core.entity.EntityFleArrow;
 import fle.core.init.IB;
 import fle.core.init.Renders;
+import fle.core.init.Rs;
 import fle.core.render.RenderArgil;
 import fle.core.render.RenderAsh;
 import fle.core.render.RenderDryingTable;
@@ -67,6 +68,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		super.onCompleteLoad();
 		if(flag)
 			onIconRegister();
+		Rs.completeInit();
 	}
 	
 	boolean flag = false;

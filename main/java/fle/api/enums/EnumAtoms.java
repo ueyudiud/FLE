@@ -1,28 +1,34 @@
 package fle.api.enums;
 
-import fle.api.material.IAtoms;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public enum EnumAtoms implements IAtoms
+import fle.api.material.IAtoms;
+import fle.api.util.ISubTagContainer;
+import fle.api.util.SubTag;
+
+public enum EnumAtoms implements IAtoms, ISubTagContainer
 {
 	Nt("Neutron"),
-	H("Hydrogen"),
-	He("Helium"),
+	H("Hydrogen", SubTag.ATOM_nonmetal),
+	He("Helium", SubTag.ATOM_nonmetal),
 	Li("Lithium"),
 	Be("Beryllium"),
-	B("Boron"),
-	C("Carbon"),
-	N("Nitrogen"),
-	O("Oxygen"),
-	F("Fluorine"),
-	Ne("Neon"),
+	B("Boron", SubTag.ATOM_nonmetal),
+	C("Carbon", SubTag.ATOM_nonmetal),
+	N("Nitrogen", SubTag.ATOM_nonmetal),
+	O("Oxygen", SubTag.ATOM_nonmetal),
+	F("Fluorine", SubTag.ATOM_nonmetal),
+	Ne("Neon", SubTag.ATOM_nonmetal),
 	Na("Sodium"),
 	Mg("Magnesium"),
 	Al("Aluminium"),
-	Si("Silicon"),
-	P("Phosphorus"),
-	S("Sulfur"),
-	Cl("Chlorine"),
-	Ar("Argon"),
+	Si("Silicon", SubTag.ATOM_nonmetal),
+	P("Phosphorus", SubTag.ATOM_nonmetal),
+	S("Sulfur", SubTag.ATOM_nonmetal),
+	Cl("Chlorine", SubTag.ATOM_nonmetal),
+	Ar("Argon", SubTag.ATOM_nonmetal),
 	K("Potassium"),
 	Ca("Calcium"),
 	Sc("Scandium"),
@@ -36,10 +42,10 @@ public enum EnumAtoms implements IAtoms
 	Cu("Copper"),
 	Zn("Zinc"),
 	Ga("Gallium"),
-	Ge("Germanium"),
-	As("Arsenic"),
-	Se("Selenium"),
-	Br("Bromine"),
+	Ge("Germanium", SubTag.ATOM_nonmetal),
+	As("Arsenic", SubTag.ATOM_nonmetal),
+	Se("Selenium", SubTag.ATOM_nonmetal),
+	Br("Bromine", SubTag.ATOM_nonmetal),
 	Kr("Krypton"),
 	Rb("Rubidium"),
 	Sr("Strontium"),
@@ -56,9 +62,9 @@ public enum EnumAtoms implements IAtoms
 	In("Indium"),
 	Sn("Tin"),
 	Sb("Antimony"),
-	Te("Tellurium"),
-	I("Iodine"),
-	Xe("Xenon"),
+	Te("Tellurium", SubTag.ATOM_nonmetal),
+	I("Iodine", SubTag.ATOM_nonmetal),
+	Xe("Xenon", SubTag.ATOM_nonmetal),
 	Cs("Caesium"),
 	Ba("Barium"),
 	La("Lanthanum"),
@@ -89,8 +95,8 @@ public enum EnumAtoms implements IAtoms
 	Pb("Lead"),
 	Bi("Bismuth"),
 	Po("Polonium"),
-	At("Astatine"),
-	Rn("Radon"),
+	At("Astatine", SubTag.ATOM_nonmetal),
+	Rn("Radon", SubTag.ATOM_nonmetal),
 	Fr("Francium"),
 	Ra("Radium"),
 	Ac("Actinium"),
@@ -118,9 +124,14 @@ public enum EnumAtoms implements IAtoms
 	
 	private String name;
 	
-	EnumAtoms(String aName) 
+	EnumAtoms(String aName, SubTag...tags) 
 	{
 		name = aName;
+		add(tags);
+		if(!contain(SubTag.ATOM_nonmetal))
+		{
+			add(SubTag.ATOM_metal);
+		}
 	}
 	
 	public String getName()
@@ -169,5 +180,25 @@ public enum EnumAtoms implements IAtoms
 	{
 		radition = true;
 		return this;
+	}
+	
+	List<SubTag> tagList = new ArrayList();
+
+	@Override
+	public boolean contain(SubTag tag)
+	{
+		return tagList.contains(tag);
+	}
+
+	@Override
+	public void add(SubTag... tag)
+	{
+		tagList.addAll(Arrays.asList(tag));
+	}
+
+	@Override
+	public void remove(SubTag tag)
+	{
+		tagList.remove(tag);
 	}
 }

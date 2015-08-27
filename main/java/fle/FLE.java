@@ -39,7 +39,7 @@ public class FLE implements FleModHandler
 {
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.02a";
+    public static final String VERSION = "2.03a";
 	
     @Instance(MODID)
     public static FLE fle;

@@ -81,16 +81,7 @@ public class Matter implements IAtoms
 		String s = "";
 		for(int i = 0; i < ions.length; ++i) 
 		{
-			if(ions[i].ion.isRadical() && (ions.length > 1 || ions[i].size != 1))
-			{
-				s += "(" + ions[i].toString() + ")";
-				if(ions[i].size != 1)
-					s += ions[i].size;
-			}
-			else
-			{
-				s += ions[i].toString();
-			}
+			s += ions[i].toString();
 		}
 		return s;
 	}

@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import fle.FLE;
+import fle.api.net.FlePackets.CoderPTUpdate;
 import fle.api.tech.PlayerTechInfo;
 import fle.api.tech.Technology;
-import fle.core.net.FlePackets.CoderPTUpdate;
 
 /**
  * This system have not complete yet.

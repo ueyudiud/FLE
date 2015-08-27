@@ -140,7 +140,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	protected void drawAreaTooltip(int mouseX, int mouseY, String tooltip, int x, int y, int u, int v)
 	{
 		if (mouseX >= x && mouseX <= (x + u) && mouseY >= y && mouseY <= (y + v))
-			drawTooltip(x, y, tooltip);
+			drawTooltip(mouseX - xoffset, mouseY - yoffset, tooltip);
 	}
 
 	protected void drawTooltip(int x, int y, String tooltip)
@@ -150,12 +150,12 @@ public abstract class GuiContainerBase extends GuiContainer
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(2896);
 		GL11.glDisable(2929);
-		x -= fontRenderer.getStringWidth(tooltip) / 2;
-		y -= 12;
+		x += 10;
+		y -= 8;
 		int width = fontRenderer.getStringWidth(tooltip) + 8;
 		int height = 8;
 		int backgroundColor = 255;
-		int borderColor = 0xbababaff;
+		int borderColor = 0x1D0051FF;
 		GL11.glDisable(3553);
 		GL11.glEnable(3042);
 		GL11.glDisable(3008);

@@ -2,6 +2,8 @@ package fle.core.util;
 
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.FleAPI;
+import fle.api.enums.EnumAtoms;
+import fle.api.enums.EnumIons;
 import fle.api.material.Matter;
 import fle.api.util.IFuelHandler;
 
@@ -16,7 +18,7 @@ public class FleFuelHandler implements IFuelHandler
 		}
 		else if(FleAPI.fluidDictionary.matchFluid("oilAnimal", aStack))
 		{
-			return (float) ((double) aStack.amount * (2 + aAirBase.getIconContain(Matter.mO2)) / 3);
+			return (float) ((double) aStack.amount * (2 + aAirBase.getIconContain(EnumAtoms.O)) / 3);
 		}
 		return -1;
 	}

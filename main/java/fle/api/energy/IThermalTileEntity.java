@@ -12,5 +12,5 @@ public interface IThermalTileEntity
 	
 	public void onHeatReceive(ForgeDirection dir, double heatValue);
 
-	public void onHeatEmmit(ForgeDirection dir, double heatValue);
+	public void onHeatEmit(ForgeDirection dir, double heatValue);
 }

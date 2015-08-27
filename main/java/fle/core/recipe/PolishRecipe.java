@@ -39,6 +39,7 @@ public class PolishRecipe
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("chip_obsidian")), "cc   cc c", ItemToolHead.a("flint_arrow", 4, Materials.Obsidian)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_b")), "pcp p p p", ItemOilLamp.a(Blocks.stone, 0)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_b")), "ppp   ppp", ItemTool.a("whetstone", Materials.Stone)));
+		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "ppp   ppp", ItemFleSub.a("stone_plate")));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "p cpccccc", ItemToolHead.a("stone_axe", Materials.Stone)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "c pccpccc", ItemToolHead.a("stone_axe", Materials.Stone)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "cpcc cccc", ItemToolHead.a("stone_shovel", Materials.Stone)));

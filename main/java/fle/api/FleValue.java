@@ -1,6 +1,7 @@
 package fle.api;
 
-import fle.api.material.Matter;
+import net.minecraft.util.EnumChatFormatting;
+import fle.api.util.FleDecimalFormat;
 
 public class FleValue 
 {
@@ -26,4 +27,10 @@ public class FleValue
 	public static int FLE_RENDER_ID;
 	
 	public static final int WATER_FREEZE_POINT = 273;
+
+	public static final FleDecimalFormat format_MJ = new FleDecimalFormat(EnumChatFormatting.LIGHT_PURPLE, "############0MJ");
+	public static final FleDecimalFormat format_K = new FleDecimalFormat(EnumChatFormatting.YELLOW, "############0K");
+	public static final FleDecimalFormat format_L = new FleDecimalFormat(EnumChatFormatting.AQUA, "############0L");
+	public static final FleDecimalFormat format_progress = new FleDecimalFormat(EnumChatFormatting.GREEN, "##0.00%");
+	
 }

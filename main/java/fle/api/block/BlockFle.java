@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fle.FLE;
+import fle.api.FleValue;
+import fle.api.energy.IThermalTileEntity;
+import fle.api.util.DamageResources;
 import fle.api.world.BlockPos;
 
 public class BlockFle extends Block
@@ -208,5 +212,35 @@ public class BlockFle extends Block
 	public MapColor getMapColor(int metadata)
 	{
 		return mapColor == null ? super.getMapColor(metadata) : mapColor;
+	}
+	
+	@Override
+	public void onEntityCollidedWithBlock(World aWorld, int x,
+			int y, int z, Entity aEntity)
+	{
+		super.onEntityCollidedWithBlock(aWorld, x, y, z, aEntity);
+		if(aWorld.getTileEntity(x, y, z) instanceof IThermalTileEntity)
+		{
+			if(((IThermalTileEntity) aWorld.getTileEntity(x, y, z)).getTemperature(ForgeDirection.UNKNOWN) > FleValue.WATER_FREEZE_POINT + 60)
+			{
+				int t = ((IThermalTileEntity) aWorld.getTileEntity(x, y, z)).getTemperature(ForgeDirection.UNKNOWN) - (FleValue.WATER_FREEZE_POINT + 60);
+				aEntity.attackEntityFrom(DamageResources.getHeatDamageSource(), (float) t / 50F);
+			}
+		}
+	}
+	
+	@Override
+	public void onEntityWalking(World aWorld, int x,
+			int y, int z, Entity aEntity)
+	{
+		super.onEntityWalking(aWorld, x, y, z, aEntity);
+		if(aWorld.getTileEntity(x, y, z) instanceof IThermalTileEntity)
+		{
+			if(((IThermalTileEntity) aWorld.getTileEntity(x, y, z)).getTemperature(ForgeDirection.UP) > FleValue.WATER_FREEZE_POINT + 60)
+			{
+				int t = ((IThermalTileEntity) aWorld.getTileEntity(x, y, z)).getTemperature(ForgeDirection.UP) - (FleValue.WATER_FREEZE_POINT + 60);
+				aEntity.attackEntityFrom(DamageResources.getHeatDamageSource(), (float) t / 50F);
+			}
+		}
 	}
 }

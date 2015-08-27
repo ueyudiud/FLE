@@ -1,4 +1,4 @@
-package fle.core.gui.base;
+package fle.api.gui;
 
 import java.util.Random;
 

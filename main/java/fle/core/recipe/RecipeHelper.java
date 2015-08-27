@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.oredict.OreDictionary;
 import fle.api.FleValue;
@@ -26,41 +27,124 @@ public class RecipeHelper
 	{
 		ItemStack input = inv.getStackInSlot(inputSlot);
 		ItemStack output = inv.getStackInSlot(outputSlot);
+		if(input == null) return true;
 		if(FluidContainerRegistry.isContainer(input))
 		{
-			if(output != null)
+			ItemStack stack;
+			if(FluidContainerRegistry.isEmptyContainer(input))
 			{
-				return false;
-			}
-			else
-			{
-				ItemStack stack;
-				if(FluidContainerRegistry.isEmptyContainer(input))
+				int i = FluidContainerRegistry.getContainerCapacity(tank.getFluid(), input);
+				stack = FluidContainerRegistry.fillFluidContainer(tank.getFluid(), input);
+				if(stack == null) return true;
+				if(output == null)
 				{
-					int i = FluidContainerRegistry.getContainerCapacity(tank.getFluid(), input);
-					stack = FluidContainerRegistry.fillFluidContainer(tank.getFluid(), input);
-					if(stack == null) return true;
 					tank.drain(i, true);
 					inv.decrStackSize(inputSlot, 1);
 					inv.setInventorySlotContents(outputSlot, stack);
 					return true;
 				}
-				else if(FluidContainerRegistry.isFilledContainer(input))
+				else if(matchOutput(inv, outputSlot, stack))
 				{
-					FluidStack contain = FluidContainerRegistry.getFluidForFilledItem(input);
-					if(tank.fill(contain, false) != 0)
+					tank.drain(i, true);
+					inv.decrStackSize(inputSlot, 1);
+					inv.getStackInSlot(outputSlot).stackSize++;
+					return true;
+				}
+				return false;
+			}
+			else if(FluidContainerRegistry.isFilledContainer(input))
+			{
+				FluidStack contain = FluidContainerRegistry.getFluidForFilledItem(input);
+				if(tank.fill(contain, false) != 0 && tank.getFluidAmount() + contain.amount <= tank.getCapacity())
+				{
+					stack = FluidContainerRegistry.drainFluidContainer(input);
+					if(output == null)
 					{
-						stack = FluidContainerRegistry.drainFluidContainer(input);
 						tank.fill(contain, true);
 						inv.decrStackSize(inputSlot, 1);
 						inv.setInventorySlotContents(outputSlot, stack);
+						return true;
+					}
+					else if(matchOutput(inv, outputSlot, stack))
+					{
+						tank.fill(contain, true);
+						inv.decrStackSize(inputSlot, 1);
+						inv.getStackInSlot(outputSlot).stackSize++;
 						return true;
 					}
 					return false;
 				}
 			}
 		}
-		return true;
+		else if(input.getItem() instanceof IFluidContainerItem)
+		{
+			IFluidContainerItem item = (IFluidContainerItem) input.getItem();
+			ItemStack aStack = input.copy();
+			aStack.stackSize = 1;
+			if(item.getFluid(input) == null)
+			{
+				if(item.fill(aStack, tank.getFluid(), false) != 0)
+				{
+					int i = item.fill(aStack, tank.getFluid(), true);
+					if(output == null)
+					{
+						tank.drain(i, true);
+						inv.decrStackSize(inputSlot, 1);
+						inv.setInventorySlotContents(outputSlot, aStack);
+						return true;
+					}
+					else if(matchOutput(inv, outputSlot, aStack))
+					{
+						tank.drain(i, true);
+						inv.decrStackSize(inputSlot, 1);
+						inv.getStackInSlot(outputSlot).stackSize++;
+						return true;
+					}
+					return false;
+				}
+			}
+			else if(item.drain(aStack, tank.getCapacity() - tank.getFluidAmount(), false) != null && tank.getFluidAmount() < tank.getCapacity())
+			{
+				FluidStack tStack = item.drain(aStack, tank.getCapacity() - tank.getFluidAmount(), true);
+				if(tank.fill(tStack, false) != 0)
+				{
+					if(output == null)
+					{
+						tank.fill(tStack, true);
+						inv.decrStackSize(inputSlot, 1);
+						inv.setInventorySlotContents(outputSlot, aStack);
+						return true;
+					}
+					else if(matchOutput(inv, outputSlot, aStack))
+					{
+						tank.fill(tStack, true);
+						inv.decrStackSize(inputSlot, 1);
+						inv.getStackInSlot(outputSlot).stackSize++;
+						return true;
+					}
+				}
+			}
+			else if(item.fill(aStack, tank.getFluid(), false) != 0)
+			{
+				int fill = item.fill(aStack, tank.getFluid().copy(), true);
+				if(output == null)
+				{
+					tank.drain(fill, true);
+					inv.decrStackSize(inputSlot, 1);
+					inv.setInventorySlotContents(outputSlot, aStack);
+					return true;
+				}
+				else if(matchOutput(inv, outputSlot, aStack))
+				{
+					tank.drain(fill, true);
+					inv.decrStackSize(inputSlot, 1);
+					inv.getStackInSlot(outputSlot).stackSize++;
+					return true;
+				}
+				return false;
+			}
+		}
+		return false;
 	}
 	
 	public static boolean matchItemStack(IInventory inv, int matchSlot, ItemAbstractStack ic)
@@ -114,7 +198,11 @@ public class RecipeHelper
 
 	public static boolean matchOutput(IInventory inv, int outputSlot, ItemStack output)
 	{
-		return inv.getStackInSlot(outputSlot) == null ? true : output == null ? true : ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && output.isItemEqual(inv.getStackInSlot(outputSlot)) && inv.getStackInSlot(outputSlot).stackSize + output.stackSize <= output.getMaxStackSize();
+		return inv.getStackInSlot(outputSlot) == null ? true : 
+			output == null ? true : 
+				ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && 
+				output.isItemEqual(inv.getStackInSlot(outputSlot)) && 
+				inv.getStackInSlot(outputSlot).stackSize + output.stackSize <= Math.min(output.getMaxStackSize(), inv.getInventoryStackLimit());
 	}
 	public static boolean matchOutput(IInventory inv, int startSlot, int endSlot, ItemStack output)
 	{

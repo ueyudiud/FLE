@@ -15,6 +15,7 @@ public class GuiIconButton extends GuiButton
 {
 	private static final ResourceLocation void_texture = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/" + FleValue.VOID_ICON_FILE + ".png");
 	private static final ResourceLocation back_ground_texture = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button_1.png");
+	public static final ResourceLocation buttonLocate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png");
 	
 	public static enum ButtonSize
 	{

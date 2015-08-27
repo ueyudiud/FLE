@@ -22,7 +22,7 @@ public final class PropertyInfo
 	 * Get color value of matter.
 	 * see {@link net.minecraft.item.Item}
 	 */
-	private int colors[] = {0xFFFFFF};
+	private int colors[] = {0xFFFFFF, 0xFFFFFF};
 	private float reflectRedLight = 1.0F;
 	private float reflectGreenLight = 1.0F;
 	private float reflectBlueLight = 1.0F;
@@ -97,7 +97,7 @@ public final class PropertyInfo
      * Higher shear strength means that a solid can cut hardly, like tungsten.
      * Lower shear strength means that a solid can cut easily, like lithium. 
      * 
-	 * Use logarithm to count press point, 1atm is 101kPa means this value is about 5.0D.
+	 * Use logarithm to count press point, 1atm is 101kPa means this value is about 2.0D.
 	 */
 	private double shearStrength = Math.log10(10.0D);
 	/**
@@ -282,5 +282,15 @@ public final class PropertyInfo
 	public double getSpecificHeat()
 	{
 		return specificHeat;
+	}
+	
+	public long getMeltingPoint()
+	{
+		return meltingPoint;
+	}
+	
+	public long getBoilingPoint()
+	{
+		return boilingPoint;
 	}
 }

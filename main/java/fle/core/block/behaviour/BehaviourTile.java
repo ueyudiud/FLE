@@ -2,6 +2,7 @@ package fle.core.block.behaviour;
 
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
@@ -20,10 +21,17 @@ import fle.core.block.BlockSubTile;
 public abstract class BehaviourTile extends BehaviourBase<BlockSubTile> implements IBlockWithTileBehaviour<BlockSubTile>, IGuiBlock
 {
 	private Class<? extends TileEntity> clazz;
-	
+
 	public BehaviourTile(Class<? extends TileEntity> tileClass) 
 	{
 		clazz = tileClass;
+		GameRegistry.registerTileEntity(tileClass, tileClass.getName());
+	}
+	public BehaviourTile(Class<? extends TileEntity> tileClass, boolean flag) 
+	{
+		clazz = tileClass;
+		if(flag)
+			GameRegistry.registerTileEntity(tileClass, tileClass.getName());
 	}
 	
 	@Override

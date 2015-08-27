@@ -1,14 +1,16 @@
 package fle.api.gui;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
-import fle.core.gui.base.InventoryTileBase;
+import fle.api.FleAPI;
+import fle.api.net.FlePackets.CoderTankUpdate;
+import fle.api.te.IFluidTanks;
+import fle.api.te.TEIT;
 
-public abstract class InventoryWithFluidTank<T extends TileEntity> extends InventoryTileBase<T> implements IFluidTank
+public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTileBase<T> implements IFluidTank, IFluidTanks
 {
 	protected FluidTank tank;
 	protected int maxHeat;
@@ -33,6 +35,14 @@ public abstract class InventoryWithFluidTank<T extends TileEntity> extends Inven
 		NBTTagCompound nbt1 = new NBTTagCompound();
 		tank.writeToNBT(nbt1);
 		nbt.setTag("Fluid", nbt1);
+	}
+	
+	public void syncTank(T tile)
+	{
+		if(!tile.getWorldObj().isRemote)
+		{
+			FleAPI.mod.getNetworkHandler().sendTo(new CoderTankUpdate(tile.getBlockPos()));
+		}
 	}
 
 	@Override
@@ -83,5 +93,41 @@ public abstract class InventoryWithFluidTank<T extends TileEntity> extends Inven
 	public FluidStack drain(int maxDrain, boolean doDrain) 
 	{
 		return tank.drain(maxDrain, doDrain);
+	}
+
+	@Override
+	public int getSizeTank()
+	{
+		return 1;
+	}
+
+	@Override
+	public IFluidTank getTank(int index)
+	{
+		return tank;
+	}
+
+	@Override
+	public FluidStack getFluidStackInTank(int index)
+	{
+		return tank.getFluid();
+	}
+
+	@Override
+	public void setFluidStackInTank(int index, FluidStack aStack)
+	{
+		tank.setFluid(aStack);
+	}
+
+	@Override
+	public FluidStack drainTank(int index, int maxDrain, boolean doDrain)
+	{
+		return tank.drain(maxDrain, doDrain);
+	}
+
+	@Override
+	public int fillTank(int index, FluidStack resource, boolean doFill)
+	{
+		return tank.fill(resource, doFill);
 	}
 }

@@ -6,8 +6,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import fle.api.gui.ContainerBase.TransLocation;
+import fle.api.gui.ContainerCraftable;
 import fle.api.gui.SlotOutput;
-import fle.core.gui.base.ContainerCraftable;
 import fle.core.te.TileEntityDryingTable;
 
 public class ContainerDryingTable extends ContainerCraftable
@@ -19,11 +19,5 @@ public class ContainerDryingTable extends ContainerCraftable
 		addSlotToContainer(new SlotOutput(inventory, 1, 124, 35));
 		locateRecipeInput = new TransLocation("recipe_input", 36);
 		locateRecipeOutput = new TransLocation("recipe_output", 37);
-	}
-
-	@Override
-	public List getNetWorkField()
-	{
-		return null;
 	}
 }

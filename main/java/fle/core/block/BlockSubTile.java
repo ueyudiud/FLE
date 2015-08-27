@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,15 +26,16 @@ import fle.api.FleValue;
 import fle.api.block.BlockHasTile;
 import fle.api.block.IBlockBehaviour;
 import fle.api.block.IBlockWithTileBehaviour;
+import fle.api.block.IDebugableBlock;
 import fle.api.block.IFacingBlock;
 import fle.api.util.IBlockTextureManager;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
 import fle.api.world.BlockPos;
 
-public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock
+public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock, IDebugableBlock
 {
-	protected final Register<IBlockWithTileBehaviour<BlockSubTile>> blockBehaviors = new Register();
+	public final Register<IBlockWithTileBehaviour<BlockSubTile>> blockBehaviors = new Register();
 	protected Map<String, IBlockTextureManager> textureNameMap = new HashMap();
 	private Map<String, IIcon[]> iconMap;
 
@@ -134,6 +136,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock
 			{
 				return true;
 			}
+			else return false;
 	    }
 	    catch (Throwable e)
 	    {
@@ -163,6 +166,15 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock
 	{
 		FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), 1, FleAPI.getIndexFromDirection(getPointFacing(aWorld, x, y, z, aEntity)));
 		super.onBlockPlacedBy(aWorld, x, y, z, aEntity, aStack);
+		IBlockBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) getDamageValue(aWorld, x, y, z)));
+		try
+	    {
+			tBehaviour.onBlockPlacedBy(this, aWorld, x, y, z, aStack, aEntity);
+	    }
+	    catch (Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
 	}
 	
 	@Override
@@ -259,8 +271,18 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
 			TileEntity tile, int metadata, int fortune)
 	{
+		int meta = metaThread.get();
+		IBlockWithTileBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) meta));
+		try
+		{
+			return tBehaviour.getHarvestDrop(this, world, metadata, tile, fortune);
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
 		ArrayList<ItemStack> drops = new ArrayList();
-		drops.add(new ItemStack(this, 1, metaThread.get()));
+		drops.add(new ItemStack(this, 1, meta));
 		return drops;
 	}
 
@@ -290,5 +312,31 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock
 	{
 		if(aStack != null)
 			super.dropBlockAsItem(aWorld, x, y, z, aStack.copy());
+	}
+	
+	@Override
+	public void randomDisplayTick(World aWorld, int x,
+			int y, int z, Random rand)
+	{
+		IBlockBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) getDamageValue(aWorld, x, y, z)));
+		try
+	    {
+			tBehaviour.onRenderUpdate(this, aWorld, x, y, z, rand);
+	    }
+	    catch (Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+	}
+
+	@Override
+	public void addInfomationToList(World aWorld, int x, int y, int z,
+			List aList)
+	{
+		IBlockWithTileBehaviour<BlockSubTile> behaviour = blockBehaviors.get(getDamageValue(aWorld, x, y, z));
+		if(behaviour instanceof IDebugableBlock)
+		{
+			((IDebugableBlock) behaviour).addInfomationToList(aWorld, x, y, z, aList);
+		}
 	}
 }

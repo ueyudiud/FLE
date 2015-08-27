@@ -307,6 +307,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
     {
     	ToolMaterialInfo tInfo = new ToolMaterialInfo(setupNBT(aStack));
     	int colorIndex = 0xFFFFFF;
+    	if(tInfo.getMaterialBase() == null) return colorIndex;
     	switch(pass)
     	{
     	case 0 :

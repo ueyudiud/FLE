@@ -261,6 +261,10 @@ public abstract class RenderBase
 
     protected void renderFluid(FluidStack fluid, int max, double scale, int xPlus, int yPlus, int zPlus) 
     {
+    	renderFluid(fluid, max, scale, xPlus, yPlus, zPlus, 0.0D, 1.0D, 0.0D, 1.0D);
+    }
+    protected void renderFluid(FluidStack fluid, int max, double scale, int xPlus, int yPlus, int zPlus, double xPos1, double xPos2, double zPos1, double zPos2) 
+    {
         if (fluid == null || fluid.getFluid() == null || fluid.getFluid().getIcon() == null) return;
         int x2 = x + xPlus;
         int y2 = y + yPlus;
@@ -273,7 +277,7 @@ public abstract class RenderBase
         float blue = (color & 255) / 255.0F;
 
         double extra = (double) fluid.amount / max * scale;
-        double height = 0.4D + extra;
+        double height = extra;
         IIcon iconStill = fluid.getFluid().getIcon();
 
         height += RENDER_OFFSET;
@@ -290,10 +294,10 @@ public abstract class RenderBase
 
         tessellator.setBrightness(200);
         tessellator.setColorOpaque_F(LIGHT_Y_POS * red, LIGHT_Y_POS * green, LIGHT_Y_POS * blue);
-        tessellator.addVertexWithUV(x2 + 0, y2 + height, z2 + 0, u2, v2);
-        tessellator.addVertexWithUV(x2 + 0, y2 + height, z2 + 1, u1, v1);
-        tessellator.addVertexWithUV(x2 + 1, y2 + height, z2 + 1, u4, v4);
-        tessellator.addVertexWithUV(x2 + 1, y2 + height, z2 + 0, u3, v3);
+        tessellator.addVertexWithUV(x2 + xPos1, y2 + height, z2 + zPos1, u2, v2);
+        tessellator.addVertexWithUV(x2 + xPos1, y2 + height, z2 + zPos2, u1, v1);
+        tessellator.addVertexWithUV(x2 + xPos2, y2 + height, z2 + zPos2, u4, v4);
+        tessellator.addVertexWithUV(x2 + xPos2, y2 + height, z2 + zPos1, u3, v3);
 
         render.renderMinY = 0;
         render.renderMaxY = 1;

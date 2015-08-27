@@ -1,7 +1,7 @@
 package fle.core.gui;
 
 import net.minecraft.item.ItemStack;
-import fle.core.gui.base.InventoryBase;
+import fle.api.gui.InventoryBase;
 
 public class InventoryBagable extends InventoryBase<ContainerItemBagable>
 {

@@ -2,10 +2,9 @@ package fle.api.gui;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import fle.FLE;
-import fle.core.gui.base.InventoryTileBase;
-import fle.core.net.FlePackets.CoderInventorUpdate;
-import fle.core.te.base.TEInventory;
+import fle.api.FleAPI;
+import fle.api.net.FlePackets.CoderInventoryUpdate;
+import fle.api.te.TEInventory;
 
 public abstract class InventoryTileCraftable<T extends TEInventory> extends InventoryTileBase<T>
 {
@@ -16,14 +15,13 @@ public abstract class InventoryTileCraftable<T extends TEInventory> extends Inve
 	{
 		super(i);
 		this.name = name;
-		boolean sendChangeToContainer;
 	}
 	
 	public void syncSlot(T tile) 
 	{
 		if(!tile.getWorldObj().isRemote)
 		{
-			FLE.fle.getNetworkHandler().sendTo(new CoderInventorUpdate(tile.getWorldObj(), tile.xCoord, (short) tile.yCoord, tile.zCoord));
+			FleAPI.mod.getNetworkHandler().sendTo(new CoderInventoryUpdate(tile.getWorldObj(), tile.xCoord, (short) tile.yCoord, tile.zCoord));
 		}
 	}
 	

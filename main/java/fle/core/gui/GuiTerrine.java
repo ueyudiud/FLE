@@ -10,7 +10,7 @@ import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.core.net.FlePackets.CoderGuiUpdate;
+import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.core.te.argil.TileEntityTerrine;
 
 @SideOnly(Side.CLIENT)
@@ -33,15 +33,34 @@ public class GuiTerrine extends GuiContainerBase
 		
 		drawFluid(75, 32, tile, 8, 30);
 		drawTexturedModalRect(aXOffset + 75, aYOffset + 32, 176, 0, 8, 30);
-		if(tile.getFluidAmount() > 0)
-		{
-			drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 34, 18, 36);
-		}
 		
 		switch(tile.mode)
 		{
+		case 0 :
+		{
+			if(tile.getFluidAmount() > 0)
+			{
+				drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 34, 18, 36);
+			}
+		}
+		break;
+		case 1 :
+		{
+			drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 72, 18, 36);
+		}
 		default :;
 		}
+	}
+	
+	@Override
+	protected void drawGuiContainerForegroundLayer(int par1, int par2)
+	{
+		super.drawGuiContainerForegroundLayer(par1, par2);
+		xoffset = (width - xSize) / 2;
+		yoffset = (height - ySize) / 2;
+
+		if(tile.getFluid() != null && tile.getFluid().getFluid() != null)
+			drawAreaTooltip(par1, par2, tile.getFluid().getLocalizedName() + " " + FleValue.format_L.format(tile.getFluidAmount()), xoffset + 75, yoffset + 32, 8, 30);
 	}
 	
 	@Override

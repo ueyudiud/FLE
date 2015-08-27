@@ -1,40 +1,57 @@
 package fle.api.net;
 
-import fle.api.FleAPI;
-import fle.api.util.FleDataOutputStream;
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.ByteBuf;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import fle.api.util.FleDataInputStream;
+import fle.api.util.FleDataOutputStream;
 
-public final class FleAbstractPacket
+public abstract class FleAbstractPacket<T extends FleAbstractPacket> implements IMessage, IMessageHandler<T, IMessage>
 {
-	public FMLProxyPacket pkt;
+	protected abstract void write(FleDataOutputStream os) throws IOException;
+	
+	protected abstract void read(FleDataInputStream is) throws IOException;
 
-	public FleAbstractPacket(IFlePacketCoder aCoder) 
+	public abstract IMessage onMessage(T message, MessageContext ctx);
+	
+	private final void init(ByteBuf buf)
 	{
-		pkt = new FMLProxyPacket(Unpooled.wrappedBuffer(init(aCoder)), FleAPI.MODID);
-	}
-
-	private byte[] init(IFlePacketCoder aCoder)
-	{
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		FleDataOutputStream os = new FleDataOutputStream(new DataOutputStream(buffer));
+		FleDataOutputStream os = new FleDataOutputStream(buf);
 		try
 		{
-			os.writeInt(aCoder.getCoderID());
-			aCoder.createPacket(os);
+			write(os);
 			os.close();
 		}
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
-		return buffer.toByteArray();
+	}
+
+	@Override
+	public final void fromBytes(ByteBuf buf)
+	{
+		try
+		{
+			read(new FleDataInputStream(buf));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public final void toBytes(ByteBuf buf)
+	{
+		init(buf);
 	}
 }

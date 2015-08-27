@@ -1,5 +1,7 @@
 package fle.core.block.machine;
 
+import java.util.List;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -10,6 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import fle.api.FleValue;
 import fle.api.block.IBlockWithTileBehaviour;
+import fle.api.block.IDebugableBlock;
 import fle.api.block.IGuiBlock;
 import fle.api.world.BlockPos;
 import fle.core.block.BlockSubTile;
@@ -32,7 +35,7 @@ public class BlockClayInventory1 extends BlockSubTile implements IGuiBlock
 	
 	public BlockClayInventory1(String aName)
 	{
-		super(ItemClayInventory.class, aName, Material.clay);
+		super(ItemClayInventory1.class, aName, Material.clay);
 		setResistance(1.8F);
 		setHardness(1.5F);
 	}

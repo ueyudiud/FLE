@@ -8,12 +8,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import fle.FLE;
+import fle.api.gui.ContainerCraftable;
 import fle.api.gui.GuiCondition;
 import fle.api.gui.GuiError;
 import fle.api.gui.SlotOutput;
 import fle.api.net.INetEventListener;
-import fle.core.gui.base.ContainerCraftable;
-import fle.core.net.FlePackets.CoderGuiUpdate;
+import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.core.recipe.RecipeHelper;
 import fle.core.recipe.WashingRecipe;
 
@@ -115,11 +115,5 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 		{
 			this.type = (GuiCondition) contain;
 		}
-	}
-
-	@Override
-	public List getNetWorkField()
-	{
-		return null;
 	}
 }

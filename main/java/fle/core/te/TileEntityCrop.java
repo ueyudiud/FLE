@@ -6,11 +6,13 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.crop.CropCard;
 import fle.api.crop.ICropTile;
-import fle.core.net.FlePackets.CoderNBTUpdate;
-import fle.core.te.base.TEBase;
+import fle.api.te.TEBase;
+import fle.core.net.FlePackets.CoderCropUpdate;
 import fle.core.util.WorldUtil;
 
 public class TileEntityCrop extends TEBase implements ICropTile
@@ -83,7 +85,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 					}
 				}
 				worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
-				FLE.fle.getNetworkHandler().sendTo(new CoderNBTUpdate(this));
+				FLE.fle.getNetworkHandler().sendTo(new CoderCropUpdate(this));
 			}
 		}
 	}
@@ -146,5 +148,33 @@ public class TileEntityCrop extends TEBase implements ICropTile
 	public int getCropAge() 
 	{
 		return age;
+	}
+
+	public double getCropBuf() 
+	{
+		return buffer;
+	}
+
+	public int getCropCushion() 
+	{
+		return cushion;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setCropAge(int a) 
+	{
+		age = a;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setCropBuf(double b) 
+	{
+		buffer = b;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setCropCushion(int c) 
+	{
+		cushion = c;
 	}
 }

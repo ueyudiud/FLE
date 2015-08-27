@@ -1,7 +1,13 @@
 package fle.api.util;
 
-import java.io.DataOutputStream;
+import fle.api.gui.GuiCondition;
+import fle.api.world.BlockPos;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
@@ -14,16 +20,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.GameData;
-import fle.api.gui.GuiCondition;
-import fle.api.gui.GuiError;
-import fle.api.world.BlockPos;
 
 public class FleDataOutputStream 
 {
-	private DataOutputStream stream;
+	private ByteBuf stream;
 	
-	public FleDataOutputStream(DataOutputStream aStream)
+	public FleDataOutputStream(ByteBuf aStream)
 	{
 		stream = aStream;
 	}
@@ -65,7 +69,16 @@ public class FleDataOutputStream
 
 	public void writeString(String s) throws IOException
 	{
-		stream.writeUTF(s);
+		ByteBufUtils.writeUTF8String(stream, s);
+	}
+
+	public void writeIntArray(int[] data) throws IOException
+	{
+		writeInt(data.length);
+		for(int i = 0; i < data.length; ++i)
+		{
+			writeInt(data[i]);
+		}
 	}
 
 	public void writeNBT(NBTTagCompound nbt) throws IOException
@@ -73,7 +86,7 @@ public class FleDataOutputStream
 		if(nbt != null)
 		{
 			stream.writeBoolean(true);
-			CompressedStreamTools.write(nbt, stream);
+			stream.writeBytes(CompressedStreamTools.compress(nbt));
 		}
 		else
 		{
@@ -83,12 +96,12 @@ public class FleDataOutputStream
 	
 	public void writeItem(Item item) throws IOException
 	{
-		stream.writeUTF(GameData.getItemRegistry().getNameForObject(item));
+		writeString(GameData.getItemRegistry().getNameForObject(item));
 	}
 	
 	public void writeBlock(Block block) throws IOException
 	{
-		stream.writeUTF(GameData.getBlockRegistry().getNameForObject(block));
+		writeString(GameData.getBlockRegistry().getNameForObject(block));
 	}
 
 	public void writeItemStack(ItemStack stack) throws IOException
@@ -139,8 +152,9 @@ public class FleDataOutputStream
 		stream.writeInt(world.provider.dimensionId);
 	}
 
-	public void writeBlockPos(int x, int y, int z) throws IOException
+	public void writeBlockPos(int dimID, int x, int y, int z) throws IOException
 	{
+		stream.writeInt(dimID);
 		stream.writeInt(x);
 		stream.writeShort(y);
 		stream.writeInt(z);
@@ -148,6 +162,7 @@ public class FleDataOutputStream
 
 	public void writeBlockPos(BlockPos pos) throws IOException
 	{
+		stream.writeInt(pos.getDim());
 		stream.writeInt(pos.x);
 		stream.writeShort(pos.y);
 		stream.writeInt(pos.z);
@@ -256,6 +271,8 @@ public class FleDataOutputStream
 	
 	public void close() throws IOException
 	{
-		stream.close();
+		ByteBufOutputStream tStream = new ByteBufOutputStream(stream);
+		tStream.close();
+		this.stream = tStream.buffer();
 	}
 }

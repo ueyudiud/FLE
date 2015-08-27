@@ -118,7 +118,7 @@ public abstract class CropBase extends CropCard
 	@Override
 	public boolean canHarvestCrop(ICropTile tile)
 	{
-		return tile.getStage() > maturation - 1;
+		return tile.getStage() >= maturation - 1;
 	}
 
 	@Override

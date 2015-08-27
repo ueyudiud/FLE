@@ -5,41 +5,43 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
+import fle.api.enums.EnumAtoms;
+import fle.api.material.Matter;
+import fle.api.net.FlePackets.CoderNBTUpdate;
+import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
+import fle.core.energy.ThermalTileHelper;
 import fle.core.init.IB;
 import fle.core.init.Materials;
-import fle.core.net.FlePackets.CoderNBTUpdate;
-import fle.core.te.base.TEBase;
 
 public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 {
-	private final double sh = Materials.HardWood.getPropertyInfo().getSpecificHeat();
-	private final double hc = Materials.HardWood.getPropertyInfo().getThermalConductivity();
-	
 	private boolean isCoal;
 	private int woodContain;
 	private int coalLevel;
-	private double heatCurrect;
+	private ThermalTileHelper heatCurrect;
 	private byte burnState = 0;//0 for level.1 ; 1 for level.2 ; 2 for level.3.
 	
 	public TileEntityFirewood()
 	{
-		
+		heatCurrect = new ThermalTileHelper(Materials.HardWood);
 	}
 	
 	public TileEntityFirewood(boolean aCoal)
 	{
 		isCoal = aCoal;
 		woodContain = aCoal ? 4000 : 5000;
+		heatCurrect = new ThermalTileHelper(!aCoal ? Materials.HardWood : Materials.Charcoal);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		heatCurrect = new ThermalTileHelper(!isCoal ? Materials.HardWood : Materials.Charcoal);
 		woodContain = nbt.getInteger("WoodContain");
 		coalLevel = nbt.getShort("CoalLevel");
-		heatCurrect = nbt.getDouble("HeatCurrect");
+		heatCurrect.readFromNBT(nbt);
 		burnState = nbt.getByte("BurnState");
 		isCoal = nbt.getBoolean("IsCoal");
 	}
@@ -50,7 +52,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		super.writeToNBT(nbt);
 		nbt.setInteger("WoodContain", woodContain);
 		nbt.setShort("CoalLevel", (short) coalLevel);
-		nbt.setDouble("HeatCurrect", heatCurrect);
+		heatCurrect.writeToNBT(nbt);
 		nbt.setByte("BurnState", burnState);
 		nbt.setBoolean("IsCoal", isCoal);
 	}
@@ -85,7 +87,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		if(burnState == 2)
 		{
 			--woodContain;
-			heatCurrect += isCoal ? 6.0F : 5.0F;
+			heatCurrect.reseaveHeat((isCoal ? 6000.0F : 4000.0F) * FLE.fle.getAirConditionProvider().getAirLevel(getBlockPos()).getIconContain(EnumAtoms.O));
 			FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 			if(!canBBurning()) burnState = 1;
 			if((getBlockPos().toPos(ForgeDirection.UP).getBlock().isFlammable(worldObj, xCoord, yCoord + 1, zCoord, ForgeDirection.UP) || getBlockPos().toPos(ForgeDirection.UP).isReplacable()))
@@ -160,33 +162,32 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 	@Override
 	public int getTemperature(ForgeDirection dir)
 	{
-		return (int) (FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos()) + heatCurrect / sh);
+		return (int) (FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos()) + heatCurrect.getTempreture());
 	}
 
 	@Override
 	public double getThermalConductivity(ForgeDirection dir)
 	{
-		return hc;
+		return heatCurrect.getThermalConductivity();
 	}
 
 	@Override
 	public double getThermalEnergyCurrect(ForgeDirection dir)
 	{
-		return heatCurrect;
+		return heatCurrect.getHeat();
 	}
 
 	@Override
 	public void onHeatReceive(ForgeDirection dir, double heatValue)
 	{
-		heatCurrect += heatValue;
+		heatCurrect.reseaveHeat(heatValue);
 	}
 
 	@Override
-	public void onHeatEmmit(ForgeDirection dir, double heatValue)
+	public void onHeatEmit(ForgeDirection dir, double heatValue)
 	{
-		heatCurrect -= heatValue;
+		heatCurrect.emitHeat(heatValue);
 	}
-
 
 	public void setBurning()
 	{

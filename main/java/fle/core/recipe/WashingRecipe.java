@@ -52,4 +52,14 @@ public class WashingRecipe
 		List<ItemStack> list = info.getDrops();
 		return list.toArray(new ItemStack[list.size()]);
 	}
+
+	public static Map<ItemAbstractStack, DropInfo> getRecipes()
+	{
+		Map<ItemAbstractStack, DropInfo> map = new HashMap();
+		for(ItemAbstractStack tStack : inputList.keySet())
+		{
+			map.put(tStack, outputList.get(inputList.get(tStack)));
+		}
+		return map;
+	}
 }

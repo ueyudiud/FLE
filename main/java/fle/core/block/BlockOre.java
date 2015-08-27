@@ -30,6 +30,7 @@ import fle.api.material.MaterialRock;
 import fle.api.util.FleLog;
 import fle.api.util.FluidIconRegisterEvent;
 import fle.api.world.BlockPos;
+import fle.core.init.IB;
 
 public class BlockOre extends BlockHasSub implements IDebugableBlock
 {
@@ -169,7 +170,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 		ArrayList<ItemStack> list = new ArrayList();
 		if(metaThread.get() != null)
 		{
-			list.add(new ItemStack(this, 1, metaThread.get()));
+			list.add(new ItemStack(IB.oreChip, 2, metaThread.get()));
 		}
 		else
 		{

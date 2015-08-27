@@ -10,7 +10,7 @@ import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.core.net.FlePackets.CoderGuiUpdate;
+import fle.api.net.FlePackets.CoderGuiUpdate;
 
 @SideOnly(Side.CLIENT)
 public class GuiWashing extends GuiContainerBase
@@ -41,7 +41,7 @@ public class GuiWashing extends GuiContainerBase
 		super.initGui();
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
-		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 18, ButtonSize.Standard, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 0, 0));
+		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 18, ButtonSize.Standard, GuiIconButton.buttonLocate, 0, 0));
 	}
 	
 	protected void actionPerformed(GuiButton guibutton)

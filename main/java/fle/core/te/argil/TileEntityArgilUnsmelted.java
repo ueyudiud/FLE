@@ -6,26 +6,24 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.energy.IThermalTileEntity;
+import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
+import fle.core.energy.ThermalTileHelper;
 import fle.core.init.IB;
 import fle.core.init.Materials;
-import fle.core.te.base.TEBase;
 
 public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEntity
 {
-	private final double sh = Materials.Argil.getPropertyInfo().getSpecificHeat();
-	private final double hc = Materials.Argil.getPropertyInfo().getThermalConductivity();
+	private ThermalTileHelper heatCurrect = new ThermalTileHelper(Materials.Argil);
+	private double smeltedTick;
 	
-	private double heatCurrect;
-	private int smeltedTick;
-
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 		
-		smeltedTick = nbt.getInteger("SmeltedTick");
-		heatCurrect = nbt.getDouble("Heat");
+		smeltedTick = nbt.getDouble("SmeltedTick");
+		heatCurrect.readFromNBT(nbt);
 	}
 	
 	@Override
@@ -33,8 +31,8 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 	{
 		super.writeToNBT(nbt);
 		
-		nbt.setInteger("SmeltedTick", smeltedTick);
-		nbt.setDouble("Heat", heatCurrect);
+		nbt.setDouble("SmeltedTick", smeltedTick);
+		heatCurrect.writeToNBT(nbt);
 	}
 	
 	@Override
@@ -42,7 +40,7 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 	{
 		bakeClay();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
-		if(smeltedTick > 40000)
+		if(smeltedTick > 10000)
 		{
 			worldObj.removeTileEntity(xCoord, yCoord, zCoord);
 			invalidate();
@@ -58,41 +56,41 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 		{
 			if(getBlockPos().toPos(ForgeDirection.VALID_DIRECTIONS[i]).isAir()) return;
 		}
-		if(heatCurrect > 50)
+		if(getTemperature(ForgeDirection.UNKNOWN) > 550)
 		{
-			double pregress = (heatCurrect - 50D) / 4;
-			heatCurrect -= pregress;
-			smeltedTick += (int) pregress;
+			double pregress = (getTemperature(ForgeDirection.UNKNOWN) - 550) * 10D;
+			heatCurrect.emitHeat(pregress);
+			smeltedTick += pregress / 100D;
 		}
 	}
 	
 	@Override
 	public int getTemperature(ForgeDirection dir)
 	{
-		return (int) (heatCurrect / sh + FleValue.WATER_FREEZE_POINT);
+		return heatCurrect.getTempreture() + FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos());
 	}
 
 	@Override
 	public double getThermalConductivity(ForgeDirection dir)
 	{
-		return hc;
+		return heatCurrect.getThermalConductivity();
 	}
 
 	@Override
 	public double getThermalEnergyCurrect(ForgeDirection dir) 
 	{
-		return heatCurrect;
+		return heatCurrect.getHeat();
 	}
 
 	@Override
 	public void onHeatReceive(ForgeDirection dir, double heatValue)
 	{
-		heatCurrect += heatValue;
+		heatCurrect.reseaveHeat(heatValue);
 	}
 
 	@Override
-	public void onHeatEmmit(ForgeDirection dir, double heatValue)
+	public void onHeatEmit(ForgeDirection dir, double heatValue)
 	{
-		heatCurrect -= heatValue;
+		heatCurrect.emitHeat(heatValue);
 	}
 }

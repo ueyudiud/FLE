@@ -6,10 +6,12 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import fle.FLE;
+import fle.api.enums.EnumAtoms;
 import fle.api.enums.EnumCraftingType;
 import fle.api.item.IBagable;
+import fle.api.item.ICastingTool;
 import fle.api.item.IItemBehaviour;
 import fle.api.item.IPolishTool;
 import fle.api.item.ISubPolishTool;
@@ -21,11 +23,13 @@ import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorArrowBag;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.BehaviorBlockable;
+import fle.core.item.behavior.BehaviorCastingTool;
 import fle.core.item.behavior.BehaviorCeramics;
 import fle.core.item.behavior.BehaviorFlintChip;
+import fle.core.item.behavior.BehaviorGuideBook;
 import fle.core.util.TextureLocation;
 
-public class ItemFleSub extends ItemSub implements IPolishTool, IBagable
+public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICastingTool
 {
 	public ItemFleSub(String aUnlocalized, String aUnlocalizedTooltip)
 	{
@@ -37,7 +41,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable
 		addSubItem(0, "flint_a", "stones/1");
 		addSubItem(1, "flint_b", "stones/2", new BehaviorFlintChip());
 		addSubItem(2, "flint_c", "stones/3");
-		addSubItem(10, "stone_a", "stones/201");
+		addSubItem(10, "stone_a", "stones/201", new BehaviorBlockable(9, Blocks.cobblestone));
 		addSubItem(11, "stone_b", "stones/202");
 		addSubItem(31, "limestone", "stones/1001");
 		addSubItem(32, "sandstone", "stones/1002");
@@ -70,13 +74,20 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable
 		addSubItem(1004, "ramie_rope", "crop/ramie_rope");
 		addSubItem(1005, "ramie_bundle_rope", "crop/ramie_bundle_rope");
 		addSubItem(1006, "charred_log", "tree/1003", new BehaviorBlockable(4, IB.charcoal));
-		addSubItem(2001, "lipocere", "resource/1");
+		addSubItem(2001, "lipocere", "resource/dust/1");
 		addSubItem(3001, "dust_limestone", "stones/11001");
-		addSubItem(3002, "plant_ash", "resource/3", new BehaviorBlockable(IB.ash));
-		addSubItem(3003, "argil_ball", "resource/2", new BehaviorCeramics());
-		addSubItem(5001, "argil_brick", "clay/101");
-		addSubItem(6002, "argil_plate", "clay/102");
+		addSubItem(3002, "plant_ash", "resource/dust/3", new BehaviorBlockable(IB.ash));
+		addSubItem(3003, "argil_ball", "resource/dust/2", new BehaviorCeramics());
+		addSubItem(3004, "cemented_grit", "resource/dust/1001", new BehaviorCastingTool());
+		addSubItem(5202, "argil_brick", "clay/101");
+		addSubItem(6201, "stone_plate", "resource/plate/stone");
+		addSubItem(6202, "argil_plate", "resource/plate/argil");
 		addSubItem(10001, "arrow_bag", "tools/arrow_bag", new BehaviorArrowBag());
+		addSubItem(10002, "guide_book", "guide_book", new BehaviorGuideBook());
+		for(int i = 0; i < EnumAtoms.values().length; ++i)
+		{
+			addSubItem(20001 + i, "ingot_" + EnumAtoms.values()[i].name().toLowerCase(), "resource/ingot/" + EnumAtoms.values()[i].name().toLowerCase());
+		}
 		stackLimitList.add(10001);
 		return this;
 	}
@@ -89,6 +100,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable
 	}
 	public static ItemStack a(String name, int size)
 	{
+		if("ingot_fe".equals(name)) return new ItemStack(Items.iron_ingot, size);
 		try
 		{
 			int meta = ((ItemFleSub) IB.subItem).itemBehaviors.serial(name);
@@ -249,5 +261,24 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable
 	    	e.printStackTrace();
 	    }
 		return super.isValidArmor(aStack, armorType, entity);
+	}
+
+	@Override
+	public boolean isCastingTool(ItemStack aStack)
+	{
+		isItemStackUsable(aStack);
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+			if(tBehavior instanceof ICastingTool)
+			{
+				return ((ICastingTool) tBehavior).isCastingTool(aStack);
+			}
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return false;
 	}
 }

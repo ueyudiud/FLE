@@ -11,4 +11,6 @@ public interface IWorldManager
 	public int[] removeData(BlockPos pos);
 	
 	public int removeData(BlockPos pos, int type);
+
+	public void setDatas(BlockPos pos, int[] data, boolean b);
 }

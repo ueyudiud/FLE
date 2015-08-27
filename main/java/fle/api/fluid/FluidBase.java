@@ -33,9 +33,19 @@ public class FluidBase extends Fluid
 		{
 			setDensity((int) (aInfo.getDenseness() * 1000));
 			setViscosity(aInfo.getViscosity());
+			setTemperature((int) ((aInfo.getMeltingPoint() + aInfo.getBoilingPoint()) / 2));
+			color = aInfo.getColors()[0];
 		}
 		register.register(this, aName);
 		FluidRegistry.registerFluid(this);
+	}
+	
+	int color = 0xFFFFFF;
+	
+	@Override
+	public int getColor()
+	{
+		return color;
 	}
 	
 	private String textureName;

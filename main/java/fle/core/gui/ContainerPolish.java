@@ -6,10 +6,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import fle.FLE;
+import fle.api.gui.ContainerCraftable;
 import fle.api.gui.SlotOutput;
 import fle.api.net.INetEventListener;
-import fle.core.gui.base.ContainerCraftable;
-import fle.core.net.FlePackets.CoderTileUpdate;
+import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.core.te.TileEntityPolish;
 
 public class ContainerPolish extends ContainerCraftable implements INetEventListener
@@ -24,7 +24,7 @@ public class ContainerPolish extends ContainerCraftable implements INetEventList
 		this.addSlotToContainer(new Slot(tile, 1, 104, 22));
 		this.addSlotToContainer(new SlotOutput(tile, 2, 133, 35));
 		if(!tile.getWorldObj().isRemote)
-			FLE.fle.getNetworkHandler().sendTo(new CoderTileUpdate(tile.getWorldObj(), tile, (byte) 1, tile.getRecipeInput()));
+			FLE.fle.getNetworkHandler().sendTo(new CoderTileUpdate(tile, (byte) 1, tile.getRecipeInput()));
 	}
 	
 	@Override
@@ -39,20 +39,14 @@ public class ContainerPolish extends ContainerCraftable implements INetEventList
 	{
 		if(type == (byte) 1)
 		{
-			if((Short) contain < 9)
+			if((Integer) contain < 9)
 			{
-				((TileEntityPolish) inv).craftedOnce(player.player, (Short) contain);
+				((TileEntityPolish) inv).craftedOnce(player.player, (Integer) contain);
 			}
-			else if((Short) contain == 9)
+			else if((Integer) contain == 9)
 			{
 				((TileEntityPolish) inv).clearMap();
 			}
 		}
-	}
-
-	@Override
-	public List getNetWorkField()
-	{
-		return null;
 	}
 }

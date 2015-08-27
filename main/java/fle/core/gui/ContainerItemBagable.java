@@ -8,9 +8,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import fle.api.gui.ContainerBase;
+import fle.api.gui.ContainerWithPlayerInventory;
 import fle.api.gui.SlotHolographic;
 import fle.api.item.IBagable;
-import fle.core.gui.base.ContainerWithPlayerInventory;
 
 public class ContainerItemBagable extends ContainerWithPlayerInventory
 {
@@ -69,12 +69,6 @@ public class ContainerItemBagable extends ContainerWithPlayerInventory
         		return inv.isItemValidForSlot(0, aStack);
         	}
         });
-	}
-
-	@Override
-	public List getNetWorkField()
-	{
-		return null;
 	}
 
 	@Override

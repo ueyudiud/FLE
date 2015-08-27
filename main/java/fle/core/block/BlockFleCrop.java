@@ -25,12 +25,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.block.BlockHasTile;
+import fle.api.block.IDebugableBlock;
 import fle.api.crop.CropCard;
 import fle.api.crop.ICropSeed;
 import fle.api.world.BlockPos;
 import fle.core.te.TileEntityCrop;
 
-public class BlockFleCrop extends BlockHasTile implements IGrowable, IPlantable
+public class BlockFleCrop extends BlockHasTile implements IGrowable, IPlantable, IDebugableBlock
 {    
 	private TileEntityCrop tile = new TileEntityCrop();
 	private Map<String, IIcon[]> map = new HashMap();
@@ -246,5 +247,30 @@ public class BlockFleCrop extends BlockHasTile implements IGrowable, IPlantable
 			TileEntity tile, int metadata, int fortune)
 	{
 		return null;
+	}
+
+	@Override
+	public void addInfomationToList(World aWorld, int x, int y, int z,
+			List aList)
+	{
+		TileEntityCrop tile = (TileEntityCrop) aWorld.getTileEntity(x, y, z);
+		if(tile != null)
+		{
+			CropCard crop = tile.getCrop();
+			if(crop != null)
+			{
+				aList.add("================Crop Card Info===============");
+				aList.add("Crop Name : " + crop.getCropName());
+				aList.add("Crop Max Stage : " + crop.getMaturation());
+				aList.add("Grow Tick : " + crop.getGrowTick());
+			}
+			aList.add("================Crop Info===============");
+			aList.add("Age : " + tile.getCropAge());
+			if(crop != null)
+			{
+				float progress = (float) ((double) tile.getCropAge() / (crop.getMaturation() - 1) + 1F / (crop.getMaturation() - 1) * tile.getCropBuf() / crop.getGrowTick()); 
+				aList.add("Maturation Progress : " + FleValue.format_progress.format_c(progress));
+			}
+		}
 	}
 }

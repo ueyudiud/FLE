@@ -299,11 +299,11 @@ public class BlockOilLamp extends BlockFle implements ITileEntityProvider, IDebu
 			if(info.fluid != null)
 			{
 				aList.add("Lamp fuel: " + info.fluid.getLocalizedName());
-				aList.add("Lamp amount: " + info.fluid.amount);
+				aList.add("Lamp amount: " + FleValue.format_L.format_c(info.fluid.amount));
 			}
 			else
 			{
-				aList.add("Lamp amount: " + 0);
+				aList.add("Lamp amount: " + FleValue.format_L.format_c(0));
 			}
 			if(tile.getRock() != null)
 				aList.add("This lamp is made of " + new ItemStack(tile.getRock(), 1, tile.getRockMeta()).getDisplayName());

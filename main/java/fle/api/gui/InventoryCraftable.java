@@ -1,8 +1,6 @@
 package fle.api.gui;
 
 import net.minecraft.item.ItemStack;
-import fle.core.gui.base.ContainerCraftable;
-import fle.core.gui.base.InventoryBase;
 
 public abstract class InventoryCraftable<T extends ContainerCraftable> extends InventoryBase<T>
 {

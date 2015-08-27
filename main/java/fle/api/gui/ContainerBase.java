@@ -1,12 +1,16 @@
 package fle.api.gui;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -15,7 +19,8 @@ public abstract class ContainerBase extends Container
 {
 	public InventoryPlayer player;
 	public IInventory inv;
-	protected Map<String, Integer> list;
+	protected Map<Integer, Field> syncMap = new HashMap();
+	protected Map<Field, Integer> preList;
 
 	public ContainerBase(InventoryPlayer player, IInventory inventory) 
 	{
@@ -35,16 +40,83 @@ public abstract class ContainerBase extends Container
 	
 	public void setupNetWorkFields()
 	{
-		list = new HashMap();
+		preList = new HashMap();
 	}
 	
-	public void setField(String str, int index)
+	public void setField(Field field, int index)
 	{
-		list.put(str, index);
+		preList.put(field, index);
+	}
+
+	protected void registerSync(int syncID, Field field)
+	{
+		syncMap.put(syncID, field);
 	}
 	
-	public abstract List getNetWorkField();
-	
+    public void addCraftingToCrafters(ICrafting crafter)
+    {
+    	super.addCraftingToCrafters(crafter);
+    	if(preList != null)
+    	{
+    		setupNetWorkFields();
+    	}
+    	for(Integer index : syncMap.keySet())
+		{
+			crafter.sendProgressBarUpdate(this, index, getIntegerFromIndex(index));
+		}
+    }
+    
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+    	if(preList != null)
+    	{
+    		setupNetWorkFields();
+    	}
+
+        for (int i = 0; i < crafters.size(); ++i)
+        {
+            ICrafting icrafting = (ICrafting) crafters.get(i);
+
+    		for(Integer index : syncMap.keySet())
+    		{
+    			boolean flag = false;
+    			int x = getIntegerFromIndex(index);
+    			int y = getPreIntegerFromIndex(index);
+    			if(y != x) flag = true;
+    			preList.put(syncMap.get(index), x);
+    			if(flag) icrafting.sendProgressBarUpdate(this, index, x);
+    		}
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int index, int amount)
+    {
+    	if(preList != null)
+    	{
+    		setupNetWorkFields();
+    	}
+    	preList.put(syncMap.get(index), amount);
+    }
+
+    private int getIntegerFromIndex(int index)
+    {
+		try
+		{
+			return (Integer) (!syncMap.containsKey(index) ? 0 : syncMap.get(index).get(inv));
+		}
+		catch (Throwable e)
+		{
+			return 0;
+		}
+	}
+
+    private int getPreIntegerFromIndex(int index)
+    {
+    	return (Integer) (!syncMap.containsKey(index) ? 0 : !preList.containsKey(syncMap.get(index)) ? 0 : preList.get(syncMap.get(index)));
+	}
+    
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int i) 
 	{

@@ -7,21 +7,18 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import fle.FLE;
 import fle.api.FleValue;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.gui.GuiCondition;
-import fle.api.world.BlockPos;
+import fle.api.te.TEIT;
+import fle.core.energy.ThermalTileHelper;
 import fle.core.gui.InventoryTerrine;
 import fle.core.init.Materials;
-import fle.core.te.base.TEInventory;
 
-public class TileEntityTerrine extends TEInventory<InventoryTerrine> implements IFluidTank, IFluidHandler, IThermalTileEntity
+public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidTank, IFluidHandler, IThermalTileEntity
 {
-	private final double sh = Materials.Argil.getPropertyInfo().getSpecificHeat();
-	private final double hc = Materials.Argil.getPropertyInfo().getThermalConductivity();
-	
+	private ThermalTileHelper heatCurrect = new ThermalTileHelper(Materials.Argil);
 	public int mode;
 	
 	public TileEntityTerrine() 
@@ -35,6 +32,7 @@ public class TileEntityTerrine extends TEInventory<InventoryTerrine> implements 
 	{
 		super.readFromNBT(nbt);
 		mode = nbt.getShort("Mode");
+		heatCurrect.readFromNBT(nbt);
 	}
 	
 	@Override
@@ -42,11 +40,13 @@ public class TileEntityTerrine extends TEInventory<InventoryTerrine> implements 
 	{
 		super.writeToNBT(nbt);
 		nbt.setShort("Mode", (short) mode);
+		heatCurrect.writeToNBT(nbt);
 	}
 
 	@Override
 	public void updateEntity() 
 	{
+		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		inv.updateEntity(this);
 	}
 	
@@ -134,34 +134,39 @@ public class TileEntityTerrine extends TEInventory<InventoryTerrine> implements 
 	{
 		mode = 1;
 	}
-
+	
 	@Override
 	public int getTemperature(ForgeDirection dir)
 	{
-		return FleValue.WATER_FREEZE_POINT;
+		return heatCurrect.getTempreture() + FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos());
 	}
 
 	@Override
 	public double getThermalConductivity(ForgeDirection dir)
 	{
-		return hc;
+		return heatCurrect.getThermalConductivity();
 	}
 
 	@Override
-	public double getThermalEnergyCurrect(ForgeDirection dir)
+	public double getThermalEnergyCurrect(ForgeDirection dir) 
 	{
-		return 0;
+		return heatCurrect.getHeat();
 	}
 
 	@Override
 	public void onHeatReceive(ForgeDirection dir, double heatValue)
 	{
-		
+		heatCurrect.reseaveHeat(heatValue);
 	}
 
 	@Override
-	public void onHeatEmmit(ForgeDirection dir, double heatValue)
+	public void onHeatEmit(ForgeDirection dir, double heatValue)
 	{
-		
+		heatCurrect.emitHeat(heatValue);
+	}
+	
+	public double getProgress()
+	{
+		return inv.getProgress();
 	}
 }

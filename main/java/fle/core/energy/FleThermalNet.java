@@ -1,5 +1,6 @@
 package fle.core.energy;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -23,6 +24,12 @@ public class FleThermalNet extends ThermalNet
 		{
 			ret -= FLE.fle.getRotationNet().getWindSpeed() / 5;
 		}
+		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
+		{
+			Block block = pos.toPos(ForgeDirection.VALID_DIRECTIONS[i]).getBlock();
+			if(block.getMaterial() == Material.fire)
+				ret = Math.min(ret + 100, 700);
+		}
 		return ret;
 	}
 	
@@ -40,10 +47,6 @@ public class FleThermalNet extends ThermalNet
 					ret += ((IThermalTileEntity) tile).getThermalConductivity(target.getOpposite()) * (((IThermalTileEntity) tile).getTemperature(target.getOpposite()) - environmentTem) / getBlockMaterialSpecificHeat(pos.getBlock().getMaterial());
 				}
 			}
-			else if(pos.toPos(target).getBlock() == Blocks.fire)
-			{
-				ret += 1;
-			}
 		}
 		return ret;
 	}
@@ -51,6 +54,7 @@ public class FleThermalNet extends ThermalNet
 	private double getBlockMaterialSpecificHeat(Material material)
 	{
 		if(material == Material.air) return 1.0D;
+		if(material == Material.fire) return 1.0D;
 		if(material == Material.water) return 4.2D;
 		if(material == Material.wood) return 2.0D;
 		if(material == Material.clay) return 0.75D;
@@ -84,14 +88,14 @@ public class FleThermalNet extends ThermalNet
 				double value;
 				if(t1 > t2 + 1)
 				{
-					value = (t1 - t2) * Math.min(te.getThermalConductivity(dir), te1.getThermalConductivity(dir.getOpposite()));
-					te.onHeatEmmit(dir, value);
+					value = (t1 - t2) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2;
+					te.onHeatEmit(dir, value);
 					te1.onHeatReceive(dir.getOpposite(), value);
 				}
 				else if(t1 + 1 < t2)
 				{
-					value = (t2 - t1) * Math.min(te.getThermalConductivity(dir), te1.getThermalConductivity(dir.getOpposite()));
-					te1.onHeatEmmit(dir.getOpposite(), value);
+					value = (t2 - t1) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2;
+					te1.onHeatEmit(dir.getOpposite(), value);
 					te.onHeatReceive(dir, value);
 				}
 			}
@@ -99,11 +103,11 @@ public class FleThermalNet extends ThermalNet
 			{
 				if(te.getTemperature(dir) > getEnvironmentTemperature(pos) + 1)
 				{
-					te.onHeatEmmit(dir, (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * Math.min(te.getThermalConductivity(dir), getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())));
+					te.onHeatEmit(dir, (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())) / 4F);
 				}
 				else if(te.getTemperature(dir) < getEnvironmentTemperature(pos) - 1)
 				{
-					te.onHeatReceive(dir, (getEnvironmentTemperature(pos) - te.getTemperature(dir)) * Math.min(te.getThermalConductivity(dir), getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())));
+					te.onHeatReceive(dir, (getEnvironmentTemperature(pos) - te.getTemperature(dir)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())) / 4F);
 				}
 			}
 		}

@@ -15,11 +15,11 @@ import fle.FLE;
 import fle.api.enums.CompoundType;
 import fle.api.material.Matter;
 import fle.api.material.Matter.AtomStack;
+import fle.api.net.FlePackets.CoderFWMUpdate;
 import fle.api.util.IAirConditionProvider;
 import fle.api.world.BlockPos;
 import fle.api.world.BlockPos.ChunkPos;
 import fle.api.world.IWorldManager;
-import fle.core.net.FlePackets.CoderFWMUpdate;
 
 public class FWM implements IWorldManager, IAirConditionProvider
 {
@@ -107,6 +107,14 @@ public class FWM implements IWorldManager, IAirConditionProvider
 				int x = array[i] & 255;
 				datas[dataType][y][x] = (short) (array[i] >> 16);
 			}
+		}
+
+		public int[] getDatasFromCoord(BlockPos aPos)
+		{
+			int[] t = new int[maxNBTSize];
+			for(int i = 0; i < t.length; ++i)
+				t[i] = getDataFromCoord(i, aPos);
+			return t;
 		}
 	}
 	
@@ -199,10 +207,11 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		{
 			dim = FLE.fle.getPlatform().getPlayerInstance().worldObj.provider.dimensionId;
 		}
-		getChunkData(dim, pos).setDataFromCoord(dataType, pos, (short) data);
+		ChunkData tData = getChunkData(dim, pos);
+		tData.setDataFromCoord(dataType, pos, (short) data);
 		if(flag)
 		{
-			FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(dim, pos, dataType, data));
+			FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(pos, tData.getDatasFromCoord(pos)));
 		}
 	}
 
@@ -228,7 +237,6 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		int ret = tData.getDataFromCoord(type, pos);
 		tData.setDataFromCoord(type, pos, (short) 0);
 		return ret;
-		
 	}
 	
 	private ChunkData getChunkData(int dim, BlockPos pos)
@@ -297,12 +305,12 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			{
 				dim = FLE.fle.getPlatform().getPlayerInstance().worldObj.provider.dimensionId;
 			}
+			ChunkData tData = getChunkData(dim, pos);
 			for(int i = 0; i < data.length; ++i)
-				getChunkData(dim, pos).setDataFromCoord(i, pos, (short) data[i]);
+				tData.setDataFromCoord(i, pos, (short) data[i]);
 			if(flag && sync)
 			{
-				for(int i = 0; i < maxNBTSize; ++i)
-					FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(dim, pos, i, data[i]));
+				FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(pos, tData.getDatasFromCoord(pos)));
 			}
 		}
 	}
