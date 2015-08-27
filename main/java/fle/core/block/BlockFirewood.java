@@ -113,7 +113,7 @@ public class BlockFirewood extends BlockHasTile
 	{
 		TileEntityFirewood tile = (TileEntityFirewood) tileRaw;
 		ArrayList<ItemStack> list = new ArrayList();
-		list.add(new ItemStack(IB.firewood, tile.getCharcoalContain()));
+		list.add(new ItemStack(IB.firewood));
 		return list;
 	}
 }

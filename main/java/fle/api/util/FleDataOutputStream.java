@@ -122,7 +122,7 @@ public class FleDataOutputStream
 
 	public void writeFluidStack(FluidStack stack) throws IOException
 	{
-		if(stack != null)
+		if(stack != null && stack.getFluid() != null)
 		{
 			stream.writeBoolean(true);
 			stream.writeInt(stack.getFluidID());

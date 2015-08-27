@@ -375,7 +375,7 @@ public class FlePackets
 				}
 				catch(Throwable e)
 				{
-					FleLog.logger.error("FLE : send a packet to null, and fail to create new tile entity!");
+					FleLog.getLogger().error("FLE : send a packet to null, and fail to create new tile entity!");
 				}
 			}
 			if(message.pos.getBlockTile() instanceof INetEventListener)

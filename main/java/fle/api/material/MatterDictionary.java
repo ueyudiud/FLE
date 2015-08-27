@@ -40,7 +40,7 @@ public class MatterDictionary
 	{
 		if(fluidMap.containsKey(matter) || fluidMatterMap.containsKey(fluid))
 		{
-			FleLog.logger.error("Fle API: Fluid " + fluid.getUnlocalizedName() + " had alreadly register.");
+			FleLog.getLogger().error("Fle API: Fluid " + fluid.getUnlocalizedName() + " had alreadly register.");
 			return;
 		}
 		fluidMap.put(matter, fluid);

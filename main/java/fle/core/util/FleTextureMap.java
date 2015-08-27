@@ -126,7 +126,7 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
                             }
                             catch (IOException ioexception)
                             {
-                                FleLog.logger.error("Unable to load miplevel {} from: {}", new Object[] {Integer.valueOf(l), resourcelocation2, ioexception});
+                                FleLog.getLogger().error("Unable to load miplevel {} from: {}", new Object[] {Integer.valueOf(l), resourcelocation2, ioexception});
                             }
                         }
                     }
@@ -156,7 +156,7 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
 
         if (i1 < this.mipmapLevels)
         {
-        	FleLog.logger.debug("{}: dropping miplevel from {} to {}, because of minTexel: {}", new Object[] {this.basePath, Integer.valueOf(this.mipmapLevels), Integer.valueOf(i1), Integer.valueOf(j)});
+        	FleLog.getLogger().debug("{}: dropping miplevel from {} to {}, because of minTexel: {}", new Object[] {this.basePath, Integer.valueOf(this.mipmapLevels), Integer.valueOf(i1), Integer.valueOf(j)});
             this.mipmapLevels = i1;
         }
 
@@ -216,7 +216,7 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
             throw stitcherexception;
         }
 
-        FleLog.logger.info("Created: {}x{} {}-atlas", new Object[] {Integer.valueOf(stitcher.getCurrentWidth()), Integer.valueOf(stitcher.getCurrentHeight()), this.basePath});
+        FleLog.getLogger().info("Created: {}x{} {}-atlas", new Object[] {Integer.valueOf(stitcher.getCurrentWidth()), Integer.valueOf(stitcher.getCurrentHeight()), this.basePath});
         TextureUtil.allocateTextureImpl(this.getGlTextureId(), this.mipmapLevels, stitcher.getCurrentWidth(), stitcher.getCurrentHeight(), (float)this.anisotropicFiltering);
         HashMap hashmap = Maps.newHashMap(this.mapRegisteredSprites);
         Iterator iterator2 = stitcher.getStichSlots().iterator();

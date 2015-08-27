@@ -141,7 +141,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister aIconRegister) 
 	{
-		FleLog.logger.info("Far Land Era start loading fluid icon.");
+		FleLog.getLogger().info("Far Land Era start loading fluid icon.");
 		MinecraftForge.EVENT_BUS.post(new FluidIconRegisterEvent(aIconRegister));
 		iconMap = new HashMap();
 		for(MaterialOre tOre : MaterialOre.getOres())

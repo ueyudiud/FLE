@@ -11,11 +11,15 @@ import fle.api.net.FlePackets.CoderNBTUpdate;
 import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.init.Config;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 
 public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 {
+	private final int charcoalPower = Config.getInteger("pCharcoal", 6000);
+	private final int firewoodPower = Config.getInteger("pFirewood", 4000);
+	
 	private boolean isCoal;
 	private int woodContain;
 	private int coalLevel;
@@ -87,7 +91,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		if(burnState == 2)
 		{
 			--woodContain;
-			heatCurrect.reseaveHeat((isCoal ? 6000.0F : 4000.0F) * FLE.fle.getAirConditionProvider().getAirLevel(getBlockPos()).getIconContain(EnumAtoms.O));
+			heatCurrect.reseaveHeat((isCoal ? charcoalPower : firewoodPower) * FLE.fle.getAirConditionProvider().getAirLevel(getBlockPos()).getIconContain(EnumAtoms.O));
 			FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 			if(!canBBurning()) burnState = 1;
 			if((getBlockPos().toPos(ForgeDirection.UP).getBlock().isFlammable(worldObj, xCoord, yCoord + 1, zCoord, ForgeDirection.UP) || getBlockPos().toPos(ForgeDirection.UP).isReplacable()))

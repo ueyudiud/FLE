@@ -1,7 +1,10 @@
 package fle;
 
+import java.io.File;
 import java.util.Map;
 
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -19,12 +22,12 @@ import fle.api.crop.CropRegister;
 import fle.api.energy.RotationNet;
 import fle.api.util.ColorMap;
 import fle.api.util.FleLog;
-import fle.api.util.IAirConditionProvider;
 import fle.api.util.IColorMapHandler;
 import fle.api.util.IPlatform;
 import fle.core.CommonProxy;
 import fle.core.Proxy;
 import fle.core.energy.FleThermalNet;
+import fle.core.init.Config;
 import fle.core.net.NetWorkHandler;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleCropRegister;
@@ -39,7 +42,8 @@ public class FLE implements FleModHandler
 {
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.03a";
+    public static final String VERSION = "2.03c";
+    public static final int minForge = 1400;
 	
     @Instance(MODID)
     public static FLE fle;
@@ -53,6 +57,7 @@ public class FLE implements FleModHandler
     private FleTechManager tm;
     private FleThermalNet tn;
     private SideGateway<Keyboard> k;
+    private Configuration config;
     
     public FLE() 
     {
@@ -70,21 +75,46 @@ public class FLE implements FleModHandler
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
-    	FleLog.logger.info("Far Land Era start pre load.");
+    	FleLog.setLogger(event.getModLog());
+    	FleLog.getLogger().info("Far Land Era start checking forge version.");
+        int forge = ForgeVersion.getBuildVersion();
+        if ((forge > 0) && (forge < minForge))
+        {
+        	FleLog.getLogger().error("The currently installed version of Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." + ForgeVersion.getRevisionVersion() + "." + forge + ") is too old.\n" + "Please update the Minecraft Forge.\n" + "\n" + "(Technical information: " + forge + " < " + minForge + ")");
+        }
+    	FleLog.getLogger().info("Far Land Era start load config.");
+        try
+        {
+        	File configFile = new File(new File(p.get().getMinecraftDir(), "config"), "FLE.cfg");
+        	config = new Configuration(configFile);
+        	config.load();
+        	FleLog.getLogger().info("Config loaded from " + configFile.getAbsolutePath());
+        }
+        catch (Exception e)
+        {
+        	FleLog.getLogger().warn("Error while trying to access configuration! " + e);
+        	config = null;
+        }
+        if(config != null)
+        {
+            Config.init(config);
+            config.save();
+        }
+    	FleLog.getLogger().info("Far Land Era start pre load.");
     	proxy.onPreload();
 	}
 
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-    	FleLog.logger.info("Far Land Era start load.");
+    	FleLog.getLogger().info("Far Land Era start load.");
     	proxy.onLoad();
 	}
 
     @EventHandler
     public void postLoad(FMLPostInitializationEvent event)
     {
-    	FleLog.logger.info("Far Land Era start post load.");
+    	FleLog.getLogger().info("Far Land Era start post load.");
     	NetworkRegistry.INSTANCE.registerGuiHandler(MODID, proxy);
     	proxy.onPostload();
 	}
@@ -92,7 +122,7 @@ public class FLE implements FleModHandler
     @EventHandler
     public void completeLoad(FMLLoadCompleteEvent event)
     {
-    	FleLog.logger.info("Far Land Era start complete load.");
+    	FleLog.getLogger().info("Far Land Era start complete load.");
     	proxy.onCompleteLoad();
 	}
     

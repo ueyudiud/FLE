@@ -337,7 +337,7 @@ public class ItemFleMetaBase extends ItemFle
 		}
 		catch(Throwable e)
 		{
-			FleLog.logger.info("Fail to get icon of item " + getUnlocalizedName(stack) + " please check your mod pack.");
+			FleLog.getLogger().info("Fail to get icon of item " + getUnlocalizedName(stack) + " please check your mod pack.");
 			return itemIcon;
 		}
 	}

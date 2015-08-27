@@ -111,7 +111,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		catch(Throwable e)
 		{
 			//Use a null item.
-			FleLog.logger.catching(new RuntimeException("Fle: some mod use empty item id, please check your fle-addon "
+			FleLog.getLogger().catching(new RuntimeException("Fle: some mod use empty item id, please check your fle-addon "
 					+ "had already update, or report this bug to mod editer."));
 			return null; //Return null.
 		}

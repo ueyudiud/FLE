@@ -496,7 +496,7 @@ public class RecipeHelper
 
 		public int getSizeInventory() {return itemstacks.length;}
 
-		public ItemStack getStackInSlot(int i) {return itemstacks[i];}
+		public ItemStack getStackInSlot(int i) {return i >= itemstacks.length || i < 0 ? null : itemstacks[i];}
 
 		public ItemStack decrStackSize(int i, int size) 
 		{
@@ -523,9 +523,7 @@ public class RecipeHelper
 		public boolean isUseableByPlayer(EntityPlayer player) {return true;}
 		public void openInventory() {}
 		public void closeInventory() {}
-		public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) { return true;}
-		
-		
+		public boolean isItemValidForSlot(int i, ItemStack stack) { return true;}
 	}
 	
 	private static class FakeInventory implements IInventory

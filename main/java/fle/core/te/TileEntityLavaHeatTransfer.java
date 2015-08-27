@@ -19,12 +19,14 @@ import fle.api.net.INetEventListener;
 import fle.api.te.IFluidTanks;
 import fle.api.te.TEBase;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.init.Config;
 import fle.core.init.Materials;
 
 public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler, IThermalTileEntity, IFluidTanks, INetEventListener
 {
 	private ThermalTileHelper tc = new ThermalTileHelper(Materials.Stone);
 	private final FluidTank tank = new FluidTank(1000);
+	private final int lavaHeatPower = Config.getInteger("pLavaTransfer", 1000);
 
 	private int buf = 0;
 	public int tick = 0;
@@ -89,7 +91,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 			}
 			if(buf > 0)
 			{
-				tc.reseaveHeat(1000D);
+				tc.reseaveHeat(lavaHeatPower);
 				--buf;
 			}
 		}

@@ -72,21 +72,21 @@ public class ItemDebug extends ItemFle
         	BlockPos pos = new BlockPos(aWorld, x, y, z);
         	ChunkPos pos1 = pos.getChunkPos();
 
-        	FleLog.logger.debug("Block TYPE is " + pos.getBlock().getClass() + ".");
-        	FleLog.logger.info("Block name is " + pos.getBlock().getUnlocalizedName() + ", by id " + Block.getIdFromBlock(pos.getBlock()) + ".");
-        	FleLog.logger.debug("Metadata: " + pos.getBlockMeta() + ".");
-        	FleLog.logger.debug("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + ".");
+        	FleLog.getLogger().debug("Block TYPE is " + pos.getBlock().getClass() + ".");
+        	FleLog.getLogger().info("Block name is " + pos.getBlock().getUnlocalizedName() + ", by id " + Block.getIdFromBlock(pos.getBlock()) + ".");
+        	FleLog.getLogger().debug("Metadata: " + pos.getBlockMeta() + ".");
+        	FleLog.getLogger().debug("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + ".");
     		String str1 = "";
         	for(int i = 0; i < 8; ++i)
     			str1 += FLE.fle.getWorldManager().getData(pos, i) + " ";
-        	FleLog.logger.info("FWM: " + str1 + ".");
+        	FleLog.getLogger().info("FWM: " + str1 + ".");
         	if(aWorld.getBlock(x, y, z) instanceof IDebugableBlock)
     		{
     			List<String> tList = new ArrayList();
     			((IDebugableBlock) aWorld.getBlock(x, y, z)).addInfomationToList(aWorld, x, y, z, tList);
     			for(String str : tList)
     			{
-    				FleLog.logger.info(str);
+    				FleLog.getLogger().info(str);
     			}
     		}
         }
