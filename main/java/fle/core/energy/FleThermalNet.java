@@ -49,15 +49,16 @@ public class FleThermalNet extends ThermalNet
 	{
 		if(material == Material.air) return 1.0D;
 		if(material == Material.fire) return 1.0D;
-		if(material == Material.water) return 4.2D;
+		if(material == Material.water) return 0.8D;
 		if(material == Material.wood) return 2.0D;
 		if(material == Material.clay) return 0.75D;
-		if(material == Material.ice) return 3.4D;
+		if(material == Material.ice) return 1.7D;
 		if(material == Material.sand) return 0.54D;
-		if(material == Material.glass) return 0.84D;
+		if(material == Material.glass) return 1.2D;
 		if(material == Material.rock) return 0.38D;
-		if(material == Material.snow) return 3.5D;
+		if(material == Material.snow) return 1.9D;
 		if(material == Material.ground) return 0.84D;
+		if(material == Material.lava) return 0.2D;
 		return 0.9D;
 	}
 

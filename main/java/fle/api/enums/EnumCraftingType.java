@@ -2,5 +2,6 @@ package fle.api.enums;
 
 public enum EnumCraftingType
 {
-	polish;
+	polish,
+	coldForging;
 }

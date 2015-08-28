@@ -47,6 +47,6 @@ public class BehaviorPickaxe extends BehaviorDigable
 	@Override
 	public boolean isBlockEffective(ItemStack aStack, Block aBlock, int aMeta)
 	{
-		return (aBlock.getMaterial() != Material.iron && aBlock.getMaterial() != Material.anvil && aBlock.getMaterial() != Material.rock) || set.contains(aBlock) ? super.isBlockEffective(aStack, aBlock, aMeta) : true;
+		return (aBlock.getMaterial() != Material.iron && aBlock.getMaterial() != Material.anvil && aBlock.getMaterial() != Material.rock) && !set.contains(aBlock) ? super.isBlockEffective(aStack, aBlock, aMeta) : true;
 	}
 }

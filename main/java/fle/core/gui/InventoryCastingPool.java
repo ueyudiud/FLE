@@ -49,6 +49,7 @@ public class InventoryCastingPool extends InventoryWithFluidTank<TileEntityCasti
 			{
 				tile.getWorldObj().markBlockRangeForRenderUpdate(tile.xCoord, tile.yCoord, tile.zCoord, tile.xCoord, tile.yCoord, tile.zCoord);
 			}
+			syncTank(tile);
 		}
 		else ++syncTick;
 		IFreezingRecipe recipe = MatterDictionary.getFreeze(getFluid(), this);

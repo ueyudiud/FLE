@@ -50,7 +50,6 @@ public class InventoryTerrine extends InventoryWithFluidTank<TileEntityTerrine>
 			if(rand.nextFloat() < 0.03125F)
 			{
 				tryDrainFluid(tile, ForgeDirection.DOWN, 1, true, true);
-				syncTank(tile);
 			}
 			if(RecipeHelper.fillOrDrainInventoryTank(this, this, 0, 1))
 			{
@@ -95,7 +94,6 @@ public class InventoryTerrine extends InventoryWithFluidTank<TileEntityTerrine>
 							decrStackSize(0, 1);
 							type = GuiError.DEFAULT;
 						}
-						syncTank(tile);
 					}
 					if(!tile.getWorldObj().isRemote)
 						FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Double) recipeTime), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
@@ -109,6 +107,7 @@ public class InventoryTerrine extends InventoryWithFluidTank<TileEntityTerrine>
 		}
 		}
 		super.updateEntity(tile);
+		syncTank(tile);
 	}
 
 	@Override

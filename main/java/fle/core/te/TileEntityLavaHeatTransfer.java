@@ -78,7 +78,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 			{
 				if(tank.drain(1, true) != null)
 				{
-					buf += 10;
+					buf += 50;
 					tick += rand.nextInt(5);
 					if(tick > 1000) tick = 1000;
 					if(!worldObj.isRemote)
