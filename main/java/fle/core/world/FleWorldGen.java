@@ -1,7 +1,5 @@
 package fle.core.world;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -15,6 +13,7 @@ import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fle.api.material.MaterialOre;
+import fle.api.material.MaterialRock;
 import fle.api.util.WeightHelper;
 import fle.api.world.TreeInfo;
 import fle.core.block.BlockLog;
@@ -55,16 +54,31 @@ public class FleWorldGen implements IWorldGenerator
 
 	public void generateSurface(Random random, int x, int z, World world)
 	{
-		int a = random.nextInt(10);
-		if(a == 0) 
+		int a = random.nextInt(16);
+		switch(a)
+		{
+		case 0 :
 		{
 			genOre(random, world, x, z, 180, 50, 0.5D, 120, Blocks.stone, g(Materials.NativeCopper, 12), g(Materials.Malachite, 9), g(Materials.Azurite, 5), g(Materials.Cuprite, 4), g(Materials.Chalcocite, 5), g(Materials.Tenorite, 1));
 			genOre(random, world, x, z, 180, 50, 0.5D, 120, Blocks.glass, g(Materials.NativeCopper, 12), g(Materials.Malachite, 9), g(Materials.Azurite, 5), g(Materials.Cuprite, 4), g(Materials.Chalcocite, 5), g(Materials.Tenorite, 1));
 		}
-		if(a == 1)
+		break;
+		case 1 :
 		{
 			genOre(random, world, x, z, 180, 10, 0.3D, 70, Blocks.stone, g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6));
 			genOre(random, world, x, z, 180, 10, 0.3D, 70, Blocks.glass, g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6));
+		}
+		break;
+		case 2 :;
+		case 3 :;
+		case 4 :;
+		case 5 :
+		{
+			genRock(random, world, x, z, 180, 40, 0.8D, 180, Blocks.stone, Materials.Limestone);
+		}
+		break;
+		default :;
+		break;
 		}
 		for(TreeInfo tInfo : BlockLog.trees)
 		{
@@ -93,6 +107,29 @@ public class FleWorldGen implements IWorldGenerator
 		return true;
 	}
 
+	public boolean genRock(Random rand, World world, int x, int z, int maxY, int minY, double chance, int size, Block base, MaterialRock material)
+	{
+		int i = 0;
+		int j = 0;
+		if(rand.nextGaussian() < chance)
+		{
+			int X = x + rand.nextInt(16);
+			int Y = minY + rand.nextInt(maxY - minY);
+			int Z = z + rand.nextInt(16);
+			int s = (int) Math.round(Math.sqrt(size) * rand.nextGaussian() + size / 2);
+			if(Y >= world.getTopSolidOrLiquidBlock(X, Z))
+			{
+				return false;
+			}
+			if(base.isReplaceableOreGen(world, X, Y, Z, base))
+			{
+				new FleRockGen(base, (short) MaterialRock.getOreID(material), s).generate(world, rand, X, Y, Z);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public boolean genOre(Random rand, World world, int x, int z, int maxY, int minY, double chance, int size, Block base, MaterialOre[]...aOres)
 	{
 		return genOre(rand, world, x, z, maxY, minY, chance, size, base, new WeightHelper<MaterialOre>(aOres));

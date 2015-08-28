@@ -48,6 +48,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	{
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		inv.updateEntity(this);
+		heatCurrect.update();
 	}
 	
 	@Override
@@ -177,5 +178,10 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		{
 			inv.recipeTime = (Double) contain;
 		}
+	}
+	@Override
+	public double getPreHeatEmit()
+	{
+		return heatCurrect.getPreHeatEmit();
 	}
 }

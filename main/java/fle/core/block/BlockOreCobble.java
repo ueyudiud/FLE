@@ -120,7 +120,7 @@ public class BlockOreCobble extends BlockSubTile
 	@Override
 	public int getHarvestLevel(int metadata)
 	{
-		return metadata;
+		return 0;
 	}
 	
 	@Override

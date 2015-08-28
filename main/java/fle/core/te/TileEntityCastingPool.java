@@ -43,6 +43,7 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	{
 		inv.updateEntity(this);
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
+		tc.update();
 	}
 	
 	@Override
@@ -105,5 +106,11 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 		{
 			tc.syncHeat((Double) contain);
 		}
+	}
+
+	@Override
+	public double getPreHeatEmit()
+	{
+		return tc.getPreHeatEmit();
 	}
 }

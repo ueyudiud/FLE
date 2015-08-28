@@ -24,12 +24,6 @@ public class FleThermalNet extends ThermalNet
 		{
 			ret -= FLE.fle.getRotationNet().getWindSpeed() / 5;
 		}
-		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
-		{
-			Block block = pos.toPos(ForgeDirection.VALID_DIRECTIONS[i]).getBlock();
-			if(block.getMaterial() == Material.fire)
-				ret = Math.min(ret + 100, 700);
-		}
 		return ret;
 	}
 	
@@ -70,12 +64,23 @@ public class FleThermalNet extends ThermalNet
 	@Override
 	public void emmitHeat(BlockPos pos) 
 	{
-		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
-			emmitHeatTo(pos, ForgeDirection.VALID_DIRECTIONS[i]);
+		double[] ds = new double[ForgeDirection.VALID_DIRECTIONS.length];
+		if(pos.getBlockTile() instanceof IThermalTileEntity)
+		{
+			for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
+			{
+				ds[i] = getEmmitHeatValue(pos, ForgeDirection.VALID_DIRECTIONS[i]);
+			}
+			for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
+			{
+				if(ds[i] > 0) ((IThermalTileEntity) pos.getBlockTile()).onHeatEmit(ForgeDirection.VALID_DIRECTIONS[i], ds[i]);
+				else if(ds[i] < 0) ((IThermalTileEntity) pos.getBlockTile()).onHeatReceive(ForgeDirection.VALID_DIRECTIONS[i], -ds[i]);
+			}
+		}
+			
 	}
-
-	@Override
-	public void emmitHeatTo(BlockPos pos, ForgeDirection dir) 
+	
+	private double getEmmitHeatValue(BlockPos pos, ForgeDirection dir)
 	{
 		if(pos.getBlockTile() instanceof IThermalTileEntity)
 		{
@@ -86,30 +91,43 @@ public class FleThermalNet extends ThermalNet
 				IThermalTileEntity te1 = (IThermalTileEntity) pos.toPos(dir).getBlockTile();
 				int t2 = te1.getTemperature(dir);
 				double value;
-				if(t1 > t2 + 1)
+				if(t1 > t2)
 				{
 					value = (t1 - t2) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2;
-					te.onHeatEmit(dir, value);
-					te1.onHeatReceive(dir.getOpposite(), value);
+					te1.onHeatReceive(dir, value);
+					return value;
 				}
-				else if(t1 + 1 < t2)
+				else if(t1 < t2)
 				{
 					value = (t2 - t1) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2;
-					te1.onHeatEmit(dir.getOpposite(), value);
-					te.onHeatReceive(dir, value);
+					te1.onHeatEmit(dir, value);
+					return -value;
 				}
 			}
 			else
 			{
-				if(te.getTemperature(dir) > getEnvironmentTemperature(pos) + 1)
+				if(te.getTemperature(dir) > getEnvironmentTemperature(pos))
 				{
-					te.onHeatEmit(dir, (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())) / 4F);
+					return (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.toPos(dir).getBlock().getMaterial())) / 4F;
 				}
-				else if(te.getTemperature(dir) < getEnvironmentTemperature(pos) - 1)
+				else if(te.getTemperature(dir) < getEnvironmentTemperature(pos))
 				{
-					te.onHeatReceive(dir, (getEnvironmentTemperature(pos) - te.getTemperature(dir)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.getBlock().getMaterial())) / 4F);
+					return -(getEnvironmentTemperature(pos) - te.getTemperature(dir)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.toPos(dir).getBlock().getMaterial())) / 4F;
 				}
 			}
+		}
+		return 0.0D;
+	}
+
+	@Override
+	public void emmitHeatTo(BlockPos pos, ForgeDirection dir) 
+	{
+		if(pos.getBlockTile() instanceof IThermalTileEntity)
+		{
+			IThermalTileEntity te = (IThermalTileEntity) pos.getBlockTile();
+			double value = getEmmitHeatValue(pos, dir);
+			if(value > 0) te.onHeatEmit(dir, value);
+			else if(value < 0) te.onHeatReceive(dir, -value);
 		}
 	}
 

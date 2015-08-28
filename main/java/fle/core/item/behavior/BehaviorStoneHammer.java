@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import fle.api.item.ICrushableTool;
 import fle.api.item.ItemFleMetaBase;
@@ -23,14 +24,6 @@ public class BehaviorStoneHammer extends BehaviorDigable implements ICrushableTo
 	public boolean canHarvestBlock(ItemFleMetaBase item, Block aBlock,
 			int aMeta, ItemStack aStack) 
 	{
-		if(aBlock == Blocks.obsidian)
-		{
-			return true;
-		}
-		if(aBlock.isToolEffective("pickaxe", aMeta) && aBlock.getHarvestLevel(aMeta) < level)
-		{
-			return true;
-		}
 		return false;
 	}
 	
@@ -48,11 +41,15 @@ public class BehaviorStoneHammer extends BehaviorDigable implements ICrushableTo
 		{
 			return true;
 		}
-		return ForgeHooks.isToolEffective(new ItemStack(Items.wooden_pickaxe), aBlock, aMeta);
+		if(aBlock.isToolEffective("pickaxe", aMeta) && aBlock.getHarvestLevel(aMeta) <= level)
+		{
+			return true;
+		}
+		return false;
 	}
-	
+
 	@Override
-	public boolean doCrush(ItemStack aStack) 
+	public boolean doCrush(World aWorld, int x, int y, int z, ItemStack aStack)
 	{
 		return true;
 	}

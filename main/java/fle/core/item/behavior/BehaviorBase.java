@@ -84,7 +84,7 @@ public class BehaviorBase implements IItemBehaviour<ItemFleMetaBase>
 	public float getDigSpeed(ItemFleMetaBase item, ItemStack aStack,
 			Block aBlock, int aMetadata) 
 	{
-		return 0.5F;
+		return 0.8F;
 	}
 
 	@Override
@@ -105,5 +105,12 @@ public class BehaviorBase implements IItemBehaviour<ItemFleMetaBase>
 			int ammorType, Entity aEntity)
 	{
 		return false;
+	}
+
+	@Override
+	public void onPlayerStoppedUsing(ItemFleMetaBase item, World aWorld,
+			EntityPlayer aPlayer, int aUseTick, ItemStack aStack)
+	{
+		
 	}
 }

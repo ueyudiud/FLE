@@ -35,7 +35,7 @@ public class ItemDebug extends ItemFle
 			int aSide, float xPos, float yPos,
 			float zPos)
 	{
-    	if(aWorld.isRemote)
+    	if(!aWorld.isRemote)
     	{
         	aPlayer.addChatMessage(new ChatComponentText("This block is named " + aWorld.getBlock(x, y, z).getUnlocalizedName() + "."));
         	BlockPos pos = new BlockPos(aWorld, x, y, z);
@@ -53,9 +53,9 @@ public class ItemDebug extends ItemFle
         	if(pos.getBlockTile() instanceof IThermalTileEntity)
         	{
         		IThermalTileEntity tile = (IThermalTileEntity) pos.getBlockTile();
-        		aPlayer.addChatMessage(new ChatComponentText(String.format("Tempreture: %s.", FleValue.format_K.format_c(tile.getTemperature(ForgeDirection.VALID_DIRECTIONS[aSide])))));
+        		aPlayer.addChatMessage(new ChatComponentText(String.format("Temperature: %s.", FleValue.format_K.format_c(tile.getTemperature(ForgeDirection.VALID_DIRECTIONS[aSide])))));
         		aPlayer.addChatMessage(new ChatComponentText(String.format("Heat Currect: %s.", FleValue.format_MJ.format_c(tile.getThermalEnergyCurrect(ForgeDirection.VALID_DIRECTIONS[aSide])))));
-            	
+        		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreHeatEmit()))));
         	}
         	if(pos.getBlock() instanceof IDebugableBlock)
     		{
@@ -67,29 +67,6 @@ public class ItemDebug extends ItemFle
     			}
     		}
     	}
-    	else
-    	{
-        	BlockPos pos = new BlockPos(aWorld, x, y, z);
-        	ChunkPos pos1 = pos.getChunkPos();
-
-        	FleLog.getLogger().debug("Block TYPE is " + pos.getBlock().getClass() + ".");
-        	FleLog.getLogger().info("Block name is " + pos.getBlock().getUnlocalizedName() + ", by id " + Block.getIdFromBlock(pos.getBlock()) + ".");
-        	FleLog.getLogger().debug("Metadata: " + pos.getBlockMeta() + ".");
-        	FleLog.getLogger().debug("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + ".");
-    		String str1 = "";
-        	for(int i = 0; i < 8; ++i)
-    			str1 += FLE.fle.getWorldManager().getData(pos, i) + " ";
-        	FleLog.getLogger().info("FWM: " + str1 + ".");
-        	if(aWorld.getBlock(x, y, z) instanceof IDebugableBlock)
-    		{
-    			List<String> tList = new ArrayList();
-    			((IDebugableBlock) aWorld.getBlock(x, y, z)).addInfomationToList(aWorld, x, y, z, tList);
-    			for(String str : tList)
-    			{
-    				FleLog.getLogger().info(str);
-    			}
-    		}
-        }
 		return true;
 	}
 	

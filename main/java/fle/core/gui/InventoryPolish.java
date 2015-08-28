@@ -86,6 +86,10 @@ public class InventoryPolish extends InventoryTileBase<TileEntityPolish> impleme
 			{
 				inputMap[selectState] = ((IPolishTool) i.getItem()).getState(stacks[1], EnumCraftingType.polish, CraftingState.getState(inputMap[selectState])).getCharIndex();
 				stacks[1] = ((IPolishTool) i.getItem()).getOutput(player, i);
+				if(stacks[1].stackSize <= 0)
+				{
+					stacks[1] = null;
+				}
 				ItemStack itemstack = PolishRecipe.getRecipeResult(input, inputMap);
 				if(!ItemStack.areItemStacksEqual(itemstack, stacks[2]))
 				{

@@ -53,9 +53,9 @@ public class Materials
 		SoftWood = new MaterialAbstract("SoftWood", new PropertyInfo(0x8F744D, 6, 0.2F, 1.1F, 0.05F, 0.07F, 2800000, -1F, 0.3F, 1.9F));
 		Charcoal = new MaterialAbstract("Charcoal", Matter.mC, new PropertyInfo(0x35322A, 2, 0.03F, 0.0F, 0.08F, 0.5F, 4000000, 98F, 0.6F, 1.2F));
 		Argil = new MaterialAbstract("Argil", new PropertyInfo(0xAE9789, 29, 0.7F, 0.0F, 1.0F, 1.9F, 10800000, 59.1F, 0.5F, 2.3F));
-		Stone = new MaterialRock("Stone", new PropertyInfo(0x626262, 16, 1.0F, 0.0F, 1.0F, 1.4F, 10000000, -1.0F, 0.38F, 2.1F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
+		Stone = new MaterialRock("Stone", new PropertyInfo(0x626262, 16, 1.2F, 0.0F, 1.0F, 1.4F, 10000000, -1.0F, 0.38F, 2.1F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868, 21, 1.2F, 0.1F, 2.0F, 1.3F, 12800000), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
-		Limestone = new MaterialRock("Limestone", new PropertyInfo(0xE4E4E5, 2, 1.0F, 0.2F, 1.0F, 1.8F, 5600000));
+		Limestone = new MaterialRock("Limestone", new PropertyInfo(0xE4E4E5, 2, 0.8F, 0.2F, 1.0F, 1.8F, 5600000));
 		Copper = new MaterialAbstract("Copper", new PropertyInfo(0xDB4E31, 38, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 4F, 1F, 0.19F), SubTag.TOOL_metal);
 	}
 }

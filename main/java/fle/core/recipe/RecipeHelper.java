@@ -567,7 +567,6 @@ public class RecipeHelper
 		public boolean isUseableByPlayer(EntityPlayer player) {return true;}
 		public void openInventory() {}
 		public void closeInventory() {}
-		public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) { return true;}
-		
+		public boolean isItemValidForSlot(int i, ItemStack stack) { return true;}	
 	}
 }

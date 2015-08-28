@@ -18,4 +18,16 @@ public abstract class ItemFleTool extends ItemFleMetaBase
 	    setNoRepair();
 	    if(aFull3D) setFull3D();
 	}
+	
+	@Override
+	public int getMaxItemUseDuration(ItemStack aStack)
+	{
+		return 1000;
+	}
+	
+	@Override
+	public EnumAction getItemUseAction(ItemStack aItemStack)
+	{
+		return EnumAction.block;
+	}
 }

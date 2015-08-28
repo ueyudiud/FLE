@@ -14,7 +14,7 @@ public class BehaviorAwl extends BehaviorBase implements ISubPolishTool<ItemFleM
 	public ItemStack getOutput(ItemFleMetaBase item, ItemStack aStack,
 			EntityPlayer aPlayer)
 	{
-		item.damageItem(aStack, aPlayer, EnumDamageResource.Crafting, 1);
+		item.damageItem(aStack, aPlayer, EnumDamageResource.Crafting, 0.2F);
 		return aStack;
 	}
 

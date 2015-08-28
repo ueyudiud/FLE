@@ -255,9 +255,34 @@ public class ItemFleMetaBase extends ItemFle
 	public void onUpdate(ItemStack aStack, World aWorld, Entity aPlayer, int aTimer, boolean aIsInHand)
 	{
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
-	    if (tBehavior != null)
+	    try
 	    {
-	    	tBehavior.onUpdate(this, aStack, aWorld, aPlayer, aTimer, aIsInHand);
+			if (tBehavior != null)
+		    {
+		    	tBehavior.onUpdate(this, aStack, aWorld, aPlayer, aTimer, aIsInHand);
+		    }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+	}
+	
+	@Override
+	public void onPlayerStoppedUsing(ItemStack aStack, World aWorld,
+			EntityPlayer aPlayer, int aUseTick)
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+	    try
+	    {
+			if (tBehavior != null)
+		    {
+		    	tBehavior.onPlayerStoppedUsing(this, aWorld, aPlayer, aUseTick, aStack);
+		    }
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
 	    }
 	}
 	 
@@ -383,5 +408,12 @@ public class ItemFleMetaBase extends ItemFle
 		{
 			return FleValue.VOID_ICON_FILE;
 		}
+	}
+	
+	@Override
+	public MovingObjectPosition getMovingObjectPositionFromPlayer(
+			World aWorld, EntityPlayer aPlayer, boolean aFlag)
+	{
+		return super.getMovingObjectPositionFromPlayer(aWorld, aPlayer,	aFlag);
 	}
 }

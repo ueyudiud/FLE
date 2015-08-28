@@ -40,4 +40,6 @@ public abstract interface IItemBehaviour<E extends Item>
 	public abstract boolean onEntityItemUpdate(E item, EntityItem aItem);
 	
 	public abstract boolean isValidArmor(E item, ItemStack aStack, int ammorType, Entity aEntity);
+
+	public abstract void onPlayerStoppedUsing(E item, World aWorld, EntityPlayer aPlayer, int aUseTick, ItemStack aStack);
 }

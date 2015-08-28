@@ -35,7 +35,10 @@ public class BehaviorDigable extends BehaviorTool
 			Block aBlock, EntityLivingBase aEntity, World aWorld, int aX,
 			int aY, int aZ) 
 	{
-		item.damageItem(aStack, aEntity, EnumDamageResource.DestoryBlock, 1);
+		if(aBlock.getBlockHardness(aWorld, aX, aY, aZ) > 0.0F)
+		{
+			item.damageItem(aStack, aEntity, EnumDamageResource.DestoryBlock, 1.0F);
+		}
 		return true;
 	}
 	

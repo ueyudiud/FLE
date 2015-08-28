@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleValue;
@@ -61,6 +62,12 @@ public class ItemToolHead extends ItemSub
 				new TextureLocation(new String[]{"tools/head/stone_hammer_head", "tools/head/stone_hammer_rust"}));
 		addSubItem(10, "flint_arrow", 
 				new TextureLocation(new String[]{"tools/head/flint_arrow_head", FleValue.VOID_ICON_FILE}));
+		addSubItem(11, "stone_sickle", 
+				new TextureLocation(new String[]{"tools/head/stone_sickle_head", "tools/head/stone_sickle_rust"}));
+		addSubItem(12, "stone_spade_hoe", 
+				new TextureLocation(new String[]{"tools/head/spade_hoe_head", "tools/head/spade_hoe_rust"}));
+		addSubItem(101, "metal_axe", 
+				new TextureLocation(new String[]{"tools/head/metal_axe_head", "tools/head/metal_axe_rust", "tools/head/metal_axe_mosaic"}));
 		return this;
 	}
 	
@@ -128,6 +135,24 @@ public class ItemToolHead extends ItemSub
 				}
 			}
 		}
+	}
+	
+	@Override
+	public IIcon getIcon(ItemStack stack, int pass)
+	{
+		if(pass == 1)
+		{
+	    	ToolMaterialInfo tInfo = new ToolMaterialInfo(setupNBT(stack));
+	    	if(tInfo.getMaterialSurface() == null)
+	    		return itemIcon;
+		}
+		if(pass == 2)
+		{
+	    	ToolMaterialInfo tInfo = new ToolMaterialInfo(setupNBT(stack));
+	    	if(tInfo.getMaterialMosaic() == null)
+	    		return itemIcon;
+		}
+		return super.getIcon(stack, pass);
 	}
 	
 	@SideOnly(Side.CLIENT)

@@ -8,13 +8,17 @@ import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
 import fle.core.gui.InventoryCastingPool;
 import fle.core.init.IB;
+import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
+import fle.core.item.ItemToolHead;
 
 public class CastingPoolRecipe implements IFreezingRecipe
 {
 	public static void init()
 	{
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3), "xxxx xxxx", ItemFleSub.a("ingot_cu")));
+		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu")));
+		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 3), "x  xx xxx", ItemToolHead.a("metal_axe", Materials.Copper)));
+		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 3), "  x xxxxx", ItemToolHead.a("metal_axe", Materials.Copper)));
 	}
 	
 	FluidStack input;

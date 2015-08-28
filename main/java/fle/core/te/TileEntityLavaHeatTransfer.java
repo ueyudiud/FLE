@@ -51,8 +51,6 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 		tick = nbt.getInteger("Tick");
 	}
 	
-	int syncTick = 0;
-	
 	@Override
 	public void updateEntity()
 	{
@@ -96,12 +94,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 			}
 		}
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
-		if(!worldObj.isRemote && syncTick == 20)
-		{
-			syncTick = 0;
-			FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(this, (byte) 1, tc.getHeat()), new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 4.0F));
-		}
-		else ++syncTick;
+		tc.update();
 	}
 	
 	@Override
@@ -206,7 +199,6 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 	{
 		return tank.fill(resource, doFill);
 	}
-
 	
 	@Override
 	public void onReseave(byte type, Object contain)
@@ -215,5 +207,11 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 		{
 			tc.syncHeat((Double) contain);
 		}
+	}
+
+	@Override
+	public double getPreHeatEmit()
+	{
+		return tc.getPreHeatEmit();
 	}
 }

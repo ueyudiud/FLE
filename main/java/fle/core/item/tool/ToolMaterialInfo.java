@@ -57,7 +57,9 @@ public class ToolMaterialInfo
 	
 	public int getToolLevel()
 	{
-		return materialBase == null ? 0 : (int) Math.floor(Math.max(materialMosaic == null ? 0F : materialMosaic.getPropertyInfo().getHardness(), (materialBase.getPropertyInfo().getHardness() + (materialSurface == null ? 0F : materialSurface.getPropertyInfo().getHardness()) * coverLevel) / (1 + coverLevel)));
+		float a = materialMosaic == null ? 0F : materialMosaic.getPropertyInfo().getHardness();
+		float b = (materialBase.getPropertyInfo().getHardness() + (materialSurface == null ? 0F : materialSurface.getPropertyInfo().getHardness()) * coverLevel) / (1 + coverLevel);
+		return materialBase == null ? 0 : (int) Math.floor(Math.max(a, b));
 	}
 	
 	public float getHardness()

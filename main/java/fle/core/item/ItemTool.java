@@ -21,6 +21,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -53,6 +54,7 @@ import fle.core.item.behavior.BehaviorArrow;
 import fle.core.item.behavior.BehaviorAwl;
 import fle.core.item.behavior.BehaviorAxe;
 import fle.core.item.behavior.BehaviorFirestarter;
+import fle.core.item.behavior.BehaviorHoe;
 import fle.core.item.behavior.BehaviorShovel;
 import fle.core.item.behavior.BehaviorStoneHammer;
 import fle.core.item.behavior.BehaviorWhetstone;
@@ -88,7 +90,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		ItemStack aStack = new ItemStack(IB.tool, 1, ((ItemTool) IB.tool).itemBehaviors.serial(toolTip));
 		aStack.stackTagCompound = new NBTTagCompound();
 		new ToolMaterialInfo(base, cover, area, mosaic).writeToNBT(aStack.getTagCompound());
-		((ItemTool) IB.tool).setDisplayDamage(aStack, damage);
+		((ItemTool) IB.tool).setDisplayDamage(aStack, damage * 100);
 		return aStack;
 	}
 	
@@ -99,6 +101,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		addToolMaterial(Materials.HardWood);
 		addToolMaterial(Materials.Stone);
 		addToolMaterial(Materials.CompactStone);
+		addToolMaterial(Materials.Copper);
 		addSubItem(1, "rough_stone_axe", SubTag.TOOL_stone, 
 				new String[]{EnumTool.axe.toString()},
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
@@ -126,7 +129,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new BehaviorStoneHammer(2, 0.9F));
 		addSubItem(6, "wooden_hammer", SubTag.TOOL_wood, 
 				new String[]{EnumTool.wood_hammer.name()}, 
-				new AttributesInfo[]{new AttributesInfo(knockbackResistance, 0.1F)},
+				new AttributesInfo[]{new AttributesInfo(knockbackResistance, 0.5F)},
 				new TextureLocation(FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/hammer/wood_hammer"), 
 				new BehaviorWoodHammer());
 		addSubItem(7, "wooden_drilling_firing", SubTag.TOOL_wood, 
@@ -145,6 +148,21 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new String[]{EnumTool.arrow.name()},
 				new TextureLocation("tools/arrow/flint_arrow_head", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/arrow/flint_arrow_stick"), 
 				new BehaviorArrow());
+		addSubItem(11, "stone_sickle", SubTag.TOOL_stone_real, 
+				new String[]{EnumTool.hoe.name()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
+				new TextureLocation("tools/hoe/stone_sickle_head", "tools/hoe/stone_sickle_rust", FleValue.VOID_ICON_FILE, "tools/hoe/stone_sickle_stick", "tools/hoe/stone_sickle_tie"), 
+				new BehaviorHoe(true, false));
+		addSubItem(12, "stone_spade_hoe", SubTag.TOOL_stone_real, 
+				new String[]{EnumTool.hoe.name()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 0.5F)},
+				new TextureLocation("tools/hoe/spade_hoe_head", "tools/hoe/spade_hoe_rust", FleValue.VOID_ICON_FILE, "tools/hoe/spade_hoe_stick", "tools/hoe/spade_hoe_tie"), 
+				new BehaviorHoe(false, true));
+		addSubItem(101, "metal_axe", SubTag.TOOL_metal, 
+				new String[]{EnumTool.axe.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 3.0F)},
+				new TextureLocation("tools/axe/metal_axe_head", "tools/axe/metal_axe_rust", "tools/axe/metal_axe_mosaic", "tools/axe/metal_axe_stick"), 
+				new BehaviorAxe(1.0F));
 		heightLightList.add(8);
 		stackLimitList.add(10);
 		return this;
@@ -302,6 +320,24 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	
 	List<Integer> heightLightList = new ArrayList();
 	
+	@Override
+	public IIcon getIcon(ItemStack stack, int pass)
+	{
+		if(pass == 1)
+		{
+	    	ToolMaterialInfo tInfo = new ToolMaterialInfo(setupNBT(stack));
+	    	if(tInfo.getMaterialSurface() == null)
+	    		return itemIcon;
+		}
+		if(pass == 2)
+		{
+	    	ToolMaterialInfo tInfo = new ToolMaterialInfo(setupNBT(stack));
+	    	if(tInfo.getMaterialMosaic() == null)
+	    		return itemIcon;
+		}
+		return super.getIcon(stack, pass);
+	}
+	
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack aStack, int pass)
     {
@@ -395,7 +431,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass) 
 	{
-		return getToolClasses(stack).contains(toolClass) ? new ToolMaterialInfo(setupNBT(stack)).getToolLevel() : 0;
+		return getToolClasses(stack).contains(toolClass) ? new ToolMaterialInfo(setupNBT(stack)).getToolLevel() : -1;
 	}
 	
 	@Override
@@ -481,7 +517,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	}
 
 	@Override
-	public boolean doCrush(ItemStack aStack) 
+	public boolean doCrush(World aWorld, int x, int y, int z, ItemStack aStack) 
 	{
 	    isItemStackUsable(aStack);
 	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
@@ -489,7 +525,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	    {
 	    	if (tBehavior instanceof ICrushableTool)
 	    	{
-	            return ((ICrushableTool) tBehavior).doCrush(aStack);
+	            return ((ICrushableTool) tBehavior).doCrush(aWorld, x, y, z, aStack);
 	        }
 	    }
 	    catch(Throwable e)

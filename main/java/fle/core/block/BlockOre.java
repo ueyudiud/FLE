@@ -64,14 +64,14 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	
 	public static int getHarvestLevel(MaterialOre ore)
 	{
-		return 1 + (int) Math.floor(ore.getPropertyInfo().getHardness());
+		return (int) (Math.floor(ore.getPropertyInfo().getHardness()) + 1) / 2;
 	}
 	  
 	public float getBlockHardness(World aWorld, int aX, int aY, int aZ)
 	{
 		try
 		{
-			return 1.0F + MaterialOre.getOreFromID(getOre(aWorld, aX, aY, aZ)).getPropertyInfo().getHardness() * 1.5F;
+			return (int) (2.0F + MaterialOre.getOreFromID(getOre(aWorld, aX, aY, aZ)).getPropertyInfo().getHardness()) * 0.7F;
 		}
 		catch(Throwable e)
 		{

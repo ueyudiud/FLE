@@ -1,8 +1,10 @@
 package fle.core.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.FleAPI;
 import fle.api.material.MaterialAbstract;
 
 public class ThermalTileHelper
@@ -11,6 +13,7 @@ public class ThermalTileHelper
 	private final double sh;
 	
 	private double heatCurrect;
+	private double preHeatEmit;
 
 	public ThermalTileHelper(MaterialAbstract material)
 	{
@@ -33,13 +36,20 @@ public class ThermalTileHelper
 		nbt.setDouble("Heat", heatCurrect);
 	}
 	
+	public void update()
+	{
+		preHeatEmit = 0D;
+	}
+	
 	public void reseaveHeat(double heat)
 	{
+		preHeatEmit -= heat;
 		heatCurrect += heat;
 	}
 	
 	public void emitHeat(double heat)
 	{
+		preHeatEmit += heat;
 		heatCurrect -= heat;
 	}
 	
@@ -62,5 +72,10 @@ public class ThermalTileHelper
 	public void syncHeat(double heat)
 	{
 		heatCurrect = heat;
-}
+	}
+	
+	public double getPreHeatEmit()
+	{
+		return preHeatEmit;
+	}
 }

@@ -36,11 +36,12 @@ import fle.core.block.BlockRock;
 import fle.core.item.ItemFleSub;
 import fle.core.item.ItemOre;
 import fle.core.item.ItemTool;
+import fle.core.item.ItemToolHead;
 import fle.core.recipe.CastingPoolRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
 import fle.core.recipe.WashingRecipe;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
-import fle.core.recipe.crafting.StoneToolCraftingRecipe;
+import fle.core.recipe.crafting.ToolCraftingRecipe;
 import fle.core.recipe.crafting.TreeCuttingRecipe;
 
 public class Rs
@@ -79,6 +80,7 @@ public class Rs
 		OreDictionary.registerOre("wick", Items.string);
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 1));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 2));
+		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 101));
 		OreDictionary.registerOre("craftingToolFirestarter", new ItemStack(IB.tool, 1, 7));
 		OreDictionary.registerOre("craftingToolFirestarter", new ItemStack(Items.flint_and_steel, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_oak"));
@@ -104,15 +106,21 @@ public class Rs
 		
 		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemFleSub.a("branch_bush"), new Object[]{"branchWood"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(new ItemStack(IB.firewood), new Object[]{"x", "o", 'x', "craftingToolAxe", 'o', "logWood"}));
-		GameRegistry.addRecipe(new StoneToolCraftingRecipe("rough_stone_axe", ItemFleSub.a("branch_bush")));
-		GameRegistry.addRecipe(new StoneToolCraftingRecipe("stone_axe", "stickWood"));
-		GameRegistry.addRecipe(new StoneToolCraftingRecipe("stone_shovel", "stickWood"));
-		GameRegistry.addRecipe(new StoneToolCraftingRecipe("stone_hammer", "stickWood"));
-		GameRegistry.addRecipe(new StoneToolCraftingRecipe("flint_arrow", 2, "stickWood", Items.feather));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemToolHead.a("rough_stone_axe", Materials.Flint), new Object[]{ItemFleSub.a("flint_c")}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemToolHead.a("rough_stone_axe", Materials.Obsidian), new Object[]{ItemFleSub.a("chip_obsidian")}));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("rough_stone_axe", ItemFleSub.a("branch_bush")));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("flint_hammer", ItemFleSub.a("branch_bush")));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_axe", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_shovel", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_hammer", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("flint_arrow", 2, "stickWood", Items.feather));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_sickle", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe("metal_axe", "stickWood"));
 		GameRegistry.addRecipe(new OilLampAddFuelRecipe(100, Items.beef));
 		GameRegistry.addRecipe(new OilLampAddFuelRecipe(150, Items.porkchop));
 		GameRegistry.addRecipe(new OilLampAddFuelRecipe(75, Items.rotten_flesh));
 		GameRegistry.addRecipe(new ShapedFleRecipe(ItemTool.a("wooden_hammer", Materials.HardWood), new Object[]{"x", "o", 'x', "logWood", 'o', "stickWood"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(ItemTool.a("wooden_hammer", Materials.HardWood, 2), new Object[]{"x", "o", 'x', "logWood", 'o', ItemFleSub.a("branch_bush")}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemFleSub.a("argil_ball", 3), new Object[]{Items.clay_ball, Items.clay_ball, Blocks.sand, "dustLimestone"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(new ItemStack(IB.woodMachine, 1, 0), new Object[]{"x", "o", 'x', "logWood", 'o', Blocks.gravel}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(new ItemStack(IB.woodMachine1, 1, 0), new Object[]{"xx", "xx", 'x', "stickWood"}));
@@ -128,10 +136,10 @@ public class Rs
 		GameRegistry.addRecipe(new ShapelessFleRecipe(new ItemStack(IB.stoneMachine1, 1, 0), new Object[]{"plateStone", "plateStone", "plateStone", "plateStone"}));
 		GameRegistry.addRecipe(new TreeCuttingRecipe());
 
-		RecipeSorter.register(FLE.MODID + ":shaped", ShapedFleRecipe.class, SHAPED, "after:forge:shapedore before:minecraft:shapeless");
-		RecipeSorter.register(FLE.MODID + ":stonetoolcrafting", StoneToolCraftingRecipe.class, SHAPED, "after:" + FLE.MODID + ":stonetoolcrafting");
-		RecipeSorter.register(FLE.MODID + ":stonetoolcrafting", TreeCuttingRecipe.class, SHAPED, "after:" + FLE.MODID + ":stonetoolcrafting");
-		RecipeSorter.register(FLE.MODID + ":shapeless", ShapelessFleRecipe.class, SHAPELESS, "after:forge:shapelessore");
+		RecipeSorter.register(FLE.MODID + ":shaped", ShapedFleRecipe.class, SHAPED, "before:minecraft:shaped");
+		RecipeSorter.register(FLE.MODID + ":toolcrafting", ToolCraftingRecipe.class, SHAPED, "after:" + FLE.MODID + ":shaped");
+		RecipeSorter.register(FLE.MODID + ":tree", TreeCuttingRecipe.class, SHAPED, "after:" + FLE.MODID + ":shaped");
+		RecipeSorter.register(FLE.MODID + ":shapeless", ShapelessFleRecipe.class, SHAPELESS, "after:forge:shapedore before:minecraft:shapeless");
 		
 		CastingPoolRecipe.init();
 	}

@@ -35,6 +35,8 @@ public class PolishRecipe
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("flint_a")), "   c  ccc", ItemToolHead.a("flint_hammer", Materials.Flint)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("flint_a")), " ccc  c c", ItemToolHead.a("flint_arrow", 4, Materials.Flint)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("flint_a")), "cc   cc c", ItemToolHead.a("flint_arrow", 4, Materials.Flint)));
+		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("flint_a")), "   c cc c", ItemTool.a("flint_awl", Materials.Flint)));
+		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("chip_obsidian")), "   c cc c", ItemTool.a("flint_awl", Materials.Obsidian)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("chip_obsidian")), " ccc  c c", ItemToolHead.a("flint_arrow", 4, Materials.Obsidian)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("chip_obsidian")), "cc   cc c", ItemToolHead.a("flint_arrow", 4, Materials.Obsidian)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_b")), "pcp p p p", ItemOilLamp.a(Blocks.stone, 0)));
@@ -45,6 +47,9 @@ public class PolishRecipe
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "cpcc cccc", ItemToolHead.a("stone_shovel", Materials.Stone)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "      ccc", ItemToolHead.a("stone_hammer", Materials.Stone)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "      ccc", ItemToolHead.a("stone_hammer", Materials.Stone)));
+		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "  pcc ccc", ItemToolHead.a("stone_sickle", Materials.Stone)));
+		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "p c     p", ItemToolHead.a("stone_spade_hoe", Materials.Stone)));
+		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("stone_a")), "c p   p  ", ItemToolHead.a("stone_spade_hoe", Materials.Stone)));
 		registerRecipe(new PolishRecipe(new ItemBaseStack(ItemFleSub.a("limestone")), "ccccccccc", ItemFleSub.a("dust_limestone")));
 	}
 	

@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.lwjgl.opengl.GL11;
 
@@ -72,6 +73,7 @@ public abstract class GuiBookBase extends GuiContainer
 				ItemStack tStack = handlers[i].getShowStackInSlot(slotID);
 				if(tStack != null)
 				{
+					tStack = tStack.copy();
 					Rectangle rect = handlers[i].getSlotPosition(slotID);
 					String str;
 					if(rect.contains(mouseX - xoffset, mouseY - yoffset))
@@ -132,6 +134,8 @@ public abstract class GuiBookBase extends GuiContainer
         if (aStack != null) font = aStack.getItem().getFontRenderer(aStack);
         if (font == null) font = fontRendererObj;
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+        if(aStack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+        	aStack.setItemDamage(0);
         itemRender.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), aStack, x, y);
         itemRender.renderItemOverlayIntoGUI(font, this.mc.getTextureManager(), aStack, x, y, show);
         GL11.glDisable(GL11.GL_DEPTH_TEST);

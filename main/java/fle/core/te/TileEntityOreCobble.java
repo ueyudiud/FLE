@@ -63,6 +63,7 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 		init();
 		smeltedOre();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
+		hc.update();
 	}
 	
 	private void init()
@@ -156,5 +157,11 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 	{
 		OreMeltingRecipe recipe = OreMeltingRecipe.matchRecipe(ore);
 		return progress / (double) recipe.energyRequire;
+	}
+
+	@Override
+	public double getPreHeatEmit()
+	{
+		return hc.getPreHeatEmit();
 	}
 }

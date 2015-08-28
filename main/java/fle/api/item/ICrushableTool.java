@@ -1,8 +1,9 @@
 package fle.api.item;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public interface ICrushableTool
 {
-	boolean doCrush(ItemStack aStack);
+	boolean doCrush(World aWorld, int x, int y, int z, ItemStack aStack);
 }

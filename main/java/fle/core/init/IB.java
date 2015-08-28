@@ -64,7 +64,7 @@ public class IB
 			}
 		}
 		Items.arrow.setMaxStackSize(16);
-		Blocks.obsidian.setHarvestLevel(EnumTool.abstract_hammer.name(), 0);
+		Blocks.obsidian.setHarvestLevel(EnumTool.pickaxe.name(), 1);
 	}
 
 	public static Item debug;

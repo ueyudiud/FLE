@@ -18,7 +18,7 @@ public class BlockClayInventory extends BlockSubTile
 {
 	public BlockClayInventory init()
 	{
-		registerSub(0, "terrine_unsmelted", new BlockTextureManager("clay/1"), new BehaviourClay(TileEntityArgilUnsmelted.class));
+		registerSub(0, "terrine_unsmelted", new BlockTextureManager("clay/1"), new BehaviourClay());
 		return this;
 	}
 	

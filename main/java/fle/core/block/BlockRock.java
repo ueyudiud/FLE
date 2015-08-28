@@ -23,6 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
+import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
 import fle.api.world.BlockPos;
 import fle.core.init.IB;
@@ -111,12 +112,19 @@ public class BlockRock extends BlockHasSub
 	
 	public static int getHarvestLevel(MaterialRock rock)
 	{
-		return 1 + (int) Math.floor(rock.getPropertyInfo().getHardness());
+		return (int) (Math.floor(rock.getPropertyInfo().getHardness()) + 1) / 2;
 	}
 	  
 	public float getBlockHardness(World aWorld, int aX, int aY, int aZ)
 	{
-		return 2.0F + getHarvestLevel(aWorld.getBlockMetadata(aX, aY, aZ)) * 1.2F;
+		try
+		{
+			return (int) (2.0F + MaterialOre.getOreFromID(getMetadata(aWorld, aX, aY, aZ)).getPropertyInfo().getHardness()) * 0.7F;
+		}
+		catch(Throwable e)
+		{
+			return 1.0F + getHarvestLevel(getMetadata(aWorld, aX, aY, aZ)) * 1.0F;
+		}
 	}
 	  
 	public float getExplosionResistance(Entity par1Entity, World aWorld, int aX, int aY, int aZ, double explosionX, double explosionY, double explosionZ)

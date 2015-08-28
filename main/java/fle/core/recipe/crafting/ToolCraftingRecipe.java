@@ -12,13 +12,13 @@ import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.item.tool.ToolMaterialInfo;
 
-public class StoneToolCraftingRecipe extends ShapelessFleRecipe
+public class ToolCraftingRecipe extends ShapelessFleRecipe
 {
-	public StoneToolCraftingRecipe(String aTool, int size, Object stick, Object other)
+	public ToolCraftingRecipe(String aTool, int size, Object stick, Object other)
 	{
 		super(null, new Object[]{new ToolRecipe(aTool, size), stick, other});
 	}
-	public StoneToolCraftingRecipe(String aTool, Object stick)
+	public ToolCraftingRecipe(String aTool, Object stick)
 	{
 		super(null, new Object[]{new ToolRecipe(aTool), stick});
 	}

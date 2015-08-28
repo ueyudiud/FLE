@@ -48,6 +48,7 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 			worldObj.setBlock(xCoord, yCoord, zCoord, IB.argil_smelted);
 			worldObj.setTileEntity(xCoord, yCoord, zCoord, IB.argil_smelted.createTileEntity(worldObj, meta));
 		}
+		heatCurrect.update();
 	}
 	
 	private void bakeClay()
@@ -56,9 +57,9 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 		{
 			if(getBlockPos().toPos(ForgeDirection.VALID_DIRECTIONS[i]).isAir()) return;
 		}
-		if(getTemperature(ForgeDirection.UNKNOWN) > 550)
+		if(getTemperature(ForgeDirection.UNKNOWN) > 520)
 		{
-			double pregress = (getTemperature(ForgeDirection.UNKNOWN) - 550) * 10D;
+			double pregress = (getTemperature(ForgeDirection.UNKNOWN) - 520) * 10D;
 			heatCurrect.emitHeat(pregress);
 			smeltedTick += pregress / 100D;
 		}
@@ -92,5 +93,16 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 	public void onHeatEmit(ForgeDirection dir, double heatValue)
 	{
 		heatCurrect.emitHeat(heatValue);
+	}
+
+	@Override
+	public double getPreHeatEmit()
+	{
+		return heatCurrect.getPreHeatEmit();
+	}
+
+	public double getProgress()
+	{
+		return smeltedTick / 10000D;
 	}
 }
