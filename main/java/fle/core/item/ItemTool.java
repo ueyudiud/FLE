@@ -55,6 +55,7 @@ import fle.core.item.behavior.BehaviorAwl;
 import fle.core.item.behavior.BehaviorAxe;
 import fle.core.item.behavior.BehaviorFirestarter;
 import fle.core.item.behavior.BehaviorHoe;
+import fle.core.item.behavior.BehaviorPickaxe;
 import fle.core.item.behavior.BehaviorShovel;
 import fle.core.item.behavior.BehaviorStoneHammer;
 import fle.core.item.behavior.BehaviorWhetstone;
@@ -163,6 +164,11 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 3.0F)},
 				new TextureLocation("tools/axe/metal_axe_head", "tools/axe/metal_axe_rust", "tools/axe/metal_axe_mosaic", "tools/axe/metal_axe_stick"), 
 				new BehaviorAxe(1.0F));
+		addSubItem(102, "metal_pickaxe", SubTag.TOOL_metal, 
+				new String[]{EnumTool.pickaxe.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
+				new TextureLocation("tools/pickaxe/metal_pickaxe_head", "tools/pickaxe/metal_pickaxe_rust", "tools/pickaxe/metal_pickaxe_mosaic", "tools/pickaxe/metal_pickaxe_stick"), 
+				new BehaviorPickaxe());
 		heightLightList.add(8);
 		stackLimitList.add(10);
 		return this;

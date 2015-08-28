@@ -68,6 +68,8 @@ public class ItemToolHead extends ItemSub
 				new TextureLocation(new String[]{"tools/head/spade_hoe_head", "tools/head/spade_hoe_rust"}));
 		addSubItem(101, "metal_axe", 
 				new TextureLocation(new String[]{"tools/head/metal_axe_head", "tools/head/metal_axe_rust", "tools/head/metal_axe_mosaic"}));
+		addSubItem(102, "metal_pickaxe", 
+				new TextureLocation(new String[]{"tools/head/metal_pickaxe_head", "tools/head/metal_pickaxe_rust", "tools/head/metal_pickaxe_mosaic"}));
 		return this;
 	}
 	

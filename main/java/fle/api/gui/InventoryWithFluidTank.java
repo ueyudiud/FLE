@@ -1,14 +1,18 @@
 package fle.api.gui;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 import fle.api.FleAPI;
 import fle.api.net.FlePackets.CoderTankUpdate;
 import fle.api.te.IFluidTanks;
+import fle.api.te.ITEInWorld;
 import fle.api.te.TEIT;
+import fle.api.world.BlockPos;
 
 public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTileBase<T> implements IFluidTank, IFluidTanks
 {
@@ -129,5 +133,47 @@ public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTi
 	public int fillTank(int index, FluidStack resource, boolean doFill)
 	{
 		return tank.fill(resource, doFill);
+	}
+
+	public boolean tryDrainFluid(ITEInWorld oiw, ForgeDirection dir, int maxDrain, boolean doDrain)
+	{
+		return tryDrainFluid(oiw, dir, maxDrain, doDrain, false);
+	}
+	public boolean tryDrainFluid(ITEInWorld oiw, ForgeDirection dir, int maxDrain, boolean doDrain, boolean drainToVoid)
+	{
+		FluidStack aStack = drain(maxDrain, false);
+		if(aStack != null)
+		{
+			BlockPos pos = oiw.getBlockPos().toPos(dir);
+			if(pos.getBlockTile() instanceof IFluidHandler)
+			{
+				if(((IFluidHandler) pos.getBlock()).canFill(dir.getOpposite(), aStack.getFluid()))
+				{
+					int drain = ((IFluidHandler) pos.getBlock()).fill(dir.getOpposite(), aStack, doDrain);
+					if(doDrain && drain > 0)
+					{
+						drain(drain, true);
+					}
+					return drain > 0;
+				}
+			}
+			else if(drainToVoid)
+			{
+				if(doDrain)
+				{
+					if(pos.getBlock().isReplaceable(oiw.getTileEntity().getWorldObj(), pos.x, pos.y, pos.z))
+					{
+						if(aStack.getFluid().canBePlacedInWorld() && aStack.amount >= 1000)
+						{
+							oiw.getTileEntity().getWorldObj().setBlock(pos.x, pos.y, pos.z, aStack.getFluid().getBlock());
+						}
+					}
+					drain(aStack.amount, doDrain);
+				}
+				return true;
+			}
+			else return false;
+		}
+		return false;
 	}
 }

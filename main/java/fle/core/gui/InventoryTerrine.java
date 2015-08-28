@@ -49,7 +49,7 @@ public class InventoryTerrine extends InventoryWithFluidTank<TileEntityTerrine>
 		{
 			if(rand.nextFloat() < 0.03125F)
 			{
-				tank.drain(1, true);
+				tryDrainFluid(tile, ForgeDirection.DOWN, 1, true, true);
 				syncTank(tile);
 			}
 			if(RecipeHelper.fillOrDrainInventoryTank(this, this, 0, 1))
