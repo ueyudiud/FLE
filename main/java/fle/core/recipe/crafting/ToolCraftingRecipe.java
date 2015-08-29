@@ -4,8 +4,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import fle.api.recipe.ItemAbstractStack;
+import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapelessFleRecipe;
 import fle.api.recipe.SingleInputRecipe;
+import fle.cg.RecipesTab;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.item.ItemTool;
@@ -14,13 +17,13 @@ import fle.core.item.tool.ToolMaterialInfo;
 
 public class ToolCraftingRecipe extends ShapelessFleRecipe
 {
-	public ToolCraftingRecipe(String aTool, int size, Object stick, Object other)
+	public ToolCraftingRecipe(RecipesTab aTab, String aTool, int size, Object stick, Object other)
 	{
-		super(null, new Object[]{new ToolRecipe(aTool, size), stick, other});
+		super(aTab, null, new Object[]{new ToolRecipe(aTool, size), stick, other});
 	}
-	public ToolCraftingRecipe(String aTool, Object stick)
+	public ToolCraftingRecipe(RecipesTab aTab, String aTool, Object stick)
 	{
-		super(null, new Object[]{new ToolRecipe(aTool), stick});
+		super(aTab, null, new Object[]{new ToolRecipe(aTool), stick});
 	}
 	
 	@Override
@@ -62,6 +65,12 @@ public class ToolCraftingRecipe extends ShapelessFleRecipe
 			}
 			((ItemTool) IB.tool).setDisplayDamage(ret, aInput.getItemDamageForDisplay());
 			return ret;
+		}
+		
+		@Override
+		public ItemAbstractStack getShowStack()
+		{
+			return new ItemBaseStack(ItemToolHead.a(toolName, Materials.Void));
 		}
 	}
 }

@@ -121,15 +121,21 @@ public abstract class GuiBookBase extends GuiContainer
 		RecipeHandler[] recipes = getShowingRecipe();
 		for(int i = 0; i < recipes.length; ++i)
 		{
-			recipes[i].onUpdate(this);
+			try
+			{
+				recipes[i].onUpdate(this);
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
     private void drawItemStack(ItemStack aStack, int x, int y, String show)
     {
-    	GL11.glTranslatef(0F, 0F, 0F);
-        zLevel = 200.0F;
-        itemRender.zLevel = 200.0F;
+        zLevel = 100.0F;
+        itemRender.zLevel = 100.0F;
         FontRenderer font = null;
         if (aStack != null) font = aStack.getItem().getFontRenderer(aStack);
         if (font == null) font = fontRendererObj;
@@ -156,7 +162,26 @@ public abstract class GuiBookBase extends GuiContainer
 	{
 		super.drawTexturedModalRect(x, y, u, v, xSize, ySize);
 	}
-	
+
+	public void drawCondition(int x, int y, GuiCondition type, boolean offsetHelper)
+	{
+		if(type != null)
+		{
+			mc.getTextureManager().bindTexture(FleAPI.conditionLocate);
+
+			if(offsetHelper)
+			{
+				xoffset = (width - xSize) / 2;
+				yoffset = (height - ySize) / 2;
+				drawTexturedModelRectFromIcon(xoffset + x, yoffset + y, type.getIcon(), 16, 16);
+			}
+			else
+			{
+				drawTexturedModelRectFromIcon(x, y, type.getIcon(), 16, 16);
+			}
+			mc.renderEngine.bindTexture(getResourceLocation());
+		}
+	}
 	protected void drawCondition(int x, int y, GuiCondition type)
 	{
 		if(type != null)

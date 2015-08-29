@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.IBlockSource;
@@ -24,6 +27,7 @@ import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.enums.EnumDamageResource;
 import fle.api.util.FleLog;
@@ -242,7 +246,7 @@ public class ItemFleMetaBase extends ItemFle
 	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 	    if(tBehavior != null)
 	    {
-	    	tBehavior.getAdditionalToolTips(this, aList, aStack);
+	    	tBehavior.getAdditionalToolTips(this, aList, aStack, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT));
 	    }
 	    addAdditionalToolTips(aList, aStack);
 	}

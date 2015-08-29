@@ -19,6 +19,9 @@ import fle.api.item.ItemFleMetaBase;
 import fle.api.recipe.CraftingState;
 import fle.api.util.FleLog;
 import fle.api.util.ITextureLocation;
+import fle.api.util.SubTag;
+import fle.cg.ICG;
+import fle.cg.RecipesTab;
 import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorArrowBag;
 import fle.core.item.behavior.BehaviorBase;
@@ -29,7 +32,7 @@ import fle.core.item.behavior.BehaviorFlintChip;
 import fle.core.item.behavior.BehaviorGuideBook;
 import fle.core.util.TextureLocation;
 
-public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICastingTool
+public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICastingTool, ICG
 {
 	public ItemFleSub(String aUnlocalized, String aUnlocalizedTooltip)
 	{
@@ -83,10 +86,14 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(6201, "stone_plate", "resource/plate/stone");
 		addSubItem(6202, "argil_plate", "resource/plate/argil");
 		addSubItem(10001, "arrow_bag", "tools/arrow_bag", new BehaviorArrowBag());
-		addSubItem(10002, "guide_book", "guide_book", new BehaviorGuideBook());
+		addSubItem(10101, "guide_book", "book/guide_book", new BehaviorGuideBook(RecipesTab.tabClassic));
+		addSubItem(10102, "guide_book_1", "book/0", new BehaviorGuideBook(RecipesTab.tabOldStoneAge));
+		addSubItem(10103, "guide_book_2", "book/1", new BehaviorGuideBook(RecipesTab.tabNewStoneAge));
+		addSubItem(10104, "guide_book_3", "book/2", new BehaviorGuideBook(RecipesTab.tabCopperAge));
 		for(int i = 0; i < EnumAtoms.values().length; ++i)
 		{
-			addSubItem(20001 + i, "ingot_" + EnumAtoms.values()[i].name().toLowerCase(), "resource/ingot/" + EnumAtoms.values()[i].name().toLowerCase());
+			if(EnumAtoms.values()[i].contain(SubTag.ATOM_metal))
+				addSubItem(20001 + i, "ingot_" + EnumAtoms.values()[i].name().toLowerCase(), "resource/ingot/" + EnumAtoms.values()[i].name().toLowerCase());
 		}
 		stackLimitList.add(10001);
 		return this;
@@ -101,6 +108,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 	public static ItemStack a(String name, int size)
 	{
 		if("ingot_fe".equals(name)) return new ItemStack(Items.iron_ingot, size);
+		if("ingot_au".equals(name)) return new ItemStack(Items.gold_ingot, size);
 		try
 		{
 			int meta = ((ItemFleSub) IB.subItem).itemBehaviors.serial(name);
@@ -111,7 +119,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		catch(Throwable e)
 		{
 			//Use a null item.
-			FleLog.getLogger().catching(new RuntimeException("Fle: some mod use empty item id, please check your fle-addon "
+			FleLog.getLogger().catching(new RuntimeException("Fle: some mod use empty item id " + name + ", please check your fle-addon "
 					+ "had already update, or report this bug to mod editer."));
 			return null; //Return null.
 		}
@@ -280,5 +288,24 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 	    	e.printStackTrace();
 	    }
 		return false;
+	}
+
+	@Override
+	public RecipesTab getBookTab(ItemStack aStack) 
+	{
+		isItemStackUsable(aStack);
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+		try
+	    {
+			if(tBehavior instanceof ICG)
+			{
+				return ((ICG) tBehavior).getBookTab(aStack);
+			}
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return RecipesTab.tabClassic;
 	}
 }

@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.crop.CropCard;
 import fle.api.crop.ICropSeed;
+import fle.api.enums.EnumDamageResource;
 import fle.api.fluid.FluidDictionary;
+import fle.api.item.ItemFleMetaBase;
 import fle.api.material.Matter;
+import fle.api.recipe.ItemAbstractStack;
 import fle.api.util.ColorMap;
+import fle.api.util.Compact;
 import fle.api.util.IFuelHandler;
 
 public class FleAPI 
@@ -30,6 +34,47 @@ public class FleAPI
 	public static FleModHandler mod;
 	public static FluidDictionary fluidDictionary;
 	private static List<IFuelHandler> fuelList = new ArrayList();
+	
+	public static void damageItem(EntityPlayer aPlayer, ItemStack aStack, EnumDamageResource aResource, float damage)
+	{
+		if(aStack == null) return;
+		else if(Compact.isFLETool(aStack.getItem()))
+		{
+			((ItemFleMetaBase) aStack.getItem()).damageItem(aStack, aPlayer, aResource, damage);
+			return;
+		}
+		else if(Compact.isGTTool(aStack.getItem()))
+		{
+			Compact.damageGTTool(aStack, damage);
+			return;
+		}
+		else
+		{
+			aStack.damageItem((int) Math.ceil(damage), aPlayer);
+			return;
+		}
+	}
+	
+	/**
+	 * Check does player has a stack equals to target. 
+	 * @param aPlayer
+	 * @param aStack target to check.
+	 * @return slot ID found, -1 means don't have stack.
+	 */
+	public static int dosePlayerHas(EntityPlayer aPlayer, ItemAbstractStack aStack)
+	{
+		for(int i = 0; i < 36; ++i)
+		{
+			if(aPlayer.inventory.getStackInSlot(i) != null)
+			{
+				if(aStack.isStackEqul(aPlayer.inventory.getStackInSlot(i)))
+				{
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
 	
 	public static ColorMap registerColorMap(String aMapName)
 	{

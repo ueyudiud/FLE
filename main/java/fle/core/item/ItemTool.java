@@ -53,6 +53,7 @@ import fle.core.init.Materials;
 import fle.core.item.behavior.BehaviorArrow;
 import fle.core.item.behavior.BehaviorAwl;
 import fle.core.item.behavior.BehaviorAxe;
+import fle.core.item.behavior.BehaviorChisel;
 import fle.core.item.behavior.BehaviorFirestarter;
 import fle.core.item.behavior.BehaviorHoe;
 import fle.core.item.behavior.BehaviorMetalHammer;
@@ -175,6 +176,16 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 2.0F), new AttributesInfo(knockbackResistance, 0.5F)},
 				new TextureLocation("tools/hammer/metal_hammer_head", "tools/hammer/metal_hammer_rust", "tools/hammer/metal_hammer_mosaic", "tools/hammer/metal_hammer_stick"), 
 				new BehaviorMetalHammer());
+		addSubItem(104, "metal_shovel", SubTag.TOOL_metal, 
+				new String[]{EnumTool.shovel.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.3F)},
+				new TextureLocation("tools/shovel/metal_shovel_head", "tools/shovel/metal_shovel_rust", "tools/shovel/metal_shovel_mosaic", "tools/shovel/metal_shovel_stick"), 
+				new BehaviorShovel(1.0F));
+		addSubItem(105, "metal_chisel", SubTag.TOOL_metal, 
+				new String[]{EnumTool.chisel.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
+				new TextureLocation("tools/chisel/metal_chisel_head", "tools/chisel/metal_chisel_rust", "tools/chisel/metal_chisel_mosaic", "tools/chisel/metal_chisel_stick"), 
+				new BehaviorChisel());
 		heightLightList.add(8);
 		stackLimitList.add(10);
 		return this;
@@ -236,7 +247,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
             	float birttleness = info.getMaterialBase().getPropertyInfo().getBrittleness();
             	float toughness = info.getMaterialBase().getPropertyInfo().getToughness();
             	float denseness = info.getMaterialBase().getPropertyInfo().getDenseness();
-            	if(itemRand.nextDouble() < 1F - birttleness / 10F)
+            	if(itemRand.nextDouble() < birttleness / 10F)
             	{
             		tDamage *= (5 - Math.log(toughness + 1.0F));
             	}

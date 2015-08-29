@@ -5,12 +5,13 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import fle.api.item.ITreeLog;
 import fle.api.recipe.ShapedFleRecipe;
+import fle.cg.RecipesTab;
 
 public class TreeCuttingRecipe extends ShapedFleRecipe
 {
 	public TreeCuttingRecipe() 
 	{
-		super(new ItemStack(Blocks.log), new Object[]{"y", "x", 'x', "logFLE", 'y', "craftingToolAxe"});
+		super(RecipesTab.tabOldStoneAge, new ItemStack(Blocks.log), new Object[]{"y", "x", 'x', "logFLE", 'y', "craftingToolAxe"});
 	}
 
     @Override

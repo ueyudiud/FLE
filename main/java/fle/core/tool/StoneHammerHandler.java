@@ -17,13 +17,17 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fle.FLE;
 import fle.api.item.ICrushableTool;
+import fle.api.material.MaterialOre;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.DropInfo;
 import fle.api.world.BlockPos;
 import fle.core.block.BlockRock;
+import fle.core.block.ItemOreCobble;
+import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
+import fle.core.item.ItemOre;
 import fle.core.util.FleEntry;
 
 public class StoneHammerHandler
@@ -43,6 +47,11 @@ public class StoneHammerHandler
 		registryDust(new ItemBaseStack(Blocks.obsidian), new DropInfo(2, 3, FleEntry.copy(tMap)));
 		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("limestone"), 1));
 		registryDust(new ItemBaseStack(BlockRock.a(Materials.Limestone)), new DropInfo(3, 4, FleEntry.copy(tMap)));
+		for(MaterialOre ore : MaterialOre.getOres())
+		{
+			tMap = FleEntry.asMap(new FleEntry(ItemOre.a(ore), 1));
+			registryDust(new ItemBaseStack(IB.ore, MaterialOre.getOreID(ore)), new DropInfo(2, 2, FleEntry.copy(tMap)));
+		}
 	}
 	
 	public static void registryDust(ItemAbstractStack c, DropInfo info)
@@ -75,7 +84,7 @@ public class StoneHammerHandler
 				}
 	}
 	
-	private void dropBlockAsItem(World aWorld, int x, int y, int z, ItemStack aStack)
+	public static void dropBlockAsItem(World aWorld, int x, int y, int z, ItemStack aStack)
     {
         if (!aWorld.isRemote && aWorld.getGameRules().getGameRuleBooleanValue("doTileDrops") && !aWorld.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
         {

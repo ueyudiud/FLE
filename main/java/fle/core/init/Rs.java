@@ -24,12 +24,14 @@ import fle.api.FleAPI;
 import fle.api.enums.EnumAtoms;
 import fle.api.material.Matter;
 import fle.api.material.MatterDictionary;
+import fle.api.recipe.IFleRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapedFleRecipe;
 import fle.api.recipe.ShapelessFleRecipe;
 import fle.api.util.DropInfo;
 import fle.cg.CraftGuide;
+import fle.cg.RecipesTab;
 import fle.cg.recipe.ShapedRecipe;
 import fle.cg.recipe.ShapelessRecipe;
 import fle.core.block.BlockRock;
@@ -38,6 +40,7 @@ import fle.core.item.ItemOre;
 import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.recipe.CastingPoolRecipe;
+import fle.core.recipe.PolishRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
 import fle.core.recipe.WashingRecipe;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
@@ -81,7 +84,8 @@ public class Rs
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 1));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 2));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 101));
-		OreDictionary.registerOre("craftingToolFirestarter", new ItemStack(IB.tool, 1, 7));
+		OreDictionary.registerOre("craftingToolHardHammer", new ItemStack(IB.tool, 1, 5));
+		OreDictionary.registerOre("craftingToolHardHammer", new ItemStack(IB.tool, 1, 103));
 		OreDictionary.registerOre("craftingToolFirestarter", new ItemStack(Items.flint_and_steel, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_oak"));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_spruce"));
@@ -95,6 +99,8 @@ public class Rs
 		OreDictionary.registerOre("plateStone", ItemFleSub.a("stone_plate"));
 		for(EnumAtoms atom : EnumAtoms.values())
 		{
+			if(atom == EnumAtoms.Fe) continue;
+			if(atom == EnumAtoms.Au) continue;
 			if(ItemFleSub.a("ingot_" + atom.name().toLowerCase()) != null)
 				OreDictionary.registerOre("ingot" + atom.getName(), ItemFleSub.a("ingot_" + atom.name().toLowerCase()));
 		}
@@ -104,36 +110,37 @@ public class Rs
 		
 		FleAPI.fluidDictionary.registerFluid("oilAnimal", IB.animalOil);
 		
-		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemFleSub.a("branch_bush"), new Object[]{"branchWood"}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(new ItemStack(IB.firewood), new Object[]{"x", "o", 'x', "craftingToolAxe", 'o', "logWood"}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemToolHead.a("rough_stone_axe", Materials.Flint), new Object[]{ItemFleSub.a("flint_c")}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemToolHead.a("rough_stone_axe", Materials.Obsidian), new Object[]{ItemFleSub.a("chip_obsidian")}));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("rough_stone_axe", ItemFleSub.a("branch_bush")));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("flint_hammer", ItemFleSub.a("branch_bush")));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_axe", "stickWood"));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_shovel", "stickWood"));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_hammer", "stickWood"));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("flint_arrow", 2, "stickWood", Items.feather));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("stone_sickle", "stickWood"));
-		GameRegistry.addRecipe(new ToolCraftingRecipe("metal_axe", "stickWood"));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabOldStoneAge, ItemFleSub.a("branch_bush"), new Object[]{"branchWood"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.firewood), new Object[]{"x", "o", 'x', "craftingToolAxe", 'o', "logWood"}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabOldStoneAge, ItemToolHead.a("rough_stone_axe", Materials.Flint), new Object[]{ItemFleSub.a("flint_c")}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabOldStoneAge, ItemToolHead.a("rough_stone_axe", Materials.Obsidian), new Object[]{ItemFleSub.a("chip_obsidian")}));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabOldStoneAge, "rough_stone_axe", ItemFleSub.a("branch_bush")));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabOldStoneAge, "flint_hammer", ItemFleSub.a("branch_bush")));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabNewStoneAge, "stone_axe", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabNewStoneAge, "stone_shovel", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabNewStoneAge, "stone_hammer", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabOldStoneAge, "flint_arrow", 2, "stickWood", Items.feather));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabNewStoneAge, "stone_sickle", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabCopperAge, "metal_axe", "stickWood"));
+		GameRegistry.addRecipe(new ToolCraftingRecipe(RecipesTab.tabCopperAge, "metal_chisel", "stickWood"));
 		GameRegistry.addRecipe(new OilLampAddFuelRecipe(100, Items.beef));
 		GameRegistry.addRecipe(new OilLampAddFuelRecipe(150, Items.porkchop));
 		GameRegistry.addRecipe(new OilLampAddFuelRecipe(75, Items.rotten_flesh));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemTool.a("wooden_hammer", Materials.HardWood), new Object[]{"x", "o", 'x', "logWood", 'o', "stickWood"}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemTool.a("wooden_hammer", Materials.HardWood, 2), new Object[]{"x", "o", 'x', "logWood", 'o', ItemFleSub.a("branch_bush")}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemFleSub.a("argil_ball", 3), new Object[]{Items.clay_ball, Items.clay_ball, Blocks.sand, "dustLimestone"}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(new ItemStack(IB.woodMachine, 1, 0), new Object[]{"x", "o", 'x', "logWood", 'o', Blocks.gravel}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(new ItemStack(IB.woodMachine1, 1, 0), new Object[]{"xx", "xx", 'x', "stickWood"}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemTool.a("whetstone", Materials.Stone), new Object[]{"xx", "xx", 'x', ItemFleSub.a("stone_b")}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemTool.a("wooden_drilling_firing", Materials.HardWood), new Object[]{" s", "wl", 's', "stickWood", 'w', "logWood", 'l', ItemFleSub.a("tinder")}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemFleSub.a("ramie_rope", 3), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_fiber_dry")}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemFleSub.a("ramie_bundle_rope"), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_rope")}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemFleSub.a("ramie_rope", 4), new Object[]{"x", 'x', ItemFleSub.a("ramie_bundle_rope")}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(ItemFleSub.a("tinder"), new Object[]{"xx", "xx", 'x', ItemFleSub.a("leaves_dry")}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemFleSub.a("cemented_grit", 8), new Object[]{Blocks.sand, Blocks.sand, Blocks.clay, Blocks.clay}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(ItemFleSub.a("stone_a", 9), new Object[]{Blocks.cobblestone}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(new ItemStack(IB.stoneMachine, 1, 0), new Object[]{Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(new ItemStack(IB.stoneMachine1, 1, 0), new Object[]{"plateStone", "plateStone", "plateStone", "plateStone"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabOldStoneAge, ItemTool.a("wooden_hammer", Materials.HardWood), new Object[]{"x", "o", 'x', "logWood", 'o', "stickWood"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabOldStoneAge, ItemTool.a("wooden_hammer", Materials.HardWood, 2), new Object[]{"x", "o", 'x', "logWood", 'o', ItemFleSub.a("branch_bush")}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("argil_ball", 3), new Object[]{Items.clay_ball, Items.clay_ball, Blocks.sand, "dustLimestone"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabOldStoneAge, new ItemStack(IB.woodMachine, 1, 0), new Object[]{"x", "o", 'x', "logWood", 'o', Blocks.gravel}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.woodMachine1, 1, 0), new Object[]{"xx", "xx", 'x', "stickWood"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabOldStoneAge, ItemTool.a("whetstone", Materials.Stone), new Object[]{"xx", "xx", 'x', ItemFleSub.a("stone_b")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemTool.a("wooden_drilling_firing", Materials.HardWood), new Object[]{" s", "wl", 's', "stickWood", 'w', "logWood", 'l', ItemFleSub.a("tinder")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_rope", 3), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_fiber_dry")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_bundle_rope"), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_rope")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_rope", 4), new Object[]{"x", 'x', ItemFleSub.a("ramie_bundle_rope")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("tinder"), new Object[]{"xx", "xx", 'x', ItemFleSub.a("leaves_dry")}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("cemented_grit", 8), new Object[]{Blocks.sand, Blocks.sand, Blocks.clay, Blocks.clay}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("stone_a", 9), new Object[]{Blocks.cobblestone}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine, 1, 0), new Object[]{Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine1, 1, 0), new Object[]{"plateStone", "plateStone", "plateStone", "plateStone"}));
 		GameRegistry.addRecipe(new TreeCuttingRecipe());
 
 		RecipeSorter.register(FLE.MODID + ":shaped", ShapedFleRecipe.class, SHAPED, "before:minecraft:shaped");
@@ -151,33 +158,44 @@ public class Rs
 			IRecipe recipe = (IRecipe) obj;
 			if(recipe instanceof ShapedRecipes)
 			{
-				CraftGuide.instance.registerRecipe(new ShapedRecipe((ShapedRecipes) recipe));
+				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapedRecipe((ShapedRecipes) recipe));
 			}
 			else if(recipe instanceof ShapedOreRecipe)
 			{
-				CraftGuide.instance.registerRecipe(new ShapedRecipe((ShapedOreRecipe) recipe));
+				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapedRecipe((ShapedOreRecipe) recipe));
 			}
 			else if(recipe instanceof ShapedFleRecipe)
 			{
-				CraftGuide.instance.registerRecipe(new ShapedRecipe((ShapedFleRecipe) recipe));
+				CraftGuide.instance.registerRecipe(((IFleRecipe) recipe).getRecipeTab(), new ShapedRecipe((ShapedFleRecipe) recipe));
+				if(((IFleRecipe) recipe).getRecipeTab() != RecipesTab.tabClassic)
+					CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapedRecipe((ShapedFleRecipe) recipe));
 			}
 			else if(recipe instanceof ShapelessRecipes)
 			{
-				CraftGuide.instance.registerRecipe(new ShapelessRecipe((ShapelessRecipes) recipe));
+				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapelessRecipe((ShapelessRecipes) recipe));
 			}
 			else if(recipe instanceof ShapelessOreRecipe)
 			{
-				CraftGuide.instance.registerRecipe(new ShapelessRecipe((ShapelessOreRecipe) recipe));
+				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapelessRecipe((ShapelessOreRecipe) recipe));
 			}
 			else if(recipe instanceof ShapelessFleRecipe)
 			{
-				CraftGuide.instance.registerRecipe(new ShapelessRecipe((ShapelessFleRecipe) recipe));
+				CraftGuide.instance.registerRecipe(((IFleRecipe) recipe).getRecipeTab(), new ShapelessRecipe((ShapelessFleRecipe) recipe));
+				if(((IFleRecipe) recipe).getRecipeTab() != RecipesTab.tabClassic)
+					CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapelessRecipe((ShapelessFleRecipe) recipe));
 			}
 		}
 		Map<ItemAbstractStack, DropInfo> washRecipes = WashingRecipe.getRecipes();
 		for(ItemAbstractStack tStack : washRecipes.keySet())
 		{
-			CraftGuide.instance.registerRecipe(new fle.cg.recipe.WashingRecipe(tStack, washRecipes.get(tStack)));
+			CraftGuide.instance.registerRecipe(RecipesTab.tabOldStoneAge, new fle.cg.recipe.WashingRecipe(tStack, washRecipes.get(tStack)));
+			CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.WashingRecipe(tStack, washRecipes.get(tStack)));
+		}
+		for(PolishRecipe recipe : PolishRecipe.getRecipeList())
+		{
+			CraftGuide.instance.registerRecipe(recipe.getTab(), new fle.cg.recipe.PolishRecipe(recipe));
+			if(recipe.getTab() != RecipesTab.tabClassic)
+				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.PolishRecipe(recipe));
 		}
 	}
 }

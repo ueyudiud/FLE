@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import fle.cg.RecipesTab;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -13,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ShapedFleRecipe implements IRecipe
+public class ShapedFleRecipe implements IFleRecipe
 {
     private static final int MAX_CRAFT_GRID_WIDTH = 3;
     private static final int MAX_CRAFT_GRID_HEIGHT = 3;
@@ -23,9 +24,15 @@ public class ShapedFleRecipe implements IRecipe
 	protected boolean mirrored = false;
 	private Object output;
 	protected ItemAbstractStack[] inputs;
-	
+	private RecipesTab tab;
+
 	public ShapedFleRecipe(Object aOutput, Object...aRecipe) 
 	{
+		this(RecipesTab.tabClassic, aOutput, aRecipe);
+	}
+	public ShapedFleRecipe(RecipesTab aTab, Object aOutput, Object...aRecipe) 
+	{
+		tab = aTab;
 		try
 		{
 			if(aOutput != null)
@@ -270,5 +277,11 @@ public class ShapedFleRecipe implements IRecipe
 	private void setOutput(Object output)
 	{
 		this.output = output;
+	}
+	
+	@Override
+	public RecipesTab getRecipeTab()
+	{
+		return tab;
 	}
 }

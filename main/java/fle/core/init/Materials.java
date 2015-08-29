@@ -9,6 +9,8 @@ import fle.api.util.SubTag;
 
 public class Materials
 {
+	public static MaterialAbstract Void;
+	
 	public static MaterialOre NativeCopper;
 	public static MaterialOre Tetrahedrite;
 	public static MaterialOre Enargite;
@@ -36,6 +38,7 @@ public class Materials
 	
 	public static void init()
 	{
+		Void = new MaterialAbstract("Void", new PropertyInfo(1, 1.0F, 1.0F, 1.0F, 0.0F, 10000000));
 		NativeCopper = new MaterialOre("NativeCopper", Matter.mCu, new PropertyInfo(0xFF834C, 18, 1.2F, 0.8F, 1.0F, 0.2F, 12000000, 18.0F, 0.18F, 0.7F), SubTag.ORE_native);
 		Tetrahedrite = new MaterialOre("Tetrahedrite", Matter.mCu10Fe2Sb4S13, new PropertyInfo(0xDCBC74, 9, 2.1F, 0.3F, 1.0F, 0.4F, 6800000, -1.0F, 0.21F, 0.7F), SubTag.ORE_sulfide);
 		Enargite = new MaterialOre("Enargite", Matter.mCu3AsS4, new PropertyInfo(0x7F6A68, 10, 1.3F, 1.0F, 0.4F, 0.5F, 6000000, -1.0F, 0.32F, 0.58F), SubTag.ORE_sulfide);
@@ -56,6 +59,6 @@ public class Materials
 		Stone = new MaterialRock("Stone", new PropertyInfo(0x626262, 16, 1.2F, 0.0F, 1.0F, 1.4F, 10000000, -1.0F, 0.38F, 2.1F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868, 21, 1.2F, 0.1F, 2.0F, 1.3F, 12800000), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		Limestone = new MaterialRock("Limestone", new PropertyInfo(0xE4E4E5, 2, 0.8F, 0.2F, 1.0F, 1.8F, 5600000));
-		Copper = new MaterialAbstract("Copper", new PropertyInfo(0xDB4E31, 38, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 4F, 1F, 0.19F), SubTag.TOOL_metal);
+		Copper = new MaterialAbstract("Copper", new PropertyInfo(0xDB4E31, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 4F, 1F, 0.19F), SubTag.TOOL_metal);
 	}
 }

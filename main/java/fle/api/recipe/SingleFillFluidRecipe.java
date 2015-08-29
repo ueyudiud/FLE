@@ -25,4 +25,10 @@ public class SingleFillFluidRecipe implements SingleInputRecipe
 	{
 		return aInput == null ? new ItemStack(Items.bucket) : stack.fillOrDrainFluid(aInput);
 	}
+
+	@Override
+	public ItemAbstractStack getShowStack() 
+	{
+		return stack;
+	}
 }

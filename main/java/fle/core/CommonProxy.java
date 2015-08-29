@@ -16,6 +16,7 @@ import fle.api.block.IGuiBlock;
 import fle.api.gui.ContainerEmpty;
 import fle.api.item.ItemFleMetaBase;
 import fle.cg.GuiBook;
+import fle.cg.ICG;
 import fle.core.entity.EntityFleArrow;
 import fle.core.entity.EntityFleFallingBlock;
 import fle.core.gui.ContainerCeramics;
@@ -33,16 +34,11 @@ import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.init.Rs;
 import fle.core.te.TileEntityCrop;
-import fle.core.te.TileEntityDryingTable;
 import fle.core.te.TileEntityFirewood;
-import fle.core.te.TileEntityLavaHeatTransfer;
 import fle.core.te.TileEntityOilLamp;
-import fle.core.te.TileEntityOreCobble;
-import fle.core.te.TileEntityPolish;
-import fle.core.te.argil.TileEntityArgilUnsmelted;
-import fle.core.te.argil.TileEntityTerrine;
 import fle.core.tool.AxeHandler;
 import fle.core.tool.BowHandler;
+import fle.core.tool.ChiselHandler;
 import fle.core.tool.StoneHammerHandler;
 import fle.core.util.FleFuelHandler;
 import fle.core.world.FleWorldGen;
@@ -79,15 +75,13 @@ public class CommonProxy extends Proxy
 		GameRegistry.registerTileEntity(TileEntityCrop.class, "fleCrop");
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(FLE.MODID, this);
+		MinecraftForge.EVENT_BUS.register(new ChiselHandler());
 		MinecraftForge.EVENT_BUS.register(new AxeHandler());
 		MinecraftForge.EVENT_BUS.register(new StoneHammerHandler());
 		MinecraftForge.EVENT_BUS.register(new BowHandler());
 		MinecraftForge.EVENT_BUS.register(new RecipeHandler());
 		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldHandler());
-		FMLCommonHandler.instance().bus().register(new AxeHandler());
-		FMLCommonHandler.instance().bus().register(new BowHandler());
-		FMLCommonHandler.instance().bus().register(new StoneHammerHandler());
 		FMLCommonHandler.instance().bus().register(new RecipeHandler());
 		FMLCommonHandler.instance().bus().register(new PlayerHandler());
 		FMLCommonHandler.instance().bus().register(new WorldHandler());
@@ -141,7 +135,7 @@ public class CommonProxy extends Proxy
 		case -1 : return new GuiWashing(player);
 		case -2 : return new GuiItemBagable(player);
 		case -3 : return new GuiCeramics(world, x, y, z, player);
-		case -4 : return new GuiBook();
+		case -4 : return new GuiBook(((ICG) player.getCurrentEquippedItem().getItem()).getBookTab(player.getCurrentEquippedItem()));
 		}
 		if(world.getBlock(x, y, z) instanceof IGuiBlock)
 			return ((IGuiBlock) world.getBlock(x, y, z)).openGui(world, x, y, z, player);

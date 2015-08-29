@@ -46,6 +46,11 @@ public class BehaviorBase implements IItemBehaviour<ItemFleMetaBase>
 	}
 
 	@Override
+	public void getAdditionalToolTips(ItemFleMetaBase item,	List<String> list, ItemStack itemstack, boolean flag) 
+	{
+		getAdditionalToolTips(item, list, itemstack);
+	}
+	
 	public void getAdditionalToolTips(ItemFleMetaBase item,	List<String> list, ItemStack itemstack) 
 	{
 		

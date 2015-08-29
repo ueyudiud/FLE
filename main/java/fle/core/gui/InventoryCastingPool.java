@@ -61,13 +61,15 @@ public class InventoryCastingPool extends InventoryWithFluidTank<TileEntityCasti
 				++buf;
 				if(buf > (getFluid().getFluid().getTemperature(getFluid()) - FleValue.WATER_FREEZE_POINT))
 				{
-					ItemStack output = recipe.getOutput(getFluid(), tile);
+					ItemStack output = recipe.getOutput(getFluid(), tile).copy();
 					if(RecipeHelper.matchOutput(tile, 11, output))
 					{
 						buf = 0;
 						drain(require, true);
 						for(int i = 0; i < 9; ++i)
+						{
 							RecipeHelper.onInputItemStack(this, i);
+						}
 						RecipeHelper.onOutputItemStack(tile, 11, output);
 						syncSlot(tile, 0, 9);
 						syncSlot(tile, 11, 12);
@@ -89,6 +91,7 @@ public class InventoryCastingPool extends InventoryWithFluidTank<TileEntityCasti
 		else if(recipe == null && !tile.getWorldObj().isRemote)
 		{
 			buf = 0;
+			FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
 		}
 	}
 

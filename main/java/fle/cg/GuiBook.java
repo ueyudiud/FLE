@@ -15,10 +15,12 @@ public class GuiBook extends GuiBookBase
 	protected int selectRecipe;
 	
 	protected RecipeHandler[] recipes;
+	protected RecipesTab tab;
 	
-	public GuiBook()
+	public GuiBook(RecipesTab aTab)
 	{
-		recipes = CraftGuide.instance.getAllRecipes();
+		tab = aTab;
+		recipes = CraftGuide.instance.getAllRecipes(tab);
 		selectRecipe = 0;
 	}
 	
@@ -98,7 +100,7 @@ public class GuiBook extends GuiBookBase
 
 	protected void switchRecipeFromItem(ItemAbstractStack aStack)
 	{
-		RecipeHandler[] rhs = CraftGuide.instance.getRecipes(aStack);
+		RecipeHandler[] rhs = CraftGuide.instance.getRecipes(tab, aStack);
 		if(rhs.length != 0)
 		{
 			recipes = rhs;
@@ -108,7 +110,7 @@ public class GuiBook extends GuiBookBase
 	}
 	protected void switchRecipeFromFluid(FluidStack aStack)
 	{
-		RecipeHandler[] rhs = CraftGuide.instance.getRecipes(aStack);
+		RecipeHandler[] rhs = CraftGuide.instance.getRecipes(tab, aStack);
 		if(rhs.length != 0)
 		{
 			recipes = rhs;

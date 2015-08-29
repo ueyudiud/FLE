@@ -226,10 +226,10 @@ public class FlePackets
 			{
 				IInventory inv = (IInventory) message.pos.getBlockTile();
 				if(message.id == -1)
-				for(int i = 0; i < message.stacks.length; ++i)
-				{
-					inv.setInventorySlotContents(i, message.stacks[i]);
-				}
+					for(int i = 0; i < message.stacks.length; ++i)
+					{
+						inv.setInventorySlotContents(i, message.stacks[i]);
+					}
 				else
 					inv.setInventorySlotContents(message.id, message.stacks[0]);
 			}

@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import fle.api.FleValue;
 import fle.api.recipe.ShapelessFleRecipe;
+import fle.cg.RecipesTab;
 import fle.core.block.ItemOilLamp;
 import fle.core.init.IB;
 import fle.core.init.Materials;
@@ -18,7 +19,7 @@ public class OilLampAddFuelRecipe extends ShapelessFleRecipe
 	
 	public OilLampAddFuelRecipe(int aContain, Object recipeInput)
 	{
-		super(lamp, new Object[]{lamp, recipeInput});
+		super(RecipesTab.tabNewStoneAge, lamp, new Object[]{lamp, recipeInput});
 		contain = aContain;
 	}
 	

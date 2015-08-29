@@ -23,7 +23,7 @@ public abstract interface IItemBehaviour<E extends Item>
   
 	public abstract ItemStack onItemRightClick(E item, ItemStack itemstack, World paramWorld, EntityPlayer player);
   
-	public abstract void getAdditionalToolTips(E item, List<String> list, ItemStack itemstack);
+	public abstract void getAdditionalToolTips(E item, List<String> list, ItemStack itemstack, boolean aFlag);
   
 	public abstract void onUpdate(E item, ItemStack itemstack, World world, Entity entity, int tick, boolean flag);
   

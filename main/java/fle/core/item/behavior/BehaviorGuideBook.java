@@ -5,9 +5,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import fle.FLE;
 import fle.api.item.ItemFleMetaBase;
+import fle.cg.ICG;
+import fle.cg.RecipesTab;
 
-public class BehaviorGuideBook extends BehaviorBase
+public class BehaviorGuideBook extends BehaviorBase implements ICG
 {
+	RecipesTab tab;
+	
+	public BehaviorGuideBook(RecipesTab aTab)
+	{
+		tab = aTab;
+	}
+	
 	@Override
 	public ItemStack onItemRightClick(ItemFleMetaBase item,
 			ItemStack itemstack, World aWorld, EntityPlayer player)
@@ -17,5 +26,11 @@ public class BehaviorGuideBook extends BehaviorBase
 			player.openGui(FLE.MODID, -4, aWorld, player.serverPosX, player.serverPosY, player.serverPosZ);
 		}
 		return itemstack;
+	}
+
+	@Override
+	public RecipesTab getBookTab(ItemStack itemstack)
+	{
+		return tab;
 	}
 }

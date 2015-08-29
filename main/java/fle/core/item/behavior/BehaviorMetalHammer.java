@@ -2,6 +2,7 @@ package fle.core.item.behavior;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,15 @@ import fle.core.item.tool.ToolMaterialInfo;
 
 public class BehaviorMetalHammer extends BehaviorTool implements ICrushableTool, ISubPolishTool<ItemFleMetaBase>
 {
+	@Override
+	public boolean onItemDamageBlock(ItemFleMetaBase item, ItemStack aStack,
+			Block aBlock, EntityLivingBase aEntity, World aWorld, int aX,
+			int aY, int aZ)
+	{
+		item.damageItem(aStack, aEntity, EnumDamageResource.DestoryBlock, 1F);
+		return true;
+	}
+	
 	public boolean isBlockEffective(ItemStack aStack, Block aBlock, int aMeta)
 	{
 		return (aBlock.getMaterial() != Material.iron && aBlock.getMaterial() != Material.anvil && aBlock.getMaterial() != Material.rock) ? ForgeHooks.isToolEffective(new ItemStack(Items.iron_pickaxe), aBlock, aMeta) : true;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import fle.cg.RecipesTab;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -13,13 +14,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ShapelessFleRecipe implements IRecipe
+public class ShapelessFleRecipe implements IFleRecipe
 {
     private Object output = null;
     private ArrayList<Object> inputs = new ArrayList<Object>();
-    
+    private RecipesTab tab;
+
 	public ShapelessFleRecipe(Object aOutput, Object...aInput) 
 	{
+		this(RecipesTab.tabClassic, aOutput, aInput);
+	}
+	public ShapelessFleRecipe(RecipesTab aTab, Object aOutput, Object...aInput) 
+	{
+		tab = aTab;
 		try
 		{
 			if(aOutput != null)
@@ -167,7 +174,8 @@ public class ShapelessFleRecipe implements IRecipe
 	public ItemStack getRecipeOutput() 
 	{
 		return output instanceof ItemStack ? ((ItemStack) output).copy() :
-			output instanceof SingleInputRecipe ? ((SingleInputRecipe) output).getResult(null) : null;
+			output instanceof SingleInputRecipe ? 
+					((SingleInputRecipe) output).getResult(null) : null;
 	}
 	
 	public ItemAbstractStack[] getInputs()
@@ -177,7 +185,15 @@ public class ShapelessFleRecipe implements IRecipe
 		{
 			if(obj instanceof ItemAbstractStack)
 				ret.add((ItemAbstractStack) obj);
+			if(obj instanceof SingleInputRecipe)
+				ret.add(((SingleInputRecipe) obj).getShowStack());
 		}
 		return ret.toArray(new ItemAbstractStack[ret.size()]);
+	}
+	
+	@Override
+	public RecipesTab getRecipeTab()
+	{
+		return tab;
 	}
 }

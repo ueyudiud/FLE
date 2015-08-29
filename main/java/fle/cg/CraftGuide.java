@@ -1,7 +1,9 @@
 package fle.cg;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -11,27 +13,30 @@ public final class CraftGuide
 {
 	public static final CraftGuide instance = new CraftGuide();
 	
-	private List<RecipeHandler> recipeList = new ArrayList();
+	Map<RecipesTab, List<RecipeHandler>> recipeList = new HashMap();
 	
 	private CraftGuide()
 	{
 		
 	}
 	
-	public void registerRecipe(RecipeHandler handler)
+	public void registerRecipe(RecipesTab tab, RecipeHandler handler)
 	{
-		recipeList.add(handler);
+		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
+		recipeList.get(tab).add(handler);
 	}
 	
-	public RecipeHandler[] getAllRecipes()
+	public RecipeHandler[] getAllRecipes(RecipesTab tab)
 	{
-		return recipeList.toArray(new RecipeHandler[recipeList.size()]);
+		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
+		return recipeList.get(tab).toArray(new RecipeHandler[recipeList.size()]);
 	}
 	
-	public RecipeHandler[] getRecipes(ItemAbstractStack stack)
+	public RecipeHandler[] getRecipes(RecipesTab tab, ItemAbstractStack stack)
 	{
+		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
 		List<RecipeHandler> ret = new ArrayList();
-		for(RecipeHandler handler : recipeList)
+		for(RecipeHandler handler : recipeList.get(tab))
 		{
 			for(ItemStack tStack : stack.toArray())
 			{
@@ -42,10 +47,11 @@ public final class CraftGuide
 		return ret.toArray(new RecipeHandler[ret.size()]);
 	}
 	
-	public RecipeHandler[] getRecipes(FluidStack stack)
+	public RecipeHandler[] getRecipes(RecipesTab tab, FluidStack stack)
 	{
+		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
 		List<RecipeHandler> ret = new ArrayList();
-		for(RecipeHandler handler : recipeList)
+		for(RecipeHandler handler : recipeList.get(tab))
 		{
 			if(handler.match(stack))
 				ret.add(handler);
