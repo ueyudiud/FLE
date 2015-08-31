@@ -17,7 +17,7 @@ public class BlockWoodMachine1 extends BlockSubTile implements IGuiBlock
 {
 	public BlockWoodMachine1 init()
 	{
-		registerSub(0, "dryingTable", new BlockTextureManager(new String[]{"machine/drying_table"}), new BehaviourDrying());
+		registerSub(0, "dryingTable", "Drying Table", new BlockTextureManager(new String[]{"machine/drying_table"}), new BehaviourDrying());
 		return this;
 	}
 	

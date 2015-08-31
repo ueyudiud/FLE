@@ -7,7 +7,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.block.IFacingBlock;
+import fle.api.net.FleAbstractPacket;
 import fle.api.world.BlockPos;
 
 public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
@@ -105,5 +109,10 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 			return true;
 		}
 		return false;
+	}
+	
+	public void sendToNearBy(FleAbstractPacket packet, float range)
+	{
+		FleAPI.mod.getNetworkHandler().sendToNearBy(packet, new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, range));
 	}
 }

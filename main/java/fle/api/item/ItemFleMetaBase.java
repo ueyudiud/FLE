@@ -49,7 +49,7 @@ public class ItemFleMetaBase extends ItemFle
 		setTextureName(FleValue.TEXTURE_FILE + ":" + FleValue.VOID_ICON_FILE);
 	}
 	
-	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
+	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, String aLocalized, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
 	{
 		if ((aMetaValue < 0) || (aMetaValue >= 32766) || (aBehavior == null))
 		{
@@ -57,7 +57,17 @@ public class ItemFleMetaBase extends ItemFle
 	    }
 	    itemBehaviors.register(aMetaValue, aBehavior, aTagName);
 	    textureLocations.put(aTagName, aLocate);
+		ItemStack aStack = new ItemStack(this, 1);
+		setDamage(aStack, aMetaValue);
+		FleAPI.lm.registerLocal(aStack.getUnlocalizedName() + ".name", aLocalized);
+		FleAPI.lm.registerLocal(aStack.getUnlocalizedName() + ".tooltip", "No tool tip.");
 	    return this;
+	}
+	
+	@Override
+	public String getItemStackDisplayName(ItemStack aStack)
+	{
+		return FleAPI.lm.translateToLocal(aStack.getUnlocalizedName() + ".name", new Object[0]);
 	}
 	  
 	public ItemStack onDispense(IBlockSource aSource, ItemStack aStack)
@@ -241,7 +251,7 @@ public class ItemFleMetaBase extends ItemFle
 	public final void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean aF3_H)
 	{
 		String tKey = getUnlocalizedName(aStack) + ".tooltip";
-		String tString = StatCollector.translateToLocal(tKey);
+		String tString = FleAPI.lm.translateToLocal(tKey);
 	    aList.add(tString);
 	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 	    if(tBehavior != null)

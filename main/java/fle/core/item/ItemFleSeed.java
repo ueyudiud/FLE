@@ -19,6 +19,7 @@ import fle.FLE;
 import fle.api.FleValue;
 import fle.api.crop.CropCard;
 import fle.api.crop.ICropSeed;
+import fle.api.enums.EnumFoodType;
 import fle.api.item.IFoodStat;
 import fle.api.item.ItemFleFood;
 import fle.api.util.ITextureLocation;
@@ -26,6 +27,7 @@ import fle.api.util.Register;
 import fle.core.init.Crops;
 import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorBase;
+import fle.core.item.behavior.FoodStandard;
 import fle.core.te.TileEntityCrop;
 import fle.core.util.TextureLocation;
 
@@ -33,20 +35,23 @@ public class ItemFleSeed extends ItemFleFood implements IPlantable, ICropSeed
 {
 	public ItemFleSeed init()
 	{
-		addSubItem(0, Crops.soybean, new TextureLocation("crop/soybean"));
-		addSubItem(1, Crops.ramie, new TextureLocation("crop/ramie_seed"));
+		addSubItem(0, Crops.soybean, "Soybeen", new TextureLocation("crop/soybean"));
+		addSubItem(1, Crops.ramie, "Ramie Seed", new TextureLocation("crop/ramie_seed"));
+		addSubItem(2, Crops.millet, "Millet Seed", new TextureLocation("crop/millet_seed"));
+		addSubItem(3, Crops.suger_cances, "Suger Cances", new TextureLocation("crop/reed"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
+		addSubItem(4, Crops.wheat, "Wheat Seed", new TextureLocation("crop/wheat_seed"));
 		return this;
 	}
 
-	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, ITextureLocation aLocate, IFoodStat<ItemFleFood> aFoodBehavior)
+	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, String aLocalized, ITextureLocation aLocate, IFoodStat<ItemFleFood> aFoodBehavior)
 	{
-		addSubItem(aMetaValue, crop.getCropName(), aLocate, new BehaviorBase(), aFoodBehavior);
+		addSubItem(aMetaValue, crop.getCropName(), aLocalized, aLocate, new BehaviorBase(), aFoodBehavior);
 		register.register(crop, crop.getCropName());
 	    return this;
 	}
-	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, ITextureLocation aLocate)
+	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, String aLocalized, ITextureLocation aLocate)
 	{
-		addSubItem(aMetaValue, crop.getCropName(), aLocate, new BehaviorBase(), null);
+		addSubItem(aMetaValue, crop.getCropName(), aLocalized, aLocate, new BehaviorBase(), null);
 		register.register(crop, crop.getCropName());
 	    return this;
 	}

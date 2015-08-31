@@ -13,10 +13,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.block.IGuiBlock;
+import fle.api.cg.GuiBook;
+import fle.api.cg.ICG;
 import fle.api.gui.ContainerEmpty;
 import fle.api.item.ItemFleMetaBase;
-import fle.cg.GuiBook;
-import fle.cg.ICG;
 import fle.core.entity.EntityFleArrow;
 import fle.core.entity.EntityFleFallingBlock;
 import fle.core.gui.ContainerCeramics;
@@ -32,6 +32,7 @@ import fle.core.init.Conditions;
 import fle.core.init.Crops;
 import fle.core.init.IB;
 import fle.core.init.Materials;
+import fle.core.init.Other;
 import fle.core.init.Rs;
 import fle.core.te.TileEntityCrop;
 import fle.core.te.TileEntityFirewood;
@@ -41,10 +42,11 @@ import fle.core.tool.BowHandler;
 import fle.core.tool.ChiselHandler;
 import fle.core.tool.StoneHammerHandler;
 import fle.core.util.FleFuelHandler;
+import fle.core.util.LanguageManager;
 import fle.core.world.FleWorldGen;
 
 public class CommonProxy extends Proxy
-{
+{	
 	@Override
 	public void onPreload() 
 	{
@@ -94,6 +96,8 @@ public class CommonProxy extends Proxy
 		Rs.reloadRecipe();
 		Rs.init();
 		Crops.postInit();
+		Materials.postInit();
+		Other.init();
 	}
 	
 	@SubscribeEvent

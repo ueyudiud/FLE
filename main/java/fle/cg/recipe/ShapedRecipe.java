@@ -8,12 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import fle.api.cg.GuiBookBase;
+import fle.api.cg.RecipeHandler;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemArrayStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapedFleRecipe;
-import fle.cg.GuiBookBase;
-import fle.cg.RecipeHandler;
 
 public class ShapedRecipe extends RecipeBase implements RecipeHandler
 {

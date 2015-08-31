@@ -66,22 +66,43 @@ public class StoneHammerHandler
 			if(!evt.getPlayer().capabilities.isCreativeMode)
 				if(evt.getPlayer().getCurrentEquippedItem() != null)
 				{
-					if(evt.getPlayer().getCurrentEquippedItem().getItem() instanceof ICrushableTool)
+					ItemStack tStack = evt.getPlayer().getCurrentEquippedItem();
+					if(tStack.getItem() instanceof ICrushableTool)
 					{
-						if(((ICrushableTool) evt.getPlayer().getCurrentEquippedItem().getItem()).doCrush(evt.world, evt.x, evt.y, evt.z, evt.getPlayer().getCurrentEquippedItem()))
+						int level = tStack.getItem().getHarvestLevel(tStack, "abstract_hammer");
+						if(evt.block.getHarvestLevel(evt.blockMetadata) <= level && evt.block.getHarvestTool(evt.blockMetadata) == "pickaxe")
 						{
-							int data = FLE.fle.getWorldManager().getData(new BlockPos(evt.world, evt.x, evt.y, evt.z), 0);
-							if(canBlockCrush(evt.block, data != 0 ? data : evt.blockMetadata))
+							if(((ICrushableTool) tStack.getItem()).doCrush(evt.world, evt.x, evt.y, evt.z, evt.getPlayer().getCurrentEquippedItem()))
 							{
-								ArrayList<ItemStack> list = onBlockCrush(evt.block, data != 0 ? data : evt.blockMetadata);
-								ForgeEventFactory.fireBlockHarvesting(list, evt.world, evt.block, evt.x, evt.y, evt.z, evt.blockMetadata, 0, 1.0F, false, evt.getPlayer());
-								for(ItemStack tStack : list)
-									dropBlockAsItem(evt.world, evt.x, evt.y, evt.z, tStack.copy());
-								return;
+								int data = FLE.fle.getWorldManager().getData(new BlockPos(evt.world, evt.x, evt.y, evt.z), 0);
+								if(canBlockCrush(evt.block, data != 0 ? data : evt.blockMetadata))
+								{
+									ArrayList<ItemStack> list = onBlockCrush(evt.block, data != 0 ? data : evt.blockMetadata);
+									ForgeEventFactory.fireBlockHarvesting(list, evt.world, evt.block, evt.x, evt.y, evt.z, evt.blockMetadata, 0, 1.0F, false, evt.getPlayer());
+									for(ItemStack tStack1 : list)
+										dropBlockAsItem(evt.world, evt.x, evt.y, evt.z, tStack1.copy());
+									return;
+								}
 							}
 						}
 					}
 				}
+	}
+	
+	public static boolean isHammerItemEffective(Block aBlock, World aWorld, int x, int y, int z, ItemStack aStack)
+	{
+		return isHammerEffective(aBlock, aBlock.getDamageValue(aWorld, x, y, z), aStack);
+	}
+	
+	public static boolean isHammerEffective(Block aBlock, int meta, ItemStack aTool)
+	{
+		int level = aTool.getItem().getHarvestLevel(aTool, "abstract_hammer");
+		if(level < 0) return false;
+		if(aBlock.getHarvestLevel(meta) <= level && aBlock.getHarvestTool(meta) == "pickaxe")
+		{
+			return canBlockCrush(aBlock, meta);
+		}
+		return false;
 	}
 	
 	public static void dropBlockAsItem(World aWorld, int x, int y, int z, ItemStack aStack)

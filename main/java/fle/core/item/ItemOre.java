@@ -32,7 +32,7 @@ public class ItemOre extends ItemSub
 		ITextureLocation locate = new TextureLocation("iconsets/chip_rock", "void", "iconsets/chip_ore1", "iconsets/chip_ore2", "void");
 		for(MaterialOre ore : MaterialOre.getOres())
 		{
-			addSubItem(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), locate, new BehaviorBlockable(9, IB.ore_cobble, MaterialOre.getOreID(ore)));
+			addSubItem(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), ore.getOreName() + " Chip", locate, new BehaviorBlockable(9, IB.ore_cobble, MaterialOre.getOreID(ore)));
 		}
 		return this;
 	}

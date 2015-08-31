@@ -34,10 +34,8 @@ public class BehaviourLavaHeatTransfer extends BehaviourTile implements IDebugab
 			{
 				if(!aWorld.isRemote)
 				{
-					if(aPlayer.inventory.addItemStackToInventory(ItemFleSub.a("chip_obsidian")))
-					{
-						tile.tick = 0;
-					}
+					aPlayer.dropPlayerItemWithRandomChoice(ItemFleSub.a("chip_obsidian"), false);
+					tile.tick = 0;
 				}
 				return true;
 			}

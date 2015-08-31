@@ -5,6 +5,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import fle.api.FleAPI;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
 
@@ -19,13 +20,13 @@ public class ItemFleFood extends ItemFleMetaBase
 	    setMaxDamage(0);
 	}
 	
-	public final ItemFleFood addSubItem(int aMetaValue, String name, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior, IFoodStat<ItemFleFood> aFoodBehavior)
+	public final ItemFleFood addSubItem(int aMetaValue, String name, String aLocalized, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior, IFoodStat<ItemFleFood> aFoodBehavior)
 	{
 		if ((aMetaValue < 0) || (aMetaValue >= OreDictionary.WILDCARD_VALUE ))
 		{
 			return this;
 	    }
-		this.addSubItem(aMetaValue, name, aLocate, aBehavior);
+		this.addSubItem(aMetaValue, name, aLocalized, aLocate, aBehavior);
 		if(aFoodBehavior != null)
 			foodStats.register(Short.valueOf((short)aMetaValue), aFoodBehavior, name);
 	    return this;

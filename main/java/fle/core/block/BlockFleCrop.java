@@ -52,7 +52,7 @@ public class BlockFleCrop extends BlockHasTile implements IGrowable, IPlantable,
      */
     protected boolean canPlaceBlockOn(Block block)
     {
-        return block == Blocks.farmland;
+        return block == Blocks.farmland || block == Blocks.dirt || block == Blocks.grass;
     }
 
     @Override
@@ -156,7 +156,7 @@ public class BlockFleCrop extends BlockHasTile implements IGrowable, IPlantable,
      */
     public boolean canBlockStay(World world, int x, int y, int z)
     {
-        return  world.getBlock(x, y - 1, z).canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, this);
+        return world.getBlock(x, y - 1, z).canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, this);
     }
 
     /**
@@ -211,11 +211,19 @@ public class BlockFleCrop extends BlockHasTile implements IGrowable, IPlantable,
 	{
 		return tile.copy();
 	}
+	
+	public static boolean flag = false;
 
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z) 
 	{
-		return EnumPlantType.Crop;
+		if(world.getTileEntity(x, y, z) instanceof TileEntityCrop)
+		{
+			TileEntityCrop tile = (TileEntityCrop) world.getTileEntity(x, y, z);
+			return tile.isWild ? EnumPlantType.Plains : tile.getCrop() == null ? 
+					EnumPlantType.Crop : tile.getCrop().getPlantType();
+		}
+		return flag ? EnumPlantType.Plains : EnumPlantType.Crop;
 	}
 
 	@Override

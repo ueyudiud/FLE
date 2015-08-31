@@ -8,12 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import fle.api.cg.GuiBookBase;
+import fle.api.cg.RecipeHandler;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemArrayStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapelessFleRecipe;
-import fle.cg.GuiBookBase;
-import fle.cg.RecipeHandler;
 
 public class ShapelessRecipe extends RecipeBase implements RecipeHandler
 {

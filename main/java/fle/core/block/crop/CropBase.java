@@ -65,7 +65,7 @@ public abstract class CropBase extends CropCard
 	
 	public CropBase setHaverstDrop(int size, Map<ItemStack, Integer> stacks)
 	{
-		this.plant = new DropInfo(size, stacks);
+		this.plant = new DropInfo(size, size, stacks);
 		return this;
 	}
 

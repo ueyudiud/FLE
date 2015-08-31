@@ -11,8 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameData;
+import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.block.ItemFleBlock;
+import fle.api.material.MaterialOre;
 import fle.core.init.IB;
 
 public class ItemOilLamp extends ItemFleBlock
@@ -22,6 +24,19 @@ public class ItemOilLamp extends ItemFleBlock
 		super(aBlock);
 		hasSubtypes = true;
 		setMaxStackSize(1);
+		FleAPI.lm.registerLocal(block.getUnlocalizedName() + ".name", "%s Oil Lamp");
+	}
+	
+	@Override
+	public String getItemStackDisplayName(ItemStack aStack)
+	{
+		return getToolMaterial(aStack).getItem() == null ? "Error Item" : FleAPI.lm.translateToLocal(block.getUnlocalizedName() + ".name", getToolMaterial(aStack).getDisplayName());
+	}
+	
+	@Override
+	public String getUnlocalizedName(ItemStack aStack)
+	{
+		return super.getUnlocalizedName(aStack);
 	}
 	
 	@Override

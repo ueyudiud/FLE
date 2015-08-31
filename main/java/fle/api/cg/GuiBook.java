@@ -1,4 +1,4 @@
-package fle.cg;
+package fle.api.cg;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;

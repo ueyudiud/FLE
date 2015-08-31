@@ -34,8 +34,10 @@ import fle.core.init.Config;
 import fle.core.net.NetWorkHandler;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleCropRegister;
+import fle.core.util.FleSetup;
 import fle.core.util.FluidDictionary;
 import fle.core.util.Keyboard;
+import fle.core.util.LanguageManager;
 import fle.core.util.SideGateway;
 import fle.core.world.FWM;
 import fle.tech.FleTechManager;
@@ -45,8 +47,8 @@ public class FLE implements FleModHandler
 {
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.03d";
-    public static final int minForge = 1400;
+    public static final String VERSION = "2.03h";
+    public static final int minForge = 1420;
 	
     @Instance(MODID)
     public static FLE fle;
@@ -64,8 +66,10 @@ public class FLE implements FleModHandler
     
     public FLE() 
     {
+    	new FleSetup().setup();
     	FleAPI.mod = fle = this;
     	FleAPI.fluidDictionary = new FluidDictionary();
+    	FleAPI.lm = new LanguageManager();
     	p = new SideGateway<IPlatform>("fle.core.PlatformCommon", "fle.core.PlatformClient");
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
     	nw = new NetWorkHandler();
@@ -113,6 +117,7 @@ public class FLE implements FleModHandler
             config.save();
         }
     	FleLog.getLogger().info("Far Land Era start pre load.");
+		LanguageManager.load();
     	proxy.onPreload();
 	}
 
@@ -127,7 +132,7 @@ public class FLE implements FleModHandler
     public void postLoad(FMLPostInitializationEvent event)
     {
     	FleLog.getLogger().info("Far Land Era start post load.");
-    	NetworkRegistry.INSTANCE.registerGuiHandler(MODID, proxy);
+    	NetworkRegistry.INSTANCE.registerGuiHandler(MODID, new CommonProxy());
     	proxy.onPostload();
 	}
 
@@ -136,6 +141,8 @@ public class FLE implements FleModHandler
     {
     	FleLog.getLogger().info("Far Land Era start complete load.");
     	proxy.onCompleteLoad();
+    	FleLog.getLogger().info("Saving languages.");
+    	LanguageManager.save();
 	}
     
 	@Override

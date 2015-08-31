@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.FleAPI;
+import fle.api.FleValue;
 import fle.api.block.BlockFle;
 import fle.api.item.ItemFleMetaBase;
 
@@ -52,6 +53,21 @@ public class BehaviorBlockable extends BehaviorBase
 				return true;
 			}
 		return false;
+	}
+	
+	@Override
+	public void getAdditionalToolTips(ItemFleMetaBase item, List<String> list,
+			ItemStack itemstack, boolean flag)
+	{
+		if(flag)
+		{
+			list.add("Use  " + sizeRequire + " " + itemstack.getDisplayName() + " to place " + new ItemStack(target, 1, targetMeta).getDisplayName() + " on the ground.");
+		}
+		else
+		{
+			list.add(FleValue.info_shift);
+		}
+		super.getAdditionalToolTips(item, list, itemstack, flag);
 	}
 	
 	@Override

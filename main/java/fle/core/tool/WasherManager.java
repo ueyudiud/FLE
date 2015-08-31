@@ -16,7 +16,7 @@ public class WasherManager
 {
 	public static boolean tryWashingItem(World aWorld, EntityPlayer aPlayer)
 	{
-		if(FLE.fle.getKeyboard().isSneakKeyDown(aPlayer) && FLE.fle.getKeyboard().isPlaceKeyDown(aPlayer))
+		if(FLE.fle.getKeyboard().isSneakKeyDown(aPlayer) && FLE.fle.getKeyboard().isPlaceKeyDown(aPlayer) && !aWorld.isRemote)
 		{
 			MovingObjectPosition pos1 = getMovingObjectPositionFromPlayer(aWorld, aPlayer, true);
 			if(pos1 == null) return false;

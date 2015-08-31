@@ -18,14 +18,14 @@ public class BlockClayInventory extends BlockSubTile
 {
 	public BlockClayInventory init()
 	{
-		registerSub(0, "terrine_unsmelted", new BlockTextureManager("clay/1"), new BehaviourClay());
+		registerSub(0, "terrine_unsmelted", "Unsmelted Terrine", new BlockTextureManager("clay/1"), new BehaviourClay());
 		return this;
 	}
 	
-	public final void registerSub(int index, String aName,
+	public final void registerSub(int index, String aName, String aLocalized,
 			IBlockWithTileBehaviour<BlockSubTile> blockBehavior)
 	{
-		registerSub(index, aName, null, blockBehavior);
+		registerSub(index, aName, aLocalized, null, blockBehavior);
 	}
 	
 	public BlockClayInventory(String aName)

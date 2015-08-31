@@ -82,10 +82,10 @@ public class InventoryCastingPool extends InventoryWithFluidTank<TileEntityCasti
 				else
 				{
 					tile.tc.reseaveHeat((getFluid().getFluid().getTemperature(getFluid()) - FLE.fle.getThermalNet().getEnvironmentTemperature(tile.getBlockPos())) * 0.2D);
-					FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 2, (Double) tile.tc.getHeat()), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
+					tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 2, (Double) tile.tc.getHeat()), 16.0F);
 				}
 				syncTank(tile);
-				FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
+				tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), 16.0F);
 			}
 		}
 		else if(recipe == null && !tile.getWorldObj().isRemote)

@@ -28,12 +28,12 @@ public class ThermalTileHelper
 
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		heatCurrect = nbt.getDouble("Heat");
+		heatCurrect = nbt.getInteger("Heat");
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setDouble("Heat", heatCurrect);
+		nbt.setInteger("Heat", (int) heatCurrect);
 	}
 	
 	public void update()

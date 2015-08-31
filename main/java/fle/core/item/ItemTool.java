@@ -60,6 +60,7 @@ import fle.core.item.behavior.BehaviorMetalHammer;
 import fle.core.item.behavior.BehaviorPickaxe;
 import fle.core.item.behavior.BehaviorShovel;
 import fle.core.item.behavior.BehaviorStoneHammer;
+import fle.core.item.behavior.BehaviorTool;
 import fle.core.item.behavior.BehaviorWhetstone;
 import fle.core.item.behavior.BehaviorWoodHammer;
 import fle.core.item.tool.ToolMaterialInfo;
@@ -105,88 +106,98 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		addToolMaterial(Materials.Stone);
 		addToolMaterial(Materials.CompactStone);
 		addToolMaterial(Materials.Copper);
-		addSubItem(1, "rough_stone_axe", SubTag.TOOL_stone, 
+		addSubItem(1, "rough_stone_axe", "Rough Stone Axe", SubTag.TOOL_stone, 
 				new String[]{EnumTool.axe.toString()},
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
 				new TextureLocation("tools/axe/rough_axe_head", "tools/axe/rough_axe_rust", FleValue.VOID_ICON_FILE, "tools/axe/rough_axe_stick", "tools/axe/rough_axe_tie"), 
 				new BehaviorAxe(0.6F));
-		addSubItem(2, "stone_axe", SubTag.TOOL_stone, 
+		addSubItem(2, "stone_axe", "Stone Axe", SubTag.TOOL_stone, 
 				new String[]{EnumTool.axe.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 2.0F)},
 				new TextureLocation("tools/axe/stone_axe_head", "tools/axe/stone_axe_rust", FleValue.VOID_ICON_FILE, "tools/axe/stone_axe_stick", "tools/axe/stone_axe_tie"), 
 				new BehaviorAxe(0.9F));
-		addSubItem(3, "stone_shovel", SubTag.TOOL_stone, 
+		addSubItem(3, "stone_shovel", "Stone Shovel", SubTag.TOOL_stone, 
 				new String[]{EnumTool.shovel.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
 				new TextureLocation("tools/shovel/stone_shovel_head", "tools/shovel/stone_shovel_rust", FleValue.VOID_ICON_FILE, "tools/shovel/stone_shovel_stick", "tools/shovel/stone_shovel_tie"), 
 				new BehaviorShovel(0.9F));
-		addSubItem(4, "flint_hammer", SubTag.TOOL_flint, 
+		addSubItem(4, "flint_hammer", "Flint Hammer", SubTag.TOOL_flint, 
 				new String[]{EnumTool.stone_hammer.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.5F)},
 				new TextureLocation("tools/hammer/flint_hammer_head", "tools/hammer/flint_hammer_rust", FleValue.VOID_ICON_FILE, "tools/hammer/flint_hammer_stick", "tools/hammer/flint_hammer_tie"), 
 				new BehaviorStoneHammer(1, 0.7F));
-		addSubItem(5, "stone_hammer", SubTag.TOOL_stone_real, 
+		addSubItem(5, "stone_hammer", "Stone Hammer", SubTag.TOOL_stone_real, 
 				new String[]{EnumTool.stone_hammer.name(), EnumTool.abstract_hammer.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 2.0F)},
 				new TextureLocation("tools/hammer/stone_hammer_head", "tools/hammer/stone_hammer_rust", FleValue.VOID_ICON_FILE, "tools/hammer/stone_hammer_stick", "tools/hammer/stone_hammer_tie"), 
 				new BehaviorStoneHammer(2, 0.9F));
-		addSubItem(6, "wooden_hammer", SubTag.TOOL_wood, 
+		addSubItem(6, "wooden_hammer", "Wooden Hammer", SubTag.TOOL_wood, 
 				new String[]{EnumTool.wood_hammer.name()}, 
 				new AttributesInfo[]{new AttributesInfo(knockbackResistance, 0.5F)},
 				new TextureLocation(FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/hammer/wood_hammer"), 
 				new BehaviorWoodHammer());
-		addSubItem(7, "wooden_drilling_firing", SubTag.TOOL_wood, 
+		addSubItem(7, "wooden_drilling_firing", "Drilling Firing", SubTag.TOOL_wood, 
 				new String[]{EnumTool.firestarter.name()},
 				new TextureLocation(FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/firestarter/wood_drilling_firing"), 
 				new BehaviorFirestarter(0.3F));
-		addSubItem(8, "whetstone", SubTag.TOOL_stone_real, 
+		addSubItem(8, "whetstone", "Whetstone", SubTag.TOOL_stone_real, 
 				new String[]{EnumTool.whetstone.name()},
 				new TextureLocation("tools/whetstone/whetstone", "tools/whetstone/whetstone_rust", FleValue.VOID_ICON_FILE), 
 				new BehaviorWhetstone());
-		addSubItem(9, "flint_awl", SubTag.TOOL_flint, 
+		addSubItem(9, "flint_awl", "Awl", SubTag.TOOL_flint, 
 				new String[]{EnumTool.awl.name()},
 				new TextureLocation("tools/awl/awl", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
 				new BehaviorAwl());
-		addSubItem(10, "flint_arrow", SubTag.TOOL_flint, 
+		addSubItem(10, "flint_arrow", "Arrow", SubTag.TOOL_flint, 
 				new String[]{EnumTool.arrow.name()},
 				new TextureLocation("tools/arrow/flint_arrow_head", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/arrow/flint_arrow_stick"), 
 				new BehaviorArrow());
-		addSubItem(11, "stone_sickle", SubTag.TOOL_stone_real, 
+		addSubItem(11, "stone_sickle", "Stone Sickle", SubTag.TOOL_stone_real, 
 				new String[]{EnumTool.hoe.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
 				new TextureLocation("tools/hoe/stone_sickle_head", "tools/hoe/stone_sickle_rust", FleValue.VOID_ICON_FILE, "tools/hoe/stone_sickle_stick", "tools/hoe/stone_sickle_tie"), 
 				new BehaviorHoe(true, false));
-		addSubItem(12, "stone_spade_hoe", SubTag.TOOL_stone_real, 
+		addSubItem(12, "stone_spade_hoe", "Stone Spade-Hoe", SubTag.TOOL_stone_real, 
 				new String[]{EnumTool.hoe.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 0.5F)},
 				new TextureLocation("tools/hoe/spade_hoe_head", "tools/hoe/spade_hoe_rust", FleValue.VOID_ICON_FILE, "tools/hoe/spade_hoe_stick", "tools/hoe/spade_hoe_tie"), 
 				new BehaviorHoe(false, true));
-		addSubItem(101, "metal_axe", SubTag.TOOL_metal, 
+		addSubItem(13, "stone_decorticating_plate", "Decorticating Plate", SubTag.TOOL_stone_real, 
+				new String[]{EnumTool.decorticating_plate.name()},
+				new TextureLocation("tools/plate/stone_decorticating_plate", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
+				new BehaviorTool());
+		addSubItem(14, "stone_decorticating_stick", "Decorticating Stick", SubTag.TOOL_stone_real, 
+				new String[]{EnumTool.decorticating_stick.name()},
+				new TextureLocation("tools/plate/stone_decorticating_stick", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
+				new BehaviorTool());
+		addSubItem(101, "metal_axe", "Metal Axe", SubTag.TOOL_metal, 
 				new String[]{EnumTool.axe.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 3.0F)},
 				new TextureLocation("tools/axe/metal_axe_head", "tools/axe/metal_axe_rust", "tools/axe/metal_axe_mosaic", "tools/axe/metal_axe_stick"), 
 				new BehaviorAxe(1.0F));
-		addSubItem(102, "metal_pickaxe", SubTag.TOOL_metal, 
+		addSubItem(102, "metal_pickaxe", "Metal Pickaxe", SubTag.TOOL_metal, 
 				new String[]{EnumTool.pickaxe.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
 				new TextureLocation("tools/pickaxe/metal_pickaxe_head", "tools/pickaxe/metal_pickaxe_rust", "tools/pickaxe/metal_pickaxe_mosaic", "tools/pickaxe/metal_pickaxe_stick"), 
 				new BehaviorPickaxe());
-		addSubItem(103, "metal_hammer", SubTag.TOOL_metal, 
+		addSubItem(103, "metal_hammer", "Metal Hammer", SubTag.TOOL_metal, 
 				new String[]{EnumTool.metal_hammer.toString(), EnumTool.abstract_hammer.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 2.0F), new AttributesInfo(knockbackResistance, 0.5F)},
 				new TextureLocation("tools/hammer/metal_hammer_head", "tools/hammer/metal_hammer_rust", "tools/hammer/metal_hammer_mosaic", "tools/hammer/metal_hammer_stick"), 
 				new BehaviorMetalHammer());
-		addSubItem(104, "metal_shovel", SubTag.TOOL_metal, 
+		addSubItem(104, "metal_shovel", "Metal Shovel", SubTag.TOOL_metal, 
 				new String[]{EnumTool.shovel.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.3F)},
 				new TextureLocation("tools/shovel/metal_shovel_head", "tools/shovel/metal_shovel_rust", "tools/shovel/metal_shovel_mosaic", "tools/shovel/metal_shovel_stick"), 
 				new BehaviorShovel(1.0F));
-		addSubItem(105, "metal_chisel", SubTag.TOOL_metal, 
+		addSubItem(105, "metal_chisel", "Metal Chisel", SubTag.TOOL_metal, 
 				new String[]{EnumTool.chisel.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
 				new TextureLocation("tools/chisel/metal_chisel_head", "tools/chisel/metal_chisel_rust", "tools/chisel/metal_chisel_mosaic", "tools/chisel/metal_chisel_stick"), 
 				new BehaviorChisel());
 		heightLightList.add(8);
+		heightLightList.add(13);
+		heightLightList.add(14);
 		stackLimitList.add(10);
 		return this;
 	}
@@ -282,18 +293,18 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	    }
 	}
 
-	public final ItemTool addSubItem(int aMetaValue, String aTagName, IDataChecker<ISubTagContainer> aTag, String[] aToolClass, AttributesInfo[] aInfo, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
+	public final ItemTool addSubItem(int aMetaValue, String aTagName, String aLocalized, IDataChecker<ISubTagContainer> aTag, String[] aToolClass, AttributesInfo[] aInfo, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
 	{
-		addSubItem(aMetaValue, aTagName, aTag, aToolClass, aLocate, aBehavior);
+		addSubItem(aMetaValue, aTagName, aLocalized, aTag, aToolClass, aLocate, aBehavior);
 		arrtibuteMap.put(aTagName, new HashMap());
 		for(int i = 0; i < aInfo.length; ++i)
 			arrtibuteMap.get(aTagName).put(aInfo[i].a, new Float(aInfo[i].value).doubleValue());
 		return this;
 	}
 	
-	public final ItemTool addSubItem(int aMetaValue, String aTagName, IDataChecker<ISubTagContainer> aTag, String[] aToolClass, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
+	public final ItemTool addSubItem(int aMetaValue, String aTagName, String aLocalized, IDataChecker<ISubTagContainer> aTag, String[] aToolClass, ITextureLocation aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
 	{
-		addSubItem(aMetaValue, aTagName, aLocate, aBehavior);
+		addSubItem(aMetaValue, aTagName, aLocalized, aLocate, aBehavior);
 		registryTool(aTagName, aToolClass);
 		tagMap.put(aTagName, aTag);
 		return this;

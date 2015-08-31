@@ -18,6 +18,10 @@ public class DamageResources
 	{
 		return new FleHeatDamageSource();
 	}
+	public static DamageSource getBleedingDamageSource()
+	{
+		return new FleBleedingDamageSource();
+	}
 	
 	public static class FleArrowAttackDamageSource extends EntityDamageSource
 	{
@@ -44,6 +48,20 @@ public class DamageResources
 	    {
 	    	return new ChatComponentText(EnumChatFormatting.RED + aTarget.getCommandSenderName() + 
 	    			EnumChatFormatting.WHITE + " felt hot!");
+	    }
+	}
+	
+	public static class FleBleedingDamageSource extends DamageSource
+	{
+	    public FleBleedingDamageSource()
+	    {
+			super("fle.bleed");
+		}
+
+		public IChatComponent func_151519_b(EntityLivingBase aTarget)
+	    {
+	    	return new ChatComponentText(EnumChatFormatting.RED + aTarget.getCommandSenderName() + 
+	    			EnumChatFormatting.WHITE + " lost lots of blood.");
 	    }
 	}
 }

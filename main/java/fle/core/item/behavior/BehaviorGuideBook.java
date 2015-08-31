@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import fle.FLE;
+import fle.api.cg.ICG;
+import fle.api.cg.RecipesTab;
 import fle.api.item.ItemFleMetaBase;
-import fle.cg.ICG;
-import fle.cg.RecipesTab;
 
 public class BehaviorGuideBook extends BehaviorBase implements ICG
 {

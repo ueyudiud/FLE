@@ -14,14 +14,14 @@ import net.minecraft.world.EnumDifficulty;
 public class FleFoodStats extends FoodStats
 {
     /** The player's food level. */
-    protected int foodLevel = 100;
+    protected int foodLevel = 40;
     /** The player's food saturation. */
     protected float foodSaturationLevel = 5.0F;
     /** The player's food exhaustion. */
     protected float foodExhaustionLevel;
     /** The player's food timer value. */
     protected int foodTimer;
-    protected int prevFoodLevel = 100;
+    protected int prevFoodLevel = 20;
     
     public FleFoodStats()
     {
@@ -67,18 +67,18 @@ public class FleFoodStats extends FoodStats
 
             if (foodSaturationLevel > 0.0F)
             {
-                foodSaturationLevel -= 0.2F;
+                foodSaturationLevel -= 1.0F;
             }
             else
             {
-            	foodLevel -= aPlayer.getRNG().nextInt(6) + 2;
+            	foodLevel -= aPlayer.getRNG().nextBoolean() ? 1 : 0 + 1;
             }
         }
 
         if (aPlayer.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && aPlayer.shouldHeal())
         {
             ++this.foodTimer;
-        	if(foodLevel >= 90)
+        	if(foodLevel >= 36)
         	{
                 if (foodTimer >= 75)
                 {
@@ -87,7 +87,7 @@ public class FleFoodStats extends FoodStats
                     foodTimer = 0;
                 }
         	}
-        	else if(foodLevel >= 75)
+        	else if(foodLevel >= 30)
         	{
                 if (foodTimer >= 100)
                 {
@@ -96,7 +96,7 @@ public class FleFoodStats extends FoodStats
                     foodTimer = 0;
                 }
         	}
-        	else if(foodLevel >= 60)
+        	else if(foodLevel >= 24)
         	{
                 if (foodTimer >= 150)
                 {
@@ -105,7 +105,7 @@ public class FleFoodStats extends FoodStats
                     foodTimer = 0;
                 }
         	}
-        	else if(foodLevel >= 40)
+        	else if(foodLevel >= 16)
         	{
                 if (foodTimer >= 240)
                 {
@@ -114,7 +114,7 @@ public class FleFoodStats extends FoodStats
                     foodTimer = 0;
                 }
         	}
-        	else if(foodLevel >= 20)
+        	else if(foodLevel >= 8)
         	{
                 if (foodTimer >= 400)
                 {
@@ -174,7 +174,7 @@ public class FleFoodStats extends FoodStats
      */
     public int getFoodLevel()
     {
-        return (int) Math.floor(foodLevel / 5);
+        return (int) Math.floor(foodLevel / 2);
     }
 
     @SideOnly(Side.CLIENT)
@@ -190,7 +190,7 @@ public class FleFoodStats extends FoodStats
     @Override
     public boolean needFood()
     {
-        return foodLevel < 100;
+        return foodLevel < 40;
     }
 
     /**
@@ -215,7 +215,7 @@ public class FleFoodStats extends FoodStats
     @Override
     public void setFoodLevel(int level)
     {
-        foodLevel = level * 5;
+        foodLevel = level * 2;
     }
 
     @SideOnly(Side.CLIENT)

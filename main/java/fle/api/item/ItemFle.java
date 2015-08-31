@@ -31,6 +31,11 @@ public abstract class ItemFle extends Item
 		unlocalizedTooltip = aUnlocalizedTooltip;
 		GameRegistry.registerItem(this, aUnlocalized, FleAPI.MODID);
 	}
+	protected ItemFle(String aUnlocalized, String aUnlocalizedTooltip, String aLocalized)
+	{
+		this(aUnlocalized, aUnlocalizedTooltip);
+		FleAPI.lm.registerLocal(getUnlocalizedName(), aLocalized);
+	}
 	
 	@Override
 	public final Item setUnlocalizedName(String aName)

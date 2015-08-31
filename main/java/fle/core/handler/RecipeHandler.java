@@ -3,8 +3,9 @@ package fle.core.handler;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import fle.api.FleAPI;
 import fle.api.enums.EnumDamageResource;
-import fle.api.item.ItemFleTool;
+import fle.api.recipe.ItemOreStack;
 import fle.core.tool.AxeHandler;
 
 public class RecipeHandler 
@@ -20,21 +21,18 @@ public class RecipeHandler
 				if(AxeHandler.isItemAxe(stack))
 				{
 					++stack.stackSize;
-					if(stack.getItem() instanceof ItemFleTool)
-					{
-						((ItemFleTool) stack.getItem()).damageItem(stack, evt.player, EnumDamageResource.Crafting, 1);
-						continue;
-					}
-					int d = stack.getItemDamage() + 1;
-					if(d >= stack.getMaxDamage())
-					{
-						--stack.stackSize;
-					}
-					else
-					{
-						stack.setItemDamage(d);
-					}
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 1F);
 					continue;
+				}
+				else if(new ItemOreStack("craftingToolDecortingPlate").isStackEqul(stack))
+				{
+					++stack.stackSize;
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.125F);
+				}
+				else if(new ItemOreStack("craftingToolDecortingStick").isStackEqul(stack))
+				{
+					++stack.stackSize;
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.125F);
 				}
 			}
 		}

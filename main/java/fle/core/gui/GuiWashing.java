@@ -27,29 +27,14 @@ public class GuiWashing extends GuiContainerBase
 		super.drawGuiContainerForegroundLayer(par1, par2);
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
-		//drawAreaTooltip(par1, par2, "Push this button to washing items.", xoffset + 25, yoffset + 18, 16, 16);
-	}
-
-	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
-	{
-		super.drawGuiContainerBackgroundLayer(f, x, y);
 	}
 	
 	@Override
-	public void initGui() 
+	public void updateScreen()
 	{
-		super.initGui();
-		xoffset = (width - xSize) / 2;
-		yoffset = (height - ySize) / 2;
-		buttonList.add(new GuiIconButton(0, xoffset + 25, yoffset + 18, ButtonSize.Standard, GuiIconButton.buttonLocate, 0, 0));
-	}
-	
-	protected void actionPerformed(GuiButton guibutton)
-	{
-		FLE.fle.getNetworkHandler().sendToServer(new CoderGuiUpdate((byte) 1, guibutton.id));
-		((ContainerWashing)this.container).washItem();
-		
-		super.actionPerformed(guibutton);
+		super.updateScreen();
+		((ContainerWashing) container).washItem();
+		FLE.fle.getNetworkHandler().sendToServer(new CoderGuiUpdate((byte) 1, 0));
 	}
 
 	@Override

@@ -3,9 +3,9 @@ package fle.core.recipe.crafting;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import fle.api.cg.RecipesTab;
 import fle.api.item.ITreeLog;
 import fle.api.recipe.ShapedFleRecipe;
-import fle.cg.RecipesTab;
 
 public class TreeCuttingRecipe extends ShapedFleRecipe
 {

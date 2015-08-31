@@ -1,4 +1,4 @@
-package fle.cg;
+package fle.api.cg;
 
 import net.minecraft.item.ItemStack;
 

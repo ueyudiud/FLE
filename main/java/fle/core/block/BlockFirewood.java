@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.FleAPI;
 import fle.api.block.BlockHasTile;
 import fle.api.world.BlockPos;
 import fle.core.init.IB;
@@ -34,6 +35,7 @@ public class BlockFirewood extends BlockHasTile
 		super("firewood", Material.wood);
 		setHardness(1.0F);
 		setResistance(1.0F);
+		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "Firewood");
 	}
 	
 	@Override

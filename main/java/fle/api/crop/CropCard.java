@@ -1,5 +1,6 @@
 package fle.api.crop;
 
+import net.minecraftforge.common.EnumPlantType;
 import fle.api.enums.EnumCropRender;
 import fle.api.util.DropInfo;
 
@@ -8,6 +9,8 @@ public abstract class CropCard
 	public abstract String getCropName();
 	
 	public abstract String getCropTextureName();
+	
+	public abstract EnumPlantType getPlantType();
 	
 	public abstract EnumCropRender getRenderType();
 	

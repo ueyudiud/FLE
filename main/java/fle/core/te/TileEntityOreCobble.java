@@ -40,6 +40,7 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 		super.readFromNBT(nbt);
 		amount = nbt.getDouble("Amount");
 		progress = nbt.getDouble("Progress");
+		ore = MaterialOre.getOreFromName(nbt.getString("Ore"));
 		hc.readFromNBT(nbt);
 	}
 	
@@ -49,6 +50,7 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 		super.writeToNBT(nbt);
 		nbt.setDouble("Amount", amount);
 		nbt.setDouble("Progress", progress);
+		nbt.setString("Ore", ore.getOreName());
 		hc.writeToNBT(nbt);
 	}
 	
@@ -73,8 +75,8 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 			double heat = hc.getHeat();
 			init(BlockOreCobble.getOre(worldObj, xCoord, yCoord, zCoord));
 			hc.reseaveHeat(heat < 0 ? 0 : heat);
-			worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 		}
+		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}
 	
 	private void smeltedOre()

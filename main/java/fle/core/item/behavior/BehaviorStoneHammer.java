@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import fle.api.item.ICrushableTool;
 import fle.api.item.ItemFleMetaBase;
+import fle.core.tool.StoneHammerHandler;
 
 public class BehaviorStoneHammer extends BehaviorDigable implements ICrushableTool
 {
@@ -37,15 +38,7 @@ public class BehaviorStoneHammer extends BehaviorDigable implements ICrushableTo
 	@Override
 	public boolean isBlockEffective(ItemStack aStack, Block aBlock, int aMeta) 
 	{
-		if(aBlock == Blocks.obsidian)
-		{
-			return true;
-		}
-		if(aBlock.isToolEffective("pickaxe", aMeta) && aBlock.getHarvestLevel(aMeta) <= level)
-		{
-			return true;
-		}
-		return false;
+		return StoneHammerHandler.isHammerEffective(aBlock, aMeta, aStack);
 	}
 
 	@Override

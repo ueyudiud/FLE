@@ -47,7 +47,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		String str = hasCustomName() ? getName() : I18n.format(getName(), new Object[0]);
+		String str = hasCustomName() ? getName() : FleAPI.lm.translateToLocal(getName(), new Object[0]);
 		fontRendererObj.drawString(str, (xSize - fontRendererObj.getStringWidth(str)) / 2, 6, 0x404040);
 	}
 

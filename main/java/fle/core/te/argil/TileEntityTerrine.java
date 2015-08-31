@@ -7,10 +7,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import fle.FLE;
-import fle.api.FleValue;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.gui.GuiCondition;
+import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.te.TEIT;
 import fle.core.energy.ThermalTileHelper;
@@ -49,6 +50,8 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		inv.updateEntity(this);
 		heatCurrect.update();
+		if(!worldObj.isRemote)
+			sendToNearBy(new CoderTileUpdate(this, (byte) 2, mode), 16.0F);
 	}
 	
 	@Override
@@ -177,6 +180,10 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		if(type == 1)
 		{
 			inv.recipeTime = (Double) contain;
+		}
+		else if(type == 2)
+		{
+			mode = (Integer) contain;
 		}
 	}
 	@Override

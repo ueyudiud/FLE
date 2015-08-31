@@ -15,5 +15,7 @@ public enum EnumTool
 	hoe,
 	pickaxe,
 	metal_hammer,
-	chisel;
+	chisel, 
+	decorticating_plate, 
+	decorticating_stick;
 }

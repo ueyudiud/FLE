@@ -48,10 +48,11 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		super(clazz, aName, aMaterial);
 	}
 	
-	public void registerSub(int index, String aName, IBlockTextureManager locate, IBlockWithTileBehaviour<BlockSubTile> blockBehavior)
+	public void registerSub(int index, String aName, String aLocalized, IBlockTextureManager locate, IBlockWithTileBehaviour<BlockSubTile> blockBehavior)
 	{
 		blockBehaviors.register(index, blockBehavior, aName);
 		textureNameMap.put(aName, locate);
+		FleAPI.lm.registerLocal(new ItemStack(this, 1, index).getUnlocalizedName() + ".name", aLocalized);
 	}
 	
 	public Register<IBlockWithTileBehaviour<BlockSubTile>> getRegister()

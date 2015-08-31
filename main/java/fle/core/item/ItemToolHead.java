@@ -50,31 +50,31 @@ public class ItemToolHead extends ItemSub
 	
 	public ItemToolHead init()
 	{
-		addSubItem(1, "rough_stone_axe", 
+		addSubItem(1, "rough_stone_axe", "Rough Stone Axe Head",
 				new TextureLocation(new String[]{"tools/head/rough_axe_head", "tools/head/rough_axe_rust"}));
-		addSubItem(2, "stone_axe", 
+		addSubItem(2, "stone_axe", "Stone Axe Head",
 				new TextureLocation(new String[]{"tools/head/stone_axe_head", "tools/head/stone_axe_rust"}));
-		addSubItem(3, "stone_shovel", 
+		addSubItem(3, "stone_shovel", "Stone Shovel Head",
 				new TextureLocation(new String[]{"tools/head/stone_shovel_head", "tools/head/stone_shovel_rust"}));
-		addSubItem(4, "flint_hammer", 
+		addSubItem(4, "flint_hammer", "Flint Hammer Head",
 				new TextureLocation(new String[]{"tools/head/flint_hammer_head", "tools/head/flint_hammer_rust"}));
-		addSubItem(5, "stone_hammer", 
+		addSubItem(5, "stone_hammer", "Stone Hammer Head",
 				new TextureLocation(new String[]{"tools/head/stone_hammer_head", "tools/head/stone_hammer_rust"}));
-		addSubItem(10, "flint_arrow", 
+		addSubItem(10, "flint_arrow", "Arrow Point", 
 				new TextureLocation(new String[]{"tools/head/flint_arrow_head", FleValue.VOID_ICON_FILE}));
-		addSubItem(11, "stone_sickle", 
+		addSubItem(11, "stone_sickle", "Stone Sickle Head", 
 				new TextureLocation(new String[]{"tools/head/stone_sickle_head", "tools/head/stone_sickle_rust"}));
-		addSubItem(12, "stone_spade_hoe", 
+		addSubItem(12, "stone_spade_hoe", "Stone Spaed-Hoe Head", 
 				new TextureLocation(new String[]{"tools/head/spade_hoe_head", "tools/head/spade_hoe_rust"}));
-		addSubItem(101, "metal_axe", 
+		addSubItem(101, "metal_axe", "Metal Axe Head",
 				new TextureLocation(new String[]{"tools/head/metal_axe_head", "tools/head/metal_axe_rust", "tools/head/metal_axe_mosaic"}));
-		addSubItem(102, "metal_pickaxe",
+		addSubItem(102, "metal_pickaxe", "Metal Pickaxe Head",
 				new TextureLocation(new String[]{"tools/head/metal_pickaxe_head", "tools/head/metal_pickaxe_rust", "tools/head/metal_pickaxe_mosaic"}));
-		addSubItem(103, "metal_hammer",
+		addSubItem(103, "metal_hammer", "Metal Hammer Head",
 				new TextureLocation(new String[]{"tools/head/metal_hammer_head", "tools/head/metal_hammer_rust", "tools/head/metal_hammer_mosaic"}));
-		addSubItem(104, "metal_shovel",
+		addSubItem(104, "metal_shovel", "Metal Shovel Head",
 				new TextureLocation(new String[]{"tools/head/metal_shovel_head", "tools/head/metal_shovel_rust", "tools/head/metal_shovel_mosaic"}));
-		addSubItem(105, "metal_chisel",
+		addSubItem(105, "metal_chisel", "Metal Chisel Head",
 				new TextureLocation(new String[]{"tools/head/metal_chisel_head", "tools/head/metal_chisel_rust", "tools/head/metal_chisel_mosaic"}));
 		return this;
 	}
@@ -86,9 +86,9 @@ public class ItemToolHead extends ItemSub
 		setMaxStackSize(4);
 	}
 
-	public final ItemToolHead addSubItem(int aMetaValue, String aTagName, ITextureLocation aLocate)
+	public final ItemToolHead addSubItem(int aMetaValue, String aTagName, String aLocalized, ITextureLocation aLocate)
 	{
-		addSubItem(aMetaValue, aTagName, aLocate, new BehaviorBase());
+		addSubItem(aMetaValue, aTagName, aLocalized, aLocate, new BehaviorBase());
 		return this;
 	}
 	

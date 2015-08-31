@@ -6,6 +6,8 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,6 +23,7 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.util.ColorMap;
 import fle.api.util.Compact;
 import fle.api.util.IFuelHandler;
+import fle.api.util.ILanguageManager;
 
 public class FleAPI 
 {
@@ -33,6 +36,7 @@ public class FleAPI
 	
 	public static FleModHandler mod;
 	public static FluidDictionary fluidDictionary;
+	public static ILanguageManager lm;
 	private static List<IFuelHandler> fuelList = new ArrayList();
 	
 	public static void damageItem(EntityPlayer aPlayer, ItemStack aStack, EnumDamageResource aResource, float damage)
@@ -159,5 +163,22 @@ public class FleAPI
 		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
 			if(ForgeDirection.VALID_DIRECTIONS[i] == aDirection) return i;
 		return 2;
+	}
+	
+	public static int getNextPotionId(int start)
+	{
+		if(Potion.potionTypes != null)
+		{
+			while(!((start > 0) && (start < Potion.potionTypes.length) && (Potion.potionTypes[start] == null)))
+			{
+				++start;
+				if(start >= 256) return -1;
+			}
+			return start;
+		}
+		else
+		{
+			return -1;
+		}
 	}
 }

@@ -12,11 +12,13 @@ import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import fle.api.crop.CropCard;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
 import fle.api.util.WeightHelper;
 import fle.api.world.TreeInfo;
 import fle.core.block.BlockLog;
+import fle.core.init.Crops;
 import fle.core.init.Materials;
 import fle.core.util.Arrays;
 
@@ -54,8 +56,7 @@ public class FleWorldGen implements IWorldGenerator
 
 	public void generateSurface(Random random, int x, int z, World world)
 	{
-		int a = random.nextInt(16);
-		switch(a)
+		switch(random.nextInt(16))
 		{
 		case 0 :
 		{
@@ -85,11 +86,26 @@ public class FleWorldGen implements IWorldGenerator
 			if(random.nextInt(5) == 0)
 				generateTree(tInfo, world, random, x, z);
 		}
+		switch(random.nextInt(128))
+		{
+		case 1 : generateCrop(Crops.millet, world, random, x, z, 8, 16);
+		case 2 : generateCrop(Crops.ramie, world, random, x, z, 8, 16);
+		case 3 : generateCrop(Crops.soybean, world, random, x, z, 8, 16);
+		break;
+		default : break;
+		}
 	}
 	
 	public void generateNether(Random random, int x, int z, World world)
 	{
 		
+	}
+	
+	public boolean generateCrop(CropCard card, World world, Random random, int x, int z, int size, int count)
+	{
+		int X = x + random.nextInt(15);
+		int Z = z + random.nextInt(15);
+		return new FleCropGen(size, count, card).generate(world, random, X, world.getTopSolidOrLiquidBlock(X, Z), Z);
 	}
 	
 	public boolean generateTree(TreeInfo tInfo, World world, Random random, int x, int z)

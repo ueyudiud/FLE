@@ -145,14 +145,7 @@ public class BlockOilLamp extends BlockFle implements ITileEntityProvider, IDebu
 				}
 				else if(new ItemOreStack("craftingToolFirestarter").isStackEqul(aPlayer.getCurrentEquippedItem()))
 				{
-					if(aPlayer.getCurrentEquippedItem().getItem() instanceof ItemFle)
-					{
-						((ItemFle) aPlayer.getCurrentEquippedItem().getItem()).damageItem(aPlayer.getCurrentEquippedItem(), aPlayer, EnumDamageResource.UseTool, 1);
-					}
-					else
-					{
-						aPlayer.getCurrentEquippedItem().damageItem(1, aPlayer);
-					}
+					FleAPI.damageItem(aPlayer, aPlayer.getCurrentEquippedItem(), EnumDamageResource.UseTool, 1F);
 					tile.setBurning();
 				}
 				aWorld.markBlockForUpdate(x, y, z);
@@ -265,14 +258,6 @@ public class BlockOilLamp extends BlockFle implements ITileEntityProvider, IDebu
 	}
 	
 	@Override
-	public void addInformation(ItemStack aStack, List<String> aList,
-			EntityPlayer aPlayer)
-	{
-		aList.add(StatCollector.translateToLocal("info.material") + ":" + ItemOilLamp.getToolMaterial(aStack).getDisplayName());
-		aList.add(StatCollector.translateToLocal("info.amount") + ":" + ItemOilLamp.getToolAmount(aStack));
-	}
-	
-	@Override
 	public IIcon getIcon(int side, int meta)
 	{
 		return Blocks.stone.getBlockTextureFromSide(side);
@@ -306,7 +291,9 @@ public class BlockOilLamp extends BlockFle implements ITileEntityProvider, IDebu
 				aList.add("Lamp amount: " + FleValue.format_L.format_c(0));
 			}
 			if(tile.getRock() != null)
+			{
 				aList.add("This lamp is made of " + new ItemStack(tile.getRock(), 1, tile.getRockMeta()).getDisplayName());
+			}
 		}
 	}
 }

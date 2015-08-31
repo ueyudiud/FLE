@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import scala.reflect.api.TreeCreator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -21,13 +20,13 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
 import fle.api.world.BlockPos;
 import fle.core.init.IB;
-import fle.core.tree.TreeCitron;
 
 public class BlockRock extends BlockHasSub
 {
@@ -35,6 +34,10 @@ public class BlockRock extends BlockHasSub
 	{
 		super(ItemRock.class, "fle.rock", Material.rock);
 		setStepSound(soundTypeStone);
+		for(MaterialRock m : MaterialRock.getRocks())
+		{
+			FleAPI.lm.registerLocal(new ItemStack(this, 1, MaterialRock.getRocks().serial(m)).getUnlocalizedName() + ".name", m.getRockName());
+		}
 	}
 	  
 	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)

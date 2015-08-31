@@ -1,5 +1,7 @@
 package fle.api.material;
 
+import java.util.Map;
+
 import fle.api.enums.MatterState;
 
 /**
@@ -190,7 +192,7 @@ public final class PropertyInfo
 		specificHeat = aSpecificHeat;
 		brittleness = aBrittleness;
 	}
-	
+		
 	public int[] getColors() 
 	{
 		return colors.clone();

@@ -22,6 +22,7 @@ import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
 import fle.api.block.IDebugableBlock;
@@ -38,6 +39,10 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	{
 		super(ItemOre.class, "blockores", Material.rock);
 		setStepSound(soundTypeStone);
+		for(MaterialOre m : MaterialOre.getOres())
+		{
+			FleAPI.lm.registerLocal(new ItemStack(this, 1, MaterialOre.getOres().serial(m)).getUnlocalizedName() + ".name", m.getOreName() + " Ore");
+		}
 	}
 	
 	@Override

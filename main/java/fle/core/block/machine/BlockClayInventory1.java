@@ -23,14 +23,14 @@ public class BlockClayInventory1 extends BlockSubTile implements IGuiBlock
 {
 	public BlockClayInventory1 init()
 	{
-		registerSub(0, "terrine", new BlockTextureManager("clay/1001"), new BehaviourTerrine());
+		registerSub(0, "terrine", "Terrine", new BlockTextureManager("clay/1001"), new BehaviourTerrine());
 		return this;
 	}
 	
-	public final void registerSub(int index, String aName,
+	public final void registerSub(int index, String aName, String aLocalized,
 			IBlockWithTileBehaviour<BlockSubTile> blockBehavior)
 	{
-		registerSub(index, aName, null, blockBehavior);
+		registerSub(index, aName, aLocalized, null, blockBehavior);
 	}
 	
 	public BlockClayInventory1(String aName)

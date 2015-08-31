@@ -2,6 +2,7 @@ package fle.api.block;
 
 import java.util.List;
 
+import fle.api.FleAPI;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -19,6 +20,18 @@ public class ItemFleBlock extends ItemBlock
 		{
 			block = (BlockFle) aBlock;
 		}
+	}
+	
+	@Override
+	public String getUnlocalizedName(ItemStack aStack)
+	{
+		return super.getUnlocalizedName(aStack) + ":" + aStack.getItemDamage();
+	}
+	
+	@Override
+	public String getItemStackDisplayName(ItemStack aStack)
+	{
+		return FleAPI.lm.translateToLocal(getUnlocalizedName(aStack) + ".name", new Object[0]);
 	}
 	
 	@Override

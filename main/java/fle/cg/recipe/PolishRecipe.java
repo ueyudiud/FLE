@@ -4,11 +4,11 @@ import java.awt.Rectangle;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import fle.api.cg.GuiBookBase;
+import fle.api.cg.RecipeHandler;
 import fle.api.recipe.CraftingState;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
-import fle.cg.GuiBookBase;
-import fle.cg.RecipeHandler;
 import fle.core.init.IB;
 
 public class PolishRecipe extends RecipeBase implements RecipeHandler

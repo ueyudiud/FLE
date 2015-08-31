@@ -1,8 +1,11 @@
 package fle.api.material;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import fle.api.util.ISubTagContainer;
 import fle.api.util.Register;
@@ -15,6 +18,7 @@ import fle.api.util.SubTag;
  */
 public class MaterialAbstract implements ISubTagContainer
 {
+	public static File property;
 	private static final Register<MaterialAbstract> register = new Register();
 	
 	public static final Register<MaterialAbstract> getMaterialRegistry()
@@ -34,10 +38,8 @@ public class MaterialAbstract implements ISubTagContainer
 	}
 	public MaterialAbstract(Matter aMatter, PropertyInfo aInfo, SubTag...aTags) 
 	{
+		this(aInfo, aTags);
 		matter = aMatter;
-		if(aTags != null)
-			tags.addAll(Arrays.asList(aTags));
-		info = aInfo;
 	}
 	public MaterialAbstract(String aName, PropertyInfo aInfo, SubTag...aTags) 
 	{

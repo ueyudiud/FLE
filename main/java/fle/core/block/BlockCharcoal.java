@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.FleAPI;
 import fle.api.block.BlockHasTile;
 import fle.api.util.SubTag;
 import fle.api.world.BlockPos;
@@ -35,6 +36,7 @@ public class BlockCharcoal extends BlockHasTile
 		super("charcoal", Material.wood);
 		setHardness(0.8F);
 		setResistance(1.2F);
+		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "Charcoal");
 	}
 
 	@Override

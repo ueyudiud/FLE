@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.material.MaterialOre;
 import fle.api.world.BlockPos;
@@ -31,7 +32,7 @@ public class BlockOreCobble extends BlockSubTile
 		boolean flag = true;
 		for(MaterialOre ore : MaterialOre.getOres())
 		{
-			registerSub(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), new BlockTextureManager("void"), new BehaviourTile(TileEntityOreCobble.class, flag)
+			registerSub(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), ore.getOreName() + " Cobble", new BlockTextureManager("void"), new BehaviourTile(TileEntityOreCobble.class, flag)
 			{
 				public Container openContainer(World aWorld, int x, int y,
 						int z, EntityPlayer aPlayer) {return null;}
@@ -46,7 +47,8 @@ public class BlockOreCobble extends BlockSubTile
 	
 	public BlockOreCobble(String aName)
 	{
-		super(ItemOreCobble.class, aName, Material.rock);
+		super(ItemOreCobble.class, aName, Material.clay);
+		setStepSound(soundTypeStone);
 	}
 
 	@Override
@@ -174,7 +176,7 @@ public class BlockOreCobble extends BlockSubTile
 		{
 			if(tile.isSmelting())
 			{
-				aList.add("Smelted Progress : " + FleValue.format_progress.format_c(tile.getProgress() * 100D));
+				aList.add("Smelted Progress : " + FleValue.format_progress.format_c(tile.getProgress()));
 			}
 		}
 		super.addInfomationToList(aWorld, x, y, z, aList);

@@ -15,6 +15,7 @@ import fle.api.item.ISubPolishTool;
 import fle.api.item.ItemFleMetaBase;
 import fle.api.recipe.CraftingState;
 import fle.core.item.tool.ToolMaterialInfo;
+import fle.core.tool.StoneHammerHandler;
 
 public class BehaviorMetalHammer extends BehaviorTool implements ICrushableTool, ISubPolishTool<ItemFleMetaBase>
 {
@@ -36,7 +37,7 @@ public class BehaviorMetalHammer extends BehaviorTool implements ICrushableTool,
 	public float getDigSpeed(ItemFleMetaBase item, ItemStack aStack,
 			Block aBlock, int aMetadata)
 	{
-		return isBlockEffective(aStack, aBlock, aMetadata) ? new ToolMaterialInfo(item.setupNBT(aStack)).getHardness() * 3.0F : super.getDigSpeed(item, aStack, aBlock, aMetadata);
+		return StoneHammerHandler.isHammerEffective(aBlock, aMetadata, aStack) ? new ToolMaterialInfo(item.setupNBT(aStack)).getHardness() * 3.0F : super.getDigSpeed(item, aStack, aBlock, aMetadata);
 	}
 	
 	@Override

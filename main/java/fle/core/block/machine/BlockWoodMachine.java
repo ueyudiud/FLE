@@ -17,7 +17,7 @@ public class BlockWoodMachine extends BlockSubTile implements IGuiBlock
 {
 	public BlockWoodMachine init()
 	{
-		registerSub(0, "polishTable", new BlockTextureManager(new String[]{"machine/polish_side", "machine/polish_top", "machine/polish_down", "machine/polish_side"}), new BehaviourPolish());
+		registerSub(0, "polishTable", "Polish Table", new BlockTextureManager(new String[]{"machine/polish_side", "machine/polish_top", "machine/polish_down", "machine/polish_side"}), new BehaviourPolish());
 		return this;
 	}
 	

@@ -58,7 +58,7 @@ public abstract class InventoryTileBase<T extends TEInventory> implements IInven
 	{
 		if(!tile.getWorldObj().isRemote)
 		{
-			FleAPI.mod.getNetworkHandler().sendTo(new CoderInventoryUpdate(tile.getWorldObj(), tile.xCoord, (short) tile.yCoord, tile.zCoord));
+			tile.sendToNearBy(new CoderInventoryUpdate(tile.getWorldObj(), tile.xCoord, (short) tile.yCoord, tile.zCoord), 16.0F);
 		}
 	}
 	
@@ -67,7 +67,7 @@ public abstract class InventoryTileBase<T extends TEInventory> implements IInven
 		if(!tile.getWorldObj().isRemote)
 		{
 			for(int i = startID; i < endID; ++i)
-				FleAPI.mod.getNetworkHandler().sendTo(new CoderInventoryUpdate(tile.getBlockPos(), i));
+				tile.sendToNearBy(new CoderInventoryUpdate(tile.getBlockPos(), i), 16.0F);
 		}
 	}
 

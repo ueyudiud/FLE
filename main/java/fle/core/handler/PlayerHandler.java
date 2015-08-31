@@ -1,16 +1,24 @@
 package fle.core.handler;
 
-import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -21,9 +29,12 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import fle.api.FleAPI;
 import fle.api.recipe.ItemBaseStack;
 import fle.core.init.IB;
+import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
 import fle.core.tool.WasherManager;
 import fle.core.util.FleFoodStats;
+import fle.core.util.FlePotionEffect;
+import fle.core.util.Util;
 
 public class PlayerHandler
 {
@@ -37,31 +48,15 @@ public class PlayerHandler
 	{
 		if(!(evt.player.getFoodStats() instanceof FleFoodStats))
 		{
-	        try
-	        {
-	        	Class<?> clazz = EntityPlayer.class;
-	            Field field = null;
-	            for(Field f : clazz.getDeclaredFields())
-	            {
-	            	try
-	            	{
-		            	f.setAccessible(true);
-		            	if(f.get(evt.player) instanceof FoodStats)
-		            	{
-		            		field = f;
-		            		break;
-		            	}
-	            	}
-	            	catch(Throwable e) {continue;}
-	            }
-	            if(field == null) throw new NullPointerException("Fle fail to find food state field.");
-	            FoodStats stats = (FoodStats) field.get(evt.player);
-	            field.set(evt.player, new FleFoodStats(stats));
-	        }
-	        catch(Throwable e)
-	        {
-	            e.printStackTrace();
-	        }
+			try
+			{
+				Util.overrideField(EntityPlayer.class, Arrays.asList("foodStats", "field_71100_bB"), evt.player, 
+						new FleFoodStats((FoodStats) Util.getValue(EntityPlayer.class, Arrays.asList("foodStats", "field_71100_bB"), evt.player)), true);
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -87,6 +82,7 @@ public class PlayerHandler
 		if(evt.player != null)
 			if(!evt.player.capabilities.isCreativeMode)
 				if(evt.itemInHand != null)
+				{
 					if(evt.itemInHand.getItem() instanceof ItemBlock)
 					{
 						Block block = Block.getBlockFromItem(evt.itemInHand.getItem());
@@ -95,6 +91,41 @@ public class PlayerHandler
 							evt.setCanceled(true);
 						}
 					}
+					else if(evt.itemInHand.getItem() == Items.wheat_seeds)
+					{
+						evt.setCanceled(true);
+					}
+				}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerHarvest(HarvestDropsEvent evt)
+	{
+		if(evt.block == Blocks.reeds)
+		{
+			evt.drops.clear();
+			evt.drops.add(ItemFleSeed.a("suger_cances"));
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onAttack(LivingAttackEvent evt)
+	{
+		if(evt.source instanceof EntityDamageSource)
+		{
+			if(evt.entityLiving instanceof EntityPlayer || evt.entityLiving instanceof IAnimals)
+			{
+				if(evt.ammount > 10.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 1000, 2));
+				else if(evt.ammount > 4.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 1000, 1));
+				else evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 1000, 0));
+			}
+		}
+		else if(evt.source == DamageSource.fall)
+		{
+			if(evt.ammount > 10.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.fracture.id, 5000, 2));
+			else if(evt.ammount > 4.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.fracture.id, 5000, 1));
+			else evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.fracture.id, 5000, 0));
+		}
 	}
 	
 	private int buf = 0;
@@ -103,8 +134,7 @@ public class PlayerHandler
 	public void onPlayerUpdate(PlayerTickEvent evt)
 	{
 		EntityPlayer player = (EntityPlayer) evt.player;
-		if(WasherManager.tryWashingItem(player.worldObj, player))
-			evt.setCanceled(true);
+		WasherManager.tryWashingItem(player.worldObj, player);
 		if(buf++ > 100)
 		{
 			buf = 0;
@@ -115,6 +145,17 @@ public class PlayerHandler
 			if(FleAPI.dosePlayerHas(player, new ItemBaseStack(ItemFleSub.a("ingot_cu"))) != -1)
 			{
 				givePlayerBook(player, "newStoneAge", ItemFleSub.a("guide_book_2"));
+			}
+			int i;
+			i = FleAPI.dosePlayerHas(player, new ItemBaseStack(Items.wheat_seeds));
+			if(i != -1)
+			{
+				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "wheat"));
+			}
+			i = FleAPI.dosePlayerHas(player, new ItemBaseStack(Items.reeds));
+			if(i != -1)
+			{
+				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "suger_cances"));
 			}
 		}
 	}

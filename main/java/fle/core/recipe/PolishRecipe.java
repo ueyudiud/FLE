@@ -6,11 +6,11 @@ import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import fle.api.cg.RecipesTab;
 import fle.api.recipe.CraftingState;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.ColorMap;
-import fle.cg.RecipesTab;
 import fle.core.block.ItemOilLamp;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
@@ -52,10 +52,11 @@ public class PolishRecipe
 		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "c pccpccc", ItemToolHead.a("stone_axe", Materials.Stone)));
 		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "cpcc cccc", ItemToolHead.a("stone_shovel", Materials.Stone)));
 		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "      ccc", ItemToolHead.a("stone_hammer", Materials.Stone)));
-		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "      ccc", ItemToolHead.a("stone_hammer", Materials.Stone)));
 		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "  pcc ccc", ItemToolHead.a("stone_sickle", Materials.Stone)));
 		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "p c     p", ItemToolHead.a("stone_spade_hoe", Materials.Stone)));
 		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "c p   p  ", ItemToolHead.a("stone_spade_hoe", Materials.Stone)));
+		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_b")), "ppp p    ", ItemTool.a("stone_decorticating_plate", Materials.Stone)));
+		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "cp p p pc", ItemTool.a("stone_decorticating_stick", Materials.Stone)));
 		registerRecipe(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("limestone")), "ccccccccc", ItemFleSub.a("dust_limestone")));
 	}
 	

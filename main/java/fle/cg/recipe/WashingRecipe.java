@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import fle.api.cg.GuiBookBase;
+import fle.api.cg.RecipeHandler;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.DropInfo;
-import fle.cg.GuiBookBase;
-import fle.cg.RecipeHandler;
 
 public class WashingRecipe extends RecipeBase implements RecipeHandler
 {

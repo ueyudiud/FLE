@@ -47,18 +47,18 @@ public class FleThermalNet extends ThermalNet
 	
 	private double getBlockMaterialSpecificHeat(Material material)
 	{
-		if(material == Material.air) return 1.0D;
-		if(material == Material.fire) return 1.0D;
-		if(material == Material.water) return 0.8D;
-		if(material == Material.wood) return 2.0D;
-		if(material == Material.clay) return 0.75D;
-		if(material == Material.ice) return 1.7D;
-		if(material == Material.sand) return 0.54D;
-		if(material == Material.glass) return 1.2D;
-		if(material == Material.rock) return 0.38D;
-		if(material == Material.snow) return 1.9D;
-		if(material == Material.ground) return 0.84D;
-		if(material == Material.lava) return 0.2D;
+		if(material == Material.air) return 0.2D;
+		if(material == Material.fire) return 0.2D;
+		if(material == Material.water) return 0.3D;
+		if(material == Material.wood) return 0.4D;
+		if(material == Material.clay) return 0.18D;
+		if(material == Material.ice) return 0.7D;
+		if(material == Material.sand) return 0.14D;
+		if(material == Material.glass) return 0.4D;
+		if(material == Material.rock) return 0.08D;
+		if(material == Material.snow) return 0.9D;
+		if(material == Material.ground) return 0.16D;
+		if(material == Material.lava) return 0.01D;
 		return 0.9D;
 	}
 
@@ -94,13 +94,13 @@ public class FleThermalNet extends ThermalNet
 				double value;
 				if(t1 > t2)
 				{
-					value = (t1 - t2) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2;
+					value = (t1 - t2) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2F;
 					te1.onHeatReceive(dir, value);
 					return value;
 				}
 				else if(t1 < t2)
 				{
-					value = (t2 - t1) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2;
+					value = (t2 - t1) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) / 2F;
 					te1.onHeatEmit(dir, value);
 					return -value;
 				}
@@ -109,11 +109,11 @@ public class FleThermalNet extends ThermalNet
 			{
 				if(te.getTemperature(dir) > getEnvironmentTemperature(pos))
 				{
-					return (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.toPos(dir).getBlock().getMaterial())) / 4F;
+					return (te.getTemperature(dir) - getEnvironmentTemperature(pos)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.toPos(dir).getBlock().getMaterial())) / 2F;
 				}
 				else if(te.getTemperature(dir) < getEnvironmentTemperature(pos))
 				{
-					return -(getEnvironmentTemperature(pos) - te.getTemperature(dir)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.toPos(dir).getBlock().getMaterial())) / 4F;
+					return -(getEnvironmentTemperature(pos) - te.getTemperature(dir)) * (te.getThermalConductivity(dir) + getBlockMaterialSpecificHeat(pos.toPos(dir).getBlock().getMaterial())) / 2F;
 				}
 			}
 		}

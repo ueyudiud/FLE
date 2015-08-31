@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.util.DamageResources;
@@ -38,6 +39,22 @@ public class BlockFle extends Block
 		super(aMaterial);
 		setBlockName(unlocalizedName = aName);
 	    GameRegistry.registerBlock(this, aItemClass, getUnlocalizedName());
+	}
+	protected BlockFle(String aName, String aLocalized, Material aMaterial)
+	{
+		this(aName, aMaterial);
+		FleAPI.lm.registerLocal(getUnlocalizedName() + ".name", aLocalized);
+	}
+	protected BlockFle(Class<? extends ItemFleBlock> aItemClass, String aName, String aLocalized, Material aMaterial)
+	{
+		this(aItemClass, aName, aMaterial);
+		FleAPI.lm.registerLocal(getUnlocalizedName() + ".name", aLocalized);
+	}
+	
+	@Override
+	public String getLocalizedName()
+	{
+		return FleAPI.lm.translateToLocal(getUnlocalizedName() + ".name", new Object[0]);
 	}
 	
 	public void setMaxStackSize(int maxStackSize)

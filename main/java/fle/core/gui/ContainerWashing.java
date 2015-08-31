@@ -44,7 +44,7 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 	
 	int getWashPrograss(int a)
 	{
-		return a * washTime / 20;
+		return a * washTime / 100;
 	}
 	
 	void washItem()
@@ -55,7 +55,6 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 			if(recipeName != null)
 			{
 				RecipeHelper.onInputItemStack(inv, 0);
-				onCraftMatrixChanged(inv);
 				if(player.player instanceof EntityPlayerMP)
 					FLE.fle.getNetworkHandler().sendToPlayer(new CoderGuiUpdate((byte) 2, GuiError.DEFAULT), (EntityPlayerMP) player.player);
 				type = GuiError.DEFAULT;
@@ -70,7 +69,7 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 		if(recipeName != null)
 		{
 			++washTime;
-			if(washTime > 20)
+			if(washTime > 100)
 			{
 				ItemStack[] output = WashingRecipe.outputRecipe(recipeName);
 				if(RecipeHelper.matchOutput(inv, 1, 10, output))
@@ -103,15 +102,21 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 		super.onContainerClosed(player);
 		dropInventoryItem(inv, player);
 	}
+	
+	@Override
+	public void updateProgressBar(int index, int amount)
+	{
+		super.updateProgressBar(index, amount);
+	}
 
 	@Override
 	public void onReseave(byte type, Object contain)
 	{
-		if(type == (byte) 1)
+		if(type == 1)
 		{
 			washItem();
 		}
-		else if(type == (byte) 2)
+		else if(type == 2)
 		{
 			this.type = (GuiCondition) contain;
 		}

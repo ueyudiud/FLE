@@ -32,6 +32,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 		this.cushion = c;
 	}
 	
+	public boolean isWild = false;
 	private int cushion;
 	private double buffer;
 	private CropCard card;
@@ -52,6 +53,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 		age = nbt.getShort("Age");
 		card = FLE.fle.getCropRegister().getCropFromName(nbt.getString("CropName"));
 		buffer = nbt.getDouble("Buffer");
+		isWild = nbt.getBoolean("Wild");
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt) 
@@ -60,6 +62,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 		nbt.setShort("Age", (short) age);
 		nbt.setDouble("Buffer", buffer);
 		nbt.setString("CropName", card.getCropName());
+		nbt.setBoolean("Wild", isWild);
 	}
 
 	@Override
@@ -84,8 +87,8 @@ public class TileEntityCrop extends TEBase implements ICropTile
 						buffer = 0;
 					}
 				}
+				sendToNearBy(new CoderCropUpdate(this), 256.0F);
 				worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
-				FLE.fle.getNetworkHandler().sendTo(new CoderCropUpdate(this));
 			}
 		}
 	}

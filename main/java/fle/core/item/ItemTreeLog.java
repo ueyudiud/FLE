@@ -21,12 +21,12 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 {
 	public ItemTreeLog init() 
 	{
-		addSubItem(1, "log_oak", new TreeChecker(Blocks.log, 0, 4, 8), new ItemStack(Blocks.log, 1, 0), "logs/oak");
-		addSubItem(2, "log_spruce", new TreeChecker(Blocks.log, 1, 5, 9), new ItemStack(Blocks.log, 1, 1), "logs/spruce");
-		addSubItem(3, "log_birch", new TreeChecker(Blocks.log, 2, 6, 10), new ItemStack(Blocks.log, 1, 2), "logs/birch");
-		addSubItem(4, "log_jungle", new TreeChecker(Blocks.log, 3, 7, 11), new ItemStack(Blocks.log, 1, 3), "logs/jungle");
-		addSubItem(5, "log_acacia", new TreeChecker(Blocks.log2, 0, 4, 8), new ItemStack(Blocks.log2, 1, 0), "logs/acacia");
-		addSubItem(6, "log_darkoak", new TreeChecker(Blocks.log2, 1, 5, 9), new ItemStack(Blocks.log2, 1, 1), "logs/darkoak");
+		addSubItem(1, "log_oak", "Oak Log", new TreeChecker(Blocks.log, 0, 4, 8), new ItemStack(Blocks.log, 1, 0), "logs/oak");
+		addSubItem(2, "log_spruce", "Spruce Log", new TreeChecker(Blocks.log, 1, 5, 9), new ItemStack(Blocks.log, 1, 1), "logs/spruce");
+		addSubItem(3, "log_birch", "Birch Log", new TreeChecker(Blocks.log, 2, 6, 10), new ItemStack(Blocks.log, 1, 2), "logs/birch");
+		addSubItem(4, "log_jungle", "Jungle Log", new TreeChecker(Blocks.log, 3, 7, 11), new ItemStack(Blocks.log, 1, 3), "logs/jungle");
+		addSubItem(5, "log_acacia", "Acacia Log", new TreeChecker(Blocks.log2, 0, 4, 8), new ItemStack(Blocks.log2, 1, 0), "logs/acacia");
+		addSubItem(6, "log_darkoak", "Dark Oak Log", new TreeChecker(Blocks.log2, 1, 5, 9), new ItemStack(Blocks.log2, 1, 1), "logs/darkoak");
 		return this;
 	}
 	
@@ -39,9 +39,9 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 	private Map<ItemAbstractStack, String> map = new HashMap();
 	private Map<String, ItemStack> outputMap = new HashMap();
 
-	public final ItemTreeLog addSubItem(int aMetaValue, String aTagName, ItemAbstractStack aStack, ItemStack aOutput, String aLocate)
+	public final ItemTreeLog addSubItem(int aMetaValue, String aTagName, String aLocalized, ItemAbstractStack aStack, ItemStack aOutput, String aLocate)
 	{
-		addSubItem(aMetaValue, aTagName, new TextureLocation(aLocate), new BehaviorBase());
+		addSubItem(aMetaValue, aTagName, aLocalized, new TextureLocation(aLocate), new BehaviorBase());
 		map.put(aStack, aTagName);
 		outputMap.put(aTagName, aOutput);
 		return this;

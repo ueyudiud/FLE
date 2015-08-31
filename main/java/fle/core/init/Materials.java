@@ -1,5 +1,15 @@
 package fle.core.init;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 import fle.api.material.MaterialAbstract;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
@@ -60,5 +70,62 @@ public class Materials
 		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868, 21, 1.2F, 0.1F, 2.0F, 1.3F, 12800000), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		Limestone = new MaterialRock("Limestone", new PropertyInfo(0xE4E4E5, 2, 0.8F, 0.2F, 1.0F, 1.8F, 5600000));
 		Copper = new MaterialAbstract("Copper", new PropertyInfo(0xDB4E31, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 4F, 1F, 0.19F), SubTag.TOOL_metal);
+	}
+	
+	public static void postInit()
+	{
+		if(MaterialAbstract.property != null)
+		{
+			BufferedWriter fw = null;
+			try
+			{
+				fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+						MaterialAbstract.property), "UTF-8"), 1024);
+				fw.write("Material Name, Color A, Color B, Max Uses, Melting Point, "
+						+ "Boiling Point, Viscosity, Hardness, Toughness, Brittleness, "
+						+ "Denseness, Shear Strength, Resistance, Specific Heat, Thermal Conductivity"
+						+ "\r\n");
+				for(MaterialAbstract material : MaterialAbstract.getMaterialRegistry())
+				{
+					PropertyInfo i = material.getPropertyInfo();
+					fw.write(String.format("%s, %d, %d, %d, %d, %d, %d, %g, %g, %g, %g, %d, %g, %g, %g\r\n", 
+							MaterialAbstract.getMaterialRegistry().name(material),
+							i.getColors()[0],
+							i.getColors()[1],
+							i.getMaxUses(),
+							i.getMeltingPoint(),
+							i.getBoilingPoint(),
+							i.getViscosity(),
+							i.getHardness(),
+							i.getToughness(),
+							i.getBrittleness(),
+							i.getDenseness(),
+							(int) Math.pow(10, i.getShearStrength()),
+							i.getResistance(),
+							(float) i.getSpecificHeat(),
+							i.getThermalConductivity()));
+				}
+				fw.flush();
+				fw.close();
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				if(fw != null)
+				{
+					try
+					{
+						fw.close();
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 }

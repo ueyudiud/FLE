@@ -15,7 +15,7 @@ public class BlockStoneMachine extends BlockSubTile implements IGuiBlock
 {
 	public BlockStoneMachine init()
 	{
-		registerSub(0, "lavaHeatTransfer", new BlockTextureManager("rock/compactstone"), new BehaviourLavaHeatTransfer());
+		registerSub(0, "lavaHeatTransfer", "Lava Heat Transfer", new BlockTextureManager("rock/compactstone"), new BehaviourLavaHeatTransfer());
 		return this;
 	}
 

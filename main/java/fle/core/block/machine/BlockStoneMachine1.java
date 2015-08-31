@@ -10,7 +10,7 @@ public class BlockStoneMachine1 extends BlockStoneMachine
 	@Override
 	public BlockStoneMachine1 init()
 	{
-		registerSub(0, "castingPool", new BlockTextureManager("void"), new BehaviourCastingPool());
+		registerSub(0, "castingPool", "Casting Pool", new BlockTextureManager("void"), new BehaviourCastingPool());
 		return this;
 	}
 	

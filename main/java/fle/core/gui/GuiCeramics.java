@@ -43,7 +43,6 @@ public class GuiCeramics extends GuiContainerBase
 	protected void actionPerformed(GuiButton guibutton)
 	{
 		FLE.fle.getNetworkHandler().sendTo(new CoderGuiUpdate((byte) 1, (Integer) guibutton.id));
-		((ContainerCeramics) this.container).onReseave((byte) 1, guibutton.id);
 		
 		super.actionPerformed(guibutton);
 	}
