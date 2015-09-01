@@ -14,6 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.net.FlePackets.CoderNBTUpdate;
 import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
@@ -146,7 +147,7 @@ public class TileEntityOilLamp extends TEBase
 	@Override
 	public ForgeDirection getDirction(BlockPos pos) 
 	{
-		return ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, 7)];
+		return ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, EnumWorldNBT.Facing)];
 	}
 
 	public void setDisburning() 

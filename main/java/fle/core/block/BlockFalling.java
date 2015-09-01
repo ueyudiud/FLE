@@ -72,9 +72,9 @@ public abstract class BlockFalling extends BlockFle implements IMovableBlock
             else
             {
             	int metadata = aWorld.getBlockMetadata(x, y, z);
-            	int[] data = FLE.fle.getWorldManager().getDatas(new BlockPos(aWorld, x, y, z));
+            	short[] data = FLE.fle.getWorldManager().getDatas(new BlockPos(aWorld, x, y, z));
                 aWorld.setBlockToAir(x, y, z);
-
+                
                 while (checkCanDrop(aWorld, x, y - 1, z) && y > 0)
                 {
                     --y;

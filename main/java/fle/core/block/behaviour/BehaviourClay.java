@@ -18,7 +18,7 @@ public class BehaviourClay extends BehaviourTile implements IDebugableBlock
 {
 	public BehaviourClay()
 	{
-		super(TileEntityArgilUnsmelted.class);
+		super("ArgilUnsmelted", TileEntityArgilUnsmelted.class);
 	}
 	
 	@Override

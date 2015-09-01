@@ -54,6 +54,6 @@ public class BehaviorDigable extends BehaviorTool
 	public float getDigSpeed(ItemFleMetaBase item, ItemStack aStack,
 			Block aBlock, int aMetadata) 
 	{
-		return isBlockEffective(aStack, aBlock, aMetadata) ? new ToolMaterialInfo(item.setupNBT(aStack)).getHardness() * 3.0F : super.getDigSpeed(item, aStack, aBlock, aMetadata);
+		return isBlockEffective(aStack, aBlock, aMetadata) ? new ToolMaterialInfo(item.setupNBT(aStack)).getHardness() * 1.5F : super.getDigSpeed(item, aStack, aBlock, aMetadata);
 	}
 }

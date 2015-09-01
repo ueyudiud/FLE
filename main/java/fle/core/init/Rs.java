@@ -65,6 +65,12 @@ public class Rs
 		registerRemovedCrafting(FakeCraftingInventory.init("x", "x", 'x', "plankWood"));
 		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 0), 'x', "stickWood"));
 		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 1), 'x', "stickWood"));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", 'o', new ItemStack(Blocks.log, 1, 0)));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", 'o', new ItemStack(Blocks.log, 1, 1)));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", 'o', new ItemStack(Blocks.log, 1, 2)));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", 'o', new ItemStack(Blocks.log, 1, 3)));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", 'o', new ItemStack(Blocks.log2, 1, 0)));
+		registerRemovedCrafting(FakeCraftingInventory.init("o", 'o', new ItemStack(Blocks.log2, 1, 1)));
 		
 		List list = new ArrayList(CraftingManager.getInstance().getRecipeList());
 		for(Object rawTarget : list)
@@ -110,11 +116,14 @@ public class Rs
 					OreDictionary.registerOre("ingot" + atom.getName(), ItemFleSub.a("ingot_" + atom.name().toLowerCase()));
 		}
 
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), Matter.mCu, 88, 720, 20000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu")), Matter.mCu, 100, 750, 100000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), Matter.mCu, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu")), Matter.mCu, 100, (int) Materials.Copper.getPropertyInfo().getMeltingPoint(), 100000);
 		MatterDictionary.registerFluid(IB.copper, Matter.mCu);
 		
 		FleAPI.fluidDictionary.registerFluid("oilAnimal", IB.animalOil);
+
+		GameRegistry.addSmelting(ItemFleSub.a("argil_unsmelted_brick"), ItemFleSub.a("argil_brick"), 0.0F);
+		GameRegistry.addSmelting(ItemFleSub.a("argil_unsmelted_plate"), ItemFleSub.a("argil_plate"), 0.0F);
 		
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabOldStoneAge, ItemFleSub.a("branch_bush"), new Object[]{"branchWood"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.firewood), new Object[]{"x", "o", 'x', "craftingToolAxe", 'o', "logWood"}));
@@ -152,6 +161,7 @@ public class Rs
 		
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("cemented_grit", 8), new Object[]{Blocks.sand, Blocks.sand, Blocks.clay, Blocks.clay}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("stone_a", 9), new Object[]{Blocks.cobblestone}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.woodMachine, 1, 1), new Object[]{"flePlankWood", "flePlankWood", "flePlankWood", "flePlantWood"}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine, 1, 0), new Object[]{Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine1, 1, 0), new Object[]{"plateStone", "plateStone", "plateStone", "plateStone"}));
 		GameRegistry.addRecipe(new TreeCuttingRecipe());

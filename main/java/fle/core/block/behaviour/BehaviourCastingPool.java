@@ -16,7 +16,7 @@ public class BehaviourCastingPool extends BehaviourTile
 {
 	public BehaviourCastingPool()
 	{
-		super(TileEntityCastingPool.class);
+		super("CastingPool", TileEntityCastingPool.class);
 	}
 
 	@Override

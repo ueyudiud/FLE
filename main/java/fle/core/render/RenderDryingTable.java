@@ -3,6 +3,7 @@ package fle.core.render;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
 import fle.core.init.IB;
 
@@ -23,7 +24,7 @@ public class RenderDryingTable extends RenderBase
 			Block tBlock = world.getBlock(x, y + 1, z);
 			if(tBlock == IB.woodMachine1)
 			{
-				int value =  FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 0);
+				int value =  FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata);
 				if((value == 0 ? world.getBlockMetadata(x, y, z) : value) == 0) d5 = 1.0D;
 				else d5 = 0.8D;
 			}

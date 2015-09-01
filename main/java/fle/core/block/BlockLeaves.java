@@ -19,6 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
 import fle.api.world.TreeInfo;
 
@@ -325,11 +326,11 @@ public class BlockLeaves extends BlockHasSub
 	@Override
 	public void setMetadata(World world, int x, int y, int z, int metadata) 
 	{
-		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 0, metadata);
+		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, metadata);
 	}
 	
 	public static void setData(BlockPos aPos, int meta)
 	{
-		FLE.fle.getWorldManager().setData(aPos, 0, meta);
+		FLE.fle.getWorldManager().setData(aPos, EnumWorldNBT.Metadata, meta);
 	}
 }

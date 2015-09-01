@@ -72,6 +72,15 @@ public class FleDataOutputStream
 		ByteBufUtils.writeUTF8String(stream, s);
 	}
 
+	public void writeShortArray(short[] data) throws IOException
+	{
+		writeInt(data.length);
+		for(int i = 0; i < data.length; ++i)
+		{
+			writeShort(data[i]);
+		}
+	}
+
 	public void writeIntArray(int[] data) throws IOException
 	{
 		writeInt(data.length);

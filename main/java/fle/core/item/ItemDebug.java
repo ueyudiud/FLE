@@ -17,6 +17,7 @@ import fle.api.FleValue;
 import fle.api.block.IDebugableBlock;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.enums.EnumDamageResource;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.item.ItemFle;
 import fle.api.util.FleLog;
 import fle.api.world.BlockPos;
@@ -47,8 +48,8 @@ public class ItemDebug extends ItemFle
         	aPlayer.addChatMessage(new ChatComponentText("Harvest Level: " + pos.getBlock().getHarvestLevel(pos.getBlockMeta()) + "."));
     		aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + "."));
     		String str1 = "";
-        	for(int i = 0; i < 8; ++i)
-    			str1 += FLE.fle.getWorldManager().getData(pos, i) + " ";
+        	for(EnumWorldNBT nbt : EnumWorldNBT.values())
+    			str1 += FLE.fle.getWorldManager().getData(pos, nbt) + " ";
         	aPlayer.addChatMessage(new ChatComponentText("FWM: " + str1 + "."));
         	if(pos.getBlockTile() instanceof IThermalTileEntity)
         	{

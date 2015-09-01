@@ -56,7 +56,7 @@ public class FLE implements FleModHandler
     @SidedProxy(modId = MODID, clientSide = "fle.core.ClientProxy", serverSide = "fle.core.CommonProxy")
     public static Proxy proxy = new CommonProxy();
     private SideGateway<IPlatform> p;
-    private FWM wm;
+    private SideGateway<FWM> wm;
     private NetWorkHandler nw;
     private CropRegister cr;
     private FleTechManager tm;
@@ -74,7 +74,7 @@ public class FLE implements FleModHandler
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
     	nw = new NetWorkHandler();
     	cr = new FleCropRegister();
-    	wm = new FWM();
+    	wm = new SideGateway<FWM>("fle.core.world.FWM", "fle.core.world.FWMClient");
     	tm = new FleTechManager();
     	tn = new FleThermalNet();
     }
@@ -198,7 +198,7 @@ public class FLE implements FleModHandler
 	@Override
 	public FWM getWorldManager() 
 	{
-		return wm;
+		return wm.get();
 	}
 
 	@Override
@@ -215,6 +215,6 @@ public class FLE implements FleModHandler
 	@Override
 	public FWM getAirConditionProvider()
 	{
-		return wm;
+		return wm.get();
 	}
 }

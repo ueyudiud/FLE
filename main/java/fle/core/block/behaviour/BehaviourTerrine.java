@@ -30,7 +30,7 @@ public class BehaviourTerrine extends BehaviourTile implements IDebugableBlock, 
 {
 	public BehaviourTerrine()
 	{
-		super(TileEntityTerrine.class);
+		super("Terrine", TileEntityTerrine.class);
 	}
 
 	@Override

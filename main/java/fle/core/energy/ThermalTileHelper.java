@@ -13,6 +13,7 @@ public class ThermalTileHelper
 	private final double sh;
 	
 	private double heatCurrect;
+	private double heatEmit;
 	private double preHeatEmit;
 
 	public ThermalTileHelper(MaterialAbstract material)
@@ -38,18 +39,19 @@ public class ThermalTileHelper
 	
 	public void update()
 	{
-		preHeatEmit = 0D;
+		preHeatEmit = heatEmit;
+		heatEmit = 0D;
 	}
 	
 	public void reseaveHeat(double heat)
 	{
-		preHeatEmit -= heat;
+		heatEmit -= heat;
 		heatCurrect += heat;
 	}
 	
 	public void emitHeat(double heat)
 	{
-		preHeatEmit += heat;
+		heatEmit += heat;
 		heatCurrect -= heat;
 	}
 	

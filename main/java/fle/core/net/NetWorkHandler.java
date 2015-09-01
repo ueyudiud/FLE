@@ -16,6 +16,7 @@ import fle.api.net.FlePackets.CoderPTUpdate;
 import fle.api.net.FlePackets.CoderTankUpdate;
 import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.core.net.FlePackets.CoderCropUpdate;
+import fle.core.net.FlePackets.CoderFWMAskMeta;
 import fle.core.net.FlePackets.CoderKeyType;
 
 public class NetWorkHandler implements FleNetworkHandler
@@ -27,6 +28,7 @@ public class NetWorkHandler implements FleNetworkHandler
 	public void init()
 	{
 		registerMessage(CoderFWMUpdate.class, Side.CLIENT);
+		registerMessage(CoderFWMAskMeta.class, Side.SERVER);
 		registerMessage(CoderKeyType.class, Side.SERVER);
 		registerMessage(CoderGuiUpdate.class, Side.SERVER);
 		registerMessage(CoderInventoryUpdate.class, Side.CLIENT);

@@ -76,6 +76,15 @@ public class FleDataInputStream
 		return ByteBufUtils.readUTF8String(stream);
 	}
 
+	public short[] readShortArray() throws IOException
+	{
+		int length = readInt();
+		short[] t = new short[length];
+		for(int i = 0; i < length; ++i)
+			t[i] = readShort();
+		return t;
+	}
+
 	public int[] readIntArray() throws IOException
 	{
 		int length = readInt();

@@ -11,6 +11,7 @@ import fle.api.block.IGuiBlock;
 import fle.core.block.BlockSubTile;
 import fle.core.block.behaviour.BehaviourDrying;
 import fle.core.block.behaviour.BehaviourPolish;
+import fle.core.block.behaviour.BehaviourWorkbenchTire0;
 import fle.core.util.BlockTextureManager;
 
 public class BlockWoodMachine extends BlockSubTile implements IGuiBlock

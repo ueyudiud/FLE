@@ -34,6 +34,7 @@ import fle.api.FleValue;
 import fle.api.block.BlockFle;
 import fle.api.block.IDebugableBlock;
 import fle.api.enums.EnumDamageResource;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.item.ItemFle;
 import fle.api.recipe.ItemOreStack;
 import fle.api.world.BlockPos;
@@ -165,7 +166,7 @@ public class BlockOilLamp extends BlockFle implements ITileEntityProvider, IDebu
 			int y, int z, EntityLivingBase aEntity,
 			ItemStack aStack)
 	{
-		FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), 7, FleAPI.getIndexFromDirection(getPointFacing(aWorld, x, y, z, aEntity)));
+		FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), EnumWorldNBT.Facing, FleAPI.getIndexFromDirection(getPointFacing(aWorld, x, y, z, aEntity)));
 		super.onBlockPlacedBy(aWorld, x, y, z, aEntity, aStack);
 	}
 	
@@ -174,7 +175,7 @@ public class BlockOilLamp extends BlockFle implements ITileEntityProvider, IDebu
 			int aMeta)
 	{
 		BlockPos tPos = new BlockPos(aWorld, x, y, z);
-		int[] is = FLE.fle.getWorldManager().removeData(tPos);
+		short[] is = FLE.fle.getWorldManager().removeData(tPos);
 		TileEntityOilLamp tile = (TileEntityOilLamp) tPos.getBlockTile();
 		Block material = tile.getRock();
 		FluidStack amount = getFluidContain(aWorld, x, y, z);

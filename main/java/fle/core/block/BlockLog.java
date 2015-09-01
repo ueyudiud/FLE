@@ -17,6 +17,7 @@ import fle.FLE;
 import fle.api.block.BlockHasSub;
 import fle.api.block.IDebugableBlock;
 import fle.api.block.IFacingBlock;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.util.Register;
 import fle.api.world.BlockPos;
 import fle.api.world.TreeInfo;
@@ -60,7 +61,7 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 	@Override
 	public void setMetadata(World world, int x, int y, int z, int metadata) 
 	{
-		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 0, metadata);
+		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, metadata);
 	}
 	
 	@Override
@@ -132,12 +133,12 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 	
 	public static int getTreeInfoID(IBlockAccess world, int x, int y, int z)
 	{
-		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 0);
+		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata);
 	}
 	
 	public static void setData(BlockPos aPos, int meta)
 	{
-		FLE.fle.getWorldManager().setData(aPos, 0, meta);
+		FLE.fle.getWorldManager().setData(aPos, EnumWorldNBT.Metadata, meta);
 	}
 
 	@Override

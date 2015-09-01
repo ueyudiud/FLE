@@ -16,6 +16,7 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fle.FLE;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.item.ICrushableTool;
 import fle.api.material.MaterialOre;
 import fle.api.recipe.ItemAbstractStack;
@@ -74,7 +75,7 @@ public class StoneHammerHandler
 						{
 							if(((ICrushableTool) tStack.getItem()).doCrush(evt.world, evt.x, evt.y, evt.z, evt.getPlayer().getCurrentEquippedItem()))
 							{
-								int data = FLE.fle.getWorldManager().getData(new BlockPos(evt.world, evt.x, evt.y, evt.z), 0);
+								int data = FLE.fle.getWorldManager().getData(new BlockPos(evt.world, evt.x, evt.y, evt.z), EnumWorldNBT.Metadata);
 								if(canBlockCrush(evt.block, data != 0 ? data : evt.blockMetadata))
 								{
 									ArrayList<ItemStack> list = onBlockCrush(evt.block, data != 0 ? data : evt.blockMetadata);

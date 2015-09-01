@@ -16,10 +16,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.BlockFluidBase;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
@@ -28,6 +30,7 @@ import fle.api.block.IBlockBehaviour;
 import fle.api.block.IBlockWithTileBehaviour;
 import fle.api.block.IDebugableBlock;
 import fle.api.block.IFacingBlock;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.util.IBlockTextureManager;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
@@ -83,8 +86,8 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		int tMeta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 0);
-		int tSide = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 1);
+		int tMeta = getDamageData(world, x, y, z);
+		int tSide = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Facing);
 		try
 		{
 			return iconMap.get(blockBehaviors.name(tMeta))[textureNameMap.get(blockBehaviors.name(tMeta)).getIconID(ForgeDirection.VALID_DIRECTIONS[FleValue.MACHINE_FACING[tSide][side]])];
@@ -113,9 +116,24 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	@Override
 	public int getDamageValue(World aWorld, int x, int y, int z)
 	{
-		int value =  FLE.fle.getWorldManager().getData(new BlockPos(aWorld, x, y, z), 0);
+		return getDamageData(aWorld, x, y, z);
+	}
+	
+	public int getDamageData(IBlockAccess aWorld, int x, int y, int z)
+	{
+		int value =  FLE.fle.getWorldManager().getData(new BlockPos(aWorld, x, y, z), EnumWorldNBT.Metadata);
 		return value == 0 ? aWorld.getBlockMetadata(x, y, z) : value;
 	}
+	
+	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld,
+			int x, int y, int z)
+	{
+		return noBoxList.contains(getDamageData(aWorld, x, y, z)) ? null : 
+			super.getCollisionBoundingBoxFromPool(aWorld, x, y, z);
+	}
+	
+	protected List<Integer> noBoxList = new ArrayList();
 	
 	@Override
 	public void getSubBlocks(Item aItem, CreativeTabs aTab,	List aList) 
@@ -165,7 +183,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 			int y, int z, EntityLivingBase aEntity,
 			ItemStack aStack)
 	{
-		FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), 1, FleAPI.getIndexFromDirection(getPointFacing(aWorld, x, y, z, aEntity)));
+		FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), EnumWorldNBT.Facing, FleAPI.getIndexFromDirection(getPointFacing(aWorld, x, y, z, aEntity)));
 		super.onBlockPlacedBy(aWorld, x, y, z, aEntity, aStack);
 		IBlockBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) getDamageValue(aWorld, x, y, z)));
 		try
@@ -254,6 +272,21 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	}
 
 	@Override
+	public boolean hasTileEntity(int aMeta)
+	{
+		IBlockWithTileBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) aMeta));
+		try
+		{
+			return tBehaviour.createNewTileEntity(this, null, aMeta) != null;
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World aWorld, int aMeta) 
 	{
 		IBlockWithTileBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) aMeta));
@@ -276,7 +309,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		IBlockWithTileBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) meta));
 		try
 		{
-			return tBehaviour.getHarvestDrop(this, world, metadata, tile, fortune);
+			return tBehaviour.getHarvestDrop(this, world, meta, tile, fortune);
 		}
 		catch(Throwable e)
 		{
@@ -290,7 +323,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	@Override
 	public ForgeDirection getDirction(BlockPos pos) 
 	{
-		return ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, 1)];
+		return ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, EnumWorldNBT.Facing)];
 	}
 
 	@Override

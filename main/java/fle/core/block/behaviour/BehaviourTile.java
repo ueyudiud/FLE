@@ -22,16 +22,14 @@ public abstract class BehaviourTile extends BehaviourBase<BlockSubTile> implemen
 {
 	private Class<? extends TileEntity> clazz;
 
+	public BehaviourTile(String string, Class<? extends TileEntity> tileClass) 
+	{
+		clazz = tileClass;
+		GameRegistry.registerTileEntity(tileClass, string);
+	}
 	public BehaviourTile(Class<? extends TileEntity> tileClass) 
 	{
 		clazz = tileClass;
-		GameRegistry.registerTileEntity(tileClass, tileClass.getName());
-	}
-	public BehaviourTile(Class<? extends TileEntity> tileClass, boolean flag) 
-	{
-		clazz = tileClass;
-		if(flag)
-			GameRegistry.registerTileEntity(tileClass, tileClass.getName());
 	}
 	
 	@Override

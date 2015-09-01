@@ -37,7 +37,7 @@ public abstract class BlockHasTile extends BlockFle implements ITileEntityProvid
 		TileEntity tile = tileThread.get();
 		if(tile != null)
 			return getDrops(world, x, y, z, tile, metadata, fortune);
-		return super.getDrops(world, x, y, z, metadata, fortune);
+		return super.getDrops(world, x, y, z, getDamageValue(world, x, y, z), fortune);
 	}
 	
 

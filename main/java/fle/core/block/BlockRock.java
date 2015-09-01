@@ -23,6 +23,7 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
 import fle.api.world.BlockPos;
@@ -74,7 +75,7 @@ public class BlockRock extends BlockHasSub
 	
 	public IIcon getIcon(IBlockAccess aAccess, int aX, int aY, int aZ, int aSide)
 	{
-		return getIcon(aSide, FLE.fle.getWorldManager().getData(new BlockPos(aAccess, aX, aY, aZ), 0));
+		return getIcon(aSide, FLE.fle.getWorldManager().getData(new BlockPos(aAccess, aX, aY, aZ), EnumWorldNBT.Metadata));
 	}
 	  
 	public IIcon getIcon(int aSide, int aMeta)
@@ -135,14 +136,6 @@ public class BlockRock extends BlockHasSub
 		return 3.0F + getHarvestLevel(aWorld.getBlockMetadata(aX, aY, aZ)) * 1.0F;
 	}
 	
-	public void breakBlock(World aWorld, int aX, int aY, int aZ, Block par5, int par6)
-	{
-		BlockPos tPos = new BlockPos(aWorld, aX, aY, aZ);
-		metaThread.set(FLE.fle.getWorldManager().getData(tPos, 0));
-		super.breakBlock(aWorld, aX, aY, aZ, par5, par6);
-		FLE.fle.getWorldManager().removeData(tPos);
-	}
-	
 	public ArrayList<ItemStack> getDrops(World aWorld, int aX, int aY, int aZ, int aMeta, int aFortune)
 	{
 		ArrayList<ItemStack> list = new ArrayList();
@@ -175,13 +168,13 @@ public class BlockRock extends BlockHasSub
 	@Override
 	public int getMetadata(World world, int x, int y, int z) 
 	{
-		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 0);
+		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata);
 	}
 
 	@Override
 	public void setMetadata(World world, int x, int y, int z, int metadata) 
 	{
-		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 0, metadata);
+		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, metadata);
 	}
 
 	public static ItemStack a(MaterialRock material)

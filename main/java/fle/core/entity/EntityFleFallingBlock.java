@@ -45,7 +45,7 @@ public class EntityFleFallingBlock extends EntityFallingBlock
 		}
 	}
 	
-	int[] dataList;
+	short[] dataList;
 	protected Block block;
     protected boolean hitEntity;
     protected float fallHurtAmount = 2.0F;
@@ -69,7 +69,8 @@ public class EntityFleFallingBlock extends EntityFallingBlock
 	protected void readEntityFromNBT(NBTTagCompound nbt)
 	{
 		super.readEntityFromNBT(nbt);
-		dataList = nbt.getIntArray("FWMData");
+		int[] aList = nbt.getIntArray("FWMData");
+		for(int i = 0; i < aList.length; dataList[i++] = (short) aList[i]);
 		block = GameData.getBlockRegistry().getObject(nbt.getString("Block"));
 	}
 	
@@ -78,7 +79,11 @@ public class EntityFleFallingBlock extends EntityFallingBlock
 	{
 		super.writeEntityToNBT(nbt);
 		if(dataList != null)
-			nbt.setIntArray("FWMData", dataList);
+		{
+			int[] aList = new int[dataList.length];
+			for(int i = 0; i < aList.length; aList[i++] = dataList[i]);
+			nbt.setIntArray("FWMData", aList);
+		}
 		nbt.setString("Block", GameData.getBlockRegistry().getNameForObject(block));
 	}
 

@@ -19,8 +19,8 @@ public class ItemFleFood extends fle.api.item.ItemFleFood
 		addSubItem(1, "flour_wholemeal", "Wholemeal Flour", "food/wholemeal_flour", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
 		addSubItem(101, "groats_wheat_wholemeal", "Wholemeal Wheat Groats", "food/wholemeal_wheat_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
 		addSubItem(102, "groats_millet_wholemeal", "Wholemeal Millet Groats", "food/wholemeal_millet_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
-		addSubItem(111, "groats_wheat", "food/wheat_groats", "Wheat Groats", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
-		addSubItem(112, "groats_millet", "food/millet_groats", "Millet Groats", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(111, "groats_wheat", "Wheat Groats", "food/wheat_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(112, "groats_millet", "Millet Groats", "food/millet_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
 		addSubItem(201, "paste", "Paste", "food/paste", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
 		addSubItem(202, "paste_graham", "Graham Paste", "food/graham_paste", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
 		addSubItem(1001, "bread", "Bread", "food/bread", new FoodStandard(EnumFoodType.Snack, 6, 1.0F));

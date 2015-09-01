@@ -6,6 +6,7 @@ import java.util.List;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.material.MaterialOre;
 import fle.api.world.BlockPos;
 import fle.core.block.behaviour.BehaviourBase;
@@ -32,14 +33,29 @@ public class BlockOreCobble extends BlockSubTile
 		boolean flag = true;
 		for(MaterialOre ore : MaterialOre.getOres())
 		{
-			registerSub(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), ore.getOreName() + " Cobble", new BlockTextureManager("void"), new BehaviourTile(TileEntityOreCobble.class, flag)
+			if(flag)
 			{
-				public Container openContainer(World aWorld, int x, int y,
-						int z, EntityPlayer aPlayer) {return null;}
+				registerSub(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), ore.getOreName() + " Cobble", new BlockTextureManager("void"), new BehaviourTile("OreCobble", TileEntityOreCobble.class)
+				{
+					public Container openContainer(World aWorld, int x, int y,
+							int z, EntityPlayer aPlayer) {return null;}
 
-				public GuiContainer openGui(World aWorld, int x, int y, int z,
-						EntityPlayer aPlayer) {return null;}
-			});
+					public GuiContainer openGui(World aWorld, int x, int y, int z,
+							EntityPlayer aPlayer) {return null;}
+				});
+			}
+			else
+			{
+
+				registerSub(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), ore.getOreName() + " Cobble", new BlockTextureManager("void"), new BehaviourTile(TileEntityOreCobble.class)
+				{
+					public Container openContainer(World aWorld, int x, int y,
+							int z, EntityPlayer aPlayer) {return null;}
+
+					public GuiContainer openGui(World aWorld, int x, int y, int z,
+							EntityPlayer aPlayer) {return null;}
+				});
+			}
 			flag = false;
 		}
 		return this;
@@ -159,12 +175,12 @@ public class BlockOreCobble extends BlockSubTile
 	
 	public static void setOre(IBlockAccess world, int x, int y, int z, int meta)
 	{
-		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 0, meta);
+		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, meta);
 	}
 	
 	public static MaterialOre getOre(IBlockAccess world, int x, int y, int z)
 	{
-		return MaterialOre.getOreFromID(FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 0));
+		return MaterialOre.getOreFromID(FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata));
 	}
 	
 	@Override

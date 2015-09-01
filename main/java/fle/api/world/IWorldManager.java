@@ -1,16 +1,22 @@
 package fle.api.world;
 
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.Map;
+
+import fle.api.enums.EnumWorldNBT;
 
 public interface IWorldManager
 {
-	public int getData(BlockPos pos, int dataType);
-	
-	public void setData(BlockPos pos, int dataType, int data);
+	short getData(BlockPos pos, EnumWorldNBT dataType);
 
-	public int[] removeData(BlockPos pos);
+	short[] getDatas(BlockPos pos);
 	
-	public int removeData(BlockPos pos, int type);
+	short setData(BlockPos pos, EnumWorldNBT dataType, int data);
 
-	public void setDatas(BlockPos pos, int[] data, boolean b);
+	void setDatas(BlockPos pos, Map<EnumWorldNBT, Integer> map, boolean sync);
+
+	void setDatas(BlockPos pos, short[] data, boolean sync);
+	
+	short removeData(BlockPos pos, EnumWorldNBT dataType);
+
+	short[] removeData(BlockPos pos);
 }

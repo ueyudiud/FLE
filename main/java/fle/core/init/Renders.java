@@ -12,14 +12,17 @@ import fle.core.render.RenderAsh;
 import fle.core.render.RenderCastingPool;
 import fle.core.render.RenderCrop;
 import fle.core.render.RenderDryingTable;
+import fle.core.render.RenderEmpty;
 import fle.core.render.RenderFleArrow;
 import fle.core.render.RenderHandler;
 import fle.core.render.RenderOilLamp;
 import fle.core.render.RenderOre;
 import fle.core.render.RenderOreCobble;
 import fle.core.render.RenderRock;
+import fle.core.render.TESRArgilItems;
 import fle.core.render.TESRDryingTable;
 import fle.core.te.TileEntityDryingTable;
+import fle.core.te.argil.TileEntityArgilItems;
 
 public class Renders
 {
@@ -30,8 +33,9 @@ public class Renders
         RenderHandler.register(IB.ore, OreDictionary.WILDCARD_VALUE, RenderOre.class);
         RenderHandler.register(IB.oilLamp, OreDictionary.WILDCARD_VALUE, RenderOilLamp.class);
         RenderHandler.register(IB.ash, OreDictionary.WILDCARD_VALUE, RenderAsh.class);
-        RenderHandler.register(IB.argil_unsmelted, OreDictionary.WILDCARD_VALUE, RenderArgil.class);
-        RenderHandler.register(IB.argil_smelted, OreDictionary.WILDCARD_VALUE, RenderArgil.class);
+        RenderHandler.register(IB.argil_unsmelted, 0, RenderArgil.class);
+        RenderHandler.register(IB.argil_unsmelted, 1, RenderEmpty.class);
+        RenderHandler.register(IB.argil_smelted, 0, RenderArgil.class);
         RenderHandler.register(IB.woodMachine1, 0, RenderDryingTable.class);
         RenderHandler.register(IB.stoneMachine1, 0, RenderCastingPool.class);
         RenderHandler.register(IB.crop, OreDictionary.WILDCARD_VALUE, RenderCrop.class);
@@ -41,6 +45,7 @@ public class Renders
         FleValue.FLE_NOINV_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
     	RenderingRegistry.registerBlockHandler(new RenderHandler(true));
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDryingTable.class, new TESRDryingTable());
+    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArgilItems.class, new TESRArgilItems());
 	    RenderingRegistry.registerEntityRenderingHandler(EntityFleArrow.class, new RenderFleArrow("arrow"));
 	}
 }

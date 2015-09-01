@@ -68,13 +68,13 @@ public class FlePackets
 	public static class CoderFWMUpdate extends FleAbstractPacket<CoderFWMUpdate>
 	{
 		private BlockPos pos;
-		private int[] data;
+		private short[] data;
 		
 		public CoderFWMUpdate() 
 		{
 			
 		}
-		public CoderFWMUpdate(BlockPos aPos, int[] aData) 
+		public CoderFWMUpdate(BlockPos aPos, short[] aData) 
 		{
 			pos = aPos;
 			data = aData;
@@ -84,14 +84,14 @@ public class FlePackets
 		protected void write(FleDataOutputStream os) throws IOException
 		{
 			os.writeBlockPos(pos);
-			os.writeIntArray(data);
+			os.writeShortArray(data);
 		}
 		
 		@Override
 		protected void read(FleDataInputStream is) throws IOException
 		{
 			pos = is.readBlockPos();
-			data = is.readIntArray();
+			data = is.readShortArray();
 		}
 		
 		@Override

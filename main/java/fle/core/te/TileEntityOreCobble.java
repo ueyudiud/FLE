@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.material.MaterialOre;
 import fle.api.te.TEBase;
 import fle.core.block.BlockOreCobble;
@@ -97,7 +98,7 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 					hc.reseaveHeat(h);
 					amount *= recipe.productivity;
 					this.progress = 0D;
-					FLE.fle.getWorldManager().setData(getBlockPos(), 0, MaterialOre.getOreID(ore));
+					FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, MaterialOre.getOreID(ore));
 					worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
 				}
 			}

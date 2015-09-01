@@ -12,7 +12,7 @@ public class BehaviourDrying extends BehaviourTile
 {
 	public BehaviourDrying()
 	{
-		super(TileEntityDryingTable.class);
+		super("DryingTable", TileEntityDryingTable.class);
 	}
 
 	@Override

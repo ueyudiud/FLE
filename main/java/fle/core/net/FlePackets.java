@@ -102,4 +102,37 @@ public class FlePackets
 			return null;
 		}
 	}
+
+	public static class CoderFWMAskMeta extends FleAbstractPacket<CoderFWMAskMeta>
+	{		
+		BlockPos pos;
+		
+		public CoderFWMAskMeta()
+		{
+			
+		}
+		public CoderFWMAskMeta(BlockPos aPos)
+		{
+			pos = aPos;
+		}
+		
+		@Override
+		protected void write(FleDataOutputStream os) throws IOException
+		{
+			os.writeBlockPos(pos);
+		}
+
+		@Override
+		protected void read(FleDataInputStream is) throws IOException
+		{
+			pos = is.readBlockPos();
+		}
+
+		@Override
+		public IMessage onMessage(CoderFWMAskMeta message, MessageContext ctx)
+		{
+			FLE.fle.getWorldManager().sendData(message.pos, ctx.getServerHandler().playerEntity);
+			return null;
+		}
+	}
 }

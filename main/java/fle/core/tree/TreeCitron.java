@@ -14,6 +14,7 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
 import fle.api.world.TreeInfo;
 import fle.core.block.BlockLog;
@@ -70,7 +71,7 @@ public class TreeCitron extends TreeInfo
 			world.setBlock(x, y, z, block);
 			BlockLog.setData(new BlockPos(world, x, y, z), (short) BlockLog.trees.serial(this));
 			if(doRand && rand.nextInt(4) == 0)
-				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 1, 1);
+				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, 1);
 		}
 	}
 
@@ -122,7 +123,7 @@ public class TreeCitron extends TreeInfo
 	@Override
 	public int getLeavesIconID(IBlockAccess world, int x, int y, int z)
 	{
-		int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 1);
+		int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Age);
 		return meta == 0 ? 0 : meta < 16 ? 1 : 2;
 	}
 
@@ -130,13 +131,13 @@ public class TreeCitron extends TreeInfo
 	public boolean onLeavesToss(World world, int x, int y, int z,
 			EntityPlayer player, ItemStack tool)
 	{
-		int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 1);
+		int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Age);
 		if(meta == 16) 
 		{
 			if(!world.isRemote)
 			{
 				dropBlockAsItem(world, x, y, z, new ItemStack(Items.apple));
-				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 1, 0);
+				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, 0);
 				world.markBlockForUpdate(x, y, z);
 			}
 			return true;
@@ -149,17 +150,17 @@ public class TreeCitron extends TreeInfo
 	{
 		if(rand.nextInt(10) == 0)
 		{
-			int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 1);
+			int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Age);
 			boolean flag = false;
 			if(meta < 16 && meta != 0)
 			{
-				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 1, ++meta);
+				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, ++meta);
 				world.markBlockForUpdate(x, y, z);
 				return;
 			}
 			if(meta == 0 && rand.nextInt(4) == 0)
 			{
-				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), 1, 1);
+				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, 1);
 				world.markBlockForUpdate(x, y, z);
 				return;
 			}

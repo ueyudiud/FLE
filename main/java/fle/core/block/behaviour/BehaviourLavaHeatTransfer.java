@@ -19,7 +19,7 @@ public class BehaviourLavaHeatTransfer extends BehaviourTile implements IDebugab
 {
 	public BehaviourLavaHeatTransfer()
 	{
-		super(TileEntityLavaHeatTransfer.class);
+		super("LavaHeatTransfer", TileEntityLavaHeatTransfer.class);
 	}
 	
 	@Override

@@ -24,6 +24,7 @@ import fle.core.block.BlockOilLamp;
 import fle.core.block.BlockOre;
 import fle.core.block.BlockOreCobble;
 import fle.core.block.BlockRock;
+import fle.core.block.BlockWorkbench;
 import fle.core.block.machine.BlockClayInventory;
 import fle.core.block.machine.BlockClayInventory1;
 import fle.core.block.machine.BlockStoneMachine;
@@ -80,6 +81,7 @@ public class IB
 	public static Block ore;
 	public static Block leaf;
 	public static Block log;
+	public static Block workbench;
 	public static Block woodMachine;
 	public static Block woodMachine1;
 	public static Block stoneMachine;
@@ -108,6 +110,7 @@ public class IB
 		leaf = new BlockLeaves("leaves").setCreativeTab(CreativeTabs.tabDecorations).setStepSound(Block.soundTypeGrass);
 		ash = new BlockAsh().setCreativeTab(CreativeTabs.tabDecorations).setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash").setStepSound(Block.soundTypeSand);
 		oilLamp = new BlockOilLamp("oilLamp").setCreativeTab(CreativeTabs.tabDecorations);
+		workbench = new BlockWorkbench("workbench", "Workbench").setCreativeTab(CreativeTabs.tabDecorations);
 		woodMachine = new BlockWoodMachine("woodMachine").init().setCreativeTab(CreativeTabs.tabDecorations);
 		woodMachine1 = new BlockWoodMachine1("woodMachine1").init().setCreativeTab(CreativeTabs.tabDecorations);
 		stoneMachine = new BlockStoneMachine("stoneMachine").init().setCreativeTab(CreativeTabs.tabDecorations);

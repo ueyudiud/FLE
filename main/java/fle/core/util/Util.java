@@ -92,7 +92,7 @@ public class Util
 		{
 			try
 			{
-				Field tField = clazz.getField(str);
+				Field tField = clazz.getDeclaredField(str);
 				tField.setAccessible(true);
 				return tField.get(target);
 			}

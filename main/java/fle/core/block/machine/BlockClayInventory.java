@@ -10,6 +10,7 @@ import fle.api.util.IBlockTextureManager;
 import fle.api.util.Register;
 import fle.api.world.BlockPos;
 import fle.core.block.BlockSubTile;
+import fle.core.block.behaviour.BehaviourArgilItem;
 import fle.core.block.behaviour.BehaviourClay;
 import fle.core.te.argil.TileEntityArgilUnsmelted;
 import fle.core.util.BlockTextureManager;
@@ -19,6 +20,8 @@ public class BlockClayInventory extends BlockSubTile
 	public BlockClayInventory init()
 	{
 		registerSub(0, "terrine_unsmelted", "Unsmelted Terrine", new BlockTextureManager("clay/1"), new BehaviourClay());
+		registerSub(1, "argil_item", "Argil Items", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourArgilItem());
+		noBoxList.add(1);
 		return this;
 	}
 	

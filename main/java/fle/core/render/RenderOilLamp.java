@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.fluid.FluidBase;
 import fle.api.world.BlockPos;
 import fle.core.block.BlockOilLamp;
@@ -41,7 +42,7 @@ public class RenderOilLamp extends RenderBase
 		renderBlock(p3, p1, p4 - p1, p4, p2, p4);
 		renderBlock(p4 - p1, p1, p3, p4, p2, p4);
 		
-		dir = ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(aPos, 7)];
+		dir = ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(aPos, EnumWorldNBT.Facing)];
 		switch(dir)
 		{
 		case SOUTH:

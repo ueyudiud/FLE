@@ -4,18 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fle.FLE;
 import fle.api.enums.CompoundType;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.material.Matter;
 import fle.api.material.Matter.AtomStack;
 import fle.api.net.FlePackets.CoderFWMUpdate;
+import fle.api.util.FleLog;
 import fle.api.util.IAirConditionProvider;
 import fle.api.world.BlockPos;
 import fle.api.world.BlockPos.ChunkPos;
@@ -23,11 +26,11 @@ import fle.api.world.IWorldManager;
 
 public class FWM implements IWorldManager, IAirConditionProvider
 {
-	private static final int maxNBTSize = 8;
+	private static final int maxNBTSize = EnumWorldNBT.values().length;
 	private Map<Integer, Map<ChunkPos, ChunkData>> nbts = new HashMap(1);
 	private Map<Integer, Map<ChunkPos, Integer>> airConditions = new HashMap(1);
 	
-	private class ChunkData
+	class ChunkData
 	{
 		public short[][][] datas;
 		
@@ -36,7 +39,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			datas = new short[dataSize][][];
 		}
 		
-		private int getDataFromCoord(int dataType, BlockPos aPos)
+		private short getDataFromCoord(int dataType, BlockPos aPos)
 		{
 			int x = aPos.x & 15;
 			int y = aPos.y & 255;
@@ -53,11 +56,11 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			}
 			else
 			{
-				return datas[dataType][y][x << 4 | z];
+				return (short) (datas[dataType][y][x << 4 | z] - 1);
 			}
 		}
 		
-		private void setDataFromCoord(int dataType, BlockPos aPos, short data)
+		short setDataFromCoord(int dataType, BlockPos aPos, short data)
 		{
 			int x = aPos.x & 15;
 			int y = aPos.y & 255;
@@ -70,7 +73,9 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			{
 				datas[dataType][y] = new short[256];
 			}
-			datas[dataType][y][x << 4 | z] = data;
+			short ret = datas[dataType][y][x << 4 | z];
+			datas[dataType][y][x << 4 | z] = (short) (data + 1);
+			 return ret;
 		}
 	
 		private int[] asIntArray(int dataType)
@@ -109,9 +114,9 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			}
 		}
 
-		public int[] getDatasFromCoord(BlockPos aPos)
+		public short[] getDatasFromCoord(BlockPos aPos)
 		{
-			int[] t = new int[maxNBTSize];
+			short[] t = new short[maxNBTSize];
 			for(int i = 0; i < t.length; ++i)
 				t[i] = getDataFromCoord(i, aPos);
 			return t;
@@ -186,15 +191,18 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		evt.getData().setTag("FLE", list);
 	}
 
-	@Override
-	public int getData(BlockPos pos, int dataType) 
+	public short getData(BlockPos pos, int dataType) 
 	{
 		int dim = pos.getDim();
 		return getChunkData(dim, pos).getDataFromCoord(dataType, pos);
 	}
 
-	@Override
-	public void setData(BlockPos pos, int dataType, int data) 
+	public short setData(BlockPos pos, int dataType, int data) 
+	{
+		return setData(pos, dataType, data, true);
+	}
+
+	public short setData(BlockPos pos, int dataType, int data, boolean sync) 
 	{
 		int dim = 0;
 		boolean flag = false;
@@ -208,38 +216,15 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			dim = FLE.fle.getPlatform().getPlayerInstance().worldObj.provider.dimensionId;
 		}
 		ChunkData tData = getChunkData(dim, pos);
-		tData.setDataFromCoord(dataType, pos, (short) data);
-		if(flag)
+		short ret = tData.setDataFromCoord(dataType, pos, (short) data);
+		if(flag && sync)
 		{
 			FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(pos, tData.getDatasFromCoord(pos)));
 		}
-	}
-
-	@Override
-	public int[] removeData(BlockPos pos) 
-	{
-		int dim = pos.getDim();
-		ChunkData tData = getChunkData(dim, pos);
-		int[] ret = new int[maxNBTSize];
-		for(int i = 0; i < maxNBTSize; ++i)
-		{
-			ret[i] = tData.getDataFromCoord(i, pos);
-			tData.setDataFromCoord(i, pos, (short) 0);
-		}
-		return ret;
-	}
-
-	@Override
-	public int removeData(BlockPos pos, int type) 
-	{
-		int dim = pos.getDim();
-		ChunkData tData = getChunkData(dim, pos);
-		int ret = tData.getDataFromCoord(type, pos);
-		tData.setDataFromCoord(type, pos, (short) 0);
 		return ret;
 	}
 	
-	private ChunkData getChunkData(int dim, BlockPos pos)
+	protected ChunkData getChunkData(int dim, BlockPos pos)
 	{
 		int tDim = new Integer(dim);
 		if(!nbts.containsKey(tDim)) nbts.put(tDim, new HashMap());
@@ -271,7 +256,6 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		return airConditions.get(aPos.getDim()).get(aPos.getChunkPos()) / 100;
 	}
 
-	@Override
 	public void setPollute(BlockPos aPos, int pollute)
 	{
 		int tDim = aPos.getDim();
@@ -280,17 +264,17 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		airConditions.get(tDim).put(aPos.getChunkPos(), i);
 	}
 
-	public int[] getDatas(BlockPos aPos)
+	public short[] getDatas(BlockPos aPos)
 	{
 		int dim = aPos.getDim();
 		int i = 0;
-		int[] ret = new int[maxNBTSize];
+		short[] ret = new short[maxNBTSize];
 		for(ChunkData data = getChunkData(dim, aPos); i < maxNBTSize; ++i)
 			ret[i] = data.getDataFromCoord(i, aPos);
 		return ret;
 	}
 
-	public void setDatas(BlockPos pos, int[] data, boolean sync)
+	public void setDatas(BlockPos pos, short[] data, boolean sync)
 	{
 		if(data != null)
 		{
@@ -313,5 +297,51 @@ public class FWM implements IWorldManager, IAirConditionProvider
 				FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(pos, tData.getDatasFromCoord(pos)));
 			}
 		}
+	}
+
+	@Override
+	public short getData(BlockPos pos, EnumWorldNBT dataType)
+	{
+		return getData(pos, dataType.ordinal());
+	}
+
+	@Override
+	public short setData(BlockPos pos, EnumWorldNBT dataType, int data)
+	{
+		return setData(pos, dataType.ordinal(), data);
+	}
+
+	@Override
+	public void setDatas(BlockPos pos, Map<EnumWorldNBT, Integer> map,
+			boolean sync)
+	{
+		for(Entry<EnumWorldNBT, Integer> e : map.entrySet())
+		{
+			setData(pos, e.getKey().ordinal(), e.getValue());
+		}
+	}
+
+	@Override
+	public short removeData(BlockPos pos, EnumWorldNBT dataType)
+	{
+		return setData(pos, dataType.ordinal(), -1);
+	}
+
+	@Override
+	public short[] removeData(BlockPos pos)
+	{
+		short[] ret = new short[maxNBTSize];
+		boolean flag = false;
+		for(int i = 0; i < ret.length; ++i)
+		{
+			if(i == ret.length - 1) flag = true;
+			ret[i] = setData(pos, i, -1, flag);
+		}
+		return ret;
+	}
+
+	public void sendData(BlockPos pos, EntityPlayerMP player)
+	{
+		FLE.fle.getNetworkHandler().sendToPlayer(new CoderFWMUpdate(pos, getDatas(pos)), player);
 	}
 }

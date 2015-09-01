@@ -26,6 +26,7 @@ import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
 import fle.api.block.IDebugableBlock;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
 import fle.api.util.FleLog;
@@ -135,7 +136,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	
 	public IIcon getIcon(IBlockAccess aAccess, int aX, int aY, int aZ, int aSide)
 	{
-		return getIcon(aSide, FLE.fle.getWorldManager().getData(new BlockPos(aAccess, aX, aY, aZ), 0));
+		return getIcon(aSide, FLE.fle.getWorldManager().getData(new BlockPos(aAccess, aX, aY, aZ), EnumWorldNBT.Metadata));
 	}
 	  
 	public IIcon getIcon(int aSide, int aMeta)
@@ -157,15 +158,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	  
 	public int getDamageValue(World aWorld, int aX, int aY, int aZ)
 	{
-		return FLE.fle.getWorldManager().getData(new BlockPos(aWorld, aX, aY, aZ), 0);
-	}
-	  
-	public void breakBlock(World aWorld, int aX, int aY, int aZ, Block par5, int par6)
-	{
-		BlockPos tPos = new BlockPos(aWorld, aX, aY, aZ);
-		metaThread.set(FLE.fle.getWorldManager().getData(tPos, 0));
-		super.breakBlock(aWorld, aX, aY, aZ, par5, par6);
-		FLE.fle.getWorldManager().removeData(tPos);
+		return FLE.fle.getWorldManager().getData(new BlockPos(aWorld, aX, aY, aZ), EnumWorldNBT.Metadata);
 	}
 	
 	private boolean drop = false;
@@ -212,26 +205,26 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	
 	public static void setData(BlockPos aPos, Block baseRock, int baseMeta, int meta)
 	{
-		FLE.fle.getWorldManager().setData(aPos, 0, meta);
-		FLE.fle.getWorldManager().setData(aPos, 1, GameData.getBlockRegistry().getId(baseRock));
-		FLE.fle.getWorldManager().setData(aPos, 2, baseMeta);
+		FLE.fle.getWorldManager().setData(aPos, EnumWorldNBT.Metadata, meta);
+		FLE.fle.getWorldManager().setData(aPos, EnumWorldNBT.Base, GameData.getBlockRegistry().getId(baseRock));
+		FLE.fle.getWorldManager().setData(aPos, EnumWorldNBT.BaseMeta, baseMeta);
 	}
 	
 	public static Block getOreBase(IBlockAccess world, int x, int y, int z)
 	{
-		int index = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 1);
+		int index = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Base);
 		Block ret = GameData.getBlockRegistry().getObjectById(index);
 		return ret == Blocks.air ? Blocks.stone : ret;
 	}
 	
 	public static int getOreBaseMeta(IBlockAccess world, int x, int y, int z)
 	{
-		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 2);
+		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.BaseMeta);
 	}
 	
 	public static int getOre(IBlockAccess world, int x, int y, int z)
 	{
-		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), 0);
+		return FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Base);
 	}
 
 	@Override

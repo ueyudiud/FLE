@@ -15,7 +15,7 @@ public class BehaviourPolish extends BehaviourTile
 {
 	public BehaviourPolish()
 	{
-		super(TileEntityPolish.class);
+		super("Polish", TileEntityPolish.class);
 	}
 	
 	@Override

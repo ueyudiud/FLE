@@ -177,7 +177,7 @@ public class BlockFle extends Block
 		if(aWorld.getTileEntity(x, y, z) != null)
 			tileThread.set(aWorld.getTileEntity(x, y, z));
 		BlockPos tPos = new BlockPos(aWorld, x, y, z);
-		metaThread.set(new Integer(FLE.fle.getWorldManager().getData(tPos, 0)));
+		metaThread.set(new Integer(getDamageValue(aWorld, x, y, z)));
 		super.breakBlock(aWorld, x, y, z, aBlock, aMeta);
 		FLE.fle.getWorldManager().removeData(tPos);
 	}

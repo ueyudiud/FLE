@@ -49,7 +49,7 @@ public class Materials
 	public static void init()
 	{
 		Void = new MaterialAbstract("Void", new PropertyInfo(1, 1.0F, 1.0F, 1.0F, 0.0F, 10000000));
-		NativeCopper = new MaterialOre("NativeCopper", Matter.mCu, new PropertyInfo(0xFF834C, 18, 1.2F, 0.8F, 1.0F, 0.2F, 12000000, 18.0F, 0.18F, 0.7F), SubTag.ORE_native);
+		NativeCopper = new MaterialOre("NativeCopper", Matter.mCu, new PropertyInfo(0xFF834C, 18, 721, 1735, 698, 500, 1.2F, 0.8F, 1.0F, 0.2F, 12000000, 18.0F, 0.18F, 0.7F), SubTag.ORE_native);
 		Tetrahedrite = new MaterialOre("Tetrahedrite", Matter.mCu10Fe2Sb4S13, new PropertyInfo(0xDCBC74, 9, 2.1F, 0.3F, 1.0F, 0.4F, 6800000, -1.0F, 0.21F, 0.7F), SubTag.ORE_sulfide);
 		Enargite = new MaterialOre("Enargite", Matter.mCu3AsS4, new PropertyInfo(0x7F6A68, 10, 1.3F, 1.0F, 0.4F, 0.5F, 6000000, -1.0F, 0.32F, 0.58F), SubTag.ORE_sulfide);
 		Cuprite = new MaterialOre("Cuprite", Matter.mCu2O, new PropertyInfo(0xD83E26, 8, 1.0F, 0.4F, 1.0F, 0.9F, 8000000, 52.0F, 0.43F, 0.5F), SubTag.ORE_oxide);
