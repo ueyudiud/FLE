@@ -68,7 +68,7 @@ public class FWMClient extends FWM
 	}
 	
 	@Override
-	public void sendData(BlockPos pos, EntityPlayerMP player)
+	public void sendData(BlockPos pos)
 	{
 		;
 	}

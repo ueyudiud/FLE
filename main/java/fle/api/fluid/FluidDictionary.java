@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fle.api.util.IChemCondition.EnumPH;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -11,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 public abstract class FluidDictionary 
 {
 	public abstract void registerFluid(String fluidName, Fluid fluid);
+	public abstract void registerFluidPH(Fluid fluid, EnumPH ph);
 	
 	public abstract List<Fluid> getFluidList(String fluidName);
 	
@@ -19,6 +21,8 @@ public abstract class FluidDictionary
 	public abstract boolean removeFluid(Fluid fluid);
 	
 	public abstract boolean matchFluid(String fluidName, FluidStack target);
+	
+	public abstract EnumPH getFluidPH(Fluid fluid);
 
 	public boolean isFluidWater(FluidStack aStack)
 	{

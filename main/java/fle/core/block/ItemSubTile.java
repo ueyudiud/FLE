@@ -34,7 +34,10 @@ public class ItemSubTile extends ItemFleBlock
     	{
     		return false;
     	}
-    	FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, tDamage);
+    	if (!world.isRemote)
+    	{
+    		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, tDamage);
+    	}
 
     	if (world.getBlock(x, y, z) == field_150939_a)
     	{

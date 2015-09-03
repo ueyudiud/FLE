@@ -35,6 +35,7 @@ import fle.core.init.Materials;
 import fle.core.init.Other;
 import fle.core.init.Rs;
 import fle.core.te.TileEntityCrop;
+import fle.core.te.TileEntityDitch;
 import fle.core.te.TileEntityFirewood;
 import fle.core.te.TileEntityOilLamp;
 import fle.core.tool.AxeHandler;
@@ -75,6 +76,7 @@ public class CommonProxy extends Proxy
 		GameRegistry.registerTileEntity(TileEntityOilLamp.class, "oilLamp");
 		GameRegistry.registerTileEntity(TileEntityFirewood.class, "firewood");
 		GameRegistry.registerTileEntity(TileEntityCrop.class, "fleCrop");
+		GameRegistry.registerTileEntity(TileEntityDitch.class, "Ditch");
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(FLE.MODID, this);
 		MinecraftForge.EVENT_BUS.register(new ChiselHandler());

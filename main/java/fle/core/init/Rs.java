@@ -14,6 +14,9 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -36,6 +39,7 @@ import fle.api.util.SubTag;
 import fle.cg.recipe.ShapedRecipe;
 import fle.cg.recipe.ShapelessRecipe;
 import fle.core.block.BlockRock;
+import fle.core.block.ItemDitch;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
 import fle.core.item.ItemOre;
@@ -48,6 +52,7 @@ import fle.core.recipe.WashingRecipe;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
 import fle.core.recipe.crafting.ToolCraftingRecipe;
 import fle.core.recipe.crafting.TreeCuttingRecipe;
+import fle.core.util.DitchInfo;
 
 public class Rs
 {
@@ -61,6 +66,7 @@ public class Rs
 	public static void reloadRecipe()
 	{
 		registerRemovedCrafting(FakeCraftingInventory.init("xx", "xx", 'x', "plankWood"));
+		registerRemovedCrafting(FakeCraftingInventory.init("xx", "xx", "xx", 'x', Blocks.glass));
 		registerRemovedCrafting(FakeCraftingInventory.init(" xs", "x s", " xs", 'x', "stickWood", 's', Items.string));
 		registerRemovedCrafting(FakeCraftingInventory.init("x", "x", 'x', "plankWood"));
 		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 0), 'x', "stickWood"));
@@ -89,6 +95,8 @@ public class Rs
 	public static void init()
 	{
 		OreDictionary.registerOre("wick", Items.string);
+		OreDictionary.registerOre("wick", ItemFleSub.a("ramie_rope"));
+		OreDictionary.registerOre("rope", ItemFleSub.a("ramie_rope"));
 		OreDictionary.registerOre("cropMillet", ItemFleSub.a("millet"));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 1));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 2));
@@ -99,16 +107,23 @@ public class Rs
 		OreDictionary.registerOre("craftingToolDecortingStick", new ItemStack(IB.tool, 1, 14));
 		OreDictionary.registerOre("craftingToolFirestarter", new ItemStack(Items.flint_and_steel, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("craftingToolFirestarter", new ItemStack(IB.tool, 1, 7));
+		OreDictionary.registerOre("craftingToolChisel", new ItemStack(IB.tool, 1, 105));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_oak"));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_spruce"));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_birch"));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_jungle"));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_acacia"));
 		OreDictionary.registerOre("branchWood", ItemFleSub.a("branch_darkoak"));
+		OreDictionary.registerOre("flePlankWood", new ItemStack(Blocks.planks, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("logFLE", new ItemStack(IB.treeLog, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("rockCompactStone", BlockRock.a(Materials.CompactStone));
 		OreDictionary.registerOre("dustLimestone", ItemFleSub.a("dust_limestone"));
+		OreDictionary.registerOre("dustQuickLime", ItemFleSub.a("dust_quicklime"));
+		OreDictionary.registerOre("dustPlantAsh", ItemFleSub.a("plant_ash"));
 		OreDictionary.registerOre("plateStone", ItemFleSub.a("stone_plate"));
+		OreDictionary.registerOre("plateArgil", ItemFleSub.a("argil_plate"));
+		OreDictionary.registerOre("brickArgil", ItemFleSub.a("argil_brick"));
+		OreDictionary.registerOre("ballArgil", ItemFleSub.a("argil_ball"));
 		for(EnumAtoms atom : EnumAtoms.values())
 		{
 			if(atom.contain(SubTag.ATOM_metal))
@@ -116,14 +131,28 @@ public class Rs
 					OreDictionary.registerOre("ingot" + atom.getName(), ItemFleSub.a("ingot_" + atom.name().toLowerCase()));
 		}
 
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), Matter.mCu, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu")), Matter.mCu, 100, (int) Materials.Copper.getPropertyInfo().getMeltingPoint(), 100000);
-		MatterDictionary.registerFluid(IB.copper, Matter.mCu);
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.WATER, 1000), ItemFleSub.a("wood_bucket_0_water"), ItemFleSub.a("wood_bucket_0_empty"));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(IB.plant_ash_mortar, 1000), ItemFleSub.a("wood_bucket_0_plant_ash_mortar"), ItemFleSub.a("wood_bucket_0_empty"));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(IB.lime_mortar, 1000), ItemFleSub.a("wood_bucket_0_lime_mortar"), ItemFleSub.a("wood_bucket_0_empty"));
+
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), EnumAtoms.Cu.asMatter(), 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Enargite)), Matter.mCu3AsS4, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Cuprite)), Matter.mCu2O, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Chalcocite)), Matter.mCu2S, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Covellite)), Matter.mCuS, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Tenorite)), Matter.mCuO, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Malachite)), Matter.mCu_OH2_CO3, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Azurite)), Matter.mCu_OH2_2CO3, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu")), EnumAtoms.Cu.asMatter(), 75, (int) Materials.Copper.getPropertyInfo().getMeltingPoint(), 100000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_as_0")), Materials.CuAs.getMatter(), 75, 682, 100000);
+		MatterDictionary.registerFluid(IB.copper, EnumAtoms.Cu.asMatter());
+		MatterDictionary.registerFluid(IB.cu_as_0, Materials.CuAs.getMatter());
 		
 		FleAPI.fluidDictionary.registerFluid("oilAnimal", IB.animalOil);
 
 		GameRegistry.addSmelting(ItemFleSub.a("argil_unsmelted_brick"), ItemFleSub.a("argil_brick"), 0.0F);
 		GameRegistry.addSmelting(ItemFleSub.a("argil_unsmelted_plate"), ItemFleSub.a("argil_plate"), 0.0F);
+		GameRegistry.addSmelting(ItemFleSub.a("dust_limestone"), ItemFleSub.a("dust_quicklime"), 0.0F);
 		
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabOldStoneAge, ItemFleSub.a("branch_bush"), new Object[]{"branchWood"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.firewood), new Object[]{"x", "o", 'x', "craftingToolAxe", 'o', "logWood"}));
@@ -151,6 +180,9 @@ public class Rs
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabOldStoneAge, Blocks.cobblestone, new Object[]{"xx", "xx", 'x', ItemFleSub.a("stone_b")}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabOldStoneAge, ItemTool.a("whetstone", Materials.Stone), new Object[]{"xx", 'x', ItemFleSub.a("stone_b")}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemTool.a("wooden_drilling_firing", Materials.HardWood), new Object[]{" s", "wl", 's', "stickWood", 'w', "logWood", 'l', ItemFleSub.a("tinder")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("wood_bucket_0_empty"), new Object[]{"rsr", "w w", " w ", 's', "stickWood", 'r', "rope", 'w', "logWood"}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("wood_bucket_0_plant_ash_mortar"), new Object[]{ItemFleSub.a("wood_bucket_0_water"), "dustPlantAsh", "dustPlantAsh", "dustPlantAsh"}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("wood_bucket_0_lime_mortar"), new Object[]{ItemFleSub.a("wood_bucket_0_water"), "dustQuickLime", "dustQuickLime", "dustQuickLime"}));
 		
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_rope", 3), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_fiber_dry")}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_bundle_rope"), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_rope")}));
@@ -161,9 +193,25 @@ public class Rs
 		
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("cemented_grit", 8), new Object[]{Blocks.sand, Blocks.sand, Blocks.clay, Blocks.clay}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("stone_a", 9), new Object[]{Blocks.cobblestone}));
-		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.woodMachine, 1, 1), new Object[]{"flePlankWood", "flePlankWood", "flePlankWood", "flePlantWood"}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, IB.workbench, new Object[]{"logWood", "logWood", "logWood", "logWood"}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine, 1, 0), new Object[]{Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone, Blocks.cobblestone}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine1, 1, 0), new Object[]{"plateStone", "plateStone", "plateStone", "plateStone"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine1, 1, 1), new Object[]{"xox", "xxx", 'x', "plateArgil", 'o', ItemFleSub.a("wood_bucket_0_lime_mortar")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine, 1, 1), new Object[]{"xox", "xox", 'x', "plateArgil", 'o', ItemFleSub.a("wood_bucket_0_lime_mortar")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine, 1, 2), new Object[]{"xox", "cxc", 'x', "brickArgil", 'o', ItemFleSub.a("wood_bucket_0_lime_mortar"), 'c', "ballArgil"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine, 1, 3), new Object[]{"cxc", "xox", 'x', "brickArgil", 'o', ItemFleSub.a("wood_bucket_0_lime_mortar"), 'c', "ballArgil"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, new ItemStack(IB.stoneMachine, 1, 3), new Object[]{" p ", "xox", " p ", 'x', "brickArgil", 'o', ItemFleSub.a("wood_bucket_0_lime_mortar"), 'p', "plateArgil"}));
+
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(Materials.ditch_stone, 20), new Object[]{" p ", " o ", " x ", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(2, Materials.ditch_stone, 60), new Object[]{" p ", " o ", "xxx", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(Materials.ditch_stone, 100), new Object[]{" p ", "xox", " x ", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
+		DitchInfo[] infos = new DitchInfo[]{Materials.ditch_wood0, Materials.ditch_wood1, Materials.ditch_wood2, Materials.ditch_wood3, Materials.ditch_wood4, Materials.ditch_wood5};
+		for(int i = 0; i < infos.length; ++i)
+		{
+			GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(infos[i], 20), new Object[]{" p ", " o ", " x ", 'x', infos[i].getBlock(), 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
+			GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(2, infos[i], 60), new Object[]{" p ", " o ", "xxx", 'x', infos[i].getBlock(), 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
+			GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(infos[i], 100), new Object[]{" p ", "xox", " x ", 'x', infos[i].getBlock(), 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
+		}
 		GameRegistry.addRecipe(new TreeCuttingRecipe());
 
 		RecipeSorter.register(FLE.MODID + ":shaped", ShapedFleRecipe.class, SHAPED, "before:minecraft:shaped");

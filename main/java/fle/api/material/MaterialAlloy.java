@@ -9,17 +9,6 @@ public class MaterialAlloy extends MaterialAbstract
 {
 	private static Register<MaterialAlloy> register = new Register();
 	
-	public MaterialAlloy getAlloyFromAtomsProportion(EnumAtoms...aAtoms)
-	{
-		if(aAtoms == null) return null;
-		WeightHelper<EnumAtoms> tHelper = new WeightHelper<EnumAtoms>(aAtoms);
-		for(MaterialAlloy tMaterial : register)
-		{
-			if(tMaterial.matchProportion(tHelper)) return tMaterial;
-		}
-		return null;
-	}
-	
 	private AlloyHelper helper;
 	
 	public MaterialAlloy(String aName, Matter aMatter, PropertyInfo aInfo, AlloyHelper aHelper, SubTag...aTag) 
@@ -29,9 +18,24 @@ public class MaterialAlloy extends MaterialAbstract
 		register.register(this, aName);
 	}
 	
-	public boolean matchProportion(WeightHelper<EnumAtoms> aHelper)
+	public boolean matchProportion(WeightHelper<IAtoms> aHelper)
 	{
 		if(helper == null || aHelper == null) return false;
 		return helper.matchProportion(aHelper);
+	}
+
+	public static MaterialAbstract findAlloy(WeightHelper<IAtoms> wh)
+	{
+		for(MaterialAlloy m : register)
+		{
+			if(m.matchProportion(wh)) return m;
+		}
+		for(MaterialAbstract m : MaterialAbstract.pureMaterials)
+		{
+			if(m.matter != null)
+				if(wh.getContain(m.matter.getElementAtoms().keySet().iterator().next()) > 0.9375F)
+					return m;
+		}
+		return null;
 	}
 }

@@ -31,9 +31,9 @@ public class FleOreGen extends FleMineableGen
 	@Override
 	protected void genBlockAt(World aWorld, Random aRand, int x, int y, int z) 
 	{
+		MaterialOre ore = weightHelper.randomGet(aRand);
 		Block block = aWorld.getBlock(x, y, z);
 		int baseMeta = aWorld.getBlockMetadata(x, y, z);
-		MaterialOre ore = weightHelper.randomGet(aRand);
 		aWorld.setBlock(x, y, z, target);
 		BlockOre.setData(new BlockPos(aWorld, x, y, z), base, block.getDamageValue(aWorld, x, y, z), MaterialOre.getOreID(ore));
 	}

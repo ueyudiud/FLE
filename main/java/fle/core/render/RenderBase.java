@@ -151,6 +151,13 @@ public abstract class RenderBase
     {
         setTexture(block, 0);
     }
+    
+    protected void setColor(int color)
+    {
+        rgb_red = (color >> 16 & 255) / 255.0F;
+        rgb_green = (color >> 8 & 255) / 255.0F;
+        rgb_blue = (color & 255) / 255.0F;
+    }
 
     //Can only be called by the in world renderer
     protected void renderColoredBlock(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Block block) 

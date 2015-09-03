@@ -9,6 +9,10 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 
 	public static final SubTag ATOM_metal = getNewSubTag("ATOM_METAL");
 	public static final SubTag ATOM_nonmetal = getNewSubTag("ATOM_NONMETAL");
+
+	public static final SubTag ATOM_gas = getNewSubTag("ATOM_GAS");
+	public static final SubTag ATOM_gas_low_temp = getNewSubTag("ATOM_GAS_LOW_TEMP");
+	public static final SubTag ATOM_liquid = getNewSubTag("ATOM_LIQUID");
 	
 	public static final SubTag ORE_TYPE_alloy = getNewSubTag("ORE_TYPE_ALLOY");
 	public static final SubTag ORE_TYPE_gem = getNewSubTag("ORE_TYPE_GEM");
@@ -23,6 +27,8 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag ORE_sulfide = getNewSubTag("ORE_SULFIDE");
 	public static final SubTag ORE_gem = ORE_TYPE_gem;//Remove old tag of gem.
 	public static final SubTag ORE_gem_only = getNewSubTag("ORE_GEM_ONLY");
+	
+	public static final SubTag CRAFTING_cold_wought = getNewSubTag("CRAFTING_COLD_WOUGHT");
 	
 	public static final SubTag TOOL_wood = getNewSubTag("TOOL_WOOD");
 	public static final SubTag TOOL_stone = getNewSubTag("TOOL_STONE");

@@ -11,6 +11,7 @@ import fle.api.net.FleNetworkHandler;
 import fle.api.net.FlePackets.CoderFWMUpdate;
 import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.api.net.FlePackets.CoderInventoryUpdate;
+import fle.api.net.FlePackets.CoderMatterUpdate;
 import fle.api.net.FlePackets.CoderNBTUpdate;
 import fle.api.net.FlePackets.CoderPTUpdate;
 import fle.api.net.FlePackets.CoderTankUpdate;
@@ -37,6 +38,7 @@ public class NetWorkHandler implements FleNetworkHandler
 		registerMessage(CoderPTUpdate.class, Side.CLIENT);
 		registerMessage(CoderTileUpdate.class, Side.CLIENT);
 		registerMessage(CoderCropUpdate.class, Side.CLIENT);
+		registerMessage(CoderMatterUpdate.class, Side.CLIENT);
 	}
 	
 	@Override
@@ -64,6 +66,12 @@ public class NetWorkHandler implements FleNetworkHandler
 	public void sendToPlayer(FleAbstractPacket aPacket, EntityPlayerMP aPlayer)
 	{
 		instance.sendTo(aPacket, aPlayer);
+	}
+	
+	@Override
+	public void sendToDim(FleAbstractPacket aPacket, int dim)
+	{
+		instance.sendToDimension(aPacket, dim);
 	}
 	
 	@Override

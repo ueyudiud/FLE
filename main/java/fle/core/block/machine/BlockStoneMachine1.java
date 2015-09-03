@@ -2,7 +2,8 @@ package fle.core.block.machine;
 
 import fle.api.FleValue;
 import fle.core.block.behaviour.BehaviourCastingPool;
-import fle.core.block.behaviour.BehaviourLavaHeatTransfer;
+import fle.core.block.behaviour.BehaviourCeramicFurnaceCrucible;
+import fle.core.block.behaviour.BehaviourCeramicFurnaceInlet;
 import fle.core.util.BlockTextureManager;
 
 public class BlockStoneMachine1 extends BlockStoneMachine
@@ -10,7 +11,8 @@ public class BlockStoneMachine1 extends BlockStoneMachine
 	@Override
 	public BlockStoneMachine1 init()
 	{
-		registerSub(0, "castingPool", "Casting Pool", new BlockTextureManager("void"), new BehaviourCastingPool());
+		registerSub(0, "castingPool", "Casting Pool", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourCastingPool());
+		registerSub(1, "ceramicFurnaceCrucible", "Ceramic Furnace Crucible", new BlockTextureManager("iconsets/ceramic"), new BehaviourCeramicFurnaceCrucible());
 		return this;
 	}
 	

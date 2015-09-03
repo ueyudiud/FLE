@@ -187,12 +187,12 @@ public abstract class ContainerBase extends Container
 		
 		public boolean conrrect(int i)
 		{
-			return i >= startId && i < endId;
+			return startId < 0 || endId < 0 ? false : i >= startId && i < endId;
 		}
 		
 		public boolean mergeItemStack(ItemStack itemstack, boolean isFront)
 		{
-			return ContainerBase.this.mergeItemStack(itemstack, startId, endId, isFront);
+			return startId < 0 || endId < 0 ? true : ContainerBase.this.mergeItemStack(itemstack, startId, endId, isFront);
 		}
 	}
 }

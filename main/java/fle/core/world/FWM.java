@@ -302,7 +302,8 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	@Override
 	public short getData(BlockPos pos, EnumWorldNBT dataType)
 	{
-		return getData(pos, dataType.ordinal());
+		int data = getData(pos, dataType.ordinal());
+		return (short) (data == -1 ? 0 : data);
 	}
 
 	@Override
@@ -340,8 +341,8 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		return ret;
 	}
 
-	public void sendData(BlockPos pos, EntityPlayerMP player)
+	public void sendData(BlockPos pos)
 	{
-		FLE.fle.getNetworkHandler().sendToPlayer(new CoderFWMUpdate(pos, getDatas(pos)), player);
+		FLE.fle.getNetworkHandler().sendToDim(new CoderFWMUpdate(pos, getDatas(pos)), pos.getDim());
 	}
 }

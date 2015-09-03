@@ -75,4 +75,9 @@ public class DropInfo
 		}
 		return ret;
 	}
+	
+	public float getDrop()
+	{
+		return (float) (maxSize + minSize) / 2F;
+	}
 }

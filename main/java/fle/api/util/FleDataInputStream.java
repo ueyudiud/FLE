@@ -194,6 +194,7 @@ public class FleDataInputStream
 		case 12 : return readWorld();
 		case 13 : return BiomeGenBase.getBiomeGenArray()[readInt()];
 		case 14 : return GuiCondition.register.get(readString());
+		case 15 : return readIntArray();
 		default : return null;
 		}
 	}

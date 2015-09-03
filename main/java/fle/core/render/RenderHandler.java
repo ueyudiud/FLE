@@ -50,7 +50,14 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 		RenderBase render = getRenderFromBlockAndMeta(block, metadata);
 		if(render != null)
 		{
-			render.render(render1, block, metadata);
+			try
+			{
+				render.render(render1, block, metadata);
+			}
+			catch(Throwable e)
+			{
+				throw new RuntimeException("FLE render block in inventory error, place report this bug to ueyudiud.", e);
+			}
 		}
 	}
 
@@ -61,7 +68,14 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 		RenderBase render = getRenderFromBlockAndMeta(block, world.getBlockMetadata(x, y, z));
 		if(render != null)
 		{
-			return render.render(render1, world, x, y, z);
+			try
+			{
+				return render.render(render1, world, x, y, z);
+			}
+			catch(Throwable e)
+			{
+				throw new RuntimeException("FLE render block in world error, place report this bug to ueyudiud.", e);
+			}
 		}
 		return false;
 	}

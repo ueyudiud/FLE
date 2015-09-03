@@ -20,6 +20,7 @@ public class MaterialAbstract implements ISubTagContainer
 {
 	public static File property;
 	private static final Register<MaterialAbstract> register = new Register();
+	public static final Register<MaterialAbstract> pureMaterials = new Register();
 	
 	public static final Register<MaterialAbstract> getMaterialRegistry()
 	{
@@ -86,5 +87,10 @@ public class MaterialAbstract implements ISubTagContainer
 	public void remove(SubTag aTag) 
 	{
 		tags.contains(aTag);
+	}
+	
+	public Matter getMatter()
+	{
+		return matter;
 	}
 }

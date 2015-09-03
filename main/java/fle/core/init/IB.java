@@ -9,13 +9,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.Fluid;
 import fle.api.FleValue;
-import fle.api.block.BlockFle;
 import fle.api.enums.EnumTool;
 import fle.api.fluid.FluidBase;
 import fle.api.material.PropertyInfo;
 import fle.api.recipe.ItemOreStack;
 import fle.core.block.BlockAsh;
 import fle.core.block.BlockCharcoal;
+import fle.core.block.BlockDitch;
 import fle.core.block.BlockFirewood;
 import fle.core.block.BlockFleCrop;
 import fle.core.block.BlockLeaves;
@@ -93,13 +93,20 @@ public class IB
 	public static Block argil_unsmelted;
 	public static Block argil_smelted;
 	public static Block ore_cobble;
+	public static Block ditch;
 	public static Fluid animalOil;
+	public static Fluid plant_ash_mortar;
+	public static Fluid lime_mortar;
 	public static Fluid copper;
+	public static Fluid cu_as_0;
 	
 	public static void init()
 	{
-		animalOil = new FluidBase("oil_a", new PropertyInfo(0xFFFFFF, 313, 773, 293, 3, 1500, 0.2F, 0.2F, 0.7F, 0.0F, 100, 0.0F, 1.8F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/oil");
+		animalOil = new FluidBase("oil_a", new PropertyInfo(0xFFFFFF, 313, 773, 293, 1831, 1500, 1.0F, -1F, 1.0F, 0.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/oil");
 		copper = new FluidBase("copper", Materials.Copper.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		plant_ash_mortar = new FluidBase("plant_ash_mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 1800, 1.0F, 3.2F, 0.7F, 1.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/plant_ash_mortar");
+		lime_mortar = new FluidBase("lime_mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 2200, 1.0F, 1.9F, 0.67F, 1.8F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/lime_mortar");
+		cu_as_0 = new FluidBase("cu_as_0", Materials.CuAs.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
 		debug = new ItemDebug("debug").setCreativeTab(CreativeTabs.tabRedstone).setTextureName(FleValue.TEXTURE_FILE + ":fle");
 		crop = new BlockFleCrop();
 		rock = new BlockRock().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);
@@ -119,6 +126,7 @@ public class IB
 		argil_smelted = new BlockClayInventory1("argil_smelted").init().setCreativeTab(CreativeTabs.tabDecorations);
 		firewood = new BlockFirewood().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/firewood_oak").setCreativeTab(CreativeTabs.tabBlock);
 		charcoal = new BlockCharcoal().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/coal").setCreativeTab(CreativeTabs.tabBlock);
+		ditch = new BlockDitch().setCreativeTab(CreativeTabs.tabDecorations);
 		tool = new ItemTool("tool", "tool").init().setCreativeTab(CreativeTabs.tabTools);
 		toolHead = new ItemToolHead("tool.head", "toolHead").init().setCreativeTab(CreativeTabs.tabMaterials);
 		food = new ItemFleFood("food", "foods").init().setCreativeTab(CreativeTabs.tabFood);

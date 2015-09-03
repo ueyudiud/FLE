@@ -162,6 +162,10 @@ public final class PropertyInfo
 	{
 		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
+	public PropertyInfo(int aColor, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, int aViscosity, float aDenseness, float aResistance, float aThermalConductivity, float aSpecificHeat)
+	{
+		this(aColor, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, aViscosity, 0.0F, 0.1F, aDenseness, 0.0F, 100000, aResistance, aThermalConductivity, aSpecificHeat);
+	}
 	public PropertyInfo(int aColor, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
 		this(new int[]{aColor, aColor}, 0, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, 0.0F, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);

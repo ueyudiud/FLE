@@ -44,6 +44,7 @@ import fle.api.item.ItemFleMetaBase;
 import fle.api.item.ItemFleTool;
 import fle.api.material.MaterialAbstract;
 import fle.api.recipe.CraftingState;
+import fle.api.util.FleLog;
 import fle.api.util.IDataChecker;
 import fle.api.util.ISubTagContainer;
 import fle.api.util.ITextureLocation;
@@ -91,11 +92,21 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	}
 	public static ItemStack a(String toolTip, MaterialAbstract base, MaterialAbstract cover, float area, MaterialAbstract mosaic, int damage)
 	{
-		ItemStack aStack = new ItemStack(IB.tool, 1, ((ItemTool) IB.tool).itemBehaviors.serial(toolTip));
-		aStack.stackTagCompound = new NBTTagCompound();
-		new ToolMaterialInfo(base, cover, area, mosaic).writeToNBT(aStack.getTagCompound());
-		((ItemTool) IB.tool).setDisplayDamage(aStack, damage * 100);
-		return aStack;
+		try
+		{
+			ItemStack aStack = new ItemStack(IB.tool, 1, ((ItemTool) IB.tool).itemBehaviors.serial(toolTip));
+			aStack.stackTagCompound = new NBTTagCompound();
+			new ToolMaterialInfo(base, cover, area, mosaic).writeToNBT(aStack.getTagCompound());
+			((ItemTool) IB.tool).setDisplayDamage(aStack, damage * 100);
+			return aStack;
+		}
+		catch(Throwable e)
+		{
+			//Use a null item.
+			FleLog.getLogger().warn("Fle: some mod use empty item with a bug, please check your fle-addon "
+					+ "had already update, or report this bug to mod editer.");
+			return null; //Return null.
+		}
 	}
 	
 	public ItemTool init()
@@ -106,6 +117,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		addToolMaterial(Materials.Stone);
 		addToolMaterial(Materials.CompactStone);
 		addToolMaterial(Materials.Copper);
+		addToolMaterial(Materials.CuAs);
 		addSubItem(1, "rough_stone_axe", "Rough Stone Axe", SubTag.TOOL_stone, 
 				new String[]{EnumTool.axe.toString()},
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
@@ -122,7 +134,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new TextureLocation("tools/shovel/stone_shovel_head", "tools/shovel/stone_shovel_rust", FleValue.VOID_ICON_FILE, "tools/shovel/stone_shovel_stick", "tools/shovel/stone_shovel_tie"), 
 				new BehaviorShovel(0.9F));
 		addSubItem(4, "flint_hammer", "Flint Hammer", SubTag.TOOL_flint, 
-				new String[]{EnumTool.stone_hammer.name()}, 
+				new String[]{EnumTool.stone_hammer.name(), EnumTool.abstract_hammer.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.5F)},
 				new TextureLocation("tools/hammer/flint_hammer_head", "tools/hammer/flint_hammer_rust", FleValue.VOID_ICON_FILE, "tools/hammer/flint_hammer_stick", "tools/hammer/flint_hammer_tie"), 
 				new BehaviorStoneHammer(1, 0.7F));

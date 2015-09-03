@@ -22,6 +22,7 @@ import fle.api.material.MaterialOre;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.DropInfo;
+import fle.api.util.FleEntry;
 import fle.api.world.BlockPos;
 import fle.core.block.BlockRock;
 import fle.core.block.ItemOreCobble;
@@ -29,7 +30,6 @@ import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
 import fle.core.item.ItemOre;
-import fle.core.util.FleEntry;
 
 public class StoneHammerHandler
 {

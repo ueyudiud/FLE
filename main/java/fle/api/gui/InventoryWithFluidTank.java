@@ -1,5 +1,6 @@
 package fle.api.gui;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,7 +46,7 @@ public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTi
 	{
 		if(!tile.getWorldObj().isRemote)
 		{
-			FleAPI.mod.getNetworkHandler().sendTo(new CoderTankUpdate(tile.getBlockPos()));
+			FleAPI.mod.getNetworkHandler().sendToNearBy(new CoderTankUpdate(tile.getBlockPos()), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
 		}
 	}
 

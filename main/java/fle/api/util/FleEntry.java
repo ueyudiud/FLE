@@ -1,4 +1,4 @@
-package fle.core.util;
+package fle.api.util;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,7 +10,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 public class FleEntry<K, V> implements Entry<K, V>
-{
+{	
 	public static <K, V> Map<K, V> asMap(Iterator<K> keys, Function<? super K, V> entries)
 	{
 		return Maps.toMap(keys, entries);

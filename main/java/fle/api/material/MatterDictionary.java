@@ -18,7 +18,7 @@ public class MatterDictionary
 	private static final Map<ItemAbstractStack, AtomStack> matterMap = new HashMap();
 	private static final Map<Matter, Fluid> fluidMap = new HashMap();
 	private static final Map<Fluid, Matter> fluidMatterMap = new HashMap();
-	private static final Map<ItemAbstractStack, Integer[]> meltingRequireMap = new HashMap();
+	private static final Map<ItemAbstractStack, int[]> meltingRequireMap = new HashMap();
 	private static final List<IFreezingRecipe> freezingRecipeMap = new ArrayList();
 
 	public static void registerMatter(ItemAbstractStack aStack, Matter matter, int amount)
@@ -28,7 +28,7 @@ public class MatterDictionary
 	public static void registerMatter(ItemAbstractStack aStack, Matter matter, int amount, int temNeed, int meltRequire)
 	{
 		matterMap.put(aStack, new AtomStack(matter, amount));
-		meltingRequireMap.put(aStack, new Integer[]{new Integer(temNeed), new Integer(meltRequire)});
+		meltingRequireMap.put(aStack, new int[]{temNeed, meltRequire});
 	}
 	
 	public static void registerMatter(IFreezingRecipe recipe)
@@ -57,14 +57,14 @@ public class MatterDictionary
 		return null;
 	}
 	
-	public static Integer[] getMeltRequires(ItemStack aStack)
+	public static int[] getMeltRequires(ItemStack aStack)
 	{
 		for(ItemAbstractStack tStack : meltingRequireMap.keySet())
 		{
 			if(tStack.isStackEqul(aStack))
 				return meltingRequireMap.get(tStack);
 		}
-		return new Integer[]{Integer.MAX_VALUE, -1};
+		return new int[]{Integer.MAX_VALUE, -1};
 	}
 	
 	public static FluidStack getMelting(ItemStack aStack)

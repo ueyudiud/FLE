@@ -1,6 +1,9 @@
 package fle.api.net;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -13,7 +16,10 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import fle.api.FleAPI;
+import fle.api.material.IAtoms;
+import fle.api.material.Matter;
 import fle.api.te.IFluidTanks;
+import fle.api.te.IMatterContainer;
 import fle.api.te.IObjectInWorld;
 import fle.api.te.ITEInWorld;
 import fle.api.tech.Technology;
@@ -24,6 +30,63 @@ import fle.api.world.BlockPos;
 
 public class FlePackets
 {
+	public static class CoderMatterUpdate extends FleAbstractPacket<CoderMatterUpdate>
+	{
+		BlockPos pos;
+		Map<IAtoms, Integer> map;
+		
+		public CoderMatterUpdate()
+		{
+			map = new HashMap<IAtoms, Integer>();
+		}
+		public CoderMatterUpdate(IObjectInWorld oiw, IMatterContainer mc)
+		{
+			pos = oiw.getBlockPos();
+			map = mc.getMatterContain();
+		}
+
+		@Override
+		protected void write(FleDataOutputStream os) throws IOException
+		{
+			os.writeBlockPos(pos);
+			Map<IAtoms, Integer> map = new HashMap();
+			for(Entry<IAtoms, Integer> entry : this.map.entrySet())
+			{
+				if(entry.getKey() == null || entry.getValue() <= 0) continue;
+				map.put(entry.getKey(), entry.getValue());
+			}
+			os.writeInt(map.size());
+			for(Entry<IAtoms, Integer> entry : map.entrySet())
+			{
+				os.writeString(entry.getKey().getChemicalFormulaName());
+				os.writeInt(entry.getValue());
+			}
+		}
+
+		@Override
+		protected void read(FleDataInputStream is) throws IOException
+		{
+			pos = is.readBlockPos();
+			int size = is.readInt();
+			for(int i = 0; i < size; ++i)
+			{
+				Matter matter = Matter.getMatterFromName(is.readString());
+				int l = is.readInt();
+				map.put(matter, l);
+			}
+		}
+
+		@Override
+		public IMessage onMessage(CoderMatterUpdate message, MessageContext ctx)
+		{
+			if(message.pos.getBlockTile() instanceof IMatterContainer)
+			{
+				((IMatterContainer) message.pos.getBlockTile()).setMatterContain(message.map);
+			}
+			return null;
+		}
+	}
+	
 	public static class CoderPTUpdate extends FleAbstractPacket<CoderPTUpdate>
 	{
 		String str;
@@ -341,15 +404,6 @@ public class FlePackets
 			os.writeBlockPos(pos);
 			os.writeByte(type);
 			os.write(contain);
-			if(tile != null)
-			{
-				os.writeBoolean(true);
-				os.writeString(tile);
-			}
-			else 
-			{
-				os.writeBoolean(false);
-			}
 		}
 
 		@Override
@@ -358,26 +412,11 @@ public class FlePackets
 			pos = is.readBlockPos();
 			type = is.readByte();
 			contain = is.read();
-			if(is.readBoolean())
-			{
-				tile = is.readString();
-			}
 		}
 
 		@Override
 		public IMessage onMessage(CoderTileUpdate message, MessageContext ctx)
 		{
-			if(message.pos.getBlockTile() == null)
-			{
-				try
-				{
-					FleAPI.mod.getPlatform().getWorldInstance(message.pos.getDim()).setTileEntity(message.pos.x, message.pos.y, message.pos.z, (TileEntity) Class.forName(tile).newInstance());
-				}
-				catch(Throwable e)
-				{
-					FleLog.getLogger().error("FLE : send a packet to null, and fail to create new tile entity!");
-				}
-			}
 			if(message.pos.getBlockTile() instanceof INetEventListener)
 			{
 				((INetEventListener) message.pos.getBlockTile()).onReseave(message.type, message.contain);

@@ -59,6 +59,12 @@ public class ItemFleBlock extends ItemBlock
 		return block.maxStackSize;
 	}
 	
+	@Override
+	public int getMetadata(int meta)
+	{
+		return meta;
+	}
+	
 	protected static NBTTagCompound setupNBT(ItemStack aStack)
 	{
 		if(!aStack.hasTagCompound())

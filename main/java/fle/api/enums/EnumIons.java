@@ -1,9 +1,16 @@
 package fle.api.enums;
 
-import fle.api.material.IAtoms;
-import fle.api.util.WeightHelper;
+import java.util.HashMap;
+import java.util.Map;
 
-public enum EnumIons implements IAtoms
+import fle.api.material.IAtoms;
+import fle.api.material.IStabilityInfo;
+import fle.api.util.FleEntry;
+import fle.api.util.IChemCondition;
+import fle.api.util.WeightHelper;
+import fle.api.util.WeightHelper.Stack;
+
+public enum EnumIons implements IAtoms, IStabilityInfo
 {
 	H_1("H", -1),
 	H1("H", +1),
@@ -108,67 +115,65 @@ public enum EnumIons implements IAtoms
 	U3("U", +3),
 	U5("U", +5),
 	Pu3("Pu", +3),
-	Ammonium("NH4", -2, true, new EnumIons[]{N_3, H1, H1, H1, H1}),
-	Carbonate("CO3", -2, true, new EnumIons[]{C4, O_2, O_2, O_2}),
-	Peroxide("O2", -2, true, new EnumIons[]{O_1, O_1}),
-	Superoxide("O2", -1, true, new EnumIons[]{O_1, O_1}),
-	Hypochlorite("ClO", -1, true, new EnumIons[]{Cl1, O_2}),
-	Chlorate("ClO3", -1, true, new EnumIons[]{Cl5, O_2, O_2, O_2}),
-	Perchlorate("ClO4", -1, true, new EnumIons[]{Cl5, O_2, O_2, O_2, O_2}),
-	Chromate("CrO4", -2, true, new EnumIons[]{Cr6, O_2, O_2, O_2, O_2}),
-	Dichromate("Cr2O7", -2, true, new EnumIons[]{Cr6, Cr6, O_2, O_2, O_2, O_2, O_2, O_2, O_2}),
-	Permanganate("MnO4", -1, true, new EnumIons[]{Mn7, O_2, O_2, O_2, O_2}),
-	Dihydrogen_Phosphate("H2PO4", -1, true, new EnumIons[]{H1, H1, P5, O_2, O_2, O_2, O_2}),
-	Monohydrogen_Phosphate("HPO4", -2, true, new EnumIons[]{H1, P5, O_2, O_2, O_2, O_2}),
-	Phosphate("PO4", -3, true, new EnumIons[]{P5, O_2, O_2, O_2, O_2}),
-	Hydrogen_Carbonate("HCO3", -1, true, new EnumIons[]{H1, C4, O_2, O_2, O_2}),
-	Nitrate("NO3", -1, true, new EnumIons[]{N5, O_2, O_2, O_2}),
-	Nitrite("NO2", -1, true, new EnumIons[]{N3, O_2, O_2}),
-	Hydrogen_Sulfite("HSO3", -1, true, new EnumIons[]{H1, S4, O_2, O_2, O_2}),
-	Sulfite("SO3", -1, true, new EnumIons[]{S4, O_2, O_2, O_2}),
-	Thiosulfate("S2O3", -2, true, new EnumIons[]{S4, S, O_2, O_2, O_2}),
-	Sulfate("SO4", -2, true, new EnumIons[]{S4, O_2, O_2, O_2, O_2}),
-	Silicate("SiO4", -4, true, new EnumIons[]{Si4, O_2, O_2, O_2, O_2}),
-	Metasilicate("SiO3", -2, true, new EnumIons[]{Si4, O_2, O_2, O_2}),
-	Aluminium_Silicate("AlSiO4", -1, true, new EnumIons[]{Al3, Si4, O_2, O_2, O_2, O_2}),
-	Hydroxide("OH", -1, true, new EnumIons[]{H1, O_2});
+	Ammonium("NH4", -2, new Stack[]{new Stack(N_3), new Stack(H1, 4)}),
+	Carbonate("CO3", -2, new Stack[]{new Stack(C4), new Stack(O_2, 3)}),
+	Peroxide("O2", -2, new Stack[]{new Stack(O_1)}),
+	Superoxide("O2", -1, new Stack[]{new Stack(O_1)}),
+	Hypochlorite("ClO", -1, new Stack[]{new Stack(Cl1), new Stack(O_2)}),
+	Chlorate("ClO3", -1, new Stack[]{new Stack(Cl5), new Stack(O_2, 3)}),
+	Perchlorate("ClO4", -1, new Stack[]{new Stack(Cl5), new Stack(O_2, 4)}),
+	Chromate("CrO4", -2, new Stack[]{new Stack(Cr6), new Stack(O_2, 4)}),
+	Dichromate("Cr2O7", -2, new Stack[]{new Stack(Cr6, 2), new Stack(O_2, 7)}),
+	Permanganate("MnO4", -1, new Stack[]{new Stack(Mn7), new Stack(O_2, 4)}),
+	Dihydrogen_Phosphate("H2PO4", -1, new Stack[]{new Stack(H1, 2), new Stack(P5), new Stack(O_2, 4)}),
+	Monohydrogen_Phosphate("HPO4", -2, new Stack[]{new Stack(H1), new Stack(P5), new Stack(O_2, 4)}),
+	Phosphate("PO4", -3, new Stack[]{new Stack(P5), new Stack(O_2, 4)}),
+	Hydrogen_Carbonate("HCO3", -1, new Stack[]{new Stack(H1), new Stack(C4), new Stack(O_2, 3)}),
+	Nitrate("NO3", -1, new Stack[]{new Stack(N5), new Stack(O_2, 3)}),
+	Nitrite("NO2", -1, new Stack[]{new Stack(N3), new Stack(O_2, 2)}),
+	Hydrogen_Sulfite("HSO3", -1, new Stack[]{new Stack(H1), new Stack(S4), new Stack(O_2, 3)}),
+	Sulfite("SO3", -1, new Stack[]{new Stack(S4), new Stack(O_2, 3)}),
+	Thiosulfate("S2O3", -2, new Stack[]{new Stack(S4), new Stack(S), new Stack(O_2, 3)}),
+	Sulfate("SO4", -2, new Stack[]{new Stack(S4), new Stack(O_2, 4)}),
+	Silicate("SiO4", -4, new Stack[]{new Stack(Si4), new Stack(O_2, 4)}),
+	Metasilicate("SiO3", -2, new Stack[]{new Stack(Si4), new Stack(O_2, 3)}),
+	Aluminium_Silicate("AlSiO4", -1, new Stack[]{new Stack(Al3), new Stack(Si4), new Stack(O_2, 4)}),
+	Hydroxide("OH", -1, new Stack[]{new Stack(H1), new Stack(O_2)});
 	
 	final String str1;
-	boolean isRadical = false;
+	boolean isRadical;
 	int charge;
-	EnumIons[] containIon;
-	EnumAtoms[] containAtom;
+	Map<IAtoms, Integer> containIon = new HashMap();
+	Map<EnumAtoms, Integer> containAtom;
 
-	EnumIons(String aCfName, int aCharge, boolean aRadical, EnumIons[] aContainIon) 
+	EnumIons(String aCfName, int aCharge, Stack<EnumIons>[] aContainIon) 
 	{
-		isRadical = aRadical;
+		isRadical = true;
 		str1 = aCfName;
 		charge = aCharge;
-		containIon = aContainIon;
-		containAtom = new EnumAtoms[containIon.length];
-		if(aRadical)
+		for(Stack<EnumIons> stack : aContainIon)
 		{
-			for(int i = 0; i < containIon.length; ++i)
-			{
-				containAtom[i] = containIon[i].getElementContain();
-			}
+			containIon.put(stack.getObj(), stack.getSize());
 		}
-		else
+		containAtom = new HashMap();
+		for(int i = 0; i < aContainIon.length; ++i)
 		{
-			containAtom = new EnumAtoms[]{EnumAtoms.valueOf(aCfName)};
+			WeightHelper.add(containAtom, aContainIon[i].getObj().getElementAtoms());
 		}
+	}
+	
+	EnumIons(String aCfName, int aCharge) 
+	{
+		isRadical = false;
+		str1 = aCfName;
+		charge = aCharge;
+		containAtom = FleEntry.asMap(new FleEntry(EnumAtoms.valueOf(aCfName), 1));
+		containIon = FleEntry.asMap(new FleEntry(this, 1));
 	}
 	
 	EnumAtoms getElementContain() 
 	{
 		return !isRadical ? EnumAtoms.valueOf(str1) : null;
-	}
-	
-	EnumIons(String aCfName, int aCharge) 
-	{
-		str1 = aCfName;
-		charge = aCharge;
-		containAtom = new EnumAtoms[]{EnumAtoms.valueOf(aCfName)};
 	}
 
 	@Override
@@ -178,9 +183,9 @@ public enum EnumIons implements IAtoms
 	}
 
 	@Override
-	public IAtoms[] getIonContain()
+	public Map<IAtoms, Integer> getIonContain(EnumCountLevel level)
 	{
-		return isRadical ? containIon.clone() : new IAtoms[]{this};
+		return level == EnumCountLevel.Atom ? containIon : FleEntry.asMap(new FleEntry(this, 1));
 	}
 	
 	@Override
@@ -196,8 +201,21 @@ public enum EnumIons implements IAtoms
 	}
 
 	@Override
-	public EnumAtoms[] getElementAtoms() 
+	public Map<EnumAtoms, Integer> getElementAtoms() 
 	{
-		return containAtom.clone();
+		return containAtom;
+	}
+
+	@Override
+	public Stack<IAtoms>[] getAtomsOutput(IChemCondition condition,
+			Stack<IAtoms> input)
+	{
+		Stack<IAtoms> i = input.copy();
+		if(input.getObj() instanceof EnumIons)
+		{
+			if(!((EnumIons) input.getObj()).isRadical)
+				i = new Stack<IAtoms>(EnumAtoms.valueOf(((EnumIons) input.getObj()).str1), input.getSize());
+		}
+		return getElementContain() != null ? getElementContain().getAtomsOutput(condition, i) : new Stack[]{i};
 	}
 }

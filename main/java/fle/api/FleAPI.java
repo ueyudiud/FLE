@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -39,7 +40,7 @@ public class FleAPI
 	public static ILanguageManager lm;
 	private static List<IFuelHandler> fuelList = new ArrayList();
 	
-	public static void damageItem(EntityPlayer aPlayer, ItemStack aStack, EnumDamageResource aResource, float damage)
+	public static void damageItem(EntityLivingBase aPlayer, ItemStack aStack, EnumDamageResource aResource, float damage)
 	{
 		if(aStack == null) return;
 		else if(Compact.isFLETool(aStack.getItem()))
@@ -154,6 +155,16 @@ public class FleAPI
 				return tHandler.getFuelRequireSmoke(aStack, aAirBase);
 		}
 		return false;
+	}
+
+	public static int getFulBuf(ItemStack aStack, Matter aAirBase)
+	{
+		for (IFuelHandler tHandler : fuelList)
+		{
+			if(tHandler.getFuelCalorificValue(aStack, aAirBase) > 0)
+				return tHandler.getFuelCalorificValue(aStack, aAirBase);
+		}
+		return -1;
 	}
 	
 	public static int getIndexFromDirection(ForgeDirection aDirection)

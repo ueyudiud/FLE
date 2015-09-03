@@ -91,7 +91,7 @@ public class InventoryCastingPool extends InventoryWithFluidTank<TileEntityCasti
 		else if(recipe == null && !tile.getWorldObj().isRemote)
 		{
 			buf = 0;
-			FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
+			tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), 16.0F);
 		}
 	}
 

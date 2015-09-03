@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
 import fle.api.cg.ICG;
 import fle.api.cg.RecipesTab;
 import fle.api.enums.EnumAtoms;
@@ -25,6 +26,7 @@ import fle.api.util.SubTag;
 import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorArgilItem;
 import fle.core.item.behavior.BehaviorArrowBag;
+import fle.core.item.behavior.BehaviorBarrel;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.BehaviorBlockable;
 import fle.core.item.behavior.BehaviorCastingTool;
@@ -80,25 +82,33 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(1006, "charred_log", "Charred Log", "tree/1003", new BehaviorBlockable(4, IB.charcoal));
 		addSubItem(1007, "millet", "Millet", "crop/millet");
 		addSubItem(2001, "lipocere", "Lipocere", "resource/dust/1");
-		addSubItem(3001, "dust_limestone", "Limestone Dust", "stones/11001");
+		addSubItem(3001, "dust_limestone", "Limestone Dust", "stones/11001", new BehaviorArgilItem());
 		addSubItem(3002, "plant_ash", "Plant Ash", "resource/dust/3", new BehaviorBlockable(IB.ash));
 		addSubItem(3003, "argil_ball", "Argil Ball", "resource/dust/2", new BehaviorCeramics());
 		addSubItem(3004, "cemented_grit", "Cemented Grit", "resource/dust/1001", new BehaviorCastingTool());
+		addSubItem(3005, "dust_quicklime", "Quick Lime Dust", "resource/dust/4");
 		addSubItem(5202, "argil_unsmelted_brick", "Unsmelted Argil Brick", "clay/101", new BehaviorArgilItem());
 		addSubItem(5203, "argil_brick", "Argil Brick", "clay/1101");
 		addSubItem(6201, "stone_plate", "Stone Plate", "resource/plate/stone");
 		addSubItem(6202, "argil_unsmelted_plate", "Unsmelted Argil Plate", "resource/plate/argil_unsmelted", new BehaviorArgilItem());
 		addSubItem(6203, "argil_plate", "Argil Plate", "resource/plate/argil");
+		addSubItem(7001, "wood_bucket_0_empty", "Empty Wood Barrel", "tank/wood_0_empty", new BehaviorBarrel(null));
+		addSubItem(7002, "wood_bucket_0_water", "Water Wood Barrel", "tank/wood_0_water", new BehaviorBarrel(FluidRegistry.WATER));
+		addSubItem(7003, "wood_bucket_0_plant_ash_mortar", "Plant Ash mortar Wood Barrel", "tank/wood_0_plant_ash_mortar", new BehaviorBarrel(IB.plant_ash_mortar));
+		addSubItem(7004, "wood_bucket_0_lime_mortar", "Lime Mortar Wood Barrel", "tank/wood_0_lime_mortar", new BehaviorBarrel(IB.lime_mortar));
 		addSubItem(10001, "arrow_bag", "Arrow Bag", "tools/arrow_bag", new BehaviorArrowBag());
 		addSubItem(10101, "guide_book", "Guide Book", "book/guide_book", new BehaviorGuideBook(RecipesTab.tabClassic));
 		addSubItem(10102, "guide_book_1", "Old Stone Age Book", "book/0", new BehaviorGuideBook(RecipesTab.tabOldStoneAge));
 		addSubItem(10103, "guide_book_2", "New Stone Age Book", "book/1", new BehaviorGuideBook(RecipesTab.tabNewStoneAge));
 		addSubItem(10104, "guide_book_3", "Copper Age Book", "book/2", new BehaviorGuideBook(RecipesTab.tabCopperAge));
-		for(int i = 0; i < EnumAtoms.values().length; ++i)
+		int i = 0;
+		for(; i < EnumAtoms.values().length; ++i)
 		{
 			if(EnumAtoms.values()[i].contain(SubTag.ATOM_metal))
 				addSubItem(20001 + i, "ingot_" + EnumAtoms.values()[i].name().toLowerCase(), EnumAtoms.values()[i].getName() + " Ingot", "resource/ingot/" + EnumAtoms.values()[i].name().toLowerCase());
 		}
+		i = 20002 + i;
+		addSubItem(i++, "ingot_cu_as_0", "Arsenic Bronze Ingot", "resource/ingot/cu-as-1");
 		stackLimitList.add(10001);
 		return this;
 	}
@@ -123,8 +133,8 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		catch(Throwable e)
 		{
 			//Use a null item.
-			FleLog.getLogger().catching(new RuntimeException("Fle: some mod use empty item id " + name + ", please check your fle-addon "
-					+ "had already update, or report this bug to mod editer."));
+			FleLog.getLogger().warn("Fle: some mod use empty item id " + name + ", please check your fle-addon "
+					+ "had already update, or report this bug to mod editer.");
 			return null; //Return null.
 		}
 	}

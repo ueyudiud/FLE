@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fle.api.util.IChemCondition.EnumPH;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -13,6 +14,7 @@ public class FluidDictionary extends fle.api.fluid.FluidDictionary
 {
 	private Map<String, List<Fluid>> fluidMap = new HashMap();
 	private Map<Fluid, List<String>> dicMap = new HashMap();
+	private Map<String, EnumPH> phMap = new HashMap();
 	
 	boolean init = true;
 	
@@ -76,5 +78,17 @@ public class FluidDictionary extends fle.api.fluid.FluidDictionary
 			init = false;
 		}
 		return fluidMap.get(fluidName).contains(target.getFluid());
+	}
+
+	@Override
+	public void registerFluidPH(Fluid fluid, EnumPH ph)
+	{
+		phMap.put(fluid.getName(), ph);
+	}
+
+	@Override
+	public EnumPH getFluidPH(Fluid fluid)
+	{
+		return phMap.containsKey(fluid.getName()) ? phMap.get(fluid.getName()) : EnumPH.Water;
 	}
 }

@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.enums.EnumAtoms;
+import fle.api.material.IAtoms.EnumCountLevel;
 import fle.api.material.Matter;
 import fle.api.net.FlePackets.CoderNBTUpdate;
 import fle.api.te.TEBase;
@@ -93,7 +94,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		if(burnState == 2)
 		{
 			--woodContain;
-			heatCurrect.reseaveHeat((isCoal ? charcoalPower : firewoodPower) * FLE.fle.getAirConditionProvider().getAirLevel(getBlockPos()).getIconContain(EnumAtoms.O));
+			heatCurrect.reseaveHeat((isCoal ? charcoalPower : firewoodPower) * FLE.fle.getAirConditionProvider().getAirLevel(getBlockPos()).getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			if(!canBBurning()) burnState = 1;
 			if((getBlockPos().toPos(ForgeDirection.UP).getBlock().isFlammable(worldObj, xCoord, yCoord + 1, zCoord, ForgeDirection.UP) || getBlockPos().toPos(ForgeDirection.UP).isReplacable()))
 			{

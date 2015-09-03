@@ -5,5 +5,5 @@ import fle.api.util.WeightHelper;
 
 public interface AlloyHelper
 {
-	public boolean matchProportion(WeightHelper<EnumAtoms> aHelper);
+	public boolean matchProportion(WeightHelper<IAtoms> aHelper);
 }

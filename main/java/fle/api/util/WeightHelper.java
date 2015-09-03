@@ -4,13 +4,90 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class WeightHelper<T>
 {
+	public static <T> Stack<T>[] asArray(Map<T, Integer> aMap)
+	{
+		Stack<T>[] sts = new Stack[aMap.size()];
+		int i = 0;
+		for(Entry<T, Integer> e : aMap.entrySet())
+		{
+			sts[i] = new Stack(e.getKey(), e.getValue());
+			++i;
+		}
+		return sts;
+	}
+	public static <T> void add(Map<T, Integer> map, T e)
+	{
+		if(e != null)
+		{
+			if(map.containsKey(e))
+			{
+				int a = map.get(e) + 1;
+				map.put(e, a);
+			}
+			else
+			{
+				map.put(e, 1);
+			}
+		}
+	}
+	public static <T> void add(Map<T, Integer> map, Stack<T> e)
+	{
+		if(e.target != null && e.size > 0)
+		{
+			if(map.containsKey(e.target))
+			{
+				int a = map.get(e.target) + e.size;
+				map.put(e.target, a);
+			}
+			else
+			{
+				map.put(e.target, e.size);
+			}
+		}
+	}
+	public static <T> void add(Map<T, Integer> map, Stack<T> e, int size)
+	{
+		if(map.containsKey(e.target))
+		{
+			int a = map.get(e.target) + e.size * size;
+			map.put(e.target, a);
+		}
+		else
+		{
+			map.put(e.target, e.size);
+		}
+	}
+	public static <T> void add(Map<T, Integer> map, T...e)
+	{
+		for(T t : e) add(map, t);
+	}
+	public static <T> void add(Map<T, Integer> map, Stack<T>...e)
+	{
+		for(Stack<T> ts : e) add(map, ts);
+	}
+	public static <T> void add(Map<T, Integer> map, int size, Stack<T>...e)
+	{
+		for(Stack<T> ts : e) add(map, ts, size);
+	}
+	public static <T> void add(Map<T, Integer> aMap,
+			Map<T, Integer> aValue)
+	{
+		for(Entry<T, Integer> e : aValue.entrySet()) add(aMap, new Stack(e.getKey(), e.getValue()));
+	}
+	public static <T> void add(Map<T, Integer> aMap, int size,
+			Map<T, Integer> aValue)
+	{
+		for(Entry<T, Integer> e : aValue.entrySet()) add(aMap, new Stack(e.getKey(), e.getValue() * size));
+	}
+	
 	private static final Random rand = new Random();
+	private int length;
 	private Stack<T>[] sts;
-	private Object[] ts;
 	
 	public WeightHelper(T[]...aTs) 
 	{
@@ -18,14 +95,12 @@ public class WeightHelper<T>
 		int size = 0;
 		for(i = 0; i < aTs.length; ++i)
 			size += aTs[i].length;
-		ts = new Object[size];
 		int r = 0;
 		Map<T, Integer> map = new HashMap();
 		for(i = 0; i < aTs.length; ++i)
 			for(int j = 0; j < aTs[i].length; ++j)
 			{
 				add(map, aTs[i][j]);
-				ts[r] = aTs[i][j];
 				++r;
 			}
 		sts = new Stack[map.size()];
@@ -35,10 +110,10 @@ public class WeightHelper<T>
 			sts[i] = new Stack(e, map.get(e));
 			++i;
 		}
+		length = r;
 	}
 	public WeightHelper(T...aTs)
 	{
-		ts = aTs;
 		int i;
 		Map<T, Integer> map = new HashMap();
 		for(i = 0; i < aTs.length; ++i)
@@ -50,6 +125,7 @@ public class WeightHelper<T>
 			sts[i] = new Stack(e, map.get(e));
 			++i;
 		}
+		length = i;
 	}
 	public WeightHelper(Map<T, Integer> aMap)
 	{
@@ -62,36 +138,16 @@ public class WeightHelper<T>
 			size += aMap.get(e);
 			++i;
 		}
-		ts = new Object[size];
-		int k = 0;
-		for(i = 0; i < sts.length; ++i)
-			for(int j = 0; j < sts[i].size; ++j)
-			{
-				ts[k] = sts[i].target;
-				++k;
-			}
+		length = size;
 	}
-	
-	private static <T> void add(Map<T, Integer> map, T e)
-	{
-		if(map.containsKey(e))
-		{
-			int a = map.get(e) + 1;
-			map.put(e, a);
-		}
-		else
-		{
-			map.put(e, 1);
-		}
-	}
-	
+
 	public double getContain(T e)
 	{
 		for(int i = 0; i < sts.length; ++i)
 		{
 			if(sts[i].isEqul(e))
 			{
-				return (double) sts[i].size / (double) ts.length;
+				return (double) sts[i].size / (double) length;
 			}
 		}
 		return 0D;
@@ -118,22 +174,29 @@ public class WeightHelper<T>
 	
 	public T randomGet(Random rand)
 	{
-		return (T) ts[rand.nextInt(ts.length)];
+		int i = rand.nextInt(length);
+		int cache = 0;
+		for(Stack<T> stack : sts)
+		{
+			if(cache + stack.size > i) return stack.target;
+			cache += stack.size;
+		}
+		return (T) null;
 	}
 	
 	public T randomGet()
 	{
-		return (T) ts[rand.nextInt(ts.length)];
+		return randomGet(rand);
+	}
+	
+	public Stack<T>[] getList()
+	{
+		return sts;
 	}
 	
 	public int allWeight()
 	{
-		return ts.length;
-	}
-	
-	public Object[] getList() 
-	{
-		return ts.clone();
+		return length;
 	}
 	
 	@Override
@@ -156,7 +219,7 @@ public class WeightHelper<T>
 		
 		public boolean isEqul(Object obj)
 		{
-			return target == null && obj == null ? true : target == null || obj == null ? false : target.equals(obj);
+			return target == null && obj == null ? true : (target == null || obj == null ? false : target.equals(obj));
 		}
 		
 		public void addStackIn(int aS)
@@ -168,6 +231,26 @@ public class WeightHelper<T>
 		public String toString()
 		{
 			return target.toString() + "x" + size;
+		}
+		
+		public T getObj()
+		{
+			return target;
+		}
+		
+		public int getSize()
+		{
+			return size;
+		}
+		
+		public void setSize(int aSize)
+		{
+			size = aSize;
+		}
+		
+		public Stack<T> copy()
+		{
+			return new Stack(target, size);
 		}
 	}
 }

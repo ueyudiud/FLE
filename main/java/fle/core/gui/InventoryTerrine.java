@@ -70,7 +70,7 @@ public class InventoryTerrine extends InventoryWithFluidTank<TileEntityTerrine>
 			if(MatterDictionary.getMelting(stacks[0]) != null && stacks[1] == null)
 			{
 				AtomStack stack = MatterDictionary.getMatter(stacks[0]);
-				Integer[] is = MatterDictionary.getMeltRequires(stacks[0]);
+				int[] is = MatterDictionary.getMeltRequires(stacks[0]);
 				if(tile.getTemperature(ForgeDirection.UNKNOWN) > is[0])
 				{
 					double progress = (tile.getTemperature(ForgeDirection.UNKNOWN) - is[0]) * 10D;

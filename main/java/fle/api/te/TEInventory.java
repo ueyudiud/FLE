@@ -89,10 +89,16 @@ public abstract class TEInventory<T extends IInventoryTile<?>> extends TEBase im
 	}
 
 	@Override
-	public void openInventory() {	}
+	public void openInventory()
+	{
+		inv.openInventory();
+	}
 
 	@Override
-	public void closeInventory() {  }
+	public void closeInventory()
+	{
+		inv.closeInventory();
+	}
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)

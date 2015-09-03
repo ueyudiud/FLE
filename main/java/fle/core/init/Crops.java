@@ -2,6 +2,7 @@ package fle.core.init;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import fle.api.util.FleEntry;
 import fle.core.block.crop.CropBase;
 import fle.core.block.crop.CropMillet;
 import fle.core.block.crop.CropRamie;
@@ -10,7 +11,6 @@ import fle.core.block.crop.CropSugerCances;
 import fle.core.block.crop.CropWheat;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
-import fle.core.util.FleEntry;
 
 public class Crops
 {

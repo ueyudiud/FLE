@@ -131,7 +131,7 @@ public class FlePackets
 		@Override
 		public IMessage onMessage(CoderFWMAskMeta message, MessageContext ctx)
 		{
-			FLE.fle.getWorldManager().sendData(message.pos, ctx.getServerHandler().playerEntity);
+			FLE.fle.getWorldManager().sendData(message.pos);
 			return null;
 		}
 	}

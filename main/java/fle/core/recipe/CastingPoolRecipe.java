@@ -17,6 +17,7 @@ public class CastingPoolRecipe implements IFreezingRecipe
 	public static void init()
 	{
 		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu")));
+		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.cu_as_0, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu_as_0")));
 		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 3), "x  xx xxx", ItemToolHead.a("metal_axe", Materials.Copper, 7)));
 		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 3), "  x xxxxx", ItemToolHead.a("metal_axe", Materials.Copper, 7)));
 		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 3), "   xxxxxx", ItemToolHead.a("metal_pickaxe", Materials.Copper, 7)));
@@ -25,6 +26,8 @@ public class CastingPoolRecipe implements IFreezingRecipe
 		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 5), "   x  xxx", ItemToolHead.a("metal_hammer", Materials.Copper, 7)));
 		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 2), " xxx xxxx", ItemToolHead.a("metal_chisel", Materials.Copper, 7)));
 		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 2), "xx x xxxx", ItemToolHead.a("metal_chisel", Materials.Copper, 7)));
+		MatterDictionary.registerMatter(new CeramicFurnaceOutletRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 1), ItemFleSub.a("ingot_cu")));
+		MatterDictionary.registerMatter(new CeramicFurnaceOutletRecipe(new FluidStack(IB.cu_as_0, FleValue.ingot_mol * 3 * 1), ItemFleSub.a("ingot_cu_as_0")));
 	}
 	
 	FluidStack input;

@@ -11,13 +11,14 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.block.IFacingBlock;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.net.FleAbstractPacket;
 import fle.api.world.BlockPos;
 
 public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 {
 	protected final Random rand = new Random();
-	private ForgeDirection dir;
+	protected ForgeDirection dir;
 	
 	public void setDirction(ForgeDirection aDirection)
 	{
@@ -76,6 +77,8 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 	@Override
 	public ForgeDirection getDirction(BlockPos pos) 
 	{
+		if(dir == ForgeDirection.UNKNOWN || dir == null)
+			dir = ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, EnumWorldNBT.Facing)];
 		return dir;
 	}
 

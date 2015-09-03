@@ -51,7 +51,7 @@ public class ItemClayInventory extends ItemSubTile
 	@Override
 	public IIcon getIconFromDamage(int meta)
 	{
-		return getIconFromDamageForRenderPass(0, meta);
+		return getIconFromDamageForRenderPass(meta, 0);
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public class ItemClayInventory extends ItemSubTile
 	}
 	
 	@Override
-	public IIcon getIconFromDamageForRenderPass(int pass, int meta)
+	public IIcon getIconFromDamageForRenderPass(int meta, int pass)
 	{
 		return iconMap.get(meta)[pass];
 	}

@@ -276,6 +276,11 @@ public class FleDataOutputStream
 			if(writeType) writeByte((byte) 14);
 			writeString(((GuiCondition) contain).getName());
 		}
+		else if(contain instanceof int[])
+		{
+			if(writeType) writeByte((byte) 15);
+			writeIntArray((int[]) contain);
+		}
 	}
 	
 	public void close() throws IOException

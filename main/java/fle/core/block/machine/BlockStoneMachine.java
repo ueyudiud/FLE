@@ -8,6 +8,10 @@ import net.minecraft.world.World;
 import fle.api.block.IBlockWithTileBehaviour;
 import fle.api.block.IGuiBlock;
 import fle.core.block.BlockSubTile;
+import fle.core.block.behaviour.BehaviourCeramicBricks;
+import fle.core.block.behaviour.BehaviourCeramicFurnaceFirebox;
+import fle.core.block.behaviour.BehaviourCeramicFurnaceInlet;
+import fle.core.block.behaviour.BehaviourCeramicFurnaceOutlet;
 import fle.core.block.behaviour.BehaviourLavaHeatTransfer;
 import fle.core.util.BlockTextureManager;
 
@@ -16,6 +20,10 @@ public class BlockStoneMachine extends BlockSubTile implements IGuiBlock
 	public BlockStoneMachine init()
 	{
 		registerSub(0, "lavaHeatTransfer", "Lava Heat Transfer", new BlockTextureManager("rock/compactstone"), new BehaviourLavaHeatTransfer());
+		registerSub(1, "ceramicBricks", "Ceramic Bricks", new BlockTextureManager("machine/calcinator"), new BehaviourCeramicBricks());
+		registerSub(2, "ceramicFurnaceInlet", "Ceramic Furnace Inlet", new BlockTextureManager(new String[]{"machine/calcinator_top", "machine/calcinator"}), new BehaviourCeramicFurnaceInlet());
+		registerSub(3, "ceramicFurnaceOutlet", "Ceramic Furnace Outlet", new BlockTextureManager(new String[]{"machine/calcinator_front", "machine/calcinator", "machine/calcinator"}), new BehaviourCeramicFurnaceOutlet());
+		registerSub(4, "ceramicFurnaceFirebox", "Ceramic Furnace Firebox", new BlockTextureManager(new String[]{"machine/calcinator_firebox", "iconsets/ceramic", "iconsets/ceramic"}), new BehaviourCeramicFurnaceFirebox());
 		return this;
 	}
 

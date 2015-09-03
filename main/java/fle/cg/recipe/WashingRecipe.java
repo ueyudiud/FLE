@@ -13,6 +13,7 @@ import fle.api.cg.RecipeHandler;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.DropInfo;
+import fle.api.util.WeightHelper.Stack;
 
 public class WashingRecipe extends RecipeBase implements RecipeHandler
 {
@@ -24,9 +25,9 @@ public class WashingRecipe extends RecipeBase implements RecipeHandler
 	{
 		input = aInput;
 		outputMap = new HashMap();
-		for(Object output : info.drops.getList())
+		for(Stack<ItemStack> output : info.drops.getList())
 		{
-			outputMap.put((ItemStack) output, info.drops.getContain((ItemStack) output));
+			outputMap.put(output.getObj(), info.getDrop() * (double) output.getSize() / (double) info.drops.allWeight());
 		}
 		outputs = outputMap.keySet().toArray(new ItemStack[outputMap.size()]);
 	}

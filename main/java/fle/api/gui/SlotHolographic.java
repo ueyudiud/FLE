@@ -61,7 +61,7 @@ public class SlotHolographic extends Slot
 	{
 		if(mPutStackInClient)
 		{
-			if (((inventory instanceof TileEntity)) && (((TileEntity)inventory).getWorldObj().isRemote)) 
+			if (((inventory instanceof TileEntity)) && (((TileEntity) inventory).getWorldObj().isRemote)) 
 			{
 				inventory.setInventorySlotContents(getSlotIndex(), aStack);
 		    }

@@ -5,7 +5,7 @@ import fle.api.util.SubTag;
 
 public class MaterialOre extends MaterialAbstract
 {
-	private static Register<MaterialOre> register = new Register();
+	private static final Register<MaterialOre> register = new Register();
 
 	public static MaterialOre getOreFromID(int index)
 	{
