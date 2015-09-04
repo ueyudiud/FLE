@@ -42,6 +42,7 @@ public class RenderDitch extends RenderBase
 		byte[] bs;
 		Fluid fluid = null;
 		double[] ds = null;
+		int fluidColor = 0xFFFFFF;
 		
 		if(isItem())
 		{
@@ -84,6 +85,10 @@ public class RenderDitch extends RenderBase
 				try
 				{
 					fluid = tile.getFluidStackInTank(0) != null ? tile.getFluidStackInTank(0).getFluid() : null;
+					if(fluid != null)
+					{
+						fluidColor = tile.getFluidStackInTank(0).getFluid().getColor(tile.getFluidStackInTank(0));
+					}
 					if(fluid != null)
 					{
 						ds = new double[5];

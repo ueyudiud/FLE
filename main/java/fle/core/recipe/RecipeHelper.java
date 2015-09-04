@@ -160,7 +160,7 @@ public class RecipeHelper
 			boolean flag = true;
 			for(int i = startSlot + sMove; i < startSlot + sMove + ic.length; ++i)
 			{
-				if(!matchItemStack(inv, i, ic[i]))
+				if(!matchItemStack(inv, i, ic[i - startSlot - sMove]))
 				{
 					flag = false;
 					break;
