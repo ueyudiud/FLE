@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import fle.api.FleValue;
 import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
+import fle.api.recipe.AbstractRecipe;
 import fle.core.gui.InventoryCastingPool;
 import fle.core.init.IB;
 import fle.core.init.Materials;

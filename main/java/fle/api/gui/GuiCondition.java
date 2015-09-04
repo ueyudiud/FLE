@@ -16,15 +16,15 @@ public class GuiCondition implements IDataChecker<IConditionContainer>
 	}
 	
 	protected final String name;
-	protected String textureName;
-	protected IIcon icon;
+	protected String[] textureName;
+	protected IIcon[] icon;
 	
 	public final String getName() 
 	{
 		return name;
 	}
 	
-	public GuiCondition setTextureName(String textureName)
+	public GuiCondition setTextureName(String...textureName)
 	{
 		this.textureName = textureName;
 		return this;
@@ -32,17 +32,26 @@ public class GuiCondition implements IDataChecker<IConditionContainer>
 	
 	public String getTextureName()
 	{
-		return textureName;
+		return textureName == null ? "MISSING_ICON_NAME_CONDITION_" + name : textureName[0];
 	}
 	
 	public void registerIcon(IIconRegister aRegister)
 	{
-		icon = aRegister.registerIcon(getTextureName());
+		icon = new IIcon[textureName.length];
+		for(int i = 0; i < icon.length; ++i)
+		{
+			icon[i] = aRegister.registerIcon(textureName[i]);
+		}
 	}
 	
-	public IIcon getIcon()
+	public int getRenderPass()
 	{
-		return icon;
+		return icon.length;
+	}
+	
+	public IIcon getIcon(int pass)
+	{
+		return icon[pass];
 	}
 	
 	@Override

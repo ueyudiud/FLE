@@ -263,7 +263,7 @@ public class FlePackets
 			pos = is.readBlockPos();
 			if(is.readBoolean())
 			{
-				int id = is.readInt();
+				id = is.readInt();
 				if(id != -1)
 				{
 					stacks = new ItemStack[]{is.readItemStack()};

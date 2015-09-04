@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import fle.api.recipe.AbstractRecipe;
+import fle.api.recipe.AbstractRecipe.GetRecipeMap;
+import fle.api.recipe.AbstractRecipe.OnInput;
+import fle.api.recipe.AbstractRecipe.OnOutput;
+import fle.api.recipe.AbstractRecipe.RecipeMatch;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSub;
 
+@AbstractRecipe(recipeName = "ceramics")
 public class CeramicsRecipe 
 {
 	private static List<CeramicsRecipe> list = new ArrayList();
@@ -28,6 +34,12 @@ public class CeramicsRecipe
 		list.add(recipe);
 	}
 	
+	@RecipeMatch
+	public static boolean a(){return true;}
+	@OnInput
+	public static void b(){}
+	
+	@OnOutput
 	public static ItemStack getRecipeResult(float...fs)
 	{
 		for(CeramicsRecipe recipe : list)
@@ -38,6 +50,12 @@ public class CeramicsRecipe
 			}
 		}
 		return null;
+	}
+	
+	@GetRecipeMap
+	public static List<CeramicsRecipe> getRecipeList()
+	{
+		return list;
 	}
 	
 	private float[][] recipeMap;

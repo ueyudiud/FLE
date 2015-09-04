@@ -173,26 +173,22 @@ public abstract class GuiBookBase extends GuiContainer
 			{
 				xoffset = (width - xSize) / 2;
 				yoffset = (height - ySize) / 2;
-				drawTexturedModelRectFromIcon(xoffset + x, yoffset + y, type.getIcon(), 16, 16);
+				int pass = type.getRenderPass();
+				for(int i = 0; i < pass; ++i)
+					drawTexturedModelRectFromIcon(xoffset + x, yoffset + y, type.getIcon(i), 16, 16);
 			}
 			else
 			{
-				drawTexturedModelRectFromIcon(x, y, type.getIcon(), 16, 16);
+				int pass = type.getRenderPass();
+				for(int i = 0; i < pass; ++i)
+					drawTexturedModelRectFromIcon(x, y, type.getIcon(i), 16, 16);
 			}
 			mc.renderEngine.bindTexture(getResourceLocation());
 		}
 	}
 	protected void drawCondition(int x, int y, GuiCondition type)
 	{
-		if(type != null)
-		{
-			mc.getTextureManager().bindTexture(FleAPI.conditionLocate);
-
-			xoffset = (width - xSize) / 2;
-			yoffset = (height - ySize) / 2;
-			drawTexturedModelRectFromIcon(xoffset + x, yoffset + y, type.getIcon(), 16, 16);
-			mc.renderEngine.bindTexture(getResourceLocation());
-		}
+		drawCondition(x, y, type, true);
 	}
 	protected void drawFluid(int x, int y, IFluidTank tank, int width, int height)
 	{

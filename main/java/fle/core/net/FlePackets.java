@@ -8,6 +8,7 @@ import fle.FLE;
 import fle.api.net.FleAbstractPacket;
 import fle.api.util.FleDataInputStream;
 import fle.api.util.FleDataOutputStream;
+import fle.api.util.FleLog;
 import fle.api.world.BlockPos;
 import fle.core.te.TileEntityCrop;
 
@@ -131,7 +132,7 @@ public class FlePackets
 		@Override
 		public IMessage onMessage(CoderFWMAskMeta message, MessageContext ctx)
 		{
-			FLE.fle.getWorldManager().sendData(message.pos);
+			FLE.fle.getWorldManager().markPosForUpdate(message.pos);
 			return null;
 		}
 	}

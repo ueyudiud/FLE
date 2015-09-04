@@ -3,7 +3,7 @@ package fle.core.block.machine;
 import fle.api.FleValue;
 import fle.core.block.behaviour.BehaviourCastingPool;
 import fle.core.block.behaviour.BehaviourCeramicFurnaceCrucible;
-import fle.core.block.behaviour.BehaviourCeramicFurnaceInlet;
+import fle.core.block.behaviour.BehaviourColdForgingPlatform;
 import fle.core.util.BlockTextureManager;
 
 public class BlockStoneMachine1 extends BlockStoneMachine
@@ -13,6 +13,7 @@ public class BlockStoneMachine1 extends BlockStoneMachine
 	{
 		registerSub(0, "castingPool", "Casting Pool", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourCastingPool());
 		registerSub(1, "ceramicFurnaceCrucible", "Ceramic Furnace Crucible", new BlockTextureManager("iconsets/ceramic"), new BehaviourCeramicFurnaceCrucible());
+		registerSub(2, "coldForgingPlatform", "Cold Forging Platform", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourColdForgingPlatform());
 		return this;
 	}
 	

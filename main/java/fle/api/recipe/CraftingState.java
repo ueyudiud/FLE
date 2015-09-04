@@ -56,9 +56,9 @@ public class CraftingState extends GuiCondition
 	}
 	
 	@Override
-	public CraftingState setTextureName(String aTextureName)
+	public CraftingState setTextureName(String...aTextureName)
 	{
-		textureName = aTextureName;
+		super.setTextureName(aTextureName);
 		return this;
 	}
 	

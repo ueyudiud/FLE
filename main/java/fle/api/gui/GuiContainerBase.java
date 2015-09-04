@@ -77,7 +77,9 @@ public abstract class GuiContainerBase extends GuiContainer
 
 			xoffset = (width - xSize) / 2;
 			yoffset = (height - ySize) / 2;
-			drawTexturedModelRectFromIcon(xoffset + x, yoffset + y, type.getIcon(), 16, 16);
+			int pass = type.getRenderPass();
+			for(int i = 0; i < pass; ++i)
+				drawTexturedModelRectFromIcon(xoffset + x, yoffset + y, type.getIcon(i), 16, 16);
 			mc.renderEngine.bindTexture(getResourceLocation());
 		}
 	}

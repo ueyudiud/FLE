@@ -6,11 +6,18 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
+import fle.api.recipe.AbstractRecipe;
+import fle.api.recipe.AbstractRecipe.GetRecipeMap;
+import fle.api.recipe.AbstractRecipe.GetRecipeName;
+import fle.api.recipe.AbstractRecipe.OnInput;
+import fle.api.recipe.AbstractRecipe.OnOutput;
+import fle.api.recipe.AbstractRecipe.RecipeMatch;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.core.item.ItemFleSub;
 import fle.core.item.ItemSub;
 
+@AbstractRecipe(recipeName = "drying", requireCraftingTime = true)
 public class DryingRecipe 
 {
 	private static Map<String, DryingRecipe> map = new HashMap();
@@ -33,11 +40,14 @@ public class DryingRecipe
 			map.get(recipe).recipeTime;
 	}
 	
+	@OnOutput
 	public static ItemStack getRecipeResult(String recipe)
 	{
 		return !map.containsKey(recipe) ? null : map.get(recipe).output.copy();
 	}
 	
+	@RecipeMatch
+	@GetRecipeName
 	public static String canDrying(ItemStack input) 
 	{
 		for(DryingRecipe recipe : list)
@@ -48,6 +58,12 @@ public class DryingRecipe
 			}
 		}
 		return null;
+	}
+	
+	@GetRecipeMap
+	public static List<DryingRecipe> getRecipeList()
+	{
+		return list;
 	}
 	
 	private String name;

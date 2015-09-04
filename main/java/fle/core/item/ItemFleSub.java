@@ -89,7 +89,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(3005, "dust_quicklime", "Quick Lime Dust", "resource/dust/4");
 		addSubItem(5202, "argil_unsmelted_brick", "Unsmelted Argil Brick", "clay/101", new BehaviorArgilItem());
 		addSubItem(5203, "argil_brick", "Argil Brick", "clay/1101");
-		addSubItem(6201, "stone_plate", "Stone Plate", "resource/plate/stone");
+		addSubItem(6201, "stone_plate", "Stone Plate", "resource/plate/stone", new BehaviorBlockable(IB.stoneMachine1, 2));
 		addSubItem(6202, "argil_unsmelted_plate", "Unsmelted Argil Plate", "resource/plate/argil_unsmelted", new BehaviorArgilItem());
 		addSubItem(6203, "argil_plate", "Argil Plate", "resource/plate/argil");
 		addSubItem(7001, "wood_bucket_0_empty", "Empty Wood Barrel", "tank/wood_0_empty", new BehaviorBarrel(null));

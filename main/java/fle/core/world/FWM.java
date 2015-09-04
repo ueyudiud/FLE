@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import fle.FLE;
 import fle.api.enums.CompoundType;
 import fle.api.enums.EnumWorldNBT;
@@ -344,5 +345,29 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	public void sendData(BlockPos pos)
 	{
 		FLE.fle.getNetworkHandler().sendToDim(new CoderFWMUpdate(pos, getDatas(pos)), pos.getDim());
+	}
+	
+	@SubscribeEvent
+	public void onWorldTick(WorldTickEvent evt)
+	{
+		for(BlockPos pos : cacheList)
+		{
+			try
+			{
+				sendData(pos);
+			}
+			catch(Throwable e)
+			{
+				FleLog.getLogger().info("Fail to send data " + pos.x + "," + pos.y + "," + pos.z + " is is can't connect server or array outof bound?");;
+			}
+		}
+		cacheList.clear();
+	}
+	
+	private List<BlockPos> cacheList = new ArrayList();
+
+	public void markPosForUpdate(BlockPos pos)
+	{
+		cacheList.add(pos);
 	}
 }

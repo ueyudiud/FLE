@@ -16,7 +16,7 @@ public class GuiError extends GuiCondition
 	
 	public GuiError setTextureName(String textureName)
 	{
-		this.textureName = textureName;
+		this.textureName = new String[]{textureName};
 		return this;
 	}
 }

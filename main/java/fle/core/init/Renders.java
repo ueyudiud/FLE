@@ -11,6 +11,7 @@ import fle.core.render.RenderArgil;
 import fle.core.render.RenderAsh;
 import fle.core.render.RenderCastingPool;
 import fle.core.render.RenderCeramicFurnaceCrucible;
+import fle.core.render.RenderColdForging;
 import fle.core.render.RenderCrop;
 import fle.core.render.RenderDitch;
 import fle.core.render.RenderDryingTable;
@@ -22,7 +23,9 @@ import fle.core.render.RenderOre;
 import fle.core.render.RenderOreCobble;
 import fle.core.render.RenderRock;
 import fle.core.render.TESRArgilItems;
+import fle.core.render.TESRColdForging;
 import fle.core.render.TESRDryingTable;
+import fle.core.te.TileEntityColdForgingPlatform;
 import fle.core.te.TileEntityDryingTable;
 import fle.core.te.argil.TileEntityArgilItems;
 
@@ -41,6 +44,7 @@ public class Renders
         RenderHandler.register(IB.woodMachine1, 0, RenderDryingTable.class);
         RenderHandler.register(IB.stoneMachine1, 0, RenderCastingPool.class);
         RenderHandler.register(IB.stoneMachine1, 1, RenderCeramicFurnaceCrucible.class);
+        RenderHandler.register(IB.stoneMachine1, 2, RenderColdForging.class);
         RenderHandler.register(IB.crop, OreDictionary.WILDCARD_VALUE, RenderCrop.class);
         RenderHandler.register(IB.ore_cobble, OreDictionary.WILDCARD_VALUE, RenderOreCobble.class);
         RenderHandler.register(IB.ditch, OreDictionary.WILDCARD_VALUE, RenderDitch.class);
@@ -50,6 +54,7 @@ public class Renders
     	RenderingRegistry.registerBlockHandler(new RenderHandler(true));
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDryingTable.class, new TESRDryingTable());
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArgilItems.class, new TESRArgilItems());
+    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColdForgingPlatform.class, new TESRColdForging());
 	    RenderingRegistry.registerEntityRenderingHandler(EntityFleArrow.class, new RenderFleArrow("arrow"));
 	}
 }

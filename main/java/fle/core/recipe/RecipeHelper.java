@@ -154,11 +154,11 @@ public class RecipeHelper
 	public static boolean matchShapedInventory(IInventory inv, int startSlot, int endSlot, ItemAbstractStack[] ic)
 	{
 		int uStartSlot = endSlot - ic.length;
-		if(uStartSlot <= 0) throw new RuntimeException();
-		for(int sMove = 0; sMove < uStartSlot; ++sMove)
+		if(uStartSlot < 0) throw new RuntimeException();
+		for(int sMove = 0; sMove <= uStartSlot; ++sMove)
 		{
 			boolean flag = true;
-			for(int i = startSlot + sMove; i < startSlot + sMove + uStartSlot; ++i)
+			for(int i = startSlot + sMove; i < startSlot + sMove + ic.length; ++i)
 			{
 				if(!matchItemStack(inv, i, ic[i]))
 				{

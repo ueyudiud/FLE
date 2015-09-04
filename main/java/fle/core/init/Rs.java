@@ -29,6 +29,8 @@ import fle.api.cg.RecipesTab;
 import fle.api.enums.EnumAtoms;
 import fle.api.material.Matter;
 import fle.api.material.MatterDictionary;
+import fle.api.recipe.AbstractRecipeManager;
+import fle.api.recipe.ExampleRecipeManager;
 import fle.api.recipe.IFleRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
@@ -46,6 +48,9 @@ import fle.core.item.ItemOre;
 import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.recipe.CastingPoolRecipe;
+import fle.core.recipe.CeramicsRecipe;
+import fle.core.recipe.ColdForgingRecipe;
+import fle.core.recipe.DryingRecipe;
 import fle.core.recipe.PolishRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
 import fle.core.recipe.WashingRecipe;
@@ -268,5 +273,9 @@ public class Rs
 			if(recipe.getTab() != RecipesTab.tabClassic)
 				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.PolishRecipe(recipe));
 		}
+		AbstractRecipeManager.registerAbstractRecipe(CeramicsRecipe.class);
+		AbstractRecipeManager.registerAbstractRecipe(DryingRecipe.class);
+		AbstractRecipeManager.registerAbstractRecipe(ColdForgingRecipe.class);
+		AbstractRecipeManager.registerAbstractRecipe("minecraft", ExampleRecipeManager.class);
 	}
 }
