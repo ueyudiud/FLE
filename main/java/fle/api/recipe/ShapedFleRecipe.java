@@ -40,9 +40,9 @@ public class ShapedFleRecipe implements IFleRecipe
 				if(aOutput instanceof ItemStack)
 					setOutput(((ItemStack) aOutput).copy());
 				else if(aOutput instanceof Item)
-					setOutput(new ItemStack((Item) aOutput, 1, OreDictionary.WILDCARD_VALUE));
+					setOutput(new ItemStack((Item) aOutput, 1));
 				else if(aOutput instanceof Block)
-					setOutput(new ItemStack((Block) aOutput, 1, OreDictionary.WILDCARD_VALUE));
+					setOutput(new ItemStack((Block) aOutput, 1));
 				else if(aOutput instanceof FluidStack)
 					setOutput(new SingleFillFluidRecipe(new ItemFluidContainerStack(false, (FluidStack) aOutput)));
 				else if(aOutput instanceof SingleInputRecipe)

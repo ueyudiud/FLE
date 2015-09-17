@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.gui.GuiError;
 import fle.api.te.TEInventory;
-import fle.core.gui.InventoryDryingTable;
+import fle.core.inventory.InventoryDryingTable;
 import fle.core.util.WorldUtil;
 
 public class TileEntityDryingTable extends TEInventory<InventoryDryingTable>

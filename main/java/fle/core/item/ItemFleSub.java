@@ -81,12 +81,15 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(1005, "ramie_bundle_rope", "Ramie Rope Bundle", "crop/ramie_bundle_rope");
 		addSubItem(1006, "charred_log", "Charred Log", "tree/1003", new BehaviorBlockable(4, IB.charcoal));
 		addSubItem(1007, "millet", "Millet", "crop/millet");
+		addSubItem(1008, "rattan", "Rattan", "crop/rattan");
 		addSubItem(2001, "lipocere", "Lipocere", "resource/dust/1");
+		addSubItem(2002, "spinneret", "Spinneret", "drop/spinneret");
 		addSubItem(3001, "dust_limestone", "Limestone Dust", "stones/11001", new BehaviorArgilItem());
 		addSubItem(3002, "plant_ash", "Plant Ash", "resource/dust/3", new BehaviorBlockable(IB.ash));
 		addSubItem(3003, "argil_ball", "Argil Ball", "resource/dust/2", new BehaviorCeramics());
 		addSubItem(3004, "cemented_grit", "Cemented Grit", "resource/dust/1001", new BehaviorCastingTool());
 		addSubItem(3005, "dust_quicklime", "Quick Lime Dust", "resource/dust/4");
+		addSubItem(4001, "wooden_wedge", "Wooden Wedge", "tools/wooden_wedge");
 		addSubItem(5202, "argil_unsmelted_brick", "Unsmelted Argil Brick", "clay/101", new BehaviorArgilItem());
 		addSubItem(5203, "argil_brick", "Argil Brick", "clay/1101");
 		addSubItem(6201, "stone_plate", "Stone Plate", "resource/plate/stone", new BehaviorBlockable(IB.stoneMachine1, 2));
@@ -102,13 +105,25 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(10103, "guide_book_2", "New Stone Age Book", "book/1", new BehaviorGuideBook(RecipesTab.tabNewStoneAge));
 		addSubItem(10104, "guide_book_3", "Copper Age Book", "book/2", new BehaviorGuideBook(RecipesTab.tabCopperAge));
 		int i = 0;
-		for(; i < EnumAtoms.values().length; ++i)
+		int j = 0;
+		String[][] strss = {{"ingot", "Ingot", "ingot"}, {"ingot_double", "Double Ingot", "ingot_double"}, {"plate", "Plate", "plate"}};
+		for(; j < strss.length; ++j)
 		{
-			if(EnumAtoms.values()[i].contain(SubTag.ATOM_metal))
-				addSubItem(20001 + i, "ingot_" + EnumAtoms.values()[i].name().toLowerCase(), EnumAtoms.values()[i].getName() + " Ingot", "resource/ingot/" + EnumAtoms.values()[i].name().toLowerCase());
+			String[] strs = strss[j];
+			for(; i < EnumAtoms.values().length; ++i)
+			{
+				if(EnumAtoms.values()[i].contain(SubTag.ATOM_metal))
+					addSubItem(20001 + j * 1000 + i, strs[0] + "_" + EnumAtoms.values()[i].name().toLowerCase(), EnumAtoms.values()[i].getName() + " " + strs[1], "resource/" + strs[2] + "/" + EnumAtoms.values()[i].name().toLowerCase());
+			}
+			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_as_0", "Arsenic Bronze " + strs[1], "resource/" + strs[2] + "/cu-as-1");
+			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_as_1", "High Arsenic Bronze " + strs[1], "resource/" + strs[2] + "/cu-as-2");
+			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_pb_0", "Lead Bronze " + strs[1], "resource/" + strs[2] + "/cu-pb-1");
+			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_pb_1", "High Lead Bronze " + strs[1], "resource/" + strs[2] + "/cu-pb-2");
+			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_sn_0", "Tin Bronze " + strs[1], "resource/" + strs[2] + "/cu-sn-1");
+			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_sn_1", "High Tin Bronze " + strs[1], "resource/" + strs[2] + "/cu-sn-2");
+			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_pb_sn", "Lead Tin Bronze " + strs[1], "resource/" + strs[2] + "/cu-pb-sn");
+			i = 0;
 		}
-		i = 20002 + i;
-		addSubItem(i++, "ingot_cu_as_0", "Arsenic Bronze Ingot", "resource/ingot/cu-as-1");
 		stackLimitList.add(10001);
 		return this;
 	}

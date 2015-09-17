@@ -14,6 +14,7 @@ import fle.api.gui.GuiError;
 import fle.api.gui.SlotOutput;
 import fle.api.net.INetEventListener;
 import fle.api.net.FlePackets.CoderGuiUpdate;
+import fle.core.inventory.InventoryWashing;
 import fle.core.recipe.RecipeHelper;
 import fle.core.recipe.WashingRecipe;
 

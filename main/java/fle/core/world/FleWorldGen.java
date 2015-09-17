@@ -60,22 +60,27 @@ public class FleWorldGen implements IWorldGenerator
 		{
 		case 0 :
 		{
-			genOre(random, world, x, z, 180, 50, 0.5D, 120, Blocks.stone, g(Materials.NativeCopper, 12), g(Materials.Malachite, 9), g(Materials.Azurite, 5), g(Materials.Cuprite, 4), g(Materials.Chalcocite, 5), g(Materials.Tenorite, 1));
-			genOre(random, world, x, z, 180, 50, 0.5D, 120, Blocks.glass, g(Materials.NativeCopper, 12), g(Materials.Malachite, 9), g(Materials.Azurite, 5), g(Materials.Cuprite, 4), g(Materials.Chalcocite, 5), g(Materials.Tenorite, 1));
+			genOre(random, world, x, z, 210, 100, 0.5D, 120, Blocks.stone, g(Materials.NativeCopper, 12), g(Materials.Malachite, 9), g(Materials.Azurite, 5), g(Materials.Cuprite, 4), g(Materials.Chalcocite, 5), g(Materials.Tenorite, 1));
+			genOre(random, world, x, z, 210, 100, 0.5D, 120, Blocks.glass, g(Materials.NativeCopper, 12), g(Materials.Malachite, 9), g(Materials.Azurite, 5), g(Materials.Cuprite, 4), g(Materials.Chalcocite, 5), g(Materials.Tenorite, 1));
 		}
 		break;
 		case 1 :
 		{
-			genOre(random, world, x, z, 180, 10, 0.3D, 70, Blocks.stone, g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6));
-			genOre(random, world, x, z, 180, 10, 0.3D, 70, Blocks.glass, g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6));
+			genOre(random, world, x, z, 180, 40, 0.3D, 70, Blocks.stone, g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6));
+			genOre(random, world, x, z, 180, 40, 0.3D, 70, Blocks.glass, g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6));
 		}
 		break;
-		case 2 :;
+		case 2 :
+		{
+			genOre(random, world, x, z, 180, 100, 0.4D, 130, Blocks.stone, g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2), g(Materials.Enargite, 2));
+			genOre(random, world, x, z, 180, 100, 0.4D, 130, Blocks.glass, g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2), g(Materials.Enargite, 2));
+		}
+		break;
 		case 3 :;
 		case 4 :;
 		case 5 :
 		{
-			genRock(random, world, x, z, 180, 40, 0.8D, 180, Blocks.stone, Materials.Limestone);
+			genRock(random, world, x, z, 240, 120, 0.8D, 180, Blocks.stone, Materials.Limestone);
 		}
 		break;
 		default :;
@@ -89,8 +94,24 @@ public class FleWorldGen implements IWorldGenerator
 		switch(random.nextInt(128))
 		{
 		case 1 : generateCrop(Crops.millet, world, random, x, z, 8, 16);
+		break;
 		case 2 : generateCrop(Crops.ramie, world, random, x, z, 8, 16);
+		break;
 		case 3 : generateCrop(Crops.soybean, world, random, x, z, 8, 16);
+		break;
+		case 4 :;
+		case 5 :;
+		case 6 :;
+		case 7 :;
+		case 8 :;
+		case 9 :;
+		case 10 :;
+		case 11 :;
+		case 12 :;
+		case 13 :;
+		case 14 :;
+		case 15 :;
+		case 16 : generateVine(world, random, x, z, 5, 100);
 		break;
 		default : break;
 		}
@@ -106,6 +127,13 @@ public class FleWorldGen implements IWorldGenerator
 		int X = x + random.nextInt(15);
 		int Z = z + random.nextInt(15);
 		return new FleCropGen(size, count, card).generate(world, random, X, world.getTopSolidOrLiquidBlock(X, Z), Z);
+	}
+	
+	public boolean generateVine(World world, Random random, int x, int z, int size, int count)
+	{
+		int X = x + random.nextInt(15);
+		int Z = z + random.nextInt(15);
+		return new FleVineGen(size, count).generate(world, random, X, world.getTopSolidOrLiquidBlock(X, Z), Z);
 	}
 	
 	public boolean generateTree(TreeInfo tInfo, World world, Random random, int x, int z)

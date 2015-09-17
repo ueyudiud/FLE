@@ -17,7 +17,7 @@ public class PolishRecipe extends RecipeBase implements RecipeHandler
 	private ItemAbstractStack input;
 	private CraftingState[] states;
 	
-	public PolishRecipe(fle.core.recipe.PolishRecipe recipe)
+	public PolishRecipe(fle.core.recipe.FLEPolishRecipe.PolishRecipe recipe)
 	{
 		output = recipe.output.copy();
 		input = recipe.getinput();

@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
 import fle.api.gui.ContainerCraftable;
+import fle.core.inventory.InventoryWorkbenchTire0;
 
 public class ContainerWorkbenchTire0 extends ContainerCraftable
 {

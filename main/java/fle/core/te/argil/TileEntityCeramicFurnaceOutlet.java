@@ -8,13 +8,13 @@ import net.minecraftforge.fluids.IFluidHandler;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.energy.IThermalTileEntity;
-import fle.api.gui.IInventoryTile;
+import fle.api.inventory.IInventoryTile;
 import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.te.TEInventory;
 import fle.core.energy.ThermalTileHelper;
-import fle.core.gui.InventoryCeramicFurnaceOutlet;
 import fle.core.init.Materials;
+import fle.core.inventory.InventoryCeramicFurnaceOutlet;
 
 public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramicFurnaceOutlet> implements IFluidHandler, IThermalTileEntity, INetEventListener
 {
@@ -27,9 +27,9 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	
 	public TileEntityCeramicFurnaceCrucible getCrucibleTile()
 	{
-		if(getBlockPos().toPos(getDirction(getBlockPos())).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
+		if(getBlockPos().toPos(getDirction(getBlockPos()).getOpposite()).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
 		{
-			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(getDirction(getBlockPos())).getBlockTile());
+			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(getDirction(getBlockPos()).getOpposite()).getBlockTile());
 		}
 		return null;
 	}
@@ -38,22 +38,22 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	public void updateEntity()
 	{
 		inv.updateEntity(this);
-		if(getBlockPos().toPos(dir.getOpposite()).getBlockTile() instanceof IFluidHandler)
+		if(getBlockPos().toPos(dir).getBlockTile() instanceof IFluidHandler)
 		{
-			FluidStack stack = drain(dir.getOpposite(), 5, false);
+			FluidStack stack = drain(dir, 5, false);
 			if(stack != null)
 			{
-				int drain = ((IFluidHandler) getBlockPos().toPos(dir.getOpposite()).getBlockTile()).fill(dir, stack, true);
+				int drain = ((IFluidHandler) getBlockPos().toPos(dir).getBlockTile()).fill(dir, stack, true);
 				drain(dir.getOpposite(), drain, true);
 			}
 		}
-		else if(getBlockPos().toPos(dir.getOpposite()).toPos(ForgeDirection.DOWN).getBlockTile() instanceof IFluidHandler)
+		else if(getBlockPos().toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile() instanceof IFluidHandler)
 		{
-			FluidStack stack = drain(dir.getOpposite(), 5, false);
+			FluidStack stack = drain(dir, 5, false);
 			if(stack != null)
 			{
-				int drain = ((IFluidHandler) getBlockPos().toPos(dir.getOpposite()).toPos(ForgeDirection.DOWN).getBlockTile()).fill(ForgeDirection.UP, stack, true);
-				drain(dir.getOpposite(), drain, true);
+				int drain = ((IFluidHandler) getBlockPos().toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile()).fill(ForgeDirection.UP, stack, true);
+				drain(dir, drain, true);
 			}
 		}
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
@@ -71,9 +71,9 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	public FluidStack drain(ForgeDirection from, FluidStack resource,
 			boolean doDrain)
 	{
-		if(getBlockPos().toPos(dir).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
+		if(getBlockPos().toPos(dir.getOpposite()).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
 		{
-			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(dir).getBlockTile()).drain(from, resource, doDrain);
+			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(dir.getOpposite()).getBlockTile()).drain(from, resource, doDrain);
 		}
 		return null;
 	}
@@ -81,9 +81,9 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if(getBlockPos().toPos(dir).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
+		if(getBlockPos().toPos(dir.getOpposite()).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
 		{
-			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(dir).getBlockTile()).drain(from, maxDrain, doDrain);
+			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(dir.getOpposite()).getBlockTile()).drain(from, maxDrain, doDrain);
 		}
 		return null;
 	}

@@ -52,6 +52,18 @@ public class BlockFle extends Block
 	}
 	
 	@Override
+	public void onNeighborBlockChange(World aWorld, int x,
+			int y, int z, Block block)
+	{
+		super.onNeighborBlockChange(aWorld, x, y, z, block);
+		byte b0 = 32;
+		if(!aWorld.isRemote && aWorld.checkChunksExist(x - 32, y - 32, z - 32, x + 32, y + 32, z + 32))
+		{
+			FLE.fle.getWorldManager().sendData(new BlockPos(aWorld, x, y, z));
+		}
+	}
+	
+	@Override
 	public String getLocalizedName()
 	{
 		return FleAPI.lm.translateToLocal(getUnlocalizedName() + ".name", new Object[0]);

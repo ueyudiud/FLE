@@ -34,9 +34,9 @@ public class ShapelessFleRecipe implements IFleRecipe
 				if(aOutput instanceof ItemStack)
 					output = ((ItemStack) aOutput).copy();
 				else if(aOutput instanceof Item)
-					output = new ItemStack((Item) aOutput, 1, OreDictionary.WILDCARD_VALUE);
+					output = new ItemStack((Item) aOutput, 1);
 				else if(aOutput instanceof Block)
-					output = new ItemStack((Block) aOutput, 1, OreDictionary.WILDCARD_VALUE);
+					output = new ItemStack((Block) aOutput, 1);
 				else if(aOutput instanceof FluidStack)
 					output = new SingleFillFluidRecipe(new ItemFluidContainerStack(false, (FluidStack) aOutput));
 				else if(aOutput instanceof SingleInputRecipe)

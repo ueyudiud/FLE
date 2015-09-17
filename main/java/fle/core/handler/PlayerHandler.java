@@ -1,46 +1,53 @@
 package fle.core.handler;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.FoodStats;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import fle.FLE;
 import fle.api.FleAPI;
-import fle.api.net.FlePackets.CoderFWMUpdate;
 import fle.api.recipe.ItemBaseStack;
-import fle.api.world.BlockPos;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
 import fle.core.tool.WasherManager;
 import fle.core.util.FleFoodStats;
-import fle.core.util.FlePotionEffect;
 import fle.core.util.Util;
 
 public class PlayerHandler
 {
+	private static Map<UUID, NBTTagCompound> map = new HashMap();
+	
 	public PlayerHandler() 
 	{
 		
@@ -62,6 +69,38 @@ public class PlayerHandler
 			}
 		}
 	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onPlayerRebirth(PlayerRespawnEvent evt)
+	{
+		if(!(evt.player.getFoodStats() instanceof FleFoodStats))
+		{
+			try
+			{
+				Util.overrideField(EntityPlayer.class, Arrays.asList("foodStats", "field_71100_bB"), evt.player, 
+						new FleFoodStats((FoodStats) Util.getValue(EntityPlayer.class, Arrays.asList("foodStats", "field_71100_bB"), evt.player)), true);
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+		}
+		if(map.containsKey(evt.player.getUniqueID()))
+		{
+			evt.player.getEntityData().setTag("FLE", map.get(evt.player.getUniqueID()));
+		}
+		if(evt.player.experienceLevel > -128)
+			--evt.player.experienceLevel;
+	}
+	
+	@SubscribeEvent
+	public void onPlayerDead(LivingDeathEvent evt)
+	{
+		if(evt.entityLiving instanceof EntityPlayer)
+		{
+			map.put(((EntityPlayer) evt.entityLiving).getUniqueID(), ((EntityPlayer) evt.entityLiving).getEntityData().getCompoundTag("FLE"));
+		}
+	}
 	
 	@SubscribeEvent
 	public void onLogout(PlayerLoggedOutEvent evt)
@@ -70,13 +109,81 @@ public class PlayerHandler
 	}
 	
 	@SubscribeEvent
-	public void renderHUD(RenderGameOverlayEvent.Pre event)
+	public void onPlayerOpenBag(PlayerOpenContainerEvent evt)
 	{
-		if(event.type == ElementType.EXPERIENCE)
+		
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void renderHUD(RenderGameOverlayEvent.Pre evt)
+	{
+		Minecraft mc;
+		int width;
+		int height;
+		if(evt.type == ElementType.EXPERIENCE)
 		{
-			//event.setCanceled(true);
+			width = evt.resolution.getScaledWidth();
+			height = evt.resolution.getScaledHeight();
+			mc = Minecraft.getMinecraft();
+			
+	        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	        GL11.glDisable(GL11.GL_BLEND);
+
+	        if (mc.playerController.gameIsSurvivalOrAdventure())
+	        {
+	            mc.mcProfiler.startSection("expBar");
+	            int cap = mc.thePlayer.xpBarCap();
+	            int left = width / 2 - 91;
+
+	            if (cap > 0)
+	            {
+	                short barWidth = 182;
+	                int filled = (int)(mc.thePlayer.experience * (float)(barWidth + 1));
+	                int top = height - 32 + 3;
+	                drawTexturedModalRect(left, top, 0, 64, barWidth, 5);
+
+	                if (filled > 0)
+	                {
+	                	drawTexturedModalRect(left, top, 0, 69, filled, 5);
+	                }
+	            }
+
+	            mc.mcProfiler.endSection();
+
+	            if (mc.playerController.gameIsSurvivalOrAdventure() && mc.thePlayer.experienceLevel != 0)
+	            {
+	                mc.mcProfiler.startSection("expLevel");
+	                boolean flag1 = mc.thePlayer.experienceLevel < 0;
+	                int color = flag1 ? 0xAD2500 : 0x80FF20;
+	                String text = "" + mc.thePlayer.experienceLevel;
+	                int x = (width - mc.fontRenderer.getStringWidth(text)) / 2;
+	                int y = height - 31 - 4;
+	                mc.fontRenderer.drawString(text, x + 1, y, 0);
+	                mc.fontRenderer.drawString(text, x - 1, y, 0);
+	                mc.fontRenderer.drawString(text, x, y + 1, 0);
+	                mc.fontRenderer.drawString(text, x, y - 1, 0);
+	                mc.fontRenderer.drawString(text, x, y, color);
+	                mc.mcProfiler.endSection();
+	            }
+	        }
+	        GL11.glEnable(GL11.GL_BLEND);
+	        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	        evt.setCanceled(true);
 		}
 	}
+	
+    private void drawTexturedModalRect(int x, int y, int u, int v, int w, int h)
+    {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV((double)(x + 0), (double)(y + h), (double) 0, (double)((float)(u + 0) * f), (double)((float)(v + h) * f1));
+        tessellator.addVertexWithUV((double)(x + w), (double)(y + h), (double) 0, (double)((float)(u + w) * f), (double)((float)(v + h) * f1));
+        tessellator.addVertexWithUV((double)(x + w), (double)(y + 0), (double) 0, (double)((float)(u + w) * f), (double)((float)(v + 0) * f1));
+        tessellator.addVertexWithUV((double)(x + 0), (double)(y + 0), (double) 0, (double)((float)(u + 0) * f), (double)((float)(v + 0) * f1));
+        tessellator.draw();
+    }
 
 	@SubscribeEvent
 	public void onPlaceItem(PlaceEvent evt)
@@ -109,25 +216,12 @@ public class PlayerHandler
 			evt.drops.clear();
 			evt.drops.add(ItemFleSeed.a("suger_cances"));
 		}
-	}
-	
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onAttack(LivingAttackEvent evt)
-	{
-		if(evt.source instanceof EntityDamageSource)
+		else if(evt.block == Blocks.vine)
 		{
-			if(evt.entityLiving instanceof EntityPlayer || evt.entityLiving instanceof IAnimals)
+			if(!evt.isSilkTouching)
 			{
-				if(evt.ammount > 10.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 1000, 2));
-				else if(evt.ammount > 4.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 1000, 1));
-				else evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 1000, 0));
+				evt.drops.add(ItemFleSub.a("rattan"));
 			}
-		}
-		else if(evt.source == DamageSource.fall)
-		{
-			if(evt.ammount > 10.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.fracture.id, 5000, 2));
-			else if(evt.ammount > 4.0F) evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.fracture.id, 5000, 1));
-			else evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.fracture.id, 5000, 0));
 		}
 	}
 	

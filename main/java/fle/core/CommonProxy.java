@@ -17,7 +17,6 @@ import fle.api.cg.GuiBook;
 import fle.api.cg.ICG;
 import fle.api.gui.ContainerEmpty;
 import fle.api.item.ItemFleMetaBase;
-import fle.api.recipe.AbstractRecipeManager;
 import fle.core.entity.EntityFleArrow;
 import fle.core.entity.EntityFleFallingBlock;
 import fle.core.gui.ContainerCeramics;
@@ -26,6 +25,7 @@ import fle.core.gui.ContainerWashing;
 import fle.core.gui.GuiCeramics;
 import fle.core.gui.GuiItemBagable;
 import fle.core.gui.GuiWashing;
+import fle.core.handler.EntityHandler;
 import fle.core.handler.PlayerHandler;
 import fle.core.handler.RecipeHandler;
 import fle.core.handler.WorldHandler;
@@ -35,18 +35,17 @@ import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.init.Other;
 import fle.core.init.Rs;
-import fle.core.recipe.CeramicsRecipe;
-import fle.core.recipe.DryingRecipe;
+import fle.core.init.WorldCof;
 import fle.core.te.TileEntityCrop;
 import fle.core.te.TileEntityDitch;
 import fle.core.te.TileEntityFirewood;
 import fle.core.te.TileEntityOilLamp;
+import fle.core.te.chest.TileEntityChest3By3;
 import fle.core.tool.AxeHandler;
 import fle.core.tool.BowHandler;
 import fle.core.tool.ChiselHandler;
 import fle.core.tool.StoneHammerHandler;
 import fle.core.util.FleFuelHandler;
-import fle.core.util.LanguageManager;
 import fle.core.world.FleWorldGen;
 
 public class CommonProxy extends Proxy
@@ -67,8 +66,6 @@ public class CommonProxy extends Proxy
 	public void onLoad() 
 	{
 		GameRegistry.registerWorldGenerator(new FleWorldGen(), 1);
-		MinecraftForge.EVENT_BUS.register(FLE.fle.getWorldManager());
-		FMLCommonHandler.instance().bus().register(FLE.fle.getWorldManager());
 	}
 
 	@Override
@@ -80,6 +77,7 @@ public class CommonProxy extends Proxy
 		GameRegistry.registerTileEntity(TileEntityFirewood.class, "firewood");
 		GameRegistry.registerTileEntity(TileEntityCrop.class, "fleCrop");
 		GameRegistry.registerTileEntity(TileEntityDitch.class, "Ditch");
+		GameRegistry.registerTileEntity(TileEntityChest3By3.class, "Chest3x3");
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(FLE.MODID, this);
 		MinecraftForge.EVENT_BUS.register(new ChiselHandler());
@@ -89,9 +87,12 @@ public class CommonProxy extends Proxy
 		MinecraftForge.EVENT_BUS.register(new RecipeHandler());
 		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldHandler());
+		MinecraftForge.EVENT_BUS.register(new EntityHandler());
 		FMLCommonHandler.instance().bus().register(new RecipeHandler());
 		FMLCommonHandler.instance().bus().register(new PlayerHandler());
 		FMLCommonHandler.instance().bus().register(new WorldHandler());
+		FMLCommonHandler.instance().bus().register(new EntityHandler());
+		WorldCof.init();
 	}
 
 	@Override

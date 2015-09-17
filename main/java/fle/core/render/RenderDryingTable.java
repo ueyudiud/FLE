@@ -9,14 +9,15 @@ import fle.core.init.IB;
 
 public class RenderDryingTable extends RenderBase
 {
+	double d1 = 0.325D,
+			d2 = 0.375D,
+			d3 = 0.625D,
+			d4 = 0.675D;
+	
 	@Override
 	public void renderBlock() 
 	{
         setTexture(block.getIcon(0, 0));
-		double d1 = 0.325D;
-		double d2 = 0.375D;
-		double d3 = 0.625D;
-		double d4 = 0.675D;
 		double d5;
 		if(isItem()) d5 = 0.8D;
 		else

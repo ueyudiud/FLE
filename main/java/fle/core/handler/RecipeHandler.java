@@ -40,12 +40,22 @@ public class RecipeHandler
 				else if(new ItemOreStack("craftingToolChisel").isStackEqul(stack))
 				{
 					++stack.stackSize;
-					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.125F);
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
 				}
 				else if(new ItemOreStack("craftingToolHardHammer").isStackEqul(stack))
 				{
 					++stack.stackSize;
-					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.125F);
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
+				}
+				else if(new ItemOreStack("craftingToolSaw").isStackEqul(stack))
+				{
+					++stack.stackSize;
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
+				}
+				else if(new ItemOreStack("craftingToolAdz").isStackEqul(stack))
+				{
+					++stack.stackSize;
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
 				}
 				else if(new ItemArrayStack(ItemFleSub.a("wood_bucket_0_plant_ash_mortar"), 
 						ItemFleSub.a("wood_bucket_0_lime_mortar")).isStackEqul(stack))

@@ -43,7 +43,7 @@ public class PlatformClient extends PlatformCommon
 		else
 		{
 			World world = Minecraft.getMinecraft().theWorld;
-			return world.provider.dimensionId != aDimId ? null : world;
+			return world == null ? null : world.provider.dimensionId != aDimId ? null : world;
 		}
 	}
 

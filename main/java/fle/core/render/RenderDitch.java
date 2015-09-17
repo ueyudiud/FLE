@@ -16,25 +16,25 @@ public class RenderDitch extends RenderBase
 {
 	private static ForgeDirection dirs[] = {ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
 	
-	private static final byte stop = 0;
-	private static final byte connect = 1;
-	private static final byte fill = 2;
+	private static final byte stop = 0,
+			connect = 1,
+			fill = 2;
 
-	double f = 0.03125;
-	double f1 = 0.0;
-	double f2 = 1.0;
-	double f3 = 0.375;
-	double f4 = 0.625;
-	double f5 = f3 - f;
-	double f6 = f4 + f;
-	double f7 = 0.25;
-	double f8 = 0.5;
-	double f9 = f7 - f;
-	double f10 = -0.375F;
-	double f11 = 1.375F;
-	double f12 = -0.625F;
-	double f13 = 1.625F;
-	double f14 = -0.5F;
+	double f = 0.03125,
+			f1 = 0.0,
+			f2 = 1.0,
+			f3 = 0.375,
+			f4 = 0.625,
+			f5 = f3 - f,
+			f6 = f4 + f,
+			f7 = 0.25,
+			f8 = 0.5,
+			f9 = f7 - f,
+			f10 = -0.375F,
+			f11 = 1.375F,
+			f12 = -0.625F,
+			f13 = 1.625F,
+			f14 = -0.5F;
 	
 	@Override
 	public void renderBlock()
@@ -198,6 +198,7 @@ public class RenderDitch extends RenderBase
 		if(fluid != null)
 		{
 			setTexture(fluid.getFlowingIcon());
+			setColor(fluidColor);
 			renderFluidBlock(f3, f7, f3, f4, f7 + (f8 - f7) * ds[4], f4);
 			switch(bs[0])
 			{

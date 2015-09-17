@@ -8,7 +8,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,6 +20,7 @@ import fle.api.fluid.FluidDictionary;
 import fle.api.item.ItemFleMetaBase;
 import fle.api.material.Matter;
 import fle.api.recipe.ItemAbstractStack;
+import fle.api.recipe.RecipeAdder;
 import fle.api.util.ColorMap;
 import fle.api.util.Compact;
 import fle.api.util.IFuelHandler;
@@ -33,8 +33,13 @@ public class FleAPI
 	@SideOnly(Side.CLIENT)
 	public static ResourceLocation conditionLocate = new ResourceLocation("textures/atlas/condition.png");
 	@SideOnly(Side.CLIENT)
+	public static ResourceLocation solidLocate = new ResourceLocation("textures/atlas/solid.png");
+	@SideOnly(Side.CLIENT)
 	public static IIconRegister conditionIconRegister;
+	@SideOnly(Side.CLIENT)
+	public static IIconRegister solidIconRegister;
 	
+	public static RecipeAdder ra;
 	public static FleModHandler mod;
 	public static FluidDictionary fluidDictionary;
 	public static ILanguageManager lm;
@@ -157,6 +162,10 @@ public class FleAPI
 		return false;
 	}
 
+	public static int getFulBuf(ItemStack aStack)
+	{
+		return getFulBuf(aStack, Matter.mAir);
+	}
 	public static int getFulBuf(ItemStack aStack, Matter aAirBase)
 	{
 		for (IFuelHandler tHandler : fuelList)

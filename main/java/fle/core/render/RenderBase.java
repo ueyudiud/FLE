@@ -1,6 +1,8 @@
 package fle.core.render;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
@@ -316,7 +318,26 @@ public abstract class RenderBase
     {
         render.renderAllFaces = true;
         render.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
-        render.renderStandardBlock(Blocks.lava, x, y, z);
+        float f = rgb_red;
+        float f1 = rgb_green;
+        float f2 = rgb_blue;
+
+        if (EntityRenderer.anaglyphEnable)
+        {
+            float f3 = (f * 30.0F + f1 * 59.0F + f2 * 11.0F) / 100.0F;
+            float f4 = (f * 30.0F + f1 * 70.0F) / 100.0F;
+            float f5 = (f * 30.0F + f2 * 70.0F) / 100.0F;
+            f = f3;
+            f1 = f4;
+            f2 = f5;
+        }
+        if(Minecraft.isAmbientOcclusionEnabled() && Blocks.lava.getLightValue() == 0)
+        	if(render.partialRenderBounds)
+        		render.renderStandardBlockWithAmbientOcclusionPartial(Blocks.lava, x, y, z, f, f1, f2);
+        	else
+        		render.renderStandardBlockWithAmbientOcclusion(Blocks.lava, x, y, z, f, f1, f2);
+        else
+        	render.renderStandardBlockWithColorMultiplier(Blocks.lava, x, y, z, f, f1, f2);
         render.renderAllFaces = false;
     }
 

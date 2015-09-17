@@ -91,6 +91,11 @@ public abstract class GuiBookBase extends GuiContainer
 					}
 				}
 			}
+		}
+		for(int i = 0; i < handlers.length; ++i)
+		{
+			int xoffset = this.xoffset + 27 + 80 * (i % 2);
+			int yoffset = this.yoffset + 17 + 60 * (i / 2);
 	        RenderHelper.enableGUIStandardItemLighting();
 			for(int tankID = 0; tankID < handlers[i].getTankContain(); ++tankID)
 			{
@@ -101,6 +106,11 @@ public abstract class GuiBookBase extends GuiContainer
 					drawFluid(xoffset + rect.x - this.xoffset, yoffset + rect.y - this.yoffset, new FluidTank(tStack, tStack.amount), rect.width, rect.height);
 				}
 			}
+		}
+		for(int i = 0; i < handlers.length; ++i)
+		{
+			int xoffset = this.xoffset + 27 + 80 * (i % 2);
+			int yoffset = this.yoffset + 17 + 60 * (i / 2);
 			handlers[i].drawRecipeFortground(this, xoffset, yoffset);
 			Rectangle rect = new Rectangle(xoffset, yoffset, 80, 60);
 			if(rect.contains(mouseX, mouseY))
@@ -108,7 +118,9 @@ public abstract class GuiBookBase extends GuiContainer
 				String str = handlers[i].getTip(mouseX - xoffset, mouseY - yoffset);
 				if(str != null)
 				{
+					zLevel = 100.0F;
 					drawTooltip(mouseX, mouseY, str);
+					zLevel = 0.0F;
 				}
 			}
 		}
@@ -134,19 +146,19 @@ public abstract class GuiBookBase extends GuiContainer
 	
     private void drawItemStack(ItemStack aStack, int x, int y, String show)
     {
-        zLevel = 100.0F;
-        itemRender.zLevel = 100.0F;
         FontRenderer font = null;
         if (aStack != null) font = aStack.getItem().getFontRenderer(aStack);
         if (font == null) font = fontRendererObj;
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         if(aStack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
         	aStack.setItemDamage(0);
+        zLevel = 32.0F;
+        itemRender.zLevel = 32.0F;
         itemRender.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), aStack, x, y);
-        itemRender.renderItemOverlayIntoGUI(font, this.mc.getTextureManager(), aStack, x, y, show);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
         zLevel = 0.0F;
         itemRender.zLevel = 0.0F;
+        itemRender.renderItemOverlayIntoGUI(font, this.mc.getTextureManager(), aStack, x, y, show);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
     }
 	
 	public abstract RecipeHandler[] getShowingRecipe();

@@ -76,7 +76,6 @@ public class AbstractRecipeManager
 	        		getRecipeName = method;
 	        	}
 	        }
-	        if(getRecipe == null) throw new NullPointerException();
 	        if(!map.containsKey(recipeName))
 	        {
 	        	map.put(recipeName, new ArrayList());

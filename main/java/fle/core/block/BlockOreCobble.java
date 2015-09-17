@@ -13,6 +13,7 @@ import fle.core.block.behaviour.BehaviourBase;
 import fle.core.block.behaviour.BehaviourTile;
 import fle.core.te.TileEntityOreCobble;
 import fle.core.util.BlockTextureManager;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.inventory.GuiContainer;

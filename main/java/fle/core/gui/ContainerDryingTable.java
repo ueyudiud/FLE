@@ -19,5 +19,6 @@ public class ContainerDryingTable extends ContainerCraftable
 		addSlotToContainer(new SlotOutput(inventory, 1, 124, 35));
 		locateRecipeInput = new TransLocation("recipe_input", 36);
 		locateRecipeOutput = new TransLocation("recipe_output", 37);
+		onCraftMatrixChanged(inventory);
 	}
 }

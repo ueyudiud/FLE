@@ -152,6 +152,16 @@ public class WeightHelper<T>
 		}
 		return 0D;
 	}
+
+	public Map<T, Double> getContains()
+	{
+		Map<T, Double> ret = new HashMap();
+		for(Stack<T> t : sts)
+		{
+			ret.put(t.target, (double) t.size / (double) length);
+		}
+		return ret;
+	}
 	
 	public T[] getArray(T[] ts)
 	{
@@ -225,6 +235,11 @@ public class WeightHelper<T>
 		public void addStackIn(int aS)
 		{
 			size += aS;
+		}
+		
+		public void minusStackOut(int aS)
+		{
+			size -= aS;
 		}
 		
 		@Override

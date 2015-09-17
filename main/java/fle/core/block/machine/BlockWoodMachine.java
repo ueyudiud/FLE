@@ -28,6 +28,12 @@ public class BlockWoodMachine extends BlockSubTile implements IGuiBlock
 		setResistance(1.0F);
 		setHardness(1.0F);
 	}
+	
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
 
 	@Override
 	public Container openContainer(World aWorld, int x, int y, int z,

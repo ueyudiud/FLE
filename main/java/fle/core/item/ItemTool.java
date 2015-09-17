@@ -54,6 +54,7 @@ import fle.core.init.Materials;
 import fle.core.item.behavior.BehaviorArrow;
 import fle.core.item.behavior.BehaviorAwl;
 import fle.core.item.behavior.BehaviorAxe;
+import fle.core.item.behavior.BehaviorBowsaw;
 import fle.core.item.behavior.BehaviorChisel;
 import fle.core.item.behavior.BehaviorFirestarter;
 import fle.core.item.behavior.BehaviorHoe;
@@ -118,6 +119,11 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		addToolMaterial(Materials.CompactStone);
 		addToolMaterial(Materials.Copper);
 		addToolMaterial(Materials.CuAs);
+		addToolMaterial(Materials.CuAs2);
+		addToolMaterial(Materials.CuPb);
+		addToolMaterial(Materials.CuPb2);
+		addToolMaterial(Materials.CuSn);
+		addToolMaterial(Materials.CuSn2);
 		addSubItem(1, "rough_stone_axe", "Rough Stone Axe", SubTag.TOOL_stone, 
 				new String[]{EnumTool.axe.toString()},
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
@@ -182,31 +188,41 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new String[]{EnumTool.decorticating_stick.name()},
 				new TextureLocation("tools/plate/stone_decorticating_stick", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
 				new BehaviorTool());
-		addSubItem(101, "metal_axe", "Metal Axe", SubTag.TOOL_metal, 
+		addSubItem(101, "metal_axe", "Metal Axe", SubTag.type_tool_metal_tier0, 
 				new String[]{EnumTool.axe.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 3.0F)},
 				new TextureLocation("tools/axe/metal_axe_head", "tools/axe/metal_axe_rust", "tools/axe/metal_axe_mosaic", "tools/axe/metal_axe_stick"), 
 				new BehaviorAxe(1.0F));
-		addSubItem(102, "metal_pickaxe", "Metal Pickaxe", SubTag.TOOL_metal, 
-				new String[]{EnumTool.pickaxe.toString()}, 
+		addSubItem(102, "metal_pickaxe", "Metal Pickaxe", SubTag.type_tool_metal_tier0, 
+				new String[]{EnumTool.pickaxe.toString()},
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
 				new TextureLocation("tools/pickaxe/metal_pickaxe_head", "tools/pickaxe/metal_pickaxe_rust", "tools/pickaxe/metal_pickaxe_mosaic", "tools/pickaxe/metal_pickaxe_stick"), 
 				new BehaviorPickaxe());
-		addSubItem(103, "metal_hammer", "Metal Hammer", SubTag.TOOL_metal, 
+		addSubItem(103, "metal_hammer", "Metal Hammer", SubTag.type_tool_metal_tier0, 
 				new String[]{EnumTool.metal_hammer.toString(), EnumTool.abstract_hammer.name()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 2.0F), new AttributesInfo(knockbackResistance, 0.5F)},
 				new TextureLocation("tools/hammer/metal_hammer_head", "tools/hammer/metal_hammer_rust", "tools/hammer/metal_hammer_mosaic", "tools/hammer/metal_hammer_stick"), 
 				new BehaviorMetalHammer());
-		addSubItem(104, "metal_shovel", "Metal Shovel", SubTag.TOOL_metal, 
+		addSubItem(104, "metal_shovel", "Metal Shovel", SubTag.type_tool_metal_tier0, 
 				new String[]{EnumTool.shovel.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.3F)},
 				new TextureLocation("tools/shovel/metal_shovel_head", "tools/shovel/metal_shovel_rust", "tools/shovel/metal_shovel_mosaic", "tools/shovel/metal_shovel_stick"), 
 				new BehaviorShovel(1.0F));
-		addSubItem(105, "metal_chisel", "Metal Chisel", SubTag.TOOL_metal, 
+		addSubItem(105, "metal_chisel", "Metal Chisel", SubTag.type_tool_metal_tier0, 
 				new String[]{EnumTool.chisel.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
 				new TextureLocation("tools/chisel/metal_chisel_head", "tools/chisel/metal_chisel_rust", "tools/chisel/metal_chisel_mosaic", "tools/chisel/metal_chisel_stick"), 
 				new BehaviorChisel());
+		addSubItem(106, "metal_bowsaw", "Metal Bowsaw", SubTag.type_tool_metal_tier1, 
+				new String[]{EnumTool.bowsaw.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 2.0F)},
+				new TextureLocation("tools/bowsaw/bowsaw_head", "tools/bowsaw/bowsaw_rust", "tools/bowsaw/bowsaw_mosaic", "tools/bowsaw/bowsaw_stick"), 
+				new BehaviorBowsaw());
+		addSubItem(107, "metal_adz", "Metal Adz", SubTag.type_tool_metal_tier1, 
+				new String[]{EnumTool.adz.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.8F)},
+				new TextureLocation("tools/axe/metal_adz_head", "tools/axe/metal_adz_rust", "tools/axe/metal_adz_mosaic", "tools/axe/metal_adz_stick"), 
+				new BehaviorTool());
 		heightLightList.add(8);
 		heightLightList.add(13);
 		heightLightList.add(14);

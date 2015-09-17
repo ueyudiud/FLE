@@ -4,6 +4,17 @@ import net.minecraft.client.renderer.entity.RenderItem;
 
 public class RenderArgil extends RenderBase
 {
+	double d1 = 1D / 16D,
+			d2 = d1 * 2,
+			d3 = d1 * 3,
+			d4 = d1 * 4,
+			d5 = d1 * 5,
+			d6 = d1 * 6,
+			d7 = d1 * 7,
+			d9 = d1 * 9,
+			d13 = d1 * 13,
+			d14 = d1 * 14;
+	
 	@Override
 	public void renderBlock() 
 	{
@@ -14,16 +25,6 @@ public class RenderArgil extends RenderBase
 		{
 		case 0 :
 		{
-			double d1 = 1D / 16D;
-			double d2 = d1 * 2,
-					d3 = d1 * 3,
-					d4 = d1 * 4,
-					d5 = d1 * 5,
-					d6 = d1 * 6,
-					d7 = d1 * 7,
-					d9 = d1 * 9,
-					d13 = d1 * 13,
-					d14 = d1 * 14;
 			renderBlock(d5, 0D, d5, 1 - d5, d1, 1 - d5);
 			
 			renderBlock(d4,     d1, d5    , d5,     d3, 1 - d5);

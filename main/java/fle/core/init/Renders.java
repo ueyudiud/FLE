@@ -1,5 +1,9 @@
 package fle.core.init;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -22,9 +26,13 @@ import fle.core.render.RenderOilLamp;
 import fle.core.render.RenderOre;
 import fle.core.render.RenderOreCobble;
 import fle.core.render.RenderRock;
+import fle.core.render.RenderWoodenFrame;
 import fle.core.render.TESRArgilItems;
+import fle.core.render.TESRBase;
 import fle.core.render.TESRColdForging;
 import fle.core.render.TESRDryingTable;
+import fle.core.render.TESRPolishTable;
+import fle.core.render.TESRStoneMill;
 import fle.core.te.TileEntityColdForgingPlatform;
 import fle.core.te.TileEntityDryingTable;
 import fle.core.te.argil.TileEntityArgilItems;
@@ -42,19 +50,41 @@ public class Renders
         RenderHandler.register(IB.argil_unsmelted, 1, RenderEmpty.class);
         RenderHandler.register(IB.argil_smelted, 0, RenderArgil.class);
         RenderHandler.register(IB.woodMachine1, 0, RenderDryingTable.class);
+        RenderHandler.register(IB.woodMachine1, 1, RenderWoodenFrame.class);
         RenderHandler.register(IB.stoneMachine1, 0, RenderCastingPool.class);
         RenderHandler.register(IB.stoneMachine1, 1, RenderCeramicFurnaceCrucible.class);
         RenderHandler.register(IB.stoneMachine1, 2, RenderColdForging.class);
         RenderHandler.register(IB.crop, OreDictionary.WILDCARD_VALUE, RenderCrop.class);
         RenderHandler.register(IB.ore_cobble, OreDictionary.WILDCARD_VALUE, RenderOreCobble.class);
         RenderHandler.register(IB.ditch, OreDictionary.WILDCARD_VALUE, RenderDitch.class);
+        RenderHandler.register(IB.woodMachine1, 2, RenderEmpty.class);
         FleValue.FLE_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
     	RenderingRegistry.registerBlockHandler(new RenderHandler(false));
         FleValue.FLE_NOINV_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
     	RenderingRegistry.registerBlockHandler(new RenderHandler(true));
-    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDryingTable.class, new TESRDryingTable());
-    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArgilItems.class, new TESRArgilItems());
-    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColdForgingPlatform.class, new TESRColdForging());
+    	registerTESR(TESRDryingTable.class);
+    	registerTESR(TESRArgilItems.class);
+    	registerTESR(TESRColdForging.class);
+    	registerTESR(TESRPolishTable.class);
+    	registerTESR(TESRStoneMill.class);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityFleArrow.class, new RenderFleArrow("arrow"));
+	}
+	
+	public static void registerTESR(Class<? extends TESRBase> tesr)
+	{
+		try
+		{
+			ParameterizedType type = (ParameterizedType) tesr.getGenericSuperclass();
+			Class<?> type1 = (Class) type.getActualTypeArguments()[0];
+			if(type1.isAssignableFrom(type1))
+			{
+				ClientRegistry.bindTileEntitySpecialRenderer((Class<? extends TileEntity>) type1, tesr.newInstance());
+			}
+			else throw new RuntimeException("FLE find a class not extends TileEntity!");
+		}
+		catch(Throwable e)
+		{
+			new RuntimeException("FLE fail to register a TESR.", e).printStackTrace();
+		}
 	}
 }

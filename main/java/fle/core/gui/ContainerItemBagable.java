@@ -11,6 +11,7 @@ import fle.api.gui.ContainerBase;
 import fle.api.gui.ContainerWithPlayerInventory;
 import fle.api.gui.SlotHolographic;
 import fle.api.item.IBagable;
+import fle.core.inventory.InventoryBagable;
 
 public class ContainerItemBagable extends ContainerWithPlayerInventory
 {

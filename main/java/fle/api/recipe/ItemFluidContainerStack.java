@@ -84,4 +84,10 @@ public class ItemFluidContainerStack extends ItemAbstractStack
 		}
 		return containerStacks;
 	}
+
+	@Override
+	public String toString()
+	{
+		return isDrain ? "stack.fluid.container.drain." + stack.getUnlocalizedName() + "x" + stack.amount : "stack.fluid.container.fill." + stack.getUnlocalizedName() + "x" + stack.amount;
+	}
 }

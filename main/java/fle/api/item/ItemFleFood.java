@@ -26,7 +26,7 @@ public class ItemFleFood extends ItemFleMetaBase
 		{
 			return this;
 	    }
-		this.addSubItem(aMetaValue, name, aLocalized, aLocate, aBehavior);
+		addSubItem(aMetaValue, name, aLocalized, aLocate, aBehavior);
 		if(aFoodBehavior != null)
 			foodStats.register(Short.valueOf((short)aMetaValue), aFoodBehavior, name);
 	    return this;

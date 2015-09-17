@@ -90,7 +90,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		int tSide = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Facing);
 		try
 		{
-			return iconMap.get(blockBehaviors.name(tMeta))[textureNameMap.get(blockBehaviors.name(tMeta)).getIconID(ForgeDirection.VALID_DIRECTIONS[FleValue.MACHINE_FACING[tSide][side]].getOpposite())];
+			return iconMap.get(blockBehaviors.name(tMeta))[textureNameMap.get(blockBehaviors.name(tMeta)).getIconID(ForgeDirection.VALID_DIRECTIONS[FleValue.MACHINE_FACING[tSide][side]])];
 		}
 		catch(Throwable e)
 		{
@@ -183,11 +183,11 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 			int y, int z, EntityLivingBase aEntity,
 			ItemStack aStack)
 	{
-		int dir = FleAPI.getIndexFromDirection(getPointFacing(aWorld, x, y, z, aEntity));
-		FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), EnumWorldNBT.Facing, dir);
+		ForgeDirection dir = getPointFacing(aWorld, x, y, z, aEntity).getOpposite();
+		FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), EnumWorldNBT.Facing, FleAPI.getIndexFromDirection(dir));
 		if(aWorld.getTileEntity(x, y, z) instanceof TEBase)
 		{
-			((TEBase) aWorld.getTileEntity(x, y, z)).setDirction(ForgeDirection.VALID_DIRECTIONS[dir]);
+			((TEBase) aWorld.getTileEntity(x, y, z)).setDirction(dir);
 		}
 		super.onBlockPlacedBy(aWorld, x, y, z, aEntity, aStack);
 		IBlockBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) getDamageValue(aWorld, x, y, z)));

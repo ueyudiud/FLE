@@ -13,10 +13,10 @@ public final class SideGateway<T>
 		try
 		{
 			if (FMLCommonHandler.instance().getSide().isClient())
-				clientInstance = ((Class<? extends T>)Class.forName(clientClass)).newInstance();
+				clientInstance = ((Class<? extends T>) Class.forName(clientClass)).newInstance();
 			else
 				clientInstance = null;
-			serverInstance = ((Class<? extends T>)Class.forName(serverClass)).newInstance();
+			serverInstance = ((Class<? extends T>) Class.forName(serverClass)).newInstance();
 		}
 		catch (Exception e)
 		{

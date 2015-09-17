@@ -2,11 +2,12 @@ package fle.api.te;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import fle.api.gui.IInventoryTile;
+import fle.api.inventory.IInventoryTile;
 
-public abstract class TEInventory<T extends IInventoryTile<?>> extends TEBase implements IInventory
+public abstract class TEInventory<T extends IInventoryTile<?>> extends TEBase implements ISidedInventory
 {
 	protected T inv;
 	
@@ -105,4 +106,24 @@ public abstract class TEInventory<T extends IInventoryTile<?>> extends TEBase im
 	{
 		return inv.isItemValidForSlot(i, itemstack);
 	}	
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		return inv.getAccessibleSlotsFromSide(side);
+	}
+
+	@Override
+	public boolean canInsertItem(int slotID, ItemStack aStack,
+			int side)
+	{
+		return inv.canInsertItem(slotID, aStack, side);
+	}
+
+	@Override
+	public boolean canExtractItem(int slotID, ItemStack aStack,
+			int side)
+	{
+		return inv.canExtractItem(slotID, aStack, side);
+	}
 }

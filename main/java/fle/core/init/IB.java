@@ -13,6 +13,8 @@ import fle.api.enums.EnumTool;
 import fle.api.fluid.FluidBase;
 import fle.api.material.PropertyInfo;
 import fle.api.recipe.ItemOreStack;
+import fle.api.soild.Solid;
+import fle.api.soild.Solid.SolidState;
 import fle.core.block.BlockAsh;
 import fle.core.block.BlockCharcoal;
 import fle.core.block.BlockDitch;
@@ -99,6 +101,13 @@ public class IB
 	public static Fluid lime_mortar;
 	public static Fluid copper;
 	public static Fluid cu_as_0;
+	public static Fluid cu_as_1;
+	public static Fluid cu_pb_0;
+	public static Fluid cu_pb_1;
+	public static Fluid cu_sn_0;
+	public static Fluid cu_sn_1;
+	public static Fluid cu_pb_sn;
+	public static Solid limestone;
 	
 	public static void init()
 	{
@@ -107,6 +116,13 @@ public class IB
 		plant_ash_mortar = new FluidBase("plant_ash_mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 1800, 1.0F, 3.2F, 0.7F, 1.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/plant_ash_mortar");
 		lime_mortar = new FluidBase("lime_mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 2200, 1.0F, 1.9F, 0.67F, 1.8F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/lime_mortar");
 		cu_as_0 = new FluidBase("cu_as_0", Materials.CuAs.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		cu_as_1 = new FluidBase("cu_as_1", Materials.CuAs2.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		cu_pb_0 = new FluidBase("cu_pb_0", Materials.CuPb.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		cu_pb_1 = new FluidBase("cu_pb_1", Materials.CuPb2.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		cu_sn_0 = new FluidBase("cu_sn_0", Materials.CuSn.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		cu_sn_1 = new FluidBase("cu_sn_1", Materials.CuSn2.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		cu_pb_sn = new FluidBase("cu_pb_sn", Materials.CuSnPb.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		limestone = new Solid("limestone", "Limestone").setType(SolidState.Dust).setTextureName("limestone");
 		debug = new ItemDebug("debug").setCreativeTab(CreativeTabs.tabRedstone).setTextureName(FleValue.TEXTURE_FILE + ":fle");
 		crop = new BlockFleCrop();
 		rock = new BlockRock().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);

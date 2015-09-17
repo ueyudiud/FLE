@@ -25,7 +25,7 @@ public class BlockDitch extends BlockHasTile
 {
 	public BlockDitch()
 	{
-		super(ItemDitch.class, "ditch", Material.rock);
+		super(ItemDitch.class, "ditch", Material.piston);
 		setHardness(0.5F);
 		setResistance(0.3F);
 		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "%s Ditch");
@@ -96,7 +96,7 @@ public class BlockDitch extends BlockHasTile
 	@Override
 	public boolean hasSubs() 
 	{
-		return false;
+		return true;
 	}
 
 	@Override

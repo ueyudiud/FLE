@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -17,7 +16,8 @@ import org.lwjgl.opengl.GL11;
 
 import fle.api.FleAPI;
 import fle.api.FleValue;
-import fle.api.fluid.FluidBase;
+import fle.api.soild.SolidTank;
+import fle.api.soild.SolidTankInfo;
 
 public abstract class GuiContainerBase extends GuiContainer
 {
@@ -63,9 +63,15 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected abstract void drawOther(int aXOffset, int aYOffset, int aMouseXPosition, int aMouseYPosition);
 
-	public abstract boolean hasCustomName();
+	public boolean hasCustomName()
+	{
+		return container instanceof ContainerBase ? ((ContainerBase) container).inv.hasCustomInventoryName() : false;
+	}
 	
-	public abstract String getName();
+	public String getName()
+	{
+		return container instanceof ContainerBase ? ((ContainerBase) container).inv.getInventoryName() : "";
+	}
 
 	public abstract ResourceLocation getResourceLocation();
 	
@@ -108,6 +114,36 @@ public abstract class GuiContainerBase extends GuiContainer
 		        float blue = (color & 255) / 255.0F;
 				GL11.glColor4f(red, green, blue, 1.0F);
 				drawRepeated(fluidIcon, xoffset + x + width - liquidWidth, yoffset + y + height - liquidHeight, liquidWidth, liquidHeight, zLevel);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				mc.renderEngine.bindTexture(getResourceLocation());
+			}
+		}
+	}
+	protected void drawSolid(int x, int y, SolidTank tank, int width, int height)
+	{
+		drawSolid(x, y, tank, width, height, false);
+	}
+	protected void drawSolid(int x, int y, SolidTank tank, int width, int height, boolean lay)
+	{
+		SolidTankInfo info = tank.getInfo();
+		xoffset = (this.width - xSize) / 2;
+		yoffset = (this.height - ySize) / 2;
+		
+		if(info.solid == null) return;
+		if (info.solid.getSize() > 0)
+		{
+			IIcon solidIcon = info.solid.getObj().getIcon();
+			if (solidIcon != null)
+			{
+				mc.renderEngine.bindTexture(FleAPI.solidLocate);
+				double liquidHeight = lay ? height : (double) (info.solid.getSize() * height) / (double)info.capacity;
+				double liquidWidth = lay ? (double) (info.solid.getSize() * width) / (double) info.capacity : width;
+		        int color = info.solid.getObj().getColor(info.solid);
+		        float red = (color >> 16 & 255) / 255.0F;
+		        float green = (color >> 8 & 255) / 255.0F;
+		        float blue = (color & 255) / 255.0F;
+				GL11.glColor4f(red, green, blue, 1.0F);
+				drawRepeated(solidIcon, xoffset + x + width - liquidWidth, yoffset + y + height - liquidHeight, liquidWidth, liquidHeight, zLevel);
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				mc.renderEngine.bindTexture(getResourceLocation());
 			}

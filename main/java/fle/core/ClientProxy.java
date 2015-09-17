@@ -7,33 +7,19 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.oredict.OreDictionary;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleAPI;
-import fle.api.FleValue;
 import fle.api.fluid.FluidBase;
 import fle.api.gui.GuiCondition;
+import fle.api.soild.Solid;
+import fle.api.soild.SolidRegistry;
 import fle.api.util.ColorMap;
 import fle.api.util.FluidIconRegisterEvent;
 import fle.api.util.IColorMapHandler;
-import fle.core.entity.EntityFleArrow;
-import fle.core.init.IB;
 import fle.core.init.Renders;
 import fle.core.init.Rs;
-import fle.core.render.RenderArgil;
-import fle.core.render.RenderAsh;
-import fle.core.render.RenderDryingTable;
-import fle.core.render.RenderFleArrow;
-import fle.core.render.RenderHandler;
-import fle.core.render.RenderOilLamp;
-import fle.core.render.RenderOre;
-import fle.core.render.RenderRock;
-import fle.core.render.TESRDryingTable;
-import fle.core.te.TileEntityDryingTable;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleTextureMap;
 
@@ -77,11 +63,17 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public void onIconRegister()
 	{
 		FleAPI.conditionIconRegister = new FleTextureMap("textures/condition");
+		FleAPI.solidIconRegister = new FleTextureMap("textures/solid");
 		for(GuiCondition c : GuiCondition.register)
 		{
 			c.registerIcon(FleAPI.conditionIconRegister);
 		}
+		for(Solid solid : SolidRegistry.getSolidList())
+		{
+			solid.registerIcon(FleAPI.solidIconRegister);
+		}
 		Minecraft.getMinecraft().renderEngine.loadTexture(FleAPI.conditionLocate, (FleTextureMap) FleAPI.conditionIconRegister);
+		Minecraft.getMinecraft().renderEngine.loadTexture(FleAPI.solidLocate, (FleTextureMap) FleAPI.solidIconRegister);
 	}
 
 	@Override

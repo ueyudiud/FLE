@@ -10,39 +10,36 @@ import fle.api.te.TEBase;
 import fle.core.te.TileEntityColdForgingPlatform;
 import fle.core.te.argil.TileEntityArgilItems;
 
-public class TESRColdForging extends TESRBase
+public class TESRColdForging extends TESRBase<TileEntityColdForgingPlatform>
 {
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double xPos, double yPos,
-			double zPos, float aLevel)
+	public void renderTileEntityAt(TileEntityColdForgingPlatform tile,
+			double xPos, double yPos, double zPos)
 	{
-		if (tile.getWorldObj() != null && tile instanceof TileEntityColdForgingPlatform)
+		EntityItem customitem = new EntityItem(getWorldObj());
+		customitem.hoverStart = 0f;
+		float blockScale = 1.0F;
+		if(((TileEntityColdForgingPlatform) tile).getStackInSlot(4) != null)
 		{
-			EntityItem customitem = new EntityItem(getWorldObj());
-			customitem.hoverStart = 0f;
-			float blockScale = 1.0F;
-			if(((TileEntityColdForgingPlatform) tile).getStackInSlot(4) != null)
+			GL11.glPushMatrix(); //start
+			GL11.glTranslatef((float)xPos + 0.5F, (float)yPos + 0.0625F, (float)zPos + 0.325F);
+			if (RenderManager.instance.options.fancyGraphics)
 			{
-				GL11.glPushMatrix(); //start
-				GL11.glTranslatef((float)xPos + 0.5F, (float)yPos + 0.0625F, (float)zPos + 0.325F);
-				if (RenderManager.instance.options.fancyGraphics)
-				{
-					GL11.glTranslatef(0.0F, 0.0625F, 0.0F);
-					GL11.glRotatef(180F, 0.0F, 0.5F, 0.5F);
-				}
-				GL11.glScalef(blockScale, blockScale, blockScale);
-				ItemStack target = ((TileEntityColdForgingPlatform) tile).getStackInSlot(4).copy();
-				customitem.setEntityItemStack(target);
-				try
-				{
-					itemRenderer.doRender(customitem, 0, 0, 0, 0, 0);
-				}
-				catch(Throwable e)
-				{
-					e.printStackTrace();
-				}
-				GL11.glPopMatrix(); //end
+				GL11.glTranslatef(0.0F, 0.0625F, 0.0F);
+				GL11.glRotatef(180F, 0.0F, 0.5F, 0.5F);
 			}
+			GL11.glScalef(blockScale, blockScale, blockScale);
+			ItemStack target = ((TileEntityColdForgingPlatform) tile).getStackInSlot(4).copy();
+			customitem.setEntityItemStack(target);
+			try
+			{
+				itemRenderer.doRender(customitem, 0, 0, 0, 0, 0);
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			GL11.glPopMatrix(); //end
 		}
 	}	
 }

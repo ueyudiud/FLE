@@ -9,6 +9,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -36,6 +37,17 @@ public class BlockFirewood extends BlockHasTile
 		setHardness(1.0F);
 		setResistance(1.0F);
 		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "Firewood");
+	}
+	
+	@Override
+	public void breakBlock(World aWorld, int x, int y, int z, Block aBlock,
+			int aMeta)
+	{
+		super.breakBlock(aWorld, x, y, z, aBlock, aMeta);
+		if(aWorld.getBlock(x, y + 1, z) == Blocks.fire)
+		{
+			aWorld.setBlockToAir(x, y + 1, z);
+		}
 	}
 	
 	@Override

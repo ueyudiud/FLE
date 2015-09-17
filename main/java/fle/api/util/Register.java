@@ -1,6 +1,7 @@
 package fle.api.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,99 +9,96 @@ import java.util.Map;
 
 public class Register<T> implements Iterable<T>
 {
+	private int size = 0;
 	private int i = 0;
-	private final List<Integer> idList = new ArrayList();
-	private final List<String> names = new ArrayList();
-	private final List<T> objs = new ArrayList();
-	private final Map<Integer, String> nameMap = new HashMap();
-	private final Map<String, T> objMap = new HashMap();
-	private final Map<T, Integer> idMap = new HashMap();
+	private Object[] oL;
+	private String[] sL;
 
-	public void register(int i, T t, String name)
+	public Register()
 	{
-		if(idMap.keySet().contains(t)) 
-		{
-			System.out.print("Fla API : Registry has already register " + t.toString() + ".");
-			return;
-		}
-		if(names.contains(t)) 
-		{
-			System.out.print("Fla API : Registry has tag name " + name + ".");
-			return;
-		}
-		names.add(name);
-		objs.add(t);
-		idList.add(i);
-		nameMap.put(i, name);
-		objMap.put(name, t);
-		idMap.put(t, i);
+		this(16);
+	}
+	public Register(int size)
+	{
+		oL = new Object[size];
+		sL = new String[size];
 	}
 	
-	public void register(T t, String name)
+	private void addSize(int size)
 	{
-		if(idMap.keySet().contains(t)) 
+		oL = Arrays.copyOf(oL, size);
+		sL = Arrays.copyOf(sL, size);
+	}
+	private int getNextAccessID()
+	{
+		while(contain(i)) ++i;
+		return i;
+	}
+
+	public int register(T t, String name)
+	{
+		getNextAccessID();
+		register(i, t, name);
+		return i;
+	}
+	public void register(int i, T t, String name)
+	{
+		if(oL.length <= i) 
 		{
-			System.out.print("Fla API : Registry has already register " + t.toString() + ".");
+			addSize(i * 2);
+		}
+		if(oL[i] != null || sL[i] != null) 
+		{
+			FleLog.getLogger().throwing(new RuntimeException("Fla API : Registry has tag name " + name + "."));
 			return;
 		}
-		if(names.contains(t)) 
-		{
-			System.out.print("Fla API : Registry has tag name " + name + ".");
-			return;
-		}
-		while(idList.contains(i))
-		{
-			++i;
-		}
-		names.add(name);
-		objs.add(t);
-		idList.add(i);
-		nameMap.put(i, name);
-		objMap.put(name, t);
-		idMap.put(t, i);
+		oL[i] = t;
+		sL[i] = name;
+		++size;
 	}
 
 	public int serial(T t)
 	{
-		return idMap.get(t);
+		for(int i = 0; i < oL.length; ++i)
+			if(oL[i] != null && oL[i].equals(t))
+				return i;
+		return -1;
 	}
 	public int serial(String name)
 	{
-		return serial(objMap.get(name));
+		for(int i = 0; i < sL.length; ++i)
+			if(sL[i] != null && sL[i].equals(name))
+				return i;
+		return -1;
 	}
 	
 	public String name(T t)
 	{
-		return nameMap.get(serial(t));
+		return name(serial(t));
 	}
 	public String name(int i)
 	{
-		return nameMap.get(i);
+		return sL[i];
 	}
-	
-	public T get(int i)
-	{
-		return get(nameMap.get(i));
-	}
+
 	public T get(String tag)
 	{
-		return objMap.get(tag);
+		return get(serial(tag));
+	}
+	public T get(int i)
+	{
+		return (T) oL[i];
 	}
 	
 	@Override
 	public Iterator<T> iterator() 
 	{
-		return new ArrayList<T>(objs).iterator();
+		return new RegisterIterator();
 	}
 
 	public int size() 
 	{
-		return objs.size();
-	}
-
-	public T iterator(int i)
-	{
-		return objs.get(i);
+		return size;
 	}
 
 	public boolean remove(int i)
@@ -108,21 +106,55 @@ public class Register<T> implements Iterable<T>
 		T target = get(i);
 		String str = name(i);
 		if(target == null || str == null) return false;
-		names.remove(str);
-		idList.remove(i);
-		nameMap.remove(i);
-		objMap.remove(str);
-		idMap.remove(target);
-		return objs.remove(target);
+		sL[i] = null;
+		oL[i] = null;
+		this.i = i;
+		--size;
+		return true;
 	}
 
 	public boolean isEmpty() 
 	{
-		return objMap.size() == 0;
+		return size == 0;
 	}
 
 	public boolean contain(String aName) 
 	{
-		return names.contains(aName);
+		return serial(aName) != -1;
+	}
+
+	public boolean contain(int id) 
+	{
+		return id < oL.length ? oL[id] != null : false;
+	}
+
+	public class RegisterIterator implements Iterator<T>
+	{
+		private int length = 0;
+		private int id = -1;
+
+		@Override
+		public boolean hasNext()
+		{
+			return length < size;
+		}
+
+		@Override
+		public T next()
+		{
+			while(id < oL.length)
+			{
+				++id;
+				if(get(id) != null) break;
+			}
+			++length;
+			return get(id);
+		}
+
+		@Override
+		public void remove()
+		{
+			throw new UnsupportedOperationException();
+		}
 	}
 }

@@ -12,8 +12,8 @@ import fle.api.material.MatterDictionary;
 import fle.api.net.INetEventListener;
 import fle.api.te.TEIT;
 import fle.core.energy.ThermalTileHelper;
-import fle.core.gui.InventoryCastingPool;
 import fle.core.init.Materials;
+import fle.core.inventory.InventoryCastingPool;
 
 public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements IThermalTileEntity, INetEventListener
 {

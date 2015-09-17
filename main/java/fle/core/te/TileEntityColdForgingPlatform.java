@@ -7,7 +7,7 @@ import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.recipe.CraftingState;
 import fle.api.te.TEInventory;
-import fle.core.gui.InventoryColdForgingPlatform;
+import fle.core.inventory.InventoryColdForgingPlatform;
 import fle.core.recipe.ColdForgingRecipe;
 
 public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForgingPlatform> implements INetEventListener

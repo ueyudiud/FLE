@@ -14,6 +14,7 @@ import fle.api.gui.ContainerCraftable;
 import fle.api.gui.GuiCondition;
 import fle.api.gui.SlotOutput;
 import fle.api.net.INetEventListener;
+import fle.core.inventory.InventoryCeramics;
 import fle.core.recipe.CeramicsRecipe;
 
 public class ContainerCeramics extends ContainerCraftable implements INetEventListener

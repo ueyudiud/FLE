@@ -14,8 +14,8 @@ import fle.api.te.IMatterContainer;
 import fle.api.te.TEIT;
 import fle.api.util.IChemCondition;
 import fle.core.energy.ThermalTileHelper;
-import fle.core.gui.InventoryCeramicFurnaceCrucible;
 import fle.core.init.Materials;
+import fle.core.inventory.InventoryCeramicFurnaceCrucible;
 
 public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurnaceCrucible> implements IThermalTileEntity, IChemCondition, IMatterContainer
 {

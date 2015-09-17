@@ -41,7 +41,7 @@ public class FleFoodStats extends FoodStats
     public void addStats(int foodLevel, float foodSaturationModifier)
     {
         this.foodLevel += foodLevel;
-        this.foodSaturationLevel = Math.min(this.foodSaturationLevel + (float) foodLevel * foodSaturationModifier / 10, (float)this.foodLevel);
+        this.foodSaturationLevel = Math.min(this.foodSaturationLevel + (float) foodLevel * foodSaturationModifier / 10.0F, (float) this.foodLevel);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class FleFoodStats extends FoodStats
         {
             foodExhaustionLevel -= 4.0F;
 
-            if (foodSaturationLevel > 0.0F)
+            if ((float) foodLevel - foodSaturationLevel <= 3.0F && foodSaturationLevel > 0.0F)
             {
                 foodSaturationLevel -= 1.0F;
             }
@@ -127,7 +127,6 @@ public class FleFoodStats extends FoodStats
         else if (foodLevel <= 0)
         {
             ++foodTimer;
-
             if (foodTimer >= 20)
             {
             	float damage = dif == EnumDifficulty.PEACEFUL ? 100.0F : dif == EnumDifficulty.EASY ? 5.0F : dif == EnumDifficulty.NORMAL ? 10.0F : 20.0F;

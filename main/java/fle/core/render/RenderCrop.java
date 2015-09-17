@@ -7,6 +7,12 @@ import fle.core.te.TileEntityCrop;
 
 public class RenderCrop extends RenderBase
 {
+	double p0 = 0.0625D,
+			p1 = 0.0D,
+			p2 = 1.0D,
+			p3 = 0.375D,
+			p4 = 0.625D;
+	
 	@Override
 	public void renderBlock() 
 	{
@@ -20,11 +26,6 @@ public class RenderCrop extends RenderBase
 				type = tile.getCrop().getRenderType();
 				setTexture(((BlockFleCrop) IB.crop).getIcon(tile.getCrop(), tile.getStage()));
 			}
-		double p0 = 0.0625D;
-		double p1 = 0.0D;
-		double p2 = 1.0D;
-		double p3 = 0.375D;
-		double p4 = 0.625D;
 		switch(type)
 		{
 		case CROSS:

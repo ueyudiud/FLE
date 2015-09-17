@@ -2,15 +2,17 @@ package fle.core.world;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import fle.FLE;
@@ -30,6 +32,12 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	private static final int maxNBTSize = EnumWorldNBT.values().length;
 	private Map<Integer, Map<ChunkPos, ChunkData>> nbts = new HashMap(1);
 	private Map<Integer, Map<ChunkPos, Integer>> airConditions = new HashMap(1);
+	
+	public FWM()
+	{
+		MinecraftForge.EVENT_BUS.register(this);
+		FMLCommonHandler.instance().bus().register(this);
+	}
 	
 	class ChunkData
 	{
@@ -346,22 +354,24 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		FLE.fle.getNetworkHandler().sendToDim(new CoderFWMUpdate(pos, getDatas(pos)), pos.getDim());
 	}
-	
+
 	@SubscribeEvent
 	public void onWorldTick(WorldTickEvent evt)
 	{
-		for(BlockPos pos : cacheList)
+		Iterator<BlockPos> itr = new ArrayList(cacheList).iterator();
+		while(itr.hasNext())
 		{
+			BlockPos pos = itr.next();
 			try
 			{
 				sendData(pos);
+				cacheList.remove(pos);
 			}
 			catch(Throwable e)
 			{
-				FleLog.getLogger().info("Fail to send data " + pos.x + "," + pos.y + "," + pos.z + " is is can't connect server or array outof bound?");;
+				FleLog.getLogger().info("Fail to send data " + pos.x + "," + pos.z + " is is can't connect server or array outof bound?");;
 			}
 		}
-		cacheList.clear();
 	}
 	
 	private List<BlockPos> cacheList = new ArrayList();

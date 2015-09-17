@@ -10,7 +10,9 @@ import fle.api.block.IBlockWithTileBehaviour;
 import fle.api.block.IGuiBlock;
 import fle.core.block.BlockSubTile;
 import fle.core.block.behaviour.BehaviourDrying;
+import fle.core.block.behaviour.BehaviourFrame;
 import fle.core.block.behaviour.BehaviourPolish;
+import fle.core.block.behaviour.BehaviourStoneMill;
 import fle.core.util.BlockTextureManager;
 
 public class BlockWoodMachine1 extends BlockSubTile implements IGuiBlock
@@ -18,6 +20,8 @@ public class BlockWoodMachine1 extends BlockSubTile implements IGuiBlock
 	public BlockWoodMachine1 init()
 	{
 		registerSub(0, "dryingTable", "Drying Table", new BlockTextureManager(new String[]{"machine/drying_table"}), new BehaviourDrying());
+		registerSub(1, "woodenFrame", "Wood Frame", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourFrame());
+		registerSub(2, "stoneMill", "Stone Mill", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourStoneMill());
 		return this;
 	}
 	

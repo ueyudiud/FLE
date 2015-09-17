@@ -13,13 +13,26 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.primitives.SignedBytes;
 
-public abstract class TESRBase extends TileEntitySpecialRenderer
+public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer
 {
 	protected static RenderBlocks renderBlocks = new RenderBlocks();
 	protected static RenderItem itemRenderer;
 	
-	public abstract void renderTileEntityAt(TileEntity tile, double xPos, double yPos, double zPos, float aLevel);
+	public abstract void renderTileEntityAt(T tile, double xPos, double yPos, double zPos);
 
+	public void renderTileEntityAt(TileEntity tile, double xPos, double yPos, double zPos, float aLevel)
+	{
+		try
+		{
+			if(tile != null)
+				renderTileEntityAt((T) tile, xPos, yPos, zPos);
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	protected World getWorldObj()
 	{
 		return field_147501_a.field_147550_f;
@@ -53,13 +66,13 @@ public abstract class TESRBase extends TileEntitySpecialRenderer
 			@Override
 			public byte getMiniBlockCount(ItemStack stack, byte original)
 			{
-				return SignedBytes.saturatedCast(Math.min(stack.stackSize / 32, 15) + 1);
+				return SignedBytes.saturatedCast(Math.min(stack.stackSize / 16, 3) + 1);
 			}
 
 			@Override
 			public byte getMiniItemCount(ItemStack stack, byte original)
 			{
-				return SignedBytes.saturatedCast(Math.min(stack.stackSize / 32, 7) + 1);
+				return SignedBytes.saturatedCast(Math.min(stack.stackSize / 8, 7) + 1);
 			}
 
 			@Override

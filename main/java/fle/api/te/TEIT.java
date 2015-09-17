@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import fle.api.gui.InventoryWithFluidTank;
+import fle.api.inventory.InventoryWithFluidTank;
 
 public abstract class TEIT<T extends InventoryWithFluidTank<?>> extends TEInventory<T> implements IFluidHandler, IFluidTanks
 {

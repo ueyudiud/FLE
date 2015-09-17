@@ -118,4 +118,15 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 	{
 		FleAPI.mod.getNetworkHandler().sendToNearBy(packet, new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, range));
 	}
+	
+	public void markRenderForUpdate()
+	{
+		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+	}
+	
+	public void markForUpdate()
+	{
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		markRenderForUpdate();
+	}
 }

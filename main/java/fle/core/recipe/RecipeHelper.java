@@ -344,7 +344,7 @@ public class RecipeHelper
 	{
 		return tank.getFluid() == null || stack == null ? true : 
 			tank.getCapacity() - tank.getFluidAmount() < stack.amount ? false :
-				tank.getFluid().isFluidEqual(stack) ? true : mixFluid(tank.getFluid(), stack) != null;
+				FluidStack.areFluidStackTagsEqual(tank.getFluid(), stack) && tank.getFluid().isFluidEqual(stack) ? true : mixFluid(tank.getFluid(), stack) != null;
 	}
 	
 	public static FluidStack mixFluid(FluidStack stack1, FluidStack stack2)
@@ -354,7 +354,11 @@ public class RecipeHelper
 
 	public static void onOutputFluidStack(IFluidTank tank, FluidStack stack) 
 	{
-		if(tank.getFluid() == null)
+		if(stack == null)
+		{
+			return;
+		}
+		else if(tank.getFluid() == null)
 		{
 			tank.fill(stack, true);
 		}

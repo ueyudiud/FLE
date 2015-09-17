@@ -1,18 +1,27 @@
 package fle.core.init;
 
-import java.lang.reflect.Field;
+import static net.minecraftforge.common.ChestGenHooks.BONUS_CHEST;
+import static net.minecraftforge.common.ChestGenHooks.DUNGEON_CHEST;
+import static net.minecraftforge.common.ChestGenHooks.MINESHAFT_CORRIDOR;
+import static net.minecraftforge.common.ChestGenHooks.PYRAMID_DESERT_CHEST;
+import static net.minecraftforge.common.ChestGenHooks.PYRAMID_JUNGLE_CHEST;
+import static net.minecraftforge.common.ChestGenHooks.PYRAMID_JUNGLE_DISPENSER;
+import static net.minecraftforge.common.ChestGenHooks.STRONGHOLD_CORRIDOR;
+import static net.minecraftforge.common.ChestGenHooks.STRONGHOLD_CROSSING;
+import static net.minecraftforge.common.ChestGenHooks.STRONGHOLD_LIBRARY;
+import static net.minecraftforge.common.ChestGenHooks.VILLAGE_BLACKSMITH;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import fle.api.material.MaterialAbstract;
-import fle.api.util.FleLog;
-import fle.core.util.FlePotionEffect;
-import fle.core.util.Util;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.FishingHooks;
-import static net.minecraftforge.common.ChestGenHooks.*;
+import fle.api.util.FleLog;
+import fle.core.util.FlePotionEffect;
+import fle.core.util.Util;
 
 public class Other
 {	
@@ -26,7 +35,8 @@ public class Other
 			for(String chest : chests)
 			{
 				ChestGenHooks hook = ChestGenHooks.getInfo(chest);
-				Util.overrideField(ChestGenHooks.class, Arrays.asList(chest), hook, new ArrayList(), true);
+				Util.overrideField(ChestGenHooks.class, Arrays.asList("field_145985_p", "contents"), hook, new ArrayList(), true);
+				ChestGenHooks.addItem(chest, new WeightedRandomChestContent(new ItemStack(Items.bread), 1, 3, 10));
 			}
 		}
 		catch(Throwable e)

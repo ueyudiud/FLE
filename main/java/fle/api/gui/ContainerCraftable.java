@@ -55,6 +55,7 @@ public abstract class ContainerCraftable extends ContainerWithPlayerInventory
 				{
 					return true;
 				}
+				return true;
 			}
 		}
 		return false;

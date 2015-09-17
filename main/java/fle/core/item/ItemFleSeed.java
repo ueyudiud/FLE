@@ -16,6 +16,7 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.crop.CropCard;
 import fle.api.crop.ICropSeed;
@@ -82,7 +83,7 @@ public class ItemFleSeed extends ItemFleFood implements IPlantable, ICropSeed
     @Override
     public String getUnlocalizedName(ItemStack stack) 
     {
-    	return super.getUnlocalizedName(stack) + ":" + register.name(stack.getItemDamage());
+    	return super.getUnlocalizedName() + ":" + register.name(stack.getItemDamage());
     }
 
     /**

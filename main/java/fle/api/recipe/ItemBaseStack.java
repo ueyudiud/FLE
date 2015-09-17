@@ -64,6 +64,6 @@ public class ItemBaseStack extends ItemAbstractStack
 	@Override
 	public String toString()
 	{
-		return "stack.base." + stack.getUnlocalizedName() + "x" + stack.stackSize;
+		return stack == null ? "stack.null" : "stack.base." + stack.getUnlocalizedName() + "x" + stack.stackSize;
 	}
 }

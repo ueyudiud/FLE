@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
-import fle.core.gui.InventoryCeramicFurnaceOutlet;
+import fle.core.inventory.InventoryCeramicFurnaceOutlet;
 
 public class CeramicFurnaceOutletRecipe implements IFreezingRecipe
 {

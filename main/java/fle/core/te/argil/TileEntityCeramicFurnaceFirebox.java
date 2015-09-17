@@ -16,8 +16,8 @@ import fle.api.net.INetEventListener;
 import fle.api.recipe.ItemOreStack;
 import fle.api.te.TEInventory;
 import fle.core.energy.ThermalTileHelper;
-import fle.core.gui.InventoryCeramicFurnaceFirebox;
 import fle.core.init.Materials;
+import fle.core.inventory.InventoryCeramicFurnaceFirebox;
 
 public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCeramicFurnaceFirebox> implements ISidedInventory, IThermalTileEntity, INetEventListener
 {

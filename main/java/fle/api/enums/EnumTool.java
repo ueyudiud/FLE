@@ -17,5 +17,7 @@ public enum EnumTool
 	metal_hammer,
 	chisel, 
 	decorticating_plate, 
-	decorticating_stick;
+	decorticating_stick, 
+	bowsaw, 
+	adz;
 }

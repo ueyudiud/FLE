@@ -4,6 +4,8 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.crop.CropCard;
 import fle.core.block.BlockFleCrop;
 import fle.core.init.IB;
@@ -23,9 +25,10 @@ public class FleCropGen extends FleSurfaceGen
 	@Override
 	public boolean generateAt(World aWorld, Random aRand, int x, int y, int z)
 	{
+		if(aWorld.getBiomeGenForCoords(x, z).getFloatTemperature(x, y, z) < 0.1F) return false;
 		BlockFleCrop.flag = true;
 		boolean flag = false;
-		if(cropBlock.canPlaceBlockAt(aWorld, x, y, z))
+		if(cropBlock.canBlockStay(aWorld, x, y, z))
 		{
 			if(aWorld.setBlock(x, y, z, cropBlock))
 			{

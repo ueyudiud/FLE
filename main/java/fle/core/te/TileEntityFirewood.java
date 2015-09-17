@@ -10,6 +10,8 @@ import fle.api.enums.EnumAtoms;
 import fle.api.material.IAtoms.EnumCountLevel;
 import fle.api.material.Matter;
 import fle.api.net.FlePackets.CoderNBTUpdate;
+import fle.api.net.FlePackets.CoderTileUpdate;
+import fle.api.net.INetEventListener;
 import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
 import fle.core.energy.ThermalTileHelper;
@@ -17,7 +19,7 @@ import fle.core.init.Config;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 
-public class TileEntityFirewood extends TEBase implements IThermalTileEntity
+public class TileEntityFirewood extends TEBase implements IThermalTileEntity, INetEventListener
 {
 	private final int charcoalPower = Config.getInteger("pCharcoal", 5000);
 	private final int firewoodPower = Config.getInteger("pFirewood", 4000);
@@ -70,7 +72,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		boolean flag = false;
 		if(burnState == 0 && checkingFire())
 		{
-			burnState = 1;
+			setBurning();
 			flag = true;
 		}
 		if(burnState > 0)
@@ -113,7 +115,8 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		}
 		if(flag)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			sendToNearBy(new CoderTileUpdate(this, (byte) 0, burnState), 128.0F);
+			markForUpdate();
 		}
 		heatCurrect.update();
 	}
@@ -194,7 +197,12 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 
 	public void setBurning()
 	{
-		burnState = 1;
+		if(!worldObj.isRemote)
+		{
+			burnState = 1;
+
+			sendToNearBy(new CoderTileUpdate(this, (byte) 0, burnState), 128.0F);
+		}
 	}
 	
 	public boolean isBurning()
@@ -216,5 +224,14 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 	public double getPreHeatEmit()
 	{
 		return heatCurrect.getPreHeatEmit();
+	}
+
+	@Override
+	public void onReseave(byte type, Object contain)
+	{
+		if(type == 0)
+		{
+			burnState = (Byte) contain;
+		}
 	}
 }

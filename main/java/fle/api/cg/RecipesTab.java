@@ -13,6 +13,7 @@ public class RecipesTab
 	public static RecipesTab tabOldStoneAge = registerNewTab("oldStoneAge");
 	public static RecipesTab tabNewStoneAge = registerNewTab("newStoneAge");
 	public static RecipesTab tabCopperAge = registerNewTab("copperAge");
+	public static RecipesTab tabBronzeAge = registerNewTab("bronzeAge");
 	public static RecipesTab tabClassic = registerNewTab("classic");
 
 	public static RecipesTab registerNewTab(String tab)

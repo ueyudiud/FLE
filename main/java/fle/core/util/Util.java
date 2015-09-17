@@ -1,6 +1,7 @@
 package fle.core.util;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Util
@@ -12,6 +13,7 @@ public class Util
 	public static <T, F> void overrideField(Class<? extends T> clazz, List<String> field, T target, F override, boolean isPrivate) throws Exception
 	{
 		boolean flag = false;
+		List<Throwable> list = new ArrayList();
 		for(String str : field)
 		{
 			try
@@ -29,10 +31,15 @@ public class Util
 			}
 			catch(Throwable e)
 			{
+				list.add(e);
 				continue;
 			}
 		}
-		if(!flag) throw new RuntimeException();
+		if(!flag)
+		{
+			for(Throwable e : list) e.printStackTrace();
+			throw new RuntimeException();
+		}
 	}
 	
 	private static Field modifiersField;
@@ -60,6 +67,7 @@ public class Util
 	public static <T, F> void overrideFinalField(Class<? extends T> clazz, List<String> field, T target, F override, boolean isPrivate) throws Exception
 	{
 		boolean flag = false;
+		List<Throwable> list = new ArrayList();
 		for(String str : field)
 		{
 			try
@@ -79,11 +87,15 @@ public class Util
 			}
 			catch(Throwable e)
 			{
-				e.printStackTrace();
+				list.add(e);
 				continue;
 			}
 		}
-		if(!flag) throw new RuntimeException();
+		if(!flag)
+		{
+			for(Throwable e : list) e.printStackTrace();
+			throw new RuntimeException("FLE: fail to find and override field " + field.get(0));
+		}
 	}
 	
 	public static <T> Object getValue(Class<? extends T> clazz, List<String> field, T target)

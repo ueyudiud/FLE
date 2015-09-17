@@ -15,8 +15,8 @@ import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.te.TEIT;
 import fle.core.energy.ThermalTileHelper;
-import fle.core.gui.InventoryTerrine;
 import fle.core.init.Materials;
+import fle.core.inventory.InventoryTerrine;
 
 public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidTank, IFluidHandler, IThermalTileEntity, INetEventListener
 {

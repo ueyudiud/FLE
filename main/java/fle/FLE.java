@@ -32,6 +32,7 @@ import fle.core.Proxy;
 import fle.core.energy.FleThermalNet;
 import fle.core.init.Config;
 import fle.core.net.NetWorkHandler;
+import fle.core.recipe.FLERA;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleCropRegister;
 import fle.core.util.FleSetup;
@@ -47,7 +48,7 @@ public class FLE implements FleModHandler
 {
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.04a";
+    public static final String VERSION = "2.04d";
     public static final int minForge = 1420;
 	
     @Instance(MODID)
@@ -70,6 +71,7 @@ public class FLE implements FleModHandler
     	FleAPI.mod = fle = this;
     	FleAPI.fluidDictionary = new FluidDictionary();
     	FleAPI.lm = new LanguageManager();
+    	FleAPI.ra = new FLERA();
     	p = new SideGateway<IPlatform>("fle.core.PlatformCommon", "fle.core.PlatformClient");
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
     	nw = new NetWorkHandler();

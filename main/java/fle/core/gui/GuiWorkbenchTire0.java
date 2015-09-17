@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
+import fle.core.inventory.InventoryWorkbenchTire0;
 
 public class GuiWorkbenchTire0 extends GuiContainerBase
 {

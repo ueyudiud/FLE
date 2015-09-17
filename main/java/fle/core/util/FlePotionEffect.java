@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
 import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +24,8 @@ public class FlePotionEffect
 	private static int start = Potion.potionTypes.length;
 	public static Potion bleeding;
 	public static Potion fracture;
+	public static Potion burn;
+	public static Potion recovery;
 	
 	public static void init()
 	{
@@ -47,6 +50,8 @@ public class FlePotionEffect
 		}
 		bleeding = new PotionFLEBleeding(FleAPI.getNextPotionId(start), "bleeding", 0xC40F0F, new int[]{0, 0});
 		fracture = new PotionFLEFracture(FleAPI.getNextPotionId(start), "fracture", 0xFFFDE8, new int[]{1, 0});
+		burn = new PotionFLEBurn(FleAPI.getNextPotionId(start), "burn", 0x922700, new int[]{2, 0});
+		recovery = new PotionFLERecovery(FleAPI.getNextPotionId(start), "recovery", 0x83FF00, new int[]{3, 0});
 	}
 
 	private static class PotionFLE extends Potion
@@ -123,9 +128,65 @@ public class FlePotionEffect
 		}
 		
 		@Override
+		public void removeAttributesModifiersFromEntity(
+				EntityLivingBase entity, BaseAttributeMap map,
+				int attemp)
+		{
+			super.removeAttributesModifiersFromEntity(entity, map, attemp);
+			if(entity.getActivePotionEffect(bleeding).getDuration() < 10)
+			{
+				entity.addPotionEffect(new PotionEffect(recovery.id, 10000));
+			}
+		}
+		
+		@Override
 		public boolean isReady(int tick, int level)
 		{
-			return tick % (60 / (level + 1)) == 0;
+			return tick % (96 / (level + 1)) == 0;
+		}
+	}
+
+	private static class PotionFLERecovery extends PotionFLE
+	{
+		public PotionFLERecovery(int id, String name, int color, int[] iconIndex)
+		{
+			super(id, name, false, color, iconIndex);
+		}
+		
+		@Override
+		public void performEffect(EntityLivingBase entity, int level)
+		{
+			entity.heal(1.0F);
+			if(entity instanceof EntityPlayer)
+			{
+				((EntityPlayer) entity).getFoodStats().addExhaustion(0.5F);
+			}
+		}
+		
+		@Override
+		public boolean isReady(int tick, int level)
+		{
+			return tick % 600 == 0;
+		}
+	}
+
+	private static class PotionFLEBurn extends PotionFLE
+	{
+		public PotionFLEBurn(int id, String name, int color, int[] iconIndex)
+		{
+			super(id, name, true, color, iconIndex);
+		}
+		
+		@Override
+		public void performEffect(EntityLivingBase entity, int level)
+		{
+			entity.attackEntityFrom(DamageResources.getBurnDamageSource(), 1.0F);
+		}
+		
+		@Override
+		public boolean isReady(int tick, int level)
+		{
+			return tick % (120 / (level + 1)) == 0;
 		}
 	}
 	

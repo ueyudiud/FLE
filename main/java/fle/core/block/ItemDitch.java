@@ -17,6 +17,7 @@ public class ItemDitch extends ItemFleBlock
 	{
 		super(aBlock);
 		setTextureName(FleValue.TEXTURE_FILE + ":" + FleValue.VOID_ICON_FILE);
+		setHasSubtypes(true);
 	}
 	
 	@Override

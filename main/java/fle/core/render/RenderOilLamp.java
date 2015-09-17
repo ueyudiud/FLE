@@ -14,6 +14,16 @@ import fle.core.te.TileEntityOilLamp;
 
 public class RenderOilLamp extends RenderBase
 {
+	double p0 = 0D,
+			p1 = 0.03125D,
+			p2 = 0.25D,
+			p3 = 0.3D,
+			p4 = 0.7D,
+			p5 = 0.4D,
+			p6 = 0.6D,
+			p7 = 0.49325D,
+			p8 = 0.50625D;
+	
 	@Override
 	public void renderBlock() 
 	{
@@ -27,15 +37,6 @@ public class RenderOilLamp extends RenderBase
 			hasWick = tile.hasWick;
 			aStack = tile.fluid.getFluid();
 		}
-		double p0 = 0D;
-		double p1 = 0.03125D;
-		double p2 = 0.25D;
-		double p3 = 0.3D;
-		double p4 = 0.7D;
-		double p5 = 0.4D;
-		double p6 = 0.6D;
-		double p7 = 0.49325D;
-		double p8 = 0.50625D;
 		renderBlock(p3, p0, p3, p4, p1, p4);
 		renderBlock(p3, p1, p3, p3 + p1, p2, p4);
 		renderBlock(p3, p1, p3, p4, p2, p3 + p1);

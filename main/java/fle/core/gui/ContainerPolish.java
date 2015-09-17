@@ -25,6 +25,7 @@ public class ContainerPolish extends ContainerCraftable implements INetEventList
 		this.addSlotToContainer(new SlotOutput(tile, 2, 133, 35));
 		if(!tile.getWorldObj().isRemote)
 			FLE.fle.getNetworkHandler().sendTo(new CoderTileUpdate(tile, (byte) 1, tile.getRecipeInput()));
+		onCraftMatrixChanged(tile);
 	}
 	
 	@Override

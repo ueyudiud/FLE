@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.material.IAtoms;
 import fle.api.material.Matter;
@@ -161,6 +162,11 @@ public class FlePackets
 		public IMessage onMessage(CoderFWMUpdate message, MessageContext ctx)
 		{
 			FleAPI.mod.getWorldManager().setDatas(message.pos, message.data, false);
+			World world = FLE.fle.getPlatform().getWorldInstance(message.pos.getDim());
+			if(world != null)
+			{
+				world.markBlockRangeForRenderUpdate(message.pos.x, message.pos.y, message.pos.z, message.pos.x, message.pos.y, message.pos.z);
+			}
 			return null;
 		}
 	}
