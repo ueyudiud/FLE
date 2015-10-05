@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -55,12 +56,10 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			int z = aPos.z & 15;
 			if(datas[dataType] == null)
 			{
-				datas[dataType] = new short[256][];
 				return 0;
 			}
 			if(datas[dataType][y] == null)
 			{
-				datas[dataType][y] = new short[256];
 				return 0;
 			}
 			else
@@ -131,6 +130,13 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			return t;
 		}
 	}
+
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load evt)
+	{
+		if(!nbts.containsKey(new Integer(evt.world.provider.dimensionId)))
+			nbts.put(new Integer(evt.world.provider.dimensionId), new HashMap());
+	}
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload evt)
@@ -142,62 +148,77 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	@SubscribeEvent
 	public void onDataLoad(ChunkDataEvent.Load evt)
 	{
-		NBTTagCompound tNBT1 = evt.getData();
-		Integer tDim = new Integer(evt.world.provider.dimensionId);
-		
-		if(!nbts.containsKey(tDim))
+		try
 		{
-			nbts.put(tDim, new HashMap());
-		}
-		ChunkPos tPos = new ChunkPos(evt.getChunk().xPosition, evt.getChunk().zPosition);
-		if(evt.getData().hasKey("FLE"))
-		{
-			if(!nbts.get(tDim).containsKey(tPos))
+			NBTTagCompound tNBT1 = evt.getData();
+			Integer tDim = new Integer(evt.world.provider.dimensionId);
+			
+			if(!nbts.containsKey(tDim))
 			{
-				nbts.get(tDim).put(tPos, new ChunkData(maxNBTSize));
+				nbts.put(tDim, new HashMap());
 			}
-			NBTTagCompound list = evt.getData().getCompoundTag("FLE");
-			for(int i = 0; i < maxNBTSize; ++i)
+			ChunkPos tPos = new ChunkPos(evt.getChunk().xPosition, evt.getChunk().zPosition);
+			if(evt.getData().hasKey("FLE"))
 			{
-				int[] is = list.getIntArray("Tag_" + String.valueOf(i));
-				if(is.length != 0)
-					nbts.get(tDim).get(tPos).loadFromIntArray(i, is);
-			}
-			if(list.hasKey("Tag_Air"))
-			{
-				if(!airConditions.containsKey(tDim))
+				if(!nbts.get(tDim).containsKey(tPos))
 				{
-					airConditions.put(tDim, new HashMap(1));
+					nbts.get(tDim).put(tPos, new ChunkData(maxNBTSize));
 				}
-				airConditions.get(tDim).put(tPos, list.getInteger("Tag_Air"));
+				NBTTagCompound list = evt.getData().getCompoundTag("FLE");
+				for(int i = 0; i < maxNBTSize; ++i)
+				{
+					int[] is = list.getIntArray("Tag_" + String.valueOf(i));
+					if(is.length != 0)
+						nbts.get(tDim).get(tPos).loadFromIntArray(i, is);
+				}
+				if(list.hasKey("Tag_Air"))
+				{
+					if(!airConditions.containsKey(tDim))
+					{
+						airConditions.put(tDim, new HashMap(1));
+					}
+					airConditions.get(tDim).put(tPos, list.getInteger("Tag_Air"));
+				}
 			}
+		}
+		catch(Throwable e)
+		{
+			throw new RuntimeException("FWM: Fail to load nbt tag from chunk data.", e);
 		}
 	}
 
 	@SubscribeEvent
 	public void onDataSave(ChunkDataEvent.Save evt)
 	{
-		Integer dim = new Integer(evt.world.provider.dimensionId);
-		boolean flagData = true;
-		boolean flagAir = true;
-		if(!nbts.containsKey(dim)) flagData = false;
-		if(!airConditions.containsKey(dim)) flagAir = false;
-		ChunkPos tPos = new ChunkPos(evt.getChunk().xPosition, evt.getChunk().zPosition);
-		if(!nbts.get(dim).containsKey(tPos)) flagData = false;
-		NBTTagCompound list = new NBTTagCompound();
-		ChunkData data = nbts.get(dim).get(tPos);
-		if(flagData)
-			for(int i = 0; i < maxNBTSize; ++i)
-			{
-				int[] is = data.asIntArray(i);
-				if(is != null)
-					list.setIntArray("Tag_" + String.valueOf(i), is);
-			}
-		if(flagAir)
-			list.setInteger("Tag_Air", airConditions.get(dim).get(tPos));
-		if(evt.getData().hasKey("FLE"))
-			evt.getData().removeTag("FLE");
-		evt.getData().setTag("FLE", list);
+		try
+		{
+
+			Integer dim = new Integer(evt.world.provider.dimensionId);
+			boolean flagData = true;
+			boolean flagAir = true;
+			if(!nbts.containsKey(dim)) flagData = false;
+			if(!airConditions.containsKey(dim)) flagAir = false;
+			ChunkPos tPos = new ChunkPos(evt.getChunk().xPosition, evt.getChunk().zPosition);
+			if(!nbts.get(dim).containsKey(tPos)) flagData = false;
+			NBTTagCompound list = new NBTTagCompound();
+			ChunkData data = nbts.get(dim).get(tPos);
+			if(flagData)
+				for(int i = 0; i < maxNBTSize; ++i)
+				{
+					int[] is = data.asIntArray(i);
+					if(is != null)
+						list.setIntArray("Tag_" + String.valueOf(i), is);
+				}
+			if(flagAir)
+				list.setInteger("Tag_Air", airConditions.get(dim).get(tPos));
+			if(evt.getData().hasKey("FLE"))
+				evt.getData().removeTag("FLE");
+			evt.getData().setTag("FLE", list);
+		}
+		catch(Throwable e)
+		{
+			throw new RuntimeException("FWM: Fail to save chunk data.", e);
+		}
 	}
 
 	public short getData(BlockPos pos, int dataType) 

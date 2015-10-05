@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -33,11 +34,11 @@ public class FleAPI
 	@SideOnly(Side.CLIENT)
 	public static ResourceLocation conditionLocate = new ResourceLocation("textures/atlas/condition.png");
 	@SideOnly(Side.CLIENT)
-	public static ResourceLocation solidLocate = new ResourceLocation("textures/atlas/solid.png");
+	public static ResourceLocation fontLocate = new ResourceLocation("textures/atlas/fontLocate");
 	@SideOnly(Side.CLIENT)
 	public static IIconRegister conditionIconRegister;
 	@SideOnly(Side.CLIENT)
-	public static IIconRegister solidIconRegister;
+	public static IIconRegister fontRegister;
 	
 	public static RecipeAdder ra;
 	public static FleModHandler mod;
@@ -71,7 +72,7 @@ public class FleAPI
 	 * @param aStack target to check.
 	 * @return slot ID found, -1 means don't have stack.
 	 */
-	public static int dosePlayerHas(EntityPlayer aPlayer, ItemAbstractStack aStack)
+	public static int doesPlayerHas(EntityPlayer aPlayer, ItemAbstractStack aStack)
 	{
 		for(int i = 0; i < 36; ++i)
 		{
@@ -173,7 +174,7 @@ public class FleAPI
 			if(tHandler.getFuelCalorificValue(aStack, aAirBase) > 0)
 				return tHandler.getFuelCalorificValue(aStack, aAirBase);
 		}
-		return -1;
+		return TileEntityFurnace.getItemBurnTime(aStack) * 10;
 	}
 	
 	public static int getIndexFromDirection(ForgeDirection aDirection)

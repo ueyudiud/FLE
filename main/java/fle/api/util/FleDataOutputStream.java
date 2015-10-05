@@ -1,6 +1,8 @@
 package fle.api.util;
 
 import fle.api.gui.GuiCondition;
+import fle.api.soild.SolidRegistry;
+import fle.api.soild.SolidStack;
 import fle.api.world.BlockPos;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
@@ -190,6 +192,21 @@ public class FleDataOutputStream
 			stream.writeInt(tile.xCoord);
 			stream.writeShort(tile.yCoord);
 			stream.writeInt(tile.zCoord);
+		}
+	}
+
+	public void writeSolidStack(SolidStack aStack) throws IOException
+	{
+		if(aStack != null)
+		{
+			stream.writeBoolean(true);
+			writeString(SolidRegistry.getSolidName(aStack.getObj()));
+			writeInt(aStack.getSize());
+			writeNBT(aStack.getTagCompound());
+		}
+		else 
+		{
+			stream.writeBoolean(false);
 		}
 	}
 

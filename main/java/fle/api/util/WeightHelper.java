@@ -140,6 +140,14 @@ public class WeightHelper<T>
 		}
 		length = size;
 	}
+	public WeightHelper(Stack<T>...aStacks)
+	{
+		sts = aStacks.clone();
+		for(Stack e : aStacks)
+		{
+			length += e.size;
+		}
+	}
 
 	public double getContain(T e)
 	{

@@ -14,6 +14,7 @@ import fle.api.recipe.AbstractRecipe.OnInput;
 import fle.api.recipe.AbstractRecipe.OnOutput;
 import fle.api.recipe.AbstractRecipe.RecipeMatch;
 
+@Deprecated
 public class AbstractRecipeManager
 {
 	private static Map<String, List<RecipeInfo>> map = new HashMap();

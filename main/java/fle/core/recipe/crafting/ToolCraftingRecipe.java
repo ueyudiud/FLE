@@ -17,9 +17,24 @@ import fle.core.item.tool.ToolMaterialInfo;
 
 public class ToolCraftingRecipe extends ShapelessFleRecipe
 {
-	public ToolCraftingRecipe(RecipesTab aTab, String aTool, int size, Object stick, Object other)
+	private static Object[] a(Object obj, Object...other)
 	{
-		super(aTab, null, new Object[]{new ToolRecipe(aTool, size), stick, other});
+		if(other == null)
+		{
+			return new Object[]{obj};
+		}
+		else
+		{
+			Object[] objs = new Object[1 + other.length];
+			objs[0] = obj;
+			System.arraycopy(other, 0, objs, 1, other.length);
+			return objs;
+		}
+	}
+	
+	public ToolCraftingRecipe(RecipesTab aTab, String aTool, int size, Object...other)
+	{
+		super(aTab, null, a(new ToolRecipe(aTool, size), other));
 	}
 	public ToolCraftingRecipe(RecipesTab aTab, String aTool, Object stick)
 	{

@@ -19,6 +19,8 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.material.IAtoms;
 import fle.api.material.Matter;
+import fle.api.soild.ISolidTanks;
+import fle.api.soild.SolidStack;
 import fle.api.te.IFluidTanks;
 import fle.api.te.IMatterContainer;
 import fle.api.te.IObjectInWorld;
@@ -367,6 +369,73 @@ public class FlePackets
 				for(int i = 0; i < message.stacks.length; ++i)
 				{
 					inv.setFluidStackInTank(i, message.stacks[i]);
+				}
+			}
+			return null;
+		}
+	}
+	
+	public static class CoderSolidTankUpdate extends FleAbstractPacket<CoderSolidTankUpdate>
+	{
+		private BlockPos pos;
+		private SolidStack[] stacks;
+		
+		public CoderSolidTankUpdate() {}
+		public CoderSolidTankUpdate(World world, int aX, int aY, int aZ) 
+		{
+			pos = new BlockPos(world, aX, aY, aZ);
+		}
+		public CoderSolidTankUpdate(BlockPos aPos) 
+		{
+			pos = aPos;
+		}
+		
+		@Override
+		protected void write(FleDataOutputStream os) throws IOException
+		{
+			os.writeBlockPos(pos);
+			if(pos.getBlockTile() instanceof ISolidTanks)
+			{
+				os.writeBoolean(true);
+				ISolidTanks inv = (ISolidTanks) pos.getBlockTile();
+				os.writeInt(inv.getSizeSolidTank());
+				for(int i = 0; i < inv.getSizeSolidTank(); ++i)
+				{
+					os.writeSolidStack(inv.getSolidStackInTank(i));
+				}
+			}
+			else
+			{
+				os.writeBoolean(false);				
+			}
+		}
+		
+		@Override
+		protected void read(FleDataInputStream is) throws IOException 
+		{
+			pos = is.readBlockPos();
+			if(is.readBoolean())
+			{
+				int size = is.readInt();
+				stacks = new SolidStack[size];
+				for(int i = 0; i < size; ++i)
+				{
+					stacks[i] = is.readSolidStack();
+				}			
+			}
+			
+		}
+		
+		@Override
+		public IMessage onMessage(CoderSolidTankUpdate message,
+				MessageContext ctx)
+		{
+			if(message.pos.getBlockTile() instanceof ISolidTanks)
+			{
+				ISolidTanks inv = (ISolidTanks) message.pos.getBlockTile();
+				for(int i = 0; i < message.stacks.length; ++i)
+				{
+					inv.setSolidStackInTank(i, message.stacks[i]);
 				}
 			}
 			return null;

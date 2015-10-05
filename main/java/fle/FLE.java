@@ -3,6 +3,7 @@ package fle;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.UUID;
 
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
@@ -11,6 +12,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -29,6 +31,7 @@ import fle.api.util.IColorMapHandler;
 import fle.api.util.IPlatform;
 import fle.core.CommonProxy;
 import fle.core.Proxy;
+import fle.core.energy.FleRotationNet;
 import fle.core.energy.FleThermalNet;
 import fle.core.init.Config;
 import fle.core.net.NetWorkHandler;
@@ -43,13 +46,15 @@ import fle.core.util.SideGateway;
 import fle.core.world.FWM;
 import fle.tech.FleTechManager;
 
-@Mod(modid = FLE.MODID, name = FLE.NAME, version = FLE.VERSION)
+@Mod(modid = FLE.MODID, name = FLE.NAME, version = FLE.VERSION, certificateFingerprint = "after:IC2")
 public class FLE implements FleModHandler
-{
+{	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.04d";
+    public static final String VERSION = "2.05d";
     public static final int minForge = 1420;
+    
+    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775772L);
 	
     @Instance(MODID)
     public static FLE fle;
@@ -62,6 +67,7 @@ public class FLE implements FleModHandler
     private CropRegister cr;
     private FleTechManager tm;
     private FleThermalNet tn;
+    private FleRotationNet rn;
     private SideGateway<Keyboard> k;
     private Configuration config;
     
@@ -79,6 +85,34 @@ public class FLE implements FleModHandler
     	wm = new SideGateway<FWM>("fle.core.world.FWM", "fle.core.world.FWMClient");
     	tm = new FleTechManager();
     	tn = new FleThermalNet();
+    	rn = new FleRotationNet();
+    }
+    
+    @EventHandler
+    public void invalidFingerprint(FMLFingerprintViolationEvent event)
+    {
+        String str = getClass().getResource("").getPath();
+        long i = str.length();
+        long i1 = (MODID.hashCode() * 31 + VERSION.hashCode()) * 31 + NAME.hashCode();
+        for(char c : str.toCharArray())
+        	i = i * 31 + c;
+        UUID uuid = new UUID(i, i1);
+        if (modUUID.equals(uuid))
+        {
+            FleLog.getLogger().info("The resource of Far Land Era are running.");
+        }
+        else if(modUUID.getLeastSignificantBits() == i1)
+        {
+            FleLog.getLogger().info(
+            		"The copy of Far Land Era that you are running has been modified from the original, "
+            		+ "and unpredictable things may happen. Please consider re-downloading the original version of the mod.");
+        }
+        else
+        {
+        	throw new RuntimeException(
+            		"The copy of Far Land Era that you are running is a development version of the mod, "
+            		+ "and as such may be unstable and/or incomplete.");
+        }
     }
 
     @EventHandler
@@ -98,7 +132,11 @@ public class FLE implements FleModHandler
         int forge = ForgeVersion.getBuildVersion();
         if ((forge > 0) && (forge < minForge))
         {
-        	FleLog.getLogger().error("The currently installed version of Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." + ForgeVersion.getRevisionVersion() + "." + forge + ") is too old.\n" + "Please update the Minecraft Forge.\n" + "\n" + "(Technical information: " + forge + " < " + minForge + ")");
+        	throw new RuntimeException("The currently installed version of "
+        			+ "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." + 
+        					ForgeVersion.getRevisionVersion() + "." + forge + ") is too old.\n" + 
+        			"Please update the Minecraft Forge.\n" + "\n" + 
+        					"(Technical information: " + forge + " < " + minForge + ")");
         }
     	FleLog.getLogger().info("Far Land Era start load config.");
         try
@@ -120,7 +158,7 @@ public class FLE implements FleModHandler
         }
     	FleLog.getLogger().info("Far Land Era start pre load.");
 		LanguageManager.load();
-    	proxy.onPreload();
+		proxy.onPreload();
 	}
 
     @EventHandler
@@ -166,9 +204,9 @@ public class FLE implements FleModHandler
 	}
 
 	@Override
-	public RotationNet getRotationNet() 
+	public FleRotationNet getRotationNet() 
 	{
-		return null;
+		return rn;
 	}
 
 	@Override

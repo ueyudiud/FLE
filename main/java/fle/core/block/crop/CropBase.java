@@ -106,7 +106,7 @@ public abstract class CropBase extends CropCard
 		double d2 = tile.getTempretureLevel();
 		double d3 = tile.getWaterLevel();
 		double d4 = (double) tile.getLightValue() / 7D;
-		return (int) ((d1 + d2 + d3) * d4 * 10D) * Math.pow(0.99D, level);
+		return (int) ((d1 + d2 + d3) * d4 * 10D) * Math.pow(0.95D, level);
 	}
 
 	@Override

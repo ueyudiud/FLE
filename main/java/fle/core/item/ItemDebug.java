@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.block.IDebugableBlock;
+import fle.api.energy.IRotationTileEntity;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.enums.EnumDamageResource;
 import fle.api.enums.EnumWorldNBT;
@@ -70,6 +71,12 @@ public class ItemDebug extends ItemFle
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Temperature: %s.", FleValue.format_K.format_c(tile.getTemperature(ForgeDirection.VALID_DIRECTIONS[aSide])))));
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Heat Currect: %s.", FleValue.format_MJ.format_c(tile.getThermalEnergyCurrect(ForgeDirection.VALID_DIRECTIONS[aSide])))));
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreHeatEmit()))));
+            	}
+            	if(pos.getBlockTile() instanceof IRotationTileEntity)
+            	{
+            		IRotationTileEntity tile = (IRotationTileEntity) pos.getBlockTile();
+            		aPlayer.addChatMessage(new ChatComponentText(String.format("Kinetic Energy Currect: %s.", FleValue.format_MJ.format_c(tile.getEnergyCurrect()))));
+            		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreEnergyEmit()))));
             	}
             	if(pos.getBlock() instanceof IDebugableBlock)
         		{

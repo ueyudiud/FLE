@@ -36,58 +36,64 @@ public class Matter implements IAtoms
 	{
 		return matter.get(name);
 	}
-	public static final Matter mNH3 = forMatter("NH3", Molecular, new AtomStack(N_3, 1), new AtomStack(H1, 3)).setMatterTemHelper(new MatterTemHelper(73, new Stack[0]));
-	public static final Matter mH2O = forMatter("H2O", Molecular, new AtomStack(H1, 2), new AtomStack(O_2)).setMatterTemHelper(new MatterTemHelper(373, new Stack[0]));
-	public static final Matter mCO = forMatter("CO", Molecular, new AtomStack(C2), new AtomStack(O_2));
-	public static final Matter mCO2 = forMatter("CO2", Molecular, new AtomStack(C4), new AtomStack(O_2, 2)).setMatterTemHelper(new MatterTemHelper(219, new Stack[0]));
-	public static final Matter mSO2 = forMatter("SO2", Molecular, new AtomStack(S4), new AtomStack(O_2, 2));
-	public static final Matter mH2S = forMatter("H2S", Molecular, new AtomStack(H1, 2), new AtomStack(S_2));
-	public static final Matter mHF = forMatter("HF", Molecular, new AtomStack(H1), new AtomStack(F_1));
-	public static final Matter mHCl = forMatter("HCl", Molecular, new AtomStack(H1), new AtomStack(Cl_1));
-	public static final Matter mHBr = forMatter("HBr", Molecular, new AtomStack(H1), new AtomStack(Br_1));
-	public static final Matter mHI = forMatter("HI", Molecular, new AtomStack(H1), new AtomStack(I_1));
+	public static final Matter mNH3 = forMatter("NH3", Molecular, new AtomStack(N_3, 1), new AtomStack(H1, 3)).setMatterTemHelper(new MatterTemHelper(73, new Stack[0])).setColor(0xA8A8FF);
+	public static final Matter mH2O = forMatter("H2O", Molecular, new AtomStack(H1, 2), new AtomStack(O_2)).setMatterTemHelper(new MatterTemHelper(373, new Stack[0])).setColor(0x51B3FF);
+	public static final Matter mCO = forMatter("CO", Molecular, new AtomStack(C2), new AtomStack(O_2)).setColor(0xEEEFE6);
+	public static final Matter mCO2 = forMatter("CO2", Molecular, new AtomStack(C4), new AtomStack(O_2, 2)).setMatterTemHelper(new MatterTemHelper(219, new Stack[0])).setColor(0xDDFFF1);
+	public static final Matter mSO2 = forMatter("SO2", Molecular, new AtomStack(S4), new AtomStack(O_2, 2)).setColor(0xE3E8A9);
+	public static final Matter mH2S = forMatter("H2S", Molecular, new AtomStack(H1, 2), new AtomStack(S_2)).setColor(0xFFF200);
+	public static final Matter mHF = forMatter("HF", Molecular, new AtomStack(H1), new AtomStack(F_1)).setColor(0xF9FFB2);
+	public static final Matter mHCl = forMatter("HCl", Molecular, new AtomStack(H1), new AtomStack(Cl_1)).setColor(0xE4FFB2);
+	public static final Matter mHBr = forMatter("HBr", Molecular, new AtomStack(H1), new AtomStack(Br_1)).setColor(0xD3884E);
+	public static final Matter mHI = forMatter("HI", Molecular, new AtomStack(H1), new AtomStack(I_1)).setColor(0xA342B2);
 	
-	public static final Matter mSiO2 = forMatter("SiO2", Molecular, new AtomStack(Si4, 1), new AtomStack(O_2, 2));
+	public static final Matter mSiO2 = forMatter("SiO2", Molecular, new AtomStack(Si4, 1), new AtomStack(O_2, 2)).setColor(0xAFAFAF);
 	
 	public static final Matter mH2CO3 = forMatter("H2CO3", Molecular, new AtomStack(H1), new AtomStack(Hydrogen_Carbonate)).setMatterTemHelper(new MatterTemHelper(250, new Stack(mH2O), new Stack(mCO2)));
 	public static final Matter mH3PO4 = forMatter("H3PO4", Molecular, new AtomStack(H1), new AtomStack(Dihydrogen_Phosphate));
 	public static final Matter mH2SO3 = forMatter("H2SO3", Molecular, new AtomStack(H1), new AtomStack(Hydrogen_Sulfite));
 	public static final Matter mH2SO4 = forMatter("H2SO4", Molecular, new AtomStack(H1, 2), new AtomStack(Sulfate));
 
-	public static final Matter mN2 = forMatter("N2", Molecular, new AtomStack(N, 2));
+	public static final Matter mN2 = forMatter("N2", Molecular, new AtomStack(N, 2)).setColor(0xEDFFFF);
 	public static final Matter mO2 = forMatter("O2", Molecular, new AtomStack(O, 2));
 	public static final Matter mAir = forMatter("MixAir", Mix, new AtomStack(mN2, 4), new AtomStack(mO2));
 	
-	public static final Matter mFeS = forMatter("FeS", Ionic, new AtomStack(Fe2, 1), new AtomStack(S_2, 1));
+	public static final Matter mFeS = forMatter("FeS", Ionic, new AtomStack(Fe2, 1), new AtomStack(S_2, 1)).setColor(0xA0A300);
 	
-	public static final Matter mCuO = forMatter("CuO", Ionic, new AtomStack(Cu2, 1), new AtomStack(O_2, 1));
-	public static final Matter mCuS = forMatter("CuS", Ionic, new AtomStack(Cu2, 1), new AtomStack(S_2, 1));
-	public static final Matter mCu2O = forMatter("Cu2O", Ionic, new AtomStack(Cu1, 2), new AtomStack(O_2, 1));
-	public static final Matter mCu2S = forMatter("Cu2S", Ionic, new AtomStack(Cu1, 2), new AtomStack(S_2, 1));
+	public static final Matter mCuO = forMatter("CuO", Ionic, new AtomStack(Cu2, 1), new AtomStack(O_2, 1)).setColor(0x006EDD);
+	public static final Matter mCuS = forMatter("CuS", Ionic, new AtomStack(Cu2, 1), new AtomStack(S_2, 1)).setColor(0xE07300);
+	public static final Matter mCu2O = forMatter("Cu2O", Ionic, new AtomStack(Cu1, 2), new AtomStack(O_2, 1)).setColor(0xE23400);
+	public static final Matter mCu2S = forMatter("Cu2S", Ionic, new AtomStack(Cu1, 2), new AtomStack(S_2, 1)).setColor(0xE5C18E);
 	public static final Matter mCuCO3 = forMatter("CuCO3", Ionic, new AtomStack(Cu2, 1), new AtomStack(Carbonate, 1)).setMatterTemHelper(new MatterTemHelper(650, new Stack(mCuO), new Stack(mCO2)));
-	public static final Matter mCu_OH2 = forMatter("Cu(OH)2", Ionic, new AtomStack(Cu2, 1), new AtomStack(Hydroxide, 2)).setMatterTemHelper(new MatterTemHelper(500, new Stack(mCuO), new Stack(mH2O)));
-	public static final Matter mCu_OH2_CO3 = forMatter("Cu(OH)2CO3", Ionic, new AtomStack(mCu_OH2), new AtomStack(mCuCO3)).setMatterTemHelper(new MatterTemHelper(500, 2, new Stack(mCu_OH2), new Stack(mCuCO3)));
-	public static final Matter mCu_OH2_2CO3 = forMatter("Cu(OH)2(CuCO3)2", Ionic, new AtomStack(mCu_OH2), new AtomStack(mCuCO3, 2)).setMatterTemHelper(new MatterTemHelper(500, 3, new Stack(mCu_OH2), new Stack(mCuCO3, 2)));
+	public static final Matter mCu_OH2 = forMatter("Cu(OH)2", Ionic, new AtomStack(Cu2, 1), new AtomStack(Hydroxide, 2)).setMatterTemHelper(new MatterTemHelper(500, new Stack(mCuO), new Stack(mH2O))).setColor(0x0062E2);
+	public static final Matter mCu_OH2_CO3 = forMatter("Cu(OH)2CO3", Ionic, new AtomStack(mCu_OH2), new AtomStack(mCuCO3)).setMatterTemHelper(new MatterTemHelper(500, 2, new Stack(mCu_OH2), new Stack(mCuCO3))).setColor(0x097500);
+	public static final Matter mCu_OH2_2CO3 = forMatter("Cu(OH)2(CuCO3)2", Ionic, new AtomStack(mCu_OH2), new AtomStack(mCuCO3, 2)).setMatterTemHelper(new MatterTemHelper(500, 3, new Stack(mCu_OH2), new Stack(mCuCO3, 2))).setColor(0x00288E);
 	public static final Matter mSb2S3 = forMatter("Sb2S3", Ionic, new AtomStack(Sb3, 2), new AtomStack(S_2, 3));
-	public static final Matter mAs2S3 = forMatter("As2S3", Molecular, new AtomStack(As3, 2), new AtomStack(S_2, 3));
+	public static final Matter mAs2S3 = forMatter("As2S3", Molecular, new AtomStack(As3, 2), new AtomStack(S_2, 3)).setColor(0x6D483B);
 	public static final Matter mAs4S4 = forMatter("As4S4", Molecular, new AtomStack(As2, 4), new AtomStack(S_2, 4));
-	public static final Matter mAs4S6 = forMatter("As4S6", Molecular, new AtomStack(mAs2S3, 2));
+	public static final Matter mAs4S6 = forMatter("As4S6", Molecular, new AtomStack(mAs2S3, 2)).setColor(0x6D483B);
 	public static final Matter mNiAs = forMatter("NiAs", Molecular, new AtomStack(Ni2), new AtomStack(As_2));
-	public static final Matter mFeAsS = forMatter("FeAsS", Ionic, new AtomStack(Fe3), new AtomStack(As_1), new AtomStack(S_2));
+	public static final Matter mFeAsS = forMatter("FeAsS", Ionic, new AtomStack(Fe3), new AtomStack(As_1), new AtomStack(S_2)).setColor(0x6B1112);
 	public static final Matter mFeAsO4 = forMatter("FeAsO4", Ionic, new AtomStack(Fe3), new AtomStack(Arsenate));
 	public static final Matter mFeAsO4_2H2O = forMatter("FeAsO4(H2O)2", Mix, new AtomStack(mFeAsO4), new AtomStack(mH2O, 2));
-	public static final Matter mCo3_AsO4_2 = forMatter("Co3(AsO4)2", Ionic, new AtomStack(Co2, 3), new AtomStack(Arsenate, 2));
-	public static final Matter mCo3_AsO4_2_8H2O = forMatter("Co3(AsO4)2(H2O)8", Mix, new AtomStack(mCo3_AsO4_2), new AtomStack(mH2O, 8));
+	public static final Matter mCo3_AsO4_2 = forMatter("Co3(AsO4)2", Ionic, new AtomStack(Co2, 3), new AtomStack(Arsenate, 2)).setColor(0xDB90DB);
+	public static final Matter mCo3_AsO4_2_8H2O = forMatter("Co3(AsO4)2(H2O)8", Mix, new AtomStack(mCo3_AsO4_2), new AtomStack(mH2O, 8)).setColor(0xDD56DD);
+	public static final Matter mPbS = forMatter("PbS", Ionic, new AtomStack(Pb2), new AtomStack(S_2)).setColor(0xD6D4D4);
+	public static final Matter mSnO2 = forMatter("SnO2", Ionic, new AtomStack(Sn4), new AtomStack(O_2, 2)).setColor(0xE8E8E8);
+	public static final Matter mSnS2 = forMatter("SnS2", Ionic, new AtomStack(Sn4), new AtomStack(S_2, 2));
+	public static final Matter mCu2FeSnS4 = forMatter("Cu2SSnS2FeS", Ionic, new AtomStack(mCu2S), new AtomStack(mSnS2), new AtomStack(mFeS));
+	public static final Matter mZnS = forMatter("ZnS", Ionic, new AtomStack(Zn2), new AtomStack(S_2)).setColor(0xE5E2C3);
 	
-	public static final Matter mCuFeS2 = forMatter("CuFeS2", Ionic, new AtomStack(Cu2), new AtomStack(Fe2), new AtomStack(S_2, 2));
+	public static final Matter mCuFeS2 = forMatter("CuFeS2", Ionic, new AtomStack(Cu2), new AtomStack(Fe2), new AtomStack(S_2, 2)).setColor(0xB2AB6B);
 	public static final Matter mCu3AsS4 = forMatter("Cu3AsS4", Ionic, new AtomStack(Cu1, 3), new AtomStack(As5), new AtomStack(S_2, 4));
-	public static final Matter mCu5FeS4 = forMatter("Cu5FeS4", Ionic, new AtomStack(Cu1, 5), new AtomStack(Fe3), new AtomStack(S_2, 4));
+	public static final Matter mCu5FeS4 = forMatter("Cu5FeS4", Ionic, new AtomStack(Cu1, 5), new AtomStack(Fe3), new AtomStack(S_2, 4)).setColor(0xB4AA6B);
 	public static final Matter mCu10Fe2Sb4S13 = forMatter("Cu10Fe2Sb4S13", Ionic, new AtomStack(Cu1, 10), new AtomStack(Fe2, 2), new AtomStack(Sb3, 4), new AtomStack(S_2, 13));
 	
 	protected CompoundType ct;
 	protected AtomStack[] ions;
 	protected MatterTemHelper mh;
-
+	private int color = 0xFFFFFF;
+	
 	public Matter(CompoundType aCt, AtomStack...aIons) 
 	{
 		ions = aIons;
@@ -103,6 +109,17 @@ public class Matter implements IAtoms
 	{
 		mh = mth;
 		return this;
+	}
+	
+	public Matter setColor(int color)
+	{
+		this.color = color;
+		return this;
+	}
+	
+	public int getColor()
+	{
+		return color;
 	}
 	
 	@Override

@@ -109,4 +109,10 @@ public class PolishRecipe extends RecipeBase implements RecipeHandler
 					return states[i + j * 3].getName();
 		return null;
 	}
+
+	@Override
+	public String getStackTip(int slotID)
+	{
+		return ItemAbstractStack.getStackTipInfo(slotID == 0 ? input : slotID == 1 ? null : output);
+	}
 }

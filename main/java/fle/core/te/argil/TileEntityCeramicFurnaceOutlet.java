@@ -35,7 +35,7 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	}
 
 	@Override
-	public void updateEntity()
+	public void updateInventory()
 	{
 		inv.updateEntity(this);
 		if(getBlockPos().toPos(dir).getBlockTile() instanceof IFluidHandler)

@@ -135,7 +135,7 @@ public class FlePotionEffect
 			super.removeAttributesModifiersFromEntity(entity, map, attemp);
 			if(entity.getActivePotionEffect(bleeding).getDuration() < 10)
 			{
-				entity.addPotionEffect(new PotionEffect(recovery.id, 10000));
+				entity.addPotionEffect(new PotionEffect(recovery.id, 5000));
 			}
 		}
 		

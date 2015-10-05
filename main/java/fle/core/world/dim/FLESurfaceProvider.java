@@ -26,7 +26,7 @@ public class FLESurfaceProvider extends WorldProvider
 	@Override
 	public IChunkProvider createChunkGenerator()
 	{
-		return new FLESurfaceChunkProvider(worldObj, getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+		return terrainType.getChunkGenerator(worldObj, field_82913_c);
 	}
 
 	@Override

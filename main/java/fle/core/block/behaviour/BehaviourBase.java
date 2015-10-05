@@ -24,6 +24,12 @@ public class BehaviourBase<E extends Block> implements IBlockBehaviour<E>
 	{
 		return false;
 	}
+	
+	@Override
+	public boolean canBlockStay(E block, World aWorld, int x, int y, int z)
+	{
+		return true;
+	}
 
 	@Override
 	public void onBlockClicked(E block, World aWorld, int x, int y, int z,
@@ -34,8 +40,8 @@ public class BehaviourBase<E extends Block> implements IBlockBehaviour<E>
 
 	@Override
 	public void onBlockPlaced(E block, World aWorld, int x, int y, int z,
-			ForgeDirection aSide, float xPos, float yPos, float zPos) {
-		// TODO Auto-generated method stub
+			ForgeDirection aSide, float xPos, float yPos, float zPos)
+	{
 		
 	}
 

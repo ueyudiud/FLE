@@ -30,7 +30,7 @@ public class TileEntityDryingTable extends TEInventory<InventoryDryingTable>
 	}
 	
 	@Override
-	public void updateEntity() 
+	public void updateInventory() 
 	{	
 		inv.updateEntity(this);
 		++levelCheckBuffer;

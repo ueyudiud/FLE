@@ -40,10 +40,17 @@ public class ShapedRecipe extends RecipeBase implements RecipeHandler
 	protected boolean isSmallRecipe;
 	public ItemAbstractStack[] stacks;
 	public ItemStack output;
+	private Object[][] showArray;
 
 	public ShapedRecipe(ShapedFleRecipe recipe)
 	{
 		stacks = recipe.getInputs().clone();
+		showArray = new Object[stacks.length][];
+		for(int i = 0; i < stacks.length; ++i)
+		{
+			if(stacks[i] != null)
+				showArray[i] = stacks[i].toArray().toArray();
+		}
 		isSmallRecipe = recipe.getXSize() <= 2 && recipe.getYSize() <= 2;
 		output = recipe.getRecipeOutput().copy();
 		xSize = recipe.getXSize();
@@ -53,15 +60,18 @@ public class ShapedRecipe extends RecipeBase implements RecipeHandler
 	{
 		Object[] inputs = recipe.getInput();
 		stacks = new ItemAbstractStack[inputs.length];
+		showArray = new Object[inputs.length][];
 		for(int i = 0; i < inputs.length; ++i)
 		{
 			if(inputs[i] instanceof ItemStack)
 			{
 				stacks[i] = new ItemBaseStack((ItemStack) inputs[i]);
+				showArray[i] = new Object[]{inputs[i]};
 			}
 			else if(inputs[i] instanceof List)
 			{
 				stacks[i] = new ItemArrayStack((List) inputs[i]);
+				showArray[i] = stacks[i].toArray().toArray();
 			}
 		}
 		isSmallRecipe = inputs.length <= 4 && inputs.length != 3;
@@ -80,9 +90,12 @@ public class ShapedRecipe extends RecipeBase implements RecipeHandler
 	public ShapedRecipe(ShapedRecipes recipe)
 	{
 		stacks = new ItemAbstractStack[recipe.recipeItems.length];
+		showArray = new Object[stacks.length][];
 		for(int i = 0; i < recipe.recipeItems.length; ++i)
 		{
 			stacks[i] = new ItemBaseStack(recipe.recipeItems[i]);
+			if(recipe.recipeItems[i] != null)
+				showArray[i] = new Object[]{recipe.recipeItems[i]};
 		}
 		isSmallRecipe = recipe.recipeHeight <= 2 && recipe.recipeWidth <= 2;
 		output = recipe.getRecipeOutput().copy();
@@ -126,11 +139,13 @@ public class ShapedRecipe extends RecipeBase implements RecipeHandler
 	{
 		
 	}
+	
+	private int updateTick = 0;
 
 	@Override
 	public void onUpdate(GuiBookBase gui)
 	{
-		
+		++updateTick;
 	}
 
 	@Override
@@ -162,12 +177,9 @@ public class ShapedRecipe extends RecipeBase implements RecipeHandler
 	public ItemStack getShowStackInSlot(int index)
 	{
 		if(index == stacks.length) return output.copy();
-		if(stacks[index] == null) return null;
-		if(stacks[index].toArray() == null) return null;
-		else if(stacks[index].toArray().isEmpty()) return null;
-		ItemStack ret = stacks[index].toArray().get(0).copy();
-		ret.stackSize = 1;
-		return ret;
+		if(showArray[index] == null) return null;
+		if(showArray[index].length == 0) return null;
+		return (ItemStack) showArray[index][(updateTick / 80) % showArray[index].length];
 	}
 
 	@Override
@@ -186,5 +198,11 @@ public class ShapedRecipe extends RecipeBase implements RecipeHandler
 	public String getTip(int mouseX, int mouseY)
 	{
 		return null;
+	}
+	
+	@Override
+	public String getStackTip(int slotID)
+	{
+		return ItemAbstractStack.getStackTipInfo(slotID == stacks.length ? output : stacks[slotID]);
 	}
 }

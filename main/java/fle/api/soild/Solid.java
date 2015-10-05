@@ -76,8 +76,8 @@ public class Solid
 	{
 		Chunk,
 		Chip,
-		Dust,
-		Sick_Dust;
+		Sick_Dust,
+		Dust;
 	}
 	
 	public boolean canPickup()

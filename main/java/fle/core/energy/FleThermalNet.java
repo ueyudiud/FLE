@@ -20,10 +20,6 @@ public class FleThermalNet extends ThermalNet
 		BiomeGenBase biome = pos.getBiome();
 		float bioTem = biome.getFloatTemperature(pos.x, pos.y, pos.z);
 		int ret = (int) ((Math.pow(bioTem, 0.5D) * 40) + FleValue.WATER_FREEZE_POINT);
-		if(FLE.fle.getRotationNet() != null)
-		{
-			ret -= FLE.fle.getRotationNet().getWindSpeed() / 5;
-		}
 		return ret;
 	}
 	

@@ -13,12 +13,15 @@ import fle.api.world.IWorldManager;
 public interface FleModHandler 
 {
 	IPlatform getPlatform();
+	ITechManager getTechManager();
 	FleNetworkHandler getNetworkHandler();
+	
 	ThermalNet getThermalNet();
 	RotationNet getRotationNet();
+	
 	CropRegister getCropRegister();
+	
 	IColorMapHandler getColorMapHandler();
 	IWorldManager getWorldManager();
-	ITechManager getTechManager();
 	IAirConditionProvider getAirConditionProvider();
 }

@@ -4,10 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.IBlockSource;
@@ -17,11 +14,16 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
+
+import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Multimap;
 
@@ -30,8 +32,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.enums.EnumDamageResource;
+import fle.api.soild.ISolidContainerItem;
+import fle.api.soild.SolidRegistry;
+import fle.api.soild.SolidStack;
+import fle.api.soild.SolidTankInfo;
 import fle.api.util.FleLog;
-import fle.api.util.IBlockTextureManager;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
 
@@ -253,6 +258,70 @@ public class ItemFleMetaBase extends ItemFle
 		String tKey = getUnlocalizedName(aStack) + ".tooltip";
 		String tString = FleAPI.lm.translateToLocal(tKey);
 	    aList.add(tString);
+	    if(FluidContainerRegistry.isContainer(aStack))
+	    {
+	    	int cap = FluidContainerRegistry.getContainerCapacity(aStack);
+	    	if(cap > 0)
+	    	{
+	    		FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(aStack);
+	    		if(fluid != null)
+	    		{
+	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + fluid.getLocalizedName(), FleValue.format_L.format_c(fluid.amount), FleValue.format_L.format(cap)));
+	    		}
+	    		else
+	    		{
+	    			aList.add(String.format("0L / %s", FleValue.format_L.format(cap)));
+	    		}
+	    	}
+	    }
+	    else if(this instanceof IFluidContainerItem)
+	    {
+	    	int cap = ((IFluidContainerItem) this).getCapacity(aStack);
+	    	if(cap > 0)
+	    	{
+	    		FluidStack fluid = ((IFluidContainerItem) this).getFluid(aStack);
+	    		if(fluid != null)
+	    		{
+	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + fluid.getLocalizedName(), FleValue.format_L.format_c(fluid.amount), FleValue.format_L.format(cap)));
+	    		}
+	    		else
+	    		{
+	    			aList.add(String.format("0L / %s", FleValue.format_L.format(cap)));
+	    		}
+	    	}
+	    }
+	    if(SolidRegistry.isContainer(aStack))
+	    {
+	    	int cap = SolidRegistry.getContainerCapacity(aStack);
+	    	if(cap > 0)
+	    	{
+		    	SolidStack solid = SolidRegistry.getSolidForFilledItem(aStack);
+	    		if(solid != null)
+	    		{
+	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + solid.getObj().getLocalizedName(solid), FleValue.format_L.format_c(solid.getSize()), FleValue.format_L.format(cap)));
+	    		}
+	    		else
+	    		{
+	    			aList.add(String.format("0L / %s", FleValue.format_L.format(cap)));
+	    		}
+	    	}
+	    }
+	    else if(this instanceof ISolidContainerItem)
+	    {
+	    	SolidTankInfo info = ((ISolidContainerItem) this).getTankInfo(aStack);
+	    	if(info != null && info.capacity > 0)
+	    	{
+	    		SolidStack solid = info.solid;
+	    		if(solid != null)
+	    		{
+	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + solid.getObj().getLocalizedName(solid), FleValue.format_L.format_c(solid.getSize()), FleValue.format_L.format(info.capacity)));
+	    		}
+	    		else
+	    		{
+	    			aList.add(String.format("0L / %s", FleValue.format_L.format(info.capacity)));
+	    		}
+	    	}
+	    }
 	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 	    if(tBehavior != null)
 	    {

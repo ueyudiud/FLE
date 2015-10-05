@@ -11,7 +11,9 @@ import fle.api.block.IGuiBlock;
 import fle.core.block.BlockSubTile;
 import fle.core.block.behaviour.BehaviourDrying;
 import fle.core.block.behaviour.BehaviourFrame;
+import fle.core.block.behaviour.BehaviourLeverOilMill;
 import fle.core.block.behaviour.BehaviourPolish;
+import fle.core.block.behaviour.BehaviourSifter;
 import fle.core.block.behaviour.BehaviourStoneMill;
 import fle.core.util.BlockTextureManager;
 
@@ -21,7 +23,9 @@ public class BlockWoodMachine1 extends BlockSubTile implements IGuiBlock
 	{
 		registerSub(0, "dryingTable", "Drying Table", new BlockTextureManager(new String[]{"machine/drying_table"}), new BehaviourDrying());
 		registerSub(1, "woodenFrame", "Wood Frame", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourFrame());
-		registerSub(2, "stoneMill", "Stone Mill", new BlockTextureManager(FleValue.VOID_ICON_FILE), new BehaviourStoneMill());
+		registerSub(2, "stoneMill", "Stone Mill", new BlockTextureManager(new String[]{"machine/stone_mill_top", "machine/stone_mill_side"}), new BehaviourStoneMill());
+		registerSub(3, "sifter", "Sifter", new BlockTextureManager(new String[]{"iconsets/sifter"}), new BehaviourSifter());
+		registerSub(4, "leverOilMill", "Lever Oil Mill", new BlockTextureManager(new String[]{"iconsets/linen"}), new BehaviourLeverOilMill());
 		return this;
 	}
 	

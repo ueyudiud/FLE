@@ -25,9 +25,10 @@ public class NoisePerlin extends NoiseBase
 	public double noise(long x, long y, long z, int size)
 	{
 		double ret = 0D;
+		double d1 = (double) (Math.pow(2, size) - 1) / (double) Math.pow(2, size);
 		for(int i = 0; i < size; ++i)
-			ret += setupSeed(x, y, z, i);
-		return ret / (2.0D - 1.0D / (double) (2 ^ size));
+			ret += setupSeed(x, y, z, i) * d1;
+		return ret;
 	}
 	
 	private double setupSeed(long x, long y, long z, long t)

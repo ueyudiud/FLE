@@ -25,10 +25,14 @@ import org.lwjgl.opengl.GL11;
 import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.gui.ContainerEmpty;
+import fle.api.gui.FontFLERenderer;
 import fle.api.gui.GuiCondition;
+import fle.api.util.FleLog;
 
 public abstract class GuiBookBase extends GuiContainer
 {
+	private static FontFLERenderer fontRender = new FontFLERenderer();
+	
 	public GuiBookBase()
 	{
 		super(new ContainerEmpty());
@@ -36,7 +40,7 @@ public abstract class GuiBookBase extends GuiContainer
 
 	static final ResourceLocation voidTexture = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/void.png");
 	static final ResourceLocation backgroundTexture = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/base.png");
-
+	
 	protected int xoffset;
 	protected int yoffset;
 	protected int xSize = 200;
@@ -65,9 +69,9 @@ public abstract class GuiBookBase extends GuiContainer
 		}
 		for(int i = 0; i < handlers.length; ++i)
 		{
+	        RenderHelper.disableStandardItemLighting();
 			int xoffset = this.xoffset + 27 + 80 * (i % 2);
 			int yoffset = this.yoffset + 17 + 60 * (i / 2);
-	        RenderHelper.disableStandardItemLighting();
 			for(int slotID = 0; slotID < handlers[i].getSlotContain(); ++slotID)
 			{
 				ItemStack tStack = handlers[i].getShowStackInSlot(slotID);
@@ -80,23 +84,31 @@ public abstract class GuiBookBase extends GuiContainer
 					{
 		                drawRect(xoffset + rect.x, yoffset + rect.y, xoffset + rect.x + rect.width, yoffset + rect.y + rect.height, -2130706433);
 					}
-					if(tStack.stackSize > 1)
+					str = handlers[i].getStackTip(slotID);
+					if(str != null)
 					{
-						str = EnumChatFormatting.WHITE.toString() + tStack.stackSize;
 						drawItemStack(tStack, xoffset + rect.x, yoffset + rect.y, str);
 					}
 					else
 					{
-						drawItemStack(tStack, xoffset + rect.x, yoffset + rect.y, (String) null);
+						if(tStack.stackSize > 1)
+						{
+							str = EnumChatFormatting.WHITE.toString() + tStack.stackSize;
+							drawItemStack(tStack, xoffset + rect.x, yoffset + rect.y, str);
+						}
+						else
+						{
+							drawItemStack(tStack, xoffset + rect.x, yoffset + rect.y, (String) null);
+						}
 					}
 				}
 			}
+			RenderHelper.enableStandardItemLighting();
 		}
 		for(int i = 0; i < handlers.length; ++i)
 		{
 			int xoffset = this.xoffset + 27 + 80 * (i % 2);
 			int yoffset = this.yoffset + 17 + 60 * (i / 2);
-	        RenderHelper.enableGUIStandardItemLighting();
 			for(int tankID = 0; tankID < handlers[i].getTankContain(); ++tankID)
 			{
 				FluidStack tStack = handlers[i].getFluidInTank(tankID);
@@ -139,26 +151,24 @@ public abstract class GuiBookBase extends GuiContainer
 			}
 			catch(Throwable e)
 			{
-				e.printStackTrace();
+				FleLog.getLogger().warn("FLE API : some mod has bug recipe item, please report this bug to modder.", e);
 			}
 		}
 	}
 	
     private void drawItemStack(ItemStack aStack, int x, int y, String show)
     {
+        if(aStack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+        	aStack.setItemDamage(0);
+        zLevel = 200.0F;
+        itemRender.zLevel = 200.0F;
         FontRenderer font = null;
         if (aStack != null) font = aStack.getItem().getFontRenderer(aStack);
         if (font == null) font = fontRendererObj;
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        if(aStack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
-        	aStack.setItemDamage(0);
-        zLevel = 32.0F;
-        itemRender.zLevel = 32.0F;
         itemRender.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), aStack, x, y);
+        itemRender.renderItemOverlayIntoGUI(font, this.mc.getTextureManager(), aStack, x, y, show);
         zLevel = 0.0F;
         itemRender.zLevel = 0.0F;
-        itemRender.renderItemOverlayIntoGUI(font, this.mc.getTextureManager(), aStack, x, y, show);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
     }
 	
 	public abstract RecipeHandler[] getShowingRecipe();

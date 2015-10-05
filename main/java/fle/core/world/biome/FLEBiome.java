@@ -14,6 +14,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import fle.api.util.FleLog;
 import fle.core.util.Util;
 import fle.core.world.dim.FLEBiomeDecoratorBase;
+import fle.core.world.dim.FLEWorldType;
 
 public class FLEBiome extends BiomeGenBase
 {
@@ -21,6 +22,8 @@ public class FLEBiome extends BiomeGenBase
 	public static final FLEBiome warm_plains = new FLEBiomePlains("FLE Plains", BiomeGenBase.plains.biomeID).setColor(9286496);
 	public static final FLEBiome warm_forest = new FLEBiomeForest("FLE Forest", BiomeGenBase.forest.biomeID, 0).setColor(353825);
 	public static final FLEBiome mid_forest = new FLEBiomeForest("FLE Forest B", BiomeGenBase.birchForest.biomeID, 2).setColor(3175492);
+	public static final FLEBiome slope = new FLEBiomeOcean("FLE Slope", 41).setColor(0x8EBFFF).setBiomeHeight(-0.3F, 0.0625F);
+	public static final FLEBiome wasteland = new FLEBiomeWasteland("FLE Wasteland", 42).setColor(0x90A832).setH(height_Default).setDisableRain();
 	
 	static
 	{
@@ -54,7 +57,7 @@ public class FLEBiome extends BiomeGenBase
 	@Override
 	public FLEBiome setColor(int color)
 	{
-		mColor = color;
+		mColor = this.color = color;
 		return this;
 	}
 
@@ -142,12 +145,24 @@ public class FLEBiome extends BiomeGenBase
 		aBytes[targetID] = metadata;
 	}
 	
+	public boolean isBeach()
+	{
+		return false;
+	}
+	
+	public boolean isOcean()
+	{
+		return false;
+	}
+	
 	@Override
 	public void genTerrainBlocks(World aWorld, Random aRand,
 			Block[] aBlocks, byte[] aByte, int x,
 			int z, double yLevel)
 	{
         boolean flag = true;
+        boolean flag1 = !(isBeach() || isOcean());
+        boolean flag2 = aWorld.getWorldInfo().getTerrainType() == FLEWorldType.FLAT;
         int k = -1;
         int l = (int)(yLevel * 3.0D + 3.0D + aRand.nextDouble() * 0.25D);
         int i1 = x & 15;
@@ -182,9 +197,9 @@ public class FLEBiome extends BiomeGenBase
                         {
                         	if(l > 0)
                         	{
-                                if (l1 >= height / 2)
+                                if (l1 >= height - 16)
                                 {
-                                	if(flag)
+                                	if(flag || flag2)
                                 	{
                                 		genTargetBlockAt(0, getFloatTemperature(x, l1, z), aRand, aBlocks, aByte, i2);
                                         k = l;
@@ -219,11 +234,16 @@ public class FLEBiome extends BiomeGenBase
                         	}
                         }
                     }
-                    else if((block2.getMaterial() == Material.water || block2.getMaterial() == Material.lava) && flag)
-                    {
-                    	if(getFloatTemperature(x, l1, z) < 0.15F) aBlocks[i2] = Blocks.ice;
-                    	flag = false;
-                    }
+                }
+                else if(block2.getMaterial() == Material.water && flag1)
+                {
+                	aBlocks[i2] = Blocks.air;
+                }
+                else if(block2.getMaterial() == Material.water && flag)
+                {
+                	if(k > 0) --k;
+                  	if(getFloatTemperature(x, l1, z) < 0.15F) aBlocks[i2] = Blocks.ice;
+                   	flag = false;
                 }
                 else
                 {

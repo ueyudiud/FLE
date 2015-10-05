@@ -114,10 +114,12 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	{
 		addToolMaterial(Materials.Flint);
 		addToolMaterial(Materials.Obsidian);
+		addToolMaterial(Materials.Bone);
 		addToolMaterial(Materials.HardWood);
 		addToolMaterial(Materials.Stone);
 		addToolMaterial(Materials.CompactStone);
 		addToolMaterial(Materials.Copper);
+		addToolMaterial(Materials.Lead);
 		addToolMaterial(Materials.CuAs);
 		addToolMaterial(Materials.CuAs2);
 		addToolMaterial(Materials.CuPb);
@@ -188,6 +190,15 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new String[]{EnumTool.decorticating_stick.name()},
 				new TextureLocation("tools/plate/stone_decorticating_stick", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
 				new BehaviorTool());
+		addSubItem(15, "bone_needle", "Bone Needle", SubTag.TOOL_bone, 
+				new String[]{EnumTool.needle.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.0F)},
+				new TextureLocation("tools/needle/needle_bone", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
+				new BehaviorTool());
+		addSubItem(16, "stone_spinning_disk", "Stone Spinning Tool", SubTag.TOOL_stone_real,
+				new String[]{EnumTool.spinning.toString()},
+				new TextureLocation("tools/spinning_disk/stone_spinning_disk_head", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/spinning_disk/stone_spinning_disk_stick"),
+				new BehaviorTool());
 		addSubItem(101, "metal_axe", "Metal Axe", SubTag.type_tool_metal_tier0, 
 				new String[]{EnumTool.axe.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 3.0F)},
@@ -223,9 +234,15 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.8F)},
 				new TextureLocation("tools/axe/metal_adz_head", "tools/axe/metal_adz_rust", "tools/axe/metal_adz_mosaic", "tools/axe/metal_adz_stick"), 
 				new BehaviorTool());
-		heightLightList.add(8);
-		heightLightList.add(13);
-		heightLightList.add(14);
+		addSubItem(108, "metal_needle", "Metal Needle", SubTag.TOOL_metal_tier1, 
+				new String[]{EnumTool.needle.toString()}, 
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 1.3F)},
+				new TextureLocation("tools/needle/needle_metal", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE), 
+				new BehaviorTool());
+		heightLightSet.add(8);
+		heightLightSet.add(13);
+		heightLightSet.add(14);
+		heightLightSet.add(16);
 		stackLimitList.add(10);
 		return this;
 	}
@@ -379,8 +396,8 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 			}
 		}
 	}
-	
-	List<Integer> heightLightList = new ArrayList();
+
+	Set<Integer> heightLightSet = new HashSet();
 	
 	@Override
 	public IIcon getIcon(ItemStack stack, int pass)
@@ -426,7 +443,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
     		break;
     	default : return 0xFFFFFF;
     	}
-    	if(heightLightList.contains(getDamage(aStack)))
+    	if(heightLightSet.contains(getDamage(aStack)) && pass < 3)
     	{
             int r = ((colorIndex >> 16 & 255) + 0xFF) / 2;
             int g = ((colorIndex >> 8 & 255) + 0xFF) / 2;

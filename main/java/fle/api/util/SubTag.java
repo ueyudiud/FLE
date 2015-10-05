@@ -33,11 +33,14 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag TOOL_wood = getNewSubTag("TOOL_WOOD");
 	public static final SubTag TOOL_stone = getNewSubTag("TOOL_STONE");
 	public static final SubTag TOOL_flint = getNewSubTag("TOOL_FLINT");
+	public static final SubTag TOOL_bone = getNewSubTag("TOOL_BONE");
 	public static final SubTag TOOL_stone_real = getNewSubTag("TOOL_STONE_REAL");
 	public static final SubTag TOOL_metal_tier0 = getNewSubTag("TOOL_METAL_TIER0");
 	public static final SubTag TOOL_metal_tier1 = getNewSubTag("TOOL_METAL_TIER1");
 	public static final SubTag TOOL_metal = TOOL_metal_tier0;//Remove old tag of tool material.
 	public static final SubTag TOOL_fireable = getNewSubTag("TOOL_FIREABLE");
+	
+	public static final SubTag IC2Item = getNewSubTag("IC2_ITEM");
 
 	public static final IDataChecker<ISubTagContainer> type_tool_metal_tier1 = new IDataChecker.Or<ISubTagContainer>(SubTag.TOOL_metal_tier1);
 	public static final IDataChecker<ISubTagContainer> type_tool_metal_tier0 = new IDataChecker.Or<ISubTagContainer>(SubTag.TOOL_metal_tier0, SubTag.TOOL_metal_tier1);

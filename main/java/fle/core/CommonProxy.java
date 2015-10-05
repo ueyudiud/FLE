@@ -57,14 +57,14 @@ public class CommonProxy extends Proxy
 		FLE.fle.getNetworkHandler().init();	
 		Materials.init();
 		Crops.init();
-		IB.init();
-		EntityRegistry.registerModEntity(EntityFleFallingBlock.class, "entityFleBlock", EntityRegistry.findGlobalUniqueEntityId(), FLE.MODID, 16, 1, true);
-		EntityRegistry.registerModEntity(EntityFleArrow.class, "fleArrow", EntityRegistry.findGlobalUniqueEntityId(), FLE.MODID, 10, 1, true);
 	}
 
 	@Override
 	public void onLoad() 
 	{
+		IB.init();
+		EntityRegistry.registerModEntity(EntityFleFallingBlock.class, "entityFleBlock", EntityRegistry.findGlobalUniqueEntityId(), FLE.MODID, 16, 1, true);
+		EntityRegistry.registerModEntity(EntityFleArrow.class, "fleArrow", EntityRegistry.findGlobalUniqueEntityId(), FLE.MODID, 10, 1, true);
 		GameRegistry.registerWorldGenerator(new FleWorldGen(), 1);
 	}
 

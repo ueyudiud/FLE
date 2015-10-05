@@ -20,10 +20,14 @@ public class ShapelessRecipe extends RecipeBase implements RecipeHandler
 	protected boolean isSmallRecipe;
 	public ItemAbstractStack[] stacks;
 	public ItemStack output;
+	public Object[][] showArray;
 
 	public ShapelessRecipe(ShapelessFleRecipe recipe)
 	{
 		stacks = recipe.getInputs().clone();
+		showArray = new Object[stacks.length][];
+		for(int i = 0; i < stacks.length; ++i)
+			showArray[i] = stacks[i].toArray().toArray();
 		isSmallRecipe = recipe.getRecipeSize() <= 4;
 		output = recipe.getRecipeOutput().copy();
 	}
@@ -31,16 +35,19 @@ public class ShapelessRecipe extends RecipeBase implements RecipeHandler
 	{
 		List<Object> inputs = recipe.getInput();
 		stacks = new ItemAbstractStack[inputs.size()];
+		showArray = new Object[stacks.length][];
 		int i = 0;
 		for(Object obj : inputs)
 		{
 			if(obj instanceof ItemStack)
 			{
 				stacks[i] = new ItemBaseStack((ItemStack) obj);
+				showArray[i] = new Object[]{obj};
 			}
 			else if(obj instanceof List)
 			{
 				stacks[i] = new ItemArrayStack((List) obj);
+				showArray[i] = ((List) obj).toArray();
 			}
 			++i;
 		}
@@ -51,9 +58,11 @@ public class ShapelessRecipe extends RecipeBase implements RecipeHandler
 	{
 		Object[] ts = recipe.recipeItems.toArray(new Object[recipe.recipeItems.size()]);
 		stacks = new ItemAbstractStack[recipe.recipeItems.size()];
+		showArray = new Object[stacks.length][];
 		for(int i = 0; i < ts.length; ++i)
 		{
 			stacks[i] = new ItemBaseStack((ItemStack) ts[i]);
+			showArray[i] = new Object[]{ts[i]};
 		}
 		isSmallRecipe = recipe.getRecipeSize() <= 4;
 		output = recipe.getRecipeOutput().copy();
@@ -94,11 +103,13 @@ public class ShapelessRecipe extends RecipeBase implements RecipeHandler
 	{
 		
 	}
+	
+	int updateTick;
 
 	@Override
 	public void onUpdate(GuiBookBase gui)
 	{
-		
+		++updateTick;
 	}
 
 	@Override
@@ -130,12 +141,9 @@ public class ShapelessRecipe extends RecipeBase implements RecipeHandler
 	public ItemStack getShowStackInSlot(int index)
 	{
 		if(index == stacks.length) return output.copy();
-		if(stacks[index] == null) return null;
-		if(stacks[index].toArray() == null) return null;
-		else if(stacks[index].toArray().isEmpty()) return null;
-		ItemStack ret = stacks[index].toArray().get(0).copy();
-		ret.stackSize = 1;
-		return ret;
+		if(showArray[index] == null) return null;
+		if(showArray[index].length == 0) return null;
+		return (ItemStack) showArray[index][(updateTick / 80) % showArray[index].length];
 	}
 
 	@Override
@@ -154,5 +162,11 @@ public class ShapelessRecipe extends RecipeBase implements RecipeHandler
 	public String getTip(int mouseX, int mouseY)
 	{
 		return null;
+	}
+	
+	@Override
+	public String getStackTip(int slotID)
+	{
+		return ItemAbstractStack.getStackTipInfo(slotID == stacks.length ? output : stacks[slotID]);
 	}
 }

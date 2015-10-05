@@ -221,8 +221,7 @@ public class FLESurfaceManager extends WorldChunkManager
 	public BiomeGenBase getBiomeGenAt(int x, int z)
 	{
 		BiomeGenBase biome = biomeCache.getBiomeGenAt(x, z);
-		return biome == BiomeGenBase.mushroomIsland ? BiomeGenBase.plains : biome == BiomeGenBase.mushroomIslandShore ?
-				BiomeGenBase.beach : biome;
+		return biome;
 	}
 	
 	@Override

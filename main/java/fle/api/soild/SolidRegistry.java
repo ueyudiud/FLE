@@ -22,6 +22,11 @@ public class SolidRegistry
     {
     	return register.contain(name);
     }
+
+	public static String getSolidName(Solid solid)
+	{
+		return register.name(solid);
+	}
     
 	static void registrySoild(String name, Solid soild)
 	{
@@ -38,7 +43,7 @@ public class SolidRegistry
     }
     public static boolean registerSolidContainer(SolidStack stack, ItemStack filledContainer, ItemStack emptyContainer)
     {
-        return registerSolidContainer(new SolidContainerData(filledContainer, stack, emptyContainer));
+        return registerSolidContainer(new SolidContainerData(emptyContainer, stack, filledContainer));
     }
     
     public static boolean registerSolidContainer(SolidContainerData data)

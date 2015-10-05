@@ -8,6 +8,7 @@ public class GuiError extends GuiCondition
 	public static GuiError CAN_NOT_OUTPUT;
 	public static GuiError CAN_NOT_INPUT;
 	public static GuiError RAINING;
+	public static GuiError ROTATION_STUCK;
 	
 	public GuiError(String aName)
 	{

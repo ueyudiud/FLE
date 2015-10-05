@@ -7,7 +7,12 @@ public class SolidTank
 {
 	int cap;
 	SolidStack stack = null;
-	
+
+	public SolidTank(int aCap, SolidStack aStack)
+	{
+		cap = aCap;
+		stack = aStack != null ? aStack.copy() : null;
+	}
 	public SolidTank(int aCap)
 	{
 		cap = aCap;
@@ -18,15 +23,17 @@ public class SolidTank
 		return cap;
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt)
+	public NBTTagCompound readFromNBT(NBTTagCompound nbt)
 	{
 		stack = SolidStack.readFromNBT(nbt);
+		return nbt;
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		if(stack != null)
 			stack.writeToNBT(nbt);
+		return nbt;
 	}
 	
 	public int fill(SolidStack aStack, boolean doFill)
@@ -61,7 +68,7 @@ public class SolidTank
 		if(maxDrain <= 0 && size() <= 0) return null;
 		if(!doDrain)
 		{
-			return new SolidStack(stack.getObj(), Math.min(size(), maxDrain), stack.nbt);
+			return stack == null ? null : new SolidStack(stack.getObj(), Math.min(size(), maxDrain), stack.nbt);
 		}
 		else
 		{
@@ -91,5 +98,20 @@ public class SolidTank
 	public SolidTankInfo getInfo()
 	{
 		return new SolidTankInfo(getStack(), getCapcity());
+	}
+	
+	public void setStack(SolidStack aStack)
+	{
+		stack = aStack;
+	}
+	
+	public boolean has(SolidStack aResource)
+	{
+		return aResource == null ? stack == null : has(aResource.getObj());
+	}
+	
+	public boolean has(Solid aSolid)
+	{
+		return get() == null || aSolid == null ? get() == null && aSolid == null : aSolid.getSolidName().equals(get().getSolidName());
 	}
 }

@@ -3,24 +3,25 @@ package fle.core.handler;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fle.api.util.DamageResources;
-import fle.core.item.ItemFleSub;
-import fle.core.util.FlePotionEffect;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityMooshroom;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import fle.api.util.DamageResources;
+import fle.core.item.ItemFleSub;
+import fle.core.util.FlePotionEffect;
 
 public class EntityHandler
 {
@@ -41,6 +42,15 @@ public class EntityHandler
 					evt.drops.remove(drop);
 				}
 			}
+			evt.drops.add(new EntityItem(evt.entityLiving.worldObj, evt.entityLiving.posX, evt.entityLiving.posY, evt.entityLiving.posZ, new ItemStack(Items.bone, evt.entityLiving.getRNG().nextInt(2) + 1)));
+		}
+		else if(evt.entityLiving instanceof EntitySheep)
+		{
+			evt.drops.add(new EntityItem(evt.entityLiving.worldObj, evt.entityLiving.posX, evt.entityLiving.posY, evt.entityLiving.posZ, new ItemStack(Items.bone, evt.entityLiving.getRNG().nextInt(2) + 1)));
+		}
+		else if(evt.entityLiving instanceof EntityPig)
+		{
+			evt.drops.add(new EntityItem(evt.entityLiving.worldObj, evt.entityLiving.posX, evt.entityLiving.posY, evt.entityLiving.posZ, new ItemStack(Items.bone, evt.entityLiving.getRNG().nextInt(2) + 1)));
 		}
 		else if(evt.entityLiving instanceof EntitySpider)
 		{

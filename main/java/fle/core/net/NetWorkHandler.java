@@ -14,6 +14,7 @@ import fle.api.net.FlePackets.CoderInventoryUpdate;
 import fle.api.net.FlePackets.CoderMatterUpdate;
 import fle.api.net.FlePackets.CoderNBTUpdate;
 import fle.api.net.FlePackets.CoderPTUpdate;
+import fle.api.net.FlePackets.CoderSolidTankUpdate;
 import fle.api.net.FlePackets.CoderTankUpdate;
 import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.core.net.FlePackets.CoderCropUpdate;
@@ -37,6 +38,7 @@ public class NetWorkHandler implements FleNetworkHandler
 		registerMessage(CoderTileUpdate.class, Side.CLIENT);
 		registerMessage(CoderCropUpdate.class, Side.CLIENT);
 		registerMessage(CoderMatterUpdate.class, Side.CLIENT);
+		registerMessage(CoderSolidTankUpdate.class, Side.CLIENT);
 	}
 	
 	@Override

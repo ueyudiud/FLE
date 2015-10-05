@@ -43,7 +43,7 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	}
 
 	@Override
-	public void updateEntity()
+	public void updateInventory()
 	{
 		inv.updateEntity(this);
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());

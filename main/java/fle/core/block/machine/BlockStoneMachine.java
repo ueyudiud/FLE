@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import fle.api.block.IBlockWithTileBehaviour;
 import fle.api.block.IGuiBlock;
 import fle.core.block.BlockSubTile;
+import fle.core.block.behaviour.BehaviourBoilingHeater;
 import fle.core.block.behaviour.BehaviourCeramicBricks;
 import fle.core.block.behaviour.BehaviourCeramicFurnaceFirebox;
 import fle.core.block.behaviour.BehaviourCeramicFurnaceInlet;
@@ -24,6 +25,7 @@ public class BlockStoneMachine extends BlockSubTile implements IGuiBlock
 		registerSub(2, "ceramicFurnaceInlet", "Ceramic Furnace Inlet", new BlockTextureManager(new String[]{"machine/calcinator_top", "machine/calcinator"}), new BehaviourCeramicFurnaceInlet());
 		registerSub(3, "ceramicFurnaceOutlet", "Ceramic Furnace Outlet", new BlockTextureManager(new String[]{"machine/calcinator_front", "machine/calcinator", "machine/calcinator"}), new BehaviourCeramicFurnaceOutlet());
 		registerSub(4, "ceramicFurnaceFirebox", "Ceramic Furnace Firebox", new BlockTextureManager(new String[]{"machine/calcinator_firebox", "iconsets/ceramic", "iconsets/ceramic"}), new BehaviourCeramicFurnaceFirebox());
+		registerSub(5, "boiling_heater", "Argil Boiling Heater", new BlockTextureManager(new String[]{"machine/boiling_heater_front", "machine/boiling_heater_top", "machine/boiling_heater_down", "machine/boiling_heater_side"}), new BehaviourBoilingHeater());
 		return this;
 	}
 

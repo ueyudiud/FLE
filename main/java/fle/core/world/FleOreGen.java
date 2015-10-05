@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import fle.FLE;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.material.MaterialOre;
 import fle.api.util.WeightHelper;
 import fle.api.world.BlockPos;
@@ -33,7 +34,8 @@ public class FleOreGen extends FleMineableGen
 	{
 		MaterialOre ore = weightHelper.randomGet(aRand);
 		Block block = aWorld.getBlock(x, y, z);
-		int baseMeta = aWorld.getBlockMetadata(x, y, z);
+		int baseMeta = FLE.fle.getWorldManager().getData(new BlockPos(aWorld, x, y, z), 0);
+		baseMeta = baseMeta == -1 ? aWorld.getBlockMetadata(x, y, z) : baseMeta;
 		aWorld.setBlock(x, y, z, target);
 		BlockOre.setData(new BlockPos(aWorld, x, y, z), base, block.getDamageValue(aWorld, x, y, z), MaterialOre.getOreID(ore));
 	}

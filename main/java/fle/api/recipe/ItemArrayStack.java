@@ -3,6 +3,9 @@ package fle.api.recipe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -12,7 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemArrayStack extends ItemAbstractStack
 {
-	private List<ItemStack> stack;
+	private Set<ItemStack> stack;
 
 	public ItemArrayStack(Block aBlock) 
 	{
@@ -34,9 +37,9 @@ public class ItemArrayStack extends ItemAbstractStack
 	{
 		this(Arrays.asList(aStack));
 	}
-	public ItemArrayStack(List list)
+	public ItemArrayStack(Iterable<ItemStack> list)
 	{
-		stack = list;
+		stack = Sets.newConcurrentHashSet(list);
 	}
 
 	@Override

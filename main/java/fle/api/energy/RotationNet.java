@@ -5,14 +5,14 @@ import fle.api.world.BlockPos;
 
 public abstract class RotationNet extends IEnergyNet
 {
-	public abstract int getWindSpeed();
+	public abstract int getWindSpeed(BlockPos pos);
 
 	public abstract void emmitRotationTo(BlockPos pos, ForgeDirection dir, RotationPacket packet);
 	
 	public static class RotationPacket
 	{
-		private double torque;
-		private double speed;
+		final double torque;
+		final double speed;
 		
 		public RotationPacket(double aTorque, double aSpeed) 
 		{
@@ -33,6 +33,16 @@ public abstract class RotationNet extends IEnergyNet
 		public double getEnergy()
 		{
 			return torque * speed;
+		}
+		
+		public RotationPacket copy()
+		{
+			return new RotationPacket(torque, speed);
+		}
+		
+		public RotationPacket access(double maxSpeed)
+		{
+			return new RotationPacket(torque, Math.min(maxSpeed, speed));
 		}
 	}
 }

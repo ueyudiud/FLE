@@ -4,10 +4,15 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.data.FontMetadataSection;
+import net.minecraft.client.resources.data.FontMetadataSectionSerializer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import fle.api.FleValue;
 import fle.api.cg.GuiBookBase;
 import fle.api.cg.RecipeHandler;
 import fle.api.recipe.ItemAbstractStack;
@@ -121,9 +126,15 @@ public class WashingRecipe extends RecipeBase implements RecipeHandler
 		{
 			if(getSlotPosition(i).contains(mouseX, mouseY))
 			{
-				return String.format("Chance : %g %%", (float) (outputMap.get(outputs[i]) * 100));
+				return String.format("Chance : %s", FleValue.format_progress.format(outputMap.get(outputs[i])));
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public String getStackTip(int slotID)
+	{
+		return ItemAbstractStack.getStackTipInfo(slotID == outputs.length ? input : outputs[slotID]);
 	}
 }

@@ -29,18 +29,6 @@ public class Gui3By3 extends GuiContainerBase
 	}
 
 	@Override
-	public boolean hasCustomName()
-	{
-		return inv.hasCustomInventoryName();
-	}
-
-	@Override
-	public String getName()
-	{
-		return inv.getInventoryName();
-	}
-
-	@Override
 	public ResourceLocation getResourceLocation()
 	{
 		return locate;

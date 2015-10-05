@@ -40,8 +40,9 @@ public class TileEntityArgilItems extends TEBase implements IThermalTileEntity
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		bakeClay();
-		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		markRenderForUpdate();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
 	}

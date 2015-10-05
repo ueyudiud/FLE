@@ -3,11 +3,15 @@ package fle.api.fluid;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import fle.api.material.IFluidChemInfo;
 import fle.api.material.Matter;
 import fle.api.material.PropertyInfo;
+import fle.api.util.IChemCondition.EnumOxide;
+import fle.api.util.IChemCondition.EnumPH;
 import fle.api.util.Register;
 
-public class FluidBase extends Fluid
+public class FluidBase extends Fluid implements IFluidChemInfo
 {
 	public static Register<FluidBase> register = new Register();
 	
@@ -64,5 +68,40 @@ public class FluidBase extends Fluid
 	public String getTextureName()
 	{
 		return textureName == null ? "MISSING_TEXTURE_" + fluidName : textureName;
+	}
+
+	public FluidBase setFluidPH(EnumPH aPH)
+	{
+		ph = aPH;
+		return this;
+	}
+	public FluidBase setFluidOxide(EnumOxide aO)
+	{
+		o = aO;
+		return this;
+	}
+	
+	private EnumPH ph = EnumPH.Water;
+	private EnumOxide o = EnumOxide.Default;
+
+	public EnumPH getFluidPH()
+	{
+		return ph;
+	}
+	public EnumOxide getFluidOxide()
+	{
+		return o;
+	}
+	
+	@Override
+	public EnumPH getFluidPH(FluidStack aStack)
+	{
+		return getFluidPH();
+	}
+	
+	@Override
+	public EnumOxide getFluidOxide(FluidStack aStack)
+	{
+		return getFluidOxide();
 	}
 }

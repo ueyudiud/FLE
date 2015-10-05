@@ -53,16 +53,16 @@ public class GuiColdForging extends GuiContainerBase
 		for(int i = 0; i < 3; ++i)
 			for(int j = 0; j < 3; ++j)
 				buttonList.add(new GuiIconButton(i + j * 3, xoffset + 67 + i * 17, yoffset + 25 + j * 17, ButtonSize.Slot));
-		buttonList.add(new GuiIconButton(9, xoffset + 70, yoffset + 11, ButtonSize.Small, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 104, 0));
-		buttonList.add(new GuiIconButton(10, xoffset + 104, yoffset + 11, ButtonSize.Small, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 72, 8));
-		buttonList.add(new GuiIconButton(11, xoffset + 26, yoffset + 25, ButtonSize.Small, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 96, 8));
+		buttonList.add(new GuiIconButton(9, xoffset + 70, yoffset + 11, ButtonSize.Small, GuiIconButton.buttonLocate, 104, 0));
+		buttonList.add(new GuiIconButton(10, xoffset + 104, yoffset + 11, ButtonSize.Small, GuiIconButton.buttonLocate, 72, 8));
+		buttonList.add(new GuiIconButton(11, xoffset + 26, yoffset + 25, ButtonSize.Small, GuiIconButton.buttonLocate, 96, 8));
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
+		sendToContainer(1, button.id);
 		super.actionPerformed(button);
-		FLE.fle.getNetworkHandler().sendToServer(new CoderGuiUpdate((byte) 1, button.id));
 	}
 
 	@Override

@@ -28,25 +28,32 @@ public class BehaviorArgilItem extends BehaviorBlockable implements IDebugableBl
 			EntityPlayer player, World world, int x, int y, int z,
 			ForgeDirection side, float xPos, float yPos, float zPos) 
 	{
+		int tX = x;
+		int tY = y;
+		int tZ = z;
 		if(itemstack.stackSize <= 64)
+		{
+			Block block = world.getBlock(x, y, z);
+			if (block != Blocks.air)
+			{
+	            x += side.offsetX;
+	            y += side.offsetY;
+	            z += side.offsetZ;
+			}
 			if(Item.getItemFromBlock(target).onItemUse(new ItemStack(target, 1, targetMeta), player, world, x, y, z, FleAPI.getIndexFromDirection(side), xPos, yPos, zPos))
 			{
-				Block block = world.getBlock(x, y, z);
-				if (block != Blocks.air)
-				{
-		            x += side.offsetX;
-		            y += side.offsetY;
-		            z += side.offsetZ;
-				}
 				if(world.getTileEntity(x, y, z) != null)
 				{
+					world.getTileEntity(x, y, z).blockMetadata = targetMeta;
+					world.getTileEntity(x, y, z).updateEntity();
 					TileEntityArgilItems tile = (TileEntityArgilItems) world.getTileEntity(x, y, z);
 					tile.stack = itemstack.copy();
 				}
 				if(!player.capabilities.isCreativeMode)
-					player.setCurrentItemOrArmor(0, null);;
+					player.setCurrentItemOrArmor(0, null);
 				return true;
 			}
+		}
 		return false;
 	}
 

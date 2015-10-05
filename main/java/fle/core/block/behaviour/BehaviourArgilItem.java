@@ -27,6 +27,13 @@ public class BehaviourArgilItem extends BehaviourTile implements IDebugableBlock
 	}
 	
 	@Override
+	public boolean canBlockStay(BlockSubTile block, World aWorld, int x, int y,
+			int z)
+	{
+		return aWorld.getBlock(x, y - 1, z).isSideSolid(aWorld, x, y, z, ForgeDirection.UP);
+	}
+	
+	@Override
 	public void onBlockPlacedBy(BlockSubTile block, World aWorld, int x, int y,
 			int z, ItemStack aStack, EntityLivingBase aEntity)
 	{

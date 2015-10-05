@@ -30,7 +30,7 @@ public class FLEBiomeOcean extends FLEBiome
 		switch(aLayer)
 		{
 		case 0 : ;
-		placeBlock = Blocks.water;
+		placeBlock = (targetID & 255) > 128 ? Blocks.air : Blocks.water;
 		metadata = 0;
 		break;
 		case 1 : ;

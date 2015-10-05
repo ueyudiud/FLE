@@ -8,9 +8,12 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldManager;
+import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderFlat;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCaves;
@@ -20,6 +23,7 @@ import net.minecraftforge.event.terraingen.ChunkProviderEvent;
 import fle.core.util.noise.NoiseBase;
 import fle.core.util.noise.NoiseMix;
 import fle.core.util.noise.NoisePerlin;
+import fle.core.world.FleCavesGen;
 
 public class FLESurfaceChunkProvider extends ChunkProviderGenerate
 {
@@ -35,7 +39,8 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
     public NoiseBase noiseGen2;
     /** For rock layer generate **/
     public NoiseBase noiseGen3;
-    private MapGenBase caveGenerator = new MapGenCaves();
+    public NoiseBase noiseGen4;
+    private MapGenBase caveGenerator = new FleCavesGen();
     private MapGenBase ravineGenerator = new MapGenRavine();
 	private float[] f1;
 	private double[] d1;
@@ -54,18 +59,18 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
 		super(aWorld, aSeed, flag);
 		worldObj = aWorld;
 		rand = new Random(aSeed);
-		noiseGen0 = new NoiseMix(64.0D, new NoisePerlin(aSeed, 8));
-		noiseGen1 = new NoiseMix(16.0D, new NoisePerlin(aSeed, 4));
-		noiseGen2 = new NoiseMix(4.0D, new NoisePerlin(aSeed, 4));
-		noiseGen3 = new NoiseMix(128.0D, new NoisePerlin(aSeed, 6));
-
-		parabolicField = new float[25];
-        for (int j = -2; j <= 2; ++j)
+		noiseGen0 = new NoiseMix(64.0D, new NoisePerlin(aSeed * 28759282L + 72957539L, 8));
+		noiseGen1 = new NoiseMix(16.0D, new NoisePerlin(aSeed * 18395739L + 38572821L, 4));
+		noiseGen2 = new NoiseMix(4.0D, new NoisePerlin(aSeed * 295829482L + 38592726L, 4));
+		noiseGen3 = new NoiseMix(128.0D, new NoisePerlin(aSeed * 1829471L + 73957293L, 6));
+		
+		parabolicField = new float[49];
+        for (int j = -3; j <= 3; ++j)
         {
-            for (int k = -2; k <= 2; ++k)
+            for (int k = -3; k <= 3; ++k)
             {
                 float f = 10.0F / MathHelper.sqrt_float((float)(j * j + k * k) + 0.2F);
-                parabolicField[j + 2 + (k + 2) * 5] = f;
+                parabolicField[j + 3 + (k + 3) * 7] = f;
             }
         }
 		idsBig = new Block[65536];
@@ -81,10 +86,11 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
         rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
         getTerrinHeight(x, z);
 		fillBlockIn();
+		biomesForGeneration = worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, x * 16, z * 16, 16, 16);
 		replaceBlocksForBiome(x, z, idsBig, metaBig, biomesForGeneration);
 		caveGenerator.func_151539_a(this, worldObj, x, z, idsBig);
 		ravineGenerator.func_151539_a(this, worldObj, x, z, idsBig);
-		Chunk chunk = new Chunk(this.worldObj, idsBig, metaBig, x, z);
+		Chunk chunk = new Chunk(worldObj, idsBig, metaBig, x, z);
         byte[] abyte1 = chunk.getBiomeArray();
 
         for (int k = 0; k < abyte1.length; ++k)
@@ -110,7 +116,7 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
             for (int l = 0; l < 16; ++l)
             {
                 BiomeGenBase biomegenbase = aBiome[l + k * 16];
-                biomegenbase.genTerrainBlocks(this.worldObj, this.rand, aBlock, aMeta, x * 16 + k, z * 16 + l, d4[l + k * 16]);
+                biomegenbase.genTerrainBlocks(worldObj, rand, aBlock, aMeta, x * 16 + k, z * 16 + l, d4[l + k * 16]);
             }
         }
     }
@@ -150,13 +156,13 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
 	{
 		int i, j, a1, a2, a3, a4, a5, a6;
 		
-		biomesForGeneration = worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, x * 16 - 2, z * 16 - 2, 16 + 4, 16 + 4);
+		biomesForGeneration = worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, x * 16 - 3, z * 16 - 3, 16 + 6, 16 + 6);
         		
 		int l = 0;
 		int k0 = 0;
         d1 = noiseGen0.noise(d1, x * 16, z * 16, 16, 16);
         d2 = noiseGen1.noise(d2, x * 16, z * 16, 16, 16);
-        d3 = noiseGen1.noise(d3, x * 16, z * 16, 16, 16);
+        d3 = noiseGen2.noise(d3, x * 16, z * 16, 16, 16);
         float[] baseHeight = new float[256];
         float[] randHeight = new float[256];
         for(int i0 = 0; i0 < 16; ++i0)
@@ -165,14 +171,14 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
                 float f0 = 0.0F;
                 float f1 = 0.0F;
                 float f2 = 0.0F;
-                BiomeGenBase biome0 = biomesForGeneration[(i0 + 2) + (i1 + 2) * 20];
-                for(int j0 = -2; j0 <= 2; ++j0)
-                	for(int j1 = -2; j1 <= 2; ++j1)
+                BiomeGenBase biome0 = biomesForGeneration[(i0 + 3) + (i1 + 3) * 22];
+                for(int j0 = -3; j0 <= 3; ++j0)
+                	for(int j1 = -3; j1 <= 3; ++j1)
                 	{
-                		BiomeGenBase biome1 = biomesForGeneration[i0 + 2 + j0 + (i1 + 2 + j1) * 20];
+                		BiomeGenBase biome1 = biomesForGeneration[i0 + 3 + j0 + (i1 + 3 + j1) * 22];
                 		float f3 = biome1.rootHeight;
                 		float f4 = biome1.heightVariation;
-                		float f5 = parabolicField[j0 + 2 + (j1 + 2) * 5];
+                		float f5 = parabolicField[j0 + 3 + (j1 + 3) * 7];
 
                         f0 += f3 * f5;
                         f1 += f4 * f5;
@@ -190,14 +196,6 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
         		float f0 = baseHeight[xOffset + zOffset * 16];
         		float f1 = randHeight[xOffset + zOffset * 16];
 
-        		if(f0 > 0.5F)
-        			f0 = (f0 - 0.5F) / 2F + 0.5F;
-        		else if(f0 < -0.5F)
-        			f0 = (f0 + 0.5F) / 2F - 0.5F;
-        		if(f1 > 0.8F)
-        			f1 = (f1 - 0.8F) / 2F + 0.8F;
-        		else if(f1 < -0.8F)
-        			f1 = (f1 + 0.8F) / 2F - 0.8F;
         		double rh = d3[xOffset + zOffset * 16];
         		rh *= 4;
         		if(rh < 0.0D)
@@ -222,7 +220,7 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
         		{
         			f0 *= 0.5F;
         		}
-        		double height = f1 * rh * 100D + f0 * ((d1[xOffset + zOffset * 16] + 1D) * 24 + (d2[xOffset + zOffset * 16] + 1D) * 8);
+        		double height = f1 * rh + f0 * ((d1[xOffset + zOffset * 16] + 1D) * 24 + (d2[xOffset + zOffset * 16] + 1D) * 8);
         		d8[xOffset + zOffset * 16] = height;
         	}
         }

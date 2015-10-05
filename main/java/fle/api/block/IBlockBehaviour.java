@@ -17,6 +17,8 @@ public interface IBlockBehaviour<E extends Block>
 {
     public boolean onBlockActivated(E block, World aWorld, int x, int y, int z, EntityPlayer aPlayer, ForgeDirection aSide, float xPos, float yPos, float zPos);
 
+    public boolean canBlockStay(E block, World aWorld, int x, int y, int z);
+    
     public void onBlockClicked(E block, World aWorld, int x, int y, int z, EntityPlayer aPlayer);
 
     public void onBlockPlaced(E block, World aWorld, int x, int y, int z, ForgeDirection aSide, float xPos, float yPos, float zPos);

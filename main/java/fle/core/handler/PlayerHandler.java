@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition;
 
 import org.lwjgl.opengl.GL11;
 
@@ -37,12 +38,14 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import fle.api.FleAPI;
 import fle.api.recipe.ItemBaseStack;
+import fle.api.recipe.ItemOreStack;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
 import fle.core.tool.WasherManager;
 import fle.core.util.FleFoodStats;
 import fle.core.util.Util;
+import fle.core.world.biome.FLEBiome;
 
 public class PlayerHandler
 {
@@ -235,25 +238,53 @@ public class PlayerHandler
 		if(buf++ > 100)
 		{
 			buf = 0;
-			if(FleAPI.dosePlayerHas(player, new ItemBaseStack(ItemFleSub.a("stone_a"))) != -1)
+			if(FleAPI.doesPlayerHas(player, new ItemBaseStack(ItemFleSub.a("stone_a"))) != -1)
 			{
 				givePlayerBook(player, "oldStoneAge", ItemFleSub.a("guide_book_1"));
 			}
-			if(FleAPI.dosePlayerHas(player, new ItemBaseStack(ItemFleSub.a("ingot_cu"))) != -1)
+			if(FleAPI.doesPlayerHas(player, new ItemBaseStack(ItemFleSub.a("ingot_cu"))) != -1)
 			{
 				givePlayerBook(player, "newStoneAge", ItemFleSub.a("guide_book_2"));
 			}
+			if(FleAPI.doesPlayerHas(player, new ItemOreStack("ingotAbstractBronze")) != -1)
+			{
+				givePlayerBook(player, "cooperAge", ItemFleSub.a("guide_book_3"));
+			}
 			int i;
-			i = FleAPI.dosePlayerHas(player, new ItemBaseStack(Items.wheat_seeds));
+			i = FleAPI.doesPlayerHas(player, new ItemBaseStack(Items.wheat_seeds));
 			if(i != -1)
 			{
 				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "wheat"));
 			}
-			i = FleAPI.dosePlayerHas(player, new ItemBaseStack(Items.reeds));
+			i = FleAPI.doesPlayerHas(player, new ItemBaseStack(Items.reeds));
 			if(i != -1)
 			{
 				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "suger_cances"));
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerSpawn(CreateSpawnPosition evt)
+	{
+		int i = 0;
+		Random rand = new Random();
+		while(i < 1024)
+		{
+			rand.setSeed(i * (i * 2895387531L) + 2842728719L);
+			int x = (rand.nextInt() ^ 24724927) / 0XFF;
+			int z = (rand.nextInt() ^ 19472847) / 0xFF;
+			if(evt.world.getBiomeGenForCoords(x, z) != FLEBiome.ocean)
+			{
+				int y = evt.world.getTopSolidOrLiquidBlock(x, z);
+				if(y > evt.world.provider.getHorizon())
+				{
+					evt.world.setSpawnLocation(x, y, z);
+					evt.setCanceled(true);
+					break;
+				}
+			}
+			++i;
 		}
 	}
 	

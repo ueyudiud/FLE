@@ -43,11 +43,16 @@ public class Materials
 	public static MaterialOre Arsenopyrite;
 	public static MaterialOre Schorodite;
 	public static MaterialOre Erythrite;
+	public static MaterialOre Gelenite;
+	public static MaterialOre Sphalerite;
+	public static MaterialOre Cassiterite;
+	public static MaterialOre Stannite;
 
 	public static MaterialAbstract SoftWood;
 	public static MaterialAbstract HardWood;
 	public static MaterialAbstract Charcoal;
 	public static MaterialAbstract Flint;
+	public static MaterialAbstract Bone;
 	public static MaterialAbstract Obsidian;
 	public static MaterialAbstract Argil;
 	
@@ -56,6 +61,9 @@ public class Materials
 	public static MaterialRock Limestone;
 
 	public static MaterialAbstract Copper;
+	public static MaterialAbstract Lead;
+	public static MaterialAbstract Zinc;
+	public static MaterialAbstract Tin;
 	public static MaterialAlloy CuAs;
 	public static MaterialAlloy CuAs2;
 	public static MaterialAlloy CuSn;
@@ -73,6 +81,7 @@ public class Materials
 	public static DitchInfo ditch_wood3;
 	public static DitchInfo ditch_wood4;
 	public static DitchInfo ditch_wood5;
+
 	
 	public static void init()
 	{
@@ -95,9 +104,14 @@ public class Materials
 		Arsenopyrite = new MaterialOre("Arsenopyrite", Matter.mFeAsS, new PropertyInfo(0xD7D5CB, 9, 2.1F, 0.1F, 1.1F, 0.2F, 8100000, -1.0F, 0.31F, 0.7F), SubTag.ORE_TYPE_default, SubTag.ORE_sulfide);
 		Schorodite = new MaterialOre("Schorodite", Matter.mFeAsO4_2H2O, new PropertyInfo(new int[]{0xB9DCCE, 0x4268A6}, 12, 2.5F, 0.1F, 1.2F, 0.2F, 8900000, -1.0F, 0.32F, 0.7F), SubTag.ORE_TYPE_default);
 		Erythrite = new MaterialOre("Erythrite", Matter.mCo3_AsO4_2_8H2O, new PropertyInfo(0xE180B0, 19, 4.1F, 0.1F, 1.2F, 0.2F, 12300000, -1.0F, 0.34F, 0.6F), SubTag.ORE_TYPE_default);
+		Gelenite = new MaterialOre("Gelenite", Matter.mPbS, new PropertyInfo(0x9899A4, 7, 1.3F, 0.1F, 1.0F, 0.3F, 6400000, -1.0F, 0.32F, 0.7F), SubTag.ORE_TYPE_default, SubTag.ORE_sulfide);
+		Sphalerite = new MaterialOre("Sphalerite", Matter.mZnS, new PropertyInfo(0xD6CCCA, 9, 2.3F, 0.2F, 1.1F, 0.28F, 9200000, -1.0F, 0.34F, 0.7F), SubTag.ORE_TYPE_default, SubTag.ORE_sulfide);
+		Cassiterite = new MaterialOre("Cassiterite", Matter.mSnO2, new PropertyInfo(0xD1CBB0, 8, 1.5F, 0.1F, 1.0F, 0.18F, 8100000, -1.0F, 0.36F, 0.63F), SubTag.ORE_TYPE_default, SubTag.ORE_oxide);
+		Stannite = new MaterialOre("Stannite", Matter.mCu2FeSnS4, new PropertyInfo(0xD6CCCA, 9, 1.9F, 0.1F, 1.0F, 0.2F, 8400000, -1.0F, 0.35F, 0.67F), SubTag.ORE_TYPE_default, SubTag.ORE_sulfide);
 		
 		Flint = new MaterialAbstract("Flint", Matter.mSiO2, new PropertyInfo(0x5A5A5A, 12, 0.6F, 0.0F, 1.1F, 1.5F, 13500000), SubTag.TOOL_stone, SubTag.TOOL_flint);
 		Obsidian = new MaterialAbstract("Obsidian", Matter.mSiO2, new PropertyInfo(0x33344F, 16, 2.1F, 0.0F, 1.0F, 3.0F, 7500000), SubTag.TOOL_stone, SubTag.TOOL_flint);
+		Bone = new MaterialAbstract("Bone", new PropertyInfo(0xF9F7E7, 7, 1.0F, 0.1F, 0.8F, 1.2F, 2800000), SubTag.TOOL_bone);
 		HardWood = new MaterialAbstract("HardWood", new PropertyInfo(0x7F643D, 20, 0.4F, 1.0F, 0.1F, 0.1F, 4600000, -1F, 0.5F, 2.0F), SubTag.TOOL_wood);
 		SoftWood = new MaterialAbstract("SoftWood", new PropertyInfo(0x8F744D, 6, 0.2F, 1.1F, 0.05F, 0.07F, 2800000, -1F, 0.3F, 1.9F));
 		Charcoal = new MaterialAbstract("Charcoal", EnumAtoms.C.asMatter(), new PropertyInfo(0x35322A, 2, 0.03F, 0.0F, 0.08F, 0.5F, 4000000, 98F, 0.6F, 1.2F));
@@ -105,7 +119,10 @@ public class Materials
 		Stone = new MaterialRock("Stone", new PropertyInfo(0x626262, 16, 1.2F, 0.0F, 1.0F, 1.4F, 10000000, -1.0F, 0.38F, 2.1F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868, 21, 1.2F, 0.1F, 2.0F, 1.3F, 12800000), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		Limestone = new MaterialRock("Limestone", new PropertyInfo(0xE4E4E5, 2, 0.8F, 0.2F, 1.0F, 1.8F, 5600000));
-		Copper = new MaterialAbstract("Copper", EnumAtoms.Cu.asMatter(), new PropertyInfo(0xDB4E31, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 4F, 1F, 0.19F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought);
+		Copper = new MaterialAbstract("Copper", EnumAtoms.Cu.asMatter(), new PropertyInfo(0xDB4E31, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 0.16F, 1F, 0.19F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought);
+		Lead = new MaterialAbstract("Lead", EnumAtoms.Pb.asMatter(), new PropertyInfo(0xC4C4C6, 21, 579, 1849, 793, 601, 0.8F, 1600, 1.2F, 9.1F, 1.9F, 0.0F, 29000000, 2.08F, 0.6F, 0.02F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought);
+		Zinc = new MaterialAbstract("Zinc", EnumAtoms.Zn.asMatter(), new PropertyInfo(0xD7D9DA, 30, 602, 1048, 782, 673, 0.8F, 1600, 1.8F, 4.7F, 1.4F, 0.0F, 38100000, 0.58F, 0.8F, 0.09F), SubTag.CRAFTING_cold_wought);
+		Tin = new MaterialAbstract("Tin", EnumAtoms.Sn.asMatter(), new PropertyInfo(0xD3D2CF, 8, 473, 2784, 582, 674, 0.8F, 1600, 1.2F, 8.7F, 1.2F, 0.0F, 30000000, 1.6F, 0.7F, 0.04F), SubTag.CRAFTING_cold_wought);
 		MaterialAbstract.pureMaterials.register(Copper, "Cu");
 		CuAs = new MaterialAlloy("CuAs", new Matter(Alloy, new AtomStack(Cu, 9), new AtomStack(As)), 
 				new PropertyInfo(0xA37C68, 175, 684, 1735, 702, 7086, 0.2F, 1500, 1.6F, 1.7F, 1.1F, 0.2F, 92000000, 102F, 0.97F, 0.21F), 

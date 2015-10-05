@@ -16,12 +16,10 @@ public class ContainerStoneMill extends ContainerCraftable
 
 		addSlotToContainer(new Slot(inventory, 0, 65, 20));
 		addSlotToContainer(new Slot(inventory, 1, 55, 52));
-		addSlotToContainer(new Slot(inventory, 2, 73, 52));
-		addSlotToContainer(new Slot(inventory, 3, 91, 52));
+		//addSlotToContainer(new Slot(inventory, 2, 73, 52));
+		addSlotToContainer(new Slot(inventory, 2, 91, 52));
 		
 		locateRecipeInput = new TransLocation("input", 36);
 		locateRecipeOutput = new TransLocation("output", 37, 40);
-		
-		onCraftMatrixChanged(inventory);
 	}
 }

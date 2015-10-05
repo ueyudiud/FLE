@@ -122,7 +122,7 @@ public class BlockFle extends Block
 	@Override
 	public int getDamageValue(World aWorld, int x, int y, int z)
 	{
-		return hasSubs() ? aWorld.getBlockMetadata(x, y, z) : 0;
+		return hasSubs() ? aWorld.getTileEntity(x, y, z) != null ? aWorld.getTileEntity(x, y, z).getBlockMetadata() : aWorld.getBlockMetadata(x, y, z) : 0;
 	}
 	
 	@Override

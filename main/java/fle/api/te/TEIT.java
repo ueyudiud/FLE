@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 import fle.api.inventory.InventoryWithFluidTank;
 
-public abstract class TEIT<T extends InventoryWithFluidTank<?>> extends TEInventory<T> implements IFluidHandler, IFluidTanks
+public abstract class TEIT<T extends InventoryWithFluidTank> extends TEInventory<T> implements IFluidHandler, IFluidTanks
 {
 	protected TEIT(T inv) 
 	{
@@ -51,9 +51,7 @@ public abstract class TEIT<T extends InventoryWithFluidTank<?>> extends TEInvent
 	{
 		return new FluidTankInfo[]{new FluidTankInfo(inv.getTank(0))};
 	}
-
-	public abstract void updateEntity();
-
+	
 	@Override
 	public int getSizeTank()
 	{

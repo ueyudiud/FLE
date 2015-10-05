@@ -38,6 +38,7 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 	@Override
 	public void updateEntity() 
 	{
+		super.updateEntity();
 		bakeClay();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		if(smeltedTick > 10000)

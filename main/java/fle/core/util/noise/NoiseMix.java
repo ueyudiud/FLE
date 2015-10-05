@@ -90,4 +90,11 @@ public class NoiseMix extends NoiseBase
 		double ret = a % b;
 		return ret < 0 ? ret + b : ret;
 	}
+	
+	@Override
+	public NoiseBase setSeed(long aSeed)
+	{
+		noise.setSeed(aSeed);
+		return super.setSeed(aSeed);
+	}
 }

@@ -1,8 +1,10 @@
 package fle.api.inventory;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -15,7 +17,7 @@ import fle.api.te.ITEInWorld;
 import fle.api.te.TEIT;
 import fle.api.world.BlockPos;
 
-public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTileAbstract<T> implements IFluidTank, IFluidTanks
+public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTileAbstract<T> implements IFluidTank, IFluidTanks, IFluidHandler
 {
 	protected FluidTank tank;
 	protected int maxHeat;
@@ -65,6 +67,11 @@ public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTi
 	
 	protected abstract void onMelted(T tile);
 
+	protected FluidTank getFluidTankFromSide(ForgeDirection aSide)
+	{
+		return tank;
+	}
+	
 	@Override
 	public FluidStack getFluid() 
 	{
@@ -116,25 +123,27 @@ public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTi
 	@Override
 	public FluidStack getFluidStackInTank(int index)
 	{
-		return tank.getFluid();
+		return getTank(index).getFluid();
 	}
 
 	@Override
 	public void setFluidStackInTank(int index, FluidStack aStack)
 	{
-		tank.setFluid(aStack);
+		IFluidTank tank = getTank(index);
+		tank.drain(tank.getCapacity(), true);
+		tank.fill(aStack, true);
 	}
 
 	@Override
 	public FluidStack drainTank(int index, int maxDrain, boolean doDrain)
 	{
-		return tank.drain(maxDrain, doDrain);
+		return getTank(index).drain(maxDrain, doDrain);
 	}
 
 	@Override
 	public int fillTank(int index, FluidStack resource, boolean doFill)
 	{
-		return tank.fill(resource, doFill);
+		return getTank(index).fill(resource, doFill);
 	}
 
 	public boolean tryDrainFluid(ITEInWorld oiw, ForgeDirection dir, int maxDrain, boolean doDrain)
@@ -177,5 +186,43 @@ public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTi
 			else return false;
 		}
 		return false;
+	}
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		return getFluidTankFromSide(from) == null ? 0 : getFluidTankFromSide(from).fill(resource, doFill);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource,
+			boolean doDrain)
+	{
+		IFluidTank tank = getFluidTankFromSide(from);
+		return tank == null ? null : tank.getInfo().fluid != null && tank.getInfo().fluid.containsFluid(resource) ? tank.drain(resource.amount, doDrain) : null;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return getFluidTankFromSide(from) == null ? null : getFluidTankFromSide(from).drain(maxDrain, doDrain);
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return getFluidTankFromSide(from) != null;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return getFluidTankFromSide(from) != null;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		return new FluidTankInfo[]{getFluidTankFromSide(from).getInfo()};
 	}
 }

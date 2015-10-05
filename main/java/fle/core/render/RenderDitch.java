@@ -20,7 +20,7 @@ public class RenderDitch extends RenderBase
 			connect = 1,
 			fill = 2;
 
-	double f = 0.03125,
+	double f = 0.0625,
 			f1 = 0.0,
 			f2 = 1.0,
 			f3 = 0.375,

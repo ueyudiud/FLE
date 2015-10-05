@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -302,7 +303,14 @@ public abstract class RenderBase
         u3 = u4;
         v3 = v2;
 
-        tessellator.setBrightness(200);
+        if (!isItem()) 
+        {
+            tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
+        }
+        if (brightness > -1) 
+        {
+            tessellator.setBrightness(brightness);
+        }
         tessellator.setColorOpaque_F(LIGHT_Y_POS * red, LIGHT_Y_POS * green, LIGHT_Y_POS * blue);
         tessellator.addVertexWithUV(x2 + xPos1, y2 + height, z2 + zPos1, u2, v2);
         tessellator.addVertexWithUV(x2 + xPos1, y2 + height, z2 + zPos2, u1, v1);
@@ -406,5 +414,304 @@ public abstract class RenderBase
 		render.setOverrideBlockTexture(icon);
 		render.renderStandardBlock(block, x, y, z);
 		render.clearOverrideBlockTexture();
+	}
+	
+	protected class RenderBox
+	{
+		IIcon[] icon = new IIcon[6];
+		
+		double minX, minY, minZ, maxX, maxY, maxZ;
+		double offsetX, offsetY, offsetZ;
+		double rotationU, rotationV, rotationW;
+		double translationX, translationY, translationZ;
+		Vec3 a, b, c, d, e, f;
+		
+		public RenderBox(double x, double y, double z) 
+		{
+			this(0D, 0D, 0D, x, y, z);
+		}
+		public RenderBox(double aMinX, double aMinY, double aMinZ, double aMaxX, double aMaxY, double aMaxZ)
+		{
+			minX = aMinX;
+			minY = aMinY;
+			minZ = aMinZ;
+			maxX = aMaxX;
+			maxY = aMaxY;
+			maxZ = aMaxZ;
+		}
+
+		public void setIcon(IIcon...icons)
+		{
+			switch(icons.length)
+			{
+			case 1 : icon = new IIcon[]{icons[0], icons[0], icons[0], icons[0], icons[0], icons[0]};
+			break;
+			case 2 : icon = new IIcon[]{icons[0], icons[0], icons[1], icons[1], icons[1], icons[1]};
+			break;
+			case 3 : icon = new IIcon[]{icons[0], icons[0], icons[1], icons[2], icons[2], icons[2]};
+			break;
+			case 4 : icon = new IIcon[]{icons[0], icons[0], icons[1], icons[2], icons[3], icons[3]};
+			break;
+			case 5 : icon = new IIcon[]{icons[0], icons[1], icons[2], icons[3], icons[4], icons[4]};
+			break;
+			case 6 : icon = new IIcon[]{icons[0], icons[1], icons[2], icons[3], icons[4], icons[5]};
+			break;
+			default: throw new RuntimeException("Icon array out of bounds!");
+			}
+		}
+		public void setIcon(Block aBlock)
+		{
+			if(isItem())
+			{
+				setIcon(aBlock, meta);
+			}
+			else
+			{
+				icon = new IIcon[]{aBlock.getIcon(world, x, y, z, 0), aBlock.getIcon(world, x, y, z, 1),
+						aBlock.getIcon(world, x, y, z, 2), aBlock.getIcon(world, x, y, z, 3),
+						aBlock.getIcon(world, x, y, z, 4), aBlock.getIcon(world, x, y, z, 5)};
+			}
+		}
+		public void setIcon(Block aBlock, int meta)
+		{
+			icon = new IIcon[]{aBlock.getIcon(0, meta), aBlock.getIcon(1, meta),
+					aBlock.getIcon(2, meta), aBlock.getIcon(3, meta),
+					aBlock.getIcon(4, meta), aBlock.getIcon(5, meta)};
+		}
+		
+		public void setOffset(double x, double y, double z)
+		{
+			offsetX = y;
+			offsetY = z;
+			offsetZ = x;
+		}
+		
+		public void setTranslate(double x, double y, double z)
+		{
+			translationX = x;
+			translationY = y;
+			translationZ = z;
+		}
+
+		public void setRotation(double u)
+		{
+			rotationU = u;
+			rotationV = 0D;
+			rotationW = 0D;
+		}
+		public void setRotation(double u, double w)
+		{
+			rotationU = u;
+			rotationV = u;
+			rotationW = w;
+		}
+		public void setRotation(double u, double v, double w)
+		{
+			rotationU = u;
+			rotationV = v;
+			rotationW = w;
+		}
+		public void setRotation(double base, double u, double v, double w)
+		{
+			rotationU = u / base;
+			rotationV = v / base;
+			rotationW = w / base;
+		}
+		
+		public void setColor(float r, float g, float b)
+		{
+			rgb_blue = b;
+			rgb_green = g;
+			rgb_red = r;
+		}
+		
+		public void setupVec3()
+		{
+			a = Vec3.createVectorHelper(minX + offsetX, 0, 0);
+			b = Vec3.createVectorHelper(0, minY + offsetY, 0);
+			c = Vec3.createVectorHelper(0, 0, minZ + offsetZ);
+			d = Vec3.createVectorHelper(maxX + offsetX, 0, 0);
+			e = Vec3.createVectorHelper(0, maxY + offsetY, 0);
+			f = Vec3.createVectorHelper(0, 0, maxZ + offsetZ);
+		}
+		
+		public void render()
+		{
+			Tessellator tessellator = Tessellator.instance;
+
+	        if (!isItem()) 
+	        {
+	            tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
+	        }
+	        if (brightness > -1) 
+	        {
+	            tessellator.setBrightness(brightness);
+	        }
+	        if(!isItem())
+	        {
+	        	setupVec3();
+	        	a.rotateAroundX((float) (2 * Math.PI * rotationV));
+	        	b.rotateAroundX((float) (2 * Math.PI * rotationV));
+	        	c.rotateAroundX((float) (2 * Math.PI * rotationV));
+	        	d.rotateAroundX((float) (2 * Math.PI * rotationV));
+	        	e.rotateAroundX((float) (2 * Math.PI * rotationV));
+	        	f.rotateAroundX((float) (2 * Math.PI * rotationV));
+	        	a.rotateAroundY((float) (2 * Math.PI * rotationU));
+	        	b.rotateAroundY((float) (2 * Math.PI * rotationU));
+	        	c.rotateAroundY((float) (2 * Math.PI * rotationU));
+	        	d.rotateAroundY((float) (2 * Math.PI * rotationU));
+	        	e.rotateAroundY((float) (2 * Math.PI * rotationU));
+	        	f.rotateAroundY((float) (2 * Math.PI * rotationU));
+	        	a.rotateAroundZ((float) (2 * Math.PI * rotationW));
+	        	b.rotateAroundZ((float) (2 * Math.PI * rotationW));
+	        	c.rotateAroundZ((float) (2 * Math.PI * rotationW));
+	        	d.rotateAroundZ((float) (2 * Math.PI * rotationW));
+	        	e.rotateAroundZ((float) (2 * Math.PI * rotationW));
+	        	f.rotateAroundZ((float) (2 * Math.PI * rotationW));
+				double x1_1 = translationX + a.xCoord + b.xCoord + c.xCoord;
+				double y1_1 = translationY + a.yCoord + b.yCoord + c.yCoord;
+				double z1_1 = translationZ + a.zCoord + b.zCoord + c.zCoord;
+				double x2_1 = translationX + d.xCoord + b.xCoord + c.xCoord;
+				double y2_1 = translationY + d.yCoord + b.yCoord + c.yCoord;
+				double z2_1 = translationZ + d.zCoord + b.zCoord + c.zCoord;
+				double x3_1 = translationX + d.xCoord + b.xCoord + f.xCoord;
+				double y3_1 = translationY + d.yCoord + b.yCoord + f.yCoord;
+				double z3_1 = translationZ + d.zCoord + b.zCoord + f.zCoord;
+				double x4_1 = translationX + a.xCoord + b.xCoord + f.xCoord;
+				double y4_1 = translationY + a.yCoord + b.yCoord + f.yCoord;
+				double z4_1 = translationZ + a.zCoord + b.zCoord + f.zCoord;
+				double x5_1 = translationX + a.xCoord + e.xCoord + c.xCoord;
+				double y5_1 = translationY + a.yCoord + e.yCoord + c.yCoord;
+				double z5_1 = translationZ + a.zCoord + e.zCoord + c.zCoord;
+				double x6_1 = translationX + d.xCoord + e.xCoord + c.xCoord;
+				double y6_1 = translationY + d.yCoord + e.yCoord + c.yCoord;
+				double z6_1 = translationZ + d.zCoord + e.zCoord + c.zCoord;
+				double x7_1 = translationX + d.xCoord + e.xCoord + f.xCoord;
+				double y7_1 = translationY + d.yCoord + e.yCoord + f.yCoord;
+				double z7_1 = translationZ + d.zCoord + e.zCoord + f.zCoord;
+				double x8_1 = translationX + a.xCoord + e.xCoord + f.xCoord;
+				double y8_1 = translationY + a.yCoord + e.yCoord + f.yCoord;
+				double z8_1 = translationZ + a.zCoord + e.zCoord + f.zCoord;
+				renderFace(tessellator, 0, 
+						x1_1, y1_1, z1_1, 
+						x2_1, y2_1, z2_1, 
+						x3_1, y3_1, z3_1, 
+						x4_1, y4_1, z4_1, false);
+				renderFace(tessellator, 1, 
+						x5_1, y5_1, z5_1, 
+						x6_1, y6_1, z6_1, 
+						x7_1, y7_1, z7_1, 
+						x8_1, y8_1, z8_1, false);
+				renderFace(tessellator, 2, 
+						x1_1, y1_1, z1_1, 
+						x2_1, y2_1, z2_1, 
+						x6_1, y6_1, z6_1, 
+						x5_1, y5_1, z5_1, false);
+				renderFace(tessellator, 3, 
+						x3_1, y3_1, z3_1, 
+						x4_1, y4_1, z4_1, 
+						x8_1, y8_1, z8_1, 
+						x7_1, y7_1, z7_1, false);
+				renderFace(tessellator, 4, 
+						x2_1, y2_1, z2_1, 
+						x3_1, y3_1, z3_1, 
+						x7_1, y7_1, z7_1, 
+						x6_1, y6_1, z6_1, false);
+				renderFace(tessellator, 5, 
+						x4_1, y4_1, z4_1, 
+						x1_1, y1_1, z1_1, 
+						x8_1, y8_1, z8_1,
+						x5_1, y5_1, z5_1, false);
+	        }
+	        else
+	        {
+	        	GL11.glTranslated(translationX, translationY, translationZ);
+	        	GL11.glRotated(1.0D, rotationV, rotationU, rotationW);
+	        	GL11.glTranslated(offsetX, offsetY, offsetZ);
+	        	render.renderMinX = minX;
+	        	render.renderMinY = minY;
+	        	render.renderMinZ = minZ;
+	        	render.renderMaxX = maxX;
+	        	render.renderMaxY = maxY;
+	        	render.renderMaxZ = maxZ;
+		        tessellator.startDrawingQuads();
+		        tessellator.setNormal(0.0F, -1.0F, 0.0F);
+		        render.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, icon[0]);
+		        tessellator.draw();
+		        tessellator.startDrawingQuads();
+		        tessellator.setNormal(0.0F, 1.0F, 0.0F);
+		        render.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, icon[1]);
+		        tessellator.draw();
+		        tessellator.startDrawingQuads();
+		        tessellator.setNormal(0.0F, 0.0F, -1.0F);
+		        render.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, icon[2]);
+		        tessellator.draw();
+		        tessellator.startDrawingQuads();
+		        tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		        render.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, icon[3]);
+		        tessellator.draw();
+		        tessellator.startDrawingQuads();
+		        tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+		        render.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, icon[4]);
+		        tessellator.draw();
+		        tessellator.startDrawingQuads();
+		        tessellator.setNormal(1.0F, 0.0F, 0.0F);
+		        render.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, icon[5]);
+		        tessellator.draw();
+	        	GL11.glTranslated(-offsetX, -offsetY, -offsetZ);
+	        	GL11.glRotated(1.0D, -rotationV, -rotationU, -rotationW);
+	        	GL11.glTranslated(-translationX, -translationY, -translationZ);
+	        }
+		}
+		
+		private void renderFace(Tessellator tessellator, int iconID, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4, boolean useRenderHelper)
+		{
+	        //Diagonal Guessing
+	        IIcon iicon = icon[iconID];
+	        if(useRenderHelper)
+	        {
+		        if (!isItem()) 
+		        {
+		            tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
+		        }
+		        if (brightness > -1) 
+		        {
+		            tessellator.setBrightness(brightness);
+		        }
+
+		        tessellator.setColorOpaque_F(rgb_red, rgb_green, rgb_blue);
+	        }
+	        double d0 = iicon.getMinU();
+	        double d1 = iicon.getMinV();
+	        double d2 = iicon.getMaxU();
+	        double d3 = iicon.getMaxV();
+	        double d5 = x + x1;
+	        double d6 = x + x2 + RENDER_OFFSET;
+	        double d7 = x + x3 + RENDER_OFFSET;
+	        double d8 = x + x4;
+	        double d13 = y + y1;
+	        double d14 = y + y2 + RENDER_OFFSET;
+	        double d15 = y + y3 + RENDER_OFFSET;
+	        double d16 = y + y4;
+	        double d9 = z + z1;
+	        double d10 = z + z2 + RENDER_OFFSET;
+	        double d11 = z + z3 + RENDER_OFFSET;
+	        double d12 = z + z4;
+
+	        tessellator.addVertexWithUV(d5, d13, d9, d2, d1);
+	        tessellator.addVertexWithUV(d6, d14, d10, d2, d3);
+	        tessellator.addVertexWithUV(d7, d15, d11, d0, d3);
+	        tessellator.addVertexWithUV(d8, d16, d12, d0, d1);
+	        tessellator.addVertexWithUV(d8, d16, d12, d0, d1);
+	        tessellator.addVertexWithUV(d7, d15, d11, d0, d3);
+	        tessellator.addVertexWithUV(d6, d14, d10, d2, d3);
+	        tessellator.addVertexWithUV(d5, d13, d9, d2, d1);
+	        render.renderMinX = minX;
+	        render.renderMinY = minY;
+	        render.renderMinZ = minZ;
+	        render.renderMaxX = maxX;
+	        render.renderMaxY = maxY;
+	        render.renderMaxZ = maxZ;
+		}
 	}
 }

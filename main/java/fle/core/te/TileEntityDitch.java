@@ -3,6 +3,7 @@ package fle.core.te;
 import java.util.ArrayList;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -75,6 +76,7 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		if(tank.getFluid() != null)
 		{
 			int temp = tank.getFluid().getFluid().getTemperature(tank.getFluid());
@@ -424,7 +426,7 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 	@SideOnly(Side.CLIENT)
 	public ItemStack getRenderItem()
 	{
-		return info.getBlock();
+		return info == null ? new ItemStack(Blocks.stone) : info.getBlock();
 	}
 	
 	public ArrayList<ItemStack> getDrop()

@@ -54,6 +54,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		if(!worldObj.isRemote)
 		{	
 			if(tank.getFluidAmount() == 0)

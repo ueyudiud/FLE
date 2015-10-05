@@ -53,14 +53,14 @@ public final class SolidStack extends Stack<Solid>
 		aNBT.setInteger("Amount", getSize());
 		if(nbt != null)
 		{
-			aNBT.setTag("NBTData", aNBT);
+			aNBT.setTag("NBTData", nbt);
 		}
 		return aNBT;
 	}
 
 	public boolean isStackEqul(SolidStack aStack)
 	{
-		return aStack.getSolidName().equals(aStack.getSolidName());
+		return getSolidName().equals(aStack.getSolidName());
 	}
 	
 	public boolean isStackTagEqul(SolidStack aStack)
@@ -91,5 +91,10 @@ public final class SolidStack extends Stack<Solid>
 	public boolean contain(SolidStack solid)
 	{
 		return isStackEqul(solid) ? solid.getSize() <= getSize() : false;
+	}
+	
+	public boolean contain(Solid solid)
+	{
+		return contain(new SolidStack(solid));
 	}
 }

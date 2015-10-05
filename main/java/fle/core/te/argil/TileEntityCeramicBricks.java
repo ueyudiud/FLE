@@ -29,6 +29,7 @@ public class TileEntityCeramicBricks extends TEBase implements IThermalTileEntit
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
 	}

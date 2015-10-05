@@ -5,7 +5,7 @@ import java.util.Random;
 
 public abstract class NoiseBase
 {
-	protected final long seed;
+	protected long seed;
 	protected Random rand;
 	protected Random rand1;
 	
@@ -50,7 +50,13 @@ public abstract class NoiseBase
 		return Math.sqrt(x * x + y * y + z * z);
 	}
 	
-	public long getSeed()
+	public NoiseBase setSeed(long aSeed)
+	{
+		seed = aSeed;
+		return this;
+	}
+	
+	public final long getSeed()
 	{
 		return seed;
 	}

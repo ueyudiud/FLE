@@ -28,7 +28,11 @@ public interface IChemCondition
 		Br2,
 		Fe3,
 		I2,
-		S,
-		C;
+		S, 
+		Default,
+		C,
+		H2,
+		Si,
+		Mg;
 	}
 }

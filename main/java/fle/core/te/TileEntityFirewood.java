@@ -68,6 +68,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity, IN
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		boolean flag = false;
 		if(burnState == 0 && checkingFire())

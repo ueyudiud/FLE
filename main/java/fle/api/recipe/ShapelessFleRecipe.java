@@ -1,24 +1,24 @@
 package fle.api.recipe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-import fle.api.cg.RecipesTab;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+import fle.api.cg.RecipesTab;
 
 public class ShapelessFleRecipe implements IFleRecipe
 {
-    private Object output = null;
-    private ArrayList<Object> inputs = new ArrayList<Object>();
-    private RecipesTab tab;
+    protected Object output = null;
+    protected Set<Object> inputs = new HashSet<Object>();
+    protected RecipesTab tab;
 
 	public ShapelessFleRecipe(Object aOutput, Object...aInput) 
 	{
@@ -180,7 +180,7 @@ public class ShapelessFleRecipe implements IFleRecipe
 	
 	public ItemAbstractStack[] getInputs()
 	{
-		List<ItemAbstractStack> ret = new ArrayList();
+		Set<ItemAbstractStack> ret = new HashSet();
 		for(Object obj : inputs)
 		{
 			if(obj instanceof ItemAbstractStack)

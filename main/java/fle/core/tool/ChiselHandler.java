@@ -1,5 +1,6 @@
 package fle.core.tool;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -22,8 +23,8 @@ public class ChiselHandler
 					if(tStack.getItem().getHarvestLevel(tStack, "chisel") >= 0)
 					{
 						int level = tStack.getItem().getHarvestLevel(tStack, "chisel");
-						int id = FleAPI.dosePlayerHas(evt.getPlayer(), new ItemOreStack("craftingToolHardHammer"));
-						if(id != -1 && evt.block.canSilkHarvest(evt.world, evt.getPlayer(), evt.x, evt.y, evt.z, evt.blockMetadata))
+						int id = FleAPI.doesPlayerHas(evt.getPlayer(), new ItemOreStack("craftingToolHardHammer"));
+						if(id != -1 && evt.block.canSilkHarvest(evt.world, evt.getPlayer(), evt.x, evt.y, evt.z, evt.blockMetadata) && (evt.block.getMaterial() == Material.rock || evt.block.getMaterial() == Material.iron))
 						{
 							if(evt.block.getHarvestLevel(evt.blockMetadata) <= level && evt.block.getHarvestTool(evt.blockMetadata) == "pickaxe")
 							{

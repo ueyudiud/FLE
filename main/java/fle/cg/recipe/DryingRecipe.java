@@ -26,7 +26,7 @@ public class DryingRecipe extends RecipeBase implements RecipeHandler
 	@Override
 	public boolean match(ItemStack target)
 	{
-		return input.isStackEqul(input) || output.isItemEqual(target) || new ItemBaseStack(IB.woodMachine1, 0).isStackEqul(target);
+		return input.isStackEqul(target) || output.isItemEqual(target) || new ItemBaseStack(IB.woodMachine1, 0).isStackEqul(target);
 	}
 
 	@Override
@@ -110,5 +110,11 @@ public class DryingRecipe extends RecipeBase implements RecipeHandler
 			return "Recipe tick: " + tick;
 		}
 		return null;
+	}
+
+	@Override
+	public String getStackTip(int slotID)
+	{
+		return ItemAbstractStack.getStackTipInfo(slotID == 0 ? input : slotID == 1 ? output : null);
 	}
 }

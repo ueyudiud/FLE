@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
@@ -16,9 +17,11 @@ import fle.api.crop.CropCard;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
 import fle.api.util.WeightHelper;
+import fle.api.util.WeightHelper.Stack;
 import fle.api.world.TreeInfo;
 import fle.core.block.BlockLog;
 import fle.core.init.Crops;
+import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.util.Arrays;
 
@@ -72,23 +75,33 @@ public class FleWorldGen implements IWorldGenerator
 		break;
 		case 2 :
 		{
-			genOre(random, world, x, z, 180, 100, 0.4D, 130, Blocks.stone, g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2), g(Materials.Enargite, 2));
-			genOre(random, world, x, z, 180, 100, 0.4D, 130, Blocks.glass, g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2), g(Materials.Enargite, 2));
+			genOre(random, world, x, z, 180, 100, 0.4D, 130, Blocks.stone, g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2));
+			genOre(random, world, x, z, 180, 100, 0.4D, 130, Blocks.glass, g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2));
 		}
 		break;
 		case 3 :;
 		case 4 :;
 		case 5 :
 		{
-			genRock(random, world, x, z, 240, 120, 0.8D, 180, Blocks.stone, Materials.Limestone);
+			if(genRock(random, world, x, z, 240, 120, 0.9D, 480, Blocks.stone, Materials.Limestone))
+			{
+				switch(random.nextInt(16))
+				{
+				case 0 : ;
+				genOre(random, world, x, z, 240, 120, 1.0D, 120, IB.rock, g(Materials.Gelenite, 5), g(Materials.Sphalerite, 7), g(Materials.Cassiterite, 10), g(Materials.Stannite, 7));
+				genOre(random, world, x, z, 240, 120, 1.0D, 120, Blocks.glass, g(Materials.Gelenite, 5), g(Materials.Sphalerite, 7), g(Materials.Cassiterite, 10), g(Materials.Stannite, 7));
+				break;
+				}
+			}
 		}
 		break;
 		default :;
 		break;
 		}
+		int s = world.getBiomeGenForCoords(x * 16 + 8, z * 16 + 8).theBiomeDecorator.treesPerChunk;
 		for(TreeInfo tInfo : BlockLog.trees)
 		{
-			if(random.nextInt(5) == 0)
+			if(random.nextInt(20) == s)
 				generateTree(tInfo, world, random, x, z);
 		}
 		switch(random.nextInt(128))
@@ -99,7 +112,8 @@ public class FleWorldGen implements IWorldGenerator
 		break;
 		case 3 : generateCrop(Crops.soybean, world, random, x, z, 8, 16);
 		break;
-		case 4 :;
+		case 4 : generateCrop(Crops.cotton, world, random, x, z, 8, 12);
+		break;
 		case 5 :;
 		case 6 :;
 		case 7 :;
@@ -108,10 +122,11 @@ public class FleWorldGen implements IWorldGenerator
 		case 10 :;
 		case 11 :;
 		case 12 :;
-		case 13 :;
-		case 14 :;
-		case 15 :;
-		case 16 : generateVine(world, random, x, z, 5, 100);
+		break;
+		case 13 : generateVine(world, random, x, z, 5, 20);
+		case 14 : generateVine(world, random, x, z, 5, 20);
+		case 15 : generateVine(world, random, x, z, 5, 20);
+		case 16 : generateVine(world, random, x, z, 5, 20);
 		break;
 		default : break;
 		}
@@ -174,7 +189,7 @@ public class FleWorldGen implements IWorldGenerator
 		return false;
 	}
 	
-	public boolean genOre(Random rand, World world, int x, int z, int maxY, int minY, double chance, int size, Block base, MaterialOre[]...aOres)
+	public boolean genOre(Random rand, World world, int x, int z, int maxY, int minY, double chance, int size, Block base, Stack<MaterialOre>...aOres)
 	{
 		return genOre(rand, world, x, z, maxY, minY, chance, size, base, new WeightHelper<MaterialOre>(aOres));
 	}
@@ -204,8 +219,8 @@ public class FleWorldGen implements IWorldGenerator
 		return true;
 	}
 	
-	private static MaterialOre[] g(MaterialOre ore, int size)
+	private static Stack<MaterialOre> g(MaterialOre ore, int size)
 	{
-		return Arrays.toArray(ore, new MaterialOre[size]);
+		return new Stack(ore, size);
 	}
 }

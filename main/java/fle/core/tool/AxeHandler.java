@@ -22,7 +22,9 @@ import fle.api.item.ITreeLog;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ItemOreStack;
+import fle.api.util.Compact;
 import fle.api.util.DropInfo;
+import fle.api.util.SubTag;
 import fle.api.world.BlockPos;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSub;
@@ -31,6 +33,8 @@ public class AxeHandler
 {
 	private static final List<ItemAbstractStack> axeList = new ArrayList();
 	private static final List<TreeInfo> treeList = new ArrayList();
+	
+	public static ItemStack IC2RubWood;
 	
 	static
 	{
@@ -65,7 +69,19 @@ public class AxeHandler
 		map.put(ItemFleSub.a("seed_darkoak"), 1);
 		map.put(ItemFleSub.a("leaves"), 5);
 		registryTree(new TreeInfo(new TreeChecker(Blocks.log2, 1, 5, 9), new TreeChecker(Blocks.leaves2, 1, 9), (ITreeLog) IB.treeLog, new DropInfo(0.5F, map)));
-
+		IC2RubWood = Compact.getItem(SubTag.IC2Item, "rubberWood", 1);
+		if(IC2RubWood != null)
+		{
+			ItemStack rw = Compact.getItem(SubTag.IC2Item, "rubberWood", 1);
+			ItemStack rl = Compact.getItem(SubTag.IC2Item, "rubberLeaves", 1);
+			ItemStack rs = Compact.getItem(SubTag.IC2Item, "rubberSapling", 1);
+			map.clear();
+			map.put(ItemFleSub.a("branch_jungle"), 5);
+			map.put(rs, 1);
+			map.put(ItemFleSub.a("leaves"), 5);
+			registryTree(new TreeInfo(new TreeChecker(Block.getBlockFromItem(rw.getItem()), 1, 8, 10), 
+					new TreeChecker(Block.getBlockFromItem(rl.getItem()), 0, 8), (ITreeLog) IB.treeLog, new DropInfo(0.5F, map)));
+		}
 	}
 	
 	public AxeHandler()
@@ -248,6 +264,8 @@ public class AxeHandler
 	
 	public static class TreeChecker extends ItemAbstractStack
 	{
+		private static final Integer[] a = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+		
 		Block block;
 		List<Integer> meta;
 		
@@ -262,7 +280,7 @@ public class AxeHandler
 		}
 		public TreeChecker(Block i)
 		{
-			this(i, 0);
+			this(i, a);
 		}
 		
 		@Override

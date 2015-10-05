@@ -5,11 +5,19 @@ import fle.api.energy.RotationNet.RotationPacket;
 
 public interface IRotationTileEntity 
 {
-	public int getEnergyCurrect();
+	double getEnergyCurrect();
 	
-	public int canReciveEnergy(ForgeDirection dir);
+	int getPreEnergyEmit();
+	
+	boolean canReciveEnergy(ForgeDirection dir);
 
-	public int canEmmitEnergy(ForgeDirection dir);
+	boolean canEmitEnergy(ForgeDirection dir);
+
+	int getStuck(RotationPacket packet, ForgeDirection dir);
 	
-	public void onRotatainReceive(RotationPacket packet);
+	void onRotationEmit(RotationPacket packet, ForgeDirection dir);
+	
+	void onRotationReceive(RotationPacket packet, ForgeDirection dir);
+	
+	void onRotationStuck(int stuck);
 }

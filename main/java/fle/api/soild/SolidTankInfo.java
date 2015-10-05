@@ -10,4 +10,9 @@ public class SolidTankInfo
 		solid = aStack;
 		capacity = aCapacity;
 	}
+
+	public double getProgress()
+	{
+		return (double) solid.getSize() / (double) capacity;
+	}
 }

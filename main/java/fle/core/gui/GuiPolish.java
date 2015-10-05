@@ -53,7 +53,7 @@ public class GuiPolish extends GuiContainerBase
 	
 	protected void actionPerformed(GuiButton guibutton)
 	{
-		FLE.fle.getNetworkHandler().sendToServer(new CoderGuiUpdate((byte) 1, guibutton.id));
+		sendToContainer(1, guibutton.id);
 		if(guibutton.id < 9)
 			tile.craftedOnce(player, guibutton.id);
 		if(guibutton.id == 9)

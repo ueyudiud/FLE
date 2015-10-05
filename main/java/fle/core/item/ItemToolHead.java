@@ -3,7 +3,9 @@ package fle.core.item;
 import static fle.core.item.ItemTool.materials;
 import static fle.core.item.ItemTool.tagMap;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -12,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
 import fle.api.item.IItemBehaviour;
 import fle.api.material.MaterialAbstract;
 import fle.api.util.IDataChecker;
@@ -61,11 +62,13 @@ public class ItemToolHead extends ItemSub
 		addSubItem(5, "stone_hammer", "Stone Hammer Head",
 				new TextureLocation(new String[]{"tools/head/stone_hammer_head", "tools/head/stone_hammer_rust"}));
 		addSubItem(10, "flint_arrow", "Arrow Point", 
-				new TextureLocation(new String[]{"tools/head/flint_arrow_head", FleValue.VOID_ICON_FILE}));
+				new TextureLocation("tools/head/flint_arrow_head"));
 		addSubItem(11, "stone_sickle", "Stone Sickle Head", 
 				new TextureLocation(new String[]{"tools/head/stone_sickle_head", "tools/head/stone_sickle_rust"}));
 		addSubItem(12, "stone_spade_hoe", "Stone Spaed-Hoe Head", 
 				new TextureLocation(new String[]{"tools/head/spade_hoe_head", "tools/head/spade_hoe_rust"}));
+		addSubItem(16, "stone_spinning_disk", "Stone Spinning Disk", 
+				new TextureLocation("tools/head/stone_spinning_disk_head"));
 		addSubItem(101, "metal_axe", "Metal Axe Head",
 				new TextureLocation(new String[]{"tools/head/metal_axe_head", "tools/head/metal_axe_rust", "tools/head/metal_axe_mosaic"}));
 		addSubItem(102, "metal_pickaxe", "Metal Pickaxe Head",
@@ -80,6 +83,7 @@ public class ItemToolHead extends ItemSub
 				new TextureLocation(new String[]{"tools/head/bowsaw_head", "tools/head/bowsaw_rust", "tools/head/bowsaw_mosaic"}));
 		addSubItem(107, "metal_adz", "Metal Adz",
 				new TextureLocation(new String[]{"tools/head/metal_adz_head", "tools/head/metal_adz_rust", "tools/head/metal_adz_mosaic"}));
+		heightLightSet.add(16);
 		return this;
 	}
 	
@@ -167,27 +171,41 @@ public class ItemToolHead extends ItemSub
 		return super.getIcon(stack, pass);
 	}
 	
+	Set<Integer> heightLightSet = new HashSet();
+	
 	@SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack aStack, int pass)
     {
     	ToolMaterialInfo tInfo = new ToolMaterialInfo(setupNBT(aStack));
+    	int colorIndex = 0xFFFFFF;
+    	if(tInfo.getMaterialBase() == null) return colorIndex;
     	switch(pass)
     	{
     	case 0 :
-    		return tInfo.getMaterialBase().getPropertyInfo().getColors()[0];
+    		colorIndex = tInfo.getMaterialBase().getPropertyInfo().getColors()[0];
+    		break;
     	case 1 :
     		if(tInfo.getCoverLevel() < 0.3F)
     		{
-    			return tInfo.getMaterialBase().getPropertyInfo().getColors()[1];
+    			colorIndex = tInfo.getMaterialBase().getPropertyInfo().getColors()[1];
     		}
     		else if(tInfo.getMaterialSurface() != null)
     		{
-    			return tInfo.getMaterialSurface().getPropertyInfo().getColors()[0];
+    			colorIndex = tInfo.getMaterialSurface().getPropertyInfo().getColors()[0];
     		}
-    		else return 0xFFFFFF;
+    		break;
     	case 2 : 
-    		return tInfo.getMaterialMosaic() == null ? 0xFFFFFF : tInfo.getMaterialMosaic().getPropertyInfo().getColors()[0];
+    		colorIndex = tInfo.getMaterialMosaic() == null ? 0xFFFFFF : tInfo.getMaterialMosaic().getPropertyInfo().getColors()[0];
+    		break;
     	default : return 0xFFFFFF;
     	}
+    	if(heightLightSet.contains(getDamage(aStack)))
+    	{
+            int r = ((colorIndex >> 16 & 255) + 0xFF) / 2;
+            int g = ((colorIndex >> 8 & 255) + 0xFF) / 2;
+            int b = ((colorIndex & 255) + 0xFF) / 2;
+            return (r << 16) + (g << 8) + b;
+    	}
+    	return colorIndex;
     }
 }

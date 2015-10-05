@@ -18,7 +18,7 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 	}
 
 	@Override
-	public void updateEntity()
+	public void updateInventory()
 	{
 		inv.updateEntity(this);
 	}

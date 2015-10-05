@@ -17,7 +17,7 @@ public class FLEBiomePlains extends FLEBiome
 	public FLEBiomePlains(String name, int index)
 	{
 		super(name, index);
-		setTemperatureRainfall(0.8F, 0.4F);
+		setTemperatureRainfall(0.7F, 0.4F);
 		setHeight(height_LowPlains);
 		theBiomeDecorator.treesPerChunk = -999;
         theBiomeDecorator.flowersPerChunk = 4;

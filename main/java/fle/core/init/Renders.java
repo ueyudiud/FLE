@@ -1,7 +1,6 @@
 package fle.core.init;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.oredict.OreDictionary;
@@ -22,10 +21,13 @@ import fle.core.render.RenderDryingTable;
 import fle.core.render.RenderEmpty;
 import fle.core.render.RenderFleArrow;
 import fle.core.render.RenderHandler;
+import fle.core.render.RenderLeverOilMill;
 import fle.core.render.RenderOilLamp;
 import fle.core.render.RenderOre;
 import fle.core.render.RenderOreCobble;
 import fle.core.render.RenderRock;
+import fle.core.render.RenderSifter;
+import fle.core.render.RenderStoneMill;
 import fle.core.render.RenderWoodenFrame;
 import fle.core.render.TESRArgilItems;
 import fle.core.render.TESRBase;
@@ -33,9 +35,6 @@ import fle.core.render.TESRColdForging;
 import fle.core.render.TESRDryingTable;
 import fle.core.render.TESRPolishTable;
 import fle.core.render.TESRStoneMill;
-import fle.core.te.TileEntityColdForgingPlatform;
-import fle.core.te.TileEntityDryingTable;
-import fle.core.te.argil.TileEntityArgilItems;
 
 public class Renders
 {
@@ -51,13 +50,15 @@ public class Renders
         RenderHandler.register(IB.argil_smelted, 0, RenderArgil.class);
         RenderHandler.register(IB.woodMachine1, 0, RenderDryingTable.class);
         RenderHandler.register(IB.woodMachine1, 1, RenderWoodenFrame.class);
+        RenderHandler.register(IB.woodMachine1, 2, RenderStoneMill.class);
+        RenderHandler.register(IB.woodMachine1, 3, RenderSifter.class);
+        RenderHandler.register(IB.woodMachine1, 4, RenderLeverOilMill.class);
         RenderHandler.register(IB.stoneMachine1, 0, RenderCastingPool.class);
         RenderHandler.register(IB.stoneMachine1, 1, RenderCeramicFurnaceCrucible.class);
         RenderHandler.register(IB.stoneMachine1, 2, RenderColdForging.class);
         RenderHandler.register(IB.crop, OreDictionary.WILDCARD_VALUE, RenderCrop.class);
         RenderHandler.register(IB.ore_cobble, OreDictionary.WILDCARD_VALUE, RenderOreCobble.class);
         RenderHandler.register(IB.ditch, OreDictionary.WILDCARD_VALUE, RenderDitch.class);
-        RenderHandler.register(IB.woodMachine1, 2, RenderEmpty.class);
         FleValue.FLE_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
     	RenderingRegistry.registerBlockHandler(new RenderHandler(false));
         FleValue.FLE_NOINV_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();

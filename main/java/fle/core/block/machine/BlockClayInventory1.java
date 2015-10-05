@@ -10,6 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.FleValue;
 import fle.api.block.IBlockWithTileBehaviour;
 import fle.api.block.IDebugableBlock;

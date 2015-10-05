@@ -15,10 +15,11 @@ import fle.api.enums.EnumWorldNBT;
 import fle.api.net.FleAbstractPacket;
 import fle.api.world.BlockPos;
 
-public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
+public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMetadataTile
 {
 	protected final Random rand = new Random();
 	protected ForgeDirection dir;
+	private NBTTagCompound nbt;
 	
 	public void setDirction(ForgeDirection aDirection)
 	{
@@ -35,6 +36,8 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 	{
 		super.readFromNBT(nbt);
 		dir = ForgeDirection.values()[nbt.getByte("BlockFacing")];
+		blockMetadata = nbt.getShort("TileMeta");
+		this.nbt = nbt;
 	}
 	
 	@Override
@@ -42,6 +45,44 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 	{
 		super.writeToNBT(nbt);
 		nbt.setByte("BlockFacing", (byte) (dir == null ? ForgeDirection.UNKNOWN.ordinal() : dir.ordinal()));
+		nbt.setShort("TileMeta", (short) getMetadata());
+	}
+	
+	private boolean init = false;
+	
+	@Override
+	public void updateEntity()
+	{
+		if(!init)
+		{
+			if(worldObj.getBlockMetadata(xCoord, yCoord, zCoord) != blockMetadata && blockMetadata != -1)
+			{
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata, 3);
+				if(getBlockType().createTileEntity(worldObj, blockMetadata).getClass() != getClass())
+				{
+					worldObj.removeTileEntity(xCoord, yCoord, zCoord);
+					TileEntity tile = blockType.createTileEntity(worldObj, blockMetadata);
+					tile.blockMetadata = blockMetadata;
+					if(nbt != null) tile.readFromNBT(nbt);
+					if(tile instanceof TEBase) ((TEBase) tile).init = true;
+					worldObj.setTileEntity(xCoord, yCoord, zCoord, tile);
+				}
+			}
+			else if(blockMetadata == -1)
+			{
+				blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			}
+			markRenderForUpdate();
+			init = true;
+			if(worldObj.isRemote)
+			{
+				FLE.fle.getWorldManager().sendData(getBlockPos());
+			}
+			else
+			{
+				FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, blockMetadata);
+			}
+		}
 	}
 	
 	@Override
@@ -78,7 +119,15 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 	public ForgeDirection getDirction(BlockPos pos) 
 	{
 		if(dir == ForgeDirection.UNKNOWN || dir == null)
-			dir = ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, EnumWorldNBT.Facing)];
+		{
+			if(worldObj.isRemote)
+			{
+				FLE.fle.getWorldManager().markPosForUpdate(pos);
+				dir = FLE.fle.getWorldManager().getData(pos, 1) != -1 ? ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, EnumWorldNBT.Facing)] : ForgeDirection.NORTH;
+			}
+			else
+				dir = ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(pos, EnumWorldNBT.Facing)];
+		}
 		return dir;
 	}
 
@@ -88,7 +137,6 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 	{
 		return false;
 	}
-	
 
 	@Override
 	public void setDirection(World world, BlockPos pos, ItemStack tool,
@@ -121,12 +169,27 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock
 	
 	public void markRenderForUpdate()
 	{
-		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		if(worldObj.isRemote)
+		{
+			worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		}
 	}
 	
 	public void markForUpdate()
 	{
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		markRenderForUpdate();
+	}
+
+	@Override
+	public void setMetadata(short meta)
+	{
+		blockMetadata = meta;
+	}
+
+	@Override
+	public short getMetadata()
+	{
+		return (short) blockMetadata;
 	}
 }

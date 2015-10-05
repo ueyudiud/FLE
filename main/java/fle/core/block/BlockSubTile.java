@@ -121,8 +121,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	
 	public int getDamageData(IBlockAccess aWorld, int x, int y, int z)
 	{
-		int value =  FLE.fle.getWorldManager().getData(new BlockPos(aWorld, x, y, z), EnumWorldNBT.Metadata);
-		return value == 0 ? aWorld.getBlockMetadata(x, y, z) : value;
+		return aWorld.getTileEntity(x, y, z) != null ? aWorld.getTileEntity(x, y, z).getBlockMetadata() : aWorld.getBlockMetadata(x, y, z);
 	}
 	
 	@Override
@@ -176,6 +175,22 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	    {
 	    	e.printStackTrace();
 	    }
+	}
+	
+	@Override
+	public boolean canBlockStay(World aWorld, int x,
+			int y, int z)
+	{
+		IBlockBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) getDamageValue(aWorld, x, y, z)));
+		try
+	    {
+			return tBehaviour.canBlockStay(this, aWorld, x, y, z);
+	    }
+	    catch (Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return true;
 	}
 	
 	@Override
@@ -268,7 +283,10 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		IBlockBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) aStack.getItemDamage()));
 		try
 	    {
-			tBehaviour.getAdditionalToolTips(this, aList, aStack);
+			if(tBehaviour != null)
+				tBehaviour.getAdditionalToolTips(this, aList, aStack);
+			else 
+				aList.add("Bug block!");
 	    }
 	    catch (Throwable e)
 	    {

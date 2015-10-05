@@ -41,7 +41,7 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	}
 	
 	@Override
-	public void updateEntity()
+	public void updateInventory()
 	{
 		inv.updateEntity(this);
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());

@@ -5,12 +5,13 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemBaseStack extends ItemAbstractStack
 {
-	private net.minecraft.item.ItemStack stack;
+	ItemStack stack;
 
 	public ItemBaseStack(Block aBlock) 
 	{
@@ -18,7 +19,7 @@ public class ItemBaseStack extends ItemAbstractStack
 	}
 	public ItemBaseStack(Block aBlock, int aMeta) 
 	{
-		this(new net.minecraft.item.ItemStack(aBlock, 1, aMeta));
+		this(new ItemStack(aBlock, 1, aMeta));
 	}
 	public ItemBaseStack(Item aItem) 
 	{
@@ -26,18 +27,18 @@ public class ItemBaseStack extends ItemAbstractStack
 	}
 	public ItemBaseStack(Item aItem, int aMeta) 
 	{
-		this(new net.minecraft.item.ItemStack(aItem, 1, aMeta));
+		this(new ItemStack(aItem, 1, aMeta));
 	}
-	public ItemBaseStack(net.minecraft.item.ItemStack aStack) 
+	public ItemBaseStack(ItemStack aStack) 
 	{
 		if(aStack != null)
 			stack = aStack.copy();
 	}
 
 	@Override
-	public boolean isStackEqul(net.minecraft.item.ItemStack item)
+	public boolean isStackEqul(ItemStack item)
 	{
-		return OreDictionary.itemMatches(stack, item, false);
+		return OreDictionary.itemMatches(stack, item, false) && item.stackSize >= stack.stackSize;
 	}
 
 	@Override
@@ -49,13 +50,13 @@ public class ItemBaseStack extends ItemAbstractStack
 	@Override
 	public boolean isStackEqul(ItemAbstractStack stack) 
 	{
-		return stack instanceof ItemBaseStack ? net.minecraft.item.ItemStack.areItemStacksEqual(((ItemBaseStack) stack).stack, this.stack) : false;
+		return stack instanceof ItemBaseStack ? ItemStack.areItemStacksEqual(((ItemBaseStack) stack).stack, this.stack) : false;
 	}
 
 	@Override
-	public List<net.minecraft.item.ItemStack> toArray() 
+	public List<ItemStack> toArray() 
 	{
-		List<net.minecraft.item.ItemStack> tList = new ArrayList();
+		List<ItemStack> tList = new ArrayList();
 		if(stack != null)
 			tList.add(stack.copy());
 		return tList;

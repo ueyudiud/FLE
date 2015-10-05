@@ -30,13 +30,13 @@ public class ItemSubTile extends ItemFleBlock
     public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
     {
     	short tDamage = (short) getDamage(stack);
-    	if (!world.setBlock(x, y, z, field_150939_a, tDamage, 3))
+    	if (!world.setBlock(x, y, z, field_150939_a, 0, 3))
     	{
     		return false;
     	}
-    	if (!world.isRemote)
+    	if (world.getTileEntity(x, y, z) != null)
     	{
-    		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, tDamage);
+    		world.getTileEntity(x, y, z).blockMetadata = tDamage;
     	}
 
     	if (world.getBlock(x, y, z) == field_150939_a)

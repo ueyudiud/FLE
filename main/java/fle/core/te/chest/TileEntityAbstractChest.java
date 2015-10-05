@@ -7,7 +7,7 @@ import fle.api.inventory.InventoryTileBase;
 import fle.api.te.TEInventory;
 import fle.core.inventory.InventoryAbstractChest;
 
-public class TileEntityAbstractChest extends TEInventory<InventoryTileBase>
+public class TileEntityAbstractChest extends TEInventory
 {
 	public TileEntityAbstractChest(int size)
 	{
@@ -15,7 +15,7 @@ public class TileEntityAbstractChest extends TEInventory<InventoryTileBase>
 	}
 
 	@Override
-	public void updateEntity()
+	public void updateInventory()
 	{
 		inv.updateEntity(this);
 	}

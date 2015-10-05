@@ -43,7 +43,7 @@ public class TileEntityPolish extends TEInventory<InventoryPolish>
 	}
 
 	@Override
-	public void updateEntity() 
+	public void updateInventory() 
 	{
 		inv.updateEntity(this);
 	}

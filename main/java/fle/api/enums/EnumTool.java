@@ -19,5 +19,7 @@ public enum EnumTool
 	decorticating_plate, 
 	decorticating_stick, 
 	bowsaw, 
-	adz;
+	adz,
+	needle, 
+	spinning;
 }

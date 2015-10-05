@@ -57,6 +57,7 @@ public class BlockTextureManager implements IBlockTextureManager
 		case 4 : return dir == ForgeDirection.NORTH ? 0 : dir == ForgeDirection.UP ? 1 : dir == ForgeDirection.DOWN ? 2 : 3;
 		case 5 : return dir == ForgeDirection.NORTH ? 0 : dir == ForgeDirection.SOUTH ? 1 : dir == ForgeDirection.UP ? 2 : dir == ForgeDirection.DOWN ? 3 : 4;
 		case 6 : return FleAPI.getIndexFromDirection(dir);
+		case 7 : return FleAPI.getIndexFromDirection(dir);
 		}
 		return 0;
 	}

@@ -26,6 +26,7 @@ import fle.core.block.BlockOilLamp;
 import fle.core.block.BlockOre;
 import fle.core.block.BlockOreCobble;
 import fle.core.block.BlockRock;
+import fle.core.block.BlockRopeLadder;
 import fle.core.block.BlockWorkbench;
 import fle.core.block.machine.BlockClayInventory;
 import fle.core.block.machine.BlockClayInventory1;
@@ -41,6 +42,7 @@ import fle.core.item.ItemOre;
 import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.item.ItemTreeLog;
+import fle.core.solid.SolidFlour;
 
 public class IB 
 {
@@ -83,6 +85,7 @@ public class IB
 	public static Block ore;
 	public static Block leaf;
 	public static Block log;
+	public static Block ropeLadder;
 	public static Block workbench;
 	public static Block woodMachine;
 	public static Block woodMachine1;
@@ -100,6 +103,9 @@ public class IB
 	public static Fluid plant_ash_mortar;
 	public static Fluid lime_mortar;
 	public static Fluid copper;
+	public static Fluid lead;
+	public static Fluid zinc;
+	public static Fluid tin;
 	public static Fluid cu_as_0;
 	public static Fluid cu_as_1;
 	public static Fluid cu_pb_0;
@@ -107,12 +113,27 @@ public class IB
 	public static Fluid cu_sn_0;
 	public static Fluid cu_sn_1;
 	public static Fluid cu_pb_sn;
+	public static Fluid plantOil;
+	public static Fluid sugarcane_juice;
+	public static Fluid brown_sugar_aqua;
 	public static Solid limestone;
+	public static Solid wheat;
+	public static Solid millet;
+	public static Solid wheat_b;
+	public static Solid millet_b;
+	public static Solid plant_ash;
+	public static Solid brown_sugar;
 	
 	public static void init()
 	{
-		animalOil = new FluidBase("oil_a", new PropertyInfo(0xFFFFFF, 313, 773, 293, 1831, 1500, 1.0F, -1F, 1.0F, 0.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/oil");
+		animalOil = new FluidBase("oil_a", new PropertyInfo(0xFFFFFF, 313, 773, 293, 1831, 1500, 0.8F, -1F, 1.0F, 0.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/oil").setTemperature(FleValue.WATER_FREEZE_POINT + 25);
+		plantOil = new FluidBase("oil_b", new PropertyInfo(0xFFFFFF, 267, 781, 294, 1472, 1300, 0.8F, -1F, 0.93F, 0.68F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/plant_oil").setTemperature(FleValue.WATER_FREEZE_POINT + 25);
+		sugarcane_juice = new FluidBase("sugarcane_juice").setTextureName(FleValue.TEXTURE_FILE + ":fluids/sugarcane_juice").setTemperature(295).setViscosity(1100);
+		brown_sugar_aqua = new FluidBase("brown_sugar_aqua").setTextureName(FleValue.TEXTURE_FILE + ":fluids/brown_sugar").setTemperature(295).setViscosity(1050);
 		copper = new FluidBase("copper", Materials.Copper.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		lead = new FluidBase("lead", Materials.Lead.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		zinc = new FluidBase("zinc", Materials.Zinc.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		tin = new FluidBase("tin", Materials.Tin.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
 		plant_ash_mortar = new FluidBase("plant_ash_mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 1800, 1.0F, 3.2F, 0.7F, 1.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/plant_ash_mortar");
 		lime_mortar = new FluidBase("lime_mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 2200, 1.0F, 1.9F, 0.67F, 1.8F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/lime_mortar");
 		cu_as_0 = new FluidBase("cu_as_0", Materials.CuAs.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
@@ -122,8 +143,14 @@ public class IB
 		cu_sn_0 = new FluidBase("cu_sn_0", Materials.CuSn.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
 		cu_sn_1 = new FluidBase("cu_sn_1", Materials.CuSn2.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
 		cu_pb_sn = new FluidBase("cu_pb_sn", Materials.CuSnPb.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
-		limestone = new Solid("limestone", "Limestone").setType(SolidState.Dust).setTextureName("limestone");
-		debug = new ItemDebug("debug").setCreativeTab(CreativeTabs.tabRedstone).setTextureName(FleValue.TEXTURE_FILE + ":fle");
+		limestone = new Solid("limestone", "Limestone").setType(SolidState.Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/limestone");
+		millet = new SolidFlour("millet", "Wholemeal Millet Groats").setTextureName(FleValue.TEXTURE_FILE + ":solid/millet");
+		wheat = new SolidFlour("wheat", "Wholemeal Wheat Groats").setTextureName(FleValue.TEXTURE_FILE + ":solid/wheat");
+		millet_b = new SolidFlour("millet_b", "Millet Groats").setTextureName(FleValue.TEXTURE_FILE + ":solid/millet_b");
+		wheat_b = new SolidFlour("wheat_b", "Wheat Groats").setTextureName(FleValue.TEXTURE_FILE + ":solid/wheat_b");
+		plant_ash = new Solid("plant_ash", "Plant Ash").setType(SolidState.Dust).setTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash");
+		brown_sugar = new Solid("brown_sugar", "Brown Sugar").setType(SolidState.Sick_Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/brown_sugar");
+		debug = new ItemDebug("debug").setMaxStackSize(1).setCreativeTab(CreativeTabs.tabRedstone).setTextureName(FleValue.TEXTURE_FILE + ":fle");
 		crop = new BlockFleCrop();
 		rock = new BlockRock().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);
 		ore = new BlockOre().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);
@@ -142,6 +169,7 @@ public class IB
 		argil_smelted = new BlockClayInventory1("argil_smelted").init().setCreativeTab(CreativeTabs.tabDecorations);
 		firewood = new BlockFirewood().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/firewood_oak").setCreativeTab(CreativeTabs.tabBlock);
 		charcoal = new BlockCharcoal().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/coal").setCreativeTab(CreativeTabs.tabBlock);
+		ropeLadder = new BlockRopeLadder("ropeLadder", "Rope Ladder").setBlockTextureName(FleValue.TEXTURE_FILE + ":tools/rope_ladder").setCreativeTab(CreativeTabs.tabDecorations);
 		ditch = new BlockDitch().setCreativeTab(CreativeTabs.tabDecorations);
 		tool = new ItemTool("tool", "tool").init().setCreativeTab(CreativeTabs.tabTools);
 		toolHead = new ItemToolHead("tool.head", "toolHead").init().setCreativeTab(CreativeTabs.tabMaterials);

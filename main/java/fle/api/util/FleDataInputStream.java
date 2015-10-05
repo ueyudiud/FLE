@@ -1,9 +1,15 @@
 package fle.api.util;
 
+import fle.FLE;
+import fle.api.FleAPI;
+import fle.api.gui.GuiCondition;
+import fle.api.soild.Solid;
+import fle.api.soild.SolidRegistry;
+import fle.api.soild.SolidStack;
+import fle.api.world.BlockPos;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -22,10 +28,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.GameData;
-import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.gui.GuiCondition;
-import fle.api.world.BlockPos;
 
 public class FleDataInputStream 
 {
@@ -128,6 +130,18 @@ public class FleDataInputStream
 			ItemStack ret = new ItemStack(item, size, meta);
 			if(nbt != null) ret.setTagCompound(nbt);
 			return ret;
+		}
+		else return null;
+	}
+
+	public SolidStack readSolidStack() throws IOException
+	{
+		if(stream.readBoolean())
+		{
+			Solid solid = SolidRegistry.getSolidFromName(readString());
+			int size = readInt();
+			NBTTagCompound nbt = readNBT();
+			return new SolidStack(solid, size, nbt);
 		}
 		else return null;
 	}

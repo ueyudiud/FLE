@@ -1,6 +1,7 @@
 package fle.core.block.machine;
 
 import fle.api.FleValue;
+import fle.core.block.behaviour.BehaviourBoilingHeater;
 import fle.core.block.behaviour.BehaviourCastingPool;
 import fle.core.block.behaviour.BehaviourCeramicFurnaceCrucible;
 import fle.core.block.behaviour.BehaviourColdForgingPlatform;

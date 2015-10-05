@@ -33,4 +33,6 @@ public interface RecipeHandler
 	FluidStack getFluidInTank(int index);
 	
 	String getTip(int mouseX, int mouseY);
+
+	String getStackTip(int slotID);
 }

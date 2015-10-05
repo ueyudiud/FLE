@@ -45,7 +45,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	}
 
 	@Override
-	public void updateEntity() 
+	public void updateInventory() 
 	{
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		inv.updateEntity(this);

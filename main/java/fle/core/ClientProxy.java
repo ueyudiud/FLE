@@ -7,10 +7,13 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleAPI;
+import fle.api.FleValue;
+import fle.api.event.FLEFontRegisterEvent;
 import fle.api.fluid.FluidBase;
 import fle.api.gui.GuiCondition;
 import fle.api.soild.Solid;
@@ -63,17 +66,14 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public void onIconRegister()
 	{
 		FleAPI.conditionIconRegister = new FleTextureMap("textures/condition");
-		FleAPI.solidIconRegister = new FleTextureMap("textures/solid");
+		FleAPI.fontRegister = new FleTextureMap("textures/font");
 		for(GuiCondition c : GuiCondition.register)
 		{
 			c.registerIcon(FleAPI.conditionIconRegister);
 		}
-		for(Solid solid : SolidRegistry.getSolidList())
-		{
-			solid.registerIcon(FleAPI.solidIconRegister);
-		}
+		MinecraftForge.EVENT_BUS.post(new FLEFontRegisterEvent(FleAPI.fontRegister));
 		Minecraft.getMinecraft().renderEngine.loadTexture(FleAPI.conditionLocate, (FleTextureMap) FleAPI.conditionIconRegister);
-		Minecraft.getMinecraft().renderEngine.loadTexture(FleAPI.solidLocate, (FleTextureMap) FleAPI.solidIconRegister);
+		Minecraft.getMinecraft().renderEngine.loadTexture(FleAPI.fontLocate, (FleTextureMap) FleAPI.fontRegister);
 	}
 
 	@Override
@@ -103,5 +103,15 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		{
 			tFluid.registerIcon(evt.register);
 		}
+		for(Solid tSoild : SolidRegistry.getSolidList())
+		{
+			tSoild.registerIcon(evt.register);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onFontIconRegister(FLEFontRegisterEvent evt)
+	{
+		
 	}
 }

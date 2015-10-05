@@ -78,7 +78,7 @@ public class Register<T> implements Iterable<T>
 	}
 	public String name(int i)
 	{
-		return sL[i];
+		return i < 0 || i > sL.length ? null : sL[i];
 	}
 
 	public T get(String tag)
@@ -87,7 +87,7 @@ public class Register<T> implements Iterable<T>
 	}
 	public T get(int i)
 	{
-		return (T) oL[i];
+		return i < 0 || i > oL.length ? null : (T) oL[i];
 	}
 	
 	@Override

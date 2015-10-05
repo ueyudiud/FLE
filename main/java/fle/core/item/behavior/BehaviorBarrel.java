@@ -100,7 +100,7 @@ public class BehaviorBarrel extends BehaviorBase
                 {
                     if (currect == null)
                     {
-                        return FluidContainerRegistry.drainFluidContainer(itemstack);
+                        return func_150910_a(itemstack, player, FluidContainerRegistry.drainFluidContainer(itemstack));
                     }
 
                     ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[movingobjectposition.sideHit];
@@ -115,7 +115,7 @@ public class BehaviorBarrel extends BehaviorBase
 
                     if (tryPlaceContainedLiquid(aWorld, i, j, k) && !player.capabilities.isCreativeMode)
                     {
-                        return FluidContainerRegistry.drainFluidContainer(itemstack);
+                        return func_150910_a(itemstack, player, FluidContainerRegistry.drainFluidContainer(itemstack));
                     }
                 }
             }

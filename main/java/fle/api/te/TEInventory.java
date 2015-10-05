@@ -1,13 +1,15 @@
 package fle.api.te;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import fle.api.inventory.IInventoryTile;
+import fle.api.net.FlePackets.CoderSolidTankUpdate;
+import fle.api.soild.ISolidHandler;
+import fle.api.soild.ISolidTanks;
 
-public abstract class TEInventory<T extends IInventoryTile<?>> extends TEBase implements ISidedInventory
+public abstract class TEInventory<T extends IInventoryTile> extends TEBase implements ISidedInventory
 {
 	protected T inv;
 	
@@ -16,8 +18,14 @@ public abstract class TEInventory<T extends IInventoryTile<?>> extends TEBase im
 		this.inv = inv;
 	}
 	
-	public abstract void updateEntity();
+	public final void updateEntity()
+	{
+		super.updateEntity();
+		updateInventory();
+	}
 	
+	protected abstract void updateInventory();
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) 
 	{
@@ -125,5 +133,11 @@ public abstract class TEInventory<T extends IInventoryTile<?>> extends TEBase im
 			int side)
 	{
 		return inv.canExtractItem(slotID, aStack, side);
+	}
+	
+	public void syncSolidTank()
+	{
+		if(this instanceof ISolidTanks && !worldObj.isRemote)
+			sendToNearBy(new CoderSolidTankUpdate(getBlockPos()), 16.0F);
 	}
 }

@@ -1,19 +1,23 @@
 package fle.core.recipe;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.FleValue;
+import fle.api.cg.RecipesTab;
 import fle.api.material.MaterialAbstract;
 import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
 import fle.api.recipe.AbstractRecipe;
+import fle.api.recipe.ShapelessFleRecipe;
 import fle.api.util.SubTag;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.inventory.InventoryCastingPool;
 import fle.core.item.ItemFleSub;
+import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 
 public class CastingPoolRecipe implements IFreezingRecipe
@@ -46,6 +50,7 @@ public class CastingPoolRecipe implements IFreezingRecipe
 				MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack((Fluid) a[0], FleValue.ingot_mol * 3 * 2), " xxx xxx ", ItemToolHead.a("metal_bowsaw", (MaterialAbstract) a[1], 12)));
 				MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack((Fluid) a[0], FleValue.ingot_mol * 3 * 2), "xx x x xx", ItemToolHead.a("metal_bowsaw", (MaterialAbstract) a[1], 12)));
 				MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack((Fluid) a[0], FleValue.ingot_mol * 3 * 2), "xxxx  xxx", ItemToolHead.a("metal_adz", (MaterialAbstract) a[1], 12)));
+				MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack((Fluid) a[0], FleValue.ingot_mol / 3 * 1), " xxx xxxx", ItemTool.a("metal_needle", (MaterialAbstract) a[1])));
 			}
 		}
 		MatterDictionary.registerMatter(new CeramicFurnaceOutletRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 1), ItemFleSub.a("ingot_cu")));

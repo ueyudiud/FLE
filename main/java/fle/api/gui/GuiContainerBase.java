@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.api.soild.SolidTank;
 import fle.api.soild.SolidTankInfo;
 
@@ -135,7 +136,7 @@ public abstract class GuiContainerBase extends GuiContainer
 			IIcon solidIcon = info.solid.getObj().getIcon();
 			if (solidIcon != null)
 			{
-				mc.renderEngine.bindTexture(FleAPI.solidLocate);
+				mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				double liquidHeight = lay ? height : (double) (info.solid.getSize() * height) / (double)info.capacity;
 				double liquidWidth = lay ? (double) (info.solid.getSize() * width) / (double) info.capacity : width;
 		        int color = info.solid.getObj().getColor(info.solid);
@@ -249,5 +250,10 @@ public abstract class GuiContainerBase extends GuiContainer
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
         mc.renderEngine.bindTexture(getResourceLocation());
+	}
+	
+	protected void sendToContainer(int type, int contain)
+	{
+		FleAPI.mod.getNetworkHandler().sendToServer(new CoderGuiUpdate((byte) type, contain));
 	}
 }

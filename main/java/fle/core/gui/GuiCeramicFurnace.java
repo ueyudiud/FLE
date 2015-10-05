@@ -15,8 +15,10 @@ import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
 import fle.api.material.IAtoms;
+import fle.api.material.Matter;
 import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.api.util.WeightHelper;
+import fle.api.util.WeightHelper.Stack;
 import fle.api.world.BlockPos;
 
 @SideOnly(Side.CLIENT)
@@ -41,8 +43,7 @@ public class GuiCeramicFurnace extends GuiContainerBase
 			drawTexturedModalRect(aXOffset + 57, aYOffset + 29, 176, 150, 20, 10);
 			drawTexturedModalRect(aXOffset + 119, aYOffset + 25, 176, 68, 10, 32);
 			drawFluid(120, 26, container.tileCFC.getTank(0), 8, 30);
-			int progress = (int) (18F * (double) new WeightHelper(container.tileCFC.getContainerMap()).allWeight() / 1000D);
-			drawFleRect(aXOffset + 58, aYOffset + 30, progress, 8, 0xFFFFFF);
+			drawCrucible(aXOffset, aYOffset);
 			drawTexturedModalRect(aXOffset + 58, aYOffset + 30, 8, 166, 18, 8);
 			drawTexturedModalRect(aXOffset + 120, aYOffset + 26, 0, 166, 8, 30);
 		}
@@ -89,6 +90,21 @@ public class GuiCeramicFurnace extends GuiContainerBase
 		}
 	}
 
+	private void drawCrucible(int aXOffset, int aYOffset)
+	{
+		WeightHelper<IAtoms> wh = new WeightHelper(container.tileCFC.getContainerMap());
+		int lastStack = 0;
+		int a0 = 0;
+		for(Stack<IAtoms> stack : wh.getList())
+		{
+			int startPos = a0;
+			int progress = (int) (18F * (double) wh.getContain(stack.getObj()));
+			
+			drawFleRect(aXOffset + 58 + startPos, aYOffset + 30, progress, 8, ((Matter) stack.getObj()).getColor());
+			a0 = a0 + progress;
+		}
+	}
+	
 	@Override
 	public void initGui()
 	{
@@ -97,14 +113,14 @@ public class GuiCeramicFurnace extends GuiContainerBase
 		yoffset = (height - ySize) / 2;
 		if(container.tileCFC != null)
 		{
-			buttonList.add(new GuiIconButton(0, xoffset + 119, yoffset + 62, ButtonSize.Small, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 96, 0));
-			buttonList.add(new GuiIconButton(1, xoffset + 119, yoffset + 15, ButtonSize.Small, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 80, 8));
+			buttonList.add(new GuiIconButton(0, xoffset + 119, yoffset + 62, ButtonSize.Small, GuiIconButton.buttonLocate, 96, 0));
+			buttonList.add(new GuiIconButton(1, xoffset + 119, yoffset + 15, ButtonSize.Small, GuiIconButton.buttonLocate, 80, 8));
 		}
 	}
 	
 	protected void actionPerformed(GuiButton guibutton)
 	{
-		FLE.fle.getNetworkHandler().sendTo(new CoderGuiUpdate((byte) 0, guibutton.id));
+		sendToContainer(0, guibutton.id);
 		
 		super.actionPerformed(guibutton);
 	}

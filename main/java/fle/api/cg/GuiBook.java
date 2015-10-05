@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.client.SplashProgress;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.gui.GuiIconButton;
@@ -52,11 +53,14 @@ public class GuiBook extends GuiBookBase
 		if(button.id == 0)
 		{
 			if(selectRecipe > 0) --selectRecipe;
+			else selectRecipe = recipes.length;
 		}
 		else if(button.id == 1)
 		{
 			if(selectRecipe * 6 + 6 < recipes.length) ++selectRecipe;
+			else selectRecipe = 0;
 		}
+		if(recipes.length < selectRecipe * 6) selectRecipe = recipes.length / 6;
 	}
 	
 	protected void markRecipeForUpdate()

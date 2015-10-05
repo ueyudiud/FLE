@@ -13,7 +13,10 @@ import net.minecraft.util.StatCollector;
 import fle.api.item.ITreeLog;
 import fle.api.item.ItemFleMetaBase;
 import fle.api.recipe.ItemAbstractStack;
+import fle.api.util.Compact;
+import fle.api.util.SubTag;
 import fle.core.item.behavior.BehaviorBase;
+import fle.core.tool.AxeHandler;
 import fle.core.tool.AxeHandler.TreeChecker;
 import fle.core.util.TextureLocation;
 
@@ -27,6 +30,14 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 		addSubItem(4, "log_jungle", "Jungle Log", new TreeChecker(Blocks.log, 3, 7, 11), new ItemStack(Blocks.log, 1, 3), "logs/jungle");
 		addSubItem(5, "log_acacia", "Acacia Log", new TreeChecker(Blocks.log2, 0, 4, 8), new ItemStack(Blocks.log2, 1, 0), "logs/acacia");
 		addSubItem(6, "log_darkoak", "Dark Oak Log", new TreeChecker(Blocks.log2, 1, 5, 9), new ItemStack(Blocks.log2, 1, 1), "logs/darkoak");
+		try
+		{
+			addSubItem(7, "log_rub", "Rubber Log", new TreeChecker(Block.getBlockFromItem(AxeHandler.IC2RubWood.getItem())), AxeHandler.IC2RubWood, "logs/rub");
+		}
+		catch(Throwable e)
+		{
+			;
+		}
 		return this;
 	}
 	
@@ -42,8 +53,11 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 	public final ItemTreeLog addSubItem(int aMetaValue, String aTagName, String aLocalized, ItemAbstractStack aStack, ItemStack aOutput, String aLocate)
 	{
 		addSubItem(aMetaValue, aTagName, aLocalized, new TextureLocation(aLocate), new BehaviorBase());
-		map.put(aStack, aTagName);
-		outputMap.put(aTagName, aOutput);
+		if(aStack != null)
+		{
+			map.put(aStack, aTagName);
+			outputMap.put(aTagName, aOutput);
+		}
 		return this;
 	}
 	
@@ -59,10 +73,24 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 	{
 		return true;
 	}
-
+	
 	@Override
 	public ItemStack createStandardLog(Block block, int blockMetadata, int length)
 	{
+		try
+		{
+			if(AxeHandler.IC2RubWood != null)
+			{
+				if(Block.getBlockFromItem(AxeHandler.IC2RubWood.getItem()) == block)
+				{
+					return createStandardLog(7, length);
+				}
+			}
+		}
+		catch(Throwable e)
+		{
+			;
+		}
 		for(ItemAbstractStack checker : map.keySet())
 		{
 			if(checker.isStackEqul(new ItemStack(block, 1, blockMetadata)))

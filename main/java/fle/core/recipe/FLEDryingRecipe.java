@@ -46,7 +46,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		
 		public boolean matchRecipe(ItemStack target)
 		{
-			if(this.input.isStackEqul(target))
+			if(input.isStackEqul(target))
 			{
 				return true;
 			}

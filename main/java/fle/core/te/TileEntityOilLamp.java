@@ -56,6 +56,7 @@ public class TileEntityOilLamp extends TEBase
 	@Override
 	public void updateEntity() 
 	{
+		super.updateEntity();
 		if(!worldObj.isRemote)
 		{
 			FLE.fle.getNetworkHandler().sendTo(new CoderNBTUpdate(this));

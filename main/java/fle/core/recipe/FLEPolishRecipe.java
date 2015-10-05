@@ -24,6 +24,7 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 	static
 	{
 		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("branch_bush")), "p pp pp p", new ItemStack(Items.stick)));
+		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(Items.bone), "cc c c cc", ItemTool.a("bone_needle", Materials.Bone)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), " c ccc c ", ItemFleSub.a("flint_b", 4)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), "c c      ", new ItemStack(Items.flint)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), "  c ccccc", ItemToolHead.a("stone_axe", Materials.Flint, 5)));

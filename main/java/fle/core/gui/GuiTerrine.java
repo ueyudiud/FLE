@@ -69,13 +69,13 @@ public class GuiTerrine extends GuiContainerBase
 		super.initGui();
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
-		buttonList.add(new GuiIconButton(0, xoffset + 74, yoffset + 21, ButtonSize.Small, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 80, 8));
-		buttonList.add(new GuiIconButton(1, xoffset + 64, yoffset + 53, ButtonSize.Small, new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/button.png"), 88, 8));
+		buttonList.add(new GuiIconButton(0, xoffset + 74, yoffset + 21, ButtonSize.Small, GuiIconButton.buttonLocate, 80, 8));
+		buttonList.add(new GuiIconButton(1, xoffset + 64, yoffset + 53, ButtonSize.Small, GuiIconButton.buttonLocate, 88, 8));
 	}
 	
 	protected void actionPerformed(GuiButton guibutton)
 	{
-		FLE.fle.getNetworkHandler().sendTo(new CoderGuiUpdate((byte) 1, guibutton.id));
+		sendToContainer(1, guibutton.id);
 		if(guibutton.id == 0) tile.drain(tile.getCapacity(), true);
 		else if(guibutton.id == 1) tile.setClose();
 		

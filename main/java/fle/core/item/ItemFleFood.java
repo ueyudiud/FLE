@@ -29,6 +29,8 @@ public class ItemFleFood extends fle.api.item.ItemFleFood
 		addSubItem(1202, "millet_congee_raw", "Raw Millet Congee", "food/millet_congee_raw", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
 		addSubItem(1203, "millet_congee_rough", "Rough Millet Congee", "food/millet_congee_rough", new FoodBowl(EnumFoodType.Refection, 7, 1.1F));
 		addSubItem(1204, "millet_congee_rough_raw", "Raw Rough Millet Congee", "food/millet_congee_rough_raw", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
+		addSubItem(10001, "brown_sugar", "Brown Sugar", "food/brown_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(10002, "sugar", "White Sugar", "food/white_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.6F));
 		return this;
 	}
 
@@ -42,7 +44,7 @@ public class ItemFleFood extends fle.api.item.ItemFleFood
 		{
 			int meta = ((ItemFleFood) IB.food).itemBehaviors.serial(name);
 			ItemStack ret = new ItemStack(IB.food, size, meta);
-			IB.subItem.setDamage(ret, meta);
+			IB.food.setDamage(ret, meta);
 			return ret;
 		}
 		catch(Throwable e)

@@ -8,21 +8,24 @@ import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryTWFTC;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.IRecipeHandler.RecipeKey;
+import fle.api.soild.SolidStack;
+import fle.api.soild.SolidTank;
 import fle.core.recipe.FLEStoneMillRecipe;
 import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe;
 import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipeKey;
+import fle.core.recipe.RecipeHelper.FDType;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.TileEntityStoneMill;
 
 public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 {
-	public int buf = 0;
 	private int recipeTick;
 	private RecipeKey recipe;
+	public SolidTank sTank = new SolidTank(1000);
 	
 	public InventoryStoneMill()
 	{
-		super("inventory.stone.mill", 4, 2000);
+		super("inventory.stone.mill", 3, 2000);
 	}
 	
 	@Override
@@ -31,6 +34,7 @@ public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 		super.readFromNBT(nbt);
 		recipeTick = nbt.getInteger("RecipeTime");
 		recipe = FLEStoneMillRecipe.getInstance().getRecipeKey(nbt.getString("RecipeName"));
+		sTank.readFromNBT(nbt);
 	}
 	
 	@Override
@@ -38,24 +42,22 @@ public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("RecipeTime", recipeTick);
-		nbt.setString("RecipeName", recipe.toString());
+		if(recipe != null)
+			nbt.setString("RecipeName", recipe.toString());
+		sTank.writeToNBT(nbt);
 	}
 	
 	@Override
 	public void updateEntity(TileEntityStoneMill tile)
 	{
 		super.updateEntity(tile);
-		if(buf > 0)
+		if(tile.getRotationHelper().getRotationEnergy() > 0)
 		{
 			onWork(tile);
-			--buf;
+			tile.getRotationHelper().minusInnerEnergy(10.0D);
+			tile.markRenderForUpdate();
 		}
-	}
-	
-	public void onPower()
-	{
-		if(buf == 0)
-			buf = 20;
+		RecipeHelper.fillOrDrainInventoryTank(this, sTank, 1, 2, FDType.F);
 	}
 	
 	public void onWork(TileEntityStoneMill tile)
@@ -68,6 +70,11 @@ public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 			{
 				RecipeHelper.onInputItemStack(this, 0);
 				recipe = str.getRecipeKey();
+				tile.type = GuiError.DEFAULT;
+			}
+			else
+			{
+				tile.type = GuiError.CAN_NOT_INPUT;
 			}
 		}
 		if(recipe != null)
@@ -89,11 +96,11 @@ public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 					recipe = null;
 					return;
 				}
-				ItemStack[] output = r.getOutput();
+				SolidStack output = r.getOutput();
 				FluidStack output1 = r.getFluidOutput();
-				if(RecipeHelper.matchOutput(this, 1, 4, output) && RecipeHelper.matchOutFluidStack(tank, output1))
+				if(RecipeHelper.matchOutSolidStack(sTank, output) && RecipeHelper.matchOutFluidStack(tank, output1))
 				{
-					RecipeHelper.onOutputShapelessStacks(this, 1, 4, output);
+					RecipeHelper.onOutputSolidStack(sTank, output);
 					RecipeHelper.onOutputFluidStack(tank, output1);
 					recipe = null;
 					recipeTick = 0;
@@ -156,5 +163,10 @@ public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 	public double getProgress()
 	{
 		return recipe == null ? 0D : (double) recipeTick / (double) ((StoneMillRecipeKey) recipe).getRecipeTick();
+	}
+
+	public boolean isWorking()
+	{
+		return recipe != null;
 	}
 }
