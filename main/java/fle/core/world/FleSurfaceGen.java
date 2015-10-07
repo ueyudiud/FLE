@@ -19,24 +19,29 @@ public abstract class FleSurfaceGen extends WorldGenerator
 		count = aCount;
 	}
 	
+	private static double a = 1D / 3D;
+	
 	@Override
 	public boolean generate(World aWorld, Random aRand,
 			int x, int y, int z)
 	{
-		int size = (int) Math.floor(Math.sqrt(this.size));
+		int size = (int) Math.floor(Math.pow(this.size, a));
 		int count = this.count;
-		label :
-		for(int i = -size; i <= size; ++i)
-			for(int j = -size; j < size; ++j)
-				for(int k = -size; k < size; ++k)
-				{
-					if(Math.sqrt(i * i + j * j + k * k) < size)
-					{
-						if(aRand.nextDouble() < 0.3D) continue;
-						if(generateAt(aWorld, aRand, x, y, z)) count -= 1;
-					}
-					if(count <= 0) break label;
-				}
+		for(int i = 0; i < this.count * 10; ++i)
+		{
+            int i1 = x + aRand.nextInt(size) - aRand.nextInt(size);
+            int j1 = y + aRand.nextInt(size) - aRand.nextInt(size);
+            int k1 = z + aRand.nextInt(size) - aRand.nextInt(size);
+            while(Math.sqrt(i1 * i1 + j1 * j1 + k1 * k1) < size)
+            {
+            	i1 += i1 < 0 ? 1 : -1;
+            	j1 += j1 < 0 ? 1 : -1;
+            	k1 += k1 < 0 ? 1 : -1;
+            }
+            if(aRand.nextDouble() < 0.6D) continue;
+			if(generateAt(aWorld, aRand, x, y, z)) count -= 1;
+			if(count <= 0) break;
+		}
 		return count != this.count;
 	}
 	

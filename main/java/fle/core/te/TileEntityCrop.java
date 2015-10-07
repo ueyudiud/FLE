@@ -61,7 +61,8 @@ public class TileEntityCrop extends TEBase implements ICropTile
 		super.writeToNBT(nbt);
 		nbt.setShort("Age", (short) age);
 		nbt.setDouble("Buffer", buffer);
-		nbt.setString("CropName", card.getCropName());
+		if(card != null)
+			nbt.setString("CropName", card.getCropName());
 		nbt.setBoolean("Wild", isWild);
 	}
 

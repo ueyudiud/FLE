@@ -42,6 +42,8 @@ public class ItemFleSeed extends ItemFleFood implements IPlantable, ICropSeed
 		addSubItem(3, Crops.suger_cances, "Suger Cances", new TextureLocation("crop/reed"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
 		addSubItem(4, Crops.wheat, "Wheat Seed", new TextureLocation("crop/wheat_seed"));
 		addSubItem(5, Crops.cotton, "Cotton Seed", new TextureLocation("crop/cotton_seed"));
+		addSubItem(6, Crops.sweet_potato, "Sweet Potato", new TextureLocation("crop/sweet_potato"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
+		addSubItem(7, Crops.potato, "Potato", new TextureLocation("crop/potato"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
 		return this;
 	}
 

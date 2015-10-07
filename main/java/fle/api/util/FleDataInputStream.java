@@ -225,4 +225,9 @@ public class FleDataInputStream
 		}
 		return null;
 	}
+	
+	public ByteBuf getBuf()
+	{
+		return stream;
+	}
 }

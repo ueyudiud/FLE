@@ -16,7 +16,7 @@ import fle.core.energy.ThermalTileHelper;
 import fle.core.init.Materials;
 import fle.core.inventory.InventoryCeramicFurnaceOutlet;
 
-public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramicFurnaceOutlet> implements IFluidHandler, IThermalTileEntity, INetEventListener
+public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramicFurnaceOutlet> implements IFluidHandler, IThermalTileEntity
 {
 	protected ThermalTileHelper tc = new ThermalTileHelper(Materials.Argil);
 	
@@ -58,7 +58,6 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 		}
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
-		sendToNearBy(new CoderTileUpdate(this, (byte) 1, FleAPI.getIndexFromDirection(dir)), 16.0F);
 	}
 
 	@Override
@@ -141,14 +140,5 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	public double getPreHeatEmit()
 	{
 		return tc.getPreHeatEmit();
-	}
-
-	@Override
-	public void onReseave(byte type, Object contain)
-	{
-		if(type == 1)
-		{
-			setDirction(ForgeDirection.VALID_DIRECTIONS[(Integer) contain]);
-		}
 	}
 }

@@ -2,7 +2,10 @@ package fle.core.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import net.minecraft.item.ItemStack;
 
 public class Util
 {
@@ -114,5 +117,12 @@ public class Util
 			}
 		}
 		return null;
+	}
+	
+	public static <T> Collection<T> copy(Collection<T> drops)
+	{
+		List<T> ret = new ArrayList<T>();
+		ret.addAll(drops);
+		return ret;
 	}
 }

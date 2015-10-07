@@ -1,5 +1,7 @@
 package fle.core.recipe;
 
+import java.util.Random;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.FleAPI;
@@ -20,8 +22,8 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 	static
 	{
 		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber_dry")), new FluidStack(IB.plant_ash_mortar, 200), 12500, ItemFleSub.a("ramie_fiber_debonded")));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("cotton_gauze")), new FluidStack(IB.sugarcane_juice, 200), 12500, ItemFleFood.a("brown_sugar", 3)));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("charred_log")), new FluidStack(IB.brown_sugar_aqua, 200), 12500, ItemFleFood.a("suger", 3)));
+		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("cotton_gauze")), new FluidStack(IB.sugarcane_juice, 200), 12500, ItemFleFood.a("brown_sugar", 3)).setType(3));
+		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("charred_log")), new FluidStack(IB.brown_sugar_aqua, 200), 12500, ItemFleFood.a("sugar", 3)).setType(3));
 	}
 	
 	public static FLEBoilingHeaterRecipe getInstance()
@@ -60,6 +62,8 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 			return this;
 		}
 		
+		private static Random rand = new Random();
+		
 		public ItemStack onOutput(ItemStack input)
 		{
 			switch(type)
@@ -69,6 +73,8 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 			case 1 : FleAPI.damageItem(null, input, EnumDamageResource.UseTool, 0.5F);
 			return input;
 			case 2 : return input;
+			case 3 : if(rand.nextInt(8) == 0) input.stackSize--;
+			return input.stackSize <= 0 ? null : input;
 			}
 			return null;
 		}

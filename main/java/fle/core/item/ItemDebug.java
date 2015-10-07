@@ -3,6 +3,8 @@ package fle.core.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -23,6 +25,7 @@ import fle.api.energy.IThermalTileEntity;
 import fle.api.enums.EnumDamageResource;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.item.ItemFle;
+import fle.api.util.FleLog;
 import fle.api.world.BlockPos;
 import fle.api.world.BlockPos.ChunkPos;
 
@@ -50,6 +53,9 @@ public class ItemDebug extends ItemFle
             	aPlayer.addChatMessage(new ChatComponentText("Metadata: " + pos.getBlockMeta() + "."));
             	aPlayer.addChatMessage(new ChatComponentText("Harvest Level: " + pos.getBlock().getHarvestLevel(pos.getBlockMeta()) + "."));
         		aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + "."));
+        		aPlayer.addChatMessage(new ChatComponentText("FTN :"));
+        		aPlayer.addChatMessage(new ChatComponentText("Wind Speed : " + FLE.fle.getRotationNet().getWindSpeed(pos)));
+        		
         		String str1 = "";
             	for(EnumWorldNBT nbt : EnumWorldNBT.values())
         			str1 += FLE.fle.getWorldManager().getData(pos, nbt) + " ";
@@ -90,7 +96,7 @@ public class ItemDebug extends ItemFle
         	}
         	catch(Throwable e)
         	{
-        		e.printStackTrace();
+        		FleLog.getLogger().catching(Level.WARN, e);
         		aPlayer.addChatMessage(new ChatComponentText("FLE: This block require a bug place check your log and report this bug."));
         	}
     	}

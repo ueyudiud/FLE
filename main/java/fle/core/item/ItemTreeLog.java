@@ -5,19 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import fle.api.item.ITreeLog;
 import fle.api.item.ItemFleMetaBase;
 import fle.api.recipe.ItemAbstractStack;
-import fle.api.util.Compact;
-import fle.api.util.SubTag;
+import fle.core.handler.AxeHandler;
+import fle.core.handler.AxeHandler.TreeChecker;
 import fle.core.item.behavior.BehaviorBase;
-import fle.core.tool.AxeHandler;
-import fle.core.tool.AxeHandler.TreeChecker;
 import fle.core.util.TextureLocation;
 
 public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog

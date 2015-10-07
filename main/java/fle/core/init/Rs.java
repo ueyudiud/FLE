@@ -32,8 +32,6 @@ import fle.api.cg.RecipesTab;
 import fle.api.enums.EnumAtoms;
 import fle.api.material.Matter;
 import fle.api.material.MatterDictionary;
-import fle.api.recipe.AbstractRecipeManager;
-import fle.api.recipe.ExampleRecipeManager;
 import fle.api.recipe.IFleRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
@@ -49,14 +47,13 @@ import fle.cg.recipe.ShapelessRecipe;
 import fle.core.block.BlockRock;
 import fle.core.block.ItemDitch;
 import fle.core.block.ItemRopeLadder;
+import fle.core.handler.AxeHandler;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
 import fle.core.item.ItemOre;
 import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.recipe.CastingPoolRecipe;
-import fle.core.recipe.CeramicsRecipe;
-import fle.core.recipe.ColdForgingRecipe;
 import fle.core.recipe.FLEDryingRecipe;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 import fle.core.recipe.FLEPolishRecipe;
@@ -148,6 +145,7 @@ public class Rs
 		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 0), 'x', "stickWood"));
 		registerRemovedCrafting(FakeCraftingInventory.init("oxv", 'o', Items.egg, 'x', Items.sugar, 'v', Blocks.pumpkin));
 		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 1), 'x', "stickWood"));
+		registerRemovedCrafting(FakeCraftingInventory.init("x x", " x ", 'x', "plankWood"));
 		
 		registerRemovedCrafting(FakeCraftingInventory.init(" x", "x ", 'x', Items.iron_ingot));
 
@@ -290,12 +288,18 @@ public class Rs
 		SolidRegistry.registerSolidContainer(new SolidStack(IB.limestone, 108), ItemFleSub.a("dust_quicklime"));
 		SolidRegistry.registerSolidContainer(new SolidStack(IB.plant_ash, 108), ItemFleSub.a("plant_ash"));
 		SolidRegistry.registerSolidContainer(new SolidStack(IB.brown_sugar, 108), ItemFleFood.a("brown_sugar"));
+		SolidRegistry.registerSolidContainer(new SolidStack(IB.millet_c, 144), ItemFleSub.a("millet"));
+		SolidRegistry.registerSolidContainer(new SolidStack(IB.wheat_c, 144), new ItemStack(Items.wheat));
 
 		FleAPI.fluidDictionary.registerFluid("oil", IB.animalOil);
 		FleAPI.fluidDictionary.registerFluid("oil", IB.plantOil);
 		FleAPI.fluidDictionary.registerFluid("mortarLime", IB.lime_mortar);
 		FleAPI.fluidDictionary.registerFluid("oilAnimal", IB.animalOil);
 		FleAPI.fluidDictionary.registerFluid("oilPlant", IB.plantOil);
+		FleAPI.fluidDictionary.registerFluid("dextrin", IB.wheat_dextrin);
+		FleAPI.fluidDictionary.registerFluid("dextrin", IB.millet_dextrin);
+		FleAPI.fluidDictionary.registerFluid("dextrin", IB.potato_dextrin);
+		FleAPI.fluidDictionary.registerFluid("dextrin", IB.sweet_potato_dextrin);
 
 		GameRegistry.addSmelting(ItemFleSub.a("argil_unsmelted_brick"), ItemFleSub.a("argil_brick"), 0.0F);
 		GameRegistry.addSmelting(ItemFleSub.a("argil_unsmelted_plate"), ItemFleSub.a("argil_plate"), 0.0F);
@@ -346,13 +350,15 @@ public class Rs
 			GameRegistry.addRecipe(new RopeLadderCraftingRecipe(true, objs));
 		}
 		GameRegistry.addRecipe(new RopeLadderCraftingRecipe(false, IB.ropeLadder));
-		
+
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabOldStoneAge, Items.string, new Object[]{ItemFleSub.a("spinneret")}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleFood.a("chicken_kebab_raw", 2), new Object[]{"stickWood", "stickWood", Items.chicken}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleFood.a("pork_kebab_raw", 2), new Object[]{"stickWood", "stickWood", Items.porkchop}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_rope", 3), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_fiber_dry")}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_bundle_rope"), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_rope")}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_rope", 4), new Object[]{"x", 'x', ItemFleSub.a("ramie_bundle_rope")}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("twine"), new Object[]{"tx ", "xsx", " x ", 't', "craftingToolSpinning", 's', "stickWood", 'x', ItemFleSub.a("ramie_fiber_debonded")}));
-		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("cotton_thread"), new Object[]{"tx ", "xsx", " x ", 't', "craftingToolSpinning", 's', "stickWood", 'x', ItemFleSub.a("cotton")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("twine", 2), new Object[]{"tx ", "xsx", " x ", 't', "craftingToolSpinning", 's', "stickWood", 'x', ItemFleSub.a("ramie_fiber_debonded")}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("cotton_thread", 2), new Object[]{"tx ", "xsx", " x ", 't', "craftingToolSpinning", 's', "stickWood", 'x', ItemFleSub.a("cotton")}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("linen"), new Object[]{"xx ", "xxn", 'x', ItemFleSub.a("ramie_rope"), 'n', "craftingToolNeedle"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("linen"), new Object[]{"xxn", "xx ", 'x', ItemFleSub.a("ramie_rope"), 'n', "craftingToolNeedle"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("linen"), new Object[]{"nxx", " xx", 'x', ItemFleSub.a("ramie_rope"), 'n', "craftingToolNeedle"}));
@@ -361,6 +367,10 @@ public class Rs
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("linen_b"), new Object[]{"xxn", "xx ", 'x', ItemFleSub.a("twine"), 'n', "craftingToolNeedleTier1"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("linen_b"), new Object[]{"nxx", " xx", 'x', ItemFleSub.a("twine"), 'n', "craftingToolNeedleTier1"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("linen_b"), new Object[]{" xx", "nxx", 'x', ItemFleSub.a("twine"), 'n', "craftingToolNeedleTier1"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("cotton_gauze"), new Object[]{"xx ", "xxn", 'x', ItemFleSub.a("cotton_thread"), 'n', "craftingToolNeedleTier1"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("cotton_gauze"), new Object[]{"xxn", "xx ", 'x', ItemFleSub.a("cotton_thread"), 'n', "craftingToolNeedleTier1"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("cotton_gauze"), new Object[]{"nxx", " xx", 'x', ItemFleSub.a("cotton_thread"), 'n', "craftingToolNeedleTier1"}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("cotton_gauze"), new Object[]{" xx", "nxx", 'x', ItemFleSub.a("cotton_thread"), 'n', "craftingToolNeedleTier1"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("sack_empty"), new Object[]{"nxx", "sxx", 'x', ItemFleSub.a("linen_b"), 's', ItemFleSub.a("twine"), 'n', "craftingToolNeedle"}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("cotton", 3), new Object[]{ItemFleSub.a("cotton_rough"), ItemFleSub.a("cotton_rough"), ItemFleSub.a("cotton_rough"), ItemFleSub.a("cotton_rough"), "stickWood"}));
 		
@@ -383,6 +393,7 @@ public class Rs
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabBronzeAge, ItemFleSub.a("millstone"), new Object[]{Blocks.stone, "craftingToolHardHammer", "craftingToolChisel"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.woodMachine1, 1, 2), new Object[]{"sm ", "ppp", " b ", 's', "stickWood", 'p', "plateStone", 'm', ItemFleSub.a("millstone"), 'b', new ItemStack(IB.woodMachine1, 1, 1)}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.woodMachine1, 1, 3), new Object[]{" f ", "sfs", " b ", 's', ItemFleSub.a("ramie_rope"), 'f', ItemFleSub.a("linen"), 'b', new ItemStack(IB.woodMachine1, 1, 1)}));
+		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.woodMachine1, 1, 4), new Object[]{"sr ", "rr ", " b ", 's', "stickWood", 'r', ItemFleSub.a("ramie_rope"), 'r', Blocks.stone, 'b', new ItemStack(IB.woodMachine1, 1, 1)}));
 		
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(Materials.ditch_stone, 20), new Object[]{" p ", " o ", " x ", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabCopperAge, ItemDitch.a(2, Materials.ditch_stone, 60), new Object[]{" p ", " o ", "xxx", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"}));
@@ -402,6 +413,7 @@ public class Rs
 		RecipeSorter.register(FLE.MODID + ":shapeless", ShapelessFleRecipe.class, SHAPELESS, "after:forge:shapedore before:minecraft:shapeless");
 		
 		CastingPoolRecipe.init();
+		AxeHandler.init();
 	}
 
 	public static void completeInit()

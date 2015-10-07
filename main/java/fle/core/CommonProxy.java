@@ -25,6 +25,7 @@ import fle.core.gui.ContainerWashing;
 import fle.core.gui.GuiCeramics;
 import fle.core.gui.GuiItemBagable;
 import fle.core.gui.GuiWashing;
+import fle.core.handler.AxeHandler;
 import fle.core.handler.EntityHandler;
 import fle.core.handler.PlayerHandler;
 import fle.core.handler.RecipeHandler;
@@ -41,7 +42,6 @@ import fle.core.te.TileEntityDitch;
 import fle.core.te.TileEntityFirewood;
 import fle.core.te.TileEntityOilLamp;
 import fle.core.te.chest.TileEntityChest3By3;
-import fle.core.tool.AxeHandler;
 import fle.core.tool.BowHandler;
 import fle.core.tool.ChiselHandler;
 import fle.core.tool.StoneHammerHandler;
@@ -53,32 +53,30 @@ public class CommonProxy extends Proxy
 	@Override
 	public void onPreload() 
 	{
+		FLE.fle.getNetworkHandler().init();
 		Conditions.init();
-		FLE.fle.getNetworkHandler().init();	
 		Materials.init();
 		Crops.init();
+		IB.init();
 	}
 
 	@Override
 	public void onLoad() 
 	{
-		IB.init();
 		EntityRegistry.registerModEntity(EntityFleFallingBlock.class, "entityFleBlock", EntityRegistry.findGlobalUniqueEntityId(), FLE.MODID, 16, 1, true);
 		EntityRegistry.registerModEntity(EntityFleArrow.class, "fleArrow", EntityRegistry.findGlobalUniqueEntityId(), FLE.MODID, 10, 1, true);
-		GameRegistry.registerWorldGenerator(new FleWorldGen(), 1);
-	}
-
-	@Override
-	public void onPostload() 
-	{
 		FleAPI.registerFuelHandler(new FleFuelHandler());
-		
+		GameRegistry.registerWorldGenerator(new FleWorldGen(), 1);
 		GameRegistry.registerTileEntity(TileEntityOilLamp.class, "oilLamp");
 		GameRegistry.registerTileEntity(TileEntityFirewood.class, "firewood");
 		GameRegistry.registerTileEntity(TileEntityCrop.class, "fleCrop");
 		GameRegistry.registerTileEntity(TileEntityDitch.class, "Ditch");
 		GameRegistry.registerTileEntity(TileEntityChest3By3.class, "Chest3x3");
-		
+	}
+
+	@Override
+	public void onPostload() 
+	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(FLE.MODID, this);
 		MinecraftForge.EVENT_BUS.register(new ChiselHandler());
 		MinecraftForge.EVENT_BUS.register(new AxeHandler());

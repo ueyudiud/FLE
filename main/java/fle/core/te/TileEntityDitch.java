@@ -105,7 +105,7 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 		}
 		else if(!worldObj.isRemote)
 		{
-			int sideMaxSpeed = 1000 * tank.getCapacity() / getDitchViscosity();
+			int sideMaxSpeed = (int) Math.ceil(1000F * tank.getCapacity() / (float) getDitchViscosity());
 			for(ForgeDirection dir : dirs)
 			{
 				TileEntity tile = getBlockPos().toPos(dir).getBlockTile();

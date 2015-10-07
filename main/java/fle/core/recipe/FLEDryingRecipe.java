@@ -89,6 +89,12 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		}
 		
 		@Override
+		public int hashCode()
+		{
+			return 43859242;
+		}
+		
+		@Override
 		public String toString()
 		{
 			try

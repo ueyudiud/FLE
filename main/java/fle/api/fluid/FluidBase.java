@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import fle.api.FleAPI;
 import fle.api.material.IFluidChemInfo;
 import fle.api.material.Matter;
 import fle.api.material.PropertyInfo;
@@ -17,19 +18,19 @@ public class FluidBase extends Fluid implements IFluidChemInfo
 	
 	final Matter matter;
 	
-	public FluidBase(String aName) 
+	public FluidBase(String aName, String localizedName) 
 	{
-		this(aName, (PropertyInfo) null);
+		this(aName, localizedName, (PropertyInfo) null);
 	}
-	public FluidBase(String aName, Matter aMatter) 
+	public FluidBase(String aName, String localizedName, Matter aMatter) 
 	{
-		this(aName, null, aMatter);
+		this(aName, localizedName, null, aMatter);
 	}
-	public FluidBase(String aName, PropertyInfo aInfo) 
+	public FluidBase(String aName, String localizedName, PropertyInfo aInfo) 
 	{
-		this(aName, aInfo, null);
+		this(aName, localizedName, aInfo, null);
 	}
-	public FluidBase(String aName, PropertyInfo aInfo, Matter aMatter) 
+	public FluidBase(String aName, String localizedName, PropertyInfo aInfo, Matter aMatter) 
 	{
 		super(aName);
 		matter = aMatter;
@@ -42,9 +43,23 @@ public class FluidBase extends Fluid implements IFluidChemInfo
 		}
 		register.register(this, aName);
 		FluidRegistry.registerFluid(this);
+		if(localizedName != null)
+			FleAPI.lm.registerLocal(getUnlocalizedName() + ".name", localizedName);
+	}
+	
+	@Override
+	public String getLocalizedName(FluidStack stack)
+	{
+		return FleAPI.lm.translateToLocal(getUnlocalizedName(stack) + ".name", new Object[0]);
 	}
 	
 	int color = 0xFFFFFF;
+	
+	public FluidBase setColor(int color)
+	{
+		this.color = color;
+		return this;
+	}
 	
 	@Override
 	public int getColor()

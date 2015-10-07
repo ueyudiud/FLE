@@ -19,7 +19,7 @@ public class FleFuelHandler implements IFuelHandler
 		{
 			return aStack.amount * 100;
 		}
-		else if(FleAPI.fluidDictionary.matchFluid("oilAnimal", aStack))
+		else if(FleAPI.fluidDictionary.matchFluid("oil", aStack))
 		{
 			return (float) ((double) aStack.amount * (2 + aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2)) / 3);
 		}
@@ -49,6 +49,10 @@ public class FleFuelHandler implements IFuelHandler
 			{
 				return (int) (360000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			}
+			else if(new ItemBaseStack(ItemFleSub.a("tinder")).isStackEqul(aStack))
+			{
+				return (int) (300000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+			}
 		}
 		return 0;
 	}
@@ -59,6 +63,10 @@ public class FleFuelHandler implements IFuelHandler
 		if(aStack != null)
 		{
 			if(new ItemBaseStack(ItemFleSub.a("charred_log")).isStackEqul(aStack))
+			{
+				return ItemFleSub.a("plant_ash");
+			}
+			else if(new ItemBaseStack(ItemFleSub.a("tinder")).isStackEqul(aStack))
 			{
 				return ItemFleSub.a("plant_ash");
 			}

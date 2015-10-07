@@ -1,5 +1,6 @@
 package fle.api.world;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -15,6 +16,11 @@ import fle.api.util.ITextureLocation;
 
 public abstract class TreeInfo implements IPlantable
 {
+	/**
+	 * Check does world is generating in world generator or grow.
+	 * TRUE means is plants growing, set block with update client.
+	 */
+	public static boolean genFlag = true;
 	protected final String name;
 	
 	public TreeInfo(String aName)
@@ -72,5 +78,17 @@ public abstract class TreeInfo implements IPlantable
 	public int getPlantMetadata(IBlockAccess world, int x, int y, int z)
 	{
 		return 0;
+	}
+	
+	public void getLogInfomation(World aWorld, int x, int y, int z,
+			List aList)
+	{
+		
+	}
+	
+	public void getLeavesInfomation(World aWorld, int x, int y, int z,
+			List aList)
+	{
+		
 	}
 }

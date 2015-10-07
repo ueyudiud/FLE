@@ -11,7 +11,9 @@ import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryWithFluidTank;
+import fle.api.material.IFluidChemInfo;
 import fle.api.net.FlePackets.CoderTileUpdate;
+import fle.api.util.IChemCondition;
 import fle.core.recipe.FLEBoilingHeaterRecipe;
 import fle.core.recipe.FLEBoilingHeaterRecipe.BHKey;
 import fle.core.recipe.FLEBoilingHeaterRecipe.BHRecipe;
@@ -19,7 +21,7 @@ import fle.core.recipe.FluidSolidMixRecipe;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.argil.TileEntityBoilingHeater;
 
-public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoilingHeater>
+public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoilingHeater> implements IChemCondition
 {
 	private static final int[] a = {0, 1};
 	private static final int[] b = {2, 3};
@@ -62,6 +64,13 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 	}
 	
 	@Override
+	public ItemStack decrStackSize(int i, int size)
+	{
+		if(key != null && i == 2) return null;
+		return super.decrStackSize(i, size);
+	}
+	
+	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
@@ -88,10 +97,13 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 	{
 		return key == null ? 0 : (int) ((float) recipeTick / (float) key.energyNeed * i);
 	}
+	
+	int tem = 295;
 
 	@Override
 	public void updateEntity(TileEntityBoilingHeater tile)
 	{
+		tem = tile.getTemperature(ForgeDirection.UNKNOWN);
 		super.updateEntity(tile);
 		boolean flag = false;
 		if(burnTime == 0 && isBurning)
@@ -116,11 +128,12 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 		}
 		if(key == null)
 		{
-			FluidSolidMixRecipe.mixSolidAndFluid(tank, this, 0);
+			FluidSolidMixRecipe.mixSolidAndFluid(tank, this, 0, this);
 			if(!RecipeHelper.fillOrDrainInventoryTank(this, tank, 0, 1))
 			{
 				flag = true;
 			}
+			recipeTick = 0;
 		}
 		if(tank.getFluid() != null && key == null)
 		{
@@ -167,11 +180,8 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 				}
 			}
 		}
-		if(flag)
-		{
-			syncSlot(tile, 0, 4);
-			syncTank(tile);
-		}
+		syncSlot(tile, 0, 4);
+		syncTank(tile);
 		tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 0, burnTime), 16.0F);
 		tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 1, isBurning ? currectItemBurntime : -1), 16.0F);
 	}
@@ -224,5 +234,23 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 	protected FluidTank getFluidTankFromSide(ForgeDirection aSide)
 	{
 		return aSide != ForgeDirection.DOWN ? tank : null;
+	}
+
+	@Override
+	public EnumPH getPHLevel()
+	{
+		return tank.getFluid() != null ? tank.getFluid().getFluid() instanceof IFluidChemInfo ? ((IFluidChemInfo) tank.getFluid().getFluid()).getFluidPH(tank.getFluid()) : EnumPH.Water : EnumPH.Water;
+	}
+
+	@Override
+	public EnumOxide getOxideLevel()
+	{
+		return tank.getFluid() != null ? tank.getFluid().getFluid() instanceof IFluidChemInfo ? ((IFluidChemInfo) tank.getFluid().getFluid()).getFluidOxide(tank.getFluid()) : EnumOxide.Default : EnumOxide.Default;
+	}
+
+	@Override
+	public int getTemperature()
+	{
+		return tem;
 	}
 }

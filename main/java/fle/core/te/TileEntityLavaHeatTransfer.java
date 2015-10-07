@@ -82,10 +82,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 					buf += 50;
 					tick += rand.nextInt(5);
 					if(tick > 1000) tick = 1000;
-					if(!worldObj.isRemote)
-					{
-						FLE.fle.getNetworkHandler().sendToNearBy(new CoderTankUpdate(getBlockPos()), new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 16.0F));
-					}
+					sendToNearBy(new CoderTankUpdate(getBlockPos()), 16.0F);
 				}
 			}
 			if(buf > 0)

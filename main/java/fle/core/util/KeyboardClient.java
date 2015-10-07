@@ -14,7 +14,7 @@ import fle.core.net.FlePackets.CoderKeyType;
 public class KeyboardClient extends Keyboard
 {
 	private final Minecraft mc = Minecraft.getMinecraft();
-	private final KeyBinding placeKey = new KeyBinding("Place Key", org.lwjgl.input.Keyboard.KEY_P, FLE.MODID);
+	public static final KeyBinding placeKey = new KeyBinding("Place Key", org.lwjgl.input.Keyboard.KEY_P, FLE.MODID);
 	private int lastKeyState;
 	
 	public KeyboardClient()

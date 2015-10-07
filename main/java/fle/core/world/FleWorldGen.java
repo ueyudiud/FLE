@@ -1,11 +1,12 @@
 package fle.core.world;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
@@ -23,7 +24,6 @@ import fle.core.block.BlockLog;
 import fle.core.init.Crops;
 import fle.core.init.IB;
 import fle.core.init.Materials;
-import fle.core.util.Arrays;
 
 public class FleWorldGen implements IWorldGenerator
 {
@@ -44,12 +44,14 @@ public class FleWorldGen implements IWorldGenerator
 	public void generate(Random random, int chunkX, int chunkZ, World world,
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) 
 	{
+		TreeInfo.genFlag = false;
 		switch(world.provider.dimensionId)
 		{
 		case 1 : this.generateEnd(random, chunkX * 16, chunkZ * 16, world);
 		case 0 : this.generateSurface(random, chunkX * 16, chunkZ * 16, world);
 		case -1 : this.generateNether(random, chunkX * 16, chunkZ * 16, world);
 		}
+		TreeInfo.genFlag = true;
 	}
 	
 	public void generateEnd(Random random, int x, int z, World world)
@@ -99,34 +101,55 @@ public class FleWorldGen implements IWorldGenerator
 		break;
 		}
 		int s = world.getBiomeGenForCoords(x * 16 + 8, z * 16 + 8).theBiomeDecorator.treesPerChunk;
+		Map<TreeInfo, Integer> info = new HashMap();
 		for(TreeInfo tInfo : BlockLog.trees)
 		{
-			if(random.nextInt(20) == s)
-				generateTree(tInfo, world, random, x, z);
+			int weight = tInfo.getGenerateWeight(world, x, z);
+			if(weight > 0) info.put(tInfo, weight);
+		}
+		WeightHelper<TreeInfo> wh = new WeightHelper<TreeInfo>(info);
+		if(random.nextInt(4) == 0 && wh.allWeight() > 0)
+		{
+			generateTree(wh.randomGet(), world, random, x, z);
 		}
 		switch(random.nextInt(128))
 		{
-		case 1 : generateCrop(Crops.millet, world, random, x, z, 8, 16);
+		case 33:;
+		case 17:;
+		case 1 : generateCrop(Crops.millet, world, random, x, z, 125, 8);
 		break;
-		case 2 : generateCrop(Crops.ramie, world, random, x, z, 8, 16);
+		case 34:;
+		case 18:;
+		case 2 : generateCrop(Crops.ramie, world, random, x, z, 125, 8);
 		break;
-		case 3 : generateCrop(Crops.soybean, world, random, x, z, 8, 16);
+		case 35:;
+		case 19:;
+		case 3 : generateCrop(Crops.soybean, world, random, x, z, 125, 8);
 		break;
-		case 4 : generateCrop(Crops.cotton, world, random, x, z, 8, 12);
+		case 36:;
+		case 20:;
+		case 4 : generateCrop(Crops.cotton, world, random, x, z, 125, 8);
 		break;
-		case 5 :;
-		case 6 :;
-		case 7 :;
+		case 21:;
+		case 5 : generateCrop(Crops.potato, world, random, x, z, 125, 8);
+		break;
+		case 22:;
+		case 6 : generateCrop(Crops.sweet_potato, world, random, x, z, 125, 8);
+		break;
+		case 39:;
+		case 23:;
+		case 7 : generateCrop(Crops.wheat, world, random, x, z, 125, 8);
+		break;
 		case 8 :;
 		case 9 :;
 		case 10 :;
 		case 11 :;
 		case 12 :;
 		break;
-		case 13 : generateVine(world, random, x, z, 5, 20);
-		case 14 : generateVine(world, random, x, z, 5, 20);
-		case 15 : generateVine(world, random, x, z, 5, 20);
-		case 16 : generateVine(world, random, x, z, 5, 20);
+		case 13 :;
+		case 14 :;
+		case 15 :;
+		case 16 : generateVine(world, random, x, z, 100, 20);
 		break;
 		default : break;
 		}
@@ -153,10 +176,10 @@ public class FleWorldGen implements IWorldGenerator
 	
 	public boolean generateTree(TreeInfo tInfo, World world, Random random, int x, int z)
 	{
-		for (int count = tInfo.getGenerateWeight(world, x + 8, z + 8); count > 0; count--)
+		for (int count = tInfo.getGenerateWeight(world, x + 8, z + 8) * 3; count > 0; count--)
 		{
 			int y;
-			for (y = 128 - 1; world.isAirBlock(x, y - 1, z) && y > 0; y--);
+			for (y = 255; world.isAirBlock(x, y - 1, z) && y > 0; y--);
 			if (tInfo.generate(world, x, y, z, random))
 				count -= 3;
 			x += random.nextInt(15) - 7;

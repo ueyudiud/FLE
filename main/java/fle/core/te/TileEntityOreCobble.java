@@ -99,7 +99,7 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 					amount *= recipe.productivity;
 					this.progress = 0D;
 					FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, MaterialOre.getOreID(ore));
-					worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
+					markRenderForUpdate();
 				}
 			}
 		}

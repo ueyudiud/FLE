@@ -1,5 +1,9 @@
 package fle.api.gui;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,6 +17,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import fle.api.FleAPI;
 import fle.api.FleValue;
@@ -184,50 +189,94 @@ public abstract class GuiContainerBase extends GuiContainer
 
 	protected void drawTooltip(int x, int y, String tooltip)
 	{
-		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-		GL11.glDisable(32826);
-		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(2896);
-		GL11.glDisable(2929);
-		x += 10;
-		y -= 8;
-		int width = fontRenderer.getStringWidth(tooltip) + 8;
-		int height = 8;
-		int backgroundColor = 255;
-		int borderColor = 0x1D0051FF;
-		GL11.glDisable(3553);
-		GL11.glEnable(3042);
-		GL11.glDisable(3008);
-		GL11.glBlendFunc(770, 771);
-		GL11.glShadeModel(7425);
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		drawRectangle(tessellator, x - 3, y - 4, x + width + 3, y - 3, backgroundColor);
-		drawRectangle(tessellator, x - 3, y + height + 3, x + width + 3, y + height + 4, backgroundColor);
-		drawRectangle(tessellator, x - 3, y - 3, x + width + 3, y + height + 3, backgroundColor);
-		drawRectangle(tessellator, x - 4, y - 3, x - 3, y + height + 3, backgroundColor);
-		drawRectangle(tessellator, x + width + 3, y - 3, x + width + 4, y + height + 3, backgroundColor);
-		drawRectangle(tessellator, x - 3, (y - 3) + 1, (x - 3) + 1, (y + height + 3) - 1, borderColor);
-		drawRectangle(tessellator, x + width + 2, (y - 3) + 1, x + width + 3, (y + height + 3) - 1, borderColor);
-		drawRectangle(tessellator, x - 3, y - 3, x + width + 3, (y - 3) + 1, borderColor);
-		drawRectangle(tessellator, x - 3, y + height + 2, x + width + 3, y + height + 3, borderColor);
-		tessellator.draw();
-		GL11.glShadeModel(7424);
-		GL11.glDisable(3042);
-		GL11.glEnable(3008);
-		GL11.glEnable(3553);
-		fontRenderer.drawStringWithShadow(tooltip, x + 4, y, -2);
-		GL11.glEnable(2896);
-		GL11.glEnable(2929);
+		drawTooltip(x, y, Arrays.asList(tooltip));
+	}
+	protected void drawTooltip(int x, int y, List<String> tooltip)
+	{
+        if (!tooltip.isEmpty())
+        {
+        	FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            RenderHelper.disableStandardItemLighting();
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            int k = 0;
+            Iterator iterator = tooltip.iterator();
+
+            while (iterator.hasNext())
+            {
+                String s = (String)iterator.next();
+                int l = font.getStringWidth(s);
+
+                if (l > k)
+                {
+                    k = l;
+                }
+            }
+
+            int j2 = x + 12;
+            int k2 = y - 12;
+            int i1 = 8;
+
+            if (tooltip.size() > 1)
+            {
+                i1 += 2 + (tooltip.size() - 1) * 10;
+            }
+
+            if (j2 + k > this.width)
+            {
+                j2 -= 28 + k;
+            }
+
+            if (k2 + i1 + 6 > this.height)
+            {
+                k2 = this.height - i1 - 6;
+            }
+
+            this.zLevel = 300.0F;
+            itemRender.zLevel = 300.0F;
+            int j1 = -267386864;
+            drawGradientRect(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
+            drawGradientRect(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
+            drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
+            drawGradientRect(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
+            drawGradientRect(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
+            int k1 = 1347420415;
+            int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
+            drawGradientRect(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
+            drawGradientRect(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
+            drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
+            drawGradientRect(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
+
+            for (int i2 = 0; i2 < tooltip.size(); ++i2)
+            {
+                String s1 = (String)tooltip.get(i2);
+                font.drawStringWithShadow(s1, j2, k2, -1);
+
+                if (i2 == 0)
+                {
+                    k2 += 2;
+                }
+
+                k2 += 10;
+            }
+
+            zLevel = 0.0F;
+            itemRender.zLevel = 0.0F;
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            RenderHelper.enableStandardItemLighting();
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        }
 	}
 
 	private void drawRectangle(Tessellator tessellator, int x1, int y1, int x2, int y2, int color)
 	{
 		tessellator.setColorRGBA(color >>> 24 & 0xff, color >>> 16 & 0xff, color >>> 8 & 0xff, color & 0xff);
-		tessellator.addVertex(x2, y1, 300D);
-		tessellator.addVertex(x1, y1, 300D);
-		tessellator.addVertex(x1, y2, 300D);
-		tessellator.addVertex(x2, y2, 300D);
+		tessellator.addVertex(x2, y1, zLevel);
+		tessellator.addVertex(x1, y1, zLevel);
+		tessellator.addVertex(x1, y2, zLevel);
+		tessellator.addVertex(x2, y2, zLevel);
 	}
 	
 	protected void drawFleRect(int x, int y, int u, int v, int color)

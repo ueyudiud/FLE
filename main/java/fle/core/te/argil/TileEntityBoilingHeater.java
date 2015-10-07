@@ -121,4 +121,9 @@ public class TileEntityBoilingHeater extends TEIT<InventoryBoilingHeater> implem
 		if(type == 1)
 			inv.setCBT((Integer) contain);
 	}
+
+	public void resetRecipe()
+	{
+		inv.key = null;
+	}
 }

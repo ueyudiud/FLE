@@ -22,6 +22,7 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 	{
 		a(new OilMillRecipe(new ItemBaseStack(ItemFleSeed.a("soybean")), ItemFleSub.a("plant_waste"), 0.08F, new FluidStack(IB.plantOil, 25)));
 		a(new OilMillRecipe(new ItemBaseStack(ItemFleSeed.a("suger_cances")), ItemFleSub.a("plant_waste"), 0.2F, new FluidStack(IB.sugarcane_juice, 50)));
+		a(new OilMillRecipe(new ItemBaseStack(Items.apple), ItemFleSub.a("plant_waste"), 0.15F, new FluidStack(IB.apple_juice, 30)));
 	}
 	
 	public static FLEOilMillRecipe getInstance()

@@ -12,7 +12,6 @@ import fle.api.recipe.ItemOreStack;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
-import fle.core.tool.AxeHandler;
 
 public class RecipeHandler 
 {

@@ -37,7 +37,6 @@ public abstract class FLELayer extends GenLayer
 	public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType type)
     {
         boolean flag = false;
-        shouldDraw = true;
         if(type == FLEWorldType.FLAT)
         {
         	FLELayerFlat gen0 = new FLELayerFlat();

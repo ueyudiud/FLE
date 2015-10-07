@@ -29,6 +29,8 @@ public class TileEntityDryingTable extends TEInventory<InventoryDryingTable>
 		return water == 0D ? WorldUtil.getWaterLevel(worldObj, xCoord, yCoord, zCoord) : water;
 	}
 	
+	int tick = 0;
+	
 	@Override
 	public void updateInventory() 
 	{	
@@ -39,6 +41,12 @@ public class TileEntityDryingTable extends TEInventory<InventoryDryingTable>
 			levelCheckBuffer = 0;
 			tem = WorldUtil.getTempretureLevel(worldObj, xCoord, yCoord, zCoord);
 			water = WorldUtil.getWaterLevel(worldObj, xCoord, yCoord, zCoord);
+		}
+		++tick;
+		if(tick > 100)
+		{
+			markNBTUpdate();
+			tick = 0;
 		}
 	}
 

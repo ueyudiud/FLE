@@ -14,6 +14,8 @@ public class TileEntityPolish extends TEInventory<InventoryPolish>
 	{
 		super(new InventoryPolish());
 	}
+	
+	int tick = 0;
 
 	public void clearMap()
 	{
@@ -46,6 +48,12 @@ public class TileEntityPolish extends TEInventory<InventoryPolish>
 	public void updateInventory() 
 	{
 		inv.updateEntity(this);
+		++tick;
+		if(tick > 100)
+		{
+			markNBTUpdate();
+			tick = 0;
+		}
 	}
 	
 	@Override

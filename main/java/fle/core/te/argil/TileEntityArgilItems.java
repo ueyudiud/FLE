@@ -1,5 +1,7 @@
 package fle.core.te.argil;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,12 +39,19 @@ public class TileEntityArgilItems extends TEBase implements IThermalTileEntity
 		}
 	}
 	
+	@SideOnly(Side.SERVER)
+	private int tick = 0;
+	
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 		bakeClay();
-		markRenderForUpdate();
+		++tick;
+		if(tick > 20)
+		{
+			markNBTUpdate();
+		}
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
 	}

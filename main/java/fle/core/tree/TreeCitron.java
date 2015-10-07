@@ -1,27 +1,28 @@
 package fle.core.tree;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.EnumPlantType;
-import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
+import fle.api.FleValue;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
-import fle.api.world.TreeInfo;
 import fle.core.block.BlockLog;
 import fle.core.init.IB;
+import fle.core.item.ItemFleFood;
 import fle.core.util.TextureLocation;
+import fle.core.world.biome.FLEBiome;
 
-public class TreeCitron extends TreeInfo
+public class TreeCitron extends TreeBase
 {	
 	public TreeCitron()
 	{
@@ -32,21 +33,21 @@ public class TreeCitron extends TreeInfo
 	public int getGenerateWeight(World world, int x, int z) 
 	{
 		BiomeGenBase tBiome = world.getBiomeGenForCoords(x, z);
-		return tBiome == BiomeGenBase.forest || tBiome == BiomeGenBase.forestHills ? 6 :
-			tBiome == BiomeGenBase.jungle || tBiome == BiomeGenBase.plains ? 2 : -1;
+		return tBiome == FLEBiome.warm_forest || tBiome == FLEBiome.forestHills ? 6 :
+			tBiome == FLEBiome.jungle || tBiome == FLEBiome.warm_plains ? 2 : -1;
 	}
 
 	@Override
 	public boolean generate(World world, int x, int y, int z, Random rand) 
 	{
-		if(!world.getBlock(x, y, z).canSustainPlant(world, x, y, z, ForgeDirection.UP, this))
+		if(!world.getBlock(x, y - 1, z).canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, this))
 			return false;
 		Block woodBlock = IB.log;
 		Block leavesBlock = IB.leaf;
-		int height = getGrowHeight(world, x, y, z);
+		int height = getGrowHeight(world, x, y, z, 2, 6, 1.3F);
 		if (height < 2)
 			return false;
-		height -= rand.nextInt(height / 2 + 1);
+		height = height + height / 3 - rand.nextInt(height / 2 + 1);
 		for (int cHeight = 0; cHeight < height; cHeight++)
 		{
 			setBlock(woodBlock, world, x, y + cHeight, z, false, rand);
@@ -54,13 +55,16 @@ public class TreeCitron extends TreeInfo
 				continue;
 			for(int cx = -4; cx <= 4; ++cx)
 				for(int cz = -4; cz <= 4; ++cz)
-					if((Math.pow(cx, 2.0D) + Math.pow(cz, 2.0D)) <= 5)
+					if(cx * cx + cz * cz <= 7)
 						setBlock(leavesBlock, world, x + cx, y + cHeight, z + cz, true, rand);
 		}
 
-		for (int i = 0; i <= height / 4 + rand.nextInt(2); i++)
-			if (world.isAirBlock(x, y + height + i, z))
-				setBlock(leavesBlock, world, x, y + height, z, true, rand);
+		int height2 = height / 4 + rand.nextInt(2);
+		for (int i = 0; i <= height2; i++)
+			for(int cx = -2; cx <= 2; ++cx)
+				for(int cz = -2; cz <= 2; ++cz)
+					if (world.getBlock(x, y + height + i, z).canBeReplacedByLeaves(world, x, y + height + i, z) && cx * cx + cz * cz <= 1)
+						setBlock(leavesBlock, world, x + cx, y + height, z + cz, true, rand);
 		return true;
 	}
 	
@@ -68,31 +72,11 @@ public class TreeCitron extends TreeInfo
 	{
 		if(world.getBlock(x, y, z).isReplaceable(world, x, y, z))
 		{
-			world.setBlock(x, y, z, block);
+			setBlock(world, x, y, z, block, 0);
 			BlockLog.setData(new BlockPos(world, x, y, z), (short) BlockLog.trees.serial(this));
 			if(doRand && rand.nextInt(4) == 0)
 				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, 1);
 		}
-	}
-
-	public int getGrowHeight(World world, int x, int y, int z)
-	{
-		BlockPos pos = new BlockPos(world, x, y, z);
-		Block base = pos.toPos(ForgeDirection.DOWN).getBlock();
-		if(!base.isSideSolid(world, x, y, z, ForgeDirection.UP))
-			return 0;
-		int height;
-		BlockPos pos1 = pos.toPos(ForgeDirection.UP);
-		for (height = 1; height < 5; height++)
-		{
-			if(pos1.getBlock().isAir(world, x, y, z))
-			{
-				pos1 = pos1.toPos(ForgeDirection.UP);
-				continue;
-			}
-			break;
-		}
-		return height;
 	}
 
 	@Override
@@ -136,7 +120,7 @@ public class TreeCitron extends TreeInfo
 		{
 			if(!world.isRemote)
 			{
-				dropBlockAsItem(world, x, y, z, new ItemStack(Items.apple));
+				dropBlockAsItem(world, x, y, z, ItemFleFood.a("citron", 1 + player.getRNG().nextInt(2)));
 				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, 0);
 				world.markBlockForUpdate(x, y, z);
 			}
@@ -148,7 +132,7 @@ public class TreeCitron extends TreeInfo
 	@Override
 	public void onLeavesUpdate(World world, int x, int y, int z, Random rand)
 	{
-		if(rand.nextInt(10) == 0)
+		if(rand.nextInt(8) == 0)
 		{
 			int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Age);
 			boolean flag = false;
@@ -158,7 +142,21 @@ public class TreeCitron extends TreeInfo
 				world.markBlockForUpdate(x, y, z);
 				return;
 			}
-			if(meta == 0 && rand.nextInt(4) == 0)
+			if(meta < 24 && meta != 0 && rand.nextInt(3) == 0)
+			{
+				if(rand.nextInt(8) < meta - 16)
+				{
+					dropBlockAsItem(world, x, y - 1, z, ItemFleFood.a("citron", 1 + rand.nextInt(2)));
+					FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, 0);
+				}
+				else
+				{
+					FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, ++meta);
+				}
+				world.markBlockForUpdate(x, y, z);
+				return;
+			}
+			if(meta == 0 && rand.nextInt(6) == 0)
 			{
 				FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Age, 1);
 				world.markBlockForUpdate(x, y, z);
@@ -166,6 +164,19 @@ public class TreeCitron extends TreeInfo
 			}
 			
 		}
+	}
+	
+	@Override
+	public void getLeavesInfomation(World world, int x, int y, int z,
+			List aList)
+	{
+		int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Age);
+		
+		if(meta != 0)
+		{
+			aList.add("Growing Progress : " + FleValue.format_progress.format_c((double) Math.min(meta, 16) / 16D));
+		}
+		super.getLeavesInfomation(world, x, y, z, aList);
 	}
 
 	@Override

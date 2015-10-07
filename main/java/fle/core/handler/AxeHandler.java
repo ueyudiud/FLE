@@ -1,4 +1,4 @@
-package fle.core.tool;
+package fle.core.handler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class AxeHandler
 	
 	public static ItemStack IC2RubWood;
 	
-	static
+	public static void init()
 	{
 		registryAxe(new ItemOreStack("craftingToolAxe"));
 		Map<ItemStack, Integer> map = new HashMap();

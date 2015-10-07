@@ -1,6 +1,8 @@
 package fle.core.block;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -8,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ColorizerFoliage;
@@ -19,11 +22,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.block.BlockHasSub;
+import fle.api.block.IDebugableBlock;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
 import fle.api.world.TreeInfo;
 
-public class BlockLeaves extends BlockHasSub
+public class BlockLeaves extends BlockHasSub implements IDebugableBlock
 {
 	private Map<String, IIcon[]> iconMap;
 	
@@ -316,6 +320,13 @@ public class BlockLeaves extends BlockHasSub
         }
         world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 8, 4);
     }
+    
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
+    		int metadata, int fortune)
+    {
+    	return new ArrayList();
+    }
 
 	@Override
 	public int getMetadata(World world, int x, int y, int z) 
@@ -332,5 +343,19 @@ public class BlockLeaves extends BlockHasSub
 	public static void setData(BlockPos aPos, int meta)
 	{
 		FLE.fle.getWorldManager().setData(aPos, EnumWorldNBT.Metadata, meta);
+	}
+
+	@Override
+	public void addInfomationToList(World aWorld, int x, int y, int z,
+			List aList)
+	{
+		try
+		{
+			BlockLog.trees.get(BlockLog.getTreeInfoID(aWorld, x, y, z)).getLeavesInfomation(aWorld, x, y, z, aList);
+		}
+		catch(Throwable e)
+		{
+			aList.add("This tree log is lost NBT! Please report this bug if this world did'n lost chunk NBT before.");
+		}
 	}
 }

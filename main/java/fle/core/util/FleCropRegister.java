@@ -37,7 +37,7 @@ public class FleCropRegister extends CropRegister
 	@Override
 	public CropCard getCropFromName(String name) 
 	{
-		return cropRegister.get(name);
+		return name == null || name == "" ? null : cropRegister.get(name);
 	}
 
 	@Override

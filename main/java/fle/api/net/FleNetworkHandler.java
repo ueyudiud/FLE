@@ -1,20 +1,26 @@
 package fle.api.net;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 
 public interface FleNetworkHandler 
 {
-	public <T extends FleAbstractPacket> void registerMessage(Class<? extends T> aType, Side side);
+	<T extends FleAbstractPacket> void registerMessage(Class<? extends T> aType, Side side);
 
-	public void sendTo(FleAbstractPacket aPacket);
+	void sendTo(FleAbstractPacket aPacket);
 
-	public void sendToPlayer(FleAbstractPacket aPacket, EntityPlayerMP aPlayer);
+	void sendToPlayer(FleAbstractPacket aPacket, EntityPlayerMP aPlayer);
 
-	public void sendToDim(FleAbstractPacket aPacket, int dim);
+	void sendToDim(FleAbstractPacket aPacket, int dim);
 
-	public void sendToServer(FleAbstractPacket aPacket);
+	void sendToServer(FleAbstractPacket aPacket);
 
-	public void sendToNearBy(FleAbstractPacket aPacket, TargetPoint aPoint);
+	void sendToNearBy(FleAbstractPacket aPacket, TargetPoint aPoint);
+
+	void sendLargePacket(FleAbstractPacket aPacket, TargetPoint aPoint);
+	
+	void onPacket(int typeID, ByteBuf subData, MessageContext ctx) throws Throwable;
 }

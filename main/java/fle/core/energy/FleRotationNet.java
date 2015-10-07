@@ -1,14 +1,14 @@
 package fle.core.energy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import fle.api.energy.IRotationTileEntity;
 import fle.api.energy.RotationNet;
@@ -16,7 +16,7 @@ import fle.api.world.BlockPos;
 
 public class FleRotationNet extends RotationNet
 {
-	private List<Integer> windLevels = new ArrayList();
+	private Map<Integer, Integer> windLevels = new HashMap();
 	
 	public FleRotationNet()
 	{
@@ -24,7 +24,7 @@ public class FleRotationNet extends RotationNet
 		FMLCommonHandler.instance().bus().register(this);
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onWorldUpdate(TickEvent.WorldTickEvent evt)
 	{
 		if(evt.world.getWorldTime() % 200 == 0)
@@ -79,19 +79,19 @@ public class FleRotationNet extends RotationNet
 						level += evt.world.rand.nextInt(5);
 					}
 				}
-				windLevels.set(evt.world.provider.dimensionId, level);
+				windLevels.put(evt.world.provider.dimensionId, level);
 			}
 		}
 		
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onWorldLodad(WorldEvent.Load evt)
 	{
-		windLevels.set(evt.world.provider.dimensionId, 0);
+		windLevels.put(evt.world.provider.dimensionId, 0);
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onWorldUnlodad(WorldEvent.Unload evt)
 	{
 		windLevels.remove(evt.world.provider.dimensionId);
@@ -100,7 +100,14 @@ public class FleRotationNet extends RotationNet
 	@Override
 	public int getWindSpeed(BlockPos pos)
 	{
-		return windLevels.get(pos.getDim()) * 10 + Math.max((pos.y - 128) / 10, 0) + (pos.getBiome().getTempCategory() == TempCategory.OCEAN ? 4 : 2);
+		if(windLevels.containsKey(pos.getDim()))
+		{
+			return windLevels.get(pos.getDim()) * (6 + Math.max((pos.y - 128) / 10, 0) + (pos.getBiome().getTempCategory() == TempCategory.OCEAN ? 4 : 2));
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	@Override

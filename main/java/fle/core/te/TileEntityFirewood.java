@@ -6,10 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
-import fle.api.enums.EnumAtoms;
 import fle.api.material.IAtoms.EnumCountLevel;
 import fle.api.material.Matter;
-import fle.api.net.FlePackets.CoderNBTUpdate;
 import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.te.TEBase;
@@ -19,7 +17,7 @@ import fle.core.init.Config;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 
-public class TileEntityFirewood extends TEBase implements IThermalTileEntity, INetEventListener
+public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 {
 	private final int charcoalPower = Config.getInteger("pCharcoal", 5000);
 	private final int firewoodPower = Config.getInteger("pFirewood", 4000);
@@ -116,7 +114,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity, IN
 		}
 		if(flag)
 		{
-			sendToNearBy(new CoderTileUpdate(this, (byte) 0, burnState), 128.0F);
+			markNBTUpdate();
 			markForUpdate();
 		}
 		heatCurrect.update();
@@ -225,14 +223,5 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity, IN
 	public double getPreHeatEmit()
 	{
 		return heatCurrect.getPreHeatEmit();
-	}
-
-	@Override
-	public void onReseave(byte type, Object contain)
-	{
-		if(type == 0)
-		{
-			burnState = (Byte) contain;
-		}
 	}
 }

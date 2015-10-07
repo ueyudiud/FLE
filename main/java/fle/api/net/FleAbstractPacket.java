@@ -15,20 +15,21 @@ import fle.api.util.FleDataInputStream;
 import fle.api.util.FleDataOutputStream;
 
 public abstract class FleAbstractPacket<T extends FleAbstractPacket> implements IMessage, IMessageHandler<T, IMessage>
-{
+{	
 	protected abstract void write(FleDataOutputStream os) throws IOException;
 	
 	protected abstract void read(FleDataInputStream is) throws IOException;
 
 	public abstract IMessage onMessage(T message, MessageContext ctx);
 	
-	private final void init(ByteBuf buf)
+	public final void init(ByteBuf buf, boolean flag)
 	{
 		FleDataOutputStream os = new FleDataOutputStream(buf);
 		try
 		{
 			write(os);
-			os.close();
+			if(flag)
+				os.close();
 		}
 		catch (IOException e) 
 		{
@@ -52,6 +53,6 @@ public abstract class FleAbstractPacket<T extends FleAbstractPacket> implements 
 	@Override
 	public final void toBytes(ByteBuf buf)
 	{
-		init(buf);
+		init(buf, true);
 	}
 }

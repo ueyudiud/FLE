@@ -96,6 +96,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(414, "white_snakeroot", "White Snakeroot", "crop/white_snakeroot");
 		addSubItem(415, "cotton_rough", "Cotton With Seed", "crop/cotton_rough");
 		addSubItem(416, "cotton", "Cotton", "crop/cotton");
+		addSubItem(417, "sprouted_potato", "Sprouted Potato", "crop/sprouted_potato");
 		addSubItem(1001, "leaves_dry", "Dry Leaves", "tree/1001");
 		addSubItem(1002, "tinder", "Tinder", "tree/1002");
 		addSubItem(1003, "ramie_fiber_dry", "Dry Ramie Fiber", "crop/ramie_fiber_dry");

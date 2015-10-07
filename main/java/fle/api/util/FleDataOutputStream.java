@@ -210,6 +210,11 @@ public class FleDataOutputStream
 		}
 	}
 
+	public void writeBytes(byte[] bs) throws IOException
+	{
+		stream.writeBytes(bs);
+	}
+
 	public void write(Object contain) throws IOException
 	{
 		write(contain, true);
@@ -298,6 +303,11 @@ public class FleDataOutputStream
 			if(writeType) writeByte((byte) 15);
 			writeIntArray((int[]) contain);
 		}
+	}
+	
+	public ByteBuf getBuf()
+	{
+		return stream;
 	}
 	
 	public void close() throws IOException

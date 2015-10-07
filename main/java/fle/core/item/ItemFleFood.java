@@ -8,6 +8,7 @@ import fle.api.util.FleLog;
 import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.FoodBowl;
+import fle.core.item.behavior.FoodKebab;
 import fle.core.item.behavior.FoodStandard;
 import fle.core.util.TextureLocation;
 
@@ -29,8 +30,13 @@ public class ItemFleFood extends fle.api.item.ItemFleFood
 		addSubItem(1202, "millet_congee_raw", "Raw Millet Congee", "food/millet_congee_raw", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
 		addSubItem(1203, "millet_congee_rough", "Rough Millet Congee", "food/millet_congee_rough", new FoodBowl(EnumFoodType.Refection, 7, 1.1F));
 		addSubItem(1204, "millet_congee_rough_raw", "Raw Rough Millet Congee", "food/millet_congee_rough_raw", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
-		addSubItem(10001, "brown_sugar", "Brown Sugar", "food/brown_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
-		addSubItem(10002, "sugar", "White Sugar", "food/white_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.6F));
+		addSubItem(5001, "brown_sugar", "Brown Sugar", "food/brown_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(5002, "sugar", "White Sugar", "food/white_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.6F));
+		addSubItem(10001, "chicken_kebab_raw", "Raw Chicken Kebab", "food/chicken_kebab_raw", new FoodKebab(EnumFoodType.Snack, 2, 0.2F));
+		addSubItem(10002, "pork_kebab_raw", "Raw Pork Kebab", "food/pork_kebab_raw", new FoodKebab(EnumFoodType.Snack, 3, 0.2F));
+		addSubItem(10011, "chicken_kebab", "Chicken Kebab", "food/chicken_kebab", new FoodKebab(EnumFoodType.Snack, 3, 0.6F));
+		addSubItem(10012, "pork_kebab", "Pork Kebab", "food/pork_kebab", new FoodKebab(EnumFoodType.Snack, 4, 0.7F));
+		addSubItem(20001, "citron", "Citron", "food/citron", new FoodStandard(EnumFoodType.Resource, 1, 0.0F));
 		return this;
 	}
 

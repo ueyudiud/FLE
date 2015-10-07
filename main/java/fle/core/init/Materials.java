@@ -1,13 +1,18 @@
 package fle.core.init;
 
+import static fle.api.enums.CompoundType.Alloy;
+import static fle.api.enums.EnumAtoms.As;
+import static fle.api.enums.EnumAtoms.Cu;
+import static fle.api.enums.EnumAtoms.Pb;
+import static fle.api.enums.EnumAtoms.Sn;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import net.minecraft.init.Blocks;
-import static fle.api.enums.CompoundType.*;
-import static fle.api.enums.EnumAtoms.*;
+import net.minecraft.item.ItemStack;
 import fle.api.enums.EnumAtoms;
 import fle.api.material.MaterialAbstract;
 import fle.api.material.MaterialAlloy;
@@ -17,6 +22,7 @@ import fle.api.material.Matter;
 import fle.api.material.Matter.AtomStack;
 import fle.api.material.PropertyInfo;
 import fle.api.util.FleEntry;
+import fle.api.util.IChemCondition.EnumPH;
 import fle.api.util.SubTag;
 import fle.core.util.DitchInfo;
 import fle.core.util.FleAlloy;
@@ -145,7 +151,7 @@ public class Materials
 		CuSnPb = new MaterialAlloy("CuSnPb", new Matter(Alloy, new AtomStack(Cu, 8), new AtomStack(Sn, 1), new AtomStack(Pb, 1)), 
 				new PropertyInfo(0xD0B36A, 208, 682, 1735, 689, 5839, 0.26F, 1600, 1.6F, 1.2F, 1.11F, 0.19F, 99000000, 129F, 0.87F, 0.29F), 
 				new FleAlloy(FleEntry.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.8D, 0.9D}), new FleEntry(EnumAtoms.Sn, new double[]{0.05D, 0.15D}), new FleEntry(EnumAtoms.Pb, new double[]{0.05D, 0.15D}))), SubTag.TOOL_metal_tier1);
-		ditch_stone = new DitchInfo("Stone", Stone, Blocks.stone, 0.01F, 9000, 1500);
+		ditch_stone = new DitchInfo("Stone", Stone, new ItemStack(Blocks.stone), 9000, 0.01F, EnumPH.Strong_Acid, EnumPH.Weak_Alkali, 1500);
 		ditch_wood0 = new DitchInfo("Wood0", HardWood, Blocks.planks, 0, 0.03F, 4000, 380);
 		ditch_wood1 = new DitchInfo("Wood1", SoftWood, Blocks.planks, 1, 0.06F, 5000, 375);
 		ditch_wood2 = new DitchInfo("Wood2", HardWood, Blocks.planks, 2, 0.03F, 4000, 380);

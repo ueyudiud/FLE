@@ -51,10 +51,10 @@ public class FLE implements FleModHandler
 {	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.05d";
+    public static final String VERSION = "2.05e";
     public static final int minForge = 1420;
     
-    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775772L);
+    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775741L);
 	
     @Instance(MODID)
     public static FLE fle;

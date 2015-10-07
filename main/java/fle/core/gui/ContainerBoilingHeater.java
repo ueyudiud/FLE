@@ -6,9 +6,11 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import fle.api.gui.ContainerCraftable;
 import fle.api.gui.SlotHolographic;
+import fle.api.net.INetEventListener;
+import fle.api.te.IFluidTanks;
 import fle.core.te.argil.TileEntityBoilingHeater;
 
-public class ContainerBoilingHeater extends ContainerCraftable
+public class ContainerBoilingHeater extends ContainerCraftable implements INetEventListener
 {
 	public ContainerBoilingHeater(InventoryPlayer player, final TileEntityBoilingHeater tile)
 	{
@@ -50,5 +52,18 @@ public class ContainerBoilingHeater extends ContainerCraftable
 			}
 		}
 		return super.slotClick(aSlotID, aMouseclick, aShifthold, aPlayer);
+	}
+
+	@Override
+	public void onReseave(byte type, Object contain)
+	{
+		if(type == 0)
+		{
+			if((Integer) contain == 0)
+			{
+				((IFluidTanks) inv).drainTank(0, ((IFluidTanks) inv).getTank(0).getCapacity(), true);
+				((TileEntityBoilingHeater) inv).resetRecipe();
+			}
+		}
 	}
 }

@@ -11,7 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemBaseStack extends ItemAbstractStack
 {
-	ItemStack stack;
+	public ItemStack stack;
 
 	public ItemBaseStack(Block aBlock) 
 	{

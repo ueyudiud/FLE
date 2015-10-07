@@ -26,11 +26,12 @@ import fle.api.util.ColorMap;
 import fle.api.util.Compact;
 import fle.api.util.IFuelHandler;
 import fle.api.util.ILanguageManager;
+import fle.api.world.BlockPos;
 
 public class FleAPI 
 {
 	public static final String MODID = "FLE";
-	public static volatile int VERSION = 202;
+	public static volatile int VERSION = 205;
 	@SideOnly(Side.CLIENT)
 	public static ResourceLocation conditionLocate = new ResourceLocation("textures/atlas/condition.png");
 	@SideOnly(Side.CLIENT)
@@ -200,6 +201,18 @@ public class FleAPI
 		else
 		{
 			return -1;
+		}
+	}
+	
+	public static int getWindSpeed(BlockPos aPos)
+	{
+		try
+		{
+			return mod.getRotationNet().getWindSpeed(aPos);
+		}
+		catch(Throwable e)
+		{
+			return 1;
 		}
 	}
 }

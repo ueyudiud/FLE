@@ -66,4 +66,12 @@ public class CraftingState extends GuiCondition
 	{
 		return c;
 	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(!(obj instanceof CraftingState)) return false;
+		CraftingState state = (CraftingState) obj;
+		return state.c == c;
+	}
 }

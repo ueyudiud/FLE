@@ -12,6 +12,7 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.block.IFacingBlock;
 import fle.api.enums.EnumWorldNBT;
+import fle.api.net.FLENBTPacket;
 import fle.api.net.FleAbstractPacket;
 import fle.api.world.BlockPos;
 
@@ -55,6 +56,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	{
 		if(!init)
 		{
+			markNBTUpdate();
 			if(worldObj.getBlockMetadata(xCoord, yCoord, zCoord) != blockMetadata && blockMetadata != -1)
 			{
 				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata, 3);
@@ -74,14 +76,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 			}
 			markRenderForUpdate();
 			init = true;
-			if(worldObj.isRemote)
-			{
-				FLE.fle.getWorldManager().sendData(getBlockPos());
-			}
-			else
-			{
-				FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, blockMetadata);
-			}
+			FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, blockMetadata);
 		}
 	}
 	
@@ -165,6 +160,17 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	public void sendToNearBy(FleAbstractPacket packet, float range)
 	{
 		FleAPI.mod.getNetworkHandler().sendToNearBy(packet, new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, range));
+	}
+	
+	public void sendLarge(FleAbstractPacket pkg, float range)
+	{
+		if(!worldObj.isRemote)
+			FleAPI.mod.getNetworkHandler().sendLargePacket(pkg, new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, range));
+	}
+	
+	public void markNBTUpdate()
+	{
+		sendLarge(new FLENBTPacket(this), 256F);
 	}
 	
 	public void markRenderForUpdate()

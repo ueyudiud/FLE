@@ -1,5 +1,6 @@
 package fle.core.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
@@ -7,6 +8,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
+import fle.api.gui.GuiIconButton;
+import fle.api.gui.GuiIconButton.ButtonSize;
 import fle.core.te.argil.TileEntityBoilingHeater;
 
 @SideOnly(Side.CLIENT)
@@ -45,7 +48,28 @@ public class GuiBoilingHeater extends GuiContainerBase
 		if(tile.getFluidStackInTank(0) != null)
 			drawAreaTooltip(par1, par2, tile.getFluidStackInTank(0).getLocalizedName() + " " + FleValue.format_L.format(tile.getFluidStackInTank(0).amount), xoffset + 66, yoffset + 15, 8, 20);
 	}
-
+	
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+		xoffset = (width - xSize) / 2;
+		yoffset = (height - ySize) / 2;
+		buttonList.add(new GuiIconButton(0, xoffset + 65, yoffset + 42, ButtonSize.Small, GuiIconButton.buttonLocate, 96, 8));
+	}
+	
+	@Override
+	protected void actionPerformed(GuiButton button)
+	{
+		super.actionPerformed(button);
+		if(button.id == 0)
+		{
+			sendToContainer(0, button.id);
+			tile.drainTank(0, tile.getTank(0).getCapacity(), true);
+			tile.resetRecipe();
+		}
+	}
+	
 	@Override
 	public ResourceLocation getResourceLocation()
 	{

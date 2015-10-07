@@ -146,9 +146,20 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 			List aList) 
 	{
 		TreeInfo tree = trees.get(getTreeInfoID(aWorld, x, y, z));
-		if(tree == null)
+		try
+		{
+			aList.add(new StringBuilder().append("Tree Name : ").append(tree.getName()).toString());
+			BlockLog.trees.get(BlockLog.getTreeInfoID(aWorld, x, y, z)).getLogInfomation(aWorld, x, y, z, aList);
+		}
+		catch(Throwable e)
+		{
 			aList.add("This tree log is lost NBT! Please report this bug if this world did'n lost chunk NBT before.");
-
-		aList.add(new StringBuilder().append("Tree Name:").append(tree.getName()).toString());
+		}
+	}
+	
+	@Override
+	public boolean canSustainLeaves(IBlockAccess world, int x, int y, int z)
+	{
+		return true;
 	}
 }

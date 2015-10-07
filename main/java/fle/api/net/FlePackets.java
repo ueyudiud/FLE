@@ -504,40 +504,4 @@ public class FlePackets
 			return null;
 		}
 	}
-	
-	public static class CoderNBTUpdate extends FleAbstractPacket<CoderNBTUpdate>
-	{
-		private BlockPos pos;
-		private NBTTagCompound nbt;
-		
-		public CoderNBTUpdate() {}
-		
-		public CoderNBTUpdate(ITEInWorld tile) 
-		{
-			pos = tile.getBlockPos();
-			tile.getTileEntity().writeToNBT(nbt = new NBTTagCompound());
-		}
-
-		@Override
-		protected void write(FleDataOutputStream os) throws IOException
-		{
-			os.writeBlockPos(pos);
-			os.writeNBT(nbt);
-		}
-
-		@Override
-		protected void read(FleDataInputStream is) throws IOException
-		{
-			pos = is.readBlockPos();
-			nbt = is.readNBT();
-		}
-
-		@Override
-		public IMessage onMessage(CoderNBTUpdate message, MessageContext ctx)
-		{
-			if(message.pos.getBlockTile() != null)
-				message.pos.getBlockTile().readFromNBT(message.nbt);
-			return null;
-		}
-	}
 }

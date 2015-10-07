@@ -128,18 +128,6 @@ public class FlePotionEffect
 		}
 		
 		@Override
-		public void removeAttributesModifiersFromEntity(
-				EntityLivingBase entity, BaseAttributeMap map,
-				int attemp)
-		{
-			super.removeAttributesModifiersFromEntity(entity, map, attemp);
-			if(entity.getActivePotionEffect(bleeding).getDuration() < 10)
-			{
-				entity.addPotionEffect(new PotionEffect(recovery.id, 5000));
-			}
-		}
-		
-		@Override
 		public boolean isReady(int tick, int level)
 		{
 			return tick % (96 / (level + 1)) == 0;

@@ -6,9 +6,11 @@ import fle.api.util.FleEntry;
 import fle.core.block.crop.CropBase;
 import fle.core.block.crop.CropCotton;
 import fle.core.block.crop.CropMillet;
+import fle.core.block.crop.CropPotato;
 import fle.core.block.crop.CropRamie;
 import fle.core.block.crop.CropSoybean;
 import fle.core.block.crop.CropSugerCances;
+import fle.core.block.crop.CropSweetPotato;
 import fle.core.block.crop.CropWheat;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
@@ -21,6 +23,8 @@ public class Crops
 	public static CropBase wheat;
 	public static CropBase suger_cances;
 	public static CropBase cotton;
+	public static CropBase sweet_potato;
+	public static CropBase potato;
 	
 	public static void init()
 	{
@@ -30,6 +34,8 @@ public class Crops
 		wheat = new CropWheat();
 		suger_cances = new CropSugerCances();
 		cotton = new CropCotton();
+		sweet_potato = new CropSweetPotato();
+		potato = new CropPotato();
 	}
 
 	public static void postInit()
@@ -40,6 +46,7 @@ public class Crops
 		wheat.setSeed(ItemFleSeed.a("wheat")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(new ItemStack(Items.wheat), 1)));
 		suger_cances.setSeed(ItemFleSeed.a("suger_cances")).setHaverstDrop(3, FleEntry.asMap(new FleEntry(ItemFleSeed.a("suger_cances"), 1)));
 		cotton.setSeed(ItemFleSeed.a("cotton")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSub.a("cotton_rough"), 1)));
-		
+		sweet_potato.setSeed(ItemFleSeed.a("sweetpotato")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSeed.a("sweetpotato"), 1)));
+		potato.setSeed(ItemFleSeed.a("potato")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSeed.a("potato"), 4), new FleEntry(ItemFleSub.a("sprouted_potato"), 1)));
 	}
 }

@@ -4,12 +4,14 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.client.SplashProgress;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
 import fle.api.recipe.ItemAbstractStack;
+import fle.api.recipe.ItemBaseStack;
 
 public class GuiBook extends GuiBookBase
 {
@@ -17,7 +19,7 @@ public class GuiBook extends GuiBookBase
 	
 	protected RecipeHandler[] recipes;
 	protected RecipesTab tab;
-	
+
 	public GuiBook(RecipesTab aTab)
 	{
 		tab = aTab;

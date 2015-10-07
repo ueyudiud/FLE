@@ -1,5 +1,6 @@
 package fle.core.handler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -226,6 +228,14 @@ public class PlayerHandler
 				evt.drops.add(ItemFleSub.a("rattan"));
 			}
 		}
+		else if(evt.block == Blocks.grass)
+		{
+			for(ItemStack tStack : Util.copy(evt.drops))
+			{
+				if(tStack.getItem() == Items.wheat_seeds)
+					evt.drops.remove(tStack);
+			}
+		}
 	}
 	
 	private int buf = 0;
@@ -260,6 +270,11 @@ public class PlayerHandler
 			if(i != -1)
 			{
 				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "suger_cances"));
+			}
+			i = FleAPI.doesPlayerHas(player, new ItemBaseStack(Items.potato));
+			if(i != -1)
+			{
+				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "potato"));
 			}
 		}
 	}
