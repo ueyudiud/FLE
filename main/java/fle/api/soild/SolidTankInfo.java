@@ -15,4 +15,9 @@ public class SolidTankInfo
 	{
 		return (double) solid.getSize() / (double) capacity;
 	}
+	
+	public boolean haveSolid()
+	{
+		return solid != null;
+	}
 }

@@ -31,22 +31,60 @@ import fle.api.world.BlockPos;
 public class FleAPI 
 {
 	public static final String MODID = "FLE";
+	/**
+	 * The main and second version here.
+	 */
 	public static volatile int VERSION = 205;
+	/**
+	 * The locate of condition icon collection, see {@link fle.api.gui.GuiCondition}.
+	 * Use renderEngine to bind this location when used in GUI.
+	 */
 	@SideOnly(Side.CLIENT)
 	public static ResourceLocation conditionLocate = new ResourceLocation("textures/atlas/condition.png");
+	@Deprecated
 	@SideOnly(Side.CLIENT)
 	public static ResourceLocation fontLocate = new ResourceLocation("textures/atlas/fontLocate");
+	/**
+	 * Condition icon register.
+	 * Called when load icons.
+	 */
 	@SideOnly(Side.CLIENT)
 	public static IIconRegister conditionIconRegister;
 	@SideOnly(Side.CLIENT)
 	public static IIconRegister fontRegister;
 	
+	/**
+	 * To add recipe.
+	 */
 	public static RecipeAdder ra;
+	/**
+	 * @see {@link fle.FLE}, this field is main class object of FLE.
+	 */
 	public static FleModHandler mod;
+	/**
+	 * Like oreDictionary, this field use to register similar fluid such like
+	 * plantOil or animalOil.
+	 */
 	public static FluidDictionary fluidDictionary;
+	/**
+	 * FLE Language Manager, use to translate localized name.
+	 * You need register lang with unlocalized name when mod is loading, 
+	 * and use {@link fle.api.util.ILanguageManager.translateToLocal}
+	 * to translate localized name when playing.
+	 * @see {@link fle.api.util.ILanguageManager}
+	 */
 	public static ILanguageManager lm;
 	private static List<IFuelHandler> fuelList = new ArrayList();
 	
+	/**
+	 * Damage item when use it (throwing, using, crafting, etc).
+	 * Which compact with some mods (FLE, GT, etc.).
+	 * @see {@link net.minecraft.item.ItemStack}
+	 * @param aPlayer the user of this tool, null means no user.
+	 * @param aStack the tool which will be damage.
+	 * @param aResource the damage type of tool.
+	 * @param damage the value of damage level.
+	 */
 	public static void damageItem(EntityLivingBase aPlayer, ItemStack aStack, EnumDamageResource aResource, float damage)
 	{
 		if(aStack == null) return;
@@ -88,6 +126,12 @@ public class FleAPI
 		return -1;
 	}
 	
+	/**
+	 * Create a color map(Get color of biome, item color, etc).
+	 * @param aMapName the textureName of map.
+	 * @return a new map, return a default map which return 0xFFFFFF always if this
+	 * is server side.
+	 */
 	public static ColorMap registerColorMap(String aMapName)
 	{
 		try
@@ -100,6 +144,12 @@ public class FleAPI
 		}
 	}
 	
+	/**
+	 * Add a new crop to FLE.
+	 * @param aCrop
+	 * @param aSeed
+	 * @return
+	 */
 	public static boolean registerCrop(CropCard aCrop, ICropSeed aSeed)
 	{
 		try
@@ -164,10 +214,21 @@ public class FleAPI
 		return false;
 	}
 
+	/**
+	 * Get fuel buffer of stack with default air condition.
+	 * @param aStack
+	 * @return
+	 */
 	public static int getFulBuf(ItemStack aStack)
 	{
 		return getFulBuf(aStack, Matter.mAir);
 	}
+	/**
+	 * Get fuel buffer of stack with air condition.
+	 * @param aStack
+	 * @param aAirBase
+	 * @return heat value of this fuel each size.
+	 */
 	public static int getFulBuf(ItemStack aStack, Matter aAirBase)
 	{
 		for (IFuelHandler tHandler : fuelList)
@@ -204,6 +265,13 @@ public class FleAPI
 		}
 	}
 	
+	/**
+	 * Get wind speed of world tick.
+	 * @see {@link fle.api.energy.RotationNet}
+	 * @param aPos
+	 * @return the wind level of this tick and return default value (1) if FLE
+	 * isn't loaded.
+	 */
 	public static int getWindSpeed(BlockPos aPos)
 	{
 		try

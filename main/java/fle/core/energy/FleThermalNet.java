@@ -134,4 +134,10 @@ public class FleThermalNet extends ThermalNet
 	{
 		return (int) (Math.pow(tempreture, 0.5D) / Math.pow(40D, 0.5D) * 40) + FleValue.WATER_FREEZE_POINT;
 	}
+
+	@Override
+	public String getEnergyNetName()
+	{
+		return "FTN";
+	}
 }

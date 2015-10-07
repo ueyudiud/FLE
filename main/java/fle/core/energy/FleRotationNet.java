@@ -134,4 +134,10 @@ public class FleRotationNet extends RotationNet
 			}
 		}
 	}
+
+	@Override
+	public String getEnergyNetName()
+	{
+		return "FRN";
+	}
 }

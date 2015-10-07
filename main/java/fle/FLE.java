@@ -26,6 +26,7 @@ import fle.api.FleValue;
 import fle.api.crop.CropRegister;
 import fle.api.energy.RotationNet;
 import fle.api.util.ColorMap;
+import fle.api.util.FLEConfiguration;
 import fle.api.util.FleLog;
 import fle.api.util.IColorMapHandler;
 import fle.api.util.IPlatform;
@@ -70,6 +71,7 @@ public class FLE implements FleModHandler
     private FleRotationNet rn;
     private SideGateway<Keyboard> k;
     private Configuration config;
+    private FLEConfiguration config1;
     
     public FLE() 
     {
@@ -142,19 +144,25 @@ public class FLE implements FleModHandler
         try
         {
         	File configFile = new File(new File(p.get().getMinecraftDir(), "config"), "FLE.cfg");
+        	File recipe = new File(new File(p.get().getMinecraftDir(), "config"), "FLE Recipe.csv");
         	config = new Configuration(configFile);
         	config.load();
+        	config1 = new FLEConfiguration(recipe);
         	FleLog.getLogger().info("Config loaded from " + configFile.getAbsolutePath());
         }
         catch (Exception e)
         {
         	FleLog.getLogger().warn("Error while trying to access configuration! " + e);
         	config = null;
+        	config1 = null;
+        }
+        if(config1 != null)
+        {
+        	config1.init();
         }
         if(config != null)
         {
             Config.init(config);
-            config.save();
         }
     	FleLog.getLogger().info("Far Land Era start pre load.");
 		LanguageManager.load();
@@ -183,6 +191,14 @@ public class FLE implements FleModHandler
     	proxy.onCompleteLoad();
     	FleLog.getLogger().info("Saving languages.");
     	LanguageManager.save();
+    	if(config != null)
+    	{
+            config.save();
+    	}
+    	if(config1 != null)
+    	{
+    		config1.save();
+    	}
 	}
     
 	@Override
@@ -256,5 +272,10 @@ public class FLE implements FleModHandler
 	public FWM getAirConditionProvider()
 	{
 		return wm.get();
+	}
+
+	public FLEConfiguration getConfig1()
+	{
+		return config1;
 	}
 }

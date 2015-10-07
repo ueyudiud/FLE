@@ -10,6 +10,8 @@ import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.ColorMap;
+import fle.api.util.ConfigInfomation;
+import fle.api.util.FLEConfiguration;
 import fle.core.block.ItemOilLamp;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
@@ -21,7 +23,7 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 {
 	private static final FLEPolishRecipe instance = new FLEPolishRecipe();
 	
-	static
+	public static void init()
 	{
 		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("branch_bush")), "p pp pp p", new ItemStack(Items.stick)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(Items.bone), "cc c c cc", ItemTool.a("bone_needle", Materials.Bone)));
@@ -56,6 +58,11 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), " pcp pcp ", ItemTool.a("stone_decorticating_stick", Materials.Stone)));
 		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("limestone")), "ccccccccc", ItemFleSub.a("dust_limestone")));
 	}
+	
+	public static void postInit(FLEConfiguration cfg)
+	{
+		instance.reloadRecipes(cfg);
+	}
 
 	public static FLEPolishRecipe getInstance()
 	{
@@ -81,7 +88,7 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 	
 	private FLEPolishRecipe() {}
 	
-	public static class PolishRecipe implements MachineRecipe
+	public static class PolishRecipe extends MachineRecipe
 	{
 		PolishRecipeKey key;
 		RecipesTab tab;
@@ -149,9 +156,15 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		{
 			return tab;
 		}
+		
+		@Override
+		public void reloadRecipe(ConfigInfomation ci)
+		{
+			
+		}
 	}
 	
-	public static class PolishRecipeKey implements RecipeKey
+	public static class PolishRecipeKey extends RecipeKey
 	{
 		ItemAbstractStack stack;
 		ItemStack stack1;

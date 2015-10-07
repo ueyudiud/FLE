@@ -20,6 +20,7 @@ import fle.api.util.IChemCondition.EnumPH;
 import fle.core.block.BlockAsh;
 import fle.core.block.BlockCharcoal;
 import fle.core.block.BlockDitch;
+import fle.core.block.BlockFLEFarmland;
 import fle.core.block.BlockFirewood;
 import fle.core.block.BlockFleCrop;
 import fle.core.block.BlockLeaves;
@@ -101,6 +102,7 @@ public class IB
 	public static Block argil_smelted;
 	public static Block ore_cobble;
 	public static Block ditch;
+	public static Block farmland;
 	public static Fluid animalOil;
 	public static Fluid plant_ash_mortar;
 	public static Fluid lime_mortar;
@@ -132,6 +134,7 @@ public class IB
 	public static Solid millet_c;
 	public static Solid plant_ash;
 	public static Solid brown_sugar;
+	public static Solid Ca_P_fertilizer;
 	
 	public static void init()
 	{
@@ -166,7 +169,9 @@ public class IB
 		wheat_c = new Solid("wheat_raw", "Wheat").setTextureName(FleValue.TEXTURE_FILE + ":solid/wheat_c").setType(SolidState.Chip);
 		plant_ash = new Solid("plant_ash", "Plant Ash").setType(SolidState.Dust).setTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash");
 		brown_sugar = new Solid("brown_sugar", "Brown Sugar").setType(SolidState.Sick_Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/brown_sugar");
+		Ca_P_fertilizer = new Solid("fertilizer1", "Ca P Fertilizer").setType(SolidState.Sick_Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/fertilizer1");
 		debug = new ItemDebug("debug").setMaxStackSize(1).setCreativeTab(CreativeTabs.tabRedstone).setTextureName(FleValue.TEXTURE_FILE + ":fle");
+		farmland = new BlockFLEFarmland("fle_farmland", "Farmland").setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/farmland");
 		crop = new BlockFleCrop();
 		rock = new BlockRock().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);
 		ore = new BlockOre().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);

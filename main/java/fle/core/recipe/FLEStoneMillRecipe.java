@@ -11,7 +11,9 @@ import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.soild.SolidStack;
+import fle.api.util.ConfigInfomation;
 import fle.api.util.DropInfo;
+import fle.api.util.FLEConfiguration;
 import fle.core.init.IB;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
@@ -21,10 +23,16 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 {
 	private static final FLEStoneMillRecipe instance = new FLEStoneMillRecipe();
 	
-	static
+	public static void init()
 	{
 		a(new StoneMillRecipe(new ItemBaseStack(ItemFleSub.a("millet")), 200, new SolidStack(IB.millet, 20)));
 		a(new StoneMillRecipe(new ItemBaseStack(Items.wheat), 200, new SolidStack(IB.wheat, 20)));
+		a(new StoneMillRecipe(new ItemBaseStack(ItemFleSub.a("defatted_crushed_bone")), 200, new SolidStack(IB.Ca_P_fertilizer, 108)));
+	}
+	
+	public static void postInit(FLEConfiguration cfg)
+	{
+		instance.reloadRecipes(cfg);
 	}
 	
 	public static FLEStoneMillRecipe getInstance()
@@ -39,7 +47,7 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 	
 	private FLEStoneMillRecipe() { }
 	
-	public static class StoneMillRecipe implements MachineRecipe
+	public static class StoneMillRecipe extends MachineRecipe
 	{
 		private ItemAbstractStack input;
 		private int tick;
@@ -89,9 +97,15 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 		{
 			return new StoneMillRecipeKey(input, tick);
 		}
+		
+		@Override
+		public void reloadRecipe(ConfigInfomation ci)
+		{
+			tick = ci.readInteger(0, tick);
+		}
 	}
 	
-	public static class StoneMillRecipeKey implements RecipeKey
+	public static class StoneMillRecipeKey extends RecipeKey
 	{
 		private ItemAbstractStack stack;
 		private ItemStack stack1;

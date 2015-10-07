@@ -1,21 +1,24 @@
 package fle.api.crop;
 
 import net.minecraft.block.Block;
+import fle.api.crop.IFertilableBlock.FertitleLevel;
 import fle.api.world.BlockPos;
 
 public interface ICropTile 
 {
-	public int getStage();
+	int getStage();
 	
-	public BlockPos getBlockPos();
+	BlockPos getBlockPos();
 	
-	public boolean isBlockUnder(Block target);
+	boolean isBlockUnder(Block target);
 	
-	public double getAirLevel();
+	double getAirLevel();
 	
-	public double getWaterLevel();
+	double getWaterLevel();
 	
-	public double getTempretureLevel();
+	double getTempretureLevel();
 	
-	public int getLightValue();
+	FertitleLevel getFertitleLevel();
+	
+	int getLightValue();
 }

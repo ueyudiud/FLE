@@ -9,6 +9,8 @@ import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
+import fle.api.util.ConfigInfomation;
+import fle.api.util.FLEConfiguration;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
@@ -18,11 +20,16 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 {
 	private static FLEOilMillRecipe instance = new FLEOilMillRecipe();
 	
-	static
+	public static void init()
 	{
 		a(new OilMillRecipe(new ItemBaseStack(ItemFleSeed.a("soybean")), ItemFleSub.a("plant_waste"), 0.08F, new FluidStack(IB.plantOil, 25)));
 		a(new OilMillRecipe(new ItemBaseStack(ItemFleSeed.a("suger_cances")), ItemFleSub.a("plant_waste"), 0.2F, new FluidStack(IB.sugarcane_juice, 50)));
 		a(new OilMillRecipe(new ItemBaseStack(Items.apple), ItemFleSub.a("plant_waste"), 0.15F, new FluidStack(IB.apple_juice, 30)));
+	}
+	
+	public static void postInit(FLEConfiguration cfg)
+	{
+		instance.reloadRecipes(cfg);
 	}
 	
 	public static FLEOilMillRecipe getInstance()
@@ -35,7 +42,7 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		instance.registerRecipe(recipe);
 	}
 	
-	public static class OilMillRecipe implements MachineRecipe
+	public static class OilMillRecipe extends MachineRecipe
 	{
 		private static final Random rand = new Random();
 		
@@ -67,9 +74,15 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		{
 			return new OilMillKey(input);
 		}
+		
+		@Override
+		public void reloadRecipe(ConfigInfomation ci)
+		{
+			
+		}
 	}
 	
-	public static class OilMillKey implements RecipeKey
+	public static class OilMillKey extends RecipeKey
 	{
 		private ItemAbstractStack key;
 		private ItemStack target;

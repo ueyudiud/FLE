@@ -5,6 +5,8 @@ import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
+import fle.api.util.ConfigInfomation;
+import fle.api.util.FLEConfiguration;
 import fle.core.item.ItemFleSub;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 
@@ -12,11 +14,17 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 {
 	private static FLEDryingRecipe instance = new FLEDryingRecipe();
 	
-	static
+	public static void init()
 	{
 		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("leaves")), 50000, ItemFleSub.a("leaves_dry")));
 		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber")), 30000, ItemFleSub.a("ramie_fiber_dry")));
 	}
+	
+	public static void postInit(FLEConfiguration cfg)
+	{
+		instance.reloadRecipes(cfg);
+	}
+	
 	public static void a(DryingRecipe recipe)
 	{
 		instance.registerRecipe(recipe);
@@ -29,7 +37,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 	
 	private FLEDryingRecipe(){}
 	
-	public static class DryingRecipe implements MachineRecipe
+	public static class DryingRecipe extends MachineRecipe
 	{
 		private String name;
 		public ItemAbstractStack input;
@@ -58,9 +66,15 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		{
 			return new DryingRecipeKey(input, recipeTime);
 		}
+
+		@Override
+		public void reloadRecipe(ConfigInfomation ci)
+		{
+			recipeTime = ci.readInteger(0, recipeTime);
+		}
 	}
 	
-	public static class DryingRecipeKey implements RecipeKey
+	public static class DryingRecipeKey extends RecipeKey
 	{
 		private ItemAbstractStack input;
 		private ItemStack input1;

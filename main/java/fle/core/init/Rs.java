@@ -40,6 +40,7 @@ import fle.api.recipe.ShapelessFleRecipe;
 import fle.api.soild.SolidRegistry;
 import fle.api.soild.SolidStack;
 import fle.api.util.DropInfo;
+import fle.api.util.FLEConfiguration;
 import fle.api.util.FleLog;
 import fle.api.util.SubTag;
 import fle.cg.recipe.ShapedRecipe;
@@ -54,10 +55,14 @@ import fle.core.item.ItemOre;
 import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.recipe.CastingPoolRecipe;
+import fle.core.recipe.FLEBoilingHeaterRecipe;
 import fle.core.recipe.FLEDryingRecipe;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
+import fle.core.recipe.FLEOilMillRecipe;
 import fle.core.recipe.FLEPolishRecipe;
 import fle.core.recipe.FLEPolishRecipe.PolishRecipe;
+import fle.core.recipe.FLESifterRecipe;
+import fle.core.recipe.FLEStoneMillRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
 import fle.core.recipe.WashingRecipe;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
@@ -142,6 +147,7 @@ public class Rs
 		registerRemovedCrafting(FakeCraftingInventory.init("xx", "xx", "xx", 'x', Blocks.glass));
 		registerRemovedCrafting(FakeCraftingInventory.init(" xs", "x s", " xs", 'x', "stickWood", 's', Items.string));
 		registerRemovedCrafting(FakeCraftingInventory.init("x", "x", 'x', "plankWood"));
+		registerRemovedCrafting(FakeCraftingInventory.init("x", 'x', Items.bone));
 		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 0), 'x', "stickWood"));
 		registerRemovedCrafting(FakeCraftingInventory.init("oxv", 'o', Items.egg, 'x', Items.sugar, 'v', Blocks.pumpkin));
 		registerRemovedCrafting(FakeCraftingInventory.init("o", "x", 'o', new ItemStack(Items.coal, 1, 1), 'x', "stickWood"));
@@ -189,7 +195,7 @@ public class Rs
 		}
 	}
 	
-	public static void init()
+	public static void init(FLEConfiguration cfg)
 	{
 		OreDictionary.registerOre("wick", Items.string);
 		OreDictionary.registerOre("wick", ItemFleSub.a("ramie_rope"));
@@ -198,6 +204,8 @@ public class Rs
 		OreDictionary.registerOre("tie", ItemFleSub.a("rattan"));
 		OreDictionary.registerOre("tie", Items.string);
 		OreDictionary.registerOre("cropMillet", ItemFleSub.a("millet"));
+		OreDictionary.registerOre("cropPotato", ItemFleFood.a("potato"));
+		OreDictionary.registerOre("cropCitron", ItemFleFood.a("citron"));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 1));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 2));
 		OreDictionary.registerOre("craftingToolAxe", new ItemStack(IB.tool, 1, 101));
@@ -352,6 +360,7 @@ public class Rs
 		GameRegistry.addRecipe(new RopeLadderCraftingRecipe(false, IB.ropeLadder));
 
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabOldStoneAge, Items.string, new Object[]{ItemFleSub.a("spinneret")}));
+		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("crushed_bone"), new Object[]{Items.bone, "craftingToolHardHammer"}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleFood.a("chicken_kebab_raw", 2), new Object[]{"stickWood", "stickWood", Items.chicken}));
 		GameRegistry.addRecipe(new ShapelessFleRecipe(RecipesTab.tabNewStoneAge, ItemFleFood.a("pork_kebab_raw", 2), new Object[]{"stickWood", "stickWood", Items.porkchop}));
 		GameRegistry.addRecipe(new ShapedFleRecipe(RecipesTab.tabNewStoneAge, ItemFleSub.a("ramie_rope", 3), new Object[]{"xx", "xx", 'x', ItemFleSub.a("ramie_fiber_dry")}));
@@ -413,6 +422,18 @@ public class Rs
 		RecipeSorter.register(FLE.MODID + ":shapeless", ShapelessFleRecipe.class, SHAPELESS, "after:forge:shapedore before:minecraft:shapeless");
 		
 		CastingPoolRecipe.init();
+		FLEBoilingHeaterRecipe.init();
+		FLEOilMillRecipe.init();
+		FLESifterRecipe.init();
+		FLEStoneMillRecipe.init();
+		FLEDryingRecipe.init();
+		FLEPolishRecipe.init();
+		FLEBoilingHeaterRecipe.postInit(cfg);
+		FLEOilMillRecipe.postInit(cfg);
+		FLESifterRecipe.postInit(cfg);
+		FLEStoneMillRecipe.postInit(cfg);
+		FLEDryingRecipe.postInit(cfg);
+		FLEPolishRecipe.postInit(cfg);
 		AxeHandler.init();
 	}
 

@@ -620,8 +620,8 @@ public abstract class RenderBase
 				renderFace(tessellator, 5, 
 						x4_1, y4_1, z4_1, 
 						x1_1, y1_1, z1_1, 
-						x8_1, y8_1, z8_1,
-						x5_1, y5_1, z5_1, false);
+						x5_1, y5_1, z5_1,
+						x8_1, y8_1, z8_1, false);
 	        }
 	        else
 	        {

@@ -9,6 +9,8 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.soild.Solid;
 import fle.api.soild.SolidStack;
+import fle.api.util.ConfigInfomation;
+import fle.api.util.FLEConfiguration;
 import fle.core.init.IB;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
@@ -18,12 +20,17 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 {
 	private static final FLESifterRecipe instance = new FLESifterRecipe();
 
-	static
+	public static void init()
 	{
 		a(new SifterRecipe(new ItemBaseStack(ItemFleFood.a("groats_wheat_wholemeal")), new SolidStack(IB.wheat_b, 20), ItemFleSub.a("bran"), 0.25F));
 		a(new SifterRecipe(new ItemBaseStack(ItemFleFood.a("groats_millet_wholemeal")), new SolidStack(IB.millet_b, 20), ItemFleSub.a("bran"), 0.25F));
 		a(new SifterRecipe(IB.wheat, new SolidStack(IB.wheat_b), ItemFleSub.a("bran"), 0.03F));
 		a(new SifterRecipe(IB.millet, new SolidStack(IB.millet_b), ItemFleSub.a("bran"), 0.03F));
+	}
+	
+	public static void postInit(FLEConfiguration cfg)
+	{
+		instance.reloadRecipes(cfg);
 	}
 	
 	public static FLESifterRecipe getInstance()
@@ -36,7 +43,7 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		instance.registerRecipe(recipe);
 	}
 	
-	public static class SifterRecipe implements MachineRecipe
+	public static class SifterRecipe extends MachineRecipe
 	{
 		private static final Random rand = new Random();   
 		
@@ -76,9 +83,15 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		{
 			return input instanceof ItemAbstractStack ? new SifterKey((ItemAbstractStack) input) : new SifterKey((Solid) input);
 		}
+		
+		@Override
+		public void reloadRecipe(ConfigInfomation ci)
+		{
+			
+		}
 	}
 	
-	public static class SifterKey implements RecipeKey
+	public static class SifterKey extends RecipeKey
 	{
 		private ItemAbstractStack inputKey;
 		private Solid inputKey1;

@@ -6,11 +6,14 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.crop.CropCard;
 import fle.api.crop.ICropTile;
+import fle.api.crop.IFertilableBlock;
+import fle.api.crop.IFertilableBlock.FertitleLevel;
 import fle.api.te.TEBase;
 import fle.core.net.FlePackets.CoderCropUpdate;
 import fle.core.util.WorldUtil;
@@ -181,5 +184,14 @@ public class TileEntityCrop extends TEBase implements ICropTile
 	public void setCropCushion(int c) 
 	{
 		cushion = c;
+	}
+
+	@Override
+	public FertitleLevel getFertitleLevel()
+	{
+		Block block = getBlockPos().toPos(ForgeDirection.DOWN).getBlock();
+		if(block instanceof IFertilableBlock)
+			return ((IFertilableBlock) block).getFertileLevel(worldObj, xCoord, yCoord - 1, zCoord);
+		return null;
 	}
 }

@@ -17,6 +17,7 @@ import fle.api.FleAPI;
 import fle.api.enums.EnumDamageResource;
 import fle.api.item.ItemFleMetaBase;
 import fle.api.world.BlockPos;
+import fle.core.init.IB;
 import fle.core.item.tool.ToolMaterialInfo;
 
 public class BehaviorHoe extends BehaviorDigable
@@ -113,7 +114,7 @@ public class BehaviorHoe extends BehaviorDigable
 					{
 						if(!aWorld.isRemote)
 						{
-			                Block block1 = Blocks.farmland;
+			                Block block1 = IB.farmland;
 			                aWorld.playSoundEffect(mop.hitVec.xCoord, mop.hitVec.yCoord, mop.hitVec.zCoord, block1.stepSound.getStepResourcePath(), (block1.stepSound.getVolume() + 1.0F) / 2.0F, block1.stepSound.getPitch() * 0.8F);
 			                aWorld.setBlock(pos.x, pos.y, pos.z, block1);
 						}

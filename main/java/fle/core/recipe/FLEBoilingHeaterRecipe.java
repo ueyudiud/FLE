@@ -3,6 +3,7 @@ package fle.core.recipe;
 import java.util.Random;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.FleAPI;
 import fle.api.enums.EnumDamageResource;
@@ -10,6 +11,8 @@ import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
+import fle.api.util.ConfigInfomation;
+import fle.api.util.FLEConfiguration;
 import fle.core.init.IB;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
@@ -19,11 +22,17 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 {
 	private static final FLEBoilingHeaterRecipe instance = new FLEBoilingHeaterRecipe();
 	
-	static
+	public static void init()
 	{
 		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber_dry")), new FluidStack(IB.plant_ash_mortar, 200), 12500, ItemFleSub.a("ramie_fiber_debonded")));
 		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("cotton_gauze")), new FluidStack(IB.sugarcane_juice, 200), 12500, ItemFleFood.a("brown_sugar", 3)).setType(3));
 		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("charred_log")), new FluidStack(IB.brown_sugar_aqua, 200), 12500, ItemFleFood.a("sugar", 3)).setType(3));
+		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("crushed_bone")), new FluidStack(FluidRegistry.WATER, 200), 30000, ItemFleSub.a("defatted_crushed_bone")));
+	}
+	
+	public static void postInit(FLEConfiguration cfg)
+	{
+		instance.reloadRecipes(cfg);
 	}
 	
 	public static FLEBoilingHeaterRecipe getInstance()
@@ -36,7 +45,7 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 		instance.registerRecipe(recipe);
 	}
 	
-	public static class BHRecipe implements MachineRecipe
+	public static class BHRecipe extends MachineRecipe
 	{
 		private ItemAbstractStack toolRequire;
 		private FluidStack input;
@@ -89,9 +98,15 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 		{
 			return new BHKey(toolRequire, energyRequire, input);
 		}
+		
+		@Override
+		public void reloadRecipe(ConfigInfomation ci)
+		{
+			
+		}
 	}
 	
-	public static class BHKey implements RecipeKey
+	public static class BHKey extends RecipeKey
 	{
 		public int energyNeed;
 		private ItemAbstractStack toolRequire;

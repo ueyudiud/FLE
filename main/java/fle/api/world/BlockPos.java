@@ -32,9 +32,9 @@ public final class BlockPos implements IObjectInWorld
 		return new BlockPos(access, x + d.offsetX, y + d.offsetY, z + d.offsetZ);
 	}
 	
-	public BlockPos toPos(int xMove, int yMove, int zMove)
+	public BlockPos toPos(int xOffset, int yOffset, int zOffset)
 	{
-		return new BlockPos(access, x + xMove, y + yMove, z + zMove);
+		return new BlockPos(access, x + xOffset, y + yOffset, z + zOffset);
 	}
 	
 	public int getBlockMeta()
