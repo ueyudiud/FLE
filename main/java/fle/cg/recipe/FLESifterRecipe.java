@@ -73,6 +73,29 @@ public class FLESifterRecipe extends StandardType
 		return list;
 	}
 	
+	@Override
+	protected List<IGuidePage> getPage(Solid solid)
+	{
+		List<IGuidePage> list = new ArrayList();
+		
+		for(IGuidePage rawPage : getAllPage())
+		{
+			SifterRecipe page = (SifterRecipe) rawPage;
+			if(page.input2 != null)
+				if(page.input2.getObj() == solid)
+				{
+					list.add(page);
+					continue;
+				}
+			if(page.output1.getObj() == solid)
+			{
+				list.add(page);
+				continue;
+			}
+		}
+		return list;
+	}
+	
 	private static class SifterRecipe extends StandardPage
 	{
 		private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/sifter.png");
@@ -145,16 +168,17 @@ public class FLESifterRecipe extends StandardType
 			return aType == Type.ITEM ? (index == 0 && input1 != null) ?
 					slotRect(66, 23) : slotRect(92, 23): 
 						aType == Type.SOLID ? (index == 0 && input2 != null) ?
-								new Rectangle(66, 23 + 16 - (input2.getSize() * 16) / 1000, 16, (input2.getSize() * 16) / 1000) : 
-									new Rectangle(66, 49 + 16 - (output1.getSize() * 16) / 1000, 16, (output1.getSize() * 16) / 1000): null;
+								new Rectangle(66, 23 + 8, 16, 16 - 8) : 
+									input2 != null ? new Rectangle(66, 49 + 8, 16, 8) :
+										new Rectangle(66, 49 + 16 - (output1.getSize() * 16) / 200, 16, (output1.getSize() * 16) / 200): null;
 		}
 		
 		@Override
 		public List<String> getToolTip(Type aType, int index)
 		{
 			return aType == Type.ITEM ? (input1 != null ? index == 1 ? 
-					Arrays.asList(FleValue.format_progress.format(RecipeInfomation.getChance(output2))) : new ArrayList() : 
-						Arrays.asList(FleValue.format_progress.format(RecipeInfomation.getChance(output2)))) : super.getToolTip(aType, index);
+					Arrays.asList(RecipeInfomation.getChanceInfo(output2, false)) : new ArrayList() : 
+						Arrays.asList(RecipeInfomation.getChanceInfo(output2, false))) : super.getToolTip(aType, index);
 		}
 	}
 }

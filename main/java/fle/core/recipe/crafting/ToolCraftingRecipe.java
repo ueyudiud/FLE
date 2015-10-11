@@ -5,6 +5,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import fle.api.cg.RecipesTab;
+import fle.api.material.MaterialAbstract;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapelessFleRecipe;
@@ -35,10 +36,12 @@ public class ToolCraftingRecipe extends ShapelessFleRecipe
 	public ToolCraftingRecipe(RecipesTab aTab, String aTool, int size, Object...other)
 	{
 		super(aTab, null, a(new ToolRecipe(aTool, size), other));
+		output = ItemTool.a(aTool, Materials.Void);
 	}
 	public ToolCraftingRecipe(RecipesTab aTab, String aTool, Object stick)
 	{
 		super(aTab, null, new Object[]{new ToolRecipe(aTool), stick});
+		output = ItemTool.a(aTool, Materials.Void);
 	}
 	
 	@Override

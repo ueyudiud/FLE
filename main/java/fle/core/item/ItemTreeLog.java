@@ -20,6 +20,7 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 {
 	public ItemTreeLog init() 
 	{
+		addSubItem(0, "log_void", "Void Log", new TreeChecker(Blocks.log, -1), new ItemStack(Blocks.log), "logs/void");
 		addSubItem(1, "log_oak", "Oak Log", new TreeChecker(Blocks.log, 0, 4, 8), new ItemStack(Blocks.log, 1, 0), "logs/oak");
 		addSubItem(2, "log_spruce", "Spruce Log", new TreeChecker(Blocks.log, 1, 5, 9), new ItemStack(Blocks.log, 1, 1), "logs/spruce");
 		addSubItem(3, "log_birch", "Birch Log", new TreeChecker(Blocks.log, 2, 6, 10), new ItemStack(Blocks.log, 1, 2), "logs/birch");

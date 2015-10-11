@@ -161,7 +161,7 @@ public class FLEWashingRecipe extends StandardType
 		public List<String> getToolTip(Type aType, int index)
 		{
 			return aType == Type.ITEM ? (index > 0 ? 
-					Arrays.asList(FleValue.format_progress.format(RecipeInfomation.getChance(outputs[index - 1]))) : new ArrayList()) :
+					Arrays.asList(RecipeInfomation.getChanceInfo(outputs[index - 1], false)) : new ArrayList()) :
 						super.getToolTip(aType, index);
 		}
 	}

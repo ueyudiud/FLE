@@ -98,7 +98,7 @@ public abstract class StandardPage extends IGuidePage
 		break;
 		case FLUID: obj = index < getInputStacks().length ? getInputFluidStacks()[index] : getOutputFluidStacks()[index - getInputStacks().length];
 		break;
-		case SOLID: obj = index < getInputStacks().length ? getInputSolidStacks()[index] : getOutputSolidStacks()[index - getInputStacks().length];
+		case SOLID: obj = index < getInputSolidStacks().length ? getInputSolidStacks()[index] : getOutputSolidStacks()[index - getInputSolidStacks().length];
 		break;
 		default: obj = null;
 		}

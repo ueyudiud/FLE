@@ -37,6 +37,7 @@ import fle.api.gui.GuiCondition;
 import fle.api.soild.SolidStack;
 import fle.api.soild.SolidTank;
 import fle.api.soild.SolidTankInfo;
+import fle.api.util.FleLog;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiBookBase extends GuiScreen
@@ -71,7 +72,7 @@ public abstract class GuiBookBase extends GuiScreen
 		}
 		catch(Throwable e)
 		{
-			throw new RuntimeException("Fle API : Fail to load recipe.", e);
+			FleLog.getLogger().catching(new RuntimeException("Fle API : Fail to load recipe.", e));
 		}
 	}
 
@@ -188,8 +189,10 @@ public abstract class GuiBookBase extends GuiScreen
 			}
 		}
 		
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		page.drawOther(this, 0, 0);
-
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		
 		if(selectType != null)
 		{
 			//Draw select rectangle;
@@ -392,8 +395,6 @@ public abstract class GuiBookBase extends GuiScreen
 	protected void drawSolid(int x, int y, SolidTank tank, int width, int height, boolean lay)
 	{
 		SolidTankInfo info = tank.getInfo();
-		xoffset = (this.width - xSize) / 2;
-		yoffset = (this.height - ySize) / 2;
 		
 		if(info.solid == null) return;
 		if (info.solid.getSize() > 0)
@@ -409,7 +410,7 @@ public abstract class GuiBookBase extends GuiScreen
 		        float green = (color >> 8 & 255) / 255.0F;
 		        float blue = (color & 255) / 255.0F;
 				GL11.glColor4f(red, green, blue, 1.0F);
-				drawRepeated(solidIcon, xoffset + x + width - liquidWidth, yoffset + y + height - liquidHeight, liquidWidth, liquidHeight, zLevel);
+				drawRepeated(solidIcon, x + width - liquidWidth, y + height - liquidHeight, liquidWidth, liquidHeight, zLevel);
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			}
 		}

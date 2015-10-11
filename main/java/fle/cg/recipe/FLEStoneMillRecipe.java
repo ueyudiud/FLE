@@ -169,7 +169,7 @@ public class FLEStoneMillRecipe extends StandardType
 					new Rectangle(117, 48 + 20 - (foutput.amount * 20) / 2000, 8, (foutput.amount * 20) / 2000) : null;
 			case ITEM : return slotRect(65, 20);
 			case SOLID: return soutput != null ?
-					new Rectangle(65, 52 + 16 - (soutput.getSize() * 16) / 1000, 16, (soutput.getSize() * 16) / 1000) : null;
+					new Rectangle(65, 52 + 16 - (soutput.getSize() * 16) / 300, 16, (soutput.getSize() * 16) / 300) : null;
 			}
 			return null;
 		}
@@ -177,7 +177,7 @@ public class FLEStoneMillRecipe extends StandardType
 		@Override
 		public void drawOther(GuiBookBase gui, int xOffset, int yOffset)
 		{
-			gui.drawTexturedModalRect(44 + xOffset, 21 + yOffset, 176, 33, 8, 60);
+			//gui.drawTexturedModalRect(117 + xOffset, 48 + yOffset, 176, 33, 8, 60);
 			super.drawOther(gui, xOffset, yOffset);
 		}
 	}

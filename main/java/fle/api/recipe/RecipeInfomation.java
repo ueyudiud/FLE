@@ -1,5 +1,6 @@
 package fle.api.recipe;
 
+import fle.api.FleValue;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -13,6 +14,12 @@ public class RecipeInfomation
 	public static float getChance(ItemStack aInput)
 	{
 		return a(aInput).getFloat("Chance");
+	}
+	
+	public static String getChanceInfo(ItemStack aInput, boolean flag)
+	{
+		return flag ? "Chance : " + FleValue.format_progress.format_c(getChance(aInput)) : 
+			"Chance : " + FleValue.format_progress.format(getChance(aInput));
 	}
 	
 	public static void setHeat(ItemStack aInput, float heat)

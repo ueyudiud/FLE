@@ -5,10 +5,14 @@ import java.util.List;
 
 import org.apache.logging.log4j.Level;
 
+import com.google.common.collect.Multimap;
+
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
@@ -114,5 +118,30 @@ public class ItemDebug extends ItemFle
 			EnumDamageResource aReource, float aDamage)
 	{
 		
+	}
+	
+	@Override
+	public Multimap getAttributeModifiers(ItemStack stack)
+	{
+		Multimap map = super.getAttributeModifiers(stack);
+        map.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), 
+        		new AttributeModifier(field_111210_e, "DEBUG", Double.MAX_VALUE, 0));
+		return map;
+	}
+	
+	@Override
+	public boolean hitEntity(ItemStack stack, EntityLivingBase target,
+			EntityLivingBase user) 
+	{
+		target.setDead();
+		return true;
+	}
+	
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player,
+			List list, boolean flag)
+	{
+		list.add("Don't play this item~");
+		super.addInformation(stack, player, list, flag);
 	}
 }

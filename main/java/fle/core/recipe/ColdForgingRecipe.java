@@ -165,4 +165,14 @@ public class ColdForgingRecipe
 	{
 		return output.copy();
 	}
+	
+	public CraftingState[] getRecipeMap()
+	{
+		return map.clone();
+	}
+
+	public ItemAbstractStack[] getRecipeInputs()
+	{
+		return stack;
+	}
 }
