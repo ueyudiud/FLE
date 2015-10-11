@@ -10,7 +10,6 @@ public class CropSoybean extends CropBase
 		setCropLevel(1);
 		setMaturationStage(7);
 		setTextureName("crop/soybean");
-		setGrowTick(1200);
 	}
 
 	@Override

@@ -18,6 +18,12 @@ public abstract class ItemAbstractStack
 	
 	public abstract List<ItemStack> toArray();
 	
+	public final ItemStack[] toList()
+	{
+		List<ItemStack> list = toArray();
+		return list.isEmpty() ? new ItemStack[0] : list.toArray(new ItemStack[list.size()]);
+	}
+	
 	@Override
 	public String toString()
 	{

@@ -1,5 +1,6 @@
 package fle.core.world.layer;
 
+import fle.core.world.biome.FLEBiome;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 
@@ -40,7 +41,7 @@ public class FLELayerRiver extends FLELayer
 				initChunkSeed(x + i, z + j);
 				if(v2 != v5 || v4 != v5 || v6 != v5 || v8 != v5) ret[i + w * j] = 1;
 				else if(v1 != v2 || v1 != v4 || v3 != v2 || v3 != v6 ||
-						v7 != v4 || v7 != v8 || v9 != v8 || v9 != v6) ret[i + w * j] = nextInt(8) < 6 ? 1 : 0;
+						v7 != v4 || v7 != v8 || v9 != v8 || v9 != v6) ret[i + w * j] = nextInt(8) < 6 ? FLEBiome.river.biomeID : 0;
 			}
 		return ret;
 	}

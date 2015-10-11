@@ -7,15 +7,15 @@ import fle.api.te.TEIT;
 
 public class RenderCastingPool extends RenderBase
 {
+	float f = 0.0F,
+			f1 = 1.0F,
+			f2 = 0.03125F,
+			f3 = 0.96875F;
+	
 	@Override
 	public void renderBlock()
 	{
 		setTexture(Blocks.stone);
-		
-		float f = 0.0F;
-		float f1 = 1.0F;
-		float f2 = 0.03125F;
-		float f3 = 0.96875F;
 		renderBlock(f, f, f, f1, f2, f1);
 		renderBlock(f, f, f, f2, f1, f1);
 		renderBlock(f, f, f, f1, f1, f2);

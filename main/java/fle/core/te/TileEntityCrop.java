@@ -93,7 +93,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 					}
 				}
 				sendToNearBy(new CoderCropUpdate(this), 256.0F);
-				worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
+				markRenderForUpdate();
 			}
 		}
 	}
@@ -131,9 +131,12 @@ public class TileEntityCrop extends TEBase implements ICropTile
 	}
 
 	@Override
-	public double getWaterLevel() 
+	public double getWaterLevel()
 	{
-		return WorldUtil.getWaterLevel(worldObj, xCoord, yCoord, zCoord);
+		int base = 500;
+		if(worldObj.getBlock(xCoord, yCoord - 1, zCoord) instanceof IFertilableBlock)
+			base = ((IFertilableBlock) worldObj.getBlock(xCoord, yCoord - 1, zCoord)).getWaterLevel(worldObj, xCoord, yCoord - 1, zCoord);
+		return base;
 	}
 
 	@Override
@@ -192,6 +195,6 @@ public class TileEntityCrop extends TEBase implements ICropTile
 		Block block = getBlockPos().toPos(ForgeDirection.DOWN).getBlock();
 		if(block instanceof IFertilableBlock)
 			return ((IFertilableBlock) block).getFertileLevel(worldObj, xCoord, yCoord - 1, zCoord);
-		return null;
+		return new FertitleLevel(0, 0, 0, 0);
 	}
 }

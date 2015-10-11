@@ -39,7 +39,7 @@ public class ConfigInfomation
 	
 	private String[] setup(String str)
 	{
-		str.replaceAll(" ", "");
+		str = str.replaceAll(" ", "");
 		String[] s1;
 		if(str.indexOf("[") != -1) s1 = str.split("[", 2);
 		else s1 = new String[]{str};

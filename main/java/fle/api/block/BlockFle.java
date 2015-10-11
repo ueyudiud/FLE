@@ -43,12 +43,12 @@ public class BlockFle extends Block
 	protected BlockFle(String aName, String aLocalized, Material aMaterial)
 	{
 		this(aName, aMaterial);
-		FleAPI.lm.registerLocal(getUnlocalizedName() + ".name", aLocalized);
+		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", aLocalized);
 	}
 	protected BlockFle(Class<? extends ItemFleBlock> aItemClass, String aName, String aLocalized, Material aMaterial)
 	{
 		this(aItemClass, aName, aMaterial);
-		FleAPI.lm.registerLocal(getUnlocalizedName() + ".name", aLocalized);
+		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", aLocalized);
 	}
 	
 	@Override

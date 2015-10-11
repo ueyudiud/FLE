@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.recipe.AbstractRecipe;
 import fle.api.recipe.AbstractRecipe.GetRecipeMap;
 import fle.api.recipe.AbstractRecipe.OnInput;
@@ -77,5 +79,20 @@ public class CeramicsRecipe
 			if(a1 > fs[i] || a2 < fs[i]) return false;
 		}
 		return true;
+	}
+
+	public float[] getDefaultValue()
+	{
+		float[] fs = new float[10];
+		for(int i = 0; i < fs.length; ++i)
+		{
+			fs[i] = (recipeMap[i][0] + recipeMap[i][1]) / 2;
+		}
+		return fs;
+	}
+
+	public ItemStack getOutput()
+	{
+		return output.copy();
 	}
 }

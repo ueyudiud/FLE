@@ -4,58 +4,65 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import fle.api.cg.IGuideType.GuideTransInfo;
+import fle.api.cg.IGuideType.IGuidePage;
 import fle.api.recipe.ItemAbstractStack;
 
 public final class CraftGuide
 {
 	public static final CraftGuide instance = new CraftGuide();
-	
-	Map<RecipesTab, List<RecipeHandler>> recipeList = new HashMap();
+		
+	Map<RecipesTab, List<IGuideType>> typeList = new HashMap();
 	
 	private CraftGuide()
 	{
 		
 	}
-	
-	public void registerRecipe(RecipesTab tab, RecipeHandler handler)
+
+	public void registerGuideType(RecipesTab tab, IGuideType aType)
 	{
-		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
-		recipeList.get(tab).add(handler);
+		if(!typeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
+		typeList.get(tab).add(aType);
 	}
 	
-	public RecipeHandler[] getAllRecipes(RecipesTab tab)
+	public IGuideType[] getTabGuides(RecipesTab tab)
 	{
-		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
-		return recipeList.get(tab).toArray(new RecipeHandler[recipeList.size()]);
-	}
-	
-	public RecipeHandler[] getRecipes(RecipesTab tab, ItemAbstractStack stack)
-	{
-		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
-		List<RecipeHandler> ret = new ArrayList();
-		for(RecipeHandler handler : recipeList.get(tab))
+		List<IGuideType> ret = new ArrayList<IGuideType>();
+		if(tab == null)
 		{
-			for(ItemStack tStack : stack.toArray())
+			for(Entry<RecipesTab, List<IGuideType>> e : typeList.entrySet())
 			{
-				if(handler.match(tStack))
-					ret.add(handler);
+				ret.addAll(e.getValue());
 			}
 		}
-		return ret.toArray(new RecipeHandler[ret.size()]);
+		else
+		{
+			if(typeList.containsKey(tab))
+			{
+				ret.addAll(typeList.get(tab));
+			}
+		}
+		return ret.toArray(new IGuideType[ret.size()]);
 	}
 	
-	public RecipeHandler[] getRecipes(RecipesTab tab, FluidStack stack)
+	public boolean getTabGuides(GuiBook gui, RecipesTab tab, GuideTransInfo aInfo)
 	{
-		if(!recipeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
-		List<RecipeHandler> ret = new ArrayList();
-		for(RecipeHandler handler : recipeList.get(tab))
+		IGuideType[] types = getTabGuides(tab);
+		if(types.length == 0) return false;
+		boolean flag = false;
+		for(IGuideType type : types)
 		{
-			if(handler.match(stack))
-				ret.add(handler);
+			List<IGuidePage> pages = type.a(aInfo);
+			if(pages != null && !pages.isEmpty())
+			{
+				gui.putRecipeInCache(type, pages);
+				flag = true;
+			}
 		}
-		return ret.toArray(new RecipeHandler[ret.size()]);
+		return flag;
 	}
 }

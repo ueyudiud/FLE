@@ -7,6 +7,11 @@ import fle.api.te.TEIT;
 
 public class RenderCeramicFurnaceCrucible extends RenderBase
 {
+	float f = 0.0F,
+			f1 = 1.0F,
+			f2 = 0.0625F,
+			f3 = 0.9375F;
+	
 	@Override
 	public void renderBlock()
 	{
@@ -15,10 +20,6 @@ public class RenderCeramicFurnaceCrucible extends RenderBase
 		else
 			setTexture(block.getIcon(world, x, y, z, 0));
 		
-		float f = 0.0F;
-		float f1 = 1.0F;
-		float f2 = 0.0625F;
-		float f3 = 0.9375F;
 		renderBlock(f, f, f, f1, f2, f1);
 		renderBlock(f, f, f, f2, f1, f1);
 		renderBlock(f, f, f, f1, f1, f2);

@@ -13,7 +13,6 @@ public class CropCotton extends CropBase
 		setCropLevel(2);
 		setMaturationStage(6);
 		setTextureName("crop/cotton");
-		setGrowTick(1500);
 		setCropRender(EnumCropRender.O_LIKE);
 	}
 	

@@ -19,6 +19,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleAPI;
+import fle.api.crop.IIrrigationHandler;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.net.FlePackets.CoderTankUpdate;
 import fle.api.net.FlePackets.CoderTileUpdate;
@@ -32,7 +33,7 @@ import fle.core.block.ItemDitch;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.util.DitchInfo;
 
-public class TileEntityDitch extends TEBase implements IDitchTile, IChemCondition, IFluidTanks, IThermalTileEntity, INetEventListener
+public class TileEntityDitch extends TEBase implements IDitchTile, IChemCondition, IFluidTanks, IThermalTileEntity, INetEventListener, IIrrigationHandler
 {
 	public static final ForgeDirection dirs[] = {ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.WEST, ForgeDirection.SOUTH};
 	protected ThermalTileHelper tc = new ThermalTileHelper(1.0F, 1000.0F);
@@ -458,5 +459,22 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 			if(flag)
 				worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 		}
+	}
+	
+	@Override
+	public boolean canIrrigate(ForgeDirection dir)
+	{
+		return dir != ForgeDirection.UP && dir != ForgeDirection.DOWN;
+	}
+	
+	@Override
+	public int doIrrigate(ForgeDirection dir, int amount)
+	{
+		if(FleAPI.fluidDictionary.isFluidWater(tank.getFluid()))
+		{
+			FluidStack stack = drain(dir, amount, true);
+			return stack == null ? 0 : stack.amount;
+		}
+		return 0;
 	}
 }

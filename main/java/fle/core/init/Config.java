@@ -15,6 +15,17 @@ public class Config
 		configMap.put("pCharcoal", setInteger(config, "energy", "Charcoal Power", "High value will make charcoal heating faster.", 5000));
 		configMap.put("pFirewood", setInteger(config, "energy", "Firewood Power", "High value will make firewood heating faster.", 4000));
 		configMap.put("pLavaTransfer", setInteger(config, "energy", "Lava Heat Transfer Power", "High value will make lava heat transfer heating faster.", 1000));
+
+		configMap.put("pFarmlandConsume", setInteger(config, "logistics", "Farmland Water Consume", "High value will mark ditch consume more water to farmland, unit : L/tick.", 10));
+
+		configMap.put("p@soybean", setInteger(config, "crop", "Soybean Grow Tick", "Get the grow tick require of this crop.", 2400));
+		configMap.put("p@ramie", setInteger(config, "crop", "Ramie Grow Tick", "Get the grow tick require of this crop.", 2200));
+		configMap.put("p@millet", setInteger(config, "crop", "Ramie Grow Tick", "Get the grow tick require of this crop.", 2200));
+		configMap.put("p@wheat", setInteger(config, "crop", "Wheat Grow Tick", "Get the grow tick require of this crop.", 2000));
+		configMap.put("p@suger_cances", setInteger(config, "crop", "Suger Cances Grow Tick", "Get the grow tick require of this crop.", 3000));
+		configMap.put("p@cotton", setInteger(config, "crop", "Cotton Grow Tick", "Get the grow tick require of this crop.", 3000));
+		configMap.put("p@sweetpotato", setInteger(config, "crop", "Cotton Grow Tick", "Get the grow tick require of this crop.", 3400));
+		configMap.put("p@potato", setInteger(config, "crop", "Potato Grow Tick", "Get the grow tick require of this crop.", 2900));
 	}
 	
 	public static boolean setBoolean(Configuration config, String type, String tag, String info, boolean defaultValue)

@@ -16,6 +16,8 @@ public interface IFertilableBlock
 	
 	FertitleLevel getFertileLevel(World world, int x, int y, int z);
 	
+	int getWaterLevel(World world, int x, int y, int z);
+	
 	public static class FertitleLevel
 	{
 		public int N;
@@ -56,18 +58,18 @@ public interface IFertilableBlock
 		
 		public void add(int aN, int aP, int aK, int aCa)
 		{
-			N = Math.max(0, Math.min(16, N + aN));
-			P = Math.max(0, Math.min(16, P + aP));
-			K = Math.max(0, Math.min(16, K + aK));
-			Ca= Math.max(0, Math.min(16, Ca + aCa));
+			N = Math.max(0, Math.min(15, N + aN));
+			P = Math.max(0, Math.min(15, P + aP));
+			K = Math.max(0, Math.min(15, K + aK));
+			Ca= Math.max(0, Math.min(15, Ca + aCa));
 		}
 		
 		public boolean need(FertitleLevel fLevel)
 		{
-			if(N < 16 && fLevel.N > 0) return true;
-			else if(K < 16 && fLevel.K > 0) return true;
-			else if(P < 16 && fLevel.P > 0) return true;
-			else if(Ca < 16 && fLevel.Ca > 0) return true;
+			if(N < 15 && fLevel.N > 0) return true;
+			else if(K < 15 && fLevel.K > 0) return true;
+			else if(P < 15 && fLevel.P > 0) return true;
+			else if(Ca < 15 && fLevel.Ca > 0) return true;
 			return false;
 		}
 		

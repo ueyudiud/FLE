@@ -1,51 +1,63 @@
 package fle.api.cg;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+import fle.api.cg.IGuideType.GuideTransInfo;
+import fle.api.cg.IGuideType.IGuidePage;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
+import fle.api.util.FleLog;
 
 public class GuiBook extends GuiBookBase
 {
-	protected int selectRecipe;
+	protected int selectType;
+	protected int selectPage;
 	
-	protected RecipeHandler[] recipes;
+	protected IGuideType[] types;
+	protected IGuidePage[][] pages;
 	protected RecipesTab tab;
 
 	public GuiBook(RecipesTab aTab)
 	{
 		tab = aTab;
-		recipes = CraftGuide.instance.getAllRecipes(tab);
-		selectRecipe = 0;
+		types = CraftGuide.instance.getTabGuides(aTab);
+		pages = new IGuidePage[types.length][];
+		for(int i = 0; i < types.length; ++i)
+		{
+			List<IGuidePage> l = types[i].getAllPage();
+			pages[i] = l.toArray(new IGuidePage[l.size()]);
+		}
+		selectPage = 0;
+		selectType = 0;
 	}
 	
 	@Override
-	public RecipeHandler[] getShowingRecipe()
+	public IGuidePage getShowingRecipe()
 	{
-		List<RecipeHandler> handlers = new ArrayList(6);
-		for(int i = 0; i < 6 && selectRecipe * 6 + i < recipes.length; ++i)
-		{
-			handlers.add(recipes[selectRecipe * 6 + i]);
-		}
-		return handlers.toArray(new RecipeHandler[handlers.size()]);
+		return pages[selectType][selectPage];
+	}
+
+	@Override
+	protected IGuideType getActiveType()
+	{
+		return types[selectType];
 	}
 
 	@Override
 	public void initGui()
 	{
 		super.initGui();
-		xoffset = (width - xSize) / 2;
-		yoffset = (height - ySize) / 2;
-		buttonList.add(new GuiIconButton(0, xoffset + 14, yoffset + 17, ButtonSize.Small, GuiIconButton.buttonLocate, 64, 8));
-		buttonList.add(new GuiIconButton(1, xoffset + 14, yoffset + 27, ButtonSize.Small, GuiIconButton.buttonLocate, 72, 8));
+		xoffset = (width - xSize) / 2 - 5;
+		yoffset = (height - ySize) / 2 + 5;
+		buttonList.add(new GuiIconButton(0, xoffset + 16, yoffset + 4, ButtonSize.Small, GuiIconButton.buttonLocate, 64, 0));
+		buttonList.add(new GuiIconButton(1, xoffset + 176 - 16 - 10, yoffset + 4, ButtonSize.Small, GuiIconButton.buttonLocate, 72, 0));
+		buttonList.add(new GuiIconButton(2, xoffset + 16, yoffset + 166 - 4 - 10, ButtonSize.Small, GuiIconButton.buttonLocate, 64, 0));
+		buttonList.add(new GuiIconButton(3, xoffset + 176 - 16 - 10, yoffset + 166 - 4 - 10, ButtonSize.Small, GuiIconButton.buttonLocate, 72, 0));
 	}
 	
 	@Override
@@ -54,15 +66,41 @@ public class GuiBook extends GuiBookBase
 		super.actionPerformed(button);
 		if(button.id == 0)
 		{
-			if(selectRecipe > 0) --selectRecipe;
-			else selectRecipe = recipes.length;
+			--selectType;
+			if(selectType < 0) selectType = types.length - 1;
+			selectPage = 0;
 		}
 		else if(button.id == 1)
 		{
-			if(selectRecipe * 6 + 6 < recipes.length) ++selectRecipe;
-			else selectRecipe = 0;
+			++selectType;
+			if(selectType >= types.length) selectType = 0;
+			selectPage = 0;
 		}
-		if(recipes.length < selectRecipe * 6) selectRecipe = recipes.length / 6;
+		else if(button.id == 2)
+		{
+			selectPage -= isShiftKeyDown() ? 5 : 1;
+			if(selectPage < 0) selectPage = pages[selectType].length - 1;
+		}
+		else if(button.id == 3)
+		{
+			selectPage += isShiftKeyDown() ? 5 : 1;
+			if(selectPage >= pages[selectType].length) selectPage = 0;
+		}
+	}
+
+	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		IGuidePage page = getShowingRecipe();
+		try
+		{
+			page.onUpdate(this);
+		}
+		catch(Throwable e)
+		{
+			FleLog.getLogger().warn("FLE API : some mod has bug recipe item, please report this bug to modder.", e);
+		}
 	}
 	
 	protected void markRecipeForUpdate()
@@ -76,52 +114,49 @@ public class GuiBook extends GuiBookBase
 		super.mouseClicked(mouseX, mouseY, type);
 		if(type == 0)
 		{
-			RecipeHandler[] handlers = getShowingRecipe();
-			for(int i = 0; i < handlers.length; ++i)
+			xoffset = (width - xSize) / 2;
+			yoffset = (height - ySize) / 2;
+			IGuidePage page;
+			page = (IGuidePage) getShowingRecipe();
+			GuideTransInfo info = types[selectType].b(page, mouseX - xoffset, mouseY - yoffset);
+			if(info != null)
 			{
-				int xoffset = this.xoffset + 27 + 80 * (i % 2);
-				int yoffset = this.yoffset + 17 + 60 * (i / 2);
-				Rectangle rect = new Rectangle(xoffset, yoffset, 80, 60);
-				if(rect.contains(mouseX, mouseY))
+				cacheTypeList = new HashMap();
+				CraftGuide.instance.getTabGuides(this, tab, info);
+				if(!cacheTypeList.isEmpty())
 				{
-					int j;
-					for(j = 0; j < handlers[i].getSlotContain(); ++j)
+					types = new IGuideType[cacheTypeList.size()];
+					pages = new IGuidePage[cacheTypeList.size()][];
+					int i = 0;
+					for(Entry<IGuideType, List<IGuidePage>> e : cacheTypeList.entrySet())
 					{
-						if(handlers[i].getSlotPosition(j).contains(mouseX - xoffset, mouseY - yoffset))
-						{
-							switchRecipeFromItem(handlers[i].getStackInSlot(j));
-						}
-					}
-					for(j = 0; j < handlers[i].getTankContain(); ++j)
-					{
-						if(handlers[i].getTankPosition(j).contains(mouseX - xoffset, mouseY - yoffset))
-						{
-							switchRecipeFromFluid(handlers[i].getFluidInTank(j));
-						}
+						types[i] = e.getKey();
+						pages[i] = e.getValue().toArray(new IGuidePage[e.getValue().size()]);
+						++i;
 					}
 				}
+				selectType = 0;
+				selectPage = 0;
+				cacheTypeList = null;
 			}
 		}
 	}
-
-	protected void switchRecipeFromItem(ItemAbstractStack aStack)
+	
+	private Map<IGuideType, List<IGuidePage>> cacheTypeList;
+		
+	void putRecipeInCache(IGuideType type, List<IGuidePage> pages)
 	{
-		RecipeHandler[] rhs = CraftGuide.instance.getRecipes(tab, aStack);
-		if(rhs.length != 0)
+		if(!pages.isEmpty())
 		{
-			recipes = rhs;
-			selectRecipe = 0;
-			markRecipeForUpdate();
+			if(cacheTypeList.containsKey(type))
+				cacheTypeList.get(type).addAll(pages);
+			else cacheTypeList.put(type, pages);
 		}
 	}
-	protected void switchRecipeFromFluid(FluidStack aStack)
+	
+	@Override
+	protected String getPageString()
 	{
-		RecipeHandler[] rhs = CraftGuide.instance.getRecipes(tab, aStack);
-		if(rhs.length != 0)
-		{
-			recipes = rhs;
-			selectRecipe = 0;
-			markRecipeForUpdate();
-		}
+		return String.format("Page %d/%d", selectPage + 1, pages[selectType].length);
 	}
 }

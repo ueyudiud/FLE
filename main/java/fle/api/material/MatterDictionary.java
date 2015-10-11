@@ -114,4 +114,9 @@ public class MatterDictionary
 		
 		public ItemStack getOutput(FluidStack aStack, IInventory inv);
 	}
+
+	public static List<IFreezingRecipe> getFreezeRecipes()
+	{
+		return freezingRecipeMap;
+	}
 }

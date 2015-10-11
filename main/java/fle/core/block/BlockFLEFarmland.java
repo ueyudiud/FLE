@@ -29,8 +29,10 @@ import fle.FLE;
 import fle.api.block.BlockFle;
 import fle.api.block.IDebugableBlock;
 import fle.api.crop.IFertilableBlock;
+import fle.api.crop.IIrrigationHandler;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
+import fle.core.init.Config;
 
 public class BlockFLEFarmland extends BlockFle implements IDebugableBlock, IFertilableBlock
 {
@@ -114,7 +116,9 @@ public class BlockFLEFarmland extends BlockFle implements IDebugableBlock, IFert
         	Ca = 1;
         }
         if((N | P | K | Ca) != 0)
+        {
         	useFertilizer(aWorld, x, y, z, new FertitleLevel(N, P, K, Ca));
+        }
     }
 
     /**
@@ -154,9 +158,12 @@ public class BlockFLEFarmland extends BlockFle implements IDebugableBlock, IFert
     }
     
     private static final ForgeDirection[] dirs = {ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST};
-
+    private int b = -1;
+    
     private int getWaterLevel(World aWorld, int x, int y, int z, boolean flag)
     {
+    	//Init farmland consume.
+    	if(b == -1) b = Config.getInteger("pFarmlandConsume");
     	int i, j, k;
     	BlockPos pos = new BlockPos(aWorld, x, y, z);
     	BlockPos pos1;
@@ -164,28 +171,33 @@ public class BlockFLEFarmland extends BlockFle implements IDebugableBlock, IFert
     	BiomeGenBase biome = aWorld.getBiomeGenForCoords(x, z);
     	count += biome.getIntRainfall() / 256;
         if(aWorld.isRaining() && biome.getIntRainfall() > 1000) count += biome.isHighHumidity() ? 50 : 30;
-        for (i = -4; i <= 4; ++i)
+        for (i = -2; i <= 2; ++i)
         {
-            for (j = 0; j <= 1; ++j)
+        	for (k = -2; k <= 2; ++k)
             {
-                for (k = -4; k <= 4; ++k)
+            	pos1 = pos.toPos(i, 0, k);
+                if (pos1.getBlock() == Blocks.water)
                 {
-                	pos1 = pos.toPos(i, j, k);
-                    if (pos1.getBlock().getMaterial() == Material.water)
-                    {
-                       count += 10;
-                    }
+                   count += 40;
                 }
             }
         }
         for(ForgeDirection dir : dirs)
         {
         	TileEntity tile = pos.toPos(dir).getBlockTile();
-        	if(tile instanceof IFluidHandler)
+        	if(tile instanceof IIrrigationHandler)
         	{
-        		if(((IFluidHandler) tile).canDrain(dir.getOpposite(), FluidRegistry.WATER))
-        			if(((IFluidHandler) tile).drain(dir.getOpposite(), new FluidStack(FluidRegistry.WATER, 1), flag) != null)
-        				count += 50;
+        		if(flag)
+        		{
+            		if(((IIrrigationHandler) tile).canIrrigate(dir.getOpposite()))
+            		{
+            			count += ((IIrrigationHandler) tile).doIrrigate(dir.getOpposite(), b) * 12;
+            		}
+        		}
+        		else if(((IIrrigationHandler) tile).canIrrigate(dir.getOpposite()))
+        		{
+        			count += 80;
+        		}
         	}
         }
 
@@ -294,5 +306,11 @@ public class BlockFLEFarmland extends BlockFle implements IDebugableBlock, IFert
 		lv1.add(-lv.N, -lv.P, -lv.K, -lv.Ca);
 		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, lv1.hashCode());
 		return false;
+	}
+
+	@Override
+	public int getWaterLevel(World world, int x, int y, int z)
+	{
+		return getWaterLevel(world, x, y, z, false);
 	}
 }

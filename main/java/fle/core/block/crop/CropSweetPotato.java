@@ -8,7 +8,6 @@ public class CropSweetPotato extends CropBase
 	{
 		super("sweetpotato");
 		setCropLevel(2);
-		setGrowTick(1700);
 		setMaturationStage(6);
 		setTextureName("crop/sweetpotato");
 	}

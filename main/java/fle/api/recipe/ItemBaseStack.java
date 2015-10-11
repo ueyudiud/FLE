@@ -38,7 +38,7 @@ public class ItemBaseStack extends ItemAbstractStack
 	@Override
 	public boolean isStackEqul(ItemStack item)
 	{
-		return OreDictionary.itemMatches(stack, item, false) && item.stackSize >= stack.stackSize;
+		return OreDictionary.itemMatches(stack, item, false);
 	}
 
 	@Override

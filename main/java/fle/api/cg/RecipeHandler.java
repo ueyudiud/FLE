@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.recipe.ItemAbstractStack;
 
+@Deprecated
 public interface RecipeHandler
 {
 	boolean match(ItemStack target);

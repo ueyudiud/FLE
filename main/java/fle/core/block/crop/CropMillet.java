@@ -11,7 +11,6 @@ public class CropMillet extends CropBase
 		setCropLevel(1);
 		setMaturationStage(8);
 		setTextureName("crop/millet(setaria)");
-		setGrowTick(1000);
 		setCropRender(O_LIKE);
 	}
 

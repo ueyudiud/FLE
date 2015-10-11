@@ -32,19 +32,19 @@ import fle.api.cg.RecipesTab;
 import fle.api.enums.EnumAtoms;
 import fle.api.material.Matter;
 import fle.api.material.MatterDictionary;
-import fle.api.recipe.IFleRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapedFleRecipe;
 import fle.api.recipe.ShapelessFleRecipe;
 import fle.api.soild.SolidRegistry;
 import fle.api.soild.SolidStack;
-import fle.api.util.DropInfo;
 import fle.api.util.FLEConfiguration;
 import fle.api.util.FleLog;
 import fle.api.util.SubTag;
-import fle.cg.recipe.ShapedRecipe;
-import fle.cg.recipe.ShapelessRecipe;
+import fle.cg.recipe.FLEClayRecipe;
+import fle.cg.recipe.FLEShapedRecipe;
+import fle.cg.recipe.FLEShapelessRecipe;
+import fle.cg.recipe.FLEWashingRecipe;
 import fle.core.block.BlockRock;
 import fle.core.block.ItemDitch;
 import fle.core.block.ItemRopeLadder;
@@ -57,14 +57,11 @@ import fle.core.item.ItemToolHead;
 import fle.core.recipe.CastingPoolRecipe;
 import fle.core.recipe.FLEBoilingHeaterRecipe;
 import fle.core.recipe.FLEDryingRecipe;
-import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 import fle.core.recipe.FLEOilMillRecipe;
 import fle.core.recipe.FLEPolishRecipe;
-import fle.core.recipe.FLEPolishRecipe.PolishRecipe;
 import fle.core.recipe.FLESifterRecipe;
 import fle.core.recipe.FLEStoneMillRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
-import fle.core.recipe.WashingRecipe;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
 import fle.core.recipe.crafting.RopeLadderCraftingRecipe;
 import fle.core.recipe.crafting.ToolCraftingRecipe;
@@ -442,51 +439,35 @@ public class Rs
 		for(Object obj : CraftingManager.getInstance().getRecipeList())
 		{
 			IRecipe recipe = (IRecipe) obj;
-			if(recipe instanceof ShapedRecipes)
+			if(recipe instanceof ShapedRecipes || recipe instanceof ShapedOreRecipe || recipe instanceof ShapedFleRecipe)
 			{
-				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapedRecipe((ShapedRecipes) recipe));
+				FLEShapedRecipe.register(recipe);
 			}
-			else if(recipe instanceof ShapedOreRecipe)
+			else if(recipe instanceof ShapelessRecipes || recipe instanceof ShapelessOreRecipe || recipe instanceof ShapelessFleRecipe)
 			{
-				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapedRecipe((ShapedOreRecipe) recipe));
-			}
-			else if(recipe instanceof ShapedFleRecipe)
-			{
-				CraftGuide.instance.registerRecipe(((IFleRecipe) recipe).getRecipeTab(), new ShapedRecipe((ShapedFleRecipe) recipe));
-				if(((IFleRecipe) recipe).getRecipeTab() != RecipesTab.tabClassic)
-					CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapedRecipe((ShapedFleRecipe) recipe));
-			}
-			else if(recipe instanceof ShapelessRecipes)
-			{
-				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapelessRecipe((ShapelessRecipes) recipe));
-			}
-			else if(recipe instanceof ShapelessOreRecipe)
-			{
-				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapelessRecipe((ShapelessOreRecipe) recipe));
-			}
-			else if(recipe instanceof ShapelessFleRecipe)
-			{
-				CraftGuide.instance.registerRecipe(((IFleRecipe) recipe).getRecipeTab(), new ShapelessRecipe((ShapelessFleRecipe) recipe));
-				if(((IFleRecipe) recipe).getRecipeTab() != RecipesTab.tabClassic)
-					CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new ShapelessRecipe((ShapelessFleRecipe) recipe));
+				FLEShapelessRecipe.register(recipe);
 			}
 		}
-		Map<ItemAbstractStack, DropInfo> washRecipes = WashingRecipe.getRecipes();
-		for(ItemAbstractStack tStack : washRecipes.keySet())
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLEShapedRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLEShapelessRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.cg.recipe.FLEPolishRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLEWashingRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.cg.recipe.FLEDryingRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLEClayRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabOldStoneAge, new fle.cg.recipe.FLEPolishRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabOldStoneAge, new FLEWashingRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabNewStoneAge, new fle.cg.recipe.FLEDryingRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabNewStoneAge, new FLEClayRecipe());
+		//Map<ItemAbstractStack, DropInfo> washRecipes = WashingRecipe.getRecipes();
+		//for(ItemAbstractStack tStack : washRecipes.keySet())
 		{
-			CraftGuide.instance.registerRecipe(RecipesTab.tabOldStoneAge, new fle.cg.recipe.WashingRecipe(tStack, washRecipes.get(tStack)));
-			CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.WashingRecipe(tStack, washRecipes.get(tStack)));
+			//CraftGuide.instance.registerRecipe(RecipesTab.tabOldStoneAge, new fle.cg.recipe.WashingRecipe(tStack, washRecipes.get(tStack)));
+			//CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.WashingRecipe(tStack, washRecipes.get(tStack)));
 		}
-		for(PolishRecipe recipe : FLEPolishRecipe.getInstance().getRecipes())
+		//for(DryingRecipe recipe : FLEDryingRecipe.getInstance().getRecipes())
 		{
-			CraftGuide.instance.registerRecipe(recipe.getTab(), new fle.cg.recipe.PolishRecipe(recipe));
-			if(recipe.getTab() != RecipesTab.tabClassic)
-				CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.PolishRecipe(recipe));
-		}
-		for(DryingRecipe recipe : FLEDryingRecipe.getInstance().getRecipes())
-		{
-			CraftGuide.instance.registerRecipe(RecipesTab.tabNewStoneAge, new fle.cg.recipe.DryingRecipe(recipe));
-			CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.DryingRecipe(recipe));
+			//CraftGuide.instance.registerRecipe(RecipesTab.tabNewStoneAge, new fle.cg.recipe.DryingRecipe(recipe));
+			//CraftGuide.instance.registerRecipe(RecipesTab.tabClassic, new fle.cg.recipe.DryingRecipe(recipe));
 		}
 	}
 }

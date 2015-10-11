@@ -112,4 +112,24 @@ public class CastingPoolRecipe implements IFreezingRecipe
 	{
 		return output.copy();
 	}	
+
+	public FluidStack getInput()
+	{
+		return input.copy();
+	}
+	
+	public ItemStack getOutput()
+	{
+		return output.copy();
+	}
+	
+	public ItemStack[] getRecipeMap()
+	{
+		ItemStack[] ret = new ItemStack[9];
+		for(int i = 0; i < 9; ++i)
+		{
+			ret[i] = (s & (1 << i)) != 0 ? ItemFleSub.a("cemented_grit") : null;
+		}
+		return ret;
+	}
 }

@@ -14,7 +14,6 @@ public class CropSugerCances extends CropBase
 		setCropLevel(2);
 		setMaturationStage(6);
 		setTextureName("crop/reed");
-		setGrowTick(1500);
 	}
 
 	@Override

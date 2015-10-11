@@ -56,7 +56,7 @@ public class FLE implements FleModHandler
     public static final int minForge = 1420;
     
     private static final UUID modUUID = new UUID(-7834374458361585156L, -677775741L);
-	
+    
     @Instance(MODID)
     public static FLE fle;
 

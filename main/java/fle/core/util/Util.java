@@ -1,6 +1,7 @@
 package fle.core.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -110,6 +111,23 @@ public class Util
 				Field tField = clazz.getDeclaredField(str);
 				tField.setAccessible(true);
 				return tField.get(target);
+			}
+			catch(Throwable e)
+			{
+				continue;
+			}
+		}
+		return null;
+	}
+	
+	public static Method getMethod(Class clazz, List<String> field, Class...classes)
+	{
+		for(String str : field)
+		{
+			try
+			{
+				Method tMethod = clazz.getDeclaredMethod(str, classes);
+				return tMethod;
 			}
 			catch(Throwable e)
 			{

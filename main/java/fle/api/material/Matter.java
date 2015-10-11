@@ -32,6 +32,23 @@ public class Matter implements IAtoms
 		matter.ct = type;
 		return matter;
 	}
+	public static Matter forMatter(Matter matter, AtomStack...atomStacks)
+	{
+		if(Matter.matter.contain(matter.toString()))
+		{
+			return getMatterFromName(matter.toString());
+		}
+		try
+		{
+			Matter m1 = (Matter) matter.clone();
+			Matter.matter.register(matter, m1.toString());
+			return m1;
+		}
+		catch(Throwable e)
+		{
+			return null;
+		}
+	}
 	public static Matter getMatterFromName(String name)
 	{
 		return matter.get(name);

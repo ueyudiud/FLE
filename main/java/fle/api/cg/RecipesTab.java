@@ -16,7 +16,7 @@ public class RecipesTab
 	public static RecipesTab tabBronzeAge = registerNewTab("bronzeAge");
 	public static RecipesTab tabClassic = registerNewTab("classic");
 
-	public static RecipesTab registerNewTab(String tab)
+	static RecipesTab registerNewTab(String tab)
 	{
 		if(map.containsKey(tab))
 		{
@@ -27,11 +27,11 @@ public class RecipesTab
 		{
 			RecipesTab ret = new RecipesTab(tab);
 			map.put(tab, ret);
-			CraftGuide.instance.recipeList.put(ret, new ArrayList());
+			CraftGuide.instance.typeList.put(ret, new ArrayList());
 			return ret;
 		}
 	}
-	public static RecipesTab registerNewTab(RecipesTab tab)
+	static RecipesTab registerNewTab(RecipesTab tab)
 	{
 		if(map.containsKey(tab.tabName))
 		{
@@ -41,7 +41,7 @@ public class RecipesTab
 		else
 		{
 			map.put(tab.tabName, tab);
-			CraftGuide.instance.recipeList.put(tab, new ArrayList());
+			CraftGuide.instance.typeList.put(tab, new ArrayList());
 			return tab;
 		}
 	}

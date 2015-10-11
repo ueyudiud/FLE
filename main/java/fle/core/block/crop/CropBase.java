@@ -7,8 +7,10 @@ import fle.FLE;
 import fle.api.FleValue;
 import fle.api.crop.CropCard;
 import fle.api.crop.ICropTile;
+import fle.api.crop.IFertilableBlock.FertitleLevel;
 import fle.api.enums.EnumCropRender;
 import fle.api.util.DropInfo;
+import fle.core.init.Config;
 
 public abstract class CropBase extends CropCard
 {
@@ -24,6 +26,7 @@ public abstract class CropBase extends CropCard
 	protected CropBase(String name) 
 	{
 		this.name = name;
+		setGrowTick();
 		FLE.fle.getCropRegister().registerCrop(this);
 	}
 	
@@ -51,9 +54,15 @@ public abstract class CropBase extends CropCard
 		return this;
 	}
 
+	@Deprecated
 	public CropBase setGrowTick(int aTick)
 	{
-		this.growTick = aTick;
+		return this;
+	}
+
+	public CropBase setGrowTick()
+	{
+		this.growTick = Config.getInteger("p@" + getCropName());
 		return this;
 	}
 	
@@ -106,8 +115,14 @@ public abstract class CropBase extends CropCard
 		double d2 = tile.getTempretureLevel();
 		double d3 = tile.getWaterLevel();
 		double d4 = (double) tile.getLightValue() / 7D;
-		double d5 = (double) tile.getFertitleLevel().N / 16D;
+		FertitleLevel lv = tile.getFertitleLevel();
+		double d5 = getFertitleNeed(tile.getStage(), lv);
 		return (int) ((d1 + d2 + d3) * d4 * 10D) * (1D + d5) * Math.pow(0.95D, level);
+	}
+	
+	protected double getFertitleNeed(int stage, FertitleLevel fl)
+	{
+		return (double) fl.P / 16D;
 	}
 
 	@Override

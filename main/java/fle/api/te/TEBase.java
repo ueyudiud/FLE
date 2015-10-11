@@ -48,15 +48,15 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		nbt.setByte("BlockFacing", (byte) (dir == null ? ForgeDirection.UNKNOWN.ordinal() : dir.ordinal()));
 		nbt.setShort("TileMeta", (short) getMetadata());
 	}
-	
+
 	private boolean init = false;
+	private boolean postinit = true;
 	
 	@Override
 	public void updateEntity()
 	{
 		if(!init)
 		{
-			markNBTUpdate();
 			if(worldObj.getBlockMetadata(xCoord, yCoord, zCoord) != blockMetadata && blockMetadata != -1)
 			{
 				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata, 3);
@@ -66,7 +66,10 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 					TileEntity tile = blockType.createTileEntity(worldObj, blockMetadata);
 					tile.blockMetadata = blockMetadata;
 					if(nbt != null) tile.readFromNBT(nbt);
-					if(tile instanceof TEBase) ((TEBase) tile).init = true;
+					if(tile instanceof TEBase)
+					{
+						((TEBase) tile).markFinishInit();
+					}
 					worldObj.setTileEntity(xCoord, yCoord, zCoord, tile);
 				}
 			}
@@ -75,9 +78,20 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 				blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			}
 			markRenderForUpdate();
-			init = true;
 			FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, blockMetadata);
+			markFinishInit();
 		}
+		if(!postinit)
+		{
+			markNBTUpdate();
+			postinit = true;
+		}
+	}
+	
+	private void markFinishInit()
+	{
+		init = true;
+		postinit = false;
 	}
 	
 	@Override
