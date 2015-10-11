@@ -89,6 +89,16 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		{
 			
 		}
+		
+		public Object getInput()
+		{
+			return input;
+		}
+		
+		public float getOutputChance()
+		{
+			return chance;
+		}
 	}
 	
 	public static class SifterKey extends RecipeKey

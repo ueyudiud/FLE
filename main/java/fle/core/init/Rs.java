@@ -41,6 +41,7 @@ import fle.api.soild.SolidStack;
 import fle.api.util.FLEConfiguration;
 import fle.api.util.FleLog;
 import fle.api.util.SubTag;
+import fle.cg.recipe.FLECastingRecipe;
 import fle.cg.recipe.FLEClayRecipe;
 import fle.cg.recipe.FLEShapedRecipe;
 import fle.cg.recipe.FLEShapelessRecipe;
@@ -454,10 +455,16 @@ public class Rs
 		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLEWashingRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.cg.recipe.FLEDryingRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLEClayRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLECastingRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.cg.recipe.FLEStoneMillRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.cg.recipe.FLESifterRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabOldStoneAge, new fle.cg.recipe.FLEPolishRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabOldStoneAge, new FLEWashingRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabNewStoneAge, new fle.cg.recipe.FLEDryingRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabNewStoneAge, new FLEClayRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabCopperAge, new FLECastingRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabBronzeAge, new fle.cg.recipe.FLEStoneMillRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabBronzeAge, new fle.cg.recipe.FLESifterRecipe());
 		//Map<ItemAbstractStack, DropInfo> washRecipes = WashingRecipe.getRecipes();
 		//for(ItemAbstractStack tStack : washRecipes.keySet())
 		{
