@@ -12,6 +12,7 @@ import fle.api.cg.GuiBookBase;
 import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
+import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 
 public class FLEDryingRecipe extends StandardType
 {
@@ -25,7 +26,7 @@ public class FLEDryingRecipe extends StandardType
 		{
 			for(fle.core.recipe.FLEDryingRecipe.DryingRecipe recipe : fle.core.recipe.FLEDryingRecipe.getInstance().getRecipes())
 			{
-				list.add(new DryingRecipe(recipe));
+				list.add(new DryingPage(recipe));
 			}
 			init = true;
 		}
@@ -58,7 +59,7 @@ public class FLEDryingRecipe extends StandardType
 		label:
 		for(IGuidePage rawPage : getAllPage())
 		{
-			DryingRecipe page = (DryingRecipe) rawPage;
+			DryingPage page = (DryingPage) rawPage;
 			if(contain.isStackEqul(page.output))
 			{
 				list.add(page);
@@ -76,7 +77,7 @@ public class FLEDryingRecipe extends StandardType
 		return list;
 	}
 	
-	private static class DryingRecipe extends StandardPage
+	private static class DryingPage extends StandardPage
 	{
 		private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/drying_table.png");
 		
@@ -84,7 +85,7 @@ public class FLEDryingRecipe extends StandardType
 		int tick;
 		ItemStack output;
 		
-		public DryingRecipe(fle.core.recipe.FLEDryingRecipe.DryingRecipe recipe)
+		public DryingPage(DryingRecipe recipe)
 		{
 			input = recipe.input;
 			tick = recipe.recipeTime;

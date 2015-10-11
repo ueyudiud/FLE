@@ -17,6 +17,7 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemArrayStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapedFleRecipe;
+import fle.core.util.Util;
 
 public class FLEShapedRecipe extends StandardType
 {
@@ -148,6 +149,7 @@ public class FLEShapedRecipe extends StandardType
 					showArray[i] = stacks[i].toList();
 				}
 			}
+			Util.setStacksSize(showArray, 1);
 			isSmallRecipe = inputs.length <= 4 && inputs.length != 3;
 			output = recipe.getRecipeOutput().copy();
 			if(!init) init();
@@ -169,8 +171,9 @@ public class FLEShapedRecipe extends StandardType
 			{
 				stacks[i] = new ItemBaseStack(recipe.recipeItems[i]);
 				if(recipe.recipeItems[i] != null)
-					showArray[i] = new ItemStack[]{recipe.recipeItems[i]};
+					showArray[i] = new ItemStack[]{recipe.recipeItems[i] != null ? recipe.recipeItems[i].copy() : null};
 			}
+			Util.setStacksSize(showArray, 1);
 			isSmallRecipe = recipe.recipeHeight <= 2 && recipe.recipeWidth <= 2;
 			output = recipe.getRecipeOutput().copy();
 			xSize = recipe.recipeWidth;

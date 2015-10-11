@@ -143,4 +143,17 @@ public class Util
 		ret.addAll(drops);
 		return ret;
 	}
+	
+	public static void setStacksSize(ItemStack[][] arrays, int i)
+	{
+		for(ItemStack[] array : arrays)
+		{
+			if(array == null) continue;
+			for(ItemStack stack : array)
+			{
+				if(stack == null) continue;
+				stack.stackSize = i;
+			}
+		}
+	}
 }

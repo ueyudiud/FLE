@@ -26,6 +26,8 @@ public class FLEWashingRecipe extends StandardType
 {
 	private List<IGuidePage> list = new ArrayList();
 	
+	private boolean init = false;
+	
 	private void init()
 	{
 		if(!init)
@@ -37,8 +39,6 @@ public class FLEWashingRecipe extends StandardType
 			init = true;
 		}
 	}
-	
-	private boolean init = false;
 	
 	@Override
 	public String getTypeName()

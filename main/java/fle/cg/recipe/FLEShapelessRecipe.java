@@ -16,6 +16,7 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemArrayStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapelessFleRecipe;
+import fle.core.util.Util;
 
 public class FLEShapelessRecipe extends StandardType
 {
@@ -133,6 +134,7 @@ public class FLEShapelessRecipe extends StandardType
 				}
 				++i;
 			}
+			Util.setStacksSize(showArray, 1);
 			output = recipe.getRecipeOutput().copy();
 		}
 		public ShapelessPage(ShapelessRecipes recipe)
@@ -143,8 +145,9 @@ public class FLEShapelessRecipe extends StandardType
 			for(int i = 0; i < ts.length; ++i)
 			{
 				stacks[i] = new ItemBaseStack((ItemStack) ts[i]);
-				showArray[i] = new ItemStack[]{(ItemStack) ts[i]};
+				showArray[i] = new ItemStack[]{ts[i] != null ? ((ItemStack) ts[i]).copy() : null};
 			}
+			Util.setStacksSize(showArray, 1);
 			output = recipe.getRecipeOutput().copy();
 		}
 		

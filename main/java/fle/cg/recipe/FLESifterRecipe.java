@@ -12,6 +12,7 @@ import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.RecipeInfomation;
+import fle.api.soild.Solid;
 import fle.api.soild.SolidStack;
 
 public class FLESifterRecipe extends StandardType
@@ -91,7 +92,7 @@ public class FLESifterRecipe extends StandardType
 			else
 			{
 				input1 = null;
-				input2 = ((SolidStack) recipe.getInput()).copy();
+				input2 = new SolidStack((Solid) recipe.getInput());
 			}
 			output1 = recipe.output1;
 			if(recipe.output2 != null)
