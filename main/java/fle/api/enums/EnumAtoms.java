@@ -13,29 +13,30 @@ import fle.api.util.FleEntry;
 import fle.api.util.IChemCondition;
 import fle.api.util.ISubTagContainer;
 import fle.api.util.SubTag;
+import static fle.api.util.SubTag.*;
 import fle.api.util.WeightHelper.Stack;
 
 public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 {
 	Nt("Neutron"),
-	H("Hydrogen", SubTag.ATOM_nonmetal),
-	He("Helium", SubTag.ATOM_nonmetal),
+	H("Hydrogen", ATOM_nonmetal, ATOM_gas),
+	He("Helium", ATOM_nonmetal, ATOM_gas),
 	Li("Lithium"),
 	Be("Beryllium"),
-	B("Boron", SubTag.ATOM_nonmetal),
-	C("Carbon", SubTag.ATOM_nonmetal),
-	N("Nitrogen", SubTag.ATOM_nonmetal),
-	O("Oxygen", SubTag.ATOM_nonmetal),
-	F("Fluorine", SubTag.ATOM_nonmetal),
-	Ne("Neon", SubTag.ATOM_nonmetal),
+	B("Boron", ATOM_nonmetal),
+	C("Carbon", ATOM_nonmetal),
+	N("Nitrogen", ATOM_nonmetal, ATOM_gas),
+	O("Oxygen", ATOM_nonmetal, ATOM_gas),
+	F("Fluorine", ATOM_nonmetal, ATOM_gas),
+	Ne("Neon", ATOM_nonmetal, ATOM_gas),
 	Na("Sodium"),
 	Mg("Magnesium"),
 	Al("Aluminium"),
-	Si("Silicon", SubTag.ATOM_nonmetal),
-	P("Phosphorus", SubTag.ATOM_nonmetal),
-	S("Sulfur", SubTag.ATOM_nonmetal),
-	Cl("Chlorine", SubTag.ATOM_nonmetal),
-	Ar("Argon", SubTag.ATOM_nonmetal),
+	Si("Silicon", ATOM_nonmetal),
+	P("Phosphorus", ATOM_nonmetal),
+	S("Sulfur", ATOM_nonmetal),
+	Cl("Chlorine", ATOM_nonmetal, ATOM_gas),
+	Ar("Argon", ATOM_nonmetal, ATOM_gas),
 	K("Potassium"),
 	Ca("Calcium"),
 	Sc("Scandium"),
@@ -49,11 +50,11 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 	Cu("Copper"),
 	Zn("Zinc"),
 	Ga("Gallium"),
-	Ge("Germanium", SubTag.ATOM_nonmetal),
-	As("Arsenic", SubTag.ATOM_nonmetal),
-	Se("Selenium", SubTag.ATOM_nonmetal),
-	Br("Bromine", SubTag.ATOM_nonmetal),
-	Kr("Krypton"),
+	Ge("Germanium", ATOM_nonmetal),
+	As("Arsenic", ATOM_nonmetal),
+	Se("Selenium", ATOM_nonmetal),
+	Br("Bromine", ATOM_nonmetal, ATOM_liquid),
+	Kr("Krypton", ATOM_gas),
 	Rb("Rubidium"),
 	Sr("Strontium"),
 	Y("Yttrium"),
@@ -69,9 +70,9 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 	In("Indium"),
 	Sn("Tin"),
 	Sb("Antimony"),
-	Te("Tellurium", SubTag.ATOM_nonmetal),
-	I("Iodine", SubTag.ATOM_nonmetal),
-	Xe("Xenon", SubTag.ATOM_nonmetal),
+	Te("Tellurium", ATOM_nonmetal),
+	I("Iodine", ATOM_nonmetal),
+	Xe("Xenon", ATOM_nonmetal, ATOM_gas),
 	Cs("Caesium"),
 	Ba("Barium"),
 	La("Lanthanum"),
@@ -97,13 +98,13 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 	Ir("Iridium"),
 	Pt("Platinum"),
 	Au("Gold"),
-	Hg("Mercury"),
+	Hg("Mercury", ATOM_liquid),
 	Tl("Thallium"),
 	Pb("Lead"),
 	Bi("Bismuth"),
 	Po("Polonium"),
-	At("Astatine", SubTag.ATOM_nonmetal),
-	Rn("Radon", SubTag.ATOM_nonmetal),
+	At("Astatine", ATOM_nonmetal),
+	Rn("Radon", ATOM_nonmetal, ATOM_gas),
 	Fr("Francium"),
 	Ra("Radium"),
 	Ac("Actinium"),
@@ -111,7 +112,31 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 	Pa("Protactinium"),
 	U("Uranium"),
 	Np("Neptunium"),
-	Pu("Plutonium");
+	Pu("Plutonium"),
+	Am("Americium"),
+	Cm("Curium"),
+	Bk("Berkelium"),
+	Cf("Californium"),
+	Es("Einsteinium"),
+	Fm("Fermium"),
+	Md("Mendelevium"),
+	No("Nobelium"),
+	Lr("Lawrencium"),
+	Rf("Rutherfordium"),
+	Db("Dubnium"),
+	Sg("Seaborgium"),
+	Bh("Bohrium"),
+	Hs("Hassium"),
+	Mt("Meitnerium"),
+	Ds("Darmstadtium"),
+	Rg("Roentgenium"),
+	Cn("Copernicium"),
+	Uut("Ununtrium"),
+	Fl("Flerovium"),
+	Uup("Ununpentium"),
+	Lv("Livermorium"),
+	Uus("Ununseptium"),
+	Uuo("Ununoctium", ATOM_gas);
 	
 	static
 	{
@@ -127,6 +152,30 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 		U.setRadition();
 		Np.setRadition();
 		Pu.setRadition();
+		Am.setRadition();
+		Cm.setRadition();
+		Bk.setRadition();
+		Cf.setRadition();
+		Es.setRadition();
+		Fm.setRadition();
+		Md.setRadition();
+		No.setRadition();
+		Lr.setRadition();
+		Rf.setRadition();
+		Db.setRadition();
+		Sg.setRadition();
+		Bh.setRadition();
+		Hs.setRadition();
+		Mt.setRadition();
+		Ds.setRadition();
+		Rg.setRadition();
+		Cn.setRadition();
+		Uut.setRadition();
+		Fl.setRadition();
+		Uup.setRadition();
+		Lv.setRadition();
+		Uus.setRadition();
+		Uuo.setRadition();
 		H.setPoiont(14, 20);
 		He.setPoiont(1, 4);
 		Li.setPoiont(453, 1560);
@@ -221,6 +270,30 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 		U.setPoiont(1405, 4404);
 		Np.setPoiont(917, 4273);
 		Pu.setPoiont(912, 3501);
+		Am.setPoiont(1449, 2880);
+		Cm.setPoiont(1613, 3383);
+		Bk.setPoiont(1259, 2900);
+		Cf.setPoiont(1173, 1743);
+		Es.setPoiont(1133, 1269);
+		Fm.setPoiont(1125, 3000);
+		Md.setPoiont(1100, 3000);
+		No.setPoiont(1100, 3000);
+		Lr.setPoiont(1900, 3000);
+		Rf.setPoiont(2400, 5800);
+		Db.setPoiont(1000, 3000);
+		Sg.setPoiont(1000, 3000);
+		Bh.setPoiont(1000, 3000);
+		Hs.setPoiont(1000, 3000);
+		Mt.setPoiont(1000, 3000);
+		Ds.setPoiont(1000, 3000);
+		Rg.setPoiont(1000, 3000);
+		Cn.setPoiont(1000, 3000);
+		Uut.setPoiont(1000, 3000);
+		Fl.setPoiont(1000, 3000);
+		Uup.setPoiont(1000, 3000);
+		Lv.setPoiont(1000, 3000);
+		Uus.setPoiont(1000, 3000);
+		Uuo.setPoiont(1000, 3000);
 	}
 	
 	private String name;
@@ -229,9 +302,13 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 	{
 		name = aName;
 		add(tags);
-		if(!contain(SubTag.ATOM_nonmetal))
+		if(!contain(ATOM_nonmetal))
 		{
-			add(SubTag.ATOM_metal);
+			add(ATOM_metal);
+		}
+		if(!(contain(ATOM_gas) || contain(ATOM_liquid)))
+		{
+			add(ATOM_soild);
 		}
 	}
 	
@@ -331,6 +408,6 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 
 	public Matter asMatter()
 	{
-		return Matter.forMatter(name(), contain(SubTag.ATOM_metal) ? CompoundType.Alloy : CompoundType.Molecular, new AtomStack(this));
+		return Matter.forMatter(name(), contain(ATOM_metal) ? CompoundType.Alloy : CompoundType.Molecular, new AtomStack(this));
 	}
 }

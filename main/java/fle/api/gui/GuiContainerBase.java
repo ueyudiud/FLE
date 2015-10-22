@@ -112,14 +112,15 @@ public abstract class GuiContainerBase extends GuiContainer
 			if (fluidIcon != null)
 			{
 				mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-				double liquidHeight = lay ? height : (double) (info.fluid.amount * height) / (double)info.capacity;
-				double liquidWidth = lay ? (double) (info.fluid.amount * width) / (double) info.capacity : width;
 		        int color = info.fluid.getFluid().getColor(info.fluid);
 		        float red = (color >> 16 & 255) / 255.0F;
 		        float green = (color >> 8 & 255) / 255.0F;
 		        float blue = (color & 255) / 255.0F;
 				GL11.glColor4f(red, green, blue, 1.0F);
-				drawRepeated(fluidIcon, xoffset + x + width - liquidWidth, yoffset + y + height - liquidHeight, liquidWidth, liquidHeight, zLevel);
+				if(lay)
+					drawRepeated(fluidIcon, xoffset + x, yoffset + y, (double) (info.fluid.amount * width) / (double)info.capacity, height, zLevel);
+				else
+					drawRepeated(fluidIcon, xoffset + x, yoffset + y + height - (double) (info.fluid.amount * height) / (double) info.capacity, width, (double) (info.fluid.amount * height) / (double) info.capacity, zLevel);
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				mc.renderEngine.bindTexture(getResourceLocation());
 			}

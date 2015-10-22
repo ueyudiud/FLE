@@ -66,15 +66,15 @@ public class NoiseMix extends NoiseBase
 	{
 		switch(modeType)
 		{
-		case 0 : return b*(1-x) + c*x;
+		case 0 : return b * (1 - x) + c * x;
 		case 1 : double f = (1 - Math.cos(x * Math.PI)) * .5D;
-		return b*(1-f) + c*f;
+		return b * (1 - f) + c * f;
 		case 2 : double P,Q,R,S;
 		P = (d - c) - (a - b);
 		Q = (a - b) - P;
 		R = c - a;
 		S = b;
-		return P * Math.pow(x , 3) + Q * Math.pow(x , 2) + R * x + S;
+		return P * x * x * x + Q * x * x + R * x + S;
 		default: return Double.NaN;
 		}
 	}

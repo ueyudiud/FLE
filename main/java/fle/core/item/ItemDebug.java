@@ -57,8 +57,6 @@ public class ItemDebug extends ItemFle
             	aPlayer.addChatMessage(new ChatComponentText("Metadata: " + pos.getBlockMeta() + "."));
             	aPlayer.addChatMessage(new ChatComponentText("Harvest Level: " + pos.getBlock().getHarvestLevel(pos.getBlockMeta()) + "."));
         		aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + "."));
-        		aPlayer.addChatMessage(new ChatComponentText("FTN :"));
-        		aPlayer.addChatMessage(new ChatComponentText("Wind Speed : " + FLE.fle.getRotationNet().getWindSpeed(pos)));
         		
         		String str1 = "";
             	for(EnumWorldNBT nbt : EnumWorldNBT.values())
@@ -75,6 +73,8 @@ public class ItemDebug extends ItemFle
             				aPlayer.addChatMessage(new ChatComponentText(String.format("Fluid Amount: %sx%s.", info.fluid.getLocalizedName(), FleValue.format_L.format_c(info.fluid.amount))));
             		}
             	}
+        		aPlayer.addChatMessage(new ChatComponentText("FTN :"));
+        		aPlayer.addChatMessage(new ChatComponentText(String.format("Enviourment Temp: %s.", FleValue.format_K.format_c(FLE.fle.getThermalNet().getEnvironmentTemperature(pos)))));
             	if(pos.getBlockTile() instanceof IThermalTileEntity)
             	{
             		IThermalTileEntity tile = (IThermalTileEntity) pos.getBlockTile();
@@ -82,6 +82,8 @@ public class ItemDebug extends ItemFle
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Heat Currect: %s.", FleValue.format_MJ.format_c(tile.getThermalEnergyCurrect(ForgeDirection.VALID_DIRECTIONS[aSide])))));
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreHeatEmit()))));
             	}
+        		aPlayer.addChatMessage(new ChatComponentText("FRN :"));
+        		aPlayer.addChatMessage(new ChatComponentText("Wind Speed : " + FLE.fle.getRotationNet().getWindSpeed(pos)));
             	if(pos.getBlockTile() instanceof IRotationTileEntity)
             	{
             		IRotationTileEntity tile = (IRotationTileEntity) pos.getBlockTile();
@@ -133,7 +135,10 @@ public class ItemDebug extends ItemFle
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target,
 			EntityLivingBase user) 
 	{
-		target.setDead();
+		if(!user.worldObj.isRemote)
+		{
+			target.setDead();
+		}
 		return true;
 	}
 	

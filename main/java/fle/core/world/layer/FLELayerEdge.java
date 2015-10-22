@@ -60,6 +60,7 @@ public class FLELayerEdge extends FLELayer
 				if(value2 == value5) ++k;
 				if(value3 == value5) ++k;
 				if(value4 == value5) ++k;
+				int[] vs = new int[]{value1, value2, value3, value4};
 				if(k < 4)
 				{
 	                initChunkSeed((long)(x + i), (long)(z + j));
@@ -71,17 +72,27 @@ public class FLELayerEdge extends FLELayer
 	                	value5 = FLEBiome.savannaPlateau.biomeID;
 	                if(value5 == FLEBiome.extremeHills.biomeID)
 	                	value5 = FLEBiome.extremeHillsEdge.biomeID;
+	                if(value5 == FLEBiome.frozenOcean.biomeID)
+	                {
+	                	for(int v : vs)
+		                	if(v != FLEBiome.frozenOcean.biomeID || v != FLEBiome.ocean.biomeID)
+		                	{
+		                		value5 = FLEBiome.frozenSlope.biomeID;
+		                		break;
+		                	}
+	                }
+	                if(value5 == FLEBiome.ocean.biomeID)
+	                {
+	                	for(int v : vs)
+		                	if(v != FLEBiome.frozenOcean.biomeID || v != FLEBiome.ocean.biomeID)
+		                	{
+		                		value5 = FLEBiome.slope.biomeID;
+		                		break;
+		                	}
+	                }
 				}
                 ret[i + j * w] = value5;
 			}
 		return ret;
-	}
-	
-	private int a(int a0, int aTarget, BiomeGenBase aBase, int a1, int a2, int a3, int a4)
-	{
-		int a = a0;
-		if(a1 == aTarget || a2 == aTarget || a3 == aTarget || a4 == aTarget)
-			a = aBase.biomeID;
-		return a;
 	}
 }

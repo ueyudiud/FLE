@@ -104,7 +104,6 @@ public class NoiseCell extends NoiseBase
 		{
 			for(int xCur = xInt - 2; xCur <= xInt + 2; xCur++) 
 			{
-
 				double xPos = xCur + valueNoise2D(xCur, zCur, seed);
 				double zPos = zCur + valueNoise2D(xCur, zCur, new Random(seed).nextLong());
 				double xDist = xPos - x;

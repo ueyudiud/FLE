@@ -10,6 +10,7 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag ATOM_metal = getNewSubTag("ATOM_METAL");
 	public static final SubTag ATOM_nonmetal = getNewSubTag("ATOM_NONMETAL");
 
+	public static final SubTag ATOM_soild = getNewSubTag("ATOM_SOILD");
 	public static final SubTag ATOM_gas = getNewSubTag("ATOM_GAS");
 	public static final SubTag ATOM_gas_low_temp = getNewSubTag("ATOM_GAS_LOW_TEMP");
 	public static final SubTag ATOM_liquid = getNewSubTag("ATOM_LIQUID");
@@ -39,6 +40,22 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag TOOL_metal_tier1 = getNewSubTag("TOOL_METAL_TIER1");
 	public static final SubTag TOOL_metal = TOOL_metal_tier0;//Remove old tag of tool material.
 	public static final SubTag TOOL_fireable = getNewSubTag("TOOL_FIREABLE");
+
+	public static final SubTag BIOME_wet = getNewSubTag("BIOME_WET");
+	public static final SubTag BIOME_w_mid = getNewSubTag("BIOME_W_MID");
+	public static final SubTag BIOME_dry = getNewSubTag("BIOME_DRY");
+	public static final SubTag BIOME_hot = getNewSubTag("BIOME_HOT");
+	public static final SubTag BIOME_warm = getNewSubTag("BIOME_WARM");
+	public static final SubTag BIOME_temperate = getNewSubTag("BIOME_TEMPERATE");
+	public static final SubTag BIOME_cold = getNewSubTag("BIOME_COLD");
+	public static final SubTag BIOME_freeze = getNewSubTag("BIOME_FREEZE");
+	public static final SubTag BIOME_ocean = getNewSubTag("BIOME_OCEAN");
+	public static final SubTag BIOME_island = getNewSubTag("BIOME_ISLAND");
+	public static final SubTag BIOME_river = getNewSubTag("BIOME_RIVER");
+	public static final SubTag BIOME_nether = getNewSubTag("BIOME_NETHER");
+	public static final SubTag BIOME_sky = getNewSubTag("BIOME_SKY");
+
+	public static final SubTag ROCK_base_rock = getNewSubTag("ROCK_BASE");
 	
 	public static final SubTag IC2Item = getNewSubTag("IC2_ITEM");
 

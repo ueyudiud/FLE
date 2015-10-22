@@ -1,4 +1,4 @@
-package fle.cg.recipe;
+package fle.core.cg;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class FLEColdForgingRecipe extends StandardType
 	@Override
 	public Rectangle getRecipeRect()
 	{
-		return new Rectangle(68, 8, 48, 16);
+		return new Rectangle(118, 41, 11, 18);
 	}
 
 	@Override

@@ -3,17 +3,19 @@ package fle.api.tech;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TechClass
+import net.minecraft.util.IIcon;
+
+public abstract class ITechTag
 {
 	private String name;
 	private List<Technology> techList = new ArrayList();
 	
-	public TechClass(String name)
+	public ITechTag(String name)
 	{
 		this.name = name;
 	}
 	
-	public String getTechClassName()
+	public String getTechTagName()
 	{
 		return name;
 	}
@@ -27,4 +29,8 @@ public class TechClass
 	{
 		return techList;
 	}
+	
+	public abstract boolean isTechEnable(PlayerTechInfo aInfo);
+	
+	public abstract IIcon getIconForTag();
 }

@@ -112,10 +112,15 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(1011, "twine", "Twine", "crop/twine");
 		addSubItem(1012, "cotton_thread", "Cotton Thread", "crop/cotton_thread");
 		addSubItem(1013, "bone_meal", "Bone Meal", "crop/bone_meal");
+		addSubItem(1014, "plant_ash_soap", "Plant Ash Soap", "resource/plant_ash_soap");
+		addSubItem(1015, "straw", "Straw", "crop/straw");
+		addSubItem(1016, "straw_dry", "Dry Straw", "crop/straw_dry");
+		addSubItem(1017, "straw_rope", "Straw Rope", "crop/straw_rope");
 		addSubItem(2001, "lipocere", "Lipocere", "resource/dust/1");
 		addSubItem(2002, "spinneret", "Spinneret", "drop/spinneret");
 		addSubItem(2003, "crushed_bone", "Crushed Bone", "drop/crushed_bone");
 		addSubItem(2004, "defatted_crushed_bone", "Defatted Crushed Bone", "drop/crushed_bone_defatted");
+		addSubItem(2005, "sinew", "Sinew", "drop/sinew");
 		addSubItem(3001, "dust_limestone", "Limestone Dust", "stones/11001", new BehaviorArgilItem());
 		addSubItem(3002, "plant_ash", "Plant Ash", "resource/dust/3", new BehaviorBlockable(IB.ash));
 		addSubItem(3003, "argil_ball", "Argil Ball", "resource/dust/2", new BehaviorCeramics());

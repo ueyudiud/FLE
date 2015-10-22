@@ -1,5 +1,6 @@
 package fle.core.world;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -176,7 +177,7 @@ public class FleWorldGen implements IWorldGenerator
 	
 	public boolean generateTree(TreeInfo tInfo, World world, Random random, int x, int z)
 	{
-		for (int count = tInfo.getGenerateWeight(world, x + 8, z + 8) * 3; count > 0; count--)
+		for (int count = world.getBiomeGenForCoords(x, z).theBiomeDecorator.treesPerChunk * 3; count > 0; count--)
 		{
 			int y;
 			for (y = 255; world.isAirBlock(x, y - 1, z) && y > 0; y--);

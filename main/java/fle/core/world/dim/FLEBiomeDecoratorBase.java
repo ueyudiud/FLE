@@ -79,6 +79,21 @@ public class FLEBiomeDecoratorBase extends BiomeDecorator
         	generate(gravelAsSandGen);
         }
 
+        //Generate lake before tree and grass to prevent that plants generate on the top of lakes.
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, LAKE);
+        if (doGen && generateLakes)
+        {
+            for (j = 0; j < 50; ++j)
+            {
+            	generate((byte) 3, new WorldGenLiquids(Blocks.flowing_water));
+            }
+
+            for (j = 0; j < 20; ++j)
+            {
+            	generate((byte) 4, new WorldGenLiquids(Blocks.flowing_lava));
+            }
+        }
+
         i = treesPerChunk;
 
         if (randomGenerator.nextInt(10) == 0)
@@ -192,20 +207,6 @@ public class FLEBiomeDecoratorBase extends BiomeDecorator
         for (j = 0; doGen && j < cactiPerChunk; ++j)
         {
         	generate((byte) 2, cactusGen);
-        }
-
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, LAKE);
-        if (doGen && generateLakes)
-        {
-            for (j = 0; j < 50; ++j)
-            {
-            	generate((byte) 3, new WorldGenLiquids(Blocks.flowing_water));
-            }
-
-            for (j = 0; j < 20; ++j)
-            {
-            	generate((byte) 4, new WorldGenLiquids(Blocks.flowing_lava));
-            }
         }
 
         MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(currentWorld, randomGenerator, chunk_X, chunk_Z));

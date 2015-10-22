@@ -49,18 +49,18 @@ public class FleMineableGen extends WorldGenerator
         double d0 = (double)((float)(x + 8) + MathHelper.sin(f) * (float)this.numberOfBlocks / 8.0F);
         double d1 = (double)((float)(x + 8) - MathHelper.sin(f) * (float)this.numberOfBlocks / 8.0F);
         double d2 = (double)((float)(z + 8) + MathHelper.cos(f) * (float)this.numberOfBlocks / 8.0F);
-        double d3 = (double)((float)(z + 8) - MathHelper.cos(f) * (float)this.numberOfBlocks / 8.0F);
+        double d3 = (double)((float)(z + 8) - MathHelper.cos(f) * (float) numberOfBlocks / 8.0F);
         double d4 = (double)(y + aRand.nextInt(3) - 2);
         double d5 = (double)(y + aRand.nextInt(3) - 2);
 
         for (int l = 0; l <= this.numberOfBlocks; ++l)
         {
-            double d6 = d0 + (d1 - d0) * (double)l / (double)this.numberOfBlocks;
-            double d7 = d4 + (d5 - d4) * (double)l / (double)this.numberOfBlocks;
-            double d8 = d2 + (d3 - d2) * (double)l / (double)this.numberOfBlocks;
-            double d9 = aRand.nextDouble() * (double)this.numberOfBlocks / 16.0D;
-            double d10 = (double)(MathHelper.sin((float)l * (float)Math.PI / (float)this.numberOfBlocks) + 1.0F) * d9 + 1.0D;
-            double d11 = (double)(MathHelper.sin((float)l * (float)Math.PI / (float)this.numberOfBlocks) + 1.0F) * d9 + 1.0D;
+            double d6 = d0 + (d1 - d0) * (double)l / (double) numberOfBlocks;
+            double d7 = d4 + (d5 - d4) * (double)l / (double) numberOfBlocks;
+            double d8 = d2 + (d3 - d2) * (double)l / (double) numberOfBlocks;
+            double d9 = aRand.nextDouble() * (double) numberOfBlocks / 16.0D;
+            double d10 = (double)(MathHelper.sin((float)l * (float)Math.PI / (float) numberOfBlocks) + 1.0F) * d9 + 1.0D;
+            double d11 = (double)(MathHelper.sin((float)l * (float)Math.PI / (float) numberOfBlocks) + 1.0F) * d9 + 1.0D;
             int i1 = MathHelper.floor_double(d6 - d10 / 2.0D);
             int j1 = MathHelper.floor_double(d7 - d11 / 2.0D);
             int k1 = MathHelper.floor_double(d8 - d10 / 2.0D);

@@ -6,14 +6,13 @@ import fle.core.te.TileEntityStoneMill;
 
 public class TESRStoneMill extends TESRBase<TileEntityStoneMill>
 {
-	private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/model/stone_mill.png");
+	//private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/model/stone_mill.png");
 	
 	@Override
 	public void renderTileEntityAt(TileEntityStoneMill tile, double xPos, double yPos,
 			double zPos)
 	{
 		//model.setRotation(tile.getRotation());
-		bindTexture(locate);
 		//model.renderTileEntityAt(tile, 1.0F);
 	}
 }

@@ -1,15 +1,19 @@
 package fle.core.recipe;
 
-import java.lang.reflect.InvocationTargetException;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.cg.RecipesTab;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.RecipeAdder;
+import fle.api.soild.Solid;
+import fle.api.soild.SolidStack;
 import fle.api.util.Compact;
+import fle.core.recipe.FLEBoilingHeaterRecipe.BHRecipe;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
+import fle.core.recipe.FLEOilMillRecipe.OilMillRecipe;
 import fle.core.recipe.FLEPolishRecipe.PolishRecipe;
+import fle.core.recipe.FLESifterRecipe.SifterRecipe;
+import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe;
 
 public class FLERA implements RecipeAdder
 {
@@ -27,6 +31,48 @@ public class FLERA implements RecipeAdder
 		FLEDryingRecipe.getInstance().registerRecipe(new DryingRecipe(input, tick, output));
 	}
 
+	@Override
+	public void addColdForgingRecipe(ItemAbstractStack[] input, String map,
+			ItemStack output)
+	{
+		ColdForgingRecipe.registerRecipe(new ColdForgingRecipe(input, map, output));
+	}
+
+	@Override
+	public void addStoneMillRecipe(ItemAbstractStack input, int tick, SolidStack output1,
+			FluidStack output2)
+	{
+		FLEStoneMillRecipe.a(new StoneMillRecipe(input, tick, output1, output2));
+	}
+
+	@Override
+	public void addSifterRecipe(ItemAbstractStack input, SolidStack output1,
+			float chance, ItemStack output2)
+	{
+		FLESifterRecipe.a(new SifterRecipe(input, output1, output2, chance));
+	}
+
+	@Override
+	public void addSifterRecipe(Solid input, SolidStack output1,
+			float chance, ItemStack output2)
+	{
+		FLESifterRecipe.a(new SifterRecipe(input, output1, output2, chance));
+	}
+
+	@Override
+	public void addOilMillRecipe(ItemAbstractStack input, FluidStack output1,
+			float change, ItemStack output2)
+	{
+		FLEOilMillRecipe.a(new OilMillRecipe(input, output2, change, output1));
+	}
+
+	@Override
+	public void addBoilingRecipe(ItemAbstractStack input1, FluidStack input2,
+			int e, ItemStack output)
+	{
+		FLEBoilingHeaterRecipe.a(new BHRecipe(input1, input2, e, output));
+	}
+	
 	@Override
 	public void addRCBlastFurnaceRecipe(ItemStack aInput, boolean flag,
 			int tick, ItemStack aOutput)
@@ -67,4 +113,5 @@ public class FLERA implements RecipeAdder
 			;
 		}
 	}
+
 }

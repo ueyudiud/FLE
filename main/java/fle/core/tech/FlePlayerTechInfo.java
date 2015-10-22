@@ -1,4 +1,4 @@
-package fle.tech;
+package fle.core.tech;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +12,6 @@ import fle.api.net.FlePackets.CoderPTUpdate;
 import fle.api.tech.PlayerTechInfo;
 import fle.api.tech.Technology;
 
-/**
- * This system have not complete yet.
- * @author ueyudiud
- *
- */
-@Deprecated
 public class FlePlayerTechInfo extends PlayerTechInfo
 {
 	public FlePlayerTechInfo(EntityPlayer aPlayer) 

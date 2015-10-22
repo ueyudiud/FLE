@@ -59,6 +59,7 @@ public class NetWorkHandler implements FleNetworkHandler
 		registerMessage(CoderMatterUpdate.class, Side.CLIENT);
 		registerMessage(CoderSolidTankUpdate.class, Side.CLIENT);
 		registerMessage(FLELargePacket.class, Side.CLIENT);
+		registerMessage(FleWorldMetaSyncPacket.class, Side.CLIENT);
 	}
 	
 	@Override
@@ -147,6 +148,52 @@ public class NetWorkHandler implements FleNetworkHandler
 		    	os.writeInt(state);
 		    	os.write(data, offset, Math.min(maxSize, data.length - offset));
 		    	sendToNearBy(new FLELargePacket(osRaw.toByteArray()), aPoint);
+		    }
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendLargePacket(FleAbstractPacket aPacket, int aDim)
+	{
+		try
+		{
+			ByteBuf buffer = new UnpooledByteBufAllocator(true).buffer();
+			aPacket.init(buffer, false);
+		    byte[] data;
+			@SuppressWarnings("resource")
+			ByteBufInputStream input = new ByteBufInputStream(Unpooled.unmodifiableBuffer(buffer));
+			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
+	        int len;
+			byte[] cache = new byte[4096];
+			while ((len = input.read(cache)) != -1)
+			{
+				buf.write(cache, 0, len);
+			}
+			data = buf.toByteArray();
+		    
+		    int maxSize = Short.MAX_VALUE - 5;
+		    for (int offset = 0; offset < data.length; offset += maxSize)
+		    {
+		    	ByteArrayOutputStream osRaw = new ByteArrayOutputStream();
+		    	DataOutputStream os = new DataOutputStream(osRaw);
+		    	int state = 0;
+		    	if (offset == 0)
+		    	{
+		    		state |= 0x1;
+		    	}
+		    	
+		    	if (offset + maxSize > data.length)
+		    	{
+		    		state |= 0x2;
+		    	}
+		    	int id = idMap.get(aPacket.getClass());
+		    	state |= id << 2;
+		    	os.writeInt(state);
+		    	os.write(data, offset, Math.min(maxSize, data.length - offset));
+		    	sendToDim(new FLELargePacket(osRaw.toByteArray()), aDim);
 		    }
 		}
 		catch(Throwable e)

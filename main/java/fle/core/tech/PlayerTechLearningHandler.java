@@ -1,4 +1,4 @@
-package fle.tech;
+package fle.core.tech;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +22,6 @@ import fle.api.tech.Technology.LearningType;
  * @author ueyudiud
  *
  */
-@Deprecated
 public class PlayerTechLearningHandler 
 {
 	private static Map<LearningType, List<Technology>> techLearningList = new HashMap();

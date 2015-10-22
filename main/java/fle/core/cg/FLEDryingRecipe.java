@@ -1,7 +1,8 @@
-package fle.cg.recipe;
+package fle.core.cg;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -11,11 +12,9 @@ import fle.api.cg.GuiBookBase;
 import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.core.item.ItemFleSub;
-import fle.core.recipe.CeramicsRecipe;
+import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 
-public class FLEClayRecipe extends StandardType
+public class FLEDryingRecipe extends StandardType
 {
 	private List<IGuidePage> list = new ArrayList();
 	
@@ -25,24 +24,24 @@ public class FLEClayRecipe extends StandardType
 	{
 		if(!init)
 		{
-			for(CeramicsRecipe recipe : CeramicsRecipe.getRecipeList())
+			for(fle.core.recipe.FLEDryingRecipe.DryingRecipe recipe : fle.core.recipe.FLEDryingRecipe.getInstance().getRecipes())
 			{
-				list.add(new ClayRecipe(recipe));
+				list.add(new DryingPage(recipe));
 			}
 			init = true;
 		}
 	}
-	
+
 	@Override
 	public String getTypeName()
 	{
-		return "Clay Model";
+		return "Drying";
 	}
 
 	@Override
 	public String getGuideName()
 	{
-		return "clay";
+		return "drying";
 	}
 
 	@Override
@@ -51,43 +50,46 @@ public class FLEClayRecipe extends StandardType
 		init();
 		return list;
 	}
-	
+
 	@Override
 	protected List<IGuidePage> getPage(ItemAbstractStack contain)
 	{
 		List<IGuidePage> list = new ArrayList();
+		
+		label:
 		for(IGuidePage rawPage : getAllPage())
 		{
-			ClayRecipe page = (ClayRecipe) rawPage;
+			DryingPage page = (DryingPage) rawPage;
 			if(contain.isStackEqul(page.output))
 			{
 				list.add(page);
-				continue;
+				continue label;
 			}
 			for(ItemStack tStack : page.input.toList())
 			{
 				if(contain.isStackEqul(tStack))
 				{
 					list.add(page);
-					break;
+					continue label;
 				}
 			}
 		}
 		return list;
 	}
 	
-	private static class ClayRecipe extends StandardPage
+	private static class DryingPage extends StandardPage
 	{
-		private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/clay_model.png");
+		private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/drying_table.png");
 		
-		static final ItemBaseStack input = new ItemBaseStack(ItemFleSub.a("argil_ball", 4));
-		float[] value;
+		ItemAbstractStack input;
+		int tick;
 		ItemStack output;
-
-		public ClayRecipe(CeramicsRecipe recipe)
+		
+		public DryingPage(DryingRecipe recipe)
 		{
-			value = recipe.getDefaultValue();
-			output = recipe.getOutput();
+			input = recipe.input;
+			tick = recipe.recipeTime;
+			output = recipe.output.copy();
 		}
 
 		@Override
@@ -109,7 +111,7 @@ public class FLEClayRecipe extends StandardType
 		}
 
 		@Override
-		protected ResourceLocation getLocation() 
+		protected ResourceLocation getLocation()
 		{
 			return locate;
 		}
@@ -117,25 +119,14 @@ public class FLEClayRecipe extends StandardType
 		@Override
 		public Rectangle getRectangle(Type aType, int index)
 		{
-			return aType == Type.ITEM ? index == 0 ? slotRect(94, 20) : slotRect(130, 40) : null;
+			return aType == Type.ITEM ? index == 0 ? slotRect(48, 35) : slotRect(124, 35): null;
 		}
 		
 		@Override
 		public void drawOther(GuiBookBase gui, int xOffset, int yOffset)
 		{
-			gui.bindTexture(locate);
-			int i;
-			for(i = 0; i < 5; ++i)
-			{
-				int i0 = (int) (value[i] * 22);
-				gui.drawTexturedModalRect(xOffset + 34 + (22 - i0), yOffset + 20 + 11 * i, 176 + (22 - i0), -1 + i * 11, i0, 11);
-			}
-			for(i = 0; i < 5; ++i)
-			{
-				int i0 = (int) (value[i + 5] * 22);
-				gui.drawTexturedModalRect(xOffset + 55, yOffset + 20 + 11 * i, 198, -1 + i * 11, i0, 11);
-			}
-			gui.drawTexturedModalRect(34, 21, 176, 54, 43, 53);
+			drawToolTip(gui.getFortRender(), 
+					Arrays.asList(String.format("Recipe buffer : %d", tick)));
 			super.drawOther(gui, xOffset, yOffset);
 		}
 	}

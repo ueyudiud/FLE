@@ -18,6 +18,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 	{
 		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("leaves")), 50000, ItemFleSub.a("leaves_dry")));
 		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber")), 30000, ItemFleSub.a("ramie_fiber_dry")));
+		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("straw")), 30000, ItemFleSub.a("straw_dry")));
 	}
 	
 	public static void postInit(FLEConfiguration cfg)

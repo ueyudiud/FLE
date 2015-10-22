@@ -27,11 +27,11 @@ public class FLELayerBeach extends FLELayer
 					for(int l = 0; l <= 2; ++l)
 					{
 						int value = is[(i + k) * (w + 2) + j + l];
-						if(value == FLEBiome.ocean.biomeID || value == FLEBiome.frozenOcean.biomeID)
+						if(value == FLEBiome.slope.biomeID || value == FLEBiome.frozenSlope.biomeID)
 							++a0;
-						if(value == FLEBiome.frozenOcean.biomeID || value == FLEBiome.icePlains.biomeID)
+						if(value == FLEBiome.frozenSlope.biomeID || value == FLEBiome.icePlains.biomeID)
 							++a1;
-						if(value == FLEBiome.iceMountains.biomeID || value == FLEBiome.birchForestHills.biomeID || value == FLEBiome.forestHills.biomeID || value == FLEBiome.coldTaigaHills.biomeID || value == FLEBiome.extremeHills.biomeID)
+						if(value == FLEBiome.iceMountains.biomeID || value == FLEBiome.coldTaigaHills.biomeID || value == FLEBiome.extremeHills.biomeID)
 							++a2;
 					}
 				ret[i * w + j] = a0 > 2 && a0 < 8 ? (a1 > 4 ? FLEBiome.coldBeach.biomeID : a2 > 3 ? FLEBiome.stoneBeach.biomeID : FLEBiome.beach.biomeID) : is[(i + 1) * (w + 2) + j + 1];

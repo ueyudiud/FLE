@@ -12,8 +12,15 @@ public class FLEBiomeOcean extends FLEBiome
 	{
 		super(name, index);
 		spawnableCreatureList.clear();
+		theBiomeDecorator.generateLakes = false;
 		topBlock = Blocks.air;
 		fillerBlock = Blocks.air;
+	}
+	
+	@Override
+	public boolean isOcean()
+	{
+		return true;
 	}
 
     public BiomeGenBase.TempCategory getTempCategory()
@@ -34,9 +41,6 @@ public class FLEBiomeOcean extends FLEBiome
 		metadata = 0;
 		break;
 		case 1 : ;
-		placeBlock = Blocks.sand;
-		metadata = 0;
-		break;
 		case 2 : ;
 		case 3 : ;
 		placeBlock = Blocks.gravel;

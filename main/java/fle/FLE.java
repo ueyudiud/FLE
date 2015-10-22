@@ -37,6 +37,7 @@ import fle.core.energy.FleThermalNet;
 import fle.core.init.Config;
 import fle.core.net.NetWorkHandler;
 import fle.core.recipe.FLERA;
+import fle.core.tech.FleTechManager;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleCropRegister;
 import fle.core.util.FleSetup;
@@ -45,17 +46,16 @@ import fle.core.util.Keyboard;
 import fle.core.util.LanguageManager;
 import fle.core.util.SideGateway;
 import fle.core.world.FWM;
-import fle.tech.FleTechManager;
 
 @Mod(modid = FLE.MODID, name = FLE.NAME, version = FLE.VERSION, certificateFingerprint = "after:IC2")
 public class FLE implements FleModHandler
 {	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.05e";
+    public static final String VERSION = "2.05g";
     public static final int minForge = 1420;
     
-    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775741L);
+    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775679L);
     
     @Instance(MODID)
     public static FLE fle;
@@ -231,26 +231,6 @@ public class FLE implements FleModHandler
 		return cr;
 	}
 
-	@NetworkCheckHandler
-	public static boolean checkHandler(Map<String, String> version, Side side)
-	{
-		return true;
-	}
-
-	@Override
-	public IColorMapHandler getColorMapHandler() 
-	{
-		return proxy instanceof IColorMapHandler ? (IColorMapHandler) proxy : 
-			new IColorMapHandler()
-		{
-			@Override
-			public ColorMap registerColorMap(String aResourceName) 
-			{
-				return new FleColorMap();
-			}
-		};
-	}
-
 	@Override
 	public FWM getWorldManager() 
 	{
@@ -277,5 +257,25 @@ public class FLE implements FleModHandler
 	public FLEConfiguration getConfig1()
 	{
 		return config1;
+	}
+
+	@NetworkCheckHandler
+	public static boolean checkHandler(Map<String, String> version, Side side)
+	{
+		return true;
+	}
+
+	@Override
+	public IColorMapHandler getColorMapHandler() 
+	{
+		return proxy instanceof IColorMapHandler ? (IColorMapHandler) proxy : 
+			new IColorMapHandler()
+		{
+			@Override
+			public ColorMap registerColorMap(String aResourceName) 
+			{
+				return new FleColorMap();
+			}
+		};
 	}
 }

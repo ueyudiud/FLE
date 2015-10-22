@@ -1,4 +1,4 @@
-package fle.tech;
+package fle.core.tech;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -6,20 +6,14 @@ import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import fle.api.recipe.ItemAbstractStack;
+import fle.api.tech.ITechTag;
 import fle.api.tech.PlayerTechInfo;
-import fle.api.tech.TechClass;
 import fle.api.tech.Technology;
 
-/**
- * This system have not complete yet.
- * @author ueyudiud
- *
- */
-@Deprecated
 public class FlaTechnology extends Technology
 {
 	private final String name;
-	protected TechClass type;
+	protected ITechTag type;
 	protected boolean isHide = false;
 	
 	public FlaTechnology(String aName)
@@ -33,7 +27,7 @@ public class FlaTechnology extends Technology
 		return name;
 	}
 
-	public FlaTechnology setTechClassBelong(TechClass aType)
+	public FlaTechnology setTechClassBelong(ITechTag aType)
 	{
 		type = aType;
 		return this;
@@ -46,7 +40,7 @@ public class FlaTechnology extends Technology
 	}
 	
 	@Override
-	public TechClass getTechClassBelong() 
+	public ITechTag getTechClassBelong() 
 	{
 		return type;
 	}

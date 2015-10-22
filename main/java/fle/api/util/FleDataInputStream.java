@@ -186,6 +186,11 @@ public class FleDataInputStream
 		int z = readInt();
 		return new BlockPos(FleAPI.mod.getPlatform().getWorldInstance(dimID), x, y, z);
 	}
+
+	public byte[] readBytes(byte[] dst) throws IOException
+	{
+		return stream.readBytes(dst).array();
+	}
 	
 	public Object read() throws IOException
 	{

@@ -9,7 +9,7 @@ public abstract class Technology
 {
 	public abstract String getName();
 	
-	public abstract TechClass getTechClassBelong();
+	public abstract ITechTag getTechClassBelong();
 	
 	public abstract boolean canTechSelected();
 	

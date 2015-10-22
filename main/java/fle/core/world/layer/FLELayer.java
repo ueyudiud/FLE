@@ -7,33 +7,21 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import fle.api.util.FleLog;
-import fle.core.util.noise.NoiseMix;
-import fle.core.util.noise.NoisePerlin;
-import fle.core.world.biome.FLEBiome;
-import fle.core.world.dim.FLESuperFlatSurfaceChunkProvider;
-import fle.core.world.dim.FLEWorldType;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.GenLayerAddIsland;
-import net.minecraft.world.gen.layer.GenLayerAddMushroomIsland;
-import net.minecraft.world.gen.layer.GenLayerAddSnow;
-import net.minecraft.world.gen.layer.GenLayerDeepOcean;
-import net.minecraft.world.gen.layer.GenLayerEdge;
-import net.minecraft.world.gen.layer.GenLayerHills;
-import net.minecraft.world.gen.layer.GenLayerRareBiome;
-import net.minecraft.world.gen.layer.GenLayerRemoveTooMuchOcean;
-import net.minecraft.world.gen.layer.GenLayerRiver;
-import net.minecraft.world.gen.layer.GenLayerRiverInit;
-import net.minecraft.world.gen.layer.GenLayerRiverMix;
-import net.minecraft.world.gen.layer.GenLayerShore;
 import net.minecraft.world.gen.layer.GenLayerSmooth;
 import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
 import net.minecraft.world.gen.layer.GenLayerZoom;
+import fle.api.util.FleLog;
+import fle.core.util.noise.NoiseBase;
+import fle.core.util.noise.NoiseMix;
+import fle.core.util.noise.NoisePerlin;
+import fle.core.world.biome.FLEBiome;
+import fle.core.world.dim.FLEWorldType;
 
 public abstract class FLELayer extends GenLayer
-{
+{	
 	public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType type)
     {
         boolean flag = false;
@@ -51,6 +39,7 @@ public abstract class FLELayer extends GenLayer
         	drawImage(512, gen3, "4 ContinentsEdge");
         	gen1 = new FLELayerZoom2(2, seed, gen3);
         	drawImage(512, gen1, "5 ContinentsZoom");
+        	gen1.initWorldGenSeed(seed);
         	return new GenLayer[]{gen1, gen1, gen1};
         }
         FLELayerSinglePixel gen0 = new FLELayerSinglePixel(true, 15L, 2L + seed);
@@ -69,59 +58,60 @@ public abstract class FLELayer extends GenLayer
         drawImage(512, gen2, "6 ContinentsAddIsland");
         FLELayerZoom2 gen3 = new FLELayerZoom2(1, 255L, gen2);
         drawImage(512, gen3, "7 ContinentsZoom");
-        FLELayerFloor gen4;
         FLELayerMontain gen6 = new FLELayerMontain(4L, gen3, new NoiseMix(32D, new NoisePerlin(1L, 2)));
         drawImage(512, gen6, "8 ContinentsMontain");
-        gen4 = new FLELayerFloor(new NoiseMix(16D, new NoisePerlin(1001L, 2)), new NoiseMix(16D, new NoisePerlin(1003L, 2)), gen6, 10L);
-        drawImage(512, gen4, "9 ContinentsFloor");
-        gen1 = new GenLayerZoom(99L, gen4);
-        drawImage(512, gen1, "10 ContinentsZoom");
+        gen1 = new GenLayerZoom(99L, gen6);
+        drawImage(512, gen1, "9 ContinentsZoom");
         gen1 = new GenLayerZoom(2L, gen1);
-        drawImage(512, gen1, "11 ContinentsZoom");
-        FLELayerEdge gen5 = new FLELayerEdge(32L, gen1);
+        drawImage(512, gen1, "10 ContinentsZoom");
+        FLELayerFloor gen4;
+        gen4 = new FLELayerFloor(new NoiseMix(87D, new NoisePerlin(1001L, 2)), new NoiseMix(83D, new NoisePerlin(1003L, 2)), gen1, 10L);
+        drawImage(512, gen4, "11 ContinentsFloor");
+        FLELayerEdge gen5 = new FLELayerEdge(32L, gen4);
         drawImage(512, gen5, "12 ContinentsEdge");
         gen5 = new FLELayerEdge(33L, gen5);
         drawImage(512, gen5, "13 ContinentsZoom");
-        //gen5 = new FLELayerEdge(33L, gen5);
-        //drawImage(512, gen5, "14 ContinentsEdge");
         gen1 = new GenLayerZoom(2L, gen5);
         drawImage(512, gen1, "14 ContinentsZoom");
         FLELayerBeach gen11 = new FLELayerBeach(72L, gen1);
         drawImage(512, gen11, "15 ContinentsBeach");
-        gen3 = new FLELayerZoom2(2, 2L, gen11);
+        gen3 = new FLELayerZoom2(1, 2L, gen11);
         drawImage(512, gen3, "16 ContinentsZoom");
-        FLELayerRiver gen7 = new FLELayerRiver(13, 9L);
-        drawImage(512, gen7, "17 ContinentsRiver");
-        GenLayerSmooth gen8 = new GenLayerSmooth(192L, gen7);
-        drawImage(512, gen8, "18 ContinentsSmooth");
-        FLELayerZoom2 gen10 = new FLELayerZoom2(2, 294L, gen8);
-        drawImage(512, gen10, "18 ContinentsZoom");
-        FLELayerRiverMix gen9 = new FLELayerRiverMix(gen3, gen10, 1L);
-        drawImage(512, gen9, "19 ContinentsRiverMix");
-        //GenLayerRiver genRiver = new GenLayerRiver(31L, gen3);
-        //drawImage(512, genRiver, "15-beta ContinentsRiver");
-        //GenLayerSmooth genlayersmooth = new GenLayerSmooth(999L, genRiver);
-        //drawImage(512, genlayersmooth, "16-beta ContinentsSmooth");
-        GenLayerSmooth genlayersmooth1 = new GenLayerSmooth(999L, gen3);
-        drawImage(512, genlayersmooth1, "25-beta ContinentsSmooth");
+        GenLayerSmooth gen13 = new GenLayerSmooth(999L, gen3);
+        drawImage(512, gen13, "17 ContinentsSmooth");
+
+        FLELayerRiver gen7 = new FLELayerRiver(8, 38L);
+        drawImage(512, gen7, "18 ContinentsRiver");
+        FLELayerZoom2 gen10 = new FLELayerZoom2(1, 294L, gen7);
+        drawImage(512, gen10, "19 ContinentsZoom");
+        GenLayerSmooth gen8 = new GenLayerSmooth(192L, gen10);
+        drawImage(512, gen8, "20 ContinentsSmooth");
+        FLELayerRiverMix gen9 = new FLELayerRiverMix(gen13, gen8, 183L);
+        drawImage(512, gen9, "21 ContinentsRiverMix");
         if(type == FLEWorldType.LARGE_BIOMES)
         {
-        	gen3 = new FLELayerZoom2(6, 294L, genlayersmooth1);
-        	genlayersmooth1 = new GenLayerSmooth(284L, gen3);
-        	gen10 = new FLELayerZoom2(6, 294L, gen9);
-        	gen8 = new GenLayerSmooth(481L, gen10);
+        	gen3 = new FLELayerZoom2(6, 294L, gen9);
+        	gen13 = new GenLayerSmooth(284L, gen3);
+        	GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(10L, gen13);
+            gen12.initWorldGenSeed(seed);
+            gen13.initWorldGenSeed(seed);
+            drawImage(512, gen12, "22-beta ContinentsVoronoiZoom");
+            return new GenLayer[]{gen13, gen12, gen13};
         }
-        //GenLayerRiverMix genlayerrivermix = new GenLayerRiverMix(100L, genlayersmooth1, genlayersmooth);
-        //drawImage(512, genlayerrivermix, "26-beta ContinentsRiverMix");
-        //GenLayerVoronoiZoom genlayervoronoizoom = new GenLayerVoronoiZoom(10L, genlayerrivermix);
-        //drawImage(512, genlayervoronoizoom, "27-beta ContinentsVoronoiZoom");
-        genlayersmooth1.initWorldGenSeed(seed);
+        //GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(27L + seed, gen9);
+        GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(27L + seed, gen13);
         gen9.initWorldGenSeed(seed);
-        //genlayervoronoizoom.initWorldGenSeed(seed);
-        return type == FLEWorldType.LARGE_BIOMES ? new GenLayer[]{gen8, gen3, gen8} : new GenLayer[]{gen9, genlayersmooth1, gen9};
+        gen12.initWorldGenSeed(seed);
+        drawImage(512, gen12, "22-beta ContinentsVoronoiZoom");
+        return new GenLayer[]{gen13, gen12, gen13};
     }
 	
 	private static boolean shouldDraw = false;
+	
+	private static synchronized void set()
+	{
+		shouldDraw = !shouldDraw;
+	}
 	
 	public static void drawImage(int size, GenLayer genlayer, String name)
 	{
@@ -136,7 +126,7 @@ public abstract class FLELayer extends GenLayer
 	    	{
 	    		return;
 	    	}
-	    	int[] ints = genlayer.getInts(256, 256, size, size);
+	    	int[] ints = genlayer.getInts(0, 0, size, size);
 	    	BufferedImage outBitmap = new BufferedImage(size, size, 1);
 	    	Graphics2D graphics = (Graphics2D)outBitmap.getGraphics();
 	    	graphics.clearRect(0, 0, size, size);

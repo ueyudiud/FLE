@@ -68,6 +68,12 @@ public class BlockFLEFarmland extends BlockFle implements IDebugableBlock, IFert
     }
     
     @Override
+    public IIcon getIcon(int side, int meta)
+    {
+    	return side == 1 ? topIcon_d : Blocks.dirt.getBlockTextureFromSide(side);
+    }
+    
+    @Override
     public IIcon getIcon(IBlockAccess world, int x,
     		int y, int z, int side)
     {

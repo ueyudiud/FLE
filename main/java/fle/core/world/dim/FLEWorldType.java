@@ -46,7 +46,8 @@ public class FLEWorldType extends WorldType
 	@Override
 	public IChunkProvider getChunkGenerator(World world, String generatorOptions)
 	{
-		return this == FLAT ? new FLESuperFlatSurfaceChunkProvider(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled()) : new FLESurfaceChunkProvider(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
+		return this == FLAT ? new FLESuperFlatSurfaceChunkProvider(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled()) : 
+			new FLESurfaceChunkProvider(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
 	}
 	
 	@Override
@@ -58,12 +59,12 @@ public class FLEWorldType extends WorldType
 	@Override
 	public int getMinimumSpawnHeight(World world)
 	{
-		return 129;
+		return 128;
 	}
 	
 	@Override
 	public double getHorizon(World world)
 	{
-		return 128;
+		return 127.0D;
 	}
 }

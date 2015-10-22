@@ -5,7 +5,7 @@ import fle.api.util.Register;
 
 public abstract class ITechManager
 {
-	public static TechClass flaBase;
+	public static ITechTag flaBase;
 	
 	public static Technology fire;
 	public static Technology mineTire1;
@@ -13,7 +13,7 @@ public abstract class ITechManager
 	
 	public abstract Technology registerTech(Technology tech);
 
-	public abstract TechClass registerTechClass(TechClass clazz);
+	public abstract ITechTag registerTechClass(ITechTag clazz);
 
 	public abstract Technology getTechFromId(String id);
 

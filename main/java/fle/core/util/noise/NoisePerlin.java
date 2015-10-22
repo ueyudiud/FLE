@@ -1,5 +1,7 @@
 package fle.core.util.noise;
 
+import java.util.Arrays;
+
 public class NoisePerlin extends NoiseBase
 {
 	private final int octave;
@@ -25,13 +27,46 @@ public class NoisePerlin extends NoiseBase
 	public double noise(long x, long y, long z, int size)
 	{
 		double ret = 0D;
-		double d1 = (double) (Math.pow(2, size) - 1) / (double) Math.pow(2, size);
+		double d1 = (double) ((2 << size) - 1) / (double) (2 << size);
 		for(int i = 0; i < size; ++i)
-			ret += setupSeed(x, y, z, i) * d1;
+			ret += next(x, y, z, i) * d1;
 		return ret;
 	}
 	
-	private double setupSeed(long x, long y, long z, long t)
+	@Override
+	public double[] noise(double[] values, long x, long z, int w, int l)
+	{
+		if(values == null || values.length < w * l) values = new double[w * l];
+		else Arrays.fill(values, 0);
+		double d1 = (double) ((2 << octave) - 1) / (double) (2 << octave);
+		for(int i = 0; i < w; ++i)
+			for(int j = 0; j < l; ++j)
+			{
+				for(int t = 0; t < octave; ++t)
+					values[i + w * j] += next(x + i, 10, z + j, t);
+				values[i + w * j] *= d1;
+			}
+		return values;
+	}
+	@Override
+	public double[] noise(double[] values, long x, long y, long z, int w,
+			int h, int l)
+	{
+		if(values == null || values.length < w * l * h) values = new double[w * l * h];
+		else Arrays.fill(values, 0);
+		double d1 = (double) ((2 << octave) - 1) / (double) (2 << octave);
+		for(int i = 0; i < w; ++i)
+			for(int j = 0; j < l; ++j)
+				for(int k = 0; k < h; ++k)
+				{
+					for(int t = 0; t < octave; ++t)
+						values[i + w * j + k * w * l] += next(x + i, y + j, z + k, t);
+					values[i + w * j + k * w * l] *= d1;
+				}
+		return values;
+	}
+	
+	private double next(long x, long y, long z, long t)
 	{
 		x = ((x << 15) + y * seed) ^ Math.abs(x);
 		y = ((z << 14) + z * y) ^ Math.abs(y);

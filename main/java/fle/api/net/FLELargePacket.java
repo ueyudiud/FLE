@@ -3,6 +3,7 @@ package fle.api.net;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ReadOnlyByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.util.internal.PlatformDependent;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -81,9 +82,8 @@ public class FLELargePacket extends FleAbstractPacket<FLELargePacket>
 			{
 				inflateBuffer.write(buffer, 0, len);
 			}
-			inflate.close();
-			
-			ByteBuf subData = UnpooledByteBufAllocator.DEFAULT.buffer();
+			inflate.close();			
+			ByteBuf subData = new UnpooledByteBufAllocator(PlatformDependent.directBufferPreferred()).buffer();
 			subData.writeBytes(inflateBuffer.toByteArray());
 			FleAPI.mod.getNetworkHandler().onPacket(id, subData, ctx);
 			largePacketCache = null;

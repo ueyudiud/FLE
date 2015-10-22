@@ -117,8 +117,7 @@ public class FLESurfaceManager extends WorldChunkManager
 		int[] var6 = lakeLayer.getInts(x, z, w, h);
 		for (int var7 = 0; var7 < w * h; var7++)
 		{
-			int index = Math.max(var6[var7], 0);
-			biome[var7] = BiomeGenBase.getBiome(index);
+			biome[var7] = BiomeGenBase.getBiome(Math.max(var6[var7], 0));
 		}
 		return biome;
 	}
@@ -134,7 +133,7 @@ public class FLESurfaceManager extends WorldChunkManager
 		}
 		if ((flag) && (w == 16) && (h == 16) && ((x & 0xF) == 0) && ((z & 0xF) == 0))
 		{
-			BiomeGenBase[] var9 = this.biomeCache.getCachedBiomes(x, z);
+			BiomeGenBase[] var9 = biomeCache.getCachedBiomes(x, z);
 			System.arraycopy(var9, 0, biome, 0, w * h);
 			return biome;
 		}

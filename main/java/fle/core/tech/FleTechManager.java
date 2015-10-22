@@ -1,9 +1,9 @@
-package fle.tech;
+package fle.core.tech;
 
 import net.minecraft.entity.player.EntityPlayer;
 import fle.api.tech.ITechManager;
+import fle.api.tech.ITechTag;
 import fle.api.tech.PlayerTechInfo;
-import fle.api.tech.TechClass;
 import fle.api.tech.Technology;
 import fle.api.util.Register;
 
@@ -12,11 +12,10 @@ import fle.api.util.Register;
  * @author ueyudiud
  *
  */
-@Deprecated
 public class FleTechManager extends ITechManager
 {
 	private final Register<Technology> register1 = new Register();
-	private final Register<TechClass> register2 = new Register();
+	private final Register<ITechTag> register2 = new Register();
 	
 	public FleTechManager init()
 	{
@@ -34,10 +33,10 @@ public class FleTechManager extends ITechManager
 		return tech;
 	}
 
-	public TechClass registerTechClass(TechClass clazz)
+	public ITechTag registerTechClass(ITechTag tag)
 	{
-		register2.register(clazz, clazz.getTechClassName());
-		return clazz;
+		register2.register(tag, tag.getTechTagName());
+		return tag;
 	}
 	
 	public Technology getTechFromId(String id)

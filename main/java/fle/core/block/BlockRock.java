@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,6 +25,7 @@ import fle.api.block.BlockHasSub;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
+import fle.api.util.SubTag;
 import fle.api.world.BlockPos;
 import fle.core.init.IB;
 

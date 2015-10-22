@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +21,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.FoodStats;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -286,10 +289,11 @@ public class PlayerHandler
 		Random rand = new Random();
 		while(i < 1024)
 		{
-			rand.setSeed(i * (i * 2895387531L) + 2842728719L);
-			int x = (rand.nextInt() ^ 24724927) / 0XFF;
-			int z = (rand.nextInt() ^ 19472847) / 0xFF;
-			if(evt.world.getBiomeGenForCoords(x, z) != FLEBiome.ocean)
+			rand.setSeed(i * (i * 2895387531L) + 2842728719L + evt.world.getSeed());
+			int x = (rand.nextInt() ^ 24724927) & 0xFFFFF;
+			int z = (rand.nextInt() ^ 19472847) & 0xFFFFF;
+			BiomeGenBase biome = evt.world.getBiomeGenForCoords(x, z);
+			if(biome.temperature > 0.5F && biome.getTempCategory() != TempCategory.OCEAN)
 			{
 				int y = evt.world.getTopSolidOrLiquidBlock(x, z);
 				if(y > evt.world.provider.getHorizon())

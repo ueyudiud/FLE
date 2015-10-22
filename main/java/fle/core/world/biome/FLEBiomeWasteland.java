@@ -29,7 +29,7 @@ public class FLEBiomeWasteland extends FLEBiome
 		switch(aLayer)
 		{
 		case 0 : ;
-		placeBlock = flag ? Blocks.dirt : Blocks.sand;
+		placeBlock = flag ? Blocks.grass : Blocks.sand;
 		metadata = 0;
 		break;
 		case 1 : ;

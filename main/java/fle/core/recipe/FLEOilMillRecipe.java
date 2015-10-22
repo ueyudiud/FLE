@@ -80,6 +80,16 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		{
 			
 		}
+		
+		public ItemAbstractStack getInput()
+		{
+			return input;
+		}
+		
+		public float getChance()
+		{
+			return outputChance;
+		}
 	}
 	
 	public static class OilMillKey extends RecipeKey

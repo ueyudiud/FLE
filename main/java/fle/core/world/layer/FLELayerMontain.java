@@ -36,9 +36,9 @@ public class FLELayerMontain extends FLELayer
 					else height += this.a;
 				}
 				double h1 = (ns[index] + 1.0D) * height;
-				if(h1 > 0.7F) a = 4;
-				else if(h1 > 0.6F) a = 3;
-				else if(h1 > 0.3F) a = 2;
+				if(h1 > 0.8F) a = 4;
+				else if(h1 > 0.7F) a = 3;
+				else if(h1 > 0.5F) a = 2;
 				else if(h1 > 0.0F) a = 1;
 				else a = is[i + 1 + (w + 2) * (j + 1)];
 				ret[index] = a;

@@ -1,10 +1,11 @@
 package fle.core.world;
 
-import net.minecraftforge.event.world.ChunkDataEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fle.FLE;
+import java.util.HashMap;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
-import fle.core.net.FlePackets.CoderFWMAskMeta;
+import fle.api.world.BlockPos.ChunkPos;
 
 public class FWMClient extends FWM
 {	
@@ -30,5 +31,33 @@ public class FWMClient extends FWM
 	public void sendData(BlockPos pos)
 	{
 		;
+	}
+	
+	@Override
+	public void sendAllData(int dim, ChunkPos pos)
+	{
+		;
+	}
+	
+	@Override
+	public void markPosForUpdate(BlockPos pos)
+	{
+		;
+	}
+	
+	@Override
+	public void syncData(int dim, ChunkPos pos, int[][] datas)
+	{
+		if(!nbts.containsKey(dim)) nbts.put(dim, new HashMap());
+		if(!nbts.get(dim).containsKey(pos)) nbts.get(dim).put(pos, new ChunkData(EnumWorldNBT.values().length));
+		ChunkData data = nbts.get(dim).get(pos);
+		for(int i = 0; i < datas.length; ++i)
+			data.loadFromIntArray(i, datas[i]);
+	}
+	
+	@Override
+	public IMessage createPacket(int dim, BlockPos pos)
+	{
+		return null;
 	}
 }

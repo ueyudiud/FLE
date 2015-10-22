@@ -1,7 +1,8 @@
-package fle.cg.recipe;
+package fle.core.cg;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -13,10 +14,9 @@ import fle.api.cg.GuiBookBase;
 import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidStack;
+import fle.api.recipe.RecipeInfomation;
 
-public class FLEStoneMillRecipe extends StandardType
+public class FLEOilMillRecipe extends StandardType
 {
 	private List<IGuidePage> list = new ArrayList();
 	
@@ -26,9 +26,9 @@ public class FLEStoneMillRecipe extends StandardType
 	{
 		if(!init)
 		{
-			for(fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe recipe : fle.core.recipe.FLEStoneMillRecipe.getInstance().getRecipes())
+			for(fle.core.recipe.FLEOilMillRecipe.OilMillRecipe recipe : fle.core.recipe.FLEOilMillRecipe.getInstance().getRecipes())
 			{
-				list.add(new StoneMillRecipe(recipe));
+				list.add(new OilMillRecipe(recipe));
 			}
 			init = true;
 		}
@@ -37,13 +37,13 @@ public class FLEStoneMillRecipe extends StandardType
 	@Override
 	public String getGuideName()
 	{
-		return "stone_mill";
+		return "oil_mill";
 	}
 
 	@Override
 	public String getTypeName()
 	{
-		return "Stone Mill Recipe";
+		return "Oil Mill Recipe";
 	}
 
 	@Override
@@ -54,47 +54,18 @@ public class FLEStoneMillRecipe extends StandardType
 	}
 	
 	@Override
-	protected List<IGuidePage> getPage(Solid solid)
-	{
-		List<IGuidePage> list = new ArrayList();
-		for(IGuidePage rawPage : getAllPage())
-		{
-			StoneMillRecipe page = (StoneMillRecipe) rawPage;
-			if(page.soutput == null) continue;
-			if(page.soutput.getObj() == solid)
-			{
-				list.add(page);
-				continue;
-			}
-		}
-		return list;
-	}
-	
-	@Override
-	protected List<IGuidePage> getPage(Fluid fluid)
-	{
-		List<IGuidePage> list = new ArrayList();
-		for(IGuidePage rawPage : getAllPage())
-		{
-			StoneMillRecipe page = (StoneMillRecipe) rawPage;
-			if(page.foutput == null) continue;
-			if(page.foutput.getFluid() == fluid)
-			{
-				list.add(page);
-				continue;
-			}
-		}
-		return list;
-	}
-	
-	@Override
 	protected List<IGuidePage> getPage(ItemAbstractStack contain)
 	{
 		List<IGuidePage> list = new ArrayList();
 		label:
 		for(IGuidePage rawPage : getAllPage())
 		{
-			StoneMillRecipe page = (StoneMillRecipe) rawPage;
+			OilMillRecipe page = (OilMillRecipe) rawPage;
+			if(contain.isStackEqul(page.output))
+			{
+				list.add(page);
+				continue label;
+			}
 			for(ItemStack tStack : page.input.toList())
 			{
 				if(contain.isStackEqul(tStack))
@@ -107,21 +78,40 @@ public class FLEStoneMillRecipe extends StandardType
 		return list;
 	}
 	
-	private static class StoneMillRecipe extends StandardPage
+	@Override
+	protected List<IGuidePage> getPage(Fluid fluid)
 	{
-		private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/stone_mill.png");
+		List<IGuidePage> list = new ArrayList();
+		for(IGuidePage rawPage : getAllPage())
+		{
+			OilMillRecipe page = (OilMillRecipe) rawPage;
+			if(page.foutput.getFluid() == fluid)
+			{
+				list.add(page);
+				continue;
+			}
+		}
+		return list;
+	}
+	
+	private static class OilMillRecipe extends StandardPage
+	{
+		private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/lever_oil_mill.png");
 		
 		ItemAbstractStack input;
-		SolidStack soutput;
+		ItemStack output;
 		FluidStack foutput;
 
-		public StoneMillRecipe(fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe recipe)
+		public OilMillRecipe(fle.core.recipe.FLEOilMillRecipe.OilMillRecipe recipe)
 		{
 			input = recipe.getInput();
-			if(recipe.getFluidOutput() != null)
-				foutput = recipe.getFluidOutput().copy();
-			if(recipe.getOutput() != null)
-				soutput = recipe.getOutput().copy();
+			foutput = recipe.output2.copy();
+			if(recipe.output1 != null)
+			{
+				ItemStack o = recipe.output1.copy();
+				RecipeInfomation.setChance(o, recipe.getChance());
+				output = o;
+			}
 		}
 
 		@Override
@@ -133,7 +123,7 @@ public class FLEStoneMillRecipe extends StandardType
 		@Override
 		protected ItemStack[] getOutputStacks()
 		{
-			return new ItemStack[0];
+			return output != null ? new ItemStack[]{output} : new ItemStack[0];
 		}
 
 		@Override
@@ -146,12 +136,6 @@ public class FLEStoneMillRecipe extends StandardType
 		protected FluidStack[] getOutputFluidStacks() 
 		{
 			return foutput == null ? super.getOutputFluidStacks() : new FluidStack[]{foutput};
-		}
-		
-		@Override
-		protected SolidStack[] getOutputSolidStacks()
-		{
-			return soutput == null ? super.getOutputSolidStacks() : new SolidStack[]{soutput};
 		}
 
 		@Override
@@ -166,10 +150,9 @@ public class FLEStoneMillRecipe extends StandardType
 			switch(aType)
 			{
 			case FLUID: return foutput != null ?
-					new Rectangle(117, 48 + 20 - (foutput.amount * 20) / 2000, 8, (foutput.amount * 20) / 2000) : null;
-			case ITEM : return slotRect(65, 20);
-			case SOLID: return soutput != null ?
-					new Rectangle(65, 52 + 16 - (soutput.getSize() * 16) / 300, 16, (soutput.getSize() * 16) / 300) : null;
+					new Rectangle(60, 56, (foutput.amount * 20) / 200, 8) : null;
+			case ITEM : return index == 0 ? slotRect(61, 21) : slotRect(98, 21);
+			case SOLID: return null;
 			}
 			return null;
 		}
@@ -177,8 +160,14 @@ public class FLEStoneMillRecipe extends StandardType
 		@Override
 		public void drawOther(GuiBookBase gui, int xOffset, int yOffset)
 		{
-			//gui.drawTexturedModalRect(117 + xOffset, 48 + yOffset, 176, 33, 8, 60);
+			gui.drawTexturedModalRect(60 + xOffset, 56 + yOffset, 176, 16, 20, 6);
 			super.drawOther(gui, xOffset, yOffset);
+		}
+		
+		@Override
+		public List<String> getToolTip(Type aType, int index)
+		{
+			return aType == Type.ITEM && index == 1 ? Arrays.asList(RecipeInfomation.getChanceInfo(output, false)) : super.getToolTip(aType, index);
 		}
 	}
 }

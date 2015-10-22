@@ -9,13 +9,16 @@ import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkDataEvent;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import fle.FLE;
 import fle.api.enums.CompoundType;
 import fle.api.enums.EnumWorldNBT;
@@ -27,11 +30,12 @@ import fle.api.util.IAirConditionProvider;
 import fle.api.world.BlockPos;
 import fle.api.world.BlockPos.ChunkPos;
 import fle.api.world.IWorldManager;
+import fle.core.net.FleWorldMetaSyncPacket;
 
 public class FWM implements IWorldManager, IAirConditionProvider
 {
 	private static final int maxNBTSize = EnumWorldNBT.values().length;
-	private Map<Integer, Map<ChunkPos, ChunkData>> nbts = new HashMap(1);
+	protected Map<Integer, Map<ChunkPos, ChunkData>> nbts = new HashMap(1);
 	private Map<Integer, Map<ChunkPos, Integer>> airConditions = new HashMap(1);
 	
 	public FWM()
@@ -110,7 +114,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			return tRet;
 		}
 		
-		private void loadFromIntArray(int dataType, int[] array)
+		void loadFromIntArray(int dataType, int[] array)
 		{
 			for(int i = 0; i < array.length; ++i)
 			{
@@ -143,6 +147,19 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		if(nbts.containsKey(new Integer(evt.world.provider.dimensionId)))
 			nbts.get(new Integer(evt.world.provider.dimensionId)).clear();
+	}
+	
+	@SubscribeEvent
+	public void onChunkLoad(ChunkEvent.Load evt)
+	{
+		if(!evt.world.isRemote)
+		{
+			sendAllData(evt.world.provider.dimensionId, new ChunkPos(evt.getChunk()));
+		}
+		else
+		{
+			
+		}
 	}
 	
 	@SubscribeEvent
@@ -192,7 +209,6 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		try
 		{
-
 			Integer dim = new Integer(evt.world.provider.dimensionId);
 			boolean flagData = true;
 			boolean flagAir = true;
@@ -373,9 +389,26 @@ public class FWM implements IWorldManager, IAirConditionProvider
 
 	public void sendData(BlockPos pos)
 	{
-		FLE.fle.getNetworkHandler().sendToDim(new CoderFWMUpdate(pos, getDatas(pos)), pos.getDim());
+		FLE.fle.getNetworkHandler().sendToNearBy(new CoderFWMUpdate(pos, getDatas(pos)), new TargetPoint(pos.getDim(), pos.x, pos.y, pos.z, 512D));
 	}
 
+	public void sendAllData(int dim, ChunkPos pos)
+	{
+		if(getClass() != FWM.class) return;
+		if(!nbts.containsKey(dim)) return;
+		if(!nbts.get(dim).containsKey(pos)) return;
+		ChunkData data = nbts.get(dim).get(pos);
+		int[][] arrays = new int[maxNBTSize][];
+		for(int i = 0; i < maxNBTSize; ++i)
+			arrays[i] = data.asIntArray(i);
+		FLE.fle.getNetworkHandler().sendLargePacket(new FleWorldMetaSyncPacket(dim, pos, arrays), new TargetPoint(dim, pos.x * 16 + 8, 128, pos.z * 16 + 8, 512D));
+	}
+	
+	public void syncData(int dim, ChunkPos pos, int[][] datas)
+	{
+		;
+	}
+	
 	@SubscribeEvent
 	public void onWorldTick(WorldTickEvent evt)
 	{
@@ -400,5 +433,17 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	public void markPosForUpdate(BlockPos pos)
 	{
 		cacheList.add(pos);
+	}
+
+	public IMessage createPacket(int dim, BlockPos pos)
+	{
+		if(!nbts.containsKey(dim)) return null;
+		ChunkPos tPos = pos.getChunkPos();
+		if(!nbts.get(dim).containsKey(tPos)) return null;
+		ChunkData data = nbts.get(dim).get(tPos);
+		int[][] arrays = new int[maxNBTSize][];
+		for(int i = 0; i < maxNBTSize; ++i)
+			arrays[i] = data.asIntArray(i);
+		return new FleWorldMetaSyncPacket(dim, tPos, arrays);
 	}
 }

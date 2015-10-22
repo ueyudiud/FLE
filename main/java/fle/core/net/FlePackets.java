@@ -107,13 +107,15 @@ public class FlePackets
 	public static class CoderFWMAskMeta extends FleAbstractPacket<CoderFWMAskMeta>
 	{		
 		BlockPos pos;
+		byte type;
 		
 		public CoderFWMAskMeta()
 		{
 			
 		}
-		public CoderFWMAskMeta(BlockPos aPos)
+		public CoderFWMAskMeta(int aType, BlockPos aPos)
 		{
+			type = (byte) aType;
 			pos = aPos;
 		}
 		
@@ -121,18 +123,25 @@ public class FlePackets
 		protected void write(FleDataOutputStream os) throws IOException
 		{
 			os.writeBlockPos(pos);
+			os.writeByte(type);
 		}
 
 		@Override
 		protected void read(FleDataInputStream is) throws IOException
 		{
 			pos = is.readBlockPos();
+			type = is.readByte();
 		}
 
 		@Override
 		public IMessage onMessage(CoderFWMAskMeta message, MessageContext ctx)
 		{
-			FLE.fle.getWorldManager().markPosForUpdate(message.pos);
+			switch(message.type)
+			{
+			case 0 : FLE.fle.getWorldManager().markPosForUpdate(message.pos);
+			break;
+			case 1 : return FLE.fle.getWorldManager().createPacket(ctx.getServerHandler().playerEntity.worldObj.provider.dimensionId, message.pos);
+			}
 			return null;
 		}
 	}

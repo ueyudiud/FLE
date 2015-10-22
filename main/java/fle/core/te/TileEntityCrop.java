@@ -72,7 +72,6 @@ public class TileEntityCrop extends TEBase implements ICropTile
 	@Override
 	public void updateEntity() 
 	{
-		super.updateEntity();
 		if(card != null)
 		{
 			if(buffer < 0) buffer = 0D;

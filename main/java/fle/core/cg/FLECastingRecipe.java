@@ -1,4 +1,4 @@
-package fle.cg.recipe;
+package fle.core.cg;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;

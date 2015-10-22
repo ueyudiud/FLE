@@ -6,14 +6,10 @@ import java.util.Random;
 public abstract class NoiseBase
 {
 	protected long seed;
-	protected Random rand;
-	protected Random rand1;
 	
 	public NoiseBase(long aSeed)
 	{
 		seed = aSeed;
-		rand = new Random(seed);
-		rand1 = new Random();
 	}
 	
 	public abstract double noise(long x, long z);
@@ -36,7 +32,7 @@ public abstract class NoiseBase
 		for(int i = 0; i < w; ++i)
 			for(int j = 0; j < l; ++j)
 				for(int k = 0; k < h; ++k)
-					values[i + w * j + k * w * l] = noise(x + i, y + h, z + j);
+					values[i + w * j + k * w * l] = noise(x + i, y + j, z + k);
 		return values;
 	}
 	

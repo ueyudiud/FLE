@@ -179,7 +179,9 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	public void sendLarge(FleAbstractPacket pkg, float range)
 	{
 		if(!worldObj.isRemote)
+		{
 			FleAPI.mod.getNetworkHandler().sendLargePacket(pkg, new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, range));
+		}
 	}
 	
 	public void markNBTUpdate()
