@@ -22,6 +22,7 @@ import fle.core.render.RenderEmpty;
 import fle.core.render.RenderFleArrow;
 import fle.core.render.RenderHandler;
 import fle.core.render.RenderLeverOilMill;
+import fle.core.render.RenderMultiTank;
 import fle.core.render.RenderOilLamp;
 import fle.core.render.RenderOre;
 import fle.core.render.RenderOreCobble;
@@ -59,6 +60,7 @@ public class Renders
         RenderHandler.register(IB.crop, OreDictionary.WILDCARD_VALUE, RenderCrop.class);
         RenderHandler.register(IB.ore_cobble, OreDictionary.WILDCARD_VALUE, RenderOreCobble.class);
         RenderHandler.register(IB.ditch, OreDictionary.WILDCARD_VALUE, RenderDitch.class);
+        RenderHandler.register(IB.tank, OreDictionary.WILDCARD_VALUE, RenderMultiTank.class);
         FleValue.FLE_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
     	RenderingRegistry.registerBlockHandler(new RenderHandler(false));
         FleValue.FLE_NOINV_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();

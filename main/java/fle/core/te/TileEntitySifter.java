@@ -23,12 +23,12 @@ public class TileEntitySifter extends TEIST<InventorySifter>
 	@Override
 	protected void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public int getRecipeProgress(int length)
 	{
-		return (int) ((double) inv.recipeTick / 200 * length);
+		return (int) ((double) getTileInventory().recipeTick / 200 * length);
 	}
 }

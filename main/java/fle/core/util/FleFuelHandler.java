@@ -8,6 +8,7 @@ import fle.api.material.Matter;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ItemOreStack;
 import fle.api.util.IFuelHandler;
+import fle.core.init.IB;
 import fle.core.item.ItemFleSub;
 
 public class FleFuelHandler implements IFuelHandler
@@ -40,6 +41,10 @@ public class FleFuelHandler implements IFuelHandler
 			if(new ItemBaseStack(ItemFleSub.a("charred_log")).isStackEqul(aStack))
 			{
 				return (int) (6000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+			}
+			else if(new ItemBaseStack(new ItemStack(IB.peat)).isStackEqul(aStack))
+			{
+				return (int) (4500000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			}
 			else if(new ItemOreStack("logWood").isStackEqul(aStack))
 			{

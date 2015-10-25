@@ -20,86 +20,86 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 	@Override
 	public void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 	}
 	
 	public void onOutput()
 	{
-		inv.onOutput();
+		getTileInventory().onOutput();
 	}
 	
 	public boolean canTakeStack()
 	{
-		return inv.canTakeStack();
+		return getTileInventory().canTakeStack();
 	}
 
 	public void onSlotChange()
 	{
-		inv.onSlotChanged();
+		getTileInventory().onSlotChanged();
 	}
 
 	public void onToolClick(EntityPlayer aPlayer, int activeSlot)
 	{
 		int[] array = new int[2];
-		switch(inv.dir)
+		switch(getTileInventory().dir)
 		{
-		case 0 : array[0] = inv.hard;
+		case 0 : array[0] = getTileInventory().hard;
 		break;
-		case 1 : array[1] = inv.hard;
+		case 1 : array[1] = getTileInventory().hard;
 		break;
-		case 2 : array[0] = -inv.hard;
+		case 2 : array[0] = -getTileInventory().hard;
 		break;
-		case 3 : array[1] = -inv.hard;
+		case 3 : array[1] = -getTileInventory().hard;
 		}
-		inv.onToolClick(aPlayer, activeSlot, ColdForgingRecipe.getState(array));
-		inv.onSlotChanged();
-		inv.syncSlot(this, 0, 4);
-		sendToNearBy(new CoderTileUpdate(this, (byte) 2, new String(inv.array)), 16.0F);
+		getTileInventory().onToolClick(aPlayer, activeSlot, ColdForgingRecipe.getState(array));
+		getTileInventory().onSlotChanged();
+		getTileInventory().syncSlot(this, 0, 4);
+		sendToNearBy(new CoderTileUpdate(this, (byte) 2, new String(getTileInventory().array)), 16.0F);
 	}
 	
 	public void setup()
 	{
-		inv.dir = 0;
-		inv.hard = 1;
+		getTileInventory().dir = 0;
+		getTileInventory().hard = 1;
 	}
 	
 	public void switchType(int type)
 	{
 		if(type == 0)
 		{
-			if(++inv.dir == 4) 
-				inv.dir = 0;
+			if(++getTileInventory().dir == 4) 
+				getTileInventory().dir = 0;
 		}
 		else if(type == 1)
 		{
-			if(++inv.hard == 4) 
-				inv.hard = 1;
+			if(++getTileInventory().hard == 4) 
+				getTileInventory().hard = 1;
 		}
 		else if(type == 2)
 		{
 			for(int i = 0; i < 4; ++i)
-				inv.decrStackSize(i, 1);
-			inv.array = "         ".toCharArray();
-			sendToNearBy(new CoderTileUpdate(this, (byte) 2, new String(inv.array)), 16.0F);
+				getTileInventory().decrStackSize(i, 1);
+			getTileInventory().array = "         ".toCharArray();
+			sendToNearBy(new CoderTileUpdate(this, (byte) 2, new String(getTileInventory().array)), 16.0F);
 		}
-		sendToNearBy(new CoderTileUpdate(this, (byte) 3, inv.hard), 16.0F);
-		sendToNearBy(new CoderTileUpdate(this, (byte) 4, inv.dir), 16.0F);
+		sendToNearBy(new CoderTileUpdate(this, (byte) 3, getTileInventory().hard), 16.0F);
+		sendToNearBy(new CoderTileUpdate(this, (byte) 4, getTileInventory().dir), 16.0F);
 	}
 	
 	public int getDir()
 	{
-		return inv.dir;
+		return getTileInventory().dir;
 	}
 	
 	public int getHarness()
 	{
-		return inv.hard;
+		return getTileInventory().hard;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public CraftingState getState(int i)
 	{
-		return CraftingState.getState(inv.array[i]);
+		return CraftingState.getState(getTileInventory().array[i]);
 	}
 
 	@Override
@@ -107,11 +107,11 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 	{
 		switch(type)
 		{
-		case 2 : inv.array = ((String) contain).toCharArray();
+		case 2 : getTileInventory().array = ((String) contain).toCharArray();
 		break;
-		case 3 : inv.hard = (Integer) contain;
+		case 3 : getTileInventory().hard = (Integer) contain;
 		break;
-		case 4 : inv.dir = (Integer) contain;
+		case 4 : getTileInventory().dir = (Integer) contain;
 		}
 	}
 }

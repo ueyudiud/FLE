@@ -27,6 +27,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
     protected static final BiomeGenBase.Height height_ShallowWaters = new BiomeGenBase.Height(-0.09375F, 0.0F);
     protected static final BiomeGenBase.Height height_MidWaters = new BiomeGenBase.Height(-0.046875F, 0.0F);
     protected static final BiomeGenBase.Height height_HighWaters = new BiomeGenBase.Height(0.015625F, 0.0F);
+    protected static final BiomeGenBase.Height height_PartiallySubmerged = new BiomeGenBase.Height(-0.03125F, 0.0625F);
     
 	private static final FLEBiome[] biomeList = new FLEBiome[256];
 	
@@ -36,8 +37,8 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	public static final FLEBiome warm_forest = new FLEBiomeForest("FLE Forest", BiomeGenBase.forest.biomeID, 0).setColor(353825);
 	public static final FLEBiome mid_forest = new FLEBiomeForest("FLE Forest B", BiomeGenBase.birchForest.biomeID, 2).setColor(3175492);
 	public static final FLEBiome slope = new FLEBiomeOcean("FLE Slope", 41).setColor(0x8EBFFF).setBiomeHeight(-0.3F, -0.03125F);
-	public static final FLEBiome wasteland = new FLEBiomeWasteland("FLE Wasteland", 42).setColor(0x90A832).setH(height_Default).setDisableRain();
-	public static final FLEBiome swampland = new FLEBiomeSwamp("FLE Swampland", BiomeGenBase.swampland.biomeID).setH(height_Shores).setColor(0x307252).setTemperatureRainfall(0.8F, 0.9F);
+	public static final FLEBiome wasteland = new FLEBiomeWasteland("FLE Wasteland", 42).setColor(0xA4B360).setH(height_Default).setDisableRain();
+	public static final FLEBiome swampland = new FLEBiomeSwamp("FLE Swampland", BiomeGenBase.swampland.biomeID).setH(height_PartiallySubmerged).setColor(0x307252).setTemperatureRainfall(0.8F, 0.9F);
 	public static final FLEBiome hill = new FLEBiomeHill("FLE Hill", 43).setColor(0x60DB60).setH(height_MidPlains);
 	public static final FLEBiome roofedForest = new FLEBiomeForest("FLE Roofed Forest", BiomeGenBase.roofedForest.biomeID, 3).setColor(4215066);
 	public static final FLEBiome roofedForest_hill = new FLEBiomeForest("FLE Roofed Forest Hill", 44, 3).setH(height_LowHills).setColor(4215066);
@@ -187,7 +188,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	
 	protected void genTerrainBlocks(Random rand, Block[] blocks, byte[] bytes, boolean isFlat, boolean isNonwaterTop, int rootHeight, int x, int z, int size, int height)
 	{
-        boolean flag = true;
+        boolean waterFlag = false;
         int k = -1;
         for (int l1 = 255; l1 >= 0; --l1)
         {
@@ -216,9 +217,9 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
                         {
                         	if(rootHeight > 0)
                         	{
-                                if (l1 >= height || !isNonwaterTop)
+                                if (l1 >= height)
                                 {
-                                	if((flag || isFlat) && isNonwaterTop)
+                                	if((!waterFlag || isFlat) && isNonwaterTop)
                                 	{
                                 		genTargetBlockAt(0, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
                                         k = rootHeight;
@@ -253,19 +254,19 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
                         	}
                         }
                     }
-                }
-                else if(block2 == Blocks.water)
-                {
-                	if(isFlat || !isNonwaterTop)
-                	{
-                		blocks[i2] = Blocks.air;
-                	}
-                	else if(flag)
-                	{
-                    	if(k > 0) --k;
-                      	if(getFloatTemperature(x, l1, z) < 0.15F) blocks[i2] = Blocks.ice;
-                       	flag = false;
-                	}
+                    else if(block2 == Blocks.water)
+                    {
+                    	if(isFlat || isNonwaterTop)
+                    	{
+                    		blocks[i2] = Blocks.air;
+                    	}
+                    	else if(!waterFlag)
+                    	{
+                        	if(k > 0) --k;
+                          	if(getFloatTemperature(x, l1, z) < 0.15F) blocks[i2] = Blocks.ice;
+                           	waterFlag = true;
+                    	}
+                    }
                 }
                 else
                 {
@@ -298,7 +299,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	}
 	
 	@Override
-	public BiomeDecorator createBiomeDecorator()
+	public FLEBiomeDecoratorBase createBiomeDecorator()
 	{
 		return new FLEBiomeDecoratorBase();
 	}

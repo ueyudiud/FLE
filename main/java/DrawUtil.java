@@ -1,37 +1,47 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import fle.api.enums.EnumAtoms;
-import fle.api.util.SubTag;
-
-@Deprecated
 public class DrawUtil
 {	
-	static String[] strs = {"cu-as-1", "cu-sn-1", "cu-pb-1", "cu-pb-2", "cu-sn-2", "cu-pb-sn"};
-	
 	public static void main(String[] arg)
 	{
 		File file = new File("./src/main/resources/assets/fle/textures/items/resource");
-		File file1 = new File(file, "ingot");
-		File file2 = new File(file, "plate");
-		for(File f : file1.listFiles())
+		File r = new File(file, "plate_double");
+		File t = new File(file, "plate_quadrupl");
+		File rP = new File(file, "plate_double.png");
+		File tP = new File(file, "plate_quadrupl.png");
+		try 
 		{
-			try 
+			BufferedImage imgR = ImageIO.read(rP);
+			BufferedImage imgT = ImageIO.read(tP);
+			loadModel(imgR, imgT);
+			for(File f : r.listFiles())
 			{
-				//File file3 = new File(file1, f.getName() + ".png");
-				BufferedImage img = ImageIO.read(f);
-				drawPlate(file2, f.getName().replaceAll(".png", ""), img);
-			} 
-			catch (IOException ex) 
-			{
-				ex.printStackTrace();
+				try
+				{
+					//File file3 = new File(file1, f.getName() + ".png");
+					BufferedImage img = ImageIO.read(f);
+					//drawPlate(file2, f.getName().replaceAll(".png", ""), img);
+					//drawIngot(file3, f.getName().replaceAll(".png", ""), img);
+					drawModel(t, f.getName().replaceAll(".png", ""), img);
+				}
+				catch(Throwable e){e.printStackTrace();}
 			}
+		} 
+		catch (IOException ex) 
+		{
+			ex.printStackTrace();
 		}
 	}
 
@@ -309,6 +319,70 @@ public class DrawUtil
 		drawPixcel(g, 1, 9, col);
 		drawPixcel(g, 2, 10, col);
 		drawPixcel(g, 3, 11, col);
+		
+		File file4 = new File(file2, e + ".png");
+		if(!file4.canExecute())
+		{
+			file4.createNewFile();
+		}
+		ImageIO.write(img1, "png", file4);
+	}
+
+	static Map<Integer, Integer> list1;
+	static Map<Integer, List<Integer>> list2;
+	
+	private static void loadModel(BufferedImage resource, BufferedImage target) throws IOException
+	{
+		list1 = new HashMap();
+		for(int i = 0; i < 16; ++i)
+			for(int j = 0; j < 16; ++j)
+			{
+				int id = i * 16 + j;
+				int col = resource.getRGB(j, i);
+				if(!list1.containsKey(col))
+				{
+					list1.put(col, id);
+				}
+			}
+		list2 = new HashMap();
+		for(int i = 0; i < 16; ++i)
+			for(int j = 0; j < 16; ++j)
+			{
+				int id = i * 16 + j;
+				int col = target.getRGB(j, i);
+				if(list1.containsKey(col))
+				{
+					int rID = list1.get(col);
+					if(!list2.containsKey(rID))
+					{
+						list2.put(rID, new ArrayList());
+					}
+					list2.get(rID).add(id);
+				}
+				else throw new RuntimeException("Can't find color at position x: " + j + ", y: " + i);
+			}
+		list1 = null;
+	}
+	
+	private static void drawModel(File file2, String e, BufferedImage img) throws IOException
+	{
+		BufferedImage img1 = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = img1.getGraphics();
+
+		for(Entry<Integer, List<Integer>> entry : list2.entrySet())
+		{
+			int value = entry.getKey();
+			int x = value & 0x0F;
+			int y = (value & 0xF0) >> 4;
+			int col = img.getRGB(x, y);
+			g.setColor(new Color(col, true));
+			for(int i : entry.getValue())
+			{
+				int u = i & 0x0F;
+				int v = (i & 0xF0) >> 4;
+			    g.drawRect(u, v, 0, 0);
+			}
+		}
 		
 		File file4 = new File(file2, e + ".png");
 		if(!file4.canExecute())

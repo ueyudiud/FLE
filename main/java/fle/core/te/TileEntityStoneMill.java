@@ -52,29 +52,29 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 		rh.update();
 		if(rh.getRotationEnergy() > 0)
 			++tick;
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		BlockPos tPos = getBlockPos();
 		for(ForgeDirection dir : dirs)
 		{
-			if(inv.sTank.getStack() != null)
+			if(getTileInventory().sTank.getStack() != null)
 			{
 				if(tPos.toPos(dir).getBlockTile() instanceof ISolidHandler)
 				{
 					ISolidHandler sh = (ISolidHandler) tPos.toPos(dir).getBlockTile();
-					if(sh.canFillS(dir.getOpposite(), inv.sTank.get()))
+					if(sh.canFillS(dir.getOpposite(), getTileInventory().sTank.get()))
 					{
-						int i = sh.fillS(dir.getOpposite(), inv.sTank.getStack(), false);
-						SolidStack aStack = inv.sTank.drain(i, true);
+						int i = sh.fillS(dir.getOpposite(), getTileInventory().sTank.getStack(), false);
+						SolidStack aStack = getTileInventory().sTank.drain(i, true);
 						sh.fillS(dir.getOpposite(), aStack, true);
 					}
 				}
 				else if(tPos.toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile() instanceof ISolidHandler)
 				{
 					ISolidHandler sh = (ISolidHandler) tPos.toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile();
-					if(sh.canFillS(ForgeDirection.UP, inv.sTank.get()))
+					if(sh.canFillS(ForgeDirection.UP, getTileInventory().sTank.get()))
 					{
-						int i = sh.fillS(ForgeDirection.UP, inv.sTank.getStack(), false);
-						SolidStack aStack = inv.sTank.drain(i, true);
+						int i = sh.fillS(ForgeDirection.UP, getTileInventory().sTank.getStack(), false);
+						SolidStack aStack = getTileInventory().sTank.drain(i, true);
 						sh.fillS(ForgeDirection.UP, aStack, true);
 					}
 				}
@@ -106,31 +106,31 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	@SideOnly(Side.CLIENT)
 	public double getProgress(int i)
 	{
-		return (int) (inv.getProgress() * i);
+		return (int) (getTileInventory().getProgress() * i);
 	}
 
 	public SolidTank getSolidTank()
 	{
-		return inv.sTank;
+		return getTileInventory().sTank;
 	}
 
 	@Override
 	public int fillS(ForgeDirection from, SolidStack resource, boolean doFill)
 	{
-		return inv.sTank.fill(resource, doFill);
+		return getTileInventory().sTank.fill(resource, doFill);
 	}
 
 	@Override
 	public SolidStack drainS(ForgeDirection from, SolidStack resource,
 			boolean doDrain)
 	{
-		return inv.sTank.has(resource) ? inv.sTank.drain(resource.getSize(), doDrain) : null;
+		return getTileInventory().sTank.has(resource) ? getTileInventory().sTank.drain(resource.getSize(), doDrain) : null;
 	}
 
 	@Override
 	public SolidStack drainS(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return inv.sTank.drain(maxDrain, doDrain);
+		return getTileInventory().sTank.drain(maxDrain, doDrain);
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	@Override
 	public SolidTankInfo[] getSolidTankInfo(ForgeDirection from)
 	{
-		return new SolidTankInfo[]{inv.sTank.getInfo()};
+		return new SolidTankInfo[]{getTileInventory().sTank.getInfo()};
 	}
 
 	@Override
@@ -161,31 +161,31 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	@Override
 	public SolidTank getSolidTank(int index)
 	{
-		return inv.sTank;
+		return getTileInventory().sTank;
 	}
 
 	@Override
 	public SolidStack getSolidStackInTank(int index)
 	{
-		return inv.sTank.getStack();
+		return getTileInventory().sTank.getStack();
 	}
 
 	@Override
 	public void setSolidStackInTank(int index, SolidStack aStack) 
 	{
-		inv.sTank.setStack(aStack);
+		getTileInventory().sTank.setStack(aStack);
 	}
 
 	@Override
 	public SolidStack drainSolidTank(int index, int maxDrain, boolean doDrain)
 	{
-		return inv.sTank.drain(maxDrain, doDrain);
+		return getTileInventory().sTank.drain(maxDrain, doDrain);
 	}
 
 	@Override
 	public int fillSolidTank(int index, SolidStack resource, boolean doFill)
 	{
-		return inv.sTank.fill(resource, doFill);
+		return getTileInventory().sTank.fill(resource, doFill);
 	}
 
 	@Override

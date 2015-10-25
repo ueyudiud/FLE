@@ -19,13 +19,10 @@ public abstract class FleSurfaceGen extends WorldGenerator
 		count = aCount;
 	}
 	
-	private static double a = 1D / 3D;
-	
 	@Override
 	public boolean generate(World aWorld, Random aRand,
 			int x, int y, int z)
 	{
-		int size = (int) Math.floor(Math.pow(this.size, a));
 		int count = this.count;
 		for(int i = 0; i < this.count * 10; ++i)
 		{

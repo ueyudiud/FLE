@@ -11,11 +11,11 @@ import fle.api.soild.ISolidTanks;
 
 public abstract class TEInventory<T extends IInventoryTile> extends TEBase implements ISidedInventory
 {
-	protected T inv;
+	private T inv;
 	
 	protected TEInventory(T inv)
 	{
-		this.inv = inv;
+		this.setTileInventory(inv);
 	}
 	
 	public final void updateEntity()
@@ -31,7 +31,7 @@ public abstract class TEInventory<T extends IInventoryTile> extends TEBase imple
 	{
 		super.readFromNBT(nbt);
 		NBTTagCompound nbt1 = nbt.getCompoundTag("Inventory");
-		inv.readFromNBT(nbt1);
+		getTileInventory().readFromNBT(nbt1);
 	}
 	
 	@Override
@@ -39,105 +39,115 @@ public abstract class TEInventory<T extends IInventoryTile> extends TEBase imple
 	{
 		super.writeToNBT(nbt);
 		NBTTagCompound nbt1 = new NBTTagCompound();
-		inv.writeToNBT(nbt1);
+		getTileInventory().writeToNBT(nbt1);
 		nbt.setTag("Inventory", nbt1);
 	}
 
 	@Override
 	public int getSizeInventory() 
 	{
-		return inv.getSizeInventory();
+		return getTileInventory().getSizeInventory();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int i) 
 	{
-		return inv.getStackInSlot(i);
+		return getTileInventory().getStackInSlot(i);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int size) 
 	{
-		return inv.decrStackSize(i, size);
+		return getTileInventory().decrStackSize(i, size);
 	}
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) 
 	{
-		return inv.getStackInSlotOnClosing(i);
+		return getTileInventory().getStackInSlotOnClosing(i);
 	}
 
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
-		inv.setInventorySlotContents(i, itemstack);
+		getTileInventory().setInventorySlotContents(i, itemstack);
 	}
 
 	@Override
 	public String getInventoryName() 
 	{
-		return inv.getInventoryName();
+		return getTileInventory().getInventoryName();
 	}
 
 	@Override
 	public boolean hasCustomInventoryName() 
 	{
-		return inv.hasCustomInventoryName();
+		return getTileInventory().hasCustomInventoryName();
 	}
 
 	@Override
 	public int getInventoryStackLimit() 
 	{
-		return inv.getInventoryStackLimit();
+		return getTileInventory().getInventoryStackLimit();
 	}
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
-		return inv.isUseableByPlayer(player);
+		return getTileInventory().isUseableByPlayer(player);
 	}
 
 	@Override
 	public void openInventory()
 	{
-		inv.openInventory();
+		getTileInventory().openInventory();
 	}
 
 	@Override
 	public void closeInventory()
 	{
-		inv.closeInventory();
+		getTileInventory().closeInventory();
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return inv.isItemValidForSlot(i, itemstack);
+		return getTileInventory().isItemValidForSlot(i, itemstack);
 	}	
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		return inv.getAccessibleSlotsFromSide(side);
+		return getTileInventory().getAccessibleSlotsFromSide(side);
 	}
 
 	@Override
 	public boolean canInsertItem(int slotID, ItemStack aStack,
 			int side)
 	{
-		return inv.canInsertItem(slotID, aStack, side);
+		return getTileInventory().canInsertItem(slotID, aStack, side);
 	}
 
 	@Override
 	public boolean canExtractItem(int slotID, ItemStack aStack,
 			int side)
 	{
-		return inv.canExtractItem(slotID, aStack, side);
+		return getTileInventory().canExtractItem(slotID, aStack, side);
 	}
 	
 	public void syncSolidTank()
 	{
 		if(this instanceof ISolidTanks && !worldObj.isRemote)
 			sendToNearBy(new CoderSolidTankUpdate(getBlockPos()), 16.0F);
+	}
+
+	public T getTileInventory()
+	{
+		return inv;
+	}
+
+	public void setTileInventory(T inv)
+	{
+		this.inv = inv;
 	}
 }

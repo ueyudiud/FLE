@@ -12,27 +12,31 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.core.world.dim.FLEBiomeDecoratorBase;
 
 public class FLEBiomeSwamp extends FLEBiome
 {
     public FLEBiomeSwamp(String name, int index)
     {
         super(name, index);
-        this.theBiomeDecorator.treesPerChunk = 2;
-        this.theBiomeDecorator.flowersPerChunk = 1;
-        this.theBiomeDecorator.deadBushPerChunk = 1;
-        this.theBiomeDecorator.mushroomsPerChunk = 8;
-        this.theBiomeDecorator.reedsPerChunk = 10;
-        this.theBiomeDecorator.clayPerChunk = 1;
-        this.theBiomeDecorator.waterlilyPerChunk = 4;
-        this.theBiomeDecorator.sandPerChunk2 = 0;
-        this.theBiomeDecorator.sandPerChunk = 0;
-        this.theBiomeDecorator.grassPerChunk = 5;
-        this.waterColorMultiplier = 14745518;
-        this.spawnableMonsterList.add(new BiomeGenBase.SpawnListEntry(EntitySlime.class, 1, 1, 1));
-        this.flowers.clear();
-        this.addFlower(Blocks.red_flower, 1, 10);
+        theBiomeDecorator.treesPerChunk = 2;
+        theBiomeDecorator.flowersPerChunk = 1;
+        theBiomeDecorator.deadBushPerChunk = 1;
+        theBiomeDecorator.mushroomsPerChunk = 8;
+        theBiomeDecorator.reedsPerChunk = 10;
+        theBiomeDecorator.clayPerChunk = 1;
+        theBiomeDecorator.waterlilyPerChunk = 4;
+        theBiomeDecorator.sandPerChunk2 = 0;
+        theBiomeDecorator.sandPerChunk = 0;
+        theBiomeDecorator.grassPerChunk = 5;
+        ((FLEBiomeDecoratorBase) theBiomeDecorator).peatPerChunk = 1;
+        waterColorMultiplier = 14745518;
+        spawnableMonsterList.add(new BiomeGenBase.SpawnListEntry(EntitySlime.class, 1, 1, 1));
+        flowers.clear();
+        addFlower(Blocks.red_flower, 1, 10);
         func_76733_a(9154376);
+        topBlock = Blocks.grass;
+        fillerBlock = Blocks.dirt;
     }
 
     public WorldGenAbstractTree func_150567_a(Random rand)
@@ -85,8 +89,83 @@ public class FLEBiomeSwamp extends FLEBiome
     		boolean isFlat, boolean isNonwaterTop, int rootHeight, int x,
     		int z, int size, int height)
     {
-    	super.genTerrainBlocks(rand, blocks, bytes, isFlat, false, rootHeight,
-    			x, z, size, height);
+        boolean waterFlag = false;
+        int k = -1;
+        for (int l1 = 255; l1 >= 0; --l1)
+        {
+            int i2 = (z * 16 + x) * size + l1;
+
+            if (l1 <= rand.nextInt(2))
+            {
+                blocks[i2] = Blocks.bedrock;
+            }
+            else if(l1 <= 8)
+            {
+            	blocks[i2] = Blocks.lava;
+            }
+            else if(l1 <= 10 + rand.nextInt(6))
+            {
+            	blocks[i2] = Blocks.air;
+            }
+            else
+            {
+                Block block2 = blocks[i2];
+                if (block2 != null && block2.getMaterial() != Material.air)
+                {
+                    if (block2 == Blocks.stone)
+                    {
+                        if(k == -1)
+                        {
+                        	if(rootHeight > 0)
+                        	{
+                                if (l1 >= height - 5)
+                                {
+                                	if(!waterFlag)
+                                	{
+                                		genTargetBlockAt(0, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
+                                	}
+                                	else
+                                	{
+                                		genTargetBlockAt(1, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
+                                	}
+                                	k = rootHeight;
+                                }
+                                else
+                                {
+                                	k = -2;
+                                	continue;
+                                }
+                        	}
+                        }
+                        else if(k > 0)
+                        {
+                        	--k;
+                        	if(k > rootHeight / 2)
+                        	{
+                        		genTargetBlockAt(1, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
+                        	}
+                        	else if(k == 0)
+                        	{
+                        		genTargetBlockAt(3, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
+                        	}
+                        	else
+                        	{
+                        		genTargetBlockAt(2, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
+                        	}
+                        }
+                    }
+                    else if(block2 == Blocks.water)
+                    {
+                    	if(k > 0) --k;
+                       	waterFlag = true;
+                    }
+                    else if(block2 == Blocks.air)
+                    {
+                        k = -1;
+                    }
+                }
+            }
+        }
     }
 
     /**

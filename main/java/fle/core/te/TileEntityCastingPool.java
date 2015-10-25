@@ -41,7 +41,7 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	@Override
 	public void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
 	}
@@ -91,8 +91,8 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	@SideOnly(Side.CLIENT)
 	public double getProgress()
 	{
-		if(inv.getFluid() == null) return 0D;
-		return (double) inv.buf / (double) ((inv.getFluid().getFluid().getTemperature(inv.getFluid()) - FleValue.WATER_FREEZE_POINT));
+		if(getTileInventory().getFluid() == null) return 0D;
+		return (double) getTileInventory().buf / (double) ((getTileInventory().getFluid().getFluid().getTemperature(getTileInventory().getFluid()) - FleValue.WATER_FREEZE_POINT));
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	{
 		if(type == 1)
 		{
-			inv.buf = (Integer) contain;
+			getTileInventory().buf = (Integer) contain;
 		}
 		else if(type == 2)
 		{

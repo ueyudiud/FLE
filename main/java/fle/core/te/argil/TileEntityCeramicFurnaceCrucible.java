@@ -43,7 +43,7 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	@Override
 	public void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
 	}
@@ -105,29 +105,29 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	@SideOnly(Side.CLIENT)
 	public Map<IAtoms, Integer> getContainerMap()
 	{
-		return inv.matterMap;
+		return getTileInventory().matterMap;
 	}
 
 	@Override
 	public Map<IAtoms, Integer> getMatterContain()
 	{
-		return inv.matterMap;
+		return getTileInventory().matterMap;
 	}
 
 	@Override
 	public void setMatterContain(Map<IAtoms, Integer> map)
 	{
-		inv.matterMap = map;
+		getTileInventory().matterMap = map;
 	}
 
 	public void onOutput()
 	{
-		inv.outputStack(this);
+		getTileInventory().outputStack(this);
 	}
 
 	public void drain()
 	{
-		inv.drain(inv.getCapacity(), true);
-		inv.syncTank(this);
+		getTileInventory().drain(getTileInventory().getCapacity(), true);
+		getTileInventory().syncTank(this);
 	}
 }

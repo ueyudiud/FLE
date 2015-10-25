@@ -37,7 +37,7 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	@Override
 	public void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		if(getBlockPos().toPos(dir).getBlockTile() instanceof IFluidHandler)
 		{
 			FluidStack stack = drain(dir, 5, false);

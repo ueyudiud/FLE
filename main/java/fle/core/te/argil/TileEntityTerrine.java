@@ -48,7 +48,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	public void updateInventory() 
 	{
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		heatCurrect.update();
 		if(!worldObj.isRemote)
 			sendToNearBy(new CoderTileUpdate(this, (byte) 2, mode), 16.0F);
@@ -57,43 +57,43 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	@Override
 	public FluidStack getFluid() 
 	{
-		return inv.getFluid();
+		return getTileInventory().getFluid();
 	}
 
 	@Override
 	public int getFluidAmount() 
 	{
-		return inv.getFluidAmount();
+		return getTileInventory().getFluidAmount();
 	}
 
 	@Override
 	public int getCapacity() 
 	{
-		return inv.getCapacity();
+		return getTileInventory().getCapacity();
 	}
 
 	@Override
 	public FluidTankInfo getInfo() 
 	{
-		return inv.getInfo();
+		return getTileInventory().getInfo();
 	}
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) 
 	{
-		return inv.fill(resource, doFill);
+		return getTileInventory().fill(resource, doFill);
 	}
 
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) 
 	{
-		return inv.drain(maxDrain, doDrain);
+		return getTileInventory().drain(maxDrain, doDrain);
 	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) 
 	{
-		return from == ForgeDirection.UP ? inv.fill(resource, doFill) : 0;
+		return from == ForgeDirection.UP ? getTileInventory().fill(resource, doFill) : 0;
 	}
 
 	@Override
@@ -101,14 +101,14 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 			boolean doDrain) 
 	{
 		if(resource != null)
-			if(!resource.isFluidEqual(inv.getFluid())) return null;
-		return from == ForgeDirection.UP ? inv.drain(resource.amount, doDrain) : null;
+			if(!resource.isFluidEqual(getTileInventory().getFluid())) return null;
+		return from == ForgeDirection.UP ? getTileInventory().drain(resource.amount, doDrain) : null;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) 
 	{
-		return from == ForgeDirection.UP ? inv.drain(maxDrain, doDrain) : null;
+		return from == ForgeDirection.UP ? getTileInventory().drain(maxDrain, doDrain) : null;
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	
 	public GuiCondition getError()
 	{
-		return inv.type;
+		return getTileInventory().type;
 	}
 
 	public void setClose() 
@@ -171,7 +171,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	
 	public double getProgress()
 	{
-		return inv.getProgress();
+		return getTileInventory().getProgress();
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	{
 		if(type == 1)
 		{
-			inv.recipeTime = (Double) contain;
+			getTileInventory().recipeTime = (Double) contain;
 		}
 		else if(type == 2)
 		{

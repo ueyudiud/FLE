@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.FLE;
 import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiError;
@@ -42,8 +43,9 @@ public class GuiDryingTable extends GuiContainerBase
 	{
 		drawTexturedModalRect(aXOffset + 88, aYOffset + 33, 176, 52, tile.getRecipeProgressBar(26), 19);
 		if(tile.type != GuiError.DEFAULT) drawCondition(92, 53, tile.type);
-		int a = (int) (FleThermalNet.getFTempretureToInteger(tile.getTempretureLevel()) / 400D * 52);
-		drawFleRect(xoffset + 25, yoffset + 17 + 52 - a, 3, a, ColorUtil.getColorWithTdWd(tile.getTempretureLevel(), tile.getWaterLevel() / 100D));
+		int temp = FLE.fle.getThermalNet().getEnvironmentTemperature(tile.getBlockPos());
+		int a = (int) (temp / 400D * 52);
+		drawFleRect(xoffset + 25, yoffset + 17 + 52 - a, 3, a, ColorUtil.getColorWithTdWd(temp, tile.getWaterLevel() / 100D));
 	}
 
 	@Override

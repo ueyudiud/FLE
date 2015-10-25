@@ -53,7 +53,9 @@ public class ItemDebug extends ItemFle
         	try
         	{
         		aPlayer.addChatMessage(new ChatComponentText("This block is named " + aWorld.getBlock(x, y, z).getUnlocalizedName() + "."));
-            	aPlayer.addChatMessage(new ChatComponentText("Block name is " + GameData.getBlockRegistry().getNameForObject(pos.getBlock()) + ", by id " + Block.getIdFromBlock(pos.getBlock()) + "."));
+        		aPlayer.addChatMessage(new ChatComponentText("Block name is " + GameData.getBlockRegistry().getNameForObject(pos.getBlock()) + ", by id " + Block.getIdFromBlock(pos.getBlock()) + "."));
+        		if(pos.getBlockTile() != null)
+        			aPlayer.addChatMessage(new ChatComponentText("Block tile is " + pos.getBlockTile().getClass() + "."));
             	aPlayer.addChatMessage(new ChatComponentText("Metadata: " + pos.getBlockMeta() + "."));
             	aPlayer.addChatMessage(new ChatComponentText("Harvest Level: " + pos.getBlock().getHarvestLevel(pos.getBlockMeta()) + "."));
         		aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + "."));

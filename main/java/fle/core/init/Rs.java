@@ -410,6 +410,9 @@ public class Rs
 		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.woodMachine1, 1, 2), new Object[]{"sm ", "ppp", " b ", 's', "stickWood", 'p', "plateStone", 'm', ItemFleSub.a("millstone"), 'b', new ItemStack(IB.woodMachine1, 1, 1)});
 		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.woodMachine1, 1, 3), new Object[]{" f ", "sfs", " b ", 's', ItemFleSub.a("ramie_rope"), 'f', ItemFleSub.a("linen"), 'b', new ItemStack(IB.woodMachine1, 1, 1)});
 		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.woodMachine1, 1, 4), new Object[]{"sr ", "rr ", " b ", 's', "stickWood", 'r', ItemFleSub.a("ramie_rope"), 'r', Blocks.stone, 'b', new ItemStack(IB.woodMachine1, 1, 1)});
+
+		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.tank, 1, 0), new Object[]{"s s", " h ", "s s", 's', "plateStone", 'h', "craftingToolChisel"});
+		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.tank, 1, 1), new Object[]{"shs", "s s", 's', "plateStone", 'h', "craftingToolHardHammer"});
 		
 		addShapedRecipe(RecipesTab.tabCopperAge, ItemDitch.a(Materials.ditch_stone, 20), new Object[]{" p ", " o ", " x ", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"});
 		addShapedRecipe(RecipesTab.tabCopperAge, ItemDitch.a(2, Materials.ditch_stone, 60), new Object[]{" p ", " o ", "xxx", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"});

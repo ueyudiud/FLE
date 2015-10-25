@@ -154,7 +154,13 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(10104, "guide_book_3", "Copper Age Book", "book/2", new BehaviorGuideBook(RecipesTab.tabCopperAge));
 		int i = 0;
 		int j = 0;
-		String[][] strss = {{"ingot", "Ingot", "ingot"}, {"ingot_double", "Double Ingot", "ingot_double"}, {"plate", "Plate", "plate"}};
+		String[][] strss = {
+				{"ingot", "Ingot", "ingot"}, 
+				{"ingot_double", "Double Ingot", "ingot_double"},
+				{"ingot_quadruple", "Quadruple Ingot", "ingot_quadruple"},
+				{"plate", "Plate", "plate"},
+				{"plate_double", "Plate", "plate"},
+				{"plate_quadruple", "Quadruple Plate", "plate_quadruple"}};
 		for(; j < strss.length; ++j)
 		{
 			String[] strs = strss[j];

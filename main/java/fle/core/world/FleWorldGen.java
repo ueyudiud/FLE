@@ -117,29 +117,29 @@ public class FleWorldGen implements IWorldGenerator
 		{
 		case 33:;
 		case 17:;
-		case 1 : generateCrop(Crops.millet, world, random, x, z, 125, 8);
+		case 1 : generateCrop(Crops.millet, world, random, x, z, 8, 8);
 		break;
 		case 34:;
 		case 18:;
-		case 2 : generateCrop(Crops.ramie, world, random, x, z, 125, 8);
+		case 2 : generateCrop(Crops.ramie, world, random, x, z, 8, 8);
 		break;
 		case 35:;
 		case 19:;
-		case 3 : generateCrop(Crops.soybean, world, random, x, z, 125, 8);
+		case 3 : generateCrop(Crops.soybean, world, random, x, z, 8, 8);
 		break;
 		case 36:;
 		case 20:;
-		case 4 : generateCrop(Crops.cotton, world, random, x, z, 125, 8);
+		case 4 : generateCrop(Crops.cotton, world, random, x, z, 8, 8);
 		break;
 		case 21:;
-		case 5 : generateCrop(Crops.potato, world, random, x, z, 125, 8);
+		case 5 : generateCrop(Crops.potato, world, random, x, z, 8, 8);
 		break;
 		case 22:;
-		case 6 : generateCrop(Crops.sweet_potato, world, random, x, z, 125, 8);
+		case 6 : generateCrop(Crops.sweet_potato, world, random, x, z, 8, 8);
 		break;
 		case 39:;
 		case 23:;
-		case 7 : generateCrop(Crops.wheat, world, random, x, z, 125, 8);
+		case 7 : generateCrop(Crops.wheat, world, random, x, z, 8, 8);
 		break;
 		case 8 :;
 		case 9 :;
@@ -150,7 +150,7 @@ public class FleWorldGen implements IWorldGenerator
 		case 13 :;
 		case 14 :;
 		case 15 :;
-		case 16 : generateVine(world, random, x, z, 100, 20);
+		case 16 : generateVine(world, random, x, z, 12, 20);
 		break;
 		default : break;
 		}

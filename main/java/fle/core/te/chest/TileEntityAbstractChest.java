@@ -17,6 +17,6 @@ public class TileEntityAbstractChest extends TEInventory
 	@Override
 	public void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 	}
 }

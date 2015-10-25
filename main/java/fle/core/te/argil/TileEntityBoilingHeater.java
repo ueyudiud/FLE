@@ -47,7 +47,7 @@ public class TileEntityBoilingHeater extends TEIT<InventoryBoilingHeater> implem
 	protected void updateInventory()
 	{
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		tc.update();
 	}
 
@@ -90,13 +90,13 @@ public class TileEntityBoilingHeater extends TEIT<InventoryBoilingHeater> implem
 	@SideOnly(Side.CLIENT)
 	public int getRecipeProgress(int i)
 	{
-		return inv.getRecipeProgress(i);
+		return getTileInventory().getRecipeProgress(i);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public int getBurnProgress(int i)
 	{
-		return inv.getBurnProgress(i);
+		return getTileInventory().getBurnProgress(i);
 	}
 
 	public void onToolClick(ItemStack tStack, EntityPlayer aPlayer)
@@ -104,26 +104,26 @@ public class TileEntityBoilingHeater extends TEIT<InventoryBoilingHeater> implem
 		if(new ItemOreStack("craftingToolFirestarter").isStackEqul(tStack))
 		{
 			FleAPI.damageItem(aPlayer, tStack, EnumDamageResource.UseTool, 0.125F);
-			inv.setBurning();
+			getTileInventory().setBurning();
 		}
 	}
 
 	public boolean isWorking()
 	{
-		return inv.key != null;
+		return getTileInventory().key != null;
 	}
 
 	@Override
 	public void onReseave(byte type, Object contain)
 	{
 		if(type == 0)
-			inv.setBT((Integer) contain);
+			getTileInventory().setBT((Integer) contain);
 		if(type == 1)
-			inv.setCBT((Integer) contain);
+			getTileInventory().setCBT((Integer) contain);
 	}
 
 	public void resetRecipe()
 	{
-		inv.key = null;
+		getTileInventory().key = null;
 	}
 }

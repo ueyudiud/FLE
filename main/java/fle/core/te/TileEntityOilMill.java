@@ -20,30 +20,30 @@ public class TileEntityOilMill extends TEIT<InventoryOilMill> implements INetEve
 	@Override
 	protected void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public int getRecipeProgress(int i)
 	{
-		return inv.getRecipeProgress(i);
+		return getTileInventory().getRecipeProgress(i);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public int getCache(int i)
 	{
-		return inv.getCache(i);
+		return getTileInventory().getCache(i);
 	}
 
 	public void onWork()
 	{
-		inv.onWork();
+		getTileInventory().onWork();
 	}
 
 	@Override
 	public void onReseave(byte type, Object contain)
 	{
 		if(type == 0)
-			inv.syncRecipeTime((Integer) contain);
+			getTileInventory().syncRecipeTime((Integer) contain);
 	}
 }

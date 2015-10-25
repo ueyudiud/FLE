@@ -2,6 +2,7 @@ package fle.core.te;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.FLE;
 import fle.api.gui.GuiError;
 import fle.api.te.TEInventory;
 import fle.core.inventory.InventoryDryingTable;
@@ -21,7 +22,7 @@ public class TileEntityDryingTable extends TEInventory<InventoryDryingTable>
 	
 	public double getTempretureLevel()
 	{
-		return tem == 0D ? WorldUtil.getTempretureLevel(worldObj, xCoord, yCoord, zCoord) : tem;
+		return tem == 0D ? FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos()) : tem;
 	}
 	
 	public double getWaterLevel() 
@@ -34,12 +35,12 @@ public class TileEntityDryingTable extends TEInventory<InventoryDryingTable>
 	@Override
 	public void updateInventory() 
 	{	
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		++levelCheckBuffer;
 		if(levelCheckBuffer >= 200)
 		{
 			levelCheckBuffer = 0;
-			tem = WorldUtil.getTempretureLevel(worldObj, xCoord, yCoord, zCoord);
+			tem = FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos());
 			water = WorldUtil.getWaterLevel(worldObj, xCoord, yCoord, zCoord);
 		}
 		++tick;
@@ -53,6 +54,6 @@ public class TileEntityDryingTable extends TEInventory<InventoryDryingTable>
 	@SideOnly(Side.CLIENT)
 	public int getRecipeProgressBar(int i) 
 	{
-		return inv.getProgressBar(i);
+		return getTileInventory().getProgressBar(i);
 	}
 }

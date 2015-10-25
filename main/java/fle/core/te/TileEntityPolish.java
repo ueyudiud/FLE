@@ -19,35 +19,35 @@ public class TileEntityPolish extends TEInventory<InventoryPolish>
 
 	public void clearMap()
 	{
-		inv.clearMap(this);
+		getTileInventory().clearMap(this);
 	}
 	
 	public void craftedOnce(EntityPlayer player, int id)
 	{
-		inv.craftedOnce(this, id, player);
+		getTileInventory().craftedOnce(this, id, player);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public char[] getStates()
 	{
-		return inv.inputMap;
+		return getTileInventory().inputMap;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public GuiCondition getCondition()
 	{
-		return inv.condition;
+		return getTileInventory().condition;
 	}
 
 	public ItemStack getRecipeInput()
 	{
-		return inv.input;
+		return getTileInventory().input;
 	}
 
 	@Override
 	public void updateInventory() 
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		++tick;
 		if(tick > 100)
 		{

@@ -110,11 +110,16 @@ public class NetWorkHandler implements FleNetworkHandler
 		instance.sendToAllAround(aPacket, aPoint);
 	}
 	
+	private ByteBuf buffer = null;
+	
 	public void sendLargePacket(FleAbstractPacket aPacket, TargetPoint aPoint)
 	{
 		try
 		{
-			ByteBuf buffer = new UnpooledByteBufAllocator(true).buffer();
+			if(buffer == null)
+			{
+				buffer = new UnpooledByteBufAllocator(true).buffer(256);
+			}
 			aPacket.init(buffer, false);
 		    byte[] data;
 			@SuppressWarnings("resource")

@@ -45,7 +45,7 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	@Override
 	public void updateInventory()
 	{
-		inv.updateEntity(this);
+		getTileInventory().updateEntity(this);
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		if(!worldObj.isRemote)
 		{
@@ -113,13 +113,13 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 
 	public boolean isBurning()
 	{
-		return inv.isBurning();
+		return getTileInventory().isBurning();
 	}
 
 	@SideOnly(Side.CLIENT)
 	public int getBurnProgress(int length)
 	{
-		return (int) (inv.getBurnProgress() * (float) length);
+		return (int) (getTileInventory().getBurnProgress() * (float) length);
 	}
 	
 	public void onToolClick(ItemStack aStack, EntityLivingBase aPlayer)
@@ -130,7 +130,7 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	    }
 	    if (new ItemOreStack("craftingToolFirestarter").isStackEqul(aStack))
 	    {
-	    	inv.setBurning();
+	    	getTileInventory().setBurning();
 	    	FleAPI.damageItem(aPlayer, aStack, EnumDamageResource.UseTool, 0.25F);
 	    }
 	}

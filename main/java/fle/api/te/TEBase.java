@@ -14,6 +14,7 @@ import fle.api.block.IFacingBlock;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.net.FLENBTPacket;
 import fle.api.net.FleAbstractPacket;
+import fle.api.util.FleLog;
 import fle.api.world.BlockPos;
 
 public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMetadataTile
@@ -83,9 +84,15 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		}
 		if(!postinit)
 		{
+			onPostinit();
 			markNBTUpdate();
 			postinit = true;
 		}
+	}
+	
+	protected void onPostinit()
+	{
+		
 	}
 	
 	private void markFinishInit()
@@ -186,7 +193,14 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	
 	public void markNBTUpdate()
 	{
-		sendLarge(new FLENBTPacket(this), 256F);
+		try
+		{
+			sendLarge(new FLENBTPacket(this), 256F);
+		}
+		catch(Throwable e)
+		{
+			FleLog.getLogger().catching(e);
+		}
 	}
 	
 	public void markRenderForUpdate()

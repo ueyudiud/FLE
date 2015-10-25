@@ -25,13 +25,13 @@ public class FluidSolidMixRecipe
 
 	static
 	{
-		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 125F, IB.limestone, 0.8F, IB.lime_mortar));
-		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 5F, IB.plant_ash, 0.9F, IB.plant_ash_mortar));
+		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 125F      , IB.limestone  , 0.8F, IB.lime_mortar));
+		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 5F        , IB.plant_ash  , 0.9F, IB.plant_ash_mortar));
 		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 2.3148148F, IB.brown_sugar, 0.2F, IB.brown_sugar_aqua));
-		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 6F, IB.millet_c, 0.5F, IB.millet_dextrin).set(FleValue.WATER_FREEZE_POINT + 120));
-		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 6F, IB.wheat_c, 0.5F, IB.wheat_dextrin).set(FleValue.WATER_FREEZE_POINT + 120));
-		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 8F, IB.millet, 0.6F, IB.millet_dextrin).set(FleValue.WATER_FREEZE_POINT + 105));
-		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 8F, IB.wheat, 0.6F, IB.wheat_dextrin).set(FleValue.WATER_FREEZE_POINT + 105));
+		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 6F        , IB.millet_c   , 0.5F, IB.millet_dextrin).set(FleValue.WATER_FREEZE_POINT + 120));
+		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 6F        , IB.wheat_c    , 0.5F, IB.wheat_dextrin).set(FleValue.WATER_FREEZE_POINT + 120));
+		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 8F        , IB.millet     , 0.6F, IB.millet_dextrin).set(FleValue.WATER_FREEZE_POINT + 105));
+		registerRecipe(new FluidSolidMixRecipe(FluidRegistry.WATER, 8F        , IB.wheat      , 0.6F, IB.wheat_dextrin).set(FleValue.WATER_FREEZE_POINT + 105));
 	}
 	
 	public static void registerRecipe(FluidSolidMixRecipe recipe)

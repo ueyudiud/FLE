@@ -27,7 +27,7 @@ public class FLELayerBeach extends FLELayer
 					for(int l = 0; l <= 2; ++l)
 					{
 						int value = is[(i + k) * (w + 2) + j + l];
-						if(value == FLEBiome.slope.biomeID || value == FLEBiome.frozenSlope.biomeID)
+						if(value == FLEBiome.slope.biomeID || value == FLEBiome.frozenSlope.biomeID || value == FLEBiome.ocean.biomeID || value == FLEBiome.frozenOcean.biomeID)
 							++a0;
 						if(value == FLEBiome.frozenSlope.biomeID || value == FLEBiome.icePlains.biomeID)
 							++a1;
