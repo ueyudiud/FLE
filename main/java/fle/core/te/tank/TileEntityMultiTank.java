@@ -10,11 +10,14 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import fle.api.net.FlePackets.CoderTileAskUpdate;
+import fle.api.net.FlePackets.CoderTileUpdate;
+import fle.api.net.INetEventHandler;
 import fle.core.block.tank.ItemTankBlock;
 import fle.core.inventory.tank.InventoryMultiTank;
 import fle.core.util.TankBlockInfo;
 
-public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTank>
+public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTank> implements INetEventHandler
 {	
 	public TileEntityMultiTank()
 	{
@@ -64,6 +67,8 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 		{
 			getTileInventory().updateEntity(this);
 		}
+		if(info == null)
+			markTankMaterialUpdate();
 	}
 	
 	protected boolean canBeMainTile()
@@ -196,5 +201,28 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	public int getInfoData()
 	{
 		return ItemTankBlock.d(info);
+	}
+	
+	protected void markTankMaterialUpdate()
+	{
+		if(worldObj.isRemote)
+			sendToNearBy(new CoderTileAskUpdate(getBlockPos(), 1), 256F);
+		else
+			sendToNearBy(new CoderTileUpdate(this, (byte) 1, this), 256F);
+	}
+	
+	@Override
+	public void onReseave(byte type, Object contain)
+	{
+		if(type == 1)
+		{
+			info = ItemTankBlock.f((Integer) contain);
+		}
+	}
+	
+	@Override
+	public short onEmmit(byte aType)
+	{
+		return (short) (aType == 1 ? ItemTankBlock.d(info) : 0);
 	}
 }

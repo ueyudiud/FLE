@@ -85,4 +85,9 @@ public class ItemTankBlock extends ItemFleBlock
 	{
 		return register.name(info);
 	}
+
+	public static TankBlockInfo f(int contain)
+	{
+		return register.contain(contain) ? register.get(contain) : TankBlockInfo.DEFAULT;
+	}
 }

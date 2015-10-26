@@ -28,7 +28,6 @@ import fle.api.te.ITEInWorld;
 import fle.api.tech.Technology;
 import fle.api.util.FleDataInputStream;
 import fle.api.util.FleDataOutputStream;
-import fle.api.util.FleLog;
 import fle.api.world.BlockPos;
 
 public class FlePackets
@@ -442,6 +441,48 @@ public class FlePackets
 		}
 	}
 	
+	public static class CoderTileAskUpdate extends FleAbstractPacket<CoderTileAskUpdate>
+	{
+		byte type;
+		BlockPos pos;
+		
+		public CoderTileAskUpdate()
+		{
+			
+		}
+		public CoderTileAskUpdate(BlockPos aPos, int aType)
+		{
+			pos = aPos;
+			type = (byte) aType;
+		}
+
+		@Override
+		protected void write(FleDataOutputStream os) throws IOException
+		{
+			os.writeBlockPos(pos);
+			os.writeByte(type);
+		}
+
+		@Override
+		protected void read(FleDataInputStream is) throws IOException
+		{
+			pos = is.readBlockPos();
+			type = is.readByte();
+		}
+
+		@Override
+		public IMessage onMessage(CoderTileAskUpdate message, MessageContext ctx)
+		{
+			TileEntity tile = message.pos.getBlockTile();
+			if(tile instanceof INetEventEmmiter)
+			{
+				return new CoderTileUpdate(message.pos, message.type, ((INetEventEmmiter) tile).onEmmit(message.type));
+			}
+			return null;
+		}
+		
+	}
+	
 	public static class CoderTileUpdate extends FleAbstractPacket<CoderTileUpdate>
 	{
 		private BlockPos pos;
@@ -451,9 +492,9 @@ public class FlePackets
 		
 		public CoderTileUpdate() {}
 		
-		public CoderTileUpdate(ITEInWorld obj, INetEventHandler tile) 
+		public CoderTileUpdate(ITEInWorld obj, byte aType, INetEventEmmiter tile) 
 		{
-			this(obj, (byte) -1, tile.onEmmitNBT());
+			this(obj, aType, tile.onEmmit(aType));
 		}
 		public CoderTileUpdate(ITEInWorld obj, short contain) 
 		{
@@ -465,6 +506,12 @@ public class FlePackets
 			type = aType;
 			contain = aContain;
 			tile = obj.getTileEntity().getClass().toString();
+		}
+		CoderTileUpdate(BlockPos aPos, byte aType, Object aContain) 
+		{
+			pos = aPos;
+			type = aType;
+			contain = aContain;
 		}
 		public CoderTileUpdate(World world, int aX, short aY, int aZ, byte aType, Object aContain) 
 		{
@@ -495,10 +542,6 @@ public class FlePackets
 			if(message.pos.getBlockTile() instanceof INetEventListener)
 			{
 				((INetEventListener) message.pos.getBlockTile()).onReseave(message.type, message.contain);
-			}
-			if(message.pos.getBlockTile() instanceof INetEventHandler)
-			{
-				((INetEventHandler) message.pos.getBlockTile()).onReseaveNBT((NBTTagCompound) message.contain);
 			}
 			FleAPI.mod.getPlatform().getWorldInstance(message.pos.getDim()).markBlockForUpdate(message.pos.x, message.pos.y, message.pos.z);
 			return null;

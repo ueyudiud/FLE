@@ -33,6 +33,7 @@ import fle.api.net.FlePackets.CoderMatterUpdate;
 import fle.api.net.FlePackets.CoderPTUpdate;
 import fle.api.net.FlePackets.CoderSolidTankUpdate;
 import fle.api.net.FlePackets.CoderTankUpdate;
+import fle.api.net.FlePackets.CoderTileAskUpdate;
 import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.core.net.FlePackets.CoderCropUpdate;
 import fle.core.net.FlePackets.CoderKeyType;
@@ -60,6 +61,7 @@ public class NetWorkHandler implements FleNetworkHandler
 		registerMessage(CoderSolidTankUpdate.class, Side.CLIENT);
 		registerMessage(FLELargePacket.class, Side.CLIENT);
 		registerMessage(FleWorldMetaSyncPacket.class, Side.CLIENT);
+		registerMessage(CoderTileAskUpdate.class, Side.SERVER);
 	}
 	
 	@Override
