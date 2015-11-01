@@ -9,7 +9,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import fle.FLE;
-import fle.core.net.FlePackets.CoderKeyType;
+import fle.core.net.FleKeyTypePacket;
 
 public class KeyboardClient extends Keyboard
 {
@@ -39,7 +39,7 @@ public class KeyboardClient extends Keyboard
 		int currentKeyState = Keyboard.Key.toInt(keys);
 		if (currentKeyState != lastKeyState)
 		{
-			FLE.fle.getNetworkHandler().sendToServer(new CoderKeyType(currentKeyState));
+			FLE.fle.getNetworkHandler().sendToServer(new FleKeyTypePacket(currentKeyState));
 			super.processKeyUpdate(FLE.fle.getPlatform().getPlayerInstance(), currentKeyState);
 			lastKeyState = currentKeyState;
 		}

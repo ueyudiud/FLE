@@ -8,14 +8,13 @@ import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.material.IAtoms.EnumCountLevel;
 import fle.api.material.Matter;
-import fle.api.net.FlePackets.CoderTileUpdate;
-import fle.api.net.INetEventListener;
 import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.init.Config;
 import fle.core.init.IB;
 import fle.core.init.Materials;
+import fle.core.net.FleTEPacket;
 
 public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 {
@@ -200,7 +199,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		{
 			burnState = 1;
 
-			sendToNearBy(new CoderTileUpdate(this, (byte) 0, burnState), 128.0F);
+			sendToNearBy(new FleTEPacket(this, (byte) 0), 128.0F);
 		}
 	}
 	
@@ -223,5 +222,18 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 	public double getPreHeatEmit()
 	{
 		return heatCurrect.getPreHeatEmit();
+	}
+	
+	@Override
+	public Object onEmmit(byte aType)
+	{
+		return aType == 0 ? burnState : null;
+	}
+	
+	@Override
+	public void onReseave(byte type, Object contain)
+	{
+		if(type == 0)
+			burnState = (Byte) contain;
 	}
 }

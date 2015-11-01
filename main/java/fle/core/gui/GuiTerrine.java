@@ -1,16 +1,14 @@
 package fle.core.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import fle.FLE;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.core.te.argil.TileEntityTerrine;
 
 @SideOnly(Side.CLIENT)

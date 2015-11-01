@@ -5,56 +5,54 @@ import java.io.IOException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import fle.FLE;
 import fle.api.te.ITEInWorld;
 import fle.api.te.TEBase;
 import fle.api.util.FleDataInputStream;
 import fle.api.util.FleDataOutputStream;
 import fle.api.world.BlockPos;
 
-public class FLENBTPacket extends FleAbstractPacket<FLENBTPacket>
+public class FleNBTPacket extends FleCoordinatesPacket
 {
-	public BlockPos pos;
 	public NBTTagCompound nbt;
 	
-	public FLENBTPacket()
+	public FleNBTPacket()
 	{
+		super(true);
 	}
-	public FLENBTPacket(ITEInWorld te)
+	public FleNBTPacket(ITEInWorld te)
 	{
-		pos = te.getBlockPos();
+		super(true, te.getBlockPos());
 		te.getTileEntity().writeToNBT(nbt = new NBTTagCompound());
 	}
 
 	@Override
 	protected void write(FleDataOutputStream os) throws IOException
 	{
-		os.writeBlockPos(pos);
+		super.write(os);
 		os.writeNBT(nbt);
 	}
 
 	@Override
 	protected void read(FleDataInputStream is) throws IOException
 	{
-		pos = is.readBlockPos();
+		super.read(is);
 		nbt = is.readNBT();
 	}
-
+	
 	@Override
-	public IMessage onMessage(FLENBTPacket message, MessageContext ctx)
+	public Object process(FleNetworkHandler nwh)
 	{
-		World world = FLE.fle.getPlatform().getWorldInstance(message.pos.getDim());
-		if(message.pos.getBlockTile() == null)
+		World world = world();
+		BlockPos pos = pos();
+		if(pos.getBlockTile() == null)
 		{
-			world.setTileEntity(message.pos.x, message.pos.y, message.pos.z, TileEntity.createAndLoadEntity(message.nbt));
+			world.setTileEntity(pos.x, pos.y, pos.z, TileEntity.createAndLoadEntity(nbt));
 		}
 		else
 		{
-			message.pos.getBlockTile().readFromNBT(message.nbt);
-			if(message.pos.getBlockTile() instanceof TEBase)
-				((TEBase) message.pos.getBlockTile()).markRenderForUpdate();
+			pos.getBlockTile().readFromNBT(nbt);
+			if(pos.getBlockTile() instanceof TEBase)
+				((TEBase) pos.getBlockTile()).markRenderForUpdate();
 		}
 		return null;
 	}

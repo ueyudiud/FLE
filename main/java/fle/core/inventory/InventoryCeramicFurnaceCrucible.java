@@ -16,9 +16,9 @@ import fle.api.material.MaterialAlloy;
 import fle.api.material.Matter;
 import fle.api.material.Matter.AtomStack;
 import fle.api.material.MatterDictionary;
-import fle.api.net.FlePackets.CoderMatterUpdate;
 import fle.api.util.WeightHelper;
 import fle.api.util.WeightHelper.Stack;
+import fle.core.net.FleMatterUpdatePacket;
 import fle.core.te.argil.TileEntityCeramicFurnaceCrucible;
 
 public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<TileEntityCeramicFurnaceCrucible>
@@ -88,7 +88,7 @@ public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<Tile
 		{
 			updateMatter(tile);
 			buf1 = 0;
-			tile.sendToNearBy(new CoderMatterUpdate(tile, tile), 16.0F);
+			tile.sendToNearBy(new FleMatterUpdatePacket(tile, tile), 16.0F);
 			syncTank(tile);
 		}
 	}

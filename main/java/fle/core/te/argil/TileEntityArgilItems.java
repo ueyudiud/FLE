@@ -39,7 +39,6 @@ public class TileEntityArgilItems extends TEBase implements IThermalTileEntity
 		}
 	}
 	
-	@SideOnly(Side.SERVER)
 	private int tick = 0;
 	
 	@Override

@@ -21,8 +21,6 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.crop.IIrrigationHandler;
 import fle.api.energy.IThermalTileEntity;
-import fle.api.net.FlePackets.CoderTankUpdate;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.te.IDitchTile;
 import fle.api.te.IFluidTanks;
@@ -31,6 +29,8 @@ import fle.api.util.IChemCondition;
 import fle.api.world.BlockPos;
 import fle.core.block.ItemDitch;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.net.FleFluidTankPacket;
+import fle.core.net.FleTEPacket;
 import fle.core.util.DitchInfo;
 
 public class TileEntityDitch extends TEBase implements IDitchTile, IChemCondition, IFluidTanks, IThermalTileEntity, INetEventListener, IIrrigationHandler
@@ -245,21 +245,13 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 		if(buf < 20) ++buf;
 		else
 		{
-			syncTank();
-			worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+			syncFluidTank();
+			markRenderForUpdate();
 			if(!worldObj.isRemote)
-				sendToNearBy(new CoderTileUpdate(this, (byte) -1, new int[]{tank.getCapacity(), DitchInfo.register.serial(info)}), 16.0F);
+				sendToNearBy(new FleTEPacket(this, (byte) -1), 16.0F);
 			buf = 0;
 		}
 		tc.update();
-	}
-	
-	public void syncTank()
-	{
-		if(!worldObj.isRemote)
-		{
-			FleAPI.mod.getNetworkHandler().sendToNearBy(new CoderTankUpdate(getBlockPos()), new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 16.0F));
-		}
 	}
 	
 	@Override
@@ -438,6 +430,12 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 	}
 	
 	@Override
+	public Object onEmmit(byte aType)
+	{
+		return aType == -1 ? new int[]{tank.getCapacity(), DitchInfo.register.serial(info)} : null;
+	}
+	
+	@Override
 	public void onReseave(byte type, Object contain)
 	{
 		if(type == -1)
@@ -457,7 +455,7 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 				flag = true;
 			}
 			if(flag)
-				worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+				markRenderForUpdate();
 		}
 	}
 	

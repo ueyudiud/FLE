@@ -7,11 +7,12 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import fle.FLE;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.net.FleAbstractPacket;
+import fle.api.net.FleNetworkHandler;
 import fle.api.util.FleDataInputStream;
 import fle.api.util.FleDataOutputStream;
 import fle.api.world.BlockPos.ChunkPos;
 
-public class FleWorldMetaSyncPacket extends FleAbstractPacket<FleWorldMetaSyncPacket>
+public class FleWorldMetaSyncPacket extends FleAbstractPacket
 {
 	int dim;
 	ChunkPos pos;
@@ -56,9 +57,9 @@ public class FleWorldMetaSyncPacket extends FleAbstractPacket<FleWorldMetaSyncPa
 	}
 
 	@Override
-	public IMessage onMessage(FleWorldMetaSyncPacket message, MessageContext ctx)
+	public Object process(FleNetworkHandler nwh)
 	{
-		FLE.fle.getWorldManager().syncData(message.dim, message.pos, message.datas);
+		FLE.fle.getWorldManager().syncData(dim, pos, datas);
 		return null;
 	}
 }

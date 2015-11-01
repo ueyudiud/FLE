@@ -8,7 +8,6 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,7 +15,6 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.enums.EnumWorldNBT;
-import fle.api.net.FLENBTPacket;
 import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
 

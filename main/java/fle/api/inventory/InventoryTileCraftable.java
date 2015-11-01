@@ -1,9 +1,6 @@
 package fle.api.inventory;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import fle.api.FleAPI;
-import fle.api.net.FlePackets.CoderInventoryUpdate;
 import fle.api.te.TEInventory;
 
 public abstract class InventoryTileCraftable<T extends TEInventory> extends InventoryTileAbstract<T>

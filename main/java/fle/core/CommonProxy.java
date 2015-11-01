@@ -53,7 +53,6 @@ public class CommonProxy extends Proxy
 	@Override
 	public void onPreload() 
 	{
-		FLE.fle.getNetworkHandler().init();
 		Conditions.init();
 		Materials.init();
 		Crops.init();

@@ -2,8 +2,8 @@ package fle.core.world;
 
 import java.util.HashMap;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import fle.api.enums.EnumWorldNBT;
+import fle.api.net.IPacket;
 import fle.api.world.BlockPos;
 import fle.api.world.BlockPos.ChunkPos;
 
@@ -56,7 +56,7 @@ public class FWMClient extends FWM
 	}
 	
 	@Override
-	public IMessage createPacket(int dim, BlockPos pos)
+	public IPacket createPacket(int dim, BlockPos pos)
 	{
 		return null;
 	}

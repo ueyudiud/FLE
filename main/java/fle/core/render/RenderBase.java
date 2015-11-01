@@ -339,7 +339,7 @@ public abstract class RenderBase
             f1 = f4;
             f2 = f5;
         }
-        if(Minecraft.isAmbientOcclusionEnabled() && Blocks.lava.getLightValue() == 0)
+        if(Minecraft.isAmbientOcclusionEnabled() && Blocks.lava.getLightOpacity(world, x, y, z) == -1)
         	if(render.partialRenderBounds)
         		render.renderStandardBlockWithAmbientOcclusionPartial(Blocks.lava, x, y, z, f, f1, f2);
         	else

@@ -49,6 +49,8 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		private ItemAbstractStack input;
 		public ItemStack output1;
 		private float outputChance;
+		private final float defaultOutputChance;
+		private final int defaultOutputAmount;
 		public FluidStack output2;
 
 		public OilMillRecipe(ItemAbstractStack aInput, FluidStack aOutput2)
@@ -60,8 +62,9 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 			input = aInput;
 			if(aOutput1 != null)
 				output1 = aOutput1.copy();
-			outputChance = aOutputChance;
+			defaultOutputChance = outputChance = aOutputChance;
 			output2 = aOutput2.copy();
+			defaultOutputAmount = output2.amount;
 		}
 		
 		public ItemStack getRandOutput()
@@ -78,7 +81,8 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		@Override
 		public void reloadRecipe(ConfigInfomation ci)
 		{
-			
+			output2.amount = ci.readInteger(0, defaultOutputAmount);
+			outputChance = ci.readFloat(1, defaultOutputChance);
 		}
 		
 		public ItemAbstractStack getInput()
@@ -114,10 +118,9 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		}
 		
 		@Override
-		public boolean equals(Object obj)
+		protected boolean isEqual(RecipeKey keyRaw)
 		{
-			if(!(obj instanceof OilMillKey)) return false;
-			OilMillKey key = (OilMillKey) obj;
+			OilMillKey key = (OilMillKey) keyRaw;
 			if(key.key != null && this.key != null) return this.key.isStackEqul(key.key);
 			if(key.key != null && target != null)
 					return key.key.isStackEqul(target);

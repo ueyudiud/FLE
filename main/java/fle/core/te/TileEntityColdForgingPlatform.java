@@ -3,11 +3,11 @@ package fle.core.te;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.recipe.CraftingState;
 import fle.api.te.TEInventory;
 import fle.core.inventory.InventoryColdForgingPlatform;
+import fle.core.net.FleTEPacket;
 import fle.core.recipe.ColdForgingRecipe;
 
 public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForgingPlatform> implements INetEventListener
@@ -54,7 +54,7 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 		getTileInventory().onToolClick(aPlayer, activeSlot, ColdForgingRecipe.getState(array));
 		getTileInventory().onSlotChanged();
 		getTileInventory().syncSlot(this, 0, 4);
-		sendToNearBy(new CoderTileUpdate(this, (byte) 2, new String(getTileInventory().array)), 16.0F);
+		sendToNearBy(new FleTEPacket(this, (byte) 2), 16.0F);
 	}
 	
 	public void setup()
@@ -80,10 +80,10 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 			for(int i = 0; i < 4; ++i)
 				getTileInventory().decrStackSize(i, 1);
 			getTileInventory().array = "         ".toCharArray();
-			sendToNearBy(new CoderTileUpdate(this, (byte) 2, new String(getTileInventory().array)), 16.0F);
+			sendToNearBy(new FleTEPacket(this, (byte) 2), 16.0F);
 		}
-		sendToNearBy(new CoderTileUpdate(this, (byte) 3, getTileInventory().hard), 16.0F);
-		sendToNearBy(new CoderTileUpdate(this, (byte) 4, getTileInventory().dir), 16.0F);
+		sendToNearBy(new FleTEPacket(this, (byte) 3), 16.0F);
+		sendToNearBy(new FleTEPacket(this, (byte) 4), 16.0F);
 	}
 	
 	public int getDir()
@@ -100,6 +100,18 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 	public CraftingState getState(int i)
 	{
 		return CraftingState.getState(getTileInventory().array[i]);
+	}
+	
+	@Override
+	public Object onEmmit(byte type)
+	{
+		switch(type)
+		{
+		case 2 : return new String(getTileInventory().array);
+		case 3 : return getTileInventory().hard;
+		case 4 : return getTileInventory().dir;
+		}
+		return null;
 	}
 
 	@Override

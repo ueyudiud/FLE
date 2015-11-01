@@ -191,10 +191,9 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		}
 		
 		@Override
-		public boolean equals(Object obj)
+		protected boolean isEqual(RecipeKey keyRaw)
 		{
-			if(!(obj instanceof PolishRecipeKey)) return false;
-			PolishRecipeKey key = (PolishRecipeKey) obj;
+			PolishRecipeKey key = (PolishRecipeKey) keyRaw;
 			if(key.stack == null && key.stack1 == null) return false;
 			if(stack != null)
 			{
@@ -209,7 +208,7 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 			if(!key.key.equals(this.key)) return false;
 			return true;
 		}
-
+		
 		@Override
 		public String toString()
 		{

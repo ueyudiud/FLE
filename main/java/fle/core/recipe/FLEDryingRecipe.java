@@ -42,6 +42,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 	{
 		private String name;
 		public ItemAbstractStack input;
+		private final int defaultRecipeTime;
 		public int recipeTime;
 		public ItemStack output;
 		
@@ -49,7 +50,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		{
 			this.input = input;
 			this.output = output.copy();
-			this.recipeTime = time;
+			this.defaultRecipeTime = recipeTime = time;
 			name = "recipe.input:" + input.toString() + ".output:" + output.toString();
 		}
 		
@@ -71,7 +72,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		@Override
 		public void reloadRecipe(ConfigInfomation ci)
 		{
-			recipeTime = ci.readInteger(0, recipeTime);
+			recipeTime = ci.readInteger(0, defaultRecipeTime);
 		}
 	}
 	
@@ -92,15 +93,25 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 				input1 = aInput.copy();
 		}
 		
-		@Override
-		public boolean equals(Object obj)
+		private boolean isStandardKey()
 		{
-			if(!(obj instanceof DryingRecipeKey)) return false;
-			DryingRecipeKey key = (DryingRecipeKey) obj;
-			if((input == null && input1 == null) || (key.input1 == null && key.input == null)) return false;
-			if(key.input != null && (input1 == null || !key.input.isStackEqul(input1))) return false;
-			if(input != null && (key.input1 == null || input.isStackEqul(key.input1))) return false;
-			return true;
+			return input != null;
+		}
+		
+		@Override
+		protected boolean isEqual(RecipeKey keyRaw)
+		{
+			DryingRecipeKey key = (DryingRecipeKey) keyRaw;
+			if(isStandardKey())
+			{
+				if(key.input1 == null) return false;
+				return input.isStackEqul(key.input1);
+			}
+			else if(key.isStandardKey())
+			{
+				return key.isEqual(this);
+			}
+			return false;
 		}
 		
 		@Override

@@ -9,8 +9,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.FleAPI;
 import fle.api.FleValue;
-import fle.api.net.FlePackets.CoderInventoryUpdate;
-import fle.api.te.TEBase;
 import fle.api.te.TEInventory;
 
 public abstract class InventoryTileBase<T extends TEInventory> implements IInventoryTile<T>
@@ -58,7 +56,7 @@ public abstract class InventoryTileBase<T extends TEInventory> implements IInven
 	{
 		if(!tile.getWorldObj().isRemote)
 		{
-			tile.sendToNearBy(new CoderInventoryUpdate(tile.getWorldObj(), tile.xCoord, (short) tile.yCoord, tile.zCoord), 16.0F);
+			tile.sendLarge(FleAPI.mod.getNetworkHandler().getPacketMaker().makeInventoryPacket(tile), 16.0F);
 		}
 	}
 	
@@ -66,8 +64,7 @@ public abstract class InventoryTileBase<T extends TEInventory> implements IInven
 	{
 		if(!tile.getWorldObj().isRemote)
 		{
-			for(int i = startID; i < endID; ++i)
-				tile.sendToNearBy(new CoderInventoryUpdate(tile.getBlockPos(), i), 16.0F);
+			tile.sendLarge(FleAPI.mod.getNetworkHandler().getPacketMaker().makeInventoryPacket(tile, startID, endID), 16.0F);
 		}
 	}
 

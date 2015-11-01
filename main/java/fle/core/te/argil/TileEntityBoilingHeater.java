@@ -112,6 +112,13 @@ public class TileEntityBoilingHeater extends TEIT<InventoryBoilingHeater> implem
 	{
 		return getTileInventory().key != null;
 	}
+	
+	@Override
+	public Object onEmmit(byte aType)
+	{
+		return aType == 0 ? getTileInventory().getBurnTime() : 
+			aType == 1 ? getTileInventory().getCurrectBurnTime() : null;
+	}
 
 	@Override
 	public void onReseave(byte type, Object contain)

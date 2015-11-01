@@ -24,7 +24,6 @@ import fle.api.FleAPI;
 import fle.api.FleModHandler;
 import fle.api.FleValue;
 import fle.api.crop.CropRegister;
-import fle.api.energy.RotationNet;
 import fle.api.util.ColorMap;
 import fle.api.util.FLEConfiguration;
 import fle.api.util.FleLog;
@@ -35,7 +34,7 @@ import fle.core.Proxy;
 import fle.core.energy.FleRotationNet;
 import fle.core.energy.FleThermalNet;
 import fle.core.init.Config;
-import fle.core.net.NetWorkHandler;
+import fle.core.net.NWH;
 import fle.core.recipe.FLERA;
 import fle.core.tech.FleTechManager;
 import fle.core.util.FleColorMap;
@@ -52,10 +51,10 @@ public class FLE implements FleModHandler
 {	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.05g";
+    public static final String VERSION = "2.05i";
     public static final int minForge = 1420;
     
-    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775679L);
+    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775617L);
     
     @Instance(MODID)
     public static FLE fle;
@@ -64,7 +63,7 @@ public class FLE implements FleModHandler
     public static Proxy proxy = new CommonProxy();
     private SideGateway<IPlatform> p;
     private SideGateway<FWM> wm;
-    private NetWorkHandler nw;
+    private NWH nw;
     private CropRegister cr;
     private FleTechManager tm;
     private FleThermalNet tn;
@@ -82,7 +81,7 @@ public class FLE implements FleModHandler
     	FleAPI.ra = new FLERA();
     	p = new SideGateway<IPlatform>("fle.core.PlatformCommon", "fle.core.PlatformClient");
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
-    	nw = new NetWorkHandler();
+    	nw = NWH.init();
     	cr = new FleCropRegister();
     	wm = new SideGateway<FWM>("fle.core.world.FWM", "fle.core.world.FWMClient");
     	tm = new FleTechManager();
@@ -208,7 +207,7 @@ public class FLE implements FleModHandler
 	}
 
 	@Override
-	public NetWorkHandler getNetworkHandler() 
+	public NWH getNetworkHandler() 
 	{
 		return nw;
 	}

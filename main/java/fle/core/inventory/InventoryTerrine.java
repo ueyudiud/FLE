@@ -9,10 +9,9 @@ import fle.FLE;
 import fle.api.gui.GuiCondition;
 import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryTWFTC;
-import fle.api.inventory.InventoryWithFluidTank;
 import fle.api.material.Matter.AtomStack;
 import fle.api.material.MatterDictionary;
-import fle.api.net.FlePackets.CoderTileUpdate;
+import fle.core.net.FleTEPacket;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.argil.TileEntityTerrine;
 
@@ -97,7 +96,7 @@ public class InventoryTerrine extends InventoryTWFTC<TileEntityTerrine>
 						}
 					}
 					if(!tile.getWorldObj().isRemote)
-						FLE.fle.getNetworkHandler().sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Double) recipeTime), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
+						FLE.fle.getNetworkHandler().sendToNearBy(new FleTEPacket(tile, (byte) 1), tile, 16.0F);
 				}
 			}
 			else

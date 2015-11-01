@@ -7,16 +7,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.gui.GuiCondition;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.te.TEIT;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.init.Materials;
 import fle.core.inventory.InventoryTerrine;
+import fle.core.net.FleTEPacket;
 
 public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidTank, IFluidHandler, IThermalTileEntity, INetEventListener
 {
@@ -51,7 +50,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		getTileInventory().updateEntity(this);
 		heatCurrect.update();
 		if(!worldObj.isRemote)
-			sendToNearBy(new CoderTileUpdate(this, (byte) 2, mode), 16.0F);
+			sendToNearBy(new FleTEPacket(this, (byte) 2), 16.0F);
 	}
 	
 	@Override
@@ -172,6 +171,13 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	public double getProgress()
 	{
 		return getTileInventory().getProgress();
+	}
+	
+	@Override
+	public Object onEmmit(byte aType)
+	{
+		return aType == 1 ? getTileInventory().recipeTime :
+			aType == 2 ? mode : null;
 	}
 
 	@Override

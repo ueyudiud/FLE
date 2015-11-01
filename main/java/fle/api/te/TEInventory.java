@@ -5,9 +5,6 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import fle.api.inventory.IInventoryTile;
-import fle.api.net.FlePackets.CoderSolidTankUpdate;
-import fle.api.soild.ISolidHandler;
-import fle.api.soild.ISolidTanks;
 
 public abstract class TEInventory<T extends IInventoryTile> extends TEBase implements ISidedInventory
 {
@@ -133,12 +130,6 @@ public abstract class TEInventory<T extends IInventoryTile> extends TEBase imple
 			int side)
 	{
 		return getTileInventory().canExtractItem(slotID, aStack, side);
-	}
-	
-	public void syncSolidTank()
-	{
-		if(this instanceof ISolidTanks && !worldObj.isRemote)
-			sendToNearBy(new CoderSolidTankUpdate(getBlockPos()), 16.0F);
 	}
 
 	public T getTileInventory()

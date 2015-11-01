@@ -15,7 +15,7 @@ import fle.api.crop.ICropTile;
 import fle.api.crop.IFertilableBlock;
 import fle.api.crop.IFertilableBlock.FertitleLevel;
 import fle.api.te.TEBase;
-import fle.core.net.FlePackets.CoderCropUpdate;
+import fle.core.net.FleCropUpdatePacket;
 import fle.core.util.WorldUtil;
 
 public class TileEntityCrop extends TEBase implements ICropTile
@@ -91,7 +91,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 						buffer = 0;
 					}
 				}
-				sendToNearBy(new CoderCropUpdate(this), 256.0F);
+				sendToNearBy(new FleCropUpdatePacket(this), 256.0F);
 				markRenderForUpdate();
 			}
 		}

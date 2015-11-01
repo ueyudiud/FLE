@@ -14,22 +14,21 @@ import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import fle.FLE;
 import fle.api.enums.CompoundType;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.material.Matter;
 import fle.api.material.Matter.AtomStack;
-import fle.api.net.FlePackets.CoderFWMUpdate;
+import fle.api.net.IPacket;
 import fle.api.util.FleLog;
 import fle.api.util.IAirConditionProvider;
 import fle.api.world.BlockPos;
 import fle.api.world.BlockPos.ChunkPos;
 import fle.api.world.IWorldManager;
+import fle.core.net.FleSyncFWMSmallPacket;
 import fle.core.net.FleWorldMetaSyncPacket;
 
 public class FWM implements IWorldManager, IAirConditionProvider
@@ -265,7 +264,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		short ret = tData.setDataFromCoord(dataType, pos, (short) data);
 		if(flag && sync)
 		{
-			FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(pos, tData.getDatasFromCoord(pos)));
+			FLE.fle.getNetworkHandler().sendTo(new FleSyncFWMSmallPacket(pos, tData.getDatasFromCoord(pos)));
 		}
 		return ret;
 	}
@@ -340,7 +339,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 				tData.setDataFromCoord(i, pos, (short) data[i]);
 			if(flag && sync)
 			{
-				FLE.fle.getNetworkHandler().sendTo(new CoderFWMUpdate(pos, tData.getDatasFromCoord(pos)));
+				FLE.fle.getNetworkHandler().sendTo(new FleSyncFWMSmallPacket(pos, tData.getDatasFromCoord(pos)));
 			}
 		}
 	}
@@ -389,7 +388,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 
 	public void sendData(BlockPos pos)
 	{
-		FLE.fle.getNetworkHandler().sendToNearBy(new CoderFWMUpdate(pos, getDatas(pos)), new TargetPoint(pos.getDim(), pos.x, pos.y, pos.z, 512D));
+		FLE.fle.getNetworkHandler().sendToNearBy(new FleSyncFWMSmallPacket(pos, getDatas(pos)), pos, 512F);
 	}
 
 	public void sendAllData(int dim, ChunkPos pos)
@@ -435,7 +434,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		cacheList.add(pos);
 	}
 
-	public IMessage createPacket(int dim, BlockPos pos)
+	public IPacket createPacket(int dim, BlockPos pos)
 	{
 		if(!nbts.containsKey(dim)) return null;
 		ChunkPos tPos = pos.getChunkPos();

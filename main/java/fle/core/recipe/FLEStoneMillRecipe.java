@@ -129,10 +129,9 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 		}
 		
 		@Override
-		public boolean equals(Object obj)
+		protected boolean isEqual(RecipeKey keyRaw)
 		{
-			if(!(obj instanceof StoneMillRecipeKey)) return false;
-			StoneMillRecipeKey key = (StoneMillRecipeKey) obj;
+			StoneMillRecipeKey key = (StoneMillRecipeKey) keyRaw;
 			if((key.stack == null && key.stack1 == null) || (stack1 == null && stack == null)) return false;
 			if(stack != null && key.stack != null) return stack.isStackEqul(key.stack);
 			if(stack != null && (key.stack1 == null || !stack.isStackEqul(key.stack1))) return false;

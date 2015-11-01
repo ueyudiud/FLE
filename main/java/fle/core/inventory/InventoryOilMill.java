@@ -9,8 +9,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryWithFluidTank;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.recipe.IRecipeHandler.RecipeKey;
+import fle.core.net.FleTEPacket;
 import fle.core.recipe.FLEOilMillRecipe;
 import fle.core.recipe.FLEOilMillRecipe.OilMillKey;
 import fle.core.recipe.FLEOilMillRecipe.OilMillRecipe;
@@ -101,7 +101,7 @@ public class InventoryOilMill extends InventoryWithFluidTank<TileEntityOilMill>
 			syncTank(tile);
 			syncSlot(tile);
 		}
-		tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 0, recipeTime), 16.0F);
+		tile.sendToNearBy(new FleTEPacket(tile, (byte) 0), 16.0F);
 	}
 	
 	public void onWork()
@@ -165,5 +165,10 @@ public class InventoryOilMill extends InventoryWithFluidTank<TileEntityOilMill>
 	public void syncRecipeTime(int i)
 	{
 		recipeTime = i;
+	}
+
+	public int getRecipeTime()
+	{
+		return recipeTime;
 	}
 }

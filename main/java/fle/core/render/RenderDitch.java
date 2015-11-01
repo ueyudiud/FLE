@@ -40,15 +40,10 @@ public class RenderDitch extends RenderBase
 	public void renderBlock()
 	{
 		byte[] bs;
-		Fluid fluid = null;
-		double[] ds = null;
-		int fluidColor = 0xFFFFFF;
 		
 		if(isItem())
 		{
 			bs = new byte[]{connect, stop, connect, stop};
-			fluid = null;
-			ds = null;
 			ItemStack renderItem = DitchInfo.register.get(meta).getBlock();
 			setTexture(Block.getBlockFromItem(renderItem.getItem()), renderItem.getItemDamage());
 		}
@@ -82,45 +77,10 @@ public class RenderDitch extends RenderBase
 					setTexture(Blocks.stone);
 					setColor(0xFFFFFF);
 				}
-				try
-				{
-					fluid = tile.getFluidStackInTank(0) != null ? tile.getFluidStackInTank(0).getFluid() : null;
-					if(fluid != null)
-					{
-						fluidColor = tile.getFluidStackInTank(0).getFluid().getColor(tile.getFluidStackInTank(0));
-					}
-					if(fluid != null)
-					{
-						ds = new double[5];
-						int level = tile.getWaterLevel();
-						ds[4] = (double) level / 256.0D;
-						if(ds[4] > 1D) ds[4] = 1D;
-						for(int i = 0; i < dirs.length; ++i)
-						{
-							if(tile.getBlockPos().toPos(dirs[i]).getBlockTile() instanceof IDitchTile)
-							{
-								ds[i] = (double) (level * 2 + ((IDitchTile) tile.getBlockPos().toPos(dirs[i]).getBlockTile()).getWaterLevel()) / 768D;
-							}
-							else
-							{
-								ds[i] = (double) (level * 2) / (256D * 3);
-							}
-							if(ds[i] > 1D) ds[i] = 1D;
-						}
-					}
-				}
-				catch(Throwable e)
-				{
-					e.printStackTrace();
-					fluid = null;
-					ds = null;
-				}
 			}
 			else
 			{
 				bs = new byte[]{stop, stop, stop, stop};
-				fluid = null;
-				ds = null;
 			}
 		}
 
@@ -193,41 +153,6 @@ public class RenderDitch extends RenderBase
 		case stop : 
 			renderBlock(f5, f9, f3, f3, f8, f4);
 		break;
-		}
-
-		if(fluid != null)
-		{
-			setTexture(fluid.getFlowingIcon());
-			setColor(fluidColor);
-			renderFluidBlock(f3, f7, f3, f4, f7 + (f8 - f7) * ds[4], f4);
-			switch(bs[0])
-			{
-			case fill : 
-				renderFluidBlock(f3, f7, f10, f4, f7 + (f8 - f7) * ds[0] / 1.5D, f1);
-				renderFluidBlock(f3, f14, f12, f4, f7 + (f8 - f7) * ds[0] / 3D, f10);
-			case connect : renderFluidBlock(f3, f7, f1, f4, f7 + (f8 - f7) * ds[0], f3);
-			}
-			switch(bs[1])
-			{
-			case fill : 
-				renderFluidBlock(f2, f7, f3, f11, f7 + (f8 - f7) * ds[1] / 1.5D, f4);
-				renderFluidBlock(f11, f14, f3, f13, f7 + (f8 - f7) * ds[1] / 3D, f4);
-			case connect : renderFluidBlock(f4, f7, f3, f2, f7 + (f8 - f7) * ds[1], f4);
-			}
-			switch(bs[2])
-			{
-			case fill : 
-				renderFluidBlock(f3, f7, f2, f4, f7 + (f8 - f7) * ds[2] / 1.5D, f11);
-				renderFluidBlock(f3, f14, f11, f4, f7 + (f8 - f7) * ds[2] / 3D, f13);
-			case connect : renderFluidBlock(f3, f7, f4, f4, f7 + (f8 - f7) * ds[2], f2);
-			}
-			switch(bs[3])
-			{
-			case fill : 
-				renderFluidBlock(f10, f7, f3, f1, f7 + (f8 - f7) * ds[3] / 1.5D, f4);
-				renderFluidBlock(f12, f14, f3, f10, f7 + (f8 - f7) * ds[3] / 3D, f4);
-			case connect : renderFluidBlock(f1, f7, f3, f3, f7 + (f8 - f7) * ds[3], f4);
-			}
 		}
 	}
 }

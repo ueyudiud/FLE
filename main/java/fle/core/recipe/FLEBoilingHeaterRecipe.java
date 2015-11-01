@@ -138,10 +138,9 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 		}
 		
 		@Override
-		public boolean equals(Object obj)
+		protected boolean isEqual(RecipeKey keyRaw)
 		{
-			if(!(obj instanceof BHKey)) return false;
-			BHKey tKey = (BHKey) obj;
+			BHKey tKey = (BHKey) keyRaw;
 			boolean flag = true;
 			boolean flag1 = false;
 			if(toolRequire != null && tKey.toolRequire != null)

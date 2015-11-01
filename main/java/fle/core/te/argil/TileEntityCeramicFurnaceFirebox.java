@@ -11,7 +11,6 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.enums.EnumDamageResource;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.recipe.ItemOreStack;
 import fle.api.te.TEInventory;
@@ -47,10 +46,6 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	{
 		getTileInventory().updateEntity(this);
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
-		if(!worldObj.isRemote)
-		{
-			sendToNearBy(new CoderTileUpdate(this, (byte) 1, FleAPI.getIndexFromDirection(dir)), 16.0F);
-		}
 		tc.update();
 	}
 	

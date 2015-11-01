@@ -3,15 +3,13 @@ package fle.core.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.inventory.InventoryTWFTC;
-import fle.api.inventory.InventoryWithFluidTank;
 import fle.api.item.ICastingTool;
 import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
-import fle.api.net.FlePackets.CoderTileUpdate;
+import fle.core.net.FleTEPacket;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.TileEntityCastingPool;
 
@@ -84,16 +82,16 @@ public class InventoryCastingPool extends InventoryTWFTC<TileEntityCastingPool>
 				else
 				{
 					tile.tc.reseaveHeat((getFluid().getFluid().getTemperature(getFluid()) - FLE.fle.getThermalNet().getEnvironmentTemperature(tile.getBlockPos())) * 0.2D);
-					tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 2, (Double) tile.tc.getHeat()), 16.0F);
+					tile.sendToNearBy(new FleTEPacket(tile, (byte) 2), 16.0F);
 				}
 				syncTank(tile);
-				tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), 16.0F);
+				tile.sendToNearBy(new FleTEPacket(tile, (byte) 1), 16.0F);
 			}
 		}
 		else if(recipe == null && !tile.getWorldObj().isRemote)
 		{
 			buf = 0;
-			tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 1, (Integer) buf), 16.0F);
+			tile.sendToNearBy(new FleTEPacket(tile, (byte) 1), 16.0F);
 		}
 	}
 

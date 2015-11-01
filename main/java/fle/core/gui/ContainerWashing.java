@@ -1,7 +1,5 @@
 package fle.core.gui;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,8 +11,8 @@ import fle.api.gui.GuiCondition;
 import fle.api.gui.GuiError;
 import fle.api.gui.SlotOutput;
 import fle.api.net.INetEventListener;
-import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.core.inventory.InventoryWashing;
+import fle.core.net.FleGuiPacket;
 import fle.core.recipe.RecipeHelper;
 import fle.core.recipe.WashingRecipe;
 
@@ -57,13 +55,13 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 			{
 				RecipeHelper.onInputItemStack(inv, 0);
 				if(player.player instanceof EntityPlayerMP)
-					FLE.fle.getNetworkHandler().sendToPlayer(new CoderGuiUpdate((byte) 2, GuiError.DEFAULT), (EntityPlayerMP) player.player);
+					FLE.fle.getNetworkHandler().sendToPlayer(new FleGuiPacket((byte) 2, GuiError.DEFAULT), (EntityPlayerMP) player.player);
 				type = GuiError.DEFAULT;
 			}
 			else
 			{
 				if(player.player instanceof EntityPlayerMP)
-					FLE.fle.getNetworkHandler().sendToPlayer(new CoderGuiUpdate((byte) 2, GuiError.CAN_NOT_INPUT), (EntityPlayerMP) player.player);
+					FLE.fle.getNetworkHandler().sendToPlayer(new FleGuiPacket((byte) 2, GuiError.CAN_NOT_INPUT), (EntityPlayerMP) player.player);
 				type = GuiError.CAN_NOT_INPUT;
 			}
 		}
@@ -81,7 +79,7 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 					onCraftMatrixChanged(inv);
 					if(player.player instanceof EntityPlayerMP)
 					{
-						FLE.fle.getNetworkHandler().sendToPlayer(new CoderGuiUpdate((byte) 2, GuiError.DEFAULT), (EntityPlayerMP) player.player);
+						FLE.fle.getNetworkHandler().sendToPlayer(new FleGuiPacket((byte) 2, GuiError.DEFAULT), (EntityPlayerMP) player.player);
 					}
 					type = GuiError.DEFAULT;
 				}
@@ -89,7 +87,7 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 				{
 					if(player.player instanceof EntityPlayerMP)
 					{
-						FLE.fle.getNetworkHandler().sendToPlayer(new CoderGuiUpdate((byte) 2, GuiError.CAN_NOT_OUTPUT), (EntityPlayerMP) player.player);
+						FLE.fle.getNetworkHandler().sendToPlayer(new FleGuiPacket((byte) 2, GuiError.CAN_NOT_OUTPUT), (EntityPlayerMP) player.player);
 					}
 					type = GuiError.CAN_NOT_OUTPUT;
 				}

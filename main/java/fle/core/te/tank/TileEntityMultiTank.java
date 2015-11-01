@@ -10,11 +10,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
-import fle.api.net.FlePackets.CoderTileAskUpdate;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventHandler;
 import fle.core.block.tank.ItemTankBlock;
 import fle.core.inventory.tank.InventoryMultiTank;
+import fle.core.net.FleSyncAskTileMetaPacket;
+import fle.core.net.FleTEPacket;
 import fle.core.util.TankBlockInfo;
 
 public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTank> implements INetEventHandler
@@ -56,6 +56,8 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 		}
 	}
 	
+	int buf = 0;
+	
 	@Override
 	protected void updateInventory()
 	{
@@ -66,9 +68,17 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 		if(isMainTile())
 		{
 			getTileInventory().updateEntity(this);
+			if(buf % 50 == 0)
+			{
+				syncFluidTank();
+				markRenderForUpdate();
+			}
 		}
-		if(info == null)
+		if(buf++ > 200)
+		{
+			buf = 0;
 			markTankMaterialUpdate();
+		}
 	}
 	
 	protected boolean canBeMainTile()
@@ -111,7 +121,7 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	
 	protected FluidTank getTank()
 	{
-		return new FluidTank(0);
+		return isMainTile ? tank : new FluidTank(0);
 	}
 
 	@Override
@@ -205,10 +215,16 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	
 	protected void markTankMaterialUpdate()
 	{
-		if(worldObj.isRemote)
-			sendToNearBy(new CoderTileAskUpdate(getBlockPos(), 1), 256F);
-		else
-			sendToNearBy(new CoderTileUpdate(this, (byte) 1, this), 256F);
+		if(!worldObj.isRemote)
+		{
+			sendToNearBy(new FleTEPacket(this, (byte) 1), 256F);
+		}
+	}
+	
+	@Override
+	public Object onEmmit(byte aType)
+	{
+		return aType == 1 ? ItemTankBlock.d(info) : null;
 	}
 	
 	@Override
@@ -217,12 +233,7 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 		if(type == 1)
 		{
 			info = ItemTankBlock.f((Integer) contain);
+			markRenderForUpdate();
 		}
-	}
-	
-	@Override
-	public short onEmmit(byte aType)
-	{
-		return (short) (aType == 1 ? ItemTankBlock.d(info) : 0);
 	}
 }

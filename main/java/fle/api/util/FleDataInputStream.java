@@ -26,14 +26,17 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.GameData;
 
 public class FleDataInputStream 
 {
-	private ByteBuf stream;
+	private ByteArrayDataInput stream;
 	
-	public FleDataInputStream(ByteBuf aStream)
+	public FleDataInputStream(ByteArrayDataInput aStream)
 	{
 		stream = aStream;
 	}
@@ -75,7 +78,7 @@ public class FleDataInputStream
 
 	public String readString() throws IOException
 	{
-		return ByteBufUtils.readUTF8String(stream);
+		return stream.readUTF();
 	}
 
 	public short[] readShortArray() throws IOException
@@ -100,7 +103,14 @@ public class FleDataInputStream
 	{
 		if(stream.readBoolean())
 		{
-			InputStream is = new ByteBufInputStream(stream);
+			InputStream is = new InputStream()
+			{				
+				@Override
+				public int read() throws IOException
+				{
+					return stream.readInt();
+				}
+			};
 			return CompressedStreamTools.readCompressed(is);
 		}
 		else
@@ -187,9 +197,12 @@ public class FleDataInputStream
 		return new BlockPos(FleAPI.mod.getPlatform().getWorldInstance(dimID), x, y, z);
 	}
 
-	public byte[] readBytes(byte[] dst) throws IOException
+	public byte[] readBytes() throws IOException
 	{
-		return stream.readBytes(dst).array();
+		int length = readShort();
+		byte[] ba = new byte[length];
+		stream.readFully(ba);
+		return ba;
 	}
 	
 	public Object read() throws IOException
@@ -231,7 +244,7 @@ public class FleDataInputStream
 		return null;
 	}
 	
-	public ByteBuf getBuf()
+	public ByteArrayDataInput getInput()
 	{
 		return stream;
 	}

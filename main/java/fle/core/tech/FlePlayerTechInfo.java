@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import fle.FLE;
-import fle.api.net.FlePackets.CoderPTUpdate;
 import fle.api.tech.PlayerTechInfo;
 import fle.api.tech.Technology;
+import fle.core.net.FlePlayerTechPacket;
 
 public class FlePlayerTechInfo extends PlayerTechInfo
 {
@@ -45,7 +45,7 @@ public class FlePlayerTechInfo extends PlayerTechInfo
 	{
 		getPlayerTechNBT().setBoolean(tech.getName(), true);
 		if(player instanceof EntityPlayerMP)
-			FLE.fle.getNetworkHandler().sendToPlayer(new CoderPTUpdate(tech, Result.ALLOW), (EntityPlayerMP) player);
+			FLE.fle.getNetworkHandler().sendToPlayer(new FlePlayerTechPacket(tech, Result.ALLOW), (EntityPlayerMP) player);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class FlePlayerTechInfo extends PlayerTechInfo
 	{
 		getPlayerTechNBT().setBoolean(tech.getName(), false);
 		if(player instanceof EntityPlayerMP)
-			FLE.fle.getNetworkHandler().sendToPlayer(new CoderPTUpdate(tech, Result.DENY), (EntityPlayerMP) player);
+			FLE.fle.getNetworkHandler().sendToPlayer(new FlePlayerTechPacket(tech, Result.DENY), (EntityPlayerMP) player);
 	}
 
 	private NBTTagCompound getPlayerTechNBT()

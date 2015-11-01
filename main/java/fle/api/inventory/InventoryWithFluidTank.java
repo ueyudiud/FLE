@@ -1,7 +1,5 @@
 package fle.api.inventory;
 
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -10,8 +8,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import fle.api.FleAPI;
-import fle.api.net.FlePackets.CoderTankUpdate;
 import fle.api.te.IFluidTanks;
 import fle.api.te.ITEInWorld;
 import fle.api.te.TEIT;
@@ -46,10 +42,7 @@ public abstract class InventoryWithFluidTank<T extends TEIT> extends InventoryTi
 	
 	public void syncTank(T tile)
 	{
-		if(!tile.getWorldObj().isRemote)
-		{
-			FleAPI.mod.getNetworkHandler().sendToNearBy(new CoderTankUpdate(tile.getBlockPos()), new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord + 0.5F, tile.yCoord + 0.5F, tile.zCoord + 0.5F, 16.0F));
-		}
+		tile.syncFluidTank();
 	}
 
 	@Override

@@ -33,7 +33,9 @@ import fle.core.render.RenderWoodenFrame;
 import fle.core.render.TESRArgilItems;
 import fle.core.render.TESRBase;
 import fle.core.render.TESRColdForging;
+import fle.core.render.TESRDitch;
 import fle.core.render.TESRDryingTable;
+import fle.core.render.TESRMT;
 import fle.core.render.TESRPolishTable;
 import fle.core.render.TESRStoneMill;
 
@@ -70,6 +72,8 @@ public class Renders
     	registerTESR(TESRColdForging.class);
     	registerTESR(TESRPolishTable.class);
     	registerTESR(TESRStoneMill.class);
+    	registerTESR(TESRMT.class);
+    	registerTESR(TESRDitch.class);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityFleArrow.class, new RenderFleArrow("arrow"));
 	}
 	

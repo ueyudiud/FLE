@@ -1,26 +1,35 @@
 package fle.api.net;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
+import fle.api.te.IObjectInWorld;
 
 public interface FleNetworkHandler 
 {
-	<T extends FleAbstractPacket> void registerMessage(Class<? extends T> aType, Side side);
+	FMLEmbeddedChannel getChannel(Side paramSide);
+	  
+	<T extends IPacket> void registerMessage(Class<? extends T> aType, Side side);
 
-	void sendTo(FleAbstractPacket aPacket);
-
-	void sendToPlayer(FleAbstractPacket aPacket, EntityPlayerMP aPlayer);
-
-	void sendToDim(FleAbstractPacket aPacket, int dim);
-
-	void sendToServer(FleAbstractPacket aPacket);
-
-	void sendToNearBy(FleAbstractPacket aPacket, TargetPoint aPoint);
-
-	void sendLargePacket(FleAbstractPacket aPacket, TargetPoint aPoint);
+	void sendTo(IPacket aPacket);
 	
-	void onPacket(int typeID, ByteBuf subData, MessageContext ctx) throws Throwable;
+	void sendToPlayer(IPacket aPacket, EntityPlayer aPlayer);
+
+	void sendToDim(IPacket aPacket, int dim);
+
+	void sendToServer(IPacket aPacket);
+
+	void sendToNearBy(IPacket aPacket, int dim, int x, int y, int z, float range);
+
+	void sendToNearBy(IPacket aPacket, IObjectInWorld obj, float range);
+
+	void sendLargePacket(IPacket aPacket, TargetPoint aPoint);
+
+	void onPacket(int id, ByteArrayDataInput subData);
+
+	IPacketMaker getPacketMaker();
 }

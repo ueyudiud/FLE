@@ -5,12 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.FLE;
 import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.core.te.TileEntityOilMill;
 
 @SideOnly(Side.CLIENT)

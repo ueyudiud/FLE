@@ -130,14 +130,23 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		@Override
 		public int hashCode()
 		{
-			return inputKey != null || inputTarget != null ? 3875918 : 294819;
+			int i = 31;
+			if(inputKey1 != null)
+			{
+				i += inputKey1.hashCode() * 31 + 3842941;
+			}
+			if(inputTarget1 != null)
+			{
+				i += inputTarget1.getObj().hashCode() * 31 + 3842941;
+			}
+			else if(inputKey != null || inputTarget != null) i += 3875918;
+			return i;
 		}
 		
 		@Override
-		public boolean equals(Object arg)
+		protected boolean isEqual(RecipeKey keyRaw)
 		{
-			if(!(arg instanceof SifterKey)) return false;
-			SifterKey key = (SifterKey) arg;
+			SifterKey key = (SifterKey) keyRaw;
 			if(key.inputKey != null && inputKey != null) return inputKey.isStackEqul(key.inputKey);
 			if(key.inputKey1 != null && inputKey1 != null) return key.inputKey1 == inputKey1;
 			if(key.inputTarget != null && inputTarget != null) return false;

@@ -12,8 +12,10 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.block.IFacingBlock;
 import fle.api.enums.EnumWorldNBT;
-import fle.api.net.FLENBTPacket;
 import fle.api.net.FleAbstractPacket;
+import fle.api.net.INetEventHandler;
+import fle.api.net.IPacket;
+import fle.api.soild.ISolidTanks;
 import fle.api.util.FleLog;
 import fle.api.world.BlockPos;
 
@@ -22,7 +24,7 @@ import fle.api.world.BlockPos;
  * @author ueyudiud
  *
  */
-public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMetadataTile
+public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMetadataTile, INetEventHandler
 {
 	/**
 	 * The default random of tile.
@@ -201,15 +203,33 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		return false;
 	}
 	
+	public void syncSolidTank()
+	{
+		if(this instanceof ISolidTanks && !worldObj.isRemote)
+			sendToNearBy(FleAPI.mod.getNetworkHandler().getPacketMaker().makeSolidTankPacket(this), 16.0F);
+	}
+	
+	public void syncFluidTank()
+	{
+		if(this instanceof IFluidTanks && !worldObj.isRemote)
+			sendToNearBy(FleAPI.mod.getNetworkHandler().getPacketMaker().makeFluidTankPacket(this), 16.0F);
+	}
+	
+	public void syncNBT()
+	{
+		if(!worldObj.isRemote)
+			sendLarge(FleAPI.mod.getNetworkHandler().getPacketMaker().makeNBTPacket(this), 256F);
+	}
+	
 	/**
 	 * Send a network packet to player nearby by FLE channel.
 	 * @see fle.api.net.FleNetworkHandler
 	 * @param packet
 	 * @param range
 	 */
-	public void sendToNearBy(FleAbstractPacket packet, float range)
+	public void sendToNearBy(IPacket packet, float range)
 	{
-		FleAPI.mod.getNetworkHandler().sendToNearBy(packet, new TargetPoint(worldObj.provider.dimensionId, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, range));
+		FleAPI.mod.getNetworkHandler().sendToNearBy(packet, this, range);
 	}
 
 	/**
@@ -219,7 +239,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	 * @param packet
 	 * @param range
 	 */
-	public void sendLarge(FleAbstractPacket pkg, float range)
+	public void sendLarge(IPacket pkg, float range)
 	{
 		if(!worldObj.isRemote)
 		{
@@ -238,7 +258,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	{
 		try
 		{
-			sendLarge(new FLENBTPacket(this), 256F);
+			syncNBT();
 		}
 		catch(Throwable e)
 		{
@@ -291,5 +311,42 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	public short getMetadata()
 	{
 		return (short) blockMetadata;
+	}
+
+	/**
+	 * Get packet information from this tile.
+	 * Used in NWH to get message.
+	 * @see fle.api.net.FleNetworkHandler
+	 * @param type
+	 * @return
+	 */
+	@Override
+	public Object onEmmit(byte aType)
+	{
+		return emmit(aType);
+	}
+	
+	protected short emmit(byte aType)
+	{
+		return 0;
+	}
+
+	/**
+	 * Receive packet information from network.
+	 * @param type The message type of this.
+	 * @param contain The contain of this elements often to be an number.
+	 */
+	@Override
+	public void onReseave(byte type, Object contain)
+	{
+		if(contain instanceof Number)
+		{
+			receiveNumber(type, (Number) contain);
+		}
+	}
+	
+	protected void receiveNumber(byte type, Number number)
+	{
+		;
 	}
 }

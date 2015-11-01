@@ -10,17 +10,15 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
-import fle.api.net.FlePackets.CoderTankUpdate;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.net.INetEventListener;
 import fle.api.te.IFluidTanks;
 import fle.api.te.TEBase;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.init.Config;
 import fle.core.init.Materials;
+import fle.core.net.FleFluidTankPacket;
 
 public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler, IThermalTileEntity, IFluidTanks, INetEventListener
 {
@@ -82,7 +80,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 					buf += 50;
 					tick += rand.nextInt(5);
 					if(tick > 1000) tick = 1000;
-					sendToNearBy(new CoderTankUpdate(getBlockPos()), 16.0F);
+					sendToNearBy(new FleFluidTankPacket(this), 16.0F);
 				}
 			}
 			if(buf > 0)

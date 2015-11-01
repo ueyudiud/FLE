@@ -3,13 +3,11 @@ package fle.core.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidTank;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.inventory.InventoryTileBase;
 import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.argil.TileEntityCeramicFurnaceCrucible;
 import fle.core.te.argil.TileEntityCeramicFurnaceOutlet;
@@ -97,8 +95,8 @@ public class InventoryCeramicFurnaceOutlet extends InventoryTileBase<TileEntityC
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(ForgeDirection dir) {
-		// TODO Auto-generated method stub
+	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
+	{
 		return null;
 	}
 }

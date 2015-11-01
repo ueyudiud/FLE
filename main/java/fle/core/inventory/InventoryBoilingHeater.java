@@ -12,8 +12,8 @@ import fle.api.FleValue;
 import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryWithFluidTank;
 import fle.api.material.IFluidChemInfo;
-import fle.api.net.FlePackets.CoderTileUpdate;
 import fle.api.util.IChemCondition;
+import fle.core.net.FleTEPacket;
 import fle.core.recipe.FLEBoilingHeaterRecipe;
 import fle.core.recipe.FLEBoilingHeaterRecipe.BHKey;
 import fle.core.recipe.FLEBoilingHeaterRecipe.BHRecipe;
@@ -182,8 +182,8 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 		}
 		syncSlot(tile, 0, 4);
 		syncTank(tile);
-		tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 0, burnTime), 16.0F);
-		tile.sendToNearBy(new CoderTileUpdate(tile, (byte) 1, isBurning ? currectItemBurntime : -1), 16.0F);
+		tile.sendToNearBy(new FleTEPacket(tile, (byte) 0), 16.0F);
+		tile.sendToNearBy(new FleTEPacket(tile, (byte) 1), 16.0F);
 	}
 	
 	@Override
@@ -252,5 +252,15 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 	public int getTemperature()
 	{
 		return tem;
+	}
+
+	public int getBurnTime()
+	{
+		return burnTime;
+	}
+
+	public int getCurrectBurnTime()
+	{
+		return isBurning ? currectItemBurntime : -1;
 	}
 }

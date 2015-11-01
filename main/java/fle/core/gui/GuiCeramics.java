@@ -11,7 +11,7 @@ import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
 import fle.api.gui.GuiIconButton;
 import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.api.net.FlePackets.CoderGuiUpdate;
+import fle.core.net.FleGuiPacket;
 
 @SideOnly(Side.CLIENT)
 public class GuiCeramics extends GuiContainerBase
@@ -42,7 +42,7 @@ public class GuiCeramics extends GuiContainerBase
 	
 	protected void actionPerformed(GuiButton guibutton)
 	{
-		FLE.fle.getNetworkHandler().sendTo(new CoderGuiUpdate((byte) 1, (Integer) guibutton.id));
+		FLE.fle.getNetworkHandler().sendTo(new FleGuiPacket((byte) 1, (short) guibutton.id));
 		
 		super.actionPerformed(guibutton);
 	}

@@ -22,10 +22,18 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 	protected final List<BlockPos> pos = new ArrayList();
 	
 	private ThreadLocal<BlockPos> thread = new ThreadLocal();
+
+	public int width;
+	public int height;
 	
 	public TileEntityAbstractTank(T inv)
 	{
 		super(inv);
+	}
+
+	public FluidTank getMainTank()
+	{
+		return isMainTile ? tank : mainTile == null ? new FluidTank(0) : mainTile.getMainTank();
 	}
 	
 	@Override
@@ -165,11 +173,15 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 				}
 				flag = true;
 				capcity = (bSize - 1) * (bSize - 1) * (ySize - 1) * 1000;
+				width = bSize;
+				height = ySize;
 				break label0;
 			}
 		if(!flag)
 		{
 			pos.clear();
+			width = 0;
+			height = 0;
 		}
 		return flag;
 	}
@@ -218,6 +230,11 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 	{
 		if(mainTile == this) mainTile = null;
 		return (T) (isMainTile ? super.getTileInventory() : mainTile == null ? super.getTileInventory() : mainTile.getTileInventory());
+	}
+	
+	protected T getThisInventory()
+	{
+		return super.getTileInventory();
 	}
 	
 	private TileEntityAbstractTank markTileConnect(TileEntityAbstractTank tile)

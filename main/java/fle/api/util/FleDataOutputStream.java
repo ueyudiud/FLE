@@ -9,8 +9,12 @@ import io.netty.buffer.ByteBufOutputStream;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -27,9 +31,9 @@ import cpw.mods.fml.common.registry.GameData;
 
 public class FleDataOutputStream 
 {
-	private ByteBuf stream;
-	
-	public FleDataOutputStream(ByteBuf aStream)
+	private ByteArrayDataOutput stream;
+
+	public FleDataOutputStream(ByteArrayDataOutput aStream)
 	{
 		stream = aStream;
 	}
@@ -71,7 +75,7 @@ public class FleDataOutputStream
 
 	public void writeString(String s) throws IOException
 	{
-		ByteBufUtils.writeUTF8String(stream, s);
+		stream.writeUTF(s);
 	}
 
 	public void writeShortArray(short[] data) throws IOException
@@ -97,7 +101,15 @@ public class FleDataOutputStream
 		if(nbt != null)
 		{
 			stream.writeBoolean(true);
-			stream.writeBytes(CompressedStreamTools.compress(nbt));
+			OutputStream os = new OutputStream()
+			{				
+				@Override
+				public void write(int b) throws IOException
+				{
+					stream.write(b);
+				}
+			};
+			os.write(CompressedStreamTools.compress(nbt));
 		}
 		else
 		{
@@ -212,7 +224,8 @@ public class FleDataOutputStream
 
 	public void writeBytes(byte[] bs) throws IOException
 	{
-		stream.writeBytes(bs);
+		stream.writeShort(bs.length);
+		stream.write(bs);
 	}
 
 	public void write(Object contain) throws IOException
@@ -303,17 +316,28 @@ public class FleDataOutputStream
 			if(writeType) writeByte((byte) 15);
 			writeIntArray((int[]) contain);
 		}
+		else if(contain instanceof Enum<?>)
+		{
+			if(writeType) writeByte((byte) 3);
+			writeInt(((Enum) contain).ordinal());
+		}
 	}
 	
-	public ByteBuf getBuf()
+	public ByteArrayDataOutput getBuf()
 	{
 		return stream;
 	}
 	
 	public void close() throws IOException
 	{
-		ByteBufOutputStream tStream = new ByteBufOutputStream(stream);
+		OutputStream tStream = new OutputStream()
+		{			
+			@Override
+			public void write(int b) throws IOException 
+			{
+				stream.write(b);
+			}
+		};
 		tStream.close();
-		this.stream = tStream.buffer();
 	}
 }

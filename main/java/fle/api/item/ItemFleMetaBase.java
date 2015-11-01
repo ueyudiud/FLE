@@ -227,7 +227,8 @@ public class ItemFleMetaBase extends ItemFle
 		try
 	    {
 			MovingObjectPosition aPos = getMovingObjectPositionFromPlayer(player.worldObj, player, false);
-			int tMeta = player.worldObj.getBlockMetadata(aPos.blockX, aPos.blockY, aPos.blockZ);
+			int tMeta = 0;
+			if(player != null) tMeta = player.worldObj.getBlockMetadata(aPos.blockX, aPos.blockY, aPos.blockZ);
 	    	return tBehavior.canHarvestBlock(this, aBlock, tMeta, aStack);
 	    }
 	    catch (Throwable e)

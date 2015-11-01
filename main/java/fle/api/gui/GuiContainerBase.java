@@ -21,7 +21,6 @@ import org.lwjgl.opengl.GL12;
 
 import fle.api.FleAPI;
 import fle.api.FleValue;
-import fle.api.net.FlePackets.CoderGuiUpdate;
 import fle.api.soild.SolidTank;
 import fle.api.soild.SolidTankInfo;
 
@@ -304,6 +303,6 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected void sendToContainer(int type, int contain)
 	{
-		FleAPI.mod.getNetworkHandler().sendToServer(new CoderGuiUpdate((byte) type, contain));
+		FleAPI.mod.getNetworkHandler().sendToServer(FleAPI.mod.getNetworkHandler().getPacketMaker().makeGuiPacket((byte) type, contain));
 	}
 }

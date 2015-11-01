@@ -1,6 +1,5 @@
 package fle.core.gui;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
@@ -8,9 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiIconButton;
-import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.api.net.FlePackets.CoderGuiUpdate;
+import fle.core.net.FleGuiPacket;
 
 @SideOnly(Side.CLIENT)
 public class GuiWashing extends GuiContainerBase
@@ -34,7 +31,7 @@ public class GuiWashing extends GuiContainerBase
 	{
 		super.updateScreen();
 		((ContainerWashing) container).washItem();
-		FLE.fle.getNetworkHandler().sendToServer(new CoderGuiUpdate((byte) 1, 0));
+		FLE.fle.getNetworkHandler().sendToServer(new FleGuiPacket((byte) 1, 0));
 	}
 
 	@Override

@@ -130,7 +130,13 @@ public class BlockFle extends Block
 	{
 		return hasSubs() ? aMeta : 0;
 	}
-    
+
+	@Override
+	public boolean isCollidable()
+	{
+		return true;
+	}
+	
     protected ForgeDirection getPointFacing(World world, int x, int y, int z, EntityLivingBase entity)
     {
         int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;

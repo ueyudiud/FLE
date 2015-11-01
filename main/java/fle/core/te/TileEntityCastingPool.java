@@ -94,6 +94,13 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 		if(getTileInventory().getFluid() == null) return 0D;
 		return (double) getTileInventory().buf / (double) ((getTileInventory().getFluid().getFluid().getTemperature(getTileInventory().getFluid()) - FleValue.WATER_FREEZE_POINT));
 	}
+	
+	@Override
+	public Object onEmmit(byte aType)
+	{
+		return aType == 1 ? getTileInventory().buf :
+			aType == 2 ? tc.getHeat() : null;
+	}
 
 	@Override
 	public void onReseave(byte type, Object contain)
