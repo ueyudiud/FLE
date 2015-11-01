@@ -3,7 +3,6 @@ package fle.core.net;
 import java.io.IOException;
 
 import net.minecraft.world.World;
-import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.net.FleCoordinatesPacket;
 import fle.api.net.FleNetworkHandler;

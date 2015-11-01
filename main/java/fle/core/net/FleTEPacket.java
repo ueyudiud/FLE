@@ -2,10 +2,8 @@ package fle.core.net;
 
 import java.io.IOException;
 
-import fle.api.FleAPI;
 import fle.api.net.FleCoordinatesPacket;
 import fle.api.net.FleNetworkHandler;
-import fle.api.net.FleSortInfomationPacket;
 import fle.api.net.INetEventEmmiter;
 import fle.api.net.INetEventHandler;
 import fle.api.net.INetEventListener;

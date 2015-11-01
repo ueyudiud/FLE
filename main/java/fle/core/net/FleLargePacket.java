@@ -1,23 +1,14 @@
 package fle.core.net;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
-import io.netty.util.internal.PlatformDependent;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.zip.InflaterInputStream;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import com.sun.corba.se.impl.ior.ByteBuffer;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
-import fle.api.FleAPI;
 import fle.api.net.FleNetworkHandler;
 import fle.api.net.IPacket;
 import fle.api.util.FleLog;

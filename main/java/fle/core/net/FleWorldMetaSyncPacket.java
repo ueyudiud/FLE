@@ -2,8 +2,6 @@ package fle.core.net;
 
 import java.io.IOException;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import fle.FLE;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.net.FleAbstractPacket;

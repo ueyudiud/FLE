@@ -2,8 +2,6 @@ package fle.core.net;
 
 import java.io.IOException;
 
-import com.google.common.io.ByteArrayDataOutput;
-
 import fle.FLE;
 import fle.api.net.FleCoordinatesPacket;
 import fle.api.net.FleNetworkHandler;
