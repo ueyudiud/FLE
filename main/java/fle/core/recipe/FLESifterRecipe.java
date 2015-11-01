@@ -167,7 +167,7 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		{
 			try
 			{
-				return inputKey != null ? "recipe.input:" + inputKey.toString() : "recipe.input:" + inputKey1.toString();
+				return inputKey != null ? "recipe.input:" + inputKey.toString() : "recipe.input:" + inputKey1.getUnlocalizedName();
 			}
 			catch(Throwable e)
 			{

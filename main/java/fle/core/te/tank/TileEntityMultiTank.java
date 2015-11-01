@@ -11,9 +11,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 import fle.api.net.INetEventHandler;
+import fle.api.te.TileEntityAbstractTank;
 import fle.core.block.tank.ItemTankBlock;
 import fle.core.inventory.tank.InventoryMultiTank;
-import fle.core.net.FleSyncAskTileMetaPacket;
 import fle.core.net.FleTEPacket;
 import fle.core.util.TankBlockInfo;
 
@@ -121,7 +121,7 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	
 	protected FluidTank getTank()
 	{
-		return isMainTile ? tank : new FluidTank(0);
+		return isMainTile ? tank : mainTile != null ? mainTile.tank : new FluidTank(0);
 	}
 
 	@Override

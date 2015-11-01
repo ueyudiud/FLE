@@ -139,7 +139,7 @@ public class FLEOilMillRecipe extends StandardType
 		}
 
 		@Override
-		protected ResourceLocation getLocation()
+		public ResourceLocation getLocation()
 		{
 			return locate;
 		}

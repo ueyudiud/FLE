@@ -167,7 +167,7 @@ public class FLEShapelessRecipe extends StandardType
 			return showArray;
 		}
 		@Override
-		protected ResourceLocation getLocation()
+		public ResourceLocation getLocation()
 		{
 			return locate;
 		}

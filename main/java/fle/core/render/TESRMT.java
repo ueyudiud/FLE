@@ -1,7 +1,5 @@
 package fle.core.render;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import org.lwjgl.opengl.GL11;

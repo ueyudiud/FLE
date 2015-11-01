@@ -157,7 +157,7 @@ public class FLESifterRecipe extends StandardType
 		}
 
 		@Override
-		protected ResourceLocation getLocation()
+		public ResourceLocation getLocation()
 		{
 			return locate;
 		}

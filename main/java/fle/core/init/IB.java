@@ -39,7 +39,7 @@ import fle.core.block.machine.BlockStoneMachine1;
 import fle.core.block.machine.BlockWoodMachine;
 import fle.core.block.machine.BlockWoodMachine1;
 import fle.core.block.tank.BlockMultiTank;
-import fle.core.block.tank.BlockTankExample;
+import fle.core.item.ItemBowl;
 import fle.core.item.ItemDebug;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSeed;
@@ -107,7 +107,6 @@ public class IB
 	public static Block ditch;
 	public static Block farmland;
 	public static Block peat;
-	public static Block tank_debug;
 	public static Block tank;
 	public static Fluid animalOil;
 	public static Fluid plant_ash_mortar;
@@ -144,6 +143,8 @@ public class IB
 	
 	public static void init()
 	{
+		new ItemBowl();
+		
 		animalOil = new FluidBase("oil_a", "Animal Oil", new PropertyInfo(0xFFFFFF, 313, 773, 293, 1831, 1500, 0.8F, -1F, 1.0F, 0.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/oil").setTemperature(FleValue.WATER_FREEZE_POINT + 25);
 		plantOil = new FluidBase("oil_b", "Plant Oil", new PropertyInfo(0xFFFFFF, 267, 781, 294, 1472, 1300, 0.8F, -1F, 0.93F, 0.68F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/plant_oil").setTemperature(FleValue.WATER_FREEZE_POINT + 25);
 		sugarcane_juice = new FluidBase("sugarcane_juice", "Sugarcane Juice").setTextureName(FleValue.TEXTURE_FILE + ":fluids/sugarcane_juice").setTemperature(295).setViscosity(1100);
@@ -188,7 +189,6 @@ public class IB
 		ash = new BlockAsh().setCreativeTab(CreativeTabs.tabDecorations).setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash").setStepSound(Block.soundTypeSand);
 		oilLamp = new BlockOilLamp("oilLamp").setCreativeTab(CreativeTabs.tabDecorations);
 		workbench = new BlockWorkbench("workbench", "Workbench").setCreativeTab(CreativeTabs.tabDecorations);
-		tank_debug = new BlockTankExample("fle_tank_debug", "Tank Debug").setCreativeTab(CreativeTabs.tabDecorations);
 		tank = new BlockMultiTank("fle_tank").setCreativeTab(CreativeTabs.tabDecorations).setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/tank");
 		woodMachine = new BlockWoodMachine("woodMachine").init().setCreativeTab(CreativeTabs.tabDecorations);
 		woodMachine1 = new BlockWoodMachine1("woodMachine1").init().setCreativeTab(CreativeTabs.tabDecorations);

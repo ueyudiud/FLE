@@ -8,18 +8,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fle.FLE;
 import fle.api.FleAPI;
@@ -28,11 +23,13 @@ import fle.api.block.BlockHasTile;
 import fle.api.block.IDebugableBlock;
 import fle.api.block.IGuiBlock;
 import fle.core.gui.ContainerMTInterface;
+import fle.core.gui.ContainerMTSoak;
 import fle.core.gui.GuiMTInterface;
+import fle.core.gui.GuiMTSoak;
 import fle.core.te.tank.TileEntityMultiTank;
 import fle.core.te.tank.TileEntityMultiTankIO;
 import fle.core.te.tank.TileEntityMultiTankInterface;
-import fle.core.te.tank.TileEntityTankExample;
+import fle.core.te.tank.TileEntityMultiTankSoak;
 import fle.core.util.TankBlockInfo;
 
 public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGuiBlock
@@ -47,9 +44,11 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 		GameRegistry.registerTileEntity(TileEntityMultiTank.class, "tankMulti");
 		GameRegistry.registerTileEntity(TileEntityMultiTankIO.class, "tankMultiIO");
 		GameRegistry.registerTileEntity(TileEntityMultiTankInterface.class, "tankMultiInterface");
+		GameRegistry.registerTileEntity(TileEntityMultiTankSoak.class, "tankMultiSoak");
 		FleAPI.lm.registerLocal(getUnlocalizedName() + ":0.name", "Tank Block");
 		FleAPI.lm.registerLocal(getUnlocalizedName() + ":1.name", "Tank Valve");
 		FleAPI.lm.registerLocal(getUnlocalizedName() + ":2.name", "Tank Interface");
+		FleAPI.lm.registerLocal(getUnlocalizedName() + ":3.name", "Tank Soak Pool");
 	}
 	
 	@Override
@@ -78,6 +77,7 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 		case 0 : return new TileEntityMultiTank();
 		case 1 : return new TileEntityMultiTankIO();
 		case 2 : return new TileEntityMultiTankInterface();
+		case 3 : return new TileEntityMultiTankSoak();
 		}
 		return null;
 	}
@@ -96,6 +96,17 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 			if(aWorld.getTileEntity(x, y, z) instanceof TileEntityMultiTankInterface)
 			{
 				if(!((TileEntityMultiTankInterface) aWorld.getTileEntity(x, y, z)).isMultiTank()) return true;
+				if(aWorld.isRemote) return true;
+				aPlayer.openGui(FLE.MODID, 0, aWorld, x, y, z);
+			}
+			return true;
+		}
+		case 3 : 
+		{
+
+			if(aWorld.getTileEntity(x, y, z) instanceof TileEntityMultiTankSoak)
+			{
+				if(!((TileEntityMultiTankSoak) aWorld.getTileEntity(x, y, z)).isMultiTank()) return true;
 				if(aWorld.isRemote) return true;
 				aPlayer.openGui(FLE.MODID, 0, aWorld, x, y, z);
 			}
@@ -130,10 +141,11 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		icons = new IIcon[3];
+		icons = new IIcon[4];
 		icons[0] = register.registerIcon(getTextureName() + "_side");
 		icons[1] = register.registerIcon(getTextureName() + "_valve");
 		icons[2] = register.registerIcon(getTextureName() + "_interface");
+		icons[3] = register.registerIcon(getTextureName() + "_soak_pool");
 	}
 	
 	@Override
@@ -146,11 +158,14 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 	public void getSubBlocks(Item item, CreativeTabs tab,
 			List list)
 	{
+		int i = 0;
 		for(TankBlockInfo info : ItemTankBlock.register)
 		{
 			list.add(ItemTankBlock.a(ItemTankBlock.register.name(info), 0));
 			list.add(ItemTankBlock.a(ItemTankBlock.register.name(info), 1));
 			list.add(ItemTankBlock.a(ItemTankBlock.register.name(info), 2));
+			list.add(ItemTankBlock.a(ItemTankBlock.register.name(info), 3));
+			if(i++ > 3) break;
 		}
 	}
 
@@ -174,6 +189,7 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 		switch(aWorld.getBlockMetadata(x, y, z))
 		{
 		case 2 : return new ContainerMTInterface(aPlayer.inventory, (TileEntityMultiTankInterface) aWorld.getTileEntity(x, y, z));
+		case 3 : return new ContainerMTSoak(aPlayer.inventory, (TileEntityMultiTankSoak) aWorld.getTileEntity(x, y, z));
 		}
 		return null;
 	}
@@ -185,6 +201,7 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 		switch(aWorld.getBlockMetadata(x, y, z))
 		{
 		case 2 : return new GuiMTInterface(aPlayer, (TileEntityMultiTankInterface) aWorld.getTileEntity(x, y, z));
+		case 3 : return new GuiMTSoak(aPlayer, (TileEntityMultiTankSoak) aWorld.getTileEntity(x, y, z));
 		}
 		return null;
 	}

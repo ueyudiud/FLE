@@ -1,8 +1,9 @@
 package fle.core.te.tank;
 
+import net.minecraft.tileentity.TileEntity;
+import fle.api.te.TileEntityAbstractTank;
 import fle.core.inventory.tank.InventoryMultiTank;
 import fle.core.recipe.RecipeHelper;
-import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityMultiTankInterface extends TileEntityMultiTank
 {
@@ -37,8 +38,26 @@ public class TileEntityMultiTankInterface extends TileEntityMultiTank
 	}
 	
 	@Override
+	public void onNeibourChange(boolean flag)
+	{
+		if(flag && isMultiTank())
+		{
+			mainTile.onNeibourChange(false);
+		}
+	}
+	
+	@Override
 	public InventoryMultiTank getTileInventory()
 	{
 		return getThisInventory();
+	}
+	
+	@Override
+	public boolean canBeConnect(TileEntityAbstractTank main, int xPos,
+			int yPos, int zPos, int width, int height)
+	{
+		return height - yPos > 5 || yPos == 0 ? false : 
+			xPos == 0 ? zPos != 0 && zPos != width - 1 : 
+				xPos == width - 1 ? zPos != 0 && zPos != width - 1 : true;
 	}
 }

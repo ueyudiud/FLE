@@ -128,11 +128,10 @@ public abstract class StandardPage extends IGuidePage
 	@Override
 	public void drawBackground(GuiBookBase gui, int xOffset, int yOffset)
 	{
-		gui.bindTexture(getLocation());
 		gui.drawTexturedModalRect(xOffset, yOffset, 0, 0, xSize, ySize);
 	}
 
-	protected abstract ResourceLocation getLocation();
+	public abstract ResourceLocation getLocation();
 	
 	@Override
 	public void drawOther(GuiBookBase gui, int xOffset, int yOffset)

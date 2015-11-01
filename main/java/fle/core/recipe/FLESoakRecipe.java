@@ -1,16 +1,18 @@
 package fle.core.recipe;
 
-import io.netty.buffer.AbstractByteBuf;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleAPI;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
+import fle.api.recipe.ItemBaseStack;
+import fle.api.recipe.ItemOreStack;
 import fle.api.util.ConfigInfomation;
 import fle.api.util.FLEConfiguration;
+import fle.core.init.IB;
+import fle.core.item.ItemFleSub;
 import fle.core.recipe.FLESoakRecipe.SoakRecipe;
 
 public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
@@ -19,7 +21,8 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 
 	public static void init()
 	{
-		
+		a(new SoakRecipe(new FluidStack(IB.plantOil, 100), new ItemOreStack("plankWood"), 400, ItemFleSub.a("rotproof_plank")));
+		a(new SoakRecipe(new FluidStack(IB.plantOil, 100), new ItemOreStack("stickWood"), 100, ItemFleSub.a("rotproof_stick")));
 	}
 	
 	public static void postInit(FLEConfiguration cfg)
@@ -106,7 +109,7 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 		
 		public int getFluidUse(ItemStack target)
 		{
-			return tick;
+			return key2.amount * (target == null ? 0 : target.stackSize);
 		}
 		
 		private boolean isStandardKey()
@@ -120,10 +123,7 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 			SoakRecipeKey key = (SoakRecipeKey) keyRaw;
 			if(isStandardKey() && key.isStandardKey())
 			{
-				if(!(FluidStack.areFluidStackTagsEqual(key2, key.key2) && key1.isStackEqul(key.key1)))
-				{
-					return false;
-				}
+				return FluidStack.areFluidStackTagsEqual(key2, key.key2) && key1.isStackEqul(key.key1);
 			}
 			if(isStandardKey())
 			{
@@ -145,10 +145,7 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 		@Override
 		public int hashCode()
 		{
-			int i = key2 != null ? key2.getFluid().hashCode() : fluid != null ? fluid.getFluid().hashCode() : 1;
-			i *= 31;
-			i += 2541951;
-			return i;
+			return 241851951;
 		}
 
 		@Override
@@ -162,6 +159,14 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 			{
 				return "null";
 			}
+		}
+		
+		public boolean match(FluidStack fluid, ItemStack input)
+		{
+			if(input == null || fluid == null) return false;
+			FluidStack fluid1 = key2.copy();
+			fluid1.amount *= input.stackSize;
+			return fluid.containsFluid(fluid1) && key1.isStackEqul(input);
 		}
 	}
 }

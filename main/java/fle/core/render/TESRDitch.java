@@ -47,9 +47,9 @@ public class TESRDitch extends TESRBase<TileEntityDitch>
 			for(int i = 0; i < dirs.length; ++i)
 				bs[i] = tile.getType(dirs[i]);
 			fluid = (FluidTank) tile.getTank(0);
-			if(fluid != null)
+			if(fluid != null && fluid.getFluidAmount() > 0)
 			{
-				fluidColor = tile.getFluidStackInTank(0).getFluid().getColor(tile.getFluidStackInTank(0));
+				fluidColor = fluid.getFluid().getFluid().getColor(fluid.getFluid());
 			}
 			if(fluid != null)
 			{

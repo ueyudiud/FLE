@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -219,6 +220,11 @@ public class PlayerHandler
 	@SubscribeEvent
 	public void onPlayerHarvest(HarvestDropsEvent evt)
 	{
+		if((evt.block == Blocks.dirt || evt.block == Blocks.grass || evt.block == Blocks.mycelium || evt.block == Blocks.hay_block) && !evt.isSilkTouching)
+		{
+			evt.drops.clear();
+			evt.drops.add(ItemFleSub.a("dust_dirt", 3));
+		}
 		if(evt.block == Blocks.reeds)
 		{
 			evt.drops.clear();

@@ -1,4 +1,4 @@
-package fle.core.te.tank;
+package fle.api.te;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,13 +7,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
+import fle.api.inventory.IConnectableTank;
 import fle.api.inventory.IInventoryTile;
 import fle.api.te.IFluidTanks;
+import fle.api.te.IMultiTankPart;
 import fle.api.te.TEInventory;
 import fle.api.world.BlockPos;
-import fle.core.inventory.tank.IConnectableTank;
 
-public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends TEInventory<T> implements IFluidHandler, IFluidTanks
+public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends TEInventory<T> implements IFluidHandler, IFluidTanks, IMultiTankPart
 {
 	public FluidTank tank;
 	
@@ -109,14 +110,17 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 	}
 	
 	private int capcity = -1;
+
+	protected int getMaxWidth(){return 16;}
+	protected int getMaxHeight(){return 16;}
 	
-	private boolean checkCanMakeTank()
+	private final boolean checkCanMakeTank()
 	{
 		boolean flag = false;
 		label0:
-		for(int bSize = 3; bSize < 16; ++bSize)
+		for(int bSize = 3; bSize < getMaxWidth(); ++bSize)
 			label1:
-			for(int ySize = 3; ySize < 20; ++ySize)
+			for(int ySize = 3; ySize < getMaxHeight(); ++ySize)
 			{
 				BlockPos pos = getBlockPos();
 				for(int i = -1; i <= bSize; ++i)
@@ -130,7 +134,7 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 							{
 								if(tile != null)
 								{
-									if(!canConnectWith(tile))
+									if(!canConnectWith(tile, i, j, k, bSize, ySize))
 									{
 										this.pos.clear();
 										continue label1;
@@ -165,10 +169,9 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 				{
 					TileEntity tile = tPos.getBlockTile();
 					if(tile == this) continue;
-					if(tile instanceof TileEntityAbstractTank)
+					if(tile instanceof IMultiTankPart)
 					{
-						((TileEntityAbstractTank) tile).mainTile = this;
-						((TileEntityAbstractTank) tile).isMainTile = false;
+						((IMultiTankPart) tile).onConnect(this, tPos.x - xCoord, tPos.y - yCoord, tPos.z - zCoord, bSize, ySize);
 					}
 				}
 				flag = true;
@@ -184,6 +187,40 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 			height = 0;
 		}
 		return flag;
+	}
+	
+	@Override
+	public boolean isConnected()
+	{
+		return isMainTile || mainTile != null;
+	}
+	
+	@Override
+	public void onConnect(TileEntityAbstractTank main, int xPos, int yPos, int zPos,
+			int width, int height)
+	{
+		mainTile = main;
+		isMainTile = false;
+		this.width = width;
+		this.height = height;
+	}
+
+	@Override
+	public boolean canBeConnect(TileEntityAbstractTank main, int xPos,
+			int yPos, int zPos, int width, int height)
+	{
+		return canBeConnect(main);
+	}
+	
+	@Override
+	public boolean canBeConnect(TileEntityAbstractTank main)
+	{
+		return true;
+	}
+
+	protected boolean canConnectWith(TileEntity tile, int xPos, int yPos, int zPos, int width, int height)
+	{
+		return canConnectWith(tile) && (tile instanceof IMultiTankPart ? ((IMultiTankPart) tile).canBeConnect(this, xPos, yPos, zPos, width, height) : true);
 	}
 	
 	protected abstract boolean canConnectWith(TileEntity tile);
@@ -208,10 +245,9 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 				for(BlockPos tPos : cache)
 				{
 					TileEntity tile = tPos.getBlockTile();
-					if(tile instanceof TileEntityAbstractTank)
+					if(tile instanceof IMultiTankPart)
 					{
-						((TileEntityAbstractTank) tile).isMainTile = false;
-						((TileEntityAbstractTank) tile).mainTile = null;
+						((IMultiTankPart) tile).onDisconnect(this);
 					}
 				}
 				pos.clear();
@@ -223,6 +259,15 @@ public abstract class TileEntityAbstractTank<T extends IInventoryTile> extends T
 		{
 			mainTile.onNeibourChange(false);
 		}
+	}
+	
+	@Override
+	public void onDisconnect(TileEntityAbstractTank main)
+	{
+		isMainTile = false;
+		mainTile = null;
+		width = 0;
+		height = 0;
 	}
 	
 	@Override

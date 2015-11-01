@@ -7,10 +7,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import fle.api.te.IFluidTanks;
-import fle.api.world.BlockPos;
+import fle.api.te.TileEntityAbstractTank;
 import fle.core.inventory.tank.InventoryTankExample;
 import fle.core.recipe.RecipeHelper;
 

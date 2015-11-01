@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.cg.IGuideType.IGuidePage.Type;
@@ -80,6 +81,8 @@ public abstract class IGuideType
 	
 	public static abstract class IGuidePage
 	{
+		public abstract ResourceLocation getLocation();
+		
 		public abstract int getSize(Type aType);
 		public abstract Object getObject(Type aType, int index);
 		public abstract Object getObjectForDisplay(Type aType, int index);

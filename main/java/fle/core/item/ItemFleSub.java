@@ -126,12 +126,15 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(3003, "argil_ball", "Argil Ball", "resource/dust/2", new BehaviorCeramics());
 		addSubItem(3004, "cemented_grit", "Cemented Grit", "resource/dust/1001", new BehaviorCastingTool());
 		addSubItem(3005, "dust_quicklime", "Quick Lime Dust", "resource/dust/4");
+		addSubItem(3006, "dust_dirt", "Dirt", "resource/dust/dirt");
 		addSubItem(4001, "wooden_wedge", "Wooden Wedge", "tools/wooden_wedge");
 		addSubItem(4002, "millstone", "Millstone", "machine/millstone");
 		addSubItem(4003, "linen", "Linen", "crop/linen");
 		addSubItem(4004, "linen_b", "Fine Linen", "crop/fine_linen");
 		addSubItem(4005, "bran", "Bran", "crop/bran");
 		addSubItem(4006, "cotton_gauze", "Cotton Gauze", "tools/cotton_gauze");
+		addSubItem(4007, "rotproof_plank", "Rotproof Plank", "tree/plank_rotproof");
+		addSubItem(4008, "rotproof_stick", "Rotproof Wooden Stick", "resource/stick/rotproof_wood");
 		addSubItem(5202, "argil_unsmelted_brick", "Unsmelted Argil Brick", "clay/101", new BehaviorArgilItem());
 		addSubItem(5203, "argil_brick", "Argil Brick", "clay/1101");
 		addSubItem(6201, "stone_plate", "Stone Plate", "resource/plate/stone", new BehaviorBlockable(IB.stoneMachine1, 2));
@@ -147,6 +150,7 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(7104, "sack_wheat_b", "Wholemeal Wheat Sack", "tools/sack/wheat_w", new BehaviorSack("sack_wheat_b", IB.wheat, 1000));
 		addSubItem(7105, "sack_millet_b", "Wholemeal Millet Sack", "tools/sack/millet_W", new BehaviorSack("sack_millet_b", IB.millet, 1000));
 		addSubItem(7106, "sack_fertilizer1", "Ca P Fertilizer Sack", "tools/sack/fertilizer1", new BehavoirSackFertilizer("sack_fertilizer1", IB.Ca_P_fertilizer, 1000, new FertitleLevel(0, 3, 0, 5)));
+		addSubItem(7201, "bowl_water", "Bowl Of Water", "bowl/water");
 		addSubItem(10001, "arrow_bag", "Arrow Bag", "tools/arrow_bag", new BehaviorArrowBag());
 		addSubItem(10101, "guide_book", "Guide Book", "book/guide_book", new BehaviorGuideBook(RecipesTab.tabClassic));
 		addSubItem(10102, "guide_book_1", "Old Stone Age Book", "book/0", new BehaviorGuideBook(RecipesTab.tabOldStoneAge));

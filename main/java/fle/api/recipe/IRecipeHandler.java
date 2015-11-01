@@ -63,6 +63,11 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 	 */
 	public boolean registerRecipe(T recipe)
 	{
+		if(recipeCache == null)
+		{
+			FleLog.getLogger().error("Some mod register a recipe after reload recipes, please check your mods. Name " + recipe.toString());
+			return false;
+		}
 		recipeCache.add(recipe);
 		if(recipeMap.containsKey(recipe.getRecipeKey()) || recipeSet.contains(recipe) || recipeKeys.containsKey(recipe.getRecipeKey().toString()))
 		{

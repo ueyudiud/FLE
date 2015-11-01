@@ -64,6 +64,7 @@ import fle.core.recipe.FLEDryingRecipe;
 import fle.core.recipe.FLEOilMillRecipe;
 import fle.core.recipe.FLEPolishRecipe;
 import fle.core.recipe.FLESifterRecipe;
+import fle.core.recipe.FLESoakRecipe;
 import fle.core.recipe.FLEStoneMillRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
@@ -261,6 +262,7 @@ public class Rs
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.WATER, 1000), ItemFleSub.a("wood_bucket_0_water"), ItemFleSub.a("wood_bucket_0_empty"));
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(IB.plant_ash_mortar, 1000), ItemFleSub.a("wood_bucket_0_plant_ash_mortar"), ItemFleSub.a("wood_bucket_0_empty"));
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(IB.lime_mortar, 1000), ItemFleSub.a("wood_bucket_0_lime_mortar"), ItemFleSub.a("wood_bucket_0_empty"));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.WATER, 1000), ItemFleSub.a("bowl_water"), new ItemStack(Items.bowl));
 
 		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), EnumAtoms.Cu.asMatter(), 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
 		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Enargite)), Matter.mCu3AsS4, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 20000);
@@ -413,10 +415,13 @@ public class Rs
 
 		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.tank, 1, 0), new Object[]{"s s", " h ", "s s", 's', "plateStone", 'h', "craftingToolChisel"});
 		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.tank, 1, 1), new Object[]{"shs", "s s", 's', "plateStone", 'h', "craftingToolHardHammer"});
+		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.tank, 1, 2), new Object[]{" s ", "shs", " s ", 's', "plateStone", 'h', "craftingToolHardHammer"});
+		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(IB.tank, 1, 3), new Object[]{"shs", "sss", 's', "plateStone", 'h', "craftingToolHardHammer"});
 		
 		addShapedRecipe(RecipesTab.tabCopperAge, ItemDitch.a(Materials.ditch_stone, 20), new Object[]{" p ", " o ", " x ", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"});
 		addShapedRecipe(RecipesTab.tabCopperAge, ItemDitch.a(2, Materials.ditch_stone, 60), new Object[]{" p ", " o ", "xxx", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"});
 		addShapedRecipe(RecipesTab.tabCopperAge, ItemDitch.a(Materials.ditch_stone, 100), new Object[]{" p ", "xox", " x ", 'x', Blocks.stone, 'o', "craftingToolChisel", 'p', "craftingToolHardHammer"});
+		addShapedRecipe(RecipesTab.tabBronzeAge, new ItemStack(Items.bowl, 4), new Object[]{"x x", " x ", 'x', ItemFleSub.a("rotproof_plank")});
 		DitchInfo[] infos = new DitchInfo[]{Materials.ditch_wood0, Materials.ditch_wood1, Materials.ditch_wood2, Materials.ditch_wood3, Materials.ditch_wood4, Materials.ditch_wood5};
 		for(int i = 0; i < infos.length; ++i)
 		{
@@ -438,12 +443,14 @@ public class Rs
 		FLEStoneMillRecipe.init();
 		FLEDryingRecipe.init();
 		FLEPolishRecipe.init();
+		FLESoakRecipe.init();
 		FLEBoilingHeaterRecipe.postInit(cfg);
 		FLEOilMillRecipe.postInit(cfg);
 		FLESifterRecipe.postInit(cfg);
 		FLEStoneMillRecipe.postInit(cfg);
 		FLEDryingRecipe.postInit(cfg);
 		FLEPolishRecipe.postInit(cfg);
+		FLESoakRecipe.postInit(cfg);
 		AxeHandler.init();
 	}
 

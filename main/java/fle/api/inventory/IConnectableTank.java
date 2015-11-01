@@ -1,6 +1,5 @@
-package fle.core.inventory.tank;
+package fle.api.inventory;
 
-import fle.api.inventory.IInventoryTile;
 import fle.api.te.TEInventory;
 import net.minecraftforge.fluids.FluidStack;
 

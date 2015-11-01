@@ -89,6 +89,7 @@ public abstract class GuiBookBase extends GuiScreen
 			float zLevel) 
 	{
         GL11.glPushMatrix();
+        bindTexture(page.getLocation());
 	    page.drawBackground(this, xoffset, yoffset);
 	    GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 	    RenderHelper.disableStandardItemLighting();
@@ -190,6 +191,7 @@ public abstract class GuiBookBase extends GuiScreen
 		}
 		
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		bindTexture(page.getLocation());
 		page.drawOther(this, 0, 0);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		

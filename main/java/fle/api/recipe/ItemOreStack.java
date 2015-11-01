@@ -6,6 +6,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+/**
+ * 
+ * @see net.minecraftforge.oredict.OreDictionary
+ * @author ueyudiud
+ *
+ */
 public class ItemOreStack extends ItemAbstractStack
 {
 	private String target;
