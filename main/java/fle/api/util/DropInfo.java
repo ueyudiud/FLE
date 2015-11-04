@@ -54,6 +54,12 @@ public class DropInfo
 		this(1, aDrop);
 	}
 	
+	DropInfo()
+	{
+		maxSize = minSize = 0;
+		chance = 0.0F;
+	}
+	
 	@Override
 	public String toString() 
 	{
@@ -79,5 +85,10 @@ public class DropInfo
 	public float getDrop()
 	{
 		return (float) (maxSize + minSize) / 2F;
+	}
+	
+	public static DropInfo empty()
+	{
+		return new DropInfo();
 	}
 }

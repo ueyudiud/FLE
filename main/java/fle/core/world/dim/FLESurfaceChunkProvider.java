@@ -9,27 +9,22 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldManager;
-import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkProviderFlat;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.MapGenBase;
-import net.minecraft.world.gen.MapGenCaves;
 import net.minecraft.world.gen.MapGenRavine;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import fle.api.util.FleLog;
-import fle.core.util.Surface;
 import fle.core.util.noise.NoiseBase;
 import fle.core.util.noise.NoiseMix;
 import fle.core.util.noise.NoisePerlin;
@@ -37,7 +32,6 @@ import fle.core.util.noise.VecNoiseBase;
 import fle.core.util.noise.VecNoiseHandler;
 import fle.core.util.noise.VecNoisePerlin;
 import fle.core.world.FleCavesGen;
-import fle.core.world.biome.FLEBiomeRiver;
 import fle.core.world.layer.FLELayer;
 
 public class FLESurfaceChunkProvider extends ChunkProviderGenerate

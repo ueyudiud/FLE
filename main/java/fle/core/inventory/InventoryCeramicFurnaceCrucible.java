@@ -18,6 +18,7 @@ import fle.api.material.Matter.AtomStack;
 import fle.api.material.MatterDictionary;
 import fle.api.util.WeightHelper;
 import fle.api.util.WeightHelper.Stack;
+import fle.core.init.Lang;
 import fle.core.net.FleMatterUpdatePacket;
 import fle.core.te.argil.TileEntityCeramicFurnaceCrucible;
 
@@ -29,7 +30,7 @@ public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<Tile
 	
 	public InventoryCeramicFurnaceCrucible()
 	{
-		super("inventory.ceramic.furnace.crucible", 3, 3000);
+		super(Lang.inventory_ceramicFurnace + ".crucible", 3, 3000);
 	}
 	
 	@Override

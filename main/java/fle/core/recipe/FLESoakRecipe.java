@@ -76,6 +76,16 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 			output.stackSize *= input.stackSize;
 			return output;
 		}
+
+		public FluidStack getFluidInput()
+		{
+			return fluid;
+		}
+
+		public ItemAbstractStack getItemInput()
+		{
+			return stack;
+		}
 	}
 	
 	public static class SoakRecipeKey extends RecipeKey

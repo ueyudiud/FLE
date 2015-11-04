@@ -507,6 +507,7 @@ public class Rs
 		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.core.cg.FLESifterRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new FLEColdForgingRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.core.cg.FLEOilMillRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabClassic, new fle.core.cg.FLESoakRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabOldStoneAge, new fle.core.cg.FLEPolishRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabOldStoneAge, new FLEWashingRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabNewStoneAge, new fle.core.cg.FLEDryingRecipe());
@@ -516,5 +517,6 @@ public class Rs
 		CraftGuide.instance.registerGuideType(RecipesTab.tabBronzeAge, new fle.core.cg.FLEStoneMillRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabBronzeAge, new fle.core.cg.FLESifterRecipe());
 		CraftGuide.instance.registerGuideType(RecipesTab.tabBronzeAge, new fle.core.cg.FLEOilMillRecipe());
+		CraftGuide.instance.registerGuideType(RecipesTab.tabBronzeAge, new fle.core.cg.FLESoakRecipe());
 	}
 }

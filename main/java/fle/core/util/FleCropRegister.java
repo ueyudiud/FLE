@@ -11,8 +11,8 @@ import fle.api.util.Register;
 
 public class FleCropRegister extends CropRegister
 {
-	private Register<CropCard> cropRegister = new Register();
-	private Map<String, ICropSeed> seedMap = new HashMap();
+	private final Register<CropCard> cropRegister = new Register();
+	private final Map<String, ICropSeed> seedMap = new HashMap();
 	
 	public FleCropRegister() 
 	{
@@ -23,6 +23,7 @@ public class FleCropRegister extends CropRegister
 	public void registerCrop(CropCard crop) 
 	{
 		if(crop == null) throw new NullPointerException();
+		if(cropRegister.contain(crop.getCropName())) throw new RuntimeException("FLE : Can not register same crop twice.");
 		cropRegister.register(crop, crop.getCropName());
 	}
 

@@ -12,6 +12,12 @@ import fle.api.cg.IGuideType.GuideTransInfo;
 import fle.api.cg.IGuideType.IGuidePage;
 import fle.api.recipe.ItemAbstractStack;
 
+/**
+ * The craft guide handler.<br>
+ * 
+ * @author ueyudiud
+ *
+ */
 public final class CraftGuide
 {
 	public static final CraftGuide instance = new CraftGuide();
@@ -23,6 +29,11 @@ public final class CraftGuide
 		
 	}
 
+	/**
+	 * Register new guide type.
+	 * @param tab
+	 * @param aType
+	 */
 	public void registerGuideType(RecipesTab tab, IGuideType aType)
 	{
 		if(!typeList.containsKey(tab)) RecipesTab.registerNewTab(tab);
@@ -49,6 +60,13 @@ public final class CraftGuide
 		return ret.toArray(new IGuideType[ret.size()]);
 	}
 	
+	/**
+	 * Get tab cache to GUI.
+	 * @param gui The GUI where the recipes page add to.
+	 * @param tab The recipe type.
+	 * @param aInfo The information of switch type.
+	 * @return Can be successful transfer pages (New pages length not be 0).
+	 */
 	public boolean getTabGuides(GuiBook gui, RecipesTab tab, GuideTransInfo aInfo)
 	{
 		IGuideType[] types = getTabGuides(tab);

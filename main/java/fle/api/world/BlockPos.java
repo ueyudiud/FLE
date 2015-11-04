@@ -80,6 +80,12 @@ public final class BlockPos implements IObjectInWorld
         else return 0;
 	}
 	
+	public World world()
+	{
+        if(access instanceof World) return (World) access;
+        return FleAPI.mod.getPlatform().getWorldInstance(getDim());
+	}
+	
 	@Override
 	public BlockPos getBlockPos() 
 	{

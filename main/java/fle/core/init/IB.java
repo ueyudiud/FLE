@@ -29,9 +29,11 @@ import fle.core.block.BlockOilLamp;
 import fle.core.block.BlockOre;
 import fle.core.block.BlockOreCobble;
 import fle.core.block.BlockPeat;
+import fle.core.block.BlockPlant;
 import fle.core.block.BlockRock;
 import fle.core.block.BlockRopeLadder;
 import fle.core.block.BlockWorkbench;
+import fle.core.block.debug.BlockThermal;
 import fle.core.block.machine.BlockClayInventory;
 import fle.core.block.machine.BlockClayInventory1;
 import fle.core.block.machine.BlockStoneMachine;
@@ -108,6 +110,7 @@ public class IB
 	public static Block farmland;
 	public static Block peat;
 	public static Block tank;
+	public static Block plant;
 	public static Fluid animalOil;
 	public static Fluid plant_ash_mortar;
 	public static Fluid lime_mortar;
@@ -177,7 +180,10 @@ public class IB
 		plant_ash = new Solid("plant_ash", "Plant Ash").setType(SolidState.Dust).setTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash");
 		brown_sugar = new Solid("brown_sugar", "Brown Sugar").setType(SolidState.Sick_Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/brown_sugar");
 		Ca_P_fertilizer = new Solid("fertilizer1", "Ca P Fertilizer").setType(SolidState.Sick_Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/fertilizer1");
+		
 		debug = new ItemDebug("debug").setMaxStackSize(1).setCreativeTab(CreativeTabs.tabRedstone).setTextureName(FleValue.TEXTURE_FILE + ":fle");
+		new BlockThermal().setCreativeTab(CreativeTabs.tabRedstone).setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/debug_thermal").setMaxStackSize(1);
+		
 		farmland = new BlockFLEFarmland("fle_farmland", "Farmland").setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/farmland");
 		crop = new BlockFleCrop();
 		rock = new BlockRock().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);
@@ -201,6 +207,7 @@ public class IB
 		ropeLadder = new BlockRopeLadder("ropeLadder", "Rope Ladder").setBlockTextureName(FleValue.TEXTURE_FILE + ":tools/rope_ladder").setCreativeTab(CreativeTabs.tabDecorations);
 		ditch = new BlockDitch().setCreativeTab(CreativeTabs.tabDecorations);
 		peat = new BlockPeat("peat", "Peat").setBlockTextureName(FleValue.TEXTURE_FILE + ":dirt/peat").setCreativeTab(CreativeTabs.tabBlock);
+		plant = new BlockPlant();
 		tool = new ItemTool("tool", "tool").init().setCreativeTab(CreativeTabs.tabTools);
 		toolHead = new ItemToolHead("tool.head", "toolHead").init().setCreativeTab(CreativeTabs.tabMaterials);
 		food = new ItemFleFood("food", "foods").init().setCreativeTab(CreativeTabs.tabFood);

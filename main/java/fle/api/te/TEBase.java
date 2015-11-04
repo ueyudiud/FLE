@@ -2,8 +2,10 @@ package fle.api.te;
 
 import java.util.Random;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -11,8 +13,10 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.block.IFacingBlock;
+import fle.api.cover.Cover;
+import fle.api.cover.CoverRegistry;
+import fle.api.cover.CoverTile;
 import fle.api.enums.EnumWorldNBT;
-import fle.api.net.FleAbstractPacket;
 import fle.api.net.INetEventHandler;
 import fle.api.net.IPacket;
 import fle.api.soild.ISolidTanks;
@@ -24,12 +28,12 @@ import fle.api.world.BlockPos;
  * @author ueyudiud
  *
  */
-public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMetadataTile, INetEventHandler
+public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMetadataTile, INetEventHandler, ICoverTE
 {
 	/**
 	 * The default random of tile.
 	 */
-	protected final Random rand = new Random();
+	public final Random rand = new Random();
 	/**
 	 * The facing of this block.
 	 * It is use to rendering icon or check witch side can input fluid,
@@ -43,6 +47,8 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	 * Use {@link TEBase.readFromNBT} when reset nbt when initializing.
 	 */
 	private NBTTagCompound nbt;
+	
+	protected final CoverTile[] covers = new CoverTile[6];
 	
 	/**
 	 * Set direction of block.
@@ -64,7 +70,31 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		super.readFromNBT(nbt);
 		dir = ForgeDirection.values()[nbt.getByte("BlockFacing")];
 		blockMetadata = nbt.getShort("TileMeta");
-		this.nbt = nbt;
+		if(init)
+		{
+			if(nbt.hasKey("CoverList"))
+			{
+				NBTTagList list = nbt.getTagList("CoverList", 10);
+				for(int i = 0; i < list.tagCount(); ++i)
+				{
+					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
+					int f = nbt1.getByte("Facing");
+					if(f > 0 && f < 7)
+					{
+						--f;
+						Cover cover = CoverRegistry.getCoverRegister().get(nbt1.getString("Cover"));
+						if(cover != null)
+							covers[f] = cover.createCoverTile(this);
+						if(covers[f] != null)
+							covers[f].readFromNBT(nbt1);
+					}
+				}
+			}
+		}
+		else
+		{
+			this.nbt = nbt;
+		}
 	}
 	
 	@Override
@@ -73,6 +103,19 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		super.writeToNBT(nbt);
 		nbt.setByte("BlockFacing", (byte) (dir == null ? ForgeDirection.UNKNOWN.ordinal() : dir.ordinal()));
 		nbt.setShort("TileMeta", (short) getMetadata());
+		NBTTagList list = new NBTTagList();
+		for(int i = 0; i < covers.length; ++i)
+		{
+			if(covers[i] != null)
+			{
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				nbt1.setByte("Facing", (byte) (i + 1));
+				nbt1.setString("Cover", covers[i].getCover().getUnlocalizedName());
+				covers[i].writeToNBT(nbt1);
+				list.appendTag(nbt1);
+			}
+		}
+		nbt.setTag("CoverList", list);
 	}
 
 	private boolean init = false;
@@ -91,11 +134,11 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 					worldObj.removeTileEntity(xCoord, yCoord, zCoord);
 					TileEntity tile = blockType.createTileEntity(worldObj, blockMetadata);
 					tile.blockMetadata = blockMetadata;
-					if(nbt != null) tile.readFromNBT(nbt);
 					if(tile instanceof TEBase)
 					{
 						((TEBase) tile).markFinishInit();
 					}
+					if(nbt != null) tile.readFromNBT(nbt);
 					worldObj.setTileEntity(xCoord, yCoord, zCoord, tile);
 				}
 			}
@@ -112,6 +155,15 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 			markNBTUpdate();
 			markRenderForUpdate();
 			postinit = true;
+		}
+	}
+	
+	protected void updateCovers()
+	{
+		for(int i = 0; i < covers.length; ++i)
+		{
+			if(covers[i] != null)
+				covers[i].onBlockUpdate();
 		}
 	}
 	
@@ -348,5 +400,46 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	protected void receiveNumber(byte type, Number number)
 	{
 		;
+	}
+
+	public void dropItem(ItemStack stack)
+	{
+		if(stack == null) return;
+        if (!worldObj.isRemote && worldObj.getGameRules().getGameRuleBooleanValue("doTileDrops") && !worldObj.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
+        {
+            float f = 0.7F;
+            double d0 = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double d1 = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double d2 = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + d0, (double)yCoord + d1, (double)zCoord + d2, stack);
+            entityitem.delayBeforeCanPickup = 10;
+            worldObj.spawnEntityInWorld(entityitem);
+        }
+	}
+
+	@Override
+	public Cover getCover(ForgeDirection dir)
+	{
+		return covers[FleAPI.getIndexFromDirection(dir)].getCover();
+	}
+
+	@Override
+	public boolean addCover(ForgeDirection dir, Cover cover)
+	{
+		if(getCover(dir) != null) return false;
+		covers[FleAPI.getIndexFromDirection(dir)] = cover.createCoverTile(this);
+		return true;
+	}
+
+	@Override
+	public void setCover(ForgeDirection dir, Cover cover)
+	{
+		covers[FleAPI.getIndexFromDirection(dir)] = cover.createCoverTile(this);
+	}
+
+	@Override
+	public void removeCover(ForgeDirection dir)
+	{
+		covers[FleAPI.getIndexFromDirection(dir)] = null;
 	}
 }

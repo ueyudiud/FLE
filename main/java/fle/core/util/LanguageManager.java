@@ -15,11 +15,57 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.xml.internal.fastinfoset.util.CharArray;
+
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.IInventory;
+import fle.FLE;
+import fle.api.FleAPI;
 import fle.api.util.ILanguageManager;
 
 public class LanguageManager implements ILanguageManager
 {
+	private static final String MOD = FLE.MODID.toLowerCase();
+	private static final char A = 'A';
+	private static final char Z = 'Z';
+	
+	public static String regWithRecommendedUnlocalizedName(String aTypeName, String enLocalizedName)
+	{
+		String str = MOD;
+		str += ".";
+		String str1 = aTypeName + "." + enLocalizedName;
+		boolean flag = false;
+		for(int i = 0; i < str1.length(); ++i)
+		{
+			char chr = str1.charAt(i);
+			if(chr == '_' || chr == ' ' || chr == ':')
+			{
+				if(flag)
+				{
+					flag = false;
+					continue;
+				}
+				flag = true;
+				str += ".";
+				continue;
+			}
+			if((int) chr <= (int) Z && (int) chr >= (int) A)
+			{
+				if(flag)
+				{
+					flag = false;
+					continue;
+				}
+				flag = true;
+				str += "." + (char) (chr & 0xFFDF);
+				continue;
+			}
+			str += chr;
+		}
+		FleAPI.lm.registerLocal(str, enLocalizedName);
+		return FleAPI.lm.translateToLocal(str, new Object[0]);
+	}
+	
 	public static File lang = null;
 	
 	private static Map<String, String> langMap = new HashMap();

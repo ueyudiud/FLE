@@ -134,8 +134,9 @@ public class FLEBiomeForest extends FLEBiome
 
                     if (aRand.nextInt(20) == 0)
                     {
-                        WorldGenBigMushroom worldgenbigmushroom = new WorldGenBigMushroom();
-                        worldgenbigmushroom.generate(aWorld, aRand, i1, k1, j1);
+                    	//Remove big mushroom generate.
+                        //WorldGenBigMushroom worldgenbigmushroom = new WorldGenBigMushroom();
+                        //worldgenbigmushroom.generate(aWorld, aRand, i1, k1, j1);
                     }
                     else
                     {

@@ -29,12 +29,18 @@ public class Register<T> implements Iterable<T>
 		oL = Arrays.copyOf(oL, size);
 		sL = Arrays.copyOf(sL, size);
 	}
-	private int getNextAccessID()
+	private synchronized int getNextAccessID()
 	{
 		while(contain(i)) ++i;
 		return i;
 	}
 
+	/**
+	 * Register new object to register.
+	 * @param t
+	 * @param name
+	 * @return
+	 */
 	public int register(T t, String name)
 	{
 		getNextAccessID();
@@ -101,7 +107,7 @@ public class Register<T> implements Iterable<T>
 		return size;
 	}
 
-	public boolean remove(int i)
+	public synchronized boolean remove(int i)
 	{
 		T target = get(i);
 		String str = name(i);

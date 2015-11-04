@@ -28,8 +28,17 @@ import fle.api.util.IFuelHandler;
 import fle.api.util.ILanguageManager;
 import fle.api.world.BlockPos;
 
+/**
+ * Fle API.
+ * @author ueyudiud
+ *
+ */
 public class FleAPI 
 {
+	/**
+	 * You can get ID of fle, this id is similar with main class in core.
+	 * @see fle.FLE
+	 */
 	public static final String MODID = "FLE";
 	/**
 	 * The main and second version here.
@@ -41,6 +50,9 @@ public class FleAPI
 	 */
 	@SideOnly(Side.CLIENT)
 	public static ResourceLocation conditionLocate = new ResourceLocation("textures/atlas/condition.png");
+	/**
+	 * The font locate had already remove, because we needn't use FLE Font Render.
+	 */
 	@Deprecated
 	@SideOnly(Side.CLIENT)
 	public static ResourceLocation fontLocate = new ResourceLocation("textures/atlas/fontLocate");
@@ -50,15 +62,17 @@ public class FleAPI
 	 */
 	@SideOnly(Side.CLIENT)
 	public static IIconRegister conditionIconRegister;
+	@Deprecated
 	@SideOnly(Side.CLIENT)
 	public static IIconRegister fontRegister;
 	
 	/**
-	 * To add recipe.
+	 * Add recipe with mod.
 	 */
 	public static RecipeAdder ra;
 	/**
-	 * @see {@link fle.FLE}, this field is main class object of FLE.
+	 * This field is main class object of FLE.
+	 * @see fle.FLE
 	 */
 	public static FleModHandler mod;
 	/**
@@ -163,17 +177,35 @@ public class FleAPI
 		}
 	}
 	
+	/**
+	 * Match is stack are contain target.
+	 * @see net.minecraftforge.fluids.FluidStack
+	 * @param aTarget
+	 * @param aStack
+	 * @return
+	 */
 	public static boolean fluidMatch(FluidStack aTarget, FluidStack aStack)
 	{
 		return aTarget == null && aStack == null ? true : 
 			(aTarget == null || aStack == null ? false : aTarget.isFluidEqual(aStack) && aStack.amount >= aTarget.amount);
 	}
 	
+	/**
+	 * Register fuel handler, get fuel buffer from handler.
+	 * @see fle.api.util.IFuelHandler
+	 * @see net.minecraft.item.crafting.FurnaceRecipes
+	 * @param aHandler The fuel handler.
+	 */
 	public static void registerFuelHandler(IFuelHandler aHandler)
 	{
 		fuelList.add(aHandler);
 	}
 	
+	/**
+	 * Get heat value of fluid fuel without air condition.
+	 * @param aStack
+	 * @return Fuel heat value with unit MJ (Minecraft Joule).
+	 */
 	public static double getFuelBuf(FluidStack aStack)
 	{
 		try
@@ -186,6 +218,13 @@ public class FleAPI
 			return 0;
 		}
 	}
+	/**
+	 * Get heat value of fluid fuel with air condition
+	 * @see fle.api.material.Matter
+	 * @param aStack
+	 * @param aAirBase
+	 * @return Fuel heat value with unit MJ (Minecraft Joule).
+	 */
 	public static double getFuelBuf(FluidStack aStack, Matter aAirBase)
 	{
 		if(aStack == null) return 0;
@@ -199,6 +238,11 @@ public class FleAPI
 		return 0;
 	}
 
+	/**
+	 * Get whether fuel contain population during burning, without air condition.
+	 * @param aStack Burning fuel.
+	 * @return Whether fuel contain population.
+	 */
 	public static boolean hasSmoke(FluidStack aStack)
 	{
 		return hasSmoke(aStack, Matter.mAir);
@@ -239,13 +283,17 @@ public class FleAPI
 		return TileEntityFurnace.getItemBurnTime(aStack) * 10;
 	}
 	
+	/**
+	 * Get direction ordinal, without UNKNOWN and null.
+	 * @see net.minecraftforge.common.util.ForgeDirection
+	 * @param aDirection
+	 * @return The index of direction.
+	 */
 	public static int getIndexFromDirection(ForgeDirection aDirection)
 	{
 		if(aDirection == ForgeDirection.UNKNOWN || aDirection == null)
 			return 2;
-		for(int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; ++i)
-			if(ForgeDirection.VALID_DIRECTIONS[i] == aDirection) return i;
-		return 2;
+		return aDirection.ordinal();
 	}
 	
 	public static int getNextPotionId(int start)

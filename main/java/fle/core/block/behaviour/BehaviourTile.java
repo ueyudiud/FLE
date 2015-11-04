@@ -2,21 +2,22 @@ package fle.core.block.behaviour;
 
 import java.util.List;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.common.registry.GameRegistry;
 import fle.FLE;
-import fle.api.block.BlockHasTile;
+import fle.api.FleAPI;
 import fle.api.block.IBlockWithTileBehaviour;
 import fle.api.block.IGuiBlock;
+import fle.api.util.FleLog;
 import fle.core.block.BlockSubTile;
+import fle.core.util.LanguageManager;
 
 public abstract class BehaviourTile extends BehaviourBase<BlockSubTile> implements IBlockWithTileBehaviour<BlockSubTile>, IGuiBlock
 {

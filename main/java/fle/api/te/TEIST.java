@@ -1,6 +1,8 @@
 package fle.api.te;
 
 import net.minecraftforge.common.util.ForgeDirection;
+import fle.api.cover.IFluidIOCover;
+import fle.api.cover.ISolidIOCover;
 import fle.api.inventory.InventorySolidTank;
 import fle.api.soild.ISolidHandler;
 import fle.api.soild.ISolidTanks;
@@ -19,6 +21,13 @@ public abstract class TEIST<T extends InventorySolidTank> extends TEInventory<T>
 	@Override
 	public int fillS(ForgeDirection from, SolidStack resource, boolean doFill)
 	{
+		if(from != ForgeDirection.UNKNOWN)
+		{
+			if(covers[from.ordinal()] instanceof ISolidIOCover)
+			{
+				return ((ISolidIOCover) covers[from.ordinal()]).fill(getBlockPos(), from, resource, doFill);
+			}
+		}
 		return getTileInventory().fillS(from, resource, doFill);
 	}
 
@@ -26,25 +35,53 @@ public abstract class TEIST<T extends InventorySolidTank> extends TEInventory<T>
 	public SolidStack drainS(ForgeDirection from, SolidStack resource,
 			boolean doDrain)
 	{
+		if(from != ForgeDirection.UNKNOWN)
+		{
+			if(covers[from.ordinal()] instanceof ISolidIOCover)
+			{
+				return ((ISolidIOCover) covers[from.ordinal()]).drain(getBlockPos(), from, resource, doDrain);
+			}
+		}
 		return getTileInventory().drainS(from, resource, doDrain);
 	}
 
 	@Override
 	public SolidStack drainS(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		if(from != ForgeDirection.UNKNOWN)
+		{
+			if(covers[from.ordinal()] instanceof ISolidIOCover)
+			{
+				return ((ISolidIOCover) covers[from.ordinal()]).drain(getBlockPos(), from, maxDrain, doDrain);
+			}
+		}
 		return getTileInventory().drainS(from, maxDrain, doDrain);
 	}
 
 	@Override
-	public boolean canFillS(ForgeDirection from, Solid Solid)
+	public boolean canFillS(ForgeDirection from, Solid solid)
 	{
-		return getTileInventory().canFillS(from, Solid);
+		if(from != ForgeDirection.UNKNOWN)
+		{
+			if(covers[from.ordinal()] instanceof ISolidIOCover)
+			{
+				return ((ISolidIOCover) covers[from.ordinal()]).canFill(getBlockPos(), from, solid);
+			}
+		}
+		return getTileInventory().canFillS(from, solid);
 	}
 
 	@Override
-	public boolean canDrainS(ForgeDirection from, Solid Solid)
+	public boolean canDrainS(ForgeDirection from, Solid solid)
 	{
-		return getTileInventory().canDrainS(from, Solid);
+		if(from != ForgeDirection.UNKNOWN)
+		{
+			if(covers[from.ordinal()] instanceof ISolidIOCover)
+			{
+				return ((ISolidIOCover) covers[from.ordinal()]).canDrain(getBlockPos(), from, solid);
+			}
+		}
+		return getTileInventory().canDrainS(from, solid);
 	}
 
 	@Override

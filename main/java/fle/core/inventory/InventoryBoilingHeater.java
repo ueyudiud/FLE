@@ -13,6 +13,7 @@ import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryWithFluidTank;
 import fle.api.material.IFluidChemInfo;
 import fle.api.util.IChemCondition;
+import fle.core.init.Lang;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.FLEBoilingHeaterRecipe;
 import fle.core.recipe.FLEBoilingHeaterRecipe.BHKey;
@@ -35,7 +36,7 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 	
 	public InventoryBoilingHeater()
 	{
-		super("inventory.boiling.heater", 6, 2000);
+		super(Lang.inventory_boilingHeater, 6, 2000);
 		maxHeat = 850;
 	}
 	

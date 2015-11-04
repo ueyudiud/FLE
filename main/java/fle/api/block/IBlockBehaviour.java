@@ -13,6 +13,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * The action handler of a block.
+ * Register in sub block.
+ * @author ueyudiud
+ *
+ * @param <E> The class this behavior belong to.
+ */
 public interface IBlockBehaviour<E extends Block>
 {
     public boolean onBlockActivated(E block, World aWorld, int x, int y, int z, EntityPlayer aPlayer, ForgeDirection aSide, float xPos, float yPos, float zPos);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.block.BlockFalling;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -241,10 +242,13 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		int dim = pos.getDim();
 		return getChunkData(dim, pos).getDataFromCoord(dataType, pos);
 	}
+	
+	private static final byte checkRange = 32;
 
 	public short setData(BlockPos pos, int dataType, int data) 
 	{
-		return setData(pos, dataType, data, true);
+		World world = pos.world();
+		return setData(pos, dataType, data, world.checkChunksExist(pos.x - checkRange, pos.y - checkRange, pos.z - checkRange, pos.x + checkRange, pos.y + checkRange, pos.z + checkRange));
 	}
 
 	public short setData(BlockPos pos, int dataType, int data, boolean sync) 

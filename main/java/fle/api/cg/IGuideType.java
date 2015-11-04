@@ -54,6 +54,10 @@ public abstract class IGuideType
 		return createTransInfo(page, slotX, slotY);
 	}
 
+	/**
+	 * Get all pages this type correct.
+	 * @return List of pages.
+	 */
 	public abstract List<IGuidePage> getAllPage();
 	public abstract List<IGuidePage> getPage(GuideTransInfo infomation);
 

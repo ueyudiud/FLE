@@ -18,5 +18,4 @@ public class FleTreeGen extends WorldGenAbstractTree
 	{
 		return false;
 	}
-
 }

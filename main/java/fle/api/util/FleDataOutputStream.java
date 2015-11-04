@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -95,21 +96,24 @@ public class FleDataOutputStream
 			writeInt(data[i]);
 		}
 	}
+	
+	private class A extends OutputStream
+	{
+		@Override
+		public void write(int b) throws IOException
+		{
+			stream.write(b);
+		}	
+	}
 
 	public void writeNBT(NBTTagCompound nbt) throws IOException
 	{
 		if(nbt != null)
 		{
 			stream.writeBoolean(true);
-			OutputStream os = new OutputStream()
-			{				
-				@Override
-				public void write(int b) throws IOException
-				{
-					stream.write(b);
-				}
-			};
-			os.write(CompressedStreamTools.compress(nbt));
+			
+			byte[] buf = CompressedStreamTools.compress(nbt);
+			writeBytes(buf);
 		}
 		else
 		{

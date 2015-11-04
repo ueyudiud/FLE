@@ -33,6 +33,7 @@ import fle.core.handler.WorldHandler;
 import fle.core.init.Conditions;
 import fle.core.init.Crops;
 import fle.core.init.IB;
+import fle.core.init.Lang;
 import fle.core.init.Materials;
 import fle.core.init.Other;
 import fle.core.init.Rs;
@@ -57,6 +58,7 @@ public class CommonProxy extends Proxy
 		Materials.init();
 		Crops.init();
 		IB.init();
+		Lang.init();
 	}
 
 	@Override

@@ -1,16 +1,104 @@
 package fle.api.util;
 
+import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import net.minecraft.item.ItemStack;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 public class FleEntry<K, V> implements Entry<K, V>
-{	
+{
+	private static final Map eMap = new AbstractMap()
+	{
+		private Set set;
+
+		@Override
+		public int size()
+		{
+			return 0;
+		}
+		
+		@Override
+		public Object put(Object key, Object value)
+		{
+			return null;
+		}
+
+		@Override
+		public void putAll(Map map)
+		{
+			;
+		}
+		
+		@Override
+		public Object remove(Object target)
+		{
+			return null;
+		}
+		
+		@Override
+		public Set entrySet()
+		{
+			if(set == null) set = new HashSet();
+			return set;
+		}
+		
+		@Override
+		public Collection values()
+		{
+			return entrySet();
+		}
+		
+		@Override
+		public boolean containsKey(Object key)
+		{
+			return false;
+		}
+		
+		public boolean containsValue(Object value)
+		{
+			return false;
+		}
+		
+		@Override
+		public void clear()
+		{
+			;
+		}
+		
+		@Override
+		public Object clone()
+		{
+			try
+			{
+				return super.clone();
+			}
+			catch(Throwable e)
+			{
+				return this;
+			}
+		}
+		
+		@Override
+		public boolean isEmpty()
+		{
+			return true;
+		}
+	};
+	
+	public static <K, V> Map<K, V> emptyMap()
+	{
+		return eMap;
+	}
 	public static <K, V> Map<K, V> asMap(Iterator<K> keys, Function<? super K, V> entries)
 	{
 		return Maps.toMap(keys, entries);

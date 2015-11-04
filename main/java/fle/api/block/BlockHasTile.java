@@ -30,6 +30,9 @@ public abstract class BlockHasTile extends BlockFle implements ITileEntityProvid
 		return true;
 	}
 	
+	/**
+	 * Get block drop from tile.
+	 */
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
 			int metadata, int fortune) 

@@ -106,12 +106,7 @@ public class EntityHandler
 				if(evt.ammount > 8.0F) level = 2;
 				else if(evt.ammount > 3.0F) level = 1;
 				else level = 0;
-				if(evt.entityLiving.isPotionActive(FlePotionEffect.recovery))
-				{
-					++level;
-					evt.entityLiving.removePotionEffect(FlePotionEffect.recovery.id);
-				}
-				evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 1000, level));
+				evt.entityLiving.addPotionEffect(new PotionEffect(FlePotionEffect.bleeding.id, 800, level));
 			}
 		}
 		else if(evt.source == DamageSource.fall)

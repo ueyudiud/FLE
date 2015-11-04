@@ -5,6 +5,12 @@ import fle.api.world.BlockPos;
 
 public abstract class RotationNet extends IEnergyNet
 {
+	@Override
+	public final EnumEnergyType getEnergyType()
+	{
+		return EnumEnergyType.ROTATION;
+	}
+	
 	public abstract int getWindSpeed(BlockPos pos);
 
 	public abstract void emmitRotationTo(BlockPos pos, ForgeDirection dir, RotationPacket packet);

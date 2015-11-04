@@ -2,6 +2,7 @@ package fle.core.world;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenBigMushroom;
 import net.minecraft.world.gen.feature.WorldGenFlowers;
@@ -19,28 +20,37 @@ public abstract class FleSurfaceGen extends WorldGenerator
 		count = aCount;
 	}
 	
-	@Override
-	public boolean generate(World aWorld, Random aRand,
-			int x, int y, int z)
-	{
-		int count = this.count;
-		for(int i = 0; i < this.count * 10; ++i)
-		{
-            int i1 = x + aRand.nextInt(size) - aRand.nextInt(size);
-            int j1 = y + aRand.nextInt(size) - aRand.nextInt(size);
-            int k1 = z + aRand.nextInt(size) - aRand.nextInt(size);
-            while(Math.sqrt(i1 * i1 + j1 * j1 + k1 * k1) < size)
+
+	public boolean generate(World aWorld, Random aRand, int x, int y, int z)
+    {
+        Block block;
+
+        do
+        {
+            block = aWorld.getBlock(x, y, z);
+            if (!(block.isLeaves(aWorld, x, y, z) || block.isAir(aWorld, x, y, z)))
             {
-            	i1 += i1 < 0 ? 1 : -1;
-            	j1 += j1 < 0 ? 1 : -1;
-            	k1 += k1 < 0 ? 1 : -1;
+                break;
             }
-            if(aRand.nextDouble() < 0.6D) continue;
-			if(generateAt(aWorld, aRand, x, y, z)) count -= 1;
-			if(count <= 0) break;
-		}
-		return count != this.count;
-	}
+            --y;
+        } 
+        while (y > 0);
+
+        int i = 0;
+        for (int l = 0; l < count * 2; ++l)
+        {
+            int i1 = x + aRand.nextInt(size) - aRand.nextInt(size);
+            int j1 = y + aRand.nextInt(size / 2) - aRand.nextInt(size / 2);
+            int k1 = z + aRand.nextInt(size) - aRand.nextInt(size);
+
+            if (generateAt(aWorld, aRand, x, y, z))
+            {
+            	++i;
+            }
+            if(i >= count) break;
+        }
+        return i != 0;
+    }
 	
 	public abstract boolean generateAt(World aWorld, Random aRand, int x, int y, int z);
 }

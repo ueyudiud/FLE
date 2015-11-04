@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+import fle.api.cover.IItemIOCover;
 import fle.api.inventory.IInventoryTile;
 
 public abstract class TEInventory<T extends IInventoryTile> extends TEBase implements ISidedInventory
@@ -122,6 +124,10 @@ public abstract class TEInventory<T extends IInventoryTile> extends TEBase imple
 	public boolean canInsertItem(int slotID, ItemStack aStack,
 			int side)
 	{
+		if(covers[side] instanceof IItemIOCover)
+		{
+			return ((IItemIOCover) covers[side]).canFill(getBlockPos(), ForgeDirection.VALID_DIRECTIONS[side], aStack);
+		}
 		return getTileInventory().canInsertItem(slotID, aStack, side);
 	}
 
@@ -129,6 +135,10 @@ public abstract class TEInventory<T extends IInventoryTile> extends TEBase imple
 	public boolean canExtractItem(int slotID, ItemStack aStack,
 			int side)
 	{
+		if(covers[side] instanceof IItemIOCover)
+		{
+			return ((IItemIOCover) covers[side]).canDrain(getBlockPos(), ForgeDirection.VALID_DIRECTIONS[side], aStack);
+		}
 		return getTileInventory().canExtractItem(slotID, aStack, side);
 	}
 

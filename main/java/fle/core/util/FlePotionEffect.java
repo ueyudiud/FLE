@@ -25,7 +25,7 @@ public class FlePotionEffect
 	public static Potion bleeding;
 	public static Potion fracture;
 	public static Potion burn;
-	public static Potion recovery;
+	//public static Potion recovery;
 	
 	public static void init()
 	{
@@ -51,7 +51,7 @@ public class FlePotionEffect
 		bleeding = new PotionFLEBleeding(FleAPI.getNextPotionId(start), "bleeding", 0xC40F0F, new int[]{0, 0});
 		fracture = new PotionFLEFracture(FleAPI.getNextPotionId(start), "fracture", 0xFFFDE8, new int[]{1, 0});
 		burn = new PotionFLEBurn(FleAPI.getNextPotionId(start), "burn", 0x922700, new int[]{2, 0});
-		recovery = new PotionFLERecovery(FleAPI.getNextPotionId(start), "recovery", 0x83FF00, new int[]{3, 0});
+		//recovery = new PotionFLERecovery(FleAPI.getNextPotionId(start), "recovery", 0x83FF00, new int[]{3, 0});
 	}
 
 	private static class PotionFLE extends Potion
@@ -134,6 +134,7 @@ public class FlePotionEffect
 		}
 	}
 
+	@Deprecated
 	private static class PotionFLERecovery extends PotionFLE
 	{
 		public PotionFLERecovery(int id, String name, int color, int[] iconIndex)

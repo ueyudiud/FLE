@@ -19,4 +19,6 @@ public interface IWorldManager
 	short removeData(BlockPos pos, EnumWorldNBT dataType);
 
 	short[] removeData(BlockPos pos);
+
+	void sendData(BlockPos blockPos);
 }

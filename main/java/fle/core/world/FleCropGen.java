@@ -29,7 +29,8 @@ public class FleCropGen extends FleSurfaceGen
 		if(aWorld.getBiomeGenForCoords(x, z).getFloatTemperature(x, y, z) < 0.1F) return false;
 		BlockFleCrop.flag = true;
 		boolean flag = false;
-		if(cropBlock.canBlockStay(aWorld, x, y, z))
+		Block target = aWorld.getBlock(x, y, z);
+		if(cropBlock.canBlockStay(aWorld, x, y, z) && (target.isAir(aWorld, x, y, z) || target.isReplaceable(aWorld, x, y, z)))
 		{
 			if(aWorld.setBlock(x, y, z, cropBlock))
 			{

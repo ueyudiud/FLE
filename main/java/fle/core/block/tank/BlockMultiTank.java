@@ -205,4 +205,10 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 		}
 		return null;
 	}
+	
+	@Override
+	public boolean hasSubs()
+	{
+		return true;
+	}
 }

@@ -25,6 +25,7 @@ public class FWMClient extends FWM
 			for(int i = 0; i < data.length; ++i)
 				tData.setDataFromCoord(i, pos, (short) data[i]);
 		}
+		pos.world().markBlockForUpdate(pos.x, pos.y, pos.z);
 	}
 	
 	@Override

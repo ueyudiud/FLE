@@ -16,7 +16,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
-import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.FleValue;
 import fle.api.energy.IThermalTileEntity;
@@ -26,6 +25,10 @@ import fle.api.world.BlockPos;
 public class BlockFle extends Block
 {
 	protected int maxStackSize = 64;
+	/**
+	 * The unlocalized name of block, override in block.
+	 * @see net.minecraft.block.Block
+	 */
 	protected final String unlocalizedName;
 
 	protected BlockFle(String aName, Material aMaterial)
@@ -51,6 +54,9 @@ public class BlockFle extends Block
 		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", aLocalized);
 	}
 	
+	/**
+	 * Mark block for update.
+	 */
 	@Override
 	public void onNeighborBlockChange(World aWorld, int x,
 			int y, int z, Block block)
@@ -59,16 +65,26 @@ public class BlockFle extends Block
 		byte b0 = 32;
 		if(!aWorld.isRemote && aWorld.checkChunksExist(x - 32, y - 32, z - 32, x + 32, y + 32, z + 32))
 		{
-			FLE.fle.getWorldManager().sendData(new BlockPos(aWorld, x, y, z));
+			FleAPI.mod.getWorldManager().sendData(new BlockPos(aWorld, x, y, z));
 		}
 	}
 	
+	/**
+	 * Get block localized name.
+	 * @see fle.api.util.ILanguageManager
+	 */
 	@Override
 	public String getLocalizedName()
 	{
 		return FleAPI.lm.translateToLocal(getUnlocalizedName() + ".name", new Object[0]);
 	}
 	
+	/**
+	 * Set max size per stack.
+	 * This method is similar to method of itemBlock of this item.
+	 * @see fle.api.block.ItemFleBlock
+	 * @param maxStackSize The max stack size.
+	 */
 	public void setMaxStackSize(int maxStackSize)
 	{
 		this.maxStackSize = maxStackSize;
@@ -137,6 +153,15 @@ public class BlockFle extends Block
 		return true;
 	}
 	
+	/**
+	 * Get entity facing from world.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param entity
+	 * @return
+	 */
     protected ForgeDirection getPointFacing(World world, int x, int y, int z, EntityLivingBase entity)
     {
         int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -151,6 +176,17 @@ public class BlockFle extends Block
         }
     }
 
+    /**
+     * Get facing from active position.
+     * @param world
+     * @param x
+     * @param y
+     * @param z
+     * @param xPos
+     * @param yPos
+     * @param zPos
+     * @return
+     */
 	protected ForgeDirection getPointFacing(World world, int x, int y, int z, double xPos, double yPos, double zPos)
     {
     	double a = xPos;
@@ -186,9 +222,18 @@ public class BlockFle extends Block
     	return dir;
     }
 	
+	/**
+	 * The local thread correct tile entity of block broken.
+	 */
 	protected ThreadLocal<TileEntity> tileThread = new ThreadLocal();
+	/**
+	 * The local thread correct meta of block broken.
+	 */
 	protected ThreadLocal<Integer> metaThread = new ThreadLocal();
 	
+	/**
+	 * Saving data during breaking block.
+	 */
 	@Override
 	public void breakBlock(World aWorld, int x, int y, int z, Block aBlock, int aMeta)
 	{
@@ -197,7 +242,8 @@ public class BlockFle extends Block
 		BlockPos tPos = new BlockPos(aWorld, x, y, z);
 		metaThread.set(new Integer(getDamageValue(aWorld, x, y, z)));
 		super.breakBlock(aWorld, x, y, z, aBlock, aMeta);
-		FLE.fle.getWorldManager().removeData(tPos);
+		//Remove all meta of this block in FWM
+		FleAPI.mod.getWorldManager().removeData(tPos);
 	}
 	
 	private MapColor mapColor = null;
@@ -249,6 +295,10 @@ public class BlockFle extends Block
 		return mapColor == null ? super.getMapColor(metadata) : mapColor;
 	}
 	
+	/**
+	 * Active when entity stand on this block.
+	 * Attack entity when entity stand this hot block.
+	 */
 	@Override
 	public void onEntityCollidedWithBlock(World aWorld, int x,
 			int y, int z, Entity aEntity)

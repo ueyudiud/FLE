@@ -8,7 +8,9 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType;
@@ -22,6 +24,7 @@ import fle.api.util.WeightHelper;
 import fle.api.util.WeightHelper.Stack;
 import fle.api.world.TreeInfo;
 import fle.core.block.BlockLog;
+import fle.core.block.plant.PlantBase;
 import fle.core.init.Crops;
 import fle.core.init.IB;
 import fle.core.init.Materials;
@@ -101,7 +104,9 @@ public class FleWorldGen implements IWorldGenerator
 		default :;
 		break;
 		}
-		int s = world.getBiomeGenForCoords(x * 16 + 8, z * 16 + 8).theBiomeDecorator.treesPerChunk;
+		//Surface generate.
+		BiomeGenBase biome = world.getBiomeGenForCoords(x * 16 + 8, z * 16 + 8);
+		int s = biome.theBiomeDecorator.treesPerChunk;
 		Map<TreeInfo, Integer> info = new HashMap();
 		for(TreeInfo tInfo : BlockLog.trees)
 		{
@@ -113,11 +118,29 @@ public class FleWorldGen implements IWorldGenerator
 		{
 			generateTree(wh.randomGet(), world, random, x, z);
 		}
+		s = biome.theBiomeDecorator.grassPerChunk;
+		for(int i = s; i > 0; --i)
+		{
+			switch(random.nextInt(16))
+			{
+			case 0 : generatePlant(Crops.bristlegrass, world, random, x, z, 8, 32 * s);
+			break;
+			}
+		}
+		s = biome.theBiomeDecorator.flowersPerChunk;
+		for(int i = s; i > 0; --i)
+		{
+			switch(random.nextInt(16))
+			{
+			case 0 : generatePlant(Crops.dandelion, world, random, x, z, 8, 32 * s);
+			break;
+			}
+		}
 		switch(random.nextInt(128))
 		{
 		case 33:;
 		case 17:;
-		case 1 : generateCrop(Crops.millet, world, random, x, z, 8, 8);
+		case 1 :;
 		break;
 		case 34:;
 		case 18:;
@@ -155,10 +178,18 @@ public class FleWorldGen implements IWorldGenerator
 		default : break;
 		}
 	}
-	
+
 	public void generateNether(Random random, int x, int z, World world)
 	{
 		
+	}
+	
+	public boolean generatePlant(PlantBase card, World world,
+			Random random, int x, int z, int size, int count)
+	{
+		int X = x + random.nextInt(15);
+		int Z = z + random.nextInt(15);
+		return new FlePlantGen(size, count, card).generate(world, random, X, 200, Z);
 	}
 	
 	public boolean generateCrop(CropCard card, World world, Random random, int x, int z, int size, int count)

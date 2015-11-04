@@ -13,6 +13,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.cover.Cover;
+import fle.api.cover.CoverRegistry;
 import fle.api.event.FLEFontRegisterEvent;
 import fle.api.fluid.FluidBase;
 import fle.api.gui.GuiCondition;
@@ -106,6 +108,10 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		for(Solid tSoild : SolidRegistry.getSolidList())
 		{
 			tSoild.registerIcon(evt.register);
+		}
+		for(Cover tCover : CoverRegistry.getCoverRegister())
+		{
+			tCover.registerIcon(evt.register);
 		}
 	}
 	

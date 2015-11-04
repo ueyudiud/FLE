@@ -3,6 +3,8 @@ package fle.core.render;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL14;
 
 import fle.core.te.tank.TileEntityMultiTank;
 
@@ -41,7 +43,7 @@ public class TESRMT extends TESRBase<TileEntityMultiTank>
 	        float vScale = tile.height - 1;
 	        float hScale = tile.width - 1;
             preGL();
-            GL11.glTranslatef((float) x + vOffset + 0.5F, (float) y + yOffset + 0.01f, (float) z + vOffset + 0.5F);
+            GL11.glTranslatef((float) x + vOffset + 0.5F, (float) y + yOffset + 1.01F, (float) z + vOffset + 0.5F);
             GL11.glScalef(hScale, vScale, hScale);
 
             //GL11.glScalef(0.999f, 1, 0.999f);

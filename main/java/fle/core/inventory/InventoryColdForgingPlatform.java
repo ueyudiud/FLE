@@ -9,6 +9,7 @@ import fle.api.enums.EnumDamageResource;
 import fle.api.inventory.InventoryTileCraftable;
 import fle.api.recipe.CraftingState;
 import fle.api.recipe.ItemOreStack;
+import fle.core.init.Lang;
 import fle.core.recipe.ColdForgingRecipe;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.TileEntityColdForgingPlatform;
@@ -21,7 +22,7 @@ public class InventoryColdForgingPlatform extends InventoryTileCraftable<TileEnt
 	
 	public InventoryColdForgingPlatform()
 	{
-		super("forging.platform", 6);
+		super(Lang.inventory_coldForgingPlatform, 6);
 	}
 	
 	@Override

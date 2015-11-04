@@ -10,6 +10,9 @@ import fle.api.world.BlockPos;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -28,6 +31,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.registry.GameData;
@@ -103,15 +107,8 @@ public class FleDataInputStream
 	{
 		if(stream.readBoolean())
 		{
-			InputStream is = new InputStream()
-			{				
-				@Override
-				public int read() throws IOException
-				{
-					return stream.readInt();
-				}
-			};
-			return CompressedStreamTools.readCompressed(is);
+			byte[] array = readBytes();
+			return CompressedStreamTools.readCompressed(new ByteArrayInputStream(array));
 		}
 		else
 		{

@@ -9,6 +9,7 @@ import fle.api.inventory.InventoryTWFTC;
 import fle.api.item.ICastingTool;
 import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
+import fle.core.init.Lang;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.TileEntityCastingPool;
@@ -19,7 +20,7 @@ public class InventoryCastingPool extends InventoryTWFTC<TileEntityCastingPool>
 	
 	public InventoryCastingPool()
 	{
-		super("inventory.casting.pool", 12, 6000);
+		super(Lang.inventory_castingPool, 12, 6000);
 		maxHeat = 1800;
 	}
 	

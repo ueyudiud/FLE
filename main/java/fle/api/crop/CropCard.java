@@ -2,15 +2,31 @@ package fle.api.crop;
 
 import net.minecraftforge.common.EnumPlantType;
 import fle.api.enums.EnumCropRender;
+import fle.api.plant.PlantCard;
 import fle.api.util.DropInfo;
 
-public abstract class CropCard
+/**
+ * 
+ * @author ueyudiud
+ *
+ */
+public abstract class CropCard extends PlantCard
 {
+	@Override
+	public final String getPlantName()
+	{
+		return getCropName();
+	}
+	
+	@Override
+	public final String getPlantTextureName()
+	{
+		return "";
+	}
+	
 	public abstract String getCropName();
 	
 	public abstract String getCropTextureName();
-	
-	public abstract EnumPlantType getPlantType();
 	
 	public abstract EnumCropRender getRenderType();
 	
@@ -33,4 +49,19 @@ public abstract class CropCard
 	public abstract DropInfo getSeedDropsInfo(ICropTile tile);
 	
 	public abstract DropInfo getHarvestDropsInfo(ICropTile tile);
+	
+	@Override
+	public boolean shouldUseBiomeColor()
+	{
+		return false;
+	}
+	
+	/**
+	 * Do not drop with resource plant.
+	 */
+	@Override
+	public final DropInfo getDropInfo()
+	{
+		return null;
+	}
 }

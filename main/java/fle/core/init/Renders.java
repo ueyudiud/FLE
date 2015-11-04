@@ -26,6 +26,7 @@ import fle.core.render.RenderMultiTank;
 import fle.core.render.RenderOilLamp;
 import fle.core.render.RenderOre;
 import fle.core.render.RenderOreCobble;
+import fle.core.render.RenderPlants;
 import fle.core.render.RenderRock;
 import fle.core.render.RenderSifter;
 import fle.core.render.RenderStoneMill;
@@ -38,6 +39,7 @@ import fle.core.render.TESRDryingTable;
 import fle.core.render.TESRMT;
 import fle.core.render.TESRPolishTable;
 import fle.core.render.TESRStoneMill;
+import fle.core.render.TESRTD;
 
 public class Renders
 {
@@ -60,6 +62,7 @@ public class Renders
         RenderHandler.register(IB.stoneMachine1, 1, RenderCeramicFurnaceCrucible.class);
         RenderHandler.register(IB.stoneMachine1, 2, RenderColdForging.class);
         RenderHandler.register(IB.crop, OreDictionary.WILDCARD_VALUE, RenderCrop.class);
+        RenderHandler.register(IB.plant, OreDictionary.WILDCARD_VALUE, RenderPlants.class);
         RenderHandler.register(IB.ore_cobble, OreDictionary.WILDCARD_VALUE, RenderOreCobble.class);
         RenderHandler.register(IB.ditch, OreDictionary.WILDCARD_VALUE, RenderDitch.class);
         RenderHandler.register(IB.tank, OreDictionary.WILDCARD_VALUE, RenderMultiTank.class);
@@ -74,6 +77,7 @@ public class Renders
     	registerTESR(TESRStoneMill.class);
     	registerTESR(TESRMT.class);
     	registerTESR(TESRDitch.class);
+    	registerTESR(TESRTD.class);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityFleArrow.class, new RenderFleArrow("arrow"));
 	}
 	

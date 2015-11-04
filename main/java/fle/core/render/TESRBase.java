@@ -23,7 +23,9 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.primitives.SignedBytes;
 
+import fle.FLE;
 import fle.core.render.RenderFakeBlock.RenderInfo;
+import fle.core.util.FLEMath;
 
 public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer
 {
@@ -144,25 +146,32 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
         return diplayLists;
     }
     
-	protected void renderFont(String[] strings, float f1, float f2, float f3)
+	protected void renderFont(String[] strings, float x, float y, float z, float size, float rotation)
 	{
+		GL11.glPushMatrix();
 		FontRenderer fontrenderer = this.func_147498_b();
-		f3 = 0.016666668F * f1;
-		GL11.glTranslatef(0.0F, 0.5F * f1, 0.07F * f1);
-		GL11.glScalef(f3, -f3, f3);
-		GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
+		float dis = (float) FLEMath.distance(x, y, z);
+		//GL11.glRotatef(rotation, 0F, -1, 0F);
+		GL11.glTranslatef(x, y, z);
+		GL11.glScalef(size, -size, size);
+		GL11.glNormal3f(0.0F, 0.0F, -1.0F * size);
 		GL11.glDepthMask(false);
 		byte b0 = 0;
 		
 		int i = 0;
 		for (String s : strings)
 		{
-			fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i++ * 10 - strings.length * 5, b0);
+			fontrenderer.drawString(s, - fontrenderer.getStringWidth(s) / 2, i++ * 10 - strings.length * 5, b0);
 		}
 
 		GL11.glDepthMask(true);
 	    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	    GL11.glPopMatrix();
+	}
+
+	protected float getDefaultRotation()
+	{
+		return (float) FLEMath.mod(FLE.fle.getPlatform().getPlayerInstance().rotationYaw, 180D);
 	}
 	
 	protected static IIcon getFluidTexture(Fluid fluid, boolean flowing)

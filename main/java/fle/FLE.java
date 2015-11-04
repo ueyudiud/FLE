@@ -24,6 +24,7 @@ import fle.api.FleAPI;
 import fle.api.FleModHandler;
 import fle.api.FleValue;
 import fle.api.crop.CropRegister;
+import fle.api.plant.PlantRegister;
 import fle.api.util.ColorMap;
 import fle.api.util.FLEConfiguration;
 import fle.api.util.FleLog;
@@ -39,6 +40,7 @@ import fle.core.recipe.FLERA;
 import fle.core.tech.FleTechManager;
 import fle.core.util.FleColorMap;
 import fle.core.util.FleCropRegister;
+import fle.core.util.FlePlantRegister;
 import fle.core.util.FleSetup;
 import fle.core.util.FluidDictionary;
 import fle.core.util.Keyboard;
@@ -51,10 +53,10 @@ public class FLE implements FleModHandler
 {	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.05i";
+    public static final String VERSION = "2.05j";
     public static final int minForge = 1420;
     
-    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775617L);
+    private static final UUID modUUID = new UUID(-7834374458361585156L, -677775586L);
     
     @Instance(MODID)
     public static FLE fle;
@@ -65,6 +67,7 @@ public class FLE implements FleModHandler
     private SideGateway<FWM> wm;
     private NWH nw;
     private CropRegister cr;
+    private FlePlantRegister pr;
     private FleTechManager tm;
     private FleThermalNet tn;
     private FleRotationNet rn;
@@ -83,6 +86,7 @@ public class FLE implements FleModHandler
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
     	nw = NWH.init();
     	cr = new FleCropRegister();
+    	pr = new FlePlantRegister();
     	wm = new SideGateway<FWM>("fle.core.world.FWM", "fle.core.world.FWMClient");
     	tm = new FleTechManager();
     	tn = new FleThermalNet();
@@ -222,6 +226,12 @@ public class FLE implements FleModHandler
 	public FleRotationNet getRotationNet() 
 	{
 		return rn;
+	}
+
+	@Override
+	public FlePlantRegister getPlantRegister()
+	{
+		return pr;
 	}
 
 	@Override

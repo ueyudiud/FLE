@@ -3,6 +3,11 @@ package fle.api.util;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import cpw.mods.fml.common.eventhandler.Event;
 
+/**
+ * 
+ * @author ueyudiud
+ *
+ */
 public class FluidIconRegisterEvent extends Event
 {
 	public IIconRegister register;
