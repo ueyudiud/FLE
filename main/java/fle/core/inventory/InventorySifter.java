@@ -9,6 +9,7 @@ import fle.api.recipe.IRecipeHandler.RecipeKey;
 import fle.api.soild.Solid;
 import fle.api.soild.SolidStack;
 import fle.api.soild.SolidTank;
+import fle.core.init.Lang;
 import fle.core.recipe.FLESifterRecipe;
 import fle.core.recipe.FLESifterRecipe.SifterKey;
 import fle.core.recipe.FLESifterRecipe.SifterRecipe;
@@ -148,7 +149,7 @@ public class InventorySifter extends InventorySolidTank<TileEntitySifter>
 	@Override
 	public String getInventoryName()
 	{
-		return "inventory.sifter";
+		return Lang.inventory_sifter;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.RecipeInfomation;
 import fle.api.soild.Solid;
 import fle.api.soild.SolidStack;
+import fle.core.init.Lang;
 
 public class FLESifterRecipe extends StandardType
 {
@@ -36,7 +37,7 @@ public class FLESifterRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Sifter Recipe";
+		return Lang.cg_sifter;
 	}
 
 	@Override

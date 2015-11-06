@@ -176,8 +176,12 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	@Override
 	public Object onEmmit(byte aType)
 	{
-		return aType == 1 ? getTileInventory().recipeTime :
-			aType == 2 ? mode : null;
+		switch(aType)
+		{
+		case 1 : return getTileInventory().recipeTime;
+		case 2 : return mode;
+		}
+		return null;
 	}
 
 	@Override

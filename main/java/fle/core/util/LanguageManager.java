@@ -34,7 +34,7 @@ public class LanguageManager implements ILanguageManager
 		String str = MOD;
 		str += ".";
 		String str1 = aTypeName + "." + enLocalizedName;
-		boolean flag = false;
+		boolean flag = true;
 		for(int i = 0; i < str1.length(); ++i)
 		{
 			char chr = str1.charAt(i);
@@ -54,10 +54,11 @@ public class LanguageManager implements ILanguageManager
 				if(flag)
 				{
 					flag = false;
+					str += Character.toLowerCase(chr);
 					continue;
 				}
 				flag = true;
-				str += "." + (char) (chr & 0xFFDF);
+				str += "." + Character.toLowerCase(chr);
 				continue;
 			}
 			str += chr;

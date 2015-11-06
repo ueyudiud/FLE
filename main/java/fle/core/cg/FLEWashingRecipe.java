@@ -20,6 +20,7 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.RecipeInfomation;
 import fle.api.util.DropInfo;
+import fle.core.init.Lang;
 import fle.core.recipe.WashingRecipe;
 
 public class FLEWashingRecipe extends StandardType
@@ -43,7 +44,7 @@ public class FLEWashingRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Washing";
+		return Lang.cg_washing;
 	}
 	
 	@Override

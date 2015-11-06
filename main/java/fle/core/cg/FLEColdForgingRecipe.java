@@ -16,6 +16,7 @@ import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.CraftingState;
 import fle.api.recipe.ItemAbstractStack;
+import fle.core.init.Lang;
 import fle.core.recipe.ColdForgingRecipe;
 
 public class FLEColdForgingRecipe extends StandardType
@@ -39,7 +40,7 @@ public class FLEColdForgingRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Cold Forging Recipe";
+		return Lang.cg_coldForging;
 	}
 	
 	@Override

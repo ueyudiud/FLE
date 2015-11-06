@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryTileCraftable;
 import fle.api.recipe.IRecipeHandler.RecipeKey;
+import fle.core.init.Lang;
 import fle.core.recipe.FLEDryingRecipe;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipeKey;
@@ -23,7 +24,7 @@ public class InventoryDryingTable extends InventoryTileCraftable<TileEntityDryin
 	
 	public InventoryDryingTable() 
 	{
-		super("inventory.dryingTable", 2);
+		super(Lang.inventory_dryingTable, 2);
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryTWFTC;
 import fle.api.material.Matter.AtomStack;
 import fle.api.material.MatterDictionary;
+import fle.core.init.Lang;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.RecipeHelper;
 import fle.core.te.argil.TileEntityTerrine;
@@ -22,7 +23,7 @@ public class InventoryTerrine extends InventoryTWFTC<TileEntityTerrine>
 	
 	public InventoryTerrine() 
 	{
-		super("inventory.terrine", 2, 3000);
+		super(Lang.inventory_terrine, 2, 3000);
 		maxHeat = 1500;
 	}
 	

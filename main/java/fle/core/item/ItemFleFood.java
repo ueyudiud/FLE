@@ -16,27 +16,27 @@ public class ItemFleFood extends fle.api.item.ItemFleFood
 {
 	public ItemFleFood init()
 	{
-		addSubItem(0, "flour", "Flour", "food/flour", new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
-		addSubItem(1, "flour_wholemeal", "Wholemeal Flour", "food/wholemeal_flour", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
-		addSubItem(101, "groats_wheat_wholemeal", "Wholemeal Wheat Groats", "food/wholemeal_wheat_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
-		addSubItem(102, "groats_millet_wholemeal", "Wholemeal Millet Groats", "food/wholemeal_millet_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
-		addSubItem(111, "groats_wheat", "Wheat Groats", "food/wheat_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
-		addSubItem(112, "groats_millet", "Millet Groats", "food/millet_groats", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
-		addSubItem(201, "paste", "Paste", "food/paste", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
-		addSubItem(202, "paste_graham", "Graham Paste", "food/graham_paste", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
-		addSubItem(1001, "bread", "Bread", "food/bread", new FoodStandard(EnumFoodType.Snack, 6, 1.0F));
-		addSubItem(1002, "bread_graham", "Graham Bread", "food/graham_bread", new FoodStandard(EnumFoodType.Snack, 4, 1.2F));
-		addSubItem(1201, "millet_congee", "Millet Congee", "food/millet_congee", new FoodBowl(EnumFoodType.Refection, 9, 1.2F));
-		addSubItem(1202, "millet_congee_raw", "Raw Millet Congee", "food/millet_congee_raw", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
-		addSubItem(1203, "millet_congee_rough", "Rough Millet Congee", "food/millet_congee_rough", new FoodBowl(EnumFoodType.Refection, 7, 1.1F));
-		addSubItem(1204, "millet_congee_rough_raw", "Raw Rough Millet Congee", "food/millet_congee_rough_raw", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
-		addSubItem(5001, "brown_sugar", "Brown Sugar", "food/brown_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
-		addSubItem(5002, "sugar", "White Sugar", "food/white_sugar", new FoodStandard(EnumFoodType.Resource, 1, 0.6F));
-		addSubItem(10001, "chicken_kebab_raw", "Raw Chicken Kebab", "food/chicken_kebab_raw", new FoodKebab(EnumFoodType.Snack, 2, 0.2F));
-		addSubItem(10002, "pork_kebab_raw", "Raw Pork Kebab", "food/pork_kebab_raw", new FoodKebab(EnumFoodType.Snack, 3, 0.2F));
-		addSubItem(10011, "chicken_kebab", "Chicken Kebab", "food/chicken_kebab", new FoodKebab(EnumFoodType.Snack, 3, 0.6F));
-		addSubItem(10012, "pork_kebab", "Pork Kebab", "food/pork_kebab", new FoodKebab(EnumFoodType.Snack, 4, 0.7F));
-		addSubItem(20001, "citron", "Citron", "food/citron", new FoodStandard(EnumFoodType.Resource, 1, 0.0F));
+		addSubItem(1, "flour", "Flour", "resource/food/1", new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
+		addSubItem(2, "flour_wholemeal", "Wholemeal Flour", "resource/food/2", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
+		addSubItem(101, "groats_wheat_wholemeal", "Wholemeal Wheat Groats", "resource/food/101", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
+		addSubItem(102, "groats_millet_wholemeal", "Wholemeal Millet Groats", "resource/food/102", new FoodStandard(EnumFoodType.Resource, 1, 0.2F));
+		addSubItem(111, "groats_wheat", "Wheat Groats", "resource/food/111", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(112, "groats_millet", "Millet Groats", "resource/food/112", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(201, "paste", "Paste", "resource/food/201", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(202, "paste_graham", "Graham Paste", "resource/food/202", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(1001, "bread", "Bread", "resource/food/1001", new FoodStandard(EnumFoodType.Snack, 6, 1.0F));
+		addSubItem(1002, "bread_graham", "Graham Bread", "resource/food/1002", new FoodStandard(EnumFoodType.Snack, 4, 1.2F));
+		addSubItem(1201, "millet_congee", "Millet Congee", "resource/food/1201", new FoodBowl(EnumFoodType.Refection, 9, 1.2F));
+		addSubItem(1202, "millet_congee_raw", "Raw Millet Congee", "resource/food/1202", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
+		addSubItem(1203, "millet_congee_rough", "Rough Millet Congee", "resource/food/1203", new FoodBowl(EnumFoodType.Refection, 7, 1.1F));
+		addSubItem(1204, "millet_congee_rough_raw", "Raw Rough Millet Congee", "resource/food/1204", new FoodBowl(EnumFoodType.Refection, 3, 1.0F));
+		addSubItem(5001, "brown_sugar", "Brown Sugar", "resource/food/5001", new FoodStandard(EnumFoodType.Resource, 1, 0.4F));
+		addSubItem(5002, "sugar", "White Sugar", "resource/food/5002", new FoodStandard(EnumFoodType.Resource, 1, 0.6F));
+		addSubItem(10001, "chicken_kebab_raw", "Raw Chicken Kebab", "resource/food/10001", new FoodKebab(EnumFoodType.Snack, 2, 0.2F));
+		addSubItem(10002, "pork_kebab_raw", "Raw Pork Kebab", "resource/food/10002", new FoodKebab(EnumFoodType.Snack, 3, 0.2F));
+		addSubItem(10011, "chicken_kebab", "Chicken Kebab", "resource/food/10011", new FoodKebab(EnumFoodType.Snack, 3, 0.6F));
+		addSubItem(10012, "pork_kebab", "Pork Kebab", "resource/food/10012", new FoodKebab(EnumFoodType.Snack, 4, 0.7F));
+		addSubItem(20001, "citron", "Citron", "resource/food/20001", new FoodStandard(EnumFoodType.Resource, 1, 0.0F));
 		return this;
 	}
 

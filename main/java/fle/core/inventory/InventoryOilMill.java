@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryWithFluidTank;
 import fle.api.recipe.IRecipeHandler.RecipeKey;
+import fle.core.init.Lang;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.FLEOilMillRecipe;
 import fle.core.recipe.FLEOilMillRecipe.OilMillKey;
@@ -27,7 +28,7 @@ public class InventoryOilMill extends InventoryWithFluidTank<TileEntityOilMill>
 	
 	public InventoryOilMill()
 	{
-		super("inventory.oil.mill", 2, 2000);
+		super(Lang.inventory_leverOilMill, 2, 2000);
 		maxHeat = 600;
 	}
 	

@@ -98,18 +98,22 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	@Override
 	public Object onEmmit(byte aType)
 	{
-		return aType == 1 ? getTileInventory().buf :
-			aType == 2 ? tc.getHeat() : null;
+		switch(aType)
+		{
+		case 3 : return getTileInventory().buf;
+		case 4 : return tc.getHeat();
+		}
+		return null;
 	}
 
 	@Override
 	public void onReseave(byte type, Object contain)
 	{
-		if(type == 1)
+		if(type == 3)
 		{
 			getTileInventory().buf = (Integer) contain;
 		}
-		else if(type == 2)
+		else if(type == 4)
 		{
 			tc.syncHeat((Double) contain);
 		}

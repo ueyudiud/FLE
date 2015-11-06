@@ -17,6 +17,7 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemArrayStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapedFleRecipe;
+import fle.core.init.Lang;
 import fle.core.util.Util;
 
 public class FLEShapedRecipe extends StandardType
@@ -42,7 +43,7 @@ public class FLEShapedRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "FLE Shaped Recipe";
+		return Lang.cg_crafting_shaped;
 	}
 
 	@Override

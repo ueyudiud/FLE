@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import fle.api.FleValue;
 import fle.api.gui.ContainerBase;
 import fle.api.gui.GuiContainerBase;
+import fle.core.init.Lang;
 
 @SideOnly(Side.CLIENT)
 public class GuiItemBagable extends GuiContainerBase
@@ -34,7 +35,7 @@ public class GuiItemBagable extends GuiContainerBase
 	@Override
 	public String getName()
 	{
-		return "inventory.bagable";
+		return Lang.inventory_bag;
 	}
 
 	@Override

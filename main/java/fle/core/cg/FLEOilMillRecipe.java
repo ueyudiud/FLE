@@ -15,6 +15,7 @@ import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.RecipeInfomation;
+import fle.core.init.Lang;
 
 public class FLEOilMillRecipe extends StandardType
 {
@@ -33,17 +34,17 @@ public class FLEOilMillRecipe extends StandardType
 			init = true;
 		}
 	}
+
+	@Override
+	public String getTypeName()
+	{
+		return Lang.cg_oilMill;
+	}
 	
 	@Override
 	public String getGuideName()
 	{
 		return "oil_mill";
-	}
-
-	@Override
-	public String getTypeName()
-	{
-		return "Oil Mill Recipe";
 	}
 
 	@Override

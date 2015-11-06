@@ -15,6 +15,7 @@ import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.soild.Solid;
 import fle.api.soild.SolidStack;
+import fle.core.init.Lang;
 
 public class FLEStoneMillRecipe extends StandardType
 {
@@ -43,7 +44,7 @@ public class FLEStoneMillRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Stone Mill Recipe";
+		return Lang.cg_stoneMill;
 	}
 
 	@Override

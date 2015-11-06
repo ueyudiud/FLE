@@ -12,6 +12,7 @@ import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
+import fle.core.init.Lang;
 import fle.core.item.ItemFleSub;
 import fle.core.recipe.CeramicsRecipe;
 
@@ -36,7 +37,7 @@ public class FLEClayRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Clay Model";
+		return Lang.cg_clay;
 	}
 
 	@Override

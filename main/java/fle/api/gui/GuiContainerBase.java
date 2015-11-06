@@ -52,8 +52,11 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		String str = hasCustomName() ? getName() : FleAPI.lm.translateToLocal(getName(), new Object[0]);
-		fontRendererObj.drawString(str, (xSize - fontRendererObj.getStringWidth(str)) / 2, 6, 0x404040);
+		if(shouldRenderName())
+		{
+			String str = getName();
+			fontRendererObj.drawString(str, (xSize - fontRendererObj.getStringWidth(str)) / 2, 6, 0x404040);
+		}
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
@@ -76,6 +79,11 @@ public abstract class GuiContainerBase extends GuiContainer
 	public String getName()
 	{
 		return container instanceof ContainerBase ? ((ContainerBase) container).inv.getInventoryName() : "";
+	}
+	
+	protected boolean shouldRenderName()
+	{
+		return true;
 	}
 
 	public abstract ResourceLocation getResourceLocation();

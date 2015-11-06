@@ -16,6 +16,7 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemArrayStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapelessFleRecipe;
+import fle.core.init.Lang;
 import fle.core.util.Util;
 
 public class FLEShapelessRecipe extends StandardType
@@ -41,7 +42,7 @@ public class FLEShapelessRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "FLE Shapeless Recipe";
+		return Lang.cg_crafting_shapeless;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.inventory.InventoryTileBase;
+import fle.core.init.Lang;
 import fle.core.te.argil.TileEntityCeramicFurnaceCrucible;
 import fle.core.te.argil.TileEntityCeramicFurnaceFirebox;
 
@@ -85,7 +86,7 @@ public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntity
 	@Override
 	public String getInventoryName()
 	{
-		return "inventory.ceramic.furnace.firebox";
+		return Lang.inventory_ceramicFireBox;
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import fle.api.material.MatterDictionary;
 import fle.api.material.MatterDictionary.IFreezingRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
+import fle.core.init.Lang;
 import fle.core.recipe.CastingPoolRecipe;
 
 public class FLECastingRecipe extends StandardType
@@ -46,7 +47,7 @@ public class FLECastingRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Casting";
+		return Lang.cg_casting;
 	}
 
 	@Override

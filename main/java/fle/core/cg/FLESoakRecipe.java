@@ -15,6 +15,7 @@ import fle.api.cg.GuiBookBase;
 import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
+import fle.core.init.Lang;
 import fle.core.recipe.FLESoakRecipe.SoakRecipe;
 
 public class FLESoakRecipe extends StandardType
@@ -44,7 +45,7 @@ public class FLESoakRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Soak";
+		return Lang.cg_soak;
 	}
 	
 	@Override

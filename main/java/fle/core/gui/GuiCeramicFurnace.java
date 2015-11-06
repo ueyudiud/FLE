@@ -18,6 +18,7 @@ import fle.api.material.Matter;
 import fle.api.util.WeightHelper;
 import fle.api.util.WeightHelper.Stack;
 import fle.api.world.BlockPos;
+import fle.core.init.Lang;
 
 @SideOnly(Side.CLIENT)
 public class GuiCeramicFurnace extends GuiContainerBase
@@ -132,7 +133,7 @@ public class GuiCeramicFurnace extends GuiContainerBase
 	@Override
 	public String getName()
 	{
-		return "inventory.ceramic.furnace";
+		return Lang.inventory_ceramicFurnace;
 	}
 
 	@Override

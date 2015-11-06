@@ -15,6 +15,7 @@ import fle.api.inventory.InventoryTileBase;
 import fle.api.item.IPolishTool;
 import fle.api.net.INetEventListener;
 import fle.api.recipe.CraftingState;
+import fle.core.init.Lang;
 import fle.core.recipe.FLEPolishRecipe;
 import fle.core.recipe.FLEPolishRecipe.PolishRecipe;
 import fle.core.recipe.FLEPolishRecipe.PolishRecipeKey;
@@ -131,7 +132,7 @@ public class InventoryPolish extends InventoryTileBase<TileEntityPolish> impleme
 	@Override
 	public String getInventoryName()
 	{
-		return "inventory.polishTable";
+		return Lang.inventory_polishTable;
 	}
 
 	@Override

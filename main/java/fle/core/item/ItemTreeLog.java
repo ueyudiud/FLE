@@ -13,6 +13,7 @@ import fle.api.item.ItemFleMetaBase;
 import fle.api.recipe.ItemAbstractStack;
 import fle.core.handler.AxeHandler;
 import fle.core.handler.AxeHandler.TreeChecker;
+import fle.core.init.Lang;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.util.TextureLocation;
 
@@ -20,13 +21,13 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 {
 	public ItemTreeLog init() 
 	{
-		addSubItem(0, "log_void", "Void Log", new TreeChecker(Blocks.log, -1), new ItemStack(Blocks.log), "logs/void");
-		addSubItem(1, "log_oak", "Oak Log", new TreeChecker(Blocks.log, 0, 4, 8), new ItemStack(Blocks.log, 1, 0), "logs/oak");
-		addSubItem(2, "log_spruce", "Spruce Log", new TreeChecker(Blocks.log, 1, 5, 9), new ItemStack(Blocks.log, 1, 1), "logs/spruce");
-		addSubItem(3, "log_birch", "Birch Log", new TreeChecker(Blocks.log, 2, 6, 10), new ItemStack(Blocks.log, 1, 2), "logs/birch");
-		addSubItem(4, "log_jungle", "Jungle Log", new TreeChecker(Blocks.log, 3, 7, 11), new ItemStack(Blocks.log, 1, 3), "logs/jungle");
-		addSubItem(5, "log_acacia", "Acacia Log", new TreeChecker(Blocks.log2, 0, 4, 8), new ItemStack(Blocks.log2, 1, 0), "logs/acacia");
-		addSubItem(6, "log_darkoak", "Dark Oak Log", new TreeChecker(Blocks.log2, 1, 5, 9), new ItemStack(Blocks.log2, 1, 1), "logs/darkoak");
+		addSubItem(0, "log_void", "Void Log", new TreeChecker(Blocks.log, -1), new ItemStack(Blocks.log), "resource/logs/void");
+		addSubItem(1, "log_oak", "Oak Log", new TreeChecker(Blocks.log, 0, 4, 8), new ItemStack(Blocks.log, 1, 0), "resource/logs/oak");
+		addSubItem(2, "log_spruce", "Spruce Log", new TreeChecker(Blocks.log, 1, 5, 9), new ItemStack(Blocks.log, 1, 1), "resource/logs/spruce");
+		addSubItem(3, "log_birch", "Birch Log", new TreeChecker(Blocks.log, 2, 6, 10), new ItemStack(Blocks.log, 1, 2), "resource/logs/birch");
+		addSubItem(4, "log_jungle", "Jungle Log", new TreeChecker(Blocks.log, 3, 7, 11), new ItemStack(Blocks.log, 1, 3), "resource/logs/jungle");
+		addSubItem(5, "log_acacia", "Acacia Log", new TreeChecker(Blocks.log2, 0, 4, 8), new ItemStack(Blocks.log2, 1, 0), "resource/logs/acacia");
+		addSubItem(6, "log_darkoak", "Dark Oak Log", new TreeChecker(Blocks.log2, 1, 5, 9), new ItemStack(Blocks.log2, 1, 1), "resource/logs/darkoak");
 		try
 		{
 			addSubItem(7, "log_rub", "Rubber Log", new TreeChecker(Block.getBlockFromItem(AxeHandler.IC2RubWood.getItem())), AxeHandler.IC2RubWood, "logs/rub");
@@ -62,7 +63,7 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 	protected void addAdditionalToolTips(List aList, ItemStack aStack)
 	{
 		super.addAdditionalToolTips(aList, aStack);
-		aList.add(new StringBuilder().append(StatCollector.translateToLocal("info.length")).append(":").append(setupNBT(aStack).getShort("Length")).toString());
+		aList.add(new StringBuilder().append(Lang.info_length).append(":").append(setupNBT(aStack).getShort("Length")).toString());
 	}
 	
 	@Override

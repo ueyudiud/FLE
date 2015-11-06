@@ -12,6 +12,7 @@ import fle.api.cg.GuiBookBase;
 import fle.api.cg.StandardPage;
 import fle.api.cg.StandardType;
 import fle.api.recipe.ItemAbstractStack;
+import fle.core.init.Lang;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 
 public class FLEDryingRecipe extends StandardType
@@ -35,7 +36,7 @@ public class FLEDryingRecipe extends StandardType
 	@Override
 	public String getTypeName()
 	{
-		return "Drying";
+		return Lang.cg_drying;
 	}
 
 	@Override
