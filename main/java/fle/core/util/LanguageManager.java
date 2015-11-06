@@ -8,17 +8,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.sun.xml.internal.fastinfoset.util.CharArray;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.inventory.IInventory;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.util.ILanguageManager;
