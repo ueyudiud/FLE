@@ -6,26 +6,53 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 
 import org.lwjgl.opengl.GL11;
 
-public abstract class RIBase
+public abstract class RIBase implements IItemRenderer
 {
 	protected ResourceLocation locate;
 	protected ItemRenderType type;
-	protected ItemStack aStack;
+	protected ItemStack stack;
 	protected IIcon icon;
 	protected double zLevel;
 	protected double rgb_r = 1.0F;
 	protected double rgb_g = 1.0F;
 	protected double rgb_b = 1.0F;
 
-	public void render(ItemRenderType aType, ItemStack stack, Object[] data) 
+	@Override
+	public final boolean handleRenderType(ItemStack item, ItemRenderType type)
+	{
+		return true;
+	}
+
+	@Override
+	public final boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
+			ItemRendererHelper helper)
+	{
+		return type == ItemRenderType.ENTITY;
+	}
+
+	@Override
+	public final void renderItem(ItemRenderType type, ItemStack item, Object... data) 
+	{
+		try
+		{
+			render(type, item, data);
+		}
+		catch(Throwable e)
+		{
+			throw new RuntimeException("FLE render item error, place report this bug to ueyudiud.", e);
+		}
+	}
+	
+	public void render(ItemRenderType aType, ItemStack aStack, Object[] data) 
 	{
 		type = aType;
-		aStack = stack;
-		icon = aStack.getIconIndex();
+		stack = aStack;
+		icon = stack.getIconIndex();
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		if (type.equals(ItemRenderType.ENTITY))
 	    {
@@ -54,6 +81,13 @@ public abstract class RIBase
 		locate = aLocate;
 		Minecraft.getMinecraft().renderEngine.bindTexture(locate);
 	}
+    
+    protected void setColor(int color)
+    {
+        rgb_r = (color >> 16 & 255) / 255.0F;
+        rgb_g = (color >> 8 & 255) / 255.0F;
+        rgb_b = (color & 255) / 255.0F;
+    }
 	
 	protected void renderIcon(IIcon icon)
 	{
@@ -79,7 +113,7 @@ public abstract class RIBase
 	{
 		renderIcon(xStart, yStart, xEnd, yEnd, zLevel, nx, ny, nz, 0, 0, 16, 16);
 	}
-	private void renderIcon(double xStart, double yStart, double xEnd, double yEnd, double zLevel, float nx, float ny, float nz, int uStart, int uEnd, int vStart, int vEnd)
+	protected void renderIcon(double xStart, double yStart, double xEnd, double yEnd, double zLevel, float nx, float ny, float nz, int uStart, int uEnd, int vStart, int vEnd)
 	{
 		if (icon == null)
 		{

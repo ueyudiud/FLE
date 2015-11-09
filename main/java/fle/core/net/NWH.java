@@ -85,11 +85,11 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	private final String channelName;
 	private Register<Class<? extends IPacket>> packetTypes = new Register();
 	private int index = 0;
-	
+
 	private NWH(String name)
 	{
 		channelName = name;
-		channel = NetworkRegistry.INSTANCE.newChannel(name, new ChannelHandler[]{this, FMLCommonHandler.instance().getSide() == Side.CLIENT ? new HandlerClient(this) : new HandlerServer(this)});
+		channel = NetworkRegistry.INSTANCE.newChannel(name, new ChannelHandler[]{this, new HandlerClient(this), new HandlerServer(this)});
 		packetTypes = new Register<Class<? extends IPacket>>(256);
 	}
 	  
@@ -282,6 +282,7 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	    	{
 	    		packet = packetTypes.get(id).newInstance();
 	    		packet.decode(aData);
+	    		packet.side(msg.getTarget());
 	    		packet.a(msg.handler());
 	    		out.add(packet);
 	    	}
@@ -314,6 +315,12 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 			    tChannel.writeAndFlush(pkt);
 	    	}
 	    }
+	    
+	    @Override
+	    public boolean acceptInboundMessage(Object msg) throws Exception
+	    {
+	    	return super.acceptInboundMessage(msg) && ((IPacket) msg).getSide().isClient();
+	    }
 	}
 	
 	@ChannelHandler.Sharable
@@ -345,6 +352,12 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 		    	}
 			    tChannel.writeAndFlush(obj);
 	    	}
+	    }
+	    
+	    @Override
+	    public boolean acceptInboundMessage(Object msg) throws Exception
+	    {
+	    	return super.acceptInboundMessage(msg) && ((IPacket) msg).getSide().isServer();
 	    }
 	}
 

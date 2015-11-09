@@ -26,6 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockOreCobble extends BlockSubTile
 {
@@ -150,7 +151,7 @@ public class BlockOreCobble extends BlockSubTile
 	
 	@Override
 	public boolean onBlockActivated(World aWorld, int x, int y, int z,
-			EntityPlayer aPlayer, int aSide, float xPos, float yPos, float zPos)
+			EntityPlayer aPlayer, ForgeDirection aSide, float xPos, float yPos, float zPos)
 	{
 		return false;
 	}

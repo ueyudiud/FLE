@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
@@ -142,6 +143,12 @@ public class ItemDebug extends ItemFle
 			target.setDead();
 		}
 		return true;
+	}
+	
+	@Override
+	public EnumRarity getRarity(ItemStack stack)
+	{
+		return EnumRarity.epic;
 	}
 	
 	@Override

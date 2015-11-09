@@ -47,17 +47,12 @@ public class Cover
 		return getCoverIcon();
 	}
 	
-	public CoverTile createCoverTile(TEBase tile)
+	public CoverTile createCoverTile(ForgeDirection dir, TEBase tile)
 	{
-		return new CoverTile(tile, this);
+		return new CoverTile(dir, tile, this);
 	}
-	
+
 	public void onBlockBreak(World world, int x, int y, int z)
-	{
-		
-	}
-	
-	public void onBlockSneakClick(World world, int x, int y, int z, EntityPlayer player, double xPos, double yPos, double zPos)
 	{
 		
 	}

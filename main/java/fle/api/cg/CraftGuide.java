@@ -14,7 +14,8 @@ import fle.api.recipe.ItemAbstractStack;
 
 /**
  * The craft guide handler.<br>
- * 
+ * Register guide type and pages here.
+ * Also get all type of pages from type here.
  * @author ueyudiud
  *
  */

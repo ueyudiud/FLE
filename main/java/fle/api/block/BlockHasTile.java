@@ -20,6 +20,15 @@ public abstract class BlockHasTile extends BlockFle implements ITileEntityProvid
 	{
 		super(aName, aMaterial);
 	}
+	protected BlockHasTile(Class<? extends ItemFleBlock> aItemClass,
+			String aName, String aLocalized,  Material aMaterial)
+	{
+		super(aItemClass, aName, aLocalized, aMaterial);
+	}
+	protected BlockHasTile(String aName, String aLocalized, Material aMaterial)
+	{
+		super(aName, aLocalized, aMaterial);
+	}
 
 	@Override
 	public abstract TileEntity createNewTileEntity(World aWorld, int aMeta);

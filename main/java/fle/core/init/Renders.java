@@ -2,7 +2,9 @@ package fle.core.init;
 
 import java.lang.reflect.ParameterizedType;
 
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -10,6 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleValue;
 import fle.core.entity.EntityFleArrow;
+import fle.core.render.RIThermalWire;
 import fle.core.render.RenderArgil;
 import fle.core.render.RenderAsh;
 import fle.core.render.RenderCastingPool;
@@ -30,6 +33,7 @@ import fle.core.render.RenderPlants;
 import fle.core.render.RenderRock;
 import fle.core.render.RenderSifter;
 import fle.core.render.RenderStoneMill;
+import fle.core.render.RenderThermalWire;
 import fle.core.render.RenderWoodenFrame;
 import fle.core.render.TESRArgilItems;
 import fle.core.render.TESRBase;
@@ -46,6 +50,7 @@ public class Renders
 	@SideOnly(Side.CLIENT)
 	public static void init()
 	{
+        RenderHandler.instance = new RenderHandler(false);
 		RenderHandler.register(IB.rock, OreDictionary.WILDCARD_VALUE, RenderRock.class);
         RenderHandler.register(IB.ore, OreDictionary.WILDCARD_VALUE, RenderOre.class);
         RenderHandler.register(IB.oilLamp, OreDictionary.WILDCARD_VALUE, RenderOilLamp.class);
@@ -66,6 +71,8 @@ public class Renders
         RenderHandler.register(IB.ore_cobble, OreDictionary.WILDCARD_VALUE, RenderOreCobble.class);
         RenderHandler.register(IB.ditch, OreDictionary.WILDCARD_VALUE, RenderDitch.class);
         RenderHandler.register(IB.tank, OreDictionary.WILDCARD_VALUE, RenderMultiTank.class);
+        RenderHandler.register(IB.thermalWire, OreDictionary.WILDCARD_VALUE, RenderThermalWire.class);
+        RenderHandler.register(Item.getItemFromBlock(IB.thermalWire), OreDictionary.WILDCARD_VALUE, RIThermalWire.class);
         FleValue.FLE_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
     	RenderingRegistry.registerBlockHandler(new RenderHandler(false));
         FleValue.FLE_NOINV_RENDER_ID = RenderingRegistry.getNextAvailableRenderId();

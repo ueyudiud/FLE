@@ -106,7 +106,7 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
     
     @Override
     public boolean onBlockActivated(World aWorld, int x, int y, int z, EntityPlayer aPlayer,
-    		int aSide, float xPos, float yPos, float zPos)
+    		ForgeDirection aSide, float xPos, float yPos, float zPos)
     {
     	return BlockLog.trees.get(BlockLog.getTreeInfoID(aWorld, x, y, z)).onLogToss(aWorld, x, y, z, aPlayer, aPlayer.getCurrentEquippedItem());
     }

@@ -164,7 +164,7 @@ public class BlockLeaves extends BlockHasSub implements IDebugableBlock
     
     @Override
     public boolean onBlockActivated(World aWorld, int x, int y, int z, EntityPlayer aPlayer,
-    		int aSide, float xPos, float yPos, float zPos)
+    		ForgeDirection dir, float xPos, float yPos, float zPos)
     {
     	return BlockLog.trees.get(BlockLog.getTreeInfoID(aWorld, x, y, z)).onLeavesToss(aWorld, x, y, z, aPlayer, aPlayer.getCurrentEquippedItem());
     }

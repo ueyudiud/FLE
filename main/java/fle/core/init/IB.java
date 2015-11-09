@@ -41,6 +41,7 @@ import fle.core.block.machine.BlockStoneMachine1;
 import fle.core.block.machine.BlockWoodMachine;
 import fle.core.block.machine.BlockWoodMachine1;
 import fle.core.block.tank.BlockMultiTank;
+import fle.core.block.wire.BlockThermalWire;
 import fle.core.item.ItemBowl;
 import fle.core.item.ItemDebug;
 import fle.core.item.ItemFleFood;
@@ -51,6 +52,7 @@ import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.item.ItemTreeLog;
 import fle.core.solid.SolidFlour;
+import fle.core.util.FleCreativeTab;
 
 public class IB 
 {
@@ -111,6 +113,7 @@ public class IB
 	public static Block peat;
 	public static Block tank;
 	public static Block plant;
+	public static Block thermalWire;
 	public static Fluid animalOil;
 	public static Fluid plant_ash_mortar;
 	public static Fluid lime_mortar;
@@ -146,6 +149,7 @@ public class IB
 	
 	public static void init()
 	{
+		new FleCreativeTab("fle");
 		new ItemBowl();
 		
 		animalOil = new FluidBase("oil_a", "Animal Oil", new PropertyInfo(0xFFFFFF, 313, 773, 293, 1831, 1500, 0.8F, -1F, 1.0F, 0.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/oil").setTemperature(FleValue.WATER_FREEZE_POINT + 25);
@@ -181,38 +185,39 @@ public class IB
 		brown_sugar = new Solid("brown_sugar", "Brown Sugar").setType(SolidState.Sick_Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/brown_sugar");
 		Ca_P_fertilizer = new Solid("fertilizer1", "Ca P Fertilizer").setType(SolidState.Sick_Dust).setTextureName(FleValue.TEXTURE_FILE + ":solid/fertilizer1");
 		
-		debug = new ItemDebug("debug").setMaxStackSize(1).setCreativeTab(CreativeTabs.tabRedstone).setTextureName(FleValue.TEXTURE_FILE + ":fle");
-		new BlockThermal().setCreativeTab(CreativeTabs.tabRedstone).setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/debug_thermal").setMaxStackSize(1);
+		debug = new ItemDebug("debug").setMaxStackSize(1).setCreativeTab(FleValue.tabFLE).setTextureName(FleValue.TEXTURE_FILE + ":fle");
+		new BlockThermal().setCreativeTab(FleValue.tabFLE).setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/debug_thermal").setMaxStackSize(1);
 		
 		farmland = new BlockFLEFarmland("fle_farmland", "Farmland").setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/farmland");
 		crop = new BlockFleCrop();
-		rock = new BlockRock().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);
-		ore = new BlockOre().setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone);
-		ore_cobble = new BlockOreCobble("ore.cobble").init().setCreativeTab(CreativeTabs.tabBlock);
-		oreChip = new ItemOre("ore.chip", "ore").init().setCreativeTab(CreativeTabs.tabMaterials);
-		log = new BlockLog("log").setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeWood);
-		leaf = new BlockLeaves("leaves").setCreativeTab(CreativeTabs.tabDecorations).setStepSound(Block.soundTypeGrass);
-		ash = new BlockAsh().setCreativeTab(CreativeTabs.tabDecorations).setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash").setStepSound(Block.soundTypeSand);
-		oilLamp = new BlockOilLamp("oilLamp").setCreativeTab(CreativeTabs.tabDecorations);
-		workbench = new BlockWorkbench("workbench", "Workbench").setCreativeTab(CreativeTabs.tabDecorations);
-		tank = new BlockMultiTank("fle_tank").setCreativeTab(CreativeTabs.tabDecorations).setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/tank");
-		woodMachine = new BlockWoodMachine("woodMachine").init().setCreativeTab(CreativeTabs.tabDecorations);
-		woodMachine1 = new BlockWoodMachine1("woodMachine1").init().setCreativeTab(CreativeTabs.tabDecorations);
-		stoneMachine = new BlockStoneMachine("stoneMachine").init().setCreativeTab(CreativeTabs.tabDecorations);
-		stoneMachine1 = new BlockStoneMachine1("stoneMachine1").init().setCreativeTab(CreativeTabs.tabDecorations);
-		argil_unsmelted = new BlockClayInventory("argil_unsmelted").init().setCreativeTab(CreativeTabs.tabDecorations);
-		argil_smelted = new BlockClayInventory1("argil_smelted").init().setCreativeTab(CreativeTabs.tabDecorations);
-		firewood = new BlockFirewood().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/firewood_oak").setCreativeTab(CreativeTabs.tabBlock);
-		charcoal = new BlockCharcoal().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/coal").setCreativeTab(CreativeTabs.tabBlock);
-		ropeLadder = new BlockRopeLadder("ropeLadder", "Rope Ladder").setBlockTextureName(FleValue.TEXTURE_FILE + ":tools/rope_ladder").setCreativeTab(CreativeTabs.tabDecorations);
+		rock = new BlockRock().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
+		ore = new BlockOre().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
+		ore_cobble = new BlockOreCobble("ore.cobble").init().setCreativeTab(FleValue.tabFLE);
+		oreChip = new ItemOre("ore.chip", "ore").init().setCreativeTab(FleValue.tabFLE);
+		log = new BlockLog("log").setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeWood);
+		leaf = new BlockLeaves("leaves").setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeGrass);
+		ash = new BlockAsh().setCreativeTab(FleValue.tabFLE).setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash").setStepSound(Block.soundTypeSand);
+		oilLamp = new BlockOilLamp("oilLamp").setCreativeTab(FleValue.tabFLE);
+		workbench = new BlockWorkbench("workbench", "Workbench").setCreativeTab(FleValue.tabFLE);
+		tank = new BlockMultiTank("fle_tank").setCreativeTab(FleValue.tabFLE).setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/tank");
+		woodMachine = new BlockWoodMachine("woodMachine").init().setCreativeTab(FleValue.tabFLE);
+		woodMachine1 = new BlockWoodMachine1("woodMachine1").init().setCreativeTab(FleValue.tabFLE);
+		stoneMachine = new BlockStoneMachine("stoneMachine").init().setCreativeTab(FleValue.tabFLE);
+		stoneMachine1 = new BlockStoneMachine1("stoneMachine1").init().setCreativeTab(FleValue.tabFLE);
+		argil_unsmelted = new BlockClayInventory("argil_unsmelted").init().setCreativeTab(FleValue.tabFLE);
+		argil_smelted = new BlockClayInventory1("argil_smelted").init().setCreativeTab(FleValue.tabFLE);
+		firewood = new BlockFirewood().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/firewood_oak").setCreativeTab(FleValue.tabFLE);
+		charcoal = new BlockCharcoal().setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/coal").setCreativeTab(FleValue.tabFLE);
+		ropeLadder = new BlockRopeLadder("ropeLadder", "Rope Ladder").setBlockTextureName(FleValue.TEXTURE_FILE + ":tools/rope_ladder").setCreativeTab(FleValue.tabFLE);
 		ditch = new BlockDitch().setCreativeTab(CreativeTabs.tabDecorations);
-		peat = new BlockPeat("peat", "Peat").setBlockTextureName(FleValue.TEXTURE_FILE + ":dirt/peat").setCreativeTab(CreativeTabs.tabBlock);
+		peat = new BlockPeat("peat", "Peat").setBlockTextureName(FleValue.TEXTURE_FILE + ":dirt/peat").setCreativeTab(FleValue.tabFLE);
 		plant = new BlockPlant();
-		tool = new ItemTool("tool", "tool").init().setCreativeTab(CreativeTabs.tabTools);
-		toolHead = new ItemToolHead("tool.head", "toolHead").init().setCreativeTab(CreativeTabs.tabMaterials);
-		food = new ItemFleFood("food", "foods").init().setCreativeTab(CreativeTabs.tabFood);
-		subItem = new ItemFleSub("sub", "subs").init().setCreativeTab(CreativeTabs.tabMaterials);
-		cropSeed = new ItemFleSeed(crop, Blocks.farmland).init().setCreativeTab(CreativeTabs.tabMaterials);
-		treeLog = new ItemTreeLog("tree.log", "log").init().setCreativeTab(CreativeTabs.tabMaterials);
+		thermalWire = new BlockThermalWire("thermalWire", "Thermal Wire").setBlockTextureName(FleValue.TEXTURE_FILE + ":wire/wire").setCreativeTab(FleValue.tabFLE);
+		tool = new ItemTool("tool", "tool").init().setCreativeTab(FleValue.tabFLE);
+		toolHead = new ItemToolHead("tool.head", "toolHead").init().setCreativeTab(FleValue.tabFLE);
+		food = new ItemFleFood("food", "foods").init().setCreativeTab(FleValue.tabFLE);
+		subItem = new ItemFleSub("sub", "subs").init().setCreativeTab(FleValue.tabFLE);
+		cropSeed = new ItemFleSeed(crop, Blocks.farmland).init().setCreativeTab(FleValue.tabFLE);
+		treeLog = new ItemTreeLog("tree.log", "log").init().setCreativeTab(FleValue.tabFLE);
 	}
 }

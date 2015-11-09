@@ -59,7 +59,7 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	public boolean canInsertItem(int aSlotID, ItemStack aResource,
 			int aSide) 
 	{
-		return FleAPI.getFulBuf(aResource, FLE.fle.getAirConditionProvider().getAirLevel(getBlockPos())) >= 0;
+		return super.canInsertItem(aSlotID, aResource, aSide) && FleAPI.getFulBuf(aResource, FLE.fle.getAirConditionProvider().getAirLevel(getBlockPos())) >= 0;
 	}
 
 	@Override

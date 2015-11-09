@@ -124,9 +124,16 @@ public abstract class TEInventory<T extends IInventoryTile> extends TEBase imple
 	public boolean canInsertItem(int slotID, ItemStack aStack,
 			int side)
 	{
+		if(should(COVER))
+		{
+			return getTileInventory().canInsertItem(slotID, aStack, side);
+		}
 		if(covers[side] instanceof IItemIOCover)
 		{
-			return ((IItemIOCover) covers[side]).canFill(getBlockPos(), ForgeDirection.VALID_DIRECTIONS[side], aStack);
+			enable(COVER);
+			boolean ret = ((IItemIOCover) covers[side]).canFill(getBlockPos(), ForgeDirection.VALID_DIRECTIONS[side], aStack);
+			disable(COVER);
+			return ret;
 		}
 		return getTileInventory().canInsertItem(slotID, aStack, side);
 	}
@@ -135,9 +142,16 @@ public abstract class TEInventory<T extends IInventoryTile> extends TEBase imple
 	public boolean canExtractItem(int slotID, ItemStack aStack,
 			int side)
 	{
+		if(should(COVER))
+		{
+			return getTileInventory().canInsertItem(slotID, aStack, side);
+		}
 		if(covers[side] instanceof IItemIOCover)
 		{
-			return ((IItemIOCover) covers[side]).canDrain(getBlockPos(), ForgeDirection.VALID_DIRECTIONS[side], aStack);
+			enable(COVER);
+			boolean ret = ((IItemIOCover) covers[side]).canDrain(getBlockPos(), ForgeDirection.VALID_DIRECTIONS[side], aStack);
+			disable(COVER);
+			return ret;
 		}
 		return getTileInventory().canExtractItem(slotID, aStack, side);
 	}

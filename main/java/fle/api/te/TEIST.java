@@ -21,11 +21,18 @@ public abstract class TEIST<T extends InventorySolidTank> extends TEInventory<T>
 	@Override
 	public int fillS(ForgeDirection from, SolidStack resource, boolean doFill)
 	{
+		if(should(COVER))
+		{
+			return getTileInventory().fillS(from, resource, doFill);
+		}
 		if(from != ForgeDirection.UNKNOWN)
 		{
 			if(covers[from.ordinal()] instanceof ISolidIOCover)
 			{
-				return ((ISolidIOCover) covers[from.ordinal()]).fill(getBlockPos(), from, resource, doFill);
+				enable(COVER);
+				int ret = ((ISolidIOCover) covers[from.ordinal()]).fill(getBlockPos(), from, resource, doFill);
+				disable(COVER);
+				return ret;
 			}
 		}
 		return getTileInventory().fillS(from, resource, doFill);
@@ -35,11 +42,18 @@ public abstract class TEIST<T extends InventorySolidTank> extends TEInventory<T>
 	public SolidStack drainS(ForgeDirection from, SolidStack resource,
 			boolean doDrain)
 	{
+		if(should(COVER))
+		{
+			return getTileInventory().drainS(from, resource, doDrain);
+		}
 		if(from != ForgeDirection.UNKNOWN)
 		{
 			if(covers[from.ordinal()] instanceof ISolidIOCover)
 			{
-				return ((ISolidIOCover) covers[from.ordinal()]).drain(getBlockPos(), from, resource, doDrain);
+				enable(COVER);
+				SolidStack ret = ((ISolidIOCover) covers[from.ordinal()]).drain(getBlockPos(), from, resource, doDrain);
+				disable(COVER);
+				return ret;
 			}
 		}
 		return getTileInventory().drainS(from, resource, doDrain);
@@ -48,11 +62,18 @@ public abstract class TEIST<T extends InventorySolidTank> extends TEInventory<T>
 	@Override
 	public SolidStack drainS(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		if(should(COVER))
+		{
+			return getTileInventory().drainS(from, maxDrain, doDrain);
+		}
 		if(from != ForgeDirection.UNKNOWN)
 		{
 			if(covers[from.ordinal()] instanceof ISolidIOCover)
 			{
-				return ((ISolidIOCover) covers[from.ordinal()]).drain(getBlockPos(), from, maxDrain, doDrain);
+				enable(COVER);
+				SolidStack ret = ((ISolidIOCover) covers[from.ordinal()]).drain(getBlockPos(), from, maxDrain, doDrain);
+				disable(COVER);
+				return ret;
 			}
 		}
 		return getTileInventory().drainS(from, maxDrain, doDrain);
@@ -61,11 +82,18 @@ public abstract class TEIST<T extends InventorySolidTank> extends TEInventory<T>
 	@Override
 	public boolean canFillS(ForgeDirection from, Solid solid)
 	{
+		if(should(COVER))
+		{
+			return getTileInventory().canFillS(from, solid);
+		}
 		if(from != ForgeDirection.UNKNOWN)
 		{
 			if(covers[from.ordinal()] instanceof ISolidIOCover)
 			{
-				return ((ISolidIOCover) covers[from.ordinal()]).canFill(getBlockPos(), from, solid);
+				enable(COVER);
+				boolean flag = ((ISolidIOCover) covers[from.ordinal()]).canFill(getBlockPos(), from, solid);
+				disable(COVER);
+				return flag;
 			}
 		}
 		return getTileInventory().canFillS(from, solid);
@@ -74,11 +102,18 @@ public abstract class TEIST<T extends InventorySolidTank> extends TEInventory<T>
 	@Override
 	public boolean canDrainS(ForgeDirection from, Solid solid)
 	{
+		if(should(COVER))
+		{
+			return getTileInventory().canDrainS(from, solid);
+		}
 		if(from != ForgeDirection.UNKNOWN)
 		{
 			if(covers[from.ordinal()] instanceof ISolidIOCover)
 			{
-				return ((ISolidIOCover) covers[from.ordinal()]).canDrain(getBlockPos(), from, solid);
+				enable(COVER);
+				boolean ret = ((ISolidIOCover) covers[from.ordinal()]).canDrain(getBlockPos(), from, solid);
+				disable(COVER);
+				return ret;
 			}
 		}
 		return getTileInventory().canDrainS(from, solid);

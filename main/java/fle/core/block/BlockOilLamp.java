@@ -21,6 +21,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 
@@ -129,8 +130,15 @@ public class BlockOilLamp extends BlockFle implements ITileEntityProvider, IDebu
 	}
 	
 	@Override
+	public boolean canBlockStay(World aWorld, int x,
+			int y, int z)
+	{
+		return aWorld.getBlock(x, y - 1, z).isSideSolid(aWorld, x, y, z, ForgeDirection.UP);
+	}
+	
+	@Override
 	public boolean onBlockActivated(World aWorld, int x, int y, int z, EntityPlayer aPlayer,
-			int aSide, float xPos, float yPos, float zPos)
+			ForgeDirection aSide, float xPos, float yPos, float zPos)
 	{
 		BlockPos tPos = new BlockPos(aWorld, x, y, z);
 		if(tPos.getBlockTile() instanceof TileEntityOilLamp)

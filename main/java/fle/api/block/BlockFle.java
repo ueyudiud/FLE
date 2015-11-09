@@ -18,7 +18,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fle.api.FleAPI;
 import fle.api.FleValue;
+import fle.api.cover.Cover;
 import fle.api.energy.IThermalTileEntity;
+import fle.api.te.ICoverTE;
 import fle.api.util.DamageResources;
 import fle.api.world.BlockPos;
 
@@ -238,7 +240,21 @@ public class BlockFle extends Block
 	public void breakBlock(World aWorld, int x, int y, int z, Block aBlock, int aMeta)
 	{
 		if(aWorld.getTileEntity(x, y, z) != null)
-			tileThread.set(aWorld.getTileEntity(x, y, z));
+		{
+			TileEntity tile = aWorld.getTileEntity(x, y, z);
+			tileThread.set(tile);
+			if(tile instanceof ICoverTE)
+			{
+				for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+				{
+					Cover cover = ((ICoverTE) tile).getCover(dir);
+					if(cover != null)
+					{
+						cover.onBlockBreak(aWorld, x, y, z);
+					}
+				}
+			}
+		}
 		BlockPos tPos = new BlockPos(aWorld, x, y, z);
 		metaThread.set(new Integer(getDamageValue(aWorld, x, y, z)));
 		super.breakBlock(aWorld, x, y, z, aBlock, aMeta);
@@ -293,6 +309,28 @@ public class BlockFle extends Block
 	public MapColor getMapColor(int metadata)
 	{
 		return mapColor == null ? super.getMapColor(metadata) : mapColor;
+	}
+	
+	@Override
+	public final boolean onBlockActivated(World aWorld, int x,
+			int y, int z, EntityPlayer aPlayer,
+			int aSide, float xPos, float yPos,
+			float zPos)
+	{
+		if(aWorld.getTileEntity(x, y, z) instanceof ICoverTE)
+		{
+			Cover cover = ((ICoverTE) aWorld.getTileEntity(x, y, z)).getCover(ForgeDirection.VALID_DIRECTIONS[aSide]);
+			if(cover != null)
+			{
+				if(cover.onBlockActive(aWorld, x, y, z, aPlayer, xPos, yPos, zPos)) return true;
+			}
+		}
+		return onBlockActivated(aWorld, x, y, z, aPlayer, ForgeDirection.VALID_DIRECTIONS[aSide], xPos, yPos, zPos);
+	}
+	
+	protected boolean onBlockActivated(World aWorld, int x, int y, int z, EntityPlayer aPlayer, ForgeDirection dir, float xPos, float yPos, float zPos)
+	{
+		return false;
 	}
 	
 	/**

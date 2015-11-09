@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fle.FLE;
 import fle.api.FleAPI;
@@ -85,7 +86,7 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 	@Override
 	public boolean onBlockActivated(World aWorld, int x,
 			int y, int z, EntityPlayer aPlayer,
-			int side, float xPos, float yPos,
+			ForgeDirection side, float xPos, float yPos,
 			float zPos)
 	{
 		switch(aWorld.getBlockMetadata(x, y, z))

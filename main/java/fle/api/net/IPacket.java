@@ -10,10 +10,14 @@ import net.minecraft.network.NetHandlerPlayServer;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import fle.FLE;
 import fle.api.FleAPI;
 
 public abstract class IPacket
-{	
+{
+	
 	NetHandlerPlayServer server;
 	NetHandlerPlayClient client;
 	
@@ -38,5 +42,17 @@ public abstract class IPacket
 	public EntityPlayerMP getPlayer()
 	{
 		return (EntityPlayerMP) (server != null ? server.playerEntity : FleAPI.mod.getPlatform().getPlayerInstance());
+	}
+
+	private Side side;
+	
+	public void side(Side target)
+	{
+		side = target;
+	}
+	
+	public Side getSide()
+	{
+		return side;
 	}
 }

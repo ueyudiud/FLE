@@ -30,6 +30,8 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag ORE_gem_only = getNewSubTag("ORE_GEM_ONLY");
 	
 	public static final SubTag CRAFTING_cold_wought = getNewSubTag("CRAFTING_COLD_WOUGHT");
+
+	public static final SubTag MATERIAL_heatwire = getNewSubTag("MATERIAL_HEATWIRE");
 	
 	public static final SubTag TOOL_wood = getNewSubTag("TOOL_WOOD");
 	public static final SubTag TOOL_stone = getNewSubTag("TOOL_STONE");

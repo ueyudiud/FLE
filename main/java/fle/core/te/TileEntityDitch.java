@@ -97,7 +97,12 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 		{
 			FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		}
-		if(info == null) return;
+		if(info == null)
+		{
+			if(worldObj.isRemote)
+				sendToServer(new FleTEPacket(this, (byte) -1));
+			return;
+		}
 		if(!info.canStay(this))
 		{
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
@@ -247,8 +252,6 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 		{
 			syncFluidTank();
 			markRenderForUpdate();
-			if(!worldObj.isRemote)
-				sendToNearBy(new FleTEPacket(this, (byte) -1), 16.0F);
 			buf = 0;
 		}
 		tc.update();

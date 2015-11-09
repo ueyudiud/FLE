@@ -41,6 +41,6 @@ public class FleSyncAskTileMetaPacket extends FleCoordinatesPacket
 	public Object process(FleNetworkHandler nwh)
 	{
 		BlockPos pos = pos();
-		return pos.getBlockTile() instanceof INetEventEmmiter ? new FleTEPacket(type, ((INetEventEmmiter) pos.getBlockTile()).onEmmit(type)) : null;
+		return pos.getBlockTile() instanceof INetEventEmmiter ? new FleTEPacket(pos, type, (INetEventEmmiter) pos.getBlockTile()) : null;
 	}
 }

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -18,33 +19,33 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.FleValue;
 
 @SideOnly(Side.CLIENT)
-public class RenderHandler implements ISimpleBlockRenderingHandler, IItemRenderer
+public class RenderHandler implements ISimpleBlockRenderingHandler
 {
 	private static final Map<String, RenderBase> blockRenders = new HashMap();
-	private static final Map<String, RIBase> itemRenders = new HashMap();
+	public static RenderHandler instance;
 	private final boolean isNoInvRendering;
-	
+
 	public RenderHandler(boolean a) 
 	{
 		isNoInvRendering = a;
 	}
 
-	public static void register(Block block, int meta, Class clazz)
+	public static void register(Block block, int meta, Class<? extends RenderBase> clazz)
 	{
 		try
 		{
-			blockRenders.put(Block.blockRegistry.getNameForObject(block) + ":" + meta, (RenderBase) clazz.newInstance());
+			blockRenders.put(Block.blockRegistry.getNameForObject(block) + ":" + meta, clazz.newInstance());
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-	public static void register(Item item, int meta, Class clazz)
+	public static void register(Item item, int meta, Class<? extends RIBase> clazz)
 	{
 		try
 		{
-			itemRenders.put(Item.itemRegistry.getNameForObject(item) + ":" + meta, (RIBase) clazz.newInstance());
+			MinecraftForgeClient.registerItemRenderer(item, clazz.newInstance());
 		}
 		catch(Exception e)
 		{
@@ -56,11 +57,6 @@ public class RenderHandler implements ISimpleBlockRenderingHandler, IItemRendere
 	{
 		RenderBase ret = blockRenders.get(Block.blockRegistry.getNameForObject(block) + ":" + meta);
 		return ret == null ? blockRenders.get(Block.blockRegistry.getNameForObject(block) + ":" + OreDictionary.WILDCARD_VALUE) : ret;
-	}
-	private static RIBase getRenderFromItemAndMeta(ItemStack stack)
-	{
-		RIBase ret = itemRenders.get(Item.itemRegistry.getNameForObject(stack.getItem()) + ":" + stack.getItemDamage());
-		return ret == null ? itemRenders.get(Item.itemRegistry.getNameForObject(stack.getItem()) + ":" + OreDictionary.WILDCARD_VALUE) : ret;
 	}
 	
 	@Override
@@ -110,36 +106,5 @@ public class RenderHandler implements ISimpleBlockRenderingHandler, IItemRendere
 	public int getRenderId() 
 	{
 		return isNoInvRendering ? FleValue.FLE_NOINV_RENDER_ID : FleValue.FLE_RENDER_ID;
-	}
-
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type)
-	{
-		if(getRenderFromItemAndMeta(item) == null) return false;
-		return type == ItemRenderType.INVENTORY ? !isNoInvRendering : type == ItemRenderType.ENTITY;
-	}
-
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-			ItemRendererHelper helper)
-	{
-		return type == ItemRenderType.ENTITY;
-	}
-
-	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data) 
-	{
-		RIBase render = getRenderFromItemAndMeta(item);
-		if(render != null)
-		{
-			try
-			{
-				render.render(type, item, data);
-			}
-			catch(Throwable e)
-			{
-				throw new RuntimeException("FLE render item error, place report this bug to ueyudiud.", e);
-			}
-		}
 	}
 }

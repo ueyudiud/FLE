@@ -71,12 +71,12 @@ public class BlockWorkbench extends BlockFle implements IGuiBlock
 	
 	@Override
 	public boolean onBlockActivated(World aWorld, int x, int y, int z, EntityPlayer aPlayer,
-			int side, float xPos, float yPos, float zPos)
+			ForgeDirection side, float xPos, float yPos, float zPos)
 	{
-		if(aWorld.isRemote) return ForgeDirection.VALID_DIRECTIONS[side] == ForgeDirection.UP;
+		if(aWorld.isRemote) return side == ForgeDirection.UP;
 		else
 		{
-			if(ForgeDirection.VALID_DIRECTIONS[side] == ForgeDirection.UP)
+			if(side == ForgeDirection.UP)
 			{
 				aPlayer.openGui(FLE.MODID, 0, aWorld, x, y, z);
 				return true;

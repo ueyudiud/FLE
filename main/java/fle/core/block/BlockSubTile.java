@@ -31,6 +31,7 @@ import fle.api.block.IBlockWithTileBehaviour;
 import fle.api.block.IDebugableBlock;
 import fle.api.block.IFacingBlock;
 import fle.api.enums.EnumWorldNBT;
+import fle.api.te.ICoverTE;
 import fle.api.te.TEBase;
 import fle.api.util.FleLog;
 import fle.api.util.IBlockTextureManager;
@@ -147,12 +148,12 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	}
 	
 	@Override
-	public boolean onBlockActivated(World aWorld, int x, int y, int z, EntityPlayer aPlayer, int aSide, float xPos, float yPos, float zPos)
+	public boolean onBlockActivated(World aWorld, int x, int y, int z, EntityPlayer aPlayer, ForgeDirection aSide, float xPos, float yPos, float zPos)
 	{
 		IBlockBehaviour<BlockSubTile> tBehaviour = blockBehaviors.get(Short.valueOf((short) getDamageValue(aWorld, x, y, z)));
 		try
 	    {
-			if(tBehaviour.onBlockActivated(this, aWorld, x, y, z, aPlayer, ForgeDirection.VALID_DIRECTIONS[aSide], xPos, yPos, zPos))
+			if(tBehaviour.onBlockActivated(this, aWorld, x, y, z, aPlayer, aSide, xPos, yPos, zPos))
 			{
 				return true;
 			}

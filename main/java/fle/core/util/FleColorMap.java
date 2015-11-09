@@ -18,7 +18,7 @@ public class FleColorMap implements ColorMap
 	@Override
 	public int getColorFromCrood(int x, int y) 
 	{
-		return colors == null ? 0xFFFFFF : colors[y << 8 + x];
+		return colors == null ? 0xFFFFFF : colors[(y << 8) + x];
 	}
 
 	@Override

@@ -12,6 +12,12 @@ import fle.api.recipe.ItemAbstractStack;
 import fle.api.soild.Solid;
 import fle.api.soild.SolidStack;
 
+/**
+ * The type of guide. <br>
+ * Show difference type from instance of this.
+ * @author ueyudiud
+ *
+ */
 public abstract class IGuideType
 {
 	/**

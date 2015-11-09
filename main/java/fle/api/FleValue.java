@@ -1,6 +1,9 @@
 package fle.api;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.EnumChatFormatting;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fle.api.util.FleDecimalFormat;
 
 public class FleValue 
@@ -25,6 +28,9 @@ public class FleValue
 
 	public static int FLE_NOINV_RENDER_ID;
 	public static int FLE_RENDER_ID;
+
+	@SideOnly(Side.CLIENT)
+	public static CreativeTabs tabFLE;
 	
 	public static final int WATER_FREEZE_POINT = 273;
 	public static final int ingot_mol = 36;

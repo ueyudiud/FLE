@@ -45,7 +45,7 @@ public class GuiDryingTable extends GuiContainerBase
 		if(tile.type != GuiError.DEFAULT) drawCondition(92, 53, tile.type);
 		int temp = FLE.fle.getThermalNet().getEnvironmentTemperature(tile.getBlockPos());
 		int a = (int) (temp / 400D * 52);
-		drawFleRect(xoffset + 25, yoffset + 17 + 52 - a, 3, a, ColorUtil.getColorWithTdWd(temp, tile.getWaterLevel() / 100D));
+		drawRect(xoffset + 25, yoffset + 17 + 52 - a, xoffset + 28, yoffset + 17 + 52, ColorUtil.getColorWithTdWd(temp, tile.getWaterLevel() / 415D));
 	}
 
 	@Override

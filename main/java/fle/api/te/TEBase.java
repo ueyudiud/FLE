@@ -30,6 +30,8 @@ import fle.api.world.BlockPos;
  */
 public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMetadataTile, INetEventHandler, ICoverTE
 {
+	private final CoverTile defaultCover = new CoverTile(ForgeDirection.UNKNOWN, this, new Cover("null"));
+	
 	/**
 	 * The default random of tile.
 	 */
@@ -48,7 +50,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	 */
 	private NBTTagCompound nbt;
 	
-	protected final CoverTile[] covers = new CoverTile[6];
+	protected final CoverTile[] covers;
 	
 	/**
 	 * Set direction of block.
@@ -61,7 +63,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	
 	public TEBase() 
 	{
-		
+		covers = new CoverTile[6];
 	}
 	
 	@Override
@@ -70,7 +72,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		super.readFromNBT(nbt);
 		dir = ForgeDirection.values()[nbt.getByte("BlockFacing")];
 		blockMetadata = nbt.getShort("TileMeta");
-		if(init)
+		if(should(INIT))
 		{
 			if(nbt.hasKey("CoverList"))
 			{
@@ -84,7 +86,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 						--f;
 						Cover cover = CoverRegistry.getCoverRegister().get(nbt1.getString("Cover"));
 						if(cover != null)
-							covers[f] = cover.createCoverTile(this);
+							covers[f] = cover.createCoverTile(ForgeDirection.VALID_DIRECTIONS[f], this);
 						if(covers[f] != null)
 							covers[f].readFromNBT(nbt1);
 					}
@@ -117,14 +119,11 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		}
 		nbt.setTag("CoverList", list);
 	}
-
-	private boolean init = false;
-	private boolean postinit = true;
 	
 	@Override
 	public void updateEntity()
 	{
-		if(!init)
+		if(!should(INIT))
 		{
 			if(worldObj.getBlockMetadata(xCoord, yCoord, zCoord) != blockMetadata && blockMetadata != -1)
 			{
@@ -137,8 +136,12 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 					if(tile instanceof TEBase)
 					{
 						((TEBase) tile).markFinishInit();
+						((TEBase) tile).nbt = nbt;
 					}
-					if(nbt != null) tile.readFromNBT(nbt);
+					if(nbt != null)
+					{
+						tile.readFromNBT(nbt);
+					}
 					worldObj.setTileEntity(xCoord, yCoord, zCoord, tile);
 				}
 			}
@@ -148,14 +151,18 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 			}
 			FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, blockMetadata);
 			markFinishInit();
+			return;
 		}
-		else if(!postinit)
+		else if(!should(POSTINIT))
 		{
-			onPostinit();
+			onPostinit(nbt);
 			markNBTUpdate();
 			markRenderForUpdate();
-			postinit = true;
+			nbt = null;
+			enable(POSTINIT);
+			return;
 		}
+		updateCovers();
 	}
 	
 	protected void updateCovers()
@@ -167,6 +174,11 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 		}
 	}
 	
+	protected void onPostinit(NBTTagCompound nbt)
+	{
+		onPostinit();
+	}
+	
 	protected void onPostinit()
 	{
 		
@@ -174,14 +186,19 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	
 	private void markFinishInit()
 	{
-		init = true;
-		postinit = false;
+		enable(INIT);
+		disable(POSTINIT);
 	}
 	
 	@Override
 	public TileEntity getTileEntity() 
 	{
 		return this;
+	}
+	
+	public boolean isClient()
+	{
+		return worldObj.isRemote;
 	}
 
 	@Override
@@ -282,6 +299,16 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	public void sendToNearBy(IPacket packet, float range)
 	{
 		FleAPI.mod.getNetworkHandler().sendToNearBy(packet, this, range);
+	}
+	
+	/**
+	 * Send a network packet to server by FLE channel.
+	 * @see fle.api.net.FleNetworkHandler
+	 * @param packet
+	 */
+	public void sendToServer(IPacket packet)
+	{
+		FleAPI.mod.getNetworkHandler().sendToServer(packet);
 	}
 
 	/**
@@ -420,26 +447,50 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	@Override
 	public Cover getCover(ForgeDirection dir)
 	{
-		return covers[FleAPI.getIndexFromDirection(dir)].getCover();
+		return covers[FleAPI.getIndexFromDirection(dir)] == null ? null : covers[FleAPI.getIndexFromDirection(dir)].getCover();
+	}
+	
+	protected boolean canAddCoverWithSide(ForgeDirection dir, Cover cover)
+	{
+		return true;
 	}
 
 	@Override
 	public boolean addCover(ForgeDirection dir, Cover cover)
 	{
-		if(getCover(dir) != null) return false;
-		covers[FleAPI.getIndexFromDirection(dir)] = cover.createCoverTile(this);
+		if(!canAddCoverWithSide(dir, cover) || getCover(dir) != null) return false;
+		covers[FleAPI.getIndexFromDirection(dir)] = cover.createCoverTile(dir, this);
 		return true;
 	}
 
 	@Override
 	public void setCover(ForgeDirection dir, Cover cover)
 	{
-		covers[FleAPI.getIndexFromDirection(dir)] = cover.createCoverTile(this);
+		covers[FleAPI.getIndexFromDirection(dir)] = cover.createCoverTile(dir, this);
 	}
 
 	@Override
 	public void removeCover(ForgeDirection dir)
 	{
 		covers[FleAPI.getIndexFromDirection(dir)] = null;
+	}
+
+	protected static final int INIT = 0;
+	protected static final int POSTINIT = 1;
+	protected static final int COVER = 8;
+	
+	private long flags = 0;
+	
+	protected void disable(int i)
+	{
+		flags &=~ (1 << i);
+	}
+	protected void enable(int i)
+	{
+		flags |= (1 << i);
+	}
+	protected boolean should(int i)
+	{
+		return (flags & (1 << i)) != 0;
 	}
 }

@@ -9,14 +9,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class CoverTile
 {
-	TEBase tile;
-	Cover cover;
+	protected ForgeDirection dir;
+	protected TEBase tile;
+	protected Cover cover;
 	
-	public CoverTile(TEBase aTile, Cover aCover)
+	public CoverTile(ForgeDirection aDir, TEBase aTile, Cover aCover)
 	{
+		dir = aDir;
 		tile = aTile;
 		cover = aCover;
 	}
@@ -45,11 +48,6 @@ public class CoverTile
 			{
 				tile.dropItem(stack);
 			}
-	}
-	
-	public void onBlockSneakClick(EntityPlayer player, double xPos, double yPos, double zPos)
-	{
-		cover.onBlockSneakClick(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, player, xPos, yPos, zPos);
 	}
 	
 	public boolean onBlockActive(EntityPlayer player, double xPos, double yPos, double zPos)

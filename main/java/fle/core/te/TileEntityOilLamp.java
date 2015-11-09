@@ -59,6 +59,12 @@ public class TileEntityOilLamp extends TEBase
 		if(!worldObj.isRemote)
 		{
 			markNBTUpdate();
+			if(!getBlockType().canBlockStay(worldObj, xCoord, yCoord, zCoord))
+			{
+				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+				worldObj.removeTileEntity(xCoord, yCoord, zCoord);
+				getBlockType().breakBlock(worldObj, xCoord, yCoord, zCoord, blockType, blockMetadata);
+			}
 		}
 		if(fluid.getFluidAmount() == 0 || isCatchRain())
 		{
