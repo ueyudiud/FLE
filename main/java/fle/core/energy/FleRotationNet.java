@@ -31,6 +31,7 @@ public class FleRotationNet extends RotationNet
 		{
 			if(!evt.world.provider.isHellWorld)
 			{
+				if(!windLevels.containsKey(evt.world.provider.dimensionId)) return;
 				int level = windLevels.get(evt.world.provider.dimensionId);
 				boolean flag = evt.world.isRaining();
 				if(flag)

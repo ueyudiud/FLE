@@ -27,18 +27,13 @@ import fle.api.world.BlockPos;
 
 public abstract class IItemControl<T extends Item>
 {
+	private static boolean f = false;
 	protected Class<T> clazz;
 
 	protected IItemControl()
 	{
 		ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 		clazz = (Class) type.getActualTypeArguments()[0];
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-	protected IItemControl(boolean flag)
-	{
-		if(flag)
-			MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	protected boolean doListenItem(ItemStack aStack)

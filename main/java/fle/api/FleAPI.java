@@ -263,7 +263,7 @@ public class FleAPI
 	 * @param aStack
 	 * @return
 	 */
-	public static int getFulBuf(ItemStack aStack)
+	public static long getFulBuf(ItemStack aStack)
 	{
 		return getFulBuf(aStack, Matter.mAir);
 	}
@@ -273,7 +273,7 @@ public class FleAPI
 	 * @param aAirBase
 	 * @return heat value of this fuel each size.
 	 */
-	public static int getFulBuf(ItemStack aStack, Matter aAirBase)
+	public static long getFulBuf(ItemStack aStack, Matter aAirBase)
 	{
 		for (IFuelHandler tHandler : fuelList)
 		{

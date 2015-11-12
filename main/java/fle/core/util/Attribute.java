@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import fle.api.FleValue;
 import fle.api.util.Register;
 import fle.core.util.AttributeObjectWithRegister.AttributeBlock;
 import fle.core.util.AttributeObjectWithRegister.AttributeItem;
@@ -19,8 +20,11 @@ public abstract class Attribute<T>
 	public static final Attribute<Item> item_material = new AttributeItem("ITEM_MATERIAL", 2);
 	public static final Attribute<Integer> metadata = new AttributeInteger("METADATA", 3);
 	public static final Attribute<Integer> tank_capcity = new AttributeInteger("TANK_CAPCITY", 1000, 4);
-	public static final Attribute<Integer> max_temp = new AttributeInteger("MAX_TEMPRETURE", 500, 5);
+	public static final Attribute<Integer> max_temp = new AttributeInteger("MAX_TEMPRETURE", FleValue.WATER_FREEZE_POINT + 100, 5);
 	public static final Attribute<int[]> access_side = new AttributeIntArray("ACCESS_SIDE", 6);
+	public static final Attribute<Float> thermalSpeed = new AttributeFloat("THERMAL_SPEED", 1.0F, 7);
+	public static final Attribute<Boolean> flag = new AttributeBoolean("FLAG", 8);
+	public static final Attribute<Block> output_block = new AttributeBlock("OUTPUT_BLOCK", 65);
 	
 	public static Attribute getAttribute(int id)
 	{
@@ -41,6 +45,16 @@ public abstract class Attribute<T>
 		this.clazz = clazz;
 		defaultValue = aValue;
 		map.register(hashCode = hashValue, this, name = aName);
+	}
+	
+	public final boolean isInstance(Object obj)
+	{
+		return clazz.isInstance(obj);
+	}
+	
+	public final Class<?> getAccessClass()
+	{
+		return clazz;
 	}
 	
 	public final T defaultValue()
@@ -75,4 +89,5 @@ public abstract class Attribute<T>
 	public abstract void write(DataOutputStream stream, T art) throws IOException;
 	
 	public abstract T read(DataInputStream stream) throws IOException;
+	
 }

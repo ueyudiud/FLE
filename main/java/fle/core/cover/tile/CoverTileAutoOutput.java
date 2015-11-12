@@ -12,6 +12,7 @@ import fle.api.cover.IItemIOCover;
 import fle.api.te.TEBase;
 import fle.api.world.BlockPos;
 import fle.core.cover.CoverAutoOutput;
+import fle.core.energy.TransportHelper;
 
 public class CoverTileAutoOutput extends CoverTile implements IItemIOCover
 {
@@ -110,40 +111,15 @@ public class CoverTileAutoOutput extends CoverTile implements IItemIOCover
 		if (tile.getBlockPos().toPos(dir).getBlockTile() instanceof ISidedInventory)
 		{
 			ISidedInventory from = (ISidedInventory) tile;
-			ISidedInventory to = (ISidedInventory) tile.getBlockPos().toPos(dir).getBlockTile();
 			for(int id = 0; id < from.getSizeInventory(); ++id)
 			{
 				if(from.getStackInSlot(id) != null)
 				{
-					ItemStack stack = from.getStackInSlot(id).copy();
-					stack.stackSize = Math.min(stack.stackSize, l);
-					if(from.canExtractItem(id, stack, dir.ordinal()))
+					int size = TransportHelper.matchAndTransferOutputItem(from.getStackInSlot(id), tile.getBlockPos().toPos(dir), dir.getOpposite());
+					if(size > 0)
 					{
-						int[] acs = to.getAccessibleSlotsFromSide(dir.getOpposite().ordinal());
-						if(acs == null) continue;
-						for(int ac : acs)
-						{
-							if(to.canInsertItem(ac, stack, dir.getOpposite().ordinal()))
-							{
-								ItemStack stack1 = from.decrStackSize(id, stack.stackSize);
-								if(to.getStackInSlot(ac) != null)
-								{
-									if(to.getStackInSlot(ac).isItemEqual(stack1))
-									{
-										to.getStackInSlot(ac).stackSize += stack1.stackSize;
-									}
-									else
-									{
-										continue;
-									}
-								}
-								else
-								{
-									to.setInventorySlotContents(ac, stack1);
-								}
-								return;
-							}
-						}
+						from.decrStackSize(id, size);
+						return;
 					}
 				}
 			}

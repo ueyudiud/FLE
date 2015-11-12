@@ -10,7 +10,7 @@ public interface IFuelHandler
 	
 	boolean getFuelRequireSmoke(FluidStack aStack, Matter aAirBase);
 	
-	int getFuelCalorificValue(ItemStack aStack, Matter aAirBase);
+	long getFuelCalorificValue(ItemStack aStack, Matter aAirBase);
 	
 	ItemStack getFuelBurnedOutput(ItemStack aStack);
 }

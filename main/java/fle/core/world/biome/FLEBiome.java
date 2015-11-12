@@ -38,15 +38,19 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	public static final FLEBiome mid_forest = new FLEBiomeForest("FLE Forest B", BiomeGenBase.birchForest.biomeID, 2).setColor(3175492);
 	public static final FLEBiome slope = new FLEBiomeOcean("FLE Slope", 41).setColor(0x8EBFFF).setBiomeHeight(-0.3F, -0.03125F);
 	public static final FLEBiome wasteland = new FLEBiomeWasteland("FLE Wasteland", 42).setColor(0xA4B360).setH(height_Default).setDisableRain();
-	public static final FLEBiome swampland = new FLEBiomeSwamp("FLE Swampland", BiomeGenBase.swampland.biomeID).setH(height_PartiallySubmerged).setColor(0x307252).setTemperatureRainfall(0.8F, 0.9F);
+	public static final FLEBiome swampland = new FLEBiomeSwamp("FLE Swampland", BiomeGenBase.swampland.biomeID).setH(height_PartiallySubmerged).setColor(0x307252).setTemperatureRainfall(1.0F, 0.9F);
 	public static final FLEBiome hill = new FLEBiomeHill("FLE Hill", 43).setColor(0x60DB60).setH(height_MidPlains);
 	public static final FLEBiome roofedForest = new FLEBiomeForest("FLE Roofed Forest", BiomeGenBase.roofedForest.biomeID, 3).setColor(4215066);
 	public static final FLEBiome roofedForest_hill = new FLEBiomeForest("FLE Roofed Forest Hill", 44, 3).setH(height_LowHills).setColor(4215066);
 	public static final FLEBiome river_low = new FLEBiomeRiver("FLE River", BiomeGenBase.river.biomeID).setWaterHeight(0).setH(height_ShallowWaters).setColor(0x0000FF);
 	public static final FLEBiome river_mid = new FLEBiomeRiver("FLE River +", 45).setWaterHeight(4).setH(height_MidWaters).setColor(0x0F0FFF);
-	public static final FLEBiome river_high = new FLEBiomeRiver("FLE River ++", 46).setWaterHeight(12).setH(height_HighWaters).setColor(0x1F1FFF).setTemperatureRainfall(0.5F, 0.4F);
+	public static final FLEBiome river_high = new FLEBiomeRiver("FLE River ++", 46).setWaterHeight(12).setH(height_HighWaters).setColor(0x1F1FFF).setTemperatureRainfall(0.53125F, 0.4F);
 	public static final FLEBiome frozenSlope = new FLEBiomeOcean("FLE Frozen Slope", 47).setColor(0x9ECFFF).setBiomeHeight(-0.3F, -0.03125F).setTemperatureRainfall(0.1F, 0.3F);
 	public static final FLEBiome frozenRiver = new FLEBiomeRiver("FLE Frozen River", BiomeGenBase.frozenRiver.biomeID).setH(height_ShallowWaters).setColor(0x3F3FFF).setTemperatureRainfall(0.1F, 0.5F).setEnableSnow();
+
+	public static final FLEBiome hell = new FLEBiomeHellSimple("FLE Hell", BiomeGenBase.hell.biomeID).setColor(BiomeGenBase.hell.color);
+	public static final FLEBiome hell_lava_sea = new FLEBiomeLavaSea("FLE Lava Sea", 65).setColor(BiomeGenBase.hell.color);
+	public static final FLEBiome hell_crystalland = new FleBiomeHellCrystalLand("FLE Crystal Land", 66).setColor(BiomeGenBase.hell.color);
     
 	static
 	{

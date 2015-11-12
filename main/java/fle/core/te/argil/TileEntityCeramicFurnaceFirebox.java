@@ -78,8 +78,8 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	@Override
 	public double getThermalConductivity(ForgeDirection dir)
 	{
-		return dir == ForgeDirection.UP && getBlockPos().toPos(ForgeDirection.UP).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible ?
-				tc.getThermalConductivity() * 5 : tc.getThermalConductivity();
+		return dir == ForgeDirection.UP && getBlockPos().toPos(ForgeDirection.UP).getBlockTile() instanceof IThermalTileEntity ?
+				tc.getThermalConductivity() * 6 : tc.getThermalConductivity();
 	}
 
 	@Override

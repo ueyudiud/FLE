@@ -25,12 +25,12 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 	
 	public static void init()
 	{
-		a(new BHRecipe(new ItemBaseStack(Items.porkchop), new FluidStack(IB.plant_ash_mortar, 160), 30000, ItemFleSub.a("plant_ash_soap", 2)));
-		a(new BHRecipe(new ItemBaseStack(Items.beef), new FluidStack(IB.plant_ash_mortar, 160), 30000, ItemFleSub.a("plant_ash_soap", 2)));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber_dry")), new FluidStack(IB.plant_ash_mortar, 200), 12500, ItemFleSub.a("ramie_fiber_debonded")));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("cotton_gauze")), new FluidStack(IB.sugarcane_juice, 200), 12500, ItemFleFood.a("brown_sugar", 3)).setType(3));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("charred_log")), new FluidStack(IB.brown_sugar_aqua, 200), 12500, ItemFleFood.a("sugar", 3)).setType(3));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("crushed_bone")), new FluidStack(FluidRegistry.WATER, 200), 30000, ItemFleSub.a("defatted_crushed_bone")));
+		a(new BHRecipe(new ItemBaseStack(Items.porkchop), new FluidStack(IB.plant_ash_mortar, 160), 450000, ItemFleSub.a("plant_ash_soap", 2)));
+		a(new BHRecipe(new ItemBaseStack(Items.beef), new FluidStack(IB.plant_ash_mortar, 160), 450000, ItemFleSub.a("plant_ash_soap", 2)));
+		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber_dry")), new FluidStack(IB.plant_ash_mortar, 200), 187500, ItemFleSub.a("ramie_fiber_debonded")));
+		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("cotton_gauze")), new FluidStack(IB.sugarcane_juice, 200), 187500, ItemFleFood.a("brown_sugar", 3)).setType(3));
+		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("charred_log")), new FluidStack(IB.brown_sugar_aqua, 200), 187500, ItemFleFood.a("sugar", 3)).setType(3));
+		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("crushed_bone")), new FluidStack(FluidRegistry.WATER, 200), 450000, ItemFleSub.a("defatted_crushed_bone")));
 	}
 	
 	public static void postInit(FLEConfiguration cfg)

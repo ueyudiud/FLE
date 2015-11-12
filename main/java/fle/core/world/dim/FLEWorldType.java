@@ -9,6 +9,7 @@ import net.minecraft.world.WorldManager;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderEnd;
 
 public class FLEWorldType extends WorldType
 {
@@ -46,20 +47,32 @@ public class FLEWorldType extends WorldType
 	@Override
 	public IChunkProvider getChunkGenerator(World world, String generatorOptions)
 	{
-		return this == FLAT ? new FLESuperFlatSurfaceChunkProvider(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled()) : 
+		switch(world.provider.dimensionId)
+		{
+		case 0 : return this == FLAT ? new FLESuperFlatSurfaceChunkProvider(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled()) : 
 			new FLESurfaceChunkProvider(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
+		case -1 : return new FLENetherChunkProvider(world, world.getSeed());
+		case 1 : return new ChunkProviderEnd(world, world.getSeed());
+		}
+		return null;
 	}
 	
 	@Override
 	public WorldChunkManager getChunkManager(World world)
 	{
-		return new FLESurfaceManager(world);
+		switch(world.provider.dimensionId)
+		{
+		case 0 : return new FLESurfaceManager(world);
+		case -1 : return new FLENetherManager(world);
+		case 1 : return new WorldChunkManager(world);
+		}
+		return null;
 	}
 	
 	@Override
 	public int getMinimumSpawnHeight(World world)
 	{
-		return 128;
+		return world.provider.isHellWorld ? 64 : 128;
 	}
 	
 	@Override

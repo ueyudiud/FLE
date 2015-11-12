@@ -65,7 +65,7 @@ public class TileEntityArgilItems extends TEBase implements IThermalTileEntity
 				smeltedTick += progress;
 				tc.emitHeat(progress);
 				
-				if(smeltedTick >= 100000 * stack.stackSize)
+				if(smeltedTick >= 8000000 * stack.stackSize)
 				{
 					ItemStack tStack = FurnaceRecipes.smelting().getSmeltingResult(stack);
 					ItemStack ret = tStack.copy();
@@ -119,6 +119,6 @@ public class TileEntityArgilItems extends TEBase implements IThermalTileEntity
 
 	public double getProgress()
 	{
-		return (double) smeltedTick / 100000D;
+		return (double) smeltedTick / 8000000D;
 	}
 }

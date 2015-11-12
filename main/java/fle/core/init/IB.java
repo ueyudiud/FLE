@@ -7,7 +7,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import fle.api.FleValue;
 import fle.api.enums.EnumTool;
 import fle.api.fluid.FluidBase;
@@ -58,6 +60,7 @@ public class IB
 {
 	public static void reloadIB()
 	{
+		FluidRegistry.LAVA.setTemperature(950);
 		ForgeHooks.canToolHarvestBlock(Blocks.obsidian, 0, new ItemStack(Items.wooden_pickaxe));//Init forge hook.
 		Blocks.torch.setLightLevel(0.5F);
 		Item.getItemFromBlock(Blocks.torch).setMaxStackSize(16);
@@ -150,7 +153,7 @@ public class IB
 	public static void init()
 	{
 		new FleCreativeTab("fle");
-		new ItemBowl();
+		MinecraftForge.EVENT_BUS.register(new ItemBowl());
 		
 		animalOil = new FluidBase("oil_a", "Animal Oil", new PropertyInfo(0xFFFFFF, 313, 773, 293, 1831, 1500, 0.8F, -1F, 1.0F, 0.7F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/oil").setTemperature(FleValue.WATER_FREEZE_POINT + 25);
 		plantOil = new FluidBase("oil_b", "Plant Oil", new PropertyInfo(0xFFFFFF, 267, 781, 294, 1472, 1300, 0.8F, -1F, 0.93F, 0.68F)).setTextureName(FleValue.TEXTURE_FILE + ":fluids/plant_oil").setTemperature(FleValue.WATER_FREEZE_POINT + 25);

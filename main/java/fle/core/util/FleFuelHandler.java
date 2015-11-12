@@ -34,29 +34,29 @@ public class FleFuelHandler implements IFuelHandler
 	}
 
 	@Override
-	public int getFuelCalorificValue(ItemStack aStack, Matter aAirBase)
+	public long getFuelCalorificValue(ItemStack aStack, Matter aAirBase)
 	{
 		if(aStack != null)
 		{
 			if(new ItemBaseStack(ItemFleSub.a("charred_log")).isStackEqul(aStack))
 			{
-				return (int) (6000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (1000000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			}
 			else if(new ItemBaseStack(new ItemStack(IB.peat)).isStackEqul(aStack))
 			{
-				return (int) (4500000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (1000000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			}
 			else if(new ItemOreStack("logWood").isStackEqul(aStack))
 			{
-				return (int) (1200000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (250000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			}
 			else if(new ItemOreStack("branchWood").isStackEqul(aStack) || new ItemBaseStack(ItemFleSub.a("branch_bush")).isStackEqul(aStack))
 			{
-				return (int) (360000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (36000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			}
 			else if(new ItemBaseStack(ItemFleSub.a("tinder")).isStackEqul(aStack))
 			{
-				return (int) (300000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (1600000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
 			}
 		}
 		return 0;

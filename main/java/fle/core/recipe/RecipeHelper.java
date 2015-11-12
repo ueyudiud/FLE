@@ -364,7 +364,7 @@ public class RecipeHelper
 			output == null ? true : 
 				ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && 
 				output.isItemEqual(inv.getStackInSlot(outputSlot)) && 
-				inv.getStackInSlot(outputSlot).stackSize + output.stackSize <= Math.min(output.getMaxStackSize(), inv.getInventoryStackLimit());
+				inv.getStackInSlot(outputSlot).stackSize + output.stackSize <= getMaxSizeLimit(inv, output);
 	}
 	public static boolean matchOutput(IInventory inv, int startSlot, int endSlot, ItemStack output)
 	{
@@ -399,7 +399,7 @@ public class RecipeHelper
 	{
 		if(!doAdd)
 		{
-			return inv.getStackInSlot(outputSlot) == null ? output.stackSize : ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && output.isItemEqual(inv.getStackInSlot(outputSlot)) ? Math.min(output.stackSize, output.getMaxStackSize() - inv.getStackInSlot(outputSlot).stackSize) : 0;
+			return inv.getStackInSlot(outputSlot) == null ? output.stackSize : ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && output.isItemEqual(inv.getStackInSlot(outputSlot)) ? Math.min(output.stackSize, getMaxSizeLimit(inv, output) - inv.getStackInSlot(outputSlot).stackSize) : 0;
 		}
 		else if(inv.getStackInSlot(outputSlot) == null) 
 		{
@@ -408,7 +408,7 @@ public class RecipeHelper
 		}
 		else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), output) && output.isItemEqual(inv.getStackInSlot(outputSlot)))
 		{
-			int add = Math.min(output.stackSize, output.getMaxStackSize() - inv.getStackInSlot(outputSlot).stackSize);
+			int add = Math.min(output.stackSize, getMaxSizeLimit(inv, output) - inv.getStackInSlot(outputSlot).stackSize);
 			inv.getStackInSlot(outputSlot).stackSize += add;
 			return add;
 		}
@@ -558,6 +558,11 @@ public class RecipeHelper
 				tank.fill(out, true);
 			}
 		}
+	}
+	
+	private static int getMaxSizeLimit(IInventory inv, ItemStack type)
+	{
+		return type != null ? Math.min(inv.getInventoryStackLimit(), type.getMaxStackSize()) : inv.getInventoryStackLimit();
 	}
 	
 	public static class FakeCraftingInventory extends InventoryCrafting

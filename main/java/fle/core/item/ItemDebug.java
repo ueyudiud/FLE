@@ -82,7 +82,7 @@ public class ItemDebug extends ItemFle
             	{
             		IThermalTileEntity tile = (IThermalTileEntity) pos.getBlockTile();
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Temperature: %s.", FleValue.format_K.format_c(tile.getTemperature(ForgeDirection.VALID_DIRECTIONS[aSide])))));
-            		aPlayer.addChatMessage(new ChatComponentText(String.format("Heat Currect: %s.", FleValue.format_MJ.format_c(tile.getThermalEnergyCurrect(ForgeDirection.VALID_DIRECTIONS[aSide])))));
+            		aPlayer.addChatMessage(new ChatComponentText(String.format("Heat Current: %s.", FleValue.format_MJ.format_c(tile.getThermalEnergyCurrect(ForgeDirection.VALID_DIRECTIONS[aSide])))));
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreHeatEmit()))));
             	}
         		aPlayer.addChatMessage(new ChatComponentText("FRN :"));
@@ -90,7 +90,7 @@ public class ItemDebug extends ItemFle
             	if(pos.getBlockTile() instanceof IRotationTileEntity)
             	{
             		IRotationTileEntity tile = (IRotationTileEntity) pos.getBlockTile();
-            		aPlayer.addChatMessage(new ChatComponentText(String.format("Kinetic Energy Currect: %s.", FleValue.format_MJ.format_c(tile.getEnergyCurrect()))));
+            		aPlayer.addChatMessage(new ChatComponentText(String.format("Kinetic Energy Current: %s.", FleValue.format_MJ.format_c(tile.getEnergyCurrect()))));
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreEnergyEmit()))));
             	}
             	if(pos.getBlock() instanceof IDebugableBlock)

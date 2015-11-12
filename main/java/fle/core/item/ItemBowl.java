@@ -13,7 +13,7 @@ public class ItemBowl extends IItemControl<Item>
 {
 	public ItemBowl()
 	{
-		super(true);
+		super();
 	}
 	
 	@Override

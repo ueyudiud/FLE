@@ -32,11 +32,11 @@ public class TileEntityCrop extends TEBase implements ICropTile
 		this.card = card;
 		this.age = a;
 		this.buffer = b;
-		this.cushion = c;
+		this.cushion = (short) c;
 	}
 	
 	public boolean isWild = false;
-	private int cushion;
+	private short cushion;
 	private double buffer;
 	private CropCard card;
 	private int age;
@@ -68,7 +68,16 @@ public class TileEntityCrop extends TEBase implements ICropTile
 			nbt.setString("CropName", card.getCropName());
 		nbt.setBoolean("Wild", isWild);
 	}
+	
+	double tempCache = -1;
 
+	@Override
+	protected void onPostinit()
+	{
+		super.onPostinit();
+		tempCache = WorldUtil.getTempretureLevel(worldObj, xCoord, yCoord, zCoord);
+	}
+	
 	@Override
 	public void updateEntity() 
 	{
@@ -76,10 +85,13 @@ public class TileEntityCrop extends TEBase implements ICropTile
 		{
 			if(buffer < 0) buffer = 0D;
 			if(age >= 256) return;
-			++cushion;
-			if(cushion > 20)
+			if(cushion++ % 20 == 0)
 			{
- 				cushion = 0;
+				if(cushion > 100)
+				{
+					cushion = 0;
+					tempCache = WorldUtil.getTempretureLevel(worldObj, xCoord, yCoord, zCoord);
+				}
 				if(card.canCropGrow(this))
 				{
 					double d = MathHelper.randomFloatClamp(worldObj.rand, 0.8F, 1.2F) * Math.log10(card.getGrowSpeed(this));
@@ -141,7 +153,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 	@Override
 	public double getTempretureLevel() 
 	{
-		return WorldUtil.getTempretureLevel(worldObj, xCoord, yCoord, zCoord);
+		return tempCache;
 	}
 
 	@Override
@@ -185,7 +197,7 @@ public class TileEntityCrop extends TEBase implements ICropTile
 	@SideOnly(Side.CLIENT)
 	public void setCropCushion(int c) 
 	{
-		cushion = c;
+		cushion = (short) c;
 	}
 
 	@Override

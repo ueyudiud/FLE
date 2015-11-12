@@ -9,6 +9,7 @@ import fle.FLE;
 import fle.api.energy.IThermalTileEntity;
 import fle.api.te.TEInventory;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.energy.TransportHelper;
 import fle.core.init.Materials;
 import fle.core.inventory.InventoryCeramicFurnaceOutlet;
 
@@ -34,23 +35,14 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	public void updateInventory()
 	{
 		getTileInventory().updateEntity(this);
-		if(getBlockPos().toPos(dir).getBlockTile() instanceof IFluidHandler)
+		int amount = TransportHelper.matchOutputFluid(drain(dir, 5, false), getBlockPos().toPos(dir), dir.getOpposite());
+		if(amount != 0)
 		{
-			FluidStack stack = drain(dir, 5, false);
-			if(stack != null)
-			{
-				int drain = ((IFluidHandler) getBlockPos().toPos(dir).getBlockTile()).fill(dir, stack, true);
-				drain(dir.getOpposite(), drain, true);
-			}
+			TransportHelper.matchAndTransferOutputFluid(drain(dir, amount, true), getBlockPos().toPos(dir), dir.getOpposite());
 		}
-		else if(getBlockPos().toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile() instanceof IFluidHandler)
+		else if((amount = TransportHelper.matchOutputFluid(drain(dir, 5, false), getBlockPos().toPos(dir).toPos(ForgeDirection.DOWN), ForgeDirection.UP)) != 0)
 		{
-			FluidStack stack = drain(dir, 5, false);
-			if(stack != null)
-			{
-				int drain = ((IFluidHandler) getBlockPos().toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile()).fill(ForgeDirection.UP, stack, true);
-				drain(dir, drain, true);
-			}
+			TransportHelper.matchAndTransferOutputFluid(drain(dir, amount, true), getBlockPos().toPos(dir).toPos(ForgeDirection.DOWN), ForgeDirection.UP);
 		}
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();

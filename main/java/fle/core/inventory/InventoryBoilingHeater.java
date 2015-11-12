@@ -13,6 +13,7 @@ import fle.api.gui.GuiError;
 import fle.api.inventory.InventoryWithFluidTank;
 import fle.api.material.IFluidChemInfo;
 import fle.api.util.IChemCondition;
+import fle.core.init.Config;
 import fle.core.init.Lang;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.FLEBoilingHeaterRecipe;
@@ -24,14 +25,16 @@ import fle.core.te.argil.TileEntityBoilingHeater;
 
 public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoilingHeater> implements IChemCondition
 {
+	protected final int power = Config.getInteger("pBoilingHeater", 400000);
+	
 	private static final int[] a = {0, 1};
 	private static final int[] b = {2, 3};
 	private static final int[] c = {4};
 	
 	public BHKey key;
 	private int recipeTick;
-	private int burnTime;
-	private int currectItemBurntime;
+	private long burnTime;
+	private long currectItemBurntime;
 	private boolean isBurning;
 	
 	public InventoryBoilingHeater()
@@ -41,13 +44,13 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void setBT(int i)
+	public void setBT(long i)
 	{
 		burnTime = i;
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void setCBT(int i)
+	public void setCBT(long i)
 	{
 		currectItemBurntime = i;
 		isBurning = i > 0;
@@ -59,8 +62,8 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 		super.writeToNBT(nbt);
 		if(key != null) nbt.setString("Recipe", key.toString());
 		nbt.setInteger("RecipeTick", recipeTick);
-		nbt.setInteger("BurnTime", burnTime);
-		nbt.setInteger("CurrectBurnTime", currectItemBurntime);
+		nbt.setLong("BurnTime", burnTime);
+		nbt.setLong("CurrectBurnTime", currectItemBurntime);
 		nbt.setBoolean("Burning", isBurning);
 	}
 	
@@ -77,8 +80,8 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 		super.readFromNBT(nbt);
 		FLEBoilingHeaterRecipe.getInstance().getRecipeKey(nbt.getString("Recipe"));
 		recipeTick = nbt.getInteger("RecipeTick");
-		burnTime = nbt.getInteger("BurnTime");
-		currectItemBurntime = nbt.getInteger("CurrectBurnTime");
+		burnTime = nbt.getLong("BurnTime");
+		currectItemBurntime = nbt.getLong("CurrectBurnTime");
 		isBurning = nbt.getBoolean("Burning");
 	}
 	
@@ -123,9 +126,9 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 		if(burnTime > 0)
 		{
 			isBurning = true;
-			int heat = Math.min(burnTime, 200);
+			long heat = Math.min(burnTime, power);
 			burnTime -= heat;
-			tile.onHeatReceive(ForgeDirection.UNKNOWN, heat);
+			tile.onHeatReceive(ForgeDirection.UNKNOWN, power);
 		}
 		if(key == null)
 		{
@@ -255,12 +258,12 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 		return tem;
 	}
 
-	public int getBurnTime()
+	public long getBurnTime()
 	{
 		return burnTime;
 	}
 
-	public int getCurrectBurnTime()
+	public long getCurrectBurnTime()
 	{
 		return isBurning ? currectItemBurntime : -1;
 	}

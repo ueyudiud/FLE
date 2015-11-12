@@ -7,14 +7,17 @@ import net.minecraftforge.common.util.ForgeDirection;
 import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.inventory.InventoryTileBase;
+import fle.core.init.Config;
 import fle.core.init.Lang;
 import fle.core.te.argil.TileEntityCeramicFurnaceCrucible;
 import fle.core.te.argil.TileEntityCeramicFurnaceFirebox;
 
 public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntityCeramicFurnaceFirebox>
 {
-	int burnTime;
-	int currectBurnTime;
+	protected final int ceramicPower = Config.getInteger("pCeramicFirebox", 500000);
+	
+	long burnTime;
+	long currectBurnTime;
 	boolean isBurning;
 	
 	public InventoryCeramicFurnaceFirebox()
@@ -26,7 +29,7 @@ public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setInteger("BurnTime", burnTime);
+		nbt.setLong("BurnTime", burnTime);
 		nbt.setBoolean("IsBurning", isBurning);
 	}
 	
@@ -34,7 +37,7 @@ public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		currectBurnTime = burnTime = nbt.getInteger("BurnTime");
+		currectBurnTime = burnTime = nbt.getLong("BurnTime");
 		isBurning = nbt.getBoolean("IsBurning");
 	}
 	
@@ -45,8 +48,8 @@ public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntity
 	{
 		if(burnTime > 0)
 		{
-			burnTime -= 1200;
-			tile.onHeatReceive(ForgeDirection.UNKNOWN, 1200.0F);
+			burnTime -= ceramicPower;
+			tile.onHeatReceive(ForgeDirection.UNKNOWN, ceramicPower);
 			for(ForgeDirection dir : dirs)
 			{
 				if(tile.getBlockPos().toPos(dir).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
@@ -62,7 +65,7 @@ public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntity
 			burnTime = 0;
 			for(int i = 0; i < 3; ++i)
 			{
-				int buf = FleAPI.getFulBuf(stacks[i], FLE.fle.getAirConditionProvider().getAirLevel(tile.getBlockPos()));
+				long buf = FleAPI.getFulBuf(stacks[i], FLE.fle.getAirConditionProvider().getAirLevel(tile.getBlockPos()));
 				if(buf > 0)
 				{
 					currectBurnTime = burnTime = buf;

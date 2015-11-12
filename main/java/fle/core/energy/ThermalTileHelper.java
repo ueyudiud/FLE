@@ -18,7 +18,7 @@ public class ThermalTileHelper
 
 	public ThermalTileHelper(MaterialAbstract material)
 	{
-		this(material.getPropertyInfo().getThermalConductivity(), material.getPropertyInfo().getSpecificHeat() * 800);
+		this(material.getPropertyInfo().getThermalConductivity() * 10, material.getPropertyInfo().getSpecificHeat() * 50000);
 	}
 	public ThermalTileHelper(double hc, double sh)
 	{

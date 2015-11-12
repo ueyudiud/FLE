@@ -177,7 +177,7 @@ public class FLEBiomeDecoratorBase extends BiomeDecorator
 
             if (randomGenerator.nextInt(8) == 0)
             {
-            	generate((byte) 2, mushroomRedGen);
+            	generate((byte) 1, mushroomRedGen);
             }
         }
 
@@ -233,11 +233,16 @@ public class FLEBiomeDecoratorBase extends BiomeDecorator
     	{
     	case 0 : return aWg.generate(currentWorld, randomGenerator, x, currentWorld.getTopSolidOrLiquidBlock(x, z), z);
     	case 1 : return aWg.generate(currentWorld, randomGenerator, x, currentWorld.getHeightValue(x, z), z);
-    	case 2 : return aWg.generate(currentWorld, randomGenerator, x, nextInt(currentWorld.getHeightValue(x, z) * 2), z);
-    	case 3 : return aWg.generate(currentWorld, randomGenerator, x, randomGenerator.nextInt(randomGenerator.nextInt(248) + 8), z);
-    	case 4 : return aWg.generate(currentWorld, randomGenerator, x, randomGenerator.nextInt(randomGenerator.nextInt(randomGenerator.nextInt(240) + 8) + 8), z);
+    	case 2 : return aWg.generate(currentWorld, randomGenerator, x, nextInt(currentWorld.getHeightValue(x, z) * 3 / 2), z);
+    	case 3 : return aWg.generate(currentWorld, randomGenerator, x, randomGenerator.nextInt(randomGenerator.nextInt(height()) + 8), z);
+    	case 4 : return aWg.generate(currentWorld, randomGenerator, x, randomGenerator.nextInt(randomGenerator.nextInt(randomGenerator.nextInt(height()) + 8) + 8), z);
     	}
     	return false;
+    }
+    
+    protected int height()
+    {
+    	return 240;
     }
 	
 	@Override

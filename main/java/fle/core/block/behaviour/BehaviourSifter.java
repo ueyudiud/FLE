@@ -1,9 +1,12 @@
 package fle.core.block.behaviour;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import fle.core.block.BlockSubTile;
@@ -16,6 +19,20 @@ public class BehaviourSifter extends BehaviourTile
 	public BehaviourSifter()
 	{
 		super("Sifter", TileEntitySifter.class);
+	}
+	
+	@Override
+	public void onBlockBreak(BlockSubTile block, World aWorld, int x, int y,
+			int z, Block aBlock, int aMeta)
+	{
+		TileEntity tile = aWorld.getTileEntity(x, y, z);
+		if(tile instanceof IInventory)
+		{
+			for(int i = 0; i < ((IInventory) tile).getSizeInventory(); ++i)
+			{
+				block.dropBlockAsItem(aWorld, x, y, z, ((IInventory) tile).getStackInSlot(i));
+			}
+		}
 	}
 
 	@Override

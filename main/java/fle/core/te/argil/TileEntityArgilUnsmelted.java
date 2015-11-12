@@ -41,7 +41,7 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 		super.updateEntity();
 		bakeClay();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
-		if(smeltedTick > 10000)
+		if(smeltedTick > 8000000)
 		{
 			worldObj.removeTileEntity(xCoord, yCoord, zCoord);
 			invalidate();
@@ -104,6 +104,6 @@ public class TileEntityArgilUnsmelted extends TEBase implements IThermalTileEnti
 
 	public double getProgress()
 	{
-		return smeltedTick / 10000D;
+		return smeltedTick / 8000000D;
 	}
 }

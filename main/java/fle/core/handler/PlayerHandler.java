@@ -291,6 +291,7 @@ public class PlayerHandler
 	@SubscribeEvent
 	public void onPlayerSpawn(CreateSpawnPosition evt)
 	{
+		if(evt.world.provider.isHellWorld) return;
 		int i = 0;
 		Random rand = new Random();
 		while(i < 1024)

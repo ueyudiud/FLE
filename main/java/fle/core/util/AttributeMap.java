@@ -5,23 +5,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
-
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-
 import fle.api.util.FleLog;
 
 public class AttributeMap
 {
 	private final Map<Attribute, Object> map;
 
+	public AttributeMap(Entry<Attribute, Object>...attributes)
+	{
+		this(attributes.length);
+		setAttributess(attributes);
+	}
+	public AttributeMap(Attribute...attributes)
+	{
+		this(attributes.length);
+		setAttributess(attributes);
+	}
 	public AttributeMap()
 	{
 		this(16);
@@ -33,6 +38,30 @@ public class AttributeMap
 	public AttributeMap(int cap, float speed)
 	{
 		map = new HashMap<Attribute, Object>(cap, speed);
+	}
+
+	private void setAttributess(Entry<Attribute, Object>...attributes)
+	{
+		try
+		{
+			for(Entry<Attribute, Object> atb : attributes)
+			{
+				if(!atb.getKey().isInstance(atb.getValue())) throw new IllegalAccessException("FLE: attribute value with class " + atb.getValue().getClass() + "can not case to " + atb.getKey().getAccessClass());
+				setAttribute(atb.getKey(), atb.getValue());
+			}
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private void setAttributess(Attribute...attributes)
+	{
+		for(Attribute atb : attributes)
+		{
+			setAttribute(atb);
+		}
 	}
 	
 	public <T> T getAttribute(Attribute<T> a)
@@ -130,5 +159,10 @@ public class AttributeMap
 				throw new IOException("Fail to load attribute message.", e);
 			}
 		}
+	}
+	
+	public boolean contain(Attribute flag)
+	{
+		return map.containsKey(flag);
 	}
 }

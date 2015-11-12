@@ -128,6 +128,21 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	}
 	
 	@Override
+	public void addCollisionBoxesToList(World aWorld, int x,
+			int y, int z, AxisAlignedBB aabb,
+			List list, Entity entity)
+	{
+		super.addCollisionBoxesToList(aWorld, x, y, z, aabb, list, entity);
+	}
+	
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess access,
+			int x, int y, int z)
+	{
+		
+	}
+	
+	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World aWorld,
 			int x, int y, int z)
 	{

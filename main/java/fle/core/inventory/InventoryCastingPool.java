@@ -82,7 +82,7 @@ public class InventoryCastingPool extends InventoryTWFTC<TileEntityCastingPool>
 				}
 				else
 				{
-					tile.tc.reseaveHeat((getFluid().getFluid().getTemperature(getFluid()) - FLE.fle.getThermalNet().getEnvironmentTemperature(tile.getBlockPos())) * 0.2D);
+					tile.tc.reseaveHeat((getFluid().getFluid().getTemperature(getFluid()) - FLE.fle.getThermalNet().getEnvironmentTemperature(tile.getBlockPos())) * 2D);
 					tile.sendToNearBy(new FleTEPacket(tile, (byte) 4), 16.0F);
 				}
 				syncTank(tile);

@@ -16,11 +16,12 @@ import fle.api.net.INetEventListener;
 import fle.api.recipe.ItemOreStack;
 import fle.api.te.TEIT;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.init.Config;
 import fle.core.init.Materials;
 import fle.core.inventory.InventoryBoilingHeater;
 
 public class TileEntityBoilingHeater extends TEIT<InventoryBoilingHeater> implements IThermalTileEntity, INetEventListener
-{
+{	
 	private ThermalTileHelper tc = new ThermalTileHelper(Materials.Argil);
 	public GuiCondition type = GuiError.DEFAULT;
 	
@@ -124,9 +125,9 @@ public class TileEntityBoilingHeater extends TEIT<InventoryBoilingHeater> implem
 	public void onReseave(byte type, Object contain)
 	{
 		if(type == 0)
-			getTileInventory().setBT((Integer) contain);
+			getTileInventory().setBT((Long) contain);
 		if(type == 1)
-			getTileInventory().setCBT((Integer) contain);
+			getTileInventory().setCBT((Long) contain);
 	}
 
 	public void resetRecipe()

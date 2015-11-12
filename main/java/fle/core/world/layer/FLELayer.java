@@ -24,7 +24,6 @@ public abstract class FLELayer extends GenLayer
 {	
 	public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType type)
     {
-        boolean flag = false;
         if(type == FLEWorldType.FLAT)
         {
         	FLELayerFlat gen0 = new FLELayerFlat();
@@ -105,6 +104,59 @@ public abstract class FLELayer extends GenLayer
         drawImage(512, gen12, "22-beta ContinentsVoronoiZoom");
         return new GenLayer[]{gen13, gen12, gen13};
     }
+
+	public static GenLayer[] initializeAllNetherBiomeGenerators(long seed,
+			WorldType type)
+	{
+        boolean flag = false;
+        if(type == FLEWorldType.FLAT)
+        {
+        	FLELayerNetherFloor gen2 = new FLELayerNetherFloor(new NoiseMix(4D, new NoisePerlin(1001L, 2)), new NoiseMix(4D, new NoisePerlin(1003L, 2)), 10L);
+            drawImage(512, gen2, "0 ContinentsFloor");
+        	FLELayerZoom2 gen1 = new FLELayerZoom2(8, 29L, gen2);
+        	drawImage(512, gen1, "1 ContinentsZoom");
+        	FLELayerEdge gen3 = new FLELayerEdge(2928L, gen1);
+        	drawImage(512, gen3, "2 ContinentsEdge");
+        	gen3 = new FLELayerEdge(528L, gen3);
+        	drawImage(512, gen3, "3 ContinentsEdge");
+        	gen1 = new FLELayerZoom2(2, seed, gen3);
+        	drawImage(512, gen1, "4 ContinentsZoom");
+        	gen1.initWorldGenSeed(seed);
+        	return new GenLayer[]{gen1, gen1, gen1};
+        }
+        GenLayerZoom gen1;
+        FLELayerZoom2 gen3;
+        FLELayerNetherFloor gen4;
+        gen4 = new FLELayerNetherFloor(new NoiseMix(87D, new NoisePerlin(1001L, 2)), new NoiseMix(83D, new NoisePerlin(1003L, 2)), 10L);
+        drawImage(512, gen4, "1 ContinentsFloor");
+        FLELayerEdge gen5 = new FLELayerEdge(32L, gen4);
+        drawImage(512, gen5, "2 ContinentsEdge");
+        gen5 = new FLELayerEdge(33L, gen5);
+        drawImage(512, gen5, "3 ContinentsZoom");
+        gen1 = new GenLayerZoom(2L, gen5);
+        drawImage(512, gen1, "4 ContinentsZoom");
+        gen3 = new FLELayerZoom2(1, 2L, gen1);
+        drawImage(512, gen3, "5 ContinentsZoom");
+        GenLayerSmooth gen13 = new GenLayerSmooth(999L, gen3);
+        drawImage(512, gen13, "6 ContinentsSmooth");
+        
+        if(type == FLEWorldType.LARGE_BIOMES)
+        {
+        	gen3 = new FLELayerZoom2(6, 294L, gen13);
+        	gen13 = new GenLayerSmooth(284L, gen3);
+        	GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(10L, gen13);
+            gen12.initWorldGenSeed(seed);
+            gen13.initWorldGenSeed(seed);
+            drawImage(512, gen12, "7-beta ContinentsVoronoiZoom");
+            return new GenLayer[]{gen13, gen12, gen13};
+        }
+        //GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(27L + seed, gen9);
+        GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(27L + seed, gen13);
+        gen13.initWorldGenSeed(seed);
+        gen12.initWorldGenSeed(seed);
+        drawImage(512, gen12, "7-beta ContinentsVoronoiZoom");
+        return new GenLayer[]{gen13, gen12, gen13};
+	}
 	
 	private static boolean shouldDraw = false;
 	

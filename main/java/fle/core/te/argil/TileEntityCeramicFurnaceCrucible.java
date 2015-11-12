@@ -57,7 +57,8 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	@Override
 	public double getThermalConductivity(ForgeDirection dir)
 	{
-		return tc.getThermalConductivity();
+		return dir == ForgeDirection.DOWN && getBlockPos().toPos(dir).getBlockTile() instanceof IThermalTileEntity ?
+				tc.getThermalConductivity() * 6 : tc.getThermalConductivity();
 	}
 
 	@Override

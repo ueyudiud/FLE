@@ -10,9 +10,9 @@ public class AttributeInteger extends Attribute<Integer>
 	{
 		super(Integer.class, aName, 0, hashValue);
 	}
-	public AttributeInteger(String aName, int d, int hashValue)
+	public AttributeInteger(String aName, int defaultValue, int hashValue)
 	{
-		super(Integer.class, aName, d, hashValue);
+		super(Integer.class, aName, defaultValue, hashValue);
 	}
 
 	@Override

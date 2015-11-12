@@ -42,7 +42,6 @@ public class RenderOilLamp extends RenderBase
 		renderBlock(p3, p1, p3, p4, p2, p3 + p1);
 		renderBlock(p3, p1, p4 - p1, p4, p2, p4);
 		renderBlock(p4 - p1, p1, p3, p4, p2, p4);
-		
 		dir = ForgeDirection.VALID_DIRECTIONS[FLE.fle.getWorldManager().getData(aPos, EnumWorldNBT.Facing)];
 		switch(dir)
 		{
