@@ -4,7 +4,6 @@ import java.lang.reflect.ParameterizedType;
 
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -30,7 +29,6 @@ import fle.core.render.RenderOilLamp;
 import fle.core.render.RenderOre;
 import fle.core.render.RenderOreCobble;
 import fle.core.render.RenderPlants;
-import fle.core.render.RenderRock;
 import fle.core.render.RenderSifter;
 import fle.core.render.RenderStoneMill;
 import fle.core.render.RenderThermalWire;
@@ -51,7 +49,6 @@ public class Renders
 	public static void init()
 	{
         RenderHandler.instance = new RenderHandler(false);
-		RenderHandler.register(IB.rock, OreDictionary.WILDCARD_VALUE, RenderRock.class);
         RenderHandler.register(IB.ore, OreDictionary.WILDCARD_VALUE, RenderOre.class);
         RenderHandler.register(IB.oilLamp, OreDictionary.WILDCARD_VALUE, RenderOilLamp.class);
         RenderHandler.register(IB.ash, OreDictionary.WILDCARD_VALUE, RenderAsh.class);

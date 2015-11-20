@@ -21,11 +21,12 @@ import fle.api.util.WeightHelper.Stack;
 import fle.core.init.Lang;
 import fle.core.net.FleMatterUpdatePacket;
 import fle.core.te.argil.TileEntityCeramicFurnaceCrucible;
+import fle.core.util.MatterContainer;
 
 public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<TileEntityCeramicFurnaceCrucible>
 {
-	private int[] progress = new int[3];
-	public Map<IAtoms, Integer> matterMap = new HashMap();
+	public int[] progress = new int[3];
+	public MatterContainer container = new MatterContainer();
 	private int buf1 = 0;
 	
 	public InventoryCeramicFurnaceCrucible()
@@ -38,16 +39,7 @@ public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<Tile
 	{
 		super.readFromNBT(nbt);
 		progress = nbt.getIntArray("Progress");
-		matterMap.clear();
-		NBTTagList list = nbt.getTagList("Progress", 11);
-		for(int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound nbt1 = list.getCompoundTagAt(i);
-			Matter matter = Matter.getMatterFromName(nbt1.getString("CFN"));
-			int size = nbt1.getInteger("C");
-			if(matter != null && size > 0)
-				matterMap.put(matter, size);
-		}
+		container.readFromNBT(nbt);
 	}
 	
 	@Override
@@ -55,15 +47,7 @@ public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<Tile
 	{
 		super.writeToNBT(nbt);
 		nbt.setIntArray("Progress", progress);
-		NBTTagList list = new NBTTagList();
-		for(Entry<IAtoms, Integer> entry : matterMap.entrySet())
-		{
-			NBTTagCompound nbt1 = new NBTTagCompound();
-			nbt1.setString("CFN", entry.getKey().getChemicalFormulaName());
-			nbt1.setInteger("C", entry.getValue());
-			list.appendTag(nbt1);
-		}
-		nbt.setTag("MatterMap", list);
+		container.writeToNBT(nbt);
 	}
 	
 	@Override
@@ -83,6 +67,14 @@ public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<Tile
 					meltItem(i);
 				}
 			}
+			else if(stacks[i] == null)
+			{
+				progress[i] = 0;
+			}
+			else if(progress[i] > 0)
+			{
+				--progress[i];
+			}
 		}
 		if(buf1 < 20) ++buf1;
 		else
@@ -97,24 +89,16 @@ public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<Tile
 	private void updateMatter(TileEntityCeramicFurnaceCrucible tile)
 	{
 		if(tile.getWorldObj().isRemote) return;
-		Stack<IAtoms>[] stacks = WeightHelper.asArray(matterMap);
-		matterMap.clear();
-		for(Stack<IAtoms> s : stacks)
-		{
-			if(s.getObj() == null || s.getSize() <= 0) continue;
-			Stack<IAtoms>[] s1 = s.getObj().getAtomsOutput(tile, s);
-			if(s1 != null)
-			{
-				WeightHelper.add(matterMap, s1);
-			}
-		}
+		container.update(tile.getBlockPos(), tile);
 	}
+	
+	private static final float lostSize = 0.25F;
 	
 	private void meltItem(int slotID)
 	{
 		AtomStack stack = MatterDictionary.getMatter(stacks[slotID]).copy();
-		stack.setSize(stack.getSize() / 4);
-		WeightHelper.add(matterMap, stack);
+		stack.setSize((int) (stack.getSize() * lostSize));
+		container.add(stack);
 		--stacks[slotID].stackSize;
 		if(stacks[slotID].stackSize <= 0) stacks[slotID] = null;
 		progress[slotID] = 0;
@@ -122,20 +106,16 @@ public class InventoryCeramicFurnaceCrucible extends InventoryWithFluidTank<Tile
 	
 	public void outputStack(TileEntityCeramicFurnaceCrucible tile)
 	{
-		WeightHelper<IAtoms> wh = new WeightHelper<IAtoms>(matterMap);
-		MaterialAbstract m = MaterialAlloy.findAlloy(wh);
+		MaterialAbstract m = MaterialAlloy.findAlloy(container.getHelper());
 		if(m != null)
 		{
-			FluidStack stack = MatterDictionary.getFluid(new AtomStack(m.getMatter(), wh.allWeight()));
+			FluidStack stack = MatterDictionary.getFluid(new AtomStack(m.getMatter(), container.size()));
 			if(fill(stack, false) != 0)
 			{
 				fill(stack, true);
-				matterMap.clear();
+				container.clear();
 			}
-		}
-		else
-		{
-			matterMap.clear();
+			syncSlot(tile);
 		}
 	}
 	

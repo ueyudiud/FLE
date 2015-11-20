@@ -12,6 +12,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fle.api.enums.EnumFLERock;
+import fle.api.material.MaterialRock;
+import fle.core.block.BlockFleRock;
+import fle.core.block.BlockRock;
+import fle.core.init.IB;
 import fle.core.world.dim.FLEBiomeDecoratorBase;
 
 public class FLEBiomeSwamp extends FLEBiome
@@ -85,12 +90,13 @@ public class FLEBiomeSwamp extends FLEBiome
 	}
     
     @Override
-    protected void genTerrainBlocks(Random rand, Block[] blocks, byte[] bytes,
+    protected void genTerrainBlocks(World aWorld, Random rand, Block[] blocks, byte[] bytes,
     		boolean isFlat, boolean isNonwaterTop, int rootHeight, int x,
     		int z, int size, int height)
     {
         boolean waterFlag = false;
         int k = -1;
+        BlockFleRock rock = BlockFleRock.a(MaterialRock.getRockFromType(EnumFLERock.getRock(rockAcidityNoise.noise(x, z), rockWeatheringNoise.noise(x, z))));
         for (int l1 = 255; l1 >= 0; --l1)
         {
             int i2 = (z * 16 + x) * size + l1;
@@ -152,6 +158,11 @@ public class FLEBiomeSwamp extends FLEBiome
                         	{
                         		genTargetBlockAt(2, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
                         	}
+                        }
+                        else
+                        {
+                        	blocks[i2] = rock;
+                        	continue;
                         }
                     }
                     else if(block2 == Blocks.water)

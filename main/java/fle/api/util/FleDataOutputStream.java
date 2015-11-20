@@ -1,21 +1,8 @@
 package fle.api.util;
 
-import fle.api.gui.GuiCondition;
-import fle.api.soild.SolidRegistry;
-import fle.api.soild.SolidStack;
-import fle.api.world.BlockPos;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -27,8 +14,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import cpw.mods.fml.common.network.ByteBufUtils;
+
+import com.google.common.io.ByteArrayDataOutput;
+
 import cpw.mods.fml.common.registry.GameData;
+import fle.api.gui.GuiCondition;
+import fle.api.soild.SolidRegistry;
+import fle.api.soild.SolidStack;
+import fle.api.world.BlockPos;
 
 public class FleDataOutputStream 
 {

@@ -328,13 +328,18 @@ public class ItemFleMetaBase extends ItemFle
 	    {
 	    	tBehavior.getAdditionalToolTips(this, aList, aStack, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT));
 	    }
-	    addAdditionalToolTips(aList, aStack);
+	    addAdditionalToolTips(aPlayer, aList, aStack);
 	}
 	  
+	protected void addAdditionalToolTips(EntityPlayer aPlayer, List aList, ItemStack aStack) 
+	{
+		addAdditionalToolTips(aList, aStack);
+	}
 	protected void addAdditionalToolTips(List aList, ItemStack aStack) 
 	{
 		
 	}
+
 
 	public void onUpdate(ItemStack aStack, World aWorld, Entity aPlayer, int aTimer, boolean aIsInHand)
 	{

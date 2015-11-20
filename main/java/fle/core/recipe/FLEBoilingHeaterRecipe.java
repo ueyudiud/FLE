@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.FleAPI;
+import fle.api.config.JsonLoader;
 import fle.api.enums.EnumDamageResource;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
@@ -33,9 +34,9 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("crushed_bone")), new FluidStack(FluidRegistry.WATER, 200), 450000, ItemFleSub.a("defatted_crushed_bone")));
 	}
 	
-	public static void postInit(FLEConfiguration cfg)
+	public static void postInit(JsonLoader loader)
 	{
-		instance.reloadRecipes(cfg);
+		instance.reloadRecipes(loader);
 	}
 	
 	public static FLEBoilingHeaterRecipe getInstance()
@@ -100,12 +101,6 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 		public RecipeKey getRecipeKey()
 		{
 			return new BHKey(toolRequire, energyRequire, input);
-		}
-		
-		@Override
-		public void reloadRecipe(ConfigInfomation ci)
-		{
-			
 		}
 	}
 	

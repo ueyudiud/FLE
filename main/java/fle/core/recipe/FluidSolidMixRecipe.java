@@ -94,6 +94,7 @@ public class FluidSolidMixRecipe
 			public int getTemperature()	    {return fluid == null ? FleValue.WATER_FREEZE_POINT + 25 : fluid.getFluid().getTemperature(fluid);}
 			public EnumPH getPHLevel()  	{return fluid == null ? EnumPH.Water : fluid.getFluid() instanceof IFluidChemInfo ? ((IFluidChemInfo) fluid.getFluid()).getFluidPH(fluid) : EnumPH.Water;}
 			public EnumOxide getOxideLevel(){return fluid == null ? EnumOxide.Default : fluid.getFluid() instanceof IFluidChemInfo ? ((IFluidChemInfo) fluid.getFluid()).getFluidOxide(fluid) : EnumOxide.Default;}
+			public EnumEnviorment isOpenEnviorment() {return EnumEnviorment.Open;}
 		};
 	}
 	

@@ -4,6 +4,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import fle.api.util.DropInfo;
 
+/**
+ * The plant id.
+ * @author ueyudiud
+ *
+ */
 public abstract class PlantCard
 {
 	public abstract String getPlantName();

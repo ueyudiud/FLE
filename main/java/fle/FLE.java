@@ -73,7 +73,6 @@ public class FLE implements FleModHandler
     private FleRotationNet rn;
     private SideGateway<Keyboard> k;
     private Configuration config;
-    private FLEConfiguration config1;
     
     public FLE() 
     {
@@ -150,18 +149,12 @@ public class FLE implements FleModHandler
         	File recipe = new File(new File(p.get().getMinecraftDir(), "config"), "FLE Recipe.csv");
         	config = new Configuration(configFile);
         	config.load();
-        	config1 = new FLEConfiguration(recipe);
         	FleLog.getLogger().info("Config loaded from " + configFile.getAbsolutePath());
         }
         catch (Exception e)
         {
         	FleLog.getLogger().warn("Error while trying to access configuration! " + e);
         	config = null;
-        	config1 = null;
-        }
-        if(config1 != null)
-        {
-        	config1.init();
         }
         if(config != null)
         {
@@ -197,10 +190,6 @@ public class FLE implements FleModHandler
     	if(config != null)
     	{
             config.save();
-    	}
-    	if(config1 != null)
-    	{
-    		config1.save();
     	}
 	}
     
@@ -261,11 +250,6 @@ public class FLE implements FleModHandler
 	public FWM getAirConditionProvider()
 	{
 		return wm.get();
-	}
-
-	public FLEConfiguration getConfig1()
-	{
-		return config1;
 	}
 
 	@NetworkCheckHandler

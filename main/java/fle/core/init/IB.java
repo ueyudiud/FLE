@@ -25,6 +25,7 @@ import fle.core.block.BlockDitch;
 import fle.core.block.BlockFLEFarmland;
 import fle.core.block.BlockFirewood;
 import fle.core.block.BlockFleCrop;
+import fle.core.block.BlockFleRock;
 import fle.core.block.BlockLeaves;
 import fle.core.block.BlockLog;
 import fle.core.block.BlockOilLamp;
@@ -73,6 +74,8 @@ public class IB
 		Blocks.netherrack.setHardness(4.5F);
 		Blocks.end_stone.setHardness(5.0F);
 		Blocks.enchanting_table.setHardness(6.0F);
+		Blocks.yellow_flower.setHardness(0.5F);
+		Blocks.red_flower.setHardness(0.5F);
 		for(Object obj : Block.blockRegistry.getKeys())
 		{
 			Block block = (Block) Block.blockRegistry.getObject(obj);
@@ -94,7 +97,7 @@ public class IB
 	public static Item food;
 	public static Item oreChip;
 	public static Block crop;
-	public static Block rock;
+	//public static Block rock;
 	public static Block ore;
 	public static Block leaf;
 	public static Block log;
@@ -193,7 +196,8 @@ public class IB
 		
 		farmland = new BlockFLEFarmland("fle_farmland", "Farmland").setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/farmland");
 		crop = new BlockFleCrop();
-		rock = new BlockRock().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
+		//rock = new BlockRock().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
+		BlockFleRock.init();
 		ore = new BlockOre().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
 		ore_cobble = new BlockOreCobble("ore.cobble").init().setCreativeTab(FleValue.tabFLE);
 		oreChip = new ItemOre("ore.chip", "ore").init().setCreativeTab(FleValue.tabFLE);

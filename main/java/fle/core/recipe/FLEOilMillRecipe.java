@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import fle.api.config.JsonLoader;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
@@ -27,9 +28,9 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		a(new OilMillRecipe(new ItemBaseStack(Items.apple), ItemFleSub.a("plant_waste"), 0.15F, new FluidStack(IB.apple_juice, 30)));
 	}
 	
-	public static void postInit(FLEConfiguration cfg)
+	public static void postInit(JsonLoader loader)
 	{
-		instance.reloadRecipes(cfg);
+		instance.reloadRecipes(loader);
 	}
 	
 	public static FLEOilMillRecipe getInstance()
@@ -76,13 +77,6 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		public RecipeKey getRecipeKey()
 		{
 			return new OilMillKey(input);
-		}
-		
-		@Override
-		public void reloadRecipe(ConfigInfomation ci)
-		{
-			output2.amount = ci.readInteger(0, defaultOutputAmount);
-			outputChance = ci.readFloat(1, defaultOutputChance);
 		}
 		
 		public ItemAbstractStack getInput()

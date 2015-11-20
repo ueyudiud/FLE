@@ -51,16 +51,17 @@ public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 	public void updateEntity(TileEntityStoneMill tile)
 	{
 		super.updateEntity(tile);
-		if(tile.getRotationHelper().getRotationEnergy() > 0)
+		double energy = tile.getRotationHelper().getRotationEnergy();
+		if(energy > 200)
 		{
-			onWork(tile);
-			tile.getRotationHelper().minusInnerEnergy(10.0D);
+			onWork(tile, (int) Math.log(energy / 200D + Math.E));
+			tile.getRotationHelper().minusInnerEnergy(200.0D);
 			tile.markRenderForUpdate();
 		}
 		RecipeHelper.fillOrDrainInventoryTank(this, sTank, 1, 2, FDType.F);
 	}
 	
-	public void onWork(TileEntityStoneMill tile)
+	public void onWork(TileEntityStoneMill tile, int speed)
 	{
 		if(recipe == null)
 		{
@@ -86,7 +87,7 @@ public class InventoryStoneMill extends InventoryTWFTC<TileEntityStoneMill>
 				return;
 			}
 			if(tile.type == GuiError.RAINING) tile.type = GuiError.DEFAULT;
-			recipeTick += 1;
+			recipeTick += speed;
 			if(recipeTick >= tTime)
 			{
 				StoneMillRecipe r = FLEStoneMillRecipe.getInstance().getRecipe(recipe);

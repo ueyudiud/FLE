@@ -40,7 +40,7 @@ public class FleCavesGen extends MapGenCaves
         Block filler = (isExceptionBiome(biome) ? Blocks.dirt  : biome.fillerBlock);
         Block block  = data[index];
 
-        if (block == IB.rock || block == Blocks.stone || block == Blocks.gravel || block == filler || block == top)
+        if ((block != null && block.isReplaceableOreGen(worldObj, x, y, z, Blocks.stone)) || block == Blocks.gravel || block == filler || block == top)
         {
             if (y < 9)
             {

@@ -2,6 +2,7 @@ package fle.api.world;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
@@ -9,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import fle.api.FleAPI;
 import fle.api.te.IObjectInWorld;
 
@@ -18,13 +18,17 @@ public final class BlockPos implements IObjectInWorld
 	public final IBlockAccess access;
 	public final int x, z;
 	public final short y;
-	
-	public BlockPos(IBlockAccess access, int x, int y, int z)
+
+	public BlockPos(IBlockAccess access, double x, double y, double z)
 	{
 		this.access = access;
-		this.x = x;
+		this.x = (int) x;
 		this.y = (short) y;
-		this.z = z;
+		this.z = (int) z;
+	}
+	public BlockPos(Entity entity)
+	{
+		this(entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ);
 	}
 	
 	public BlockPos toPos(ForgeDirection d)

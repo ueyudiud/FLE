@@ -3,9 +3,8 @@ package fle.core.world.biome;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import fle.core.world.dim.FLEBiomeDecoratorBase;
 import fle.core.world.dim.FLEBiomeDecoratorHell;
@@ -35,7 +34,7 @@ public abstract class FLEBiomeHellBase extends FLEBiome
 	}
 	
 	@Override
-	protected void genTerrainBlocks(Random rand, Block[] blocks, byte[] bytes,
+	protected void genTerrainBlocks(World aWorld, Random rand, Block[] blocks, byte[] bytes,
 			boolean isFlat, boolean isNonwaterTop, int rootHeight, int x,
 			int z, int size, int height)
 	{

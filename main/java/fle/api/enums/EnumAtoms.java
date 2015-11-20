@@ -1,22 +1,24 @@
 package fle.api.enums;
 
+import static fle.api.util.SubTag.ATOM_gas;
+import static fle.api.util.SubTag.ATOM_liquid;
+import static fle.api.util.SubTag.ATOM_metal;
+import static fle.api.util.SubTag.ATOM_nonmetal;
+import static fle.api.util.SubTag.ATOM_soild;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import fle.api.material.IAtoms;
-import fle.api.material.IStabilityInfo;
 import fle.api.material.Matter;
 import fle.api.material.Matter.AtomStack;
 import fle.api.util.FleEntry;
-import fle.api.util.IChemCondition;
 import fle.api.util.ISubTagContainer;
 import fle.api.util.SubTag;
-import static fle.api.util.SubTag.*;
-import fle.api.util.WeightHelper.Stack;
 
-public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
+public enum EnumAtoms implements IAtoms, ISubTagContainer
 {
 	Nt("Neutron"),
 	H("Hydrogen", ATOM_nonmetal, ATOM_gas),
@@ -389,23 +391,6 @@ public enum EnumAtoms implements IAtoms, ISubTagContainer, IStabilityInfo
 		meltingPoint = m;
 	}
 	
-	@Override
-	public Stack<IAtoms>[] getAtomsOutput(IChemCondition condition,
-			Stack<IAtoms> input)
-	{
-		Stack<IAtoms> i = input.copy();
-		if(input.getObj() instanceof EnumAtoms)
-		{
-			i = new Stack<IAtoms>(((EnumAtoms) input.getObj()).asMatter(), input.getSize());
-		}
-		if(condition.getTemperature() > boilingPoint)
-			if(condition.getTemperature() >= boilingPoint + 100)
-				return new Stack[0];
-			else
-				i.setSize((int) ((float) i.getSize() * (double) (condition.getTemperature() - boilingPoint) / 100D));
-		return new Stack[]{i};
-	}
-
 	public Matter asMatter()
 	{
 		return Matter.forMatter(name(), contain(ATOM_metal) ? CompoundType.Alloy : CompoundType.Molecular, new AtomStack(this));

@@ -25,7 +25,7 @@ import fle.core.te.argil.TileEntityBoilingHeater;
 
 public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoilingHeater> implements IChemCondition
 {
-	protected final int power = Config.getInteger("pBoilingHeater", 400000);
+	protected final int power = Config.getInteger("pBoilingHeater");
 	
 	private static final int[] a = {0, 1};
 	private static final int[] b = {2, 3};
@@ -266,5 +266,11 @@ public class InventoryBoilingHeater extends InventoryWithFluidTank<TileEntityBoi
 	public long getCurrectBurnTime()
 	{
 		return isBurning ? currectItemBurntime : -1;
+	}
+
+	@Override
+	public EnumEnviorment isOpenEnviorment()
+	{
+		return EnumEnviorment.Open;
 	}
 }

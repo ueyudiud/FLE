@@ -1,23 +1,28 @@
 package fle.api.enums;
 
+import static fle.api.util.SubTag.ATOM_metal;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import fle.api.material.IAtoms;
-import fle.api.material.IStabilityInfo;
+import fle.api.material.Matter;
+import fle.api.material.Proton;
+import fle.api.material.Matter.AtomStack;
 import fle.api.util.FleEntry;
-import fle.api.util.IChemCondition;
 import fle.api.util.WeightHelper;
 import fle.api.util.WeightHelper.Stack;
 
-public enum EnumIons implements IAtoms, IStabilityInfo
+public enum EnumIons implements IAtoms
 {
 	H_1("H", -1),
 	H1("H", +1),
 	Li1("Li", +1),
 	Be2("Be", +2),
 	B3("B", +3),
+	C1("C", +1),
 	C2("C", +2),
+	C3("C", +3),
 	C4("C", +4),
 	N_3("N", -3),
 	N3("N", +3),
@@ -32,7 +37,7 @@ public enum EnumIons implements IAtoms, IStabilityInfo
 	P3("P", +3),
 	P5("P", +5),
 	S_2("S", -2),
-	S("S", 0),
+	S2("S", +2),
 	S4("S", +4),
 	S6("S", +6),
 	Cl_1("Cl", -1),
@@ -132,17 +137,22 @@ public enum EnumIons implements IAtoms, IStabilityInfo
 	Monohydrogen_Phosphate("HPO4", -2, new Stack[]{new Stack(H1), new Stack(P5), new Stack(O_2, 4)}),
 	Phosphate("PO4", -3, new Stack[]{new Stack(P5), new Stack(O_2, 4)}),
 	Arsenate("AsO4", -3, new Stack[]{new Stack(As5), new Stack(O_2, 4)}),
+	Arsenite("AsO3", -3, new Stack[]{new Stack(As3), new Stack(O_2, 3)}),
+	Arsenitonium("AsO2", +3, new Stack[]{new Stack(As5), new Stack(O_1, 2)}),//metastable
 	Hydrogen_Carbonate("HCO3", -1, new Stack[]{new Stack(H1), new Stack(C4), new Stack(O_2, 3)}),
 	Nitrate("NO3", -1, new Stack[]{new Stack(N5), new Stack(O_2, 3)}),
 	Nitrite("NO2", -1, new Stack[]{new Stack(N3), new Stack(O_2, 2)}),
 	Hydrogen_Sulfite("HSO3", -1, new Stack[]{new Stack(H1), new Stack(S4), new Stack(O_2, 3)}),
+	Hydrogen_Sulfide("HS", -1, new Stack[]{new Stack(H1), new Stack(S_2)}),
 	Sulfite("SO3", -1, new Stack[]{new Stack(S4), new Stack(O_2, 3)}),
-	Thiosulfate("S2O3", -2, new Stack[]{new Stack(S4), new Stack(S), new Stack(O_2, 3)}),
+	Thiosulfate("S2O3", -2, new Stack[]{new Stack(S4), new Stack(EnumAtoms.S), new Stack(O_2, 3)}),
 	Sulfate("SO4", -2, new Stack[]{new Stack(S4), new Stack(O_2, 4)}),
 	Silicate("SiO4", -4, new Stack[]{new Stack(Si4), new Stack(O_2, 4)}),
 	Metasilicate("SiO3", -2, new Stack[]{new Stack(Si4), new Stack(O_2, 3)}),
 	Aluminium_Silicate("AlSiO4", -1, new Stack[]{new Stack(Al3), new Stack(Si4), new Stack(O_2, 4)}),
-	Hydroxide("OH", -1, new Stack[]{new Stack(H1), new Stack(O_2)});
+	Hydroxide("OH", -1, new Stack[]{new Stack(H1), new Stack(O_2)}),
+	Hydronium("H3O", +1, new Stack[]{new Stack(H1, 3), new Stack(O_2)}),
+	Ferricoxide("FeO", +1, new Stack[]{new Stack(Fe3), new Stack(O_2)});
 	
 	final String str1;
 	boolean isRadical;
@@ -150,12 +160,12 @@ public enum EnumIons implements IAtoms, IStabilityInfo
 	Map<IAtoms, Integer> containIon = new HashMap();
 	Map<EnumAtoms, Integer> containAtom;
 
-	EnumIons(String aCfName, int aCharge, Stack<EnumIons>[] aContainIon) 
+	EnumIons(String aCfName, int aCharge, Stack<IAtoms>[] aContainIon) 
 	{
 		isRadical = true;
 		str1 = aCfName;
 		charge = aCharge;
-		for(Stack<EnumIons> stack : aContainIon)
+		for(Stack<IAtoms> stack : aContainIon)
 		{
 			containIon.put(stack.getObj(), stack.getSize());
 		}
@@ -209,17 +219,9 @@ public enum EnumIons implements IAtoms, IStabilityInfo
 	{
 		return containAtom;
 	}
-
-	@Override
-	public Stack<IAtoms>[] getAtomsOutput(IChemCondition condition,
-			Stack<IAtoms> input)
+	
+	public Matter asMatter()
 	{
-		Stack<IAtoms> i = input.copy();
-		if(input.getObj() instanceof EnumIons)
-		{
-			if(!((EnumIons) input.getObj()).isRadical)
-				i = new Stack<IAtoms>(EnumAtoms.valueOf(((EnumIons) input.getObj()).str1), input.getSize());
-		}
-		return getElementContain() != null ? getElementContain().getAtomsOutput(condition, i) : new Stack[]{i};
+		return Matter.forMatter(name(), CompoundType.Ionic, new AtomStack(this));
 	}
 }

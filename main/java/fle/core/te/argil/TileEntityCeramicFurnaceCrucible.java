@@ -106,19 +106,19 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	@SideOnly(Side.CLIENT)
 	public Map<IAtoms, Integer> getContainerMap()
 	{
-		return getTileInventory().matterMap;
+		return getTileInventory().container.getMatterContain();
 	}
 
 	@Override
 	public Map<IAtoms, Integer> getMatterContain()
 	{
-		return getTileInventory().matterMap;
+		return getTileInventory().container.getMatterContain();
 	}
 
 	@Override
 	public void setMatterContain(Map<IAtoms, Integer> map)
 	{
-		getTileInventory().matterMap = map;
+		getTileInventory().container.setMatterContain(map);
 	}
 
 	public void onOutput()
@@ -130,5 +130,16 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	{
 		getTileInventory().drain(getTileInventory().getCapacity(), true);
 		getTileInventory().syncTank(this);
+	}
+
+	@Override
+	public EnumEnviorment isOpenEnviorment()
+	{
+		return EnumEnviorment.Open;
+	}
+	
+	public int[] getProgress()
+	{
+		return getTileInventory().progress;
 	}
 }

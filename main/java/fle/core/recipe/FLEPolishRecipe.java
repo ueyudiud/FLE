@@ -4,6 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import fle.api.cg.RecipesTab;
+import fle.api.config.JsonLoader;
 import fle.api.recipe.CraftingState;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
@@ -59,9 +60,9 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("limestone")), "ccccccccc", ItemFleSub.a("dust_limestone")));
 	}
 	
-	public static void postInit(FLEConfiguration cfg)
+	public static void postInit(JsonLoader loader)
 	{
-		instance.reloadRecipes(cfg);
+		instance.reloadRecipes(loader);
 	}
 
 	public static FLEPolishRecipe getInstance()
@@ -155,12 +156,6 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		public RecipesTab getTab()
 		{
 			return tab;
-		}
-		
-		@Override
-		public void reloadRecipe(ConfigInfomation ci)
-		{
-			
 		}
 	}
 	

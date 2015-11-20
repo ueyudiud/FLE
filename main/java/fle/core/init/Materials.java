@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import fle.api.enums.EnumAtoms;
+import fle.api.enums.EnumFLERock;
 import fle.api.material.MaterialAbstract;
 import fle.api.material.MaterialAlloy;
 import fle.api.material.MaterialOre;
@@ -65,6 +66,10 @@ public class Materials
 	public static MaterialRock Stone;
 	public static MaterialRock CompactStone;
 	public static MaterialRock Limestone;
+	public static MaterialRock Rhyolite;
+	public static MaterialRock Andesite;
+	public static MaterialRock Basalt;
+	public static MaterialRock Peridotite;
 
 	public static MaterialAbstract Copper;
 	public static MaterialAbstract Lead;
@@ -125,10 +130,15 @@ public class Materials
 		Stone = new MaterialRock("Stone", new PropertyInfo(0x626262, 16, 1.2F, 0.0F, 1.0F, 1.4F, 10000000, -1.0F, 0.38F, 2.1F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868, 21, 1.2F, 0.1F, 2.0F, 1.3F, 12800000, -1.0F, 0.35F, 2.2F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		Limestone = new MaterialRock("Limestone", new PropertyInfo(0xE4E4E5, 2, 0.8F, 0.2F, 1.0F, 1.8F, 5600000));
-		Copper = new MaterialAbstract("Copper", EnumAtoms.Cu.asMatter(), new PropertyInfo(0xDB4E31, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 0.16F, 0.7F, 0.057F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
-		Lead = new MaterialAbstract("Lead", EnumAtoms.Pb.asMatter(), new PropertyInfo(0xC4C4C6, 21, 579, 1849, 793, 601, 0.8F, 1600, 1.2F, 9.1F, 1.9F, 0.0F, 29000000, 2.08F, 0.55F, 0.006F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
-		Zinc = new MaterialAbstract("Zinc", EnumAtoms.Zn.asMatter(), new PropertyInfo(0xD7D9DA, 30, 602, 1048, 782, 673, 0.8F, 1600, 1.8F, 4.7F, 1.4F, 0.0F, 38100000, 0.58F, 0.625F, 0.027F), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
-		Tin = new MaterialAbstract("Tin", EnumAtoms.Sn.asMatter(), new PropertyInfo(0xD3D2CF, 8, 473, 2784, 582, 674, 0.8F, 1600, 1.2F, 8.7F, 1.2F, 0.0F, 30000000, 1.6F, 0.55F, 0.04F), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Rhyolite = new MaterialRock("Rhyolite", new PropertyInfo(new int[]{0x4F535A, 0x414140}, 48, 1.9F, 0F, 1.0F, 1.02F, 18000000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Rhyolite);
+		Andesite = new MaterialRock("Andesite", new PropertyInfo(new int[]{0x616162, 0x6C6C62}, 41, 1.6F, 0F, 1.0F, 1.02F, 16300000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Andesite);
+		Basalt = new MaterialRock("Basalt", new PropertyInfo(0x3A3A3A, 41, 1.61F, 0F, 1.0F, 1.0F, 16350000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Basalt);
+		Peridotite = new MaterialRock("Peridotite", new PropertyInfo(0x9EB965, 49, 2.2F, 0F, 1.01F, 1.0F, 19800000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Peridotite);
+		
+		Copper = new MaterialAbstract("Copper", EnumAtoms.Cu.asMatter(), new PropertyInfo(0xDB4E31, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 0.16F, 1.0F, 0.057F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Lead = new MaterialAbstract("Lead", EnumAtoms.Pb.asMatter(), new PropertyInfo(0xC4C4C6, 21, 579, 1849, 793, 601, 0.8F, 1600, 1.2F, 9.1F, 1.9F, 0.0F, 29000000, 2.08F, 0.8F, 0.006F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Zinc = new MaterialAbstract("Zinc", EnumAtoms.Zn.asMatter(), new PropertyInfo(0xD7D9DA, 30, 602, 1048, 782, 673, 0.8F, 1600, 1.8F, 4.7F, 1.4F, 0.0F, 38100000, 0.58F, 0.7F, 0.027F), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Tin = new MaterialAbstract("Tin", EnumAtoms.Sn.asMatter(), new PropertyInfo(0xD3D2CF, 8, 473, 2784, 582, 674, 0.8F, 1600, 1.2F, 8.7F, 1.2F, 0.0F, 30000000, 1.6F, 0.8F, 0.04F), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
 		MaterialAbstract.pureMaterials.register(Copper, "Cu");
 		MaterialAbstract.pureMaterials.register(Lead, "Pb");
 		MaterialAbstract.pureMaterials.register(Zinc, "Zn");

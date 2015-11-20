@@ -72,13 +72,19 @@ public class ToolMaterialInfo
 		else f2 = (materialBase.getPropertyInfo().getHardness() + materialSurface.getPropertyInfo().getHardness() * coverLevel) / (1 + coverLevel * 1.2F);
 		return Math.max(f1, f2);
 	}
+
+	public static void onRusting(World world, int x, int y, int z, NBTTagCompound tag)
+	{
+		new ToolMaterialInfo(tag).r(world, x, y, z).writeToNBT(tag);
+	}
 	
-	public void onRusting(World world, int x, int y, int z)
+	public ToolMaterialInfo r(World world, int x, int y, int z)
 	{
 		RustRecipe tRecipe = RustRecipe.getRustRecipe(materialBase);
-		if(tRecipe == null) return;
+		if(tRecipe == null) return this;
 		float speed = tRecipe.getBaseSpeed(FLE.fle.getThermalNet().getEnvironmentTemperature(new BlockPos(world, x, y, z)), new BlockPos(world, x, y, z).getBiome().getFloatRainfall());
 		coverLevel += speed * (Math.min(0, 2F - materialSurface.getPropertyInfo().getDenseness()) * coverLevel) / 200D;
+		return this;
 	}
 	
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)

@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import fle.api.material.IAtoms;
+import fle.api.util.WeightHelper.Stack;
+
 public class WeightHelper<T>
 {
 	public static <T> Stack<T>[] asArray(Map<T, Integer> aMap)
@@ -19,6 +22,15 @@ public class WeightHelper<T>
 			++i;
 		}
 		return sts;
+	}
+	public static <T> Map<T, Integer> asMap(Stack<T>...list)
+	{
+		Map<T, Integer> map = new HashMap<T, Integer>();
+		for(Stack<T> stack : list)
+		{
+			map.put(stack.target, stack.size);
+		}
+		return map;
 	}
 	public static <T> void add(Map<T, Integer> map, T e)
 	{
@@ -59,12 +71,16 @@ public class WeightHelper<T>
 		}
 		else
 		{
-			map.put(e.target, e.size);
+			map.put(e.target, e.size * size);
 		}
 	}
 	public static <T> void add(Map<T, Integer> map, T...e)
 	{
 		for(T t : e) add(map, t);
+	}
+	public static <T> void add(Map<T, Integer> map, int size, T...e)
+	{
+		for(T t : e) add(map, new Stack<T>(t, size));
 	}
 	public static <T> void add(Map<T, Integer> map, Stack<T>...e)
 	{
@@ -84,12 +100,30 @@ public class WeightHelper<T>
 	{
 		for(Entry<T, Integer> e : aValue.entrySet()) add(aMap, new Stack(e.getKey(), e.getValue() * size));
 	}
+	public static <T> Stack<T>[] multiply(Stack<T>[] aStacks, int size)
+	{
+		Stack<T>[] ret = new Stack[aStacks.length];
+		int i = 0;
+		for(Stack<T> stack : aStacks)
+		{
+			ret[i] = stack.copy();
+			ret[i].size *= size;
+			++i;
+		}
+		return ret;
+	}
 	
 	private static final Random rand = new Random();
+	private static Stack EMPTY_STACK = new Stack(null);
 	private int length;
 	private Stack<T>[] sts;
-	
-	public WeightHelper(T[]...aTs) 
+
+	public WeightHelper()
+	{
+		length = 0;
+		sts = new Stack[0];
+	}
+	public WeightHelper(T[]...aTs)
 	{
 		int i;
 		int size = 0;
@@ -149,6 +183,133 @@ public class WeightHelper<T>
 		}
 	}
 
+	private boolean arrange()
+	{
+		for(int i = 0; i < sts.length - 1; ++i)
+		{
+			if(sts[i].getObj() == null)
+			{
+				sts[i] = sts[sts.length - 1];
+				sts[sts.length - 1] = EMPTY_STACK.copy();
+				return true;
+			}
+			for(int j = i + 1; j < sts.length; ++j)
+			{
+				if(sts[j].getObj() != null)
+					if(sts[j].getObj().equals(sts[i].getObj()))
+					{
+						sts[Math.min(i, j)].addStackIn(sts[Math.max(i, j)].size);
+						sts[Math.max(i, j)] = sts[sts.length - 1];
+						if(Math.max(i, j) != sts.length - 1)
+						{
+							sts[sts.length - 1] = EMPTY_STACK.copy();
+							return true;
+						}
+					}
+			}
+		}
+		return true;
+	}
+	private void addListSize()
+	{
+		Stack<T>[] instead = new Stack[sts.length + 1];
+		System.arraycopy(sts, 0, instead, 0, sts.length);
+		sts = instead;
+	}
+	
+	public void add(Stack<T>...target)
+	{
+		arrange();
+		label:
+		for(Stack<T> s : target)
+		{
+			if(s == null) continue;
+			if(s.getObj() == null) continue;
+			for(int i = 0; i < sts.length; ++i)
+			{
+				Stack<T> stack = sts[i];
+				if(stack.target == null)
+				{
+					sts[i] = s.copy();
+					length += s.size;
+					continue label;
+				}
+				if(stack.target.equals(s.target))
+				{
+					stack.addStackIn(s.size);
+					length += s.size;
+					continue label;
+				}
+			}
+			addListSize();
+			length += s.size;
+			sts[sts.length - 1] = s.copy();
+		}
+	}
+	public void add(T...target)
+	{
+		arrange();
+		label :
+		for(T s : target)
+		{
+			if(s == null) continue;
+			for(int i = 0; i < sts.length; ++i)
+			{
+				Stack<T> stack = sts[i];
+				if(stack.target == null)
+				{
+					sts[i] = new Stack<T>(s);
+					length++;
+					continue label;
+				}
+				if(stack.target.equals(s))
+				{
+					stack.addStackIn(1);
+					length++;
+					continue label;
+				}
+			}
+			addListSize();
+			sts[sts.length - 1] = new Stack(s);
+			length++;
+		}
+	}
+	
+	public int remove(T target)
+	{
+		if(target == null) return 0;
+		arrange();
+		for(int i = 0; i < sts.length; ++i)
+		{
+			Stack<T> stack = sts[i];
+			if(stack.getObj().equals(target))
+			{
+				int size = stack.size;
+				sts[i] = EMPTY_STACK;
+				length -= size;
+				return size;
+			}
+		}
+		return 0;
+	}
+	public Stack<T> remove(T target, int aSize)
+	{
+		if(target == null || aSize <= 0) return null;
+		for(int i = 0; i < sts.length; ++i)
+		{
+			Stack<T> stack = sts[i];
+			if(stack.getObj() == null) continue;
+			if(stack.getObj().equals(target))
+			{
+				int size = Math.min(aSize, stack.size);
+				sts[i].minusStackOut(size);
+				length -= size;
+				return new Stack(target, size);
+			}
+		}
+		return null;
+	}
+	
 	public double getContain(T e)
 	{
 		for(int i = 0; i < sts.length; ++i)
@@ -163,6 +324,7 @@ public class WeightHelper<T>
 
 	public Map<T, Double> getContains()
 	{
+		arrange();
 		Map<T, Double> ret = new HashMap();
 		for(Stack<T> t : sts)
 		{
@@ -192,10 +354,12 @@ public class WeightHelper<T>
 	
 	public T randomGet(Random rand)
 	{
+		if(length <= 0) return null;
 		int i = rand.nextInt(length);
 		int cache = 0;
 		for(Stack<T> stack : sts)
 		{
+			if(stack.getObj() == null) continue;
 			if(cache + stack.size > i) return stack.target;
 			cache += stack.size;
 		}
@@ -245,15 +409,30 @@ public class WeightHelper<T>
 			size += aS;
 		}
 		
-		public void minusStackOut(int aS)
+		public Stack<T> minusStackOut(int aS)
 		{
+			if(target == null) return EMPTY_STACK.copy();
+			int ret = Math.min(size, aS);
 			size -= aS;
+			if(size <= 0)
+			{
+				size = 0;
+				target = null;
+			}
+			return new Stack<T>(target, ret);
 		}
 		
 		@Override
 		public String toString()
 		{
-			return target.toString() + "x" + size;
+			return target == null ? "empty" : target.toString() + "x" + size;
+		}
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			if(!(obj instanceof Stack)) return false;
+			return target == null ? ((Stack) obj).getObj() == null : target.equals(((Stack) obj).getObj());
 		}
 		
 		public T getObj()
@@ -275,5 +454,34 @@ public class WeightHelper<T>
 		{
 			return new Stack(target, size);
 		}
+	}
+
+	public void toMap(Map<T, Integer> map)
+	{
+		for(Stack<T> t : sts)
+		{
+			if(t == null) continue;
+			if(t.size <= 0 || t.target == null) continue;
+			map.put(t.target, t.size);
+		}
+	}
+	
+	public boolean contain(T target)
+	{
+		for(Stack<T> s : sts)
+			if(s.target != null && s.target.equals(target)) return true;
+		return false;
+	}
+	
+	public boolean contain(Stack<T> stack)
+	{
+		return getSize(stack.getObj()) >= stack.size;
+	}
+	
+	public int getSize(T target)
+	{
+		for(Stack<T> s : sts)
+			if(s.target != null && s.target.equals(target)) return s.size;
+		return 0;
 	}
 }

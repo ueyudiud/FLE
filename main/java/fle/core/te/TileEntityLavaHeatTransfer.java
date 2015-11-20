@@ -24,7 +24,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 {
 	private ThermalTileHelper tc = new ThermalTileHelper(Materials.Stone);
 	private final FluidTank tank = new FluidTank(1000);
-	private final int lavaHeatPower = Config.getInteger("pLavaTransfer", 300000);
+	private final int lavaHeatPower = Config.getInteger("pLavaTransfer");
 
 	private int buf = 0;
 	public int tick = 0;

@@ -21,9 +21,10 @@ public class WorldHandler
 	public void onHeatEmmit(FLEThermalHeatEvent evt)
 	{
 		if(evt.world.isRemote) return;
-		if(evt.block == Blocks.lava && evt.isEmmit)
+		double h = Math.abs(evt.heat + 1);
+		if(evt.block == Blocks.lava && !evt.isEmmit)
 		{
-			if(evt.world.rand.nextInt((int) (50000D / evt.heat)) == 0)
+			if(evt.world.rand.nextInt((int) (10000000D / h) + 1) == 0)
 			{
 				evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.obsidian);
 				evt.setHeat(evt.heat / 2);
@@ -32,14 +33,25 @@ public class WorldHandler
 		}
 		else if(evt.block == Blocks.water)
 		{
-			if(evt.world.rand.nextInt((int) (40000D / evt.heat)) == 0)
+			if(evt.world.rand.nextInt((int) (4000000D / h) + 1) == 0)
 			{
 				if(evt.isEmmit)
-					evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.ice);
-				else
+				{
 					evt.world.setBlockToAir(evt.x, evt.y, evt.z);
-				evt.setHeat(evt.heat / 2);
+				}
+				else
+				{
+					evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.ice);
+				}
 				return;
+			}
+		}
+		else if(evt.block == Blocks.ice && evt.isEmmit)
+		{
+			if(evt.world.rand.nextInt((int) (2000000D / h) + 1) == 0)
+			{
+				evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.water);
+				evt.setHeat(evt.heat * 1.2F);
 			}
 		}
 	}

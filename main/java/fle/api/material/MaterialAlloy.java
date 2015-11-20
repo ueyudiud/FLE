@@ -33,7 +33,7 @@ public class MaterialAlloy extends MaterialAbstract
 		for(MaterialAbstract m : MaterialAbstract.pureMaterials)
 		{
 			if(m.matter != null)
-				if(wh.getContain(m.matter.getElementAtoms().keySet().iterator().next()) > 0.9375F)
+				if(wh.getContain(m.matter.getElementAtoms().keySet().iterator().next()) > 0.925F)
 					return m;
 		}
 		return null;

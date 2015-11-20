@@ -23,6 +23,7 @@ import fle.api.material.MaterialRock;
 import fle.api.util.WeightHelper;
 import fle.api.util.WeightHelper.Stack;
 import fle.api.world.TreeInfo;
+import fle.core.block.BlockFleRock;
 import fle.core.block.BlockLog;
 import fle.core.block.plant.PlantBase;
 import fle.core.init.Crops;
@@ -94,7 +95,7 @@ public class FleWorldGen implements IWorldGenerator
 				switch(random.nextInt(16))
 				{
 				case 0 : ;
-				genOre(random, world, x, z, 240, 120, 1.0D, 120, IB.rock, g(Materials.Gelenite, 5), g(Materials.Sphalerite, 7), g(Materials.Cassiterite, 10), g(Materials.Stannite, 7));
+				genOre(random, world, x, z, 240, 120, 1.0D, 120, BlockFleRock.a(Materials.Limestone), g(Materials.Gelenite, 5), g(Materials.Sphalerite, 7), g(Materials.Cassiterite, 10), g(Materials.Stannite, 7));
 				genOre(random, world, x, z, 240, 120, 1.0D, 120, Blocks.glass, g(Materials.Gelenite, 5), g(Materials.Sphalerite, 7), g(Materials.Cassiterite, 10), g(Materials.Stannite, 7));
 				break;
 				}
@@ -237,7 +238,7 @@ public class FleWorldGen implements IWorldGenerator
 			}
 			if(base.isReplaceableOreGen(world, X, Y, Z, base))
 			{
-				new FleRockGen(base, (short) MaterialRock.getOreID(material), s).generate(world, rand, X, Y, Z);
+				new FleRockGen(base, material, s).generate(world, rand, X, Y, Z);
 				return true;
 			}
 		}

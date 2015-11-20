@@ -307,6 +307,7 @@ public abstract class GuiContainerBase extends GuiContainer
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
         mc.renderEngine.bindTexture(getResourceLocation());
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 	
 	protected void sendToContainer(int type, int contain)

@@ -2,9 +2,15 @@ package fle.core.world.biome;
 
 import java.util.Random;
 
+import fle.api.enums.EnumFLERock;
+import fle.api.material.MaterialRock;
+import fle.core.block.BlockFleRock;
+import fle.core.block.BlockRock;
+import fle.core.init.IB;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
 
 public class FLEBiomeRiver extends FLEBiome
 {
@@ -25,13 +31,14 @@ public class FLEBiomeRiver extends FLEBiome
 	}
 	
 	@Override
-	protected void genTerrainBlocks(Random rand, Block[] blocks, byte[] bytes,
+	protected void genTerrainBlocks(World aWorld, Random rand, Block[] blocks, byte[] bytes,
 			boolean isFlat, boolean isNonwaterTop, int rootHeight, int x,
 			int z, int size, int height)
 	{
 		int waterHeight = rootHeight + height - 1;
         boolean flag = true;
         int k = -1;
+        BlockFleRock rock = BlockFleRock.a(MaterialRock.getRockFromType(EnumFLERock.getRock(rockAcidityNoise.noise(x, z), rockWeatheringNoise.noise(x, z))));
         for (int l1 = 255; l1 >= 0; --l1)
         {
             int i2 = (z * 16 + x) * size + l1;
@@ -83,6 +90,11 @@ public class FLEBiomeRiver extends FLEBiome
                         		blocks[i2] = Blocks.gravel;
                         		k = -2;
                         	}
+                        }
+                        else
+                        {
+                        	blocks[i2] = rock;
+                        	continue;
                         }
                     }
                 }

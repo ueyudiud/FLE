@@ -4,6 +4,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import fle.api.config.JsonLoader;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
@@ -25,9 +26,9 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 		a(new SoakRecipe(new FluidStack(IB.plantOil, 100), new ItemOreStack("stickWood"), 100, ItemFleSub.a("rotproof_stick")));
 	}
 	
-	public static void postInit(FLEConfiguration cfg)
+	public static void postInit(JsonLoader loader)
 	{
-		instance.reloadRecipes(cfg);
+		instance.reloadRecipes(loader);
 	}
 	
 	public static FLESoakRecipe getInstance()
@@ -62,12 +63,6 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 		public SoakRecipeKey getRecipeKey()
 		{
 			return new SoakRecipeKey(fluid, tick, stack, output.stackSize, output.getMaxStackSize());
-		}
-
-		@Override
-		public void reloadRecipe(ConfigInfomation ci)
-		{
-			tick = ci.readInteger(0, defaultTick);
 		}
 		
 		public ItemStack getOutput(ItemStack input)

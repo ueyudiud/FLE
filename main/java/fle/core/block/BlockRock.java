@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -29,6 +30,7 @@ import fle.api.util.SubTag;
 import fle.api.world.BlockPos;
 import fle.core.init.IB;
 
+@Deprecated
 public class BlockRock extends BlockHasSub
 {
 	public BlockRock() 
@@ -175,15 +177,5 @@ public class BlockRock extends BlockHasSub
 	public void setMetadata(World world, int x, int y, int z, int metadata) 
 	{
 		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, metadata);
-	}
-
-	public static ItemStack a(MaterialRock material)
-	{
-		return a(material, 1);
-	}
-
-	public static ItemStack a(MaterialRock material, int size)
-	{
-		return new ItemStack(IB.rock, size, MaterialRock.getOreID(material));
 	}
 }

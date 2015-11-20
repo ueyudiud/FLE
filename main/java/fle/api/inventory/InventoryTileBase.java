@@ -1,5 +1,6 @@
 package fle.api.inventory;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,10 +27,7 @@ public abstract class InventoryTileBase<T extends TEInventory> implements IInven
 	{
 		NBTTagList list = nbt.getTagList("Slots", 10);
 		int i;
-		for(i = 0; i < stacks.length; ++i)
-		{
-			stacks[i] = null;
-		}
+		Arrays.fill(stacks, null);
 		for(i = 0; i < list.tagCount(); ++i)
 		{
 			NBTTagCompound nbt1 = list.getCompoundTagAt(i);

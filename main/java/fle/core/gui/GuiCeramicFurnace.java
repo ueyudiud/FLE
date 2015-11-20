@@ -78,7 +78,7 @@ public class GuiCeramicFurnace extends GuiContainerBase
 				for(Entry<IAtoms, Integer> entry : map.entrySet())
 				{
 					if(entry.getKey() == null || entry.getValue() <= 0) continue;
-					str += entry.getKey().getChemicalFormulaName() + "x" + entry.getValue();
+					str += entry.getKey().getChemicalFormulaName() + "x" + entry.getValue() + " ";
 				}
 				drawAreaTooltip(par1, par2, str, 58 + xoffset, 30 + yoffset, 18, 8);
 			}

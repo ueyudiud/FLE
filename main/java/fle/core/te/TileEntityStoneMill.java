@@ -22,7 +22,7 @@ import fle.core.inventory.InventoryStoneMill;
 
 public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISolidHandler, ISolidTanks, IRotationTileEntity
 {
-	private RotationTileHelper rh = new RotationTileHelper(1024D, -1D);
+	private RotationTileHelper rh = new RotationTileHelper(1024D, 16D);
 	public GuiCondition type;
 
 	public TileEntityStoneMill()
@@ -86,7 +86,7 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	
 	public void onPower()
 	{
-		rh.reseaveRotation(new RotationPacket(256, 0.25));
+		rh.reseaveRotation(new RotationPacket(2048, 0.125));
 	}
 	
 	int tick;

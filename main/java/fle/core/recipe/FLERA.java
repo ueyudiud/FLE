@@ -8,6 +8,7 @@ import fle.api.recipe.RecipeAdder;
 import fle.api.soild.Solid;
 import fle.api.soild.SolidStack;
 import fle.api.util.Compact;
+import fle.api.util.DropInfo;
 import fle.core.recipe.FLEBoilingHeaterRecipe.BHRecipe;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 import fle.core.recipe.FLEOilMillRecipe.OilMillRecipe;
@@ -17,6 +18,11 @@ import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe;
 
 public class FLERA implements RecipeAdder
 {
+	public void addWashingRecipe(ItemAbstractStack input, DropInfo info)
+	{
+		WashingRecipe.registryDust(input, info);
+	}
+	
 	@Override
 	public void addPolishRecipe(ItemAbstractStack input, String map,
 			ItemStack output)

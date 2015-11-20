@@ -31,19 +31,17 @@ import fle.FLE;
 import fle.api.FleAPI;
 import fle.api.cg.CraftGuide;
 import fle.api.cg.RecipesTab;
+import fle.api.config.JsonLoader;
 import fle.api.enums.EnumAtoms;
-import fle.api.material.Matter;
-import fle.api.material.MatterDictionary;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ShapedFleRecipe;
 import fle.api.recipe.ShapelessFleRecipe;
 import fle.api.soild.SolidRegistry;
 import fle.api.soild.SolidStack;
-import fle.api.util.FLEConfiguration;
 import fle.api.util.FleLog;
 import fle.api.util.SubTag;
-import fle.core.block.BlockRock;
+import fle.core.block.BlockFleRock;
 import fle.core.block.ItemDitch;
 import fle.core.block.ItemRopeLadder;
 import fle.core.cg.FLECastingRecipe;
@@ -55,7 +53,6 @@ import fle.core.cg.FLEWashingRecipe;
 import fle.core.handler.AxeHandler;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
-import fle.core.item.ItemOre;
 import fle.core.item.ItemTool;
 import fle.core.item.ItemToolHead;
 import fle.core.recipe.CastingPoolRecipe;
@@ -66,6 +63,8 @@ import fle.core.recipe.FLEPolishRecipe;
 import fle.core.recipe.FLESifterRecipe;
 import fle.core.recipe.FLESoakRecipe;
 import fle.core.recipe.FLEStoneMillRecipe;
+import fle.core.recipe.MatterJsonRecipe;
+import fle.core.recipe.MatterReactionRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
 import fle.core.recipe.crafting.RopeLadderCraftingRecipe;
@@ -197,7 +196,7 @@ public class Rs
 		}
 	}
 	
-	public static void init(FLEConfiguration cfg)
+	public static void init()
 	{
 		addOre("wick", Items.string);
 		addOre("wick", ItemFleSub.a("ramie_rope"));
@@ -237,7 +236,7 @@ public class Rs
 		addOre("branchWood", ItemFleSub.a("branch_darkoak"));
 		addOre("flePlankWood", new ItemStack(Blocks.planks, 1, OreDictionary.WILDCARD_VALUE));
 		addOre("logFLE", new ItemStack(IB.treeLog, 1, OreDictionary.WILDCARD_VALUE));
-		addOre("rockCompactStone", BlockRock.a(Materials.CompactStone));
+		addOre("rockCompactStone", BlockFleRock.a(Materials.CompactStone));
 		addOre("dustLimestone", ItemFleSub.a("dust_limestone"));
 		addOre("dustQuickLime", ItemFleSub.a("dust_quicklime"));
 		addOre("dustPlantAsh", ItemFleSub.a("plant_ash"));
@@ -264,40 +263,7 @@ public class Rs
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(IB.lime_mortar, 1000), ItemFleSub.a("wood_bucket_0_lime_mortar"), ItemFleSub.a("wood_bucket_0_empty"));
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.WATER, 1000), ItemFleSub.a("bowl_water"), new ItemStack(Items.bowl));
 
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), EnumAtoms.Cu.asMatter(), 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Enargite)), Matter.mCu3AsS4, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Cuprite)), Matter.mCu2O, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Chalcocite)), Matter.mCu2S, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Covellite)), Matter.mCuS, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Tenorite)), Matter.mCuO, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Orpiment)), Matter.mAs2S3, 88, 681, 60000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Malachite)), Matter.mCu_OH2_CO3, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Azurite)), Matter.mCu_OH2_2CO3, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Gelenite)), Matter.mPbS, 88, (int) Materials.Lead.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Cassiterite)), Matter.mSnO2, 88, (int) Materials.Tin.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Stannite)), Matter.mCu2FeSnS4, 88, 718, 20000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu")), EnumAtoms.Cu.asMatter(), 75, (int) Materials.Copper.getPropertyInfo().getMeltingPoint(), 600000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_pb")), EnumAtoms.Pb.asMatter(), 75, (int) Materials.Lead.getPropertyInfo().getMeltingPoint(), 120000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_zn")), EnumAtoms.Zn.asMatter(), 75, (int) Materials.Zinc.getPropertyInfo().getMeltingPoint(), 290000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_sn")), EnumAtoms.Sn.asMatter(), 75, (int) Materials.Tin.getPropertyInfo().getMeltingPoint(), 130000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_as_0")), Materials.CuAs.getMatter(), 75, 684, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_as_1")), Materials.CuAs2.getMatter(), 75, 573, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_0")), Materials.CuPb.getMatter(), 75, 671, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_1")), Materials.CuPb2.getMatter(), 75, 628, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_sn_0")), Materials.CuSn.getMatter(), 75, 648, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_sn_1")), Materials.CuSn2.getMatter(), 75, 629, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_sn")), Materials.CuSnPb.getMatter(), 75, 629, 200000);
-		MatterDictionary.registerFluid(IB.copper, EnumAtoms.Cu.asMatter());
-		MatterDictionary.registerFluid(IB.lead, EnumAtoms.Pb.asMatter());
-		MatterDictionary.registerFluid(IB.zinc, EnumAtoms.Zn.asMatter());
-		MatterDictionary.registerFluid(IB.tin, EnumAtoms.Sn.asMatter());
-		MatterDictionary.registerFluid(IB.cu_as_0, Materials.CuAs.getMatter());
-		MatterDictionary.registerFluid(IB.cu_as_1, Materials.CuAs2.getMatter());
-		MatterDictionary.registerFluid(IB.cu_pb_0, Materials.CuPb.getMatter());
-		MatterDictionary.registerFluid(IB.cu_pb_1, Materials.CuPb2.getMatter());
-		MatterDictionary.registerFluid(IB.cu_sn_0, Materials.CuSn.getMatter());
-		MatterDictionary.registerFluid(IB.cu_sn_1, Materials.CuSn2.getMatter());
-		MatterDictionary.registerFluid(IB.cu_pb_sn, Materials.CuSnPb.getMatter());
+		MatterReactionRecipe.init();
 		
 		SolidRegistry.registerSolidContainer(new SolidStack(IB.limestone, 108), ItemFleSub.a("dust_quicklime"));
 		SolidRegistry.registerSolidContainer(new SolidStack(IB.plant_ash, 108), ItemFleSub.a("plant_ash"));
@@ -444,13 +410,7 @@ public class Rs
 		FLEDryingRecipe.init();
 		FLEPolishRecipe.init();
 		FLESoakRecipe.init();
-		FLEBoilingHeaterRecipe.postInit(cfg);
-		FLEOilMillRecipe.postInit(cfg);
-		FLESifterRecipe.postInit(cfg);
-		FLEStoneMillRecipe.postInit(cfg);
-		FLEDryingRecipe.postInit(cfg);
-		FLEPolishRecipe.postInit(cfg);
-		FLESoakRecipe.postInit(cfg);
+		
 		AxeHandler.init();
 	}
 
@@ -484,6 +444,16 @@ public class Rs
 
 	public static void completeInit()
 	{
+		new JsonLoader("fle_matter.json").process(MatterJsonRecipe.instance);
+		JsonLoader loader = new JsonLoader("fle_recipe.json");
+		FLEBoilingHeaterRecipe.postInit(loader);
+		FLEOilMillRecipe.postInit(loader);
+		FLESifterRecipe.postInit(loader);
+		FLEStoneMillRecipe.postInit(loader);
+		FLEDryingRecipe.postInit(loader);
+		FLEPolishRecipe.postInit(loader);
+		FLESoakRecipe.postInit(loader);
+		
 		for(Object obj : CraftingManager.getInstance().getRecipeList())
 		{
 			IRecipe recipe = (IRecipe) obj;

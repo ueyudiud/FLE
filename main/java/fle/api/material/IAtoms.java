@@ -4,7 +4,7 @@ import java.util.Map;
 
 import fle.api.enums.EnumAtoms;
 
-public interface IAtoms extends IStabilityInfo
+public interface IAtoms
 {	
 	String getChemicalFormulaName();
 	

@@ -7,12 +7,14 @@ public class ChemCondition implements IChemCondition
 	EnumPH p;
 	EnumOxide o;
 	int t;
+	EnumEnviorment e;
 	
-	public ChemCondition(EnumPH ph, EnumOxide ox, int tem)
+	public ChemCondition(EnumPH ph, EnumOxide ox, int tem, EnumEnviorment en)
 	{
 		p = ph;
 		o = ox;
 		t = tem;
+		e = en;
 	}
 
 	@Override
@@ -31,5 +33,11 @@ public class ChemCondition implements IChemCondition
 	public int getTemperature()
 	{
 		return t;
+	}
+
+	@Override
+	public EnumEnviorment isOpenEnviorment()
+	{
+		return e;
 	}
 }

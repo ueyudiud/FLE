@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import fle.api.block.ItemFleBlock;
 import fle.api.material.MaterialRock;
 import fle.api.util.Register;
+import fle.core.block.BlockFleRock;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.te.tank.TileEntityMultiTank;
@@ -32,7 +33,7 @@ public class ItemTankBlock extends ItemFleBlock
 		register.register(new TankBlockInfo(Blocks.quartz_block, 1), "quartzBlockII");
 		register.register(new TankBlockInfo(Blocks.quartz_block, 2), "quartzBlockIII");
 		register.register(new TankBlockInfo(Blocks.nether_brick), "netherBrick");
-		register.register(new TankBlockInfo(IB.rock, MaterialRock.getOreID(Materials.CompactStone)), "compactStone");
+		register.register(new TankBlockInfo(BlockFleRock.a(Materials.CompactStone)), "compactStone");
 		register.register(new TankBlockInfo(Blocks.bedrock), "bedrock");
 		register.register(new TankBlockInfo(Blocks.end_stone), "end");
 		hasSubtypes = true;

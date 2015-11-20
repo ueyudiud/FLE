@@ -99,7 +99,7 @@ public class CommonProxy extends Proxy
 	{
 		IB.reloadIB();
 		Rs.reloadRecipe();
-		Rs.init(FLE.fle.getConfig1());
+		Rs.init();
 		Crops.postInit();
 		Materials.postInit();
 		Other.init();

@@ -1,5 +1,6 @@
 package fle.api.recipe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.JsonElement;
+
+import fle.api.config.IJsonLoader;
+import fle.api.config.JsonLoader;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.util.ConfigInfomation;
 import fle.api.util.FLEConfiguration;
@@ -19,40 +24,9 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 	protected Map<String, RecipeKey> recipeKeys = new HashMap();
 	protected Map<RecipeKey, T> recipeMap = new HashMap();
 	
-	/**
-	 * Active on reload recipes.
-	 * @param config
-	 */
-	public void reloadRecipes(FLEConfiguration config)
+	public void reloadRecipes(JsonLoader loader)
 	{
-		recipeSet.clear();
-		recipeKeys.clear();
-		recipeMap.clear();
-		for(T recipe : recipeCache)
-			reloadRecipe(config, recipe);
-		recipeCache = null;
-	}
-	
-	/**
-	 * 
-	 * @param config
-	 * @param recipe
-	 */
-	private void reloadRecipe(FLEConfiguration config, T recipe)
-	{
-		RecipeKey key = recipe.getRecipeKey();
-		try
-		{
-			recipe.reloadRecipe(config.getConfigInfomation(key.getClass().getName() + "@" +key.toString()));
-		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
-		}
-		key = recipe.getRecipeKey();
-		recipeMap.put(key, recipe);
-		recipeKeys.put(key.toString(), key);
-		recipeSet.add(recipe);
+		
 	}
 	
 	/**
@@ -131,7 +105,7 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 	 * Get output information from here and match input from recipe key.
 	 * @author ueyudiud
 	 */
-	public static abstract class MachineRecipe
+	public static abstract class MachineRecipe implements IJsonLoader
 	{		
 		/**
 		 * Get key of recipe.
@@ -140,10 +114,11 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 		public abstract RecipeKey getRecipeKey();
 		
 		/**
-		 * Load recipe configuration from config file.
-		 * @param config The decoded config file.
+		 * Load recipe configuration from json file.
+		 * @param e The json element.
 		 */
-		public abstract void reloadRecipe(ConfigInfomation config);
+		@Deprecated
+		public final void readJson(JsonElement e) throws IOException{};
 	}
 	
 	public static abstract class RecipeKey

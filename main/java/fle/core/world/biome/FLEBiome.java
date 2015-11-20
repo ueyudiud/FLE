@@ -9,16 +9,21 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenForest;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
+import fle.api.enums.EnumFLERock;
+import fle.api.material.MaterialRock;
 import fle.api.util.FleLog;
 import fle.api.util.ISubTagContainer;
 import fle.api.util.SubTag;
+import fle.core.block.BlockFleRock;
+import fle.core.block.BlockRock;
+import fle.core.init.IB;
 import fle.core.util.Util;
+import fle.core.util.noise.NoiseMix;
+import fle.core.util.noise.NoisePerlin;
 import fle.core.world.dim.FLEBiomeDecoratorBase;
 import fle.core.world.dim.FLEWorldType;
 
@@ -69,7 +74,13 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 		BiomeDictionary.registerBiomeType(wasteland, BiomeDictionary.Type.DRY, BiomeDictionary.Type.HOT);
 		BiomeDictionary.registerBiomeType(slope, BiomeDictionary.Type.WATER);
 		BiomeDictionary.registerBiomeType(roofedForest_hill, BiomeDictionary.Type.HOT, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.FOREST);
+
+		rockAcidityNoise = new NoiseMix(64, new NoisePerlin(49175151L, 4));
+		rockWeatheringNoise = new NoiseMix(64, new NoisePerlin(19275917L, 4));
 	}
+	
+	protected static final NoiseMix rockAcidityNoise;
+	protected static final NoiseMix rockWeatheringNoise;
 	
 	int mColor;
 	
@@ -190,10 +201,11 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 		return false;
 	}
 	
-	protected void genTerrainBlocks(Random rand, Block[] blocks, byte[] bytes, boolean isFlat, boolean isNonwaterTop, int rootHeight, int x, int z, int size, int height)
+	protected void genTerrainBlocks(World aWorld, Random rand, Block[] blocks, byte[] bytes, boolean isFlat, boolean isNonwaterTop, int rootHeight, int x, int z, int size, int height)
 	{
         boolean waterFlag = false;
         int k = -1;
+        BlockFleRock rock = BlockFleRock.a(MaterialRock.getRockFromType(EnumFLERock.getRock(rockAcidityNoise.noise(x, z), rockWeatheringNoise.noise(x, z))));
         for (int l1 = 255; l1 >= 0; --l1)
         {
             int i2 = (z * 16 + x) * size + l1;
@@ -233,6 +245,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
                                 		genTargetBlockAt(1, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
                                         k = isNonwaterTop ? rootHeight - 1 : rootHeight;
                                 	}
+                                	continue;
                                 }
                                 else
                                 {
@@ -256,6 +269,12 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
                         	{
                         		genTargetBlockAt(2, getFloatTemperature(x, l1, z), rand, blocks, bytes, i2);
                         	}
+                        	continue;
+                        }
+                        else
+                        {
+                        	blocks[i2] = rock;
+                        	continue;
                         }
                     }
                     else if(block2 == Blocks.water)
@@ -293,7 +312,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
         int k1 = aBlocks.length / 256;
         short height = (short) aWorld.getWorldInfo().getTerrainType().getHorizon(aWorld);
 
-        genTerrainBlocks(aRand, aBlocks, aByte, flag2, flag1, l, i1, j1, k1, height - 1);
+        genTerrainBlocks(aWorld, aRand, aBlocks, aByte, flag2, flag1, l, i1, j1, k1, height - 1);
 	}
 
 	@Override

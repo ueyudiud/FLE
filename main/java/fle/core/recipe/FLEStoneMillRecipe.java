@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import fle.api.config.JsonLoader;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
@@ -30,9 +31,9 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 		a(new StoneMillRecipe(new ItemBaseStack(ItemFleSub.a("defatted_crushed_bone")), 200, new SolidStack(IB.Ca_P_fertilizer, 108)));
 	}
 	
-	public static void postInit(FLEConfiguration cfg)
+	public static void postInit(JsonLoader loader)
 	{
-		instance.reloadRecipes(cfg);
+		instance.reloadRecipes(loader);
 	}
 	
 	public static FLEStoneMillRecipe getInstance()
@@ -96,12 +97,6 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 		public RecipeKey getRecipeKey()
 		{
 			return new StoneMillRecipeKey(input, tick);
-		}
-		
-		@Override
-		public void reloadRecipe(ConfigInfomation ci)
-		{
-			tick = ci.readInteger(0, tick);
 		}
 	}
 	

@@ -66,7 +66,13 @@ public class BehaviourCeramicFurnaceCrucible extends BehaviourTile implements ID
 			Map<IAtoms, Double> wh = new WeightHelper(tile.getContainerMap()).getContains();
 			for(Entry<IAtoms, Double> e : wh.entrySet())
 			{
+				if(e.getKey() == null) continue;
+				if(e.getValue() < 0.03125F) continue;
 				aList.add(String.format("%s : %s", e.getKey().getChemicalFormulaName(), FleValue.format_progress.format_c(e.getValue())));
+			}
+			for(int a : tile.getProgress())
+			{
+				aList.add("Progress : " + a);
 			}
 		}
 	}

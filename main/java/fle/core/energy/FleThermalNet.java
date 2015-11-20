@@ -82,6 +82,9 @@ public class FleThermalNet extends ThermalNet
 		return ret;
 	}
 	
+	//To keep the balance with thermal tile conduct speed.
+	private static final double conductValue = 0.109375;
+	
 	private double getBlockMaterialConductSpeed(Block block)
 	{
 		if(map.containsKey(block))
@@ -109,7 +112,7 @@ public class FleThermalNet extends ThermalNet
 	@Override
 	public void emmitHeat(BlockPos pos) 
 	{
-		double[] ds = new double[ForgeDirection.VALID_DIRECTIONS.length];
+		double[] ds = new double[6];
 		if(pos.getBlockTile() instanceof IThermalTileEntity)
 		{
 			int i;
@@ -136,8 +139,7 @@ public class FleThermalNet extends ThermalNet
 			{
 				IThermalTileEntity te1 = (IThermalTileEntity) pos.toPos(dir).getBlockTile();
 				int t2 = te1.getTemperature(dir);
-				double value;
-				value = (t2 - t1) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) * heatConductSpeed;
+				double value = 2 * (t2 - t1) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) * heatConductSpeed;
 				if(t1 > t2)
 				{
 					te1.onHeatReceive(dir, -value);
@@ -161,7 +163,7 @@ public class FleThermalNet extends ThermalNet
 					t2 = getEnvironmentTemperature(pos.toPos(dir));
 				}
 				double s = getBlockMaterialConductSpeed(pos.toPos(dir).getBlock());
-				FLEThermalHeatEvent evt = new FLEThermalHeatEvent(pos.toPos(dir), (t1 - t2) * Math.sqrt(te.getThermalConductivity(dir) * s) / heatConductSpeed, t1 > t2);
+				FLEThermalHeatEvent evt = new FLEThermalHeatEvent(pos.toPos(dir), 2 * (t1 - t2) * (te.getThermalConductivity(dir) + s) * heatConductSpeed * conductValue, t1 > t2);
 				MinecraftForge.EVENT_BUS.post(evt);
 				return evt.getHeat();
 			}

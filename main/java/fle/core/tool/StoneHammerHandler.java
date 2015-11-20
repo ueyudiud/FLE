@@ -9,10 +9,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fle.FLE;
@@ -24,8 +22,7 @@ import fle.api.recipe.ItemBaseStack;
 import fle.api.util.DropInfo;
 import fle.api.util.FleEntry;
 import fle.api.world.BlockPos;
-import fle.core.block.BlockRock;
-import fle.core.block.ItemOreCobble;
+import fle.core.block.BlockFleRock;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
@@ -47,7 +44,7 @@ public class StoneHammerHandler
 		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_obsidian"), 1));
 		registryDust(new ItemBaseStack(Blocks.obsidian), new DropInfo(2, 3, FleEntry.copy(tMap)));
 		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("limestone"), 1));
-		registryDust(new ItemBaseStack(BlockRock.a(Materials.Limestone)), new DropInfo(3, 4, FleEntry.copy(tMap)));
+		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Limestone)), new DropInfo(3, 4, FleEntry.copy(tMap)));
 		for(MaterialOre ore : MaterialOre.getOres())
 		{
 			tMap = FleEntry.asMap(new FleEntry(ItemOre.a(ore), 1));

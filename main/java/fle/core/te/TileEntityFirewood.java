@@ -18,8 +18,8 @@ import fle.core.net.FleTEPacket;
 
 public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 {
-	private final int charcoalPower = Config.getInteger("pCharcoal", 800000);
-	private final int firewoodPower = Config.getInteger("pFirewood", 500000);
+	private final int charcoalPower = Config.getInteger("pCharcoal");
+	private final int firewoodPower = Config.getInteger("pFirewood");
 	
 	private boolean isCoal;
 	private int woodContain;

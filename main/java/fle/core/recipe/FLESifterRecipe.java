@@ -3,6 +3,7 @@ package fle.core.recipe;
 import java.util.Random;
 
 import net.minecraft.item.ItemStack;
+import fle.api.config.JsonLoader;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
@@ -28,9 +29,9 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		a(new SifterRecipe(IB.millet, new SolidStack(IB.millet_b), ItemFleSub.a("bran"), 0.03F));
 	}
 	
-	public static void postInit(FLEConfiguration cfg)
+	public static void postInit(JsonLoader loader)
 	{
-		instance.reloadRecipes(cfg);
+		instance.reloadRecipes(loader);
 	}
 	
 	public static FLESifterRecipe getInstance()
@@ -82,12 +83,6 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		public RecipeKey getRecipeKey()
 		{
 			return input instanceof ItemAbstractStack ? new SifterKey((ItemAbstractStack) input) : new SifterKey((Solid) input);
-		}
-		
-		@Override
-		public void reloadRecipe(ConfigInfomation ci)
-		{
-			
 		}
 		
 		public Object getInput()

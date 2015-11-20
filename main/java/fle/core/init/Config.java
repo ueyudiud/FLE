@@ -12,11 +12,11 @@ public class Config
 	
 	public static void init(Configuration config)
 	{
-		configMap.put("pCharcoal", setInteger(config, "energy", "Charcoal Power", "High value will make charcoal heating faster.", 500000));
-		configMap.put("pFirewood", setInteger(config, "energy", "Firewood Power", "High value will make firewood heating faster.", 300000));
-		configMap.put("pLavaTransfer", setInteger(config, "energy", "Lava Heat Transfer Power", "High value will make lava heat transfer heating faster.", 200000));
-		configMap.put("pCeramicFirebox", setInteger(config, "energy", "Ceramic Firebox Power", "High value will make cermaic firebox heating faster.", 400000));
-		configMap.put("pBoilingHeater", setInteger(config, "energy", "Boiling Heater Power", "High value will make boiling heater heating faster.", 350000));
+		configMap.put("pCharcoal", setInteger(config, "energy", "Charcoal Power", "High value will make charcoal heating faster.", 40000));
+		configMap.put("pFirewood", setInteger(config, "energy", "Firewood Power", "High value will make firewood heating faster.", 50000));
+		configMap.put("pLavaTransfer", setInteger(config, "energy", "Lava Heat Transfer Power", "High value will make lava heat transfer heating faster.", 30000));
+		configMap.put("pCeramicFirebox", setInteger(config, "energy", "Ceramic Firebox Power", "High value will make cermaic firebox heating faster.", 40000));
+		configMap.put("pBoilingHeater", setInteger(config, "energy", "Boiling Heater Power", "High value will make boiling heater heating faster.", 35000));
 		
 		configMap.put("pFarmlandConsume", setInteger(config, "logistics", "Farmland Water Consume", "High value will mark ditch consume more water to farmland, unit : L/tick.", 10));
 

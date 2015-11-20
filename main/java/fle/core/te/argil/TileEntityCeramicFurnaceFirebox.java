@@ -129,6 +129,13 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	    	FleAPI.damageItem(aPlayer, aStack, EnumDamageResource.UseTool, 0.25F);
 	    }
 	}
+	
+	@Override
+	public Object onEmmit(byte aType)
+	{
+		if(aType == 2) return getTileInventory().getSyncState();
+		return super.onEmmit(aType);
+	}
 
 	@Override
 	public void onReseave(byte type, Object contain)
@@ -136,6 +143,10 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 		if(type == 1)
 		{
 			setDirction(ForgeDirection.VALID_DIRECTIONS[(Integer) contain]);
+		}
+		else if(type == 2)
+		{
+			getTileInventory().markBurnState((Long) contain);
 		}
 	}
 }

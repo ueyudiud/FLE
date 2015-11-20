@@ -1,5 +1,7 @@
 package fle.core.inventory;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +16,7 @@ import fle.core.te.argil.TileEntityCeramicFurnaceFirebox;
 
 public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntityCeramicFurnaceFirebox>
 {
-	protected final int ceramicPower = Config.getInteger("pCeramicFirebox", 500000);
+	protected final int ceramicPower = Config.getInteger("pCeramicFirebox");
 	
 	long burnTime;
 	long currectBurnTime;
@@ -70,6 +72,7 @@ public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntity
 				{
 					currectBurnTime = burnTime = buf;
 					decrStackSize(i, 1);
+					syncSlot(tile);
 					break;
 				}
 			}
@@ -131,5 +134,17 @@ public class InventoryCeramicFurnaceFirebox extends InventoryTileBase<TileEntity
 	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
 	{
 		return new int[]{0, 1, 2};
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void markBurnState(long tick)
+	{
+		burnTime = currectBurnTime = tick;
+		isBurning = tick > 0;
+	}
+
+	public long getSyncState()
+	{
+		return burnTime;
 	}
 }

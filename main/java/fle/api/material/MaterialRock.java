@@ -1,6 +1,9 @@
 package fle.api.material;
 
+import java.util.EnumMap;
+
 import net.minecraft.util.IIcon;
+import fle.api.enums.EnumFLERock;
 import fle.api.util.Register;
 import fle.api.util.SubTag;
 
@@ -49,6 +52,27 @@ public class MaterialRock extends MaterialAbstract
 	public static MaterialRock getOreFromID(int id) 
 	{
 		return register.get(id);
+	}
+	
+	public static MaterialRock getRockFromType(EnumFLERock type)
+	{
+		return map.get(type);
+	}
+	
+	private static EnumMap<EnumFLERock, MaterialRock> map = new EnumMap(EnumFLERock.class);
+	
+	EnumFLERock rockType;
+	
+	public MaterialRock setRockType(EnumFLERock rock)
+	{
+		rockType = rock;
+		map.put(rock, this);
+		return this;
+	}
+	
+	public EnumFLERock getRockType()
+	{
+		return rockType;
 	}
 
 	public final String getRockName() 

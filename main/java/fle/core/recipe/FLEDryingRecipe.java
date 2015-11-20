@@ -1,6 +1,7 @@
 package fle.core.recipe;
 
 import net.minecraft.item.ItemStack;
+import fle.api.config.JsonLoader;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
@@ -21,9 +22,9 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("straw")), 30000, ItemFleSub.a("straw_dry")));
 	}
 	
-	public static void postInit(FLEConfiguration cfg)
+	public static void postInit(JsonLoader loader)
 	{
-		instance.reloadRecipes(cfg);
+		instance.reloadRecipes(loader);
 	}
 	
 	public static void a(DryingRecipe recipe)
@@ -67,12 +68,6 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		public RecipeKey getRecipeKey()
 		{
 			return new DryingRecipeKey(input, recipeTime);
-		}
-
-		@Override
-		public void reloadRecipe(ConfigInfomation ci)
-		{
-			recipeTime = ci.readInteger(0, defaultRecipeTime);
 		}
 	}
 	

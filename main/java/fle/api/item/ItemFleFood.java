@@ -9,6 +9,11 @@ import fle.api.FleAPI;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
 
+/**
+ * The foods require meta.
+ * @author ueyudiud
+ *
+ */
 public class ItemFleFood extends ItemFleMetaBase
 {
 	private Register<IFoodStat> foodStats = new Register();

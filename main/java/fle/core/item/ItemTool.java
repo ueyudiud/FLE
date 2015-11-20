@@ -17,10 +17,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -322,6 +324,31 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
         }
 	}
 	
+	@Override
+	protected void addAdditionalToolTips(EntityPlayer aPlayer, List aList, ItemStack aStack)
+	{
+		if(aPlayer.capabilities.isCreativeMode)
+		{
+			ToolMaterialInfo info = new ToolMaterialInfo(setupNBT(aStack));
+			try
+			{
+				MaterialAbstract m0 = info.getMaterialBase();
+				MaterialAbstract m1 = info.getMaterialMosaic();
+				int u = info.getMaxUse() * 100;
+				aList.add(EnumChatFormatting.AQUA.toString() + "B : " + MaterialAbstract.getMaterialRegistry().name(m0));
+				if(m1 != null)
+					aList.add(EnumChatFormatting.YELLOW.toString() + "M : " + MaterialAbstract.getMaterialRegistry().name(m1));
+				aList.add(EnumChatFormatting.RED.toString() + "H : " + (int) (info.getHardness() * 100) + "/" + (int) (m0.getPropertyInfo().getHardness() * 100));
+				aList.add(EnumChatFormatting.GREEN.toString() + "U : " + (u - getDisplayDamage(aStack)) + "/" + u);
+			}
+			catch(Throwable e)
+			{
+				aList.clear();
+				aList.add("Error item!");
+			}
+		}
+	}
+	
 	public void onToolDestoryed(ItemStack aTool, EntityPlayer aPlayer)
 	{
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aTool)));
@@ -456,9 +483,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	@Override
 	public void onUpdate(ItemStack aStack, World aWorld, Entity aPlayer, int aTimer, boolean aIsInHand) 
 	{
-		ToolMaterialInfo aInfo = new ToolMaterialInfo(setupNBT(aStack));
-		aInfo.onRusting(aPlayer.worldObj, (int) aPlayer.posX, (int) aPlayer.posY, (int) aPlayer.posZ);
-		aInfo.writeToNBT(aStack.stackTagCompound);
+		ToolMaterialInfo.onRusting(aWorld, (int) aPlayer.posX, (int) aPlayer.posY, (int) aPlayer.posZ, setupNBT(aStack));
 		super.onUpdate(aStack, aWorld, aPlayer, aTimer, aIsInHand);
 	}
 	
