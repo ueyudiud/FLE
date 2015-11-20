@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class NoisePerlin extends NoiseBase
 {
+	@Deprecated
 	private final int octave;
 	
 	public NoisePerlin(long aSeed, int aOctave)
@@ -38,13 +39,10 @@ public class NoisePerlin extends NoiseBase
 	{
 		if(values == null || values.length < w * l) values = new double[w * l];
 		else Arrays.fill(values, 0);
-		double d1 = (double) ((2 << octave) - 1) / (double) (2 << octave);
 		for(int i = 0; i < w; ++i)
 			for(int j = 0; j < l; ++j)
 			{
-				for(int t = 0; t < octave; ++t)
-					values[i + w * j] += next(x + i, 10, z + j, t);
-				values[i + w * j] *= d1;
+				values[i + w * j] += next(x + i, 10, z + j, 0);
 			}
 		return values;
 	}
@@ -54,14 +52,11 @@ public class NoisePerlin extends NoiseBase
 	{
 		if(values == null || values.length < w * l * h) values = new double[w * l * h];
 		else Arrays.fill(values, 0);
-		double d1 = (double) ((2 << octave) - 1) / (double) (2 << octave);
 		for(int i = 0; i < w; ++i)
 			for(int j = 0; j < l; ++j)
 				for(int k = 0; k < h; ++k)
 				{
-					for(int t = 0; t < octave; ++t)
-						values[i + w * j + k * w * l] += next(x + i, y + j, z + k, t);
-					values[i + w * j + k * w * l] *= d1;
+					values[i + w * j + k * w * l] = next(x + i, y + j, z + k, 0);
 				}
 		return values;
 	}

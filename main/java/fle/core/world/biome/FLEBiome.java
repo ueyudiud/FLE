@@ -22,6 +22,7 @@ import fle.core.block.BlockFleRock;
 import fle.core.block.BlockRock;
 import fle.core.init.IB;
 import fle.core.util.Util;
+import fle.core.util.noise.NoiseFuzzy;
 import fle.core.util.noise.NoiseMix;
 import fle.core.util.noise.NoisePerlin;
 import fle.core.world.dim.FLEBiomeDecoratorBase;
@@ -75,12 +76,12 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 		BiomeDictionary.registerBiomeType(slope, BiomeDictionary.Type.WATER);
 		BiomeDictionary.registerBiomeType(roofedForest_hill, BiomeDictionary.Type.HOT, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.FOREST);
 
-		rockAcidityNoise = new NoiseMix(64, new NoisePerlin(49175151L, 4));
-		rockWeatheringNoise = new NoiseMix(64, new NoisePerlin(19275917L, 4));
+		rockAcidityNoise = new NoiseFuzzy(2095710L, 3, 16, 16, 1.6F);
+		rockWeatheringNoise = new NoiseFuzzy(56819619L, 3, 16, 16, 1.6F);
 	}
 	
-	protected static final NoiseMix rockAcidityNoise;
-	protected static final NoiseMix rockWeatheringNoise;
+	protected static final NoiseFuzzy rockAcidityNoise;
+	protected static final NoiseFuzzy rockWeatheringNoise;
 	
 	int mColor;
 	
@@ -205,9 +206,10 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	{
         boolean waterFlag = false;
         int k = -1;
-        BlockFleRock rock = BlockFleRock.a(MaterialRock.getRockFromType(EnumFLERock.getRock(rockAcidityNoise.noise(x, z), rockWeatheringNoise.noise(x, z))));
         for (int l1 = 255; l1 >= 0; --l1)
         {
+            BlockFleRock rock = BlockFleRock.a(MaterialRock.getRockFromType(
+            		EnumFLERock.getRock(rockAcidityNoise.noise(x, l1, z), rockWeatheringNoise.noise(x, l1, z))));
             int i2 = (z * 16 + x) * size + l1;
 
             if (l1 <= rand.nextInt(2))

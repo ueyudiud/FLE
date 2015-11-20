@@ -38,9 +38,10 @@ public class FLEBiomeRiver extends FLEBiome
 		int waterHeight = rootHeight + height - 1;
         boolean flag = true;
         int k = -1;
-        BlockFleRock rock = BlockFleRock.a(MaterialRock.getRockFromType(EnumFLERock.getRock(rockAcidityNoise.noise(x, z), rockWeatheringNoise.noise(x, z))));
         for (int l1 = 255; l1 >= 0; --l1)
         {
+            BlockFleRock rock = BlockFleRock.a(MaterialRock.getRockFromType(
+            		EnumFLERock.getRock(rockAcidityNoise.noise(x, l1, z), rockWeatheringNoise.noise(x, l1, z))));
             int i2 = (z * 16 + x) * size + l1;
 
             if (l1 <= rand.nextInt(2))

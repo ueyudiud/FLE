@@ -16,11 +16,4 @@ public class FleRockGen extends FleMineableGen
 	{
 		super(BlockFleRock.a(rock), (short) 0, number, base);
 	}
-	
-	@Override
-	protected void genBlockAt(World aWorld, Random rand, int x, int y, int z)
-	{
-		aWorld.setBlock(x, y, z, target, BlockRock.getHarvestLevel(MaterialRock.getOreFromID(mineableBlockMeta)), 2);
-		((IWorldNBT) target).setMetadata(aWorld, x, y, z, mineableBlockMeta);
-	}
 }

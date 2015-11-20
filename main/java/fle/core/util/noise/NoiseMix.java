@@ -22,19 +22,36 @@ public class NoiseMix extends NoiseBase
 		modeType = (byte) aType;
 	}
 
+	long xCache;
+	long yCache;
+	long zCache;
+	
+	double cache[];
+	
 	@Override
 	public double noise(long x, long z)
 	{
 		long x1 = (long) Math.floor(x / size);
 		long z1 = (long) Math.floor(z / size);
 		double[] de = new double[4];
-		for(int i = -1; i < 3; ++i)
+		if(xCache == x1 && zCache == z1 && yCache == -1)
 		{
-			double d0 = noise.noise(x1 - 1, z1 + i);
-			double d1 = noise.noise(x1, z1 + i);
-			double d2 = noise.noise(x1 + 1, z1 + i);
-			double d3 = noise.noise(x1 + 2, z1 + i);
-			de[i + 1] = a(d0, d1, d2, d3, mode(x, size) / size);
+			de = cache;
+		}
+		else
+		{
+			xCache = x1;
+			zCache = z1;
+			yCache = -1;
+			for(int i = -1; i < 3; ++i)
+			{
+				double d0 = noise.noise(x1 - 1, z1 + i);
+				double d1 = noise.noise(x1, z1 + i);
+				double d2 = noise.noise(x1 + 1, z1 + i);
+				double d3 = noise.noise(x1 + 2, z1 + i);
+				de[i + 1] = a(d0, d1, d2, d3, mode(x, size) / size);
+			}
+			cache = de;
 		}
 		return a(de[0], de[1], de[2], de[3], mode(z, size) / size);
 	}
@@ -46,18 +63,29 @@ public class NoiseMix extends NoiseBase
 		long y1 = (long) Math.floor(y / size);
 		long z1 = (long) Math.floor(z / size);
 		double[] de = new double[4];
-		for(int i = -1; i < 3; ++i)
+		if(xCache == x1 && zCache == z1 && yCache == -1)
 		{
-			double[] de1 = new double[4];
-			for(int j = -1; j < 3; ++j)
+			de = cache;
+		}
+		else
+		{
+			xCache = x1;
+			yCache = y1;
+			zCache = z1;
+			for(int i = -1; i < 3; ++i)
 			{
-				double d0 = noise.noise(x1 - 1, y1 + j, z1 + i);
-				double d1 = noise.noise(x1, y1 + j, z1 + i);
-				double d2 = noise.noise(x1 + 1, y1 + j, z1 + i);
-				double d3 = noise.noise(x1 + 2, y1 + j, z1 + i);
-				de1[j + 1] = a(d0, d1, d2, d3, mode(y, size) / size);
+				double[] de1 = new double[4];
+				for(int j = -1; j < 3; ++j)
+				{
+					double d0 = noise.noise(x1 - 1, y1 + j, z1 + i);
+					double d1 = noise.noise(x1, y1 + j, z1 + i);
+					double d2 = noise.noise(x1 + 1, y1 + j, z1 + i);
+					double d3 = noise.noise(x1 + 2, y1 + j, z1 + i);
+					de1[j + 1] = a(d0, d1, d2, d3, mode(y, size) / size);
+				}
+				de[i + 1] = a(de1[0], de1[1], de1[2], de1[3], mode(z, size) / size);
 			}
-			de[i + 1] = a(de1[0], de1[1], de1[2], de1[3], mode(z, size) / size);
+			cache = de;
 		}
 		return a(de[0], de[1], de[2], de[3], mode(x, size) / size);
 	}
