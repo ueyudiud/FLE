@@ -15,6 +15,7 @@ import fle.api.te.TEBase;
 import fle.core.block.BlockOreCobble;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.item.ItemOre;
+import fle.core.net.FleTEPacket;
 import fle.core.recipe.OreMeltingRecipe;
 
 public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
@@ -60,28 +61,30 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 		return ore;
 	}
 	
+	short buf = 0;
+	
 	@Override
 	public void updateEntity()
 	{
-		init();
+		if(buf++ == 20)
+		{
+			sendToNearBy(new FleTEPacket(this, (byte) 2), 64.0F);
+			buf = 0;
+			if(ore == null)
+			{
+				double heat = hc.getHeat();
+				hc.reseaveHeat(heat < 0 ? 0 : heat);
+			}
+			markRenderForUpdate();
+		}
 		smeltedOre();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		hc.update();
 	}
 	
-	private void init()
-	{
-		if(ore == null)
-		{
-			double heat = hc.getHeat();
-			init(BlockOreCobble.getOre(worldObj, xCoord, yCoord, zCoord));
-			hc.reseaveHeat(heat < 0 ? 0 : heat);
-		}
-		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
-	}
-	
 	private void smeltedOre()
 	{
+		if(worldObj.isRemote) return;
 		OreMeltingRecipe recipe = OreMeltingRecipe.matchRecipe(ore);
 		if(recipe != null)
 		{
@@ -98,8 +101,8 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 					hc.reseaveHeat(h);
 					amount *= recipe.productivity;
 					this.progress = 0D;
-					FLE.fle.getWorldManager().setData(getBlockPos(), EnumWorldNBT.Metadata, MaterialOre.getOreID(ore));
 					markRenderForUpdate();
+					sendToNearBy(new FleTEPacket(this, (byte) 2), 64.0F);
 				}
 			}
 		}
@@ -108,35 +111,30 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 	@Override
 	public int getTemperature(ForgeDirection dir)
 	{
-		init();
 		return FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos()) + hc.getTempreture();
 	}
 
 	@Override
 	public double getThermalConductivity(ForgeDirection dir)
 	{
-		init();
 		return hc.getThermalConductivity();
 	}
 
 	@Override
 	public double getThermalEnergyCurrect(ForgeDirection dir)
-	{
-		init();
+	{		
 		return hc.getHeat();
 	}
 
 	@Override
 	public void onHeatReceive(ForgeDirection dir, double heatValue)
 	{
-		init();
 		hc.reseaveHeat(heatValue);
 	}
 
 	@Override
 	public void onHeatEmit(ForgeDirection dir, double heatValue)
 	{
-		init();
 		hc.emitHeat(heatValue);
 	}
 	
@@ -147,15 +145,12 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 		return list;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public boolean isSmelting()
 	{
-		init();
 		OreMeltingRecipe recipe = OreMeltingRecipe.matchRecipe(ore);
 		return recipe != null;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public double getProgress()
 	{
 		OreMeltingRecipe recipe = OreMeltingRecipe.matchRecipe(ore);
@@ -166,5 +161,20 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 	public double getPreHeatEmit()
 	{
 		return hc.getPreHeatEmit();
+	}
+	
+	@Override
+	protected short emmit(byte aType)
+	{
+		return aType == 2 ? (short) MaterialOre.getOreID(ore) : 0;
+	}
+	
+	@Override
+	protected void receiveNumber(byte type, Number number)
+	{
+		if(type == 2)
+		{
+			init(MaterialOre.getOreFromID(number.shortValue()));
+		}
 	}
 }

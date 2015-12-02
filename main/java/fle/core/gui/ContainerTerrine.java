@@ -96,7 +96,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 	}
 
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == (byte) 1)
 		{

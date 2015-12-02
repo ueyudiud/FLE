@@ -12,14 +12,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.util.ITextureLocation;
 
 public abstract class TreeInfo implements IPlantable
 {
+	private Block log;
+	private Block leaves;
+	
 	/**
 	 * Check does world is generating in world generator or grow.
 	 * TRUE means is plants growing, set block with update client.
-	 */
+	 */	
 	public static boolean genFlag = true;
 	protected final String name;
 	
@@ -41,19 +45,35 @@ public abstract class TreeInfo implements IPlantable
         }
     }
 	
+    public final void initTreeBlock(Block b1, Block b2)
+    {
+    	log = b1;
+    	leaves = b2;
+    }
+    
+    public final Block log()
+    {
+    	return log;
+    }
+    
+    public final Block leaves()
+    {
+    	return leaves;
+    }
+    
 	public abstract int getGenerateWeight(World world, int x, int z);
 	
 	public abstract boolean generate(World world, int x, int y, int z, Random rand);
 	
 	public abstract ITextureLocation getTextureLocate(boolean isLog);
 
-	public abstract int getDefaultLogIconID(boolean isSide);
+	public abstract int getDefaultLogIconID(ForgeDirection dir);
 	
-	public abstract int getLogIconID(boolean isSide, IBlockAccess world, int x, int y, int z);
+	public abstract int getLogIconID(ForgeDirection dir, IBlockAccess world, int x, int y, int z);
 
-	public abstract int getDefaultLeavesIconID();
+	public abstract int getDefaultLeavesIconID(ForgeDirection dir);
 	
-	public abstract int getLeavesIconID(IBlockAccess world, int x, int y, int z);
+	public abstract int getLeavesIconID(ForgeDirection dir, IBlockAccess world, int x, int y, int z);
 	
 	public abstract boolean onLeavesToss(World world, int x, int y, int z, EntityPlayer player, ItemStack tool);
 	
@@ -62,6 +82,16 @@ public abstract class TreeInfo implements IPlantable
 	public abstract boolean onLogToss(World world, int x, int y, int z, EntityPlayer player, ItemStack tool);
 	
 	public abstract void onLogUpdate(World world, int x, int y, int z, Random rand);
+	
+	public float getLogHardness()
+	{
+		return 1.0F;
+	}
+	
+	public int getFlammability(IBlockAccess world, int x, int y, int z, boolean isLog)
+	{
+		return isLog ? 5 : 60;
+	}
 
 	public String getName() 
 	{

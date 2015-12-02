@@ -6,20 +6,24 @@ public class NoisePerlin extends NoiseBase
 {
 	@Deprecated
 	private final int octave;
-	
+
 	public NoisePerlin(long aSeed, int aOctave)
 	{
+		this(aSeed);
+	}
+	public NoisePerlin(long aSeed)
+	{
 		super(aSeed);
-		octave = aOctave;
+		octave = 0;
 	}
 
 	public double noise(long x, long z)
 	{
-		return noise(x, z, octave);
+		return noise(x, z, 1);
 	}
 	public double noise(long x, long y, long z)
 	{
-		return noise(x, y, z, octave);
+		return noise(x, y, z, 1);
 	}
 	public double noise(long x, long z, int size)
 	{
@@ -27,11 +31,7 @@ public class NoisePerlin extends NoiseBase
 	}
 	public double noise(long x, long y, long z, int size)
 	{
-		double ret = 0D;
-		double d1 = (double) ((2 << size) - 1) / (double) (2 << size);
-		for(int i = 0; i < size; ++i)
-			ret += next(x, y, z, i) * d1;
-		return ret;
+		return next(x, y, z, 0);
 	}
 	
 	@Override

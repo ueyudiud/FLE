@@ -24,8 +24,17 @@ import fle.api.te.ICoverTE;
 import fle.api.util.DamageResources;
 import fle.api.world.BlockPos;
 
+/**
+ * 
+ * @author ueyudiud
+ *
+ */
 public class BlockFle extends Block
 {
+	/**
+	 * The max stack size of block.
+	 * @see fle.api.block.ItemFleBlock
+	 */
 	protected int maxStackSize = 64;
 	/**
 	 * The unlocalized name of block, override in block.
@@ -92,36 +101,63 @@ public class BlockFle extends Block
 		this.maxStackSize = maxStackSize;
 	}
 
+	/**
+	 * Add tool tip on GUI when display this item on slot.
+	 * @param aStack
+	 * @param aList
+	 * @param aPlayer
+	 */
 	public void addInformation(ItemStack aStack, List<String> aList, EntityPlayer aPlayer)
 	{
 		;
 	}
 	
+	/**
+	 * Get meta of item during break block and harvest dropping.
+	 * @param world Active world.
+	 * @param pos The harvest block position.
+	 * @return The value of metadata.
+	 */
 	public int getItemstackMetaOnDroped(World world, BlockPos pos)
 	{
 		return pos.getBlockMeta();
 	}
 	
+	/**
+	 * Get max stack size of block.
+	 * @return
+	 */
 	public int getMaxStackSize()
 	{
 		return maxStackSize;
 	}
 	
+	/**
+	 * The method to check if block require meta blocks.
+	 * @return 
+	 */
 	public boolean hasSubs()
 	{
 		return false;
 	}
 	
+	/**
+	 * Get harvest data.
+	 * @param aDamage
+	 * @return
+	 */
 	public short getHarvestData(int aDamage)
 	{
 		return (short) (hasSubs() ? aDamage : 0);
 	}
 
+	@Deprecated
 	public boolean requiresMultipleRenderPasses() 
 	{
 		return false;
 	}
 
+	@Deprecated
 	public int getRenderPasses() 
 	{
 		return requiresMultipleRenderPasses() ? 2 : 1;
@@ -149,6 +185,10 @@ public class BlockFle extends Block
 		return hasSubs() ? aMeta : 0;
 	}
 
+	/**
+	 * Check block can be select by player.
+	 * @return 
+	 */
 	@Override
 	public boolean isCollidable()
 	{
@@ -305,6 +345,9 @@ public class BlockFle extends Block
 		return this;
 	}
 	
+	/**
+	 * Get map color from block.
+	 */
 	@Override
 	public MapColor getMapColor(int metadata)
 	{

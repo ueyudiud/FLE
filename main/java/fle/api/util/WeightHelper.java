@@ -100,6 +100,74 @@ public class WeightHelper<T>
 	{
 		for(Entry<T, Integer> e : aValue.entrySet()) add(aMap, new Stack(e.getKey(), e.getValue() * size));
 	}
+
+	public static <T> boolean remove(Map<T, Integer> map, T e)
+	{
+		if(e != null)
+		{
+			if(map.containsKey(e))
+			{
+				int a = map.get(e) - 1;
+				if(a > 0)
+					map.put(e, a);
+				else
+					map.remove(e);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	public static <T> int remove(Map<T, Integer> map, Stack<T> e)
+	{
+		if(e.target != null && e.size > 0)
+		{
+			if(map.containsKey(e.target))
+			{
+				int a = map.get(e.target) - e.size;
+				if(a > 0)
+					map.put(e.target, a);
+				else
+					map.remove(e.target);
+				return a > 0 ? e.size : a + e.size;
+			}
+			return 0;
+		}
+		return 0;
+	}
+	public static <T> int remove(Map<T, Integer> map, Stack<T> e, int size)
+	{
+		return remove(map, new Stack(e.target, e.size * size));
+	}
+	public static <T> void remove(Map<T, Integer> map, T...e)
+	{
+		for(T t : e) remove(map, t);
+	}
+	public static <T> void remove(Map<T, Integer> map, int size, T...e)
+	{
+		for(T t : e) remove(map, new Stack<T>(t, size));
+	}
+	public static <T> void remove(Map<T, Integer> map, Stack<T>...e)
+	{
+		for(Stack<T> ts : e) remove(map, ts);
+	}
+	public static <T> void remove(Map<T, Integer> map, int size, Stack<T>...e)
+	{
+		for(Stack<T> ts : e) remove(map, ts, size);
+	}
+	public static <T> void remove(Map<T, Integer> aMap,
+			Map<T, Integer> aValue)
+	{
+		for(Entry<T, Integer> e : aValue.entrySet()) remove(aMap, new Stack(e.getKey(), e.getValue()));
+	}
+	public static <T> void remove(Map<T, Integer> aMap, int size,
+			Map<T, Integer> aValue)
+	{
+		for(Entry<T, Integer> e : aValue.entrySet()) remove(aMap, new Stack(e.getKey(), e.getValue() * size));
+	}
 	public static <T> Stack<T>[] multiply(Stack<T>[] aStacks, int size)
 	{
 		Stack<T>[] ret = new Stack[aStacks.length];
@@ -389,8 +457,8 @@ public class WeightHelper<T>
 	
 	public static class Stack<T>
 	{
-		private int size;
-		private T target;
+		int size;
+		T target;
 		
 		public Stack(T t){this(t, 1);}
 		public Stack(T t, int s) 

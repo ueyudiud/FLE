@@ -15,10 +15,6 @@ public class ItemLeaves extends ItemSubBlock
 	public ItemLeaves(Block aBlock)
 	{
 		super(aBlock);
-		for(TreeInfo tree : BlockLog.trees)
-		{
-			FleAPI.lm.registerLocal(new ItemStack(this, 1, BlockLog.trees.serial(tree)).getUnlocalizedName() + ".name", tree.getName().substring(0, 1).toUpperCase() + tree.getName().substring(1) + " Leaves");
-		}
 	}
 	
 	@Override
@@ -30,7 +26,6 @@ public class ItemLeaves extends ItemSubBlock
     	{
     		return false;
     	}
-    	BlockLog.setData(new BlockPos(aWorld, aX, aY, aZ), tDamage);
 	    if (aWorld.getBlock(aX, aY, aZ) == this.field_150939_a)
 	    {
 	    	this.field_150939_a.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);

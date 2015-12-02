@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -31,6 +32,13 @@ public class BehaviourTerrine extends BehaviourTile implements IDebugableBlock, 
 	public BehaviourTerrine()
 	{
 		super("Terrine", TileEntityTerrine.class);
+	}
+	
+	@Override
+	public boolean canBlockStay(BlockSubTile block, World aWorld, int x, int y,
+			int z)
+	{
+		return aWorld.getBlock(x, y - 1, z).isSideSolid(aWorld, x, y - 1, z, ForgeDirection.DOWN);
 	}
 
 	@Override

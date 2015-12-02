@@ -14,6 +14,7 @@ import fle.api.material.MatterReactionRegister;
 import fle.api.material.MatterReactionRegister.ReactionHandler;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.IChemCondition;
+import fle.api.util.MolCaculator;
 import fle.api.util.WeightHelper;
 import fle.api.util.IChemCondition.EnumOxide;
 import fle.api.util.IChemCondition.EnumPH;
@@ -30,41 +31,41 @@ public class MatterReactionRecipe implements ReactionHandler
 {
 	public static void init()
 	{
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), EnumAtoms.Cu.asMatter(), 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Enargite)), Matter.mCu3AsS4, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Cuprite)), Matter.mCu2O, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Chalcocite)), Matter.mCu2S, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Covellite)), Matter.mCuS, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Tenorite)), Matter.mCuO, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Orpiment)), Matter.mAs2S3, 88, 681, 60000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Malachite)), Matter.mCu_OH2_CO3, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Azurite)), Matter.mCu_OH2_2CO3, 88, (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Gelenite)), Matter.mPbS, 88, (int) Materials.Lead.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Cassiterite)), Matter.mSnO2, 88, (int) Materials.Tin.getPropertyInfo().getMeltingPoint(), 400000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Stannite)), Matter.mCu2FeSnS4, 88, 718, 20000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu")), EnumAtoms.Cu.asMatter(), 75, (int) Materials.Copper.getPropertyInfo().getMeltingPoint(), 600000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_pb")), EnumAtoms.Pb.asMatter(), 75, (int) Materials.Lead.getPropertyInfo().getMeltingPoint(), 120000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_zn")), EnumAtoms.Zn.asMatter(), 75, (int) Materials.Zinc.getPropertyInfo().getMeltingPoint(), 290000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_sn")), EnumAtoms.Sn.asMatter(), 75, (int) Materials.Tin.getPropertyInfo().getMeltingPoint(), 130000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_as_0")), Materials.CuAs.getMatter(), 75, 684, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_as_1")), Materials.CuAs2.getMatter(), 75, 573, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_0")), Materials.CuPb.getMatter(), 75, 671, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_1")), Materials.CuPb2.getMatter(), 75, 628, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_sn_0")), Materials.CuSn.getMatter(), 75, 648, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_sn_1")), Materials.CuSn2.getMatter(), 75, 629, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_sn")), Materials.CuSnPb.getMatter(), 75, 629, 200000);
-		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("charred_log")), EnumAtoms.C.asMatter(), 200, 350, 5000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.NativeCopper)), EnumAtoms.Cu.asMatter(), MolCaculator.asMol(88, 1, 1) , (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Enargite)),     Matter.mCu3AsS4,         MolCaculator.asMol(88, 8, 1) , (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Cuprite)),      Matter.mCu2O,            MolCaculator.asMol(88, 3, 1) , (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Chalcocite)),   Matter.mCu2S,            MolCaculator.asMol(88, 3, 1) , (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Covellite)),    Matter.mCuS,             MolCaculator.asMol(88, 2, 1) , (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Tenorite)),     Matter.mCuO,             MolCaculator.asMol(88, 2, 1) , (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Orpiment)),     Matter.mAs2S3,           MolCaculator.asMol(88, 5, 1) , 681, 60000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Malachite)),    Matter.mCu_OH2_CO3,      MolCaculator.asMol(88, 10, 1), (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Azurite)),      Matter.mCu_OH2_2CO3,     MolCaculator.asMol(88, 14, 1), (int) Materials.NativeCopper.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Gelenite)),     Matter.mPbS,             MolCaculator.asMol(88, 2, 1) , (int) Materials.Lead.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Cassiterite)),  Matter.mSnO2,            MolCaculator.asMol(88, 3, 1) , (int) Materials.Tin.getPropertyInfo().getMeltingPoint(), 400000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemOre.a(Materials.Stannite)),     Matter.mCu2FeSnS4,       MolCaculator.asMol(88, 8, 1) , 718, 20000);
+		for(EnumAtoms atom : EnumAtoms.values())
+		{
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_" + atom.name().toLowerCase())),  atom.asMatter(), MolCaculator.asMol(75, 1, 1), atom.meltingPoint, atom.meltingPoint * 1000);
+		}
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_as_0")),     Materials.CuAs.getMatter(), MolCaculator.asMol(75, 1, 1), 684, 200000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_as_1")),     Materials.CuAs2.getMatter(), MolCaculator.asMol(75, 1, 1), 573, 200000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_0")),     Materials.CuPb.getMatter(), MolCaculator.asMol(75, 1, 1), 671, 200000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_1")),     Materials.CuPb2.getMatter(), MolCaculator.asMol(75, 1, 1), 628, 200000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_sn_0")),     Materials.CuSn.getMatter(), MolCaculator.asMol(75, 1, 1), 648, 200000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_sn_1")),     Materials.CuSn2.getMatter(), MolCaculator.asMol(75, 1, 1), 629, 200000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("ingot_cu_pb_sn")),    Materials.CuSnPb.getMatter(), MolCaculator.asMol(75, 1, 1), 629, 200000);
+		MatterDictionary.registerMatter(new ItemBaseStack(ItemFleSub.a("charred_log")),       EnumAtoms.C.asMatter(), MolCaculator.asMol(1000, 5, 1), 350, 6400);
 		
-		MatterDictionary.registerFluid(IB.copper, EnumAtoms.Cu.asMatter());
-		MatterDictionary.registerFluid(IB.lead, EnumAtoms.Pb.asMatter());
-		MatterDictionary.registerFluid(IB.zinc, EnumAtoms.Zn.asMatter());
-		MatterDictionary.registerFluid(IB.tin, EnumAtoms.Sn.asMatter());
-		MatterDictionary.registerFluid(IB.cu_as_0, Materials.CuAs.getMatter());
-		MatterDictionary.registerFluid(IB.cu_as_1, Materials.CuAs2.getMatter());
-		MatterDictionary.registerFluid(IB.cu_pb_0, Materials.CuPb.getMatter());
-		MatterDictionary.registerFluid(IB.cu_pb_1, Materials.CuPb2.getMatter());
-		MatterDictionary.registerFluid(IB.cu_sn_0, Materials.CuSn.getMatter());
-		MatterDictionary.registerFluid(IB.cu_sn_1, Materials.CuSn2.getMatter());
+		MatterDictionary.registerFluid(IB.copper,   EnumAtoms.Cu.asMatter());
+		MatterDictionary.registerFluid(IB.lead,     EnumAtoms.Pb.asMatter());
+		MatterDictionary.registerFluid(IB.zinc,     EnumAtoms.Zn.asMatter());
+		MatterDictionary.registerFluid(IB.tin,      EnumAtoms.Sn.asMatter());
+		MatterDictionary.registerFluid(IB.cu_as_0,  Materials.CuAs.getMatter());
+		MatterDictionary.registerFluid(IB.cu_as_1,  Materials.CuAs2.getMatter());
+		MatterDictionary.registerFluid(IB.cu_pb_0,  Materials.CuPb.getMatter());
+		MatterDictionary.registerFluid(IB.cu_pb_1,  Materials.CuPb2.getMatter());
+		MatterDictionary.registerFluid(IB.cu_sn_0,  Materials.CuSn.getMatter());
+		MatterDictionary.registerFluid(IB.cu_sn_1,  Materials.CuSn2.getMatter());
 		MatterDictionary.registerFluid(IB.cu_pb_sn, Materials.CuSnPb.getMatter());
 
 		ReactionRecipe1.addRecipes();
@@ -103,8 +104,7 @@ public class MatterReactionRecipe implements ReactionHandler
 				new MatterReactionRecipe(EnumIons.Hydroxide.asMatter(), EnumIons.H1.asMatter(), 48, EnumPH.MinPH, EnumPH.Weak_Alkali, 0.0814, 0.00032, 0.7004049, 
 						new Stack(Matter.mH2O)),
 				new MatterReactionRecipe(Matter.mH2O, EnumIons.H1.asMatter(), 91, EnumPH.MinPH, EnumPH.Weak_Acid, 0.0714, 0.00072, 0.7004049, 
-						new Stack(EnumIons.Hydronium.asMatter())),
-						
+						new Stack(EnumIons.Hydronium.asMatter())),						
 				new MatterReactionRecipe(EnumIons.O_2.asMatter(), Matter.mH2O, 15, EnumPH.MinPH, EnumPH.Super_Alkali, 0.091, 0.00032, 0.0004049, 
 						new Stack(EnumIons.Hydroxide, 2)),
 				new MatterReactionRecipe(EnumIons.Hydroxide.asMatter(), EnumIons.Hydronium.asMatter(), 48, EnumPH.MinPH, EnumPH.Weak_Alkali, 0.0814, 0.00032, 0.0004049, 

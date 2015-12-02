@@ -26,12 +26,12 @@ public class FleCropGen extends FleSurfaceGen
 	@Override
 	public boolean generateAt(World aWorld, Random aRand, int x, int y, int z)
 	{
-		if(aWorld.getBiomeGenForCoords(x, z).getFloatTemperature(x, y, z) < 0.1F) return false;
-		BlockFleCrop.flag = true;
 		boolean flag = false;
 		Block target = aWorld.getBlock(x, y, z);
-		if(cropBlock.canBlockStay(aWorld, x, y, z) && (target.isAir(aWorld, x, y, z) || target.isReplaceable(aWorld, x, y, z)))
+		if((aWorld.isAirBlock(x, y, z) || aWorld.getBlock(x, y, z).isReplaceable(aWorld, x, y, z)) &&
+				cropBlock.canBlockStay(aWorld, x, y, z))
 		{
+			BlockFleCrop.flag = true;
 			if(aWorld.setBlock(x, y, z, cropBlock))
 			{
 				if(aWorld.getTileEntity(x, y, z) instanceof TileEntityCrop)
@@ -43,8 +43,12 @@ public class FleCropGen extends FleSurfaceGen
 					flag = true;
 				}
 			}
+			BlockFleCrop.flag = false;
 		}
-		BlockFleCrop.flag = false;
+		else
+		{
+			return false;
+		}
 		if(flag)
 		{
 			aWorld.markBlockRangeForRenderUpdate(x, y, z, x, y, z);

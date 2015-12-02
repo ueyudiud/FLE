@@ -81,34 +81,12 @@ public class FLEBiomeHill extends FLEBiome
 
         super.decorate(aWorld, aRand, x, z);
     }
-
+    
     @Override
-    protected void genTargetBlockAt(int aLayer, float aTemp, Random aRand,
-    		Block[] aBlocks, byte[] aBytes, int targetID)
+    protected Block getBlock(boolean isFirstTop, boolean isNoCover,
+    		boolean hasFluidOnSide, boolean isBaseDecorateBlock,
+    		Block replaceBlock, Random rand, float temp)
     {
-		Block placeBlock;
-		byte metadata;
-		switch(aLayer)
-		{
-		case 0 : ;
-		placeBlock = Blocks.grass;
-		metadata = 0;
-		break;
-		case 1 : ;
-		case 2 : ;
-		placeBlock = Blocks.dirt;
-		metadata = 0;
-		break;
-		case 3 : ;
-		placeBlock = Blocks.gravel;
-		metadata = 0;
-		break;
-		default: ;
-		placeBlock = Blocks.stone;
-		metadata = 0;
-		}
-		
-		aBlocks[targetID] = placeBlock;
-		aBytes[targetID] = metadata;
+    	return isBaseDecorateBlock ? Blocks.gravel : super.getBlock(isFirstTop, isNoCover, hasFluidOnSide, isBaseDecorateBlock, replaceBlock, rand, temp);
     }
 }

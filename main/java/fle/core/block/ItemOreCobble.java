@@ -21,19 +21,18 @@ public class ItemOreCobble extends ItemSubTile
 	{
 		short tDamage = (short)getDamage(aStack);
 
-    	if (!aWorld.setBlock(aX, aY, aZ, field_150939_a, field_150939_a.onBlockPlaced(aWorld, aX, aY, aZ, side, hitY, hitY, hitZ, (int) Math.ceil(MaterialOre.getOreFromID(tDamage).getPropertyInfo().getHardness())), 3))
+    	if (!aWorld.setBlock(aX, aY, aZ, block, block.onBlockPlaced(aWorld, aX, aY, aZ, side, hitY, hitY, hitZ, (int) Math.ceil(MaterialOre.getOreFromID(tDamage).getPropertyInfo().getHardness())), 3))
     	{
     		return false;
     	}
-	    if (aWorld.getBlock(aX, aY, aZ) == field_150939_a)
+	    if (aWorld.getBlock(aX, aY, aZ) == block)
 	    {
-	    	BlockOreCobble.setOre(aWorld, aX, aY, aZ, tDamage);
 	    	if (aWorld.getTileEntity(aX, aY, aZ) instanceof TileEntityOreCobble)
 	    	{
 	    		((TileEntityOreCobble) aWorld.getTileEntity(aX, aY, aZ)).init(MaterialOre.getOreFromID(tDamage));
 	    	}
-	    	field_150939_a.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);
-	    	field_150939_a.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
+	    	block.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);
+	    	block.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
 	    }
 	    return true;
 	}

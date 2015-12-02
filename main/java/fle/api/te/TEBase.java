@@ -400,7 +400,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	 * @return
 	 */
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		return emmit(aType);
 	}
@@ -416,7 +416,7 @@ public class TEBase extends TileEntity implements ITEInWorld, IFacingBlock, IMet
 	 * @param contain The contain of this elements often to be an number.
 	 */
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(contain instanceof Number)
 		{

@@ -3,12 +3,13 @@ package fle.core.inventory;
 import net.minecraft.item.ItemStack;
 import fle.api.inventory.InventoryCraftable;
 import fle.core.gui.ContainerWashing;
+import fle.core.init.Lang;
 
 public class InventoryWashing extends InventoryCraftable
 {
 	public InventoryWashing(ContainerWashing container)
 	{
-		super("inventory.washing", container, 10);
+		super(Lang.inventory_washing, container, 11);
 	}
 
 	@Override

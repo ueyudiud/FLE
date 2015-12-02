@@ -24,6 +24,15 @@ public class Vec extends Vec3
 		return new Vec(x + xCoord, y + yCoord, z + zCoord);
 	}
 	
+	public Vec add(double x, double y,
+			double z)
+	{
+		xCoord += x;
+		yCoord += y;
+		zCoord += z;
+		return this;
+	}
+	
 	public Vec add(Vec3 vec)
 	{
 		xCoord += vec.xCoord;

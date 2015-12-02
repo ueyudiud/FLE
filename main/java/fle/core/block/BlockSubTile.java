@@ -196,6 +196,20 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	}
 	
 	@Override
+	public void onNeighborBlockChange(World aWorld, int x, int y, int z,
+			Block block)
+	{
+		if(!canBlockStay(aWorld, x, y, z))
+		{
+			dropBlockAsItem(aWorld, x, y, z, getDamageValue(aWorld, x, y, z), 0);
+		}
+		else
+		{
+			super.onNeighborBlockChange(aWorld, x, y, z, block);
+		}
+	}
+	
+	@Override
 	public boolean canBlockStay(World aWorld, int x,
 			int y, int z)
 	{
@@ -209,6 +223,13 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	    	e.printStackTrace();
 	    }
 		return true;
+	}
+	
+	@Override
+	public boolean canPlaceBlockAt(World aWorld, int x,
+			int y, int z)
+	{
+		return canBlockStay(aWorld, x, y, z);
 	}
 	
 	@Override

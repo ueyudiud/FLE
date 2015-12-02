@@ -17,36 +17,16 @@ public class FLEBiomeWasteland extends FLEBiome
         theBiomeDecorator.reedsPerChunk = 20;
         theBiomeDecorator.cactiPerChunk = 2;
         spawnableCreatureList.clear();
+        topBlock = Blocks.sand;
+        fillerBlock = Blocks.sandstone;
 	}
-	
-	@Override
-	protected void genTargetBlockAt(int aLayer, float aTemp, Random aRand,
-			Block[] aBlocks, byte[] aBytes, int targetID)
-	{
-		boolean flag = aRand.nextBoolean();
-		Block placeBlock;
-		byte metadata;
-		switch(aLayer)
-		{
-		case 0 : ;
-		placeBlock = flag ? Blocks.grass : Blocks.sand;
-		metadata = 0;
-		break;
-		case 1 : ;
-		case 2 : ;
-		placeBlock = flag ? Blocks.dirt : Blocks.sand;
-		metadata = 0;
-		break;
-		case 3 : ;
-		placeBlock = flag ? Blocks.gravel : Blocks.sandstone;
-		metadata = 0;
-		break;
-		default: ;
-		placeBlock = Blocks.stone;
-		metadata = 0;
-		}
-		
-		aBlocks[targetID] = placeBlock;
-		aBytes[targetID] = metadata;
-	}
+    
+    @Override
+    protected Block getBlock(boolean isFirstTop, boolean isNoCover,
+    		boolean hasFluidOnSide, boolean isBaseDecorateBlock,
+    		Block replaceBlock, Random rand, float temp)
+    {
+    	return isBaseDecorateBlock ? Blocks.gravel : isNoCover ? (rand.nextBoolean() ? Blocks.sand : Blocks.grass) :
+    		rand.nextBoolean() ? Blocks.dirt : Blocks.sand;
+    }
 }

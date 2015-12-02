@@ -21,5 +21,7 @@ public enum EnumTool
 	bowsaw, 
 	adz,
 	needle, 
-	spinning;
+	spinning,
+	bar_grizzy, 
+	knife;
 }

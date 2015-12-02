@@ -194,7 +194,7 @@ public class ContainerCeramicFurnace extends ContainerCraftable implements INetE
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 0)
 		{

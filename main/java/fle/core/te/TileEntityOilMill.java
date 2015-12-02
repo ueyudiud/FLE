@@ -41,13 +41,13 @@ public class TileEntityOilMill extends TEIT<InventoryOilMill> implements INetEve
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		return aType == 0 ? getTileInventory().getRecipeTime() : null;
 	}
 
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 0)
 			getTileInventory().syncRecipeTime((Integer) contain);

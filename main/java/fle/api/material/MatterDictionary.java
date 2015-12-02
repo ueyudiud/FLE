@@ -1,26 +1,95 @@
 package fle.api.material;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import fle.api.material.Matter.AtomStack;
 import fle.api.recipe.ItemAbstractStack;
+import fle.api.recipe.ItemBaseStack;
 import fle.api.util.FleLog;
+import fle.api.util.SizeUtil;
+import fle.api.util.SizeUtil.I;
+import fle.api.util.SizeUtil.Size;
+import fle.api.util.WeightHelper.Stack;
 
 public class MatterDictionary
 {
+	private static final Map<ItemAbstractStack, I<Matter>> itemMatterList = new HashMap();
+	private static final Map<Fluid, I<Matter>> fluidMatterList = new HashMap();
+	private static final Map<Matter, EnumMap<Size, ItemStack>> matterToItemMap = new HashMap<Matter, EnumMap<Size,ItemStack>>();
+	
 	private static final Map<ItemAbstractStack, AtomStack> matterMap = new HashMap();
 	private static final Map<Matter, Fluid> fluidMap = new HashMap();
 	private static final Map<Fluid, Matter> fluidMatterMap = new HashMap();
 	private static final Map<ItemAbstractStack, int[]> meltingRequireMap = new HashMap();
 	private static final List<IFreezingRecipe> freezingRecipeMap = new ArrayList();
 
+	public static void regMatter(Object obj, Matter matter)
+	{
+		regMatter(obj, SizeUtil.info(matter, 1));
+	}
+	public static void regMatter(Object obj, Matter matter, Size aSize)
+	{
+		regMatter(obj, SizeUtil.info(matter, 1, aSize));
+	}
+	public static void regMatter(Object obj, I<Matter> info)
+	{
+		if(obj instanceof Item)
+			regMatter(new ItemBaseStack((Item) obj), info);
+		else if(obj instanceof Block)
+			regMatter(new ItemBaseStack((Block) obj), info);
+		else if(obj instanceof ItemStack)
+			regMatter(new ItemBaseStack((ItemStack) obj), info);
+		else if(obj instanceof Fluid)
+		{
+			if(fluidMatterList.containsKey(obj))
+			{
+				FleLog.getLogger().error("Fle API: Fluid " + ((Fluid) obj).getUnlocalizedName() + 
+						" had alreadly register.");
+				return;
+			}
+			fluidMatterList.put((Fluid) obj, info);
+		}
+		else if(obj instanceof ItemAbstractStack)
+		{
+			itemMatterList.put((ItemAbstractStack) obj, info);
+		}
+	}
+	
+	public static I<Matter> toMatterInfo(ItemStack aStack)
+	{
+		for(Entry<ItemAbstractStack, I<Matter>> e : itemMatterList.entrySet())
+		{
+			if(e.getKey().isStackEqul(aStack))
+				return e.getValue().copy(aStack.stackSize);
+		}
+		return null;
+	}
+	
+	public static AtomStack toMatter(ItemStack aStack)
+	{
+		I<Matter> i = toMatterInfo(aStack);
+		if(i != null)
+			return new AtomStack(i.getTarget(), i.getSize());
+		return null;
+	}
+	public static ItemStack toItem(Matter stacks, Size size)
+	{
+		return matterToItemMap.containsKey(stacks) ? 
+				!matterToItemMap.get(stacks).containsKey(size) ? null : 
+					matterToItemMap.get(stacks).get(size).copy() : null;
+	}
+	
 	public static void registerMatter(ItemAbstractStack aStack, Matter matter, int amount)
 	{
 		matterMap.put(aStack, new AtomStack(matter, amount));

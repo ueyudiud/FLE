@@ -42,6 +42,8 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		nbt.setShort("Mode", (short) mode);
 		heatCurrect.writeToNBT(nbt);
 	}
+	
+	private int buf = 0;
 
 	@Override
 	public void updateInventory() 
@@ -49,8 +51,12 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		getTileInventory().updateEntity(this);
 		heatCurrect.update();
-		if(!worldObj.isRemote)
+		if(buf++ == 50)
+		{
+			buf = 0;
 			sendToNearBy(new FleTEPacket(this, (byte) 2), 16.0F);
+			sendToNearBy(new FleTEPacket(this, (byte) 3), 16.0F);
+		}
 	}
 	
 	@Override
@@ -174,18 +180,19 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		switch(aType)
 		{
 		case 1 : return getTileInventory().recipeTime;
 		case 2 : return mode;
+		case 3 : return heatCurrect.getHeat();
 		}
 		return null;
 	}
 
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 1)
 		{
@@ -194,6 +201,10 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		else if(type == 2)
 		{
 			mode = (Integer) contain;
+		}
+		else if(type == 3)
+		{
+			heatCurrect.syncHeat((Double) contain);
 		}
 	}
 	@Override

@@ -17,10 +17,10 @@ public class DrawUtil
 	public static void main(String[] arg)
 	{
 		File file = new File("./src/main/resources/assets/fle/textures/items/resource");
-		File r = new File(file, "plate_double");
-		File t = new File(file, "plate_quadrupl");
-		File rP = new File(file, "plate_double.png");
-		File tP = new File(file, "plate_quadrupl.png");
+		File r = new File(file, "unused/stones");
+		File t = new File(file, "un");
+		File rP = new File(file, "chip1.png");
+		File tP = new File(file, "chip2.png");
 		try 
 		{
 			BufferedImage imgR = ImageIO.read(rP);

@@ -193,18 +193,18 @@ public class TileEntityThermalWire extends TEBase implements IThermalTileEntity
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		switch(aType)
 		{
 		case 3 : return MaterialAbstract.getMaterialRegistry().serial(material);
 		case 4 : return tc.getHeat();
 		}
-		return super.onEmmit(aType);
+		return super.onEmit(aType);
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		switch(type)
 		{
@@ -216,7 +216,7 @@ public class TileEntityThermalWire extends TEBase implements IThermalTileEntity
 		case 4 : if(tc != null) tc.syncHeat((Double) contain);
 		break;
 		default : 
-			super.onReseave(type, contain);
+			super.onReceive(type, contain);
 		}
 	}
 }

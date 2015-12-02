@@ -22,6 +22,13 @@ public class BehaviourSifter extends BehaviourTile
 	}
 	
 	@Override
+	public boolean canBlockStay(BlockSubTile block, World aWorld, int x, int y,
+			int z)
+	{
+		return aWorld.getBlock(x, y - 1, z).isSideSolid(aWorld, x, y - 1, z, ForgeDirection.DOWN);
+	}
+	
+	@Override
 	public void onBlockBreak(BlockSubTile block, World aWorld, int x, int y,
 			int z, Block aBlock, int aMeta)
 	{

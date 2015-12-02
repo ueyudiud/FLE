@@ -1,7 +1,5 @@
 package fle.core.block.machine;
 
-import java.util.List;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -10,10 +8,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import fle.api.FleValue;
 import fle.api.block.IBlockWithTileBehaviour;
-import fle.api.block.IDebugableBlock;
 import fle.api.block.IGuiBlock;
 import fle.api.world.BlockPos;
 import fle.core.block.BlockSubTile;

@@ -60,6 +60,7 @@ import fle.core.item.behavior.BehaviorBowsaw;
 import fle.core.item.behavior.BehaviorChisel;
 import fle.core.item.behavior.BehaviorFirestarter;
 import fle.core.item.behavior.BehaviorHoe;
+import fle.core.item.behavior.BehaviorKnife;
 import fle.core.item.behavior.BehaviorMetalHammer;
 import fle.core.item.behavior.BehaviorPickaxe;
 import fle.core.item.behavior.BehaviorShovel;
@@ -120,6 +121,10 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 		addToolMaterial(Materials.HardWood);
 		addToolMaterial(Materials.Stone);
 		addToolMaterial(Materials.CompactStone);
+		addToolMaterial(Materials.Rhyolite);
+		addToolMaterial(Materials.Andesite);
+		addToolMaterial(Materials.Basalt);
+		addToolMaterial(Materials.Peridotite);
 		addToolMaterial(Materials.Copper);
 		addToolMaterial(Materials.Lead);
 		addToolMaterial(Materials.CuAs);
@@ -201,6 +206,15 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				new String[]{EnumTool.spinning.toString()},
 				new TextureLocation("tools/spinning_disk/stone_spinning_disk_head", FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/spinning_disk/stone_spinning_disk_stick"),
 				new BehaviorTool());
+		addSubItem(17, "wooden_bar_grizzy", "Wooden Bar Grizzy", SubTag.TOOL_wood, 
+				new String[]{EnumTool.bar_grizzy.toString()},
+				new TextureLocation(FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, FleValue.VOID_ICON_FILE, "tools/simple_bar_grizzly"),
+				new BehaviorTool());
+		addSubItem(18, "stone_knife", "Stone Knife", SubTag.TOOL_stone,
+				new String[]{EnumTool.knife.toString()},
+				new AttributesInfo[]{new AttributesInfo(attackDamage, 4.0F)},
+				new TextureLocation("tools/knife/stone_knife_head", "tools/knife/stone_knife_rust", "tools/knife/stone_knife_mosaic", "tools/knife/stone_knife_handle", "tools/knife/stone_knife_tie"),
+				new BehaviorKnife());
 		addSubItem(101, "metal_axe", "Metal Axe", SubTag.type_tool_metal_tier0, 
 				new String[]{EnumTool.axe.toString()}, 
 				new AttributesInfo[]{new AttributesInfo(attackDamage, 3.0F)},
@@ -289,6 +303,16 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 	public void setDisplayDamage(ItemStack aStack, int aDamage) 
 	{
 		setupNBT(aStack).setInteger("ToolDamage", aDamage);
+	}
+	
+	public void setToolDamage(ItemStack aStack, int aDamage)
+	{
+		setDisplayDamage(aStack, aDamage);
+	}
+	
+	public int getToolDamage(ItemStack aStack)
+	{
+		return getDisplayDamage(aStack);
 	}
 	
 	@Override

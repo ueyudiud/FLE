@@ -87,7 +87,7 @@ public class ContainerCeramics extends ContainerCraftable implements INetEventLi
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == (byte) 1)
 		{

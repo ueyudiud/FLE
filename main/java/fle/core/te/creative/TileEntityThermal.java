@@ -26,7 +26,10 @@ public class TileEntityThermal extends TEBase implements IThermalTileEntity
 		{
 			th.emitHeat(th.getHeat());
 		}
-		sendToNearBy(new FleTEPacket(this, (byte) 2), 32.0F);
+		else
+		{
+			sendToNearBy(new FleTEPacket(this, (byte) 2), 32.0F);
+		}
 	}
 
 	@Override
@@ -66,18 +69,18 @@ public class TileEntityThermal extends TEBase implements IThermalTileEntity
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
-		return aType == 2 ? th.getHeat() : super.onEmmit(aType);
+		return aType == 2 ? th.getHeat() : super.onEmit(aType);
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 2)
 		{
 			th.syncHeat((Double) contain);
 		}
-		super.onReseave(type, contain);
+		super.onReceive(type, contain);
 	}
 }

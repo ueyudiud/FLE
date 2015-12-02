@@ -103,7 +103,7 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 	}
 	
 	@Override
-	public Object onEmmit(byte type)
+	public Object onEmit(byte type)
 	{
 		switch(type)
 		{
@@ -115,7 +115,7 @@ public class TileEntityColdForgingPlatform extends TEInventory<InventoryColdForg
 	}
 
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		switch(type)
 		{

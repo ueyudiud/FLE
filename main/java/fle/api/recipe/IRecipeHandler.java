@@ -121,6 +121,10 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 		public final void readJson(JsonElement e) throws IOException{};
 	}
 	
+	/**
+	 * 
+	 * @author ueyudiud
+	 */
 	public static abstract class RecipeKey
 	{
 		public boolean equals(Object obj)

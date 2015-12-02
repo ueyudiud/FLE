@@ -1,5 +1,6 @@
 package fle.core.block;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import fle.api.util.Register;
 import fle.api.world.BlockPos;
 import fle.api.world.TreeInfo;
 import fle.core.tree.TreeCitron;
+import fle.core.tree.TreeSisal;
 
 public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlock
 {
@@ -31,6 +33,7 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 	static
 	{
 		register(new TreeCitron());
+		register(new TreeSisal());
 	}
 	
 	public static void register(TreeInfo aTree)
@@ -49,6 +52,7 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 	public void updateTick(World aWorld, int aX, int aY,
 			int aZ, Random aRandom)
 	{
+		onNeighborBlockChange(aWorld, aX, aY, aZ, null);
 		trees.get(getTreeInfoID(aWorld, aX, aY, aZ)).onLogUpdate(aWorld, aX, aY, aZ, aRandom);
 	}
 	
@@ -67,7 +71,7 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		return iconMap.get(trees.name(meta))[trees.get(meta).getDefaultLogIconID(side != 0 && side != 1)];
+		return iconMap.get(trees.name(meta))[trees.get(meta).getDefaultLogIconID(ForgeDirection.values()[side])];
 	}
 	
 	@Override
@@ -75,9 +79,8 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 			int y, int z, int side)
 	{
 		int id = getTreeInfoID(world, x, y, z);
-		ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[world.getBlockMetadata(x, y, z)];
-		boolean isSide = !(ForgeDirection.VALID_DIRECTIONS[side] == dir || ForgeDirection.VALID_DIRECTIONS[side] == dir.getOpposite());
-		return iconMap.get(trees.name(id))[trees.get(id).getLogIconID(isSide, world, x, y, z)];
+		int dir = ForgeDirection.ROTATION_MATRIX[world.getBlockMetadata(x, y, z)][side];
+		return iconMap.get(trees.name(id))[trees.get(id).getLogIconID(ForgeDirection.VALID_DIRECTIONS[dir], world, x, y, z)];
 	}
 	
 	@Override
@@ -101,7 +104,7 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 	{
 		ForgeDirection dir = getPointFacing(aWorld, aX, aY, aZ, xPos, yPos, zPos);
 		return dir == ForgeDirection.UP || dir == ForgeDirection.DOWN ?
-				0 : dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH ? 1 : 2;
+				0 : dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH ? 3 : 5;
 	}
     
     @Override
@@ -161,5 +164,20 @@ public class BlockLog extends BlockHasSub implements IFacingBlock, IDebugableBlo
 	public boolean canSustainLeaves(IBlockAccess world, int x, int y, int z)
 	{
 		return true;
+	}
+	
+	@Override
+	public boolean isWood(IBlockAccess world, int x, int y, int z)
+	{
+		return true;
+	}
+	
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
+			int metadata, int fortune)
+	{
+		ArrayList<ItemStack> ret = new ArrayList<>();
+		ret.add(new ItemStack(this, 1, getTreeInfoID(world, x, y, z)));
+		return ret;
 	}
 }

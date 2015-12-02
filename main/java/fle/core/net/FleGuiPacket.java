@@ -24,7 +24,7 @@ public class FleGuiPacket extends FleSortInfomationPacket
 	{
 		if(obj instanceof INetEventEmmiter)
 		{
-			return ((INetEventEmmiter) obj).onEmmit(type);
+			return ((INetEventEmmiter) obj).onEmit(type);
 		}
 		return obj;
 	}
@@ -34,7 +34,7 @@ public class FleGuiPacket extends FleSortInfomationPacket
 	{
 		if(getPlayer().openContainer instanceof INetEventListener)
 		{
-			((INetEventListener) getPlayer().openContainer).onReseave(type, contain);
+			((INetEventListener) getPlayer().openContainer).onReceive(type, contain);
 		}
 		return null;
 	}

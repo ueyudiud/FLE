@@ -48,7 +48,6 @@ public class BlockOreCobble extends BlockSubTile
 			}
 			else
 			{
-
 				registerSub(MaterialOre.getOreID(ore), ore.getOreName().toLowerCase(), ore.getOreName() + " Cobble", new BlockTextureManager("void"), new BehaviourTile(TileEntityOreCobble.class)
 				{
 					public Container openContainer(World aWorld, int x, int y,
@@ -132,7 +131,6 @@ public class BlockOreCobble extends BlockSubTile
 		}
 		catch(Throwable e)
 		{
-			e.printStackTrace();
 			return 0xFFFFFF;
 		}
 	}
@@ -146,7 +144,7 @@ public class BlockOreCobble extends BlockSubTile
 	@Override
 	public float getBlockHardness(World world, int x, int y, int z)
 	{
-		return 1F + getOre(world, x, y, z).getPropertyInfo().getHardness();
+		return 1F + ((TileEntityOreCobble) world.getTileEntity(x, y, z)).getOre().getPropertyInfo().getHardness();
 	}
 	
 	@Override
@@ -173,16 +171,6 @@ public class BlockOreCobble extends BlockSubTile
 			int metadata, int fortune)
 	{
 		return ((TileEntityOreCobble) tileThread.get()).getDrops();
-	}
-	
-	public static void setOre(IBlockAccess world, int x, int y, int z, int meta)
-	{
-		FLE.fle.getWorldManager().setData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata, meta);
-	}
-	
-	public static MaterialOre getOre(IBlockAccess world, int x, int y, int z)
-	{
-		return MaterialOre.getOreFromID(FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata));
 	}
 	
 	@Override

@@ -131,14 +131,14 @@ public class TileEntityCeramicFurnaceFirebox extends TEInventory<InventoryCerami
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		if(aType == 2) return getTileInventory().getSyncState();
-		return super.onEmmit(aType);
+		return super.onEmit(aType);
 	}
 
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 1)
 		{

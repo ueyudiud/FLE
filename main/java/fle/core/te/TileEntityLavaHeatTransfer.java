@@ -197,7 +197,7 @@ public class TileEntityLavaHeatTransfer extends TEBase implements IFluidHandler,
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 1)
 		{

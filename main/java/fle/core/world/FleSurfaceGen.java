@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenBigMushroom;
 import net.minecraft.world.gen.feature.WorldGenFlowers;
+import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenTrees;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -37,13 +38,13 @@ public abstract class FleSurfaceGen extends WorldGenerator
         while (y > 0);
 
         int i = 0;
-        for (int l = 0; l < count * 2; ++l)
+        for (int l = 0; l < count * 8; ++l)
         {
             int i1 = x + aRand.nextInt(size) - aRand.nextInt(size);
-            int j1 = y + aRand.nextInt(size / 2) - aRand.nextInt(size / 2);
+            int j1 = y + aRand.nextInt(size / 2);
             int k1 = z + aRand.nextInt(size) - aRand.nextInt(size);
 
-            if (generateAt(aWorld, aRand, x, y, z))
+            if (generateAt(aWorld, aRand, i1, j1, k1))
             {
             	++i;
             }

@@ -29,6 +29,8 @@ public class Lang
 	public static String inventory_stoneMill;
 	public static String inventory_terrine;
 	public static String inventory_bag;
+	public static String inventory_washing;
+	public static String inventory_cermaics;
 	
 	public static String info_length;
 	
@@ -59,6 +61,8 @@ public class Lang
 		inventory_sifter = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Sifter");
 		inventory_stoneMill = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Stone Mill");
 		inventory_terrine = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Terrine");
+		inventory_washing = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Washing");
+		inventory_cermaics = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Cermaics");
 		
 		info_length = LanguageManager.regWithRecommendedUnlocalizedName("info", "Length");
 	}

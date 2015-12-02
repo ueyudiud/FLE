@@ -342,7 +342,7 @@ public abstract class GuiBookBase extends GuiScreen
 		if(type != null)
 		{
 			mc.getTextureManager().bindTexture(FleAPI.conditionLocate);
-
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			if(offsetHelper)
 			{
 				xoffset = (width - xSize) / 2;

@@ -8,6 +8,7 @@ import fle.api.material.Matter;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ItemOreStack;
 import fle.api.util.IFuelHandler;
+import fle.core.init.Config;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSub;
 
@@ -33,6 +34,9 @@ public class FleFuelHandler implements IFuelHandler
 		return false;
 	}
 
+	private final int powerCharcoal = Config.getInteger("pCharcoal");
+	private final int powerFirewood = Config.getInteger("pFirewood");
+	
 	@Override
 	public long getFuelCalorificValue(ItemStack aStack, Matter aAirBase)
 	{
@@ -40,23 +44,23 @@ public class FleFuelHandler implements IFuelHandler
 		{
 			if(new ItemBaseStack(ItemFleSub.a("charred_log")).isStackEqul(aStack))
 			{
-				return (long) (1000000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (powerCharcoal * 25000 / 4);
 			}
 			else if(new ItemBaseStack(new ItemStack(IB.peat)).isStackEqul(aStack))
 			{
-				return (long) (1000000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (powerCharcoal * 25000 / 6);
 			}
 			else if(new ItemOreStack("logWood").isStackEqul(aStack))
 			{
-				return (long) (250000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (powerFirewood * 30000 / 4);
 			}
 			else if(new ItemOreStack("branchWood").isStackEqul(aStack) || new ItemBaseStack(ItemFleSub.a("branch_bush")).isStackEqul(aStack))
 			{
-				return (long) (36000000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (powerFirewood * 30000 / 12);
 			}
 			else if(new ItemBaseStack(ItemFleSub.a("tinder")).isStackEqul(aStack))
 			{
-				return (long) (1600000F * aAirBase.getIonContain(EnumCountLevel.Matter, Matter.mO2));
+				return (long) (1600000);
 			}
 		}
 		return 0;

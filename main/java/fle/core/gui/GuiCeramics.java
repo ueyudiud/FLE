@@ -42,8 +42,8 @@ public class GuiCeramics extends GuiContainerBase
 	
 	protected void actionPerformed(GuiButton guibutton)
 	{
-		FLE.fle.getNetworkHandler().sendTo(new FleGuiPacket((byte) 1, (short) guibutton.id));
-		
+		FLE.fle.getNetworkHandler().sendTo(new FleGuiPacket((byte) 1, guibutton.id));
+		((ContainerCeramics) container).onReceive((byte) 1, guibutton.id);
 		super.actionPerformed(guibutton);
 	}
 

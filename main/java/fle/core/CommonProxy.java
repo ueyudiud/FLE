@@ -31,7 +31,7 @@ import fle.core.handler.PlayerHandler;
 import fle.core.handler.RecipeHandler;
 import fle.core.handler.WorldHandler;
 import fle.core.init.Conditions;
-import fle.core.init.Crops;
+import fle.core.init.Plants;
 import fle.core.init.IB;
 import fle.core.init.Lang;
 import fle.core.init.Materials;
@@ -56,7 +56,7 @@ public class CommonProxy extends Proxy
 	{
 		Conditions.init();
 		Materials.init();
-		Crops.init();
+		Plants.init();
 		IB.init();
 		Lang.init();
 	}
@@ -100,7 +100,7 @@ public class CommonProxy extends Proxy
 		IB.reloadIB();
 		Rs.reloadRecipe();
 		Rs.init();
-		Crops.postInit();
+		Plants.postInit();
 		Materials.postInit();
 		Other.init();
 	}

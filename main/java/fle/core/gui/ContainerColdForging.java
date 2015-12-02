@@ -100,7 +100,7 @@ public class ContainerColdForging extends ContainerCraftable implements INetEven
 	}
 
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 1)
 		{

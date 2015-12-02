@@ -1,5 +1,6 @@
 package fle.core.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
@@ -7,6 +8,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fle.FLE;
 import fle.api.FleValue;
 import fle.api.gui.GuiContainerBase;
+import fle.api.gui.GuiIconButton;
+import fle.api.gui.GuiIconButton.ButtonSize;
 import fle.core.net.FleGuiPacket;
 
 @SideOnly(Side.CLIENT)
@@ -27,9 +30,18 @@ public class GuiWashing extends GuiContainerBase
 	}
 	
 	@Override
-	public void updateScreen()
+	public void initGui()
 	{
-		super.updateScreen();
+		super.initGui();
+		xoffset = (width - xSize) / 2;
+		yoffset = (height - ySize) / 2;
+		buttonList.add(new GuiIconButton(0, xoffset + 72, yoffset + 18, ButtonSize.Standard, GuiIconButton.buttonLocate, 0, 0));
+	}
+	
+	@Override
+	protected void actionPerformed(GuiButton button)
+	{
+		super.actionPerformed(button);
 		((ContainerWashing) container).washItem();
 		FLE.fle.getNetworkHandler().sendToServer(new FleGuiPacket((byte) 1, 0));
 	}
@@ -50,7 +62,11 @@ public class GuiWashing extends GuiContainerBase
 	protected void drawOther(int aXOffset, int aYOffset, int aMouseXPosition,
 			int aMouseYPosition) 
 	{
-		drawTexturedModalRect(aXOffset + 53, aYOffset + 39, 176, 0, 27, ((ContainerWashing)this.container).getWashPrograss(33));
+		if(((ContainerWashing) container).isWashing())
+		{
+			drawTexturedModalRect(aXOffset + 54, aYOffset + 36, 176, 0, 27, 11);
+			drawTexturedModalRect(aXOffset + 55, aYOffset + 52, 176, 11, 27, ((ContainerWashing)this.container).getWashPrograss(22));
+		}
 		drawCondition(26, 55, ((ContainerWashing) container).type);
 	}
 

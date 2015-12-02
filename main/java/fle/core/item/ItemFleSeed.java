@@ -25,7 +25,7 @@ import fle.api.item.IFoodStat;
 import fle.api.item.ItemFleFood;
 import fle.api.util.ITextureLocation;
 import fle.api.util.Register;
-import fle.core.init.Crops;
+import fle.core.init.Plants;
 import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.FoodStandard;
@@ -36,14 +36,15 @@ public class ItemFleSeed extends ItemFleFood implements IPlantable, ICropSeed
 {
 	public ItemFleSeed init()
 	{
-		addSubItem(0, Crops.soybean, "Soybeen", new TextureLocation("resource/seed/0"));
-		addSubItem(1, Crops.ramie, "Ramie Seed", new TextureLocation("resource/seed/1"));
-		addSubItem(2, Crops.millet, "Millet Seed", new TextureLocation("resource/seed/2"));
-		addSubItem(3, Crops.suger_cances, "Suger Cances", new TextureLocation("resource/seed/3"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
-		addSubItem(4, Crops.wheat, "Wheat Seed", new TextureLocation("resource/seed/4"));
-		addSubItem(5, Crops.cotton, "Cotton Seed", new TextureLocation("resource/seed/5"));
-		addSubItem(6, Crops.sweet_potato, "Sweet Potato", new TextureLocation("resource/seed/6"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
-		addSubItem(7, Crops.potato, "Potato", new TextureLocation("resource/seed/7"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
+		addSubItem(0, Plants.soybean, "Soybeen", new TextureLocation("resource/seed/0"));
+		addSubItem(1, Plants.ramie, "Ramie Seed", new TextureLocation("resource/seed/1"));
+		addSubItem(2, Plants.millet, "Millet Seed", new TextureLocation("resource/seed/2"));
+		addSubItem(3, Plants.suger_cances, "Suger Cances", new TextureLocation("resource/seed/3"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
+		addSubItem(4, Plants.wheat, "Wheat Seed", new TextureLocation("resource/seed/4"));
+		addSubItem(5, Plants.cotton, "Cotton Seed", new TextureLocation("resource/seed/5"));
+		addSubItem(6, Plants.sweet_potato, "Sweet Potato", new TextureLocation("resource/seed/6"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
+		addSubItem(7, Plants.potato, "Potato", new TextureLocation("resource/seed/7"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
+		addSubItem(8, Plants.flax, "Flax", new TextureLocation("resource/seed/8"));
 		return this;
 	}
 

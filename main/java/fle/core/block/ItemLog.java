@@ -15,10 +15,6 @@ public class ItemLog extends ItemSubBlock
 	public ItemLog(Block aBlock)
 	{
 		super(aBlock);
-		for(TreeInfo tree : BlockLog.trees)
-		{
-			FleAPI.lm.registerLocal(new ItemStack(this, 1, BlockLog.trees.serial(tree)).getUnlocalizedName() + ".name", tree.getName().substring(0, 1).toUpperCase() + tree.getName().substring(1) + " Log");
-		}
 	}
 	
 	@Override
@@ -26,15 +22,14 @@ public class ItemLog extends ItemSubBlock
 	{
 		short tDamage = (short)getDamage(aStack);
 
-    	if (!aWorld.setBlock(aX, aY, aZ, this.field_150939_a, 0, 3))
+    	if (!aWorld.setBlock(aX, aY, aZ, block, block.onBlockPlaced(aWorld, aX, aY, aZ, side, hitX, hitY, hitZ, tDamage), 3))
     	{
     		return false;
     	}
-    	BlockLog.setData(new BlockPos(aWorld, aX, aY, aZ), tDamage);
-	    if (aWorld.getBlock(aX, aY, aZ) == this.field_150939_a)
+	    if (aWorld.getBlock(aX, aY, aZ) == block)
 	    {
-	    	this.field_150939_a.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);
-	    	this.field_150939_a.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
+	    	block.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);
+	    	block.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
 	    }
 	    return true;
 	}

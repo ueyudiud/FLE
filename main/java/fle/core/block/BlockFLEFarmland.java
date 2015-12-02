@@ -34,14 +34,14 @@ import fle.api.enums.EnumWorldNBT;
 import fle.api.world.BlockPos;
 import fle.core.init.Config;
 
-public class BlockFLEFarmland extends BlockFle implements IDebugableBlock, IFertilableBlock
+public class BlockFleFarmland extends BlockFle implements IDebugableBlock, IFertilableBlock
 {
 	@SideOnly(Side.CLIENT)
 	private IIcon topIcon_d;
 	@SideOnly(Side.CLIENT)
 	private IIcon topIcon_w;
 	
-	public BlockFLEFarmland(String aName, String aLocalized)
+	public BlockFleFarmland(String aName, String aLocalized)
 	{
 		super(aName, aLocalized, Material.ground);
         setTickRandomly(true);

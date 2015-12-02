@@ -7,6 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import fle.core.block.BlockSubTile;
 import fle.core.gui.ContainerCastingPool;
 import fle.core.gui.GuiCastingPool;
@@ -17,6 +18,13 @@ public class BehaviourCastingPool extends BehaviourTile
 	public BehaviourCastingPool()
 	{
 		super("CastingPool", TileEntityCastingPool.class);
+	}
+	
+	@Override
+	public boolean canBlockStay(BlockSubTile block, World aWorld, int x, int y,
+			int z)
+	{
+		return aWorld.getBlock(x, y - 1, z).isSideSolid(aWorld, x, y - 1, z, ForgeDirection.DOWN);
 	}
 
 	@Override

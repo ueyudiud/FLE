@@ -23,6 +23,13 @@ public class BehaviourColdForgingPlatform extends BehaviourTile
 	}
 	
 	@Override
+	public boolean canBlockStay(BlockSubTile block, World aWorld, int x, int y,
+			int z)
+	{
+		return aWorld.getBlock(x, y - 1, z).isSideSolid(aWorld, x, y - 1, z, ForgeDirection.DOWN);
+	}
+	
+	@Override
 	public boolean onBlockActivated(BlockSubTile block, World aWorld, int x,
 			int y, int z, EntityPlayer aPlayer, ForgeDirection aSide,
 			float xPos, float yPos, float zPos)

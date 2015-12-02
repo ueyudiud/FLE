@@ -43,7 +43,7 @@ public class FleAPI
 	/**
 	 * The main and second version here.
 	 */
-	public static volatile int VERSION = 205;
+	public static volatile int VERSION = 206;
 	/**
 	 * The locate of condition icon collection, see {@link fle.api.gui.GuiCondition}.
 	 * Use renderEngine to bind this location when used in GUI.

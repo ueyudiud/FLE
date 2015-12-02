@@ -9,7 +9,7 @@ public class InventoryCeramics extends InventoryCraftable<ContainerCeramics>
 {
 	public InventoryCeramics(ContainerCeramics container)
 	{
-		super(Lang.inventory_ceramicFurnace, container, 1);
+		super(Lang.inventory_cermaics, container, 1);
 	}
 
 	@Override

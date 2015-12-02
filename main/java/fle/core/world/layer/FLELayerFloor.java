@@ -32,7 +32,7 @@ public class FLELayerFloor extends FLELayer
 				int k0 = i + j * w;
 				int bioID = value2[k0];
 				double v1 = (values[k0] + 1D) * 0.5D;
-				double v2 = (values1[k0]+ 1D) * 0.5D * Math.sqrt(v1);
+				double v2 = (values1[k0]+ 1D) * 0.5D;
 				if(bioID == FLEBiome.ocean.biomeID)
 				{
 					ret[k0] = v2 > 0.1F ? FLEBiome.ocean.biomeID : FLEBiome.frozenOcean.biomeID;
@@ -42,9 +42,10 @@ public class FLELayerFloor extends FLELayer
 				{
 					if(bioID == 1)
 					{
-						if(v2 > 0.74F) ret[k0] = FLEBiome.jungle.biomeID;
-						else if(v2 > 0.48F) ret[k0] = FLEBiome.warm_forest.biomeID;
+						if(v2 > 0.8F) ret[k0] = FLEBiome.jungle.biomeID;
+						else if(v2 > 0.5F) ret[k0] = FLEBiome.warm_forest.biomeID;
 						else if(v2 > 0.2F) ret[k0] = FLEBiome.savanna.biomeID;
+						else if(v2 > 0.1F) ret[k0] = FLEBiome.wasteland.biomeID;
 						else ret[k0] = FLEBiome.desert.biomeID;
 					}
 					else if(bioID == 2)
@@ -66,26 +67,27 @@ public class FLELayerFloor extends FLELayer
 				{
 					if(bioID == 1)
 					{
-						if(v2 > 0.48F) ret[k0] = FLEBiome.swampland.biomeID;
-						else if(v2 > 0.4F) ret[k0] = FLEBiome.roofedForest.biomeID;
-						else if(v2 > 0.32F) ret[k0] = FLEBiome.mid_forest.biomeID;
+						if(v2 > 0.8F) ret[k0] = FLEBiome.swampland.biomeID;
+						else if(v2 > 0.6F) ret[k0] = FLEBiome.roofedForest.biomeID;
+						else if(v2 > 0.4F) ret[k0] = FLEBiome.mid_forest.biomeID;
 						else if(v2 > 0.12F) ret[k0] = FLEBiome.warm_plains.biomeID;
 						else ret[k0] = FLEBiome.desert.biomeID;
 					}
 					else if(bioID == 2)
 					{
-						if(v2 > 0.46F) ret[k0] = FLEBiome.roofedForest_hill.biomeID;
-						else if(v2 > 0.32F) ret[k0] = FLEBiome.forestHills.biomeID;
+						if(v2 > 0.7F) ret[k0] = FLEBiome.roofedForest_hill.biomeID;
+						else if(v2 > 0.6F) ret[k0] = FLEBiome.forestHills.biomeID;
+						else if(v2 > 0.1F) ret[k0] = FLEBiome.hill.biomeID;
 						else ret[k0] = FLEBiome.desertHills.biomeID;
 					}
 					else if(bioID == 3)
 					{
-						if(v2 > 0.36F) ret[k0] = FLEBiome.forestHills.biomeID;
-						else ret[k0] = FLEBiome.plains.biomeID;
+						if(v2 > 0.64F) ret[k0] = FLEBiome.forestHills.biomeID;
+						else ret[k0] = FLEBiome.hill.biomeID;
 					}
 					else if(bioID == 4)
 					{
-						if(v2 > 0.4F) ret[k0] = FLEBiome.forestHills.biomeID;
+						if(v2 > 0.7F) ret[k0] = FLEBiome.forestHills.biomeID;
 						else ret[k0] = FLEBiome.hill.biomeID;
 					}
 				}
@@ -93,18 +95,18 @@ public class FLELayerFloor extends FLELayer
 				{
 					if(bioID == 1)
 					{
-						if(v2 > 0.25F) ret[k0] = FLEBiome.mid_forest.biomeID;
-						else if(v2 > 0.1F) ret[k0] = FLEBiome.warm_plains.biomeID;
+						if(v2 > 0.6F) ret[k0] = FLEBiome.mid_forest.biomeID;
+						else if(v2 > 0.4F) ret[k0] = FLEBiome.warm_plains.biomeID;
 						else ret[k0] = FLEBiome.desert.biomeID;
 					}
 					else if(bioID == 2)
 					{
-						if(v2 > 0.28F) ret[k0] = FLEBiome.forestHills.biomeID;
+						if(v2 > 0.64F) ret[k0] = FLEBiome.forestHills.biomeID;
 						else ret[k0] = FLEBiome.plains.biomeID;
 					}
 					else if(bioID == 3)
 					{
-						if(v2 > 0.3F) ret[k0] = FLEBiome.forestHills.biomeID;
+						if(v2 > 0.72F) ret[k0] = FLEBiome.forestHills.biomeID;
 						else ret[k0] = FLEBiome.hill.biomeID;
 					}
 					else if(bioID == 4)
@@ -116,22 +118,22 @@ public class FLELayerFloor extends FLELayer
 				{
 					if(bioID == 1)
 					{
-						if(v2 > 0.1F) ret[k0] = FLEBiome.megaTaiga.biomeID;
+						if(v2 > 0.6F) ret[k0] = FLEBiome.megaTaiga.biomeID;
 						else ret[k0] = FLEBiome.taiga.biomeID;
 					}
 					else if(bioID == 2)
 					{
-						if(v2 > 0.1F) ret[k0] = FLEBiome.megaTaigaHills.biomeID;
+						if(v2 > 0.6F) ret[k0] = FLEBiome.megaTaigaHills.biomeID;
 						else ret[k0] = FLEBiome.taigaHills.biomeID;
 					}
 					else if(bioID == 3)
 					{
-						if(v2 > 0.1F) ret[k0] = FLEBiome.megaTaigaHills.biomeID;
+						if(v2 > 0.62F) ret[k0] = FLEBiome.megaTaigaHills.biomeID;
 						else ret[k0] = FLEBiome.coldTaigaHills.biomeID;
 					}
 					else if(bioID == 4)
 					{
-						if(v2 > 0.1F) ret[k0] = FLEBiome.taigaHills.biomeID;
+						if(v2 > 0.64F) ret[k0] = FLEBiome.taigaHills.biomeID;
 						else ret[k0] = FLEBiome.extremeHills.biomeID;
 					}
 				}
@@ -139,12 +141,12 @@ public class FLELayerFloor extends FLELayer
 				{
 					if(bioID == 1)
 					{
-						if(v2 > 0.04F) ret[k0] = FLEBiome.coldTaiga.biomeID;
+						if(v2 > 0.75F) ret[k0] = FLEBiome.coldTaiga.biomeID;
 						else ret[k0] = FLEBiome.icePlains.biomeID;
 					}
 					else if(bioID == 2)
 					{
-						if(v2 > 0.1F) ret[k0] = FLEBiome.coldTaigaHills.biomeID;
+						if(v2 > 0.8F) ret[k0] = FLEBiome.coldTaigaHills.biomeID;
 						else ret[k0] = FLEBiome.coldTaigaHills.biomeID;
 					}
 					else

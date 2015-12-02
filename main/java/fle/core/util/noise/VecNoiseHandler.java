@@ -21,7 +21,7 @@ public class VecNoiseHandler
 	 */
 	public static void main(String[] args)
 	{
-		//FLESurfaceChunkProvider.drawImage(128, "Debug Chunk");
+		FLESurfaceChunkProvider.drawImage(128, "Debug Chunk");
 		drawImage(1024, "Debug", new NoiseMix(2, 16, new NoisePerlin(38573013L, 2)), new VecNoisePerlin(3759180L, 3, 1.0F));
 	}
 	

@@ -8,6 +8,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+/**
+ * The mod compact (For other mods) invoke method and get field method.
+ * @author ueyudiud
+ *
+ */
 public class Compact
 {
 	//IC

@@ -1,14 +1,13 @@
 package fle.core.render;
 
-import org.lwjgl.opengl.GL11;
-
-import fle.core.te.TileEntityPolish;
-import fle.core.te.argil.TileEntityArgilItems;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
+import fle.core.te.TileEntityPolish;
 
 public class TESRPolishTable extends TESRBase<TileEntityPolish>
 {

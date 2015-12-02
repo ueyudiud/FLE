@@ -4,6 +4,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import fle.api.world.BlockPos;
 
+/**
+ * The interface of movable block.
+ * @author ueyudiud
+ *
+ */
 public interface IMovableBlock
 {
 	public void onBlockStartMove(World aWorld, BlockPos aPos);

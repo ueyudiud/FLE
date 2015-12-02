@@ -31,13 +31,13 @@ public class FleTEPacket extends FleCoordinatesPacket
 	{
 		super(true, obj.getBlockPos());
 		type = aType;
-		contain = emmiter.onEmmit(type);
+		contain = emmiter.onEmit(type);
 	}
 	public FleTEPacket(INetEventHandler handler, byte aType) 
 	{
 		super(true, handler.getBlockPos());
 		type = aType;
-		contain = handler.onEmmit(type);
+		contain = handler.onEmit(type);
 	}
 	
 	@Override
@@ -62,7 +62,7 @@ public class FleTEPacket extends FleCoordinatesPacket
 		BlockPos pos = pos();
 		if(pos.getBlockTile() instanceof INetEventListener)
 		{
-			((INetEventListener) pos.getBlockTile()).onReseave(type, contain);
+			((INetEventListener) pos.getBlockTile()).onReceive(type, contain);
 		}
 		world().markBlockForUpdate(pos.x, pos.y, pos.z);
 		return null;

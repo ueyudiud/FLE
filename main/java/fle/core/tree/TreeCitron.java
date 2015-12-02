@@ -42,21 +42,19 @@ public class TreeCitron extends TreeBase
 	{
 		if(!world.getBlock(x, y - 1, z).canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, this))
 			return false;
-		Block woodBlock = IB.log;
-		Block leavesBlock = IB.leaf;
 		int height = getGrowHeight(world, x, y, z, 2, 6, 1.3F);
 		if (height < 2)
 			return false;
 		height = height + height / 3 - rand.nextInt(height / 2 + 1);
 		for (int cHeight = 0; cHeight < height; cHeight++)
 		{
-			setBlock(woodBlock, world, x, y + cHeight, z, false, rand);
+			setBlock(log(), world, x, y + cHeight, z, false, rand);
 			if (cHeight <= height / 2)
 				continue;
 			for(int cx = -4; cx <= 4; ++cx)
 				for(int cz = -4; cz <= 4; ++cz)
 					if(cx * cx + cz * cz <= 7)
-						setBlock(leavesBlock, world, x + cx, y + cHeight, z + cz, true, rand);
+						setBlock(leaves(), world, x + cx, y + cHeight, z + cz, true, rand);
 		}
 
 		int height2 = height / 4 + rand.nextInt(2);
@@ -64,7 +62,7 @@ public class TreeCitron extends TreeBase
 			for(int cx = -2; cx <= 2; ++cx)
 				for(int cz = -2; cz <= 2; ++cz)
 					if (world.getBlock(x, y + height + i, z).canBeReplacedByLeaves(world, x, y + height + i, z) && cx * cx + cz * cz <= 1)
-						setBlock(leavesBlock, world, x + cx, y + height, z + cz, true, rand);
+						setBlock(leaves(), world, x + cx, y + height, z + cz, true, rand);
 		return true;
 	}
 	
@@ -86,26 +84,28 @@ public class TreeCitron extends TreeBase
 	}
 
 	@Override
-	public int getDefaultLogIconID(boolean isSide)
+	public int getDefaultLogIconID(ForgeDirection dir)
 	{
-		return isSide ? 0 : 1;
+		return dir != ForgeDirection.UP && dir != ForgeDirection.DOWN ?
+				0 : 1;
 	}
 
 	@Override
-	public int getLogIconID(boolean isSide, IBlockAccess world, int x, int y,
+	public int getLogIconID(ForgeDirection dir, IBlockAccess world, int x, int y,
 			int z)
 	{
-		return isSide ? 0 : 1;
+		return dir != ForgeDirection.UP && dir != ForgeDirection.DOWN ?
+				0 : 1;
 	}
 
 	@Override
-	public int getDefaultLeavesIconID()
+	public int getDefaultLeavesIconID(ForgeDirection dir)
 	{
 		return 0;
 	}
 
 	@Override
-	public int getLeavesIconID(IBlockAccess world, int x, int y, int z)
+	public int getLeavesIconID(ForgeDirection dir, IBlockAccess world, int x, int y, int z)
 	{
 		int meta = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Age);
 		return meta == 0 ? 0 : meta < 16 ? 1 : 2;

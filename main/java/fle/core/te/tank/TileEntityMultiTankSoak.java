@@ -150,14 +150,14 @@ public class TileEntityMultiTankSoak extends TileEntityMultiTank
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		return aType == 3 ? (long) targetTick[3] << 48 | (long) targetTick[2] << 32 | (long) targetTick[1] << 16 | (long) targetTick[0] :
-				aType == 2 ? (long) recipeTick[3] << 48 | (long) recipeTick[2] << 32 | (long) recipeTick[1] << 16 | (long) recipeTick[0] : super.onEmmit(aType);
+				aType == 2 ? (long) recipeTick[3] << 48 | (long) recipeTick[2] << 32 | (long) recipeTick[1] << 16 | (long) recipeTick[0] : super.onEmit(aType);
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 2)
 		{
@@ -175,6 +175,6 @@ public class TileEntityMultiTankSoak extends TileEntityMultiTank
 			targetTick[2] = (int) ((c >> 32) & 0xFFFF);
 			targetTick[3] = (int) ((c >> 48) & 0xFFFF);
 		}
-		super.onReseave(type, contain);
+		super.onReceive(type, contain);
 	}
 }

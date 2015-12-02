@@ -222,13 +222,13 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		return aType == 1 ? ItemTankBlock.d(info) : null;
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 1)
 		{

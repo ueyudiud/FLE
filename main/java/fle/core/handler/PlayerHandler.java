@@ -1,6 +1,5 @@
 package fle.core.handler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,23 +7,17 @@ import java.util.Random;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockGrass;
-import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -45,13 +38,12 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import fle.api.FleAPI;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.recipe.ItemOreStack;
-import fle.core.init.IB;
+import fle.core.block.BlockFleLog;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
 import fle.core.tool.WasherManager;
 import fle.core.util.FleFoodStats;
 import fle.core.util.Util;
-import fle.core.world.biome.FLEBiome;
 
 public class PlayerHandler
 {
@@ -205,7 +197,7 @@ public class PlayerHandler
 					if(evt.itemInHand.getItem() instanceof ItemBlock)
 					{
 						Block block = Block.getBlockFromItem(evt.itemInHand.getItem());
-						if(block == Blocks.log || block == Blocks.log2 || block == IB.log)
+						if(block == Blocks.log || block == Blocks.log2 || block instanceof BlockFleLog)
 						{
 							evt.setCanceled(true);
 						}
@@ -225,7 +217,17 @@ public class PlayerHandler
 			evt.drops.clear();
 			evt.drops.add(ItemFleSub.a("dust_dirt", 3));
 		}
-		if(evt.block == Blocks.reeds)
+		else if(evt.block == Blocks.gravel)
+		{
+			evt.drops.clear();
+			evt.drops.add(ItemFleSub.a("pile_gravel", 3));
+		}
+		else if(evt.block == Blocks.sand)
+		{
+			evt.drops.clear();
+			evt.drops.add(ItemFleSub.a("pile_sand", 3));
+		}
+		else if(evt.block == Blocks.reeds)
 		{
 			evt.drops.clear();
 			evt.drops.add(ItemFleSeed.a("suger_cances"));
@@ -257,7 +259,7 @@ public class PlayerHandler
 		if(buf++ > 100)
 		{
 			buf = 0;
-			if(FleAPI.doesPlayerHas(player, new ItemBaseStack(ItemFleSub.a("stone_a"))) != -1)
+			if(FleAPI.doesPlayerHas(player, new ItemBaseStack(ItemFleSub.a("chip_stone"))) != -1)
 			{
 				givePlayerBook(player, "oldStoneAge", ItemFleSub.a("guide_book_1"));
 			}
@@ -300,7 +302,7 @@ public class PlayerHandler
 			int x = (rand.nextInt() ^ 24724927) & 0xFFFFF;
 			int z = (rand.nextInt() ^ 19472847) & 0xFFFFF;
 			BiomeGenBase biome = evt.world.getBiomeGenForCoords(x, z);
-			if(biome.temperature > 0.5F && biome.getTempCategory() != TempCategory.OCEAN)
+			if(biome.getTempCategory() != TempCategory.OCEAN)
 			{
 				int y = evt.world.getTopSolidOrLiquidBlock(x, z);
 				if(y > evt.world.provider.getHorizon())

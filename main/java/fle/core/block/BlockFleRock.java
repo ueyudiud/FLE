@@ -13,6 +13,7 @@ import fle.api.FleValue;
 import fle.api.block.BlockFle;
 import fle.api.material.MaterialRock;
 import fle.core.init.Materials;
+import fle.core.item.ItemFleSub;
 
 public class BlockFleRock extends BlockFle
 {
@@ -22,11 +23,15 @@ public class BlockFleRock extends BlockFle
 	{
 		for(MaterialRock rock : MaterialRock.getRocks())
 		{
-			map.put(rock, new BlockFleRock(rock));
+			BlockFleRock block = new BlockFleRock(rock);
+			if(rock.getRockType() != null) rock.getRockType().normal = block;
+			map.put(rock, block);
 		}
 	}
 	
 	MaterialRock m;
+	
+	private ItemStack drop;
 	
 	public BlockFleRock(MaterialRock material)
 	{
@@ -36,6 +41,7 @@ public class BlockFleRock extends BlockFle
 		setStepSound(soundTypeStone);
 		setCreativeTab(FleValue.tabFLE);
 		setBlockTextureName(FleValue.TEXTURE_FILE + ":rock/" + material.getRockName().toLowerCase());
+		drop = ItemFleSub.a("chip_" + material.getRockName().toLowerCase());
 	}
 
 	public String getHarvestTool(int aMeta)
@@ -54,6 +60,12 @@ public class BlockFleRock extends BlockFle
 		if(m == Materials.Stone)
 		{
 			list.add(new ItemStack(Blocks.stone));
+		}
+		else if(drop != null)
+		{
+			ItemStack s = drop.copy();
+			s.stackSize = 4;
+			list.add(s);
 		}
 		else
 		{

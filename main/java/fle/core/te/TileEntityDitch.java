@@ -427,13 +427,13 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		return aType == -1 ? new int[]{tank.getCapacity(), DitchInfo.register.serial(info)} : null;
 	}
 	
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == -1)
 		{

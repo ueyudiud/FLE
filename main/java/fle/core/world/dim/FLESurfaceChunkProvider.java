@@ -32,6 +32,7 @@ import fle.core.util.noise.VecNoiseBase;
 import fle.core.util.noise.VecNoiseHandler;
 import fle.core.util.noise.VecNoisePerlin;
 import fle.core.world.FleCavesGen;
+import fle.core.world.biome.FLEBiome;
 import fle.core.world.layer.FLELayer;
 
 public class FLESurfaceChunkProvider extends ChunkProviderGenerate
@@ -118,11 +119,12 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
     public void replaceBlocksForBiome(int x, int z, Block[] aBlock, byte[] aMeta, BiomeGenBase[] aBiome)
     {
         ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, x, z, aBlock, aMeta, aBiome, worldObj);
+        
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) return;
 
         d4 = noiseGen3.noise(d4, x * 16, z * 16, 16, 16);
-
+        FLEBiome.setRockNoiseSeed(worldObj.getSeed());
         for (int k = 0; k < 16; ++k)
         {
             for (int l = 0; l < 16; ++l)
@@ -275,7 +277,7 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
 	    	{
 	    		for (int z = 0; z < size; z++)
 	    		{
-	    			graphics.setColor(new Color(0x010101 * (int) (ds[size * z + x] + 128) * 2));
+	    			graphics.setColor(new Color(0x010101 * (int) (ds[size * z + x])));
 	    			graphics.drawRect(x, z, 1, 1);
 	    		}
 	    	}

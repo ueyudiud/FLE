@@ -1,18 +1,19 @@
 package fle.core.recipe;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import fle.api.cg.RecipesTab;
 import fle.api.config.JsonLoader;
+import fle.api.material.MaterialRock;
 import fle.api.recipe.CraftingState;
 import fle.api.recipe.IRecipeHandler;
 import fle.api.recipe.IRecipeHandler.MachineRecipe;
 import fle.api.recipe.ItemAbstractStack;
 import fle.api.recipe.ItemBaseStack;
 import fle.api.util.ColorMap;
-import fle.api.util.ConfigInfomation;
-import fle.api.util.FLEConfiguration;
+import fle.core.block.BlockFleRock;
 import fle.core.block.ItemOilLamp;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
@@ -41,23 +42,35 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), " ccc  c c", ItemToolHead.a("flint_arrow", 4, Materials.Flint)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), "cc   cc c", ItemToolHead.a("flint_arrow", 4, Materials.Flint)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), "   c cc c", ItemTool.a("flint_awl", Materials.Flint)));
+		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), " cc cc cc", ItemTool.a("stone_knife", Materials.Flint)));
+		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("flint_a")), "cc cc cc ", ItemTool.a("stone_knife", Materials.Flint)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("chip_obsidian")), "   c cc c", ItemTool.a("flint_awl", Materials.Obsidian)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("chip_obsidian")), " ccc  c c", ItemToolHead.a("flint_arrow", 4, Materials.Obsidian)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("chip_obsidian")), "cc   cc c", ItemToolHead.a("flint_arrow", 4, Materials.Obsidian)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_b")), "pcp p p p", ItemOilLamp.a(Blocks.stone, 0)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_b")), "ppp   ppp", ItemTool.a("whetstone", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "ppp   ppp", ItemFleSub.a("stone_plate")));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "p cpccccc", ItemToolHead.a("stone_axe", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "c pccpccc", ItemToolHead.a("stone_axe", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "cpcc cccc", ItemToolHead.a("stone_shovel", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "      ccc", ItemToolHead.a("stone_hammer", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "  pcc ccc", ItemToolHead.a("stone_sickle", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "p c     p", ItemToolHead.a("stone_spade_hoe", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "c p   p  ", ItemToolHead.a("stone_spade_hoe", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_b")), "ppp p    ", ItemTool.a("stone_decorticating_plate", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), "cp p p pc", ItemTool.a("stone_decorticating_stick", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("stone_a")), " pcp pcp ", ItemTool.a("stone_decorticating_stick", Materials.Stone)));
-		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("limestone")), "ccccccccc", ItemFleSub.a("dust_limestone")));
+		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("chip_obsidian")), " cc cc cc", ItemTool.a("stone_knife", Materials.Obsidian)));
+		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new ItemBaseStack(ItemFleSub.a("chip_obsidian")), "cc cc cc ", ItemTool.a("stone_knife", Materials.Obsidian)));
+		Object[][] o = {{"stone", Materials.Stone}, {"rhyolite", Materials.Rhyolite}, {"basalt", Materials.Basalt}, {"andesite", Materials.Andesite}, {"peridotite", Materials.Peridotite}};
+		for(Object[] s : o)
+		{
+			ItemStack fragment = ItemFleSub.a("fragment_" + (String) s[0]);
+			ItemStack chip = ItemFleSub.a("chip_" + (String) s[0]);
+			MaterialRock material = (MaterialRock) s[1];
+			Block m = BlockFleRock.a(material);
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(fragment), "pcp p p p", ItemOilLamp.a(m, 0)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(fragment), "ppp   ppp", ItemTool.a("whetstone", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(fragment), "ppp p    ", ItemTool.a("stone_decorticating_plate", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "p cpccccc", ItemToolHead.a("stone_axe", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "c pccpccc", ItemToolHead.a("stone_axe", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "cpcc cccc", ItemToolHead.a("stone_shovel", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "      ccc", ItemToolHead.a("stone_hammer", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "  pcc ccc", ItemToolHead.a("stone_sickle", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "p c     p", ItemToolHead.a("stone_spade_hoe", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "c p   p  ", ItemToolHead.a("stone_spade_hoe", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), "cp p p pc", ItemTool.a("stone_decorticating_stick", material)));
+			a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(chip), " pcp pcp ", ItemTool.a("stone_decorticating_stick", material)));
+		}
+		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("chip_stone")), "ppp   ppp", ItemFleSub.a("stone_plate")));
+		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new ItemBaseStack(ItemFleSub.a("chip_limestone")), "ccccccccc", ItemFleSub.a("dust_limestone")));
 	}
 	
 	public static void postInit(JsonLoader loader)

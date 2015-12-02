@@ -8,18 +8,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import fle.api.cg.ICG;
 import fle.api.cg.RecipesTab;
-import fle.api.cover.Cover;
-import fle.api.cover.CoverRegistry;
 import fle.api.crop.IFertilableBlock.FertitleLevel;
 import fle.api.enums.EnumAtoms;
 import fle.api.enums.EnumCraftingType;
 import fle.api.item.IBagable;
 import fle.api.item.ICastingTool;
 import fle.api.item.IItemBehaviour;
+import fle.api.item.IPlacedHandler;
 import fle.api.item.IPolishTool;
 import fle.api.item.ISubPolishTool;
 import fle.api.item.ItemFleMetaBase;
@@ -29,12 +30,13 @@ import fle.api.soild.Solid;
 import fle.api.soild.Solid.SolidState;
 import fle.api.soild.SolidStack;
 import fle.api.soild.SolidTankInfo;
+import fle.api.te.ITEInWorld;
 import fle.api.util.FleLog;
 import fle.api.util.ITextureLocation;
 import fle.api.util.SubTag;
 import fle.core.cover.CoverAutoOutput;
+import fle.core.init.Config;
 import fle.core.init.IB;
-import fle.core.item.behavior.BehaviorArgilItem;
 import fle.core.item.behavior.BehaviorArrowBag;
 import fle.core.item.behavior.BehaviorBarrel;
 import fle.core.item.behavior.BehaviorBase;
@@ -44,11 +46,14 @@ import fle.core.item.behavior.BehaviorCeramics;
 import fle.core.item.behavior.BehaviorCoverable;
 import fle.core.item.behavior.BehaviorFlintChip;
 import fle.core.item.behavior.BehaviorGuideBook;
+import fle.core.item.behavior.BehaviorPlaceableItem;
 import fle.core.item.behavior.BehaviorSack;
 import fle.core.item.behavior.BehavoirSackFertilizer;
+import fle.core.te.TileEntityPlacedItem;
 import fle.core.util.TextureLocation;
 
-public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICastingTool, ICG, ISolidContainerItem
+public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICastingTool, 
+ICG, ISolidContainerItem, IPlacedHandler
 {
 	public ItemFleSub(String aUnlocalized, String aUnlocalizedTooltip)
 	{
@@ -61,12 +66,31 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(1, "flint_a", "Flint Fragment", "resource/1");
 		addSubItem(2, "flint_b", "Small Flint Chip", "resource/2", new BehaviorFlintChip());
 		addSubItem(3, "flint_c", "Sharp Flint Chip", "resource/3");
-		addSubItem(11, "stone_a", "Stone Chip", "resource/11", new BehaviorBlockable(9, Blocks.cobblestone));
-		addSubItem(12, "stone_b", "Stone Fragment", "resource/12");
-		addSubItem(31, "limestone", "LimeStone Chip", "resource/31");
-		addSubItem(32, "sandstone", "Sandstone Chip", "resource/32");
-		addSubItem(33, "netherstone", "Nether Chip", "resource/33");
+		addSubItem(11, "stone_a", "Stone Chip", "resource/11", new BehaviorBlockable(9, Blocks.cobblestone));//Removed now.
+		addSubItem(12, "stone_b", "Stone Fragment", "resource/12");//Removed now.
+		addSubItem(21, "pile_gravel", "Gravel Pile", "resource/21");
+		addSubItem(22, "pile_dirt", "Dirt Pile", "resource/22");
+		addSubItem(23, "pile_sludge", "Sludge Pile", "resource/23");
+		addSubItem(24, "pile_humus", "Humus Pile", "resource/24");
+		addSubItem(25, "pile_sand", "Sand Pile", "resource/25");
+		addSubItem(30, "chip_stone", "Stone Chip", "resource/30", new BehaviorBlockable(9, Blocks.cobblestone));
+		addSubItem(31, "chip_limestone", "LimeStone Chip", "resource/31");
+		addSubItem(32, "chip_sandstone", "Sandstone Chip", "resource/32");
+		addSubItem(33, "chip_netherstone", "Nether Chip", "resource/33");
 		addSubItem(34, "chip_obsidian", "Obsidian Chip", "resource/34");
+		addSubItem(35, "chip_rhyolite", "Rhyolite Chip", "resource/35");
+		addSubItem(36, "chip_andesite", "Andesite Chip", "resource/36");
+		addSubItem(37, "chip_basalt", "Basalt Chip", "resource/37");
+		addSubItem(38, "chip_peridotite", "Peridotite Chip", "resource/38");
+		addSubItem(60, "fragment_stone", "Stone Fragment", "resource/60");
+		addSubItem(61, "fragment_limestone", "LimeStone Fragment", "resource/61");
+		addSubItem(62, "fragment_sandstone", "Sandstone Fragment", "resource/62");
+		addSubItem(63, "fragment_netherstone", "Nether Fragment", "resource/63");
+		addSubItem(64, "fragment_obsidian", "Obsidian Fragment", "resource/64");
+		addSubItem(65, "fragment_rhyolite", "Rhyolite Fragment", "resource/65");
+		addSubItem(66, "fragment_andesite", "Andesite Fragment", "resource/66");
+		addSubItem(67, "fragment_basalt", "Basalt Fragment", "resource/67");
+		addSubItem(68, "fragment_peridotite", "Peridotite Fragment", "resource/68");
 		addSubItem(101, "bark_oak", "Oak Bark", "resource/101");
 		addSubItem(102, "bark_spruce", "Spruce Bark", "resource/102");
 		addSubItem(103, "bark_birch", "Birch Bark", "resource/103");
@@ -105,6 +129,9 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(415, "cotton_rough", "Cotton With Seed", "resource/415");
 		addSubItem(416, "cotton", "Cotton", "resource/416");
 		addSubItem(417, "sprouted_potato", "Sprouted Potato", "resource/417");
+		addSubItem(501, "crystal_quartz", "Quartz", "resource/501");
+		addSubItem(502, "crystal_opal", "Opal", "resource/502");
+		addSubItem(521, "chip_quartz", "Chip Quartz", "resource/521");
 		addSubItem(1001, "leaves_dry", "Dry Leaves", "resource/1001");
 		addSubItem(1002, "tinder", "Tinder", "resource/1002");
 		addSubItem(1003, "ramie_fiber_dry", "Dry Ramie Fiber", "resource/1003");
@@ -127,12 +154,12 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(2003, "crushed_bone", "Crushed Bone", "resource/2003");
 		addSubItem(2004, "defatted_crushed_bone", "Defatted Crushed Bone", "resource/2004");
 		addSubItem(2005, "sinew", "Sinew", "resource/2005");
-		addSubItem(3001, "dust_limestone", "Limestone Dust", "resource/3001", new BehaviorArgilItem());
+		addSubItem(3001, "dust_limestone", "Limestone Dust", "resource/3001", new BehaviorPlaceableItem());
 		addSubItem(3002, "plant_ash", "Plant Ash", "resource/3002", new BehaviorBlockable(IB.ash));
 		addSubItem(3003, "argil_ball", "Argil Ball", "resource/3003", new BehaviorCeramics());
 		addSubItem(3004, "cemented_grit", "Cemented Grit", "resource/3004", new BehaviorCastingTool());
 		addSubItem(3005, "dust_quicklime", "Quick Lime Dust", "resource/3005");
-		addSubItem(3006, "dust_dirt", "Dirt", "resource/3006");
+		addSubItem(3006, "dust_sand", "Sand Dust", "resource/3006");
 		addSubItem(4001, "wooden_wedge", "Wooden Wedge", "resource/4001");
 		addSubItem(4002, "millstone", "Millstone", "resource/4002");
 		addSubItem(4003, "linen", "Linen", "resource/4003");
@@ -141,10 +168,10 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 		addSubItem(4006, "cotton_gauze", "Cotton Gauze", "resource/4006");
 		addSubItem(4007, "rotproof_plank", "Rotproof Plank", "resource/4007");
 		addSubItem(4008, "rotproof_stick", "Rotproof Wooden Stick", "resource/4008");
-		addSubItem(5202, "argil_unsmelted_brick", "Unsmelted Argil Brick", "resource/5202", new BehaviorArgilItem());
+		addSubItem(5202, "argil_unsmelted_brick", "Unsmelted Argil Brick", "resource/5202", new BehaviorPlaceableItem());
 		addSubItem(5203, "argil_brick", "Argil Brick", "resource/5203");
 		addSubItem(6201, "stone_plate", "Stone Plate", "resource/plate/stone", new BehaviorBlockable(IB.stoneMachine1, 2));
-		addSubItem(6202, "argil_unsmelted_plate", "Unsmelted Argil Plate", "resource/6202", new BehaviorArgilItem());
+		addSubItem(6202, "argil_unsmelted_plate", "Unsmelted Argil Plate", "resource/6202", new BehaviorPlaceableItem());
 		addSubItem(6203, "argil_plate", "Argil Plate", "resource/plate/argil");
 		addSubItem(7001, "wood_bucket_0_empty", "Empty Wood Barrel", "tools/tank/wood_0_empty", new BehaviorBarrel(null));
 		addSubItem(7002, "wood_bucket_0_water", "Water Wood Barrel", "tools/tank/wood_0_water", new BehaviorBarrel(FluidRegistry.WATER));
@@ -580,5 +607,58 @@ public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICasti
 	    	e.printStackTrace();
 	    }
 		return 0.0D;
+	}
+
+	@Override
+	public ItemStack onBlockRemove(ITEInWorld te, ItemStack target)
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(target)));
+		try
+	    {
+			if(tBehavior instanceof IPlacedHandler)
+			{
+				return ((IPlacedHandler) tBehavior).onBlockRemove(te, target);
+			}
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		return target;
+	}
+
+	public final int smeltingEnergy = Config.getInteger("pItemSmeltingTick");
+	
+	@Override
+	public ItemStack updatePlacedItem(ITEInWorld te, ItemStack target)
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(target)));
+		try
+	    {
+			if(tBehavior instanceof IPlacedHandler)
+			{
+				return ((IPlacedHandler) tBehavior).updatePlacedItem(te, target);
+			}
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		if(FurnaceRecipes.smelting().getSmeltingResult(target) != null)
+		{
+			int t = ((TileEntityPlacedItem) te.getTileEntity()).getTemperature(ForgeDirection.UNKNOWN);
+			double h = (t - 500) * 256.0D;
+			if(t > 500)
+			{
+				((TileEntityPlacedItem) te.getTileEntity()).onHeatEmit(ForgeDirection.UNKNOWN, h);
+				if(((TileEntityPlacedItem) te.getTileEntity()).addSmeltedTick(h) > smeltingEnergy * target.stackSize)
+				{
+					ItemStack ret = FurnaceRecipes.smelting().getSmeltingResult(target);
+					ret.stackSize *= target.stackSize;
+					return ret;
+				}
+			}
+		}
+		return target;
 	}
 }

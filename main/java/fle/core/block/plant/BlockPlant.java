@@ -1,4 +1,4 @@
-package fle.core.block;
+package fle.core.block.plant;
 
 import static net.minecraftforge.common.EnumPlantType.Plains;
 

@@ -64,7 +64,7 @@ public class BlockLeaves extends BlockHasSub implements IDebugableBlock
 	{
 		try
 		{
-			return iconMap.get(BlockLog.trees.name(meta))[BlockLog.trees.get(meta).getDefaultLeavesIconID()];
+			return iconMap.get(BlockLog.trees.name(meta))[BlockLog.trees.get(meta).getDefaultLeavesIconID(ForgeDirection.values()[side])];
 		}
 		catch(Throwable e)
 		{
@@ -77,7 +77,7 @@ public class BlockLeaves extends BlockHasSub implements IDebugableBlock
 			int y, int z, int side)
 	{
 		int id = BlockLog.getTreeInfoID(world, x, y, z);
-		return iconMap.get(BlockLog.trees.name(id))[BlockLog.trees.get(id).getLeavesIconID(world, x, y, z)];
+		return iconMap.get(BlockLog.trees.name(id))[BlockLog.trees.get(id).getLeavesIconID(ForgeDirection.values()[side], world, x, y, z)];
 	}
 	
 	@Override
@@ -174,6 +174,7 @@ public class BlockLeaves extends BlockHasSub implements IDebugableBlock
      */
     public void updateTick(World aWorld, int x, int y, int z, Random aRand)
     {
+		onNeighborBlockChange(aWorld, x, y, z, null);
     	BlockLog.trees.get(BlockLog.getTreeInfoID(aWorld, x, y, z)).onLeavesUpdate(aWorld, x, y, z, aRand);
     	
         if (!aWorld.isRemote)

@@ -94,6 +94,7 @@ public abstract class GuiContainerBase extends GuiContainer
 		{
 			mc.getTextureManager().bindTexture(FleAPI.conditionLocate);
 
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			xoffset = (width - xSize) / 2;
 			yoffset = (height - ySize) / 2;
 			int pass = type.getRenderPass();

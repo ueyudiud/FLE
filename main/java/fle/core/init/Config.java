@@ -12,12 +12,13 @@ public class Config
 	
 	public static void init(Configuration config)
 	{
-		configMap.put("pCharcoal", setInteger(config, "energy", "Charcoal Power", "High value will make charcoal heating faster.", 40000));
-		configMap.put("pFirewood", setInteger(config, "energy", "Firewood Power", "High value will make firewood heating faster.", 50000));
+		configMap.put("pCharcoal", setInteger(config, "energy", "Charcoal Power", "High value will make charcoal heating faster.", 15000));
+		configMap.put("pFirewood", setInteger(config, "energy", "Firewood Power", "High value will make firewood heating faster.", 12500));
 		configMap.put("pLavaTransfer", setInteger(config, "energy", "Lava Heat Transfer Power", "High value will make lava heat transfer heating faster.", 30000));
 		configMap.put("pCeramicFirebox", setInteger(config, "energy", "Ceramic Firebox Power", "High value will make cermaic firebox heating faster.", 40000));
 		configMap.put("pBoilingHeater", setInteger(config, "energy", "Boiling Heater Power", "High value will make boiling heater heating faster.", 35000));
-		
+
+		configMap.put("pItemSmeltingTick", setInteger(config, "energy", "Item Smelting Pre Size", "You need energy with this value to smelting items.", 1024000));
 		configMap.put("pFarmlandConsume", setInteger(config, "logistics", "Farmland Water Consume", "High value will mark ditch consume more water to farmland, unit : L/tick.", 10));
 
 		configMap.put("p@soybean", setInteger(config, "crop", "Soybean Grow Tick", "Get the grow tick require of this crop.", 2400));

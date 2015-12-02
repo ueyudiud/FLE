@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
+import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType;
@@ -20,18 +23,71 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fle.api.crop.CropCard;
 import fle.api.material.MaterialOre;
 import fle.api.material.MaterialRock;
+import fle.api.plant.PlantCard;
 import fle.api.util.WeightHelper;
 import fle.api.util.WeightHelper.Stack;
 import fle.api.world.TreeInfo;
+import fle.core.block.BlockFleLog;
 import fle.core.block.BlockFleRock;
 import fle.core.block.BlockLog;
 import fle.core.block.plant.PlantBase;
-import fle.core.init.Crops;
+import fle.core.init.Plants;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 
 public class FleWorldGen implements IWorldGenerator
 {
+	private static WeightHelper<WorldGenerator> plantGeneratorsTempCold;
+	private static WeightHelper<WorldGenerator> plantGeneratorsTempWarm;
+	private static WeightHelper<WorldGenerator> plantGeneratorsTempHot;
+	
+	private static boolean flag = false;
+	
+	private static void init()
+	{
+		if(flag) return;
+		FleSurfaceGen gen1 = new FleSurfaceGen(8, 6) 
+		{
+		    @Override
+			public boolean generateAt(World aWorld, Random aRand, int x, int y, int z)
+		    {
+				if(aWorld.getBlock(x, y, z).isAir(aWorld, x, y, z) && (aWorld.getBlock(x, y - 1, z).getMaterial() == Material.ground || aWorld.getBlock(x, y - 1, z) == Blocks.grass))
+				{
+					aWorld.setBlock(x, y, z, IB.plant_rattan, 0, 3);
+					return true;
+				}
+				return false;
+			}
+		};
+		Stack[] wgs1 = {new Stack(new FlePlantGen(8, 2, Plants.bristlegrass), 24),
+				new Stack(new FleCropGen(8, 3, Plants.ramie)),
+				new Stack(new FleCropGen(8, 3, Plants.soybean))};
+		Stack[] wgs2 = {new Stack(new FlePlantGen(8, 12, Plants.bristlegrass), 24), 
+				new Stack(new FlePlantGen(8, 4, Plants.dandelion), 8),
+				new Stack(new FleCropGen(8, 2, Plants.cotton)),
+				new Stack(new FleCropGen(8, 3, Plants.potato), 2),
+				new Stack(new FleCropGen(8, 3, Plants.ramie), 2),
+				new Stack(new FleCropGen(8, 3, Plants.soybean), 3),
+				new Stack(new FleCropGen(8, 2, Plants.sweet_potato), 2),
+				new Stack(new FleCropGen(8, 2, Plants.flax)),
+				new Stack(new FleCropGen(8, 3, Plants.wheat), 3),
+				new Stack(gen1, 6)};
+		Stack[] wgs3 = {new Stack(new FlePlantGen(8, 32, Plants.bristlegrass), 24), 
+				new Stack(new FlePlantGen(8, 5, Plants.dandelion), 6),
+				new Stack(new FleCropGen(8, 4, Plants.cotton)),
+				new Stack(new FleCropGen(8, 4, Plants.potato)),
+				new Stack(new FleCropGen(8, 4, Plants.ramie)),
+				new Stack(new FleCropGen(8, 4, Plants.soybean)),
+				new Stack(new FleCropGen(8, 4, Plants.sweet_potato)),
+				new Stack(new FleCropGen(8, 4, Plants.flax)),
+				new Stack(new FleCropGen(8, 4, Plants.wheat)),
+				new Stack(gen1, 14)};
+		plantGeneratorsTempCold = new WeightHelper(wgs1);
+		plantGeneratorsTempWarm = new WeightHelper(wgs2);
+		plantGeneratorsTempHot = new WeightHelper(wgs3);
+		flag = true;
+	}
+	
 	public FleWorldGen() 
 	{
 		MinecraftForge.ORE_GEN_BUS.register(this);
@@ -49,6 +105,7 @@ public class FleWorldGen implements IWorldGenerator
 	public void generate(Random random, int chunkX, int chunkZ, World world,
 			IChunkProvider chunkGenerator, IChunkProvider chunkProvider) 
 	{
+		init();
 		TreeInfo.genFlag = false;
 		switch(world.provider.dimensionId)
 		{
@@ -109,7 +166,7 @@ public class FleWorldGen implements IWorldGenerator
 		BiomeGenBase biome = world.getBiomeGenForCoords(x * 16 + 8, z * 16 + 8);
 		int s = biome.theBiomeDecorator.treesPerChunk;
 		Map<TreeInfo, Integer> info = new HashMap();
-		for(TreeInfo tInfo : BlockLog.trees)
+		for(TreeInfo tInfo : BlockFleLog.trees)
 		{
 			int weight = tInfo.getGenerateWeight(world, x, z);
 			if(weight > 0) info.put(tInfo, weight);
@@ -119,65 +176,23 @@ public class FleWorldGen implements IWorldGenerator
 		{
 			generateTree(wh.randomGet(), world, random, x, z);
 		}
-		s = biome.theBiomeDecorator.grassPerChunk;
-		for(int i = s; i > 0; --i)
-		{
-			switch(random.nextInt(16))
+		for(int i = 0; i < 4; ++i)
+			if(random.nextInt(6) == 0)
 			{
-			case 0 : generatePlant(Crops.bristlegrass, world, random, x, z, 8, 32 * s);
-			break;
+				switch(biome.getTempCategory())
+				{
+				case COLD:
+					plantGeneratorsTempCold.randomGet().generate(world, random, x, 255, z);
+					break;
+				case MEDIUM:
+					plantGeneratorsTempWarm.randomGet().generate(world, random, x, 255, z);
+					break;
+				case WARM:
+					plantGeneratorsTempHot.randomGet().generate(world, random, x, 255, z);
+					break;
+				default :;
+				}
 			}
-		}
-		s = biome.theBiomeDecorator.flowersPerChunk;
-		for(int i = s; i > 0; --i)
-		{
-			switch(random.nextInt(16))
-			{
-			case 0 : generatePlant(Crops.dandelion, world, random, x, z, 8, 32 * s);
-			break;
-			}
-		}
-		switch(random.nextInt(128))
-		{
-		case 33:;
-		case 17:;
-		case 1 :;
-		break;
-		case 34:;
-		case 18:;
-		case 2 : generateCrop(Crops.ramie, world, random, x, z, 8, 8);
-		break;
-		case 35:;
-		case 19:;
-		case 3 : generateCrop(Crops.soybean, world, random, x, z, 8, 8);
-		break;
-		case 36:;
-		case 20:;
-		case 4 : generateCrop(Crops.cotton, world, random, x, z, 8, 8);
-		break;
-		case 21:;
-		case 5 : generateCrop(Crops.potato, world, random, x, z, 8, 8);
-		break;
-		case 22:;
-		case 6 : generateCrop(Crops.sweet_potato, world, random, x, z, 8, 8);
-		break;
-		case 39:;
-		case 23:;
-		case 7 : generateCrop(Crops.wheat, world, random, x, z, 8, 8);
-		break;
-		case 8 :;
-		case 9 :;
-		case 10 :;
-		case 11 :;
-		case 12 :;
-		break;
-		case 13 :;
-		case 14 :;
-		case 15 :;
-		case 16 : generateVine(world, random, x, z, 12, 20);
-		break;
-		default : break;
-		}
 	}
 
 	public void generateNether(Random random, int x, int z, World world)
@@ -198,13 +213,6 @@ public class FleWorldGen implements IWorldGenerator
 		int X = x + random.nextInt(15);
 		int Z = z + random.nextInt(15);
 		return new FleCropGen(size, count, card).generate(world, random, X, world.getTopSolidOrLiquidBlock(X, Z), Z);
-	}
-	
-	public boolean generateVine(World world, Random random, int x, int z, int size, int count)
-	{
-		int X = x + random.nextInt(15);
-		int Z = z + random.nextInt(15);
-		return new FleVineGen(size, count).generate(world, random, X, world.getTopSolidOrLiquidBlock(X, Z), Z);
 	}
 	
 	public boolean generateTree(TreeInfo tInfo, World world, Random random, int x, int z)

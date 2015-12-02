@@ -3,8 +3,11 @@ package fle.core.init;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import fle.api.util.FleEntry;
+import fle.api.world.TreeInfo;
+import fle.core.block.BlockFleLog;
 import fle.core.block.crop.CropBase;
 import fle.core.block.crop.CropCotton;
+import fle.core.block.crop.CropFlax;
 import fle.core.block.crop.CropMillet;
 import fle.core.block.crop.CropPotato;
 import fle.core.block.crop.CropRamie;
@@ -17,8 +20,10 @@ import fle.core.block.plant.PlantBristleGrass;
 import fle.core.block.plant.PlantDandelion;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
+import fle.core.tree.TreeCitron;
+import fle.core.tree.TreeSisal;
 
-public class Crops
+public class Plants
 {
 	public static CropBase soybean;
 	public static CropBase ramie;
@@ -28,9 +33,13 @@ public class Crops
 	public static CropBase cotton;
 	public static CropBase sweet_potato;
 	public static CropBase potato;
+	public static CropBase flax;
 	
 	public static PlantBase bristlegrass;
 	public static PlantBase dandelion;
+
+	public static TreeInfo citron;
+	public static TreeInfo sisal;
 	
 	public static void init()
 	{
@@ -42,12 +51,19 @@ public class Crops
 		cotton = new CropCotton();
 		sweet_potato = new CropSweetPotato();
 		potato = new CropPotato();
+		flax = new CropFlax();
+		
 		bristlegrass = new PlantBristleGrass();
 		dandelion = new PlantDandelion();
+		citron = new TreeCitron();
+		sisal = new TreeSisal();
 	}
 
 	public static void postInit()
 	{
+		BlockFleLog.register(citron);
+		BlockFleLog.register(sisal);
+		
 		soybean.setSeed(ItemFleSeed.a("soybean")).setHaverstDrop(3, FleEntry.asMap(new FleEntry(ItemFleSeed.a("soybean"), 1)));
 		ramie.setSeed(ItemFleSeed.a("ramie")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSub.a("ramie_fiber"), 1)));
 		millet.setSeed(ItemFleSeed.a("millet")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSub.a("millet"), 1)));
@@ -55,8 +71,9 @@ public class Crops
 		suger_cances.setSeed(ItemFleSeed.a("suger_cances")).setHaverstDrop(3, FleEntry.asMap(new FleEntry(ItemFleSeed.a("suger_cances"), 1)));
 		cotton.setSeed(ItemFleSeed.a("cotton")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSub.a("cotton_rough"), 1)));
 		sweet_potato.setSeed(ItemFleSeed.a("sweetpotato")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSeed.a("sweetpotato"), 1)));
-		potato.setSeed(ItemFleSeed.a("potato")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSeed.a("potato"), 4), new FleEntry(ItemFleSub.a("sprouted_potato"), 1)));
-
+		potato.setSeed(ItemFleSeed.a("potato")).setHaverstDrop(3, FleEntry.asMap(new FleEntry(ItemFleSeed.a("potato"), 4), new FleEntry(ItemFleSub.a("sprouted_potato"), 1)));
+		flax.setSeed(ItemFleSeed.a("flax")).setHaverstDrop(4, FleEntry.asMap(new FleEntry(ItemFleSeed.a("flax"), 4)));
+		
 		bristlegrass.setHaverstDrop(ItemFleSeed.a("millet"));
 		dandelion.setHaverstDrop(ItemFleSub.a("dandelion"));
 	}

@@ -1,14 +1,12 @@
 package fle.core.render;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import fle.api.te.TEBase;
+
+import org.lwjgl.opengl.GL11;
+
 import fle.core.te.TileEntityColdForgingPlatform;
-import fle.core.te.argil.TileEntityArgilItems;
 
 public class TESRColdForging extends TESRBase<TileEntityColdForgingPlatform>
 {

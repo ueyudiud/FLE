@@ -1,4 +1,4 @@
-package fle.core.block;
+package fle.core.block.plant;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +10,6 @@ import fle.api.block.ItemFleBlock;
 import fle.api.enums.EnumWorldNBT;
 import fle.api.plant.PlantCard;
 import fle.api.world.BlockPos;
-import fle.core.block.plant.PlantBase;
 
 public class ItemPlant extends ItemFleBlock
 {

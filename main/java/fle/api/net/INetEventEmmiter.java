@@ -7,5 +7,5 @@ public interface INetEventEmmiter
 	 * @param aType
 	 * @return the contain of this event.
 	 */
-	Object onEmmit(byte aType);
+	Object onEmit(byte aType);
 }

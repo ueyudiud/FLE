@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
-public class FleBiomeHellCrystalLand extends FLEBiomeHellBase
+public class FLEBiomeHellCrystalLand extends FLEBiomeHellBase
 {
-	public FleBiomeHellCrystalLand(String name, int index)
+	public FLEBiomeHellCrystalLand(String name, int index)
 	{
 		super(name, index);
 		spawnableCaveCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityBat.class, 3, 2, 2));

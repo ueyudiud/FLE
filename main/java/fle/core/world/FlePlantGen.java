@@ -24,9 +24,8 @@ public class FlePlantGen extends FleSurfaceGen
 	@Override
 	public boolean generateAt(World aWorld, Random aRand, int x, int y, int z)
 	{
-		if(aWorld.getBiomeGenForCoords(x, z).getFloatTemperature(x, y, z) < 0.1F) return false;
-		Block target = aWorld.getBlock(x, y, z);
-		if(block.canBlockStay(aWorld, x, y, z) && (target.isAir(aWorld, x, y, z) || target.isReplaceable(aWorld, x, y, z)))
+		if((aWorld.isAirBlock(x, y, z) || aWorld.getBlock(x, y, z).isReplaceable(aWorld, x, y, z)) && 
+				block.canBlockStay(aWorld, x, y, z))
 		{
 			aWorld.setBlock(x, y, z, block);
 			FLE.fle.getWorldManager().setData(new BlockPos(aWorld, x, y, z), EnumWorldNBT.Metadata, data);

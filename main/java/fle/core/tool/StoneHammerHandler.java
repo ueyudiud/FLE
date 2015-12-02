@@ -35,16 +35,24 @@ public class StoneHammerHandler
 	static
 	{
 		Map<ItemStack, Integer> tMap;
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("stone_a"), 8), new FleEntry(ItemFleSub.a("stone_b"), 3));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_stone"), 8), new FleEntry(ItemFleSub.a("fragment_stone"), 3));
 		registryDust(new ItemBaseStack(Blocks.stone), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("sandstone"), 1));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_sandstone"), 1));
 		registryDust(new ItemBaseStack(Blocks.sandstone), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("netherstone"), 1));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_netherstone"), 1));
 		registryDust(new ItemBaseStack(Blocks.netherrack), new DropInfo(3, 4, FleEntry.copy(tMap)));
 		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_obsidian"), 1));
 		registryDust(new ItemBaseStack(Blocks.obsidian), new DropInfo(2, 3, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("limestone"), 1));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_limestone"), 1));
 		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Limestone)), new DropInfo(3, 4, FleEntry.copy(tMap)));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_rhyolite"), 1));
+		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Rhyolite)), new DropInfo(3, 4, FleEntry.copy(tMap)));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_andesite"), 1));
+		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Andesite)), new DropInfo(3, 4, FleEntry.copy(tMap)));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_basalt"), 1));
+		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Basalt)), new DropInfo(3, 4, FleEntry.copy(tMap)));
+		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_peridotite"), 1));
+		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Peridotite)), new DropInfo(3, 4, FleEntry.copy(tMap)));
 		for(MaterialOre ore : MaterialOre.getOres())
 		{
 			tMap = FleEntry.asMap(new FleEntry(ItemOre.a(ore), 1));
@@ -60,7 +68,7 @@ public class StoneHammerHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onHaevest(BreakEvent evt)
 	{
-		if (evt.getPlayer() != null)
+		if (evt.getPlayer() != null && !evt.world.isRemote)
 			if(!evt.getPlayer().capabilities.isCreativeMode)
 				if(evt.getPlayer().getCurrentEquippedItem() != null)
 				{

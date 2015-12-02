@@ -96,7 +96,7 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	}
 	
 	@Override
-	public Object onEmmit(byte aType)
+	public Object onEmit(byte aType)
 	{
 		switch(aType)
 		{
@@ -107,7 +107,7 @@ public class TileEntityCastingPool extends TEIT<InventoryCastingPool> implements
 	}
 
 	@Override
-	public void onReseave(byte type, Object contain)
+	public void onReceive(byte type, Object contain)
 	{
 		if(type == 3)
 		{
