@@ -1,21 +1,13 @@
 package fle.core;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.world.World;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class PlatformClient extends PlatformCommon
 {
-	private final Minecraft mc = Minecraft.getMinecraft();
-	private final Map renders = new HashMap();
-
 	public PlatformClient()
 	{
 		
@@ -26,7 +18,7 @@ public class PlatformClient extends PlatformCommon
 	{
 		
 	}
-
+	
 	@Override
 	public EntityPlayer getPlayerInstance()
 	{

@@ -1,7 +1,6 @@
 package fle.core.util;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public final class SideGateway<T>
 {

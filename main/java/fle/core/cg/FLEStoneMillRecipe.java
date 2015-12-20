@@ -8,13 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleValue;
-import fle.api.cg.GuiBookBase;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidStack;
+import flapi.cg.GuiBookBase;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.solid.Solid;
+import flapi.solid.SolidStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 
 public class FLEStoneMillRecipe extends StandardType
@@ -62,7 +62,7 @@ public class FLEStoneMillRecipe extends StandardType
 		{
 			StoneMillRecipe page = (StoneMillRecipe) rawPage;
 			if(page.soutput == null) continue;
-			if(page.soutput.getObj() == solid)
+			if(page.soutput.get() == solid)
 			{
 				list.add(page);
 				continue;
@@ -98,7 +98,7 @@ public class FLEStoneMillRecipe extends StandardType
 			StoneMillRecipe page = (StoneMillRecipe) rawPage;
 			for(ItemStack tStack : page.input.toList())
 			{
-				if(contain.isStackEqul(tStack))
+				if(contain.equal(tStack))
 				{
 					list.add(page);
 					continue label;

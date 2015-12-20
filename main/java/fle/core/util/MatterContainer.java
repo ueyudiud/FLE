@@ -3,37 +3,34 @@ package fle.core.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import flapi.collection.ArrayStandardStackList;
+import flapi.collection.CollectionUtil;
+import flapi.collection.abs.IStackList;
+import flapi.collection.abs.Stack;
+import flapi.material.IChemCondition;
+import flapi.material.IMolecular;
+import flapi.material.IMolecular.EnumCountLevel;
+import flapi.material.Matter;
+import flapi.material.MatterReactionRegister;
+import flapi.te.interfaces.IMatterContainer;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.enums.EnumAtoms;
-import fle.api.enums.EnumIons;
-import fle.api.material.IAtoms;
-import fle.api.material.Matter;
-import fle.api.material.MatterReactionRegister;
-import fle.api.material.IAtoms.EnumCountLevel;
-import fle.api.te.IMatterContainer;
-import fle.api.util.IChemCondition;
-import fle.api.util.WeightHelper;
-import fle.api.util.WeightHelper.Stack;
-import fle.api.world.BlockPos;
 
 public class MatterContainer implements IMatterContainer, Runnable
 {	
-	private Random rand = new Random();
-
-	private WeightHelper<IAtoms> wh = new WeightHelper<IAtoms>();
+	private IStackList<Stack<IMolecular>,IMolecular> wh = new ArrayStandardStackList();
 	
-	public synchronized WeightHelper<IAtoms> getHelper()
+	public IStackList<Stack<IMolecular>,IMolecular> getHelper()
 	{
 		return wh;
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		Map<IAtoms, Integer> matterMap = new HashMap<IAtoms, Integer>();
+		Map<IMolecular, Integer> matterMap = new HashMap<IMolecular, Integer>();
 		NBTTagList list = nbt.getTagList("Progress", 11);
 		for(int i = 0; i < list.tagCount(); ++i)
 		{
@@ -43,33 +40,31 @@ public class MatterContainer implements IMatterContainer, Runnable
 			if(matter != null && size > 0)
 				matterMap.put(matter, size);
 		}
-		wh = new WeightHelper<IAtoms>(matterMap);
+		wh = new ArrayStandardStackList(matterMap);
 	}
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		Map<IAtoms, Integer> matterMap = wh.asMap(wh.getList());
+		Map<IMolecular, Integer> matterMap = CollectionUtil.asMap(wh.toArray());
 		NBTTagList list = new NBTTagList();
-		for(Entry<IAtoms, Integer> entry : matterMap.entrySet())
+		for(Entry<IMolecular, Integer> entry : matterMap.entrySet())
 		{
 			if(entry.getKey() == null) continue;
 			NBTTagCompound nbt1 = new NBTTagCompound();
-			nbt1.setString("CFN", entry.getKey().getChemicalFormulaName());
+			nbt1.setString("CFN", entry.getKey().getChemName());
 			nbt1.setInteger("C", entry.getValue());
 			list.appendTag(nbt1);
 		}
 		nbt.setTag("MatterMap", list);
+		return nbt;
 	}
 	
 	private synchronized void updateMatter(BlockPos aPos, IChemCondition condition)
 	{
-		WeightHelper<IAtoms> wh1 = FLE.fle.getAirConditionProvider().getAirLevel(aPos).getIonHelper(EnumCountLevel.Matter);
-		int r = (int) (Math.log(Math.sqrt(condition.getTemperature() + size()) + 1));
+		IStackList<Stack<IMolecular>,IMolecular> wh1 = FLE.fle.getAirConditionProvider().getAirLevel(aPos).getIonHelper(EnumCountLevel.Matter);
+		int r = (int) (Math.log(Math.sqrt(condition.getTemperature()) + 1) - size() / 10);
 		for(int i = 0; i < r; ++i)
 			getHelper().add(wh1.randomGet());
 		if(size() < 3) return;
-		IAtoms a1;
-		IAtoms a2;
-		Stack<IAtoms>[] as;
 		MatterReactionRegister.getReactionResult(condition, wh);
 		//int loop = (int) Math.ceil((double) size() * condition.getTemperature() / 10000D);
 		//for(int i = 0; i < loop; ++i)
@@ -79,41 +74,31 @@ public class MatterContainer implements IMatterContainer, Runnable
 	
 	public int size()
 	{
-		return wh.allWeight();
+		return wh.size();
 	}
 	
-	public void add(Stack<IAtoms>...stacks)
+	public void add(Stack<IMolecular>...stacks)
 	{
-		wh.add(stacks);
+		wh.addAll(stacks);
 	}
 	
-	private final IAtoms selectMatter(Stack<IAtoms>...stacks)
+	@Override
+	public Map<IMolecular, Integer> getMatterContain()
 	{
-		return stacks[rand.nextInt(stacks.length)].getObj();
-	}
-	
-	private final IAtoms selectMatter(IAtoms...atoms)
-	{
-		return atoms[rand.nextInt(atoms.length)];
+		return CollectionUtil.asMap(wh.toArray());
 	}
 
 	@Override
-	public Map<IAtoms, Integer> getMatterContain()
+	public void setMatterContain(Map<IMolecular, Integer> map)
 	{
-		return WeightHelper.asMap(wh.getList());
-	}
-
-	@Override
-	public void setMatterContain(Map<IAtoms, Integer> map)
-	{
-		wh = new WeightHelper<IAtoms>(map);
+		wh = new ArrayStandardStackList(map);
 	}
 	
 	public void clear()
 	{
 		synchronized(wh)
 		{
-			wh = new WeightHelper<IAtoms>();
+			wh = new ArrayStandardStackList();
 		}
 	}
 	

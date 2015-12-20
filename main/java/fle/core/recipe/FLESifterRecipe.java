@@ -3,15 +3,13 @@ package fle.core.recipe;
 import java.util.Random;
 
 import net.minecraft.item.ItemStack;
-import fle.api.config.JsonLoader;
-import fle.api.recipe.IRecipeHandler;
-import fle.api.recipe.IRecipeHandler.MachineRecipe;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidStack;
-import fle.api.util.ConfigInfomation;
-import fle.api.util.FLEConfiguration;
+import flapi.recipe.IRecipeHandler;
+import flapi.recipe.IRecipeHandler.MachineRecipe;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.solid.Solid;
+import flapi.solid.SolidStack;
+import flapi.util.io.JsonLoader;
 import fle.core.init.IB;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
@@ -23,8 +21,8 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 
 	public static void init()
 	{
-		a(new SifterRecipe(new ItemBaseStack(ItemFleFood.a("groats_wheat_wholemeal")), new SolidStack(IB.wheat_b, 20), ItemFleSub.a("bran"), 0.25F));
-		a(new SifterRecipe(new ItemBaseStack(ItemFleFood.a("groats_millet_wholemeal")), new SolidStack(IB.millet_b, 20), ItemFleSub.a("bran"), 0.25F));
+		a(new SifterRecipe(new BaseStack(ItemFleFood.a("groats_wheat_wholemeal")), new SolidStack(IB.wheat_b, 20), ItemFleSub.a("bran"), 0.25F));
+		a(new SifterRecipe(new BaseStack(ItemFleFood.a("groats_millet_wholemeal")), new SolidStack(IB.millet_b, 20), ItemFleSub.a("bran"), 0.25F));
 		a(new SifterRecipe(IB.wheat, new SolidStack(IB.wheat_b), ItemFleSub.a("bran"), 0.03F));
 		a(new SifterRecipe(IB.millet, new SolidStack(IB.millet_b), ItemFleSub.a("bran"), 0.03F));
 	}
@@ -132,7 +130,7 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 			}
 			if(inputTarget1 != null)
 			{
-				i += inputTarget1.getObj().hashCode() * 31 + 3842941;
+				i += inputTarget1.get().hashCode() * 31 + 3842941;
 			}
 			else if(inputKey != null || inputTarget != null) i += 3875918;
 			return i;
@@ -142,14 +140,14 @@ public class FLESifterRecipe extends IRecipeHandler<SifterRecipe>
 		protected boolean isEqual(RecipeKey keyRaw)
 		{
 			SifterKey key = (SifterKey) keyRaw;
-			if(key.inputKey != null && inputKey != null) return inputKey.isStackEqul(key.inputKey);
+			if(key.inputKey != null && inputKey != null) return inputKey.equal(key.inputKey);
 			if(key.inputKey1 != null && inputKey1 != null) return key.inputKey1 == inputKey1;
 			if(key.inputTarget != null && inputTarget != null) return false;
 			if(key.inputTarget != null && inputTarget1 != null) return false;
 			if(key.inputKey != null && inputTarget != null)
-				if(!key.inputKey.isStackEqul(inputTarget)) return false;
+				if(!key.inputKey.equal(inputTarget)) return false;
 			if(key.inputTarget != null && inputKey != null)
-				if(!inputKey.isStackEqul(key.inputTarget)) return false;
+				if(!inputKey.equal(key.inputTarget)) return false;
 			if(key.inputKey1 != null && inputTarget1 != null)
 				if(!inputTarget1.contain(key.inputKey1)) return false;
 			if(key.inputTarget1 != null && inputKey1 != null)

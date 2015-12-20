@@ -1,7 +1,7 @@
 package fle.api.tech;
 
 import net.minecraft.entity.player.EntityPlayer;
-import fle.api.util.Register;
+import flapi.collection.Register;
 
 public abstract class ITechManager
 {

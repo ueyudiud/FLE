@@ -9,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -20,9 +19,9 @@ import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.api.block.BlockFle;
-import fle.api.world.BlockPos;
+import flapi.block.old.BlockFle;
+import flapi.util.FleValue;
+import flapi.world.BlockPos;
 import fle.core.item.ItemFleSub;
 
 public class BlockPlantRattan extends BlockFle implements IShearable
@@ -72,12 +71,6 @@ public class BlockPlantRattan extends BlockFle implements IShearable
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
         int l = world.getBlockMetadata(x, y, z);
-        float f1 = 1.0F;
-        float f2 = 1.0F;
-        float f3 = 1.0F;
-        float f4 = 0.0F;
-        float f5 = 0.0F;
-        float f6 = 0.0F;
         switch(l)
         {
         case 0 :
@@ -128,11 +121,6 @@ public class BlockPlantRattan extends BlockFle implements IShearable
     	BlockPos pos = new BlockPos(aWorld, x, y, z);
     	ForgeDirection dir = direction(meta);
     	return pos.toPos(dir.getOpposite()).getBlock().isSideSolid(aWorld, x, y, z, dir);
-    }
-    
-    private boolean check(Block block)
-    {
-        return block.renderAsNormalBlock() && block.getMaterial().blocksMovement();
     }
 
     @SideOnly(Side.CLIENT)
@@ -208,7 +196,7 @@ public class BlockPlantRattan extends BlockFle implements IShearable
             		if(rand.nextBoolean()) return;
         			for(int side = 2; side < 6; ++side)
         			{
-        				if(canPlaceBlockOnSide(aWorld, x, y, z, side))
+        				if(canPlaceBlockOnSide(aWorld, x, y + 1, z, side))
         				{
         					aWorld.setBlock(x, y + 1, z, this, side, 2);
         					return;
@@ -226,27 +214,14 @@ public class BlockPlantRattan extends BlockFle implements IShearable
     {
         return meta == 0 ? 0 : side == 1 ? 2 : side;
     }
-
-    public Item getItemDropped(int item, Random rand, int level)
+    
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
+    		int metadata, int fortune)
     {
-        return null;
-    }
-
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
-    public int quantityDropped(Random rand)
-    {
-        return 0;
-    }
-
-    /**
-     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
-     * block and l is the block's subtype/damage.
-     */
-    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
-    {
-        super.harvestBlock(world, player, x, y, z, meta);
+    	ArrayList<ItemStack> list = new ArrayList();
+    	list.add(ItemFleSub.a("rattan"));
+    	return list;
     }
 
     @Override

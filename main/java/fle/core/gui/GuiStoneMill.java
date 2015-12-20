@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
+import flapi.gui.GuiContainerBase;
+import flapi.util.FleValue;
 import fle.core.te.TileEntityStoneMill;
 
 @SideOnly(Side.CLIENT)
@@ -26,7 +26,7 @@ public class GuiStoneMill extends GuiContainerBase
 			int aMouseYPosition)
 	{
 		int p1 = (int) (20 * tile.getEnergyContain());
-		int p2 = (int) tile.getProgress(68);
+		int p2 = (int) tile.getProgressBar(68);
 		if(p1 > 0)
 		{
 			drawTexturedModalRect(aXOffset + 82, aYOffset + 17, 176, 0, p1, 21);
@@ -35,7 +35,6 @@ public class GuiStoneMill extends GuiContainerBase
 		{
 			drawTexturedModalRect(aXOffset + 49, aYOffset + 39, 0, 166, p2, 10);
 		}
-		drawSolid(73, 52, tile.getSolidTank(), 16, 16);
 		if(tile.type != null)
 		{
 			drawCondition(111, 21, tile.type);
@@ -48,9 +47,6 @@ public class GuiStoneMill extends GuiContainerBase
 		super.drawGuiContainerForegroundLayer(par1, par2);
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
-
-		if(tile.getFluidStackInTank(0) != null)
-			drawAreaTooltip(par1, par2, tile.getSolidTank().get().getLocalizedName() + " " + FleValue.format_L.format(tile.getSolidTank(0).getStack().getSize()), xoffset + 73, yoffset + 52, 16, 16);
 	}
 
 	@Override

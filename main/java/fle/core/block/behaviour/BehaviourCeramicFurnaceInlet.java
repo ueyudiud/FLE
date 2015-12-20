@@ -4,7 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
-import fle.api.world.BlockPos;
+import flapi.world.BlockPos;
 import fle.core.gui.ContainerCeramicFurnace;
 import fle.core.gui.GuiCeramicFurnace;
 import fle.core.te.argil.TileEntityCeramicFurnaceInlet;

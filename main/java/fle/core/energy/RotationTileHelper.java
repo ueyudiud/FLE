@@ -1,9 +1,9 @@
 package fle.core.energy;
 
+import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.energy.RotationNet.RotationPacket;
-import net.minecraft.nbt.NBTTagCompound;
+import flapi.energy.RotationNet.RotationPacket;
 
 public class RotationTileHelper
 {

@@ -1,7 +1,6 @@
 package fle.core.render;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
@@ -81,7 +80,11 @@ public class TESRDitch extends TESRBase<TileEntityDitch>
 
 		if(fluid.getFluidAmount() > 0)
 		{
-            int[] displayLists = getLiquidDisplayLists(fluid.getFluid().getFluid());
+            //int[] displayLists = getLiquidDisplayLists(fluid.getFluid().getFluid());
+	        float red = (fluidColor >> 16 & 255) / 255.0F;
+	        float green = (fluidColor >> 8 & 255) / 255.0F;
+	        float blue = (fluidColor & 255) / 255.0F;
+			GL11.glColor4f(red, green, blue, 1.0F);
 			renderFluidBlock(fluid, x + f3, y + f7, z + f3, x + f4, y + f7 + (f8 - f7) * ds[4], z + f4);
 			switch(bs[0])
 			{
@@ -111,6 +114,7 @@ public class TESRDitch extends TESRBase<TileEntityDitch>
 				renderFluidBlock(fluid, x + f12, y + f14, z + f3, x + f10, y + f7 + (f8 - f7) * ds[3] / 3D, z + f4);
 			case connect : renderFluidBlock(fluid, x + f1, y + f7, z + f3, x + f3, y + f7 + (f8 - f7) * ds[3], z + f4);
 			}
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		}
 	}
 

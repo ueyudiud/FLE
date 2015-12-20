@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import fle.api.util.IPlatform;
+import flapi.util.IPlatform;
 
 public class PlatformCommon implements IPlatform
 {

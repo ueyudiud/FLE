@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import fle.api.block.IBlockBehaviour;
-import fle.api.item.IBagable;
+import flapi.block.interfaces.IBlockBehaviour;
+import flapi.item.interfaces.IBagable;
 import fle.core.block.BlockSubTile;
 import fle.core.init.IB;
 

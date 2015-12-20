@@ -1,16 +1,19 @@
 package fle.core.net;
 
+import flapi.collection.Register;
+import flapi.net.FleNBTPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.net.FluidUpdatePacket;
+import flapi.net.FluidWindowPacket;
+import flapi.net.INetEventHandler;
+import flapi.net.IPacket;
+import flapi.net.IPacketMaker;
+import flapi.net.SolidUpdatePacket;
+import flapi.net.SolidWindowPacket;
+import flapi.te.interfaces.IObjectInWorld;
+import flapi.util.FleLog;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.net.FleNBTPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.net.INetEventHandler;
-import fle.api.net.IPacket;
-import fle.api.net.IPacketMaker;
-import fle.api.te.IObjectInWorld;
-import fle.api.te.ITEInWorld;
-import fle.api.util.FleLog;
-import fle.api.util.Register;
-import fle.api.world.BlockPos;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -32,7 +35,6 @@ import org.apache.logging.log4j.Level;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
@@ -47,9 +49,13 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	private static Register<NWH> register = new Register();
 	
 	public static NWH init()
-	{
+	{		
 		NWH nwh = new NWH("fle");
 
+		nwh.registerMessage(FluidWindowPacket.class, Side.CLIENT);
+		nwh.registerMessage(SolidWindowPacket.class, Side.CLIENT);
+		nwh.registerMessage(FluidUpdatePacket.class, Side.CLIENT);
+		nwh.registerMessage(SolidUpdatePacket.class, Side.CLIENT);
 		nwh.registerMessage(FleKeyTypePacket.class, Side.SERVER);
 		nwh.registerMessage(FleGuiPacket.class, Side.SERVER);
 		nwh.registerMessage(FleSyncAskFWMPacket.class, Side.SERVER);
@@ -244,6 +250,50 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	}
 
 	@Override
+	public void sendLargePacket(IPacket aPacket, EntityPlayerMP player)
+	{
+		try
+		{
+		    byte[] data = aPacket.encode().toByteArray();
+			ByteArrayInputStream input = new ByteArrayInputStream(data);
+			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
+	        int len;
+			byte[] cache = new byte[4096];
+			while ((len = input.read(cache)) != -1)
+			{
+				buf.write(cache, 0, len);
+			}
+			data = buf.toByteArray();
+		    
+		    int maxSize = Short.MAX_VALUE - 5;
+		    for (int offset = 0; offset < data.length; offset += maxSize)
+		    {
+		    	ByteArrayOutputStream osRaw = new ByteArrayOutputStream();
+		    	DataOutputStream os = new DataOutputStream(osRaw);
+		    	int state = 0;
+		    	if (offset == 0)
+		    	{
+		    		state |= 0x1;
+		    	}
+		    	
+		    	if (offset + maxSize > data.length)
+		    	{
+		    		state |= 0x2;
+		    	}
+		    	int id = packetTypes.serial(aPacket.getClass());
+		    	state |= id << 2;
+		    	os.writeInt(state);
+		    	os.write(data, offset, Math.min(maxSize, data.length - offset));
+		    	sendToPlayer(new FleLargePacket(osRaw.toByteArray()), player);
+		    }
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}		
+	}
+
+	@Override
 	public void onPacket(int id, ByteArrayDataInput subData)
 	{
 		try
@@ -340,7 +390,6 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	    	if(obj instanceof IPacket)
 	    	{
 		    	Channel tChannel = ctx.channel();
-		    	IPacket pkt = (IPacket) obj;
 		    	if(aPacket.getPlayer() != null)
 		    	{
 					tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
@@ -364,16 +413,21 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	private static IPacketMaker maker = new IPacketMaker()
 	{
 		public IPacket makeNBTPacket(INetEventHandler handler){return new FleNBTPacket(handler);}
-		public IPacket makeInventoryPacket(ITEInWorld te, int start, int end){return new FleInventoryPacket(te, start, end);}
-		public IPacket makeInventoryPacket(ITEInWorld te){return new FleInventoryPacket(te);}
+		public IPacket makeInventoryPacket(INetEventHandler te, int start, int end){return new FleInventoryPacket(te, start, end);}
+		public IPacket makeInventoryPacket(INetEventHandler te){return new FleInventoryPacket(te);}
 		public IPacket makeGuiPacket(byte type, Object contain){return new FleGuiPacket(type, contain);}
-		public IPacket makeFluidTankPacket(ITEInWorld te){return new FleFluidTankPacket(te);}
-		public IPacket makeSolidTankPacket(ITEInWorld te){return new FleSolidTankPacket(te);}
+		public IPacket makeFluidTankPacket(INetEventHandler te){return new FleFluidTankPacket(te);}
+		public IPacket makeSolidTankPacket(INetEventHandler te){return new FleSolidTankPacket(te);}
 	};
 	
 	@Override
 	public IPacketMaker getPacketMaker()
 	{
 		return maker;
+	}
+	
+	public final String getChannelName()
+	{
+		return channelName;
 	}
 }

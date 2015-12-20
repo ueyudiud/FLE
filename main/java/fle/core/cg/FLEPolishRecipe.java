@@ -2,20 +2,20 @@ package fle.core.cg;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import fle.api.FleValue;
-import fle.api.cg.GuiBookBase;
-import fle.api.cg.IGuideType;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.CraftingState;
-import fle.api.recipe.ItemAbstractStack;
+
+import org.lwjgl.opengl.GL11;
+
+import flapi.cg.GuiBookBase;
+import flapi.cg.IGuideType;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.CraftingState;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 
 public class FLEPolishRecipe extends StandardType
 {
@@ -67,7 +67,7 @@ public class FLEPolishRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			PolishPage page = (PolishPage) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				ret.add(rawPage);
 				continue;
@@ -75,7 +75,7 @@ public class FLEPolishRecipe extends StandardType
 			for(ItemStack stack : page.input.toList())
 			{
 				if(stack == null) continue;
-				if(contain.isStackEqul(stack))
+				if(contain.equal(stack))
 				{
 					ret.add(rawPage);
 					continue;

@@ -1,20 +1,20 @@
 package fle.core.recipe;
 
+import static fle.core.handler.FuelHandler.g;
+
 import java.util.Random;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleAPI;
-import fle.api.config.JsonLoader;
-import fle.api.enums.EnumDamageResource;
-import fle.api.recipe.IRecipeHandler;
-import fle.api.recipe.IRecipeHandler.MachineRecipe;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.util.ConfigInfomation;
-import fle.api.util.FLEConfiguration;
+import flapi.FleAPI;
+import flapi.enums.EnumDamageResource;
+import flapi.recipe.IRecipeHandler;
+import flapi.recipe.IRecipeHandler.MachineRecipe;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.io.JsonLoader;
 import fle.core.init.IB;
 import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
@@ -26,12 +26,12 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 	
 	public static void init()
 	{
-		a(new BHRecipe(new ItemBaseStack(Items.porkchop), new FluidStack(IB.plant_ash_mortar, 160), 450000, ItemFleSub.a("plant_ash_soap", 2)));
-		a(new BHRecipe(new ItemBaseStack(Items.beef), new FluidStack(IB.plant_ash_mortar, 160), 450000, ItemFleSub.a("plant_ash_soap", 2)));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber_dry")), new FluidStack(IB.plant_ash_mortar, 200), 187500, ItemFleSub.a("ramie_fiber_debonded")));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("cotton_gauze")), new FluidStack(IB.sugarcane_juice, 200), 187500, ItemFleFood.a("brown_sugar", 3)).setType(3));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("charred_log")), new FluidStack(IB.brown_sugar_aqua, 200), 187500, ItemFleFood.a("sugar", 3)).setType(3));
-		a(new BHRecipe(new ItemBaseStack(ItemFleSub.a("crushed_bone")), new FluidStack(FluidRegistry.WATER, 200), 450000, ItemFleSub.a("defatted_crushed_bone")));
+		a(new BHRecipe(new BaseStack(Items.porkchop), new FluidStack(IB.plant_ash_mortar, 160), g(1.25F), ItemFleSub.a("plant_ash_soap", 2)));
+		a(new BHRecipe(new BaseStack(Items.beef), new FluidStack(IB.plant_ash_mortar, 160), g(1.25F), ItemFleSub.a("plant_ash_soap", 2)));
+		a(new BHRecipe(new BaseStack(ItemFleSub.a("ramie_fiber_dry")), new FluidStack(IB.plant_ash_mortar, 200), g(1.0F), ItemFleSub.a("ramie_fiber_debonded")));
+		a(new BHRecipe(new BaseStack(ItemFleSub.a("cotton_gauze")), new FluidStack(IB.sugarcane_juice, 200), g(0.8F), ItemFleFood.a("brown_sugar", 3)).setType(3));
+		a(new BHRecipe(new BaseStack(ItemFleSub.a("charred_log")), new FluidStack(IB.brown_sugar_aqua, 200), g(0.8F), ItemFleFood.a("sugar", 3)).setType(3));
+		a(new BHRecipe(new BaseStack(ItemFleSub.a("crushed_bone")), new FluidStack(FluidRegistry.WATER, 200), g(1.25F), ItemFleSub.a("defatted_crushed_bone")));
 	}
 	
 	public static void postInit(JsonLoader loader)
@@ -140,7 +140,7 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 			boolean flag1 = false;
 			if(toolRequire != null && tKey.toolRequire != null)
 			{
-				flag &= toolRequire.isStackEqul(tKey.toolRequire);
+				flag &= toolRequire.equal(tKey.toolRequire);
 				flag1 = true;
 			}
 			if(key != null && tKey.key != null)
@@ -159,12 +159,12 @@ public class FLEBoilingHeaterRecipe extends IRecipeHandler<BHRecipe>
 			}
 			if(toolRequire != null && tKey.tool != null)
 			{
-				if(!toolRequire.isStackEqul(tKey.tool)) return false;
+				if(!toolRequire.equal(tKey.tool)) return false;
 			}
 			else if(toolRequire != null ^ tKey.tool != null) return false;
 			if(tKey.toolRequire != null && tool != null)
 			{
-				if(!tKey.toolRequire.isStackEqul(tool)) return false;
+				if(!tKey.toolRequire.equal(tool)) return false;
 			}
 			else if(tKey.toolRequire != null ^ tool != null) return false;
 			return true;

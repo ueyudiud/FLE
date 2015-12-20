@@ -3,11 +3,6 @@ package fle.core.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.Level;
-
-import com.google.common.collect.Multimap;
-
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,20 +14,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import org.apache.logging.log4j.Level;
+
+import com.google.common.collect.Multimap;
+
+import cpw.mods.fml.common.registry.GameData;
+import flapi.energy.IRotationTileEntity;
+import flapi.energy.IThermalTileEntity;
+import flapi.enums.EnumDamageResource;
+import flapi.enums.EnumWorldNBT;
+import flapi.item.ItemFle;
+import flapi.util.FleLog;
+import flapi.util.FleValue;
+import flapi.util.IDebugable;
+import flapi.world.BlockPos;
+import flapi.world.BlockPos.ChunkPos;
 import fle.FLE;
-import fle.api.FleValue;
-import fle.api.block.IDebugableBlock;
-import fle.api.energy.IRotationTileEntity;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.enums.EnumDamageResource;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.item.ItemFle;
-import fle.api.util.FleLog;
-import fle.api.world.BlockPos;
-import fle.api.world.BlockPos.ChunkPos;
 
 public class ItemDebug extends ItemFle
 {
@@ -50,6 +50,7 @@ public class ItemDebug extends ItemFle
     	if(!aWorld.isRemote)
     	{
         	BlockPos pos = new BlockPos(aWorld, x, y, z);
+        	@SuppressWarnings("unused")
         	ChunkPos pos1 = pos.getChunkPos();
         	try
         	{
@@ -61,6 +62,15 @@ public class ItemDebug extends ItemFle
             	aPlayer.addChatMessage(new ChatComponentText("Harvest Level: " + pos.getBlock().getHarvestLevel(pos.getBlockMeta()) + "."));
         		aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + "."));
         		
+        		//{
+        			//for(int y1 = y; y1 > 1; --y1)
+        				//if(aWorld.getBlock(x, y1, z) instanceof BlockOre)
+        				//{
+        					//aPlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.YELLOW.toString() + "Here are ore under the surface, position " + y1));
+        					//break;
+        				//}
+        		//}
+        		
         		String str1 = "";
             	for(EnumWorldNBT nbt : EnumWorldNBT.values())
         			str1 += FLE.fle.getWorldManager().getData(pos, nbt) + " ";
@@ -69,6 +79,7 @@ public class ItemDebug extends ItemFle
             	{
             		IFluidHandler handler = (IFluidHandler) pos.getBlockTile();
             		FluidTankInfo[] infos = handler.getTankInfo(ForgeDirection.VALID_DIRECTIONS[aSide]);
+            		if(infos != null)
             		for(FluidTankInfo info : infos)
             		{
             			aPlayer.addChatMessage(new ChatComponentText(String.format("Capacity: %s.", FleValue.format_L.format_c(info.capacity))));
@@ -93,10 +104,10 @@ public class ItemDebug extends ItemFle
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Kinetic Energy Current: %s.", FleValue.format_MJ.format_c(tile.getEnergyCurrect()))));
             		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreEnergyEmit()))));
             	}
-            	if(pos.getBlock() instanceof IDebugableBlock)
+            	if(pos.getBlock() instanceof IDebugable)
         		{
         			List<String> tList = new ArrayList();
-        			((IDebugableBlock) pos.getBlock()).addInfomationToList(aWorld, x, y, z, tList);
+        			((IDebugable) pos.getBlock()).addInfomationToList(aWorld, x, y, z, tList);
         			for(String str : tList)
         			{
         				aPlayer.addChatMessage(new ChatComponentText(str));

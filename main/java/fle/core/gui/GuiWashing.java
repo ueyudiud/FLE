@@ -5,11 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import flapi.gui.GuiContainerBase;
+import flapi.gui.GuiIconButton;
+import flapi.gui.GuiIconButton.ButtonSize;
+import flapi.util.FleValue;
 import fle.FLE;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiIconButton;
-import fle.api.gui.GuiIconButton.ButtonSize;
 import fle.core.net.FleGuiPacket;
 
 @SideOnly(Side.CLIENT)
@@ -45,13 +45,7 @@ public class GuiWashing extends GuiContainerBase
 		((ContainerWashing) container).washItem();
 		FLE.fle.getNetworkHandler().sendToServer(new FleGuiPacket((byte) 1, 0));
 	}
-
-	@Override
-	public String getName() 
-	{
-		return container.inv.getInventoryName();
-	}
-
+	
 	@Override
 	public ResourceLocation getResourceLocation() 
 	{

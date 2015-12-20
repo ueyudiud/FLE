@@ -1,14 +1,14 @@
 package fle.core.recipe.matter;
 
-import fle.api.enums.EnumAtoms;
-import fle.api.enums.EnumIons;
-import fle.api.material.Electron;
-import fle.api.material.IAtoms;
-import fle.api.material.Matter;
-import fle.api.material.MatterReactionRegister;
-import fle.api.util.IChemCondition.EnumOxide;
-import fle.api.util.IChemCondition.EnumPH;
-import fle.api.util.WeightHelper.Stack;
+import flapi.collection.abs.Stack;
+import flapi.enums.EnumAtoms;
+import flapi.enums.EnumIons;
+import flapi.material.Electron;
+import flapi.material.IMolecular;
+import flapi.material.IChemCondition.EnumOxide;
+import flapi.material.IChemCondition.EnumPH;
+import flapi.material.Matter;
+import flapi.material.MatterReactionRegister;
 import fle.core.recipe.MatterPhaseChangeRecipe;
 import fle.core.recipe.MatterPhaseChangeRecipe.MatterInfo;
 import fle.core.recipe.MatterReactionRecipe;
@@ -203,7 +203,7 @@ public class ReactionRecipe1
 		
 	}
 
-	static void addRecipe(IAtoms atom, boolean gasPhease, int temp, float bE, float tE, Matter...output)
+	static void addRecipe(IMolecular atom, boolean gasPhease, int temp, float bE, float tE, Matter...output)
 	{
 		MatterPhaseChangeRecipe.register(new MatterInfo(gasPhease, atom, temp, bE, tE, output));
 	}

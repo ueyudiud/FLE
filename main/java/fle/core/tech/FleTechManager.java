@@ -1,11 +1,11 @@
 package fle.core.tech;
 
 import net.minecraft.entity.player.EntityPlayer;
-import fle.api.tech.ITechManager;
-import fle.api.tech.ITechTag;
-import fle.api.tech.PlayerTechInfo;
-import fle.api.tech.Technology;
-import fle.api.util.Register;
+import flapi.collection.Register;
+import flapi.tech.ITechManager;
+import flapi.tech.ITechTag;
+import flapi.tech.PlayerTechInfo;
+import flapi.tech.Technology;
 
 /**
  * This system have not complete yet.
@@ -53,7 +53,7 @@ public class FleTechManager extends ITechManager
 	{
 		return new FlePlayerTechInfo(player);
 	}
-
+	
 	@Override
 	public Register<Technology> getTechs() 
 	{

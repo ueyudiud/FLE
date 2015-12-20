@@ -6,9 +6,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.block.interfaces.IBlockWithTileBehaviour;
+import flapi.block.interfaces.IGuiBlock;
 import fle.FLE;
-import fle.api.block.IBlockWithTileBehaviour;
-import fle.api.block.IGuiBlock;
 import fle.core.block.BlockSubTile;
 import fle.core.gui.ContainerWorkbenchTire0;
 import fle.core.gui.GuiWorkbenchTire0;
@@ -35,7 +35,7 @@ public class BehaviourWorkbenchTire0 extends BehaviourBase<BlockSubTile> impleme
 	{
 		return new ContainerWorkbenchTire0(aWorld, x, y, z, aPlayer.inventory);
 	}
-
+	
 	@Override
 	public GuiContainer openGui(World aWorld, int x, int y, int z,
 			EntityPlayer aPlayer)

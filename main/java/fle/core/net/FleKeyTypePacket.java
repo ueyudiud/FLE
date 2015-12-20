@@ -2,11 +2,11 @@ package fle.core.net;
 
 import java.io.IOException;
 
+import flapi.net.FleAbstractPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
 import fle.FLE;
-import fle.api.net.FleAbstractPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
 
 public class FleKeyTypePacket extends FleAbstractPacket
 {

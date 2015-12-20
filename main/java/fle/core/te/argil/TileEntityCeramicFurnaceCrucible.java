@@ -2,28 +2,38 @@ package fle.core.te.argil;
 
 import java.util.Map;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import flapi.energy.IThermalTileEntity;
+import flapi.material.IChemCondition;
+import flapi.material.IMolecular;
+import flapi.material.MaterialAbstract;
+import flapi.material.MaterialAlloy;
+import flapi.material.Matter.AtomStack;
+import flapi.material.MatterDictionary;
+import flapi.te.TEIFluidTank;
+import flapi.te.interfaces.IMatterContainer;
 import fle.FLE;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.material.IAtoms;
-import fle.api.net.INetEventListener;
-import fle.api.te.IMatterContainer;
-import fle.api.te.TEIT;
-import fle.api.util.IChemCondition;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.init.Lang;
 import fle.core.init.Materials;
-import fle.core.inventory.InventoryCeramicFurnaceCrucible;
+import fle.core.net.FleMatterUpdatePacket;
+import fle.core.util.MatterContainer;
 
-public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurnaceCrucible> implements IThermalTileEntity, IChemCondition, IMatterContainer
+public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IThermalTileEntity, IChemCondition, IMatterContainer
 {
 	protected ThermalTileHelper tc = new ThermalTileHelper(Materials.Argil);
+	public int[] progress = new int[3];
+	public MatterContainer container = new MatterContainer();
+	private int buf1 = 0;
 
 	public TileEntityCeramicFurnaceCrucible()
 	{
-		super(new InventoryCeramicFurnaceCrucible());
+		super(3, 3000);
 	}
 	
 	@Override
@@ -31,6 +41,8 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	{
 		super.writeToNBT(nbt);
 		tc.writeToNBT(nbt);
+		nbt.setIntArray("Progress", progress);
+		nbt.setTag("Matters", container.writeToNBT(new NBTTagCompound()));
 	}
 	
 	@Override
@@ -38,14 +50,76 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	{
 		super.readFromNBT(nbt);
 		tc.readFromNBT(nbt);
+		progress = nbt.getIntArray("Progress");
+		container.readFromNBT(nbt.getCompoundTag("Matters"));
 	}
 	
 	@Override
-	public void updateInventory()
+	public void update()
 	{
-		getTileInventory().updateEntity(this);
+		int tem = getTemperature();
+		for(int i = 0; i < stacks.length; ++i)
+		{
+			int[] is = MatterDictionary.getMeltRequires(stacks[i]);
+			if(is[0] <= tem)
+			{
+				int tick = (tem - is[0]) * 2;
+				onHeatEmit(ForgeDirection.UNKNOWN, tick);
+				progress[i] += tick;
+				if(progress[i] >= is[1])
+				{
+					meltItem(i);
+				}
+			}
+			else if(stacks[i] == null)
+			{
+				progress[i] = 0;
+			}
+			else if(progress[i] > 0)
+			{
+				--progress[i];
+			}
+		}
+		if(buf1 < 20) ++buf1;
+		else
+		{
+			updateMatter();
+			buf1 = 0;
+			sendToNearBy(new FleMatterUpdatePacket(this, this), 16.0F);
+		}
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
+	}
+	
+	private void updateMatter()
+	{
+		if(isClient()) return;
+		container.update(getBlockPos(), this);
+	}
+	private static final float lostSize = 0.25F;
+	
+	private void meltItem(int slotID)
+	{
+		AtomStack stack = MatterDictionary.getMatter(stacks[slotID]).copy();
+		stack.size = (int) (stack.size() * lostSize);
+		container.add(stack);
+		--stacks[slotID].stackSize;
+		if(stacks[slotID].stackSize <= 0) stacks[slotID] = null;
+		progress[slotID] = 0;
+	}
+	
+	public void outputStack(TileEntityCeramicFurnaceCrucible tile)
+	{
+		MaterialAbstract m = MaterialAlloy.findAlloy(container.getHelper());
+		if(m != null)
+		{
+			FluidStack stack = MatterDictionary.getFluid(new AtomStack(m.getMatter(), container.size()));
+			if(tank.fill(stack, false) != 0)
+			{
+				tank.fill(stack, true);
+				container.clear();
+			}
+		}
 	}
 
 	@Override
@@ -104,32 +178,40 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public Map<IAtoms, Integer> getContainerMap()
+	public Map<IMolecular, Integer> getContainerMap()
 	{
-		return getTileInventory().container.getMatterContain();
+		return container.getMatterContain();
 	}
 
 	@Override
-	public Map<IAtoms, Integer> getMatterContain()
+	public Map<IMolecular, Integer> getMatterContain()
 	{
-		return getTileInventory().container.getMatterContain();
+		return container.getMatterContain();
 	}
 
 	@Override
-	public void setMatterContain(Map<IAtoms, Integer> map)
+	public void setMatterContain(Map<IMolecular, Integer> map)
 	{
-		getTileInventory().container.setMatterContain(map);
+		container.setMatterContain(map);
 	}
 
 	public void onOutput()
 	{
-		getTileInventory().outputStack(this);
+		MaterialAbstract m = MaterialAlloy.findAlloy(container.getHelper());
+		if(m != null)
+		{
+			FluidStack stack = MatterDictionary.getFluid(new AtomStack(m.getMatter(), container.size()));
+			if(tank.fill(stack, false) != 0)
+			{
+				tank.fill(stack, true);
+				container.clear();
+			}
+		}
 	}
 
 	public void drain()
 	{
-		getTileInventory().drain(getTileInventory().getCapacity(), true);
-		getTileInventory().syncTank(this);
+		tank.drain(tank.getCapacity(), true);
 	}
 
 	@Override
@@ -140,6 +222,38 @@ public class TileEntityCeramicFurnaceCrucible extends TEIT<InventoryCeramicFurna
 	
 	public int[] getProgress()
 	{
-		return getTileInventory().progress;
+		return progress;
+	}
+
+	@Override
+	public boolean canInsertItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return aDirection == ForgeDirection.UP ? MatterDictionary.getMatter(aResource) != null : false;
+	}
+
+	@Override
+	public boolean canExtractItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return false;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
+	{
+		return null;
+	}
+
+	@Override
+	protected String getDefaultName()
+	{
+		return Lang.inventory_ceramicFurnace;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return i < 3;
 	}
 }

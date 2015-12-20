@@ -1,33 +1,41 @@
 package fle.core.te;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.energy.IRotationTileEntity;
-import fle.api.energy.RotationNet.RotationPacket;
-import fle.api.gui.GuiCondition;
-import fle.api.gui.GuiError;
-import fle.api.soild.ISolidHandler;
-import fle.api.soild.ISolidTanks;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidStack;
-import fle.api.soild.SolidTank;
-import fle.api.soild.SolidTankInfo;
-import fle.api.te.TEIT;
-import fle.api.util.FleLog;
-import fle.api.world.BlockPos;
+import flapi.energy.IRotationTileEntity;
+import flapi.energy.RotationNet.RotationPacket;
+import flapi.gui.GuiCondition;
+import flapi.gui.GuiError;
+import flapi.recipe.IRecipeHandler.RecipeKey;
+import flapi.solid.ISolidHandler;
+import flapi.solid.Solid;
+import flapi.solid.SolidStack;
+import flapi.solid.SolidTank;
+import flapi.te.TEIFS;
+import flapi.world.BlockPos;
 import fle.core.energy.RotationTileHelper;
-import fle.core.inventory.InventoryStoneMill;
+import fle.core.init.Lang;
+import fle.core.recipe.FLEStoneMillRecipe;
+import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe;
+import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipeKey;
+import fle.core.recipe.RecipeHelper;
+import fle.core.recipe.RecipeHelper.FDType;
 
-public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISolidHandler, ISolidTanks, IRotationTileEntity
+public class TileEntityStoneMill extends TEIFS implements IRotationTileEntity
 {
 	private RotationTileHelper rh = new RotationTileHelper(1024D, 16D);
 	public GuiCondition type;
+	private int recipeTick;
+	private RecipeKey recipe;
+	private int maxRecipeTick;
 
 	public TileEntityStoneMill()
 	{
-		super(new InventoryStoneMill());
+		super(3, 1000, 2000);
 	}
 	
 	@Override
@@ -35,6 +43,12 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	{
 		super.readFromNBT(nbt);
 		rh.readFromNBT(nbt);
+		recipe = FLEStoneMillRecipe.getInstance().getRecipeKey(nbt.getString("Recipe"));
+		if(recipe != null)
+		{
+			maxRecipeTick = ((StoneMillRecipeKey) recipe).getRecipeTick();
+			recipeTick = nbt.getInteger("Tick");
+		}
 	}
 	
 	@Override
@@ -42,51 +56,120 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	{
 		super.writeToNBT(nbt);
 		rh.writeToNBT(nbt);
+		if(recipe != null)
+		{
+			nbt.setString("Recipe", recipe.toString());
+			nbt.setInteger("Tick", recipeTick);
+		}
 	}
 	
 	private static ForgeDirection[] dirs = {ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
 
 	@Override
-	public void updateInventory() 
+	public void update() 
 	{
 		rh.update();
-		if(rh.getRotationEnergy() > 0)
+		double energy = rh.getRotationEnergy();
+		if(energy > 200)
+		{
 			++tick;
-		getTileInventory().updateEntity(this);
+			onWork((int) Math.log(energy / 200D + Math.E));
+			rh.minusInnerEnergy(200.0D);
+			markRenderForUpdate();
+		}
+		if(energy > 0)
+		{
+			rh.minusInnerEnergy(1.0D);
+		}
+		if(isClient()) return;
+		RecipeHelper.fillOrDrainInventoryTank(this, sTank, 1, 2, FDType.F);
 		BlockPos tPos = getBlockPos();
 		for(ForgeDirection dir : dirs)
 		{
-			if(getTileInventory().sTank.getStack() != null)
+			if(sTank.getStack() != null)
 			{
 				if(tPos.toPos(dir).getBlockTile() instanceof ISolidHandler)
 				{
 					ISolidHandler sh = (ISolidHandler) tPos.toPos(dir).getBlockTile();
-					if(sh.canFillS(dir.getOpposite(), getTileInventory().sTank.get()))
+					if(sh.canFillS(dir.getOpposite(), sTank.get()))
 					{
-						int i = sh.fillS(dir.getOpposite(), getTileInventory().sTank.getStack(), false);
-						SolidStack aStack = getTileInventory().sTank.drain(i, true);
+						int i = sh.fillS(dir.getOpposite(), sTank.getStack(), false);
+						SolidStack aStack = sTank.drain(i, true);
 						sh.fillS(dir.getOpposite(), aStack, true);
 					}
 				}
 				else if(tPos.toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile() instanceof ISolidHandler)
 				{
 					ISolidHandler sh = (ISolidHandler) tPos.toPos(dir).toPos(ForgeDirection.DOWN).getBlockTile();
-					if(sh.canFillS(ForgeDirection.UP, getTileInventory().sTank.get()))
+					if(sh.canFillS(ForgeDirection.UP, sTank.get()))
 					{
-						int i = sh.fillS(ForgeDirection.UP, getTileInventory().sTank.getStack(), false);
-						SolidStack aStack = getTileInventory().sTank.drain(i, true);
+						int i = sh.fillS(ForgeDirection.UP, sTank.getStack(), false);
+						SolidStack aStack = sTank.drain(i, true);
 						sh.fillS(ForgeDirection.UP, aStack, true);
 					}
 				}
 			}
 			else break;
 		}
-		syncSolidTank();
+	}
+	
+	public void onWork(int speed)
+	{
+		if(recipe == null)
+		{
+			recipeTick = 0;
+			StoneMillRecipe str = FLEStoneMillRecipe.getInstance().getRecipe(new StoneMillRecipeKey(stacks[0]));
+			if(str != null)
+			{
+				RecipeHelper.onInputItemStack(this, 0);
+				recipe = str.getRecipeKey();
+				maxRecipeTick = ((StoneMillRecipeKey) recipe).getRecipeTick();
+				type = GuiError.DEFAULT;
+			}
+			else
+			{
+				type = GuiError.CAN_NOT_INPUT;
+			}
+		}
+		if(recipe != null && !isClient())
+		{
+			if(maxRecipeTick == -1)
+			{
+				recipe = null;
+				return;
+			}
+			recipeTick += speed;
+			if(recipeTick >= maxRecipeTick)
+			{
+				StoneMillRecipe r = FLEStoneMillRecipe.getInstance().getRecipe(recipe);
+				if(r == null)
+				{
+					recipeTick = 0;
+					recipe = null;
+					return;
+				}
+				SolidStack output = r.getOutput();
+				FluidStack output1 = r.getFluidOutput();
+				if(RecipeHelper.matchOutSolidStack(sTank, output) && RecipeHelper.matchOutFluidStack(fTank, output1))
+				{
+					RecipeHelper.onOutputSolidStack(sTank, output);
+					RecipeHelper.onOutputFluidStack(fTank, output1);
+					recipe = null;
+					recipeTick = 0;
+					type = GuiError.DEFAULT;
+				}
+				else
+				{
+					recipeTick = ((StoneMillRecipeKey) recipe).getRecipeTick();
+					type = GuiError.CAN_NOT_OUTPUT;
+				}
+			}
+		}
 	}
 	
 	public void onPower()
 	{
-		rh.reseaveRotation(new RotationPacket(2048, 0.125));
+		rh.reseaveRotation(new RotationPacket(2048, 0.25));
 	}
 	
 	int tick;
@@ -104,88 +187,22 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	}
 
 	@SideOnly(Side.CLIENT)
-	public double getProgress(int i)
+	public double getProgressBar(int i)
 	{
-		return (int) (getTileInventory().getProgress() * i);
+		return (int) (maxRecipeTick == 0 ? 0D : (double) recipeTick / (double) maxRecipeTick * i);
 	}
-
-	public SolidTank getSolidTank()
-	{
-		return getTileInventory().sTank;
-	}
-
+	
 	@Override
-	public int fillS(ForgeDirection from, SolidStack resource, boolean doFill)
+	protected SolidTank getTankFromSide(ForgeDirection side)
 	{
-		return getTileInventory().sTank.fill(resource, doFill);
-	}
-
-	@Override
-	public SolidStack drainS(ForgeDirection from, SolidStack resource,
-			boolean doDrain)
-	{
-		return getTileInventory().sTank.has(resource) ? getTileInventory().sTank.drain(resource.getSize(), doDrain) : null;
-	}
-
-	@Override
-	public SolidStack drainS(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return getTileInventory().sTank.drain(maxDrain, doDrain);
+		for(ForgeDirection dir : dirs) if(dir == side) return sTank;
+		return null;
 	}
 
 	@Override
 	public boolean canFillS(ForgeDirection from, Solid Solid)
 	{
-		return from == ForgeDirection.UP;
-	}
-
-	@Override
-	public boolean canDrainS(ForgeDirection from, Solid Solid)
-	{
-		for(ForgeDirection dir : dirs) if(dir == from) return true;
 		return false;
-	}
-
-	@Override
-	public SolidTankInfo[] getSolidTankInfo(ForgeDirection from)
-	{
-		return new SolidTankInfo[]{getTileInventory().sTank.getInfo()};
-	}
-
-	@Override
-	public int getSizeSolidTank() 
-	{
-		return 1;
-	}
-
-	@Override
-	public SolidTank getSolidTank(int index)
-	{
-		return getTileInventory().sTank;
-	}
-
-	@Override
-	public SolidStack getSolidStackInTank(int index)
-	{
-		return getTileInventory().sTank.getStack();
-	}
-
-	@Override
-	public void setSolidStackInTank(int index, SolidStack aStack) 
-	{
-		getTileInventory().sTank.setStack(aStack);
-	}
-
-	@Override
-	public SolidStack drainSolidTank(int index, int maxDrain, boolean doDrain)
-	{
-		return getTileInventory().sTank.drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public int fillSolidTank(int index, SolidStack resource, boolean doFill)
-	{
-		return getTileInventory().sTank.fill(resource, doFill);
 	}
 
 	@Override
@@ -239,5 +256,66 @@ public class TileEntityStoneMill extends TEIT<InventoryStoneMill> implements ISo
 	public RotationTileHelper getRotationHelper()
 	{
 		return rh;
+	}
+
+	@Override
+	protected String getDefaultName()
+	{
+		return Lang.inventory_stoneMill;
+	}
+
+	@Override
+	public boolean canInsertItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return isInputSlot(aSlotID);
+	}
+
+	@Override
+	public boolean canExtractItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return isOutputSlot(aSlotID);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
+	{
+		return dir == ForgeDirection.UP ? new int[]{0} : dir != ForgeDirection.DOWN ? new int[]{1, 2, 3} : null;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return isInputSlot(i);
+	}
+
+	protected boolean isInputSlot(int i)
+	{
+		return i == 0;
+	}
+
+	protected boolean isOutputSlot(int i)
+	{
+		return i != 0;
+	}
+	
+	@Override
+	public int getProgressSize()
+	{
+		return 2;
+	}
+	
+	@Override
+	public int getProgress(int id)
+	{
+		return id == 0 ? recipeTick : id == 1 ? maxRecipeTick : 0;
+	}
+	
+	@Override
+	public void setProgress(int id, int value)
+	{
+		if(id == 0) recipeTick = value;
+		if(id == 1) maxRecipeTick = value;
 	}
 }

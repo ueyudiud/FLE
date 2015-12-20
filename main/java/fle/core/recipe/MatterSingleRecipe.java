@@ -1,50 +1,49 @@
 package fle.core.recipe;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
-import fle.api.material.IAtoms;
-import fle.api.material.MatterReactionRegister.ReactionHandler;
-import fle.api.util.IChemCondition;
-import fle.api.util.WeightHelper;
-import fle.api.util.IChemCondition.EnumOxide;
-import fle.api.util.IChemCondition.EnumPH;
-import fle.api.util.WeightHelper.Stack;
+import flapi.collection.CollectionUtil;
+import flapi.collection.abs.IStackList;
+import flapi.collection.abs.Stack;
+import flapi.material.IChemCondition;
+import flapi.material.IChemCondition.EnumOxide;
+import flapi.material.IChemCondition.EnumPH;
+import flapi.material.IMolecular;
+import flapi.material.MatterReactionRegister.ReactionHandler;
 
 public class MatterSingleRecipe implements ReactionHandler
 {
 	private static final Random rand = new Random();
 
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		this(aA1, temNeed, EnumOxide.Lowest, 0, 0, 0.0000392, baseEffect, stacks);
 	}
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, double tempretureEffect, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, double tempretureEffect, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		this(aA1, temNeed, EnumOxide.Lowest, 0, 0, tempretureEffect, baseEffect, stacks);
 	}
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, EnumPH ph1, EnumPH ph2, double phEffect, double tempretureEffect, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, EnumPH ph1, EnumPH ph2, double phEffect, double tempretureEffect, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		this(aA1, temNeed, ph1, ph2, phEffect, 0, tempretureEffect, baseEffect, stacks);
 	}
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, EnumOxide o1, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, EnumOxide o1, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		this(aA1, temNeed, o1, 0, oxideEffect, tempretureEffect, baseEffect, stacks);
 	}
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, EnumPH ph1, EnumPH ph2, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, EnumPH ph1, EnumPH ph2, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		this(aA1, temNeed, ph1, ph2, EnumOxide.Lowest, EnumOxide.Highest, phEffect, oxideEffect, tempretureEffect, baseEffect, stacks);
 	}
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, EnumOxide o1, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, EnumOxide o1, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		this(aA1, temNeed, EnumPH.MaxPH, EnumPH.MinPH, o1, EnumOxide.Highest, phEffect, oxideEffect, tempretureEffect, baseEffect, stacks);
 	}
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, EnumOxide o1, EnumOxide o2, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, EnumOxide o1, EnumOxide o2, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		this(aA1, temNeed, EnumPH.MaxPH, EnumPH.MinPH, o1, o2, phEffect, oxideEffect, tempretureEffect, baseEffect, stacks);
 	}
-	public MatterSingleRecipe(IAtoms aA1, int temNeed, EnumPH ph1, EnumPH ph2, EnumOxide o1, EnumOxide o2, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IAtoms>...stacks)
+	public MatterSingleRecipe(IMolecular aA1, int temNeed, EnumPH ph1, EnumPH ph2, EnumOxide o1, EnumOxide o2, double phEffect, double oxideEffect, double tempretureEffect, double baseEffect, Stack<IMolecular>...stacks)
 	{
 		a1 = aA1;
 		tem = temNeed;
@@ -59,8 +58,7 @@ public class MatterSingleRecipe implements ReactionHandler
 		output = stacks;
 	}
 
-	private IAtoms a1;
-	private int scale = 1;
+	private IMolecular a1;
 	private int tem;
 	private int p1;
 	private int p2;
@@ -70,7 +68,7 @@ public class MatterSingleRecipe implements ReactionHandler
 	private double b;
 	private double c;
 	private double d;
-	private Stack<IAtoms>[] output;
+	private Stack<IMolecular>[] output;
 
 	public double getChance(IChemCondition condition)
 	{
@@ -79,7 +77,7 @@ public class MatterSingleRecipe implements ReactionHandler
 	}
 	
 	@Override
-	public boolean doesActive(IChemCondition condition, WeightHelper helper)
+	public boolean doesActive(IChemCondition condition, IStackList<Stack<IMolecular>, IMolecular> helper)
 	{
 		return helper.contain(a1)
 				&& condition.getOxideLevel().ordinal() <= o
@@ -90,19 +88,18 @@ public class MatterSingleRecipe implements ReactionHandler
 	
 	public void setScale(int scale)
 	{
-		this.scale = scale;
 	}
 
 	@Override
-	public void doReactionResult(IChemCondition condition, WeightHelper<IAtoms> helper)
+	public void doReactionResult(IChemCondition condition, IStackList<Stack<IMolecular>, IMolecular> helper)
 	{
-		int size = helper.getSize(a1);
+		int size = helper.weight(a1);
 		double ch = getChance(condition);
 		int l = 0;
 		for(int i = 0; i < size; ++i)
 			if(rand.nextDouble() < ch) 
 				++l;
-		helper.remove(a1, l);
-		helper.add(WeightHelper.multiply(output, l));
+		helper.removeAll(new Stack(a1, l));
+		helper.addAll(CollectionUtil.multiply(output, l));
 	}
 }

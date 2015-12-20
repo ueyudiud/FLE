@@ -9,19 +9,18 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleValue;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.energy.ThermalNet;
-import fle.api.event.FLEThermalHeatEvent;
-import fle.api.util.FleEntry;
-import fle.api.world.BlockPos;
+import flapi.collection.CollectionUtil.FleEntry;
+import flapi.energy.IThermalTileEntity;
+import flapi.energy.ThermalNet;
+import flapi.event.FLEThermalHeatEvent;
+import flapi.util.FleValue;
+import flapi.world.BlockPos;
 import fle.core.util.Attribute;
 import fle.core.util.AttributeMap;
 
 public class FleThermalNet extends ThermalNet
 {
 	private static final Map<Block, AttributeMap> map = new HashMap();
-	private static float heatConductSpeed = 0.25F;
 
 	static
 	{
@@ -135,11 +134,16 @@ public class FleThermalNet extends ThermalNet
 		{
 			IThermalTileEntity te = (IThermalTileEntity) pos.getBlockTile();
 			int t1 = te.getTemperature(dir);
+			if(te.getThermalConductivity(dir) <= 0) return 0;
 			if(pos.toPos(dir).getBlockTile() instanceof IThermalTileEntity)
 			{
 				IThermalTileEntity te1 = (IThermalTileEntity) pos.toPos(dir).getBlockTile();
+				if(te1.getThermalConductivity(dir.getOpposite()) <= 0) return 0;
 				int t2 = te1.getTemperature(dir);
-				double value = 2 * (t2 - t1) * (te.getThermalConductivity(dir) + te1.getThermalConductivity(dir.getOpposite())) * heatConductSpeed;
+				double conduct = Math.sqrt(te.getThermalConductivity(dir) * te1.getThermalConductivity(dir.getOpposite()));
+				double heatLevel = Math.abs(t1 / 100D) + Math.abs(t2 / 100D);
+				double conduceProgress = heatLevel / (heatLevel + 1);
+				double value = (t2 - t1) * conduct * conduceProgress;
 				if(t1 > t2)
 				{
 					te1.onHeatReceive(dir, -value);
@@ -163,7 +167,11 @@ public class FleThermalNet extends ThermalNet
 					t2 = getEnvironmentTemperature(pos.toPos(dir));
 				}
 				double s = getBlockMaterialConductSpeed(pos.toPos(dir).getBlock());
-				FLEThermalHeatEvent evt = new FLEThermalHeatEvent(pos.toPos(dir), 2 * (t1 - t2) * (te.getThermalConductivity(dir) + s) * heatConductSpeed * conductValue, t1 > t2);
+				double conduct = Math.sqrt(te.getThermalConductivity(dir) * s);
+				double heatLevel = Math.abs(t1 / 100D) + Math.abs(t2 / 100D);
+				double conduceProgress = heatLevel / (heatLevel + 1);
+				double value = Math.signum(t1 - t2) * Math.log(1 + Math.abs(t1 - t2)) * conduct * conduceProgress;
+				FLEThermalHeatEvent evt = new FLEThermalHeatEvent(pos.toPos(dir), value * conductValue, t1 > t2);
 				MinecraftForge.EVENT_BUS.post(evt);
 				return evt.getHeat();
 			}

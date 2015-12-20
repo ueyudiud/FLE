@@ -2,9 +2,6 @@ package fle.core.render;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-
 public class RIThermalWire extends RIBase
 {
 	@Override

@@ -5,13 +5,14 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import fle.api.soild.ISolidContainerItem;
-import fle.api.soild.Solid;
-import fle.api.soild.Solid.SolidState;
-import fle.api.soild.SolidStack;
-import fle.api.soild.SolidTank;
-import fle.api.soild.SolidTankInfo;
+import flapi.solid.ISolidContainerItem;
+import flapi.solid.Solid;
+import flapi.solid.Solid.SolidState;
+import flapi.solid.SolidStack;
+import flapi.solid.SolidTank;
+import flapi.solid.SolidTankInfo;
 import fle.core.item.ItemFleSub;
+import fle.tool.item.behavior.BehaviorTool;
 
 public class BehaviorSack extends BehaviorTool implements ISolidContainerItem
 {
@@ -54,7 +55,7 @@ public class BehaviorSack extends BehaviorTool implements ISolidContainerItem
 	@Override
 	public int fill(ItemStack aStack, SolidStack resource, boolean doFill)
 	{
-		if(map.containsKey(resource.getObj()))
+		if(map.containsKey(resource.get()))
 		{
 			SolidTank st = new SolidTank(capacity, getSolid(aStack));
 			int ret = st.fill(resource, doFill);

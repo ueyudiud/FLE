@@ -1,14 +1,15 @@
 package fle.core.te;
 
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.energy.IThermalTileEntity;
+import flapi.item.interfaces.IPlacedHandler;
+import flapi.te.TEBase;
 import fle.FLE;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.item.IPlacedHandler;
-import fle.api.te.TEBase;
 import fle.core.energy.ThermalTileHelper;
-import fle.core.init.Config;
 import fle.core.init.Materials;
 import fle.core.net.FleTEPacket;
 
@@ -64,7 +65,7 @@ public class TileEntityPlacedItem extends TEBase implements IThermalTileEntity
 	int buf = 0;
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if(should(INIT))
 		{
@@ -173,5 +174,13 @@ public class TileEntityPlacedItem extends TEBase implements IThermalTileEntity
 			return;
 		}
 		super.onReceive(type, contain);
+	}
+
+	public void getPlacedInfomation(List<String> list)
+	{
+		if(stack.getItem() instanceof IPlacedHandler)
+		{
+			((IPlacedHandler) stack.getItem()).addPlaceInfomation(this, list, stack);
+		}
 	}
 }

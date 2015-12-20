@@ -1,9 +1,9 @@
 package fle.core.net;
 
-import fle.api.net.FleNetworkHandler;
-import fle.api.net.FleSortInfomationPacket;
-import fle.api.net.INetEventEmmiter;
-import fle.api.net.INetEventListener;
+import flapi.net.FleNetworkHandler;
+import flapi.net.FleSortInfomationPacket;
+import flapi.net.INetEventEmmiter;
+import flapi.net.INetEventListener;
 
 public class FleGuiPacket extends FleSortInfomationPacket
 {

@@ -1,7 +1,6 @@
 package fle.core.util.noise;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public abstract class NoiseBase
 {
@@ -46,9 +45,9 @@ public abstract class NoiseBase
 		return Math.sqrt(x * x + y * y + z * z);
 	}
 	
-	public NoiseBase setSeed(long aSeed)
+	public NoiseBase setSeed(long seed)
 	{
-		seed = aSeed;
+		this.seed = seed;
 		return this;
 	}
 	

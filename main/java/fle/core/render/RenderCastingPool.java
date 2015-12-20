@@ -1,9 +1,9 @@
 package fle.core.render;
 
+import flapi.te.TEIFluidTank;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
-import fle.api.te.TEIT;
 
 public class RenderCastingPool extends RenderBase
 {
@@ -23,9 +23,9 @@ public class RenderCastingPool extends RenderBase
 		renderBlock(f, f, f3, f1, f1, f1);
 		
 		if(isItem()) return;
-		if(world.getTileEntity(x, y, z) instanceof TEIT)
+		if(world.getTileEntity(x, y, z) instanceof TEIFluidTank)
 		{
-			FluidTankInfo info = ((TEIT) world.getTileEntity(x, y, z)).getTankInfo(ForgeDirection.UNKNOWN)[0];
+			FluidTankInfo info = ((TEIFluidTank) world.getTileEntity(x, y, z)).getTankInfo(ForgeDirection.UNKNOWN)[0];
 			if(info.fluid != null)
 			{
 				renderFluid(info.fluid, info.capacity, 0.985F, 0, 0, 0, f2, f3, f2, f3);

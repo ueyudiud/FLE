@@ -1,78 +1,70 @@
 package fle.core.item;
 
-import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.collection.Register;
+import flapi.enums.EnumFoodType;
+import flapi.item.interfaces.IFoodStat;
+import flapi.plant.CropCard;
+import flapi.plant.ICropSeed;
 import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.crop.CropCard;
-import fle.api.crop.ICropSeed;
-import fle.api.enums.EnumFoodType;
-import fle.api.item.IFoodStat;
-import fle.api.item.ItemFleFood;
-import fle.api.util.ITextureLocation;
-import fle.api.util.Register;
-import fle.core.init.Plants;
 import fle.core.init.IB;
+import fle.core.init.Plants;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.FoodStandard;
-import fle.core.te.TileEntityCrop;
-import fle.core.util.TextureLocation;
+import fle.core.util.ItemTextureHandler;
+import fle.resource.block.TileEntityCrop;
 
-public class ItemFleSeed extends ItemFleFood implements IPlantable, ICropSeed
+public class ItemFleSeed extends flapi.item.ItemFleFood implements IPlantable, ICropSeed
 {
 	public ItemFleSeed init()
 	{
-		addSubItem(0, Plants.soybean, "Soybeen", new TextureLocation("resource/seed/0"));
-		addSubItem(1, Plants.ramie, "Ramie Seed", new TextureLocation("resource/seed/1"));
-		addSubItem(2, Plants.millet, "Millet Seed", new TextureLocation("resource/seed/2"));
-		addSubItem(3, Plants.suger_cances, "Suger Cances", new TextureLocation("resource/seed/3"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
-		addSubItem(4, Plants.wheat, "Wheat Seed", new TextureLocation("resource/seed/4"));
-		addSubItem(5, Plants.cotton, "Cotton Seed", new TextureLocation("resource/seed/5"));
-		addSubItem(6, Plants.sweet_potato, "Sweet Potato", new TextureLocation("resource/seed/6"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
-		addSubItem(7, Plants.potato, "Potato", new TextureLocation("resource/seed/7"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
-		addSubItem(8, Plants.flax, "Flax", new TextureLocation("resource/seed/8"));
+		addSubItem(0, Plants.soybean, "Soybeen", new ItemTextureHandler("resource/seed/0"));
+		addSubItem(1, Plants.ramie, "Ramie Seed", new ItemTextureHandler("resource/seed/1"));
+		addSubItem(2, Plants.millet, "Millet Seed", new ItemTextureHandler("resource/seed/2"));
+		addSubItem(3, Plants.suger_cances, "Suger Cances", new ItemTextureHandler("resource/seed/3"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
+		addSubItem(4, Plants.wheat, "Wheat Seed", new ItemTextureHandler("resource/seed/4"));
+		addSubItem(5, Plants.cotton, "Cotton Seed", new ItemTextureHandler("resource/seed/5"));
+		addSubItem(6, Plants.sweet_potato, "Sweet Potato", new ItemTextureHandler("resource/seed/6"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
+		addSubItem(7, Plants.potato, "Potato", new ItemTextureHandler("resource/seed/7"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));
+		addSubItem(8, Plants.flax, "Flax", new ItemTextureHandler("resource/seed/8"));
 		return this;
 	}
 
-	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, String aLocalized, ITextureLocation aLocate, IFoodStat<ItemFleFood> aFoodBehavior)
+	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, String aLocalized, ItemTextureHandler aLocate, IFoodStat<flapi.item.ItemFleFood> aFoodBehavior)
 	{
-		addSubItem(aMetaValue, crop.getCropName(), aLocalized, aLocate, new BehaviorBase(), aFoodBehavior);
 		register.register(crop, crop.getCropName());
+		addSubItem(aMetaValue, crop.getCropName(), aLocalized, aLocate, new BehaviorBase(), aFoodBehavior);
 	    return this;
 	}
-	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, String aLocalized, ITextureLocation aLocate)
+	public final ItemFleSeed addSubItem(int aMetaValue, CropCard crop, String aLocalized, ItemTextureHandler aLocate)
 	{
-		addSubItem(aMetaValue, crop.getCropName(), aLocalized, aLocate, new BehaviorBase(), null);
-		register.register(crop, crop.getCropName());
-	    return this;
+		return addSubItem(aMetaValue, crop, aLocalized, aLocate, (IFoodStat) null);
 	}
 	
 	private Register<CropCard> register = new Register();
 	
     private Block plantBlock;
     /** BlockID of the block the seeds can be planted on. */
-    private Block soilBlock;
+    @SuppressWarnings("unused")
+	private Block soilBlock;
 
     public ItemFleSeed(Block plant, Block soil)
     {
-    	super("fle.seed", "fle.seed");
+    	super("seed", "seed");
         plantBlock = plant;
         soilBlock = soil;
-        setHasSubtypes(true);
+        hasSubtypes = true;
     }
 
     public static ItemStack a(String cropName)
@@ -85,9 +77,9 @@ public class ItemFleSeed extends ItemFleFood implements IPlantable, ICropSeed
     }
     
     @Override
-    public String getUnlocalizedName(ItemStack stack) 
+    public String getMetaUnlocalizedName(int aMetadata)
     {
-    	return super.getUnlocalizedName() + ":" + register.name(stack.getItemDamage());
+    	return register.name(aMetadata);
     }
 
     /**

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -12,45 +13,45 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import fle.api.cg.ICG;
-import fle.api.cg.RecipesTab;
-import fle.api.crop.IFertilableBlock.FertitleLevel;
-import fle.api.enums.EnumAtoms;
-import fle.api.enums.EnumCraftingType;
-import fle.api.item.IBagable;
-import fle.api.item.ICastingTool;
-import fle.api.item.IItemBehaviour;
-import fle.api.item.IPlacedHandler;
-import fle.api.item.IPolishTool;
-import fle.api.item.ISubPolishTool;
-import fle.api.item.ItemFleMetaBase;
-import fle.api.recipe.CraftingState;
-import fle.api.soild.ISolidContainerItem;
-import fle.api.soild.Solid;
-import fle.api.soild.Solid.SolidState;
-import fle.api.soild.SolidStack;
-import fle.api.soild.SolidTankInfo;
-import fle.api.te.ITEInWorld;
-import fle.api.util.FleLog;
-import fle.api.util.ITextureLocation;
-import fle.api.util.SubTag;
-import fle.core.cover.CoverAutoOutput;
+import flapi.cg.ICG;
+import flapi.cg.RecipesTab;
+import flapi.enums.EnumAtoms;
+import flapi.enums.EnumCraftingType;
+import flapi.enums.EnumDamageResource;
+import flapi.item.ItemFleMetaBase;
+import flapi.item.interfaces.IBagable;
+import flapi.item.interfaces.ICastingTool;
+import flapi.item.interfaces.IItemBehaviour;
+import flapi.item.interfaces.IPlacedHandler;
+import flapi.item.interfaces.IPolishTool;
+import flapi.item.interfaces.ISubPolishTool;
+import flapi.plant.IFertilableBlock.FertitleLevel;
+import flapi.recipe.CraftingState;
+import flapi.solid.ISolidContainerItem;
+import flapi.solid.Solid;
+import flapi.solid.Solid.SolidState;
+import flapi.solid.SolidStack;
+import flapi.solid.SolidTankInfo;
+import flapi.util.FleLog;
+import flapi.util.FleValue;
+import flapi.util.SubTag;
+import flapi.world.ITEInWorld;
 import fle.core.init.Config;
 import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorArrowBag;
 import fle.core.item.behavior.BehaviorBarrel;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.BehaviorBlockable;
-import fle.core.item.behavior.BehaviorCastingTool;
 import fle.core.item.behavior.BehaviorCeramics;
-import fle.core.item.behavior.BehaviorCoverable;
 import fle.core.item.behavior.BehaviorFlintChip;
 import fle.core.item.behavior.BehaviorGuideBook;
 import fle.core.item.behavior.BehaviorPlaceableItem;
 import fle.core.item.behavior.BehaviorSack;
 import fle.core.item.behavior.BehavoirSackFertilizer;
+import fle.core.item.behavior.IDamageable;
 import fle.core.te.TileEntityPlacedItem;
-import fle.core.util.TextureLocation;
+import fle.core.util.ItemTextureHandler;
+import fle.tool.item.behavior.BehaviorCastingTool;
 
 public class ItemFleSub extends ItemSub implements IPolishTool, IBagable, ICastingTool, 
 ICG, ISolidContainerItem, IPlacedHandler
@@ -112,6 +113,7 @@ ICG, ISolidContainerItem, IPlacedHandler
 		addSubItem(151, "branch_bush", "Bush Branch", "resource/151");
 		addSubItem(161, "leaves", "Leaves", "resource/161");
 		addSubItem(162, "leaves_b", "Leaves", "resource/162");
+		addSubItem(163, "leaves_sisal", "Sisal Leaves", "resource/163");
 		addSubItem(401, "ramie_fiber", "Ramie Fiber", "resource/401");
 		addSubItem(402, "dandelion", "Dandelion", "resource/402");
 		addSubItem(403, "rugosa", "A.Rugosa", "resource/403");
@@ -129,6 +131,8 @@ ICG, ISolidContainerItem, IPlacedHandler
 		addSubItem(415, "cotton_rough", "Cotton With Seed", "resource/415");
 		addSubItem(416, "cotton", "Cotton", "resource/416");
 		addSubItem(417, "sprouted_potato", "Sprouted Potato", "resource/417");
+		addSubItem(418, "malt", "Malt", "resource/418");
+		addSubItem(419, "aspergillus", "Mould Saccharifier", "resource/419");
 		addSubItem(501, "crystal_quartz", "Quartz", "resource/501");
 		addSubItem(502, "crystal_opal", "Opal", "resource/502");
 		addSubItem(521, "chip_quartz", "Chip Quartz", "resource/521");
@@ -149,6 +153,10 @@ ICG, ISolidContainerItem, IPlacedHandler
 		addSubItem(1015, "straw", "Straw", "resource/1015");
 		addSubItem(1016, "straw_dry", "Dry Straw", "resource/1016");
 		addSubItem(1017, "straw_rope", "Straw Rope", "resource/1017");
+		addSubItem(1018, "sisal_fiber", "Sisal Fiber", "resource/1018");
+		addSubItem(1019, "sisal_rope", "Sisal Rope", "resource/1019");
+		addSubItem(1020, "tinder_smoldering", "Smoldering Tinder", "resource/1020");
+		addSubItem(1021, "yeast_strain", "Yeast Strain", "resource/1021");
 		addSubItem(2001, "lipocere", "Lipocere", "resource/2001");
 		addSubItem(2002, "spinneret", "Spinneret", "resource/2002");
 		addSubItem(2003, "crushed_bone", "Crushed Bone", "resource/2003");
@@ -184,7 +192,9 @@ ICG, ISolidContainerItem, IPlacedHandler
 		addSubItem(7105, "sack_millet_b", "Wholemeal Millet Sack", "tools/sack/millet_W", new BehaviorSack("sack_millet_b", IB.millet, 1000));
 		addSubItem(7106, "sack_fertilizer1", "Ca P Fertilizer Sack", "tools/sack/fertilizer1", new BehavoirSackFertilizer("sack_fertilizer1", IB.Ca_P_fertilizer, 1000, new FertitleLevel(0, 3, 0, 5)));
 		addSubItem(7201, "bowl_water", "Bowl Of Water", "tools/tank/bowl_water");
-		addSubItem(8001, "cover_input_wooden", "Wooden Input Hatch", "cover/input_wooden", new BehaviorCoverable(new CoverAutoOutput("output_wooden", 100, 1).register()));
+		addSubItem(7241, "jug_argil_unsmelted", "Argil Jug", "clay/3", new BehaviorPlaceableItem());
+		addSubItem(7242, "jug_argil", "Argil Jug", "clay/1003/empty");
+		//addSubItem(7243, "jug_argil_wheat", "Argil Jug With Wheat Alcohol", "clay/1003/alcohol_wheat");
 		addSubItem(10001, "arrow_bag", "Arrow Bag", "tools/arrow_bag", new BehaviorArrowBag());
 		addSubItem(10101, "guide_book", "Guide Book", "book/10086", new BehaviorGuideBook(RecipesTab.tabClassic));
 		addSubItem(10102, "guide_book_1", "Old Stone Age Book", "book/0", new BehaviorGuideBook(RecipesTab.tabOldStoneAge));
@@ -243,19 +253,20 @@ ICG, ISolidContainerItem, IPlacedHandler
 			//Use a null item.
 			FleLog.getLogger().warn("Fle: some mod use empty item id " + name + ", please check your fle-addon "
 					+ "had already update, or report this bug to mod editer.");
+			FleLog.getLogger().catching(e);
 			return null; //Return null.
 		}
 	}
 
 	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, String aLocalized, String aLocate)
 	{
-		return addSubItem(aMetaValue, aTagName, aLocalized, new TextureLocation(aLocate), new BehaviorBase());
+		return addSubItem(aMetaValue, aTagName, aLocalized, new ItemTextureHandler(aLocate), new BehaviorBase());
 	}
 	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, String aLocalized, String aLocate, IItemBehaviour<ItemFleMetaBase> aBehavior)
 	{
-		return addSubItem(aMetaValue, aTagName, aLocalized, new TextureLocation(aLocate), aBehavior);
+		return addSubItem(aMetaValue, aTagName, aLocalized, new ItemTextureHandler(aLocate), aBehavior);
 	}
-	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, String aLocalized, ITextureLocation aLocate)
+	public final ItemFleMetaBase addSubItem(int aMetaValue, String aTagName, String aLocalized, ItemTextureHandler aLocate)
 	{
 		return addSubItem(aMetaValue, aTagName, aLocalized, aLocate, new BehaviorBase());
 	}
@@ -269,7 +280,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public ItemStack getOutput(EntityPlayer player, ItemStack aStack) 
 	{
-	    isItemStackUsable(aStack);
 	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 	    try
 	    {
@@ -288,7 +298,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public CraftingState getState(ItemStack aStack, EnumCraftingType aType, CraftingState aState) 
 	{
-	    isItemStackUsable(aStack);
 	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 	    try
 	    {
@@ -325,7 +334,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public ItemStack getItemContain(ItemStack aStack, int i)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -344,7 +352,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public void setItemContain(ItemStack aStack, int i, ItemStack aInput)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -380,7 +387,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public boolean isValidArmor(ItemStack aStack, int armorType, Entity entity)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -396,7 +402,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public boolean isCastingTool(ItemStack aStack)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -415,7 +420,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public RecipesTab getBookTab(ItemStack aStack) 
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -434,7 +438,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public SolidStack getSolid(ItemStack aStack)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -453,7 +456,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public int fill(ItemStack aStack, SolidStack resource, boolean doFill)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -473,7 +475,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	public SolidStack drain(ItemStack aStack, SolidStack resource,
 			boolean doDrain)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -492,7 +493,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public SolidStack drain(ItemStack aStack, int maxDrain, boolean doDrain)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -511,7 +511,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public boolean canFill(ItemStack aStack, Solid Solid)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -530,7 +529,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public boolean canDrain(ItemStack aStack, Solid Solid)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -549,7 +547,6 @@ ICG, ISolidContainerItem, IPlacedHandler
 	@Override
 	public SolidTankInfo getTankInfo(ItemStack aStack)
 	{
-		isItemStackUsable(aStack);
 		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
 		try
 	    {
@@ -660,5 +657,45 @@ ICG, ISolidContainerItem, IPlacedHandler
 			}
 		}
 		return target;
+	}
+	
+	@Override
+	public void addPlaceInfomation(ITEInWorld tile, List<String> list,
+			ItemStack stack)
+	{
+		IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(stack)));
+		try
+	    {
+			if(tBehavior instanceof IPlacedHandler)
+			{
+				((IPlacedHandler) tBehavior).addPlaceInfomation(tile, list, stack);
+			}
+	    }
+	    catch(Throwable e)
+	    {
+	    	e.printStackTrace();
+	    }
+		if(FurnaceRecipes.smelting().getSmeltingResult(stack) != null)
+		{
+			list.add("Smelting Progress : " + FleValue.format_progress.format(((TileEntityPlacedItem) tile).getSmeltedTick() / (double) (smeltingEnergy * stack.stackSize)));
+		}
+	}
+	
+	@Override
+	public void damageItem(ItemStack stack, EntityLivingBase user,
+			EnumDamageResource reource, float damage)
+	{
+		IItemBehaviour<ItemFleMetaBase> behavior = itemBehaviors.get(Short.valueOf((short)getDamage(stack)));
+		try
+	    {
+			if(behavior instanceof IDamageable)
+			{
+				((IDamageable) behavior).damageItem(stack, user, reource, damage);
+			}
+	    }
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

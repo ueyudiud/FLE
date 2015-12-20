@@ -2,7 +2,7 @@ package fle.core.util;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import fle.api.FleValue;
+import flapi.util.FleValue;
 import fle.core.init.IB;
 
 public class FleCreativeTab extends CreativeTabs

@@ -8,20 +8,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.block.interfaces.IMovableBlock;
+import flapi.util.FleValue;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.FleValue;
-import fle.api.world.BlockPos;
-import fle.core.entity.EntityFleFallingBlock;
 import fle.core.item.ItemFleSub;
-import fle.core.item.ItemSub;
 
-public class BlockAsh extends BlockFalling
+public class BlockAsh extends BlockFalling implements IMovableBlock
 {
 	public BlockAsh() 
 	{

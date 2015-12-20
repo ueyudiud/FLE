@@ -5,11 +5,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import fle.api.FleValue;
-import fle.api.util.Register;
+import flapi.collection.Register;
+import flapi.util.FleValue;
 import fle.core.util.AttributeObjectWithRegister.AttributeBlock;
 import fle.core.util.AttributeObjectWithRegister.AttributeItem;
 

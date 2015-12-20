@@ -9,14 +9,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import fle.api.FleValue;
-import fle.api.cg.IGuideType;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemArrayStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.ShapedFleRecipe;
+import flapi.cg.IGuideType;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.ShapedFleRecipe;
+import flapi.recipe.stack.ArrayStack;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 import fle.core.util.Util;
 
@@ -66,7 +66,7 @@ public class FLEShapedRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			ShapedPage page = (ShapedPage) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				ret.add(rawPage);
 				continue;
@@ -77,7 +77,7 @@ public class FLEShapedRecipe extends StandardType
 				for(ItemStack stack : stacks)
 				{
 					if(stack == null) continue;
-					if(contain.isStackEqul(stack))
+					if(contain.equal(stack))
 					{
 						ret.add(rawPage);
 						continue label;
@@ -110,7 +110,6 @@ public class FLEShapedRecipe extends StandardType
 		}
 		
 		protected int xSize;
-		protected int ySize;
 		protected boolean isSmallRecipe;
 		public ItemAbstractStack[] stacks;
 		public ItemStack output;
@@ -130,7 +129,7 @@ public class FLEShapedRecipe extends StandardType
 			isSmallRecipe = recipe.getXSize() <= 2 && recipe.getYSize() <= 2;
 			output = recipe.getRecipeOutput().copy();
 			xSize = recipe.getXSize();
-			ySize = recipe.getYSize();
+			recipe.getYSize();
 		}
 		public ShapedPage(ShapedOreRecipe recipe)
 		{
@@ -141,12 +140,12 @@ public class FLEShapedRecipe extends StandardType
 			{
 				if(inputs[i] instanceof ItemStack)
 				{
-					stacks[i] = new ItemBaseStack((ItemStack) inputs[i]);
+					stacks[i] = new BaseStack((ItemStack) inputs[i]);
 					showArray[i] = new ItemStack[]{(ItemStack) inputs[i]};
 				}
 				else if(inputs[i] instanceof List)
 				{
-					stacks[i] = new ItemArrayStack((List) inputs[i]);
+					stacks[i] = new ArrayStack((List) inputs[i]);
 					showArray[i] = stacks[i].toList();
 				}
 			}
@@ -157,11 +156,11 @@ public class FLEShapedRecipe extends StandardType
 			try
 			{
 				xSize = oreRecipeWidth.getInt(recipe);
-				ySize = oreRecipeHeight.getInt(recipe);
+				oreRecipeHeight.getInt(recipe);
 			}
 			catch(Throwable e)
 			{
-				xSize = ySize = isSmallRecipe ? 2 : 3;
+				xSize = isSmallRecipe ? 2 : 3;
 			}
 		}
 		public ShapedPage(ShapedRecipes recipe)
@@ -170,7 +169,7 @@ public class FLEShapedRecipe extends StandardType
 			showArray = new ItemStack[stacks.length][];
 			for(int i = 0; i < recipe.recipeItems.length; ++i)
 			{
-				stacks[i] = new ItemBaseStack(recipe.recipeItems[i]);
+				stacks[i] = new BaseStack(recipe.recipeItems[i]);
 				if(recipe.recipeItems[i] != null)
 					showArray[i] = new ItemStack[]{recipe.recipeItems[i] != null ? recipe.recipeItems[i].copy() : null};
 			}
@@ -178,7 +177,6 @@ public class FLEShapedRecipe extends StandardType
 			isSmallRecipe = recipe.recipeHeight <= 2 && recipe.recipeWidth <= 2;
 			output = recipe.getRecipeOutput().copy();
 			xSize = recipe.recipeWidth;
-			ySize = recipe.recipeHeight;
 		}
 		
 		@Override

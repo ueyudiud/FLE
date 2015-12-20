@@ -30,7 +30,7 @@ public class FLEBiomeTaiga extends FLEBiome
 		super(name, index);
         this.type = aType;
         this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityWolf.class, 8, 4, 4));
-        this.theBiomeDecorator.treesPerChunk = 10;
+        this.theBiomeDecorator.treesPerChunk = 6;
 
         if (aType != 1 && aType != 2)
         {

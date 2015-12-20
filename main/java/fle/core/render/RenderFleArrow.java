@@ -3,8 +3,7 @@ package fle.core.render;
 import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import fle.api.FleValue;
+import flapi.util.FleValue;
 
 public class RenderFleArrow extends RenderArrow
 {

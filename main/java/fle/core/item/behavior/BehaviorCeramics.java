@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.item.ItemFleMetaBase;
 import fle.FLE;
-import fle.api.item.ItemFleMetaBase;
 
 public class BehaviorCeramics extends BehaviorBase
 {

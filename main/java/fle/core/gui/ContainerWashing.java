@@ -1,26 +1,22 @@
 package fle.core.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.enums.EnumDamageResource;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.GuiCondition;
-import fle.api.gui.GuiError;
-import fle.api.gui.SlotOutput;
-import fle.api.net.INetEventListener;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemOreStack;
+import flapi.FleAPI;
+import flapi.enums.EnumDamageResource;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.GuiCondition;
+import flapi.gui.GuiError;
+import flapi.gui.SlotOutput;
+import flapi.net.INetEventListener;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.recipe.stack.OreStack;
 import fle.core.inventory.InventoryWashing;
-import fle.core.net.FleGuiPacket;
 import fle.core.recipe.RecipeHelper;
 import fle.core.recipe.WashingRecipe;
 
@@ -121,11 +117,11 @@ public class ContainerWashing extends ContainerCraftable implements INetEventLis
 		}
 	}
 	
-	private static final ItemAbstractStack stack = new ItemOreStack("craftingToolBarGrizzy");
+	private static final ItemAbstractStack stack = new OreStack("craftingToolBarGrizzy");
 	
 	boolean matchBarGrizzy()
 	{
-		return inv.getStackInSlot(1) != null ? stack.isStackEqul(inv.getStackInSlot(1)) : false;
+		return inv.getStackInSlot(1) != null ? stack.equal(inv.getStackInSlot(1)) : false;
 	}
 	
 	void useBarGrizzy()

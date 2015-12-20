@@ -3,14 +3,10 @@ package fle.core.block.plant;
 import static net.minecraftforge.common.EnumPlantType.Plains;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -25,16 +21,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import flapi.FleAPI;
+import flapi.block.old.BlockFle;
+import flapi.enums.EnumWorldNBT;
+import flapi.plant.PlantCard;
+import flapi.recipe.DropInfo;
+import flapi.util.FleValue;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.block.BlockFle;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.plant.PlantCard;
-import fle.api.util.DropInfo;
-import fle.api.util.FleEntry;
-import fle.api.world.BlockPos;
-import fle.core.world.biome.FLEBiome;
 
 public class BlockPlant extends BlockFle implements IPlantable
 {
@@ -92,11 +88,9 @@ public class BlockPlant extends BlockFle implements IPlantable
     public void registerBlockIcons(IIconRegister register)
     {
     	icons = new IIcon[FLE.fle.getPlantRegister().getPlantSize()];
-    	Iterator<PlantCard> itr = FLE.fle.getPlantRegister().getPlants();
     	int i;
-    	while (itr.hasNext())
+    	for (PlantCard plant : FLE.fle.getPlantRegister().getPlants())
     	{
-			PlantCard plant = itr.next();
 			i = FLE.fle.getPlantRegister().getPlantID(plant);
 			icons[i] = register.registerIcon(FleValue.TEXTURE_FILE + ":" + plant.getPlantTextureName());
 		}
@@ -199,10 +193,8 @@ public class BlockPlant extends BlockFle implements IPlantable
     public void getSubBlocks(Item item, CreativeTabs tab,
     		List list)
     {
-    	Iterator<PlantCard> itr = FLE.fle.getPlantRegister().getPlants();
-    	while (itr.hasNext())
+    	for(PlantCard plantCard : FLE.fle.getPlantRegister().getPlants())
     	{
-			PlantCard plantCard = itr.next();
 			list.add(new ItemStack(item, 1, FLE.fle.getPlantRegister().getPlantID(plantCard)));
 		}
     }

@@ -2,12 +2,11 @@ package fle.core.world;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.block.BlockFalling;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,25 +17,26 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import flapi.enums.CompoundType;
+import flapi.enums.EnumWorldNBT;
+import flapi.material.Matter;
+import flapi.material.Matter.AtomStack;
+import flapi.net.IPacket;
+import flapi.util.FleLog;
+import flapi.world.BlockPos;
+import flapi.world.BlockPos.ChunkPos;
+import flapi.world.IAirConditionProvider;
+import flapi.world.IWorldManager;
 import fle.FLE;
-import fle.api.enums.CompoundType;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.material.Matter;
-import fle.api.material.Matter.AtomStack;
-import fle.api.net.IPacket;
-import fle.api.util.FleLog;
-import fle.api.util.IAirConditionProvider;
-import fle.api.world.BlockPos;
-import fle.api.world.BlockPos.ChunkPos;
-import fle.api.world.IWorldManager;
 import fle.core.net.FleSyncFWMSmallPacket;
 import fle.core.net.FleWorldMetaSyncPacket;
 
 public class FWM implements IWorldManager, IAirConditionProvider
 {
-	private static final int maxNBTSize = EnumWorldNBT.values().length;
-	protected Map<Integer, Map<ChunkPos, ChunkData>> nbts = new HashMap(1);
-	private Map<Integer, Map<ChunkPos, Integer>> airConditions = new HashMap(1);
+	public static boolean generateFlag = true;
+	protected static final int maxNBTSize = EnumWorldNBT.values().length;
+	protected Map<Integer, Map<ChunkPos, ChunkData>> nbts = new HashMap(3);
+	private Map<Integer, Map<ChunkPos, Integer>> airConditions = new HashMap(3);
 	
 	public FWM()
 	{
@@ -48,9 +48,9 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		public short[][][] datas;
 		
-		public ChunkData(int dataSize)
+		public ChunkData()
 		{
-			datas = new short[dataSize][][];
+			datas = new short[256][][];
 		}
 		
 		private short getDataFromCoord(int dataType, BlockPos aPos)
@@ -58,17 +58,17 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			int x = aPos.x & 15;
 			int y = aPos.y & 255;
 			int z = aPos.z & 15;
-			if(datas[dataType] == null)
+			if(datas[y] == null)
 			{
 				return 0;
 			}
-			if(datas[dataType][y] == null)
+			if(datas[y][x << 4 | z] == null)
 			{
 				return 0;
 			}
 			else
 			{
-				return (short) (datas[dataType][y][x << 4 | z] - 1);
+				return datas[y][x << 4 | z][dataType];
 			}
 		}
 		
@@ -77,31 +77,33 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			int x = aPos.x & 15;
 			int y = aPos.y & 255;
 			int z = aPos.z & 15;
-			if(datas[dataType] == null)
+			if(datas[y] == null)
 			{
-				datas[dataType] = new short[256][];
+				datas[y] = new short[256][];
 			}
-			if(datas[dataType][y] == null)
+			if(datas[y][x << 4 | z] == null)
 			{
-				datas[dataType][y] = new short[256];
+				datas[y][x << 4 | z] = new short[maxNBTSize];
 			}
-			short ret = datas[dataType][y][x << 4 | z];
-			datas[dataType][y][x << 4 | z] = (short) (data + 1);
+			short ret = datas[y][x << 4 | z][dataType];
+			datas[y][x << 4 | z][dataType] = data;
 			 return ret;
 		}
 	
 		private int[] asIntArray(int dataType)
 		{
-			if(datas[dataType] == null) return new int[0];
 			List<Integer> ret = new ArrayList(1);
-			for(int y = 0; y < datas[dataType].length; ++y)
-			{	
-				if(datas[dataType][y] == null) continue;
-				for(int i = 0; i < datas[dataType][y].length; ++i)
+			for(int i = 0; i < datas.length; ++i)
+			{
+				short[][] datas1 = datas[i];
+				if(datas1 == null) continue;
+				for(int j = 0; j < datas1.length; ++j)
 				{
-					if(datas[dataType][y][i] != 0)
+					short[] datas2 = datas1[j];
+					if(datas2 == null) continue;
+					if(datas2[dataType] != 0)
 					{
-						Integer a = new Integer((datas[dataType][y][i] << 16) + (y << 8) + i);
+						Integer a = new Integer((datas2[dataType] << 16) + (i << 8) + j);
 						ret.add(a);
 					}
 				}
@@ -118,35 +120,51 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		{
 			for(int i = 0; i < array.length; ++i)
 			{
-				if(datas[dataType] == null) datas[dataType] = new short[256][];
 				int y = (array[i] >> 8) & 255;
-				if(datas[dataType][y] == null) datas[dataType][y] = new short[256];
+				if(datas[y] == null) datas[y] = new short[256][];
 				int x = array[i] & 255;
-				datas[dataType][y][x] = (short) (array[i] >> 16);
+				if(datas[y][x] == null) datas[y][x] = new short[maxNBTSize];
+				datas[y][x][dataType] = (short) (array[i] >> 16);
 			}
 		}
 
 		public short[] getDatasFromCoord(BlockPos aPos)
 		{
-			short[] t = new short[maxNBTSize];
-			for(int i = 0; i < t.length; ++i)
-				t[i] = getDataFromCoord(i, aPos);
-			return t;
+			int x = aPos.x & 15;
+			int y = aPos.y & 255;
+			int z = aPos.z & 15;
+			if(datas[y] == null)
+			{
+				return new short[maxNBTSize];
+			}
+			if(datas[y][x << 4 | z] == null)
+			{
+				return new short[maxNBTSize];
+			}
+			else
+			{
+				return datas[y][x << 4 | z];
+			}
 		}
 	}
 
+	private int dim(World world)
+	{
+		return world.provider.dimensionId;
+	}
+	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load evt)
 	{
-		if(!nbts.containsKey(new Integer(evt.world.provider.dimensionId)))
-			nbts.put(new Integer(evt.world.provider.dimensionId), new HashMap());
+		if(!nbts.containsKey(new Integer(dim(evt.world))))
+			nbts.put(new Integer(dim(evt.world)), new HashMap());
 	}
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload evt)
 	{
-		if(nbts.containsKey(new Integer(evt.world.provider.dimensionId)))
-			nbts.get(new Integer(evt.world.provider.dimensionId)).clear();
+		if(nbts.containsKey(new Integer(dim(evt.world))))
+			nbts.get(new Integer(dim(evt.world))).clear();
 	}
 	
 	@SubscribeEvent
@@ -154,11 +172,11 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		if(!evt.world.isRemote)
 		{
-			sendAllData(evt.world.provider.dimensionId, new ChunkPos(evt.getChunk()));
+			//sendChunkData(dim(evt.world), new ChunkPos(evt.getChunk()));
 		}
 		else
 		{
-			
+			askChunkData(dim(evt.world), new ChunkPos(evt.getChunk()));
 		}
 	}
 	
@@ -167,7 +185,6 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		try
 		{
-			NBTTagCompound tNBT1 = evt.getData();
 			Integer tDim = new Integer(evt.world.provider.dimensionId);
 			
 			if(!nbts.containsKey(tDim))
@@ -179,7 +196,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 			{
 				if(!nbts.get(tDim).containsKey(tPos))
 				{
-					nbts.get(tDim).put(tPos, new ChunkData(maxNBTSize));
+					nbts.get(tDim).put(tPos, new ChunkData());
 				}
 				NBTTagCompound list = evt.getData().getCompoundTag("FLE");
 				for(int i = 0; i < maxNBTSize; ++i)
@@ -248,7 +265,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	public short setData(BlockPos pos, int dataType, int data) 
 	{
 		World world = pos.world();
-		return setData(pos, dataType, data, world.checkChunksExist(pos.x - checkRange, pos.y - checkRange, pos.z - checkRange, pos.x + checkRange, pos.y + checkRange, pos.z + checkRange));
+		return setData(pos, dataType, data, generateFlag && world.checkChunksExist(pos.x - checkRange, pos.y - checkRange, pos.z - checkRange, pos.x + checkRange, pos.y + checkRange, pos.z + checkRange));
 	}
 
 	public short setData(BlockPos pos, int dataType, int data, boolean sync) 
@@ -257,18 +274,18 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		boolean flag = false;
 		if(pos.access instanceof World)
 		{
-			dim = ((World) pos.access).provider.dimensionId;
+			dim = dim((World) pos.access);
 			flag = !((World) pos.access).isRemote;
 		}
 		else if(FLE.fle.getPlatform().getPlayerInstance() != null)
 		{
-			dim = FLE.fle.getPlatform().getPlayerInstance().worldObj.provider.dimensionId;
+			dim = dim(FLE.fle.getPlatform().getPlayerInstance().worldObj);
 		}
 		ChunkData tData = getChunkData(dim, pos);
 		short ret = tData.setDataFromCoord(dataType, pos, (short) data);
-		if(flag && sync)
+		if(generateFlag && flag && sync)
 		{
-			FLE.fle.getNetworkHandler().sendTo(new FleSyncFWMSmallPacket(pos, tData.getDatasFromCoord(pos)));
+			FLE.fle.getNetworkHandler().sendToNearBy(new FleSyncFWMSmallPacket(pos, tData.getDatasFromCoord(pos)), new TargetPoint(dim, pos.x + 0.5F, pos.y + 0.5F, pos.z + 0.5F, 128.0F));
 		}
 		return ret;
 	}
@@ -277,7 +294,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		int tDim = new Integer(dim);
 		if(!nbts.containsKey(tDim)) nbts.put(tDim, new HashMap());
-		if(!nbts.get(tDim).containsKey(pos.getChunkPos())) nbts.get(tDim).put(pos.getChunkPos(), new ChunkData(maxNBTSize));
+		if(!nbts.get(tDim).containsKey(pos.getChunkPos())) nbts.get(tDim).put(pos.getChunkPos(), new ChunkData());
 		return nbts.get(tDim).get(pos.getChunkPos());
 	}
 
@@ -390,14 +407,21 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		return ret;
 	}
 
-	public void sendData(BlockPos pos)
+	public void sendChunkData(EntityPlayerMP player, ChunkPos pos)
 	{
-		FLE.fle.getNetworkHandler().sendToNearBy(new FleSyncFWMSmallPacket(pos, getDatas(pos)), pos, 512F);
-	}
-
-	public void sendAllData(int dim, ChunkPos pos)
-	{
+		int dim = dim(player.worldObj);
 		if(getClass() != FWM.class) return;
+		if(!nbts.containsKey(dim)) return;
+		if(!nbts.get(dim).containsKey(pos)) return;
+		ChunkData data = nbts.get(dim).get(pos);
+		int[][] arrays = new int[maxNBTSize][];
+		for(int i = 0; i < maxNBTSize; ++i)
+			arrays[i] = data.asIntArray(i);
+		FLE.fle.getNetworkHandler().sendLargePacket(new FleWorldMetaSyncPacket(dim, pos, arrays), player);
+	}
+	
+	public void sendChunkData(int dim, ChunkPos pos)
+	{
 		if(!nbts.containsKey(dim)) return;
 		if(!nbts.get(dim).containsKey(pos)) return;
 		ChunkData data = nbts.get(dim).get(pos);
@@ -407,7 +431,7 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		FLE.fle.getNetworkHandler().sendLargePacket(new FleWorldMetaSyncPacket(dim, pos, arrays), new TargetPoint(dim, pos.x * 16 + 8, 128, pos.z * 16 + 8, 512D));
 	}
 	
-	public void syncData(int dim, ChunkPos pos, int[][] datas)
+	public void askChunkData(int dim, ChunkPos pos)
 	{
 		;
 	}
@@ -415,27 +439,29 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	@SubscribeEvent
 	public void onWorldTick(WorldTickEvent evt)
 	{
-		Iterator<BlockPos> itr = new ArrayList(cacheList).iterator();
-		while(itr.hasNext())
+		if(!evt.world.isRemote)
 		{
-			BlockPos pos = itr.next();
-			try
+			for(Entry<EntityPlayerMP, ChunkPos> entry : cacheList.entrySet())
 			{
-				sendData(pos);
-				cacheList.remove(pos);
+				try
+				{
+					sendChunkData(entry.getKey(), entry.getValue());
+				}
+				catch(Throwable e)
+				{
+					ChunkPos pos = entry.getValue();
+					FleLog.getLogger().info("Fail to send data " + pos.x + "," + pos.z + " is is can't connect server or array outof bound?");;
+				}
 			}
-			catch(Throwable e)
-			{
-				FleLog.getLogger().info("Fail to send data " + pos.x + "," + pos.z + " is is can't connect server or array outof bound?");;
-			}
+			cacheList.clear();
 		}
 	}
 	
-	private List<BlockPos> cacheList = new ArrayList();
+	private Map<EntityPlayerMP, ChunkPos> cacheList = new HashMap();
 
-	public void markPosForUpdate(BlockPos pos)
+	public void markPosForUpdate(EntityPlayerMP player, ChunkPos pos)
 	{
-		cacheList.add(pos);
+		cacheList.put(player, pos);
 	}
 
 	public IPacket createPacket(int dim, BlockPos pos)
@@ -448,5 +474,16 @@ public class FWM implements IWorldManager, IAirConditionProvider
 		for(int i = 0; i < maxNBTSize; ++i)
 			arrays[i] = data.asIntArray(i);
 		return new FleWorldMetaSyncPacket(dim, tPos, arrays);
+	}
+
+	
+	public void syncMeta(World world, BlockPos pos, short[] data)
+	{
+		;
+	}
+
+	public void syncMetas(int dim, ChunkPos pos, int[][] datas)
+	{
+		;
 	}
 }

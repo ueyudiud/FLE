@@ -2,51 +2,50 @@ package fle.core.net;
 
 import java.io.IOException;
 
+import flapi.net.FleAbstractPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
+import flapi.world.BlockPos.ChunkPos;
 import fle.FLE;
-import fle.api.net.FleCoordinatesPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
-import fle.api.world.BlockPos;
 
-public class FleSyncAskFWMPacket extends FleCoordinatesPacket
+public class FleSyncAskFWMPacket extends FleAbstractPacket
 {	
-	byte type;
+	ChunkPos pos;
+	int dim;
 	
 	public FleSyncAskFWMPacket()
 	{
-		super(true);
+		super();
 	}
-	public FleSyncAskFWMPacket(byte aType, BlockPos pos)
+	public FleSyncAskFWMPacket(int dim, ChunkPos pos)
 	{
-		super(true, pos);
-		type = aType;
-		
+		super();
+		this.dim = dim;
+		this.pos = pos;
 	}
 	
 	@Override
 	protected void write(FleDataOutputStream os) throws IOException
 	{
-		super.write(os);
-		os.writeByte(type);
+		os.writeInt(dim);
+		os.writeInt((int) pos.x);
+		os.writeInt((int) pos.z);
 	}
 	
 	@Override
 	protected void read(FleDataInputStream is) throws IOException
 	{
-		super.read(is);
-		type = is.readByte();
+		dim = is.readInt();
+		int x = is.readInt();
+		int z = is.readInt();
+		pos = new ChunkPos(x, z);
 	}
 	
 	@Override
 	public Object process(FleNetworkHandler nwh)
 	{
-		switch(type)
-		{
-		case 0 : FLE.fle.getWorldManager().markPosForUpdate(pos());
-		break;
-		case 1 : return FLE.fle.getWorldManager().createPacket(pos().getDim(), pos());
-		}
+		FLE.fle.getWorldManager().markPosForUpdate(getPlayer(), pos);
 		return null;
 	}
 }

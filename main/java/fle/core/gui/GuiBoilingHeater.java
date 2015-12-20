@@ -2,14 +2,13 @@ package fle.core.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiIconButton;
-import fle.api.gui.GuiIconButton.ButtonSize;
+import flapi.gui.GuiContainerBase;
+import flapi.gui.GuiIconButton;
+import flapi.gui.GuiIconButton.ButtonSize;
+import flapi.util.FleValue;
 import fle.core.te.argil.TileEntityBoilingHeater;
 
 @SideOnly(Side.CLIENT)
@@ -34,7 +33,6 @@ public class GuiBoilingHeater extends GuiContainerBase
 		{
 			drawTexturedModalRect(aXOffset + 81, aYOffset + 41 + 14 - p, 176, 14 - p, 14, p);
 		}
-		drawFluid(66, 15, tile.getTank(0), 8, 20);
 		drawTexturedModalRect(aXOffset + 66, aYOffset + 15, 176, 14, 8, 20);
 	}
 	

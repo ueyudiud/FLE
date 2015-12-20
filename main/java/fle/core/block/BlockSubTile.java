@@ -13,7 +13,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,28 +21,26 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.FleAPI;
+import flapi.block.interfaces.IBlockBehaviour;
+import flapi.block.interfaces.IBlockWithTileBehaviour;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.block.interfaces.IFacingBlock;
+import flapi.block.old.BlockHasTile;
+import flapi.collection.Register;
+import flapi.enums.EnumWorldNBT;
+import flapi.te.TEBase;
+import flapi.util.BlockTextureHandler;
+import flapi.util.FleValue;
+import flapi.util.IDebugable;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.block.BlockHasTile;
-import fle.api.block.IBlockBehaviour;
-import fle.api.block.IBlockWithTileBehaviour;
-import fle.api.block.IDebugableBlock;
-import fle.api.block.IFacingBlock;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.te.ICoverTE;
-import fle.api.te.TEBase;
-import fle.api.util.FleLog;
-import fle.api.util.IBlockTextureManager;
-import fle.api.util.ITextureLocation;
-import fle.api.util.Register;
-import fle.api.world.BlockPos;
+import fle.core.util.BlockTextureManager;
 
-public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock, IDebugableBlock
+public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock, IDebugable, IDebugableBlock
 {
 	public final Register<IBlockWithTileBehaviour<BlockSubTile>> blockBehaviors = new Register();
-	protected Map<String, IBlockTextureManager> textureNameMap = new HashMap();
-	private Map<String, IIcon[]> iconMap;
+	protected Map<String, BlockTextureHandler> textureNameMap = new HashMap();
 
 	protected BlockSubTile(String aName, Material aMaterial)
 	{
@@ -54,11 +51,11 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		super(clazz, aName, aMaterial);
 	}
 	
-	public void registerSub(int index, String aName, String aLocalized, IBlockTextureManager locate, IBlockWithTileBehaviour<BlockSubTile> blockBehavior)
+	public void registerSub(int index, String aName, String aLocalized, BlockTextureManager locate, IBlockWithTileBehaviour<BlockSubTile> blockBehavior)
 	{
 		blockBehaviors.register(index, blockBehavior, aName);
-		textureNameMap.put(aName, locate);
-		FleAPI.lm.registerLocal(new ItemStack(this, 1, index).getUnlocalizedName() + ".name", aLocalized);
+		textureNameMap.put(aName, new BlockTextureHandler(locate));
+		FleAPI.langManager.registerLocal(new ItemStack(this, 1, index).getUnlocalizedName() + ".name", aLocalized);
 	}
 	
 	public Register<IBlockWithTileBehaviour<BlockSubTile>> getRegister()
@@ -66,7 +63,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		return blockBehaviors;
 	}
 	
-	public IBlockTextureManager getTextureName(String meta)
+	public BlockTextureHandler getTextureHandler(String meta)
 	{
 		return textureNameMap.get(meta);
 	}
@@ -75,14 +72,10 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	public void registerBlockIcons(IIconRegister register)
 	{
 		blockIcon = register.registerIcon(FleValue.TEXTURE_FILE + ":" + FleValue.VOID_ICON_FILE);
-		iconMap = new HashMap();
 		for(String str : textureNameMap.keySet())
 		{
-			ITextureLocation locate = textureNameMap.get(str);
-			IIcon[] icons = new IIcon[locate.getLocateSize()];
-			for(int i = 0; i < icons.length; ++i)
-				icons[i] = register.registerIcon(locate.getTextureFileName(i) + ":" + locate.getTextureName(i));
-			iconMap.put(str, icons);
+			BlockTextureHandler handler = textureNameMap.get(str);
+			if(handler != null) handler.registerIcon(register);
 		}
 	}
 	
@@ -93,7 +86,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		int tSide = FLE.fle.getWorldManager().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Facing);
 		try
 		{
-			return iconMap.get(blockBehaviors.name(tMeta))[textureNameMap.get(blockBehaviors.name(tMeta)).getIconID(ForgeDirection.VALID_DIRECTIONS[FleValue.MACHINE_FACING[tSide][side]])];
+			return textureNameMap.get(blockBehaviors.name(tMeta)).getIcon(this, world, x, y, z, FleValue.MACHINE_FACING[tSide][side]);
 		}
 		catch(Throwable e)
 		{
@@ -107,7 +100,7 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 	{
 		try
 		{
-			return iconMap.get(blockBehaviors.name(meta))[textureNameMap.get(blockBehaviors.name(meta)).getIconID(ForgeDirection.VALID_DIRECTIONS[FleValue.MACHINE_FACING[3][side]])];
+			return textureNameMap.get(blockBehaviors.name(meta)).getIcon(this, meta, FleValue.MACHINE_FACING[3][side]);
 		}
 		catch(Throwable e)
 		{
@@ -432,7 +425,11 @@ public abstract class BlockSubTile extends BlockHasTile implements IFacingBlock,
 		IBlockWithTileBehaviour<BlockSubTile> behaviour = blockBehaviors.get(getDamageValue(aWorld, x, y, z));
 		if(behaviour instanceof IDebugableBlock)
 		{
-			((IDebugableBlock) behaviour).addInfomationToList(aWorld, x, y, z, aList);
+			((IDebugableBlock) behaviour).addInfomationToList(aWorld, x, y, z, aList);//Old API.
+		}
+		else if(behaviour instanceof IDebugable)
+		{
+			((IDebugable) behaviour).addInfomationToList(aWorld, x, y, z, aList);
 		}
 	}
 }

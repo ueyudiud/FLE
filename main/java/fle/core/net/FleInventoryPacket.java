@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import fle.api.net.FleCoordinatesPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.te.ITEInWorld;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
-import fle.api.world.BlockPos;
+import flapi.net.FleCoordinatesPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.te.interfaces.IObjectInWorld;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
+import flapi.world.BlockPos;
 
 public class FleInventoryPacket extends FleCoordinatesPacket
 {
@@ -21,22 +21,22 @@ public class FleInventoryPacket extends FleCoordinatesPacket
 		super(true);
 	}
 	
-	public FleInventoryPacket(ITEInWorld tile)
+	public FleInventoryPacket(IObjectInWorld tile)
 	{
 		this(A.ALL.ordinal(), tile);
 	}
 	
-	public FleInventoryPacket(ITEInWorld tile, int id)
+	public FleInventoryPacket(IObjectInWorld tile, int id)
 	{
 		this((id << 4) | A.ONE.ordinal(), tile);
 	}
 	
-	public FleInventoryPacket(ITEInWorld tile, int start, int end)
+	public FleInventoryPacket(IObjectInWorld tile, int start, int end)
 	{
 		this((end << 16) | (start << 4) | A.RANGE.ordinal(), tile);
 	}
 	
-	private FleInventoryPacket(int type, ITEInWorld tile)
+	private FleInventoryPacket(int type, IObjectInWorld tile)
 	{
 		super(true, tile.getBlockPos());
 		id = type;
@@ -142,9 +142,9 @@ public class FleInventoryPacket extends FleCoordinatesPacket
 			case RANGE:
 				short start = (short) ((id & 0xFFF0) >> 4);
 				short end = (short) (id >> 16);
-				for(int i = 0; i < stacks.length; ++i)
+				for(int i = start; i < end; ++i)
 				{
-					inv.setInventorySlotContents(start + i, stacks[i]);
+					inv.setInventorySlotContents(i, stacks[i - start]);
 				}
 				break;
 			case ONE:

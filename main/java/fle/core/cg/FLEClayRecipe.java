@@ -6,12 +6,12 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import fle.api.FleValue;
-import fle.api.cg.GuiBookBase;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
+import flapi.cg.GuiBookBase;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 import fle.core.item.ItemFleSub;
 import fle.core.recipe.CeramicsRecipe;
@@ -60,14 +60,14 @@ public class FLEClayRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			ClayRecipe page = (ClayRecipe) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				list.add(page);
 				continue;
 			}
-			for(ItemStack tStack : page.input.toList())
+			for(ItemStack tStack : ClayRecipe.input.toList())
 			{
-				if(contain.isStackEqul(tStack))
+				if(contain.equal(tStack))
 				{
 					list.add(page);
 					break;
@@ -81,7 +81,7 @@ public class FLEClayRecipe extends StandardType
 	{
 		private static final ResourceLocation locate = new ResourceLocation(FleValue.TEXTURE_FILE, "textures/gui/cg/clay_model.png");
 		
-		static final ItemBaseStack input = new ItemBaseStack(ItemFleSub.a("argil_ball", 4));
+		static final BaseStack input = new BaseStack(ItemFleSub.a("argil_ball", 4));
 		float[] value;
 		ItemStack output;
 

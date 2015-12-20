@@ -1,9 +1,9 @@
 package fle.core.te.tank;
 
-import fle.api.te.TileEntityAbstractTank;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
+import flapi.te.TEAbstractTank;
 
 public class TileEntityMultiTankIO extends TileEntityMultiTank
 {
@@ -46,7 +46,7 @@ public class TileEntityMultiTankIO extends TileEntityMultiTank
 	}
 	
 	@Override
-	public boolean canBeConnect(TileEntityAbstractTank main, int xPos,
+	public boolean canBeConnect(TEAbstractTank main, int xPos,
 			int yPos, int zPos, int width, int height)
 	{
 		return yPos == 0 || height - yPos > 5 ? false : 

@@ -2,8 +2,8 @@ package fle.core.item.behavior;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import fle.api.enums.EnumFoodType;
-import fle.api.item.ItemFleFood;
+import flapi.enums.EnumFoodType;
+import flapi.item.ItemFleFood;
 
 public class FoodStandard extends FoodBase
 {

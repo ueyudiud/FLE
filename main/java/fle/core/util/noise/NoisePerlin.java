@@ -4,9 +4,6 @@ import java.util.Arrays;
 
 public class NoisePerlin extends NoiseBase
 {
-	@Deprecated
-	private final int octave;
-
 	public NoisePerlin(long aSeed, int aOctave)
 	{
 		this(aSeed);
@@ -14,24 +11,15 @@ public class NoisePerlin extends NoiseBase
 	public NoisePerlin(long aSeed)
 	{
 		super(aSeed);
-		octave = 0;
 	}
 
 	public double noise(long x, long z)
 	{
-		return noise(x, z, 1);
+		return noise(x, -1, z);
 	}
 	public double noise(long x, long y, long z)
 	{
-		return noise(x, y, z, 1);
-	}
-	public double noise(long x, long z, int size)
-	{
-		return noise(x, 10, z, size);
-	}
-	public double noise(long x, long y, long z, int size)
-	{
-		return next(x, y, z, 0);
+		return next(x, y, z);
 	}
 	
 	@Override
@@ -42,7 +30,7 @@ public class NoisePerlin extends NoiseBase
 		for(int i = 0; i < w; ++i)
 			for(int j = 0; j < l; ++j)
 			{
-				values[i + w * j] += next(x + i, 10, z + j, 0);
+				values[i + w * j] += next(x + i, 10, z + j);
 			}
 		return values;
 	}
@@ -56,18 +44,14 @@ public class NoisePerlin extends NoiseBase
 			for(int j = 0; j < l; ++j)
 				for(int k = 0; k < h; ++k)
 				{
-					values[i + w * j + k * w * l] = next(x + i, y + j, z + k, 0);
+					values[i + w * j + k * w * l] = next(x + i, y + j, z + k);
 				}
 		return values;
 	}
 	
-	private double next(long x, long y, long z, long t)
+	private double next(long x, long y, long z)
 	{
-		x = ((x << 15) + y * seed) ^ Math.abs(x);
-		y = ((z << 14) + z * y) ^ Math.abs(y);
-		z = ((y << 13) + x * y) ^ Math.abs(z);
-		long ret = x * 1843271941L + y * 492471019L + z * 4292525927L + t * 141241L;
-		ret = ret * (ret * ret * seed + 19990303L) + 1376312589L;
-		return (1.0D - ((double)((ret * (ret * ret * 60493 + 19990303) + 1376312589) & 0x7fffffff) / 1073741824.0)) / (double) (1 << t);
+		long ret = (x * 38591L + y) ^ (y * 37501L + z) ^ (z * 17419L + x) ^ seed;
+	    return (1.0 - ((ret * (ret * (ret * 15731 + seed) + 782949221L) + 76312589L) & 0x7FFFFFFF) / 1073741824.0);   
 	}
 }

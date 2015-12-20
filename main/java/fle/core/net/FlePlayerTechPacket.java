@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.common.eventhandler.Event.Result;
-import fle.api.FleAPI;
-import fle.api.net.FleAbstractPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.tech.Technology;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
+import flapi.FleAPI;
+import flapi.net.FleAbstractPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.tech.Technology;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
 
 public class FlePlayerTechPacket extends FleAbstractPacket
 {

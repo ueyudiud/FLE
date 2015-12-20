@@ -5,13 +5,11 @@ import java.util.Random;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.config.JsonLoader;
-import fle.api.recipe.IRecipeHandler;
-import fle.api.recipe.IRecipeHandler.MachineRecipe;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.util.ConfigInfomation;
-import fle.api.util.FLEConfiguration;
+import flapi.recipe.IRecipeHandler;
+import flapi.recipe.IRecipeHandler.MachineRecipe;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.io.JsonLoader;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
@@ -23,9 +21,9 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 	
 	public static void init()
 	{
-		a(new OilMillRecipe(new ItemBaseStack(ItemFleSeed.a("soybean")), ItemFleSub.a("plant_waste"), 0.08F, new FluidStack(IB.plantOil, 25)));
-		a(new OilMillRecipe(new ItemBaseStack(ItemFleSeed.a("suger_cances")), ItemFleSub.a("plant_waste"), 0.2F, new FluidStack(IB.sugarcane_juice, 50)));
-		a(new OilMillRecipe(new ItemBaseStack(Items.apple), ItemFleSub.a("plant_waste"), 0.15F, new FluidStack(IB.apple_juice, 30)));
+		a(new OilMillRecipe(new BaseStack(ItemFleSeed.a("soybean")), ItemFleSub.a("plant_waste"), 0.08F, new FluidStack(IB.plantOil, 25)));
+		a(new OilMillRecipe(new BaseStack(ItemFleSeed.a("suger_cances")), ItemFleSub.a("plant_waste"), 0.2F, new FluidStack(IB.sugarcane_juice, 50)));
+		a(new OilMillRecipe(new BaseStack(Items.apple), ItemFleSub.a("plant_waste"), 0.15F, new FluidStack(IB.apple_juice, 30)));
 	}
 	
 	public static void postInit(JsonLoader loader)
@@ -50,8 +48,6 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		private ItemAbstractStack input;
 		public ItemStack output1;
 		private float outputChance;
-		private final float defaultOutputChance;
-		private final int defaultOutputAmount;
 		public FluidStack output2;
 
 		public OilMillRecipe(ItemAbstractStack aInput, FluidStack aOutput2)
@@ -63,9 +59,8 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 			input = aInput;
 			if(aOutput1 != null)
 				output1 = aOutput1.copy();
-			defaultOutputChance = outputChance = aOutputChance;
+			outputChance = aOutputChance;
 			output2 = aOutput2.copy();
-			defaultOutputAmount = output2.amount;
 		}
 		
 		public ItemStack getRandOutput()
@@ -115,11 +110,11 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		protected boolean isEqual(RecipeKey keyRaw)
 		{
 			OilMillKey key = (OilMillKey) keyRaw;
-			if(key.key != null && this.key != null) return this.key.isStackEqul(key.key);
+			if(key.key != null && this.key != null) return this.key.equal(key.key);
 			if(key.key != null && target != null)
-					return key.key.isStackEqul(target);
+					return key.key.equal(target);
 			if(key.target != null && this.key != null)
-					return this.key.isStackEqul(key.target);
+					return this.key.equal(key.target);
 			return false;
 		}
 		

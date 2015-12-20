@@ -4,10 +4,9 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
+import flapi.plant.PlantCard;
+import flapi.recipe.DropInfo;
 import fle.FLE;
-import fle.api.plant.PlantCard;
-import fle.api.util.DropInfo;
-import fle.core.block.crop.CropBase;
 
 public abstract class PlantBase extends PlantCard
 {

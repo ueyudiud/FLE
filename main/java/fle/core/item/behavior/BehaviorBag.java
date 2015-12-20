@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import fle.api.item.IBagable;
-import fle.api.item.ItemFleMetaBase;
+import flapi.item.ItemFleMetaBase;
+import flapi.item.interfaces.IBagable;
 
 public abstract class BehaviorBag extends BehaviorBase implements IBagable
 {

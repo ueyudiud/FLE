@@ -5,9 +5,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
-import fle.api.block.IBlockWithTileBehaviour;
-import fle.api.block.IGuiBlock;
+import flapi.block.interfaces.IBlockWithTileBehaviour;
+import flapi.block.interfaces.IGuiBlock;
 import fle.core.block.BlockSubTile;
+import fle.core.block.behaviour.BehaviourBarrel;
 import fle.core.block.behaviour.BehaviourPolish;
 import fle.core.util.BlockTextureManager;
 
@@ -16,6 +17,7 @@ public class BlockWoodMachine extends BlockSubTile implements IGuiBlock
 	public BlockWoodMachine init()
 	{
 		registerSub(0, "polishTable", "Polish Table", new BlockTextureManager(new String[]{"machine/polish_side", "machine/polish_top", "machine/polish_down", "machine/polish_side"}), new BehaviourPolish());
+		registerSub(1, "barrel", "Barrel", new BlockTextureManager(new String[]{"machine/barrel_top", "machine/barrel_side"}), new BehaviourBarrel());
 		return this;
 	}
 	

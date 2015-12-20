@@ -5,9 +5,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import flapi.item.ItemFleMetaBase;
+import flapi.item.interfaces.IArrowItem;
 import fle.FLE;
-import fle.api.item.IArrowItem;
-import fle.api.item.ItemFleMetaBase;
 
 public class BehaviorArrowBag extends BehaviorBag
 {

@@ -7,13 +7,13 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import fle.api.FleValue;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.RecipeInfomation;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidStack;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.RecipeInfomation;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.solid.Solid;
+import flapi.solid.SolidStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 
 public class FLESifterRecipe extends StandardType
@@ -64,7 +64,7 @@ public class FLESifterRecipe extends StandardType
 			if(page.input1 == null) continue;
 			for(ItemStack tStack : page.input1.toList())
 			{
-				if(contain.isStackEqul(tStack))
+				if(contain.equal(tStack))
 				{
 					list.add(page);
 					break;
@@ -83,12 +83,12 @@ public class FLESifterRecipe extends StandardType
 		{
 			SifterRecipe page = (SifterRecipe) rawPage;
 			if(page.input2 != null)
-				if(page.input2.getObj() == solid)
+				if(page.input2.get() == solid)
 				{
 					list.add(page);
 					continue;
 				}
-			if(page.output1.getObj() == solid)
+			if(page.output1.get() == solid)
 			{
 				list.add(page);
 				continue;

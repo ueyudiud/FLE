@@ -1,18 +1,16 @@
 package fle.core.recipe;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.config.JsonLoader;
-import fle.api.recipe.IRecipeHandler;
-import fle.api.recipe.IRecipeHandler.MachineRecipe;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.ItemOreStack;
-import fle.api.util.ConfigInfomation;
-import fle.api.util.FLEConfiguration;
+import flapi.recipe.IRecipeHandler;
+import flapi.recipe.IRecipeHandler.MachineRecipe;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.recipe.stack.OreStack;
+import flapi.util.io.JsonLoader;
 import fle.core.init.IB;
+import fle.core.item.ItemFleFood;
 import fle.core.item.ItemFleSub;
 import fle.core.recipe.FLESoakRecipe.SoakRecipe;
 
@@ -22,8 +20,9 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 
 	public static void init()
 	{
-		a(new SoakRecipe(new FluidStack(IB.plantOil, 100), new ItemOreStack("plankWood"), 400, ItemFleSub.a("rotproof_plank")));
-		a(new SoakRecipe(new FluidStack(IB.plantOil, 100), new ItemOreStack("stickWood"), 100, ItemFleSub.a("rotproof_stick")));
+		a(new SoakRecipe(new FluidStack(IB.plantOil, 100), new OreStack("plankWood"), 400, ItemFleSub.a("rotproof_plank")));
+		a(new SoakRecipe(new FluidStack(IB.plantOil, 100), new OreStack("stickWood"), 100, ItemFleSub.a("rotproof_stick")));
+		a(new SoakRecipe(new FluidStack(FluidRegistry.WATER, 100), new BaseStack(ItemFleFood.a("groats_wheat")), 2000, ItemFleSub.a("aspergillus")));
 	}
 	
 	public static void postInit(JsonLoader loader)
@@ -47,7 +46,6 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 	{
 		private FluidStack fluid;
 		private ItemAbstractStack stack;
-		private final int defaultTick;
 		public int tick;
 		private ItemStack output;
 		
@@ -55,7 +53,7 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 		{
 			fluid = aFluid.copy();
 			stack = aStack;
-			defaultTick = tick = recipeTick;
+			tick = recipeTick;
 			output = aOutput.copy();
 		}
 		
@@ -128,12 +126,12 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 			SoakRecipeKey key = (SoakRecipeKey) keyRaw;
 			if(isStandardKey() && key.isStandardKey())
 			{
-				return FluidStack.areFluidStackTagsEqual(key2, key.key2) && key1.isStackEqul(key.key1);
+				return FluidStack.areFluidStackTagsEqual(key2, key.key2) && key1.equal(key.key1);
 			}
 			if(isStandardKey())
 			{
 				if(key.item == null) return false;
-				if(!key1.isStackEqul(key.item)) return false;
+				if(!key1.equal(key.item)) return false;
 				if(key.item.stackSize * outputSize > maxSize) return false;
 				if(key.fluid == null) return false;
 				FluidStack fluid = key2.copy();
@@ -171,7 +169,7 @@ public class FLESoakRecipe extends IRecipeHandler<SoakRecipe>
 			if(input == null || fluid == null) return false;
 			FluidStack fluid1 = key2.copy();
 			fluid1.amount *= input.stackSize;
-			return fluid.containsFluid(fluid1) && key1.isStackEqul(input);
+			return fluid.containsFluid(fluid1) && key1.equal(input);
 		}
 	}
 }

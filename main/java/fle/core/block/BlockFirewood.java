@@ -1,8 +1,5 @@
 package fle.core.block;
 
-import static net.minecraftforge.common.util.ForgeDirection.DOWN;
-import static net.minecraftforge.common.util.ForgeDirection.UP;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,18 +7,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleAPI;
-import fle.api.block.BlockHasTile;
-import fle.api.world.BlockPos;
+import flapi.FleAPI;
+import flapi.block.old.BlockHasTile;
 import fle.core.init.IB;
 import fle.core.te.TileEntityFirewood;
 
@@ -36,7 +30,7 @@ public class BlockFirewood extends BlockHasTile
 		super("firewood", Material.wood);
 		setHardness(1.0F);
 		setResistance(1.0F);
-		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "Firewood");
+		FleAPI.langManager.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "Firewood");
 	}
 	
 	@Override
@@ -125,7 +119,6 @@ public class BlockFirewood extends BlockHasTile
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
 			TileEntity tileRaw, int metadata, int fortune)
 	{
-		TileEntityFirewood tile = (TileEntityFirewood) tileRaw;
 		ArrayList<ItemStack> list = new ArrayList();
 		list.add(new ItemStack(IB.firewood));
 		return list;

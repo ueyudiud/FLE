@@ -2,22 +2,38 @@ package fle.core.recipe;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.cg.RecipesTab;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.RecipeAdder;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidStack;
-import fle.api.util.Compact;
-import fle.api.util.DropInfo;
+import flapi.cg.RecipesTab;
+import flapi.recipe.DropInfo;
+import flapi.recipe.IPlayerToolCraftingRecipe;
+import flapi.recipe.RecipeAdder;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.solid.Solid;
+import flapi.solid.SolidStack;
+import flapi.util.Compact;
 import fle.core.recipe.FLEBoilingHeaterRecipe.BHRecipe;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 import fle.core.recipe.FLEOilMillRecipe.OilMillRecipe;
 import fle.core.recipe.FLEPolishRecipe.PolishRecipe;
 import fle.core.recipe.FLESifterRecipe.SifterRecipe;
 import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe;
+import fle.core.recipe.crafting.PlayerToolCraftingRecipe;
 
 public class FLERA implements RecipeAdder
 {
+	@Override
+	public void addPlayerCraftingRecipe(IPlayerToolCraftingRecipe recipe)
+	{
+		PlayerToolCraftingRecipe.addRecipe(recipe);
+	}
+	
+	@Override
+	public void addPlayerCraftingRecipe(ItemAbstractStack input1,
+			ItemAbstractStack input2, ItemAbstractStack tool, float toolDamage,
+			ItemStack output)
+	{
+		PlayerToolCraftingRecipe.addRecipe(new PlayerToolCraftingRecipe(input1, input2, tool, toolDamage, output));
+	}
+	
 	public void addWashingRecipe(ItemAbstractStack input, DropInfo info)
 	{
 		WashingRecipe.registryDust(input, info);

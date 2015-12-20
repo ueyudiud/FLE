@@ -7,22 +7,19 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.cover.Cover;
-import fle.api.cover.CoverRegistry;
-import fle.api.event.FLEFontRegisterEvent;
-import fle.api.fluid.FluidBase;
-import fle.api.gui.GuiCondition;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidRegistry;
-import fle.api.util.ColorMap;
-import fle.api.util.FluidIconRegisterEvent;
-import fle.api.util.IColorMapHandler;
+import flapi.cover.Cover;
+import flapi.cover.CoverRegistry;
+import flapi.event.FluidIconRegisterEvent;
+import flapi.fluid.FluidBase;
+import flapi.gui.GuiCondition;
+import flapi.solid.Solid;
+import flapi.solid.SolidRegistry;
+import flapi.util.ColorMap;
+import flapi.util.FleValue;
+import flapi.util.IColorMapHandler;
 import fle.core.init.Renders;
 import fle.core.init.Rs;
 import fle.core.util.FleColorMap;
@@ -67,15 +64,12 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	@Override
 	public void onIconRegister()
 	{
-		FleAPI.conditionIconRegister = new FleTextureMap("textures/condition");
-		FleAPI.fontRegister = new FleTextureMap("textures/font");
+		FleTextureMap map = new FleTextureMap("textures/condition");
 		for(GuiCondition c : GuiCondition.register)
 		{
-			c.registerIcon(FleAPI.conditionIconRegister);
+			c.registerIcon(map);
 		}
-		MinecraftForge.EVENT_BUS.post(new FLEFontRegisterEvent(FleAPI.fontRegister));
-		Minecraft.getMinecraft().renderEngine.loadTexture(FleAPI.conditionLocate, (FleTextureMap) FleAPI.conditionIconRegister);
-		Minecraft.getMinecraft().renderEngine.loadTexture(FleAPI.fontLocate, (FleTextureMap) FleAPI.fontRegister);
+		Minecraft.getMinecraft().renderEngine.loadTexture(FleValue.conditionLocate, map);
 	}
 
 	@Override
@@ -113,11 +107,5 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		{
 			tCover.registerIcon(evt.register);
 		}
-	}
-	
-	@SubscribeEvent
-	public void onFontIconRegister(FLEFontRegisterEvent evt)
-	{
-		
 	}
 }

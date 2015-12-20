@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
-import fle.api.util.FleLog;
+import flapi.util.FleLog;
 
 public class AttributeMap
 {

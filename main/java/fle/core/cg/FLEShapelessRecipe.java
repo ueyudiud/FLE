@@ -8,14 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import fle.api.FleValue;
-import fle.api.cg.IGuideType;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemArrayStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.ShapelessFleRecipe;
+import flapi.cg.IGuideType;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.ShapelessFleRecipe;
+import flapi.recipe.stack.ArrayStack;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 import fle.core.util.Util;
 
@@ -65,7 +65,7 @@ public class FLEShapelessRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			ShapelessPage page = (ShapelessPage) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				ret.add(rawPage);
 				continue;
@@ -76,7 +76,7 @@ public class FLEShapelessRecipe extends StandardType
 				for(ItemStack stack : stacks)
 				{
 					if(stack == null) continue;
-					if(contain.isStackEqul(stack))
+					if(contain.equal(stack))
 					{
 						ret.add(rawPage);
 						continue label;
@@ -125,12 +125,12 @@ public class FLEShapelessRecipe extends StandardType
 			{
 				if(obj instanceof ItemStack)
 				{
-					stacks[i] = new ItemBaseStack((ItemStack) obj);
+					stacks[i] = new BaseStack((ItemStack) obj);
 					showArray[i] = new ItemStack[]{(ItemStack) obj};
 				}
 				else if(obj instanceof List)
 				{
-					stacks[i] = new ItemArrayStack((List) obj);
+					stacks[i] = new ArrayStack((List) obj);
 					showArray[i] = stacks[i].toList();
 				}
 				++i;
@@ -145,7 +145,7 @@ public class FLEShapelessRecipe extends StandardType
 			showArray = new ItemStack[stacks.length][];
 			for(int i = 0; i < ts.length; ++i)
 			{
-				stacks[i] = new ItemBaseStack((ItemStack) ts[i]);
+				stacks[i] = new BaseStack((ItemStack) ts[i]);
 				showArray[i] = new ItemStack[]{ts[i] != null ? ((ItemStack) ts[i]).copy() : null};
 			}
 			Util.setStacksSize(showArray, 1);

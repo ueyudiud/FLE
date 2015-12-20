@@ -3,11 +3,10 @@ package fle.core.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.SlotHolographic;
-import fle.api.net.INetEventListener;
-import fle.api.te.IFluidTanks;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.FluidSlot;
+import flapi.gui.SlotTool;
+import flapi.net.INetEventListener;
 import fle.core.te.argil.TileEntityBoilingHeater;
 
 public class ContainerBoilingHeater extends ContainerCraftable implements INetEventListener
@@ -27,31 +26,11 @@ public class ContainerBoilingHeater extends ContainerCraftable implements INetEv
 		});
 		addSlotToContainer(new Slot(tile, 3, 94, 19));
 		addSlotToContainer(new Slot(tile, 4, 89, 57));
-		addSlotToContainer(new SlotHolographic(tile, 5, 71, 57, false, false));
+		addSlotToContainer(new SlotTool(tile, 5, 71, 57));
+		
+		addSlotToContainer(new FluidSlot(tile, 0, 66, 15, 8, 20));
 		locateRecipeInput = new TransLocation("input", 36);
 		locateRecipeOutput = new TransLocation("output", 37);
-	}
-
-	@Override
-	public ItemStack slotClick(int aSlotID, int aMouseclick, int aShifthold, EntityPlayer aPlayer)
-	{
-		if(aSlotID > 0)
-		{
-			if(getSlot(aSlotID) == getSlotFromInventory(inv, 5))
-			{
-				ItemStack tStack = aPlayer.inventory.getItemStack();
-			    if (tStack != null)
-			    {
-			    	((TileEntityBoilingHeater) inv).onToolClick(tStack, aPlayer);
-			    	if (tStack.stackSize <= 0)
-			    	{
-			    		aPlayer.inventory.setItemStack(null);
-			    	}
-			    }
-			    return null;
-			}
-		}
-		return super.slotClick(aSlotID, aMouseclick, aShifthold, aPlayer);
 	}
 
 	@Override
@@ -61,7 +40,7 @@ public class ContainerBoilingHeater extends ContainerCraftable implements INetEv
 		{
 			if((Integer) contain == 0)
 			{
-				((IFluidTanks) inv).drainTank(0, ((IFluidTanks) inv).getTank(0).getCapacity(), true);
+				((TileEntityBoilingHeater) inv).drainTank(0, ((TileEntityBoilingHeater) inv).getTank(0).getCapacity(), true);
 				((TileEntityBoilingHeater) inv).resetRecipe();
 			}
 		}

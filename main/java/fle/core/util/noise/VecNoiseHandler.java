@@ -4,14 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import fle.api.util.FleLog;
+import flapi.util.FleLog;
+import flapi.util.io.JsonInputStream;
 import fle.core.util.FLEMath;
-import fle.core.world.dim.FLESurfaceChunkProvider;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.gen.ChunkProviderGenerate;
 
 public class VecNoiseHandler
 {	
@@ -21,8 +21,20 @@ public class VecNoiseHandler
 	 */
 	public static void main(String[] args)
 	{
-		FLESurfaceChunkProvider.drawImage(128, "Debug Chunk");
-		drawImage(1024, "Debug", new NoiseMix(2, 16, new NoisePerlin(38573013L, 2)), new VecNoisePerlin(3759180L, 3, 1.0F));
+		long l = new Random().nextLong();
+		System.out.print(l);
+		//FLESurfaceChunkProvider.drawImage(128, "Debug Chunk");
+		drawImage(512, "Debug", 
+				new NoiseMix(l, 
+						new NoiseFuzzy(1L, 4, 1.6D, 3.2D, 0.4F), 
+						new NoiseSmooth(
+								new NoiseGauss(1L, 3, 
+										new NoiseSmooth(18F, 
+												new NoisePerlin(1L))))), 
+				new VecNoisePerlin(3759180L, 3, 1.0F));
+		drawImage(512, "Debug1", 
+				new NoiseMontain(l, 7, 2, .3F),
+				new VecNoisePerlin(35917541L, 2, 4.0F));
 	}
 	
 	final static double basic;
@@ -34,6 +46,68 @@ public class VecNoiseHandler
 			for(int j1 = -2; j1 <= 2; ++j1)
 				a += FLEMath.alpha(2D, FLEMath.distance(j0, j1));
 		basic = a;
+	}
+
+	public static NoiseBase loadNoiseFromJson(JsonInputStream stream) throws IOException
+	{
+		return loadNoiseFromJson(true, stream);
+	}
+	
+	private static NoiseBase loadNoiseFromJson(boolean isFirstLoad, JsonInputStream stream) throws IOException
+	{
+		try
+		{
+			if(!stream.contain("Type"))
+			{
+				throw new IOException();
+			}
+			String name = stream.getString("Type", null);
+			if("perlin".equals(name))
+			{
+				return new NoisePerlin(0L);
+			}
+			else if("cell".equals(name))
+			{
+				return new NoiseCell(0L);
+			}
+			else if("fuzzy".equals(name))
+			{
+				int octive = stream.getInteger("Octive", 1);
+				double start = stream.getDouble("StartLevel", 4.0);
+				double increase = stream.getDouble("IncreaseLevel", 2.0F);
+				float weakness = (float) stream.getDouble("Weakness", .5F);
+				return new NoiseFuzzy(0L, octive, start, increase, weakness);
+			}
+			else if("gauss".equals(name))
+			{
+				int size = stream.getInteger("Size", 2);
+				return new NoiseGauss(0L, size, loadNoiseFromJson(false, stream.sub("SubNoise")));
+			}
+			else if("mix".equals(name))
+			{
+				return new NoiseMix(0L, loadNoiseFromJson(false, stream.sub("SubNoise1")), loadNoiseFromJson(false, stream.sub("SubNoise2")));
+			}
+			else if("montain".equals(name))
+			{
+				int size = stream.getInteger("Size", 1);
+				int gen = stream.getInteger("GenChance", 3);
+				double level = stream.getDouble("Level", 1);
+				return new NoiseMontain(0L, size, gen, level);
+			}
+			else if("smooth".equals(name))
+			{
+				int type = stream.getInteger("Type", 0);
+				double size = stream.getDouble("Size", 4.0F);
+				return new NoiseSmooth(type, size, loadNoiseFromJson(false, stream.sub("SubNoise")));
+			}
+		}
+		catch(Throwable e)
+		{
+			if(!isFirstLoad) FleLog.addExceptionToCache(e);
+			else FleLog.resetAndCatchException("FLE : Fail to load custom noise.");
+			throw new IOException();
+		}
+		return null;
 	}
 	
 	public static double[] getValue(int x, int z, NoiseBase height, VecNoiseBase noise, int size)
@@ -72,7 +146,7 @@ public class VecNoiseHandler
 						Vec vec = vecNoise[i0 + j0 + 3 + (i1 + j1 + 3) * (size + 6)];
 						double o = FLEMath.alpha(2D, FLEMath.distance(j0 + vec.xCoord, j1 + vec.zCoord));
 						double b = heightNoise[i0 + j0 + 3 + (i1 + j1 + 3) * (size + 6)];
-						b = b * 0.8F + 0.2F;
+						//b = b * 0.8F + 0.2F;
 						a += b * o;
 					}
 				a /= basic;

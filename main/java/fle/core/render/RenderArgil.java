@@ -1,7 +1,5 @@
 package fle.core.render;
 
-import net.minecraft.client.renderer.entity.RenderItem;
-
 public class RenderArgil extends RenderBase
 {
 	double d1 = 1D / 16D,

@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleValue;
-import fle.api.cg.GuiBookBase;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.RecipeInfomation;
+import flapi.cg.GuiBookBase;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.RecipeInfomation;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 
 public class FLEOilMillRecipe extends StandardType
@@ -62,14 +62,14 @@ public class FLEOilMillRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			OilMillRecipe page = (OilMillRecipe) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				list.add(page);
 				continue label;
 			}
 			for(ItemStack tStack : page.input.toList())
 			{
-				if(contain.isStackEqul(tStack))
+				if(contain.equal(tStack))
 				{
 					list.add(page);
 					continue label;

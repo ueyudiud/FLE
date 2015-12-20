@@ -6,11 +6,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import flapi.block.interfaces.IMovableBlock;
+import flapi.block.old.BlockFle;
+import flapi.block.old.ItemFleBlock;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.block.BlockFle;
-import fle.api.block.IMovableBlock;
-import fle.api.block.ItemFleBlock;
-import fle.api.world.BlockPos;
 import fle.core.entity.EntityFleFallingBlock;
 
 public abstract class BlockFalling extends BlockFle implements IMovableBlock

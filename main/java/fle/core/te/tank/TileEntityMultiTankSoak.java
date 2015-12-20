@@ -5,8 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.te.TileEntityAbstractTank;
-import fle.core.inventory.tank.InventoryMultiTank;
+import flapi.te.TEAbstractTank;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.FLESoakRecipe;
 import fle.core.recipe.FLESoakRecipe.SoakRecipe;
@@ -70,7 +69,6 @@ public class TileEntityMultiTankSoak extends TileEntityMultiTank
 	@Override
 	protected void updateInventory()
 	{
-		super.updateInventory();
 		if(worldObj.isRemote)
 		{
 			for(int i = 0; i < 4; ++i)
@@ -119,7 +117,6 @@ public class TileEntityMultiTankSoak extends TileEntityMultiTank
 						recipeTick[i] = 0;
 						targetTick[i] = 0;
 						keys[i] = null;
-						getTileInventory().syncSlot(this);
 						syncFluidTank();
 						sendToNearBy(new FleTEPacket(this, (byte) 2), 64.0F);
 						sendToNearBy(new FleTEPacket(this, (byte) 3), 64.0F);
@@ -129,14 +126,9 @@ public class TileEntityMultiTankSoak extends TileEntityMultiTank
 		}
 	}
 	
-	@Override
-	public InventoryMultiTank getTileInventory()
-	{
-		return getThisInventory();
-	}
 	
 	@Override
-	public boolean canBeConnect(TileEntityAbstractTank main, int xPos,
+	public boolean canBeConnect(TEAbstractTank main, int xPos,
 			int yPos, int zPos, int width, int height)
 	{
 		return xPos == 0 ? zPos != 0 && zPos != width - 1 : 

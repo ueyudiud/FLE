@@ -4,13 +4,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleAPI;
-import fle.api.crop.IFertilableBlock;
-import fle.api.crop.IFertilableBlock.FertitleLevel;
-import fle.api.item.ItemFleMetaBase;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidTankInfo;
-import fle.api.world.BlockPos;
+import flapi.FleAPI;
+import flapi.item.ItemFleMetaBase;
+import flapi.plant.IFertilableBlock;
+import flapi.plant.IFertilableBlock.FertitleLevel;
+import flapi.solid.Solid;
+import flapi.solid.SolidTankInfo;
+import flapi.world.BlockPos;
 
 public class BehavoirSackFertilizer extends BehaviorSack
 {

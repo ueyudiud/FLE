@@ -3,29 +3,25 @@ package fle.core.world.dim;
 import java.util.Arrays;
 import java.util.Random;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import fle.core.util.noise.NoiseMix;
-import fle.core.util.noise.NoisePerlin;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkProviderFlat;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCaves;
 import net.minecraft.world.gen.MapGenRavine;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 
 public class FLESuperFlatSurfaceChunkProvider extends ChunkProviderGenerate
 {
 	private Random rand;
 	private World worldObj;
-	private WorldType worldType;
+	//private WorldType worldType;
 	private BiomeGenBase[] biomesForGeneration;
 	private Block[] idsBig;
 	private byte[] metaBig;

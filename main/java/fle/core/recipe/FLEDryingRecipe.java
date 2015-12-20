@@ -1,13 +1,11 @@
 package fle.core.recipe;
 
 import net.minecraft.item.ItemStack;
-import fle.api.config.JsonLoader;
-import fle.api.recipe.IRecipeHandler;
-import fle.api.recipe.IRecipeHandler.MachineRecipe;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.util.ConfigInfomation;
-import fle.api.util.FLEConfiguration;
+import flapi.recipe.IRecipeHandler;
+import flapi.recipe.IRecipeHandler.MachineRecipe;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.io.JsonLoader;
 import fle.core.item.ItemFleSub;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 
@@ -17,9 +15,9 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 	
 	public static void init()
 	{
-		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("leaves")), 50000, ItemFleSub.a("leaves_dry")));
-		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("ramie_fiber")), 30000, ItemFleSub.a("ramie_fiber_dry")));
-		a(new DryingRecipe(new ItemBaseStack(ItemFleSub.a("straw")), 30000, ItemFleSub.a("straw_dry")));
+		a(new DryingRecipe(new BaseStack(ItemFleSub.a("leaves")), 50000, ItemFleSub.a("leaves_dry")));
+		a(new DryingRecipe(new BaseStack(ItemFleSub.a("ramie_fiber")), 30000, ItemFleSub.a("ramie_fiber_dry")));
+		a(new DryingRecipe(new BaseStack(ItemFleSub.a("straw")), 30000, ItemFleSub.a("straw_dry")));
 	}
 	
 	public static void postInit(JsonLoader loader)
@@ -41,9 +39,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 	
 	public static class DryingRecipe extends MachineRecipe
 	{
-		private String name;
 		public ItemAbstractStack input;
-		private final int defaultRecipeTime;
 		public int recipeTime;
 		public ItemStack output;
 		
@@ -51,13 +47,12 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		{
 			this.input = input;
 			this.output = output.copy();
-			this.defaultRecipeTime = recipeTime = time;
-			name = "recipe.input:" + input.toString() + ".output:" + output.toString();
+			recipeTime = time;
 		}
 		
 		public boolean matchRecipe(ItemStack target)
 		{
-			if(input.isStackEqul(target))
+			if(input.equal(target))
 			{
 				return true;
 			}
@@ -99,8 +94,10 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 			DryingRecipeKey key = (DryingRecipeKey) keyRaw;
 			if(isStandardKey())
 			{
+				if(key.isStandardKey())
+					return input.equal(key.input);
 				if(key.input1 == null) return false;
-				return input.isStackEqul(key.input1);
+				return input.equal(key.input1);
 			}
 			else if(key.isStandardKey())
 			{

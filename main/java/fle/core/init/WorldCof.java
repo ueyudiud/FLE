@@ -1,19 +1,18 @@
 package fle.core.init;
 
-import fle.core.world.dim.FLENetherProvider;
-import fle.core.world.dim.FLESurfaceManager;
-import fle.core.world.dim.FLESurfaceProvider;
-import fle.core.world.dim.FLEWorldType;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.DimensionManager;
+import fle.core.world.dim.FLENetherProvider;
+import fle.core.world.dim.FLESurfaceProvider;
+import fle.core.world.dim.FLEWorldType;
 
 public class WorldCof
 {
 	public static void init()
 	{
-		FLEWorldType.DEFAULT = new FLEWorldType(WorldType.DEFAULT.getWorldTypeID(), "DEFAULT");
-		FLEWorldType.FLAT = new FLEWorldType(WorldType.FLAT.getWorldTypeID(), "FLAT");
-		FLEWorldType.LARGE_BIOMES = new FLEWorldType(WorldType.LARGE_BIOMES.getWorldTypeID(), "LARGE");
+		FLEWorldType.DEFAULT = new FLEWorldType(WorldType.DEFAULT.getWorldTypeID(), "DEFAULT", "FLE Default");
+		FLEWorldType.FLAT = new FLEWorldType(WorldType.FLAT.getWorldTypeID(), "FLAT", "FLE Flat");
+		FLEWorldType.LARGE_BIOMES = new FLEWorldType(WorldType.LARGE_BIOMES.getWorldTypeID(), "LARGE", "FLE Large Biome");
 		
 		DimensionManager.unregisterDimension(-1);
 		DimensionManager.unregisterDimension(0);

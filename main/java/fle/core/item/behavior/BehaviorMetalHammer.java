@@ -8,14 +8,15 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import fle.api.enums.EnumCraftingType;
-import fle.api.enums.EnumDamageResource;
-import fle.api.item.ICrushableTool;
-import fle.api.item.ISubPolishTool;
-import fle.api.item.ItemFleMetaBase;
-import fle.api.recipe.CraftingState;
-import fle.core.item.tool.ToolMaterialInfo;
+import flapi.enums.EnumCraftingType;
+import flapi.enums.EnumDamageResource;
+import flapi.item.ItemFleMetaBase;
+import flapi.item.interfaces.ICrushableTool;
+import flapi.item.interfaces.ISubPolishTool;
+import flapi.recipe.CraftingState;
 import fle.core.tool.StoneHammerHandler;
+import fle.tool.ToolMaterialInfo;
+import fle.tool.item.behavior.BehaviorTool;
 
 public class BehaviorMetalHammer extends BehaviorTool implements ICrushableTool, ISubPolishTool<ItemFleMetaBase>
 {

@@ -1,12 +1,10 @@
 package fle.core.gui;
 
-import fle.api.gui.ContainerCraftable;
-import fle.core.te.TileEntityStoneMill;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.SolidSlot;
+import fle.core.te.TileEntityStoneMill;
 
 public class ContainerStoneMill extends ContainerCraftable
 {
@@ -18,6 +16,7 @@ public class ContainerStoneMill extends ContainerCraftable
 		addSlotToContainer(new Slot(inventory, 1, 55, 52));
 		//addSlotToContainer(new Slot(inventory, 2, 73, 52));
 		addSlotToContainer(new Slot(inventory, 2, 91, 52));
+		addSlotToContainer(new SolidSlot(inventory, 0, 73, 52));
 		
 		locateRecipeInput = new TransLocation("input", 36);
 		locateRecipeOutput = new TransLocation("output", 37, 40);

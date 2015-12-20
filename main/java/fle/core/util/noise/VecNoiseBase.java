@@ -2,8 +2,6 @@ package fle.core.util.noise;
 
 import java.util.Arrays;
 
-import net.minecraft.util.Vec3;
-
 public abstract class VecNoiseBase
 {
 	protected long seed;

@@ -19,8 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.FishingHooks;
-import fle.api.util.FleLog;
-import fle.core.util.FlePotionEffect;
+import flapi.util.FleLog;
 import fle.core.util.Util;
 
 public class Other
@@ -29,7 +28,6 @@ public class Other
 	
 	public static void init()
 	{
-		FlePotionEffect.init();
 		try
 		{
 			for(String chest : chests)

@@ -1,6 +1,6 @@
 package fle.core.solid;
 
-import fle.api.soild.Solid;
+import flapi.solid.Solid;
 
 public class SolidFlour extends Solid
 {

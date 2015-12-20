@@ -1,7 +1,7 @@
 package fle.core.inventory;
 
 import net.minecraft.item.ItemStack;
-import fle.api.inventory.InventoryCraftable;
+import flapi.gui.InventoryCraftable;
 import fle.core.gui.ContainerWashing;
 import fle.core.init.Lang;
 

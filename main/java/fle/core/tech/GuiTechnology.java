@@ -7,11 +7,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.tech.ITechTag;
-import fle.api.tech.PlayerTechInfo;
-import fle.api.tech.Technology;
+import flapi.tech.ITechTag;
+import flapi.tech.PlayerTechInfo;
+import flapi.tech.Technology;
 
-@Deprecated
+@SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)
 public class GuiTechnology extends GuiScreen
 {

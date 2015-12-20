@@ -1,7 +1,7 @@
 package fle.core.cover;
 
-import fle.api.cover.Cover;
-import fle.api.cover.CoverRegistry;
+import flapi.cover.Cover;
+import flapi.cover.CoverRegistry;
 
 public class CoverBase extends Cover
 {

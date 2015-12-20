@@ -18,8 +18,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.block.IFacingBlock;
-import fle.api.world.BlockPos;
+import flapi.block.interfaces.IFacingBlock;
+import flapi.world.BlockPos;
 
 @SideOnly(Side.CLIENT)
 public abstract class RenderBase 
@@ -245,7 +245,6 @@ public abstract class RenderBase
         double d1 = iicon.getMinV();
         double d2 = iicon.getMaxU();
         double d3 = iicon.getMaxV();
-        double d4 = 0.0625D;
         double d5 = x + x1;
         double d6 = x + x2;
         double d7 = x + x3;

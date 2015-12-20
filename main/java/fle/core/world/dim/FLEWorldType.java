@@ -2,14 +2,13 @@ package fle.core.world.dim;
 
 import java.util.Arrays;
 
-import fle.api.FleAPI;
-import fle.core.util.Util;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldManager;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderEnd;
+import flapi.FleAPI;
+import fle.core.util.Util;
 
 public class FLEWorldType extends WorldType
 {
@@ -17,9 +16,9 @@ public class FLEWorldType extends WorldType
 	public static FLEWorldType FLAT;
 	public static FLEWorldType LARGE_BIOMES;
 	
-	public FLEWorldType(int index, String name)
+	public FLEWorldType(int index, String name, String localized)
 	{
-		this(name);
+		this(name, localized);
 		worldTypes[index] = this;
 		int oldIndex = getWorldTypeID();
 		worldTypes[oldIndex] = null;
@@ -32,16 +31,16 @@ public class FLEWorldType extends WorldType
 			e.printStackTrace();
 		}
 	}
-	public FLEWorldType(String name)
+	public FLEWorldType(String name, String localized)
 	{
 		super(name);
-		FleAPI.lm.registerLocal(super.getTranslateName(), "LOST_NAME_" + name);
+		FleAPI.langManager.registerLocal(super.getTranslateName(), localized);
 	}
 	
 	@Override
 	public String getTranslateName()
 	{
-		return FleAPI.lm.translateToLocal(super.getTranslateName(), new Object[0]);
+		return FleAPI.langManager.translateToLocal(super.getTranslateName(), new Object[0]);
 	}
 	
 	@Override

@@ -5,10 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiIconButton;
-import fle.api.gui.GuiIconButton.ButtonSize;
+import flapi.gui.GuiContainerBase;
+import flapi.gui.GuiIconButton;
+import flapi.gui.GuiIconButton.ButtonSize;
+import flapi.util.FleValue;
 import fle.core.te.TileEntityOilMill;
 
 @SideOnly(Side.CLIENT)
@@ -38,7 +38,6 @@ public class GuiLeverOilMill extends GuiContainerBase
 		{
 			drawTexturedModalRect(aXOffset + 63, aYOffset + 38, 176, 0, 10, p2);
 		}
-		drawFluid(60, 56, tile.getTank(0), 20, 8, true);
 		drawTexturedModalRect(aXOffset + 60, aYOffset + 56, 176, 16, 20, 8);
 		if(tile.type != null)
 		{

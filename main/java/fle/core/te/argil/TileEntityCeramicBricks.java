@@ -2,9 +2,9 @@ package fle.core.te.argil;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.energy.IThermalTileEntity;
+import flapi.te.TEBase;
 import fle.FLE;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.te.TEBase;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.init.Materials;
 
@@ -27,9 +27,8 @@ public class TileEntityCeramicBricks extends TEBase implements IThermalTileEntit
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
 	}

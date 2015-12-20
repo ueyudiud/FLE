@@ -1,19 +1,15 @@
 package fle.core.gui;
 
-import java.util.List;
-
-import javax.lang.model.type.ErrorType;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.GuiCondition;
-import fle.api.gui.SlotOutput;
-import fle.api.net.INetEventListener;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.GuiCondition;
+import flapi.gui.SlotOutput;
+import flapi.net.INetEventListener;
 import fle.core.inventory.InventoryCeramics;
 import fle.core.recipe.CeramicsRecipe;
 

@@ -1,40 +1,81 @@
 package fle.core.te.argil;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
+import flapi.energy.IThermalTileEntity;
+import flapi.material.MatterDictionary;
+import flapi.material.MatterDictionary.IFreezingRecipe;
+import flapi.te.TEInventory;
+import flapi.util.FleValue;
 import fle.FLE;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.te.TEInventory;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.energy.TransportHelper;
 import fle.core.init.Materials;
-import fle.core.inventory.InventoryCeramicFurnaceOutlet;
+import fle.core.recipe.RecipeHelper;
 
-public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramicFurnaceOutlet> implements IFluidHandler, IThermalTileEntity
+public class TileEntityCeramicFurnaceOutlet extends TEInventory implements IFluidHandler, IThermalTileEntity
 {
+	private int buf;
 	protected ThermalTileHelper tc = new ThermalTileHelper(Materials.Argil);
 	
 	public TileEntityCeramicFurnaceOutlet()
 	{
-		super(new InventoryCeramicFurnaceOutlet());
+		super(2);
 	}
 	
 	public TileEntityCeramicFurnaceCrucible getCrucibleTile()
 	{
-		if(getBlockPos().toPos(getDirction(getBlockPos()).getOpposite()).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
+		if(getBlockPos().toPos(getDirction().getOpposite()).getBlockTile() instanceof TileEntityCeramicFurnaceCrucible)
 		{
-			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(getDirction(getBlockPos()).getOpposite()).getBlockTile());
+			return ((TileEntityCeramicFurnaceCrucible) getBlockPos().toPos(getDirction().getOpposite()).getBlockTile());
 		}
 		return null;
 	}
 
 	@Override
-	public void updateInventory()
+	public void update()
 	{
-		getTileInventory().updateEntity(this);
+		TileEntityCeramicFurnaceCrucible tile1 = getCrucibleTile();
+		if(tile1 != null)
+		{
+			IFluidTank tank = tile1.getTank(0);
+			IFreezingRecipe recipe = MatterDictionary.getFreeze(tank.getFluid(), this);
+			if(recipe != null && !isClient())
+			{
+				int require = recipe.getMatterRequire(tank.getFluid(), this);
+				if(tank.getFluidAmount() >= require)
+				{
+					++buf;
+					if(buf > (tank.getFluid().getFluid().getTemperature(tank.getFluid()) - FleValue.WATER_FREEZE_POINT))
+					{
+						ItemStack output = recipe.getOutput(tank.getFluid(), this).copy();
+						if(RecipeHelper.matchOutput(this, 1, output))
+						{
+							buf = 0;
+							tank.drain(require, true);
+							RecipeHelper.onOutputItemStack(this, 1, output);
+						}
+						else
+						{
+							
+						}
+					}
+					else
+					{
+						onHeatReceive(getDirction(), (tank.getFluid().getFluid().getTemperature(tank.getFluid()) - FLE.fle.getThermalNet().getEnvironmentTemperature(getBlockPos())) * 0.2D);
+					}
+				}
+			}
+			else if(recipe == null && !isClient())
+			{
+				buf = 0;
+			}
+		}
 		int amount = TransportHelper.matchOutputFluid(drain(dir, 5, false), getBlockPos().toPos(dir), dir.getOpposite());
 		if(amount != 0)
 		{
@@ -128,5 +169,43 @@ public class TileEntityCeramicFurnaceOutlet extends TEInventory<InventoryCeramic
 	public double getPreHeatEmit()
 	{
 		return tc.getPreHeatEmit();
+	}
+
+	@Override
+	protected String getDefaultName()
+	{
+		return null;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int aSide)
+	{
+		return new int[0];
+	}
+
+	@Override
+	public boolean canInsertItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return false;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
+	{
+		return null;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return false;
 	}
 }

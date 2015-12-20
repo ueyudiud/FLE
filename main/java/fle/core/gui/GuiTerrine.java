@@ -5,10 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiIconButton;
-import fle.api.gui.GuiIconButton.ButtonSize;
+import flapi.gui.GuiContainerBase;
+import flapi.gui.GuiIconButton;
+import flapi.gui.GuiIconButton.ButtonSize;
+import flapi.util.FleValue;
 import fle.core.te.argil.TileEntityTerrine;
 
 @SideOnly(Side.CLIENT)
@@ -29,14 +29,13 @@ public class GuiTerrine extends GuiContainerBase
 	{		
 		drawCondition(107, 46, tile.getError());
 		
-		drawFluid(75, 32, tile, 8, 30);
 		drawTexturedModalRect(aXOffset + 75, aYOffset + 32, 176, 0, 8, 30);
 		
 		switch(tile.mode)
 		{
 		case 0 :
 		{
-			if(tile.getFluidAmount() > 0)
+			if(tile.getTank(0).getFluidAmount() > 0)
 			{
 				drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 34, 18, 36);
 			}
@@ -45,6 +44,11 @@ public class GuiTerrine extends GuiContainerBase
 		case 1 :
 		{
 			drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 72, 18, 36);
+			if(tile.getProgress() > 0)
+			{
+				int i = (int) (tile.getProgress() * 34);
+				drawFleRect(aXOffset + 107, aYOffset + 28 + 34 - i, 2, i, 0xC10900);
+			}
 		}
 		default :;
 		}
@@ -57,8 +61,8 @@ public class GuiTerrine extends GuiContainerBase
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
 
-		if(tile.getFluid() != null && tile.getFluid().getFluid() != null)
-			drawAreaTooltip(par1, par2, tile.getFluid().getLocalizedName() + " " + FleValue.format_L.format(tile.getFluidAmount()), xoffset + 75, yoffset + 32, 8, 30);
+		if(tile.getFluidStackInTank(0) != null)
+			drawAreaTooltip(par1, par2, tile.getFluidStackInTank(0).getLocalizedName() + " " + FleValue.format_L.format(tile.getTank(0).getFluidAmount()), xoffset + 75, yoffset + 32, 8, 30);
 	}
 	
 	@Override
@@ -74,7 +78,7 @@ public class GuiTerrine extends GuiContainerBase
 	protected void actionPerformed(GuiButton guibutton)
 	{
 		sendToContainer(1, guibutton.id);
-		if(guibutton.id == 0) tile.drain(tile.getCapacity(), true);
+		if(guibutton.id == 0) tile.getTank(0).drain(tile.getTank(0).getCapacity(), true);
 		else if(guibutton.id == 1) tile.setClose();
 		
 		super.actionPerformed(guibutton);

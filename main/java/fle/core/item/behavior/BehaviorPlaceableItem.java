@@ -8,12 +8,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleValue;
-import fle.api.block.IDebugableBlock;
-import fle.api.item.ItemFleMetaBase;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.item.ItemFleMetaBase;
 import fle.core.block.BlockPlacedItem;
 import fle.core.init.IB;
-import fle.core.te.TileEntityPlacedItem;
 
 public class BehaviorPlaceableItem extends BehaviorBlockable implements IDebugableBlock
 {

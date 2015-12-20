@@ -3,12 +3,12 @@ package fle.core.net;
 import java.io.IOException;
 
 import net.minecraft.world.World;
-import fle.api.FleAPI;
-import fle.api.net.FleCoordinatesPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
-import fle.api.world.BlockPos;
+import flapi.net.FleCoordinatesPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
+import flapi.world.BlockPos;
+import fle.FLE;
 
 public class FleSyncFWMSmallPacket extends FleCoordinatesPacket
 {
@@ -41,11 +41,12 @@ public class FleSyncFWMSmallPacket extends FleCoordinatesPacket
 	@Override
 	public Object process(FleNetworkHandler nwh)
 	{
-		BlockPos pos = pos();
-		FleAPI.mod.getWorldManager().setDatas(pos, data, false);
 		World world = world();
+		BlockPos pos = pos();
+		FLE.fle.getWorldManager().syncMeta(world, pos, data);
 		if(world != null)
 		{
+			world.markBlockForUpdate(pos.x, pos.y, pos.z);
 			world.markBlockRangeForRenderUpdate(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z);
 		}
 		return null;

@@ -4,17 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import fle.api.material.IAtoms;
-import fle.api.material.Matter;
-import fle.api.material.MatterReactionRegister.ReactionHandler;
-import fle.api.util.IChemCondition;
-import fle.api.util.IChemCondition.EnumEnviorment;
-import fle.api.util.WeightHelper;
-import fle.api.util.WeightHelper.Stack;
+import flapi.collection.CollectionUtil;
+import flapi.collection.abs.IStackList;
+import flapi.collection.abs.Stack;
+import flapi.material.IMolecular;
+import flapi.material.IChemCondition;
+import flapi.material.MatterReactionRegister.ReactionHandler;
 
 public class MatterPhaseChangeRecipe implements ReactionHandler
 {
-	private static final HashMap<IAtoms, MatterInfo> map = new HashMap<IAtoms, MatterPhaseChangeRecipe.MatterInfo>();
+	private static final HashMap<IMolecular, MatterInfo> map = new HashMap<IMolecular, MatterPhaseChangeRecipe.MatterInfo>();
 	private static final Random rand = new Random();
 	
 	public static final MatterPhaseChangeRecipe instance = new MatterPhaseChangeRecipe();
@@ -27,34 +26,34 @@ public class MatterPhaseChangeRecipe implements ReactionHandler
 	}
 
 	@Override
-	public boolean doesActive(IChemCondition condition, WeightHelper helper)
+	public boolean doesActive(IChemCondition condition, IStackList<Stack<IMolecular>, IMolecular> helper)
 	{
 		return true;
 	}
 
 	@Override
 	public void doReactionResult(IChemCondition condition,
-			WeightHelper<IAtoms> helper)
+			IStackList<Stack<IMolecular>, IMolecular> helper)
 	{
 		MatterInfo info;
-		Stack<IAtoms>[] stacks = helper.getList();
-		for(Stack<IAtoms> stack : stacks)
+		Stack<IMolecular>[] stacks = helper.toArray();
+		for(Stack<IMolecular> stack : stacks)
 		{
-			if(stack.getObj() == null) continue;
-			if(map.containsKey(stack.getObj()))
+			if(stack.get() == null) continue;
+			if(map.containsKey(stack.get()))
 			{
-				info = map.get(stack.getObj());
+				info = map.get(stack.get());
 				if(info.can(condition))
 				{
 					double ch = info.chance(condition);
 					int l = 0;
-					for(int i = 0; i < stack.getSize(); ++i)
+					for(int i = 0; i < stack.size(); ++i)
 						if(ch > rand.nextDouble())
 							++l;
 					if(l > 0)
 					{
-						helper.remove(stack.getObj(), l);
-						helper.add(WeightHelper.multiply(info.output().clone(), l));
+						helper.removeAll(new Stack(stack.get(), l));
+						helper.addAll(CollectionUtil.multiply(info.output().clone(), l));
 					}
 				}
 				else info = null;
@@ -64,24 +63,39 @@ public class MatterPhaseChangeRecipe implements ReactionHandler
 	
 	public static final class MatterInfo
 	{
-		private IAtoms i;
-		private Stack<IAtoms>[] o;
+		private IMolecular i;
+		private Stack<IMolecular>[] o;
 		private int tem;
 		private float bE;
 		private float tE;
 		private boolean requreEn = true;
 
-		public MatterInfo(boolean flag, IAtoms input, int temp, float baseEffect, float temEffect, IAtoms...output)
+		public MatterInfo(boolean flag, IMolecular input, int temp, float baseEffect, float temEffect, IMolecular...output)
 		{
 			this(input, temp, baseEffect, temEffect, output);
 			requreEn = flag;
 		}
-		public MatterInfo(IAtoms input, int temp, float baseEffect, float temEffect, IAtoms...output)
+		public MatterInfo(boolean flag, IMolecular input, int temp, float baseEffect, float temEffect, Stack<IMolecular>...output)
+		{
+			this(input, temp, baseEffect, temEffect, output);
+			requreEn = flag;
+		}
+		public MatterInfo(IMolecular input, int temp, float baseEffect, float temEffect, IMolecular...output)
 		{
 			i = input;
-			Map<IAtoms, Integer> map = new HashMap();
-			WeightHelper.add(map, output);
-			o = WeightHelper.asArray(map);
+			Map<IMolecular, Integer> map = new HashMap();
+			CollectionUtil.add(map, output);
+			o = CollectionUtil.asArray(map);
+			tem = temp;
+			bE = baseEffect;
+			tE = temEffect;
+		}
+		public MatterInfo(IMolecular input, int temp, float baseEffect, float temEffect, Stack<IMolecular>...output)
+		{
+			i = input;
+			Map<IMolecular, Integer> map = new HashMap();
+			CollectionUtil.add(map, output);
+			o = CollectionUtil.asArray(map);
 			tem = temp;
 			bE = baseEffect;
 			tE = temEffect;
@@ -97,14 +111,19 @@ public class MatterPhaseChangeRecipe implements ReactionHandler
 			return bE + tE * (condition.getTemperature() - tem) * (condition.getTemperature() - tem);
 		}
 		
-		public IAtoms atom()
+		public IMolecular atom()
 		{
 			return i;
 		}
 		
-		public Stack<IAtoms>[] output()
+		public Stack<IMolecular>[] output()
 		{
 			return o;
+		}
+		
+		public boolean getRequrieEnergy()
+		{
+			return requreEn;
 		}
 	}
 }

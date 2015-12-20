@@ -1,12 +1,9 @@
 package fle.core.render;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.fluids.FluidTank;
 import fle.core.block.tank.ItemTankBlock;
 import fle.core.te.tank.TileEntityMultiTank;
 import fle.core.util.TankBlockInfo;
@@ -24,8 +21,6 @@ public class RenderMultiTank extends RenderBase
 		}
 		IIcon override;
 		IIcon base;
-		FluidTank tank;
-
 		if(isItem())
 		{
 			ItemStack stack = new ItemStack(block, 1, meta);

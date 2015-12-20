@@ -5,10 +5,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.SlotHolographic;
-import fle.api.gui.SlotOutput;
-import fle.api.net.INetEventListener;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.SlotOutput;
+import flapi.net.INetEventListener;
 import fle.core.te.TileEntityColdForgingPlatform;
 
 public class ContainerColdForging extends ContainerCraftable implements INetEventListener

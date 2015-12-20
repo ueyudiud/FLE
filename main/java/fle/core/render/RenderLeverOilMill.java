@@ -1,10 +1,7 @@
 package fle.core.render;
 
-import java.util.Random;
-
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.world.BlockPos;
 import fle.core.te.TileEntityOilMill;
 
 public class RenderLeverOilMill extends RenderBase
@@ -46,12 +43,12 @@ public class RenderLeverOilMill extends RenderBase
 		renderBlock(d2 + d10, d10, d2 + d10, d6 - d10, d5, d6 - d10);
 		
 		float height = 0;
-		if(isItem()) dir = ForgeDirection.SOUTH;
+		if(isItem()) dir = ForgeDirection.WEST;
 		else
 		{
 			if(world.getTileEntity(x, y, z) instanceof TileEntityOilMill)
 			{
-				dir = ((TileEntityOilMill) world.getTileEntity(x, y, z)).getDirction(new BlockPos(world, x, y, z));
+				dir = ((TileEntityOilMill) world.getTileEntity(x, y, z)).getDirction();
 				height = (float) ((TileEntityOilMill) world.getTileEntity(x, y, z)).getCache(64) / 512F;
 			}
 			else

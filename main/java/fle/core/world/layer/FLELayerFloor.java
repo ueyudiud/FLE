@@ -13,8 +13,8 @@ public class FLELayerFloor extends FLELayer
 	public FLELayerFloor(NoiseBase aNoise1, NoiseBase aNoise2, GenLayer aLayer, long seed)
 	{
 		super(seed);
-		noise = aNoise1.setSeed(seed);
-		noise1 = aNoise2.setSeed(seed);
+		noise = aNoise1.setSeed(seed * 1841941L + 3875018L);
+		noise1 = aNoise2.setSeed(seed * 10576918L + 6917591L);
 		parent = aLayer;
 	}
 

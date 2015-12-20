@@ -16,18 +16,15 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fle.api.world.BlockPos;
+import flapi.world.BlockPos;
 
 public abstract class IItemControl<T extends Item>
 {
-	private static boolean f = false;
 	protected Class<T> clazz;
 
 	protected IItemControl()

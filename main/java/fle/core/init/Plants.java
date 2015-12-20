@@ -2,26 +2,27 @@ package fle.core.init;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import fle.api.util.FleEntry;
-import fle.api.world.TreeInfo;
-import fle.core.block.BlockFleLog;
-import fle.core.block.crop.CropBase;
-import fle.core.block.crop.CropCotton;
-import fle.core.block.crop.CropFlax;
-import fle.core.block.crop.CropMillet;
-import fle.core.block.crop.CropPotato;
-import fle.core.block.crop.CropRamie;
-import fle.core.block.crop.CropSoybean;
-import fle.core.block.crop.CropSugerCances;
-import fle.core.block.crop.CropSweetPotato;
-import fle.core.block.crop.CropWheat;
+import flapi.collection.CollectionUtil;
+import flapi.collection.CollectionUtil.FleEntry;
+import flapi.plant.TreeInfo;
 import fle.core.block.plant.PlantBase;
 import fle.core.block.plant.PlantBristleGrass;
 import fle.core.block.plant.PlantDandelion;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
-import fle.core.tree.TreeCitron;
-import fle.core.tree.TreeSisal;
+import fle.resource.block.BlockFleLog;
+import fle.resource.crop.CropBase;
+import fle.resource.crop.CropCotton;
+import fle.resource.crop.CropFlax;
+import fle.resource.crop.CropMillet;
+import fle.resource.crop.CropPotato;
+import fle.resource.crop.CropRamie;
+import fle.resource.crop.CropSoybean;
+import fle.resource.crop.CropSugerCances;
+import fle.resource.crop.CropSweetPotato;
+import fle.resource.crop.CropWheat;
+import fle.resource.tree.TreeCitron;
+import fle.resource.tree.TreeSisal;
 
 public class Plants
 {
@@ -64,15 +65,15 @@ public class Plants
 		BlockFleLog.register(citron);
 		BlockFleLog.register(sisal);
 		
-		soybean.setSeed(ItemFleSeed.a("soybean")).setHaverstDrop(3, FleEntry.asMap(new FleEntry(ItemFleSeed.a("soybean"), 1)));
-		ramie.setSeed(ItemFleSeed.a("ramie")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSub.a("ramie_fiber"), 1)));
-		millet.setSeed(ItemFleSeed.a("millet")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSub.a("millet"), 1)));
-		wheat.setSeed(ItemFleSeed.a("wheat")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(new ItemStack(Items.wheat), 1)));
-		suger_cances.setSeed(ItemFleSeed.a("suger_cances")).setHaverstDrop(3, FleEntry.asMap(new FleEntry(ItemFleSeed.a("suger_cances"), 1)));
-		cotton.setSeed(ItemFleSeed.a("cotton")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSub.a("cotton_rough"), 1)));
-		sweet_potato.setSeed(ItemFleSeed.a("sweetpotato")).setHaverstDrop(2, FleEntry.asMap(new FleEntry(ItemFleSeed.a("sweetpotato"), 1)));
-		potato.setSeed(ItemFleSeed.a("potato")).setHaverstDrop(3, FleEntry.asMap(new FleEntry(ItemFleSeed.a("potato"), 4), new FleEntry(ItemFleSub.a("sprouted_potato"), 1)));
-		flax.setSeed(ItemFleSeed.a("flax")).setHaverstDrop(4, FleEntry.asMap(new FleEntry(ItemFleSeed.a("flax"), 4)));
+		soybean.setSeed(ItemFleSeed.a("soybean")).setHaverstDrop(3, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("soybean"), 1)));
+		ramie.setSeed(ItemFleSeed.a("ramie")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSub.a("ramie_fiber"), 1)));
+		millet.setSeed(ItemFleSeed.a("millet")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSub.a("millet"), 1)));
+		wheat.setSeed(ItemFleSeed.a("wheat")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(new ItemStack(Items.wheat), 1)));
+		suger_cances.setSeed(ItemFleSeed.a("suger_cances")).setHaverstDrop(3, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("suger_cances"), 1)));
+		cotton.setSeed(ItemFleSeed.a("cotton")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSub.a("cotton_rough"), 1)));
+		sweet_potato.setSeed(ItemFleSeed.a("sweetpotato")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("sweetpotato"), 1)));
+		potato.setSeed(ItemFleSeed.a("potato")).setHaverstDrop(3, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("potato"), 4), new FleEntry(ItemFleSub.a("sprouted_potato"), 1)));
+		flax.setSeed(ItemFleSeed.a("flax")).setHaverstDrop(4, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("flax"), 4)));
 		
 		bristlegrass.setHaverstDrop(ItemFleSeed.a("millet"));
 		dandelion.setHaverstDrop(ItemFleSub.a("dandelion"));

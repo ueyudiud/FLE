@@ -3,10 +3,10 @@ package fle.core.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiIconButton;
-import fle.api.gui.GuiIconButton.ButtonSize;
+import flapi.gui.GuiContainerBase;
+import flapi.gui.GuiIconButton;
+import flapi.gui.GuiIconButton.ButtonSize;
+import flapi.util.FleValue;
 import fle.core.te.TileEntityColdForgingPlatform;
 
 public class GuiColdForging extends GuiContainerBase

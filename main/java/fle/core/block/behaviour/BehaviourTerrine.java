@@ -12,16 +12,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidTank;
-import fle.api.FleValue;
-import fle.api.block.IDebugableBlock;
-import fle.api.item.IBagable;
-import fle.api.material.MatterDictionary;
-import fle.api.te.IFluidTanks;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.item.interfaces.IBagable;
+import flapi.util.FleValue;
 import fle.core.block.BlockSubTile;
 import fle.core.gui.ContainerTerrine;
 import fle.core.gui.GuiTerrine;
@@ -109,9 +105,9 @@ public class BehaviourTerrine extends BehaviourTile implements IDebugableBlock, 
 			TileEntityTerrine tile = (TileEntityTerrine) aTile;
 			ArrayList<ItemStack> ret = new ArrayList();
 			ItemStack stack = new ItemStack(block, 1, aMeta);
-			if(tile.getFluid() != null)
+			if(tile.getFluidStackInTank(0) != null)
 			{
-				fill(stack, tile.getFluid(), true);
+				fill(stack, tile.getFluidStackInTank(0), true);
 			}
 			for(int i = 0; i < 2; ++i)
 				if(tile.getStackInSlot(i) != null)

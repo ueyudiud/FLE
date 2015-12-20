@@ -3,9 +3,9 @@ package fle.core.item.behavior;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import fle.api.enums.EnumFoodType;
-import fle.api.item.IFoodStat;
-import fle.api.item.ItemFleFood;
+import flapi.enums.EnumFoodType;
+import flapi.item.ItemFleFood;
+import flapi.item.interfaces.IFoodStat;
 
 public abstract class FoodBase implements IFoodStat<ItemFleFood>
 {

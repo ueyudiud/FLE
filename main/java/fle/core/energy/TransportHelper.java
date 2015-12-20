@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import fle.api.soild.ISolidHandler;
-import fle.api.soild.SolidStack;
-import fle.api.world.BlockPos;
+import flapi.solid.ISolidHandler;
+import flapi.solid.SolidStack;
+import flapi.world.BlockPos;
 
 public class TransportHelper
 {
@@ -81,7 +81,7 @@ public class TransportHelper
 		dir = dir.getOpposite();
 		if(dir != null && dir != ForgeDirection.UNKNOWN)
 		{
-			if(inv.canFillS(dir, aStack.getObj()))
+			if(inv.canFillS(dir, aStack.get()))
 			{
 				return inv.fillS(dir, aStack, false);
 			}
@@ -194,7 +194,7 @@ public class TransportHelper
 		dir = dir.getOpposite();
 		if(dir != null && dir != ForgeDirection.UNKNOWN)
 		{
-			if(inv.canFillS(dir, aStack.getObj()))
+			if(inv.canFillS(dir, aStack.get()))
 			{
 				return inv.fillS(dir, aStack, true);
 			}

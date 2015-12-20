@@ -2,15 +2,8 @@ package fle.core.world.biome;
 
 import java.util.Random;
 
-import fle.api.enums.EnumFLERock;
-import fle.api.material.MaterialRock;
-import fle.core.block.BlockFleRock;
-import fle.core.block.BlockRock;
-import fle.core.init.IB;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
 
 public class FLEBiomeRiver extends FLEBiome
 {

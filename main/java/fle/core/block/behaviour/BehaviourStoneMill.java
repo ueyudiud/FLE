@@ -1,17 +1,20 @@
 package fle.core.block.behaviour;
 
-import fle.core.block.BlockSubTile;
-import fle.core.gui.ContainerStoneMill;
-import fle.core.gui.GuiStoneMill;
-import fle.core.te.TileEntityStoneMill;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import fle.core.block.BlockSubTile;
+import fle.core.gui.ContainerStoneMill;
+import fle.core.gui.GuiStoneMill;
+import fle.core.recipe.RecipeHelper;
+import fle.core.te.TileEntityStoneMill;
 
 public class BehaviourStoneMill extends BehaviourTile
 {
@@ -28,19 +31,31 @@ public class BehaviourStoneMill extends BehaviourTile
 	}
 	
 	@Override
-	public boolean onBlockActivated(BlockSubTile block, World aWorld, int x,
+	public boolean onBlockActivated(BlockSubTile block, World world, int x,
 			int y, int z, EntityPlayer aPlayer, ForgeDirection aSide,
 			float xPos, float yPos, float zPos)
 	{
 		if(aSide == ForgeDirection.UP)
 		{
-			if(aWorld.getTileEntity(x, y, z) instanceof TileEntityStoneMill)
+			ItemStack stack = aPlayer.getCurrentEquippedItem();
+			if(world.getTileEntity(x, y, z) instanceof TileEntityStoneMill)
 			{
-				((TileEntityStoneMill) aWorld.getTileEntity(x, y, z)).onPower();
-				return true;
+				TileEntityStoneMill tile = (TileEntityStoneMill) world.getTileEntity(x, y, z);
+				if(aPlayer.getCurrentEquippedItem() != null && RecipeHelper.matchOutput(tile, 0, stack))
+				{
+					if(world.isRemote) return true;
+					RecipeHelper.onOutputItemStack(tile, 0, stack.copy());
+					aPlayer.destroyCurrentEquippedItem();
+					return true;
+				}
+				else
+				{
+					((TileEntityStoneMill) world.getTileEntity(x, y, z)).onPower();
+					return true;
+				}
 			}
 		}
-		return super.onBlockActivated(block, aWorld, x, y, z, aPlayer, aSide, xPos,
+		return super.onBlockActivated(block, world, x, y, z, aPlayer, aSide, xPos,
 				yPos, zPos);
 	}
 	
@@ -56,6 +71,13 @@ public class BehaviourStoneMill extends BehaviourTile
 				block.dropBlockAsItem(aWorld, x, y, z, ((IInventory) tile).getStackInSlot(i));
 			}
 		}
+	}
+	
+	@Override
+	public void onFallenUpon(BlockSubTile block, World world, int x, int y,
+			int z, Entity entity, float aHeight)
+	{
+		
 	}
 
 	@Override

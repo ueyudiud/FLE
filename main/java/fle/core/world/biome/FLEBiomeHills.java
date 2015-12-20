@@ -10,11 +10,9 @@ import net.minecraft.world.biome.BiomeGenHills;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenTaiga2;
-import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class FLEBiomeHills extends FLEBiome
 {
-    private WorldGenerator theWorldGenerator;
     private WorldGenTaiga2 treeGen;
     private int a;
     private int b;
@@ -24,7 +22,7 @@ public class FLEBiomeHills extends FLEBiome
 	public FLEBiomeHills(String name, int index, boolean flag)
 	{
 		super(name, index);
-        this.theWorldGenerator = new WorldGenMinable(Blocks.monster_egg, 8);
+        new WorldGenMinable(Blocks.monster_egg, 8);
         this.treeGen = new WorldGenTaiga2(false);
         this.a = 0;
         this.b = 1;

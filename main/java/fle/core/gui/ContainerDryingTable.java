@@ -1,13 +1,9 @@
 package fle.core.gui;
 
-import java.util.List;
-
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import fle.api.gui.ContainerBase.TransLocation;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.SlotOutput;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.SlotOutput;
 import fle.core.te.TileEntityDryingTable;
 
 public class ContainerDryingTable extends ContainerCraftable

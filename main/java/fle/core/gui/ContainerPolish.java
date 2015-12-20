@@ -2,13 +2,11 @@ package fle.core.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.SlotOutput;
+import flapi.net.INetEventListener;
 import fle.FLE;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.SlotOutput;
-import fle.api.net.INetEventListener;
 import fle.core.net.FleGuiPacket;
-import fle.core.net.FleTEPacket;
 import fle.core.te.TileEntityPolish;
 
 public class ContainerPolish extends ContainerCraftable implements INetEventListener
@@ -22,16 +20,9 @@ public class ContainerPolish extends ContainerCraftable implements INetEventList
 		this.addSlotToContainer(new Slot(tile, 0, 20, 17));
 		this.addSlotToContainer(new Slot(tile, 1, 104, 22));
 		this.addSlotToContainer(new SlotOutput(tile, 2, 133, 35));
-		if(!tile.getWorldObj().isRemote)
+		if(!tile.isClient())
 			FLE.fle.getNetworkHandler().sendTo(new FleGuiPacket((byte) 1, tile.getRecipeInput()));
 		onCraftMatrixChanged(tile);
-	}
-	
-	@Override
-	public boolean transferStackInSlot(Slot slot, ItemStack baseItemStack,
-			ItemStack itemstack, int locate) 
-	{
-		return super.transferStackInSlot(slot, baseItemStack, itemstack, locate);
 	}
 
 	@Override

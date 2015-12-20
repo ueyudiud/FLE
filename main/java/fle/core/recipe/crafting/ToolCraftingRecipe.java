@@ -1,53 +1,54 @@
 package fle.core.recipe.crafting;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import fle.api.cg.RecipesTab;
-import fle.api.material.MaterialAbstract;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.ShapelessFleRecipe;
-import fle.api.recipe.SingleInputRecipe;
+import flapi.recipe.IPlayerToolCraftingRecipe;
+import flapi.recipe.SingleInputRecipe;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
 import fle.core.init.IB;
 import fle.core.init.Materials;
-import fle.core.item.ItemTool;
-import fle.core.item.ItemToolHead;
-import fle.core.item.tool.ToolMaterialInfo;
+import fle.tool.ToolMaterialInfo;
+import fle.tool.item.ItemTool;
+import fle.tool.item.ItemToolHead;
 
-public class ToolCraftingRecipe extends ShapelessFleRecipe
+public class ToolCraftingRecipe implements IPlayerToolCraftingRecipe
 {
-	private static Object[] a(Object obj, Object...other)
-	{
-		if(other == null)
-		{
-			return new Object[]{obj};
-		}
-		else
-		{
-			Object[] objs = new Object[1 + other.length];
-			objs[0] = obj;
-			System.arraycopy(other, 0, objs, 1, other.length);
-			return objs;
-		}
-	}
+	private SingleInputRecipe recipe;
+	private ItemAbstractStack other;
+	private ItemAbstractStack tool;
 	
-	public ToolCraftingRecipe(RecipesTab aTab, String aTool, int size, Object...other)
+	public ToolCraftingRecipe(String tool, int size, ItemAbstractStack c)
 	{
-		super(aTab, null, a(new ToolRecipe(aTool, size), other));
-		output = ItemTool.a(aTool, Materials.Void);
+		this(tool, size, null, c);
 	}
-	public ToolCraftingRecipe(RecipesTab aTab, String aTool, Object stick)
+	public ToolCraftingRecipe(String tool, int size, ItemAbstractStack input, ItemAbstractStack c)
 	{
-		super(aTab, null, new Object[]{new ToolRecipe(aTool), stick});
-		output = ItemTool.a(aTool, Materials.Void);
+		recipe = new ToolRecipe(tool, size);
+		other = input;
+		this.tool = c;
 	}
 	
 	@Override
-	public ItemStack getCraftingResult(InventoryCrafting aInv)
+	public boolean match(ItemStack input1, ItemStack input2, ItemStack tool)
 	{
-		return super.getCraftingResult(aInv);
+		return recipe.match(input1) ? (other != null ? other.equal(input2) : true) && this.tool.equal(tool) : false;
+	}
+
+	@Override
+	public ItemStack useTool(EntityPlayer player, ItemStack tool)
+	{
+		tool.stackSize--;
+		return tool;
+	}
+
+	@Override
+	public ItemStack getOutput(ItemStack input1, ItemStack input2,
+			ItemStack tool)
+	{
+		return recipe.getResult(input1);
 	}
 	
 	private static class ToolRecipe implements SingleInputRecipe
@@ -55,10 +56,6 @@ public class ToolCraftingRecipe extends ShapelessFleRecipe
 		private String toolName;
 		private int size = 1;
 
-		public ToolRecipe(String aToolName) 
-		{
-			toolName = aToolName;
-		}
 		public ToolRecipe(String aToolName, int aSize) 
 		{
 			toolName = aToolName;
@@ -88,7 +85,7 @@ public class ToolCraftingRecipe extends ShapelessFleRecipe
 		@Override
 		public ItemAbstractStack getShowStack()
 		{
-			return new ItemBaseStack(ItemToolHead.a(toolName, Materials.Void));
+			return new BaseStack(ItemToolHead.a(toolName, Materials.Void));
 		}
 	}
 }

@@ -8,14 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleValue;
-import fle.api.cg.GuiBookBase;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.material.MatterDictionary;
-import fle.api.material.MatterDictionary.IFreezingRecipe;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
+import flapi.cg.GuiBookBase;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.material.MatterDictionary;
+import flapi.material.MatterDictionary.IFreezingRecipe;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 import fle.core.recipe.CastingPoolRecipe;
 
@@ -81,7 +81,7 @@ public class FLECastingRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			CastingPage page = (CastingPage) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				list.add(page);
 				continue label;
@@ -90,7 +90,7 @@ public class FLECastingRecipe extends StandardType
 			{
 				for(ItemStack tStack : tStacks)
 				{
-					if(contain.isStackEqul(tStack))
+					if(contain.equal(tStack))
 					{
 						list.add(page);
 						continue label;
@@ -118,7 +118,7 @@ public class FLECastingRecipe extends StandardType
 			display = new ItemStack[s.length][];
 			for (int i = 0; i < s.length; i++)
 			{
-				inputs[i] = new ItemBaseStack(s[i]);
+				inputs[i] = new BaseStack(s[i]);
 				display[i] = inputs[i].toList();
 			}
 			output = recipe.getOutput();

@@ -9,5 +9,4 @@ public class BlockCreative extends BlockSubTile
 	{
 		super(aName, Material.iron);
 	}
-
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fle.api.material.MaterialOre;
+import flapi.material.MaterialOre;
 import fle.core.init.Materials;
 
 public class OreMeltingRecipe

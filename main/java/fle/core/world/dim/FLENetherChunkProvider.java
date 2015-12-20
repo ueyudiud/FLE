@@ -13,10 +13,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import fle.core.util.noise.NoiseBase;
-import fle.core.util.noise.NoiseMix;
 import fle.core.util.noise.NoisePerlin;
-import fle.core.world.FleCrystalGen;
-import fle.core.world.FleLiquidGen;
+import fle.core.util.noise.NoiseSmooth;
+import fle.resource.world.FleCrystalGen;
+import fle.resource.world.FleLiquidGen;
 
 public class FLENetherChunkProvider extends ChunkProviderHell
 {
@@ -32,8 +32,8 @@ public class FLENetherChunkProvider extends ChunkProviderHell
 	{
 		super(aWorld, seed);
 		worldObj = aWorld;
-		slowsandGravelNoiseGen = new NoiseMix(32D, new NoisePerlin(seed * 27414179L + 14194157L, 8));
-		netherrackExculsivityNoiseGen = new NoiseMix(32D, new NoisePerlin(seed * 151851953L + 151795157L, 8));
+		slowsandGravelNoiseGen = new NoiseSmooth(32D, new NoisePerlin(seed * 27414179L + 14194157L, 8));
+		netherrackExculsivityNoiseGen = new NoiseSmooth(32D, new NoisePerlin(seed * 151851953L + 151795157L, 8));
 		hellRNG = new Random(seed);
 	}
 	
@@ -44,7 +44,7 @@ public class FLENetherChunkProvider extends ChunkProviderHell
         if (event.getResult() == Result.DENY) return;
 
         byte b0 = 64;
-        double d0 = 0.03125D;
+        //double d0 = 0.03125D;
         slowsandNoise = slowsandGravelNoiseGen.noise(slowsandNoise, x * 16, z * 16, 16, 16);
         gravelNoise = slowsandGravelNoiseGen.noise(gravelNoise, x * 16, 109, z * 16, 16, 1, 16);
         netherrackExclusivityNoise = netherrackExculsivityNoiseGen.noise(netherrackExclusivityNoise, x * 16, z * 16, 16, 16);

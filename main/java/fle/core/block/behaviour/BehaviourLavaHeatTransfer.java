@@ -3,17 +3,16 @@ package fle.core.block.behaviour;
 import java.util.List;
 import java.util.Random;
 
-import fle.api.FleValue;
-import fle.api.block.IDebugableBlock;
-import fle.core.block.BlockSubTile;
-import fle.core.item.ItemFleSub;
-import fle.core.te.TileEntityLavaHeatTransfer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.util.FleValue;
+import fle.core.block.BlockSubTile;
+import fle.core.item.ItemFleSub;
+import fle.core.te.TileEntityLavaHeatTransfer;
 
 public class BehaviourLavaHeatTransfer extends BehaviourTile implements IDebugableBlock
 {
@@ -30,12 +29,12 @@ public class BehaviourLavaHeatTransfer extends BehaviourTile implements IDebugab
 		TileEntityLavaHeatTransfer tile = (TileEntityLavaHeatTransfer) aWorld.getTileEntity(x, y, z);
 		if(tile != null) 
 		{
-			if(tile.tick == 1000)
+			if(tile.tick >= 1000)
 			{
 				if(!aWorld.isRemote)
 				{
 					aPlayer.dropPlayerItemWithRandomChoice(ItemFleSub.a("chip_obsidian"), false);
-					tile.tick = 0;
+					tile.tick -= 1000;
 				}
 				return true;
 			}

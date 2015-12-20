@@ -4,10 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import fle.api.material.MaterialAbstract;
+import flapi.material.MaterialAbstract;
 import fle.core.block.ItemSubTile;
 import fle.core.init.IB;
-import fle.core.te.TileEntityThermalWire;
+import fle.energy.block.TileEntityThermalWire;
 
 public class ItemThermalWire extends ItemSubTile
 {

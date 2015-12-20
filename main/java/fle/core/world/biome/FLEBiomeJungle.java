@@ -32,7 +32,7 @@ public class FLEBiomeJungle extends FLEBiome
         }
         else
         {
-            this.theBiomeDecorator.treesPerChunk = 50;
+            this.theBiomeDecorator.treesPerChunk = 25;
         }
 
         this.theBiomeDecorator.grassPerChunk = 25;

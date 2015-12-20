@@ -2,9 +2,10 @@ package fle.core.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.SlotOutput;
-import fle.api.net.INetEventListener;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.FluidSlot;
+import flapi.gui.SlotOutput;
+import flapi.net.INetEventListener;
 import fle.core.te.TileEntityOilMill;
 
 public class ContainerLeverOilMill extends ContainerCraftable implements INetEventListener
@@ -15,6 +16,7 @@ public class ContainerLeverOilMill extends ContainerCraftable implements INetEve
 
 		addSlotToContainer(new Slot(tile, 0, 61, 21));
 		addSlotToContainer(new SlotOutput(tile, 1, 98, 21));
+		addSlotToContainer(new FluidSlot(tile, 0, 60, 56, 20, 8));
 		
 		locateRecipeInput = new TransLocation("input", 36);
 		locateRecipeOutput = new TransLocation("output", 37);

@@ -1,16 +1,14 @@
 package fle.core.recipe;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.util.DropInfo;
+import flapi.recipe.DropInfo;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
 import fle.core.item.ItemFleSub;
 
 public class WashingRecipe
@@ -28,7 +26,7 @@ public class WashingRecipe
 		map.put(ItemFleSub.a("chip_stone"), 2);
 		map.put(ItemFleSub.a("crystal_opal"), 3);
 		map.put(ItemFleSub.a("chip_quartz"), 1);
-		registryDust(new ItemBaseStack(ItemFleSub.a("pile_gravel")), new DropInfo(0.95F, map));
+		registryDust(new BaseStack(ItemFleSub.a("pile_gravel")), new DropInfo(0.95F, map));
 		map.clear();
 		map.put(ItemFleSub.a("dust_sand"), 36);
 		map.put(ItemFleSub.a("flint_b"), 8);
@@ -36,13 +34,13 @@ public class WashingRecipe
 		map.put(ItemFleSub.a("chip_stone"), 1);
 		map.put(ItemFleSub.a("crushed_bone"), 2);
 		map.put(ItemFleSub.a("crystal_quartz"), 3);
-		registryDust(new ItemBaseStack(ItemFleSub.a("pile_sand")), new DropInfo(0.95F, map));
+		registryDust(new BaseStack(ItemFleSub.a("pile_sand")), new DropInfo(0.95F, map));
 		map.clear();
 		map.put(ItemFleSub.a("dust_sand"), 11);
 		map.put(ItemFleSub.a("pile_sludge"), 15);
 		map.put(ItemFleSub.a("flint_b"), 2);
 		map.put(ItemFleSub.a("chip_sandstone"), 12);
-		registryDust(new ItemBaseStack(ItemFleSub.a("pile_dirt")), new DropInfo(0.95F, map));
+		registryDust(new BaseStack(ItemFleSub.a("pile_dirt")), new DropInfo(0.95F, map));
 		map.put(ItemFleSub.a("chip_stone"), 3);
 	}
 	
@@ -56,7 +54,7 @@ public class WashingRecipe
 	{
 		for (ItemAbstractStack tStack : inputList.keySet())
 		{
-			if(tStack.isStackEqul(input))
+			if(tStack.equal(input))
 			{
 				return inputList.get(tStack);
 			}			

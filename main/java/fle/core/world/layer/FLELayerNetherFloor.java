@@ -1,6 +1,5 @@
 package fle.core.world.layer;
 
-import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 import fle.core.util.noise.NoiseBase;
 import fle.core.world.biome.FLEBiome;

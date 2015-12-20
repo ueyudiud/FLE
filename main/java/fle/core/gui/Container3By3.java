@@ -4,7 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import fle.api.gui.ContainerWithPlayerInventory;
+import flapi.gui.ContainerWithPlayerInventory;
 
 public class Container3By3 extends ContainerWithPlayerInventory
 {

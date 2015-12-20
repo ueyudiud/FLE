@@ -12,8 +12,8 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.common.registry.GameData;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidRegistry;
+import flapi.solid.Solid;
+import flapi.solid.SolidRegistry;
 import fle.core.init.IB;
 
 public class AttributeObjectWithRegister<T> extends Attribute<T>

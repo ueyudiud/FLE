@@ -1,7 +1,5 @@
 package fle.core.tool;
 
-import fle.FLE;
-import fle.api.world.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -11,6 +9,8 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import flapi.world.BlockPos;
+import fle.FLE;
 
 public class WasherManager
 {

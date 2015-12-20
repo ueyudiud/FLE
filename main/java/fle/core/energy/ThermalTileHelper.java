@@ -1,11 +1,9 @@
 package fle.core.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleAPI;
-import fle.api.material.MaterialAbstract;
+import flapi.material.MaterialAbstract;
 
 public class ThermalTileHelper
 {
@@ -18,7 +16,7 @@ public class ThermalTileHelper
 
 	public ThermalTileHelper(MaterialAbstract material)
 	{
-		this(material.getPropertyInfo().getThermalConductivity() * 10, material.getPropertyInfo().getSpecificHeat() * 50000);
+		this(material.getPropertyInfo().getThermalConductivity() * 10, material.getPropertyInfo().getSpecificHeat() * 10000);
 	}
 	public ThermalTileHelper(double hc, double sh)
 	{
@@ -29,12 +27,12 @@ public class ThermalTileHelper
 
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		heatCurrect = nbt.getInteger("Heat");
+		heatCurrect = nbt.getDouble("Heat");
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setInteger("Heat", (int) heatCurrect);
+		nbt.setDouble("Heat", heatCurrect);
 	}
 	
 	public void update()

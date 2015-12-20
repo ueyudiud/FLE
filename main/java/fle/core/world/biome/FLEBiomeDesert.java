@@ -2,6 +2,7 @@ package fle.core.world.biome;
 
 import java.util.Random;
 
+import fle.core.world.dim.FLEBiomeDecoratorBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenDesertWells;
@@ -11,9 +12,11 @@ public class FLEBiomeDesert extends FLEBiome
 	public FLEBiomeDesert(String name, int index)
 	{
 		super(name, index);
-        this.spawnableCreatureList.clear();
         this.topBlock = Blocks.sand;
         this.fillerBlock = Blocks.sand;
+        this.setDisableRain();
+        ((FLEBiomeDecoratorBase) this.theBiomeDecorator).waterLakePerChunk = -1;
+        ((FLEBiomeDecoratorBase) this.theBiomeDecorator).lavaLakePerChunk = -1;
         this.theBiomeDecorator.treesPerChunk = -999;
         this.theBiomeDecorator.deadBushPerChunk = 2;
         this.theBiomeDecorator.reedsPerChunk = 50;

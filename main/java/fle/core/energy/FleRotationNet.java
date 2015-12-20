@@ -10,9 +10,9 @@ import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import fle.api.energy.IRotationTileEntity;
-import fle.api.energy.RotationNet;
-import fle.api.world.BlockPos;
+import flapi.energy.IRotationTileEntity;
+import flapi.energy.RotationNet;
+import flapi.world.BlockPos;
 
 public class FleRotationNet extends RotationNet
 {

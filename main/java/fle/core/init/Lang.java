@@ -31,6 +31,7 @@ public class Lang
 	public static String inventory_bag;
 	public static String inventory_washing;
 	public static String inventory_cermaics;
+	public static String inventory_barrel;
 	
 	public static String info_length;
 	
@@ -63,6 +64,7 @@ public class Lang
 		inventory_terrine = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Terrine");
 		inventory_washing = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Washing");
 		inventory_cermaics = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Cermaics");
+		inventory_barrel = LanguageManager.regWithRecommendedUnlocalizedName("inventory", "Barrel");
 		
 		info_length = LanguageManager.regWithRecommendedUnlocalizedName("info", "Length");
 	}

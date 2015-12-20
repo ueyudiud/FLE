@@ -2,8 +2,6 @@ package fle.core.world.biome;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.entity.passive.EntityWolf;
@@ -14,9 +12,10 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenForest;
 import net.minecraft.world.biome.BiomeGenMutated;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
-import net.minecraft.world.gen.feature.WorldGenBigMushroom;
 import net.minecraft.world.gen.feature.WorldGenCanopyTree;
 import net.minecraft.world.gen.feature.WorldGenForest;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class FLEBiomeForest extends FLEBiome
 {
@@ -25,18 +24,18 @@ public class FLEBiomeForest extends FLEBiome
     protected static final WorldGenForest genTree2 = new WorldGenForest(false, false);
     protected static final WorldGenCanopyTree genTree3 = new WorldGenCanopyTree(false);
     
-	public FLEBiomeForest(String name, int index, int aType)
+    public FLEBiomeForest(String name, int index, int aType)
 	{
 		super(name, index);
 		topBlock = Blocks.grass;
 		fillerBlock = Blocks.dirt;
 		type = aType;
-        theBiomeDecorator.treesPerChunk = 10;
+        theBiomeDecorator.treesPerChunk = 6;
         theBiomeDecorator.grassPerChunk = 2;
 
         if (type == 1)
         {
-            theBiomeDecorator.treesPerChunk = 6;
+            theBiomeDecorator.treesPerChunk = 4;
             theBiomeDecorator.flowersPerChunk = 100;
             theBiomeDecorator.grassPerChunk = 1;
         }
@@ -244,7 +243,7 @@ public class FLEBiomeForest extends FLEBiome
             {
                 public WorldGenAbstractTree func_150567_a(Random aRand)
                 {
-                    return aRand.nextBoolean() ? FLEBiomeForest.this.genTree1 : FLEBiomeForest.this.genTree2;
+                    return aRand.nextBoolean() ? FLEBiomeForest.genTree1 : FLEBiomeForest.genTree2;
                 }
             };
         }

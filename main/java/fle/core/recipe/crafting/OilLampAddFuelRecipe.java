@@ -3,14 +3,11 @@ package fle.core.recipe.crafting;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-import fle.api.FleValue;
-import fle.api.cg.RecipesTab;
-import fle.api.recipe.ShapelessFleRecipe;
-import fle.core.block.ItemOilLamp;
+import flapi.cg.RecipesTab;
+import flapi.recipe.ShapelessFleRecipe;
+import flapi.util.FleValue;
 import fle.core.init.IB;
-import fle.core.init.Materials;
-import fle.core.item.ItemTool;
+import fle.tool.block.ItemOilLamp;
 
 public class OilLampAddFuelRecipe extends ShapelessFleRecipe
 {

@@ -1,7 +1,5 @@
 package fle.core.render;
 
-import net.minecraft.util.ResourceLocation;
-import fle.api.FleValue;
 import fle.core.te.TileEntityStoneMill;
 
 public class TESRStoneMill extends TESRBase<TileEntityStoneMill>

@@ -2,9 +2,9 @@ package fle.core.render;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.enums.EnumWorldNBT;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.world.BlockPos;
 import fle.core.init.IB;
 
 public class RenderDryingTable extends RenderBase

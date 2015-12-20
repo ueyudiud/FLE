@@ -2,8 +2,6 @@ package fle.core.util.noise;
 
 import java.util.Arrays;
 
-import net.minecraft.util.Vec3;
-
 public class VecNoiseSimple extends VecNoiseBase
 {
 	float baseLength;
@@ -11,13 +9,12 @@ public class VecNoiseSimple extends VecNoiseBase
 	
 	public VecNoiseSimple(long aSeed, float aLength)
 	{
-		super(aSeed);
-		baseLength = aLength;
+		this(aSeed, aLength, new NoisePerlin(aSeed * 358751012L - 935719757L));
 	}
 	
 	public VecNoiseSimple(long aSeed, float aLength, NoiseBase aRandLength)
 	{
-		this(aSeed, aLength);
+		super(aSeed);
 		randLength = aRandLength;
 		randLength.setSeed(aSeed * 3759275907L + 29829588671L);
 	}
@@ -91,5 +88,12 @@ public class VecNoiseSimple extends VecNoiseBase
 		z = ((y << 13) + x * y) ^ z + s;
 		long ret = x * 1843271941L + y * 492471019L + z * 4292525927L + s * 274827423L;
 		return (1.0D - ((double)((ret * (ret * ret * 61493 + 19990303) + 1376312589) & 0x7fffffff) / 1073741824.0));
+	}
+	
+	@Override
+	public VecNoiseBase setSeed(long aSeed)
+	{
+		randLength.setSeed(aSeed * 358751012L - 935719757L);
+		return super.setSeed(aSeed);
 	}
 }

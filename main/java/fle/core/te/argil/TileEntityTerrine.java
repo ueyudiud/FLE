@@ -1,30 +1,34 @@
 package fle.core.te.argil;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidTank;
+import flapi.energy.IThermalTileEntity;
+import flapi.gui.GuiCondition;
+import flapi.gui.GuiError;
+import flapi.material.Matter.AtomStack;
+import flapi.material.MatterDictionary;
+import flapi.te.TEIFluidTank;
 import fle.FLE;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.gui.GuiCondition;
-import fle.api.net.INetEventListener;
-import fle.api.te.TEIT;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.init.Lang;
 import fle.core.init.Materials;
-import fle.core.inventory.InventoryTerrine;
 import fle.core.net.FleTEPacket;
+import fle.core.recipe.RecipeHelper;
 
-public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidTank, IFluidHandler, IThermalTileEntity, INetEventListener
+public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntity
 {
 	private ThermalTileHelper heatCurrect = new ThermalTileHelper(Materials.Argil);
 	public int mode;
+	public GuiCondition type = GuiError.DEFAULT;
+	public double recipeTime;
 	
 	public TileEntityTerrine() 
 	{
-		super(new InventoryTerrine());
+		super(2, 3000);
 	}
 	
 	@Override
@@ -33,6 +37,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		super.readFromNBT(nbt);
 		mode = nbt.getShort("Mode");
 		heatCurrect.readFromNBT(nbt);
+		recipeTime = nbt.getDouble("RecipeTime");
 	}
 	
 	@Override
@@ -41,15 +46,77 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 		super.writeToNBT(nbt);
 		nbt.setShort("Mode", (short) mode);
 		heatCurrect.writeToNBT(nbt);
+		nbt.setDouble("RecipeTime", recipeTime);
 	}
 	
 	private int buf = 0;
 
 	@Override
-	public void updateInventory() 
+	public void update() 
 	{
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
-		getTileInventory().updateEntity(this);
+		switch(mode)
+		{
+		case 0 :
+		{
+			if(rand.nextFloat() < 0.03125F)
+			{
+				tryDrainFluid(ForgeDirection.DOWN, 1, true, true);
+			}
+			if(RecipeHelper.fillOrDrainInventoryTank(this, tank, 0, 1))
+			{
+				type = GuiError.DEFAULT;
+			}
+			else
+			{
+				type = GuiError.CAN_NOT_OUTPUT;
+			}
+		}
+		break;
+		case 1 :
+		{
+			if(isClient())
+			{
+				return;
+			}
+			if(MatterDictionary.getMelting(stacks[0]) != null && stacks[1] == null)
+			{
+				AtomStack stack = MatterDictionary.getMatter(stacks[0]);
+				int[] is = MatterDictionary.getMeltRequires(stacks[0]);
+				if(getTemperature(ForgeDirection.UNKNOWN) > is[0])
+				{
+					double progress = (getTemperature(ForgeDirection.UNKNOWN) - is[0]) * 10D;
+					onHeatEmit(ForgeDirection.UNKNOWN, progress);
+					recipeTime += progress;
+					if(recipeTime >= is[1])
+					{
+						FluidStack resource = MatterDictionary.getFluid(stack);
+						resource.amount /= 4;
+						if(tank.fill(resource, false) == 0)
+						{
+							type = GuiError.CAN_NOT_OUTPUT;
+						}
+						else
+						{
+							if(!isClient())
+							{
+								tank.fill(resource, true);
+							}
+							recipeTime = 0;
+							decrStackSize(0, 1);
+							type = GuiError.DEFAULT;
+						}
+					}
+					FLE.fle.getNetworkHandler().sendToNearBy(new FleTEPacket(this, (byte) 1), this, 16.0F);
+				}
+			}
+			else
+			{
+				mode = 0;
+				recipeTime = 0;
+			}
+		}
+		}
 		heatCurrect.update();
 		if(buf++ == 50)
 		{
@@ -60,60 +127,9 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	}
 	
 	@Override
-	public FluidStack getFluid() 
+	protected FluidTank getFluidTankFromSide(ForgeDirection aSide)
 	{
-		return getTileInventory().getFluid();
-	}
-
-	@Override
-	public int getFluidAmount() 
-	{
-		return getTileInventory().getFluidAmount();
-	}
-
-	@Override
-	public int getCapacity() 
-	{
-		return getTileInventory().getCapacity();
-	}
-
-	@Override
-	public FluidTankInfo getInfo() 
-	{
-		return getTileInventory().getInfo();
-	}
-
-	@Override
-	public int fill(FluidStack resource, boolean doFill) 
-	{
-		return getTileInventory().fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) 
-	{
-		return getTileInventory().drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) 
-	{
-		return from == ForgeDirection.UP ? getTileInventory().fill(resource, doFill) : 0;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource,
-			boolean doDrain) 
-	{
-		if(resource != null)
-			if(!resource.isFluidEqual(getTileInventory().getFluid())) return null;
-		return from == ForgeDirection.UP ? getTileInventory().drain(resource.amount, doDrain) : null;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) 
-	{
-		return from == ForgeDirection.UP ? getTileInventory().drain(maxDrain, doDrain) : null;
+		return aSide == ForgeDirection.UP ? tank : null;
 	}
 
 	@Override
@@ -127,20 +143,15 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	{
 		return from == ForgeDirection.UP;
 	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) 
-	{
-		return new FluidTankInfo[]{getInfo()};
-	}	
 	
 	public GuiCondition getError()
 	{
-		return getTileInventory().type;
+		return type;
 	}
 
 	public void setClose() 
 	{
+		type = GuiError.DEFAULT;
 		mode = 1;
 	}
 	
@@ -176,7 +187,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	
 	public double getProgress()
 	{
-		return getTileInventory().getProgress();
+		return recipeTime / MatterDictionary.getMeltRequires(stacks[0])[1];
 	}
 	
 	@Override
@@ -184,7 +195,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	{
 		switch(aType)
 		{
-		case 1 : return getTileInventory().recipeTime;
+		case 1 : return recipeTime;
 		case 2 : return mode;
 		case 3 : return heatCurrect.getHeat();
 		}
@@ -196,7 +207,7 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	{
 		if(type == 1)
 		{
-			getTileInventory().recipeTime = (Double) contain;
+			recipeTime = (Double) contain;
 		}
 		else if(type == 2)
 		{
@@ -211,5 +222,47 @@ public class TileEntityTerrine extends TEIT<InventoryTerrine> implements IFluidT
 	public double getPreHeatEmit()
 	{
 		return heatCurrect.getPreHeatEmit();
+	}
+
+	@Override
+	protected String getDefaultName()
+	{
+		return Lang.inventory_terrine;
+	}
+
+	@Override
+	public boolean canInsertItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return aDirection == ForgeDirection.UP ? true : false;
+	}
+
+	@Override
+	public boolean canExtractItem(int aSlotID, ItemStack aResource,
+			ForgeDirection aDirection)
+	{
+		return false;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
+	{
+		return new int[]{0};
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return false;
+	}
+
+	protected boolean isInputSlot(int i)
+	{
+		return i == 0;
+	}
+
+	protected boolean isOutputSlot(int i)
+	{
+		return false;
 	}
 }

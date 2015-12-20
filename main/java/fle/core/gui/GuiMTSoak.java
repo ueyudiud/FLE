@@ -1,13 +1,11 @@
 package fle.core.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.api.gui.ContainerBase;
-import fle.api.gui.GuiContainerBase;
+import flapi.gui.GuiContainerBase;
+import flapi.util.FleValue;
 import fle.core.te.tank.TileEntityMultiTankSoak;
 
 @SideOnly(Side.CLIENT)
@@ -27,7 +25,6 @@ public class GuiMTSoak extends GuiContainerBase
 	protected void drawOther(int aXOffset, int aYOffset, int aMouseXPosition,
 			int aMouseYPosition)
 	{
-		drawFluid(41, 18, tile.getMainTank(), 50, 50);
 		drawTexturedModalRect(aXOffset + 41, aYOffset + 18, 176, 0, 50, 50);
 		for(int i = 0; i < 2; ++i)
 			for(int j = 0; j < 2; ++j)

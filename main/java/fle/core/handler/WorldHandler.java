@@ -3,8 +3,8 @@ package fle.core.handler;
 import net.minecraft.init.Blocks;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import flapi.event.FLEThermalHeatEvent;
 import fle.FLE;
-import fle.api.event.FLEThermalHeatEvent;
 
 public class WorldHandler
 {

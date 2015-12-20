@@ -2,15 +2,15 @@ package fle.core.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.gui.ContainerCraftable;
-import fle.api.gui.SlotHolographic;
-import fle.api.net.INetEventListener;
-import fle.api.world.BlockPos;
+import flapi.gui.ContainerCraftable;
+import flapi.gui.FluidSlot;
+import flapi.gui.SlotTool;
+import flapi.net.INetEventListener;
+import flapi.te.interfaces.IContainerNetworkUpdate;
+import flapi.world.BlockPos;
 import fle.core.te.argil.TileEntityCeramicFurnaceCrucible;
 import fle.core.te.argil.TileEntityCeramicFurnaceFirebox;
 import fle.core.te.argil.TileEntityCeramicFurnaceInlet;
@@ -31,13 +31,13 @@ public class ContainerCeramicFurnace extends ContainerCraftable implements INetE
 		int i;
 		if(isFireboxNearBy(aPos))
 		{
-			addSlotToContainer(new SlotHolographic(tileCFF, 3, 22, 58, false, false));
+			addSlotToContainer(new SlotTool(tileCFF, 3, 22, 58));
 			for(i = 0; i < 3; ++i)
 				addSlotToContainer(new Slot(tileCFF, i, 41 + 18 * i, 58));
 		}
 		if(isCrucibleNearBy(aPos))
 		{
-			
+			addSlotToContainer(new FluidSlot(tileCFC, 0, 120, 26, 8, 30));
 		}
 		if(isInletNearBy(aPos) && tileCFC != null)
 		{
@@ -47,9 +47,10 @@ public class ContainerCeramicFurnace extends ContainerCraftable implements INetE
 		}
 		if(isOutletNearBy(aPos))
 		{
-			addSlotToContainer(new Slot((IInventory) tileCFO, 0, 138, 26));
-			addSlotToContainer(new Slot((IInventory) tileCFO, 1, 138, 58));
+			addSlotToContainer(new Slot(tileCFO, 0, 138, 26));
+			addSlotToContainer(new Slot(tileCFO, 1, 138, 58));
 		}
+		lastNumbers = new int[(tileCFF != null ? tileCFF.getProgressSize() : 0) + (tileCFC != null ? tileCFC.getProgressSize() : 0) + (tileCFO != null ? tileCFO.getProgressSize() : 0)];
 		locateRecipeInput = new TransLocation("input", -1);
 		locateRecipeOutput = new TransLocation("output", -1);
 	}
@@ -166,25 +167,96 @@ public class ContainerCeramicFurnace extends ContainerCraftable implements INetE
 	}
 	
 	@Override
-	public ItemStack slotClick(int aSlotID, int aMouseclick, int aShifthold, EntityPlayer aPlayer)
+	public void addCraftingToCrafters(ICrafting crafter)
 	{
-		if(tileCFF != null && aSlotID > 0)
+		super.addCraftingToCrafters(crafter);
+		for(int i = 0; i < lastNumbers.length; ++i)
 		{
-			if(getSlot(aSlotID) == getSlotFromInventory(tileCFF, 3))
-			{
-				ItemStack tStack = aPlayer.inventory.getItemStack();
-			    if (tStack != null)
-			    {
-			    	tileCFF.onToolClick(tStack, aPlayer);
-			    	if (tStack.stackSize <= 0)
-			    	{
-			    		aPlayer.inventory.setItemStack(null);
-			    	}
-			    }
-			    return null;
-			}
+			crafter.sendProgressBarUpdate(this, i, getProgress(i));
 		}
-		return super.slotClick(aSlotID, aMouseclick, aShifthold, aPlayer);
+	}
+
+	@Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+        for(Object obj : crafters)
+        {
+        	ICrafting crafter = (ICrafting) obj;
+    		for(int i = 0; i < lastNumbers.length; ++i)
+    		{
+    			int value = getProgress(i);
+    			if(lastNumbers[i] != value)
+    				crafter.sendProgressBarUpdate(this, i, value);
+    		}
+        }
+		for(int i = 0; i < lastNumbers.length; ++i)
+			lastNumbers[i] = getProgress(i);
+    }
+	
+	@Override
+	public void updateProgressBar(int index, int amount)
+	{
+		super.updateProgressBar(index, amount);
+		setProgress(index, amount);
+	}
+
+	protected int getProgress(int id)
+	{
+		int i = 0;
+    	if (tileCFF instanceof IContainerNetworkUpdate)
+    	{
+    		i = id;
+    		id -= ((IContainerNetworkUpdate) tileCFF).getProgressSize();
+    		if(id < 0) return ((IContainerNetworkUpdate) tileCFF).getProgress(i);
+    	}
+    	if (tileCFC instanceof IContainerNetworkUpdate)
+    	{
+    		i = id;
+    		id -= ((IContainerNetworkUpdate) tileCFC).getProgressSize();
+    		if(id <= 0) return  ((IContainerNetworkUpdate) tileCFC).getProgress(i);
+    	}
+    	if (tileCFO instanceof IContainerNetworkUpdate)
+    	{
+    		i = id;
+    		id -= ((IContainerNetworkUpdate) tileCFO).getProgressSize();
+    		if(id <= 0) return  ((IContainerNetworkUpdate) tileCFO).getProgress(i);
+    	}
+    	return 0;
+	}
+	protected void setProgress(int id, int value)
+	{
+		int i = 0;
+    	if (tileCFF instanceof IContainerNetworkUpdate)
+    	{
+    		i = id;
+    		id -= ((IContainerNetworkUpdate) tileCFF).getProgressSize();
+    		if(id < 0) 
+    		{
+    			((IContainerNetworkUpdate) tileCFF).setProgress(i, value);
+    			return;
+    		}
+    	}
+    	if (tileCFC instanceof IContainerNetworkUpdate)
+    	{
+    		i = id;
+    		id -= ((IContainerNetworkUpdate) tileCFC).getProgressSize();
+    		if(id <= 0)
+    		{
+    			((IContainerNetworkUpdate) tileCFC).setProgress(i, value);
+    			return;
+    		}
+    	}
+    	if (tileCFO instanceof IContainerNetworkUpdate)
+    	{
+    		i = id;
+    		id -= ((IContainerNetworkUpdate) tileCFO).getProgressSize();
+    		if(id <= 0)
+    		{
+    			((IContainerNetworkUpdate) tileCFO).setProgress(i, value);
+    			return;
+    		}
+    	}
 	}
 	
 	@Override

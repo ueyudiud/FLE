@@ -1,18 +1,15 @@
 package fle.core.util;
 
 import java.io.File;
-import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.FMLInjectionData;
-import cpw.mods.fml.relauncher.IFMLCallHook;
-import fle.api.material.MaterialAbstract;
+import flapi.material.MaterialAbstract;
 
 public class FleSetup
 {
 	private File mcDir;
-	private String mcVeision;
+	public String mcVeision;
 
 	public void setup()
 	{

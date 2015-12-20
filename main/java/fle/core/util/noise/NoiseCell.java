@@ -1,7 +1,6 @@
 package fle.core.util.noise;
 
-import java.util.Random;
-
+@SuppressWarnings("unused")
 public class NoiseCell extends NoiseBase
 {
 	public NoiseCell(long aSeed)
@@ -43,7 +42,7 @@ public class NoiseCell extends NoiseBase
 			for(int xCur = xInt - 2; xCur <= xInt + 2; xCur++) 
 			{
 				xPos = xCur + valueNoise2D(xCur, zCur, seed);
-				zPos = zCur + valueNoise2D(xCur, zCur, new Random(seed).nextLong());
+				zPos = zCur + valueNoise2D(xCur, zCur, next(xCur, 0, zCur));
 				xDist = xPos - x;
 				zDist = zPos - z;
 				dist = distance(xPos - x, zPos - z);
@@ -105,7 +104,7 @@ public class NoiseCell extends NoiseBase
 			for(int xCur = xInt - 2; xCur <= xInt + 2; xCur++) 
 			{
 				double xPos = xCur + valueNoise2D(xCur, zCur, seed);
-				double zPos = zCur + valueNoise2D(xCur, zCur, new Random(seed).nextLong());
+				double zPos = zCur + valueNoise2D(xCur, zCur, next(xCur, 0, zCur));
 				double xDist = xPos - x;
 				double zDist = zPos - z;
 				//double dist = xDist * xDist + zDist * zDist;
@@ -162,8 +161,6 @@ public class NoiseCell extends NoiseBase
 		double yCandidate = 0;
 		double zCandidate = 0;
 
-		Random rand = new Random(seed);
-
 		for(int zCur = zInt - 2; zCur <= zInt + 2; zCur++) {
 			for(int yCur = yInt - 2; yCur <= yInt + 2; yCur++) {
 				for(int xCur = xInt - 2; xCur <= xInt + 2; xCur++) {
@@ -171,8 +168,8 @@ public class NoiseCell extends NoiseBase
 					// this unit cube.
 
 					double xPos = xCur + valueNoise3D (xCur, yCur, zCur, seed);
-					double yPos = yCur + valueNoise3D (xCur, yCur, zCur, rand.nextLong());
-					double zPos = zCur + valueNoise3D (xCur, yCur, zCur, rand.nextLong());
+					double yPos = yCur + valueNoise3D (xCur, yCur, zCur, next(xCur, yCur, zCur));
+					double zPos = zCur + valueNoise3D (xCur, yCur, zCur, next(xCur, yCur + 5, zCur));
 					double xDist = xPos - x;
 					double yDist = yPos - y;
 					double zDist = zPos - z;
@@ -214,5 +211,11 @@ public class NoiseCell extends NoiseBase
 		long n = (1619 * x + 31337 * y + 6971 * z + 1013 * seed) & 0x7fffffff;
 		n = (n >> 13) ^ n;
 		return 1.0 - ((double)((n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff) / 1073741824.0);
+	}
+
+	private long next(long x, long y, long z)
+	{
+		long ret = (x * 38591L + y) ^ (y * 37501L + z) ^ (z * 17419L + x) ^ seed;
+	    return (ret * (ret * (ret * 15731 + seed) + 782949221L) + 76312589L) & 0x7FFFFFFF;   
 	}
 }

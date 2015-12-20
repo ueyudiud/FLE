@@ -2,11 +2,10 @@ package fle.core.recipe.crafting;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import fle.api.cg.RecipesTab;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.ShapelessFleRecipe;
-import fle.core.block.ItemRopeLadder;
+import flapi.recipe.ShapelessFleRecipe;
+import flapi.recipe.stack.BaseStack;
 import fle.core.init.IB;
+import fle.tool.block.ItemRopeLadder;
 
 public class RopeLadderCraftingRecipe extends ShapelessFleRecipe
 {
@@ -27,7 +26,7 @@ public class RopeLadderCraftingRecipe extends ShapelessFleRecipe
 			int length = 0;
 			for(int i = 0; i < aInv.getSizeInventory(); ++i)
 			{
-				if(new ItemBaseStack(IB.ropeLadder).isStackEqul(aInv.getStackInSlot(i)))
+				if(new BaseStack(IB.ropeLadder).equal(aInv.getStackInSlot(i)))
 				{
 					length += ItemRopeLadder.b(aInv.getStackInSlot(i));
 				}
@@ -40,7 +39,7 @@ public class RopeLadderCraftingRecipe extends ShapelessFleRecipe
 			int length = 0;
 			for(int i = 0; i < aInv.getSizeInventory(); ++i)
 			{
-				if(new ItemBaseStack(IB.ropeLadder).isStackEqul(aInv.getStackInSlot(i)))
+				if(new BaseStack(IB.ropeLadder).equal(aInv.getStackInSlot(i)))
 				{
 					++size;
 					length += ItemRopeLadder.b(aInv.getStackInSlot(i));

@@ -1,8 +1,8 @@
 package fle.core.init;
 
-import fle.api.FleValue;
-import fle.api.gui.GuiError;
-import fle.api.recipe.CraftingState;
+import flapi.gui.GuiError;
+import flapi.recipe.CraftingState;
+import flapi.util.FleValue;
 
 public class Conditions
 {

@@ -17,12 +17,12 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
+import flapi.FleAPI;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.block.interfaces.IGuiBlock;
+import flapi.block.old.BlockHasTile;
+import flapi.util.FleValue;
 import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.block.BlockHasTile;
-import fle.api.block.IDebugableBlock;
-import fle.api.block.IGuiBlock;
 import fle.core.gui.ContainerMTInterface;
 import fle.core.gui.ContainerMTSoak;
 import fle.core.gui.GuiMTInterface;
@@ -46,10 +46,10 @@ public class BlockMultiTank extends BlockHasTile implements IDebugableBlock, IGu
 		GameRegistry.registerTileEntity(TileEntityMultiTankIO.class, "tankMultiIO");
 		GameRegistry.registerTileEntity(TileEntityMultiTankInterface.class, "tankMultiInterface");
 		GameRegistry.registerTileEntity(TileEntityMultiTankSoak.class, "tankMultiSoak");
-		FleAPI.lm.registerLocal(getUnlocalizedName() + ":0.name", "Tank Block");
-		FleAPI.lm.registerLocal(getUnlocalizedName() + ":1.name", "Tank Valve");
-		FleAPI.lm.registerLocal(getUnlocalizedName() + ":2.name", "Tank Interface");
-		FleAPI.lm.registerLocal(getUnlocalizedName() + ":3.name", "Tank Soak Pool");
+		FleAPI.langManager.registerLocal(getUnlocalizedName() + ":0.name", "Tank Block");
+		FleAPI.langManager.registerLocal(getUnlocalizedName() + ":1.name", "Tank Valve");
+		FleAPI.langManager.registerLocal(getUnlocalizedName() + ":2.name", "Tank Interface");
+		FleAPI.langManager.registerLocal(getUnlocalizedName() + ":3.name", "Tank Soak Pool");
 	}
 	
 	@Override

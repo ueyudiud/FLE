@@ -3,7 +3,7 @@ package fle.api.te;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.cover.Cover;
+import flapi.cover.Cover;
 
 public interface ICoverTE
 {

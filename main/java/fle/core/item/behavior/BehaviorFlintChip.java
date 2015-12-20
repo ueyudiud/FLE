@@ -3,10 +3,9 @@ package fle.core.item.behavior;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import fle.api.enums.EnumCraftingType;
-import fle.api.item.IPolishTool;
-import fle.api.item.ISubPolishTool;
-import fle.api.recipe.CraftingState;
+import flapi.enums.EnumCraftingType;
+import flapi.item.interfaces.ISubPolishTool;
+import flapi.recipe.CraftingState;
 
 public class BehaviorFlintChip extends BehaviorBase implements ISubPolishTool
 {

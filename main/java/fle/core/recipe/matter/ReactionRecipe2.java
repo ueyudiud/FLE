@@ -1,13 +1,11 @@
 package fle.core.recipe.matter;
 
-import static fle.core.recipe.matter.ReactionRecipe1.*;
-import fle.api.enums.EnumAtoms;
-import fle.api.enums.EnumIons;
-import fle.api.material.Electron;
-import fle.api.material.Matter;
-import fle.api.util.IChemCondition.EnumOxide;
-import fle.api.util.IChemCondition.EnumPH;
-import fle.api.util.WeightHelper.Stack;
+import static fle.core.recipe.matter.ReactionRecipe1.addRecipe;
+import flapi.collection.abs.Stack;
+import flapi.enums.EnumAtoms;
+import flapi.enums.EnumIons;
+import flapi.material.IChemCondition.EnumOxide;
+import flapi.material.Matter;
 
 public class ReactionRecipe2
 {

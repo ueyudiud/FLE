@@ -2,11 +2,7 @@ package fle.core.handler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
@@ -17,7 +13,6 @@ import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
@@ -26,19 +21,21 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fle.api.util.DamageResources;
-import fle.api.util.WeightHelper;
+import flapi.collection.ArrayStandardStackList;
+import flapi.collection.abs.IStackList;
+import flapi.collection.abs.Stack;
+import flapi.util.DamageResources;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
-import fle.core.item.ItemTool;
 import fle.core.util.FlePotionEffect;
+import fle.tool.item.ItemTool;
 
 public class EntityHandler
 {
-	private final WeightHelper<ItemStack> zombieHandle = new WeightHelper<ItemStack>(
-			ItemTool.a("metal_axe", Materials.CuSn, 47),
-			ItemTool.a("metal_axe", Materials.CuAs, 44),
-			ItemTool.a("metal_axe", Materials.Copper, 43));
+	private final IStackList<Stack<ItemStack>, ItemStack> zombieHandle = new ArrayStandardStackList<ItemStack>(
+			new Stack(ItemTool.a("metal_axe", Materials.CuSn, 47)),
+			new Stack(ItemTool.a("metal_axe", Materials.CuAs, 44)),
+					new Stack(ItemTool.a("metal_axe", Materials.Copper, 43)));
 	
 	@SubscribeEvent
 	public void onEntitySpawn(LivingSpawnEvent evt)

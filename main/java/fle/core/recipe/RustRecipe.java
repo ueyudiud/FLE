@@ -3,7 +3,7 @@ package fle.core.recipe;
 import java.util.HashMap;
 import java.util.Map;
 
-import fle.api.material.MaterialAbstract;
+import flapi.material.MaterialAbstract;
 
 public class RustRecipe
 {
@@ -21,7 +21,7 @@ public class RustRecipe
 	}
 	
 	private float baseSpeed;
-	private MaterialAbstract input;
+	public MaterialAbstract input;
 	private MaterialAbstract output;
 	
 	public RustRecipe(MaterialAbstract aInput, float aBaseSpeed, MaterialAbstract aOutput) 

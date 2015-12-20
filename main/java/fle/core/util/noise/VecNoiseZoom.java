@@ -2,8 +2,8 @@ package fle.core.util.noise;
 
 import java.util.Arrays;
 
-import fle.core.util.FLEMath;
 import net.minecraft.util.Vec3;
+import fle.core.util.FLEMath;
 
 public class VecNoiseZoom extends VecNoiseBase
 {
@@ -121,15 +121,10 @@ public class VecNoiseZoom extends VecNoiseBase
 		return a;
 	}
 	
-	private double mode(double a, double b)
+	@Override
+	public VecNoiseBase setSeed(long aSeed)
 	{
-		double ret = a % b;
-		return ret < 0 ? ret + b : ret;
-	}
-	
-	private int mode(long a, long b)
-	{
-		long ret = a % b;
-		return (int) (ret < 0 ? ret + b : ret);
+		noise.setSeed(aSeed);
+		return super.setSeed(aSeed);
 	}
 }

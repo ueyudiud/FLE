@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import fle.api.block.ItemFleBlock;
+import flapi.block.old.ItemFleBlock;
 import fle.core.te.TileEntityPlacedItem;
 
 public class ItemPlaceable extends ItemFleBlock

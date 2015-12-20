@@ -1,24 +1,20 @@
 package fle.core.recipe;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleValue;
-import fle.api.cg.RecipesTab;
-import fle.api.material.MaterialAbstract;
-import fle.api.material.MatterDictionary;
-import fle.api.material.MatterDictionary.IFreezingRecipe;
-import fle.api.recipe.AbstractRecipe;
-import fle.api.recipe.ShapelessFleRecipe;
-import fle.api.util.SubTag;
+import flapi.material.MaterialAbstract;
+import flapi.material.MatterDictionary;
+import flapi.material.MatterDictionary.IFreezingRecipe;
+import flapi.util.FleValue;
+import flapi.util.SubTag;
 import fle.core.init.IB;
 import fle.core.init.Materials;
-import fle.core.inventory.InventoryCastingPool;
 import fle.core.item.ItemFleSub;
-import fle.core.item.ItemTool;
-import fle.core.item.ItemToolHead;
+import fle.core.te.TileEntityCastingPool;
+import fle.tool.item.ItemTool;
+import fle.tool.item.ItemToolHead;
 
 public class CastingPoolRecipe implements IFreezingRecipe
 {
@@ -91,7 +87,7 @@ public class CastingPoolRecipe implements IFreezingRecipe
 	@Override
 	public boolean match(FluidStack aStack, IInventory inv)
 	{
-		if(aStack == null || !(inv instanceof InventoryCastingPool)) return false;
+		if(aStack == null || !(inv instanceof TileEntityCastingPool)) return false;
 		if((!input.isFluidEqual(aStack)) || input.amount > aStack.amount) return false;
 		for(int i = 0; i < 9; ++i)
 		{

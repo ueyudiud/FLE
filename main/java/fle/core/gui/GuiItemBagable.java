@@ -1,12 +1,11 @@
 package fle.core.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import fle.api.FleValue;
-import fle.api.gui.ContainerBase;
-import fle.api.gui.GuiContainerBase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import flapi.gui.GuiContainerBase;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 
 @SideOnly(Side.CLIENT)

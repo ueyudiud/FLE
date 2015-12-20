@@ -4,14 +4,12 @@ import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.Ev
 
 import java.util.Random;
 
-import fle.core.world.FleCrystalGen;
-import fle.core.world.dim.FLEBiomeDecoratorBase;
-import fle.core.world.dim.FLEBiomeDecoratorHell;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.TerrainGen;
+import fle.resource.world.FleCrystalGen;
 
 public class FLEBiomeHellCrystalLand extends FLEBiomeHellBase
 {

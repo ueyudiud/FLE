@@ -5,11 +5,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.item.ItemStack;
 
 public class Util
 {
+	private static final Random rand = new Random();
+	
 	public static <T, F> void overrideStaticField(Class<? extends T> clazz, List<String> field, F override, boolean isPrivate) throws Exception
 	{
 		overrideField(clazz, field, null, override, isPrivate);
@@ -155,5 +158,10 @@ public class Util
 				stack.stackSize = i;
 			}
 		}
+	}
+	
+	public static <T> T randomGet(T[] array)
+	{
+		return array[rand.nextInt(array.length)];
 	}
 }

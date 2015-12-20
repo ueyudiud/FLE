@@ -4,10 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import fle.FLE;
-import fle.api.block.ItemFleBlock;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.world.BlockPos;
+import net.minecraftforge.common.util.ForgeDirection;
+import flapi.block.old.ItemFleBlock;
+import flapi.te.TEBase;
 
 public class ItemSubTile extends ItemFleBlock
 {
@@ -30,13 +29,17 @@ public class ItemSubTile extends ItemFleBlock
     public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
     {
     	short tDamage = (short) getDamage(stack);
-    	if (!world.setBlock(x, y, z, block, 0, 3))
+    	if (!world.setBlock(x, y, z, block, tDamage, 3))
     	{
     		return false;
     	}
     	if (world.getTileEntity(x, y, z) != null)
     	{
     		world.getTileEntity(x, y, z).blockMetadata = tDamage;
+    		if(world.getTileEntity(x, y, z) instanceof TEBase)
+    		{
+    			((TEBase) world.getTileEntity(x, y, z)).setDirction(ForgeDirection.VALID_DIRECTIONS[side]);
+    		}
     	}
 
     	if (world.getBlock(x, y, z) == block)

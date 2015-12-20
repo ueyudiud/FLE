@@ -12,19 +12,14 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.enums.EnumFLERock;
-import fle.api.material.MaterialRock;
-import fle.core.block.BlockFleRock;
-import fle.core.block.BlockRock;
-import fle.core.init.IB;
 import fle.core.world.dim.FLEBiomeDecoratorBase;
 
 public class FLEBiomeSwamp extends FLEBiome
 {
     public FLEBiomeSwamp(String name, int index)
     {
-        super(name, index);
-        theBiomeDecorator.treesPerChunk = 2;
+    	super(name, index);
+        theBiomeDecorator.treesPerChunk = 1;
         theBiomeDecorator.flowersPerChunk = 1;
         theBiomeDecorator.deadBushPerChunk = 1;
         theBiomeDecorator.mushroomsPerChunk = 8;
@@ -33,8 +28,8 @@ public class FLEBiomeSwamp extends FLEBiome
         theBiomeDecorator.waterlilyPerChunk = 4;
         theBiomeDecorator.sandPerChunk2 = 0;
         theBiomeDecorator.sandPerChunk = 0;
-        theBiomeDecorator.grassPerChunk = 5;
-        ((FLEBiomeDecoratorBase) theBiomeDecorator).peatPerChunk = 1;
+        theBiomeDecorator.grassPerChunk = 6;
+        ((FLEBiomeDecoratorBase) theBiomeDecorator).peatPerChunk = 2;
         waterColorMultiplier = 14745518;
         spawnableMonsterList.add(new BiomeGenBase.SpawnListEntry(EntitySlime.class, 1, 1, 1));
         flowers.clear();

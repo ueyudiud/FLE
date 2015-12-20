@@ -2,15 +2,15 @@ package fle.core.net;
 
 import java.io.IOException;
 
-import fle.api.net.FleCoordinatesPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.soild.ISolidTanks;
-import fle.api.soild.SolidStack;
-import fle.api.te.IFluidTanks;
-import fle.api.te.ITEInWorld;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
-import fle.api.world.BlockPos;
+import flapi.net.FleCoordinatesPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.solid.ISolidTanks;
+import flapi.solid.SolidStack;
+import flapi.te.interfaces.IFluidTanks;
+import flapi.te.interfaces.IObjectInWorld;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
+import flapi.world.BlockPos;
 
 public class FleSolidTankPacket extends FleCoordinatesPacket
 {
@@ -27,7 +27,7 @@ public class FleSolidTankPacket extends FleCoordinatesPacket
 		
 	}
 
-	public FleSolidTankPacket(ITEInWorld tile)
+	public FleSolidTankPacket(IObjectInWorld tile)
 	{
 		super(true, tile.getBlockPos());
 		

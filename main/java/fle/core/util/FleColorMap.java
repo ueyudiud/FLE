@@ -1,6 +1,6 @@
 package fle.core.util;
 
-import fle.api.util.ColorMap;
+import flapi.util.ColorMap;
 
 public class FleColorMap implements ColorMap
 {

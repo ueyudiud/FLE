@@ -6,10 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fle.api.item.IArrowItem;
-import fle.api.item.IBagable;
-import fle.core.entity.EntityFleArrow;
-import fle.core.item.tool.ToolMaterialInfo;
+import flapi.item.interfaces.IArrowItem;
+import flapi.item.interfaces.IBagable;
+import fle.tool.ToolMaterialInfo;
 
 public class BowHandler
 {

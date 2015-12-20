@@ -1,7 +1,6 @@
 package fle.core.item;
 
-import net.minecraft.item.ItemStack;
-import fle.api.item.ItemFleMetaBase;
+import flapi.item.ItemFleMetaBase;
 
 public class ItemSub extends ItemFleMetaBase
 {

@@ -1,6 +1,5 @@
 package fle.core.world.layer;
 
-import fle.core.world.biome.FLEBiome;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerZoom;
 import net.minecraft.world.gen.layer.IntCache;
@@ -48,7 +47,6 @@ public class FLELayerRiver extends FLELayer
 					is[o + 2 + 2 * w1]
 				};
 				
-				int k0 = 0;
 				int c = 0;
 				for(int a0 = 0; a0 < vs.length; ++a0)
 					for(int a1 = 0; a1 < a0; ++a1)

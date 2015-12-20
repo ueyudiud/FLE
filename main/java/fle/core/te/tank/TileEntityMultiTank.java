@@ -2,6 +2,7 @@ package fle.core.te.tank;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -10,22 +11,25 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
-import fle.api.net.INetEventHandler;
-import fle.api.te.TileEntityAbstractTank;
+import flapi.net.INetEventHandler;
+import flapi.te.TEAbstractTank;
 import fle.core.block.tank.ItemTankBlock;
-import fle.core.inventory.tank.InventoryMultiTank;
 import fle.core.net.FleTEPacket;
 import fle.core.util.TankBlockInfo;
 
-public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTank> implements INetEventHandler
+public class TileEntityMultiTank extends TEAbstractTank implements INetEventHandler
 {	
+	final String name;
+	
 	public TileEntityMultiTank()
 	{
-		super(new InventoryMultiTank("MultiTankBlock", 2));
+		super(2);
+		name = "MultiTankSide";
 	}
 	public TileEntityMultiTank(String name, int size)
 	{
-		super(new InventoryMultiTank(name, size));
+		super(size);
+		this.name = name;
 	}
 		
 	@Override
@@ -59,15 +63,11 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	int buf = 0;
 	
 	@Override
-	protected void updateInventory()
+	protected void update()
 	{
-		if(canBeMainTile())
-		{
-			super.updateInventory();
-		}
+		updateInventory();
 		if(isMainTile())
 		{
-			getTileInventory().updateEntity(this);
 			if(buf % 50 == 0)
 			{
 				syncFluidTank();
@@ -81,6 +81,11 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 		}
 	}
 	
+	protected void updateInventory()
+	{
+		
+	}
+	
 	protected boolean canBeMainTile()
 	{
 		return true;
@@ -88,14 +93,14 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	
 	public boolean isMainTile()
 	{
-		return isMainTile;
+		return should(MAINTILE);
 	}
 	
 	public boolean isMultiTank()
 	{
-		return isMainTile || mainTile != null;
+		return should(MAINTILE) || mainTile != null;
 	}
-
+	
 	@Override
 	protected boolean canConnectWith(TileEntity tile)
 	{
@@ -116,12 +121,12 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 	@Override
 	public int getSizeTank()
 	{
-		return isMainTile || mainTile != null ? 1 : 0;
+		return should(MAINTILE) || mainTile != null ? 1 : 0;
 	}
 	
 	protected FluidTank getTank()
 	{
-		return isMainTile ? tank : mainTile != null ? mainTile.tank : new FluidTank(0);
+		return should(MAINTILE) ? tank : mainTile != null ? mainTile.tank : new FluidTank(0);
 	}
 
 	@Override
@@ -235,5 +240,36 @@ public class TileEntityMultiTank extends TileEntityAbstractTank<InventoryMultiTa
 			info = ItemTankBlock.f((Integer) contain);
 			markRenderForUpdate();
 		}
+	}
+	@Override
+	protected String getDefaultName()
+	{
+		return name;
+	}
+	
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return false;
+	}
+	
+	@Override
+	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
+	{
+		return null;
+	}
+	
+	@Override
+	public boolean canInsertItem(int slotID, ItemStack resource,
+			ForgeDirection direction)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean canExtractItem(int slotID, ItemStack resource,
+			ForgeDirection direction)
+	{
+		return false;
 	}
 }

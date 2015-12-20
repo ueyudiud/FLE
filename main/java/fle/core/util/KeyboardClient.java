@@ -15,12 +15,14 @@ public class KeyboardClient extends Keyboard
 {
 	private final Minecraft mc = Minecraft.getMinecraft();
 	public static final KeyBinding placeKey = new KeyBinding("Place Key", org.lwjgl.input.Keyboard.KEY_P, FLE.MODID);
+	public static final KeyBinding techKey = new KeyBinding("Tech Key", org.lwjgl.input.Keyboard.KEY_T, FLE.MODID);
 	private int lastKeyState;
 	
 	public KeyboardClient()
 	{
 		lastKeyState = 0;
 		ClientRegistry.registerKeyBinding(placeKey);
+		ClientRegistry.registerKeyBinding(techKey);
 	}
 	
 	public void sendKeyUpdate()
@@ -31,6 +33,8 @@ public class KeyboardClient extends Keyboard
 		{
 			if (GameSettings.isKeyDown(placeKey))
 				keys.add(Keyboard.Key.Place);
+			if (GameSettings.isKeyDown(techKey))
+				keys.add(Keyboard.Key.Tech);
 			if (GameSettings.isKeyDown(mc.gameSettings.keyBindForward))
 				keys.add(Keyboard.Key.Forward);
 			if (GameSettings.isKeyDown(mc.gameSettings.keyBindJump))

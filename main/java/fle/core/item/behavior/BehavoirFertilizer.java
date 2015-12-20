@@ -4,11 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleAPI;
-import fle.api.crop.IFertilableBlock;
-import fle.api.crop.IFertilableBlock.FertitleLevel;
-import fle.api.item.ItemFleMetaBase;
-import fle.api.world.BlockPos;
+import flapi.FleAPI;
+import flapi.item.ItemFleMetaBase;
+import flapi.plant.IFertilableBlock;
+import flapi.plant.IFertilableBlock.FertitleLevel;
+import flapi.world.BlockPos;
 
 public class BehavoirFertilizer extends BehaviorBase
 {

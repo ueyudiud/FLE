@@ -1,7 +1,7 @@
 package fle.core.util;
 
-import fle.api.FleValue;
-import fle.api.util.ITextureLocation;
+import flapi.util.FleValue;
+import flapi.util.ITextureLocation;
 
 public class TextureLocation implements ITextureLocation
 {

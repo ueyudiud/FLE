@@ -10,9 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -20,18 +18,15 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.block.old.BlockFle;
+import flapi.enums.EnumWorldNBT;
+import flapi.plant.IFertilableBlock;
+import flapi.plant.IIrrigationHandler;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.block.BlockFle;
-import fle.api.block.IDebugableBlock;
-import fle.api.crop.IFertilableBlock;
-import fle.api.crop.IIrrigationHandler;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.world.BlockPos;
 import fle.core.init.Config;
 
 public class BlockFleFarmland extends BlockFle implements IDebugableBlock, IFertilableBlock
@@ -178,16 +173,15 @@ public class BlockFleFarmland extends BlockFle implements IDebugableBlock, IFert
     	count += biome.getIntRainfall() / 256;
         if(aWorld.isRaining() && biome.getIntRainfall() > 1000) count += biome.isHighHumidity() ? 50 : 30;
         for (i = -2; i <= 2; ++i)
-        {
-        	for (k = -2; k <= 2; ++k)
-            {
-            	pos1 = pos.toPos(i, 0, k);
-                if (pos1.getBlock() == Blocks.water)
+        	for(j = -1; j <= 0; ++j)
+            	for (k = -2; k <= 2; ++k)
                 {
-                   count += 40;
+                	pos1 = pos.toPos(i, j, k);
+                    if (pos1.getBlock() == Blocks.water)
+                    {
+                       count += 40;
+                    }
                 }
-            }
-        }
         for(ForgeDirection dir : dirs)
         {
         	TileEntity tile = pos.toPos(dir).getBlockTile();

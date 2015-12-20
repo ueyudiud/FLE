@@ -1,8 +1,8 @@
 package fle.core.util;
 
+import flapi.util.ColorMap;
+import flapi.util.FleValue;
 import fle.FLE;
-import fle.api.FleValue;
-import fle.api.util.ColorMap;
 import fle.core.energy.FleThermalNet;
 
 public class ColorUtil

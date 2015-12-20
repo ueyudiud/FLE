@@ -8,16 +8,15 @@ import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.BaseAttributeMap;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.util.DamageResources;
-import fle.api.util.FleLog;
+import flapi.FleAPI;
+import flapi.util.DamageResources;
+import flapi.util.FleLog;
+import flapi.util.FleValue;
 
 public class FlePotionEffect
 {
@@ -26,6 +25,7 @@ public class FlePotionEffect
 	public static Potion fracture;
 	public static Potion burn;
 	//public static Potion recovery;
+	public static Potion drunk;
 	
 	public static void init()
 	{
@@ -52,6 +52,7 @@ public class FlePotionEffect
 		fracture = new PotionFLEFracture(FleAPI.getNextPotionId(start), "fracture", 0xFFFDE8, new int[]{1, 0});
 		burn = new PotionFLEBurn(FleAPI.getNextPotionId(start), "burn", 0x922700, new int[]{2, 0});
 		//recovery = new PotionFLERecovery(FleAPI.getNextPotionId(start), "recovery", 0x83FF00, new int[]{3, 0});
+		drunk = new PotionDrunk(FleAPI.getNextPotionId(start), "drunk", 0x3E8B2D, new int[]{4, 0});
 	}
 
 	private static class PotionFLE extends Potion
@@ -135,6 +136,7 @@ public class FlePotionEffect
 	}
 
 	@Deprecated
+	@SuppressWarnings("unused")
 	private static class PotionFLERecovery extends PotionFLE
 	{
 		public PotionFLERecovery(int id, String name, int color, int[] iconIndex)
@@ -185,6 +187,38 @@ public class FlePotionEffect
 		{
 			super(id, name, true, color, iconIndex);
 			setAttribute(SharedMonsterAttributes.movementSpeed, new UUID(184829284141L, 4182453251241L), -0.25D);
+		}
+	}
+	
+	private static class PotionDrunk extends PotionFLE
+	{
+		public PotionDrunk(int id, String name, int color,
+				int[] iconIndex)
+		{
+			super(id, name, false, color, iconIndex);
+		}
+
+		@Override
+		public boolean isReady(int tick, int level)
+		{
+			return tick % (120 / (level + 1)) == 0;
+		}
+		
+		@Override
+		public void performEffect(EntityLivingBase entity, int level)
+		{
+			if(!entity.worldObj.isRemote && (entity instanceof EntityPlayer))
+			{
+				if(entity.getRNG().nextInt(5 / level) == 0)
+					((EntityPlayer) entity).getFoodStats().addStats(1, 0.0625F * level);
+			}
+			if(entity.onGround && level > 1)
+			{
+				entity.motionX += (entity.getRNG().nextDouble() - 0.5) * 0.03125;
+				entity.motionX *= 1D + (entity.getRNG().nextDouble() * 0.03125 - entity.getRNG().nextDouble() * 0.03125) * level * level;
+				entity.motionZ += (entity.getRNG().nextDouble() - 0.5) * 0.0390625;
+				entity.motionZ *= 1D + (entity.getRNG().nextDouble() * 0.03125 - entity.getRNG().nextDouble() * 0.03125) * level * level;
+			}
 		}
 	}
 }

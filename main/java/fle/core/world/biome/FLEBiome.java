@@ -10,24 +10,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenHills;
-import net.minecraft.world.biome.BiomeGenJungle;
-import net.minecraft.world.biome.BiomeGenSnow;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
-import fle.api.enums.EnumFLERock;
-import fle.api.material.MaterialRock;
-import fle.api.util.FleLog;
-import fle.api.util.ISubTagContainer;
-import fle.api.util.SubTag;
-import fle.core.block.BlockFleRock;
-import fle.core.block.BlockRock;
-import fle.core.init.IB;
+import flapi.enums.EnumFLERock;
+import flapi.util.FleLog;
+import flapi.util.ISubTagContainer;
+import flapi.util.SubTag;
 import fle.core.util.Util;
 import fle.core.util.noise.NoiseFuzzy;
-import fle.core.util.noise.NoiseMix;
-import fle.core.util.noise.NoisePerlin;
 import fle.core.world.dim.FLEBiomeDecoratorBase;
 import fle.core.world.dim.FLEWorldType;
 
@@ -111,7 +102,8 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 		rockWeatheringNoise.setSeed(seed * 386719561L + 971961810L);
 	}
 	
-	int mColor;
+	public int mColor;
+	public float montainHeight;
 	
 	public FLEBiome(String name, int index)
 	{
@@ -139,13 +131,13 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
     public final FLEBiome setH(BiomeGenBase.Height height)
     {
         rootHeight = height.rootHeight;
-        heightVariation = height.variation;
+        montainHeight = heightVariation = height.variation;
         return this;
     }
     
 	public FLEBiome setBiomeHeight(float min, float max)
 	{
-		setHeight(new Height((min + max) / 2.0F, (max - min) / 2.0F));
+		setH(new Height((min + max) / 2.0F, (max - min) / 2.0F));
 		return this;
 	}
 	

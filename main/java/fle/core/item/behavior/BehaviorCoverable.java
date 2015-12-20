@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.cover.Cover;
-import fle.api.item.ItemFleMetaBase;
+import flapi.cover.Cover;
+import flapi.item.ItemFleMetaBase;
 import fle.api.te.ICoverTE;
 
 public class BehaviorCoverable extends BehaviorBase

@@ -13,9 +13,9 @@ import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import flapi.tech.Technology;
+import flapi.tech.Technology.LearningType;
 import fle.FLE;
-import fle.api.tech.Technology;
-import fle.api.tech.Technology.LearningType;
 
 /**
  * This system have not complete yet.

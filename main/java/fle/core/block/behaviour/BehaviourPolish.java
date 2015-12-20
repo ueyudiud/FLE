@@ -5,7 +5,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
-import fle.api.block.IBlockWithTileBehaviour;
 import fle.core.block.BlockSubTile;
 import fle.core.gui.ContainerPolish;
 import fle.core.gui.GuiPolish;

@@ -13,20 +13,21 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import flapi.collection.CollectionUtil;
+import flapi.collection.CollectionUtil.FleEntry;
+import flapi.enums.EnumWorldNBT;
+import flapi.item.interfaces.ICrushableTool;
+import flapi.material.MaterialOre;
+import flapi.recipe.DropInfo;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.item.ICrushableTool;
-import fle.api.material.MaterialOre;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.util.DropInfo;
-import fle.api.util.FleEntry;
-import fle.api.world.BlockPos;
-import fle.core.block.BlockFleRock;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
-import fle.core.item.ItemOre;
+import fle.resource.block.BlockFleRock;
+import fle.resource.item.ItemOre;
 
 public class StoneHammerHandler
 {
@@ -35,28 +36,28 @@ public class StoneHammerHandler
 	static
 	{
 		Map<ItemStack, Integer> tMap;
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_stone"), 8), new FleEntry(ItemFleSub.a("fragment_stone"), 3));
-		registryDust(new ItemBaseStack(Blocks.stone), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_sandstone"), 1));
-		registryDust(new ItemBaseStack(Blocks.sandstone), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_netherstone"), 1));
-		registryDust(new ItemBaseStack(Blocks.netherrack), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_obsidian"), 1));
-		registryDust(new ItemBaseStack(Blocks.obsidian), new DropInfo(2, 3, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_limestone"), 1));
-		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Limestone)), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_rhyolite"), 1));
-		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Rhyolite)), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_andesite"), 1));
-		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Andesite)), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_basalt"), 1));
-		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Basalt)), new DropInfo(3, 4, FleEntry.copy(tMap)));
-		tMap = FleEntry.asMap(new FleEntry(ItemFleSub.a("chip_peridotite"), 1));
-		registryDust(new ItemBaseStack(BlockFleRock.a(Materials.Peridotite)), new DropInfo(3, 4, FleEntry.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_stone"), 8), new FleEntry(ItemFleSub.a("fragment_stone"), 3));
+		registryDust(new BaseStack(Blocks.stone), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_sandstone"), 1));
+		registryDust(new BaseStack(Blocks.sandstone), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_netherstone"), 1));
+		registryDust(new BaseStack(Blocks.netherrack), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_obsidian"), 1));
+		registryDust(new BaseStack(Blocks.obsidian), new DropInfo(2, 3, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_limestone"), 1));
+		registryDust(new BaseStack(BlockFleRock.a(Materials.Limestone)), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_rhyolite"), 1));
+		registryDust(new BaseStack(BlockFleRock.a(Materials.Rhyolite)), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_andesite"), 1));
+		registryDust(new BaseStack(BlockFleRock.a(Materials.Andesite)), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_basalt"), 1));
+		registryDust(new BaseStack(BlockFleRock.a(Materials.Basalt)), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
+		tMap = CollectionUtil.asMap(new FleEntry(ItemFleSub.a("chip_peridotite"), 1));
+		registryDust(new BaseStack(BlockFleRock.a(Materials.Peridotite)), new DropInfo(3, 4, CollectionUtil.copy(tMap)));
 		for(MaterialOre ore : MaterialOre.getOres())
 		{
-			tMap = FleEntry.asMap(new FleEntry(ItemOre.a(ore), 1));
-			registryDust(new ItemBaseStack(IB.ore, MaterialOre.getOreID(ore)), new DropInfo(2, 2, FleEntry.copy(tMap)));
+			tMap = CollectionUtil.asMap(new FleEntry(ItemOre.a(ore), 1));
+			registryDust(new BaseStack(IB.ore, MaterialOre.getOreID(ore)), new DropInfo(2, 2, CollectionUtil.copy(tMap)));
 		}
 	}
 	
@@ -139,7 +140,7 @@ public class StoneHammerHandler
 	{
 		for(ItemAbstractStack tCheck : dustList.keySet())
 		{
-			if(tCheck.isStackEqul(new ItemStack(block, 1, meta)))
+			if(tCheck.equal(new ItemStack(block, 1, meta)))
 			{
 				return dustList.get(tCheck);
 			}
@@ -151,7 +152,7 @@ public class StoneHammerHandler
 	{
 		for(ItemAbstractStack tCheck : dustList.keySet())
 		{
-			if(tCheck.isStackEqul(new ItemStack(block, 1, meta)))
+			if(tCheck.equal(new ItemStack(block, 1, meta)))
 			{
 				return true;
 			}

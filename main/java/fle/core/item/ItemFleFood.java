@@ -1,18 +1,20 @@
 package fle.core.item;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import fle.api.enums.EnumFoodType;
-import fle.api.item.IFoodStat;
-import fle.api.util.FleLog;
+import net.minecraft.potion.PotionEffect;
+import flapi.enums.EnumFoodType;
+import flapi.item.interfaces.IFoodStat;
+import flapi.util.FleLog;
 import fle.core.init.IB;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.item.behavior.FoodBowl;
+import fle.core.item.behavior.FoodJug;
 import fle.core.item.behavior.FoodKebab;
 import fle.core.item.behavior.FoodStandard;
-import fle.core.util.TextureLocation;
+import fle.core.util.FlePotionEffect;
+import fle.core.util.ItemTextureHandler;
 
-public class ItemFleFood extends fle.api.item.ItemFleFood
+public class ItemFleFood extends flapi.item.ItemFleFood
 {
 	public ItemFleFood init()
 	{
@@ -37,6 +39,7 @@ public class ItemFleFood extends fle.api.item.ItemFleFood
 		addSubItem(10011, "chicken_kebab", "Chicken Kebab", "resource/food/10011", new FoodKebab(EnumFoodType.Snack, 3, 0.6F));
 		addSubItem(10012, "pork_kebab", "Pork Kebab", "resource/food/10012", new FoodKebab(EnumFoodType.Snack, 4, 0.7F));
 		addSubItem(20001, "citron", "Citron", "resource/food/20001", new FoodStandard(EnumFoodType.Resource, 1, 0.0F));
+		addSubItem(30001, "jug_argil_wheat", "Argil Jug With Wheat Alcohol", "clay/1003/alcohol_wheat", new FoodJug(EnumFoodType.Drink, new PotionEffect(FlePotionEffect.drunk.id, 1000, 1)));
 		return this;
 	}
 
@@ -67,9 +70,9 @@ public class ItemFleFood extends fle.api.item.ItemFleFood
 		super(aUnlocalized, aUnlocalizedTooltip);
 	}
 	
-	public final ItemFleFood addSubItem(int aMetaValue, String name, String aLocalized, String aLocate, IFoodStat<fle.api.item.ItemFleFood> aFoodBehavior)
+	public final ItemFleFood addSubItem(int aMetaValue, String name, String aLocalized, String aLocate, IFoodStat<flapi.item.ItemFleFood> aFoodBehavior)
 	{
-		addSubItem(aMetaValue, name, aLocalized, new TextureLocation(aLocate), new BehaviorBase(), aFoodBehavior);
+		addSubItem(aMetaValue, name, aLocalized, new ItemTextureHandler(aLocate), new BehaviorBase(), aFoodBehavior);
 		return this;
 	}
 }

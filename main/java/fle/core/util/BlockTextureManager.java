@@ -1,11 +1,12 @@
 package fle.core.util;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.util.IBlockTextureManager;
+import flapi.FleAPI;
+import flapi.util.BTI;
+import flapi.util.FleValue;
+import flapi.util.ITextureHandler;
 
-public class BlockTextureManager implements IBlockTextureManager
+public class BlockTextureManager implements ITextureHandler<BTI>
 {
 	String textureFileName;
 	String[] textureNames;
@@ -45,10 +46,11 @@ public class BlockTextureManager implements IBlockTextureManager
 	{
 		return textureNames[pass];
 	}
-
+	
 	@Override
-	public int getIconID(ForgeDirection dir) 
+	public int getIconIndex(BTI infomation)
 	{
+		ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[infomation.side];
 		switch(textureNames.length)
 		{
 		case 1 : return 0;

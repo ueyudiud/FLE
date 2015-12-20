@@ -7,9 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import flapi.tech.PlayerTechInfo;
+import flapi.tech.Technology;
 import fle.FLE;
-import fle.api.tech.PlayerTechInfo;
-import fle.api.tech.Technology;
 import fle.core.net.FlePlayerTechPacket;
 
 public class FlePlayerTechInfo extends PlayerTechInfo

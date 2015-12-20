@@ -7,23 +7,15 @@ import java.util.Map;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import fle.api.enums.EnumAtoms;
-import fle.api.recipe.AbstractRecipe;
-import fle.api.recipe.AbstractRecipe.GetRecipeMap;
-import fle.api.recipe.AbstractRecipe.OnInput;
-import fle.api.recipe.AbstractRecipe.OnOutput;
-import fle.api.recipe.CraftingState;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemOreStack;
+import flapi.recipe.CraftingState;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.recipe.stack.OreStack;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
-import fle.core.item.ItemToolHead;
+import fle.tool.item.ItemToolHead;
 
-@AbstractRecipe(recipeName = "forging.cold")
 public class ColdForgingRecipe
 {
-	@OnInput
-	@OnOutput
 	public static ItemStack getResult(IInventory aInput, String aStates)
 	{
 		for(ColdForgingRecipe recipe : list)
@@ -33,7 +25,6 @@ public class ColdForgingRecipe
 		return null;
 	}
 	
-	@GetRecipeMap
 	public static List<ColdForgingRecipe> getRecipes()
 	{
 		return list;
@@ -46,15 +37,15 @@ public class ColdForgingRecipe
 	
 	static
 	{
-		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new ItemOreStack("ingotCopper"), new ItemOreStack("ingotCopper")}, 
+		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new OreStack("ingotCopper"), new OreStack("ingotCopper")}, 
 				" q     n ", ItemFleSub.a("ingot_double_cu")));
-		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new ItemOreStack("ingotCopper"), new ItemOreStack("ingotCopper"), new ItemOreStack("ingotCopper")}, 
+		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new OreStack("ingotCopper"), new OreStack("ingotCopper"), new OreStack("ingotCopper")}, 
 				"o  o! !ss", ItemToolHead.a("metal_axe", Materials.Copper)));
-		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new ItemOreStack("ingotCopper"), new ItemOreStack("ingotCopper"), new ItemOreStack("ingotCopper")}, 
+		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new OreStack("ingotCopper"), new OreStack("ingotCopper"), new OreStack("ingotCopper")}, 
 				"   nnnsss", ItemToolHead.a("metal_pickaxe", Materials.Copper)));
-		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new ItemOreStack("ingotCopper")}, 
+		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new OreStack("ingotCopper")}, 
 				"o r1n4!s@", ItemToolHead.a("metal_shovel", Materials.Copper)));
-		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new ItemOreStack("ingotCopper"), new ItemOreStack("ingotCopper")}, 
+		registerRecipe(new ColdForgingRecipe(new ItemAbstractStack[]{new OreStack("ingotCopper"), new OreStack("ingotCopper")}, 
 				" 3*1 r!n4", ItemToolHead.a("metal_chisel", Materials.Copper)));
 		a(' ', 0, 0);
 		a('n', 1, 0);

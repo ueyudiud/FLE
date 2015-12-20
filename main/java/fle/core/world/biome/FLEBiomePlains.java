@@ -4,17 +4,15 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
-import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenPlains;
 
 public class FLEBiomePlains extends FLEBiome
 {
     protected boolean flag = true;
     
-	public FLEBiomePlains(String name, int index)
+    public FLEBiomePlains(String name, int index)
 	{
 		super(name, index);
 		setTemperatureRainfall(0.7F, 0.4F);

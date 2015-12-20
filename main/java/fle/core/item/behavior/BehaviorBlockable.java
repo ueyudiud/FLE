@@ -8,10 +8,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.block.BlockFle;
-import fle.api.item.ItemFleMetaBase;
+import flapi.FleAPI;
+import flapi.block.old.BlockFle;
+import flapi.item.ItemFleMetaBase;
+import flapi.util.FleValue;
 
 public class BehaviorBlockable extends BehaviorBase
 {

@@ -5,14 +5,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import fle.api.block.ItemFleBlock;
-import fle.api.material.MaterialRock;
-import fle.api.util.Register;
-import fle.core.block.BlockFleRock;
+import flapi.block.old.ItemFleBlock;
+import flapi.collection.Register;
 import fle.core.init.IB;
 import fle.core.init.Materials;
 import fle.core.te.tank.TileEntityMultiTank;
 import fle.core.util.TankBlockInfo;
+import fle.resource.block.BlockFleRock;
 
 public class ItemTankBlock extends ItemFleBlock
 {	

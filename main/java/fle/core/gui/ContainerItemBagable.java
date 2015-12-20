@@ -1,16 +1,12 @@
 package fle.core.gui;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import fle.api.gui.ContainerBase;
-import fle.api.gui.ContainerWithPlayerInventory;
-import fle.api.gui.SlotHolographic;
-import fle.api.item.IBagable;
+import flapi.gui.ContainerWithPlayerInventory;
+import flapi.gui.SlotHolographic;
+import flapi.item.interfaces.IBagable;
 import fle.core.inventory.InventoryBagable;
 
 public class ContainerItemBagable extends ContainerWithPlayerInventory

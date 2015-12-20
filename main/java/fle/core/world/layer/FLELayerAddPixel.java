@@ -25,7 +25,6 @@ public class FLELayerAddPixel extends FLELayer
 		int h1 = h + 2;
 		int[] aIs = parent.getInts(x1, z1, w1, h1);
 		int[] ret = IntCache.getIntCache(w * h);
-		int value1, value2, value3, value4;
 		for(int i = 0; i < w; ++i)
 			for(int j = 0; j < h; ++j)
 			{

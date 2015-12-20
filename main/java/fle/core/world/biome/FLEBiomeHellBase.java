@@ -14,7 +14,7 @@ public abstract class FLEBiomeHellBase extends FLEBiome
 	public FLEBiomeHellBase(String name, int index)
 	{
 		super(name, index);
-        spawnableMonsterList.clear();
+		spawnableMonsterList.clear();
         spawnableCreatureList.clear();
         spawnableWaterCreatureList.clear();
         spawnableCaveCreatureList.clear();

@@ -1,8 +1,5 @@
 package fle.core.block;
 
-import static net.minecraftforge.common.util.ForgeDirection.DOWN;
-import static net.minecraftforge.common.util.ForgeDirection.UP;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,16 +12,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleAPI;
-import fle.api.block.BlockHasTile;
-import fle.api.util.SubTag;
-import fle.api.world.BlockPos;
-import fle.core.init.IB;
+import flapi.FleAPI;
+import flapi.block.old.BlockHasTile;
 import fle.core.item.ItemFleSub;
-import fle.core.item.ItemSub;
 import fle.core.te.TileEntityFirewood;
 
 public class BlockCharcoal extends BlockHasTile
@@ -37,7 +29,7 @@ public class BlockCharcoal extends BlockHasTile
 		super("charcoal", Material.wood);
 		setHardness(0.8F);
 		setResistance(1.2F);
-		FleAPI.lm.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "Charcoal");
+		FleAPI.langManager.registerLocal(new ItemStack(this).getUnlocalizedName() + ".name", "Charcoal");
 	}
 	
 	@Override

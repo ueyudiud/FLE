@@ -15,7 +15,8 @@ public class Keyboard
 		Forward,
 		Place,
 		Jump,
-		Sneak;
+		Sneak,
+		Tech;
 		
 		int flag;
 		
@@ -70,6 +71,11 @@ public class Keyboard
 	public boolean isJumpKeyDown(EntityPlayer player)
 	{
 		return get(player, Key.Jump);
+	}
+	
+	public boolean isTechKeyDown(EntityPlayer player)
+	{
+		return get(player, Key.Tech);
 	}
 
 	public boolean isSneakKeyDown(EntityPlayer player)

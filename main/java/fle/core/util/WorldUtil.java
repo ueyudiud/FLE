@@ -2,13 +2,11 @@ package fle.core.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import flapi.util.FleValue;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.FleValue;
-import fle.api.recipe.ItemOreStack;
-import fle.api.world.BlockPos;
 
 public class WorldUtil
 {

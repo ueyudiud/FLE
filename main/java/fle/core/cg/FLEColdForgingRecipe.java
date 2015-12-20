@@ -9,13 +9,13 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import fle.api.FleValue;
-import fle.api.cg.GuiBookBase;
-import fle.api.cg.IGuideType;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.CraftingState;
-import fle.api.recipe.ItemAbstractStack;
+import flapi.cg.GuiBookBase;
+import flapi.cg.IGuideType;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.CraftingState;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 import fle.core.recipe.ColdForgingRecipe;
 
@@ -70,7 +70,7 @@ public class FLEColdForgingRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			ColdForgingPage page = (ColdForgingPage) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				ret.add(rawPage);
 				continue;
@@ -80,7 +80,7 @@ public class FLEColdForgingRecipe extends StandardType
 				if(stack == null) continue;
 				for(ItemStack target : stack.toList())
 				{
-					if(contain.isStackEqul(target))
+					if(contain.equal(target))
 					{
 						ret.add(rawPage);
 						continue label;

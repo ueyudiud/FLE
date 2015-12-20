@@ -150,6 +150,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	{
 		GL11.glPushMatrix();
 		FontRenderer fontrenderer = this.func_147498_b();
+		@SuppressWarnings("unused")
 		float dis = (float) FLEMath.distance(x, y, z);
 		//GL11.glRotatef(rotation, 0F, -1, 0F);
 		GL11.glTranslatef(x, y, z);

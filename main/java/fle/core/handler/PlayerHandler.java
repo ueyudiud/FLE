@@ -35,15 +35,16 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import fle.api.FleAPI;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.ItemOreStack;
-import fle.core.block.BlockFleLog;
+import flapi.FleAPI;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.OreStack;
+import fle.FLE;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
 import fle.core.tool.WasherManager;
 import fle.core.util.FleFoodStats;
 import fle.core.util.Util;
+import fle.resource.block.BlockFleLog;
 
 public class PlayerHandler
 {
@@ -89,9 +90,12 @@ public class PlayerHandler
 		if(map.containsKey(evt.player.getUniqueID()))
 		{
 			evt.player.getEntityData().setTag("FLE", map.get(evt.player.getUniqueID()));
+			evt.player.experienceLevel = evt.player.getEntityData().getCompoundTag("FLE").getInteger("ExpLevel");
 		}
 		if(evt.player.experienceLevel > -128)
+		{
 			--evt.player.experienceLevel;
+		}
 	}
 	
 	@SubscribeEvent
@@ -99,6 +103,7 @@ public class PlayerHandler
 	{
 		if(evt.entityLiving instanceof EntityPlayer)
 		{
+			((EntityPlayer) evt.entityLiving).getEntityData().getCompoundTag("FLE").setInteger("ExpLevel", ((EntityPlayer) evt.entityLiving).experienceLevel);
 			map.put(((EntityPlayer) evt.entityLiving).getUniqueID(), ((EntityPlayer) evt.entityLiving).getEntityData().getCompoundTag("FLE"));
 		}
 	}
@@ -215,7 +220,7 @@ public class PlayerHandler
 		if((evt.block == Blocks.dirt || evt.block == Blocks.grass || evt.block == Blocks.mycelium || evt.block == Blocks.hay_block) && !evt.isSilkTouching)
 		{
 			evt.drops.clear();
-			evt.drops.add(ItemFleSub.a("dust_dirt", 3));
+			evt.drops.add(ItemFleSub.a("pile_dirt", 3));
 		}
 		else if(evt.block == Blocks.gravel)
 		{
@@ -256,33 +261,37 @@ public class PlayerHandler
 	{
 		EntityPlayer player = (EntityPlayer) evt.player;
 		WasherManager.tryWashingItem(player.worldObj, player);
+		if(FLE.fle.getKeyboard().isTechKeyDown(player) && player.openContainer.isPlayerNotUsingContainer(player))
+		{
+			player.openGui(FLE.MODID, -5, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+		}
 		if(buf++ > 100)
 		{
 			buf = 0;
-			if(FleAPI.doesPlayerHas(player, new ItemBaseStack(ItemFleSub.a("chip_stone"))) != -1)
+			if(FleAPI.doesPlayerHas(player, new BaseStack(ItemFleSub.a("chip_stone"))) != -1)
 			{
 				givePlayerBook(player, "oldStoneAge", ItemFleSub.a("guide_book_1"));
 			}
-			if(FleAPI.doesPlayerHas(player, new ItemBaseStack(ItemFleSub.a("ingot_cu"))) != -1)
+			if(FleAPI.doesPlayerHas(player, new BaseStack(ItemFleSub.a("ingot_cu"))) != -1)
 			{
 				givePlayerBook(player, "newStoneAge", ItemFleSub.a("guide_book_2"));
 			}
-			if(FleAPI.doesPlayerHas(player, new ItemOreStack("ingotAbstractBronze")) != -1)
+			if(FleAPI.doesPlayerHas(player, new OreStack("ingotAbstractBronze")) != -1)
 			{
 				givePlayerBook(player, "cooperAge", ItemFleSub.a("guide_book_3"));
 			}
 			int i;
-			i = FleAPI.doesPlayerHas(player, new ItemBaseStack(Items.wheat_seeds));
+			i = FleAPI.doesPlayerHas(player, new BaseStack(Items.wheat_seeds));
 			if(i != -1)
 			{
 				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "wheat"));
 			}
-			i = FleAPI.doesPlayerHas(player, new ItemBaseStack(Items.reeds));
+			i = FleAPI.doesPlayerHas(player, new BaseStack(Items.reeds));
 			if(i != -1)
 			{
 				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "suger_cances"));
 			}
-			i = FleAPI.doesPlayerHas(player, new ItemBaseStack(Items.potato));
+			i = FleAPI.doesPlayerHas(player, new BaseStack(Items.potato));
 			if(i != -1)
 			{
 				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "potato"));

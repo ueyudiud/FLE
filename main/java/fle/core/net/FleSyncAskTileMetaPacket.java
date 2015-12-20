@@ -2,12 +2,12 @@ package fle.core.net;
 
 import java.io.IOException;
 
-import fle.api.net.FleCoordinatesPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.net.INetEventEmmiter;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
-import fle.api.world.BlockPos;
+import flapi.net.FleCoordinatesPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.net.INetEventEmmiter;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
+import flapi.world.BlockPos;
 
 public class FleSyncAskTileMetaPacket extends FleCoordinatesPacket
 {

@@ -1,11 +1,7 @@
 package fle.core.item.behavior;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -15,9 +11,9 @@ import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerRegisterEvent;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.item.ItemFleMetaBase;
+import cpw.mods.fml.common.eventhandler.Event;
+import flapi.item.ItemFleMetaBase;
 
 public class BehaviorBarrel extends BehaviorBase
 {

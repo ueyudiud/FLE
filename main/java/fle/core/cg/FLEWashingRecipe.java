@@ -12,14 +12,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleValue;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.cg.IGuideType.IGuidePage.Type;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.RecipeInfomation;
-import fle.api.util.DropInfo;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.DropInfo;
+import flapi.recipe.RecipeInfomation;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
 import fle.core.recipe.WashingRecipe;
 
@@ -70,7 +68,7 @@ public class FLEWashingRecipe extends StandardType
 			WashingPage page = (WashingPage) rawPage;
 			for(ItemStack tStack : page.input.toList())
 			{
-				if(contain.isStackEqul(tStack))
+				if(contain.equal(tStack))
 				{
 					list.add(page);
 					continue label;
@@ -78,7 +76,7 @@ public class FLEWashingRecipe extends StandardType
 			}
 			for(ItemStack tStack : page.outputs)
 			{
-				if(contain.isStackEqul(tStack))
+				if(contain.equal(tStack))
 				{
 					list.add(page);
 					continue label;
@@ -104,15 +102,16 @@ public class FLEWashingRecipe extends StandardType
 		public WashingPage(Entry<ItemAbstractStack, DropInfo> recipe)
 		{
 			input = recipe.getKey();
-			Map<ItemStack, Double> map = recipe.getValue().drops.getContains();
+			Map<ItemStack, Integer> map = recipe.getValue().drops.toMap();
 			int i = 0;
 			outputs = new ItemStack[map.size()];
-			for(Entry<ItemStack, Double> e : map.entrySet())
+			float size = recipe.getValue().drops.size();
+			for(Entry<ItemStack, Integer> e : map.entrySet())
 			{
 				ItemStack input = e.getKey();
 				if(input == null) continue;
 				input = input.copy();
-				RecipeInfomation.setChance(input, e.getValue().floatValue());
+				RecipeInfomation.setChance(input, e.getValue().floatValue() / size);
 				outputs[i] = input;
 				++i;
 			}

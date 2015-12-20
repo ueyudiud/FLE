@@ -5,9 +5,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import fle.api.gui.ContainerWithPlayerInventory;
-import fle.api.material.MatterDictionary;
-import fle.api.net.INetEventListener;
+import flapi.gui.ContainerWithPlayerInventory;
+import flapi.gui.FluidSlot;
+import flapi.material.MatterDictionary;
+import flapi.net.INetEventListener;
 import fle.core.te.argil.TileEntityTerrine;
 
 public class ContainerTerrine extends ContainerWithPlayerInventory implements INetEventListener
@@ -23,7 +24,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 			public boolean isItemValid(ItemStack item) 
 			{
 				return ((TileEntityTerrine) inventory).mode == 1 ? false : 
-					((TileEntityTerrine) inventory).getFluidAmount() == 0 ? true :
+					((TileEntityTerrine) inventory).getTank(0).getFluidAmount() == 0 ? true :
 					FluidContainerRegistry.isContainer(item) || MatterDictionary.getMelting(item) != null || item.getItem() instanceof IFluidContainerItem;
 			}
 			@Override
@@ -38,7 +39,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 			public boolean isItemValid(ItemStack item) 
 			{
 				return ((TileEntityTerrine) inventory).mode == 1 ? false : 
-					((TileEntityTerrine) inventory).getFluidAmount() == 0;
+					((TileEntityTerrine) inventory).getTank(0).getFluidAmount() == 0;
 			}
 			@Override
 			public ItemStack decrStackSize(int par1)
@@ -50,6 +51,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 				return super.decrStackSize(par1);
 			}
 		});
+		addSlotToContainer(new FluidSlot(tile, 0, 75, 32, 8, 30));
 		locateContainer = new TransLocation("container", 36);
 	}
 
@@ -66,7 +68,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 		}
 		else if(this.locatePlayerBag.conrrect(locate))
 		{
-			if(((TileEntityTerrine) inv).getFluidAmount() == 0 ? true :	FluidContainerRegistry.isContainer(itemstack))
+			if(((TileEntityTerrine) inv).getTank(0).getFluidAmount() == 0 ? true :	FluidContainerRegistry.isContainer(itemstack))
 			{
 				if(!this.locateContainer.mergeItemStack(itemstack, false))
 				{
@@ -80,7 +82,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 		}
 		else if(this.locatePlayerHand.conrrect(locate))
 		{
-			if(((TileEntityTerrine) inv).getFluidAmount() == 0 ? true :	FluidContainerRegistry.isContainer(itemstack))
+			if(((TileEntityTerrine) inv).getTank(0).getFluidAmount() == 0 ? true :	FluidContainerRegistry.isContainer(itemstack))
 			{
 				if(!this.locateContainer.mergeItemStack(itemstack, false))
 				{
@@ -103,7 +105,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 			int id = (Integer) contain;
 			if(id == 0)
 			{
-				((TileEntityTerrine) this.inv).drain(((TileEntityTerrine) this.inv).getCapacity(), true);
+				((TileEntityTerrine) this.inv).getTank(0).drain(((TileEntityTerrine) this.inv).getTank(0).getCapacity(), true);
 			}
 			else if(id == 1)
 			{

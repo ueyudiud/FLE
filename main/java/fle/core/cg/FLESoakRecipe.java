@@ -5,18 +5,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.FleValue;
-import fle.api.cg.GuiBookBase;
-import fle.api.cg.StandardPage;
-import fle.api.cg.StandardType;
-import fle.api.recipe.ItemAbstractStack;
+import flapi.cg.GuiBookBase;
+import flapi.cg.StandardPage;
+import flapi.cg.StandardType;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.util.FleValue;
 import fle.core.init.Lang;
-import fle.core.recipe.FLESoakRecipe.SoakRecipe;
 
 public class FLESoakRecipe extends StandardType
 {
@@ -85,14 +83,14 @@ public class FLESoakRecipe extends StandardType
 		for(IGuidePage rawPage : getAllPage())
 		{
 			SoakPage page = (SoakPage) rawPage;
-			if(contain.isStackEqul(page.output))
+			if(contain.equal(page.output))
 			{
 				list.add(page);
 				continue label;
 			}
 			for(ItemStack tStack : page.display)
 			{
-				if(contain.isStackEqul(tStack))
+				if(contain.equal(tStack))
 				{
 					list.add(page);
 					continue label;

@@ -2,17 +2,16 @@ package fle.core.block.behaviour;
 
 import java.util.List;
 
-import fle.api.FleValue;
-import fle.api.block.IDebugableBlock;
-import fle.core.block.BlockSubTile;
-import fle.core.te.argil.TileEntityArgilUnsmelted;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.util.FleValue;
+import fle.core.block.BlockSubTile;
+import fle.core.te.argil.TileEntityArgilUnsmelted;
 
 public class BehaviourClay extends BehaviourTile implements IDebugableBlock
 {

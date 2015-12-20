@@ -6,11 +6,11 @@ import java.util.Map;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import fle.api.item.IBeeComb;
-import fle.api.item.IItemBehaviour;
-import fle.api.item.ItemFleMetaBase;
-import fle.api.util.FleLog;
-import fle.api.world.BlockPos;
+import flapi.item.ItemFleMetaBase;
+import flapi.item.interfaces.IBeeComb;
+import flapi.item.interfaces.IItemBehaviour;
+import flapi.util.FleLog;
+import flapi.world.BlockPos;
 
 public class ItemBeeComb extends ItemFleMetaBase implements IBeeComb
 {

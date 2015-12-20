@@ -9,9 +9,9 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import fle.api.net.FleNetworkHandler;
-import fle.api.net.IPacket;
-import fle.api.util.FleLog;
+import flapi.net.FleNetworkHandler;
+import flapi.net.IPacket;
+import flapi.util.FleLog;
 
 public class FleLargePacket extends IPacket
 {
@@ -43,8 +43,9 @@ public class FleLargePacket extends IPacket
 	public void decode(ByteArrayDataInput s) throws IOException
 	{
 		byte[] b = new byte[s.readShort()];
+		s.readFully(b);
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(b));
-		int type = s.readInt();
+		int type = stream.readInt();
 		id = type >> 2;
 		if((type & 0x1) != 0)
 		{

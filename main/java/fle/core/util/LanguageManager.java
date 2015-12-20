@@ -8,13 +8,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.minecraft.client.resources.I18n;
+import flapi.FleAPI;
+import flapi.collection.Register;
+import flapi.util.FleLog;
+import flapi.util.ILanguageManager;
 import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.util.ILanguageManager;
 
 public class LanguageManager implements ILanguageManager
 {
@@ -56,17 +56,17 @@ public class LanguageManager implements ILanguageManager
 			}
 			str += chr;
 		}
-		FleAPI.lm.registerLocal(str, enLocalizedName);
-		return FleAPI.lm.translateToLocal(str, new Object[0]);
+		FleAPI.langManager.registerLocal(str, enLocalizedName);
+		return FleAPI.langManager.translateToLocal(str, new Object[0]);
 	}
 	
 	public static File lang = null;
 	
-	private static Map<String, String> langMap = new HashMap();
+	private static Register langRegister = new Register();
 	
 	public static void load()
 	{
-		langMap.clear();
+		langRegister.clear();
 		BufferedReader fr = null;
 		try
 		{
@@ -77,12 +77,24 @@ public class LanguageManager implements ILanguageManager
 			{
 				while((line = fr.readLine()) != null)
 				{
-                    langMap.put(line.split(",")[0], line.split(",")[1].replaceFirst(" ", ""));
+					try
+					{
+						String[] strs = line.split(",");
+						langRegister.register(Integer.valueOf(strs[0]), strs[1], strs[2]);
+					}
+					catch(Throwable e)
+					{
+						FleLog.addExceptionToCache(e);
+					}
 				}
+			}
+			catch(Throwable e)
+			{
+				FleLog.addExceptionToCache(e);
 			}
 			finally
 			{
-				
+				FleLog.resetAndCatchException("FLE : Find the exception while loading lang file.");
 			}
 		}
 		catch(Throwable e)
@@ -99,9 +111,12 @@ public class LanguageManager implements ILanguageManager
 			fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
 			        lang), "UTF-8"), 1024);
 			fw.write("TAG, NAME\r\n");
-			for(String str : langMap.keySet())
+			String[] langs = langRegister.keySet();
+			for(int i = 0; i < langs.length; ++i)
 			{
-				fw.write(String.format("%s, %s\r\n", str, langMap.get(str)));
+				String name = langs[i];
+				if(name == null) continue;
+				fw.write(String.format("%s,%s,%s\r\n", i, name, langRegister.get(name)));
 			}
 			fw.flush();
 			fw.close();
@@ -129,25 +144,25 @@ public class LanguageManager implements ILanguageManager
 	@Override
 	public void registerLocal(String unlocalizedName, String localizedName)
 	{
-		if(langMap.containsKey(unlocalizedName))
+		if(langRegister.contain(unlocalizedName))
 		{
 			return;
 		}
-		langMap.put(unlocalizedName, localizedName);
+		langRegister.register(localizedName, unlocalizedName);
 	}
 	
 	@Override
 	public String translateToLocal(String str, Object...objects)
 	{
 		String ret;
-		if(langMap.containsKey(str))
+		if(langRegister.contain(str))
 		{
-			ret = String.format(langMap.get(str), objects);
+			ret = String.format((String) langRegister.get(str), objects);
 		}
 		else
 		{
 			ret = I18n.format(str, objects);
-			langMap.put(str, ret);
+			langRegister.register(str, ret);
 		}
 		return ret;
 	}

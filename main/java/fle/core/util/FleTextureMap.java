@@ -30,20 +30,17 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import fle.api.util.FleLog;
+import flapi.util.FleLog;
 
 public class FleTextureMap extends AbstractTexture implements IIconRegister, ITextureObject
 {
 	private static final boolean ENABLE_SKIP = Boolean.parseBoolean(System.getProperty("fml.skipFirstTextureLoad", "true"));
-    private final List listAnimatedSprites = Lists.newArrayList();
-    private final Map mapRegisteredSprites = Maps.newHashMap();
-    private final Map mapUploadedSprites = Maps.newHashMap();
+    private final List<IIcon> listAnimatedSprites = Lists.newArrayList();
+    private final Map<String, IIcon> mapRegisteredSprites = Maps.newHashMap();
+    private final Map<String, IIcon> mapUploadedSprites = Maps.newHashMap();
     private final String basePath;
     private int mipmapLevels;
     private int anisotropicFiltering = 1;
@@ -137,12 +134,14 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
             }
             catch (RuntimeException runtimeexception)
             {
+            	FleLog.addExceptionToCache(runtimeexception);
                 //logger.error("Unable to parse metadata from " + resourcelocation1, runtimeexception);
                 cpw.mods.fml.client.FMLClientHandler.instance().trackBrokenTexture(resourcelocation1, runtimeexception.getMessage());
                 continue;
             }
             catch (IOException ioexception1)
             {
+            	FleLog.addExceptionToCache(ioexception1);
                 //logger.error("Using missing texture, unable to load " + resourcelocation1, ioexception1);
                 cpw.mods.fml.client.FMLClientHandler.instance().trackMissingTexture(resourcelocation1);
                 continue;
@@ -176,7 +175,6 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("Sprite being mipmapped");
                 crashreportcategory.addCrashSectionCallable("Sprite name", new Callable()
                 {
-                    private static final String __OBFID = "CL_00001059";
                     public String call()
                     {
                         return textureatlassprite1.getIconName();
@@ -184,7 +182,6 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
                 });
                 crashreportcategory.addCrashSectionCallable("Sprite size", new Callable()
                 {
-                    private static final String __OBFID = "CL_00001060";
                     public String call()
                     {
                         return textureatlassprite1.getIconWidth() + " x " + textureatlassprite1.getIconHeight();
@@ -192,7 +189,6 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
                 });
                 crashreportcategory.addCrashSectionCallable("Sprite frames", new Callable()
                 {
-                    private static final String __OBFID = "CL_00001061";
                     public String call()
                     {
                         return textureatlassprite1.getFrameCount() + " frames";
@@ -258,33 +254,35 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
             textureatlassprite = (TextureAtlasSprite)iterator2.next();
             textureatlassprite.copyFrom(this.missingImage);
         }
+        FleLog.resetAndCatchException("Catching exception during loading textures.");
         //cpw.mods.fml.client.FMLClientHandler.instance().logMissingTextureErrors();
     }
     
     private ResourceLocation completeResourceLocation(ResourceLocation aLocation, int aType)
     {
-        return aType == 0 ? new ResourceLocation(aLocation.getResourceDomain(), String.format("%s/%s%s", new Object[] {this.basePath, aLocation.getResourcePath(), ".png"})): new ResourceLocation(aLocation.getResourceDomain(), String.format("%s/mipmaps/%s.%d%s", new Object[] {this.basePath, aLocation.getResourcePath(), Integer.valueOf(aType), ".png"}));
+        return aType == 0 ? 
+        		new ResourceLocation(aLocation.getResourceDomain(), String.format("%s/%s%s", new Object[] {this.basePath, aLocation.getResourcePath(), ".png"})): 
+        			new ResourceLocation(aLocation.getResourceDomain(), String.format("%s/mipmaps/%s.%d%s", new Object[] {this.basePath, aLocation.getResourcePath(), Integer.valueOf(aType), ".png"}));
     }
     
 	@Override
-	public IIcon registerIcon(String aString) 
+	public IIcon registerIcon(String string) 
 	{
-        if (aString == null)
+        if (string == null)
         {
             throw new IllegalArgumentException("Name cannot be null!");
         }
-        else if (aString.indexOf(92) == -1) // Disable backslashes (\) in texture asset paths.
+        else if (string.indexOf('\\') == -1) // Disable backslashes (\) in texture asset paths.
         {
-            Object object = (TextureAtlasSprite) mapRegisteredSprites.get(aString);
+            IIcon icon = mapRegisteredSprites.get(string);
 
-            if (object == null)
+            if (icon == null)
             {
-            	object = new FleTextureAtlasIcon(aString);
+            	icon = new FleTextureAtlasIcon(string);
+            	mapRegisteredSprites.put(string, icon);
             }
-
-            mapRegisteredSprites.put(aString, object);
             
-            return (IIcon)object;
+            return icon;
         }
         else
         {
@@ -298,11 +296,8 @@ public class FleTextureMap extends AbstractTexture implements IIconRegister, ITe
 
         if ((float)this.anisotropicFiltering > 1.0F)
         {
-            boolean flag = true;
-            boolean flag1 = true;
-            boolean flag2 = true;
-            this.missingImage.setIconWidth(32);
-            this.missingImage.setIconHeight(32);
+            this.missingImage.setIconWidth(16);//Missing texture use 16x16
+            this.missingImage.setIconHeight(16);
             aint = new int[1024];
             System.arraycopy(TextureUtil.missingTextureData, 0, aint, 0, TextureUtil.missingTextureData.length);
             TextureUtil.prepareAnisotropicData(aint, 16, 16, 8);

@@ -3,8 +3,6 @@ package fle.core.render;
 import net.minecraftforge.fluids.FluidTankInfo;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL14;
 
 import fle.core.te.tank.TileEntityMultiTank;
 

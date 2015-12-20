@@ -9,30 +9,20 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.core.entity.EntityFleArrow;
+import flapi.util.FleValue;
 import fle.core.render.RIThermalWire;
 import fle.core.render.RenderArgil;
 import fle.core.render.RenderAsh;
 import fle.core.render.RenderCastingPool;
 import fle.core.render.RenderCeramicFurnaceCrucible;
 import fle.core.render.RenderColdForging;
-import fle.core.render.RenderCrop;
-import fle.core.render.RenderDitch;
 import fle.core.render.RenderDryingTable;
 import fle.core.render.RenderEmpty;
-import fle.core.render.RenderFleArrow;
 import fle.core.render.RenderHandler;
 import fle.core.render.RenderLeverOilMill;
 import fle.core.render.RenderMultiTank;
-import fle.core.render.RenderOilLamp;
-import fle.core.render.RenderOre;
-import fle.core.render.RenderOreCobble;
-import fle.core.render.RenderPlants;
-import fle.core.render.RenderRattan;
 import fle.core.render.RenderSifter;
 import fle.core.render.RenderStoneMill;
-import fle.core.render.RenderThermalWire;
 import fle.core.render.RenderWoodenFrame;
 import fle.core.render.TESRBase;
 import fle.core.render.TESRColdForging;
@@ -43,6 +33,14 @@ import fle.core.render.TESRPlacedItem;
 import fle.core.render.TESRPolishTable;
 import fle.core.render.TESRStoneMill;
 import fle.core.render.TESRTD;
+import fle.energy.block.RenderThermalWire;
+import fle.resource.block.RenderCrop;
+import fle.resource.block.RenderOre;
+import fle.resource.block.RenderOreCobble;
+import fle.resource.block.RenderPlants;
+import fle.resource.block.RenderRattan;
+import fle.tool.block.RenderDitch;
+import fle.tool.block.RenderOilLamp;
 
 public class Renders
 {
@@ -85,7 +83,7 @@ public class Renders
     	registerTESR(TESRMT.class);
     	registerTESR(TESRDitch.class);
     	registerTESR(TESRTD.class);
-	    RenderingRegistry.registerEntityRenderingHandler(EntityFleArrow.class, new RenderFleArrow("arrow"));
+	    //RenderingRegistry.registerEntityRenderingHandler(EntityFleArrow.class, new RenderFleArrow("arrow"));
 	}
 	
 	public static void registerTESR(Class<? extends TESRBase> tesr)

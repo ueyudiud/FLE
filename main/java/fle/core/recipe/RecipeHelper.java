@@ -1,5 +1,7 @@
 package fle.core.recipe;
 
+import static fle.core.recipe.RecipeHelper.FDType.FD;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,17 +20,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.oredict.OreDictionary;
-import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.FleValue;
-import fle.api.fluid.FluidDictionary;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.soild.ISolidContainerItem;
-import fle.api.soild.ISolidHandler;
-import fle.api.soild.SolidRegistry;
-import fle.api.soild.SolidStack;
-import fle.api.soild.SolidTank;
-import static fle.core.recipe.RecipeHelper.FDType.*;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.solid.ISolidContainerItem;
+import flapi.solid.SolidRegistry;
+import flapi.solid.SolidStack;
+import flapi.solid.SolidTank;
+import flapi.util.FleValue;
 
 public class RecipeHelper 
 {
@@ -125,7 +122,7 @@ public class RecipeHelper
 			}
 			else if(item.drain(aStack, tank.getCapcity() - tank.size(), false) != null && tank.size() < tank.getCapcity() && type.d)
 			{
-				if(item.canDrain(aStack, item.getSolid(aStack).getObj()))
+				if(item.canDrain(aStack, item.getSolid(aStack).get()))
 				{
 					SolidStack tStack = item.drain(aStack, tank.getCapcity() - tank.size(), true);
 					if(tank.fill(tStack, false) != 0)
@@ -311,7 +308,7 @@ public class RecipeHelper
 	
 	public static boolean matchItemStack(IInventory inv, int matchSlot, ItemAbstractStack ic)
 	{
-		return inv.getStackInSlot(matchSlot) != null ? ic.isStackEqul(inv.getStackInSlot(matchSlot)) : ic == null;
+		return inv.getStackInSlot(matchSlot) != null ? ic.equal(inv.getStackInSlot(matchSlot)) : ic == null;
 	}
 	public static boolean matchShapedInventory(IInventory inv, int startSlot, int endSlot, ItemAbstractStack[] ic)
 	{
@@ -346,7 +343,7 @@ public class RecipeHelper
 			while(itr.hasNext())
 			{
 				ItemAbstractStack checker = itr.next();
-				if(checker.isStackEqul(stack))
+				if(checker.equal(stack))
 				{
 					flag = true;
 					list.remove(checker);
@@ -462,16 +459,14 @@ public class RecipeHelper
 		
 		for(int i = startSlot; i < endSlot; ++i)
 		{
-			boolean flag = false;
 			ItemStack stack = inv.getStackInSlot(i);
 			if(stack == null) continue;
 			Iterator<ItemAbstractStack> itr = list.iterator();
 			while(itr.hasNext())
 			{
 				ItemAbstractStack checker = itr.next();
-				if(checker.isStackEqul(stack))
+				if(checker.equal(stack))
 				{
-					flag = true;
 					inv.decrStackSize(i, 1);
 					list.remove(checker);
 					break;
@@ -694,7 +689,6 @@ public class RecipeHelper
 		{
 			if(itemstacks[i] == null) return null;
 			ItemStack ret = itemstacks[i].copy();
-			int a = ret.stackSize;
 			itemstacks[i].stackSize -= size;
 			if(itemstacks[i].stackSize < 1) itemstacks[i] = null;
 			ret.stackSize = Math.min(size, ret.stackSize);
@@ -738,7 +732,6 @@ public class RecipeHelper
 		{
 			if(itemstacks[i] == null) return null;
 			ItemStack ret = itemstacks[i].copy();
-			int a = ret.stackSize;
 			itemstacks[i].stackSize -= size;
 			if(itemstacks[i].stackSize < 1) itemstacks[i] = null;
 			ret.stackSize = Math.min(size, ret.stackSize);

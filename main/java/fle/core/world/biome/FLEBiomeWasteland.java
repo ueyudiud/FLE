@@ -4,7 +4,6 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.biome.BiomeGenDesert;
 
 public class FLEBiomeWasteland extends FLEBiome
 {
@@ -12,9 +11,9 @@ public class FLEBiomeWasteland extends FLEBiome
 	{
 		super(name, index);
 		theBiomeDecorator.treesPerChunk = -999;
-        theBiomeDecorator.deadBushPerChunk = 15;
+        theBiomeDecorator.deadBushPerChunk = 12;
         theBiomeDecorator.grassPerChunk = 1;
-        theBiomeDecorator.reedsPerChunk = 20;
+        theBiomeDecorator.reedsPerChunk = 8;
         theBiomeDecorator.cactiPerChunk = 2;
         spawnableCreatureList.clear();
         topBlock = Blocks.sand;

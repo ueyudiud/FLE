@@ -1,6 +1,6 @@
 package fle.api.util;
 
-import fle.api.FleValue;
+import flapi.util.FleValue;
 
 public class MolCaculator
 {

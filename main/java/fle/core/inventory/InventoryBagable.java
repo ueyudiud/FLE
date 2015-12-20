@@ -1,7 +1,7 @@
 package fle.core.inventory;
 
 import net.minecraft.item.ItemStack;
-import fle.api.inventory.InventoryBase;
+import flapi.gui.InventoryBase;
 import fle.core.gui.ContainerItemBagable;
 
 public class InventoryBagable extends InventoryBase<ContainerItemBagable>
@@ -11,24 +11,25 @@ public class InventoryBagable extends InventoryBase<ContainerItemBagable>
 	public InventoryBagable(ContainerItemBagable container, int targetID)
 	{
 		super(container, 1);
+		this.targetID = targetID;
 	}
 	
 	@Override
 	public int getSizeInventory()
 	{
-		return container.getBag().getSize(container.player.getCurrentItem());
+		return container.getBag().getSize(container.player.getStackInSlot(targetID));
 	}
 	
 	@Override
 	public void setInventorySlotContents(int i, ItemStack stack)
 	{
-		container.getBag().setItemContain(container.player.getCurrentItem(), i, stack);
+		container.getBag().setItemContain(container.player.getStackInSlot(targetID), i, stack);
 	}
 	
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
-		return container.getBag().getItemContain(container.player.getCurrentItem(), i);
+		return container.getBag().getItemContain(container.player.getStackInSlot(targetID), i);
 	}
 	
 	@Override
@@ -36,7 +37,6 @@ public class InventoryBagable extends InventoryBase<ContainerItemBagable>
 	{
 		if(getStackInSlot(i) == null) return null;
 		ItemStack ret = getStackInSlot(i).copy();
-		int a = ret.stackSize;
 		ItemStack in = getStackInSlot(i);
 		in.stackSize -= size;
 		if(in.stackSize <= 0) setInventorySlotContents(i, null);
@@ -48,7 +48,7 @@ public class InventoryBagable extends InventoryBase<ContainerItemBagable>
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return container.getBag().isItemValid(container.player.getCurrentItem(), itemstack);
+		return container.getBag().isItemValid(container.player.getStackInSlot(targetID), itemstack);
 	}
 
 	@Override

@@ -8,15 +8,15 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import fle.api.FleValue;
-import fle.api.material.IFluidChemInfo;
-import fle.api.soild.Solid;
-import fle.api.soild.SolidRegistry;
-import fle.api.soild.SolidStack;
-import fle.api.soild.SolidTank;
-import fle.api.util.IChemCondition;
-import fle.api.util.IChemCondition.EnumOxide;
-import fle.api.util.IChemCondition.EnumPH;
+import flapi.material.IChemCondition;
+import flapi.material.IChemCondition.EnumOxide;
+import flapi.material.IChemCondition.EnumPH;
+import flapi.material.IFluidChemInfo;
+import flapi.solid.Solid;
+import flapi.solid.SolidRegistry;
+import flapi.solid.SolidStack;
+import flapi.solid.SolidTank;
+import flapi.util.FleValue;
 import fle.core.init.IB;
 
 public class FluidSolidMixRecipe
@@ -73,10 +73,10 @@ public class FluidSolidMixRecipe
 		SolidStack tStack = SolidRegistry.getSolidForFilledItem(inv.getStackInSlot(slotID));
 		if(tStack == null) return;
 		int size = tStack.getSize();
-		tStack.setSize(size * inv.getStackInSlot(slotID).stackSize);
+		tStack.size = size * inv.getStackInSlot(slotID).stackSize;
 		for(FluidSolidMixRecipe recipe : set)
 		{
-			if(recipe.match(fluidTank.getFluid().getFluid(), tStack.getObj(), cc))
+			if(recipe.match(fluidTank.getFluid().getFluid(), tStack.get(), cc))
 			{
 				int amount = fluidTank.getFluidAmount();
 				int decrSize = recipe.getMaxSolidUse(amount, tStack.getSize());

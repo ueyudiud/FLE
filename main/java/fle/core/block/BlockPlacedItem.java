@@ -3,26 +3,23 @@ package fle.core.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.FleValue;
-import fle.api.block.BlockHasTile;
+import cpw.mods.fml.common.registry.GameRegistry;
+import flapi.block.old.BlockHasTile;
+import flapi.util.FleValue;
+import flapi.util.IDebugable;
 import fle.core.init.IB;
 import fle.core.te.TileEntityPlacedItem;
 
-public class BlockPlacedItem extends BlockHasTile
+public class BlockPlacedItem extends BlockHasTile implements IDebugable
 {
 	public static boolean putPlacedItem(ItemStack stack, EntityPlayer aPlayer, World aWorld, int x, int y, int z, float xPos, float yPos, float zPos)
 	{
@@ -128,5 +125,16 @@ public class BlockPlacedItem extends BlockHasTile
 			ret.add(((TileEntityPlacedItem) tile).getDrop());
 		}
 		return ret;
+	}
+
+	@Override
+	public void addInfomationToList(World world, int x, int y, int z,
+			List<String> list)
+	{
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileEntityPlacedItem)
+		{
+			((TileEntityPlacedItem) tile).getPlacedInfomation(list);
+		}
 	}
 }

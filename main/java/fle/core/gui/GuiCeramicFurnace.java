@@ -9,15 +9,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiIconButton;
-import fle.api.gui.GuiIconButton.ButtonSize;
-import fle.api.material.IAtoms;
-import fle.api.material.Matter;
-import fle.api.util.WeightHelper;
-import fle.api.util.WeightHelper.Stack;
-import fle.api.world.BlockPos;
+import flapi.collection.ArrayStandardStackList;
+import flapi.collection.abs.Stack;
+import flapi.gui.GuiContainerBase;
+import flapi.gui.GuiIconButton;
+import flapi.gui.GuiIconButton.ButtonSize;
+import flapi.material.IMolecular;
+import flapi.material.Matter;
+import flapi.util.FleValue;
+import flapi.world.BlockPos;
 import fle.core.init.Lang;
 
 @SideOnly(Side.CLIENT)
@@ -32,36 +32,43 @@ public class GuiCeramicFurnace extends GuiContainerBase
 		super(new ContainerCeramicFurnace(new BlockPos(aWorld, x, y, z), aPlayer.inventory));
 		container = (ContainerCeramicFurnace) super.container;
 	}
+	
+	@Override
+	protected void drawUnderFluidAndSolid(int xO, int yO)
+	{
+		if(container.tileCFC != null)
+		{
+			drawTexturedModalRect(xO + 57, yO + 29, 176, 150, 20, 10);
+			drawTexturedModalRect(xO + 119, yO + 25, 176, 68, 10, 32);
+		}
+	}
 
 	@Override
-	protected void drawOther(int aXOffset, int aYOffset, int aMouseXPosition,
+	protected void drawOther(int xO, int yO, int aMouseXPosition,
 			int aMouseYPosition)
 	{
 		if(container.tileCFC != null)
 		{
-			drawTexturedModalRect(aXOffset + 57, aYOffset + 29, 176, 150, 20, 10);
-			drawTexturedModalRect(aXOffset + 119, aYOffset + 25, 176, 68, 10, 32);
-			drawFluid(120, 26, container.tileCFC.getTank(0), 8, 30);
-			drawCrucible(aXOffset, aYOffset);
-			drawTexturedModalRect(aXOffset + 58, aYOffset + 30, 8, 166, 18, 8);
-			drawTexturedModalRect(aXOffset + 120, aYOffset + 26, 0, 166, 8, 30);
+			drawCrucible(xO, yO);
+			drawTexturedModalRect(xO + 58, yO + 30, 8, 166, 18, 8);
+			drawTexturedModalRect(xO + 120, yO + 26, 0, 166, 8, 30);
 		}
 		if(container.tileCFF != null)
 		{
-			drawTexturedModalRect(aXOffset + 21, aYOffset + 40, 176, 33, 73, 35);
+			drawTexturedModalRect(xO + 21, yO + 40, 176, 33, 73, 35);
 			if(container.tileCFF.isBurning())
 			{
 				int progress = container.tileCFF.getBurnProgress(14);
-				drawTexturedModalRect(aXOffset + 50, aYOffset + 41 + 14 - progress, 212, 68 + 14 - progress, 32, progress);
+				drawTexturedModalRect(xO + 50, yO + 41 + 14 - progress, 212, 68 + 14 - progress, 32, progress);
 			}
 		}
 		if(container.tileCFI != null && container.tileCFC != null)
 		{
-			drawTexturedModalRect(aXOffset + 38, aYOffset + 10, 176, 0, 58, 33);
+			drawTexturedModalRect(xO + 38, yO + 10, 176, 0, 58, 33);
 		}
 		if(container.tileCFO != null)
 		{
-			drawTexturedModalRect(aXOffset + 129, aYOffset + 25, 186, 68, 26, 50);
+			drawTexturedModalRect(xO + 129, yO + 25, 186, 68, 26, 50);
 		}
 	}
 	
@@ -71,14 +78,14 @@ public class GuiCeramicFurnace extends GuiContainerBase
 		super.drawGuiContainerForegroundLayer(par1, par2);
 		if(container.tileCFC != null)
 		{
-			Map<IAtoms, Integer> map = container.tileCFC.getContainerMap();
+			Map<IMolecular, Integer> map = container.tileCFC.getContainerMap();
 			if(!map.isEmpty()) 
 			{
 				String str = "";
-				for(Entry<IAtoms, Integer> entry : map.entrySet())
+				for(Entry<IMolecular, Integer> entry : map.entrySet())
 				{
 					if(entry.getKey() == null || entry.getValue() <= 0) continue;
-					str += entry.getKey().getChemicalFormulaName() + "x" + entry.getValue() + " ";
+					str += entry.getKey().getChemName() + "x" + entry.getValue() + " ";
 				}
 				drawAreaTooltip(par1, par2, str, 58 + xoffset, 30 + yoffset, 18, 8);
 			}
@@ -91,15 +98,15 @@ public class GuiCeramicFurnace extends GuiContainerBase
 
 	private void drawCrucible(int aXOffset, int aYOffset)
 	{
-		WeightHelper<IAtoms> wh = new WeightHelper(container.tileCFC.getContainerMap());
-		int lastStack = 0;
+		if(container.tileCFC.getContainerMap().isEmpty()) return;
+		ArrayStandardStackList<IMolecular> wh = new ArrayStandardStackList(container.tileCFC.getContainerMap());
 		int a0 = 0;
-		for(Stack<IAtoms> stack : wh.getList())
+		for(Stack<IMolecular> stack : wh)
 		{
 			int startPos = a0;
-			int progress = (int) (18F * (double) wh.getContain(stack.getObj()));
+			int progress = (int) (18F * (double) wh.scale(stack.get()));
 			
-			drawFleRect(aXOffset + 58 + startPos, aYOffset + 30, progress, 8, ((Matter) stack.getObj()).getColor());
+			drawFleRect(aXOffset + 58 + startPos, aYOffset + 30, progress, 8, ((Matter) stack.get()).getColor());
 			a0 = a0 + progress;
 		}
 	}

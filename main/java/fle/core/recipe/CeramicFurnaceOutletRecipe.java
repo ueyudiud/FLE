@@ -3,8 +3,8 @@ package fle.core.recipe;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.material.MatterDictionary.IFreezingRecipe;
-import fle.core.inventory.InventoryCeramicFurnaceOutlet;
+import flapi.material.MatterDictionary.IFreezingRecipe;
+import fle.core.te.argil.TileEntityCeramicFurnaceOutlet;
 
 public class CeramicFurnaceOutletRecipe implements IFreezingRecipe
 {
@@ -20,7 +20,7 @@ public class CeramicFurnaceOutletRecipe implements IFreezingRecipe
 	@Override
 	public boolean match(FluidStack aStack, IInventory inv)
 	{
-		if(inv instanceof InventoryCeramicFurnaceOutlet && aStack != null)
+		if(inv instanceof TileEntityCeramicFurnaceOutlet && aStack != null)
 		{
 			return stack.isFluidEqual(aStack) && stack.amount <= aStack.amount;
 		}

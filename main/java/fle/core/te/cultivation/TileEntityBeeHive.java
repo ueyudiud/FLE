@@ -3,21 +3,18 @@ package fle.core.te.cultivation;
 import java.util.Arrays;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.item.interfaces.IBeeComb;
+import flapi.te.TEBase;
 import fle.FLE;
-import fle.api.cover.Cover;
-import fle.api.inventory.InventoryTileBase;
-import fle.api.item.IBeeComb;
-import fle.api.te.TEBase;
-import fle.api.te.TEInventory;
 import fle.core.util.LanguageManager;
 import fle.core.util.WorldUtil;
 
+@SuppressWarnings("unused")
 public class TileEntityBeeHive extends TEBase implements ISidedInventory
 {
 	public boolean hasBee = false;
@@ -68,9 +65,8 @@ public class TileEntityBeeHive extends TEBase implements ISidedInventory
 	private int larvaMaxCache;
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
 		if(!hasBee) return;
 		if(c++ > 40)
 		{
@@ -205,12 +201,6 @@ public class TileEntityBeeHive extends TEBase implements ISidedInventory
 	protected void markCacheForUpdate()
 	{
 		c = 40;
-	}
-
-	@Override
-	protected boolean canAddCoverWithSide(ForgeDirection dir, Cover cover)
-	{
-		return false;
 	}
 	
 	@Override

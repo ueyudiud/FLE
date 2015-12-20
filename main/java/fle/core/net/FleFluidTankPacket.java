@@ -3,13 +3,13 @@ package fle.core.net;
 import java.io.IOException;
 
 import net.minecraftforge.fluids.FluidStack;
-import fle.api.net.FleCoordinatesPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.te.IFluidTanks;
-import fle.api.te.ITEInWorld;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
-import fle.api.world.BlockPos;
+import flapi.net.FleCoordinatesPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.te.interfaces.IFluidTanks;
+import flapi.te.interfaces.IObjectInWorld;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
+import flapi.world.BlockPos;
 
 public class FleFluidTankPacket extends FleCoordinatesPacket
 {
@@ -26,7 +26,7 @@ public class FleFluidTankPacket extends FleCoordinatesPacket
 		
 	}
 
-	public FleFluidTankPacket(ITEInWorld tile)
+	public FleFluidTankPacket(IObjectInWorld tile)
 	{
 		super(true, tile.getBlockPos());
 		

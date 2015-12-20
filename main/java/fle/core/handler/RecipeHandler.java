@@ -3,30 +3,32 @@ package fle.core.handler;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import fle.api.FleAPI;
-import fle.api.enums.EnumDamageResource;
-import fle.api.recipe.ItemAbstractStack;
-import fle.api.recipe.ItemArrayStack;
-import fle.api.recipe.ItemBaseStack;
-import fle.api.recipe.ItemOreStack;
+import flapi.FleAPI;
+import flapi.enums.EnumDamageResource;
+import flapi.recipe.stack.ArrayStack;
+import flapi.recipe.stack.BaseStack;
+import flapi.recipe.stack.ItemAbstractStack;
+import flapi.recipe.stack.OreStack;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
+import fle.core.tool.AxeHandler;
 
 public class RecipeHandler 
 {
-	private final ItemAbstractStack decortingPlate = new ItemOreStack("craftingToolDecortingPlate");
-	private final ItemAbstractStack decortingStick = new ItemOreStack("craftingToolDecortingStick");
-	private final ItemAbstractStack chisel = new ItemOreStack("craftingToolChisel");
-	private final ItemAbstractStack needle = new ItemOreStack("craftingToolNeedle");
-	private final ItemAbstractStack hardHammer = new ItemOreStack("craftingToolHardHammer");
-	private final ItemAbstractStack saw = new ItemOreStack("craftingToolSaw");
-	private final ItemAbstractStack adz = new ItemOreStack("craftingToolAdz");
-	private final ItemAbstractStack whetstone = new ItemOreStack("craftingToolWhetstone");
-	private final ItemAbstractStack spinning = new ItemOreStack("craftingToolSpinning");
-	private final ItemAbstractStack woodenBucket = new ItemArrayStack(ItemFleSub.a("wood_bucket_0_plant_ash_mortar"), 
+	private final ItemAbstractStack decortingPlate = new OreStack("craftingToolDecortingPlate");
+	private final ItemAbstractStack decortingStick = new OreStack("craftingToolDecortingStick");
+	private final ItemAbstractStack chisel = new OreStack("craftingToolChisel");
+	private final ItemAbstractStack needle = new OreStack("craftingToolNeedle");
+	private final ItemAbstractStack hardHammer = new OreStack("craftingToolHardHammer");
+	private final ItemAbstractStack saw = new OreStack("craftingToolSaw");
+	private final ItemAbstractStack adz = new OreStack("craftingToolAdz");
+	private final ItemAbstractStack whetstone = new OreStack("craftingToolWhetstone");
+	private final ItemAbstractStack spinning = new OreStack("craftingToolSpinning");
+	private final ItemAbstractStack knife = new OreStack("craftingToolKnife");
+	private final ItemAbstractStack woodenBucket = new ArrayStack(ItemFleSub.a("wood_bucket_0_plant_ash_mortar"), 
 			ItemFleSub.a("wood_bucket_0_lime_mortar"));
-	private final ItemAbstractStack cotton = new ItemBaseStack(ItemFleSub.a("cotton_rough"));
+	private final ItemAbstractStack cotton = new BaseStack(ItemFleSub.a("cotton_rough"));
 	
 	@SubscribeEvent
 	public void onCrafting(ItemCraftedEvent evt)
@@ -42,57 +44,62 @@ public class RecipeHandler
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 1F);
 					continue;
 				}
-				else if(decortingPlate.isStackEqul(stack))
+				else if(decortingPlate.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.125F);
 				}
-				else if(decortingStick.isStackEqul(stack))
+				else if(decortingStick.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.125F);
 				}
-				else if(chisel.isStackEqul(stack))
+				else if(chisel.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
 				}
-				else if(needle.isStackEqul(stack))
+				else if(needle.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.0625F);
 				}
-				else if(hardHammer.isStackEqul(stack))
+				else if(hardHammer.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
 				}
-				else if(saw.isStackEqul(stack))
+				else if(saw.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
 				}
-				else if(adz.isStackEqul(stack))
+				else if(adz.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.5F);
 				}
-				else if(whetstone.isStackEqul(stack))
+				else if(whetstone.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.1875F);
 				}
-				else if(spinning.isStackEqul(stack))
+				else if(spinning.equal(stack))
 				{
 					++stack.stackSize;
 					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.0625F);
 				}
-				else if(woodenBucket.isStackEqul(stack))
+				else if(woodenBucket.equal(stack))
 				{
 					++stack.stackSize;
 					IB.subItem.setDamage(stack, ItemFleSub.a("wood_bucket_0_empty").getItemDamage());
 				}
-				else if(cotton.isStackEqul(stack))
+				else if(knife.equal(stack))
+				{
+					++stack.stackSize;
+					FleAPI.damageItem(evt.player, stack, EnumDamageResource.Crafting, 0.25F);
+				}
+				else if(cotton.equal(stack))
 				{
 					if(evt.player.getRNG().nextBoolean())
 						evt.player.dropPlayerItemWithRandomChoice(ItemFleSeed.a("cotton"), false);

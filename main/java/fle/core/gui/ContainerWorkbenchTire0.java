@@ -2,8 +2,6 @@ package fle.core.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
@@ -12,7 +10,7 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
-import fle.api.gui.ContainerCraftable;
+import flapi.gui.ContainerCraftable;
 import fle.core.inventory.InventoryWorkbenchTire0;
 
 public class ContainerWorkbenchTire0 extends ContainerCraftable

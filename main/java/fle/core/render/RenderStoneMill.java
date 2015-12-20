@@ -1,9 +1,7 @@
 package fle.core.render;
 
-import org.lwjgl.opengl.GL11;
-
-import fle.core.te.TileEntityStoneMill;
 import net.minecraft.init.Blocks;
+import fle.core.te.TileEntityStoneMill;
 
 public class RenderStoneMill extends RenderBase
 {

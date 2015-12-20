@@ -4,11 +4,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
+import flapi.energy.IThermalTileEntity;
+import flapi.te.TEBase;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.cover.Cover;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.te.TEBase;
-import fle.api.world.BlockPos;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.init.Config;
 import fle.core.init.IB;
@@ -34,7 +33,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 	public TileEntityFirewood(boolean aCoal)
 	{
 		isCoal = aCoal;
-		woodContain = aCoal ? 25000 : 30000;
+		woodContain = 1600;
 		heatCurrect = new ThermalTileHelper(!aCoal ? Materials.HardWood : Materials.Charcoal);
 	}
 	
@@ -62,9 +61,8 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 	}
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		boolean flag = false;
 		if(burnState == 0 && checkingFire())
@@ -78,7 +76,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 			else if(!isCoal)
 			{
 				worldObj.setBlock(xCoord, yCoord, zCoord, IB.charcoal, 0, 2);
-				woodContain = 25000;
+				woodContain = 1600;
 				coalLevel = 20000;
 				if(!canBBurning())
 					burnState = 0;
@@ -89,15 +87,15 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		}
 		if(burnState == 2)
 		{
-			if(woodContain-- <= 0)
+			if(woodContain-- <= 0 && !isClient())
 			{
 				worldObj.setBlock(xCoord, yCoord, zCoord, IB.ash);
 				worldObj.removeTileEntity(xCoord, yCoord, zCoord);
 				return;
 			}
-			if(getTemperature(ForgeDirection.UNKNOWN) < 900)
+			if(getTemperature(ForgeDirection.UNKNOWN) < 800)
 			{
-				double h = (900 - getTemperature(ForgeDirection.UNKNOWN)) * (isCoal ? charcoalPower : firewoodPower) * 0.01D;
+				double h = isCoal ? charcoalPower : firewoodPower;
 				heatCurrect.reseaveHeat(h);
 			}
 			if(!canBBurning()) burnState = 1;
@@ -112,9 +110,9 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 		}
 		if(flag)
 		{
-			markNBTUpdate();
 			markForUpdate();
 		}
+		sendToNearBy(new FleTEPacket(this, (byte) 0), 64.0F);
 		heatCurrect.update();
 	}
 	
@@ -159,7 +157,7 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 				return true;
 			}
 		}
-		return false;
+		return getTemperature(ForgeDirection.UNKNOWN) > 500;
 	}
 	
 	@Override
@@ -190,12 +188,6 @@ public class TileEntityFirewood extends TEBase implements IThermalTileEntity
 	public void onHeatEmit(ForgeDirection dir, double heatValue)
 	{
 		heatCurrect.emitHeat(heatValue);
-	}
-	
-	@Override
-	protected boolean canAddCoverWithSide(ForgeDirection dir, Cover cover)
-	{
-		return false;
 	}
 
 	public void setBurning()

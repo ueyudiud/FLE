@@ -31,7 +31,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import com.mojang.authlib.GameProfile;
 
-import fle.core.item.tool.ToolMaterialInfo;
+import fle.tool.ToolMaterialInfo;
 
 @Deprecated
 public class EntityFleArrow extends EntityArrow

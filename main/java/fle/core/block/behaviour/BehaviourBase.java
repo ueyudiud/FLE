@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import fle.api.block.IBlockBehaviour;
+import flapi.block.interfaces.IBlockBehaviour;
 
 public class BehaviourBase<E extends Block> implements IBlockBehaviour<E>
 {

@@ -14,24 +14,22 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import flapi.energy.IThermalTileEntity;
+import flapi.fluid.FluidDictionary;
+import flapi.material.IChemCondition;
+import flapi.net.INetEventListener;
+import flapi.plant.IIrrigationHandler;
+import flapi.te.TEBase;
+import flapi.te.interfaces.IDitchTile;
+import flapi.te.interfaces.IFluidTanks;
+import flapi.world.BlockPos;
 import fle.FLE;
-import fle.api.FleAPI;
-import fle.api.crop.IIrrigationHandler;
-import fle.api.energy.IThermalTileEntity;
-import fle.api.net.INetEventListener;
-import fle.api.te.IDitchTile;
-import fle.api.te.IFluidTanks;
-import fle.api.te.TEBase;
-import fle.api.util.IChemCondition;
-import fle.api.world.BlockPos;
-import fle.core.block.ItemDitch;
 import fle.core.energy.ThermalTileHelper;
-import fle.core.net.FleFluidTankPacket;
 import fle.core.net.FleTEPacket;
-import fle.core.util.DitchInfo;
+import fle.tool.DitchInfo;
+import fle.tool.block.ItemDitch;
 
 public class TileEntityDitch extends TEBase implements IDitchTile, IChemCondition, IFluidTanks, IThermalTileEntity, INetEventListener, IIrrigationHandler
 {
@@ -75,9 +73,8 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 	int buf = 0;
 	
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
 		if(tank.getFluid() != null)
 		{
 			int temp = tank.getFluid().getFluid().getTemperature(tank.getFluid());
@@ -97,6 +94,7 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 		{
 			FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		}
+		if(info == null) return;
 		if(!info.canStay(this))
 		{
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
@@ -323,7 +321,7 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 	@Override
 	public EnumPH getPHLevel()
 	{
-		return tank.getFluid() != null ? FleAPI.fluidDictionary.getFluidPH(tank.getFluid().getFluid()) : EnumPH.Water;
+		return tank.getFluid() != null ? FluidDictionary.getFluidPH(tank.getFluid().getFluid()) : EnumPH.Water;
 	}
 
 	@Override
@@ -465,7 +463,7 @@ public class TileEntityDitch extends TEBase implements IDitchTile, IChemConditio
 	@Override
 	public int doIrrigate(ForgeDirection dir, int amount)
 	{
-		if(FleAPI.fluidDictionary.isFluidWater(tank.getFluid()))
+		if(FluidDictionary.isFluidWater(tank.getFluid()))
 		{
 			FluidStack stack = drain(dir, amount, true);
 			return stack == null ? 0 : stack.amount;

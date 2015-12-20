@@ -5,7 +5,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import fle.api.recipe.ItemAbstractStack;
+import flapi.recipe.stack.ItemAbstractStack;
 import fle.api.tech.ITechTag;
 import fle.api.tech.PlayerTechInfo;
 import fle.api.tech.Technology;
@@ -114,7 +114,7 @@ public class FlaTechnology extends Technology
 		public boolean canBeLearned(PlayerTechInfo info, LearningType type, Event evt) 
 		{
 			if(!super.canBeLearned(info, type, evt)) return false;
-			return type == LearningType.Crafting ? ic.isStackEqul(((ItemCraftedEvent) evt).crafting) : false;
+			return type == LearningType.Crafting ? ic.equal(((ItemCraftedEvent) evt).crafting) : false;
 		}
 	}
 }

@@ -2,105 +2,66 @@ package fle.core.util.noise;
 
 public class NoiseMix extends NoiseBase
 {
-	byte modeType;
-	double size;
-	NoiseBase noise;
+	private NoiseBase noise1;
+	private NoiseBase noise2;
+	private double weight;
 
-	public NoiseMix(NoiseBase noise)
+	public NoiseMix(long seed, NoiseBase noise1, NoiseBase noise2)
 	{
-		this(1, 4.0F, noise);
+		this(seed, 0.5, noise1, noise2);
 	}
-	public NoiseMix(double aSize, NoiseBase noise)
+	public NoiseMix(long seed, double weight, NoiseBase noise1, NoiseBase noise2)
 	{
-		this(1, aSize, noise);
-	}
-	public NoiseMix(int aType, double aSize, NoiseBase aNoise)
-	{
-		super(aNoise.getSeed());
-		noise = aNoise;
-		size = aSize;
-		modeType = (byte) aType;
+		super(seed);
+		this.noise1 = noise1.setSeed(seed * 375191749L + 501859135L);
+		this.noise2 = noise2.setSeed(seed * 947195717L + 295719571L);
+		this.weight = weight;
 	}
 
-	long xCache;
-	long yCache;
-	long zCache;
-	
-	double cache[];
-	
 	@Override
 	public double noise(long x, long z)
 	{
-		return noise(x, -1, z);
+		return noise1.noise(x, z) * (1D - weight) + noise2.noise(x, z) * weight;
 	}
 
 	@Override
 	public double noise(long x, long y, long z)
 	{
-		long x1 = (long) Math.floor(x / size);
-		long y1 = (long) Math.floor(y / size);
-		long z1 = (long) Math.floor(z / size);
-		double[] de = new double[4];
-		if(xCache == x1 && zCache == z1 && yCache == y1)
-		{
-			de = cache;
-		}
-		else
-		{
-			for(int i = -1; i < 3; ++i)
-			{
-				double[] de1 = new double[4];
-				for(int j = -1; j < 3; ++j)
-				{
-					double d0 = noise.noise(x1 - 1, y1 + j, z1 + i);
-					double d1 = noise.noise(x1, y1 + j, z1 + i);
-					double d2 = noise.noise(x1 + 1, y1 + j, z1 + i);
-					double d3 = noise.noise(x1 + 2, y1 + j, z1 + i);
-					de1[j + 1] = a(d0, d1, d2, d3, mode(y, size) / size);
-				}
-				de[i + 1] = a(de1[0], de1[1], de1[2], de1[3], mode(z, size) / size);
-			}
-			xCache = x1;
-			yCache = y1;
-			zCache = z1;
-			cache = de;
-		}
-		return a(de[0], de[1], de[2], de[3], mode(x, size) / size);
+		return noise1.noise(x, y, z) * (1D - weight) + noise2.noise(x, y, z) * weight;
 	}
 
-	private double a(double a, double b, double c, double d, double x)
+	@Override
+	public double[] noise(double[] values, long x, long y, long z, int w,
+			int h, int l)
 	{
-		switch(modeType)
+		double[] ds1 = noise1.noise(values, x, y, z, w, h, l);
+		double[] ds2 = noise2.noise(new double[0], x, y, z, w, h, l);
+		for(int i = 0; i < ds2.length; ++i)
 		{
-		case 0 : return b * (1 - x) + c * x;
-		case 1 : double f = (1 - Math.cos(x * Math.PI)) * .5D;
-		return b * (1 - f) + c * f;
-		case 2 : double P,Q,R,S;
-		P = (d - c) - (a - b);
-		Q = (a - b) - P;
-		R = c - a;
-		S = b;
-		return P * x * x * x + Q * x * x + R * x + S;
-		default: return Double.NaN;
+			ds1[i] *= 1 - weight;
+			ds1[i] += ds2[i] * weight;
 		}
-	}
-	
-	private double mode(double a, double b)
-	{
-		double ret = a % b;
-		return ret < 0 ? ret + b : ret;
-	}
-	
-	private double mode(long a, double b)
-	{
-		double ret = a % b;
-		return ret < 0 ? ret + b : ret;
+		return ds1;
 	}
 	
 	@Override
-	public NoiseBase setSeed(long aSeed)
+	public double[] noise(double[] values, long x, long z, int w, int l)
 	{
-		noise.setSeed(aSeed);
-		return super.setSeed(aSeed);
+		double[] ds1 = noise1.noise(values, x, z, w, l);
+		double[] ds2 = noise2.noise(new double[0], x, z, w, l);
+		for(int i = 0; i < ds2.length; ++i)
+		{
+			ds1[i] *= 1 - weight;
+			ds1[i] += ds2[i] * weight;
+		}
+		return ds1;
+	}
+	
+	@Override
+	public NoiseBase setSeed(long seed)
+	{
+		noise1.setSeed(seed * 375191749L + 501859135L);
+		noise2.setSeed(seed * 947195717L + 295719571L);
+		return super.setSeed(seed);
 	}
 }

@@ -2,13 +2,13 @@ package fle.core.net;
 
 import java.io.IOException;
 
+import flapi.enums.EnumWorldNBT;
+import flapi.net.FleAbstractPacket;
+import flapi.net.FleNetworkHandler;
+import flapi.util.io.FleDataInputStream;
+import flapi.util.io.FleDataOutputStream;
+import flapi.world.BlockPos.ChunkPos;
 import fle.FLE;
-import fle.api.enums.EnumWorldNBT;
-import fle.api.net.FleAbstractPacket;
-import fle.api.net.FleNetworkHandler;
-import fle.api.util.FleDataInputStream;
-import fle.api.util.FleDataOutputStream;
-import fle.api.world.BlockPos.ChunkPos;
 
 public class FleWorldMetaSyncPacket extends FleAbstractPacket
 {
@@ -26,7 +26,6 @@ public class FleWorldMetaSyncPacket extends FleAbstractPacket
 	{
 		
 	}
-	
 
 	@Override
 	protected void write(FleDataOutputStream os) throws IOException
@@ -57,7 +56,7 @@ public class FleWorldMetaSyncPacket extends FleAbstractPacket
 	@Override
 	public Object process(FleNetworkHandler nwh)
 	{
-		FLE.fle.getWorldManager().syncData(dim, pos, datas);
+		FLE.fle.getWorldManager().syncMetas(dim, pos, datas);
 		return null;
 	}
 }

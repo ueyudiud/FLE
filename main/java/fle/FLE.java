@@ -20,16 +20,13 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
-import fle.api.FleAPI;
-import fle.api.FleModHandler;
-import fle.api.FleValue;
-import fle.api.crop.CropRegister;
-import fle.api.plant.PlantRegister;
-import fle.api.util.ColorMap;
-import fle.api.util.FLEConfiguration;
-import fle.api.util.FleLog;
-import fle.api.util.IColorMapHandler;
-import fle.api.util.IPlatform;
+import flapi.FleAPI;
+import flapi.plant.CropRegister;
+import flapi.util.ColorMap;
+import flapi.util.FleLog;
+import flapi.util.FleValue;
+import flapi.util.IColorMapHandler;
+import flapi.util.IPlatform;
 import fle.core.CommonProxy;
 import fle.core.Proxy;
 import fle.core.energy.FleRotationNet;
@@ -39,24 +36,23 @@ import fle.core.net.NWH;
 import fle.core.recipe.FLERA;
 import fle.core.tech.FleTechManager;
 import fle.core.util.FleColorMap;
-import fle.core.util.FleCropRegister;
-import fle.core.util.FlePlantRegister;
 import fle.core.util.FleSetup;
-import fle.core.util.FluidDictionary;
 import fle.core.util.Keyboard;
 import fle.core.util.LanguageManager;
 import fle.core.util.SideGateway;
 import fle.core.world.FWM;
+import fle.resource.FleCropRegister;
+import fle.resource.FlePlantRegister;
 
 @Mod(modid = FLE.MODID, name = FLE.NAME, version = FLE.VERSION, certificateFingerprint = "after:IC2")
-public class FLE implements FleModHandler
+public class FLE implements flapi.Mod
 {	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.06a";
+    public static final String VERSION = "2.06e";
     public static final int minForge = 1420;
     
-    private static final UUID modUUID = new UUID(-7834374458361585156L, -677774904L);
+    private static final UUID modUUID = new UUID(-7834374458361585156L, -677774780L);
     
     @Instance(MODID)
     public static FLE fle;
@@ -78,8 +74,7 @@ public class FLE implements FleModHandler
     {
     	new FleSetup().setup();
     	FleAPI.mod = fle = this;
-    	FleAPI.fluidDictionary = new FluidDictionary();
-    	FleAPI.lm = new LanguageManager();
+    	FleAPI.langManager = new LanguageManager();
     	FleAPI.ra = new FLERA();
     	p = new SideGateway<IPlatform>("fle.core.PlatformCommon", "fle.core.PlatformClient");
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
@@ -146,7 +141,7 @@ public class FLE implements FleModHandler
         try
         {
         	File configFile = new File(new File(p.get().getMinecraftDir(), "config"), "FLE.cfg");
-        	File recipe = new File(new File(p.get().getMinecraftDir(), "config"), "FLE Recipe.csv");
+        	//File recipe = new File(new File(p.get().getMinecraftDir(), "config"), "FLE Recipe.csv");
         	config = new Configuration(configFile);
         	config.load();
         	FleLog.getLogger().info("Config loaded from " + configFile.getAbsolutePath());

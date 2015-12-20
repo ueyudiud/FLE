@@ -4,11 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import flapi.gui.GuiContainerBase;
+import flapi.gui.GuiError;
+import flapi.util.FleValue;
 import fle.FLE;
-import fle.api.FleValue;
-import fle.api.gui.GuiContainerBase;
-import fle.api.gui.GuiError;
-import fle.core.energy.FleThermalNet;
 import fle.core.te.TileEntityDryingTable;
 import fle.core.util.ColorUtil;
 

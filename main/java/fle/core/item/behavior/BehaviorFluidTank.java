@@ -1,5 +1,6 @@
 package fle.core.item.behavior;
 
+import fle.tool.item.behavior.BehaviorTool;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;

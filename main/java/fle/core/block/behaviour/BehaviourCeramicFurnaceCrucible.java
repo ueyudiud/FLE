@@ -9,11 +9,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
-import fle.api.FleValue;
-import fle.api.block.IDebugableBlock;
-import fle.api.material.IAtoms;
-import fle.api.util.WeightHelper;
-import fle.api.world.BlockPos;
+import flapi.block.interfaces.IDebugableBlock;
+import flapi.material.IMolecular;
+import flapi.util.FleValue;
+import flapi.world.BlockPos;
 import fle.core.block.BlockSubTile;
 import fle.core.gui.ContainerCeramicFurnace;
 import fle.core.gui.GuiCeramicFurnace;
@@ -63,12 +62,13 @@ public class BehaviourCeramicFurnaceCrucible extends BehaviourTile implements ID
 		{
 			aList.add("=====================Contain=====================");
 			TileEntityCeramicFurnaceCrucible tile = (TileEntityCeramicFurnaceCrucible) aWorld.getTileEntity(x, y, z);
-			Map<IAtoms, Double> wh = new WeightHelper(tile.getContainerMap()).getContains();
-			for(Entry<IAtoms, Double> e : wh.entrySet())
+			Map<IMolecular, Integer> wh = tile.getContainerMap();
+			double size = wh.size();
+			for(Entry<IMolecular, Integer> e : wh.entrySet())
 			{
 				if(e.getKey() == null) continue;
-				if(e.getValue() < 0.03125F) continue;
-				aList.add(String.format("%s : %s", e.getKey().getChemicalFormulaName(), FleValue.format_progress.format_c(e.getValue())));
+				if((double) e.getValue().intValue() / size < 0.03125F) continue;
+				aList.add(String.format("%s : %s", e.getKey().getChemName(), FleValue.format_progress.format_c((double) e.getValue().intValue() / size)));
 			}
 			for(int a : tile.getProgress())
 			{
