@@ -29,7 +29,7 @@ public class BlockFleRock extends BlockFle
 		}
 	}
 	
-	MaterialRock m;
+	final MaterialRock m;
 	
 	private ItemStack drop;
 	
@@ -42,11 +42,25 @@ public class BlockFleRock extends BlockFle
 		setCreativeTab(FleValue.tabFLE);
 		setBlockTextureName(FleValue.TEXTURE_FILE + ":rock/" + material.getRockName().toLowerCase());
 		drop = ItemFleSub.a("chip_" + material.getRockName().toLowerCase());
+		m = material;
 	}
 
 	public String getHarvestTool(int aMeta)
 	{
 		return "pickaxe";
+	}
+	
+	@Override
+	public float getBlockHardness(World world, int x,
+			int y, int z)
+	{
+		return 1.0F + m.getPropertyInfo().getHardness();
+	}
+	
+	@Override
+	public int getHarvestLevel(int metadata)
+	{
+		return m.getPropertyInfo().getHarvestLevel() - 3;
 	}
 	
 	public MaterialRock getRockMaterial()

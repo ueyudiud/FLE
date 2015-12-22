@@ -9,7 +9,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenForest;
 import net.minecraft.world.biome.BiomeGenMutated;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenCanopyTree;
@@ -90,10 +89,19 @@ public class FLEBiomeForest extends FLEBiome
         }
     }
 
-    public WorldGenAbstractTree func_150567_a(Random p_150567_1_)
-    {
-        return (WorldGenAbstractTree)(type == 3 && p_150567_1_.nextInt(3) > 0 ? genTree3 : (type != 2 && p_150567_1_.nextInt(5) != 0 ? worldGeneratorTrees : genTree2));
-    }
+	@Override
+	public WorldGenAbstractTree getTreeGenerator(double noise, Random rand)
+	{
+		switch(type)
+		{
+		case 3 :
+			return rand.nextInt(3) > 0 ? genTree3 : noise > 0.7 ? genTree2 : genTree1;
+		case 2 :
+			return genTree2;
+		default:
+			return noise > 0.7 ? genTree2 : worldGeneratorTrees;
+		}
+	}
 
     public String func_150572_a(Random aRand, int x, int y, int z)
     {
@@ -141,7 +149,7 @@ public class FLEBiomeForest extends FLEBiome
                     }
                     else
                     {
-                        WorldGenAbstractTree worldgenabstracttree = func_150567_a(aRand);
+                        WorldGenAbstractTree worldgenabstracttree = getTreeGenerator(x, z, aRand);
                         worldgenabstracttree.setScale(1.0D, 1.0D, 1.0D);
 
                         if (worldgenabstracttree.generate(aWorld, aRand, i1, k1, j1))
@@ -220,11 +228,10 @@ public class FLEBiomeForest extends FLEBiome
      */
     public BiomeGenBase createMutation()
     {
-        if (biomeID == BiomeGenBase.forest.biomeID)
+        if (biomeID == FLEBiome.forest.biomeID)
         {
-            BiomeGenForest biomegenforest = new BiomeGenForest(biomeID + 128, 1);
+            FLEBiomeForest biomegenforest = new FLEBiomeForest("FLE Flower Forest", biomeID + 128, 1);
             biomegenforest.setHeight(new BiomeGenBase.Height(rootHeight, heightVariation + 0.2F));
-            biomegenforest.setBiomeName("Flower Forest");
             biomegenforest.func_150557_a(6976549, true);
             biomegenforest.func_76733_a(8233509);
             return biomegenforest;

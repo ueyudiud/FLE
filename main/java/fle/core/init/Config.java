@@ -28,7 +28,7 @@ public class Config
 		configMap.put("p@ramie", setInteger(config, "crop", "Ramie Grow Tick", "Get the grow tick require of this crop.", 2200));
 		configMap.put("p@millet", setInteger(config, "crop", "Ramie Grow Tick", "Get the grow tick require of this crop.", 2200));
 		configMap.put("p@wheat", setInteger(config, "crop", "Wheat Grow Tick", "Get the grow tick require of this crop.", 2000));
-		configMap.put("p@suger_cances", setInteger(config, "crop", "Suger Cances Grow Tick", "Get the grow tick require of this crop.", 3000));
+		configMap.put("p@sugar_cances", setInteger(config, "crop", "Suger Cances Grow Tick", "Get the grow tick require of this crop.", 3000));
 		configMap.put("p@cotton", setInteger(config, "crop", "Cotton Grow Tick", "Get the grow tick require of this crop.", 3000));
 		configMap.put("p@sweetpotato", setInteger(config, "crop", "Cotton Grow Tick", "Get the grow tick require of this crop.", 3400));
 		configMap.put("p@potato", setInteger(config, "crop", "Potato Grow Tick", "Get the grow tick require of this crop.", 2900));

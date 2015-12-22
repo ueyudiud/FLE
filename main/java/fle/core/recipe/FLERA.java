@@ -15,6 +15,7 @@ import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 import fle.core.recipe.FLEOilMillRecipe.OilMillRecipe;
 import fle.core.recipe.FLEPolishRecipe.PolishRecipe;
 import fle.core.recipe.FLESifterRecipe.SifterRecipe;
+import fle.core.recipe.FLESoakRecipe.SoakRecipe;
 import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe;
 import fle.core.recipe.crafting.PlayerToolCraftingRecipe;
 
@@ -47,10 +48,10 @@ public class FLERA implements RecipeAdder
 	}
 
 	@Override
-	public void addDryingRecipe(ItemAbstractStack input, int tick,
+	public void addDryingRecipe(String name, ItemAbstractStack input, int tick,
 			ItemStack output)
 	{
-		FLEDryingRecipe.getInstance().registerRecipe(new DryingRecipe(input, tick, output));
+		FLEDryingRecipe.getInstance().registerRecipe(new DryingRecipe(name, input, tick, output));
 	}
 
 	@Override
@@ -68,31 +69,38 @@ public class FLERA implements RecipeAdder
 	}
 
 	@Override
-	public void addSifterRecipe(ItemAbstractStack input, SolidStack output1,
+	public void addSifterRecipe(String name, ItemAbstractStack input, SolidStack output1,
 			float chance, ItemStack output2)
 	{
-		FLESifterRecipe.a(new SifterRecipe(input, output1, output2, chance));
+		FLESifterRecipe.a(new SifterRecipe(name, input, output1, output2, chance));
 	}
 
 	@Override
-	public void addSifterRecipe(Solid input, SolidStack output1,
+	public void addSifterRecipe(String name, Solid input, SolidStack output1,
 			float chance, ItemStack output2)
 	{
-		FLESifterRecipe.a(new SifterRecipe(input, output1, output2, chance));
+		FLESifterRecipe.a(new SifterRecipe(name, input, output1, output2, chance));
 	}
 
 	@Override
-	public void addOilMillRecipe(ItemAbstractStack input, FluidStack output1,
+	public void addOilMillRecipe(String name, ItemAbstractStack input, FluidStack output1,
 			float change, ItemStack output2)
 	{
-		FLEOilMillRecipe.a(new OilMillRecipe(input, output2, change, output1));
+		FLEOilMillRecipe.a(new OilMillRecipe(name, input, output2, change, output1));
 	}
 
 	@Override
-	public void addBoilingRecipe(ItemAbstractStack input1, FluidStack input2,
+	public void addBoilingRecipe(String name, ItemAbstractStack input1, FluidStack input2,
 			int e, ItemStack output)
 	{
-		FLEBoilingHeaterRecipe.a(new BHRecipe(input1, input2, e, output));
+		FLEBoilingHeaterRecipe.a(new BHRecipe(name, input1, input2, e, output));
+	}
+	
+	@Override
+	public void addSoakRecipe(String name, FluidStack fInput,
+			ItemAbstractStack iInput, int tick, ItemStack output)
+	{	
+		FLESoakRecipe.a(new SoakRecipe(name, fInput, iInput, tick, output));
 	}
 	
 	@Override

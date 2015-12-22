@@ -11,9 +11,9 @@ import flapi.collection.abs.Stack;
 
 public class DropInfo 
 {
-	private final int minSize;
-	private final int maxSize;
-	private final float chance;
+	public final int minSize;
+	public final int maxSize;
+	public final float chance;
 	
 	public IStackList<Stack<ItemStack>, ItemStack> drops;
 	

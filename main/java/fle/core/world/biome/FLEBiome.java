@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
@@ -36,32 +37,37 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	public static final BiomeGenBase warm_plains_M;
 	public static final FLEBiome warm_forest = new FLEBiomeForest("FLE Forest", BiomeGenBase.forest.biomeID, 0).setColor(353825);
 	public static final FLEBiome mid_forest = new FLEBiomeForest("FLE Forest B", BiomeGenBase.birchForest.biomeID, 2).setColor(3175492);
-	public static final FLEBiome extremeHills = new FLEBiomeHills("FLE Extreme Hill", BiomeGenBase.extremeHills.biomeID, false).setColor(6316128).setH(height_MidHills).setTemperatureRainfall(0.2F, 0.3F);
-    public static final FLEBiome slope = new FLEBiomeOcean("FLE Slope", 41, true).setColor(0x8EBFFF).setBiomeHeight(-0.3F, -0.03125F);
+	public static final FLEBiome extremeHills = new FLEBiomeHills("FLE Extreme Hill", BiomeGenBase.extremeHills.biomeID, false).setColor(6316128).setH(height_MidHills).setMontainHeight(1.0F).setTemperatureRainfall(0.2F, 0.3F);
+    public static final FLEBiome slope = new FLEBiomeOcean("FLE Slope", 41, true).setColor(0x8EBFFF).setBiomeHeight(-0.1F, -0.03125F);
 	public static final FLEBiome wasteland = new FLEBiomeWasteland("FLE Wasteland", 42).setColor(0xA4B360).setH(height_Default).setDisableRain();
 	public static final FLEBiome swampland = new FLEBiomeSwamp("FLE Swampland", BiomeGenBase.swampland.biomeID).setH(height_PartiallySubmerged).setColor(0x307252).setTemperatureRainfall(1.0F, 0.9F);
-	public static final FLEBiome hill = new FLEBiomeHill("FLE Hill", 43).setColor(0x60DB60).setH(height_MidPlains);
+	public static final FLEBiome hill = new FLEBiomeHill("FLE Hill", 43).setColor(0x60DB60).setH(height_MidPlains).setMontainHeight(0.2F);
 	public static final FLEBiome roofedForest = new FLEBiomeForest("FLE Roofed Forest", BiomeGenBase.roofedForest.biomeID, 3).setColor(4215066);
-	public static final FLEBiome roofedForest_hill = new FLEBiomeForest("FLE Roofed Forest Hill", 44, 3).setH(height_LowHills).setColor(4215066);
+	public static final FLEBiome roofedForest_hill = new FLEBiomeForest("FLE Roofed Forest Hill", 44, 3).setH(height_LowHills).setMontainHeight(0.3F).setColor(4215066);
 	public static final FLEBiome jungle = new FLEBiomeJungle("FLE Jungle", 21, false).setColor(5470985).func_76733_a(5470985).setTemperatureRainfall(0.95F, 0.9F);
-    public static final FLEBiome jungleHills = new FLEBiomeJungle("FLE Jungle Hill", 22, false).setColor(2900485).func_76733_a(5470985).setTemperatureRainfall(0.95F, 0.9F).setH(height_LowHills);
+    public static final FLEBiome jungleHills = new FLEBiomeJungle("FLE Jungle Hill", 22, false).setColor(2900485).func_76733_a(5470985).setTemperatureRainfall(0.95F, 0.9F).setH(height_LowHills).setMontainHeight(0.3F);
     public static final FLEBiome jungleEdge = new FLEBiomeJungle("FLE Jungle Edge", 23, true).setColor(6458135).func_76733_a(5470985).setTemperatureRainfall(0.95F, 0.8F);
     public static final FLEBiome river_low = new FLEBiomeRiver("FLE River", BiomeGenBase.river.biomeID).setWaterHeight(0).setH(height_ShallowWaters).setColor(0x0000FF);
 	public static final FLEBiome river_mid = new FLEBiomeRiver("FLE River +", 45).setWaterHeight(4).setH(height_MidWaters).setColor(0x0F0FFF);
 	public static final FLEBiome river_high = new FLEBiomeRiver("FLE River ++", 46).setWaterHeight(12).setH(height_HighWaters).setColor(0x1F1FFF).setTemperatureRainfall(0.53125F, 0.4F);
-	public static final FLEBiome frozenSlope = new FLEBiomeOcean("FLE Frozen Slope", 47, true).setColor(0x9ECFFF).setBiomeHeight(-0.3F, -0.03125F).setTemperatureRainfall(0.1F, 0.3F);
+	public static final FLEBiome frozenSlope = new FLEBiomeOcean("FLE Frozen Slope", 47, true).setColor(0x9ECFFF).setBiomeHeight(-0.1F, -0.03125F).setTemperatureRainfall(0.1F, 0.3F);
 	public static final FLEBiome frozenRiver = new FLEBiomeRiver("FLE Frozen River", BiomeGenBase.frozenRiver.biomeID).setH(height_ShallowWaters).setColor(0x3F3FFF).setTemperatureRainfall(0.1F, 0.5F).setEnableSnow();
 	public static final FLEBiome desert = new FLEBiomeDesert("FLE Desert", BiomeGenBase.desert.biomeID).setColor(16421912);
-	public static final FLEBiome desertHills = new FLEBiomeDesert("FLE Desert Hill", BiomeGenBase.desertHills.biomeID).setColor(13786898);
-	public static final FLEBiome warm_forestHills = new FLEBiomeForest("FLE Forest Hill", BiomeGenBase.forestHills.biomeID, 0).setColor(2250012).setH(height_LowHills);
+	public static final FLEBiome desertHills = new FLEBiomeDesert("FLE Desert Hill", BiomeGenBase.desertHills.biomeID).setColor(13786898).setH(height_LowHills).setMontainHeight(0.3F);
+	public static final FLEBiome warm_forestHills = new FLEBiomeForest("FLE Forest Hill", BiomeGenBase.forestHills.biomeID, 0).setColor(2250012).setH(height_LowHills).setMontainHeight(0.3F);
+	public static final FLEBiome savanna = new FleBiomeSavanna("FLE Savanna", BiomeGenBase.savanna.biomeID).setColor(12431967).setTemperatureRainfall(1.2F, 0.0F).setDisableRain().setH(height_LowPlains);
+	public static final FLEBiome savannaPlateau = new FleBiomeSavanna("FLE Savanna Plateau", BiomeGenBase.savannaPlateau.biomeID).setColor(10984804).setTemperatureRainfall(1.0F, 0.0F).setDisableRain().setH(height_HighPlateaus);
 	public static final FLEBiome taiga = new FLEBiomeTaiga("FLE Taiga", BiomeGenBase.taiga.biomeID, 0).setColor(747097).setTemperatureRainfall(0.25F, 0.8F).setH(height_MidPlains);
-	public static final FLEBiome taigaHills = new FLEBiomeTaiga("FLE Taiga Hill", BiomeGenBase.taigaHills.biomeID, 0).setColor(1456435).setTemperatureRainfall(0.25F, 0.8F).setH(height_LowHills);
+	public static final FLEBiome taigaHills = new FLEBiomeTaiga("FLE Taiga Hill", BiomeGenBase.taigaHills.biomeID, 0).setColor(1456435).setTemperatureRainfall(0.25F, 0.8F).setH(height_LowHills).setMontainHeight(0.3F);
 	public static final FLEBiome coldTaiga = new FLEBiomeTaiga("FLE Cold Taiga", BiomeGenBase.coldTaiga.biomeID, 0).setColor(3233098).setTemperatureRainfall(-0.1F, 0.8F).setEnableSnow().setH(height_MidPlains);
-	public static final FLEBiome coldTaigaHills = new FLEBiomeTaiga("FLE Cold Taiga Hill", BiomeGenBase.coldTaigaHills.biomeID, 0).setColor(2375478).setTemperatureRainfall(-0.15F, 0.8F).setEnableSnow().setH(height_LowHills);
+	public static final FLEBiome coldTaigaHills = new FLEBiomeTaiga("FLE Cold Taiga Hill", BiomeGenBase.coldTaigaHills.biomeID, 0).setColor(2375478).setTemperatureRainfall(-0.15F, 0.8F).setEnableSnow().setH(height_LowHills).setMontainHeight(0.3F);
 	public static final FLEBiome megaTaiga = new FLEBiomeTaiga("FLE Taiga", BiomeGenBase.megaTaiga.biomeID, 1).setColor(5858897).setTemperatureRainfall(0.3F, 0.8F).setH(height_MidPlains);
 	public static final FLEBiome megaTaigaHills = new FLEBiomeTaiga("FLE Taiga Hill", BiomeGenBase.megaTaigaHills.biomeID, 1).setColor(4542270).setTemperatureRainfall(0.3F, 0.8F).setH(height_LowHills);
-	public static final FLEBiome icePlains = new FLEBiomeSnow("FLE Ice Plain", 12, false).setColor(16777215).setEnableSnow().setTemperatureRainfall(0.0F, 0.5F).setH(height_LowPlains);
-    public static final FLEBiome iceMountains = new FLEBiomeSnow("FLE Ice Mountain", 13, false).setColor(10526880).setEnableSnow().setTemperatureRainfall(0.0F, 0.5F).setH(height_LowHills);
+	public static final FLEBiome icePlains = new FLEBiomeSnow("FLE Ice Plain", BiomeGenBase.icePlains.biomeID, false).setColor(16777215).setEnableSnow().setTemperatureRainfall(0.0F, 0.5F).setH(height_LowPlains);
+    public static final FLEBiome iceMountains = new FLEBiomeSnow("FLE Ice Mountain", BiomeGenBase.iceMountains.biomeID, false).setColor(10526880).setEnableSnow().setTemperatureRainfall(0.0F, 0.5F).setH(height_MidHills).setMontainHeight(0.7F);
+    public static final FLEBiome beach = new FLEBiomeBeach("FLE Beach", BiomeGenBase.beach.biomeID).setColor(16440917).setTemperatureRainfall(0.8F, 0.4F).setH(height_Shores);
+    public static final FLEBiome coldBeach = new FLEBiomeBeach("FLE Cold Beach", BiomeGenBase.coldBeach.biomeID).setColor(16445632).setTemperatureRainfall(0.05F, 0.3F).setH(height_Shores).setEnableSnow();
+    public static final FLEBiome stoneBeach = new FLEBiomeBeach("FLE Stone Beach", BiomeGenBase.stoneBeach.biomeID).setColor(10658436).setTemperatureRainfall(0.2F, 0.3F).setH(height_RockyWaters);
     
 	public static final FLEBiome hell = new FLEBiomeHellSimple("FLE Hell", BiomeGenBase.hell.biomeID).setColor(BiomeGenBase.hell.color);
 	public static final FLEBiome hell_lava_sea = new FLEBiomeLavaSea("FLE Lava Sea", 65).setColor(BiomeGenBase.hell.color);
@@ -89,17 +95,20 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 		BiomeDictionary.registerBiomeType(slope, BiomeDictionary.Type.WATER);
 		BiomeDictionary.registerBiomeType(roofedForest_hill, BiomeDictionary.Type.HOT, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.FOREST);
 
-		rockAcidityNoise = new NoiseFuzzy(2095710L, 3, 16, 16, 1.6F);
-		rockWeatheringNoise = new NoiseFuzzy(56819619L, 3, 16, 16, 1.6F);
+		rockAcidityNoise = new NoiseFuzzy(2095710L, 3, 16, 16, 0.8F);
+		rockWeatheringNoise = new NoiseFuzzy(56819619L, 3, 16, 16, 0.8F);
+		treeGenNoise = new NoiseFuzzy(4729571L, 4, 6, 1.3F, 0.6F);
 	}
 	
 	protected static final NoiseFuzzy rockAcidityNoise;
 	protected static final NoiseFuzzy rockWeatheringNoise;
+	protected static final NoiseFuzzy treeGenNoise;
 	
 	public static void setRockNoiseSeed(long seed)
 	{
 		rockAcidityNoise.setSeed(seed * 459571951L + 37591754L);
 		rockWeatheringNoise.setSeed(seed * 386719561L + 971961810L);
+		treeGenNoise.setSeed(seed * 375917105L + 2859185917L);
 	}
 	
 	public int mColor;
@@ -127,11 +136,17 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 		mColor = this.color = color;
 		return this;
 	}
+	
+	public FLEBiome setMontainHeight(float montainHeight)
+	{
+		this.montainHeight = montainHeight;
+		return this;
+	}
 
     public final FLEBiome setH(BiomeGenBase.Height height)
     {
         rootHeight = height.rootHeight;
-        montainHeight = heightVariation = height.variation;
+        heightVariation = height.variation;
         return this;
     }
     
@@ -185,6 +200,11 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	}
 	
 	public boolean isOcean()
+	{
+		return false;
+	}
+	
+	public boolean isRiver()
 	{
 		return false;
 	}
@@ -275,7 +295,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 			Block[] aBlocks, byte[] aByte, int x,
 			int z, double yLevel)
 	{
-        boolean flag1 = !(isBeach() || isOcean());
+        boolean flag1 = !(isBeach() || isOcean() || isRiver());
         boolean flag2 = aWorld.getWorldInfo().getTerrainType() == FLEWorldType.FLAT;
         int l = (int)(yLevel * 0.33D + 2.0D + (aRand.nextDouble()+ 1.0D) * 0.5D);
         int i1 = x & 15;
@@ -327,5 +347,15 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 	public void remove(SubTag aTag) 
 	{
 		tags.contains(aTag);
+	}
+	
+	public WorldGenAbstractTree getTreeGenerator(int chunkX, int chunkZ, Random rand)
+	{
+		return getTreeGenerator(treeGenNoise.noise(chunkX, chunkZ), rand);
+	}
+	
+	public WorldGenAbstractTree getTreeGenerator(double noise, Random rand)
+	{
+		return func_150567_a(rand);
 	}
 }

@@ -15,6 +15,12 @@ public class FLEBiomeRiver extends FLEBiome
 		theBiomeDecorator.sandPerChunk = 2;
 	}
 	
+	@Override
+	public boolean isRiver()
+	{
+		return true;
+	}
+	
 	int height;
 	
 	public FLEBiomeRiver setWaterHeight(int aHeight)

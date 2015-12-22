@@ -3,6 +3,7 @@ package fle.core.init;
 import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPED;
 import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import flapi.cg.CraftGuide;
 import flapi.cg.RecipesTab;
 import flapi.enums.EnumAtoms;
 import flapi.fluid.FluidDictionary;
+import flapi.plant.TreeInfo;
 import flapi.recipe.ShapedFleRecipe;
 import flapi.recipe.ShapelessFleRecipe;
 import flapi.recipe.stack.BaseStack;
@@ -40,7 +42,7 @@ import flapi.solid.SolidRegistry;
 import flapi.solid.SolidStack;
 import flapi.util.FleLog;
 import flapi.util.SubTag;
-import flapi.util.io.JsonLoader;
+import flapi.util.io.JsonHandler;
 import fle.FLE;
 import fle.core.block.machine.ItemThermalWire;
 import fle.core.cg.FLECastingRecipe;
@@ -62,14 +64,15 @@ import fle.core.recipe.FLEPolishRecipe;
 import fle.core.recipe.FLESifterRecipe;
 import fle.core.recipe.FLESoakRecipe;
 import fle.core.recipe.FLEStoneMillRecipe;
-import fle.core.recipe.MatterJsonRecipe;
 import fle.core.recipe.MatterReactionRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
+import fle.core.recipe.WashingRecipe;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
 import fle.core.recipe.crafting.PlayerToolCraftingRecipe;
 import fle.core.recipe.crafting.RopeLadderCraftingRecipe;
 import fle.core.tool.AxeHandler;
 import fle.core.tool.BurnHandler;
+import fle.resource.block.BlockFleLog;
 import fle.resource.block.BlockFleRock;
 import fle.tool.DitchInfo;
 import fle.tool.block.ItemDitch;
@@ -203,6 +206,13 @@ public class Rs
 	
 	public static void init()
 	{
+		for(TreeInfo info : BlockFleLog.trees)
+		{
+			if(info.log() != null)
+				addOre("logWood", info.log());
+			if(info.leaves() != null)
+				addOre("leaves", info.leaves());
+		}
 		addOre("wick", Items.string);
 		addOre("wick", ItemFleSub.a("ramie_rope"));
 		addOre("wick", ItemFleSub.a("sisal_rope"));
@@ -246,6 +256,7 @@ public class Rs
 		addOre("branchWood", ItemFleSub.a("branch_jungle"));
 		addOre("branchWood", ItemFleSub.a("branch_acacia"));
 		addOre("branchWood", ItemFleSub.a("branch_darkoak"));
+		addOre("branchWood", ItemFleSub.a("branch_beech"));
 		addOre("flePlankWood", new ItemStack(Blocks.planks, 1, OreDictionary.WILDCARD_VALUE));
 		addOre("logFLE", new ItemStack(IB.treeLog, 1, OreDictionary.WILDCARD_VALUE));
 		addOre("rockCompactStone", BlockFleRock.a(Materials.CompactStone));
@@ -463,18 +474,35 @@ public class Rs
 	{
 		GameRegistry.addRecipe(recipe);
 	}
-
+	
 	public static void completeInit()
 	{
-		new JsonLoader("fle_matter.json").process(MatterJsonRecipe.instance);
-		JsonLoader loader = new JsonLoader("fle_recipe.json");
-		FLEBoilingHeaterRecipe.postInit(loader);
-		FLEOilMillRecipe.postInit(loader);
-		FLESifterRecipe.postInit(loader);
-		FLEStoneMillRecipe.postInit(loader);
-		FLEDryingRecipe.postInit(loader);
-		FLEPolishRecipe.postInit(loader);
-		FLESoakRecipe.postInit(loader);
+		try
+		{
+			File file = new File(FLE.fle.getPlatform().getMinecraftDir(), "config/fle/recipe");
+			if(!file.canExecute()) file.mkdirs();
+			JsonHandler loader0 = new JsonHandler("fle/recipe/boiling_heater.json");
+			JsonHandler loader1 = new JsonHandler("fle/recipe/oil_mill.json");
+			JsonHandler loader2 = new JsonHandler("fle/recipe/sifter.json");
+			JsonHandler loader3 = new JsonHandler("fle/recipe/stone_mill.json");
+			JsonHandler loader4 = new JsonHandler("fle/recipe/drying.json");
+			JsonHandler loader5 = new JsonHandler("fle/recipe/polish.json");
+			JsonHandler loader6 = new JsonHandler("fle/recipe/soak.json");
+			JsonHandler loader7 = new JsonHandler("fle/recipe/washing.json");
+			FLEBoilingHeaterRecipe.postInit(loader0);
+			FLEOilMillRecipe.postInit(loader1);
+			FLESifterRecipe.postInit(loader2);
+			FLEStoneMillRecipe.postInit(loader3);
+			FLEDryingRecipe.postInit(loader4);
+			FLEPolishRecipe.postInit(loader5);
+			FLESoakRecipe.postInit(loader6);
+			WashingRecipe.postInit(loader7);
+		}
+		catch(Throwable e)
+		{
+			FleLog.getLogger().error("Fail to load recipe", e);
+		}
+		
 		
 		for(Object obj : CraftingManager.getInstance().getRecipeList())
 		{

@@ -10,7 +10,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 import flapi.util.FleLog;
-import flapi.util.io.JsonInputStream;
+import flapi.util.io.JsonInput;
 import fle.core.util.FLEMath;
 
 public class VecNoiseHandler
@@ -48,12 +48,12 @@ public class VecNoiseHandler
 		basic = a;
 	}
 
-	public static NoiseBase loadNoiseFromJson(JsonInputStream stream) throws IOException
+	public static NoiseBase loadNoiseFromJson(JsonInput stream) throws IOException
 	{
 		return loadNoiseFromJson(true, stream);
 	}
 	
-	private static NoiseBase loadNoiseFromJson(boolean isFirstLoad, JsonInputStream stream) throws IOException
+	private static NoiseBase loadNoiseFromJson(boolean isFirstLoad, JsonInput stream) throws IOException
 	{
 		try
 		{

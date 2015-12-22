@@ -25,7 +25,7 @@ public class NoiseFuzzy extends NoiseBase
 	public double noise(long x, long z)
 	{
 		double ret = 0;
-		double w = 0;
+		double w = 1;
 		for(int i = 0; i < noises.length; ++i)
 		{
 			ret += noises[i].noise(x, z) * w;

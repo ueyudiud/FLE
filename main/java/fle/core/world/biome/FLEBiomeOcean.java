@@ -1,5 +1,8 @@
 package fle.core.world.biome;
 
+import java.util.Random;
+
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -12,6 +15,14 @@ public class FLEBiomeOcean extends FLEBiome
 		theBiomeDecorator.generateLakes = false;
 		topBlock = isSandBase ? Blocks.sand : Blocks.gravel;
 		fillerBlock = Blocks.gravel;
+	}
+	
+	@Override
+	protected Block getBlock(boolean isFirstTop, boolean isNoCover,
+			boolean hasFluidOnSide, boolean isBaseDecorateBlock,
+			Block replaceBlock, Random rand, float temp)
+	{
+		return isFirstTop ? topBlock : fillerBlock;
 	}
 	
 	@Override

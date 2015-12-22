@@ -11,11 +11,10 @@ public class FLELayerItrZoom extends FLELayer
 	{
 		super(seed);
 		zt = aZoomTime;
-		aLayer.initWorldGenSeed(seed);
 		GenLayer layer = new GenLayerZoom(seed, aLayer);
 		for(int i = 1; i < zt; ++i)
 		{
-			layer = new GenLayerZoom(seed, layer);
+			layer = new GenLayerZoom(seed + i, layer);
 		}
 		parent = layer;
 	}

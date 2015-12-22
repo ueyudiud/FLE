@@ -32,7 +32,7 @@ public class ItemFleSeed extends flapi.item.ItemFleFood implements IPlantable, I
 		addSubItem(0, Plants.soybean, "Soybeen", new ItemTextureHandler("resource/seed/0"));
 		addSubItem(1, Plants.ramie, "Ramie Seed", new ItemTextureHandler("resource/seed/1"));
 		addSubItem(2, Plants.millet, "Millet Seed", new ItemTextureHandler("resource/seed/2"));
-		addSubItem(3, Plants.suger_cances, "Suger Cances", new ItemTextureHandler("resource/seed/3"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
+		addSubItem(3, Plants.sugar_cances, "Sugar Cances", new ItemTextureHandler("resource/seed/3"), new FoodStandard(EnumFoodType.Resource, 1, 0.1F));
 		addSubItem(4, Plants.wheat, "Wheat Seed", new ItemTextureHandler("resource/seed/4"));
 		addSubItem(5, Plants.cotton, "Cotton Seed", new ItemTextureHandler("resource/seed/5"));
 		addSubItem(6, Plants.sweet_potato, "Sweet Potato", new ItemTextureHandler("resource/seed/6"), new FoodStandard(EnumFoodType.Resource, 1, 0.3F));

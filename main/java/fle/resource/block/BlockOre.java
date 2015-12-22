@@ -22,6 +22,7 @@ import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import flapi.FleAPI;
+import flapi.block.IHarvestHandler;
 import flapi.block.interfaces.IDebugableBlock;
 import flapi.block.old.BlockHasSub;
 import flapi.enums.EnumWorldNBT;
@@ -34,7 +35,7 @@ import fle.FLE;
 import fle.core.init.IB;
 import fle.core.world.FWM;
 
-public class BlockOre extends BlockHasSub implements IDebugableBlock
+public class BlockOre extends BlockHasSub implements IDebugableBlock, IHarvestHandler
 {
 	public BlockOre()
 	{
@@ -70,7 +71,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	
 	public static int getHarvestLevel(MaterialOre ore)
 	{
-		return (int) Math.floor(ore.getPropertyInfo().getHardness() + 1 / 2);
+		return ore.getPropertyInfo().getHarvestLevel();
 	}
 	  
 	public float getBlockHardness(World world, int x, int y, int z)
@@ -179,6 +180,30 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 	
 	public ArrayList<ItemStack> getDrops(World aWorld, int aX, int aY, int aZ, int aMeta, int aFortune)
 	{
+		return new ArrayList<ItemStack>();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(Item aItem, CreativeTabs aTab, List aList)
+	{
+		for (MaterialOre tMaterial : MaterialOre.getOres())
+	    {
+	        aList.add(new ItemStack(aItem, 1, MaterialOre.getOreID(tMaterial)));
+	    }
+	}
+	
+	@Override
+	public boolean canHarvestBlock(World world, int x, int y, int z,
+			int metadata, String toolKey, int level)
+	{
+		metaThread.set(getDamageValue(world, x, y, z));
+		return "pickaxe".equals(toolKey) && getOre(world, x, y, z).getPropertyInfo().getHarvestLevel() <= level;
+	}
+	
+	@Override
+	public ArrayList<ItemStack> getHarvestDrop(World world, int x, int y,
+			int z, int metadata, String toolKey, int level)
+	{
 		ArrayList<ItemStack> list = new ArrayList();
 		if(metaThread.get() != null)
 		{
@@ -189,15 +214,6 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock
 			list.add(new ItemStack(Blocks.stone));
 		}
 	    return list;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item aItem, CreativeTabs aTab, List aList)
-	{
-		for (MaterialOre tMaterial : MaterialOre.getOres())
-	    {
-	        aList.add(new ItemStack(aItem, 1, MaterialOre.getOreID(tMaterial)));
-	    }
 	}
 	
 	private static FWM a()

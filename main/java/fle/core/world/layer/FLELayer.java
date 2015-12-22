@@ -68,10 +68,20 @@ public abstract class FLELayer extends GenLayer
         FLELayerEdge gen5 = new FLELayerEdge(32L, gen4);
         drawImage(512, gen5, "12 ContinentsEdge");
         gen5 = new FLELayerEdge(33L, gen5);
-        drawImage(512, gen5, "13 ContinentsZoom");
-        gen1 = new GenLayerZoom(2L, gen5);
-        drawImage(512, gen1, "14 ContinentsZoom");
-        FLELayerBeach gen11 = new FLELayerBeach(72L, gen1);
+        drawImage(512, gen5, "13 ContinentsEdge");
+        FLELayerBeach gen11;
+        if(type == FLEWorldType.LARGE_BIOMES)
+        {
+        	FLELayerItrZoom gen14 = new FLELayerItrZoom(3, 46284L, gen5);
+            drawImage(512, gen14, "14 ContinentsZoom");
+            gen11 = new FLELayerBeach(73L, gen14);
+        }
+        else
+        {
+            gen1 = new GenLayerZoom(2L, gen5);
+            drawImage(512, gen1, "14 ContinentsZoom");
+            gen11 = new FLELayerBeach(72L, gen1);
+        }
         drawImage(512, gen11, "15 ContinentsBeach");
         gen3 = new FLELayerItrZoom(1, 2L, gen11);
         drawImage(512, gen3, "16 ContinentsZoom");
@@ -88,20 +98,20 @@ public abstract class FLELayer extends GenLayer
         drawImage(512, gen9, "21 ContinentsRiverMix");
         if(type == FLEWorldType.LARGE_BIOMES)
         {
-        	gen3 = new FLELayerItrZoom(6, 294L, gen9);
-        	gen13 = new GenLayerSmooth(284L, gen3);
+        	gen1 = new GenLayerZoom(3274L, gen9);
+        	gen13 = new GenLayerSmooth(284L, gen1);
         	GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(10L, gen13);
             gen12.initWorldGenSeed(seed);
             gen13.initWorldGenSeed(seed);
             drawImage(512, gen12, "22-beta ContinentsVoronoiZoom");
             return new GenLayer[]{gen13, gen12, gen13};
         }
-        //GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(27L + seed, gen9);
-        GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(27L + seed, gen13);
+        GenLayerVoronoiZoom gen12 = new GenLayerVoronoiZoom(27L + seed, gen9);
         gen9.initWorldGenSeed(seed);
         gen12.initWorldGenSeed(seed);
+        gen13.initWorldGenSeed(seed);
         drawImage(512, gen12, "22-beta ContinentsVoronoiZoom");
-        return new GenLayer[]{gen13, gen12, gen13};
+        return new GenLayer[]{gen9, gen12, gen9};
     }
 
 	public static GenLayer[] initializeAllNetherBiomeGenerators(long seed,

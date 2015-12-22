@@ -34,6 +34,7 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
 import fle.core.init.IB;
+import fle.core.world.biome.FLEBiome;
 import fle.resource.world.FleDirtDefaultGen;
 import fle.resource.world.FleDirtGen;
 
@@ -125,7 +126,7 @@ public class FLEBiomeDecoratorBase extends BiomeDecorator
             k = chunk_X + randomGenerator.nextInt(16) + 8;
             l = chunk_Z + randomGenerator.nextInt(16) + 8;
             i1 = currentWorld.getHeightValue(k, l);
-            WorldGenAbstractTree worldgenabstracttree = biome.func_150567_a(randomGenerator);
+            WorldGenAbstractTree worldgenabstracttree = biome instanceof FLEBiome ? ((FLEBiome) biome).getTreeGenerator(chunk_X, chunk_Z, randomGenerator) : biome.func_150567_a(randomGenerator);
             worldgenabstracttree.setScale(1.0D, 1.0D, 1.0D);
 
             if (worldgenabstracttree.generate(currentWorld, randomGenerator, k, i1, l))

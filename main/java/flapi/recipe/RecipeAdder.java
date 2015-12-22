@@ -22,19 +22,21 @@ public interface RecipeAdder
 
 	void addPolishRecipe(ItemAbstractStack input, String map, ItemStack output);
 	
-	void addDryingRecipe(ItemAbstractStack input, int tick, ItemStack output);
+	void addDryingRecipe(String name, ItemAbstractStack input, int tick, ItemStack output);
 	
 	void addColdForgingRecipe(ItemAbstractStack[] input, String map, ItemStack output);
 	
 	void addStoneMillRecipe(ItemAbstractStack input, int tick, SolidStack output1, FluidStack output2);
 
-	void addSifterRecipe(ItemAbstractStack input, SolidStack output1, float chance, ItemStack output2);
+	void addSifterRecipe(String name, ItemAbstractStack input, SolidStack output1, float chance, ItemStack output2);
 
-	void addSifterRecipe(Solid input, SolidStack output1, float chance, ItemStack output2);
+	void addSifterRecipe(String name, Solid input, SolidStack output1, float chance, ItemStack output2);
 	
-	void addOilMillRecipe(ItemAbstractStack input, FluidStack output1, float change, ItemStack output2);
+	void addOilMillRecipe(String name, ItemAbstractStack input, FluidStack output1, float change, ItemStack output2);
 	
-	void addBoilingRecipe(ItemAbstractStack input1, FluidStack input2, int energyRequire, ItemStack output);
+	void addBoilingRecipe(String name, ItemAbstractStack input1, FluidStack input2, int energyRequire, ItemStack output);
+	
+	void addSoakRecipe(String name, FluidStack fInput, ItemAbstractStack iInput, int tick, ItemStack output);
 	
 	void addRCBlastFurnaceRecipe(ItemStack aInput, boolean flag, int tick, ItemStack aOutput);
 	

@@ -5,28 +5,36 @@ import java.util.Random;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import flapi.fluid.FluidJsonStack;
 import flapi.recipe.IRecipeHandler;
 import flapi.recipe.IRecipeHandler.MachineRecipe;
 import flapi.recipe.stack.BaseStack;
 import flapi.recipe.stack.ItemAbstractStack;
-import flapi.util.io.JsonLoader;
+import flapi.recipe.stack.JsonStack;
+import flapi.recipe.stack.JsonStack.StackInfomation;
+import flapi.util.io.JsonHandler;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSeed;
 import fle.core.item.ItemFleSub;
+import fle.core.recipe.FLEOilMillRecipe.OMInfo;
 import fle.core.recipe.FLEOilMillRecipe.OilMillRecipe;
 
-public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
+public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe, OMInfo>
 {
 	private static FLEOilMillRecipe instance = new FLEOilMillRecipe();
 	
 	public static void init()
 	{
-		a(new OilMillRecipe(new BaseStack(ItemFleSeed.a("soybean")), ItemFleSub.a("plant_waste"), 0.08F, new FluidStack(IB.plantOil, 25)));
-		a(new OilMillRecipe(new BaseStack(ItemFleSeed.a("suger_cances")), ItemFleSub.a("plant_waste"), 0.2F, new FluidStack(IB.sugarcane_juice, 50)));
-		a(new OilMillRecipe(new BaseStack(Items.apple), ItemFleSub.a("plant_waste"), 0.15F, new FluidStack(IB.apple_juice, 30)));
+		a(new OilMillRecipe("Soybean Oil", new BaseStack(ItemFleSeed.a("soybean")), ItemFleSub.a("plant_waste"), 0.08F, new FluidStack(IB.plantOil, 25)));
+		a(new OilMillRecipe("Sugar Cabces Juice", new BaseStack(ItemFleSeed.a("sugar_cances")), ItemFleSub.a("plant_waste"), 0.2F, new FluidStack(IB.sugarcane_juice, 50)));
+		a(new OilMillRecipe("Apple Juice", new BaseStack(Items.apple), ItemFleSub.a("plant_waste"), 0.15F, new FluidStack(IB.apple_juice, 30)));
 	}
 	
-	public static void postInit(JsonLoader loader)
+	public static void postInit(JsonHandler loader)
 	{
 		instance.reloadRecipes(loader);
 	}
@@ -41,26 +49,67 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		instance.registerRecipe(recipe);
 	}
 	
-	public static class OilMillRecipe extends MachineRecipe
+	protected OilMillRecipe readFromJson(OMInfo element) 
+	{
+		return element.output1 != null ? 
+				new OilMillRecipe(element.name, element.input.toStack(), element.output1.getStack(), element.outputChance, element.output2.getFluid()) :
+					new OilMillRecipe(element.name, element.input.toStack(), element.output2.getFluid());
+	}
+	
+	public static class OMInfo
+	{
+		@Expose
+		public String name;
+		@Expose
+		public StackInfomation input;
+		@Expose
+		@SerializedName("outputItem")
+		public StackInfomation output1;
+		@Expose
+		@SerializedName("outputItemChance")
+		public float outputChance;
+		@Expose
+		@SerializedName("outputFluid")
+		public FluidJsonStack output2;
+	}
+	
+	public static class OilMillRecipe extends MachineRecipe<OMInfo>
 	{
 		private static final Random rand = new Random();
 		
+		private final String name;
 		private ItemAbstractStack input;
 		public ItemStack output1;
 		private float outputChance;
 		public FluidStack output2;
 
-		public OilMillRecipe(ItemAbstractStack aInput, FluidStack aOutput2)
+		public OilMillRecipe(String name, ItemAbstractStack input, FluidStack output)
 		{
-			this(aInput, null, 0.0F, aOutput2);
+			this(name, input, null, 0.0F, output);
 		}
-		public OilMillRecipe(ItemAbstractStack aInput, ItemStack aOutput1, float aOutputChance, FluidStack aOutput2)
+		public OilMillRecipe(String name, ItemAbstractStack aInput, ItemStack aOutput1, float aOutputChance, FluidStack aOutput2)
 		{
+			this.name = name;
 			input = aInput;
 			if(aOutput1 != null)
 				output1 = aOutput1.copy();
 			outputChance = aOutputChance;
 			output2 = aOutput2.copy();
+		}
+		
+		@Override
+		protected OMInfo makeInfo()
+		{
+			OMInfo info = new OMInfo();
+			info.name = name;
+			info.input = new JsonStack(input).getInfomation();
+			if(output1 != null)
+			{
+				info.output1 = new JsonStack(output1).getInfomation();
+				info.outputChance = outputChance;
+			}
+			info.output2 = new FluidJsonStack(output2);
+			return info;
 		}
 		
 		public ItemStack getRandOutput()
@@ -71,7 +120,7 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		@Override
 		public RecipeKey getRecipeKey()
 		{
-			return new OilMillKey(input);
+			return new OilMillKey(name, input);
 		}
 		
 		public ItemAbstractStack getInput()
@@ -87,12 +136,14 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 	
 	public static class OilMillKey extends RecipeKey
 	{
+		private String name;
 		private ItemAbstractStack key;
 		private ItemStack target;
 		
-		public OilMillKey(ItemAbstractStack aKey)
+		public OilMillKey(String name, ItemAbstractStack key)
 		{
-			key = aKey;
+			this.name = name;
+			this.key = key;
 		}
 		public OilMillKey(ItemStack aTarget)
 		{
@@ -123,7 +174,7 @@ public class FLEOilMillRecipe extends IRecipeHandler<OilMillRecipe>
 		{
 			try
 			{
-				return "recipe.input:" + key.toString();
+				return "recipe." + name.toLowerCase();
 			}
 			catch(Throwable e)
 			{

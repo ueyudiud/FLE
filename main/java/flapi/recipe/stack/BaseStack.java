@@ -12,6 +12,7 @@ public class BaseStack extends ItemAbstractStack
 	
 	public BaseStack(Item item){this(item, OreDictionary.WILDCARD_VALUE);}
 	public BaseStack(Item item, int meta){this(new ItemStack(item, 1, meta));}
+	public BaseStack(Item item, int size, int meta){this(new ItemStack(item, size, meta));}
 	public BaseStack(Block block){this(block, OreDictionary.WILDCARD_VALUE);}
 	public BaseStack(Block block, int meta){this(new ItemStack(block, 1, meta));}
 	public BaseStack(ItemStack item)

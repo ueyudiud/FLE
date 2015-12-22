@@ -40,6 +40,6 @@ public class Conditions
 		GuiError.CAN_NOT_OUTPUT = new GuiError("cant_output").setTextureName(FleValue.TEXTURE_FILE + ":output_error");
 		GuiError.CAN_NOT_INPUT = new GuiError("cant_input").setTextureName(FleValue.TEXTURE_FILE + ":input_error");
 		GuiError.RAINING = new GuiError("raining").setTextureName(FleValue.TEXTURE_FILE + ":rain_error");
-		GuiError.ROTATION_STUCK = new GuiError("stuck").setTextureName(FleValue.TEXTURE_FILE + ":stuck");
+		GuiError.ROTATION_STUCK = new GuiError("stuck").setTextureName(FleValue.TEXTURE_FILE + ":stuck_error");
 	}
 }

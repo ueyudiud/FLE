@@ -10,7 +10,7 @@ public class CropSugerCances extends CropBase
 {
 	public CropSugerCances()
 	{
-		super("suger_cances");
+		super("sugar_cances");
 		setCropLevel(2);
 		setMaturationStage(6);
 		setTextureName("crop/reed");

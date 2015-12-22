@@ -11,7 +11,7 @@ import flapi.collection.abs.IStackList;
 import flapi.collection.abs.Stack;
 import flapi.enums.CompoundType;
 import flapi.enums.EnumAtoms;
-import flapi.util.io.JsonInputStream;
+import flapi.util.io.JsonInput;
 import static flapi.enums.CompoundType.*;
 import static flapi.enums.EnumAtoms.*;
 import static flapi.enums.EnumIons.*;
@@ -182,12 +182,12 @@ public class Matter implements IMolecular
 			return new AtomStack(get(), size());
 		}
 		
-		public static Stack<IMolecular>[] readMatterStackFromJson(JsonInputStream stream)
+		public static Stack<IMolecular>[] readMatterStackFromJson(JsonInput stream)
 		{
 			Stack<IMolecular>[] ret = new Stack[stream.size()];
 			for(int i = 0; i < stream.size(); ++i)
 			{
-				JsonInputStream s1 = stream.sub(i);
+				JsonInput s1 = stream.sub(i);
 				ret[i] = new Stack<IMolecular>(Matter.getMatterFromName(s1.getString("atoms", "null")), s1.getInteger("size", 1));
 			}
 			return ret;

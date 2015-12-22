@@ -362,6 +362,7 @@ public class ItemTool extends ItemFleTool implements IFluidContainerItem, ICrush
 				aList.add(EnumChatFormatting.AQUA.toString() + "B : " + MaterialAbstract.getMaterialRegistry().name(m0));
 				if(m1 != null)
 					aList.add(EnumChatFormatting.YELLOW.toString() + "M : " + MaterialAbstract.getMaterialRegistry().name(m1));
+				aList.add(EnumChatFormatting.BLUE.toString() + "L : " + m0.getPropertyInfo().getHarvestLevel());
 				aList.add(EnumChatFormatting.RED.toString() + "H : " + (int) (info.getHardness() * 100) + "/" + (int) (m0.getPropertyInfo().getHardness() * 100));
 				aList.add(EnumChatFormatting.GREEN.toString() + "U : " + (u - getDisplayDamage(aStack)) + "/" + u);
 			}

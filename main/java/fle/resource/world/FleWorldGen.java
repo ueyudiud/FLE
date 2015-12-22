@@ -91,7 +91,7 @@ public class FleWorldGen implements IWorldGenerator
 						Blocks.stone, 0.5F, 1.2F, 96), 32),//Cu mine
 				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6)), 
 						Blocks.stone, 0.5F, 1.2F, 96), 24),//Cu & S mine
-				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2)), 
+				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Scorodite, 1), g(Materials.Erythrite, 2)), 
 						Blocks.stone, 0.5F, 1.2F, 96), 18)//As				
 		};
 		Stack[] wgmsm = {
@@ -99,7 +99,7 @@ public class FleWorldGen implements IWorldGenerator
 						Blocks.stone, 0.2F, 1.2F, 96), 18),//Cu mine
 				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6)), 
 						Blocks.stone, 0.2F, 1.2F, 96), 32),//Cu & S mine
-				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2)), 
+				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Scorodite, 1), g(Materials.Erythrite, 2)), 
 						Blocks.stone, 0.2F, 1.2F, 96), 18)//As				
 		};
 		Stack[] wgdsm = {
@@ -107,7 +107,7 @@ public class FleWorldGen implements IWorldGenerator
 						Blocks.stone, 0.2F, 1.1F, 96), 10),//Cu mine
 				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6)), 
 						Blocks.stone, 0.2F, 1.1F, 96), 40),//Cu & S mine
-				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2)), 
+				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Scorodite, 1), g(Materials.Erythrite, 2)), 
 						Blocks.stone, 0.2F, 1.1F, 96), 18)//As				
 		};
 		Stack[] wgmmm = {
@@ -115,7 +115,7 @@ public class FleWorldGen implements IWorldGenerator
 						Blocks.stone, 0.8F, 2.0F, 640), 24),//Cu mine
 				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6)), 
 						Blocks.stone, 0.8F, 2.0F, 640), 32),//Cu & S mine
-				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2)), 
+				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Scorodite, 1), g(Materials.Erythrite, 2)), 
 						Blocks.stone, 0.8F, 2.0F, 640), 18)//As				
 		};
 		Stack[] wgdmm = {
@@ -123,7 +123,7 @@ public class FleWorldGen implements IWorldGenerator
 						Blocks.stone, 0.8F, 2.0F, 640), 20),//Cu mine
 				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6)), 
 						Blocks.stone, 0.8F, 2.0F, 640), 32),//Cu & S mine
-				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2)), 
+				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Scorodite, 1), g(Materials.Erythrite, 2)), 
 						Blocks.stone, 0.8F, 2.0F, 640), 18)//As				
 		};
 		Stack[] wgdlm = {
@@ -131,7 +131,7 @@ public class FleWorldGen implements IWorldGenerator
 						Blocks.stone, 1.0F, 2.5F, 5120), 32),//Cu mine
 				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Chalcopyrite, 14), g(Materials.Bornite, 8), g(Materials.Chalcocite, 7), g(Materials.Covellite, 2), g(Materials.Tetrahedrite, 4), g(Materials.Enargite, 6)), 
 						Blocks.stone, 1.0F, 2.5F, 5120), 15),//Cu & S mine
-				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Schorodite, 1), g(Materials.Erythrite, 2)), 
+				new Stack(new FleDivergeOreGen(new ArrayStandardStackList(g(Materials.Orpiment, 8), g(Materials.Realgar, 12), g(Materials.Arsenolite, 2), g(Materials.Nickeline, 1), g(Materials.Arsenopyrite, 2), g(Materials.Scorodite, 1), g(Materials.Erythrite, 2)), 
 						Blocks.stone, 1.0F, 2.5F, 5120), 18)//As				
 		};
 		Stack[] wgsrg = {
@@ -198,13 +198,14 @@ public class FleWorldGen implements IWorldGenerator
 
 	public void generateSurface(Random random, int x, int z, World world)
 	{
-		switch(random.nextInt(6))
-		{
-		case 0 : genOre(random, world, x, z, 250, 100, superficialRockGenerators);
-		break;
-		case 1 : genOre(random, world, x, z, 130, 0, deepRockGenerators);
-		break;
-		}
+		if(x % 7 == 0 && z % 7 == 0)
+			switch(random.nextInt(3))
+			{
+			case 0 : genOre(random, world, x, z, 250, 100, superficialRockGenerators);
+			break;
+			case 1 : genOre(random, world, x, z, 130, 0, deepRockGenerators);
+			break;
+			}
 		if(cX % 83 == 0 && cZ % 83 == 0)
 		{
 			if(random.nextBoolean())

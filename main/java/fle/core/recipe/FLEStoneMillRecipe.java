@@ -3,17 +3,26 @@ package fle.core.recipe;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import flapi.fluid.FluidJsonStack;
 import flapi.recipe.IRecipeHandler;
 import flapi.recipe.IRecipeHandler.MachineRecipe;
 import flapi.recipe.stack.BaseStack;
 import flapi.recipe.stack.ItemAbstractStack;
+import flapi.recipe.stack.JsonStack;
+import flapi.recipe.stack.JsonStack.StackInfomation;
+import flapi.solid.SolidJsonStack;
 import flapi.solid.SolidStack;
-import flapi.util.io.JsonLoader;
+import flapi.util.io.JsonHandler;
 import fle.core.init.IB;
 import fle.core.item.ItemFleSub;
+import fle.core.recipe.FLEStoneMillRecipe.StoneMillInfo;
 import fle.core.recipe.FLEStoneMillRecipe.StoneMillRecipe;
 
-public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
+public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe, StoneMillInfo>
 {
 	private static final FLEStoneMillRecipe instance = new FLEStoneMillRecipe();
 	
@@ -24,7 +33,7 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 		a(new StoneMillRecipe(new BaseStack(ItemFleSub.a("defatted_crushed_bone")), 200, new SolidStack(IB.Ca_P_fertilizer, 108)));
 	}
 	
-	public static void postInit(JsonLoader loader)
+	public static void postInit(JsonHandler loader)
 	{
 		instance.reloadRecipes(loader);
 	}
@@ -39,9 +48,34 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 		instance.registerRecipe(recipe);
 	}
 	
+	@Override
+	protected StoneMillRecipe readFromJson(StoneMillInfo element)
+	{
+		return element.fOutput != null && element != null ?
+				new StoneMillRecipe(element.input.toStack(), element.tick, element.sOutput.getSolid(), element.fOutput.getFluid()) :
+					element.fOutput != null ? new StoneMillRecipe(element.input.toStack(), element.tick, element.fOutput.getFluid()) :
+						new StoneMillRecipe(element.input.toStack(), element.tick, element.sOutput.getSolid());
+	}
+	
 	private FLEStoneMillRecipe() { }
 	
-	public static class StoneMillRecipe extends MachineRecipe
+	public static class StoneMillInfo
+	{
+		@Expose
+		@SerializedName("input")
+		private StackInfomation input;
+		@Expose
+		@SerializedName("time")
+		private int tick;
+		@Expose
+		@SerializedName("outputSolid")
+		private SolidJsonStack sOutput;
+		@Expose
+		@SerializedName("outputFluid")
+		private FluidJsonStack fOutput;
+	}
+	
+	public static class StoneMillRecipe extends MachineRecipe<StoneMillInfo>
 	{
 		private ItemAbstractStack input;
 		private int tick;
@@ -64,6 +98,19 @@ public class FLEStoneMillRecipe extends IRecipeHandler<StoneMillRecipe>
 				sOutput = output.copy();
 			if(o != null)
 				fOutput = o.copy();
+		}
+		
+		@Override
+		protected StoneMillInfo makeInfo()
+		{
+			StoneMillInfo info = new StoneMillInfo();
+			info.input = new JsonStack(input).getInfomation();
+			info.tick = tick;
+			if(sOutput != null)
+				info.sOutput = new SolidJsonStack(sOutput);
+			if(fOutput != null)
+				info.fOutput = new FluidJsonStack(fOutput);
+			return info;
 		}
 		
 		public ItemAbstractStack getInput()

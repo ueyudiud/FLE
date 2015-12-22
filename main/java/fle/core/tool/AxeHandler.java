@@ -26,6 +26,7 @@ import flapi.util.Compact;
 import flapi.util.SubTag;
 import flapi.world.BlockPos;
 import fle.core.init.IB;
+import fle.core.init.Plants;
 import fle.core.item.ItemFleSub;
 
 public class AxeHandler 
@@ -68,6 +69,11 @@ public class AxeHandler
 		map.put(ItemFleSub.a("seed_darkoak"), 1);
 		map.put(ItemFleSub.a("leaves"), 5);
 		registryTree(new TreeInfo(new TreeChecker(Blocks.log2, 1, 5, 9), new TreeChecker(Blocks.leaves2, 1, 9), (ITreeLog) IB.treeLog, new DropInfo(0.5F, map)));
+		map.clear();
+		map.put(ItemFleSub.a("branch_beech"), 5);
+		map.put(ItemFleSub.a("seed_beech"), 1);
+		map.put(ItemFleSub.a("leaves"), 5);
+		registryTree(new TreeInfo(new TreeChecker(Plants.beech.log()), new TreeChecker(Plants.beech.leaves()), (ITreeLog) IB.treeLog, new DropInfo(0.5F, map)));
 		IC2RubWood = Compact.getItem(SubTag.IC2Item, "rubberWood", 1);
 		if(IC2RubWood != null)
 		{
@@ -142,7 +148,6 @@ public class AxeHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onUsedAxe(HarvestDropsEvent evt)
 	{
-		isUsingAxe = false;
 		BlockPos pos = new BlockPos(evt.world, evt.x, evt.y, evt.z);
 		if(new OreStack("treeSapling").equal(new ItemStack(evt.block, 1, evt.blockMetadata)))
 		{

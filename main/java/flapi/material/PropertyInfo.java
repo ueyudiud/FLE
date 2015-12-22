@@ -64,7 +64,15 @@ public final class PropertyInfo
 	 */
 	private int viscosity = 1000;
 	/**
-     * Hardness of the solid - the effect to carve in another item.
+	 * The harvest level of material. Use in ore or block.
+	 * The effect to made block more hardly to dig.<br>
+	 * 
+	 * Higher level means you need get higher level tool to dig this block.
+	 * @see net.minecraft.item.ToolMaterial
+	 */
+	private int harvestLevel = -1;
+	/**
+     * Hardness of the solid - the effect to carve in another item.<br>
      *
      * Higher hardness means that a solid carve more easily, like diamond.
      * Lower hardness means that a solid carve more hardly, like gypsum. 
@@ -132,33 +140,33 @@ public final class PropertyInfo
 	 */
 	private int maxUses = 1;
 
-	public PropertyInfo(int aColor, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int aColor, int aHarvestLevel, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
 	{
-		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, 1.0F);
+		this(aColor, aHarvestLevel, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, 1.0F);
 	}
-	public PropertyInfo(int[] aColor, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
+	public PropertyInfo(int[] aColor, int aHarvestLevel, int aMaxUse, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity)
 	{
-		this(aColor, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, 1.0F);
+		this(aColor, aHarvestLevel, aMaxUse, -1, -1, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, 1.0F);
 	}
-	public PropertyInfo(int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
+	public PropertyInfo(int aHarvestLevel, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
-		this(0xFFFFFF, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength);
+		this(0xFFFFFF, aHarvestLevel, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength);
 	}
-	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
+	public PropertyInfo(int aColor, int aHarvestLevel, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
-		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F, 1.0F);
+		this(aColor, aHarvestLevel, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F, 1.0F);
 	}
-	public PropertyInfo(int[] aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
+	public PropertyInfo(int[] aColor, int aHarvestLevel, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength)
 	{
-		this(aColor, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F, 1.0F);
+		this(aColor, aHarvestLevel, aMaxUse, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, -1F, 0.1F, 1.0F);
 	}
-	public PropertyInfo(int aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
+	public PropertyInfo(int aColor, int aHarvestLevel, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
-		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
+		this(aColor, aHarvestLevel, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
-	public PropertyInfo(int[] aColor, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
+	public PropertyInfo(int[] aColor, int aHarvestLevel, int aMaxUse, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
-		this(aColor, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
+		this(aColor, aHarvestLevel, aMaxUse, 0xFFFFFF, 0XFFFFFF, 0XFFFFFF, 0XFFFFFF, 0.0F, 1000, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
 	public PropertyInfo(int aColor, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, int aViscosity, float aDenseness, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
@@ -166,18 +174,19 @@ public final class PropertyInfo
 	}
 	public PropertyInfo(int aColor, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
-		this(new int[]{aColor, aColor}, 0, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, 0.0F, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
+		this(new int[]{aColor, aColor}, -1, 0, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, 0.0F, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
-	public PropertyInfo(int aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
+	public PropertyInfo(int aColor, int aHarvestLevel, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
-		this(new int[]{aColor, aColor}, aMaxUse, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
+		this(new int[]{aColor, aColor}, aHarvestLevel, aMaxUse, aMeltingPoint, aBoilingPoint, aPointTem, aPointPress, aPressEffect, aViscosity, aHardness, aThoughness, aDenseness, aBrittleness, aShearStrength, aResistance, aThermalConductivity, aSpecificHeat);
 	}
-	public PropertyInfo(int[] aColor, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
+	public PropertyInfo(int[] aColor, int aHarvestLevel, int aMaxUse, int aMeltingPoint, int aBoilingPoint, int aPointTem, int aPointPress, float aPressEffect, int aViscosity, float aHardness, float aThoughness, float aDenseness, float aBrittleness, int aShearStrength, float aResistance, float aThermalConductivity, float aSpecificHeat)
 	{
 		colors = aColor;
         reflectRedLight = (aColor[0] >> 16 & 255) / 255.0F;
         reflectGreenLight = (aColor[0] >> 8 & 255) / 255.0F;
         reflectBlueLight = (aColor[0] & 255) / 255.0F;
+        harvestLevel = aHarvestLevel;
         maxUses = aMaxUse;
 		meltingPoint = aMeltingPoint;
 		boilingPoint = aBoilingPoint;
@@ -203,6 +212,11 @@ public final class PropertyInfo
 	public float[] getReflectLights() 
 	{
 		return new float[]{reflectRedLight, reflectGreenLight, reflectBlueLight};
+	}
+	
+	public int getHarvestLevel()
+	{
+		return harvestLevel;
 	}
 	
 	public int getMaxUses() 

@@ -3,6 +3,7 @@ package fle.resource.item;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,6 +15,7 @@ import flapi.item.interfaces.IItemBehaviour;
 import flapi.item.interfaces.ITreeLog;
 import flapi.recipe.stack.ItemAbstractStack;
 import fle.core.init.Lang;
+import fle.core.init.Plants;
 import fle.core.item.behavior.BehaviorBase;
 import fle.core.tool.AxeHandler;
 import fle.core.tool.AxeHandler.TreeChecker;
@@ -32,12 +34,13 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 		addSubItem(6, "log_darkoak", "Dark Oak Log", new TreeChecker(Blocks.log2, 1, 5, 9), new ItemStack(Blocks.log2, 1, 1), "resource/logs/darkoak");
 		try
 		{
-			addSubItem(7, "log_rub", "Rubber Log", new TreeChecker(Block.getBlockFromItem(AxeHandler.IC2RubWood.getItem())), AxeHandler.IC2RubWood, "logs/rub");
+			addSubItem(7, "log_rub", "Rubber Log", new TreeChecker(Block.getBlockFromItem(AxeHandler.IC2RubWood.getItem())), AxeHandler.IC2RubWood, "resource/logs/rub");
 		}
 		catch(Throwable e)
 		{
 			;
 		}
+		addSubItem(8, "log_beech", "Beech Log", new TreeChecker(Plants.beech.log()), new ItemStack(Plants.beech.log()), "resource/logs/beech");
 		return this;
 	}
 	
@@ -91,11 +94,11 @@ public class ItemTreeLog extends ItemFleMetaBase implements ITreeLog
 		{
 			;
 		}
-		for(ItemAbstractStack checker : map.keySet())
+		for(Entry<ItemAbstractStack, String> checker : map.entrySet())
 		{
-			if(checker.equal(new ItemStack(block, 1, blockMetadata)))
+			if(checker.getKey().equal(new ItemStack(block, 1, blockMetadata)))
 			{
-				return createStandardLog(itemBehaviors.serial(map.get(checker)), length);
+				return createStandardLog(itemBehaviors.serial(checker.getValue()), length);
 			}
 		}
 		return null;

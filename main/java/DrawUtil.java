@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
+@SuppressWarnings("unused")
 public class DrawUtil
 {	
 	public static void main(String[] arg)

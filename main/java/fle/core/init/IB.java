@@ -61,20 +61,34 @@ public class IB
 	public static void reloadIB()
 	{
 		FluidRegistry.LAVA.setTemperature(950);
-		ForgeHooks.canToolHarvestBlock(Blocks.obsidian, 0, new ItemStack(Items.wooden_pickaxe));//Init forge hook.
-		Blocks.torch.setLightLevel(0.5F);
+		//Forced to initialize forge hook.
+		ForgeHooks.canToolHarvestBlock(Blocks.obsidian, 0, new ItemStack(Items.wooden_pickaxe));
 		Item.getItemFromBlock(Blocks.torch).setMaxStackSize(16);
-		Blocks.fire.setLightLevel(0.625F);
-		Blocks.lit_pumpkin.setLightLevel(0.625F);
-		Blocks.lit_furnace.setLightLevel(0.5F);
+		Blocks.stone             .setHarvestLevel(EnumTool.pickaxe.name(), 6 );
+		Blocks.sandstone         .setHarvestLevel(EnumTool.pickaxe.name(), 9 );
+		Blocks.netherrack        .setHarvestLevel(EnumTool.pickaxe.name(), 10);
+		Blocks.end_stone         .setHarvestLevel(EnumTool.pickaxe.name(), 39);
+		Blocks.stonebrick        .setHarvestLevel(EnumTool.pickaxe.name(), 8 );
+		Blocks.nether_brick      .setHarvestLevel(EnumTool.pickaxe.name(), 13);
+		Blocks.stone_brick_stairs.setHarvestLevel(EnumTool.pickaxe.name(), 8 );
+		Blocks.stone_stairs      .setHarvestLevel(EnumTool.pickaxe.name(), 9 );
+		Blocks.obsidian          .setHarvestLevel(EnumTool.pickaxe.name(), 13);
+
+		Blocks.brown_mushroom.setLightLevel(0.0F);
+		Blocks.torch         .setLightLevel(0.5F);
+		Blocks.lit_furnace   .setLightLevel(0.5F);
+		Blocks.fire          .setLightLevel(0.625F);
+		Blocks.lit_pumpkin   .setLightLevel(0.625F);
+		
 		Blocks.obsidian.setResistance(20.0F);
-		Blocks.obsidian.setHardness(6.0F);
-		Blocks.stone.setHardness(4.0F);
-		Blocks.netherrack.setHardness(4.5F);
-		Blocks.end_stone.setHardness(5.0F);
+		
+		Blocks.obsidian        .setHardness(6.0F);
+		Blocks.stone           .setHardness(4.0F);
+		Blocks.netherrack      .setHardness(4.5F);
+		Blocks.end_stone       .setHardness(5.0F);
 		Blocks.enchanting_table.setHardness(6.0F);
-		Blocks.yellow_flower.setHardness(0.5F);
-		Blocks.red_flower.setHardness(0.5F);
+		Blocks.yellow_flower   .setHardness(0.5F);
+		Blocks.red_flower      .setHardness(0.5F);
 		OreStack treeSapling = new OreStack("treeSapling");
 		for(Object obj : Block.blockRegistry.getKeys())
 		{
@@ -85,7 +99,6 @@ public class IB
 			}
 		}
 		Items.arrow.setMaxStackSize(16);
-		Blocks.obsidian.setHarvestLevel(EnumTool.pickaxe.name(), 1);
 	}
 
 	public static Item debug;
@@ -211,10 +224,7 @@ public class IB
 		farmland = new BlockFleFarmland("fle_farmland", "Farmland").setBlockTextureName(FleValue.TEXTURE_FILE + ":iconsets/farmland");
 		crop = new BlockFleCrop();
 		//rock = new BlockRock().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
-		BlockFleRock.init();
-		ore = new BlockOre().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
 		ore_cobble = new BlockOreCobble("ore.cobble").init();
-		oreChip = new ItemOre("ore.chip", "ore").init().setCreativeTab(FleValue.tabFLE);
 		//log = new BlockLog("log").setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeWood);
 		//leaf = new BlockLeaves("leaves").setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeGrass);
 		ash = new BlockAsh().setCreativeTab(FleValue.tabFLE).setBlockTextureName(FleValue.TEXTURE_FILE + ":wood/firewood/ash").setStepSound(Block.soundTypeSand);
@@ -240,6 +250,9 @@ public class IB
 		toolHead = new ItemToolHead("tool.head", "toolHead").init().setCreativeTab(FleValue.tabFLE);
 		food = new ItemFleFood("food", "foods").init().setCreativeTab(FleValue.tabFLE);
 		subItem = new ItemFleSub("sub", "subs").init().setCreativeTab(FleValue.tabFLE);
+		BlockFleRock.init();
+		ore = new BlockOre().setCreativeTab(FleValue.tabFLE).setStepSound(Block.soundTypeStone);
+		oreChip = new ItemOre("ore.chip", "ore").init().setCreativeTab(FleValue.tabFLE);
 		cropSeed = new ItemFleSeed(crop, Blocks.farmland).init().setCreativeTab(FleValue.tabFLE);
 		treeLog = new ItemTreeLog("tree.log", "log").init().setCreativeTab(FleValue.tabFLE);
 	}

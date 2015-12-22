@@ -3,11 +3,11 @@ package flapi.util.io;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 
-public class JsonInputStream
+public class JsonInput
 {
 	JsonElement element;
 	
-	public JsonInputStream(JsonElement ele)
+	public JsonInput(JsonElement ele)
 	{
 		element = ele;
 	}
@@ -17,14 +17,14 @@ public class JsonInputStream
 		return element.isJsonObject() ? element.getAsJsonObject().has(tag) : false;
 	}
 	
-	public JsonInputStream sub(String tag)
+	public JsonInput sub(String tag)
 	{
-		return new JsonInputStream(element.isJsonObject() ? element.getAsJsonObject().get(tag) : JsonNull.INSTANCE);
+		return new JsonInput(element.isJsonObject() ? element.getAsJsonObject().get(tag) : JsonNull.INSTANCE);
 	}
 	
-	public JsonInputStream sub(int id)
+	public JsonInput sub(int id)
 	{
-		return new JsonInputStream(element.isJsonArray() ? element.getAsJsonArray().get(id) : element);
+		return new JsonInput(element.isJsonArray() ? element.getAsJsonArray().get(id) : element);
 	}
 	
 	public int size()

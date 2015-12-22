@@ -21,6 +21,7 @@ import fle.resource.crop.CropSoybean;
 import fle.resource.crop.CropSugerCances;
 import fle.resource.crop.CropSweetPotato;
 import fle.resource.crop.CropWheat;
+import fle.resource.tree.TreeBeech;
 import fle.resource.tree.TreeCitron;
 import fle.resource.tree.TreeSisal;
 
@@ -30,7 +31,7 @@ public class Plants
 	public static CropBase ramie;
 	public static CropBase millet;
 	public static CropBase wheat;
-	public static CropBase suger_cances;
+	public static CropBase sugar_cances;
 	public static CropBase cotton;
 	public static CropBase sweet_potato;
 	public static CropBase potato;
@@ -41,6 +42,7 @@ public class Plants
 
 	public static TreeInfo citron;
 	public static TreeInfo sisal;
+	public static TreeInfo beech;
 	
 	public static void init()
 	{
@@ -48,7 +50,7 @@ public class Plants
 		ramie = new CropRamie();
 		millet = new CropMillet();
 		wheat = new CropWheat();
-		suger_cances = new CropSugerCances();
+		sugar_cances = new CropSugerCances();
 		cotton = new CropCotton();
 		sweet_potato = new CropSweetPotato();
 		potato = new CropPotato();
@@ -58,18 +60,19 @@ public class Plants
 		dandelion = new PlantDandelion();
 		citron = new TreeCitron();
 		sisal = new TreeSisal();
+		beech = new TreeBeech();
+		BlockFleLog.register(citron);
+		BlockFleLog.register(sisal);
+		BlockFleLog.register(beech);
 	}
 
 	public static void postInit()
-	{
-		BlockFleLog.register(citron);
-		BlockFleLog.register(sisal);
-		
+	{		
 		soybean.setSeed(ItemFleSeed.a("soybean")).setHaverstDrop(3, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("soybean"), 1)));
 		ramie.setSeed(ItemFleSeed.a("ramie")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSub.a("ramie_fiber"), 1)));
 		millet.setSeed(ItemFleSeed.a("millet")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSub.a("millet"), 1)));
 		wheat.setSeed(ItemFleSeed.a("wheat")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(new ItemStack(Items.wheat), 1)));
-		suger_cances.setSeed(ItemFleSeed.a("suger_cances")).setHaverstDrop(3, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("suger_cances"), 1)));
+		sugar_cances.setSeed(ItemFleSeed.a("sugar_cances")).setHaverstDrop(3, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("sugar_cances"), 1)));
 		cotton.setSeed(ItemFleSeed.a("cotton")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSub.a("cotton_rough"), 1)));
 		sweet_potato.setSeed(ItemFleSeed.a("sweetpotato")).setHaverstDrop(2, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("sweetpotato"), 1)));
 		potato.setSeed(ItemFleSeed.a("potato")).setHaverstDrop(3, CollectionUtil.asMap(new FleEntry(ItemFleSeed.a("potato"), 4), new FleEntry(ItemFleSub.a("sprouted_potato"), 1)));

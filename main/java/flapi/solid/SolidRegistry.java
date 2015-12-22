@@ -18,7 +18,7 @@ public class SolidRegistry
     private static Map<ContainerKey, SolidContainerData> filledContainerMap = Maps.newHashMap();
     private static Set<ContainerKey> emptyContainers = Sets.newHashSet();
 
-    public boolean hasSolid(String name)
+    public static boolean hasSolid(String name)
     {
     	return register.contain(name);
     }

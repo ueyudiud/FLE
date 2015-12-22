@@ -49,10 +49,10 @@ public class FLE implements flapi.Mod
 {	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.06e";
+    public static final String VERSION = "2.06f";
     public static final int minForge = 1420;
     
-    private static final UUID modUUID = new UUID(-7834374458361585156L, -677774780L);
+    private static final UUID modUUID = new UUID(-7834374458361585156L, -677774749L);
     
     @Instance(MODID)
     public static FLE fle;

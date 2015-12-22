@@ -3,6 +3,10 @@ package fle.core.recipe;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import flapi.cg.RecipesTab;
 import flapi.material.MaterialRock;
 import flapi.recipe.CraftingState;
@@ -10,17 +14,20 @@ import flapi.recipe.IRecipeHandler;
 import flapi.recipe.IRecipeHandler.MachineRecipe;
 import flapi.recipe.stack.BaseStack;
 import flapi.recipe.stack.ItemAbstractStack;
+import flapi.recipe.stack.JsonStack;
+import flapi.recipe.stack.JsonStack.StackInfomation;
 import flapi.util.ColorMap;
-import flapi.util.io.JsonLoader;
+import flapi.util.io.JsonHandler;
 import fle.core.init.Materials;
 import fle.core.item.ItemFleSub;
+import fle.core.recipe.FLEPolishRecipe.PolishInfo;
 import fle.core.recipe.FLEPolishRecipe.PolishRecipe;
 import fle.resource.block.BlockFleRock;
 import fle.tool.block.ItemOilLamp;
 import fle.tool.item.ItemTool;
 import fle.tool.item.ItemToolHead;
 
-public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
+public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe, PolishInfo>
 {
 	private static final FLEPolishRecipe instance = new FLEPolishRecipe();
 	
@@ -72,7 +79,7 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		a(new PolishRecipe(RecipesTab.tabNewStoneAge, new BaseStack(ItemFleSub.a("chip_limestone")), "ccccccccc", ItemFleSub.a("dust_limestone")));
 	}
 	
-	public static void postInit(JsonLoader loader)
+	public static void postInit(JsonHandler loader)
 	{
 		instance.reloadRecipes(loader);
 	}
@@ -99,9 +106,26 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 		return false;
 	}
 	
+	@Override
+	protected PolishRecipe readFromJson(PolishInfo element)
+	{
+		return new PolishRecipe(RecipesTab.tabClassic, element.input.toStack(), element.recipeTable.toCharArray(), element.output.getStack());
+	}
+	
 	private FLEPolishRecipe() {}
 	
-	public static class PolishRecipe extends MachineRecipe
+	public static class PolishInfo
+	{
+		@Expose
+		StackInfomation input;
+		@Expose
+		@SerializedName("map")
+		String recipeTable;
+		@Expose
+		StackInfomation output;
+	}
+	
+	public static class PolishRecipe extends MachineRecipe<PolishInfo>
 	{
 		PolishRecipeKey key;
 		RecipesTab tab;
@@ -129,6 +153,16 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe>
 				for(int j = 0; j < 3; ++j)
 					cs[i + j * 3] = CraftingState.getState(aMap.getColorFromCrood(xStart + i, yStart + j)).getCharIndex();
 			this.cs = cs;
+		}
+		
+		@Override
+		protected PolishInfo makeInfo()
+		{
+			PolishInfo info = new PolishInfo();
+			info.input = new JsonStack(input).getInfomation();
+			info.recipeTable = new String(cs);
+			info.output = new JsonStack(output).getInfomation();
+			return info;
 		}
 		
 		@Override

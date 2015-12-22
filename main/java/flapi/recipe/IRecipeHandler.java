@@ -1,6 +1,7 @@
 package flapi.recipe;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,26 +9,50 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.JsonElement;
+import com.google.gson.Gson;
 
 import flapi.recipe.IRecipeHandler.MachineRecipe;
 import flapi.util.FleLog;
 import flapi.util.io.IJsonLoader;
-import flapi.util.io.JsonLoader;
+import flapi.util.io.JsonHandler;
 
-
-public abstract class IRecipeHandler<T extends MachineRecipe>
+public abstract class IRecipeHandler<T extends MachineRecipe<E>, E> implements IJsonLoader
 {
 	private List<T> recipeCache = new ArrayList();
 	protected Set<T> recipeSet = new HashSet();
 	protected Map<String, RecipeKey> recipeKeys = new HashMap();
 	protected Map<RecipeKey, T> recipeMap = new HashMap();
+	protected Class<E> saveRecipeType;
 	
-	public void reloadRecipes(JsonLoader loader)
+	public IRecipeHandler()
 	{
-		
+		ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+		saveRecipeType = (Class) type.getActualTypeArguments()[1];
 	}
 	
+	@Override
+	public final Class<?> getSaveClass()
+	{
+		return saveRecipeType;
+	}
+	
+	public void reloadRecipes(JsonHandler handler)
+	{
+		if(handler.read(this))
+		{
+			FleLog.getLogger().info("Detected the recipes from json.");
+			for(T t : recipeCache)
+				reloadRecipe(t);
+		}
+		else
+		{
+			handler.register(getSaveRecipes(recipeCache));
+			for(T t : recipeCache)
+				reloadRecipe(t);
+			handler.write(this);
+		}
+	}
+
 	/**
 	 * Register a new recipe, info: the recipe key can't be similar from other recipes,
 	 * because it will cause more than one recipe will be return by handler.
@@ -42,6 +67,11 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 			return false;
 		}
 		recipeCache.add(recipe);
+		return true;
+	}
+	
+	boolean reloadRecipe(T recipe)
+	{
 		if(recipeMap.containsKey(recipe.getRecipeKey()) || recipeSet.contains(recipe) || recipeKeys.containsKey(recipe.getRecipeKey().toString()))
 		{
 			FleLog.getLogger().warn("Some mod register a same recipe, name " + recipe.toString());
@@ -94,6 +124,35 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 		return recipeSet;
 	}
 	
+	protected List<E> getSaveRecipes(List<T> cache)
+	{
+		List<E> ret = new ArrayList();
+		for(T recipe : cache)
+		{
+			ret.add(recipe.makeInfo());
+		}
+		return ret;
+	}
+	
+	protected abstract T readFromJson(E element);
+
+	@Override
+	public void readJson(Gson gson, List<String> list) throws IOException
+	{
+		recipeCache.clear();
+		for(String json : list)
+		{
+			E info = gson.fromJson(json, saveRecipeType);
+			registerRecipe(readFromJson(info));
+		}
+	}
+
+	@Override
+	public void writeJson(Gson gson, List<String> list) throws IOException
+	{
+		;
+	}
+	
 	/**
 	 * The standard recipe.<br>
 	 * Use <code> recipe.getRecipeKey() </code> to get a key of recipe,
@@ -104,20 +163,15 @@ public abstract class IRecipeHandler<T extends MachineRecipe>
 	 * Get output information from here and match input from recipe key.
 	 * @author ueyudiud
 	 */
-	public static abstract class MachineRecipe implements IJsonLoader
-	{		
+	public static abstract class MachineRecipe<E>
+	{
 		/**
 		 * Get key of recipe.
 		 * @return
 		 */
 		public abstract RecipeKey getRecipeKey();
 		
-		/**
-		 * Load recipe configuration from json file.
-		 * @param e The json element.
-		 */
-		@Deprecated
-		public final void readJson(JsonElement e) throws IOException{};
+		protected abstract E makeInfo();
 	}
 	
 	/**

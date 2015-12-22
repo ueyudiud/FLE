@@ -1,26 +1,32 @@
 package fle.core.recipe;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import net.minecraft.item.ItemStack;
 import flapi.recipe.IRecipeHandler;
 import flapi.recipe.IRecipeHandler.MachineRecipe;
 import flapi.recipe.stack.BaseStack;
 import flapi.recipe.stack.ItemAbstractStack;
-import flapi.util.io.JsonLoader;
+import flapi.recipe.stack.JsonStack;
+import flapi.recipe.stack.JsonStack.StackInfomation;
+import flapi.util.io.JsonHandler;
 import fle.core.item.ItemFleSub;
+import fle.core.recipe.FLEDryingRecipe.DryingInfo;
 import fle.core.recipe.FLEDryingRecipe.DryingRecipe;
 
-public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
+public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe, DryingInfo>
 {
 	private static FLEDryingRecipe instance = new FLEDryingRecipe();
 	
 	public static void init()
 	{
-		a(new DryingRecipe(new BaseStack(ItemFleSub.a("leaves")), 50000, ItemFleSub.a("leaves_dry")));
-		a(new DryingRecipe(new BaseStack(ItemFleSub.a("ramie_fiber")), 30000, ItemFleSub.a("ramie_fiber_dry")));
-		a(new DryingRecipe(new BaseStack(ItemFleSub.a("straw")), 30000, ItemFleSub.a("straw_dry")));
+		a(new DryingRecipe("Leaves Drying", new BaseStack(ItemFleSub.a("leaves")), 50000, ItemFleSub.a("leaves_dry")));
+		a(new DryingRecipe("Ramie Fiber Drying", new BaseStack(ItemFleSub.a("ramie_fiber")), 30000, ItemFleSub.a("ramie_fiber_dry")));
+		a(new DryingRecipe("Straw Drying", new BaseStack(ItemFleSub.a("straw")), 30000, ItemFleSub.a("straw_dry")));
 	}
 	
-	public static void postInit(JsonLoader loader)
+	public static void postInit(JsonHandler loader)
 	{
 		instance.reloadRecipes(loader);
 	}
@@ -37,17 +43,49 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 	
 	private FLEDryingRecipe(){}
 	
-	public static class DryingRecipe extends MachineRecipe
+	@Override
+	protected DryingRecipe readFromJson(DryingInfo element)
 	{
+		return new DryingRecipe(element.name, element.input.toStack(), element.recipeTime, element.output.getStack());
+	}
+	
+	public static class DryingInfo
+	{
+		@Expose
+		public String name;
+		@Expose
+		public StackInfomation input;
+		@Expose
+		@SerializedName("time")
+		public int recipeTime;
+		@Expose
+		public StackInfomation output;
+	}
+	
+	public static class DryingRecipe extends MachineRecipe<DryingInfo>
+	{
+		public final String name;
 		public ItemAbstractStack input;
 		public int recipeTime;
 		public ItemStack output;
 		
-		public DryingRecipe(ItemAbstractStack input, int time, ItemStack output)
+		public DryingRecipe(String name, ItemAbstractStack input, int time, ItemStack output)
 		{
+			this.name = name;
 			this.input = input;
 			this.output = output.copy();
 			recipeTime = time;
+		}
+		
+		@Override
+		protected DryingInfo makeInfo()
+		{
+			DryingInfo info = new DryingInfo();
+			info.name = name;
+			info.input = new JsonStack(input).getInfomation();
+			info.recipeTime = recipeTime;
+			info.output = new JsonStack(output).getInfomation();
+			return info;
 		}
 		
 		public boolean matchRecipe(ItemStack target)
@@ -62,18 +100,20 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		@Override
 		public RecipeKey getRecipeKey()
 		{
-			return new DryingRecipeKey(input, recipeTime);
+			return new DryingRecipeKey(name, input, recipeTime);
 		}
 	}
 	
 	public static class DryingRecipeKey extends RecipeKey
 	{
+		private String name;
 		private ItemAbstractStack input;
 		private ItemStack input1;
 		private int tick;
 
-		public DryingRecipeKey(ItemAbstractStack aInput, int aTick)
+		public DryingRecipeKey(String name, ItemAbstractStack aInput, int aTick)
 		{
+			this.name = name;
 			input = aInput;
 			tick = aTick;
 		}
@@ -85,7 +125,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		
 		private boolean isStandardKey()
 		{
-			return input != null;
+			return name != null;
 		}
 		
 		@Override
@@ -117,7 +157,7 @@ public class FLEDryingRecipe extends IRecipeHandler<DryingRecipe>
 		{
 			try
 			{
-				return "recipe.input:" + input.toString();
+				return "recipe." + name.toLowerCase();
 			}
 			catch(Throwable e)
 			{

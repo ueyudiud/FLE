@@ -1,8 +1,14 @@
 package flapi.collection.abs;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Stack<T> implements IStack<T>
 {
+	@Expose
+	@SerializedName("target")
 	public T obj;
+	@Expose
 	public int size;
 
 	public Stack(T target)

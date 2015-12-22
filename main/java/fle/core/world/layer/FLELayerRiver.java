@@ -6,17 +6,17 @@ import net.minecraft.world.gen.layer.IntCache;
 
 public class FLELayerRiver extends FLELayer
 {
-	public FLELayerRiver(int aTime, long seed)
+	public FLELayerRiver(int time, long seed)
 	{
 		super(seed);
-		GenLayer mLayer = new FLELayerSinglePixel(false, 16, seed);
+		GenLayer mLayer = new FLELayerSinglePixel(false, 9, seed);
 		int i;
-		for(i = 1; i < aTime / 2; ++i)
+		for(i = 1; i < time / 2; ++i)
 		{
 			mLayer = new GenLayerZoom(i * 294117L, mLayer);
 			mLayer = new FLELayerAddPixel(36, mLayer, 2, 39284L + i * 385081041L);
 		}
-		for(; i < aTime; ++i)
+		for(; i < time; ++i)
 		{
 			mLayer = new GenLayerZoom(i * 294143L, mLayer);
 		}

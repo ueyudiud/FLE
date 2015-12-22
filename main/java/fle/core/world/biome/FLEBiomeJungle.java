@@ -45,15 +45,16 @@ public class FLEBiomeJungle extends FLEBiome
 
         this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityChicken.class, 10, 4, 4));
     }
-
-    public WorldGenAbstractTree func_150567_a(Random aRand)
-    {
-        return (WorldGenAbstractTree)(aRand.nextInt(10) == 0 ? 
-        		this.worldGeneratorBigTree : 
-        			(aRand.nextInt(2) == 0 ? new WorldGenShrub(3, 0) : 
-        				(!this.flag && aRand.nextInt(3) == 0 ? new WorldGenMegaJungle(false, 10, 20, 3, 3) : 
-        					new WorldGenTrees(false, 4 + aRand.nextInt(7), 3, 3, true))));
-    }
+	
+	@Override
+	public WorldGenAbstractTree getTreeGenerator(double noise, Random rand)
+	{
+		return (WorldGenAbstractTree)(rand.nextInt(10) == 0 ? 
+        		worldGeneratorBigTree : 
+        			(rand.nextInt(2) == 0 ? new WorldGenShrub(3, 0) : 
+        				(!flag && rand.nextInt(3) == 0 ? new WorldGenMegaJungle(false, 10, 20, 3, 3) : 
+        					new WorldGenTrees(false, 4 + rand.nextInt(7), 3, 3, true))));
+	}
 
     /**
      * Gets a WorldGen appropriate for this biome.

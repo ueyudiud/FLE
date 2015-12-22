@@ -48,6 +48,7 @@ import fle.core.tool.StoneHammerHandler;
 import fle.core.util.FlePotionEffect;
 import fle.resource.block.TileEntityCrop;
 import fle.resource.world.FleWorldGen;
+import fle.tool.ToolHandler;
 import fle.tool.block.TileEntityOilLamp;
 
 public class CommonProxy extends Proxy
@@ -89,6 +90,7 @@ public class CommonProxy extends Proxy
 		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldHandler());
 		MinecraftForge.EVENT_BUS.register(new EntityHandler());
+		MinecraftForge.EVENT_BUS.register(new ToolHandler());
 		FMLCommonHandler.instance().bus().register(new RecipeHandler());
 		FMLCommonHandler.instance().bus().register(new PlayerHandler());
 		FMLCommonHandler.instance().bus().register(new WorldHandler());
@@ -101,8 +103,8 @@ public class CommonProxy extends Proxy
 	{
 		IB.reloadIB();
 		Rs.reloadRecipe();
-		Rs.init();
 		Plants.postInit();
+		Rs.init();
 		Materials.postInit();
 		Other.init();
 	}

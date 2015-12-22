@@ -235,7 +235,7 @@ public class PlayerHandler
 		else if(evt.block == Blocks.reeds)
 		{
 			evt.drops.clear();
-			evt.drops.add(ItemFleSeed.a("suger_cances"));
+			evt.drops.add(ItemFleSeed.a("sugar_cances"));
 		}
 		else if(evt.block == Blocks.vine)
 		{
@@ -289,7 +289,7 @@ public class PlayerHandler
 			i = FleAPI.doesPlayerHas(player, new BaseStack(Items.reeds));
 			if(i != -1)
 			{
-				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "suger_cances"));
+				player.inventory.setInventorySlotContents(i, ItemFleSeed.a(player.inventory.getStackInSlot(i).stackSize, "sugar_cances"));
 			}
 			i = FleAPI.doesPlayerHas(player, new BaseStack(Items.potato));
 			if(i != -1)

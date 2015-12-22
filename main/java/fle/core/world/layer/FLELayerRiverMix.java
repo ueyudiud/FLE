@@ -21,36 +21,29 @@ public class FLELayerRiverMix extends FLELayer
 		int[] is0 = parent.getInts(x, z, w, h);
 		int[] is1 = riverLayer.getInts(x, z, w, h);
 		int[] ret = IntCache.getIntCache(w * h);
-		int a, v, u;
+		int a, u;
 		for (int j = 0; j < h; j++)
 			for (int i = 0; i < w; i++)
 			{
-				a = v = is0[i + w * j];
+				a = is0[i + w * j];
 				u = is1[i + w * j];
-				if(v == FLEBiome.ocean.biomeID || v == FLEBiome.frozenOcean.biomeID)
+				if(a == FLEBiome.ocean.biomeID || a == FLEBiome.frozenOcean.biomeID)
 				{
-					a = v;
+					;
 				}
 				else if(u == 1)
 				{
-					a = v == FLEBiome.iceMountains.biomeID || v == FLEBiome.icePlains.biomeID || 
-							v == FLEBiome.coldBeach.biomeID || v == FLEBiome.coldTaiga.biomeID ||
-							v == FLEBiome.coldTaigaHills.biomeID ? FLEBiome.frozenRiver.biomeID : 
-								v == FLEBiome.extremeHills.biomeID || v == FLEBiome.savannaPlateau.biomeID ? FLEBiome.river_high.biomeID :
-									v == FLEBiome.hill.biomeID || v == FLEBiome.forestHills.biomeID || 
-									v == FLEBiome.desertHills.biomeID || v == FLEBiome.roofedForest_hill.biomeID ||
-									v == FLEBiome.jungleHills.biomeID || v == FLEBiome.taigaHills.biomeID ? 
-											FLEBiome.river_mid.biomeID : FLEBiome.river_low.biomeID;
+					a = FLEBiome.river_low.biomeID;
 				}
-				ret[i + j * w] = a;
+				ret[i + w * j] = a;
 			}
-		return ret;
+		return is0;
 	}
 	
 	@Override
 	public void initWorldGenSeed(long seed)
 	{
 		super.initWorldGenSeed(seed);
-		riverLayer.initWorldGenSeed((seed + 28591741L) * seed + 385917519L);
+		riverLayer.initWorldGenSeed(seed);
 	}
 }
