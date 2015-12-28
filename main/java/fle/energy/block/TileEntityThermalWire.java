@@ -17,7 +17,7 @@ public class TileEntityThermalWire extends TEBase implements IThermalTileEntity
 	private ThreadLocal<MaterialAbstract> mT = new ThreadLocal<MaterialAbstract>();
 	
 	MaterialAbstract material;
-	ThermalTileHelper tc;
+	ThermalTileHelper tc = new ThermalTileHelper(1.0F, 0.1F);
 	
 	public TileEntityThermalWire()
 	{

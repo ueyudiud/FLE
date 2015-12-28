@@ -2,15 +2,16 @@ package fle.core.recipe;
 
 import java.util.Random;
 
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.IMolecular;
+import flapi.chem.base.IChemCondition.EnumOxide;
+import flapi.chem.base.IChemCondition.EnumPH;
 import flapi.collection.CollectionUtil;
 import flapi.collection.abs.IStackList;
 import flapi.collection.abs.Stack;
-import flapi.material.IChemCondition;
-import flapi.material.IChemCondition.EnumOxide;
-import flapi.material.IChemCondition.EnumPH;
-import flapi.material.IMolecular;
 import flapi.material.MatterReactionRegister.ReactionHandler;
 
+@Deprecated
 public class MatterSingleRecipe implements ReactionHandler
 {
 	private static final Random rand = new Random();

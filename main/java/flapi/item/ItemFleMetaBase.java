@@ -29,6 +29,8 @@ import com.google.common.collect.Multimap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import flapi.FleAPI;
+import flapi.chem.MatterDictionary;
+import flapi.chem.base.MatterStack;
 import flapi.collection.Register;
 import flapi.enums.EnumDamageResource;
 import flapi.item.interfaces.IItemBehaviour;
@@ -248,81 +250,94 @@ public class ItemFleMetaBase extends ItemFle
 	    return aStack;
 	}
 
-	public final void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean aF3_H)
+	public final void addInformation(ItemStack stack, EntityPlayer player, List list, boolean aF3_H)
 	{
-		String tKey = getUnlocalizedName(aStack) + ".tooltip";
+		String tKey = getUnlocalizedName(stack) + ".tooltip";
 		String tString = FleAPI.langManager.translateToLocal(tKey);
-	    aList.add(tString);
-	    if(FluidContainerRegistry.isContainer(aStack))
+	    list.add(tString);
+	    if(FluidContainerRegistry.isContainer(stack))
 	    {
-	    	int cap = FluidContainerRegistry.getContainerCapacity(aStack);
+	    	int cap = FluidContainerRegistry.getContainerCapacity(stack);
 	    	if(cap > 0)
 	    	{
-	    		FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(aStack);
+	    		FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
 	    		if(fluid != null)
 	    		{
-	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + fluid.getLocalizedName(), FleValue.format_L.format_c(fluid.amount), FleValue.format_L.format(cap)));
+	    			list.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + fluid.getLocalizedName(), FleValue.format_L.format_c(fluid.amount), FleValue.format_L.format(cap)));
 	    		}
 	    		else
 	    		{
-	    			aList.add(String.format("0L / %s", FleValue.format_L.format(cap)));
+	    			list.add(String.format("0L / %s", FleValue.format_L.format(cap)));
 	    		}
 	    	}
 	    }
 	    else if(this instanceof IFluidContainerItem)
 	    {
-	    	int cap = ((IFluidContainerItem) this).getCapacity(aStack);
+	    	int cap = ((IFluidContainerItem) this).getCapacity(stack);
 	    	if(cap > 0)
 	    	{
-	    		FluidStack fluid = ((IFluidContainerItem) this).getFluid(aStack);
+	    		FluidStack fluid = ((IFluidContainerItem) this).getFluid(stack);
 	    		if(fluid != null)
 	    		{
-	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + fluid.getLocalizedName(), FleValue.format_L.format_c(fluid.amount), FleValue.format_L.format(cap)));
+	    			list.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + fluid.getLocalizedName(), FleValue.format_L.format_c(fluid.amount), FleValue.format_L.format(cap)));
 	    		}
 	    		else
 	    		{
-	    			aList.add(String.format("0L / %s", FleValue.format_L.format(cap)));
+	    			list.add(String.format("0L / %s", FleValue.format_L.format(cap)));
 	    		}
 	    	}
 	    }
-	    if(SolidRegistry.isContainer(aStack))
+	    if(SolidRegistry.isContainer(stack))
 	    {
-	    	int cap = SolidRegistry.getContainerCapacity(aStack);
+	    	int cap = SolidRegistry.getContainerCapacity(stack);
 	    	if(cap > 0)
 	    	{
-		    	SolidStack solid = SolidRegistry.getSolidForFilledItem(aStack);
+		    	SolidStack solid = SolidRegistry.getSolidForFilledItem(stack);
 	    		if(solid != null)
 	    		{
-	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + solid.get().getLocalizedName(solid), FleValue.format_L.format_c(solid.size()), FleValue.format_L.format(cap)));
+	    			list.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + solid.get().getLocalizedName(solid), FleValue.format_L.format_c(solid.size()), FleValue.format_L.format(cap)));
 	    		}
 	    		else
 	    		{
-	    			aList.add(String.format("0L / %s", FleValue.format_L.format(cap)));
+	    			list.add(String.format("0L / %s", FleValue.format_L.format(cap)));
 	    		}
 	    	}
 	    }
 	    else if(this instanceof ISolidContainerItem)
 	    {
-	    	SolidTankInfo info = ((ISolidContainerItem) this).getTankInfo(aStack);
+	    	SolidTankInfo info = ((ISolidContainerItem) this).getTankInfo(stack);
 	    	if(info != null && info.capacity > 0)
 	    	{
 	    		SolidStack solid = info.solid;
 	    		if(solid != null)
 	    		{
-	    			aList.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + solid.get().getLocalizedName(solid), FleValue.format_L.format_c(solid.size()), FleValue.format_L.format(info.capacity)));
+	    			list.add(String.format("%s %s / %s", EnumChatFormatting.WHITE.toString() + solid.get().getLocalizedName(solid), FleValue.format_L.format_c(solid.size()), FleValue.format_L.format(info.capacity)));
 	    		}
 	    		else
 	    		{
-	    			aList.add(String.format("0L / %s", FleValue.format_L.format(info.capacity)));
+	    			list.add(String.format("0L / %s", FleValue.format_L.format(info.capacity)));
 	    		}
 	    	}
 	    }
-	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(aStack)));
+	    MatterStack mStack = MatterDictionary.toMatter(stack);
+	    if(mStack != null)
+	    {
+	    	list.add(String.format("%s%s %s", mStack.getMatter().getName(), EnumChatFormatting.LIGHT_PURPLE, FleValue.format_mol.format_c(mStack.getPart().resolution)));
+	    }
+	    IItemBehaviour<ItemFleMetaBase> tBehavior = itemBehaviors.get(Short.valueOf((short)getDamage(stack)));
 	    if(tBehavior != null)
 	    {
-	    	tBehavior.getAdditionalToolTips(this, aList, aStack, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT));
+	    	tBehavior.getAdditionalToolTips(this, list, stack, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT));
 	    }
-	    addAdditionalToolTips(aPlayer, aList, aStack);
+	    try
+	    {
+	    	addAdditionalToolTips(player, list, stack);
+	    }
+	    catch(Throwable e)
+	    {
+	    	list.add("This item require an bug lead the tool info can't load!");
+	    	FleLog.getLogger().debug("Catching during get tool info.", e);
+	    }
 	}
 	  
 	protected void addAdditionalToolTips(EntityPlayer aPlayer, List aList, ItemStack aStack) 

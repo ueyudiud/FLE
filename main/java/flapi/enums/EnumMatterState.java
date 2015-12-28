@@ -1,6 +1,6 @@
 package flapi.enums;
 
-public enum MatterState
+public enum EnumMatterState
 {
 	Solid,
 	Liquid,
@@ -9,5 +9,4 @@ public enum MatterState
 	Plasma,
 	Aqua,
 	AlcoholicSolution;
-
 }

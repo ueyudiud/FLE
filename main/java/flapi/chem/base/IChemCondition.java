@@ -1,4 +1,4 @@
-package flapi.material;
+package flapi.chem.base;
 
 public interface IChemCondition
 {

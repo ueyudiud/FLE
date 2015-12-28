@@ -1,10 +1,11 @@
-package flapi.material;
+package flapi.chem.particle;
 
 import java.util.Map;
 
+import flapi.chem.base.IMolecular;
 import flapi.collection.CollectionUtil;
 import flapi.collection.CollectionUtil.FleEntry;
-import flapi.enums.EnumAtoms;
+import flapi.material.ElementaryParticle;
 
 public class Proton extends ElementaryParticle
 {
@@ -21,12 +22,12 @@ public class Proton extends ElementaryParticle
 	@Override
 	public Map<IMolecular, Integer> getIonContain(EnumCountLevel level)
 	{
-		return level != EnumCountLevel.Atom ? CollectionUtil.asMap(new FleEntry(EnumAtoms.H, 1)) : super.getIonContain(level);
+		return level != EnumCountLevel.Atom ? CollectionUtil.asMap(new FleEntry(Atoms.H, 1)) : super.getIonContain(level);
 	}
 	
 	@Override
-	public double getElementContain(EnumAtoms e)
+	public double getElementContain(Atoms e)
 	{
-		return e == EnumAtoms.H ? 1 : 0;
+		return e == Atoms.H ? 1 : 0;
 	}
 }

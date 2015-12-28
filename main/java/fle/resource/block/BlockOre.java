@@ -32,7 +32,6 @@ import flapi.util.FleLog;
 import flapi.util.FleValue;
 import flapi.world.BlockPos;
 import fle.FLE;
-import fle.core.init.IB;
 import fle.core.world.FWM;
 
 public class BlockOre extends BlockHasSub implements IDebugableBlock, IHarvestHandler
@@ -196,8 +195,17 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock, IHarvestHa
 	public boolean canHarvestBlock(World world, int x, int y, int z,
 			int metadata, String toolKey, int level)
 	{
-		metaThread.set(getDamageValue(world, x, y, z));
 		return "pickaxe".equals(toolKey) && getOre(world, x, y, z).getPropertyInfo().getHarvestLevel() <= level;
+	}
+	
+	protected ThreadLocal<Integer> amountThread = new ThreadLocal<Integer>();
+	
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block aBlock,
+			int aMeta)
+	{
+		amountThread.set(getAmount(world, x, y, z));
+		super.breakBlock(world, x, y, z, aBlock, aMeta);
 	}
 	
 	@Override
@@ -207,7 +215,7 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock, IHarvestHa
 		ArrayList<ItemStack> list = new ArrayList();
 		if(metaThread.get() != null)
 		{
-			list.add(new ItemStack(IB.oreChip, 2, metaThread.get()));
+			list.add(fle.resource.item.ItemOre.a(MaterialOre.getOreFromID(metaThread.get()), amountThread.get(), 1));
 		}
 		else
 		{
@@ -226,11 +234,12 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock, IHarvestHa
 		a().setData(pos, EnumWorldNBT.Metadata, meta);
 	}
 	
-	public static void setData(BlockPos pos, Block baseRock, int baseMeta, int meta)
+	public static void setData(BlockPos pos, Block baseRock, int baseMeta, int meta, int amount)
 	{
 		a().setData(pos, EnumWorldNBT.Base, GameData.getBlockRegistry().getId(baseRock));
 		a().setData(pos, EnumWorldNBT.BaseMeta, baseMeta);
 		a().setData(pos, EnumWorldNBT.Metadata, meta);
+		a().setData(pos, EnumWorldNBT.Age, amount);
 	}
 	
 	public static Block getOreBase(IBlockAccess world, int x, int y, int z)
@@ -250,6 +259,11 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock, IHarvestHa
 		return MaterialOre.getOreFromID(
 				a().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Metadata));
 	}
+	
+	public static int getAmount(IBlockAccess world, int x, int y, int z)
+	{
+		return a().getData(new BlockPos(world, x, y, z), EnumWorldNBT.Age);
+	}
 
 	@Override
 	public void addInfomationToList(World aWorld, int x, int y, int z,
@@ -264,5 +278,6 @@ public class BlockOre extends BlockHasSub implements IDebugableBlock, IHarvestHa
 		
 		aList.add(new StringBuilder().append("Base Block Name:").append(new ItemStack(tBlock, 1, metadata).getDisplayName()).toString());
 		aList.add(new StringBuilder().append("Ore Name:").append(material.getOreName()).toString());
+		aList.add(new StringBuilder().append("Ore Amount:").append(FleValue.format_mol.format_c(getAmount(aWorld, x, y, z))).toString());
 	}
 }

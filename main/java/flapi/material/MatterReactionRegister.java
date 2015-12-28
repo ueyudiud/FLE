@@ -5,9 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.IMolecular;
+import flapi.chem.base.Matter;
 import flapi.collection.abs.IStackList;
 import flapi.collection.abs.Stack;
 
+@Deprecated
 public class MatterReactionRegister
 {
 	private static final List<IReactionHandler> handlerList = new ArrayList<IReactionHandler>();

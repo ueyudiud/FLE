@@ -5,11 +5,11 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import flapi.FleAPI;
+import flapi.chem.base.IChemCondition.EnumOxide;
+import flapi.chem.base.IChemCondition.EnumPH;
+import flapi.chem.base.IFluidChemInfo;
+import flapi.chem.base.Matter;
 import flapi.collection.Register;
-import flapi.material.IChemCondition.EnumOxide;
-import flapi.material.IChemCondition.EnumPH;
-import flapi.material.IFluidChemInfo;
-import flapi.material.Matter;
 import flapi.material.PropertyInfo;
 
 public class FluidBase extends Fluid implements IFluidChemInfo

@@ -6,11 +6,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import flapi.chem.MatterDictionary;
+import flapi.chem.MeltingRecipe;
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.IMatterInputHatch;
+import flapi.chem.base.MatterStack;
 import flapi.energy.IThermalTileEntity;
 import flapi.gui.GuiCondition;
 import flapi.gui.GuiError;
-import flapi.material.Matter.AtomStack;
-import flapi.material.MatterDictionary;
 import flapi.te.TEIFluidTank;
 import fle.FLE;
 import fle.core.energy.ThermalTileHelper;
@@ -19,11 +22,13 @@ import fle.core.init.Materials;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.RecipeHelper;
 
-public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntity
+public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntity, IMatterInputHatch, IChemCondition
 {
 	private ThermalTileHelper heatCurrect = new ThermalTileHelper(Materials.Argil);
 	public int mode;
 	public GuiCondition type = GuiError.DEFAULT;
+	public MeltingRecipe recipe;
+	private int scale;
 	public double recipeTime;
 	
 	public TileEntityTerrine() 
@@ -37,7 +42,12 @@ public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntit
 		super.readFromNBT(nbt);
 		mode = nbt.getShort("Mode");
 		heatCurrect.readFromNBT(nbt);
-		recipeTime = nbt.getDouble("RecipeTime");
+		recipe = MatterDictionary.getMeltingRecipe(nbt.getString("Recipe"));
+		if(recipe != null)
+		{
+			scale = nbt.getInteger("RecipeScale");
+			recipeTime = nbt.getDouble("RecipeTime");
+		}
 	}
 	
 	@Override
@@ -46,7 +56,12 @@ public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntit
 		super.writeToNBT(nbt);
 		nbt.setShort("Mode", (short) mode);
 		heatCurrect.writeToNBT(nbt);
-		nbt.setDouble("RecipeTime", recipeTime);
+		if(recipe != null)
+		{
+			nbt.setString("Recipe", recipe.getName());
+			nbt.setInteger("RecipeScale", scale);
+			nbt.setDouble("RecipeTime", recipeTime);
+		}
 	}
 	
 	private int buf = 0;
@@ -79,18 +94,26 @@ public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntit
 			{
 				return;
 			}
-			if(MatterDictionary.getMelting(stacks[0]) != null && stacks[1] == null)
+			if(recipe == null)
 			{
-				AtomStack stack = MatterDictionary.getMatter(stacks[0]);
-				int[] is = MatterDictionary.getMeltRequires(stacks[0]);
-				if(getTemperature(ForgeDirection.UNKNOWN) > is[0])
+				Object[] o = MatterDictionary.getAndInputMeltingRecipe(this, this);
+				if(o != null)
 				{
-					double progress = (getTemperature(ForgeDirection.UNKNOWN) - is[0]) * 10D;
-					onHeatEmit(ForgeDirection.UNKNOWN, progress);
-					recipeTime += progress;
-					if(recipeTime >= is[1])
+					recipe = (MeltingRecipe) o[0];
+					scale = (Integer) o[1];
+				}
+			}
+			if(recipe != null && stacks[1] == null)
+			{
+				if(recipe.input.req.match(this))
+				{
+					float value = recipe.getSpeed() * recipe.input.req.speed(this);
+					onHeatEmit(ForgeDirection.UNKNOWN, value);
+					recipeTime += value;
+					if(recipeTime >= recipe.energyRequire)
 					{
-						FluidStack resource = MatterDictionary.getFluid(stack);
+						FluidStack resource = recipe.fluid.copy();
+						resource.amount *= scale;
 						resource.amount /= 4;
 						if(tank.fill(resource, false) == 0)
 						{
@@ -102,7 +125,9 @@ public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntit
 							{
 								tank.fill(resource, true);
 							}
+							recipe = null;
 							recipeTime = 0;
+							scale = 0;
 							decrStackSize(0, 1);
 							type = GuiError.DEFAULT;
 						}
@@ -187,7 +212,7 @@ public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntit
 	
 	public double getProgress()
 	{
-		return recipeTime / MatterDictionary.getMeltRequires(stacks[0])[1];
+		return recipeTime / recipe.energyRequire;
 	}
 	
 	@Override
@@ -264,5 +289,53 @@ public class TileEntityTerrine extends TEIFluidTank implements IThermalTileEntit
 	protected boolean isOutputSlot(int i)
 	{
 		return false;
+	}
+
+	@Override
+	public int getMatterHatchSize()
+	{
+		return 1;
+	}
+
+	@Override
+	public MatterStack getMatter(int idx)
+	{
+		return MatterDictionary.toMatter(stacks[0]);
+	}
+	
+	@Override
+	public MatterStack decrMatter(int idx, int size)
+	{
+		return MatterDictionary.toMatter(decrStackSize(idx, size));
+	}
+
+	@Override
+	public void setMatter(int idx, MatterStack stack)
+	{
+		stacks[idx] = MatterDictionary.toItem(stack);
+	}
+
+	@Override
+	public EnumEnviorment isOpenEnviorment()
+	{
+		return mode == 0 ? EnumEnviorment.Open : EnumEnviorment.Close;
+	}
+
+	@Override
+	public EnumPH getPHLevel()
+	{
+		return EnumPH.Water;
+	}
+
+	@Override
+	public EnumOxide getOxideLevel()
+	{
+		return EnumOxide.Default;
+	}
+
+	@Override
+	public int getTemperature()
+	{
+		return getTemperature(ForgeDirection.UNKNOWN);
 	}
 }

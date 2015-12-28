@@ -2,9 +2,9 @@ package fle.core.handler;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import flapi.chem.base.Matter;
+import flapi.chem.base.IMolecular.EnumCountLevel;
 import flapi.fluid.FluidDictionary;
-import flapi.material.IMolecular.EnumCountLevel;
-import flapi.material.Matter;
 import flapi.recipe.stack.BaseStack;
 import flapi.recipe.stack.OreStack;
 import flapi.util.IFuelHandler;

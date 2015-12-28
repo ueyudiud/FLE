@@ -10,10 +10,10 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import flapi.chem.base.IChemCondition.EnumOxide;
+import flapi.chem.base.IChemCondition.EnumPH;
 import flapi.enums.EnumTool;
 import flapi.fluid.FluidBase;
-import flapi.material.IChemCondition.EnumOxide;
-import flapi.material.IChemCondition.EnumPH;
 import flapi.material.PropertyInfo;
 import flapi.recipe.stack.OreStack;
 import flapi.solid.Solid;
@@ -142,6 +142,7 @@ public class IB
 	public static Fluid lead;
 	public static Fluid zinc;
 	public static Fluid tin;
+	public static Fluid arsenic;
 	public static Fluid cu_as_0;
 	public static Fluid cu_as_1;
 	public static Fluid cu_pb_0;
@@ -191,6 +192,7 @@ public class IB
 		lead = new FluidBase("lead", "Lead Liquid", Materials.Lead.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
 		zinc = new FluidBase("zinc", "Zinc Liquid", Materials.Zinc.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
 		tin = new FluidBase("tin", "Tin Liquid", Materials.Tin.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
+		arsenic = new FluidBase("arsenic", "Arsenic Liquid", Materials.Arsenic.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");
 		plant_ash_mortar = new FluidBase("plant_ash_mortar", "Plant Ash Mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 1800, 1.0F, 3.2F, 0.7F, 1.7F)).setFluidPH(EnumPH.Weak_Alkali).setTextureName(FleValue.TEXTURE_FILE + ":fluids/plant_ash_mortar");
 		lime_mortar = new FluidBase("lime_mortar", "Lime Mortar", new PropertyInfo(0xFFFFFF, 264, 360, 212, 1842, 2200, 1.0F, 1.9F, 0.67F, 1.8F)).setFluidPH(EnumPH.Weak_Alkali).setTextureName(FleValue.TEXTURE_FILE + ":fluids/lime_mortar");
 		cu_as_0 = new FluidBase("cu_as_0", "Arsenic Bronze Liquid", Materials.CuAs.getPropertyInfo()).setTextureName(FleValue.TEXTURE_FILE + ":fluids/metal_a");

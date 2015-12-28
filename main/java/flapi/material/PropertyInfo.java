@@ -1,6 +1,6 @@
 package flapi.material;
 
-import flapi.enums.MatterState;
+import flapi.enums.EnumMatterState;
 
 /**
  * Far Land Era Implementation
@@ -224,7 +224,7 @@ public final class PropertyInfo
 		return maxUses;
 	}
 	
-	public MatterState getState(int aTemperature, int aPress)
+	public EnumMatterState getState(int aTemperature, int aPress)
 	{
 		double tPress = Math.log10(aPress);
 		
@@ -232,24 +232,24 @@ public final class PropertyInfo
 		{
 			double d1 = tPress / aTemperature;
 			double d2 = triplePointPress / triplePointTemperature;
-			return d1 > d2 ? MatterState.Solid : MatterState.Gas;
+			return d1 > d2 ? EnumMatterState.Solid : EnumMatterState.Gas;
 		}
 		else if(aTemperature < triplePointTemperature)
 		{
 			double d3 = aTemperature - tPress * pressEffect;
-			return d3 < triplePointTemperature ? MatterState.Solid : MatterState.Liquid;
+			return d3 < triplePointTemperature ? EnumMatterState.Solid : EnumMatterState.Liquid;
 		}
 		else
 		{
 			double d4 = Math.pow(tPress, 1.5D) / aTemperature;
 			double d5 = triplePointPress / triplePointTemperature;
-			return d4 > d5 ? MatterState.Liquid : MatterState.Gas;
+			return d4 > d5 ? EnumMatterState.Liquid : EnumMatterState.Gas;
 		}
 	}
 	
-	public MatterState getState(int aTemperature)
+	public EnumMatterState getState(int aTemperature)
 	{
-		return boilingPoint < 0 && meltingPoint < 0 ? getState(aTemperature, 10000) : aTemperature < meltingPoint ? MatterState.Solid : aTemperature > boilingPoint ? MatterState.Gas : MatterState.Liquid;
+		return boilingPoint < 0 && meltingPoint < 0 ? getState(aTemperature, 10000) : aTemperature < meltingPoint ? EnumMatterState.Solid : aTemperature > boilingPoint ? EnumMatterState.Gas : EnumMatterState.Liquid;
 	}
 	
 	public float getHardness()

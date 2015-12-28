@@ -17,10 +17,10 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import flapi.chem.base.Matter;
+import flapi.chem.base.Matter.AtomStack;
 import flapi.enums.CompoundType;
 import flapi.enums.EnumWorldNBT;
-import flapi.material.Matter;
-import flapi.material.Matter.AtomStack;
 import flapi.net.IPacket;
 import flapi.util.FleLog;
 import flapi.world.BlockPos;
@@ -303,14 +303,12 @@ public class FWM implements IWorldManager, IAirConditionProvider
 	{
 		switch(aPos.getDim())
 		{
-		case -1 : return new Matter(CompoundType.Mix, new AtomStack(Matter.mCO2, 12), new AtomStack(Matter.mCO, 6), new AtomStack(Matter.mHF, 2), new AtomStack(Matter.mN2, 29), new AtomStack(Matter.mH2S, 31));
-		case 0 : 
-			float f = 0.0F;
-			for(int i = -2; i <= 2; ++i)
-				for(int j = -2; j <= 2; ++j)
-					f += aPos.toPos(i, 0, j).getBiome().getIntRainfall() / 65536.0F;
-			return new Matter(CompoundType.Mix, new AtomStack(Matter.mN2, 79), new AtomStack(Matter.mO2, 20), new AtomStack(Matter.mH2O, (int) Math.floor(f)));
-		case 1 : return new Matter(CompoundType.Mix, new AtomStack(Matter.mN2));
+		case -1 : return Matter.forMatter("Nether Air", CompoundType.Mix, 
+				new AtomStack(Matter.mCO2, 12), new AtomStack(Matter.mCO, 6), 
+				new AtomStack(Matter.mHF, 2), new AtomStack(Matter.mN2, 29), 
+				new AtomStack(Matter.mH2S, 31));
+		case 0 : return Matter.mAir;
+		case 1 : return Matter.forMatter("End Air", CompoundType.Mix, new AtomStack(Matter.mN2));
 		}
 		return Matter.mAir;
 	}

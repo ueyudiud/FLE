@@ -15,12 +15,12 @@ public class OreMeltingRecipe
 	
 	static
 	{
-		registerRecipe(new OreMeltingRecipe(Materials.Cuprite, 550, 640000, Materials.NativeCopper, 0.5F));
-		registerRecipe(new OreMeltingRecipe(Materials.Tenorite, 600, 800000, Materials.NativeCopper, 0.3F));
-		registerRecipe(new OreMeltingRecipe(Materials.Chalcocite, 450, 180000, Materials.Cuprite, 0.95F));
-		registerRecipe(new OreMeltingRecipe(Materials.Covellite, 500, 102000, Materials.Tenorite, 0.95F));
-		registerRecipe(new OreMeltingRecipe(Materials.Malachite, 400, 86000, Materials.Tenorite, 0.3F));
-		registerRecipe(new OreMeltingRecipe(Materials.Azurite, 400, 88000, Materials.Tenorite, 0.3F));
+		registerRecipe(new OreMeltingRecipe(Materials.Cuprite,    550, 640000, Materials.NativeCopper, 0.5F));
+		registerRecipe(new OreMeltingRecipe(Materials.Tenorite,   600, 800000, Materials.NativeCopper, 0.3F));
+		registerRecipe(new OreMeltingRecipe(Materials.Chalcocite, 450, 180000, Materials.Cuprite,      0.95F));
+		registerRecipe(new OreMeltingRecipe(Materials.Covellite,  500, 102000, Materials.Tenorite,     0.95F));
+		registerRecipe(new OreMeltingRecipe(Materials.Malachite,  400, 86000,  Materials.Tenorite,     0.3F));
+		registerRecipe(new OreMeltingRecipe(Materials.Azurite,    400, 88000,  Materials.Tenorite,     0.3F));
 	}
 	
 	public static void registerRecipe(OreMeltingRecipe recipe)

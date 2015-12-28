@@ -1,6 +1,6 @@
 package flapi.world;
 
-import flapi.material.Matter;
+import flapi.chem.base.Matter;
 
 public interface IAirConditionProvider
 {

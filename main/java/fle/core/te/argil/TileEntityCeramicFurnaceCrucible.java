@@ -1,36 +1,28 @@
 package fle.core.te.argil;
 
-import java.util.Map;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import flapi.chem.MatterDictionary;
+import flapi.chem.MeltingRecipe;
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.IMatterInputHatch;
+import flapi.chem.base.MatterStack;
 import flapi.energy.IThermalTileEntity;
-import flapi.material.IChemCondition;
-import flapi.material.IMolecular;
-import flapi.material.MaterialAbstract;
-import flapi.material.MaterialAlloy;
-import flapi.material.Matter.AtomStack;
-import flapi.material.MatterDictionary;
 import flapi.te.TEIFluidTank;
-import flapi.te.interfaces.IMatterContainer;
 import fle.FLE;
 import fle.core.energy.ThermalTileHelper;
 import fle.core.init.Lang;
 import fle.core.init.Materials;
-import fle.core.net.FleMatterUpdatePacket;
-import fle.core.util.MatterContainer;
+import fle.core.recipe.RecipeHelper;
 
-public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IThermalTileEntity, IChemCondition, IMatterContainer
+public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IThermalTileEntity, IChemCondition, IMatterInputHatch
 {
 	protected ThermalTileHelper tc = new ThermalTileHelper(Materials.Argil);
-	public int[] progress = new int[3];
-	public MatterContainer container = new MatterContainer();
-	private int buf1 = 0;
-
+	public MeltingRecipe recipe;
+	public int scale;
+	public float progress;
 	public TileEntityCeramicFurnaceCrucible()
 	{
 		super(3, 3000);
@@ -41,8 +33,12 @@ public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IT
 	{
 		super.writeToNBT(nbt);
 		tc.writeToNBT(nbt);
-		nbt.setIntArray("Progress", progress);
-		nbt.setTag("Matters", container.writeToNBT(new NBTTagCompound()));
+		if(recipe != null)
+		{
+			nbt.setString("Recipe", recipe.getName());
+			nbt.setInteger("Scale", scale);
+			nbt.setInteger("Progress", (int) progress);
+		}
 	}
 	
 	@Override
@@ -50,78 +46,56 @@ public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IT
 	{
 		super.readFromNBT(nbt);
 		tc.readFromNBT(nbt);
-		progress = nbt.getIntArray("Progress");
-		container.readFromNBT(nbt.getCompoundTag("Matters"));
+		recipe = MatterDictionary.getMeltingRecipe(nbt.getString("Recipe"));
+		if(recipe != null)
+		{
+			scale = nbt.getInteger("Scale");
+			progress = nbt.getInteger("Progress");
+		}
 	}
 	
 	@Override
 	public void update()
 	{
-		int tem = getTemperature();
-		for(int i = 0; i < stacks.length; ++i)
+		if(recipe == null)
 		{
-			int[] is = MatterDictionary.getMeltRequires(stacks[i]);
-			if(is[0] <= tem)
+			Object[] obj = MatterDictionary.getAndInputMeltingRecipe(this, this);
+			if(obj != null)
 			{
-				int tick = (tem - is[0]) * 2;
+				recipe = (MeltingRecipe) obj[0];
+				scale = (Integer) obj[1];
+			}
+		}
+		if(recipe != null)
+		{
+			if(recipe.input.req.match(this))
+			{
+				float tick = recipe.input.req.speed(this) * recipe.defaultSpeed;
 				onHeatEmit(ForgeDirection.UNKNOWN, tick);
-				progress[i] += tick;
-				if(progress[i] >= is[1])
+				progress += tick;
+				if(progress >= recipe.energyRequire * scale)
 				{
-					meltItem(i);
+					if(RecipeHelper.matchOutFluidStack(tank, recipe.fluid))
+					{
+						FluidStack fluid = recipe.fluid.copy();
+						fluid.amount *= scale;
+						RecipeHelper.onOutputFluidStack(tank, fluid);
+						recipe = null;
+						progress = 0;
+						scale = 0;
+					}
+					else
+					{
+						progress = recipe.energyRequire;
+					}
 				}
 			}
-			else if(stacks[i] == null)
-			{
-				progress[i] = 0;
-			}
-			else if(progress[i] > 0)
-			{
-				--progress[i];
-			}
 		}
-		if(buf1 < 20) ++buf1;
-		else
-		{
-			updateMatter();
-			buf1 = 0;
-			sendToNearBy(new FleMatterUpdatePacket(this, this), 16.0F);
-		}
+		syncFluidTank();
 		FLE.fle.getThermalNet().emmitHeat(getBlockPos());
 		tc.update();
 	}
 	
-	private void updateMatter()
-	{
-		if(isClient()) return;
-		container.update(getBlockPos(), this);
-	}
-	private static final float lostSize = 0.25F;
-	
-	private void meltItem(int slotID)
-	{
-		AtomStack stack = MatterDictionary.getMatter(stacks[slotID]).copy();
-		stack.size = (int) (stack.size() * lostSize);
-		container.add(stack);
-		--stacks[slotID].stackSize;
-		if(stacks[slotID].stackSize <= 0) stacks[slotID] = null;
-		progress[slotID] = 0;
-	}
-	
-	public void outputStack(TileEntityCeramicFurnaceCrucible tile)
-	{
-		MaterialAbstract m = MaterialAlloy.findAlloy(container.getHelper());
-		if(m != null)
-		{
-			FluidStack stack = MatterDictionary.getFluid(new AtomStack(m.getMatter(), container.size()));
-			if(tank.fill(stack, false) != 0)
-			{
-				tank.fill(stack, true);
-				container.clear();
-			}
-		}
-	}
-
 	@Override
 	public int getTemperature(ForgeDirection dir)
 	{
@@ -176,38 +150,6 @@ public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IT
 	{
 		return getTemperature(ForgeDirection.UNKNOWN);
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public Map<IMolecular, Integer> getContainerMap()
-	{
-		return container.getMatterContain();
-	}
-
-	@Override
-	public Map<IMolecular, Integer> getMatterContain()
-	{
-		return container.getMatterContain();
-	}
-
-	@Override
-	public void setMatterContain(Map<IMolecular, Integer> map)
-	{
-		container.setMatterContain(map);
-	}
-
-	public void onOutput()
-	{
-		MaterialAbstract m = MaterialAlloy.findAlloy(container.getHelper());
-		if(m != null)
-		{
-			FluidStack stack = MatterDictionary.getFluid(new AtomStack(m.getMatter(), container.size()));
-			if(tank.fill(stack, false) != 0)
-			{
-				tank.fill(stack, true);
-				container.clear();
-			}
-		}
-	}
 
 	public void drain()
 	{
@@ -220,16 +162,16 @@ public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IT
 		return EnumEnviorment.Open;
 	}
 	
-	public int[] getProgress()
+	public int getProgressBar(int length)
 	{
-		return progress;
+		return (int) (progress * length / recipe.energyRequire);
 	}
-
+	
 	@Override
-	public boolean canInsertItem(int aSlotID, ItemStack aResource,
-			ForgeDirection aDirection)
+	public boolean canInsertItem(int slotID, ItemStack resource,
+			ForgeDirection direction)
 	{
-		return aDirection == ForgeDirection.UP ? MatterDictionary.getMatter(aResource) != null : false;
+		return direction == ForgeDirection.UP ? MatterDictionary.toMatter(resource) != null : false;
 	}
 
 	@Override
@@ -242,7 +184,7 @@ public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IT
 	@Override
 	public int[] getAccessibleSlotsFromSide(ForgeDirection dir)
 	{
-		return null;
+		return new int[0];
 	}
 
 	@Override
@@ -255,5 +197,29 @@ public class TileEntityCeramicFurnaceCrucible extends TEIFluidTank implements IT
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return i < 3;
+	}
+
+	@Override
+	public int getMatterHatchSize()
+	{
+		return stacks.length;
+	}
+
+	@Override
+	public MatterStack getMatter(int idx)
+	{
+		return MatterDictionary.toMatter(stacks[idx]);
+	}
+	
+	@Override
+	public MatterStack decrMatter(int idx, int size)
+	{
+		return MatterDictionary.toMatter(decrStackSize(idx, size));
+	}
+
+	@Override
+	public void setMatter(int idx, MatterStack stack)
+	{
+		stacks[idx] = MatterDictionary.toItem(stack);
 	}
 }

@@ -3,9 +3,12 @@ package flapi.material;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.Matter;
 import flapi.util.SizeUtil;
 import flapi.util.SizeUtil.I;
 
+@Deprecated
 public abstract class IReactionHandler
 {
 	protected IReactionHandler()

@@ -53,8 +53,8 @@ public class FLEPolishRecipe extends IRecipeHandler<PolishRecipe, PolishInfo>
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new BaseStack(ItemFleSub.a("chip_obsidian")), "   c cc c", ItemTool.a("flint_awl", Materials.Obsidian)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new BaseStack(ItemFleSub.a("chip_obsidian")), " ccc  c c", ItemToolHead.a("flint_arrow", 4, Materials.Obsidian)));
 		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new BaseStack(ItemFleSub.a("chip_obsidian")), "cc   cc c", ItemToolHead.a("flint_arrow", 4, Materials.Obsidian)));
-		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new BaseStack(ItemFleSub.a("chip_obsidian")), " cc cc cc", ItemTool.a("stone_knife", Materials.Obsidian)));
-		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new BaseStack(ItemFleSub.a("chip_obsidian")), "cc cc cc ", ItemTool.a("stone_knife", Materials.Obsidian)));
+		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new BaseStack(ItemFleSub.a("chip_obsidian")), " cc cc cc", ItemToolHead.a("stone_knife", Materials.Obsidian)));
+		a(new PolishRecipe(RecipesTab.tabOldStoneAge, new BaseStack(ItemFleSub.a("chip_obsidian")), "cc cc cc ", ItemToolHead.a("stone_knife", Materials.Obsidian)));
 		Object[][] o = {{"stone", Materials.Stone}, {"rhyolite", Materials.Rhyolite}, {"basalt", Materials.Basalt}, {"andesite", Materials.Andesite}, {"peridotite", Materials.Peridotite}};
 		for(Object[] s : o)
 		{

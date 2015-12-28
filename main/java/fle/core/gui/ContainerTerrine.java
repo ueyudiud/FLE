@@ -7,7 +7,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import flapi.gui.ContainerWithPlayerInventory;
 import flapi.gui.FluidSlot;
-import flapi.material.MatterDictionary;
 import flapi.net.INetEventListener;
 import fle.core.te.argil.TileEntityTerrine;
 
@@ -25,7 +24,7 @@ public class ContainerTerrine extends ContainerWithPlayerInventory implements IN
 			{
 				return ((TileEntityTerrine) inventory).mode == 1 ? false : 
 					((TileEntityTerrine) inventory).getTank(0).getFluidAmount() == 0 ? true :
-					FluidContainerRegistry.isContainer(item) || MatterDictionary.getMelting(item) != null || item.getItem() instanceof IFluidContainerItem;
+					FluidContainerRegistry.isContainer(item) || item.getItem() instanceof IFluidContainerItem;
 			}
 			@Override
 			public ItemStack decrStackSize(int par1)

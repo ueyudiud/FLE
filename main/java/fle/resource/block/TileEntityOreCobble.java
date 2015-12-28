@@ -10,6 +10,7 @@ import flapi.material.MaterialOre;
 import flapi.te.TEBase;
 import fle.FLE;
 import fle.core.energy.ThermalTileHelper;
+import fle.core.init.Parts;
 import fle.core.net.FleTEPacket;
 import fle.core.recipe.OreMeltingRecipe;
 import fle.resource.item.ItemOre;
@@ -17,7 +18,7 @@ import fle.resource.item.ItemOre;
 public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 {
 	double progress;
-	double amount = 1000D;
+	int amount = Parts.chip.resolution;
 	MaterialOre ore;
 	ThermalTileHelper hc;
 	
@@ -26,17 +27,18 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 		hc = new ThermalTileHelper(1F, 1F);
 	}
 	
-	public void init(MaterialOre ore)
+	public void init(MaterialOre ore, int amount)
 	{
 		this.ore = ore;
 		hc = new ThermalTileHelper(ore);
+		this.amount = amount;
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		amount = nbt.getDouble("Amount");
+		amount = nbt.getInteger("Amount");
 		progress = nbt.getDouble("Progress");
 		ore = MaterialOre.getOreFromName(nbt.getString("Ore"));
 		hc.readFromNBT(nbt);
@@ -46,7 +48,7 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setDouble("Amount", amount);
+		nbt.setInteger("Amount", amount);
 		nbt.setDouble("Progress", progress);
 		nbt.setString("Ore", ore.getOreName());
 		hc.writeToNBT(nbt);
@@ -138,7 +140,7 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 	public ArrayList<ItemStack> getDrops()
 	{
 		ArrayList<ItemStack> list = new ArrayList();
-		list.add(ItemOre.a(ore, (int) Math.floor(amount / (1000D / 9D))));
+		list.add(ItemOre.a(ore, amount, 1));
 		return list;
 	}
 
@@ -161,17 +163,19 @@ public class TileEntityOreCobble extends TEBase implements IThermalTileEntity
 	}
 	
 	@Override
-	protected short emmit(byte aType)
+	public Object onEmit(byte type)
 	{
-		return aType == 2 ? (short) MaterialOre.getOreID(ore) : 0;
+		return type == 2 ? new int[]{MaterialOre.getOreID(ore), amount} : null;
 	}
 	
 	@Override
-	protected void receiveNumber(byte type, Number number)
-	{
+	public void onReceive(byte type, Object contain)
+	{		
 		if(type == 2)
 		{
-			init(MaterialOre.getOreFromID(number.shortValue()));
-		}
+			int[] is = (int[]) contain;
+			init(MaterialOre.getOreFromID(is[0]), is[1]);
+		}	
 	}
+	
 }

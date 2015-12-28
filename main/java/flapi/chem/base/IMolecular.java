@@ -1,18 +1,18 @@
-package flapi.material;
+package flapi.chem.base;
 
 import java.util.Map;
 
-import flapi.enums.EnumAtoms;
+import flapi.chem.particle.Atoms;
 
 public interface IMolecular
 {	
 	String getChemName();
 	
-	double getElementContain(EnumAtoms e);
+	double getElementContain(Atoms e);
 
 	Map<IMolecular, Integer> getIonContain(EnumCountLevel level);
 
-	Map<EnumAtoms, Integer> getElementAtoms();
+	Map<Atoms, Integer> getElementAtoms();
 
 	boolean isRadical();
 	

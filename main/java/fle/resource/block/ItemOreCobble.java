@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import flapi.material.MaterialOre;
 import fle.core.block.ItemSubTile;
+import fle.core.init.IB;
 
 public class ItemOreCobble extends ItemSubTile
 {
@@ -15,22 +16,22 @@ public class ItemOreCobble extends ItemSubTile
 	}
 	
 	@Override
-	public boolean placeBlockAt(ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int side, float hitX, float hitY, float hitZ, int aMeta)
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta)
 	{
-		short tDamage = (short)getDamage(aStack);
+		short damage = (short)getDamage(stack);
 
-    	if (!aWorld.setBlock(aX, aY, aZ, block, block.onBlockPlaced(aWorld, aX, aY, aZ, side, hitY, hitY, hitZ, (int) Math.ceil(MaterialOre.getOreFromID(tDamage).getPropertyInfo().getHardness())), 3))
+    	if (!world.setBlock(x, y, z, block, block.onBlockPlaced(world, x, y, z, side, hitY, hitY, hitZ, (int) Math.ceil(MaterialOre.getOreFromID(damage).getPropertyInfo().getHardness())), 3))
     	{
     		return false;
     	}
-	    if (aWorld.getBlock(aX, aY, aZ) == block)
+	    if (world.getBlock(x, y, z) == block)
 	    {
-	    	if (aWorld.getTileEntity(aX, aY, aZ) instanceof TileEntityOreCobble)
+	    	if (world.getTileEntity(x, y, z) instanceof TileEntityOreCobble)
 	    	{
-	    		((TileEntityOreCobble) aWorld.getTileEntity(aX, aY, aZ)).init(MaterialOre.getOreFromID(tDamage));
+	    		((TileEntityOreCobble) world.getTileEntity(x, y, z)).init(MaterialOre.getOreFromID(damage), ((fle.resource.item.ItemOre) IB.oreChip).getOreAmount(stack));
 	    	}
-	    	block.onBlockPlacedBy(aWorld, aX, aY, aZ, aPlayer, aStack);
-	    	block.onPostBlockPlaced(aWorld, aX, aY, aZ, tDamage);
+	    	block.onBlockPlacedBy(world, x, y, z, player, stack);
+	    	block.onPostBlockPlaced(world, x, y, z, damage);
 	    }
 	    return true;
 	}

@@ -35,7 +35,7 @@ public class TEBase extends TileEntity implements INetEventHandler, IContainerNe
 	 * It is use to rendering icon or check witch side can input fluid,
 	 * save in NBT with tag "BlockFacing".
 	 */
-	protected ForgeDirection dir;
+	protected ForgeDirection dir = ForgeDirection.UNKNOWN;
 	/**
 	 * The nbt cache of tile during the loading.
 	 * When tile is loading, it need update tile, with setTileEntity

@@ -1,6 +1,7 @@
 package flapi.recipe.stack;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.annotations.Expose;
@@ -44,7 +45,17 @@ public class JsonStack extends ItemAbstractStack
 	}
 	public JsonStack(ItemStack stack)
 	{
-		this(new BaseStack(stack));
+		parent = new BaseStack(stack);
+		infomation = new StackInfomation();
+		infomation.itemName = GameData.getItemRegistry().getNameForObject(stack.getItem());
+		infomation.damage = stack.getItemDamage() == OreDictionary.WILDCARD_VALUE ? -1 : stack.getItemDamage();
+		infomation.size = stack.stackSize;
+		if(stack.stackTagCompound != null)
+		{
+			NBT nbt = new NBT();
+			nbt.readFromNBT(stack.stackTagCompound);
+			infomation.nbt = nbt;
+		}
 	}
 	public JsonStack(ItemAbstractStack stack)
 	{
@@ -56,6 +67,12 @@ public class JsonStack extends ItemAbstractStack
 			infomation.itemName = GameData.getItemRegistry().getNameForObject(i.getItem());
 			infomation.damage = i.getItemDamage() == OreDictionary.WILDCARD_VALUE ? -1 : i.getItemDamage();
 			infomation.size = i.stackSize;
+			if(i.stackTagCompound != null)
+			{
+				NBT nbt = new NBT();
+				nbt.readFromNBT(i.stackTagCompound);
+				infomation.nbt = nbt;
+			}
 		}
 		else if(stack instanceof OreStack)
 		{
@@ -91,7 +108,10 @@ public class JsonStack extends ItemAbstractStack
 		@Expose
 		@SerializedName("itemSize")
 		public int size;
-		
+		@Expose
+		@SerializedName("itemNBT")
+		public NBT nbt;
+				
 		public ItemAbstractStack toStack()
 		{
 			return oreName == null && id == 0 && itemName == null ? null : new JsonStack(this).parent;
@@ -99,11 +119,15 @@ public class JsonStack extends ItemAbstractStack
 		
 		public ItemStack getStack()
 		{
-			ItemAbstractStack stack =toStack();
+			ItemAbstractStack stack = toStack();
 			if(stack == null || stack.toList().length == 0) return null;
 			ItemStack ret = stack.toList()[0].copy();
 			if(ret.getItemDamage() == OreDictionary.WILDCARD_VALUE)
 				ret.setItemDamage(0);
+			if(nbt != null)
+			{
+				ret.stackTagCompound = nbt.writeToNBT(new NBTTagCompound());
+			}
 			return ret;
 		}
 

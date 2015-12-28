@@ -308,8 +308,8 @@ public class PlayerHandler
 		while(i < 1024)
 		{
 			rand.setSeed(i * (i * 2895387531L) + 2842728719L + evt.world.getSeed());
-			int x = (rand.nextInt() ^ 24724927) & 0xFFFFF;
-			int z = (rand.nextInt() ^ 19472847) & 0xFFFFF;
+			int x = (rand.nextInt() ^ 24724927) & 0x3FFF;
+			int z = (rand.nextInt() ^ 19472847) & 0x3FFF;
 			BiomeGenBase biome = evt.world.getBiomeGenForCoords(x, z);
 			if(biome.getTempCategory() != TempCategory.OCEAN)
 			{

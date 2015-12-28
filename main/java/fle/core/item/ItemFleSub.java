@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import flapi.cg.ICG;
 import flapi.cg.RecipesTab;
-import flapi.enums.EnumAtoms;
+import flapi.chem.particle.Atoms;
 import flapi.enums.EnumCraftingType;
 import flapi.enums.EnumDamageResource;
 import flapi.item.ItemFleMetaBase;
@@ -215,10 +215,10 @@ ICG, ISolidContainerItem, IPlacedHandler
 		for(; j < strss.length; ++j)
 		{
 			String[] strs = strss[j];
-			for(; i < EnumAtoms.values().length; ++i)
+			for(; i < Atoms.values().length; ++i)
 			{
-				if(EnumAtoms.values()[i].contain(SubTag.ATOM_metal))
-					addSubItem(20001 + j * 1000 + i, strs[0] + "_" + EnumAtoms.values()[i].name().toLowerCase(), EnumAtoms.values()[i].getName() + " " + strs[1], "resource/" + strs[2] + "/" + EnumAtoms.values()[i].name().toLowerCase());
+				if(Atoms.values()[i].contain(SubTag.ATOM_metal))
+					addSubItem(20001 + j * 1000 + i, strs[0] + "_" + Atoms.values()[i].name().toLowerCase(), Atoms.values()[i].getName() + " " + strs[1], "resource/" + strs[2] + "/" + Atoms.values()[i].name().toLowerCase());
 			}
 			++i;
 			addSubItem(20001 + j * 1000 + i++, strs[0] + "_cu_as_0", "Arsenic Bronze " + strs[1], "resource/" + strs[2] + "/cu-as-1");

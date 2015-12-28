@@ -1,5 +1,6 @@
 package flapi.material;
 
+import flapi.chem.base.IMolecular;
 import flapi.collection.abs.IStackList;
 import flapi.collection.abs.Stack;
 

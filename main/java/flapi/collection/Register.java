@@ -1,8 +1,11 @@
 package flapi.collection;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
+import flapi.chem.MeltingRecipe;
 import flapi.collection.abs.IRegister;
 import flapi.util.FleLog;
 
@@ -181,5 +184,10 @@ public class Register<T> implements IRegister<T>
 		{
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	public List<MeltingRecipe> toList()
+	{
+		return new ArrayList(Arrays.asList(oL));
 	}
 }

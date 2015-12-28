@@ -1,6 +1,6 @@
 package fle.core.util;
 
-import flapi.material.IChemCondition;
+import flapi.chem.base.IChemCondition;
 
 public class ChemCondition implements IChemCondition
 {

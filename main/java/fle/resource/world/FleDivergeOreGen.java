@@ -9,6 +9,7 @@ import flapi.collection.abs.Stack;
 import flapi.material.MaterialOre;
 import flapi.world.BlockPos;
 import fle.core.init.IB;
+import fle.core.init.Parts;
 import fle.resource.block.BlockOre;
 
 public class FleDivergeOreGen extends FleDivergeMineableGen
@@ -31,6 +32,17 @@ public class FleDivergeOreGen extends FleDivergeMineableGen
 				!world.getBlock(x, y, z).isAir(world, x, y, z) &&
 				world.getBlock(x, y, z).isReplaceableOreGen(world, x, y, z, base);
 	}
+	
+	@Override
+	protected void genBlockAt(World world, Random rand, int x, int y, int z,
+			int distanceSQ)
+	{
+		MaterialOre ore = genList.randomGet(rand);
+		Block block = world.getBlock(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
+		world.setBlock(x, y, z, IB.ore);
+		BlockOre.setData(new BlockPos(world, x, y, z), block, meta, MaterialOre.getOreID(ore), Parts.chip.resolution * 100 / (distanceSQ + 36));
+	}
 
 	@Override
 	protected void genBlockAt(World world, Random rand, int x, int y, int z)
@@ -39,6 +51,6 @@ public class FleDivergeOreGen extends FleDivergeMineableGen
 		Block block = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
 		world.setBlock(x, y, z, IB.ore);
-		BlockOre.setData(new BlockPos(world, x, y, z), block, meta, MaterialOre.getOreID(ore));
+		BlockOre.setData(new BlockPos(world, x, y, z), block, meta, MaterialOre.getOreID(ore), Parts.chip.resolution * 2);
 	}
 }

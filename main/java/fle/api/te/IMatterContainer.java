@@ -2,7 +2,7 @@ package fle.api.te;
 
 import java.util.Map;
 
-import flapi.material.IMolecular;
+import flapi.chem.base.IMolecular;
 
 public interface IMatterContainer
 {

@@ -41,9 +41,9 @@ public class ContainerCeramicFurnace extends ContainerCraftable implements INetE
 		}
 		if(isInletNearBy(aPos) && tileCFC != null)
 		{
-			addSlotToContainer(new Slot(tileCFC, 0, 39, 26));
-			addSlotToContainer(new Slot(tileCFC, 1, 59, 11));
-			addSlotToContainer(new Slot(tileCFC, 2, 79, 26));
+			addSlotToContainer(new Slot(tileCFC, 0, 41, 26));
+			addSlotToContainer(new Slot(tileCFC, 1, 59, 26));
+			addSlotToContainer(new Slot(tileCFC, 2, 77, 26));
 		}
 		if(isOutletNearBy(aPos))
 		{
@@ -272,8 +272,6 @@ public class ContainerCeramicFurnace extends ContainerCraftable implements INetE
 		{
 			switch((Integer) contain)
 			{
-			case 0 : tileCFC.onOutput();
-			break;
 			case 1 : tileCFC.drain();
 			}
 		}

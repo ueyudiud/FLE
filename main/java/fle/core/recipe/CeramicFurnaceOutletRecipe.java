@@ -3,7 +3,7 @@ package fle.core.recipe;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import flapi.material.MatterDictionary.IFreezingRecipe;
+import flapi.chem.MatterDictionary.IFreezingRecipe;
 import fle.core.te.argil.TileEntityCeramicFurnaceOutlet;
 
 public class CeramicFurnaceOutletRecipe implements IFreezingRecipe

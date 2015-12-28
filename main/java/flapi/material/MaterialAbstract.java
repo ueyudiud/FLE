@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
+import flapi.chem.base.Matter;
 import flapi.collection.Register;
 import flapi.util.ISubTagContainer;
 import flapi.util.SubTag;

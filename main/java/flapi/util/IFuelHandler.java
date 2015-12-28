@@ -2,7 +2,7 @@ package flapi.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import flapi.material.Matter;
+import flapi.chem.base.Matter;
 
 public interface IFuelHandler
 {

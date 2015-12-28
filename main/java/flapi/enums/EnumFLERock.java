@@ -2,7 +2,7 @@ package flapi.enums;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import flapi.material.IChemCondition.EnumPH;
+import flapi.chem.base.IChemCondition.EnumPH;
 
 public enum EnumFLERock
 {

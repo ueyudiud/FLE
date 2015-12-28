@@ -1,8 +1,6 @@
 package fle.core.block.behaviour;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -10,8 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import flapi.block.interfaces.IDebugableBlock;
-import flapi.material.IMolecular;
-import flapi.util.FleValue;
 import flapi.world.BlockPos;
 import fle.core.block.BlockSubTile;
 import fle.core.gui.ContainerCeramicFurnace;
@@ -60,20 +56,7 @@ public class BehaviourCeramicFurnaceCrucible extends BehaviourTile implements ID
 	{
 		if (aWorld.getTileEntity(x, y, z) instanceof TileEntityCeramicFurnaceCrucible)
 		{
-			aList.add("=====================Contain=====================");
-			TileEntityCeramicFurnaceCrucible tile = (TileEntityCeramicFurnaceCrucible) aWorld.getTileEntity(x, y, z);
-			Map<IMolecular, Integer> wh = tile.getContainerMap();
-			double size = wh.size();
-			for(Entry<IMolecular, Integer> e : wh.entrySet())
-			{
-				if(e.getKey() == null) continue;
-				if((double) e.getValue().intValue() / size < 0.03125F) continue;
-				aList.add(String.format("%s : %s", e.getKey().getChemName(), FleValue.format_progress.format_c((double) e.getValue().intValue() / size)));
-			}
-			for(int a : tile.getProgress())
-			{
-				aList.add("Progress : " + a);
-			}
+			;
 		}
 	}
 }

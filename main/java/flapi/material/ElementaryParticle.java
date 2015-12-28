@@ -2,14 +2,15 @@ package flapi.material;
 
 import java.util.Map;
 
+import flapi.chem.base.IMolecular;
+import flapi.chem.particle.Atoms;
 import flapi.collection.CollectionUtil;
 import flapi.collection.CollectionUtil.FleEntry;
-import flapi.enums.EnumAtoms;
 
 public abstract class ElementaryParticle implements IMolecular
 {
 	@Override
-	public double getElementContain(EnumAtoms e)
+	public double getElementContain(Atoms e)
 	{
 		return 0;
 	}
@@ -21,7 +22,7 @@ public abstract class ElementaryParticle implements IMolecular
 	}
 
 	@Override
-	public Map<EnumAtoms, Integer> getElementAtoms()
+	public Map<Atoms, Integer> getElementAtoms()
 	{
 		return CollectionUtil.asMap(new FleEntry[0]);
 	}

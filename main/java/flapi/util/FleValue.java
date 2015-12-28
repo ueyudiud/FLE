@@ -38,6 +38,7 @@ public class FleValue
 
 	@SideOnly(Side.CLIENT)
 	public static CreativeTabs tabFLE;
+
 	
 	public static final int WATER_FREEZE_POINT = 273;
 	public static final int ingot_mol = 36;
@@ -47,6 +48,7 @@ public class FleValue
 	public static final FleDecimalFormat format_K = new FleDecimalFormat(EnumChatFormatting.YELLOW, "############0K");
 	public static final FleDecimalFormat format_L = new FleDecimalFormat(EnumChatFormatting.AQUA, "############0L");
 	public static final FleDecimalFormat format_progress = new FleDecimalFormat(EnumChatFormatting.GREEN, "##0.00%");
+	public static final FleDecimalFormat format_mol = new FleDecimalFormat(EnumChatFormatting.DARK_GREEN, "########0mol");
 	public static final String info_shift = String.format("Press %sshift %sto get more info.", EnumChatFormatting.AQUA.toString(), EnumChatFormatting.GRAY.toString());
 	
 }

@@ -6,10 +6,11 @@ import java.util.Map;
 import flapi.collection.abs.Stack;
 
 /**
- * The new reaction handler.
+ * No use now, see Parts.
  * @author ueyudiud
- *
+ * @see flapi.chem.base.Part
  */
+@Deprecated
 public class SizeUtil
 {
 	public static final SizeUtil instance = new SizeUtil();
@@ -185,6 +186,7 @@ public class SizeUtil
 		return i;
 	}
 	
+	@Deprecated
 	public static class I<T>
 	{
 		T target;

@@ -2,9 +2,9 @@ package fle.tool;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.IChemCondition.EnumPH;
 import flapi.collection.Register;
-import flapi.material.IChemCondition;
-import flapi.material.IChemCondition.EnumPH;
 import flapi.material.MaterialAbstract;
 
 public class DitchInfo

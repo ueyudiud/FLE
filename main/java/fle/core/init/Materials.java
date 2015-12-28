@@ -1,7 +1,7 @@
 package fle.core.init;
 
+import static flapi.chem.particle.Atoms.*;
 import static flapi.enums.CompoundType.*;
-import static flapi.enums.EnumAtoms.*;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -10,17 +10,17 @@ import java.io.OutputStreamWriter;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import flapi.chem.base.Matter;
+import flapi.chem.base.IChemCondition.EnumPH;
+import flapi.chem.base.Matter.AtomStack;
+import flapi.chem.particle.Atoms;
 import flapi.collection.CollectionUtil;
 import flapi.collection.CollectionUtil.FleEntry;
-import flapi.enums.EnumAtoms;
 import flapi.enums.EnumFLERock;
-import flapi.material.IChemCondition.EnumPH;
 import flapi.material.MaterialAbstract;
 import flapi.material.MaterialAlloy;
 import flapi.material.MaterialOre;
 import flapi.material.MaterialRock;
-import flapi.material.Matter;
-import flapi.material.Matter.AtomStack;
 import flapi.material.PropertyInfo;
 import flapi.util.SubTag;
 import fle.core.util.FleAlloy;
@@ -73,6 +73,7 @@ public class Materials
 	public static MaterialAbstract Lead;
 	public static MaterialAbstract Zinc;
 	public static MaterialAbstract Tin;
+	public static MaterialAbstract Arsenic;
 	public static MaterialAlloy CuAs;
 	public static MaterialAlloy CuAs2;
 	public static MaterialAlloy CuSn;
@@ -90,13 +91,12 @@ public class Materials
 	public static DitchInfo ditch_wood3;
 	public static DitchInfo ditch_wood4;
 	public static DitchInfo ditch_wood5;
-
 	
 	public static void init()
 	{
 		Void = new MaterialAbstract("Void", new PropertyInfo(0xAAAAAA, -1, -1, 1.0F, 1.0F, 1.0F, 0.0F, 10000000, -1.0F, 0.1F, 0.2F));
 		
-		NativeCopper = new MaterialOre("NativeCopper", EnumAtoms.Cu.asMatter(), new PropertyInfo(0xFF834C, 7, 14, 721, 1735, 698, 500, 0.0F, 1200, 1.2F, 0.8F, 1.0F, 0.2F, 12000000, 18.0F, 0.18F, 0.7F), SubTag.ORE_native);
+		NativeCopper = new MaterialOre("NativeCopper", Atoms.Cu.asMatter(), new PropertyInfo(0xFF834C, 7, 14, 721, 1735, 698, 500, 0.0F, 1200, 1.2F, 0.8F, 1.0F, 0.2F, 12000000, 18.0F, 0.18F, 0.7F), SubTag.ORE_native);
 		Tetrahedrite = new MaterialOre("Tetrahedrite", Matter.mCu10Fe2Sb4S13,   new PropertyInfo(0xDCBC74,                      21,  9,  2.1F, 0.3F, 1.0F, 0.4F,  6800000, -1.0F, 0.21F, 0.7F ), SubTag.ORE_sulfide);
 		Enargite     = new MaterialOre("Enargite",     Matter.mCu3AsS4,         new PropertyInfo(0x7F6A68,                      13,  10, 1.3F, 1.0F, 0.4F, 0.5F,  6000000, -1.0F, 0.32F, 0.58F), SubTag.ORE_sulfide);
 		Cuprite      = new MaterialOre("Cuprite",      Matter.mCu2O,            new PropertyInfo(0xD83E26,                      10,  8,  1.0F, 0.4F, 1.0F, 0.9F,  8000000, 52.0F, 0.43F, 0.5F ), SubTag.ORE_oxide);
@@ -132,38 +132,40 @@ public class Materials
 		Bone         = new MaterialAbstract("Bone",                             new PropertyInfo(0xF9F7E7, 7 , 7 , 1.0F, 0.1F, 0.8F,  1.2F,  2800000), SubTag.TOOL_bone);
 		HardWood     = new MaterialAbstract("HardWood",                         new PropertyInfo(0x7F643D, 4 , 20, 0.4F, 1.0F, 0.1F,  0.1F,  4600000,  -1F, 0.34F, 2.0F), SubTag.TOOL_wood);
 		SoftWood     = new MaterialAbstract("SoftWood",                         new PropertyInfo(0x8F744D, 3 , 6 , 0.2F, 1.1F, 0.05F, 0.07F, 2800000,  -1F, 0.22F, 1.9F));
-		Charcoal     = new MaterialAbstract("Charcoal", EnumAtoms.C.asMatter(), new PropertyInfo(0x35322A, 2 , 2 , 0.1F, 0.0F, 0.08F, 0.5F,  4000000,  98F, 0.6F , 1.2F));
+		Charcoal     = new MaterialAbstract("Charcoal", Atoms.C.asMatter(), new PropertyInfo(0x35322A, 2 , 2 , 0.1F, 0.0F, 0.08F, 0.5F,  4000000,  98F, 0.6F , 1.2F));
 		Argil        = new MaterialAbstract("Argil",                            new PropertyInfo(0xAE9789, 5 , 29, 0.7F, 0.0F, 1.0F,  1.9F,  10800000, 59F, 0.26F, 1.8F));
 		
-		Copper       = new MaterialAbstract("Copper", EnumAtoms.Cu.asMatter(), new PropertyInfo(0xDB4E31, 14, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 0.16F, 1.0F, 0.057F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
-		Lead         = new MaterialAbstract("Lead",   EnumAtoms.Pb.asMatter(), new PropertyInfo(0xC4C4C6, 9 , 21, 579, 1849, 793, 601, 0.8F, 1600, 1.2F, 9.1F, 1.9F, 0.0F, 29000000, 2.08F, 0.8F, 0.006F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
-		Zinc         = new MaterialAbstract("Zinc",   EnumAtoms.Zn.asMatter(), new PropertyInfo(0xD7D9DA, 5 , 30, 602, 1048, 782, 673, 0.8F, 1600, 1.8F, 4.7F, 1.4F, 0.0F, 38100000, 0.58F, 0.7F, 0.027F), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
-		Tin          = new MaterialAbstract("Tin",    EnumAtoms.Sn.asMatter(), new PropertyInfo(0xD3D2CF, 8 , 8 , 473, 2784, 582, 674, 0.8F, 1600, 1.2F, 8.7F, 1.2F, 0.0F, 30000000, 1.6F , 0.8F, 0.04F ), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Arsenic      = new MaterialAbstract("Arsenic", Atoms.As.asMatter(), new PropertyInfo(0x555655, 8, 19, 887, 1090, 673, 481, 0.9F, 1550, 1.6F, 1.2F, 0.9F, 0.2F, 27927000, -1.0F, 0.2F, 0.21F));
+		
+		Copper       = new MaterialAbstract("Copper", Atoms.Cu.asMatter(), new PropertyInfo(0xDB4E31, 14, 52, 857, 1735, 698, 500, 0.8F, 1600, 2.3F, 8.0F, 1.2F, 0.0F, 48000000, 0.16F, 1.0F, 0.057F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Lead         = new MaterialAbstract("Lead",   Atoms.Pb.asMatter(), new PropertyInfo(0xC4C4C6, 9 , 21, 579, 1849, 793, 601, 0.8F, 1600, 1.2F, 9.1F, 1.9F, 0.0F, 29000000, 2.08F, 0.8F, 0.006F), SubTag.TOOL_metal_tier0, SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Zinc         = new MaterialAbstract("Zinc",   Atoms.Zn.asMatter(), new PropertyInfo(0xD7D9DA, 5 , 30, 602, 1048, 782, 673, 0.8F, 1600, 1.8F, 4.7F, 1.4F, 0.0F, 38100000, 0.58F, 0.7F, 0.027F), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
+		Tin          = new MaterialAbstract("Tin",    Atoms.Sn.asMatter(), new PropertyInfo(0xD3D2CF, 8 , 8 , 473, 2784, 582, 674, 0.8F, 1600, 1.2F, 8.7F, 1.2F, 0.0F, 30000000, 1.6F , 0.8F, 0.04F ), SubTag.CRAFTING_cold_wought, SubTag.MATERIAL_heatwire);
 		MaterialAbstract.pureMaterials.register(Copper, "Cu");
 		MaterialAbstract.pureMaterials.register(Lead, "Pb");
 		MaterialAbstract.pureMaterials.register(Zinc, "Zn");
 		MaterialAbstract.pureMaterials.register(Tin, "Sn");
-		CuAs = new MaterialAlloy("CuAs", new Matter(Alloy, new AtomStack(Cu, 9), new AtomStack(As)), 
+		CuAs = new MaterialAlloy("CuAs", Matter.forMatter("Arsenic Bronze", Alloy, new AtomStack(Cu, 9), new AtomStack(As)), 
 				new PropertyInfo(0xA37C68, 16, 175, 684, 1735, 702, 7086, 0.2F, 1500, 1.6F, 1.7F, 1.1F, 0.2F, 92000000, 102F, 0.97F, 0.21F), 
-				new FleAlloy(CollectionUtil.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.8D, 0.95D}), new FleEntry(EnumAtoms.As, new double[]{0.05D, 0.2D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
-		CuAs2 = new MaterialAlloy("CuAs2", new Matter(Alloy, new AtomStack(Cu, 3), new AtomStack(As)), 
+				new FleAlloy(CollectionUtil.asMap(new FleEntry(Atoms.Cu, new double[]{0.8D, 0.95D}), new FleEntry(Atoms.As, new double[]{0.05D, 0.2D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
+		CuAs2 = new MaterialAlloy("CuAs2", Matter.forMatter("High Arsenic Bronze", Alloy, new AtomStack(Cu, 3), new AtomStack(As)), 
 				new PropertyInfo(0x6A6353, 14, 135, 573, 1735, 689, 6894, 0.1F, 1650, 1.4F, 0.5F, 1.1F, 0.4F, 86000000, 100F, 0.96F, 0.22F), 
-				new FleAlloy(CollectionUtil.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.5D, 0.8D}), new FleEntry(EnumAtoms.As, new double[]{0.1D, 0.5D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
-		CuPb = new MaterialAlloy("CuPb", new Matter(Alloy, new AtomStack(Cu, 17), new AtomStack(Pb, 2)), 
+				new FleAlloy(CollectionUtil.asMap(new FleEntry(Atoms.Cu, new double[]{0.5D, 0.8D}), new FleEntry(Atoms.As, new double[]{0.1D, 0.5D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
+		CuPb = new MaterialAlloy("CuPb", Matter.forMatter("Lead Bronze", Alloy, new AtomStack(Cu, 17), new AtomStack(Pb, 2)), 
 				new PropertyInfo(0x8E8741, 18, 200, 671, 1735, 702, 8291, 0.2F, 1500, 1.8F, 1.6F, 1.2F, 0.1F, 97000000, 98F, 0.94F, 0.22F), 
-				new FleAlloy(CollectionUtil.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.8D, 0.95D}), new FleEntry(EnumAtoms.Pb, new double[]{0.05D, 0.2D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
-		CuPb2 = new MaterialAlloy("CuPb2", new Matter(Alloy, new AtomStack(Cu, 3), new AtomStack(Pb, 2)), 
+				new FleAlloy(CollectionUtil.asMap(new FleEntry(Atoms.Cu, new double[]{0.8D, 0.95D}), new FleEntry(Atoms.Pb, new double[]{0.05D, 0.2D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
+		CuPb2 = new MaterialAlloy("CuPb2", Matter.forMatter("High Lead Bronze", Alloy, new AtomStack(Cu, 3), new AtomStack(Pb, 2)), 
 				new PropertyInfo(0x817E66, 17, 160, 628, 1735, 702, 8028, 0.3F, 1500, 1.7F, 1.2F, 1.3F, 0.3F, 82000000, 101F, 0.99F, 0.21F), 
-				new FleAlloy(CollectionUtil.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.4D, 0.8D}), new FleEntry(EnumAtoms.Pb, new double[]{0.2D, 0.6D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
-		CuSn = new MaterialAlloy("CuSn", new Matter(Alloy, new AtomStack(Cu, 17), new AtomStack(Sn, 2)), 
+				new FleAlloy(CollectionUtil.asMap(new FleEntry(Atoms.Cu, new double[]{0.4D, 0.8D}), new FleEntry(Atoms.Pb, new double[]{0.2D, 0.6D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
+		CuSn = new MaterialAlloy("CuSn", Matter.forMatter("Tin Bronze", Alloy, new AtomStack(Cu, 17), new AtomStack(Sn, 2)), 
 				new PropertyInfo(0x936436, 18, 215, 648, 1735, 702, 8028, 0.3F, 1500, 1.9F, 1.2F, 1.1F, 0.1F, 102000000, 103F, 0.93F, 0.23F), 
-				new FleAlloy(CollectionUtil.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.8D, 0.95D}), new FleEntry(EnumAtoms.Sn, new double[]{0.05D, 0.2D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
-		CuSn2 = new MaterialAlloy("CuSn2", new Matter(Alloy, new AtomStack(Cu, 3), new AtomStack(Sn, 2)), 
+				new FleAlloy(CollectionUtil.asMap(new FleEntry(Atoms.Cu, new double[]{0.8D, 0.95D}), new FleEntry(Atoms.Sn, new double[]{0.05D, 0.2D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
+		CuSn2 = new MaterialAlloy("CuSn2", Matter.forMatter("High Tin Bronze", Alloy, new AtomStack(Cu, 3), new AtomStack(Sn, 2)), 
 				new PropertyInfo(0xA28A72, 15, 175, 629, 1735, 702, 7960, 0.26F, 1500, 1.5F, 1.1F, 1.13F, 0.18F, 93000000, 109F, 0.91F, 0.27F), 
-				new FleAlloy(CollectionUtil.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.4D, 0.8D}), new FleEntry(EnumAtoms.Sn, new double[]{0.2D, 0.6D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
-		CuSnPb = new MaterialAlloy("CuSnPb", new Matter(Alloy, new AtomStack(Cu, 8), new AtomStack(Sn, 1), new AtomStack(Pb, 1)), 
+				new FleAlloy(CollectionUtil.asMap(new FleEntry(Atoms.Cu, new double[]{0.4D, 0.8D}), new FleEntry(Atoms.Sn, new double[]{0.2D, 0.6D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
+		CuSnPb = new MaterialAlloy("CuSnPb", Matter.forMatter("Lead Tin Bronze", Alloy, new AtomStack(Cu, 8), new AtomStack(Sn, 1), new AtomStack(Pb, 1)), 
 				new PropertyInfo(0xD0B36A, 20, 208, 682, 1735, 689, 5839, 0.26F, 1600, 1.6F, 1.2F, 1.11F, 0.19F, 99000000, 129F, 0.87F, 0.29F), 
-				new FleAlloy(CollectionUtil.asMap(new FleEntry(EnumAtoms.Cu, new double[]{0.8D, 0.9D}), new FleEntry(EnumAtoms.Sn, new double[]{0.05D, 0.15D}), new FleEntry(EnumAtoms.Pb, new double[]{0.05D, 0.15D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
+				new FleAlloy(CollectionUtil.asMap(new FleEntry(Atoms.Cu, new double[]{0.8D, 0.9D}), new FleEntry(Atoms.Sn, new double[]{0.05D, 0.15D}), new FleEntry(Atoms.Pb, new double[]{0.05D, 0.15D}))), SubTag.TOOL_metal_tier1, SubTag.MATERIAL_heatwire);
 		ditch_stone = new DitchInfo("Stone", Stone, new ItemStack(Blocks.stone), 9000, 0.01F, EnumPH.Strong_Acid, EnumPH.Weak_Alkali, 1500);
 		ditch_wood0 = new DitchInfo("Wood0", HardWood, Blocks.planks, 0, 0.03F, 4000, 380);
 		ditch_wood1 = new DitchInfo("Wood1", SoftWood, Blocks.planks, 1, 0.06F, 5000, 375);

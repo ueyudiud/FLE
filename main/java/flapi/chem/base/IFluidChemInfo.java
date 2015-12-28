@@ -1,8 +1,8 @@
-package flapi.material;
+package flapi.chem.base;
 
 import net.minecraftforge.fluids.FluidStack;
-import flapi.material.IChemCondition.EnumOxide;
-import flapi.material.IChemCondition.EnumPH;
+import flapi.chem.base.IChemCondition.EnumOxide;
+import flapi.chem.base.IChemCondition.EnumPH;
 
 public interface IFluidChemInfo
 {

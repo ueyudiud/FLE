@@ -1,4 +1,4 @@
-package flapi.enums;
+package flapi.chem.particle;
 
 import static flapi.util.SubTag.ATOM_gas;
 import static flapi.util.SubTag.ATOM_liquid;
@@ -11,15 +11,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import flapi.chem.base.IMolecular;
+import flapi.chem.base.Matter;
+import flapi.chem.base.Matter.AtomStack;
 import flapi.collection.CollectionUtil;
 import flapi.collection.CollectionUtil.FleEntry;
-import flapi.material.IMolecular;
-import flapi.material.Matter;
-import flapi.material.Matter.AtomStack;
+import flapi.enums.CompoundType;
 import flapi.util.ISubTagContainer;
 import flapi.util.SubTag;
 
-public enum EnumAtoms implements IMolecular, ISubTagContainer
+public enum Atoms implements IMolecular, ISubTagContainer
 {
 	Nt("Neutron"),
 	H("Hydrogen", ATOM_nonmetal, ATOM_gas),
@@ -301,7 +302,7 @@ public enum EnumAtoms implements IMolecular, ISubTagContainer
 	
 	private String name;
 	
-	EnumAtoms(String aName, SubTag...tags) 
+	Atoms(String aName, SubTag...tags) 
 	{
 		name = aName;
 		add(tags);
@@ -344,20 +345,20 @@ public enum EnumAtoms implements IMolecular, ISubTagContainer
 	}
 
 	@Override
-	public double getElementContain(EnumAtoms e) 
+	public double getElementContain(Atoms e) 
 	{
 		return e == this ? 1D : 0D;
 	}
 
 	@Override
-	public Map<EnumAtoms, Integer> getElementAtoms() 
+	public Map<Atoms, Integer> getElementAtoms() 
 	{
 		return CollectionUtil.asMap(new FleEntry(this, 1));
 	}
 	
 	boolean radition = false;
 	
-	private EnumAtoms setRadition()
+	private Atoms setRadition()
 	{
 		radition = true;
 		return this;
@@ -394,6 +395,6 @@ public enum EnumAtoms implements IMolecular, ISubTagContainer
 	
 	public Matter asMatter()
 	{
-		return Matter.forMatter(name(), contain(ATOM_metal) ? CompoundType.Alloy : CompoundType.Molecular, new AtomStack(this));
+		return Matter.forMatter(name, contain(ATOM_metal) ? CompoundType.Alloy : CompoundType.Molecular, new AtomStack(this));
 	}
 }

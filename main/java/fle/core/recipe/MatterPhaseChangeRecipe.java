@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.IMolecular;
 import flapi.collection.CollectionUtil;
 import flapi.collection.abs.IStackList;
 import flapi.collection.abs.Stack;
-import flapi.material.IMolecular;
-import flapi.material.IChemCondition;
 import flapi.material.MatterReactionRegister.ReactionHandler;
 
+@Deprecated
 public class MatterPhaseChangeRecipe implements ReactionHandler
 {
 	private static final HashMap<IMolecular, MatterInfo> map = new HashMap<IMolecular, MatterPhaseChangeRecipe.MatterInfo>();

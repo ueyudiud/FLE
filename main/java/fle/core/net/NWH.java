@@ -68,7 +68,6 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 		nwh.registerMessage(FlePlayerTechPacket.class, Side.CLIENT);
 		nwh.registerMessage(FleTEPacket.class, Side.CLIENT);
 		nwh.registerMessage(FleCropUpdatePacket.class, Side.CLIENT);
-		nwh.registerMessage(FleMatterUpdatePacket.class, Side.CLIENT);
 		nwh.registerMessage(FleLargePacket.class, Side.CLIENT);
 		nwh.registerMessage(FleWorldMetaSyncPacket.class, Side.CLIENT);
 		

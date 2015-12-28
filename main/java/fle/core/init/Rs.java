@@ -30,7 +30,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import flapi.cg.CraftGuide;
 import flapi.cg.RecipesTab;
-import flapi.enums.EnumAtoms;
+import flapi.chem.particle.Atoms;
 import flapi.fluid.FluidDictionary;
 import flapi.plant.TreeInfo;
 import flapi.recipe.ShapedFleRecipe;
@@ -64,12 +64,13 @@ import fle.core.recipe.FLEPolishRecipe;
 import fle.core.recipe.FLESifterRecipe;
 import fle.core.recipe.FLESoakRecipe;
 import fle.core.recipe.FLEStoneMillRecipe;
-import fle.core.recipe.MatterReactionRecipe;
 import fle.core.recipe.RecipeHelper.FakeCraftingInventory;
 import fle.core.recipe.WashingRecipe;
 import fle.core.recipe.crafting.OilLampAddFuelRecipe;
 import fle.core.recipe.crafting.PlayerToolCraftingRecipe;
 import fle.core.recipe.crafting.RopeLadderCraftingRecipe;
+import fle.core.recipe.matter.MatterDicts;
+import fle.core.recipe.matter.MatterMeltingRecipe;
 import fle.core.tool.AxeHandler;
 import fle.core.tool.BurnHandler;
 import fle.resource.block.BlockFleLog;
@@ -288,7 +289,8 @@ public class Rs
 		addOre("chipHardStone", ItemFleSub.a("chip_andesite"));
 		addOre("chipHardStone", ItemFleSub.a("chip_basalt"));
 		addOre("chipHardStone", ItemFleSub.a("chip_peridotite"));
-		for(EnumAtoms atom : EnumAtoms.values())
+		MatterDicts.init();
+		for(Atoms atom : Atoms.values())
 		{
 			if(atom.contain(SubTag.ATOM_metal))
 				if(ItemFleSub.a("ingot_" + atom.name().toLowerCase()) != null)
@@ -301,7 +303,7 @@ public class Rs
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.WATER, 1000), ItemFleSub.a("bowl_water"), new ItemStack(Items.bowl));
 		FluidContainerRegistry.registerFluidContainer(new FluidStack(IB.wheat_alcohol, 200), ItemFleFood.a("jug_argil_wheat"), ItemFleSub.a("jug_argil"));
 		
-		MatterReactionRecipe.init();
+		//MatterReactionRecipe.init();
 		
 		SolidRegistry.registerSolidContainer(new SolidStack(IB.limestone, 108), ItemFleSub.a("dust_quicklime"));
 		SolidRegistry.registerSolidContainer(new SolidStack(IB.plant_ash, 108), ItemFleSub.a("plant_ash"));
@@ -439,6 +441,7 @@ public class Rs
 		FLEDryingRecipe.init();
 		FLEPolishRecipe.init();
 		FLESoakRecipe.init();
+		MatterMeltingRecipe.init();
 		
 		BarrelDrinkRecipe.init();
 		BarrelDrinkMixRecipe.init();

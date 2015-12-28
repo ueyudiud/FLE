@@ -2,10 +2,13 @@ package flapi.material;
 
 import java.util.Map;
 
+import flapi.chem.base.IChemCondition;
+import flapi.chem.base.Matter;
 import flapi.collection.CollectionUtil;
 import flapi.collection.abs.Stack;
 import flapi.util.SizeUtil;
 
+@Deprecated
 public class ReactionHandlerStandard extends IReactionHandler
 {
 	private Stack<Matter>[] recipeMap;

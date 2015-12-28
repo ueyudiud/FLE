@@ -1,17 +1,18 @@
-package flapi.enums;
+package flapi.chem.particle;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import flapi.chem.base.IMolecular;
+import flapi.chem.base.Matter;
+import flapi.chem.base.Matter.AtomStack;
 import flapi.collection.ArrayStandardStackList;
 import flapi.collection.CollectionUtil;
 import flapi.collection.CollectionUtil.FleEntry;
 import flapi.collection.abs.Stack;
-import flapi.material.IMolecular;
-import flapi.material.Matter;
-import flapi.material.Matter.AtomStack;
+import flapi.enums.CompoundType;
 
-public enum EnumIons implements IMolecular
+public enum Ions implements IMolecular
 {
 	H_1("H", -1),
 	H1("H", +1),
@@ -143,7 +144,7 @@ public enum EnumIons implements IMolecular
 	Hydrogen_Sulfite("HSO3", -1, new Stack[]{new Stack(H1), new Stack(S4), new Stack(O_2, 3)}),
 	Hydrogen_Sulfide("HS", -1, new Stack[]{new Stack(H1), new Stack(S_2)}),
 	Sulfite("SO3", -1, new Stack[]{new Stack(S4), new Stack(O_2, 3)}),
-	Thiosulfate("S2O3", -2, new Stack[]{new Stack(S4), new Stack(EnumAtoms.S), new Stack(O_2, 3)}),
+	Thiosulfate("S2O3", -2, new Stack[]{new Stack(S4), new Stack(Atoms.S), new Stack(O_2, 3)}),
 	Sulfate("SO4", -2, new Stack[]{new Stack(S4), new Stack(O_2, 4)}),
 	Silicate("SiO4", -4, new Stack[]{new Stack(Si4), new Stack(O_2, 4)}),
 	Metasilicate("SiO3", -2, new Stack[]{new Stack(Si4), new Stack(O_2, 3)}),
@@ -156,9 +157,9 @@ public enum EnumIons implements IMolecular
 	boolean isRadical;
 	int charge;
 	Map<IMolecular, Integer> containIon = new HashMap();
-	Map<EnumAtoms, Integer> containAtom;
+	Map<Atoms, Integer> containAtom;
 
-	EnumIons(String aCfName, int aCharge, Stack<IMolecular>[] aContainIon) 
+	Ions(String aCfName, int aCharge, Stack<IMolecular>[] aContainIon) 
 	{
 		isRadical = true;
 		str1 = aCfName;
@@ -174,18 +175,18 @@ public enum EnumIons implements IMolecular
 		}
 	}
 	
-	EnumIons(String aCfName, int aCharge) 
+	Ions(String aCfName, int aCharge) 
 	{
 		isRadical = false;
 		str1 = aCfName;
 		charge = aCharge;
-		containAtom = CollectionUtil.asMap(new FleEntry(EnumAtoms.valueOf(aCfName), 1));
+		containAtom = CollectionUtil.asMap(new FleEntry(Atoms.valueOf(aCfName), 1));
 		containIon = CollectionUtil.asMap(new FleEntry(this, 1));
 	}
 	
-	EnumAtoms getElementContain() 
+	Atoms getElementContain() 
 	{
-		return !isRadical ? EnumAtoms.valueOf(str1) : null;
+		return !isRadical ? Atoms.valueOf(str1) : null;
 	}
 
 	@Override
@@ -207,13 +208,13 @@ public enum EnumIons implements IMolecular
 	}
 	
 	@Override
-	public double getElementContain(EnumAtoms e) 
+	public double getElementContain(Atoms e) 
 	{
-		return new ArrayStandardStackList<EnumAtoms>(containAtom).scale(e);
+		return new ArrayStandardStackList<Atoms>(containAtom).scale(e);
 	}
 
 	@Override
-	public Map<EnumAtoms, Integer> getElementAtoms() 
+	public Map<Atoms, Integer> getElementAtoms() 
 	{
 		return containAtom;
 	}

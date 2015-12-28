@@ -1,21 +1,14 @@
 package fle.core.gui;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import flapi.collection.ArrayStandardStackList;
-import flapi.collection.abs.Stack;
 import flapi.gui.GuiContainerBase;
 import flapi.gui.GuiIconButton;
 import flapi.gui.GuiIconButton.ButtonSize;
-import flapi.material.IMolecular;
-import flapi.material.Matter;
 import flapi.util.FleValue;
 import flapi.world.BlockPos;
 import fle.core.init.Lang;
@@ -49,8 +42,6 @@ public class GuiCeramicFurnace extends GuiContainerBase
 	{
 		if(container.tileCFC != null)
 		{
-			drawCrucible(xO, yO);
-			drawTexturedModalRect(xO + 58, yO + 30, 8, 166, 18, 8);
 			drawTexturedModalRect(xO + 120, yO + 26, 0, 166, 8, 30);
 		}
 		if(container.tileCFF != null)
@@ -73,45 +64,6 @@ public class GuiCeramicFurnace extends GuiContainerBase
 	}
 	
 	@Override
-	protected void drawGuiContainerForegroundLayer(int par1, int par2)
-	{
-		super.drawGuiContainerForegroundLayer(par1, par2);
-		if(container.tileCFC != null)
-		{
-			Map<IMolecular, Integer> map = container.tileCFC.getContainerMap();
-			if(!map.isEmpty()) 
-			{
-				String str = "";
-				for(Entry<IMolecular, Integer> entry : map.entrySet())
-				{
-					if(entry.getKey() == null || entry.getValue() <= 0) continue;
-					str += entry.getKey().getChemName() + "x" + entry.getValue() + " ";
-				}
-				drawAreaTooltip(par1, par2, str, 58 + xoffset, 30 + yoffset, 18, 8);
-			}
-			if(container.tileCFC.getFluidStackInTank(0) != null)
-			{
-				drawAreaTooltip(par1, par2, container.tileCFC.getFluidStackInTank(0).getLocalizedName() + " " + FleValue.format_L.format_c(container.tileCFC.getFluidStackInTank(0).amount), xoffset + 120, yoffset + 26, 8, 30);
-			}
-		}
-	}
-
-	private void drawCrucible(int aXOffset, int aYOffset)
-	{
-		if(container.tileCFC.getContainerMap().isEmpty()) return;
-		ArrayStandardStackList<IMolecular> wh = new ArrayStandardStackList(container.tileCFC.getContainerMap());
-		int a0 = 0;
-		for(Stack<IMolecular> stack : wh)
-		{
-			int startPos = a0;
-			int progress = (int) (18F * (double) wh.scale(stack.get()));
-			
-			drawFleRect(aXOffset + 58 + startPos, aYOffset + 30, progress, 8, ((Matter) stack.get()).getColor());
-			a0 = a0 + progress;
-		}
-	}
-	
-	@Override
 	public void initGui()
 	{
 		super.initGui();
@@ -119,7 +71,6 @@ public class GuiCeramicFurnace extends GuiContainerBase
 		yoffset = (height - ySize) / 2;
 		if(container.tileCFC != null)
 		{
-			buttonList.add(new GuiIconButton(0, xoffset + 119, yoffset + 62, ButtonSize.Small, GuiIconButton.buttonLocate, 96, 0));
 			buttonList.add(new GuiIconButton(1, xoffset + 119, yoffset + 15, ButtonSize.Small, GuiIconButton.buttonLocate, 80, 8));
 		}
 	}

@@ -50,6 +50,7 @@ public class ToolHandler
 			}
 			if(result)
 			{
+				evt.block.breakBlock(evt.world, evt.x, evt.y, evt.z, evt.block, evt.blockMetadata);
 				ArrayList<ItemStack> drops = ((IHarvestHandler) evt.block).getHarvestDrop(evt.world, evt.x, evt.y, evt.z, evt.blockMetadata, tool, level);
 				HarvestDropsEvent evt1 = new HarvestDropsEvent(evt.x, evt.y, evt.z, evt.world, evt.block, evt.blockMetadata, 0, 1.0F, drops, evt.getPlayer(), false);
 				MinecraftForge.EVENT_BUS.post(evt1);

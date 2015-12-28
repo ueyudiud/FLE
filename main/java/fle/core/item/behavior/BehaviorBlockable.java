@@ -45,12 +45,17 @@ public class BehaviorBlockable extends BehaviorBase
 			ForgeDirection side, float xPos, float yPos, float zPos) 
 	{
 		if(itemstack.stackSize >= sizeRequire)
-			if(Item.getItemFromBlock(target).onItemUse(new ItemStack(target, 1, targetMeta), player, world, x, y, z, FleAPI.getIndexFromDirection(side), xPos, yPos, zPos))
+		{
+			ItemStack stack = new ItemStack(target, 1, targetMeta);
+			if(itemstack.hasTagCompound())
+				stack.stackTagCompound = itemstack.stackTagCompound;
+			if(Item.getItemFromBlock(target).onItemUse(stack, player, world, x, y, z, FleAPI.getIndexFromDirection(side), xPos, yPos, zPos))
 			{
 				if(!player.capabilities.isCreativeMode)
 					itemstack.stackSize -= sizeRequire;
 				return true;
 			}
+		}
 		return false;
 	}
 	

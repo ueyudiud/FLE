@@ -2,6 +2,7 @@ package flapi.material;
 
 import java.util.EnumMap;
 
+import flapi.chem.base.Matter;
 import flapi.collection.Register;
 import flapi.enums.EnumFLERock;
 import flapi.util.SubTag;

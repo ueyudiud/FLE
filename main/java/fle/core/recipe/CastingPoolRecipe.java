@@ -4,13 +4,16 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import flapi.chem.MatterDictionary;
+import flapi.chem.MatterDictionary.IFreezingRecipe;
+import flapi.chem.base.Matter;
+import flapi.chem.base.Part;
 import flapi.material.MaterialAbstract;
-import flapi.material.MatterDictionary;
-import flapi.material.MatterDictionary.IFreezingRecipe;
 import flapi.util.FleValue;
 import flapi.util.SubTag;
 import fle.core.init.IB;
 import fle.core.init.Materials;
+import fle.core.init.Parts;
 import fle.core.item.ItemFleSub;
 import fle.core.te.TileEntityCastingPool;
 import fle.tool.item.ItemTool;
@@ -18,19 +21,22 @@ import fle.tool.item.ItemToolHead;
 
 public class CastingPoolRecipe implements IFreezingRecipe
 {
-	private static Object[][] array0 = {{IB.copper, Materials.Copper}, {IB.cu_as_0, Materials.CuAs}, {IB.cu_as_1, Materials.CuAs2}, {IB.cu_pb_0, Materials.CuPb}, {IB.cu_pb_1, Materials.CuPb2}, {IB.cu_sn_0, Materials.CuSn}, {IB.cu_sn_1, Materials.CuSn2}};
+	private static Object[][] array0 = {
+		{IB.copper, Materials.Copper}, 
+		{IB.lead, Materials.Lead},
+		{IB.tin, Materials.Tin},
+		{IB.cu_as_0, Materials.CuAs}, 
+		{IB.cu_as_1, Materials.CuAs2}, 
+		{IB.cu_pb_0, Materials.CuPb}, 
+		{IB.cu_pb_1, Materials.CuPb2}, 
+		{IB.cu_sn_0, Materials.CuSn}, 
+		{IB.cu_sn_1, Materials.CuSn2}};
 	
 	public static void init()
-	{
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu")));
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.cu_as_0, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu_as_0")));
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.cu_as_1, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu_as_1")));
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.cu_pb_0, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu_pb_0")));
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.cu_pb_1, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu_pb_1")));
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.cu_sn_0, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu_sn_0")));
-		MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack(IB.cu_sn_1, FleValue.ingot_mol * 3 * 1), "xxxx xxxx", ItemFleSub.a("ingot_cu_sn_1")));
+	{		
 		for(Object[] a : array0)
 		{
+			add(((MaterialAbstract) a[1]).getMatter(), Parts.ingot, "xxxx xxxx");
 			if(SubTag.type_tool_metal_tier0.isTrue(((MaterialAbstract) a[1])))
 			{
 				MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack((Fluid) a[0], FleValue.ingot_mol * 3 * 3), "x  xx xxx", ItemToolHead.a("metal_axe", (MaterialAbstract) a[1], 12)));
@@ -49,14 +55,23 @@ public class CastingPoolRecipe implements IFreezingRecipe
 				MatterDictionary.registerMatter(new CastingPoolRecipe(new FluidStack((Fluid) a[0], FleValue.ingot_mol / 3 * 1), " xxx xxxx", ItemTool.a("metal_needle", (MaterialAbstract) a[1])));
 			}
 		}
-		MatterDictionary.registerMatter(new CeramicFurnaceOutletRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 1), ItemFleSub.a("ingot_cu")));
-		MatterDictionary.registerMatter(new CeramicFurnaceOutletRecipe(new FluidStack(IB.cu_as_0, FleValue.ingot_mol * 3 * 1), ItemFleSub.a("ingot_cu_as_0")));
+		//MatterDictionary.registerMatter(new CeramicFurnaceOutletRecipe(new FluidStack(IB.copper, FleValue.ingot_mol * 3 * 1), ItemFleSub.a("ingot_cu")));
+		//MatterDictionary.registerMatter(new CeramicFurnaceOutletRecipe(new FluidStack(IB.cu_as_0, FleValue.ingot_mol * 3 * 1), ItemFleSub.a("ingot_cu_as_0")));
+	}
+	
+	private static void add(Matter matter, Part part, String map)
+	{
+		MatterDictionary.registerMatter(new CastingPoolRecipe(matter, part, map));
 	}
 	
 	FluidStack input;
 	int s;
 	ItemStack output;
-	
+
+	public CastingPoolRecipe(Matter input, Part part, String str)
+	{
+		this(new FluidStack(MatterDictionary.toFluid(input), part.resolution), str, MatterDictionary.toItem(input, part));
+	}
 	public CastingPoolRecipe(FluidStack aInput, String str, ItemStack aOutput)
 	{
 		try

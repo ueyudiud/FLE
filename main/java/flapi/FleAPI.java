@@ -13,9 +13,9 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.logging.log4j.Logger;
 
+import flapi.chem.base.Matter;
 import flapi.enums.EnumDamageResource;
 import flapi.item.ItemFle;
-import flapi.material.Matter;
 import flapi.plant.CropCard;
 import flapi.plant.ICropSeed;
 import flapi.recipe.RecipeAdder;
@@ -202,7 +202,7 @@ public class FleAPI
 	}
 	/**
 	 * Get heat value of fluid fuel with air condition
-	 * @see fle.api.material.Matter
+	 * @see flapi.chem.base.material.Matter
 	 * @param aStack
 	 * @param aAirBase
 	 * @return Fuel heat value with unit MJ (Minecraft Joule).

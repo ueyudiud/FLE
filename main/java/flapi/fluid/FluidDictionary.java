@@ -8,7 +8,7 @@ import java.util.Map;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import flapi.material.IChemCondition.EnumPH;
+import flapi.chem.base.IChemCondition.EnumPH;
 
 public abstract class FluidDictionary 
 {

@@ -1,7 +1,9 @@
-package flapi.material;
+package flapi.chem.particle;
 
+import flapi.chem.base.Matter;
+import flapi.chem.base.Matter.AtomStack;
 import flapi.enums.CompoundType;
-import flapi.material.Matter.AtomStack;
+import flapi.material.ElementaryParticle;
 
 public class Electron extends ElementaryParticle
 {

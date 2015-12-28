@@ -38,5 +38,4 @@ public class FLELayerBeach extends FLELayer
 			}
 		return ret;
 	}
-
 }

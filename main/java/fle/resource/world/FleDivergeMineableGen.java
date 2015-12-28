@@ -39,9 +39,10 @@ public abstract class FleDivergeMineableGen extends WorldGenerator
     		x1 = (int) ((Math.pow(rand.nextFloat(), diverge) - Math.pow(rand.nextFloat(), diverge)) * size);
     		y1 = (int) ((Math.pow(rand.nextFloat(), diverge) - Math.pow(rand.nextFloat(), diverge)) * size);
     		z1 = (int) ((Math.pow(rand.nextFloat(), diverge) - Math.pow(rand.nextFloat(), diverge)) * size);
-    		if(matchCanGen(aWorld, rand, x + x1, y + y1, z + z1, x1 * x1 + y1 * y1 + z1 * z1))
+    		int distanceSQ = x1 * x1 + y1 * y1 + z1 * z1;
+    		if(matchCanGen(aWorld, rand, x + x1, y + y1, z + z1, distanceSQ))
     		{
-    			genBlockAt(aWorld, rand, x1, y1, z1);
+    			genBlockAt(aWorld, rand, x + x1, y + y1, z + z1, distanceSQ);
     			++c;
     			if(c >= numberOfBlocks) break;
     		}
@@ -50,7 +51,13 @@ public abstract class FleDivergeMineableGen extends WorldGenerator
         return true;
     }
     
-    protected abstract boolean matchCanGen(World world, Random rand, int x, int y, int z, int distanceSQ);
+    protected void genBlockAt(World world, Random rand, int x, int y, int z,
+			int distanceSQ)
+    {
+		genBlockAt(world, rand, x, y, z);
+	}
+
+	protected abstract boolean matchCanGen(World world, Random rand, int x, int y, int z, int distanceSQ);
     
     protected abstract void genBlockAt(World world, Random rand, int x, int y, int z);
 }
