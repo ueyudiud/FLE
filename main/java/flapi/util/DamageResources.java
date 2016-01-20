@@ -7,12 +7,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fluids.Fluid;
+import farcore.block.fluid.BlockFluidBase;
 
 public class DamageResources
 {
-	public static DamageSource getArrowDamageSource(Entity aEntity)
+	public static DamageSource getArrowDamageSource(Entity entity)
 	{
-		return new FleArrowAttackDamageSource(aEntity);
+		return new FleArrowAttackDamageSource(entity);
 	}
 	public static DamageSource getHeatDamageSource()
 	{
@@ -26,6 +28,10 @@ public class DamageResources
 	{
 		return new FleBurnDamageSource();
 	}
+	public static DamageSource getFluidHeatDamage(BlockFluidBase fluid)
+	{
+		return new FleFluidBurnDamageSource(fluid.getFluid());
+	}
 	
 	public static class FleArrowAttackDamageSource extends EntityDamageSource
 	{
@@ -33,10 +39,11 @@ public class DamageResources
 		{
 			super("fle.arrow", aEntity);
 		}
-		
-	    public IChatComponent func_151519_b(EntityLivingBase aTarget)
+
+		@Override
+	    public IChatComponent getDeathMessage(EntityLivingBase target)
 	    {
-	    	return new ChatComponentText(EnumChatFormatting.RED + aTarget.getCommandSenderName() + 
+	    	return new ChatComponentText(EnumChatFormatting.RED + target.getCommandSenderEntity().getName() + 
 	    			EnumChatFormatting.WHITE + " try to pickup an arrow didn't on the ground.");
 	    }
 	}
@@ -48,9 +55,10 @@ public class DamageResources
 			super("fle.heat");
 		}
 
-		public IChatComponent func_151519_b(EntityLivingBase aTarget)
+	    @Override
+	    public IChatComponent getDeathMessage(EntityLivingBase target)
 	    {
-	    	return new ChatComponentText(EnumChatFormatting.RED + aTarget.getCommandSenderName() + 
+	    	return new ChatComponentText(EnumChatFormatting.RED + target.getCommandSenderEntity().getName() + 
 	    			EnumChatFormatting.WHITE + " felt hot!");
 	    }
 	}
@@ -62,9 +70,10 @@ public class DamageResources
 			super("fle.bleed");
 		}
 
-		public IChatComponent func_151519_b(EntityLivingBase aTarget)
+	    @Override
+	    public IChatComponent getDeathMessage(EntityLivingBase target)
 	    {
-	    	return new ChatComponentText(EnumChatFormatting.RED + aTarget.getCommandSenderName() + 
+	    	return new ChatComponentText(EnumChatFormatting.RED + target.getCommandSenderEntity().getName() + 
 	    			EnumChatFormatting.WHITE + " lost lots of blood.");
 	    }
 	}
@@ -76,10 +85,29 @@ public class DamageResources
 			super("fle.burn");
 		}
 
-		public IChatComponent func_151519_b(EntityLivingBase aTarget)
+	    @Override
+	    public IChatComponent getDeathMessage(EntityLivingBase target)
 	    {
-	    	return new ChatComponentText(EnumChatFormatting.RED + aTarget.getCommandSenderName() + 
+	    	return new ChatComponentText(EnumChatFormatting.RED + target.getCommandSenderEntity().getName() + 
 	    			EnumChatFormatting.WHITE + " carbonized.");
+	    }
+	}
+	
+	public static class FleFluidBurnDamageSource extends DamageSource
+	{
+		private Fluid fluid;
+		
+		public FleFluidBurnDamageSource(Fluid fluid)
+		{
+			super("fle.fluid.burn");
+			this.fluid = fluid;
+		}
+
+		@Override
+	    public IChatComponent getDeathMessage(EntityLivingBase target)
+	    {
+			return new ChatComponentText(EnumChatFormatting.RED + target.getCommandSenderEntity().getName() + 
+					EnumChatFormatting.WHITE + " try to swim in the " + fluid.getName());
 	    }
 	}
 }

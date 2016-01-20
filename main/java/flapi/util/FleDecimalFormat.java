@@ -7,7 +7,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class FleDecimalFormat extends DecimalFormat
 {
 	/**
-	 * 
+	 * The fle decimal format UUID.
 	 */
 	private static final long serialVersionUID = 4952146830229549349L;
 	private EnumChatFormatting e;
@@ -22,7 +22,7 @@ public class FleDecimalFormat extends DecimalFormat
 		e = aE;
 	}
 	
-	public String format_c(long value)
+	public String formatColor(long value)
 	{
 		if(e == null)
 		{
@@ -34,7 +34,7 @@ public class FleDecimalFormat extends DecimalFormat
 		}
 	}
 	
-	public String format_c(double value)
+	public String formatColor(double value)
 	{
 		if(e == null)
 		{

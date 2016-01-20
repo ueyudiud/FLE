@@ -7,21 +7,25 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
+import farcore.util.IKey;
+import farcore.util.IKeyBoard;
 
-public class Keyboard
+public class Keyboard implements IKeyBoard
 {
-	public static enum Key
+	public static enum Key implements IKey
 	{
-		Forward,
-		Place,
-		Jump,
-		Sneak,
-		Tech;
+		Forward('F'),
+		Place('P'),
+		Jump('J'),
+		Sneak('S'),
+		Tech('T');
 		
+		char chr;
 		int flag;
 		
-		Key()
+		Key(char c)
 		{
+			chr = c;
 			flag = 1 << ordinal();
 		}
 		
@@ -37,7 +41,7 @@ public class Keyboard
 			return ret;
 		}
 
-		public static Set fromInt(int keyState)
+		public static Set fromInt(long keyState)
 		{
 			Set ret = EnumSet.noneOf(Key.class);
 			int i = 0;
@@ -50,9 +54,15 @@ public class Keyboard
 
 			return ret;
 		}
+
+		@Override
+		public char getControlChar()
+		{
+			return chr;
+		}
 	}
 	
-	private final Map playerKeys = new WeakHashMap();
+	private final Map<EntityPlayer, Set<IKey>> playerKeys = new WeakHashMap();
 
 	public Keyboard()
 	{
@@ -60,22 +70,22 @@ public class Keyboard
 
 	public boolean isPlaceKeyDown(EntityPlayer player)
 	{
-		return get(player, Key.Place);
+		return isKeyDown(player, Key.Place);
 	}
 
 	public boolean isForwardKeyDown(EntityPlayer player)
 	{
-		return get(player, Key.Forward);
+		return isKeyDown(player, Key.Forward);
 	}
 
 	public boolean isJumpKeyDown(EntityPlayer player)
 	{
-		return get(player, Key.Jump);
+		return isKeyDown(player, Key.Jump);
 	}
 	
 	public boolean isTechKeyDown(EntityPlayer player)
 	{
-		return get(player, Key.Tech);
+		return isKeyDown(player, Key.Tech);
 	}
 
 	public boolean isSneakKeyDown(EntityPlayer player)
@@ -87,7 +97,7 @@ public class Keyboard
 	{
 	}
 
-	public void processKeyUpdate(EntityPlayer player, int keyState)
+	public void processKeyUpdate(EntityPlayer player, long keyState)
 	{
 		playerKeys.put(player, Key.fromInt(keyState));
 	}
@@ -97,12 +107,10 @@ public class Keyboard
 		playerKeys.remove(player);
 	}
 
-	private boolean get(EntityPlayer player, Key key)
+	@Override
+	public boolean isKeyDown(EntityPlayer player, IKey key)
 	{
-		Set keys = (Set)playerKeys.get(player);
-		if (keys == null)
-			return false;
-		else
-			return keys.contains(key);
+		Set keys = (Set) playerKeys.get(player);
+		return keys == null ? false : keys.contains(key);
 	}
 }

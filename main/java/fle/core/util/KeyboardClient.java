@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import cpw.mods.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import fle.FLE;
 import fle.core.net.FleKeyTypePacket;
 
@@ -22,7 +22,7 @@ public class KeyboardClient extends Keyboard
 	{
 		lastKeyState = 0;
 		ClientRegistry.registerKeyBinding(placeKey);
-		ClientRegistry.registerKeyBinding(techKey);
+		ClientRegistry.registerKeyBinding(techKey);		
 	}
 	
 	public void sendKeyUpdate()
@@ -32,15 +32,15 @@ public class KeyboardClient extends Keyboard
 		if (currentScreen == null || currentScreen.allowUserInput)
 		{
 			if (GameSettings.isKeyDown(placeKey))
-				keys.add(Keyboard.Key.Place);
+				keys.add(Key.Place);
 			if (GameSettings.isKeyDown(techKey))
-				keys.add(Keyboard.Key.Tech);
+				keys.add(Key.Tech);
 			if (GameSettings.isKeyDown(mc.gameSettings.keyBindForward))
-				keys.add(Keyboard.Key.Forward);
+				keys.add(Key.Forward);
 			if (GameSettings.isKeyDown(mc.gameSettings.keyBindJump))
-				keys.add(Keyboard.Key.Jump);
+				keys.add(Key.Jump);
 		}
-		int currentKeyState = Keyboard.Key.toInt(keys);
+		int currentKeyState = Key.toInt(keys);
 		if (currentKeyState != lastKeyState)
 		{
 			FLE.fle.getNetworkHandler().sendToServer(new FleKeyTypePacket(currentKeyState));

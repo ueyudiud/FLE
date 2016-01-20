@@ -2,41 +2,42 @@ package fle.core.net;
 
 import java.io.IOException;
 
-import flapi.net.FleAbstractPacket;
-import flapi.net.FleNetworkHandler;
-import flapi.util.io.FleDataInputStream;
-import flapi.util.io.FleDataOutputStream;
+import net.minecraft.network.PacketBuffer;
+import farcore.net.FlePacketBuffer;
+import farcore.net.INetworkHandler;
+import farcore.net.IPacket;
 import fle.FLE;
 
-public class FleKeyTypePacket extends FleAbstractPacket
+public class FleKeyTypePacket extends IPacket
 {
-	int keys;
+	long state;
 	
-	public FleKeyTypePacket() 
+	public FleKeyTypePacket()
 	{
 		
 	}
-	public FleKeyTypePacket(int key) 
+	public FleKeyTypePacket(long state)
 	{
-		keys = key;
+		this.state = state;
 	}
-	
+
 	@Override
-	protected void write(FleDataOutputStream os) throws IOException
+	public PacketBuffer encode(FlePacketBuffer buffer) throws IOException
 	{
-		os.writeInt(keys);
+		buffer.writeLong(state);
+		return buffer;
 	}
-	
+
 	@Override
-	protected void read(FleDataInputStream is) throws IOException
+	public void decode(FlePacketBuffer buffer) throws IOException
 	{
-		keys = is.readInt();	
+		state = buffer.readLong();
 	}
-	
+
 	@Override
-	public Object process(FleNetworkHandler nwh)
+	public IPacket process(INetworkHandler handler)
 	{
-		FLE.fle.getKeyboard().processKeyUpdate(getPlayer(), keys);
+		FLE.fle.getKeyboard().processKeyUpdate(getPlayer(), state);
 		return null;
 	}
 }

@@ -2,9 +2,27 @@
 {
   "modid": "fle",
   "name": "Far Land Era",
-  "mcversion": "1.7.10",
+  "mcversion": "${mcversion}",
+  "description": "Far tech mod.",
+  "url": "",
   "updateUrl": "",
+  "credits": "ueyudiud",
+  "logoFile": "",
   "screenshots": [],
   "dependencies": []
+},
+{
+  "modid": "SimElectricity",
+  "name": "SimElectricity",
+  "description": "Providing a electricity energy network based on real world circuit simulation~",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/RoyalAliceAcademyOfSciences/SimElectricity",
+  "updateUrl": "",
+  "authorList": ["Rikka0_0","Aurora"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["JGraphT"]
 }
 ]

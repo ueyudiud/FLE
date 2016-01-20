@@ -1,17 +1,16 @@
 package fle.core.net;
 
+import io.netty.buffer.Unpooled;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
-import flapi.net.FleNetworkHandler;
-import flapi.net.IPacket;
-import flapi.util.FleLog;
+import farcore.net.FlePacketBuffer;
+import farcore.net.INetworkHandler;
+import farcore.net.IPacket;
+import farcore.util.FleLog;
 
 public class FleLargePacket extends IPacket
 {
@@ -31,19 +30,17 @@ public class FleLargePacket extends IPacket
 	}
 
 	@Override
-	public ByteArrayDataOutput encode() throws IOException
+	public FlePacketBuffer encode(FlePacketBuffer output) throws IOException
 	{
-		ByteArrayDataOutput output = ByteStreams.newDataOutput();
-		output.writeShort(bs.length);
-		output.write(bs);
+		//ByteArrayDataOutput output = ByteStreams.newDataOutput();
+		output.writeByteArray(bs);
 		return output;
 	}
 
 	@Override
-	public void decode(ByteArrayDataInput s) throws IOException
+	public void decode(FlePacketBuffer s) throws IOException
 	{
-		byte[] b = new byte[s.readShort()];
-		s.readFully(b);
+		byte[] b = s.readByteArray();
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(b));
 		int type = stream.readInt();
 		id = type >> 2;
@@ -64,12 +61,12 @@ public class FleLargePacket extends IPacket
 	}
 
 	@Override
-	public Object process(FleNetworkHandler nwh)
+	public IPacket process(INetworkHandler nwh)
 	{
 		if(!flag) return null;
 		try
 		{
-			nwh.onPacket(id, ByteStreams.newDataInput(largePacketCache.toByteArray()));
+			nwh.onPacket(id, new FlePacketBuffer(Unpooled.buffer().writeBytes(largePacketCache.toByteArray())));
 			largePacketCache = null;
 		}
 		catch(Throwable e)

@@ -2,9 +2,11 @@ package flapi.util;
 
 import java.lang.reflect.Method;
 
+import farcore.util.FleLog;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.registry.GameData;
 
 /**
  * The mod compact (For other mods) invoke method and get field method.
@@ -128,9 +130,14 @@ public class Compact
 		}
 	}
 
-	public static ItemStack getItem(SubTag tag, String aName, int size)
+	public static ItemStack getItem(String mod, String name, int size)
 	{
-		if(tag == SubTag.IC2Item)
+		if(mod == null) return null;
+		if(mod.equals("forge"))
+		{
+			return new ItemStack(GameData.getItemRegistry().getObject(name), size);
+		}
+		else if(mod.equals("ic2"))
 		{
 			try
 			{
@@ -139,7 +146,7 @@ public class Compact
 					Class<?> clazz = Class.forName("ic2.api.item.IC2Items");
 					IC2Items_getItem = clazz.getMethod("getItem", String.class);
 				}
-				Object aRawStack = IC2Items_getItem.invoke(null, aName);
+				Object aRawStack = IC2Items_getItem.invoke(null, name);
 				if(aRawStack instanceof ItemStack)
 				{
 					ItemStack aStack = ((ItemStack) aRawStack).copy();

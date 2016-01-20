@@ -8,32 +8,42 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import flapi.FleAPI;
-import flapi.collection.Register;
-import flapi.util.FleLog;
-import flapi.util.ILanguageManager;
+
+import farcore.util.FleLog;
+import farcore.util.ILanguageManager;
+import farcore.util.Langs;
 import fle.FLE;
 
 public class LanguageManager implements ILanguageManager
 {
+	private static final String defaultLocale = Langs.english;
 	private static final String MOD = FLE.MODID.toLowerCase();
 	private static final char A = 'A';
 	private static final char Z = 'Z';
 	
-	public static String regWithRecommendedUnlocalizedName(String aTypeName, String enLocalizedName)
+	@Override
+	public String registerRecommended(String locale, String type,
+			String localized)
 	{
 		String str = MOD;
 		str += ".";
-		String str1 = aTypeName + "." + enLocalizedName;
+		String str1 = type + "." + localized;
 		boolean flag = true;
-		for(int i = 0; i < str1.length(); ++i)
+		for (int i = 0; i < str1.length(); ++i)
 		{
 			char chr = str1.charAt(i);
-			if(chr == '_' || chr == ' ' || chr == ':')
+			if (chr == '_' || chr == ' ' || chr == ':')
 			{
-				if(flag)
+				if (flag)
 				{
 					flag = false;
 					continue;
@@ -42,9 +52,9 @@ public class LanguageManager implements ILanguageManager
 				str += ".";
 				continue;
 			}
-			if((int) chr <= (int) Z && (int) chr >= (int) A)
+			if ((int) chr <= (int) Z && (int) chr >= (int) A)
 			{
-				if(flag)
+				if (flag)
 				{
 					flag = false;
 					str += Character.toLowerCase(chr);
@@ -56,84 +66,128 @@ public class LanguageManager implements ILanguageManager
 			}
 			str += chr;
 		}
-		FleAPI.langManager.registerLocal(str, enLocalizedName);
-		return FleAPI.langManager.translateToLocal(str, new Object[0]);
+		registerLocal(locale, str, localized);
+		return str;
+	}
+	
+	@Override
+	public String registerRecommended(String type, String localized)
+	{
+		return registerRecommended(defaultLocale, type, localized);
 	}
 	
 	public static File lang = null;
 	
-	private static Register langRegister = new Register();
+	private static Map<String, Map<String, String>> langRegister = new HashMap();
 	
 	public static void load()
 	{
+		if (!lang.canExecute())
+			return;
 		langRegister.clear();
-		BufferedReader fr = null;
+		@SuppressWarnings("resource")
+		JsonReader reader = null;
 		try
 		{
-			fr = new BufferedReader(new InputStreamReader(new FileInputStream(lang), "UTF-8"), 1024);
-			fr.readLine();
-			String line;
+			reader = new JsonReader(new BufferedReader(
+					new InputStreamReader(new FileInputStream(lang), "UTF-8"),
+					1024));
 			try
 			{
-				while((line = fr.readLine()) != null)
+				reader.beginObject();
+				while (reader.hasNext())
 				{
-					try
+					String locale = reader.nextName();
+					Map<String, String> map;
+					langRegister.put(locale, map = new HashMap());
+					reader.beginObject();
+					while (reader.hasNext())
 					{
-						String[] strs = line.split(",");
-						langRegister.register(Integer.valueOf(strs[0]), strs[1], strs[2]);
+						String n = reader.nextName();
+						String l = reader.nextString();
+						map.put(n, l);
 					}
-					catch(Throwable e)
-					{
-						FleLog.addExceptionToCache(e);
-					}
+					reader.endObject();
 				}
+				reader.endObject();
 			}
-			catch(Throwable e)
+			catch (IOException e)
 			{
 				FleLog.addExceptionToCache(e);
 			}
-			finally
-			{
-				FleLog.resetAndCatchException("FLE : Find the exception while loading lang file.");
-			}
 		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public static void save()
-	{
-		BufferedWriter fw = null;
-		try
-		{
-			fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
-			        lang), "UTF-8"), 1024);
-			fw.write("TAG, NAME\r\n");
-			String[] langs = langRegister.keySet();
-			for(int i = 0; i < langs.length; ++i)
-			{
-				String name = langs[i];
-				if(name == null) continue;
-				fw.write(String.format("%s,%s,%s\r\n", i, name, langRegister.get(name)));
-			}
-			fw.flush();
-			fw.close();
-		}
-		catch (IOException e)
+		catch (Throwable e)
 		{
 			e.printStackTrace();
 		}
 		finally
 		{
-			if(fw != null)
+			FleLog.resetAndCatchException(
+					"FLE : Find the exception while loading lang file.");
+			if (reader != null)
 			{
 				try
 				{
-					fw.close();
+					reader.close();
 				}
-				catch (IOException e) 
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static void save()
+	{
+		JsonWriter writer = null;
+		try
+		{
+			writer = new JsonWriter(new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(lang), "UTF-8"),
+					1024));
+			writer.setIndent(" ");
+			writer.beginObject();
+			for (Entry<String, Map<String, String>> entry : langRegister
+					.entrySet())
+			{
+				if (entry.getValue() == null || entry.getValue().size() == 0)
+					continue;
+				try
+				{
+					writer.name(entry.getKey());
+					writer.beginObject();
+					Map<String, String> register = entry.getValue();
+					for (Entry<String, String> line : register.entrySet())
+					{
+						writer.name(line.getKey());
+						writer.value(line.getValue());
+					}
+					writer.endObject();
+				}
+				catch (IOException e)
+				{
+					FleLog.addExceptionToCache(e);
+				}
+			}
+			writer.endObject();
+		}
+		catch (IOException e)
+		{
+			FleLog.addExceptionToCache(e);
+		}
+		finally
+		{
+			FleLog.resetAndCatchException(
+					"Catching these exception when saving lang.");
+			if (writer != null)
+			{
+				try
+				{
+					writer.flush();
+					writer.close();
+				}
+				catch (IOException e)
 				{
 					e.printStackTrace();
 				}
@@ -142,27 +196,41 @@ public class LanguageManager implements ILanguageManager
 	}
 	
 	@Override
-	public void registerLocal(String unlocalizedName, String localizedName)
+	public void registerLocal(String locale, String unlocalizedName,
+			String localizedName)
 	{
-		if(langRegister.contain(unlocalizedName))
+		if (!langRegister.containsKey(locale))
+			langRegister.put(locale, new HashMap());
+		Map<String, String> register = langRegister.get(locale);
+		if (register.containsKey(unlocalizedName))
 		{
 			return;
 		}
-		langRegister.register(localizedName, unlocalizedName);
+		register.put(unlocalizedName, localizedName);
 	}
 	
 	@Override
-	public String translateToLocal(String str, Object...objects)
+	public void registerLocal(String unlocalizedName, String localizedName)
 	{
+		registerLocal(defaultLocale, unlocalizedName, localizedName);
+	}
+	
+	@Override
+	public String translateToLocal(String str, Object... objects)
+	{
+		String locale = Minecraft.getMinecraft().getLanguageManager()
+				.getCurrentLanguage().getLanguageCode();
 		String ret;
-		if(langRegister.contain(str))
+		Map<String, String> map;
+		if (langRegister.containsKey(locale)
+				&& (map = langRegister.get(locale)).containsKey(str))
 		{
-			ret = String.format((String) langRegister.get(str), objects);
+			ret = String.format(map.get(str), objects).trim();
 		}
 		else
 		{
 			ret = I18n.format(str, objects);
-			langRegister.register(str, ret);
+			registerLocal(locale, str, ret);
 		}
 		return ret;
 	}

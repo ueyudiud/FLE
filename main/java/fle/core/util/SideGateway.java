@@ -1,6 +1,6 @@
 package fle.core.util;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public final class SideGateway<T>
 {

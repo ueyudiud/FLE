@@ -1,0 +1,41 @@
+# Creative Tab
+itemGroup.SimElectricity=SimElectricity
+
+# Blocks
+tile.sime:quantum_generator.name=Quantum Generator
+tile.sime:voltage_meter.name=Voltage Meter(1MOhm)
+tile.sime:electric_furnace.name=Electric Furnace
+tile.sime:solar_panel.name=Solar Panel
+tile.sime:wire.thin.name=Thin Copper Cable
+tile.sime:wire.medium.name=Medium Copper Cable
+tile.sime:wire.thick.name=Thick Copper Cable
+tile.sime:adjustable_resistor.name=Adjustable Resistor
+tile.sime:simple_generator.name=Simple Generator
+tile.sime:adjustable_transformer.name=Adjustable Transformer
+tile.sime:windmill_top.name=WindMill
+tile.sime:battery_box.name=BatteryBox
+tile.sime:incandescent_lamp.name=Incandescent Lamp (5w)
+tile.sime:switch.name=Switch
+tile.sime:tower.name=Tower
+tile.sime:solar_inverter.name=Solar Inverter (Regulated)
+tile.sime:ic2consumer.name=IC2->SE Converter
+tile.sime:ic2generator.name=SE->IC2 Converter
+tile.sime:icemachine.name=No.9 Ice Machine
+
+# Items
+item.sime:ultimate_multimeter.name=Ultimate Multimeter
+item.sime:glove.name=Glove
+item.sime:wrench.name=Wrench
+item.sime:fan.name=WindMill Turbine
+item.sime:hvwire.name=HV Wire
+item.sime:iceingot.name=Ice Ingot
+
+# Text
+sime.Output=Output:
+sime.Impedance=Impedance:
+sime.Resistance=Resistance:
+sime.TwSelect=Tower Selected.
+sime.TwConnect=Tower Connected.
+sime.ActionCancel=Action Cancelled.
+sime.TgtNotTw=Target is not a Tower.
+sime.TwClose=Two targets are too close.
