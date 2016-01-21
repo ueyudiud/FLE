@@ -4,6 +4,22 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 
+import farcore.util.FleLog;
+import flapi.FleAPI;
+import flapi.FleMod;
+import flapi.energy.EnergyType;
+import flapi.energy.IEnergyNet;
+import flapi.util.FleValue;
+import flapi.util.IPlatform;
+import fle.core.energy.electrical.ElectricalNet;
+import fle.core.energy.thermal.ThermalNet;
+import fle.core.init.NetworkInit;
+import fle.core.net.FleNetworkHandler;
+import fle.core.proxy.CommonProxy;
+import fle.core.proxy.Proxy;
+import fle.core.util.Keyboard;
+import fle.core.util.LanguageManager;
+import fle.core.util.SideGateway;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -18,21 +34,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import farcore.util.FleLog;
-import flapi.FleAPI;
-import flapi.FleMod;
-import flapi.energy.EnergyType;
-import flapi.energy.IEnergyNet;
-import flapi.util.FleValue;
-import flapi.util.IPlatform;
-import fle.core.energy.electrical.ElectricalNet;
-import fle.core.init.NetworkInit;
-import fle.core.net.FleNetworkHandler;
-import fle.core.proxy.CommonProxy;
-import fle.core.proxy.Proxy;
-import fle.core.util.Keyboard;
-import fle.core.util.LanguageManager;
-import fle.core.util.SideGateway;
 
 @Mod(modid = FLE.MODID, name = FLE.NAME, version = FLE.VERSION, certificateFingerprint = FLE.CERTIFICATE)
 public class FLE implements FleMod
@@ -41,26 +42,30 @@ public class FLE implements FleMod
 	public static final String NAME = "Far Land Era";
 	public static final String VERSION = "3.00a";
 	public static final int minForge = 1570;
-	protected static final String CERTIFICATE = "";//"after:IC2";
-
+	protected static final String CERTIFICATE = "";// "after:IC2";
+	
 	@Instance(MODID)
 	public static FLE fle;
-
+	
 	@SidedProxy(modId = MODID, clientSide = "fle.core.proxy.ClientProxy", serverSide = "fle.core.proxy.CommonProxy")
 	public static Proxy proxy = new CommonProxy();
-	/**Check the mod has loaded in server at least once.*/
+	/** Check the mod has loaded in server at least once. */
 	private boolean loadedFlag = false;
 	private SideGateway<IPlatform> p;
 	private SideGateway<Keyboard> keyboard;
 	public final ElectricalNet eleNet;
+	public final ThermalNet thermalNet;
 	public final FleNetworkHandler netHandler;
 	
 	public FLE()
 	{
 		FleAPI.mod = (fle = this);
-		p = new SideGateway<IPlatform>("fle.core.util.Platform", "fle.core.util.PlatformClient");
-		keyboard = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
+		p = new SideGateway<IPlatform>("fle.core.util.Platform",
+				"fle.core.util.PlatformClient");
+		keyboard = new SideGateway<Keyboard>("fle.core.util.Keyboard",
+				"fle.core.util.KeyboardClient");
 		eleNet = new ElectricalNet();
+		thermalNet = new ThermalNet();
 		netHandler = FleNetworkHandler.createNewHandler("fle");
 		NetworkInit.init(netHandler);
 	}
@@ -69,7 +74,7 @@ public class FLE implements FleMod
 	public void preLoad(FMLPreInitializationEvent event)
 	{
 		FleLog.setLogger(event.getModLog());
-		//Release mod meta data.
+		// Release mod meta data.
 		ModMetadata mm = event.getModMetadata();
 		mm.credits = "ueyudiud";
 		mm.description = "Far tech mod.";
@@ -78,50 +83,56 @@ public class FLE implements FleMod
 		mm.version = VERSION;
 		mm.url = "http://tieba.baidu.com/p/3977359185";
 		mm.logoFile = "/assets/" + FleValue.TEXTURE_FILE + "/textures/logo.png";
-		//Check forge version.
+		// Check forge version.
 		FleLog.getLogger().info("Far Land Era start checking forge version.");
 		int forge = ForgeVersion.getBuildVersion();
 		if ((forge > 0) && (forge < minForge))
 		{
 			throw new RuntimeException("The currently installed version of "
-					+ "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." + 
-					ForgeVersion.getRevisionVersion() + "." + forge + ") is too old.\n" + 
-					"Please update the Minecraft Forge.\n" + "\n" + 
-					"(Technical information: " + forge + " < " + minForge + ")");
+					+ "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "."
+					+ ForgeVersion.getMinorVersion() + "."
+					+ ForgeVersion.getRevisionVersion() + "." + forge
+					+ ") is too old.\n" + "Please update the Minecraft Forge.\n"
+					+ "\n" + "(Technical information: " + forge + " < "
+					+ minForge + ")");
 		}
-		//Start load config.
+		// Start load config.
 		FleLog.info("Far Land Era start load config.");
 		try
 		{
 			FleAPI.lang = new LanguageManager();
-			LanguageManager.lang = new File(p.get().getMinecraftDir(), "FLE_Lang.json");
-			/*File configFile = new File(new File(p.get().getMinecraftDir(), "config"), "FLE.cfg");
-			File recipe = new File(new File(p.get().getMinecraftDir(), "config"), "FLE Recipe.csv");
-			config = new Configuration(configFile);
-			config.load();
-			FleLog.getLogger().info("Config loaded from " + configFile.getAbsolutePath());*/
+			LanguageManager.lang = new File(p.get().getMinecraftDir(),
+					"FLE_Lang.json");
+			/*
+			 * File configFile = new File(new File(p.get().getMinecraftDir(),
+			 * "config"), "FLE.cfg"); File recipe = new File(new
+			 * File(p.get().getMinecraftDir(), "config"), "FLE Recipe.csv");
+			 * config = new Configuration(configFile); config.load();
+			 * FleLog.getLogger().info("Config loaded from " +
+			 * configFile.getAbsolutePath());
+			 */
 		}
 		catch (Exception e)
 		{
-			FleLog.getLogger().warn("Error while trying to access configuration! " + e);
-			//config = null;
+			FleLog.getLogger()
+					.warn("Error while trying to access configuration! " + e);
+			// config = null;
 		}
-		/*if(config != null)
-		{
-			Config.init(config);
-		}*/
+		/*
+		 * if(config != null) { Config.init(config); }
+		 */
 		FleLog.info("Far Land Era start pre load.");
 		LanguageManager.load();
 		proxy.onPreload();
 	}
-
+	
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
 		FleLog.info("Far Land Era start load.");
 		proxy.onLoad();
 	}
-
+	
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event)
 	{
@@ -142,7 +153,8 @@ public class FLE implements FleMod
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent event)
 	{
-		if(loadedFlag) return;
+		if (loadedFlag)
+			return;
 		loadedFlag = true;
 		FleLog.info("Far Land Era start load server config");
 		proxy.onServerLoad();
@@ -157,30 +169,36 @@ public class FLE implements FleMod
 	@Override
 	public IEnergyNet getEnergyNet(EnergyType type)
 	{
-		switch(type)
-		{
-		case Electrical: return eleNet;
-		case Kinetic: return null;
-		case Light: return null;
-		case Magic: return null;
-		case Nuclear: return null;
-		case Thermal: return null;
-		default: return null;
+		switch (type) {
+		case Electrical:
+			return eleNet;
+		case Kinetic:
+			return null;
+		case Light:
+			return null;
+		case Magic:
+			return null;
+		case Nuclear:
+			return null;
+		case Thermal:
+			return thermalNet;
+		default:
+			return null;
 		}
 	}
-
+	
 	@Override
 	public FleNetworkHandler getNetworkHandler()
 	{
 		return netHandler;
 	}
-
+	
 	@Override
 	public Keyboard getKeyboard()
 	{
 		return keyboard.get();
 	}
-
+	
 	@NetworkCheckHandler
 	public static boolean checkHandler(Map<String, String> version, Side side)
 	{

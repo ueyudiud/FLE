@@ -12,11 +12,13 @@ import farcore.substance.AtomRadical;
 import farcore.substance.Ion;
 import farcore.substance.Matter;
 import farcore.substance.Substance;
+import farcore.tileentity.INutritionTileEntity;
 import farcore.tileentity.TEBase;
 import farcore.util.FleLog;
 import farcore.util.Vs;
 
-public class TileEntityDirt extends TEBase implements IUpdatePlayerListBox
+public class TileEntityDirt extends TEBase
+		implements IUpdatePlayerListBox, INutritionTileEntity
 {
 	@NBTLoad(name = "dirt")
 	@NBTSave(name = "dirt")
@@ -203,4 +205,67 @@ public class TileEntityDirt extends TEBase implements IUpdatePlayerListBox
 		return a;
 	}
 	
+	public int useWater(int amount, boolean d)
+	{
+		int a = Math.min(amount, H2O);
+		if (d)
+		{
+			H2O -= a;
+		}
+		return a;
+	}
+	
+	public int useAmmonia(int amount, boolean d)
+	{
+		int a = Math.min(amount, NH4);
+		if (d)
+		{
+			NH4 -= a;
+			PH -= a;
+		}
+		return a;
+	}
+	
+	@Override
+	public int getParticleContain(EnumNutrition nutrition)
+	{
+		switch (nutrition) {
+		case Ca:
+			return Ca;
+		case H2O:
+			return H2O;
+		case K:
+			return K;
+		case N:
+			return CON2H4 + NH4 + NO3;
+		case NH3:
+			return NH4;
+		case P:
+			return PO4;
+		default:
+			return 0;
+		}
+	}
+	
+	@Override
+	public int useParticle(EnumNutrition nutrition, int max, boolean process)
+	{
+		switch (nutrition) {
+		case Ca:
+			return useCalcium(max, process);
+		case H2O:
+			return useWater(max, process);
+		case K:
+			return usePotassium(max, process);
+		case N:
+			return useNitrogen(max, process);
+		case NH3:
+			return useAmmonia(max, process);
+		case P:
+			return usePhosphorus(max, process);
+		default:
+			break;
+		}
+		return 0;
+	}
 }

@@ -101,7 +101,8 @@ public class BlockDirt extends BlockResource
 	{
 		TileEntityDirt tile = getTile(worldIn, pos);
 		if (tile != null)
-			return state.withProperty(dirtProperty, tile.dirt.getName())
+			return state.withProperty(COVER, EnumDirtCover.nothing)
+					.withProperty(dirtProperty, tile.dirt.getName())
 					.withProperty(DIRT_STATE, tile.state);
 		return super.getActualState(state, worldIn, pos);
 	}
@@ -257,6 +258,66 @@ public class BlockDirt extends BlockResource
 		{
 			spawnAsEntity(world, pos, stack);
 		}
+	}
+	
+	@Override
+	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn,
+			float fallDistance)
+	{
+		if (entityIn instanceof EntityLivingBase
+				&& getTile(worldIn, pos).state == EnumDirtState.farmland)
+		{
+			if (!worldIn.isRemote
+					&& worldIn.rand.nextFloat() < fallDistance - 0.5F)
+			{
+				if (!(entityIn instanceof EntityPlayer) && !worldIn
+						.getGameRules().getGameRuleBooleanValue("mobGriefing"))
+				{
+					return;
+				}
+				
+				getTile(worldIn, pos).state = EnumDirtState.dirt;
+			}
+			
+		}
+		super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+	}
+	
+	@Override
+	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos,
+			IBlockState state, Entity entityIn)
+	{
+		switch ((EnumDirtCover) state.getValue(COVER)) {
+		case snow:
+		{
+			entityIn.motionX *= 1.05D;
+			entityIn.motionZ *= 1.05D;
+			break;
+		}
+		case water:
+		{
+			entityIn.motionX *= 1.025D;
+			entityIn.motionZ *= 1.025D;
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	public void fillWithRain(World worldIn, BlockPos pos)
+	{
+		if (worldIn.rand.nextInt(5) == 0 && worldIn.getBlockState(pos)
+				.getValue(COVER) == EnumDirtCover.nothing)
+		{
+			worldIn.setBlockState(pos,
+					worldIn.getBlockState(pos).withProperty(COVER,
+							worldIn.getBiomeGenForCoords(pos).isSnowyBiome()
+									? EnumDirtCover.snow
+									: EnumDirtCover.water));
+		}
+		super.fillWithRain(worldIn, pos);
 	}
 	
 	@Override

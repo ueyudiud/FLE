@@ -107,8 +107,7 @@ public class TEBase extends TileEntity
 				64.0F);
 	}
 	
-	// =============================Block state
-	// control=============================
+	// ===Block state control===
 	public void onBlockPlaced(ItemStack stack, EntityLivingBase placer,
 			Direction side)
 	{
@@ -431,8 +430,7 @@ public class TEBase extends TileEntity
 	
 	}
 	
-	// ====================================Long flag system
-	// start================================
+	// ===Long flag system start===
 	protected static final int COVER = 8;
 	
 	/**
@@ -455,7 +453,7 @@ public class TEBase extends TileEntity
 		return (flags & (1 << i)) != 0;
 	}
 	
-	// ===========================World conf start==========================
+	// ===World conf start===
 	public int getEnviormentLight()
 	{
 		return worldObj.getLight(pos);

@@ -222,15 +222,23 @@ public class LanguageManager implements ILanguageManager
 				.getCurrentLanguage().getLanguageCode();
 		String ret;
 		Map<String, String> map;
-		if (langRegister.containsKey(locale)
-				&& (map = langRegister.get(locale)).containsKey(str))
+		try
 		{
-			ret = String.format(map.get(str), objects).trim();
+			if (langRegister.containsKey(locale)
+					&& (map = langRegister.get(locale)).containsKey(str))
+			{
+				ret = String.format(map.get(str), objects).trim();
+			}
+			else
+			{
+				ret = I18n.format(str, objects);
+				registerLocal(locale, str, ret);
+			}
 		}
-		else
+		catch (IllegalArgumentException exception)
 		{
-			ret = I18n.format(str, objects);
-			registerLocal(locale, str, ret);
+			FleLog.debug("Fail to format name " + str + ".");
+			ret = "Fail to load name";
 		}
 		return ret;
 	}
