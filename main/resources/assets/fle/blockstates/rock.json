@@ -1,0 +1,100 @@
+{
+	"variants": {
+		"rock=basalt,state=resource": {
+			"model": "fle:rock/basalt.resource"
+		},
+		"rock=basalt,state=smooth": {
+			"model": "fle:rock/basalt.smooth"
+		},
+		"rock=basalt,state=cobble": {
+			"model": "fle:rock/basalt.cobble"
+		},
+		"rock=basalt,state=crush": {
+			"model": "fle:rock/basalt.crush"
+		},
+		"rock=peridotite,state=resource": {
+			"model": "fle:rock/peridotite.resource"
+		},
+		"rock=peridotite,state=smooth": {
+			"model": "fle:rock/peridotite.smooth"
+		},
+		"rock=peridotite,state=cobble": {
+			"model": "fle:rock/peridotite.cobble"
+		},
+		"rock=peridotite,state=crush": {
+			"model": "fle:rock/peridotite.crush"
+		},
+		"rock=compact stone,state=resource": {
+			"model": "fle:rock/compact stone.resource"
+		},
+		"rock=compact stone,state=smooth": {
+			"model": "fle:rock/compact stone.smooth"
+		},
+		"rock=compact stone,state=cobble": {
+			"model": "fle:rock/compact stone.cobble"
+		},
+		"rock=compact stone,state=crush": {
+			"model": "fle:rock/compact stone.crush"
+		},
+		"rock=rhyolite,state=resource": {
+			"model": "fle:rock/rhyolite.resource"
+		},
+		"rock=rhyolite,state=smooth": {
+			"model": "fle:rock/rhyolite.smooth"
+		},
+		"rock=rhyolite,state=cobble": {
+			"model": "fle:rock/rhyolite.cobble"
+		},
+		"rock=rhyolite,state=crush": {
+			"model": "fle:rock/rhyolite.crush"
+		},
+		"rock=stone,state=resource": {
+			"model": "fle:rock/stone.resource"
+		},
+		"rock=stone,state=smooth": {
+			"model": "fle:rock/stone.smooth"
+		},
+		"rock=stone,state=cobble": {
+			"model": "fle:rock/stone.cobble"
+		},
+		"rock=stone,state=crush": {
+			"model": "fle:rock/stone.crush"
+		},
+		"rock=limestone,state=resource": {
+			"model": "fle:rock/limestone.resource"
+		},
+		"rock=limestone,state=smooth": {
+			"model": "fle:rock/limestone.smooth"
+		},
+		"rock=limestone,state=cobble": {
+			"model": "fle:rock/limestone.cobble"
+		},
+		"rock=limestone,state=crush": {
+			"model": "fle:rock/limestone.crush"
+		},
+		"rock=andesite,state=resource": {
+			"model": "fle:rock/andesite.resource"
+		},
+		"rock=andesite,state=smooth": {
+			"model": "fle:rock/andesite.smooth"
+		},
+		"rock=andesite,state=cobble": {
+			"model": "fle:rock/andesite.cobble"
+		},
+		"rock=andesite,state=crush": {
+			"model": "fle:rock/andesite.crush"
+		},
+		"rock=void,state=resource": {
+			"model": "fle:rock/void.resource"
+		},
+		"rock=void,state=smooth": {
+			"model": "fle:rock/void.smooth"
+		},
+		"rock=void,state=cobble": {
+			"model": "fle:rock/void.cobble"
+		},
+		"rock=void,state=crush": {
+			"model": "fle:rock/void.crush"
+		}
+	}
+}

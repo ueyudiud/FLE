@@ -1,0 +1,8 @@
+{
+	"parent": "fle:block/base_layer3",
+	"textures": {
+		"render1": "fle:blocks/rock/limestone",
+		"render2": "fle:blocks/rock/override/smooth",
+		"render3": "fle:blocks/ore/nickeline"
+	}
+}

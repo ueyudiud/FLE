@@ -1,0 +1,2212 @@
+{
+	"variants": {
+		"mine=gelenite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/gelenite.rhyolite.resource"
+		},
+		"mine=gelenite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/gelenite.rhyolite.smooth"
+		},
+		"mine=gelenite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/gelenite.rhyolite.cobble"
+		},
+		"mine=gelenite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/gelenite.rhyolite.crush"
+		},
+		"mine=gelenite,rock=stone,state=resource": {
+			"model": "fle:mineral/gelenite.stone.resource"
+		},
+		"mine=gelenite,rock=stone,state=smooth": {
+			"model": "fle:mineral/gelenite.stone.smooth"
+		},
+		"mine=gelenite,rock=stone,state=cobble": {
+			"model": "fle:mineral/gelenite.stone.cobble"
+		},
+		"mine=gelenite,rock=stone,state=crush": {
+			"model": "fle:mineral/gelenite.stone.crush"
+		},
+		"mine=gelenite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/gelenite.compact stone.resource"
+		},
+		"mine=gelenite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/gelenite.compact stone.smooth"
+		},
+		"mine=gelenite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/gelenite.compact stone.cobble"
+		},
+		"mine=gelenite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/gelenite.compact stone.crush"
+		},
+		"mine=gelenite,rock=void,state=resource": {
+			"model": "fle:mineral/gelenite.void.resource"
+		},
+		"mine=gelenite,rock=void,state=smooth": {
+			"model": "fle:mineral/gelenite.void.smooth"
+		},
+		"mine=gelenite,rock=void,state=cobble": {
+			"model": "fle:mineral/gelenite.void.cobble"
+		},
+		"mine=gelenite,rock=void,state=crush": {
+			"model": "fle:mineral/gelenite.void.crush"
+		},
+		"mine=gelenite,rock=andesite,state=resource": {
+			"model": "fle:mineral/gelenite.andesite.resource"
+		},
+		"mine=gelenite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/gelenite.andesite.smooth"
+		},
+		"mine=gelenite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/gelenite.andesite.cobble"
+		},
+		"mine=gelenite,rock=andesite,state=crush": {
+			"model": "fle:mineral/gelenite.andesite.crush"
+		},
+		"mine=gelenite,rock=basalt,state=resource": {
+			"model": "fle:mineral/gelenite.basalt.resource"
+		},
+		"mine=gelenite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/gelenite.basalt.smooth"
+		},
+		"mine=gelenite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/gelenite.basalt.cobble"
+		},
+		"mine=gelenite,rock=basalt,state=crush": {
+			"model": "fle:mineral/gelenite.basalt.crush"
+		},
+		"mine=gelenite,rock=limestone,state=resource": {
+			"model": "fle:mineral/gelenite.limestone.resource"
+		},
+		"mine=gelenite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/gelenite.limestone.smooth"
+		},
+		"mine=gelenite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/gelenite.limestone.cobble"
+		},
+		"mine=gelenite,rock=limestone,state=crush": {
+			"model": "fle:mineral/gelenite.limestone.crush"
+		},
+		"mine=gelenite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/gelenite.peridotite.resource"
+		},
+		"mine=gelenite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/gelenite.peridotite.smooth"
+		},
+		"mine=gelenite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/gelenite.peridotite.cobble"
+		},
+		"mine=gelenite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/gelenite.peridotite.crush"
+		},
+		"mine=realgar,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/realgar.rhyolite.resource"
+		},
+		"mine=realgar,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/realgar.rhyolite.smooth"
+		},
+		"mine=realgar,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/realgar.rhyolite.cobble"
+		},
+		"mine=realgar,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/realgar.rhyolite.crush"
+		},
+		"mine=realgar,rock=stone,state=resource": {
+			"model": "fle:mineral/realgar.stone.resource"
+		},
+		"mine=realgar,rock=stone,state=smooth": {
+			"model": "fle:mineral/realgar.stone.smooth"
+		},
+		"mine=realgar,rock=stone,state=cobble": {
+			"model": "fle:mineral/realgar.stone.cobble"
+		},
+		"mine=realgar,rock=stone,state=crush": {
+			"model": "fle:mineral/realgar.stone.crush"
+		},
+		"mine=realgar,rock=compact stone,state=resource": {
+			"model": "fle:mineral/realgar.compact stone.resource"
+		},
+		"mine=realgar,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/realgar.compact stone.smooth"
+		},
+		"mine=realgar,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/realgar.compact stone.cobble"
+		},
+		"mine=realgar,rock=compact stone,state=crush": {
+			"model": "fle:mineral/realgar.compact stone.crush"
+		},
+		"mine=realgar,rock=void,state=resource": {
+			"model": "fle:mineral/realgar.void.resource"
+		},
+		"mine=realgar,rock=void,state=smooth": {
+			"model": "fle:mineral/realgar.void.smooth"
+		},
+		"mine=realgar,rock=void,state=cobble": {
+			"model": "fle:mineral/realgar.void.cobble"
+		},
+		"mine=realgar,rock=void,state=crush": {
+			"model": "fle:mineral/realgar.void.crush"
+		},
+		"mine=realgar,rock=andesite,state=resource": {
+			"model": "fle:mineral/realgar.andesite.resource"
+		},
+		"mine=realgar,rock=andesite,state=smooth": {
+			"model": "fle:mineral/realgar.andesite.smooth"
+		},
+		"mine=realgar,rock=andesite,state=cobble": {
+			"model": "fle:mineral/realgar.andesite.cobble"
+		},
+		"mine=realgar,rock=andesite,state=crush": {
+			"model": "fle:mineral/realgar.andesite.crush"
+		},
+		"mine=realgar,rock=basalt,state=resource": {
+			"model": "fle:mineral/realgar.basalt.resource"
+		},
+		"mine=realgar,rock=basalt,state=smooth": {
+			"model": "fle:mineral/realgar.basalt.smooth"
+		},
+		"mine=realgar,rock=basalt,state=cobble": {
+			"model": "fle:mineral/realgar.basalt.cobble"
+		},
+		"mine=realgar,rock=basalt,state=crush": {
+			"model": "fle:mineral/realgar.basalt.crush"
+		},
+		"mine=realgar,rock=limestone,state=resource": {
+			"model": "fle:mineral/realgar.limestone.resource"
+		},
+		"mine=realgar,rock=limestone,state=smooth": {
+			"model": "fle:mineral/realgar.limestone.smooth"
+		},
+		"mine=realgar,rock=limestone,state=cobble": {
+			"model": "fle:mineral/realgar.limestone.cobble"
+		},
+		"mine=realgar,rock=limestone,state=crush": {
+			"model": "fle:mineral/realgar.limestone.crush"
+		},
+		"mine=realgar,rock=peridotite,state=resource": {
+			"model": "fle:mineral/realgar.peridotite.resource"
+		},
+		"mine=realgar,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/realgar.peridotite.smooth"
+		},
+		"mine=realgar,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/realgar.peridotite.cobble"
+		},
+		"mine=realgar,rock=peridotite,state=crush": {
+			"model": "fle:mineral/realgar.peridotite.crush"
+		},
+		"mine=cuprite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/cuprite.rhyolite.resource"
+		},
+		"mine=cuprite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/cuprite.rhyolite.smooth"
+		},
+		"mine=cuprite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/cuprite.rhyolite.cobble"
+		},
+		"mine=cuprite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/cuprite.rhyolite.crush"
+		},
+		"mine=cuprite,rock=stone,state=resource": {
+			"model": "fle:mineral/cuprite.stone.resource"
+		},
+		"mine=cuprite,rock=stone,state=smooth": {
+			"model": "fle:mineral/cuprite.stone.smooth"
+		},
+		"mine=cuprite,rock=stone,state=cobble": {
+			"model": "fle:mineral/cuprite.stone.cobble"
+		},
+		"mine=cuprite,rock=stone,state=crush": {
+			"model": "fle:mineral/cuprite.stone.crush"
+		},
+		"mine=cuprite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/cuprite.compact stone.resource"
+		},
+		"mine=cuprite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/cuprite.compact stone.smooth"
+		},
+		"mine=cuprite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/cuprite.compact stone.cobble"
+		},
+		"mine=cuprite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/cuprite.compact stone.crush"
+		},
+		"mine=cuprite,rock=void,state=resource": {
+			"model": "fle:mineral/cuprite.void.resource"
+		},
+		"mine=cuprite,rock=void,state=smooth": {
+			"model": "fle:mineral/cuprite.void.smooth"
+		},
+		"mine=cuprite,rock=void,state=cobble": {
+			"model": "fle:mineral/cuprite.void.cobble"
+		},
+		"mine=cuprite,rock=void,state=crush": {
+			"model": "fle:mineral/cuprite.void.crush"
+		},
+		"mine=cuprite,rock=andesite,state=resource": {
+			"model": "fle:mineral/cuprite.andesite.resource"
+		},
+		"mine=cuprite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/cuprite.andesite.smooth"
+		},
+		"mine=cuprite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/cuprite.andesite.cobble"
+		},
+		"mine=cuprite,rock=andesite,state=crush": {
+			"model": "fle:mineral/cuprite.andesite.crush"
+		},
+		"mine=cuprite,rock=basalt,state=resource": {
+			"model": "fle:mineral/cuprite.basalt.resource"
+		},
+		"mine=cuprite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/cuprite.basalt.smooth"
+		},
+		"mine=cuprite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/cuprite.basalt.cobble"
+		},
+		"mine=cuprite,rock=basalt,state=crush": {
+			"model": "fle:mineral/cuprite.basalt.crush"
+		},
+		"mine=cuprite,rock=limestone,state=resource": {
+			"model": "fle:mineral/cuprite.limestone.resource"
+		},
+		"mine=cuprite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/cuprite.limestone.smooth"
+		},
+		"mine=cuprite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/cuprite.limestone.cobble"
+		},
+		"mine=cuprite,rock=limestone,state=crush": {
+			"model": "fle:mineral/cuprite.limestone.crush"
+		},
+		"mine=cuprite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/cuprite.peridotite.resource"
+		},
+		"mine=cuprite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/cuprite.peridotite.smooth"
+		},
+		"mine=cuprite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/cuprite.peridotite.cobble"
+		},
+		"mine=cuprite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/cuprite.peridotite.crush"
+		},
+		"mine=arsenopyrite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/arsenopyrite.rhyolite.resource"
+		},
+		"mine=arsenopyrite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.rhyolite.smooth"
+		},
+		"mine=arsenopyrite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.rhyolite.cobble"
+		},
+		"mine=arsenopyrite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/arsenopyrite.rhyolite.crush"
+		},
+		"mine=arsenopyrite,rock=stone,state=resource": {
+			"model": "fle:mineral/arsenopyrite.stone.resource"
+		},
+		"mine=arsenopyrite,rock=stone,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.stone.smooth"
+		},
+		"mine=arsenopyrite,rock=stone,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.stone.cobble"
+		},
+		"mine=arsenopyrite,rock=stone,state=crush": {
+			"model": "fle:mineral/arsenopyrite.stone.crush"
+		},
+		"mine=arsenopyrite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/arsenopyrite.compact stone.resource"
+		},
+		"mine=arsenopyrite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.compact stone.smooth"
+		},
+		"mine=arsenopyrite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.compact stone.cobble"
+		},
+		"mine=arsenopyrite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/arsenopyrite.compact stone.crush"
+		},
+		"mine=arsenopyrite,rock=void,state=resource": {
+			"model": "fle:mineral/arsenopyrite.void.resource"
+		},
+		"mine=arsenopyrite,rock=void,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.void.smooth"
+		},
+		"mine=arsenopyrite,rock=void,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.void.cobble"
+		},
+		"mine=arsenopyrite,rock=void,state=crush": {
+			"model": "fle:mineral/arsenopyrite.void.crush"
+		},
+		"mine=arsenopyrite,rock=andesite,state=resource": {
+			"model": "fle:mineral/arsenopyrite.andesite.resource"
+		},
+		"mine=arsenopyrite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.andesite.smooth"
+		},
+		"mine=arsenopyrite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.andesite.cobble"
+		},
+		"mine=arsenopyrite,rock=andesite,state=crush": {
+			"model": "fle:mineral/arsenopyrite.andesite.crush"
+		},
+		"mine=arsenopyrite,rock=basalt,state=resource": {
+			"model": "fle:mineral/arsenopyrite.basalt.resource"
+		},
+		"mine=arsenopyrite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.basalt.smooth"
+		},
+		"mine=arsenopyrite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.basalt.cobble"
+		},
+		"mine=arsenopyrite,rock=basalt,state=crush": {
+			"model": "fle:mineral/arsenopyrite.basalt.crush"
+		},
+		"mine=arsenopyrite,rock=limestone,state=resource": {
+			"model": "fle:mineral/arsenopyrite.limestone.resource"
+		},
+		"mine=arsenopyrite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.limestone.smooth"
+		},
+		"mine=arsenopyrite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.limestone.cobble"
+		},
+		"mine=arsenopyrite,rock=limestone,state=crush": {
+			"model": "fle:mineral/arsenopyrite.limestone.crush"
+		},
+		"mine=arsenopyrite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/arsenopyrite.peridotite.resource"
+		},
+		"mine=arsenopyrite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/arsenopyrite.peridotite.smooth"
+		},
+		"mine=arsenopyrite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/arsenopyrite.peridotite.cobble"
+		},
+		"mine=arsenopyrite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/arsenopyrite.peridotite.crush"
+		},
+		"mine=sphalerite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/sphalerite.rhyolite.resource"
+		},
+		"mine=sphalerite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/sphalerite.rhyolite.smooth"
+		},
+		"mine=sphalerite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/sphalerite.rhyolite.cobble"
+		},
+		"mine=sphalerite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/sphalerite.rhyolite.crush"
+		},
+		"mine=sphalerite,rock=stone,state=resource": {
+			"model": "fle:mineral/sphalerite.stone.resource"
+		},
+		"mine=sphalerite,rock=stone,state=smooth": {
+			"model": "fle:mineral/sphalerite.stone.smooth"
+		},
+		"mine=sphalerite,rock=stone,state=cobble": {
+			"model": "fle:mineral/sphalerite.stone.cobble"
+		},
+		"mine=sphalerite,rock=stone,state=crush": {
+			"model": "fle:mineral/sphalerite.stone.crush"
+		},
+		"mine=sphalerite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/sphalerite.compact stone.resource"
+		},
+		"mine=sphalerite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/sphalerite.compact stone.smooth"
+		},
+		"mine=sphalerite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/sphalerite.compact stone.cobble"
+		},
+		"mine=sphalerite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/sphalerite.compact stone.crush"
+		},
+		"mine=sphalerite,rock=void,state=resource": {
+			"model": "fle:mineral/sphalerite.void.resource"
+		},
+		"mine=sphalerite,rock=void,state=smooth": {
+			"model": "fle:mineral/sphalerite.void.smooth"
+		},
+		"mine=sphalerite,rock=void,state=cobble": {
+			"model": "fle:mineral/sphalerite.void.cobble"
+		},
+		"mine=sphalerite,rock=void,state=crush": {
+			"model": "fle:mineral/sphalerite.void.crush"
+		},
+		"mine=sphalerite,rock=andesite,state=resource": {
+			"model": "fle:mineral/sphalerite.andesite.resource"
+		},
+		"mine=sphalerite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/sphalerite.andesite.smooth"
+		},
+		"mine=sphalerite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/sphalerite.andesite.cobble"
+		},
+		"mine=sphalerite,rock=andesite,state=crush": {
+			"model": "fle:mineral/sphalerite.andesite.crush"
+		},
+		"mine=sphalerite,rock=basalt,state=resource": {
+			"model": "fle:mineral/sphalerite.basalt.resource"
+		},
+		"mine=sphalerite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/sphalerite.basalt.smooth"
+		},
+		"mine=sphalerite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/sphalerite.basalt.cobble"
+		},
+		"mine=sphalerite,rock=basalt,state=crush": {
+			"model": "fle:mineral/sphalerite.basalt.crush"
+		},
+		"mine=sphalerite,rock=limestone,state=resource": {
+			"model": "fle:mineral/sphalerite.limestone.resource"
+		},
+		"mine=sphalerite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/sphalerite.limestone.smooth"
+		},
+		"mine=sphalerite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/sphalerite.limestone.cobble"
+		},
+		"mine=sphalerite,rock=limestone,state=crush": {
+			"model": "fle:mineral/sphalerite.limestone.crush"
+		},
+		"mine=sphalerite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/sphalerite.peridotite.resource"
+		},
+		"mine=sphalerite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/sphalerite.peridotite.smooth"
+		},
+		"mine=sphalerite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/sphalerite.peridotite.cobble"
+		},
+		"mine=sphalerite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/sphalerite.peridotite.crush"
+		},
+		"mine=tenorite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/tenorite.rhyolite.resource"
+		},
+		"mine=tenorite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/tenorite.rhyolite.smooth"
+		},
+		"mine=tenorite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/tenorite.rhyolite.cobble"
+		},
+		"mine=tenorite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/tenorite.rhyolite.crush"
+		},
+		"mine=tenorite,rock=stone,state=resource": {
+			"model": "fle:mineral/tenorite.stone.resource"
+		},
+		"mine=tenorite,rock=stone,state=smooth": {
+			"model": "fle:mineral/tenorite.stone.smooth"
+		},
+		"mine=tenorite,rock=stone,state=cobble": {
+			"model": "fle:mineral/tenorite.stone.cobble"
+		},
+		"mine=tenorite,rock=stone,state=crush": {
+			"model": "fle:mineral/tenorite.stone.crush"
+		},
+		"mine=tenorite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/tenorite.compact stone.resource"
+		},
+		"mine=tenorite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/tenorite.compact stone.smooth"
+		},
+		"mine=tenorite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/tenorite.compact stone.cobble"
+		},
+		"mine=tenorite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/tenorite.compact stone.crush"
+		},
+		"mine=tenorite,rock=void,state=resource": {
+			"model": "fle:mineral/tenorite.void.resource"
+		},
+		"mine=tenorite,rock=void,state=smooth": {
+			"model": "fle:mineral/tenorite.void.smooth"
+		},
+		"mine=tenorite,rock=void,state=cobble": {
+			"model": "fle:mineral/tenorite.void.cobble"
+		},
+		"mine=tenorite,rock=void,state=crush": {
+			"model": "fle:mineral/tenorite.void.crush"
+		},
+		"mine=tenorite,rock=andesite,state=resource": {
+			"model": "fle:mineral/tenorite.andesite.resource"
+		},
+		"mine=tenorite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/tenorite.andesite.smooth"
+		},
+		"mine=tenorite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/tenorite.andesite.cobble"
+		},
+		"mine=tenorite,rock=andesite,state=crush": {
+			"model": "fle:mineral/tenorite.andesite.crush"
+		},
+		"mine=tenorite,rock=basalt,state=resource": {
+			"model": "fle:mineral/tenorite.basalt.resource"
+		},
+		"mine=tenorite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/tenorite.basalt.smooth"
+		},
+		"mine=tenorite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/tenorite.basalt.cobble"
+		},
+		"mine=tenorite,rock=basalt,state=crush": {
+			"model": "fle:mineral/tenorite.basalt.crush"
+		},
+		"mine=tenorite,rock=limestone,state=resource": {
+			"model": "fle:mineral/tenorite.limestone.resource"
+		},
+		"mine=tenorite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/tenorite.limestone.smooth"
+		},
+		"mine=tenorite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/tenorite.limestone.cobble"
+		},
+		"mine=tenorite,rock=limestone,state=crush": {
+			"model": "fle:mineral/tenorite.limestone.crush"
+		},
+		"mine=tenorite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/tenorite.peridotite.resource"
+		},
+		"mine=tenorite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/tenorite.peridotite.smooth"
+		},
+		"mine=tenorite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/tenorite.peridotite.cobble"
+		},
+		"mine=tenorite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/tenorite.peridotite.crush"
+		},
+		"mine=cassiterite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/cassiterite.rhyolite.resource"
+		},
+		"mine=cassiterite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/cassiterite.rhyolite.smooth"
+		},
+		"mine=cassiterite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/cassiterite.rhyolite.cobble"
+		},
+		"mine=cassiterite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/cassiterite.rhyolite.crush"
+		},
+		"mine=cassiterite,rock=stone,state=resource": {
+			"model": "fle:mineral/cassiterite.stone.resource"
+		},
+		"mine=cassiterite,rock=stone,state=smooth": {
+			"model": "fle:mineral/cassiterite.stone.smooth"
+		},
+		"mine=cassiterite,rock=stone,state=cobble": {
+			"model": "fle:mineral/cassiterite.stone.cobble"
+		},
+		"mine=cassiterite,rock=stone,state=crush": {
+			"model": "fle:mineral/cassiterite.stone.crush"
+		},
+		"mine=cassiterite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/cassiterite.compact stone.resource"
+		},
+		"mine=cassiterite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/cassiterite.compact stone.smooth"
+		},
+		"mine=cassiterite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/cassiterite.compact stone.cobble"
+		},
+		"mine=cassiterite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/cassiterite.compact stone.crush"
+		},
+		"mine=cassiterite,rock=void,state=resource": {
+			"model": "fle:mineral/cassiterite.void.resource"
+		},
+		"mine=cassiterite,rock=void,state=smooth": {
+			"model": "fle:mineral/cassiterite.void.smooth"
+		},
+		"mine=cassiterite,rock=void,state=cobble": {
+			"model": "fle:mineral/cassiterite.void.cobble"
+		},
+		"mine=cassiterite,rock=void,state=crush": {
+			"model": "fle:mineral/cassiterite.void.crush"
+		},
+		"mine=cassiterite,rock=andesite,state=resource": {
+			"model": "fle:mineral/cassiterite.andesite.resource"
+		},
+		"mine=cassiterite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/cassiterite.andesite.smooth"
+		},
+		"mine=cassiterite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/cassiterite.andesite.cobble"
+		},
+		"mine=cassiterite,rock=andesite,state=crush": {
+			"model": "fle:mineral/cassiterite.andesite.crush"
+		},
+		"mine=cassiterite,rock=basalt,state=resource": {
+			"model": "fle:mineral/cassiterite.basalt.resource"
+		},
+		"mine=cassiterite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/cassiterite.basalt.smooth"
+		},
+		"mine=cassiterite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/cassiterite.basalt.cobble"
+		},
+		"mine=cassiterite,rock=basalt,state=crush": {
+			"model": "fle:mineral/cassiterite.basalt.crush"
+		},
+		"mine=cassiterite,rock=limestone,state=resource": {
+			"model": "fle:mineral/cassiterite.limestone.resource"
+		},
+		"mine=cassiterite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/cassiterite.limestone.smooth"
+		},
+		"mine=cassiterite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/cassiterite.limestone.cobble"
+		},
+		"mine=cassiterite,rock=limestone,state=crush": {
+			"model": "fle:mineral/cassiterite.limestone.crush"
+		},
+		"mine=cassiterite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/cassiterite.peridotite.resource"
+		},
+		"mine=cassiterite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/cassiterite.peridotite.smooth"
+		},
+		"mine=cassiterite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/cassiterite.peridotite.cobble"
+		},
+		"mine=cassiterite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/cassiterite.peridotite.crush"
+		},
+		"mine=stannite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/stannite.rhyolite.resource"
+		},
+		"mine=stannite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/stannite.rhyolite.smooth"
+		},
+		"mine=stannite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/stannite.rhyolite.cobble"
+		},
+		"mine=stannite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/stannite.rhyolite.crush"
+		},
+		"mine=stannite,rock=stone,state=resource": {
+			"model": "fle:mineral/stannite.stone.resource"
+		},
+		"mine=stannite,rock=stone,state=smooth": {
+			"model": "fle:mineral/stannite.stone.smooth"
+		},
+		"mine=stannite,rock=stone,state=cobble": {
+			"model": "fle:mineral/stannite.stone.cobble"
+		},
+		"mine=stannite,rock=stone,state=crush": {
+			"model": "fle:mineral/stannite.stone.crush"
+		},
+		"mine=stannite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/stannite.compact stone.resource"
+		},
+		"mine=stannite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/stannite.compact stone.smooth"
+		},
+		"mine=stannite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/stannite.compact stone.cobble"
+		},
+		"mine=stannite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/stannite.compact stone.crush"
+		},
+		"mine=stannite,rock=void,state=resource": {
+			"model": "fle:mineral/stannite.void.resource"
+		},
+		"mine=stannite,rock=void,state=smooth": {
+			"model": "fle:mineral/stannite.void.smooth"
+		},
+		"mine=stannite,rock=void,state=cobble": {
+			"model": "fle:mineral/stannite.void.cobble"
+		},
+		"mine=stannite,rock=void,state=crush": {
+			"model": "fle:mineral/stannite.void.crush"
+		},
+		"mine=stannite,rock=andesite,state=resource": {
+			"model": "fle:mineral/stannite.andesite.resource"
+		},
+		"mine=stannite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/stannite.andesite.smooth"
+		},
+		"mine=stannite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/stannite.andesite.cobble"
+		},
+		"mine=stannite,rock=andesite,state=crush": {
+			"model": "fle:mineral/stannite.andesite.crush"
+		},
+		"mine=stannite,rock=basalt,state=resource": {
+			"model": "fle:mineral/stannite.basalt.resource"
+		},
+		"mine=stannite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/stannite.basalt.smooth"
+		},
+		"mine=stannite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/stannite.basalt.cobble"
+		},
+		"mine=stannite,rock=basalt,state=crush": {
+			"model": "fle:mineral/stannite.basalt.crush"
+		},
+		"mine=stannite,rock=limestone,state=resource": {
+			"model": "fle:mineral/stannite.limestone.resource"
+		},
+		"mine=stannite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/stannite.limestone.smooth"
+		},
+		"mine=stannite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/stannite.limestone.cobble"
+		},
+		"mine=stannite,rock=limestone,state=crush": {
+			"model": "fle:mineral/stannite.limestone.crush"
+		},
+		"mine=stannite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/stannite.peridotite.resource"
+		},
+		"mine=stannite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/stannite.peridotite.smooth"
+		},
+		"mine=stannite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/stannite.peridotite.cobble"
+		},
+		"mine=stannite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/stannite.peridotite.crush"
+		},
+		"mine=void,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/void.rhyolite.resource"
+		},
+		"mine=void,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/void.rhyolite.smooth"
+		},
+		"mine=void,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/void.rhyolite.cobble"
+		},
+		"mine=void,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/void.rhyolite.crush"
+		},
+		"mine=void,rock=stone,state=resource": {
+			"model": "fle:mineral/void.stone.resource"
+		},
+		"mine=void,rock=stone,state=smooth": {
+			"model": "fle:mineral/void.stone.smooth"
+		},
+		"mine=void,rock=stone,state=cobble": {
+			"model": "fle:mineral/void.stone.cobble"
+		},
+		"mine=void,rock=stone,state=crush": {
+			"model": "fle:mineral/void.stone.crush"
+		},
+		"mine=void,rock=compact stone,state=resource": {
+			"model": "fle:mineral/void.compact stone.resource"
+		},
+		"mine=void,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/void.compact stone.smooth"
+		},
+		"mine=void,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/void.compact stone.cobble"
+		},
+		"mine=void,rock=compact stone,state=crush": {
+			"model": "fle:mineral/void.compact stone.crush"
+		},
+		"mine=void,rock=void,state=resource": {
+			"model": "fle:mineral/void.void.resource"
+		},
+		"mine=void,rock=void,state=smooth": {
+			"model": "fle:mineral/void.void.smooth"
+		},
+		"mine=void,rock=void,state=cobble": {
+			"model": "fle:mineral/void.void.cobble"
+		},
+		"mine=void,rock=void,state=crush": {
+			"model": "fle:mineral/void.void.crush"
+		},
+		"mine=void,rock=andesite,state=resource": {
+			"model": "fle:mineral/void.andesite.resource"
+		},
+		"mine=void,rock=andesite,state=smooth": {
+			"model": "fle:mineral/void.andesite.smooth"
+		},
+		"mine=void,rock=andesite,state=cobble": {
+			"model": "fle:mineral/void.andesite.cobble"
+		},
+		"mine=void,rock=andesite,state=crush": {
+			"model": "fle:mineral/void.andesite.crush"
+		},
+		"mine=void,rock=basalt,state=resource": {
+			"model": "fle:mineral/void.basalt.resource"
+		},
+		"mine=void,rock=basalt,state=smooth": {
+			"model": "fle:mineral/void.basalt.smooth"
+		},
+		"mine=void,rock=basalt,state=cobble": {
+			"model": "fle:mineral/void.basalt.cobble"
+		},
+		"mine=void,rock=basalt,state=crush": {
+			"model": "fle:mineral/void.basalt.crush"
+		},
+		"mine=void,rock=limestone,state=resource": {
+			"model": "fle:mineral/void.limestone.resource"
+		},
+		"mine=void,rock=limestone,state=smooth": {
+			"model": "fle:mineral/void.limestone.smooth"
+		},
+		"mine=void,rock=limestone,state=cobble": {
+			"model": "fle:mineral/void.limestone.cobble"
+		},
+		"mine=void,rock=limestone,state=crush": {
+			"model": "fle:mineral/void.limestone.crush"
+		},
+		"mine=void,rock=peridotite,state=resource": {
+			"model": "fle:mineral/void.peridotite.resource"
+		},
+		"mine=void,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/void.peridotite.smooth"
+		},
+		"mine=void,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/void.peridotite.cobble"
+		},
+		"mine=void,rock=peridotite,state=crush": {
+			"model": "fle:mineral/void.peridotite.crush"
+		},
+		"mine=azurite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/azurite.rhyolite.resource"
+		},
+		"mine=azurite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/azurite.rhyolite.smooth"
+		},
+		"mine=azurite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/azurite.rhyolite.cobble"
+		},
+		"mine=azurite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/azurite.rhyolite.crush"
+		},
+		"mine=azurite,rock=stone,state=resource": {
+			"model": "fle:mineral/azurite.stone.resource"
+		},
+		"mine=azurite,rock=stone,state=smooth": {
+			"model": "fle:mineral/azurite.stone.smooth"
+		},
+		"mine=azurite,rock=stone,state=cobble": {
+			"model": "fle:mineral/azurite.stone.cobble"
+		},
+		"mine=azurite,rock=stone,state=crush": {
+			"model": "fle:mineral/azurite.stone.crush"
+		},
+		"mine=azurite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/azurite.compact stone.resource"
+		},
+		"mine=azurite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/azurite.compact stone.smooth"
+		},
+		"mine=azurite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/azurite.compact stone.cobble"
+		},
+		"mine=azurite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/azurite.compact stone.crush"
+		},
+		"mine=azurite,rock=void,state=resource": {
+			"model": "fle:mineral/azurite.void.resource"
+		},
+		"mine=azurite,rock=void,state=smooth": {
+			"model": "fle:mineral/azurite.void.smooth"
+		},
+		"mine=azurite,rock=void,state=cobble": {
+			"model": "fle:mineral/azurite.void.cobble"
+		},
+		"mine=azurite,rock=void,state=crush": {
+			"model": "fle:mineral/azurite.void.crush"
+		},
+		"mine=azurite,rock=andesite,state=resource": {
+			"model": "fle:mineral/azurite.andesite.resource"
+		},
+		"mine=azurite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/azurite.andesite.smooth"
+		},
+		"mine=azurite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/azurite.andesite.cobble"
+		},
+		"mine=azurite,rock=andesite,state=crush": {
+			"model": "fle:mineral/azurite.andesite.crush"
+		},
+		"mine=azurite,rock=basalt,state=resource": {
+			"model": "fle:mineral/azurite.basalt.resource"
+		},
+		"mine=azurite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/azurite.basalt.smooth"
+		},
+		"mine=azurite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/azurite.basalt.cobble"
+		},
+		"mine=azurite,rock=basalt,state=crush": {
+			"model": "fle:mineral/azurite.basalt.crush"
+		},
+		"mine=azurite,rock=limestone,state=resource": {
+			"model": "fle:mineral/azurite.limestone.resource"
+		},
+		"mine=azurite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/azurite.limestone.smooth"
+		},
+		"mine=azurite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/azurite.limestone.cobble"
+		},
+		"mine=azurite,rock=limestone,state=crush": {
+			"model": "fle:mineral/azurite.limestone.crush"
+		},
+		"mine=azurite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/azurite.peridotite.resource"
+		},
+		"mine=azurite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/azurite.peridotite.smooth"
+		},
+		"mine=azurite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/azurite.peridotite.cobble"
+		},
+		"mine=azurite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/azurite.peridotite.crush"
+		},
+		"mine=malachite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/malachite.rhyolite.resource"
+		},
+		"mine=malachite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/malachite.rhyolite.smooth"
+		},
+		"mine=malachite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/malachite.rhyolite.cobble"
+		},
+		"mine=malachite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/malachite.rhyolite.crush"
+		},
+		"mine=malachite,rock=stone,state=resource": {
+			"model": "fle:mineral/malachite.stone.resource"
+		},
+		"mine=malachite,rock=stone,state=smooth": {
+			"model": "fle:mineral/malachite.stone.smooth"
+		},
+		"mine=malachite,rock=stone,state=cobble": {
+			"model": "fle:mineral/malachite.stone.cobble"
+		},
+		"mine=malachite,rock=stone,state=crush": {
+			"model": "fle:mineral/malachite.stone.crush"
+		},
+		"mine=malachite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/malachite.compact stone.resource"
+		},
+		"mine=malachite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/malachite.compact stone.smooth"
+		},
+		"mine=malachite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/malachite.compact stone.cobble"
+		},
+		"mine=malachite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/malachite.compact stone.crush"
+		},
+		"mine=malachite,rock=void,state=resource": {
+			"model": "fle:mineral/malachite.void.resource"
+		},
+		"mine=malachite,rock=void,state=smooth": {
+			"model": "fle:mineral/malachite.void.smooth"
+		},
+		"mine=malachite,rock=void,state=cobble": {
+			"model": "fle:mineral/malachite.void.cobble"
+		},
+		"mine=malachite,rock=void,state=crush": {
+			"model": "fle:mineral/malachite.void.crush"
+		},
+		"mine=malachite,rock=andesite,state=resource": {
+			"model": "fle:mineral/malachite.andesite.resource"
+		},
+		"mine=malachite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/malachite.andesite.smooth"
+		},
+		"mine=malachite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/malachite.andesite.cobble"
+		},
+		"mine=malachite,rock=andesite,state=crush": {
+			"model": "fle:mineral/malachite.andesite.crush"
+		},
+		"mine=malachite,rock=basalt,state=resource": {
+			"model": "fle:mineral/malachite.basalt.resource"
+		},
+		"mine=malachite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/malachite.basalt.smooth"
+		},
+		"mine=malachite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/malachite.basalt.cobble"
+		},
+		"mine=malachite,rock=basalt,state=crush": {
+			"model": "fle:mineral/malachite.basalt.crush"
+		},
+		"mine=malachite,rock=limestone,state=resource": {
+			"model": "fle:mineral/malachite.limestone.resource"
+		},
+		"mine=malachite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/malachite.limestone.smooth"
+		},
+		"mine=malachite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/malachite.limestone.cobble"
+		},
+		"mine=malachite,rock=limestone,state=crush": {
+			"model": "fle:mineral/malachite.limestone.crush"
+		},
+		"mine=malachite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/malachite.peridotite.resource"
+		},
+		"mine=malachite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/malachite.peridotite.smooth"
+		},
+		"mine=malachite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/malachite.peridotite.cobble"
+		},
+		"mine=malachite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/malachite.peridotite.crush"
+		},
+		"mine=nickeline,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/nickeline.rhyolite.resource"
+		},
+		"mine=nickeline,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/nickeline.rhyolite.smooth"
+		},
+		"mine=nickeline,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/nickeline.rhyolite.cobble"
+		},
+		"mine=nickeline,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/nickeline.rhyolite.crush"
+		},
+		"mine=nickeline,rock=stone,state=resource": {
+			"model": "fle:mineral/nickeline.stone.resource"
+		},
+		"mine=nickeline,rock=stone,state=smooth": {
+			"model": "fle:mineral/nickeline.stone.smooth"
+		},
+		"mine=nickeline,rock=stone,state=cobble": {
+			"model": "fle:mineral/nickeline.stone.cobble"
+		},
+		"mine=nickeline,rock=stone,state=crush": {
+			"model": "fle:mineral/nickeline.stone.crush"
+		},
+		"mine=nickeline,rock=compact stone,state=resource": {
+			"model": "fle:mineral/nickeline.compact stone.resource"
+		},
+		"mine=nickeline,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/nickeline.compact stone.smooth"
+		},
+		"mine=nickeline,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/nickeline.compact stone.cobble"
+		},
+		"mine=nickeline,rock=compact stone,state=crush": {
+			"model": "fle:mineral/nickeline.compact stone.crush"
+		},
+		"mine=nickeline,rock=void,state=resource": {
+			"model": "fle:mineral/nickeline.void.resource"
+		},
+		"mine=nickeline,rock=void,state=smooth": {
+			"model": "fle:mineral/nickeline.void.smooth"
+		},
+		"mine=nickeline,rock=void,state=cobble": {
+			"model": "fle:mineral/nickeline.void.cobble"
+		},
+		"mine=nickeline,rock=void,state=crush": {
+			"model": "fle:mineral/nickeline.void.crush"
+		},
+		"mine=nickeline,rock=andesite,state=resource": {
+			"model": "fle:mineral/nickeline.andesite.resource"
+		},
+		"mine=nickeline,rock=andesite,state=smooth": {
+			"model": "fle:mineral/nickeline.andesite.smooth"
+		},
+		"mine=nickeline,rock=andesite,state=cobble": {
+			"model": "fle:mineral/nickeline.andesite.cobble"
+		},
+		"mine=nickeline,rock=andesite,state=crush": {
+			"model": "fle:mineral/nickeline.andesite.crush"
+		},
+		"mine=nickeline,rock=basalt,state=resource": {
+			"model": "fle:mineral/nickeline.basalt.resource"
+		},
+		"mine=nickeline,rock=basalt,state=smooth": {
+			"model": "fle:mineral/nickeline.basalt.smooth"
+		},
+		"mine=nickeline,rock=basalt,state=cobble": {
+			"model": "fle:mineral/nickeline.basalt.cobble"
+		},
+		"mine=nickeline,rock=basalt,state=crush": {
+			"model": "fle:mineral/nickeline.basalt.crush"
+		},
+		"mine=nickeline,rock=limestone,state=resource": {
+			"model": "fle:mineral/nickeline.limestone.resource"
+		},
+		"mine=nickeline,rock=limestone,state=smooth": {
+			"model": "fle:mineral/nickeline.limestone.smooth"
+		},
+		"mine=nickeline,rock=limestone,state=cobble": {
+			"model": "fle:mineral/nickeline.limestone.cobble"
+		},
+		"mine=nickeline,rock=limestone,state=crush": {
+			"model": "fle:mineral/nickeline.limestone.crush"
+		},
+		"mine=nickeline,rock=peridotite,state=resource": {
+			"model": "fle:mineral/nickeline.peridotite.resource"
+		},
+		"mine=nickeline,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/nickeline.peridotite.smooth"
+		},
+		"mine=nickeline,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/nickeline.peridotite.cobble"
+		},
+		"mine=nickeline,rock=peridotite,state=crush": {
+			"model": "fle:mineral/nickeline.peridotite.crush"
+		},
+		"mine=chalcocite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/chalcocite.rhyolite.resource"
+		},
+		"mine=chalcocite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/chalcocite.rhyolite.smooth"
+		},
+		"mine=chalcocite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/chalcocite.rhyolite.cobble"
+		},
+		"mine=chalcocite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/chalcocite.rhyolite.crush"
+		},
+		"mine=chalcocite,rock=stone,state=resource": {
+			"model": "fle:mineral/chalcocite.stone.resource"
+		},
+		"mine=chalcocite,rock=stone,state=smooth": {
+			"model": "fle:mineral/chalcocite.stone.smooth"
+		},
+		"mine=chalcocite,rock=stone,state=cobble": {
+			"model": "fle:mineral/chalcocite.stone.cobble"
+		},
+		"mine=chalcocite,rock=stone,state=crush": {
+			"model": "fle:mineral/chalcocite.stone.crush"
+		},
+		"mine=chalcocite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/chalcocite.compact stone.resource"
+		},
+		"mine=chalcocite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/chalcocite.compact stone.smooth"
+		},
+		"mine=chalcocite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/chalcocite.compact stone.cobble"
+		},
+		"mine=chalcocite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/chalcocite.compact stone.crush"
+		},
+		"mine=chalcocite,rock=void,state=resource": {
+			"model": "fle:mineral/chalcocite.void.resource"
+		},
+		"mine=chalcocite,rock=void,state=smooth": {
+			"model": "fle:mineral/chalcocite.void.smooth"
+		},
+		"mine=chalcocite,rock=void,state=cobble": {
+			"model": "fle:mineral/chalcocite.void.cobble"
+		},
+		"mine=chalcocite,rock=void,state=crush": {
+			"model": "fle:mineral/chalcocite.void.crush"
+		},
+		"mine=chalcocite,rock=andesite,state=resource": {
+			"model": "fle:mineral/chalcocite.andesite.resource"
+		},
+		"mine=chalcocite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/chalcocite.andesite.smooth"
+		},
+		"mine=chalcocite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/chalcocite.andesite.cobble"
+		},
+		"mine=chalcocite,rock=andesite,state=crush": {
+			"model": "fle:mineral/chalcocite.andesite.crush"
+		},
+		"mine=chalcocite,rock=basalt,state=resource": {
+			"model": "fle:mineral/chalcocite.basalt.resource"
+		},
+		"mine=chalcocite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/chalcocite.basalt.smooth"
+		},
+		"mine=chalcocite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/chalcocite.basalt.cobble"
+		},
+		"mine=chalcocite,rock=basalt,state=crush": {
+			"model": "fle:mineral/chalcocite.basalt.crush"
+		},
+		"mine=chalcocite,rock=limestone,state=resource": {
+			"model": "fle:mineral/chalcocite.limestone.resource"
+		},
+		"mine=chalcocite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/chalcocite.limestone.smooth"
+		},
+		"mine=chalcocite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/chalcocite.limestone.cobble"
+		},
+		"mine=chalcocite,rock=limestone,state=crush": {
+			"model": "fle:mineral/chalcocite.limestone.crush"
+		},
+		"mine=chalcocite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/chalcocite.peridotite.resource"
+		},
+		"mine=chalcocite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/chalcocite.peridotite.smooth"
+		},
+		"mine=chalcocite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/chalcocite.peridotite.cobble"
+		},
+		"mine=chalcocite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/chalcocite.peridotite.crush"
+		},
+		"mine=chalcopyrite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/chalcopyrite.rhyolite.resource"
+		},
+		"mine=chalcopyrite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.rhyolite.smooth"
+		},
+		"mine=chalcopyrite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.rhyolite.cobble"
+		},
+		"mine=chalcopyrite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/chalcopyrite.rhyolite.crush"
+		},
+		"mine=chalcopyrite,rock=stone,state=resource": {
+			"model": "fle:mineral/chalcopyrite.stone.resource"
+		},
+		"mine=chalcopyrite,rock=stone,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.stone.smooth"
+		},
+		"mine=chalcopyrite,rock=stone,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.stone.cobble"
+		},
+		"mine=chalcopyrite,rock=stone,state=crush": {
+			"model": "fle:mineral/chalcopyrite.stone.crush"
+		},
+		"mine=chalcopyrite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/chalcopyrite.compact stone.resource"
+		},
+		"mine=chalcopyrite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.compact stone.smooth"
+		},
+		"mine=chalcopyrite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.compact stone.cobble"
+		},
+		"mine=chalcopyrite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/chalcopyrite.compact stone.crush"
+		},
+		"mine=chalcopyrite,rock=void,state=resource": {
+			"model": "fle:mineral/chalcopyrite.void.resource"
+		},
+		"mine=chalcopyrite,rock=void,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.void.smooth"
+		},
+		"mine=chalcopyrite,rock=void,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.void.cobble"
+		},
+		"mine=chalcopyrite,rock=void,state=crush": {
+			"model": "fle:mineral/chalcopyrite.void.crush"
+		},
+		"mine=chalcopyrite,rock=andesite,state=resource": {
+			"model": "fle:mineral/chalcopyrite.andesite.resource"
+		},
+		"mine=chalcopyrite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.andesite.smooth"
+		},
+		"mine=chalcopyrite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.andesite.cobble"
+		},
+		"mine=chalcopyrite,rock=andesite,state=crush": {
+			"model": "fle:mineral/chalcopyrite.andesite.crush"
+		},
+		"mine=chalcopyrite,rock=basalt,state=resource": {
+			"model": "fle:mineral/chalcopyrite.basalt.resource"
+		},
+		"mine=chalcopyrite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.basalt.smooth"
+		},
+		"mine=chalcopyrite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.basalt.cobble"
+		},
+		"mine=chalcopyrite,rock=basalt,state=crush": {
+			"model": "fle:mineral/chalcopyrite.basalt.crush"
+		},
+		"mine=chalcopyrite,rock=limestone,state=resource": {
+			"model": "fle:mineral/chalcopyrite.limestone.resource"
+		},
+		"mine=chalcopyrite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.limestone.smooth"
+		},
+		"mine=chalcopyrite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.limestone.cobble"
+		},
+		"mine=chalcopyrite,rock=limestone,state=crush": {
+			"model": "fle:mineral/chalcopyrite.limestone.crush"
+		},
+		"mine=chalcopyrite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/chalcopyrite.peridotite.resource"
+		},
+		"mine=chalcopyrite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/chalcopyrite.peridotite.smooth"
+		},
+		"mine=chalcopyrite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/chalcopyrite.peridotite.cobble"
+		},
+		"mine=chalcopyrite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/chalcopyrite.peridotite.crush"
+		},
+		"mine=erythrite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/erythrite.rhyolite.resource"
+		},
+		"mine=erythrite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/erythrite.rhyolite.smooth"
+		},
+		"mine=erythrite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/erythrite.rhyolite.cobble"
+		},
+		"mine=erythrite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/erythrite.rhyolite.crush"
+		},
+		"mine=erythrite,rock=stone,state=resource": {
+			"model": "fle:mineral/erythrite.stone.resource"
+		},
+		"mine=erythrite,rock=stone,state=smooth": {
+			"model": "fle:mineral/erythrite.stone.smooth"
+		},
+		"mine=erythrite,rock=stone,state=cobble": {
+			"model": "fle:mineral/erythrite.stone.cobble"
+		},
+		"mine=erythrite,rock=stone,state=crush": {
+			"model": "fle:mineral/erythrite.stone.crush"
+		},
+		"mine=erythrite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/erythrite.compact stone.resource"
+		},
+		"mine=erythrite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/erythrite.compact stone.smooth"
+		},
+		"mine=erythrite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/erythrite.compact stone.cobble"
+		},
+		"mine=erythrite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/erythrite.compact stone.crush"
+		},
+		"mine=erythrite,rock=void,state=resource": {
+			"model": "fle:mineral/erythrite.void.resource"
+		},
+		"mine=erythrite,rock=void,state=smooth": {
+			"model": "fle:mineral/erythrite.void.smooth"
+		},
+		"mine=erythrite,rock=void,state=cobble": {
+			"model": "fle:mineral/erythrite.void.cobble"
+		},
+		"mine=erythrite,rock=void,state=crush": {
+			"model": "fle:mineral/erythrite.void.crush"
+		},
+		"mine=erythrite,rock=andesite,state=resource": {
+			"model": "fle:mineral/erythrite.andesite.resource"
+		},
+		"mine=erythrite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/erythrite.andesite.smooth"
+		},
+		"mine=erythrite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/erythrite.andesite.cobble"
+		},
+		"mine=erythrite,rock=andesite,state=crush": {
+			"model": "fle:mineral/erythrite.andesite.crush"
+		},
+		"mine=erythrite,rock=basalt,state=resource": {
+			"model": "fle:mineral/erythrite.basalt.resource"
+		},
+		"mine=erythrite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/erythrite.basalt.smooth"
+		},
+		"mine=erythrite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/erythrite.basalt.cobble"
+		},
+		"mine=erythrite,rock=basalt,state=crush": {
+			"model": "fle:mineral/erythrite.basalt.crush"
+		},
+		"mine=erythrite,rock=limestone,state=resource": {
+			"model": "fle:mineral/erythrite.limestone.resource"
+		},
+		"mine=erythrite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/erythrite.limestone.smooth"
+		},
+		"mine=erythrite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/erythrite.limestone.cobble"
+		},
+		"mine=erythrite,rock=limestone,state=crush": {
+			"model": "fle:mineral/erythrite.limestone.crush"
+		},
+		"mine=erythrite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/erythrite.peridotite.resource"
+		},
+		"mine=erythrite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/erythrite.peridotite.smooth"
+		},
+		"mine=erythrite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/erythrite.peridotite.cobble"
+		},
+		"mine=erythrite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/erythrite.peridotite.crush"
+		},
+		"mine=tetrahedrite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/tetrahedrite.rhyolite.resource"
+		},
+		"mine=tetrahedrite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.rhyolite.smooth"
+		},
+		"mine=tetrahedrite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.rhyolite.cobble"
+		},
+		"mine=tetrahedrite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/tetrahedrite.rhyolite.crush"
+		},
+		"mine=tetrahedrite,rock=stone,state=resource": {
+			"model": "fle:mineral/tetrahedrite.stone.resource"
+		},
+		"mine=tetrahedrite,rock=stone,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.stone.smooth"
+		},
+		"mine=tetrahedrite,rock=stone,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.stone.cobble"
+		},
+		"mine=tetrahedrite,rock=stone,state=crush": {
+			"model": "fle:mineral/tetrahedrite.stone.crush"
+		},
+		"mine=tetrahedrite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/tetrahedrite.compact stone.resource"
+		},
+		"mine=tetrahedrite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.compact stone.smooth"
+		},
+		"mine=tetrahedrite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.compact stone.cobble"
+		},
+		"mine=tetrahedrite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/tetrahedrite.compact stone.crush"
+		},
+		"mine=tetrahedrite,rock=void,state=resource": {
+			"model": "fle:mineral/tetrahedrite.void.resource"
+		},
+		"mine=tetrahedrite,rock=void,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.void.smooth"
+		},
+		"mine=tetrahedrite,rock=void,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.void.cobble"
+		},
+		"mine=tetrahedrite,rock=void,state=crush": {
+			"model": "fle:mineral/tetrahedrite.void.crush"
+		},
+		"mine=tetrahedrite,rock=andesite,state=resource": {
+			"model": "fle:mineral/tetrahedrite.andesite.resource"
+		},
+		"mine=tetrahedrite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.andesite.smooth"
+		},
+		"mine=tetrahedrite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.andesite.cobble"
+		},
+		"mine=tetrahedrite,rock=andesite,state=crush": {
+			"model": "fle:mineral/tetrahedrite.andesite.crush"
+		},
+		"mine=tetrahedrite,rock=basalt,state=resource": {
+			"model": "fle:mineral/tetrahedrite.basalt.resource"
+		},
+		"mine=tetrahedrite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.basalt.smooth"
+		},
+		"mine=tetrahedrite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.basalt.cobble"
+		},
+		"mine=tetrahedrite,rock=basalt,state=crush": {
+			"model": "fle:mineral/tetrahedrite.basalt.crush"
+		},
+		"mine=tetrahedrite,rock=limestone,state=resource": {
+			"model": "fle:mineral/tetrahedrite.limestone.resource"
+		},
+		"mine=tetrahedrite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.limestone.smooth"
+		},
+		"mine=tetrahedrite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.limestone.cobble"
+		},
+		"mine=tetrahedrite,rock=limestone,state=crush": {
+			"model": "fle:mineral/tetrahedrite.limestone.crush"
+		},
+		"mine=tetrahedrite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/tetrahedrite.peridotite.resource"
+		},
+		"mine=tetrahedrite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/tetrahedrite.peridotite.smooth"
+		},
+		"mine=tetrahedrite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/tetrahedrite.peridotite.cobble"
+		},
+		"mine=tetrahedrite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/tetrahedrite.peridotite.crush"
+		},
+		"mine=enargite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/enargite.rhyolite.resource"
+		},
+		"mine=enargite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/enargite.rhyolite.smooth"
+		},
+		"mine=enargite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/enargite.rhyolite.cobble"
+		},
+		"mine=enargite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/enargite.rhyolite.crush"
+		},
+		"mine=enargite,rock=stone,state=resource": {
+			"model": "fle:mineral/enargite.stone.resource"
+		},
+		"mine=enargite,rock=stone,state=smooth": {
+			"model": "fle:mineral/enargite.stone.smooth"
+		},
+		"mine=enargite,rock=stone,state=cobble": {
+			"model": "fle:mineral/enargite.stone.cobble"
+		},
+		"mine=enargite,rock=stone,state=crush": {
+			"model": "fle:mineral/enargite.stone.crush"
+		},
+		"mine=enargite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/enargite.compact stone.resource"
+		},
+		"mine=enargite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/enargite.compact stone.smooth"
+		},
+		"mine=enargite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/enargite.compact stone.cobble"
+		},
+		"mine=enargite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/enargite.compact stone.crush"
+		},
+		"mine=enargite,rock=void,state=resource": {
+			"model": "fle:mineral/enargite.void.resource"
+		},
+		"mine=enargite,rock=void,state=smooth": {
+			"model": "fle:mineral/enargite.void.smooth"
+		},
+		"mine=enargite,rock=void,state=cobble": {
+			"model": "fle:mineral/enargite.void.cobble"
+		},
+		"mine=enargite,rock=void,state=crush": {
+			"model": "fle:mineral/enargite.void.crush"
+		},
+		"mine=enargite,rock=andesite,state=resource": {
+			"model": "fle:mineral/enargite.andesite.resource"
+		},
+		"mine=enargite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/enargite.andesite.smooth"
+		},
+		"mine=enargite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/enargite.andesite.cobble"
+		},
+		"mine=enargite,rock=andesite,state=crush": {
+			"model": "fle:mineral/enargite.andesite.crush"
+		},
+		"mine=enargite,rock=basalt,state=resource": {
+			"model": "fle:mineral/enargite.basalt.resource"
+		},
+		"mine=enargite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/enargite.basalt.smooth"
+		},
+		"mine=enargite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/enargite.basalt.cobble"
+		},
+		"mine=enargite,rock=basalt,state=crush": {
+			"model": "fle:mineral/enargite.basalt.crush"
+		},
+		"mine=enargite,rock=limestone,state=resource": {
+			"model": "fle:mineral/enargite.limestone.resource"
+		},
+		"mine=enargite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/enargite.limestone.smooth"
+		},
+		"mine=enargite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/enargite.limestone.cobble"
+		},
+		"mine=enargite,rock=limestone,state=crush": {
+			"model": "fle:mineral/enargite.limestone.crush"
+		},
+		"mine=enargite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/enargite.peridotite.resource"
+		},
+		"mine=enargite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/enargite.peridotite.smooth"
+		},
+		"mine=enargite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/enargite.peridotite.cobble"
+		},
+		"mine=enargite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/enargite.peridotite.crush"
+		},
+		"mine=bornite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/bornite.rhyolite.resource"
+		},
+		"mine=bornite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/bornite.rhyolite.smooth"
+		},
+		"mine=bornite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/bornite.rhyolite.cobble"
+		},
+		"mine=bornite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/bornite.rhyolite.crush"
+		},
+		"mine=bornite,rock=stone,state=resource": {
+			"model": "fle:mineral/bornite.stone.resource"
+		},
+		"mine=bornite,rock=stone,state=smooth": {
+			"model": "fle:mineral/bornite.stone.smooth"
+		},
+		"mine=bornite,rock=stone,state=cobble": {
+			"model": "fle:mineral/bornite.stone.cobble"
+		},
+		"mine=bornite,rock=stone,state=crush": {
+			"model": "fle:mineral/bornite.stone.crush"
+		},
+		"mine=bornite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/bornite.compact stone.resource"
+		},
+		"mine=bornite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/bornite.compact stone.smooth"
+		},
+		"mine=bornite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/bornite.compact stone.cobble"
+		},
+		"mine=bornite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/bornite.compact stone.crush"
+		},
+		"mine=bornite,rock=void,state=resource": {
+			"model": "fle:mineral/bornite.void.resource"
+		},
+		"mine=bornite,rock=void,state=smooth": {
+			"model": "fle:mineral/bornite.void.smooth"
+		},
+		"mine=bornite,rock=void,state=cobble": {
+			"model": "fle:mineral/bornite.void.cobble"
+		},
+		"mine=bornite,rock=void,state=crush": {
+			"model": "fle:mineral/bornite.void.crush"
+		},
+		"mine=bornite,rock=andesite,state=resource": {
+			"model": "fle:mineral/bornite.andesite.resource"
+		},
+		"mine=bornite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/bornite.andesite.smooth"
+		},
+		"mine=bornite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/bornite.andesite.cobble"
+		},
+		"mine=bornite,rock=andesite,state=crush": {
+			"model": "fle:mineral/bornite.andesite.crush"
+		},
+		"mine=bornite,rock=basalt,state=resource": {
+			"model": "fle:mineral/bornite.basalt.resource"
+		},
+		"mine=bornite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/bornite.basalt.smooth"
+		},
+		"mine=bornite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/bornite.basalt.cobble"
+		},
+		"mine=bornite,rock=basalt,state=crush": {
+			"model": "fle:mineral/bornite.basalt.crush"
+		},
+		"mine=bornite,rock=limestone,state=resource": {
+			"model": "fle:mineral/bornite.limestone.resource"
+		},
+		"mine=bornite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/bornite.limestone.smooth"
+		},
+		"mine=bornite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/bornite.limestone.cobble"
+		},
+		"mine=bornite,rock=limestone,state=crush": {
+			"model": "fle:mineral/bornite.limestone.crush"
+		},
+		"mine=bornite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/bornite.peridotite.resource"
+		},
+		"mine=bornite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/bornite.peridotite.smooth"
+		},
+		"mine=bornite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/bornite.peridotite.cobble"
+		},
+		"mine=bornite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/bornite.peridotite.crush"
+		},
+		"mine=scorodite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/scorodite.rhyolite.resource"
+		},
+		"mine=scorodite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/scorodite.rhyolite.smooth"
+		},
+		"mine=scorodite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/scorodite.rhyolite.cobble"
+		},
+		"mine=scorodite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/scorodite.rhyolite.crush"
+		},
+		"mine=scorodite,rock=stone,state=resource": {
+			"model": "fle:mineral/scorodite.stone.resource"
+		},
+		"mine=scorodite,rock=stone,state=smooth": {
+			"model": "fle:mineral/scorodite.stone.smooth"
+		},
+		"mine=scorodite,rock=stone,state=cobble": {
+			"model": "fle:mineral/scorodite.stone.cobble"
+		},
+		"mine=scorodite,rock=stone,state=crush": {
+			"model": "fle:mineral/scorodite.stone.crush"
+		},
+		"mine=scorodite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/scorodite.compact stone.resource"
+		},
+		"mine=scorodite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/scorodite.compact stone.smooth"
+		},
+		"mine=scorodite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/scorodite.compact stone.cobble"
+		},
+		"mine=scorodite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/scorodite.compact stone.crush"
+		},
+		"mine=scorodite,rock=void,state=resource": {
+			"model": "fle:mineral/scorodite.void.resource"
+		},
+		"mine=scorodite,rock=void,state=smooth": {
+			"model": "fle:mineral/scorodite.void.smooth"
+		},
+		"mine=scorodite,rock=void,state=cobble": {
+			"model": "fle:mineral/scorodite.void.cobble"
+		},
+		"mine=scorodite,rock=void,state=crush": {
+			"model": "fle:mineral/scorodite.void.crush"
+		},
+		"mine=scorodite,rock=andesite,state=resource": {
+			"model": "fle:mineral/scorodite.andesite.resource"
+		},
+		"mine=scorodite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/scorodite.andesite.smooth"
+		},
+		"mine=scorodite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/scorodite.andesite.cobble"
+		},
+		"mine=scorodite,rock=andesite,state=crush": {
+			"model": "fle:mineral/scorodite.andesite.crush"
+		},
+		"mine=scorodite,rock=basalt,state=resource": {
+			"model": "fle:mineral/scorodite.basalt.resource"
+		},
+		"mine=scorodite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/scorodite.basalt.smooth"
+		},
+		"mine=scorodite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/scorodite.basalt.cobble"
+		},
+		"mine=scorodite,rock=basalt,state=crush": {
+			"model": "fle:mineral/scorodite.basalt.crush"
+		},
+		"mine=scorodite,rock=limestone,state=resource": {
+			"model": "fle:mineral/scorodite.limestone.resource"
+		},
+		"mine=scorodite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/scorodite.limestone.smooth"
+		},
+		"mine=scorodite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/scorodite.limestone.cobble"
+		},
+		"mine=scorodite,rock=limestone,state=crush": {
+			"model": "fle:mineral/scorodite.limestone.crush"
+		},
+		"mine=scorodite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/scorodite.peridotite.resource"
+		},
+		"mine=scorodite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/scorodite.peridotite.smooth"
+		},
+		"mine=scorodite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/scorodite.peridotite.cobble"
+		},
+		"mine=scorodite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/scorodite.peridotite.crush"
+		},
+		"mine=orpiment,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/orpiment.rhyolite.resource"
+		},
+		"mine=orpiment,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/orpiment.rhyolite.smooth"
+		},
+		"mine=orpiment,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/orpiment.rhyolite.cobble"
+		},
+		"mine=orpiment,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/orpiment.rhyolite.crush"
+		},
+		"mine=orpiment,rock=stone,state=resource": {
+			"model": "fle:mineral/orpiment.stone.resource"
+		},
+		"mine=orpiment,rock=stone,state=smooth": {
+			"model": "fle:mineral/orpiment.stone.smooth"
+		},
+		"mine=orpiment,rock=stone,state=cobble": {
+			"model": "fle:mineral/orpiment.stone.cobble"
+		},
+		"mine=orpiment,rock=stone,state=crush": {
+			"model": "fle:mineral/orpiment.stone.crush"
+		},
+		"mine=orpiment,rock=compact stone,state=resource": {
+			"model": "fle:mineral/orpiment.compact stone.resource"
+		},
+		"mine=orpiment,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/orpiment.compact stone.smooth"
+		},
+		"mine=orpiment,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/orpiment.compact stone.cobble"
+		},
+		"mine=orpiment,rock=compact stone,state=crush": {
+			"model": "fle:mineral/orpiment.compact stone.crush"
+		},
+		"mine=orpiment,rock=void,state=resource": {
+			"model": "fle:mineral/orpiment.void.resource"
+		},
+		"mine=orpiment,rock=void,state=smooth": {
+			"model": "fle:mineral/orpiment.void.smooth"
+		},
+		"mine=orpiment,rock=void,state=cobble": {
+			"model": "fle:mineral/orpiment.void.cobble"
+		},
+		"mine=orpiment,rock=void,state=crush": {
+			"model": "fle:mineral/orpiment.void.crush"
+		},
+		"mine=orpiment,rock=andesite,state=resource": {
+			"model": "fle:mineral/orpiment.andesite.resource"
+		},
+		"mine=orpiment,rock=andesite,state=smooth": {
+			"model": "fle:mineral/orpiment.andesite.smooth"
+		},
+		"mine=orpiment,rock=andesite,state=cobble": {
+			"model": "fle:mineral/orpiment.andesite.cobble"
+		},
+		"mine=orpiment,rock=andesite,state=crush": {
+			"model": "fle:mineral/orpiment.andesite.crush"
+		},
+		"mine=orpiment,rock=basalt,state=resource": {
+			"model": "fle:mineral/orpiment.basalt.resource"
+		},
+		"mine=orpiment,rock=basalt,state=smooth": {
+			"model": "fle:mineral/orpiment.basalt.smooth"
+		},
+		"mine=orpiment,rock=basalt,state=cobble": {
+			"model": "fle:mineral/orpiment.basalt.cobble"
+		},
+		"mine=orpiment,rock=basalt,state=crush": {
+			"model": "fle:mineral/orpiment.basalt.crush"
+		},
+		"mine=orpiment,rock=limestone,state=resource": {
+			"model": "fle:mineral/orpiment.limestone.resource"
+		},
+		"mine=orpiment,rock=limestone,state=smooth": {
+			"model": "fle:mineral/orpiment.limestone.smooth"
+		},
+		"mine=orpiment,rock=limestone,state=cobble": {
+			"model": "fle:mineral/orpiment.limestone.cobble"
+		},
+		"mine=orpiment,rock=limestone,state=crush": {
+			"model": "fle:mineral/orpiment.limestone.crush"
+		},
+		"mine=orpiment,rock=peridotite,state=resource": {
+			"model": "fle:mineral/orpiment.peridotite.resource"
+		},
+		"mine=orpiment,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/orpiment.peridotite.smooth"
+		},
+		"mine=orpiment,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/orpiment.peridotite.cobble"
+		},
+		"mine=orpiment,rock=peridotite,state=crush": {
+			"model": "fle:mineral/orpiment.peridotite.crush"
+		},
+		"mine=arsenolite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/arsenolite.rhyolite.resource"
+		},
+		"mine=arsenolite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/arsenolite.rhyolite.smooth"
+		},
+		"mine=arsenolite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/arsenolite.rhyolite.cobble"
+		},
+		"mine=arsenolite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/arsenolite.rhyolite.crush"
+		},
+		"mine=arsenolite,rock=stone,state=resource": {
+			"model": "fle:mineral/arsenolite.stone.resource"
+		},
+		"mine=arsenolite,rock=stone,state=smooth": {
+			"model": "fle:mineral/arsenolite.stone.smooth"
+		},
+		"mine=arsenolite,rock=stone,state=cobble": {
+			"model": "fle:mineral/arsenolite.stone.cobble"
+		},
+		"mine=arsenolite,rock=stone,state=crush": {
+			"model": "fle:mineral/arsenolite.stone.crush"
+		},
+		"mine=arsenolite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/arsenolite.compact stone.resource"
+		},
+		"mine=arsenolite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/arsenolite.compact stone.smooth"
+		},
+		"mine=arsenolite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/arsenolite.compact stone.cobble"
+		},
+		"mine=arsenolite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/arsenolite.compact stone.crush"
+		},
+		"mine=arsenolite,rock=void,state=resource": {
+			"model": "fle:mineral/arsenolite.void.resource"
+		},
+		"mine=arsenolite,rock=void,state=smooth": {
+			"model": "fle:mineral/arsenolite.void.smooth"
+		},
+		"mine=arsenolite,rock=void,state=cobble": {
+			"model": "fle:mineral/arsenolite.void.cobble"
+		},
+		"mine=arsenolite,rock=void,state=crush": {
+			"model": "fle:mineral/arsenolite.void.crush"
+		},
+		"mine=arsenolite,rock=andesite,state=resource": {
+			"model": "fle:mineral/arsenolite.andesite.resource"
+		},
+		"mine=arsenolite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/arsenolite.andesite.smooth"
+		},
+		"mine=arsenolite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/arsenolite.andesite.cobble"
+		},
+		"mine=arsenolite,rock=andesite,state=crush": {
+			"model": "fle:mineral/arsenolite.andesite.crush"
+		},
+		"mine=arsenolite,rock=basalt,state=resource": {
+			"model": "fle:mineral/arsenolite.basalt.resource"
+		},
+		"mine=arsenolite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/arsenolite.basalt.smooth"
+		},
+		"mine=arsenolite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/arsenolite.basalt.cobble"
+		},
+		"mine=arsenolite,rock=basalt,state=crush": {
+			"model": "fle:mineral/arsenolite.basalt.crush"
+		},
+		"mine=arsenolite,rock=limestone,state=resource": {
+			"model": "fle:mineral/arsenolite.limestone.resource"
+		},
+		"mine=arsenolite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/arsenolite.limestone.smooth"
+		},
+		"mine=arsenolite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/arsenolite.limestone.cobble"
+		},
+		"mine=arsenolite,rock=limestone,state=crush": {
+			"model": "fle:mineral/arsenolite.limestone.crush"
+		},
+		"mine=arsenolite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/arsenolite.peridotite.resource"
+		},
+		"mine=arsenolite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/arsenolite.peridotite.smooth"
+		},
+		"mine=arsenolite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/arsenolite.peridotite.cobble"
+		},
+		"mine=arsenolite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/arsenolite.peridotite.crush"
+		},
+		"mine=covellite,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/covellite.rhyolite.resource"
+		},
+		"mine=covellite,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/covellite.rhyolite.smooth"
+		},
+		"mine=covellite,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/covellite.rhyolite.cobble"
+		},
+		"mine=covellite,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/covellite.rhyolite.crush"
+		},
+		"mine=covellite,rock=stone,state=resource": {
+			"model": "fle:mineral/covellite.stone.resource"
+		},
+		"mine=covellite,rock=stone,state=smooth": {
+			"model": "fle:mineral/covellite.stone.smooth"
+		},
+		"mine=covellite,rock=stone,state=cobble": {
+			"model": "fle:mineral/covellite.stone.cobble"
+		},
+		"mine=covellite,rock=stone,state=crush": {
+			"model": "fle:mineral/covellite.stone.crush"
+		},
+		"mine=covellite,rock=compact stone,state=resource": {
+			"model": "fle:mineral/covellite.compact stone.resource"
+		},
+		"mine=covellite,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/covellite.compact stone.smooth"
+		},
+		"mine=covellite,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/covellite.compact stone.cobble"
+		},
+		"mine=covellite,rock=compact stone,state=crush": {
+			"model": "fle:mineral/covellite.compact stone.crush"
+		},
+		"mine=covellite,rock=void,state=resource": {
+			"model": "fle:mineral/covellite.void.resource"
+		},
+		"mine=covellite,rock=void,state=smooth": {
+			"model": "fle:mineral/covellite.void.smooth"
+		},
+		"mine=covellite,rock=void,state=cobble": {
+			"model": "fle:mineral/covellite.void.cobble"
+		},
+		"mine=covellite,rock=void,state=crush": {
+			"model": "fle:mineral/covellite.void.crush"
+		},
+		"mine=covellite,rock=andesite,state=resource": {
+			"model": "fle:mineral/covellite.andesite.resource"
+		},
+		"mine=covellite,rock=andesite,state=smooth": {
+			"model": "fle:mineral/covellite.andesite.smooth"
+		},
+		"mine=covellite,rock=andesite,state=cobble": {
+			"model": "fle:mineral/covellite.andesite.cobble"
+		},
+		"mine=covellite,rock=andesite,state=crush": {
+			"model": "fle:mineral/covellite.andesite.crush"
+		},
+		"mine=covellite,rock=basalt,state=resource": {
+			"model": "fle:mineral/covellite.basalt.resource"
+		},
+		"mine=covellite,rock=basalt,state=smooth": {
+			"model": "fle:mineral/covellite.basalt.smooth"
+		},
+		"mine=covellite,rock=basalt,state=cobble": {
+			"model": "fle:mineral/covellite.basalt.cobble"
+		},
+		"mine=covellite,rock=basalt,state=crush": {
+			"model": "fle:mineral/covellite.basalt.crush"
+		},
+		"mine=covellite,rock=limestone,state=resource": {
+			"model": "fle:mineral/covellite.limestone.resource"
+		},
+		"mine=covellite,rock=limestone,state=smooth": {
+			"model": "fle:mineral/covellite.limestone.smooth"
+		},
+		"mine=covellite,rock=limestone,state=cobble": {
+			"model": "fle:mineral/covellite.limestone.cobble"
+		},
+		"mine=covellite,rock=limestone,state=crush": {
+			"model": "fle:mineral/covellite.limestone.crush"
+		},
+		"mine=covellite,rock=peridotite,state=resource": {
+			"model": "fle:mineral/covellite.peridotite.resource"
+		},
+		"mine=covellite,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/covellite.peridotite.smooth"
+		},
+		"mine=covellite,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/covellite.peridotite.cobble"
+		},
+		"mine=covellite,rock=peridotite,state=crush": {
+			"model": "fle:mineral/covellite.peridotite.crush"
+		},
+		"mine=native copper,rock=rhyolite,state=resource": {
+			"model": "fle:mineral/native copper.rhyolite.resource"
+		},
+		"mine=native copper,rock=rhyolite,state=smooth": {
+			"model": "fle:mineral/native copper.rhyolite.smooth"
+		},
+		"mine=native copper,rock=rhyolite,state=cobble": {
+			"model": "fle:mineral/native copper.rhyolite.cobble"
+		},
+		"mine=native copper,rock=rhyolite,state=crush": {
+			"model": "fle:mineral/native copper.rhyolite.crush"
+		},
+		"mine=native copper,rock=stone,state=resource": {
+			"model": "fle:mineral/native copper.stone.resource"
+		},
+		"mine=native copper,rock=stone,state=smooth": {
+			"model": "fle:mineral/native copper.stone.smooth"
+		},
+		"mine=native copper,rock=stone,state=cobble": {
+			"model": "fle:mineral/native copper.stone.cobble"
+		},
+		"mine=native copper,rock=stone,state=crush": {
+			"model": "fle:mineral/native copper.stone.crush"
+		},
+		"mine=native copper,rock=compact stone,state=resource": {
+			"model": "fle:mineral/native copper.compact stone.resource"
+		},
+		"mine=native copper,rock=compact stone,state=smooth": {
+			"model": "fle:mineral/native copper.compact stone.smooth"
+		},
+		"mine=native copper,rock=compact stone,state=cobble": {
+			"model": "fle:mineral/native copper.compact stone.cobble"
+		},
+		"mine=native copper,rock=compact stone,state=crush": {
+			"model": "fle:mineral/native copper.compact stone.crush"
+		},
+		"mine=native copper,rock=void,state=resource": {
+			"model": "fle:mineral/native copper.void.resource"
+		},
+		"mine=native copper,rock=void,state=smooth": {
+			"model": "fle:mineral/native copper.void.smooth"
+		},
+		"mine=native copper,rock=void,state=cobble": {
+			"model": "fle:mineral/native copper.void.cobble"
+		},
+		"mine=native copper,rock=void,state=crush": {
+			"model": "fle:mineral/native copper.void.crush"
+		},
+		"mine=native copper,rock=andesite,state=resource": {
+			"model": "fle:mineral/native copper.andesite.resource"
+		},
+		"mine=native copper,rock=andesite,state=smooth": {
+			"model": "fle:mineral/native copper.andesite.smooth"
+		},
+		"mine=native copper,rock=andesite,state=cobble": {
+			"model": "fle:mineral/native copper.andesite.cobble"
+		},
+		"mine=native copper,rock=andesite,state=crush": {
+			"model": "fle:mineral/native copper.andesite.crush"
+		},
+		"mine=native copper,rock=basalt,state=resource": {
+			"model": "fle:mineral/native copper.basalt.resource"
+		},
+		"mine=native copper,rock=basalt,state=smooth": {
+			"model": "fle:mineral/native copper.basalt.smooth"
+		},
+		"mine=native copper,rock=basalt,state=cobble": {
+			"model": "fle:mineral/native copper.basalt.cobble"
+		},
+		"mine=native copper,rock=basalt,state=crush": {
+			"model": "fle:mineral/native copper.basalt.crush"
+		},
+		"mine=native copper,rock=limestone,state=resource": {
+			"model": "fle:mineral/native copper.limestone.resource"
+		},
+		"mine=native copper,rock=limestone,state=smooth": {
+			"model": "fle:mineral/native copper.limestone.smooth"
+		},
+		"mine=native copper,rock=limestone,state=cobble": {
+			"model": "fle:mineral/native copper.limestone.cobble"
+		},
+		"mine=native copper,rock=limestone,state=crush": {
+			"model": "fle:mineral/native copper.limestone.crush"
+		},
+		"mine=native copper,rock=peridotite,state=resource": {
+			"model": "fle:mineral/native copper.peridotite.resource"
+		},
+		"mine=native copper,rock=peridotite,state=smooth": {
+			"model": "fle:mineral/native copper.peridotite.smooth"
+		},
+		"mine=native copper,rock=peridotite,state=cobble": {
+			"model": "fle:mineral/native copper.peridotite.cobble"
+		},
+		"mine=native copper,rock=peridotite,state=crush": {
+			"model": "fle:mineral/native copper.peridotite.crush"
+		}
+	}
+}

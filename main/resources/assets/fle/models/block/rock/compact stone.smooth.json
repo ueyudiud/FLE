@@ -1,0 +1,7 @@
+{
+	"parent": "fle:block/base_layer2",
+	"textures": {
+		"render1": "fle:blocks/rock/compact stone",
+		"render2": "fle:blocks/rock/override/smooth"
+	}
+}

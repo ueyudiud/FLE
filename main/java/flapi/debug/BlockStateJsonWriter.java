@@ -18,11 +18,23 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 
+import farcore.util.FleLog;
+
 public class BlockStateJsonWriter
 {
+	private static File $(File file) throws IOException
+	{
+		if (!file.exists())
+		{
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+		}
+		return file;
+	}
+	
 	private static JsonWriter $(JsonWriter writer)
 	{
-		writer.setIndent(" ");
+		writer.setIndent("	");
 		return writer;
 	}
 	
@@ -35,11 +47,7 @@ public class BlockStateJsonWriter
 	
 	public BlockStateJsonWriter(File file) throws IOException
 	{
-		this(new BufferedWriter(new FileWriter(file)));
-		if (!file.exists())
-		{
-			file.mkdirs();
-		}
+		this(new BufferedWriter(new FileWriter($(file))));
 	}
 	
 	public BlockStateJsonWriter(Writer writer)
@@ -69,7 +77,7 @@ public class BlockStateJsonWriter
 	public BlockStateJsonWriter setBlockState(BlockState state)
 	{
 		check();
-		if (state != null)
+		if (this.state != null)
 			throw new IllegalArgumentException(
 					"This writer is already contain a block state.");
 		this.state = state;
@@ -93,9 +101,16 @@ public class BlockStateJsonWriter
 			throw new IllegalArgumentException("Can not init two times!");
 	}
 	
+	public ItemModelJsonWriter item()
+	{
+		return new ItemModelJsonWriter();
+	}
+	
 	public void write(File file, IModelProvider provider) throws IOException
 	{
 		check();
+		ModelJsonWriter writer2 = new ModelJsonWriter();
+		ItemModelJsonWriter writer3 = new ItemModelJsonWriter();
 		try
 		{
 			writer.beginObject();
@@ -112,14 +127,21 @@ public class BlockStateJsonWriter
 				while (itr.hasNext())
 				{
 					Entry<IProperty, Comparable> entry = itr.next();
-					name += entry.getKey().getName() + ":"
+					name += entry.getKey().getName() + "="
 							+ entry.getKey().getName(entry.getValue());
 					if (itr.hasNext())
-						name += ", ";
+						name += ",";
 				}
 				writer.name(name);
 				writer.beginObject();
 				BlockModel model = apply(state);
+				String[] data = model.model.split(":");
+				if (data.length == 1)
+					data = new String[]{"minecraft", data[0]};
+				File file2 = new File(file, String
+						.format("%s/models/block/%s.json", data[0], data[1]));
+				File file3 = new File(file, String
+						.format("%s/models/item/%s.json", data[0], data[1]));
 				writer.name("model");
 				writer.value(model.model);
 				if (model.x != 0)
@@ -138,17 +160,13 @@ public class BlockStateJsonWriter
 					writer.value(model.uvLock);
 				}
 				writer.endObject();
-				String[] data = model.model.split(":");
-				if (data.length == 1)
-					data = new String[]{"minecraft", data[0]};
-				File file2 = new File(file,
-						String.format("%s/models/%s.json", data[0], data[1]));
-				if (file2.exists())
-					continue;
-				file2.mkdirs();
-				ModelJsonWriter writer2 = new ModelJsonWriter(file2);
+				writer2.writer(file2);
 				provider.provide(writer2, model);
 				writer2.write();
+				writer3.writer(file3).parent(data[0] + ":" + data[1]).displayB()
+						.write();
+				writer2.reset();
+				writer3.reset();
 			}
 			writer.endObject();
 			writer.endObject();
@@ -156,6 +174,21 @@ public class BlockStateJsonWriter
 		catch (JsonIOException exception)
 		{
 			throw new IOException(exception);
+		}
+		catch (IOException exception)
+		{
+			throw exception;
+		}
+		finally
+		{
+			try
+			{
+				writer.close();
+			}
+			catch (IOException exception)
+			{
+				FleLog.error("Can not close file.", exception);
+			}
 		}
 	}
 	

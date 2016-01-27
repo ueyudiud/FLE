@@ -1,0 +1,10 @@
+{
+	"parent": "fle:block/dirt_base",
+	"textures": {
+		"base": "fle:blocks/dirt/dirt",
+		"cover": "fle:blocks/dirt/cover/water_side",
+		"covertop": "fle:blocks/dirt/cover/water_top",
+		"grow": "fle:blocks/dirt/state/farmland_side",
+		"growtop": "fle:blocks/dirt/state/farmland_top"
+	}
+}

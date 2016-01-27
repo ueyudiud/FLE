@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -35,7 +36,14 @@ import farcore.block.IPropagatedableBlock;
 import farcore.block.properties.FlePropertyEnum;
 import farcore.block.properties.FlePropertyString;
 import farcore.substance.Substance;
+import farcore.util.Direction;
 import flapi.FleResource;
+import flapi.debug.BlockStateJsonWriter.BlockModel;
+import flapi.debug.IModelStateProvider;
+import flapi.debug.ModelJsonWriter;
+import flapi.util.FleValue;
+import fle.FLE;
+import fle.debug.ModelResource;
 import fle.resource.block.item.ItemDirt;
 import fle.resource.tile.TileEntityDirt;
 import net.minecraftforge.common.EnumPlantType;
@@ -45,6 +53,42 @@ import net.minecraftforge.event.ForgeEventFactory;
 public class BlockDirt extends BlockResource
 		implements ITileEntityProvider, IPropagatedableBlock
 {
+	private void debug()
+	{
+		ModelResource.add(this, (IBlockState state) -> {
+			return String.format("%s:dirt/%s.%s.%s", FleValue.TEXTURE_FILE,
+					(String) dirtProperty.getName(state.getValue(dirtProperty)),
+					((EnumDirtState) state.getValue(DIRT_STATE)).name(),
+					((EnumDirtCover) state.getValue(COVER)).name());
+		} , (ModelJsonWriter writer, BlockModel model) -> {
+			writer.setParent("fle:block/dirt_base")
+					.setTextures("base",
+							FleValue.TEXTURE_FILE + ":blocks/dirt/"
+									+ (String) model.getState()
+											.getValue(dirtProperty))
+					.setTextures("cover",
+							FleValue.TEXTURE_FILE + ":blocks/dirt/cover/"
+									+ ((EnumDirtCover) model.getState()
+											.getValue(COVER)).name()
+									+ "_side")
+					.setTextures("covertop",
+							FleValue.TEXTURE_FILE + ":blocks/dirt/cover/"
+									+ ((EnumDirtCover) model.getState()
+											.getValue(COVER)).name()
+									+ "_top")
+					.setTextures("grow",
+							FleValue.TEXTURE_FILE + ":blocks/dirt/state/"
+									+ ((EnumDirtState) model.getState()
+											.getValue(DIRT_STATE)).name()
+									+ "_side")
+					.setTextures("growtop",
+							FleValue.TEXTURE_FILE + ":blocks/dirt/state/"
+									+ ((EnumDirtState) model.getState()
+											.getValue(DIRT_STATE)).name()
+									+ "_top");
+		} , new IModelStateProvider[0]);
+	}
+	
 	static final FlePropertyEnum<EnumDirtState> DIRT_STATE = new FlePropertyEnum(
 			"grow", EnumDirtState.class);
 	static final FlePropertyEnum<EnumDirtCover> COVER = new FlePropertyEnum(
@@ -67,6 +111,28 @@ public class BlockDirt extends BlockResource
 		FarCore.registerTileEntity(TileEntityDirt.class, "fle.dirt",
 				Substance.LOADER, Substance.SAVER, SpecieRegistry.LOADER,
 				SpecieRegistry.SAVER);
+		if (FLE.DEBUG)
+			debug();
+	}
+	
+	@Override
+	public EnumWorldBlockLayer getBlockLayer()
+	{
+		return EnumWorldBlockLayer.TRANSLUCENT;
+	}
+	
+	@Override
+	public int getLightOpacity(IBlockAccess world, BlockPos pos)
+	{
+		return isSideSolide(world, pos, Direction.UP) ? 255 : 100;
+	}
+	
+	@Override
+	public boolean isSideSolide(IBlockAccess world, BlockPos pos,
+			Direction side)
+	{
+		return getTile(world, pos).state == EnumDirtState.farmland
+				? side != Direction.UP : true;
 	}
 	
 	@Override
@@ -204,7 +270,9 @@ public class BlockDirt extends BlockResource
 	
 	private TileEntityDirt getTile(IBlockAccess world, BlockPos pos)
 	{
-		return (TileEntityDirt) world.getTileEntity(pos);
+		return !(world.getTileEntity(pos) instanceof TileEntityDirt)
+				? new TileEntityDirt()
+				: (TileEntityDirt) world.getTileEntity(pos);
 	}
 	
 	@Override

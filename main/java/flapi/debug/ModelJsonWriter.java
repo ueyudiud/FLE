@@ -7,24 +7,43 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.EnumMap;
 
+import javax.vecmath.Vector3f;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonWriter;
-import com.sun.javafx.geom.Vec3f;
 
 import net.minecraft.util.EnumFacing;
 
+import farcore.util.FleLog;
+
 public class ModelJsonWriter
 {
-	static final Vec3f DEFAULT_FROM = new Vec3f(0.0F, 0.0F, 0.0F);
-	static final Vec3f DEFAULT_TO = new Vec3f(1.0F, 1.0F, 1.0F);
+	static final Vector3f DEFAULT_FROM;
+	static final Vector3f DEFAULT_TO;
+	
+	static
+	{
+		DEFAULT_FROM = new Vector3f(0.0F, 0.0F, 0.0F);
+		DEFAULT_TO = new Vector3f(1.0F, 1.0F, 1.0F);
+	}
+	
+	private static File $(File file) throws IOException
+	{
+		if (!file.exists())
+		{
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+		}
+		return file;
+	}
 	
 	private static JsonWriter $(JsonWriter writer)
 	{
-		writer.setIndent(" ");
+		writer.setIndent("	");
 		return writer;
 	}
 	
@@ -39,26 +58,23 @@ public class ModelJsonWriter
 		build = false;
 		elements = new JsonArray();
 		object = new JsonObject();
-		
+		writer = null;
 	}
 	
-	public ModelJsonWriter(File file) throws IOException
+	public ModelJsonWriter writer(File file) throws IOException
 	{
-		this(new BufferedWriter(new FileWriter(file)));
-		if (!file.exists())
-		{
-			file.mkdirs();
-		}
+		return writer(new BufferedWriter(new FileWriter($(file))));
 	}
 	
-	public ModelJsonWriter(Writer writer)
+	public ModelJsonWriter writer(Writer writer)
 	{
-		this($(new JsonWriter(writer)));
+		return writer($(new JsonWriter(writer)));
 	}
 	
-	public ModelJsonWriter(JsonWriter writer)
+	public ModelJsonWriter writer(JsonWriter writer)
 	{
 		this.writer = writer;
+		return this;
 	}
 	
 	public ModelJsonWriter setParent(String parent)
@@ -108,7 +124,8 @@ public class ModelJsonWriter
 	public JsonObject build()
 	{
 		check();
-		object.add("elements", elements);
+		if (elements.size() != 0)
+			object.add("elements", elements);
 		build = true;
 		return object;
 	}
@@ -132,11 +149,22 @@ public class ModelJsonWriter
 		{
 			throw new IOException(exception);
 		}
+		finally
+		{
+			try
+			{
+				writer.close();
+			}
+			catch (IOException exception)
+			{
+				FleLog.error("Can not close model file.", exception);
+			}
+		}
 	}
 	
-	private class ElementBuilder
+	public class ElementBuilder
 	{
-		private class FaceBuilder
+		public class FaceBuilder
 		{
 			final EnumFacing facing;
 			boolean build = false;
@@ -149,6 +177,11 @@ public class ModelJsonWriter
 			{
 				this.facing = facing;
 				this.texture = "#" + facing.getName();
+			}
+			
+			FaceBuilder()
+			{
+				facing = null;
 			}
 			
 			private void check()
@@ -196,6 +229,7 @@ public class ModelJsonWriter
 		}
 		
 		EnumMap<EnumFacing, FaceBuilder> map = new EnumMap(EnumFacing.class);
+		FaceBuilder particle;
 		float[] from;
 		float[] to;
 		float[] origin;
@@ -204,10 +238,20 @@ public class ModelJsonWriter
 		boolean rescale;
 		boolean shade = true;
 		
+		public ElementBuilder from(float from)
+		{
+			return from(from, from, from);
+		}
+		
 		public ElementBuilder from(float x, float y, float z)
 		{
 			from = new float[]{x, y, z};
 			return this;
+		}
+		
+		public ElementBuilder to(float to)
+		{
+			return to(to, to, to);
 		}
 		
 		public ElementBuilder to(float x, float y, float z)
@@ -241,6 +285,36 @@ public class ModelJsonWriter
 		{
 			this.shade = shade;
 			return this;
+		}
+		
+		/**
+		 * Set 6 face with same texture.
+		 * 
+		 * @param texture
+		 * @return
+		 */
+		public ElementBuilder face(String texture)
+		{
+			for (EnumFacing facing : EnumFacing.values())
+			{
+				face(facing).cullface(facing).texture(texture).build();
+			}
+			return this;
+		}
+		
+		public ElementBuilder face(String texture, float start, float to)
+		{
+			for (EnumFacing facing : EnumFacing.values())
+			{
+				face(facing).cullface(facing).uv(start, start, to, to)
+						.texture(texture).build();
+			}
+			return this;
+		}
+		
+		public FaceBuilder particle()
+		{
+			return new FaceBuilder();
 		}
 		
 		public FaceBuilder face(EnumFacing face)
@@ -291,6 +365,21 @@ public class ModelJsonWriter
 						face.addProperty("rotation", builder.rotation);
 					faces.add(builder.facing.getName(), face);
 				}
+				if (particle != null)
+				{
+					JsonObject face = new JsonObject();
+					if (particle.uv != null)
+					{
+						face.add("uv", create(particle.uv));
+					}
+					face.addProperty("texture", particle.texture);
+					if (particle.cullface != null)
+						face.addProperty("cullface",
+								particle.cullface.getName());
+					if (particle.rotation != 0)
+						face.addProperty("rotation", particle.rotation);
+					faces.add("particle", face);
+				}
 				object.add("faces", faces);
 			}
 			elements.add(object);
@@ -300,6 +389,9 @@ public class ModelJsonWriter
 	
 	private void check()
 	{
+		if (writer == null)
+			throw new IllegalArgumentException(
+					"Do not current a writer to write!");
 		if (build)
 			throw new IllegalArgumentException("Can not init two times!");
 	}

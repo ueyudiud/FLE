@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -34,6 +35,7 @@ import flapi.debug.BlockStateJsonWriter.BlockModel;
 import flapi.debug.IModelStateProvider;
 import flapi.debug.ModelJsonWriter;
 import flapi.util.FleValue;
+import fle.FLE;
 import fle.debug.ModelResource;
 import fle.resource.block.item.ItemRock;
 import fle.resource.tile.TileEntityRock;
@@ -42,15 +44,20 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 public class BlockRock extends BlockResource implements ITileEntityProvider
 {
-	// TODO not finish yet.
 	private void debug()
 	{
 		ModelResource.add(this, (IBlockState state) -> {
-			return FleValue.TEXTURE_FILE + ":rock."
-					+ ((Substance) state.getValue(rockProperty)).getName() + "."
-					+ ((EnumRockState) state.getValue(stateProperty)).name();
+			return String.format("%s:rock/%s.%s", FleValue.TEXTURE_FILE,
+					(String) rockProperty.getName(state.getValue(rockProperty)),
+					((EnumRockState) state.getValue(stateProperty)).name());
 		} , (ModelJsonWriter writer, BlockModel model) -> {
-			writer.setParent("block/cube_all").setTextures("all", "");
+			writer.setParent("fle:block/base_layer2").setTextures("render1",
+					FleValue.TEXTURE_FILE + ":blocks/rock/" + (String) model
+							.getState().getValue(rockProperty))
+					.setTextures("render2",
+							FleValue.TEXTURE_FILE + ":blocks/rock/override/"
+									+ ((EnumRockState) model.getState()
+											.getValue(stateProperty)).name());
 		} , new IModelStateProvider[0]);
 	}
 	
@@ -70,6 +77,14 @@ public class BlockRock extends BlockResource implements ITileEntityProvider
 		super(unlocalized, ItemRock.class, Material.rock);
 		FarCore.registerTileEntity(TileEntityRock.class, "fle.rock",
 				Substance.LOADER, Substance.SAVER);
+		if (FLE.DEBUG)
+			debug();
+	}
+	
+	@Override
+	public EnumWorldBlockLayer getBlockLayer()
+	{
+		return EnumWorldBlockLayer.TRANSLUCENT;
 	}
 	
 	@Override
@@ -150,12 +165,12 @@ public class BlockRock extends BlockResource implements ITileEntityProvider
 	
 	public void getSubBlocks(Item item, CreativeTabs tab, List list)
 	{
-		for (String tag : rockProperty)
+		for (EnumRockState state : EnumRockState.values())
 		{
-			if ("void".equals(tag))
-				continue;
-			for (EnumRockState state : EnumRockState.values())
+			for (String tag : rockProperty)
 			{
+				if ("void".equals(tag))
+					continue;
 				list.add(setRock(new ItemStack(item), tag, state));
 			}
 		}
@@ -233,7 +248,9 @@ public class BlockRock extends BlockResource implements ITileEntityProvider
 	
 	private TileEntityRock getTile(IBlockAccess world, BlockPos pos)
 	{
-		return (TileEntityRock) world.getTileEntity(pos);
+		return !(world.getTileEntity(pos) instanceof TileEntityRock)
+				? new TileEntityRock()
+				: (TileEntityRock) world.getTileEntity(pos);
 	}
 	
 	public ItemStack setRock(ItemStack stack, Substance value)

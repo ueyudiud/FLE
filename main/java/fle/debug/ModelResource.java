@@ -21,7 +21,7 @@ public class ModelResource
 		try
 		{
 			if (writer == null)
-				writer = new RenderJsonWriter(new File("."));
+				writer = new RenderJsonWriter(new File("./assets"));
 			writer.write(block.getBlockState(), provider1, provider, providers);
 		}
 		catch (IOException exception)

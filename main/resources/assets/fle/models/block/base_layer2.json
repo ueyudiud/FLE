@@ -1,0 +1,33 @@
+{
+    "ambientocclusion": true,
+    "textures": {
+        "particle": "#render1",
+        "layer1": "#render1",
+        "layer2": "#render2"
+    },
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down": { "texture": "#layer1", "cullface": "down", "uv": [0, 0, 16, 16]},
+                "up":   { "texture": "#layer1", "cullface": "up", "uv": [0, 0, 16, 16]},
+                "north":{ "texture": "#layer1", "cullface": "north", "uv": [0, 0, 16, 16]},
+                "south":{ "texture": "#layer1", "cullface": "south", "uv": [0, 0, 16, 16]},
+                "west": { "texture": "#layer1", "cullface": "west", "uv": [0, 0, 16, 16]},
+                "east": { "texture": "#layer1", "cullface": "east", "uv": [0, 0, 16, 16]}
+            }
+        },
+        {   "from": [ -0.001, -0.001, -0.001 ],
+            "to": [ 16.001, 16.001, 16.001 ],
+            "shade": false,
+            "faces": {
+                "down": { "texture": "#layer2"},
+                "up":   { "texture": "#layer2"},
+                "north":{ "texture": "#layer2"},
+                "south":{ "texture": "#layer2"},
+                "west": { "texture": "#layer2"},
+                "east": { "texture": "#layer2"}
+            }
+        }
+    ]
+}

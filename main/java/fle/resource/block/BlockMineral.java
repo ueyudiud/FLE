@@ -21,11 +21,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.event.ForgeEventFactory;
+
 import farcore.FarCore;
 import farcore.block.BlockResource;
 import farcore.block.EnumRockState;
@@ -33,31 +33,74 @@ import farcore.block.properties.FlePropertyString;
 import farcore.substance.Substance;
 import farcore.util.Part;
 import flapi.FleResource;
+import flapi.debug.BlockStateJsonWriter.BlockModel;
+import flapi.debug.IModelStateProvider;
+import flapi.debug.ModelJsonWriter;
+import flapi.util.FleValue;
+import fle.FLE;
+import fle.debug.ModelResource;
 import fle.init.Substance1;
 import fle.resource.block.item.ItemMineral;
 import fle.resource.tile.TileEntityMineral;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.event.ForgeEventFactory;
 
 public class BlockMineral extends BlockResource implements ITileEntityProvider
 {
-	static final FlePropertyString<Substance> mineableProperty = new FlePropertyString<Substance>("mine", FleResource.mineral)
-			{
+	private void debug()
+	{
+		ModelResource.add(this, (IBlockState state) -> {
+			return String.format("%s:mineral/%s.%s.%s", FleValue.TEXTURE_FILE,
+					(String) mineableProperty
+							.getName(state.getValue(mineableProperty)),
+					(String) rockProperty.getName(state.getValue(rockProperty)),
+					((EnumRockState) state.getValue(stateProperty)).name());
+		} , (ModelJsonWriter writer, BlockModel model) -> {
+			writer.setParent("fle:block/base_layer3")
+					.setTextures("render1",
+							FleValue.TEXTURE_FILE + ":blocks/rock/"
+									+ (String) model.getState()
+											.getValue(rockProperty))
+					.setTextures("render2",
+							FleValue.TEXTURE_FILE + ":blocks/rock/override/"
+									+ ((EnumRockState) model.getState()
+											.getValue(stateProperty)).name())
+					.setTextures("render3", FleValue.TEXTURE_FILE
+							+ ":blocks/ore/"
+							+ (String) mineableProperty.getName(model.getState()
+									.getValue(mineableProperty)));
+		} , new IModelStateProvider[0]);
+	}
+	
+	static final FlePropertyString<Substance> mineableProperty = new FlePropertyString<Substance>(
+			"mine", FleResource.mineral)
+	{
 		public String getName(Comparable value)
 		{
 			return FleResource.mineral.get((String) value).getName();
 		}
-			};
-
+	};
+	
 	public BlockMineral(String unlocalized)
 	{
 		super(unlocalized, ItemMineral.class, Material.rock);
-		FarCore.registerTileEntity(TileEntityMineral.class, "fle.mineral", 
+		FarCore.registerTileEntity(TileEntityMineral.class, "fle.mineral",
 				Substance.LOADER, Substance.SAVER);
+		if (FLE.DEBUG)
+			debug();
+	}
+	
+	@Override
+	public EnumWorldBlockLayer getBlockLayer()
+	{
+		return EnumWorldBlockLayer.TRANSLUCENT;
 	}
 	
 	@Override
 	public float getBlockHardness(World worldIn, BlockPos pos)
 	{
-		return Math.max(getRock(worldIn, pos).getBlockHardness(), getMineral(worldIn, pos).getBlockHardness());
+		return Math.max(getRock(worldIn, pos).getBlockHardness(),
+				getMineral(worldIn, pos).getBlockHardness());
 	}
 	
 	@Override
@@ -72,7 +115,7 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 			BlockPos pos)
 	{
 		TileEntityMineral tile = getTile(worldIn, pos);
-		if(tile != null)
+		if (tile != null)
 		{
 			return state.withProperty(rockProperty, tile.rock.getName())
 					.withProperty(mineableProperty, tile.ore.getName())
@@ -80,11 +123,12 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 		}
 		return state;
 	}
-
+	
 	@Override
 	protected BlockState createBlockState()
 	{
-		return new BlockState(this, rockProperty, stateProperty, mineableProperty);
+		return new BlockState(this, rockProperty, stateProperty,
+				mineableProperty);
 	}
 	
 	@Override
@@ -94,7 +138,7 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta) 
+	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState();
 	}
@@ -105,7 +149,7 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 	{
 		return true;
 	}
-		
+	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
@@ -115,23 +159,27 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
-		return Math.max(getRock(state).blockMineLevel, getMineral(state).blockMineLevel);
+		return Math.max(getRock(state).blockMineLevel,
+				getMineral(state).blockMineLevel);
 	}
 	
 	@Override
 	public boolean isToolEffective(String type, IBlockState state)
 	{
-		return "hardHammer".equals(type) || "pickaxe".equals(type) || "crusher".equals(state);
+		return "hardHammer".equals(type) || "pickaxe".equals(type)
+				|| "crusher".equals(state);
 	}
 	
 	public void getSubBlocks(Item item, CreativeTabs tab, List list)
 	{
-		for(String tag : mineableProperty)
+		for (String tag : mineableProperty)
 		{
-			if("void".equals(tag)) continue;
-			for(EnumRockState state : EnumRockState.values())
+			if ("void".equals(tag))
+				continue;
+			for (EnumRockState state : EnumRockState.values())
 			{
-				list.add(setMineral(new ItemStack(item), Substance1.stone.getName(), state, tag, 144));
+				list.add(setMineral(new ItemStack(item),
+						Substance1.stone.getName(), state, tag, 144));
 			}
 		}
 	}
@@ -141,40 +189,49 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 			IBlockState state, int fortune, TileEntity tile)
 	{
 		ArrayList<ItemStack> ret = new ArrayList();
-		if(tile instanceof TileEntityMineral)
+		if (tile instanceof TileEntityMineral)
 		{
 			EnumRockState s = ((TileEntityMineral) tile).state;
-			if(s == EnumRockState.resource)
+			if (s == EnumRockState.resource)
 			{
 				s = EnumRockState.cobble;
 			}
-			ret.add(setMineral(new ItemStack(this, 1), ((TileEntityMineral) tile).rock, s, ((TileEntityMineral) tile).ore, ((TileEntityMineral) tile).amount));
+			ret.add(setMineral(new ItemStack(this, 1),
+					((TileEntityMineral) tile).rock, s,
+					((TileEntityMineral) tile).ore,
+					((TileEntityMineral) tile).amount));
 		}
-		else ret.add(new ItemStack(Blocks.stone));
+		else
+			ret.add(new ItemStack(Blocks.stone));
 		return ret;
 	}
 	
 	@Override
-	protected void onSilkHarvest(World world, EntityPlayer player,
-			BlockPos pos, IBlockState state, TileEntity te)
+	protected void onSilkHarvest(World world, EntityPlayer player, BlockPos pos,
+			IBlockState state, TileEntity te)
 	{
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 		ItemStack itemstack;
-		if(te instanceof TileEntityMineral)
+		if (te instanceof TileEntityMineral)
 		{
-			itemstack = setMineral(new ItemStack(this), ((TileEntityMineral) te).rock, ((TileEntityMineral) te).state, ((TileEntityMineral) te).ore, ((TileEntityMineral) te).amount);
+			itemstack = setMineral(new ItemStack(this),
+					((TileEntityMineral) te).rock,
+					((TileEntityMineral) te).state,
+					((TileEntityMineral) te).ore,
+					((TileEntityMineral) te).amount);
 		}
 		else
 		{
 			itemstack = new ItemStack(Blocks.stone);
 		}
-
+		
 		if (itemstack != null)
 		{
 			items.add(itemstack);
 		}
-
-		ForgeEventFactory.fireBlockHarvesting(items, world, pos, world.getBlockState(pos), 0, 1.0f, true, player);
+		
+		ForgeEventFactory.fireBlockHarvesting(items, world, pos,
+				world.getBlockState(pos), 0, 1.0f, true, player);
 		for (ItemStack stack : items)
 		{
 			spawnAsEntity(world, pos, stack);
@@ -186,7 +243,7 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 			EntityLivingBase placer, ItemStack stack)
 	{
 		TileEntityMineral tile = getTile(world, pos);
-		if(tile != null)
+		if (tile != null)
 		{
 			tile.ore = getMineral(stack);
 			tile.rock = getRock(stack);
@@ -197,61 +254,77 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 	}
 	
 	@Override
-    public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable)
-    {
+	public boolean canSustainPlant(IBlockAccess world, BlockPos pos,
+			EnumFacing direction, IPlantable plantable)
+	{
 		return false;
-    }
+	}
 	
 	private TileEntityMineral getTile(IBlockAccess world, BlockPos pos)
 	{
-		return (TileEntityMineral) world.getTileEntity(pos);
+		return !(world.getTileEntity(pos) instanceof TileEntityMineral)
+				? new TileEntityMineral()
+				: (TileEntityMineral) world.getTileEntity(pos);
 	}
-
+	
 	public Substance getRock(World world, BlockPos pos)
 	{
 		return getTile(world, pos).rock;
-	}	
+	}
+	
 	public Substance getMineral(World world, BlockPos pos)
 	{
 		return getTile(world, pos).ore;
 	}
+	
 	public Substance getRock(IBlockState blockState)
 	{
-		return rockProperty.getValue((String) blockState.getValue(rockProperty));
+		return rockProperty
+				.getValue((String) blockState.getValue(rockProperty));
 	}
+	
 	public String getRockStateName(IBlockState state)
 	{
 		return getRockState(state).name();
 	}
+	
 	public EnumRockState getRockState(IBlockState state)
 	{
 		return (EnumRockState) state.getValue(stateProperty);
 	}
+	
 	public Substance getMineral(IBlockState state)
 	{
-		return mineableProperty.getValue((String) state.getValue(mineableProperty));
+		return mineableProperty
+				.getValue((String) state.getValue(mineableProperty));
 	}
 	
 	public Substance getRock(ItemStack stack)
 	{
 		return rockProperty.getValue(getRockName(stack));
 	}
+	
 	public String getRockName(ItemStack stack)
 	{
 		return stack.getSubCompound("mineral", true).getString("rock");
 	}
+	
 	public EnumRockState getRockState(ItemStack stack)
 	{
-		return EnumRockState.valueOf(stack.getSubCompound("mineral", true).getString("state"));
-	}	
+		return EnumRockState.valueOf(
+				stack.getSubCompound("mineral", true).getString("state"));
+	}
+	
 	public Substance getMineral(ItemStack stack)
 	{
 		return mineableProperty.getValue(getMineralName(stack));
 	}
+	
 	public String getMineralName(ItemStack stack)
 	{
 		return stack.getSubCompound("mineral", true).getString("ore");
 	}
+	
 	public int getMineralAmount(ItemStack stack)
 	{
 		return stack.getSubCompound("mineral", true).getInteger("amount");
@@ -259,13 +332,19 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 	
 	public ItemStack setMineral(ItemStack stack, Substance value)
 	{
-		return setMineral(stack, Substance1.stone, EnumRockState.resource, value, Part.ore.resolution);
+		return setMineral(stack, Substance1.stone, EnumRockState.resource,
+				value, Part.ore.resolution);
 	}
-	public ItemStack setMineral(ItemStack stack, Substance value, EnumRockState state, Substance value1, int amount)
+	
+	public ItemStack setMineral(ItemStack stack, Substance value,
+			EnumRockState state, Substance value1, int amount)
 	{
-		return setMineral(stack, FleResource.rock.name(value), state, FleResource.mineral.name(value1), amount);
+		return setMineral(stack, FleResource.rock.name(value), state,
+				FleResource.mineral.name(value1), amount);
 	}
-	public ItemStack setMineral(ItemStack stack, String value, EnumRockState state, String value1, int amount)
+	
+	public ItemStack setMineral(ItemStack stack, String value,
+			EnumRockState state, String value1, int amount)
 	{
 		NBTTagCompound nbt = stack.getSubCompound("mineral", true);
 		nbt.setString("rock", value);
@@ -274,7 +353,7 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 		nbt.setInteger("amount", amount);
 		return stack;
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{

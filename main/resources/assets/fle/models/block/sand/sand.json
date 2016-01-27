@@ -1,0 +1,6 @@
+{
+	"parent": "fle:block/base",
+	"textures": {
+		"render": "fle:blocks/sand/sand"
+	}
+}

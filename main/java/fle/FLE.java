@@ -42,6 +42,10 @@ public class FLE implements FleMod
 	public static final String NAME = "Far Land Era";
 	public static final String VERSION = "3.00a";
 	public static final int minForge = 1570;
+	/**
+	 * To control some debug mode.
+	 */
+	public static final boolean DEBUG = true;
 	protected static final String CERTIFICATE = "";// "after:IC2";
 	
 	@Instance(MODID)

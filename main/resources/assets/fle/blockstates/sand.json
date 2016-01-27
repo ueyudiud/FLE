@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"sand=salt sand": {
+			"model": "fle:sand/salt sand"
+		},
+		"sand=void": {
+			"model": "fle:sand/void"
+		},
+		"sand=soul sand": {
+			"model": "fle:sand/soul sand"
+		},
+		"sand=beach sand": {
+			"model": "fle:sand/beach sand"
+		},
+		"sand=sand": {
+			"model": "fle:sand/sand"
+		}
+	}
+}

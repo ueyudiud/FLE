@@ -1,24 +1,24 @@
 {
     "ambientocclusion": true,
     "textures": {
-        "particle": "#side",
-        "down": "#bottom",
-        "up": "#top",
-        "north": "#front",
-        "east": "#side",
-        "south": "#back",
-        "west": "#side"
+        "particle": "#render",
+        "down": "#render",
+        "up": "#render",
+        "north": "#render",
+        "east": "#render",
+        "south": "#render",
+        "west": "#render"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],
             "to": [ 16, 16, 16 ],
             "faces": {
-                "down": { "texture": "#down",  "cullface": "down"  },
-                "up":   { "texture": "#up",    "cullface": "up"    },
-                "north":{ "texture": "#north", "cullface": "north" },
-                "south":{ "texture": "#south", "cullface": "south" },
-                "west": { "texture": "#west",  "cullface": "west"  },
-                "east": { "texture": "#east",  "cullface": "east"  }
+                "down": { "texture": "#render", "cullface": "down"  },
+                "up":   { "texture": "#render", "cullface": "up"    },
+                "north":{ "texture": "#render", "cullface": "north" },
+                "south":{ "texture": "#render", "cullface": "south" },
+                "west": { "texture": "#render", "cullface": "west"  },
+                "east": { "texture": "#render", "cullface": "east"  }
             }
         }
     ]

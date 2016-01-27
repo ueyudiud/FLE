@@ -1,0 +1,49 @@
+{
+	"variants": {
+		"cover=nothing,dirt=dirt,grow=dirt": {
+			"model": "fle:dirt/dirt.dirt.nothing"
+		},
+		"cover=nothing,dirt=dirt,grow=grass": {
+			"model": "fle:dirt/dirt.grass.nothing"
+		},
+		"cover=nothing,dirt=dirt,grow=mycelium": {
+			"model": "fle:dirt/dirt.mycelium.nothing"
+		},
+		"cover=nothing,dirt=dirt,grow=moss": {
+			"model": "fle:dirt/dirt.moss.nothing"
+		},
+		"cover=nothing,dirt=dirt,grow=farmland": {
+			"model": "fle:dirt/dirt.farmland.nothing"
+		},
+		"cover=water,dirt=dirt,grow=dirt": {
+			"model": "fle:dirt/dirt.dirt.water"
+		},
+		"cover=water,dirt=dirt,grow=grass": {
+			"model": "fle:dirt/dirt.grass.water"
+		},
+		"cover=water,dirt=dirt,grow=mycelium": {
+			"model": "fle:dirt/dirt.mycelium.water"
+		},
+		"cover=water,dirt=dirt,grow=moss": {
+			"model": "fle:dirt/dirt.moss.water"
+		},
+		"cover=water,dirt=dirt,grow=farmland": {
+			"model": "fle:dirt/dirt.farmland.water"
+		},
+		"cover=snow,dirt=dirt,grow=dirt": {
+			"model": "fle:dirt/dirt.dirt.snow"
+		},
+		"cover=snow,dirt=dirt,grow=grass": {
+			"model": "fle:dirt/dirt.grass.snow"
+		},
+		"cover=snow,dirt=dirt,grow=mycelium": {
+			"model": "fle:dirt/dirt.mycelium.snow"
+		},
+		"cover=snow,dirt=dirt,grow=moss": {
+			"model": "fle:dirt/dirt.moss.snow"
+		},
+		"cover=snow,dirt=dirt,grow=farmland": {
+			"model": "fle:dirt/dirt.farmland.snow"
+		}
+	}
+}

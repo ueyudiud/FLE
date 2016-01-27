@@ -1,0 +1,8 @@
+{
+	"parent": "fle:block/base_layer3",
+	"textures": {
+		"render1": "fle:blocks/rock/compact stone",
+		"render2": "fle:blocks/rock/override/crush",
+		"render3": "fle:blocks/ore/chalcocite"
+	}
+}

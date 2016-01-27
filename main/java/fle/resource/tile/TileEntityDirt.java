@@ -16,13 +16,14 @@ import farcore.tileentity.INutritionTileEntity;
 import farcore.tileentity.TEBase;
 import farcore.util.FleLog;
 import farcore.util.Vs;
+import fle.init.Substance1;
 
 public class TileEntityDirt extends TEBase
 		implements IUpdatePlayerListBox, INutritionTileEntity
 {
 	@NBTLoad(name = "dirt")
 	@NBTSave(name = "dirt")
-	public Substance dirt;
+	public Substance dirt = Substance1.$void;
 	
 	@NBTLoad(name = "calcium")
 	@NBTSave(name = "calcium")
@@ -54,7 +55,7 @@ public class TileEntityDirt extends TEBase
 	public int PH;
 	@NBTLoad(name = "state")
 	@NBTSave(name = "state")
-	public EnumDirtState state;
+	public EnumDirtState state = EnumDirtState.dirt;
 	@NBTLoad(name = "plant")
 	@NBTSave(name = "plant")
 	public IPlant plant;
