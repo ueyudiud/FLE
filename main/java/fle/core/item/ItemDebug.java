@@ -3,6 +3,19 @@ package fle.core.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+
+import com.google.common.collect.Multimap;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameData;
+import farcore.util.FleLog;
+import farcore.util.IDebugable;
+import farcore.world.BlockPos;
+import farcore.world.BlockPos.ChunkPos;
+import flapi.item.ItemFle;
+import fle.core.handler.PlayerEventHandler;
+import fle.resource.block.auto.ResourceIcons;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,33 +25,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import org.apache.logging.log4j.Level;
-
-import com.google.common.collect.Multimap;
-
-import cpw.mods.fml.common.registry.GameData;
-import flapi.energy.IRotationTileEntity;
-import flapi.energy.IThermalTileEntity;
-import flapi.enums.EnumDamageResource;
-import flapi.enums.EnumWorldNBT;
-import flapi.item.ItemFle;
-import flapi.util.FleLog;
-import flapi.util.FleValue;
-import flapi.util.IDebugable;
-import flapi.world.BlockPos;
-import flapi.world.BlockPos.ChunkPos;
-import fle.FLE;
-
 public class ItemDebug extends ItemFle
 {
-	public ItemDebug(String aUnlocalized)
+	public ItemDebug()
 	{
-		super(aUnlocalized);
+		super("debug", "Debugger");
 	}
 	
 	@Override
@@ -50,17 +48,16 @@ public class ItemDebug extends ItemFle
     	if(!aWorld.isRemote)
     	{
         	BlockPos pos = new BlockPos(aWorld, x, y, z);
-        	@SuppressWarnings("unused")
-        	ChunkPos pos1 = pos.getChunkPos();
+        	ChunkPos pos1 = pos.chunkPos();
         	try
         	{
         		aPlayer.addChatMessage(new ChatComponentText("This block is named " + aWorld.getBlock(x, y, z).getUnlocalizedName() + "."));
-        		aPlayer.addChatMessage(new ChatComponentText("Block name is " + GameData.getBlockRegistry().getNameForObject(pos.getBlock()) + ", by id " + Block.getIdFromBlock(pos.getBlock()) + "."));
-        		if(pos.getBlockTile() != null)
-        			aPlayer.addChatMessage(new ChatComponentText("Block tile is " + pos.getBlockTile().getClass() + "."));
-            	aPlayer.addChatMessage(new ChatComponentText("Metadata: " + pos.getBlockMeta() + "."));
-            	aPlayer.addChatMessage(new ChatComponentText("Harvest Level: " + pos.getBlock().getHarvestLevel(pos.getBlockMeta()) + "."));
-        		aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.getBlock().getBlockHardness(aWorld, x, y, z) + "."));
+        		aPlayer.addChatMessage(new ChatComponentText("Block name is " + GameData.getBlockRegistry().getNameForObject(pos.block()) + ", by id " + Block.getIdFromBlock(pos.block()) + "."));
+        		if(pos.tile() != null)
+        			aPlayer.addChatMessage(new ChatComponentText("Block tile is " + pos.tile().getClass() + "."));
+            	aPlayer.addChatMessage(new ChatComponentText("Metadata: " + pos.meta() + "."));
+            	aPlayer.addChatMessage(new ChatComponentText("Harvest Level: " + pos.block().getHarvestLevel(pos.meta()) + "."));
+        		aPlayer.addChatMessage(new ChatComponentText("Hardness: " + pos.block().getBlockHardness(aWorld, x, y, z) + "."));
         		
         		//{
         			//for(int y1 = y; y1 > 1; --y1)
@@ -71,43 +68,39 @@ public class ItemDebug extends ItemFle
         				//}
         		//}
         		
-        		String str1 = "";
-            	for(EnumWorldNBT nbt : EnumWorldNBT.values())
-        			str1 += FLE.fle.getWorldManager().getData(pos, nbt) + " ";
-            	aPlayer.addChatMessage(new ChatComponentText("FWM: " + str1 + "."));
-            	if(pos.getBlockTile() instanceof IFluidHandler)
+        		if(pos.tile() instanceof IFluidHandler)
             	{
-            		IFluidHandler handler = (IFluidHandler) pos.getBlockTile();
+            		IFluidHandler handler = (IFluidHandler) pos.tile();
             		FluidTankInfo[] infos = handler.getTankInfo(ForgeDirection.VALID_DIRECTIONS[aSide]);
             		if(infos != null)
             		for(FluidTankInfo info : infos)
             		{
-            			aPlayer.addChatMessage(new ChatComponentText(String.format("Capacity: %s.", FleValue.format_L.format_c(info.capacity))));
+            			aPlayer.addChatMessage(new ChatComponentText(String.format("Capacity: %s.", info.capacity + "L")));
             			if(info.fluid != null)
-            				aPlayer.addChatMessage(new ChatComponentText(String.format("Fluid Amount: %sx%s.", info.fluid.getLocalizedName(), FleValue.format_L.format_c(info.fluid.amount))));
+            				aPlayer.addChatMessage(new ChatComponentText(String.format("Fluid Amount: %sx%s.", info.fluid.getLocalizedName(), info.fluid.amount + "L")));
             		}
             	}
-        		aPlayer.addChatMessage(new ChatComponentText("FTN :"));
-        		aPlayer.addChatMessage(new ChatComponentText(String.format("Enviourment Temp: %s.", FleValue.format_K.format_c(FLE.fle.getThermalNet().getEnvironmentTemperature(pos)))));
-            	if(pos.getBlockTile() instanceof IThermalTileEntity)
-            	{
-            		IThermalTileEntity tile = (IThermalTileEntity) pos.getBlockTile();
-            		aPlayer.addChatMessage(new ChatComponentText(String.format("Temperature: %s.", FleValue.format_K.format_c(tile.getTemperature(ForgeDirection.VALID_DIRECTIONS[aSide])))));
-            		aPlayer.addChatMessage(new ChatComponentText(String.format("Heat Current: %s.", FleValue.format_MJ.format_c(tile.getThermalEnergyCurrect(ForgeDirection.VALID_DIRECTIONS[aSide])))));
-            		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreHeatEmit()))));
-            	}
-        		aPlayer.addChatMessage(new ChatComponentText("FRN :"));
-        		aPlayer.addChatMessage(new ChatComponentText("Wind Speed : " + FLE.fle.getRotationNet().getWindSpeed(pos)));
-            	if(pos.getBlockTile() instanceof IRotationTileEntity)
-            	{
-            		IRotationTileEntity tile = (IRotationTileEntity) pos.getBlockTile();
-            		aPlayer.addChatMessage(new ChatComponentText(String.format("Kinetic Energy Current: %s.", FleValue.format_MJ.format_c(tile.getEnergyCurrect()))));
-            		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreEnergyEmit()))));
-            	}
-            	if(pos.getBlock() instanceof IDebugable)
+//        		aPlayer.addChatMessage(new ChatComponentText("FTN :"));
+//        		aPlayer.addChatMessage(new ChatComponentText(String.format("Enviourment Temp: %s.", FleValue.format_K.format_c(FLE.fle.getThermalNet().getEnvironmentTemperature(pos)))));
+//            	if(pos.getBlockTile() instanceof IThermalTileEntity)
+//            	{
+//            		IThermalTileEntity tile = (IThermalTileEntity) pos.getBlockTile();
+//            		aPlayer.addChatMessage(new ChatComponentText(String.format("Temperature: %s.", FleValue.format_K.format_c(tile.getTemperature(ForgeDirection.VALID_DIRECTIONS[aSide])))));
+//            		aPlayer.addChatMessage(new ChatComponentText(String.format("Heat Current: %s.", FleValue.format_MJ.format_c(tile.getThermalEnergyCurrect(ForgeDirection.VALID_DIRECTIONS[aSide])))));
+//            		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreHeatEmit()))));
+//            	}
+//        		aPlayer.addChatMessage(new ChatComponentText("FRN :"));
+//        		aPlayer.addChatMessage(new ChatComponentText("Wind Speed : " + FLE.fle.getRotationNet().getWindSpeed(pos)));
+//            	if(pos.getBlockTile() instanceof IRotationTileEntity)
+//            	{
+//            		IRotationTileEntity tile = (IRotationTileEntity) pos.getBlockTile();
+//            		aPlayer.addChatMessage(new ChatComponentText(String.format("Kinetic Energy Current: %s.", FleValue.format_MJ.format_c(tile.getEnergyCurrect()))));
+//            		aPlayer.addChatMessage(new ChatComponentText(String.format("Emit Heat: %s.", FleValue.format_MJ.format_c(tile.getPreEnergyEmit()))));
+//            	}
+            	if(pos.block() instanceof IDebugable)
         		{
         			List<String> tList = new ArrayList();
-        			((IDebugable) pos.getBlock()).addInfomationToList(aWorld, x, y, z, tList);
+        			((IDebugable) pos.block()).addInfomationToList(pos, tList);
         			for(String str : tList)
         			{
         				aPlayer.addChatMessage(new ChatComponentText(str));
@@ -122,19 +115,13 @@ public class ItemDebug extends ItemFle
     	}
 		return true;
 	}
-	
-	@Override
-	public void registerIcons(IIconRegister register)
-	{
-		super.registerIcons(register);
-	}
 
-	@Override
-	public void damageItem(ItemStack stack, EntityLivingBase aUser,
-			EnumDamageResource aReource, float aDamage)
-	{
-		
-	}
+//	@Override
+//	public void damageItem(ItemStack stack, EntityLivingBase aUser,
+//			EnumDamageResource aReource, float aDamage)
+//	{
+//		
+//	}
 	
 	@Override
 	public Multimap getAttributeModifiers(ItemStack stack)

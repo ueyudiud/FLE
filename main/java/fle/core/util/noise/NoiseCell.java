@@ -1,6 +1,5 @@
 package fle.core.util.noise;
 
-@SuppressWarnings("unused")
 public class NoiseCell extends NoiseBase
 {
 	public NoiseCell(long aSeed)

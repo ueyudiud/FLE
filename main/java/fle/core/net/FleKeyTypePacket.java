@@ -2,11 +2,11 @@ package fle.core.net;
 
 import java.io.IOException;
 
-import flapi.net.FleAbstractPacket;
-import flapi.net.FleNetworkHandler;
-import flapi.util.io.FleDataInputStream;
-import flapi.util.io.FleDataOutputStream;
-import fle.FLE;
+import farcore.net.FleAbstractPacket;
+import farcore.net.INetworkHandler;
+import farcore.util.io.FleDataInputStream;
+import farcore.util.io.FleDataOutputStream;
+import fle.core.FLE;
 
 public class FleKeyTypePacket extends FleAbstractPacket
 {
@@ -34,7 +34,7 @@ public class FleKeyTypePacket extends FleAbstractPacket
 	}
 	
 	@Override
-	public Object process(FleNetworkHandler nwh)
+	public Object process(INetworkHandler nwh)
 	{
 		FLE.fle.getKeyboard().processKeyUpdate(getPlayer(), keys);
 		return null;

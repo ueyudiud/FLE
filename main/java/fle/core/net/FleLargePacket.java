@@ -9,9 +9,10 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import flapi.net.FleNetworkHandler;
-import flapi.net.IPacket;
-import flapi.util.FleLog;
+import farcore.net.INetworkHandler;
+import farcore.net.IPacket;
+import farcore.util.FleLog;
+import farcore.util.io.FleDataInputStream;
 
 public class FleLargePacket extends IPacket
 {
@@ -64,12 +65,14 @@ public class FleLargePacket extends IPacket
 	}
 
 	@Override
-	public Object process(FleNetworkHandler nwh)
+	public Object process(INetworkHandler nwh)
 	{
 		if(!flag) return null;
 		try
 		{
-			nwh.onPacket(id, ByteStreams.newDataInput(largePacketCache.toByteArray()));
+			
+			nwh.onPacket(id, 
+					ByteStreams.newDataInput(largePacketCache.toByteArray()));
 			largePacketCache = null;
 		}
 		catch(Throwable e)

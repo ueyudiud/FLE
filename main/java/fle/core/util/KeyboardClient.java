@@ -8,7 +8,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import cpw.mods.fml.client.registry.ClientRegistry;
-import fle.FLE;
+import farcore.FarCore;
+import fle.core.FLE;
 import fle.core.net.FleKeyTypePacket;
 
 public class KeyboardClient extends Keyboard
@@ -44,7 +45,7 @@ public class KeyboardClient extends Keyboard
 		if (currentKeyState != lastKeyState)
 		{
 			FLE.fle.getNetworkHandler().sendToServer(new FleKeyTypePacket(currentKeyState));
-			super.processKeyUpdate(FLE.fle.getPlatform().getPlayerInstance(), currentKeyState);
+			super.processKeyUpdate(FarCore.getPlayerInstance(), currentKeyState);
 			lastKeyState = currentKeyState;
 		}
 	}

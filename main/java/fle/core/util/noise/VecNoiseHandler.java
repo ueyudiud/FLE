@@ -9,8 +9,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import flapi.util.FleLog;
-import flapi.util.io.JsonInput;
+import farcore.util.FleLog;
 import fle.core.util.FLEMath;
 
 public class VecNoiseHandler
@@ -46,68 +45,6 @@ public class VecNoiseHandler
 			for(int j1 = -2; j1 <= 2; ++j1)
 				a += FLEMath.alpha(2D, FLEMath.distance(j0, j1));
 		basic = a;
-	}
-
-	public static NoiseBase loadNoiseFromJson(JsonInput stream) throws IOException
-	{
-		return loadNoiseFromJson(true, stream);
-	}
-	
-	private static NoiseBase loadNoiseFromJson(boolean isFirstLoad, JsonInput stream) throws IOException
-	{
-		try
-		{
-			if(!stream.contain("Type"))
-			{
-				throw new IOException();
-			}
-			String name = stream.getString("Type", null);
-			if("perlin".equals(name))
-			{
-				return new NoisePerlin(0L);
-			}
-			else if("cell".equals(name))
-			{
-				return new NoiseCell(0L);
-			}
-			else if("fuzzy".equals(name))
-			{
-				int octive = stream.getInteger("Octive", 1);
-				double start = stream.getDouble("StartLevel", 4.0);
-				double increase = stream.getDouble("IncreaseLevel", 2.0F);
-				float weakness = (float) stream.getDouble("Weakness", .5F);
-				return new NoiseFuzzy(0L, octive, start, increase, weakness);
-			}
-			else if("gauss".equals(name))
-			{
-				int size = stream.getInteger("Size", 2);
-				return new NoiseGauss(0L, size, loadNoiseFromJson(false, stream.sub("SubNoise")));
-			}
-			else if("mix".equals(name))
-			{
-				return new NoiseMix(0L, loadNoiseFromJson(false, stream.sub("SubNoise1")), loadNoiseFromJson(false, stream.sub("SubNoise2")));
-			}
-			else if("montain".equals(name))
-			{
-				int size = stream.getInteger("Size", 1);
-				int gen = stream.getInteger("GenChance", 3);
-				double level = stream.getDouble("Level", 1);
-				return new NoiseMontain(0L, size, gen, level);
-			}
-			else if("smooth".equals(name))
-			{
-				int type = stream.getInteger("Type", 0);
-				double size = stream.getDouble("Size", 4.0F);
-				return new NoiseSmooth(type, size, loadNoiseFromJson(false, stream.sub("SubNoise")));
-			}
-		}
-		catch(Throwable e)
-		{
-			if(!isFirstLoad) FleLog.addExceptionToCache(e);
-			else FleLog.resetAndCatchException("FLE : Fail to load custom noise.");
-			throw new IOException();
-		}
-		return null;
 	}
 	
 	public static double[] getValue(int x, int z, NoiseBase height, VecNoiseBase noise, int size)

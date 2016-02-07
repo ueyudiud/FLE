@@ -1,23 +1,32 @@
 package fle.core.net;
 
-import flapi.net.FleNetworkHandler;
-import flapi.net.FleSortInfomationPacket;
-import flapi.net.INetEventEmmiter;
-import flapi.net.INetEventListener;
+import java.io.IOException;
 
-public class FleGuiPacket extends FleSortInfomationPacket
+import farcore.net.FleAbstractPacket;
+import farcore.net.INetEventEmmiter;
+import farcore.net.INetEventListener;
+import farcore.net.INetworkHandler;
+import farcore.util.io.FleDataInputStream;
+import farcore.util.io.FleDataOutputStream;
+
+public class FleGuiPacket extends FleAbstractPacket
 {
+	byte type;
+	Object contain;
+	
 	public FleGuiPacket()
 	{
 		
 	}
 	public FleGuiPacket(byte aType, short contain) 
 	{
-		super(aType, contain);
+		this.type = aType;
+		this.contain = contain;
 	}
 	public FleGuiPacket(byte aType, Object contain) 
 	{
-		super(aType, a(aType, contain));
+		this.type = aType;
+		this.contain = a(aType, contain);
 	}
 	
 	private static Object a(byte type, Object obj)
@@ -30,7 +39,21 @@ public class FleGuiPacket extends FleSortInfomationPacket
 	}
 	
 	@Override
-	public Object process(FleNetworkHandler nwh)
+	protected void write(FleDataOutputStream os) throws IOException
+	{
+		os.writeByte(type);
+		os.write(contain);
+	}
+	
+	@Override
+	protected void read(FleDataInputStream is) throws IOException
+	{
+		type = is.readByte();
+		contain = is.read();
+	}
+	
+	@Override
+	public Object process(INetworkHandler nwh)
 	{
 		if(getPlayer().openContainer instanceof INetEventListener)
 		{

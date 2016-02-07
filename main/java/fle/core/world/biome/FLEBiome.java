@@ -5,6 +5,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
+import farcore.util.FleLog;
+import farcore.util.ISubTagContainer;
+import farcore.util.SubTag;
+import farcore.util.Util;
+import fle.core.util.noise.NoiseFuzzy;
+import fle.core.world.dim.FLEBiomeDecoratorBase;
+import fle.core.world.dim.FLEWorldType;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -14,14 +21,6 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
-import flapi.enums.EnumFLERock;
-import flapi.util.FleLog;
-import flapi.util.ISubTagContainer;
-import flapi.util.SubTag;
-import fle.core.util.Util;
-import fle.core.util.noise.NoiseFuzzy;
-import fle.core.world.dim.FLEBiomeDecoratorBase;
-import fle.core.world.dim.FLEWorldType;
 
 public class FLEBiome extends BiomeGenBase implements ISubTagContainer
 {
@@ -220,7 +219,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
         boolean waterFlag = false;
         boolean coverFlag = true;
         int k = -1;
-        Block[] rock = EnumFLERock.getRockBlock(rockAcidityNoise.noise(x, z), rockWeatheringNoise.noise(x, z));
+//        Block[] rock = EnumFLERock.getRockBlock(rockAcidityNoise.noise(x, z), rockWeatheringNoise.noise(x, z));
         for (int l1 = 255; l1 >= 0; --l1)
         {
             int i2 = (z * 16 + x) * size + l1;
@@ -263,7 +262,7 @@ public class FLEBiome extends BiomeGenBase implements ISubTagContainer
                         }
                         else
                         {
-                        	blocks[i2] = rock[Math.min(0, (255 - l1) / 64)];
+                        	blocks[i2] = Blocks.stone;//rock[Math.min(0, (255 - l1) / 64)];
                         }
                     }
                     else if(block2 == Blocks.water)

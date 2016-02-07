@@ -1,4 +1,4 @@
-@API(apiVersion = "1.03", owner = FleAPI.MODID, provides = "ueyudiud")
+@API(apiVersion = "2.00", owner = FleAPI.MODID, provides = "ueyudiud")
 package flapi;
 
 import cpw.mods.fml.common.API;

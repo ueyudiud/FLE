@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+@Deprecated
 public class PlatformClient extends PlatformCommon
 {
 	public PlatformClient()

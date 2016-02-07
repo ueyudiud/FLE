@@ -1,16 +1,16 @@
 package fle.core.util;
 
-import flapi.util.FleValue;
-import flapi.util.ITextureLocation;
+import flapi.util.Values;
 
-public class TextureLocation implements ITextureLocation
+@Deprecated
+public class TextureLocation
 {
 	private String fileName;
 	private String textureName[];
 
 	public TextureLocation(String aTextureName) 
 	{
-		this(FleValue.TEXTURE_FILE, aTextureName);
+		this(Values.TEXTURE_FILE, aTextureName);
 	}
 	public TextureLocation(String aFileName, String aTextureName) 
 	{
@@ -18,7 +18,7 @@ public class TextureLocation implements ITextureLocation
 	}
 	public TextureLocation(String...aTextureNames) 
 	{
-		this(FleValue.TEXTURE_FILE, aTextureNames);
+		this(Values.TEXTURE_FILE, aTextureNames);
 	}
 	public TextureLocation(String aFileName, String[] aTextureNames)
 	{
@@ -26,19 +26,16 @@ public class TextureLocation implements ITextureLocation
 		textureName = aTextureNames;
 	}
 
-	@Override
 	public int getLocateSize() 
 	{
 		return textureName.length;
 	}
 
-	@Override
 	public String getTextureFileName(int pass) 
 	{
 		return fileName;
 	}
-
-	@Override
+	
 	public String getTextureName(int pass) 
 	{
 		return textureName[pass];

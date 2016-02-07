@@ -9,6 +9,21 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import farcore.util.FleLog;
+import fle.core.util.noise.NoiseBase;
+import fle.core.util.noise.NoiseFuzzy;
+import fle.core.util.noise.NoiseGauss;
+import fle.core.util.noise.NoiseMix;
+import fle.core.util.noise.NoiseMontain;
+import fle.core.util.noise.NoisePerlin;
+import fle.core.util.noise.NoiseSmooth;
+import fle.core.util.noise.VecNoiseBase;
+import fle.core.util.noise.VecNoiseHandler;
+import fle.core.util.noise.VecNoisePerlin;
+import fle.core.util.noise.VecNoiseSimple;
+import fle.core.world.biome.FLEBiome;
+import fle.core.world.layer.FLELayer;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
@@ -24,23 +39,6 @@ import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import flapi.util.FleLog;
-import fle.core.util.noise.NoiseBase;
-import fle.core.util.noise.NoiseFuzzy;
-import fle.core.util.noise.NoiseGauss;
-import fle.core.util.noise.NoiseMix;
-import fle.core.util.noise.NoiseMontain;
-import fle.core.util.noise.NoisePerlin;
-import fle.core.util.noise.NoiseSmooth;
-import fle.core.util.noise.VecNoiseBase;
-import fle.core.util.noise.VecNoiseHandler;
-import fle.core.util.noise.VecNoisePerlin;
-import fle.core.util.noise.VecNoiseSimple;
-import fle.core.world.FWM;
-import fle.core.world.biome.FLEBiome;
-import fle.core.world.layer.FLELayer;
-import fle.resource.world.FleCavesGen;
 
 public class FLESurfaceChunkProvider extends ChunkProviderGenerate
 {
@@ -58,7 +56,7 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
     /** For rock layer generate **/
     public NoiseBase noiseGen3;
     public NoiseBase noiseGen4;
-    private MapGenBase caveGenerator = new FleCavesGen();
+    private MapGenBase caveGenerator = new MapGenBase();
     private MapGenBase ravineGenerator = new MapGenRavine();
 	private double[] rockHeightCache;
 	private double[] heightCache;
@@ -109,7 +107,7 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
             this.scatteredFeatureGenerator.func_151539_a(this, this.worldObj, x, z, ablock);
         }
          */
-		FWM.generateFlag = false;
+//		FWM.generateFlag = false;
         rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
         getTerrinHeight(heightCache, x * 4, z * 4);
 		fillBlockIn();
@@ -125,7 +123,7 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
             abyte1[k] = (byte) biomesForGeneration[k].biomeID;
         }
         chunk.generateSkylightMap();
-        FWM.generateFlag = true;
+//        FWM.generateFlag = true;
         return chunk;
 	}
 
@@ -152,9 +150,9 @@ public class FLESurfaceChunkProvider extends ChunkProviderGenerate
 	@Override
 	public void populate(IChunkProvider provider, int x, int z)
 	{
-		FWM.generateFlag = false;
+//		FWM.generateFlag = false;
 		super.populate(provider, x, z);
-		FWM.generateFlag = true;
+//		FWM.generateFlag = true;
 	}
 	
 	public void fillBlockIn()

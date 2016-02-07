@@ -1,34 +1,10 @@
 package fle.core.net;
 
-import flapi.collection.Register;
-import flapi.net.FleNBTPacket;
-import flapi.net.FleNetworkHandler;
-import flapi.net.FluidUpdatePacket;
-import flapi.net.FluidWindowPacket;
-import flapi.net.INetEventHandler;
-import flapi.net.IPacket;
-import flapi.net.IPacketMaker;
-import flapi.net.SolidUpdatePacket;
-import flapi.net.SolidWindowPacket;
-import flapi.te.interfaces.IObjectInWorld;
-import flapi.util.FleLog;
-import flapi.world.BlockPos;
-import fle.FLE;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.MessageToMessageCodec;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.EnumMap;
 import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 import org.apache.logging.log4j.Level;
 
@@ -42,9 +18,29 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import cpw.mods.fml.relauncher.Side;
+import farcore.FarCore;
+import farcore.collection.Register;
+import farcore.net.FleEntityPacket;
+import farcore.net.FleFallingBlockPacket;
+import farcore.net.FleNBTPacket;
+import farcore.net.FleTEPacket;
+import farcore.net.INetworkHandler;
+import farcore.net.IPacket;
+import farcore.util.FleLog;
+import farcore.world.BlockPos;
+import farcore.world.IObjectInWorld;
+import fle.core.FLE;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.MessageToMessageCodec;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 @ChannelHandler.Sharable
-public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implements FleNetworkHandler
+public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implements INetworkHandler
 {
 	private static Register<NWH> register = new Register();
 	
@@ -52,25 +48,30 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	{		
 		NWH nwh = new NWH("fle");
 
-		nwh.registerMessage(FluidWindowPacket.class, Side.CLIENT);
-		nwh.registerMessage(SolidWindowPacket.class, Side.CLIENT);
-		nwh.registerMessage(FluidUpdatePacket.class, Side.CLIENT);
-		nwh.registerMessage(SolidUpdatePacket.class, Side.CLIENT);
+//		nwh.registerMessage(FluidWindowPacket.class, Side.CLIENT);
+//		nwh.registerMessage(SolidWindowPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FluidUpdatePacket.class, Side.CLIENT);
+//		nwh.registerMessage(SolidUpdatePacket.class, Side.CLIENT);
 		nwh.registerMessage(FleKeyTypePacket.class, Side.SERVER);
 		nwh.registerMessage(FleGuiPacket.class, Side.SERVER);
-		nwh.registerMessage(FleSyncAskFWMPacket.class, Side.SERVER);
-		nwh.registerMessage(FleSyncAskTileMetaPacket.class, Side.SERVER);
-		nwh.registerMessage(FleSyncFWMSmallPacket.class, Side.CLIENT);
-		nwh.registerMessage(FleInventoryPacket.class, Side.CLIENT);
-		nwh.registerMessage(FleFluidTankPacket.class, Side.CLIENT);
-		nwh.registerMessage(FleSolidTankPacket.class, Side.CLIENT);
+		nwh.registerMessage(FleFallingBlockPacket.class, Side.CLIENT);
+		nwh.registerMessage(FleEntityPacket.class, Side.CLIENT);
 		nwh.registerMessage(FleNBTPacket.class, Side.CLIENT);
-		nwh.registerMessage(FlePlayerTechPacket.class, Side.CLIENT);
+		nwh.registerMessage(FleTileLoadedAskSyncPacket.class, Side.SERVER);
+		nwh.registerMessage(FleTileLoadedSyncPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FleSyncAskFWMPacket.class, Side.SERVER);
+//		nwh.registerMessage(FleSyncAskTileMetaPacket.class, Side.SERVER);
+//		nwh.registerMessage(FleSyncFWMSmallPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FleInventoryPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FleFluidTankPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FleSolidTankPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FleNBTPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FlePlayerTechPacket.class, Side.CLIENT);
 		nwh.registerMessage(FleTEPacket.class, Side.CLIENT);
-		nwh.registerMessage(FleCropUpdatePacket.class, Side.CLIENT);
+//		nwh.registerMessage(FleCropUpdatePacket.class, Side.CLIENT);
 		nwh.registerMessage(FleLargePacket.class, Side.CLIENT);
-		nwh.registerMessage(FleWorldMetaSyncPacket.class, Side.CLIENT);
-		
+//		nwh.registerMessage(FleWorldMetaSyncPacket.class, Side.CLIENT);
+//		nwh.registerMessage(FleBaseTEPacket.class, Side.CLIENT);
 		return nwh;
 	}
 	
@@ -84,6 +85,11 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 		NWH nw = new NWH(name);
 		register.register(nw, name);
 		return nw;
+	}
+	
+	public final String getChannelName()
+	{
+		return channelName;
 	}
 	
 	private final EnumMap<Side, FMLEmbeddedChannel> channel;
@@ -117,10 +123,10 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	@Override
 	public void sendTo(IPacket aPacket)
 	{
-		if(FLE.fle.getPlatform().isSimulating())
+		if(FarCore.isSimulating())
 		{
-			if(FLE.fle.getPlatform().getPlayerInstance() instanceof EntityPlayerMP)
-				sendToPlayer(aPacket, FLE.fle.getPlatform().getPlayerInstance());
+			if(FarCore.getPlayerInstance() instanceof EntityPlayerMP)
+				sendToPlayer(aPacket, FarCore.getPlayerInstance());
 		}
 		else
 		{
@@ -188,8 +194,8 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	public void sendToNearBy(IPacket aPacket, IObjectInWorld obj,
 			float range)
 	{
-		BlockPos pos = obj.getBlockPos();
-		sendToNearBy(aPacket, pos.getDim(), pos.x, pos.y, pos.z, range);
+		BlockPos pos = obj.pos();
+		sendToNearBy(aPacket, pos.t, pos.x, pos.y, pos.z, range);
 	}
 
 	public void sendToNearBy(IPacket aPacket, TargetPoint aPoint)
@@ -345,9 +351,9 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	@ChannelHandler.Sharable
 	static final class HandlerClient extends SimpleChannelInboundHandler<IPacket>
 	{
-	    public final FleNetworkHandler nwh;
+	    public final INetworkHandler nwh;
 	    
-	    public HandlerClient(FleNetworkHandler aNWH)
+	    public HandlerClient(INetworkHandler aNWH)
 	    {
 	    	nwh = aNWH;
 	    }
@@ -375,9 +381,9 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	@ChannelHandler.Sharable
 	static final class HandlerServer extends SimpleChannelInboundHandler<IPacket>
 	{
-		public final FleNetworkHandler nwh;
+		public final INetworkHandler nwh;
 	    
-	    public HandlerServer(FleNetworkHandler aNWH)
+	    public HandlerServer(INetworkHandler aNWH)
 	    {
 	    	nwh = aNWH;
 	    }
@@ -407,26 +413,5 @@ public class NWH extends MessageToMessageCodec<FMLProxyPacket, IPacket> implemen
 	    {
 	    	return super.acceptInboundMessage(msg) && ((IPacket) msg).getSide().isServer();
 	    }
-	}
-
-	private static IPacketMaker maker = new IPacketMaker()
-	{
-		public IPacket makeNBTPacket(INetEventHandler handler){return new FleNBTPacket(handler);}
-		public IPacket makeInventoryPacket(INetEventHandler te, int start, int end){return new FleInventoryPacket(te, start, end);}
-		public IPacket makeInventoryPacket(INetEventHandler te){return new FleInventoryPacket(te);}
-		public IPacket makeGuiPacket(byte type, Object contain){return new FleGuiPacket(type, contain);}
-		public IPacket makeFluidTankPacket(INetEventHandler te){return new FleFluidTankPacket(te);}
-		public IPacket makeSolidTankPacket(INetEventHandler te){return new FleSolidTankPacket(te);}
-	};
-	
-	@Override
-	public IPacketMaker getPacketMaker()
-	{
-		return maker;
-	}
-	
-	public final String getChannelName()
-	{
-		return channelName;
 	}
 }

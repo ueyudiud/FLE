@@ -2,6 +2,10 @@ package fle.core.world.dim;
 
 import java.util.Random;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import fle.core.util.noise.NoiseBase;
+import fle.core.util.noise.NoisePerlin;
+import fle.core.util.noise.NoiseSmooth;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -11,12 +15,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import fle.core.util.noise.NoiseBase;
-import fle.core.util.noise.NoisePerlin;
-import fle.core.util.noise.NoiseSmooth;
-import fle.resource.world.FleCrystalGen;
-import fle.resource.world.FleLiquidGen;
 
 public class FLENetherChunkProvider extends ChunkProviderHell
 {
@@ -143,24 +141,24 @@ public class FLENetherChunkProvider extends ChunkProviderHell
         }
     }
 
-	private FleCrystalGen gen1 = new FleCrystalGen();
-	private FleLiquidGen gen2 = new FleLiquidGen(Blocks.netherrack, Blocks.lava, Blocks.netherrack, null);
+//	private FleCrystalGen gen1 = new FleCrystalGen();
+//	private FleLiquidGen gen2 = new FleLiquidGen(Blocks.netherrack, Blocks.lava, Blocks.netherrack, null);
 	
 	@Override
 	public void populate(IChunkProvider provider, int x, int z)
 	{
 		super.populate(provider, x, z);
 
-		float temp = worldObj.provider.getBiomeGenForCoords(x * 16, z * 16).getFloatTemperature(x * 16, 64, z * 16);
-		if(temp < 7F)
-		{
-			if(hellRNG.nextBoolean())
-				gen1.generate(worldObj, hellRNG, x * 16, hellRNG.nextInt(100) + 10, z * 16);
-		}
-		else if(temp > 10F)
-		{
-			if(hellRNG.nextBoolean())
-				gen2.generate(worldObj, hellRNG, x * 16, hellRNG.nextInt(hellRNG.nextInt(80) + 20) + 10, z * 16);
-		}
+//		float temp = worldObj.provider.getBiomeGenForCoords(x * 16, z * 16).getFloatTemperature(x * 16, 64, z * 16);
+//		if(temp < 7F)
+//		{
+//			if(hellRNG.nextBoolean())
+//				gen1.generate(worldObj, hellRNG, x * 16, hellRNG.nextInt(100) + 10, z * 16);
+//		}
+//		else if(temp > 10F)
+//		{
+//			if(hellRNG.nextBoolean())
+//				gen2.generate(worldObj, hellRNG, x * 16, hellRNG.nextInt(hellRNG.nextInt(80) + 20) + 10, z * 16);
+//		}
 	}
 }

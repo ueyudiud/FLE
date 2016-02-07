@@ -4,19 +4,23 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import flapi.util.IPlatform;
 
-public class PlatformCommon implements IPlatform
+/**
+ * Use Far core instead this class.
+ * @author ueyudiud
+ *
+ */
+@Deprecated
+public class PlatformCommon
 {
-	@Override
 	public boolean isSimulating()
 	{
 		return !FMLCommonHandler.instance().getEffectiveSide().isClient();
