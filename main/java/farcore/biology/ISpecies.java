@@ -9,35 +9,35 @@ import com.google.common.collect.ImmutableList;
  * @author ueyudiud
  * @see farcore.biology.SpecieRegistry
  */
-public interface ISpecies
+public abstract class ISpecies
 {
-	default String kindom()
+	public String kindom()
 	{
 		return "entity";
 	}
 	
-	String phylum();
+	public abstract String phylum();
 	
-	String family();
+	public abstract String family();
 	
 	/**
 	 * Get species name.
 	 * 
 	 * @return
 	 */
-	String name();
+	public abstract String name();
 	
-	default String fullName()
+	public String fullName()
 	{
 		return kindom() + "." + phylum() + "." + family() + "." + name();
 	}
 	
-	ImmutableList<DNAPart> dna();
+	public abstract ImmutableList<DNAPart> dna();
 	
 	/**
 	 * Create a new biology instance as this species.
 	 * 
 	 * @return The new instance.
 	 */
-	IBiology instance();
+	public abstract IBiology instance();
 }

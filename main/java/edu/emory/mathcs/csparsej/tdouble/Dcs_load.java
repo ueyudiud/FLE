@@ -57,9 +57,7 @@ public class Dcs_load
 		double x;
 		Dcs T;
 		// Far land era : Auto fixed.
-		@SuppressWarnings("resource")
 		Reader r = new InputStreamReader(in);
-		@SuppressWarnings("resource")
 		BufferedReader br = new BufferedReader(r);
 		
 		T = Dcs_util.cs_spalloc(0, 0, 1, true, true); /* allocate result */

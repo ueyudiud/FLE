@@ -178,9 +178,14 @@ public class DNA
 		;
 	}
 	
-	private static final Comparator<DNAPair> COMPARATOR = (DNAPair pair1,
-			DNAPair pair2) -> pair1.compareTo(pair2);
-			
+	private static final Comparator<DNAPair> COMPARATOR = new Comparator<DNA.DNAPair>()
+	{
+		public int compare(DNAPair pair1, DNAPair pair2)
+		{
+			return pair1.compareTo(pair2);
+		}
+	};
+	
 	public DNA(DNAPair... parts)
 	{
 		this.parts = parts;

@@ -32,6 +32,8 @@ import farcore.block.properties.FlePropertyString;
 import farcore.substance.Substance;
 import flapi.FleResource;
 import flapi.debug.BlockStateJsonWriter.BlockModel;
+import flapi.debug.IModelLocateProvider;
+import flapi.debug.IModelProvider;
 import flapi.debug.IModelStateProvider;
 import flapi.debug.ModelJsonWriter;
 import flapi.util.FleValue;
@@ -46,19 +48,33 @@ public class BlockRock extends BlockResource implements ITileEntityProvider
 {
 	private void debug()
 	{
-		ModelResource.add(this, (IBlockState state) -> {
-			return String.format("%s:rock/%s.%s", FleValue.TEXTURE_FILE,
-					(String) rockProperty.getName(state.getValue(rockProperty)),
-					((EnumRockState) state.getValue(stateProperty)).name());
-		} , (ModelJsonWriter writer, BlockModel model) -> {
-			writer.setParent("fle:block/base_layer2").setTextures("render1",
-					FleValue.TEXTURE_FILE + ":blocks/rock/" + (String) model
-							.getState().getValue(rockProperty))
-					.setTextures("render2",
-							FleValue.TEXTURE_FILE + ":blocks/rock/override/"
-									+ ((EnumRockState) model.getState()
-											.getValue(stateProperty)).name());
-		} , new IModelStateProvider[0]);
+		ModelResource.add(this, new IModelLocateProvider()
+		{
+			@Override
+			public String apply(IBlockState state)
+			{
+				return String.format("%s:rock/%s.%s", FleValue.TEXTURE_FILE,
+						(String) rockProperty
+								.getName(state.getValue(rockProperty)),
+						((EnumRockState) state.getValue(stateProperty)).name());
+			}
+		}, new IModelProvider()
+		{
+			@Override
+			public void provide(ModelJsonWriter writer, BlockModel model)
+			{
+				writer.setParent("fle:block/base_layer2")
+						.setTextures("render1",
+								FleValue.TEXTURE_FILE + ":blocks/rock/"
+										+ (String) model.getState()
+												.getValue(rockProperty))
+						.setTextures("render2",
+								FleValue.TEXTURE_FILE + ":blocks/rock/override/"
+										+ ((EnumRockState) model.getState()
+												.getValue(stateProperty))
+														.name());
+			}
+		}, new IModelStateProvider[0]);
 	}
 	
 	static final FlePropertyEnum<EnumRockState> stateProperty = new FlePropertyEnum<EnumRockState>(

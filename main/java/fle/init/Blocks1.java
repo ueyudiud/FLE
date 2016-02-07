@@ -4,6 +4,7 @@ import fle.resource.block.BlockDirt;
 import fle.resource.block.BlockMineral;
 import fle.resource.block.BlockRock;
 import fle.resource.block.BlockSand;
+import fle.resource.block.BlockStoneChip;
 
 /**
  * 
@@ -16,4 +17,5 @@ public class Blocks1
 	public static BlockRock rock;
 	public static BlockMineral mineral;
 	public static BlockDirt dirt;
+	public static BlockStoneChip stoneChip;
 }

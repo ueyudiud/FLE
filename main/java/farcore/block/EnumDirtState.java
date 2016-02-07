@@ -2,8 +2,9 @@ package farcore.block;
 
 import farcore.biology.plant.ICoverablePlantSpecies;
 import farcore.biology.plant.PlantCover;
+import farcore.util.IUnlocalized;
 
-public enum EnumDirtState
+public enum EnumDirtState implements IUnlocalized
 {
 	dirt, grass, mycelium, moss, farmland;
 	

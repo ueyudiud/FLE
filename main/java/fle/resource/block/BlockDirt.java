@@ -39,6 +39,8 @@ import farcore.substance.Substance;
 import farcore.util.Direction;
 import flapi.FleResource;
 import flapi.debug.BlockStateJsonWriter.BlockModel;
+import flapi.debug.IModelLocateProvider;
+import flapi.debug.IModelProvider;
 import flapi.debug.IModelStateProvider;
 import flapi.debug.ModelJsonWriter;
 import flapi.util.FleValue;
@@ -55,38 +57,57 @@ public class BlockDirt extends BlockResource
 {
 	private void debug()
 	{
-		ModelResource.add(this, (IBlockState state) -> {
-			return String.format("%s:dirt/%s.%s.%s", FleValue.TEXTURE_FILE,
-					(String) dirtProperty.getName(state.getValue(dirtProperty)),
-					((EnumDirtState) state.getValue(DIRT_STATE)).name(),
-					((EnumDirtCover) state.getValue(COVER)).name());
-		} , (ModelJsonWriter writer, BlockModel model) -> {
-			writer.setParent("fle:block/dirt_base")
-					.setTextures("base",
-							FleValue.TEXTURE_FILE + ":blocks/dirt/"
-									+ (String) model.getState()
-											.getValue(dirtProperty))
-					.setTextures("cover",
-							FleValue.TEXTURE_FILE + ":blocks/dirt/cover/"
-									+ ((EnumDirtCover) model.getState()
-											.getValue(COVER)).name()
-									+ "_side")
-					.setTextures("covertop",
-							FleValue.TEXTURE_FILE + ":blocks/dirt/cover/"
-									+ ((EnumDirtCover) model.getState()
-											.getValue(COVER)).name()
-									+ "_top")
-					.setTextures("grow",
-							FleValue.TEXTURE_FILE + ":blocks/dirt/state/"
-									+ ((EnumDirtState) model.getState()
-											.getValue(DIRT_STATE)).name()
-									+ "_side")
-					.setTextures("growtop",
-							FleValue.TEXTURE_FILE + ":blocks/dirt/state/"
-									+ ((EnumDirtState) model.getState()
-											.getValue(DIRT_STATE)).name()
-									+ "_top");
-		} , new IModelStateProvider[0]);
+		ModelResource.add(this, new IModelLocateProvider()
+		{
+			@Override
+			public String apply(IBlockState state)
+			{
+				return String.format("%s:dirt/%s.%s.%s", FleValue.TEXTURE_FILE,
+						(String) dirtProperty
+								.getName(state.getValue(dirtProperty)),
+						((EnumDirtState) state.getValue(DIRT_STATE)).name(),
+						((EnumDirtCover) state.getValue(COVER)).name());
+			}
+		}, new IModelProvider()
+		{
+			@Override
+			public void provide(ModelJsonWriter writer, BlockModel model)
+			{
+				if (model.getState()
+						.getValue(DIRT_STATE) == EnumDirtState.farmland)
+				{
+					writer.setParent("fle:block/farmland_base");
+				}
+				else
+				{
+					writer.setParent("fle:block/dirt_base");
+				}
+				writer.setTextures("base",
+						FleValue.TEXTURE_FILE + ":blocks/dirt/"
+								+ (String) model.getState()
+										.getValue(dirtProperty))
+						.setTextures("cover",
+								FleValue.TEXTURE_FILE + ":blocks/dirt/cover/"
+										+ ((EnumDirtCover) model.getState()
+												.getValue(COVER)).name()
+										+ "_side")
+						.setTextures("covertop",
+								FleValue.TEXTURE_FILE + ":blocks/dirt/cover/"
+										+ ((EnumDirtCover) model.getState()
+												.getValue(COVER)).name()
+										+ "_top")
+						.setTextures("grow",
+								FleValue.TEXTURE_FILE + ":blocks/dirt/state/"
+										+ ((EnumDirtState) model.getState()
+												.getValue(DIRT_STATE)).name()
+										+ "_side")
+						.setTextures("growtop",
+								FleValue.TEXTURE_FILE + ":blocks/dirt/state/"
+										+ ((EnumDirtState) model.getState()
+												.getValue(DIRT_STATE)).name()
+										+ "_top");
+			}
+		}, new IModelStateProvider[0]);
 	}
 	
 	static final FlePropertyEnum<EnumDirtState> DIRT_STATE = new FlePropertyEnum(
@@ -179,6 +200,12 @@ public class BlockDirt extends BlockResource
 		return getDirt(worldIn, pos).getBlockHardness();
 	}
 	
+	@Override
+	public boolean isNormalCube(IBlockAccess world, BlockPos pos)
+	{
+		return getTile(world, pos).state != EnumDirtState.farmland;
+	}
+	
 	public Substance getDirt(IBlockState state)
 	{
 		return dirtProperty.getValue(getDirtName(state));
@@ -263,7 +290,7 @@ public class BlockDirt extends BlockResource
 			}
 			for (EnumDirtState state : EnumDirtState.values())
 			{
-				list.add(setDirt(new ItemStack(item), tag, EnumDirtState.dirt));
+				list.add(setDirt(new ItemStack(item), tag, state));
 			}
 		}
 	}

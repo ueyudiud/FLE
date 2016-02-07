@@ -34,6 +34,8 @@ import farcore.substance.Substance;
 import farcore.util.Part;
 import flapi.FleResource;
 import flapi.debug.BlockStateJsonWriter.BlockModel;
+import flapi.debug.IModelLocateProvider;
+import flapi.debug.IModelProvider;
 import flapi.debug.IModelStateProvider;
 import flapi.debug.ModelJsonWriter;
 import flapi.util.FleValue;
@@ -49,27 +51,40 @@ public class BlockMineral extends BlockResource implements ITileEntityProvider
 {
 	private void debug()
 	{
-		ModelResource.add(this, (IBlockState state) -> {
-			return String.format("%s:mineral/%s.%s.%s", FleValue.TEXTURE_FILE,
-					(String) mineableProperty
-							.getName(state.getValue(mineableProperty)),
-					(String) rockProperty.getName(state.getValue(rockProperty)),
-					((EnumRockState) state.getValue(stateProperty)).name());
-		} , (ModelJsonWriter writer, BlockModel model) -> {
-			writer.setParent("fle:block/base_layer3")
-					.setTextures("render1",
-							FleValue.TEXTURE_FILE + ":blocks/rock/"
-									+ (String) model.getState()
-											.getValue(rockProperty))
-					.setTextures("render2",
-							FleValue.TEXTURE_FILE + ":blocks/rock/override/"
-									+ ((EnumRockState) model.getState()
-											.getValue(stateProperty)).name())
-					.setTextures("render3", FleValue.TEXTURE_FILE
-							+ ":blocks/ore/"
-							+ (String) mineableProperty.getName(model.getState()
-									.getValue(mineableProperty)));
-		} , new IModelStateProvider[0]);
+		ModelResource.add(this, new IModelLocateProvider()
+		{
+			@Override
+			public String apply(IBlockState state)
+			{
+				return String.format("%s:mineral/%s.%s.%s",
+						FleValue.TEXTURE_FILE,
+						(String) mineableProperty
+								.getName(state.getValue(mineableProperty)),
+						(String) rockProperty
+								.getName(state.getValue(rockProperty)),
+						((EnumRockState) state.getValue(stateProperty)).name());
+			}
+		}, new IModelProvider()
+		{
+			@Override
+			public void provide(ModelJsonWriter writer, BlockModel model)
+			{
+				writer.setParent("fle:block/base_layer3")
+						.setTextures("render1",
+								FleValue.TEXTURE_FILE + ":blocks/rock/"
+										+ (String) model.getState()
+												.getValue(rockProperty))
+						.setTextures("render2", FleValue.TEXTURE_FILE
+								+ ":blocks/rock/override/"
+								+ ((EnumRockState) model.getState()
+										.getValue(stateProperty)).name())
+						.setTextures("render3", FleValue.TEXTURE_FILE
+								+ ":blocks/ore/"
+								+ (String) mineableProperty
+										.getName(model.getState()
+												.getValue(mineableProperty)));
+			}
+		}, new IModelStateProvider[0]);
 	}
 	
 	static final FlePropertyString<Substance> mineableProperty = new FlePropertyString<Substance>(

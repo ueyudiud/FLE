@@ -32,6 +32,8 @@ import farcore.entity.EntityFleFallingBlock;
 import farcore.substance.Substance;
 import flapi.FleResource;
 import flapi.debug.BlockStateJsonWriter.BlockModel;
+import flapi.debug.IModelLocateProvider;
+import flapi.debug.IModelProvider;
 import flapi.debug.IModelStateProvider;
 import flapi.debug.ModelJsonWriter;
 import flapi.util.FleValue;
@@ -47,16 +49,25 @@ public class BlockSand extends BlockResource
 {
 	private void debug()
 	{
-		ModelResource.add(this, (IBlockState state) -> {
-			return String.format("%s:sand/%s", FleValue.TEXTURE_FILE,
-					(String) sandProperty
-							.getName(state.getValue(sandProperty)));
-		} , (ModelJsonWriter writer, BlockModel model) -> {
-			writer.setParent("fle:block/base")
-					.setTextures("render", FleValue.TEXTURE_FILE
-							+ ":blocks/sand/"
-							+ (String) model.getState().getValue(sandProperty));
-		} , new IModelStateProvider[0]);
+		ModelResource.add(this, new IModelLocateProvider()
+		{
+			@Override
+			public String apply(IBlockState state)
+			{
+				return String.format("%s:sand/%s", FleValue.TEXTURE_FILE,
+						(String) sandProperty
+								.getName(state.getValue(sandProperty)));
+			}
+		}, new IModelProvider()
+		{
+			@Override
+			public void provide(ModelJsonWriter writer, BlockModel model)
+			{
+				writer.setParent("fle:block/base").setTextures("render",
+						FleValue.TEXTURE_FILE + ":blocks/sand/" + (String) model
+								.getState().getValue(sandProperty));
+			}
+		}, new IModelStateProvider[0]);
 	}
 	
 	static final FlePropertyString<Substance> sandProperty = new FlePropertyString<Substance>(

@@ -4,8 +4,10 @@ import static fle.init.Substance1.*;
 
 import farcore.block.EnumDirtState;
 import farcore.block.EnumRockState;
+import farcore.util.IUnlocalized;
 import farcore.util.Langs;
 import flapi.FleAPI;
+import flapi.enums.EnumRockSize;
 
 public class Lang
 {
@@ -55,24 +57,30 @@ public class Lang
 		beachSand.setTranslate("Beach Sand").setTranslate(Langs.chinese, "白沙");
 		soulSand.setTranslate("Soul Sand").setTranslate(Langs.chinese, "灵魂沙");
 		
-		rt(EnumRockState.resource.getUnlocalized() + ".name", "%s");
-		rt(EnumRockState.cobble.getUnlocalized() + ".name", "Cobble %s");
-		rt(EnumRockState.crush.getUnlocalized() + ".name", "Crush %s");
-		rt(EnumRockState.smooth.getUnlocalized() + ".name", "Smooth %s");
-		rt(EnumDirtState.dirt.getUnlocalized() + ".name", "%s");
-		rt(EnumDirtState.farmland.getUnlocalized() + ".name", "%s Farmland");
-		rt(EnumDirtState.grass.getUnlocalized() + ".name", "%s With Grass");
-		rt(EnumDirtState.mycelium.getUnlocalized() + ".name",
-				"%s With Mycelium");
-		rt(EnumDirtState.moss.getUnlocalized() + ".name", "Mossy %s");
-		rt(Langs.chinese, EnumRockState.resource.getUnlocalized() + ".name",
-				"%s岩");
-		rt(Langs.chinese, EnumRockState.cobble.getUnlocalized() + ".name",
-				"%s原石");
-		rt(Langs.chinese, EnumRockState.crush.getUnlocalized() + ".name",
-				"粉碎%s岩");
-		rt(Langs.chinese, EnumRockState.smooth.getUnlocalized() + ".name",
-				"平滑%s岩");
+		dirt.setTranslate("Dirt").setTranslate(Langs.chinese, "泥土");
+		
+		rt(EnumRockState.resource, "%s");
+		rt(EnumRockState.cobble, "Cobble %s");
+		rt(EnumRockState.crush, "Crush %s");
+		rt(EnumRockState.smooth, "Smooth %s");
+		rt(EnumDirtState.dirt, "%s");
+		rt(EnumDirtState.farmland, "%s Farmland");
+		rt(EnumDirtState.grass, "%s With Grass");
+		rt(EnumDirtState.mycelium, "%s With Mycelium");
+		rt(EnumDirtState.moss, "Mossy %s");
+		rt(EnumRockState.resource.getUnlocalized() + ".ore.name", "%s Ore");
+		rt(EnumRockState.cobble.getUnlocalized() + ".ore.name",
+				"Cobble %s Ore");
+		rt(EnumRockState.crush.getUnlocalized() + ".ore.name", "Crush %s Ore");
+		rt(EnumRockState.smooth.getUnlocalized() + ".ore.name",
+				"Smooth %s Ore");
+		rt(EnumRockSize.small, "Small %s");
+		rt(EnumRockSize.medium, "Medium %s");
+		rt(EnumRockSize.large, "Large %s");
+		rt(Langs.chinese, EnumRockState.resource, "%s岩");
+		rt(Langs.chinese, EnumRockState.cobble, "%s原石");
+		rt(Langs.chinese, EnumRockState.crush, "粉碎%s岩");
+		rt(Langs.chinese, EnumRockState.smooth, "平滑%s岩");
 		rt(Langs.chinese, EnumRockState.resource.getUnlocalized() + ".ore.name",
 				"%s矿");
 		rt(Langs.chinese, EnumRockState.cobble.getUnlocalized() + ".ore.name",
@@ -81,15 +89,14 @@ public class Lang
 				"粉碎%s矿");
 		rt(Langs.chinese, EnumRockState.smooth.getUnlocalized() + ".ore.name",
 				"平滑%s矿");
-		rt(Langs.chinese, EnumDirtState.dirt.getUnlocalized() + ".name", "%s");
-		rt(Langs.chinese, EnumDirtState.farmland.getUnlocalized() + ".name",
-				"%s耕地");
-		rt(Langs.chinese, EnumDirtState.grass.getUnlocalized() + ".name",
-				"草方块");
-		rt(Langs.chinese, EnumDirtState.mycelium.getUnlocalized() + ".name",
-				"菌丝");
-		rt(Langs.chinese, EnumDirtState.moss.getUnlocalized() + ".name",
-				"苔藓方块");
+		rt(Langs.chinese, EnumDirtState.dirt, "%s");
+		rt(Langs.chinese, EnumDirtState.farmland, "%s耕地");
+		rt(Langs.chinese, EnumDirtState.grass, "草方块");
+		rt(Langs.chinese, EnumDirtState.mycelium, "菌丝");
+		rt(Langs.chinese, EnumDirtState.moss, "苔藓方块");
+		rt(Langs.chinese, EnumRockSize.small, "小型%s石块");
+		rt(Langs.chinese, EnumRockSize.medium, "中型%s石块");
+		rt(Langs.chinese, EnumRockSize.large, "大型%s石块");
 	}
 	
 	private static void rt(String unlocalized, String localized)
@@ -97,8 +104,19 @@ public class Lang
 		FleAPI.lang.registerLocal(unlocalized, localized);
 	}
 	
+	private static void rt(IUnlocalized unlocalized, String localized)
+	{
+		rt(unlocalized.getUnlocalized() + ".name", localized);
+	}
+	
 	private static void rt(String locale, String unlocalized, String localized)
 	{
 		FleAPI.lang.registerLocal(locale, unlocalized, localized);
+	}
+	
+	private static void rt(String locale, IUnlocalized unlocalized,
+			String localized)
+	{
+		rt(locale, unlocalized.getUnlocalized() + ".name", localized);
 	}
 }

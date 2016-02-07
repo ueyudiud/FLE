@@ -3,6 +3,7 @@ package fle.core.energy.thermal;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -23,7 +24,7 @@ public class ThermalNet implements IThermalNet
 	}
 	
 	@Override
-	public long getEnviormentTemperature(World world, BlockPos pos)
+	public int getEnviormentTemperature(IBlockAccess world, BlockPos pos)
 	{
 		BiomeGenBase biome = world.getBiomeGenForCoords(pos);
 		float bioTem = biome.getFloatTemperature(pos);
@@ -144,6 +145,8 @@ public class ThermalNet implements IThermalNet
 				}
 			}
 		}
+		FleLog.resetAndCatchException(
+				"Catching exception during caculating thermal current.");
 	}
 	
 	public static int floatTempretureToInteger(double tempreture)

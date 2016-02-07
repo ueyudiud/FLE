@@ -1,10 +1,12 @@
 package farcore.block;
 
-public enum EnumDirtCover
+import farcore.util.IUnlocalized;
+
+public enum EnumDirtCover implements IUnlocalized
 {
 	nothing, water, snow;
-
-	public String getCoverName()
+	
+	public String getUnlocalized()
 	{
 		return "state.cover." + name();
 	}

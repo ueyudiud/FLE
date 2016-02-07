@@ -1,0 +1,76 @@
+{
+	"variants": {
+		"rock=rhyolite,size=small": {
+			"model": "fle:rock/chip.rhyolite.small"
+		},
+		"rock=rhyolite,size=medium": {
+			"model": "fle:rock/chip.rhyolite.medium"
+		},
+		"rock=rhyolite,size=large": {
+			"model": "fle:rock/chip.rhyolite.large"
+		},
+		"rock=basalt,size=small": {
+			"model": "fle:rock/chip.basalt.small"
+		},
+		"rock=basalt,size=medium": {
+			"model": "fle:rock/chip.basalt.medium"
+		},
+		"rock=basalt,size=large": {
+			"model": "fle:rock/chip.basalt.large"
+		},
+		"rock=void,size=small": {
+			"model": "fle:rock/chip.void.small"
+		},
+		"rock=void,size=medium": {
+			"model": "fle:rock/chip.void.medium"
+		},
+		"rock=void,size=large": {
+			"model": "fle:rock/chip.void.large"
+		},
+		"rock=compact stone,size=small": {
+			"model": "fle:rock/chip.compact stone.small"
+		},
+		"rock=compact stone,size=medium": {
+			"model": "fle:rock/chip.compact stone.medium"
+		},
+		"rock=compact stone,size=large": {
+			"model": "fle:rock/chip.compact stone.large"
+		},
+		"rock=peridotite,size=small": {
+			"model": "fle:rock/chip.peridotite.small"
+		},
+		"rock=peridotite,size=medium": {
+			"model": "fle:rock/chip.peridotite.medium"
+		},
+		"rock=peridotite,size=large": {
+			"model": "fle:rock/chip.peridotite.large"
+		},
+		"rock=andesite,size=small": {
+			"model": "fle:rock/chip.andesite.small"
+		},
+		"rock=andesite,size=medium": {
+			"model": "fle:rock/chip.andesite.medium"
+		},
+		"rock=andesite,size=large": {
+			"model": "fle:rock/chip.andesite.large"
+		},
+		"rock=limestone,size=small": {
+			"model": "fle:rock/chip.limestone.small"
+		},
+		"rock=limestone,size=medium": {
+			"model": "fle:rock/chip.limestone.medium"
+		},
+		"rock=limestone,size=large": {
+			"model": "fle:rock/chip.limestone.large"
+		},
+		"rock=stone,size=small": {
+			"model": "fle:rock/chip.stone.small"
+		},
+		"rock=stone,size=medium": {
+			"model": "fle:rock/chip.stone.medium"
+		},
+		"rock=stone,size=large": {
+			"model": "fle:rock/chip.stone.large"
+		}
+	}
+}

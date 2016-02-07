@@ -21,24 +21,4 @@ public interface IObjectInWorld
 	World getWorld();
 	
 	BlockPos getBlockPos();
-	
-	default double getX()
-	{
-		return getBlockPos().getX();
-	}
-	
-	default double getY()
-	{
-		return getBlockPos().getY();
-	}
-	
-	default double getZ()
-	{
-		return getBlockPos().getZ();
-	}
-	
-	default int getT()
-	{
-		return getWorld().provider.getDimensionId();
-	}
 }

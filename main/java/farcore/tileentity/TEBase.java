@@ -21,6 +21,7 @@ import farcore.util.Direction;
 import farcore.util.Facing;
 import farcore.util.FleLog;
 import farcore.util.FleRandom;
+import farcore.world.BlockData;
 import flapi.FleAPI;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -56,9 +57,16 @@ public class TEBase extends TileEntity
 	 */
 	protected int[] colorState = {-1, -1, -1, -1, -1, -1};
 	
+	private BlockData data;
+	
 	public TEBase()
 	{
 	
+	}
+	
+	public BlockData data()
+	{
+		return data == null ? data = new BlockData(this) : data;
 	}
 	
 	@Override
@@ -107,7 +115,7 @@ public class TEBase extends TileEntity
 				64.0F);
 	}
 	
-	// ===Block state control===
+	// ================Block state control=============
 	public void onBlockPlaced(ItemStack stack, EntityLivingBase placer,
 			Direction side)
 	{
@@ -141,8 +149,7 @@ public class TEBase extends TileEntity
 	
 	}
 	
-	// ==================Set block state & Block
-	// properties==============================
+	// ==========Set block state & Block properties==========
 	public int getLightOpacity()
 	{
 		return lightValue;
@@ -351,13 +358,13 @@ public class TEBase extends TileEntity
 		markRenderForUpdate();
 	}
 	
-	// =====================================Meta
-	// handler====================================
+	// ==============Meta handler====================
 	/**
-	 * REMOVE IN 1.8! Set tile meta of this tile entity. Info: this meta is
-	 * similar with world data & 15 (Because minecraft can only save 16 meta
-	 * before 1.8) If this meta is not similar with world meta, this tile will
-	 * cause a update when initialized. This data is not same return with
+	 * REMOVE IN 1.8! <br>
+	 * Set tile meta of this tile entity. Info: this meta is similar with world
+	 * data & 15 (Because minecraft can only save 16 meta before 1.8) If this
+	 * meta is not similar with world meta, this tile will cause a update when
+	 * initialized. This data is not same return with
 	 * <code> fle.api.world.IWorldManager.getData </code>.
 	 * 
 	 * @see net.block.Block
@@ -370,8 +377,7 @@ public class TEBase extends TileEntity
 	 * public short getMetadata() { return (short) blockMetadata; }
 	 */
 	
-	// ====================================Net work
-	// start==============================
+	// ===============Net work start=================
 	/**
 	 * Get packet information from this tile. Used in NWH to get message.
 	 * 
@@ -430,7 +436,7 @@ public class TEBase extends TileEntity
 	
 	}
 	
-	// ===Long flag system start===
+	// =========Long flag system start===========
 	protected static final int COVER = 8;
 	
 	/**
@@ -453,7 +459,7 @@ public class TEBase extends TileEntity
 		return (flags & (1 << i)) != 0;
 	}
 	
-	// ===World conf start===
+	// ============World conf start===============
 	public int getEnviormentLight()
 	{
 		return worldObj.getLight(pos);

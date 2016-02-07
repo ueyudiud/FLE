@@ -11,10 +11,10 @@ import farcore.block.IPropagatedableBlock;
  * 
  * @author ueyudiud Entity Kingdom >> Plant Phylum
  */
-public interface IPlantSpecies extends ISpecies
+public abstract class IPlantSpecies extends ISpecies
 {
 	@Override
-	default String phylum()
+	public String phylum()
 	{
 		return "plant";
 	}
@@ -26,7 +26,7 @@ public interface IPlantSpecies extends ISpecies
 	 * @param pos
 	 * @return
 	 */
-	boolean canGrow(World world, BlockPos pos);
+	public abstract boolean canGrow(World world, BlockPos pos);
 	
 	/**
 	 * Match whether a plant can plant on the locate.
@@ -35,7 +35,7 @@ public interface IPlantSpecies extends ISpecies
 	 * @param pos
 	 * @return
 	 */
-	default boolean canPlant(World world, BlockPos pos)
+	public boolean canPlant(World world, BlockPos pos)
 	{
 		if (pos.getY() < 10)
 			return false;
@@ -55,7 +55,7 @@ public interface IPlantSpecies extends ISpecies
 	 * @param pos
 	 * @return
 	 */
-	boolean isBelongTo(World world, BlockPos pos);
+	public abstract boolean isBelongTo(World world, BlockPos pos);
 	
 	/**
 	 * Plant the plant to the target block.
@@ -64,11 +64,11 @@ public interface IPlantSpecies extends ISpecies
 	 * @param pos
 	 * @param iBiology
 	 */
-	void onPlant(World world, BlockPos pos, IPlant plant);
+	public abstract void onPlant(World world, BlockPos pos, IPlant plant);
 	
 	/**
 	 * The instance should be a plant.
 	 */
 	@Override
-	IPlant instance();
+	public abstract IPlant instance();
 }

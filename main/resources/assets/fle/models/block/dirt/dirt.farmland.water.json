@@ -1,5 +1,5 @@
 {
-	"parent": "fle:block/dirt_base",
+	"parent": "fle:block/farmland_base",
 	"textures": {
 		"base": "fle:blocks/dirt/dirt",
 		"cover": "fle:blocks/dirt/cover/water_side",

@@ -1,5 +1,17 @@
 {
 	"variants": {
+		"rock=rhyolite,state=resource": {
+			"model": "fle:rock/rhyolite.resource"
+		},
+		"rock=rhyolite,state=smooth": {
+			"model": "fle:rock/rhyolite.smooth"
+		},
+		"rock=rhyolite,state=cobble": {
+			"model": "fle:rock/rhyolite.cobble"
+		},
+		"rock=rhyolite,state=crush": {
+			"model": "fle:rock/rhyolite.crush"
+		},
 		"rock=basalt,state=resource": {
 			"model": "fle:rock/basalt.resource"
 		},
@@ -12,17 +24,17 @@
 		"rock=basalt,state=crush": {
 			"model": "fle:rock/basalt.crush"
 		},
-		"rock=peridotite,state=resource": {
-			"model": "fle:rock/peridotite.resource"
+		"rock=void,state=resource": {
+			"model": "fle:rock/void.resource"
 		},
-		"rock=peridotite,state=smooth": {
-			"model": "fle:rock/peridotite.smooth"
+		"rock=void,state=smooth": {
+			"model": "fle:rock/void.smooth"
 		},
-		"rock=peridotite,state=cobble": {
-			"model": "fle:rock/peridotite.cobble"
+		"rock=void,state=cobble": {
+			"model": "fle:rock/void.cobble"
 		},
-		"rock=peridotite,state=crush": {
-			"model": "fle:rock/peridotite.crush"
+		"rock=void,state=crush": {
+			"model": "fle:rock/void.crush"
 		},
 		"rock=compact stone,state=resource": {
 			"model": "fle:rock/compact stone.resource"
@@ -36,41 +48,17 @@
 		"rock=compact stone,state=crush": {
 			"model": "fle:rock/compact stone.crush"
 		},
-		"rock=rhyolite,state=resource": {
-			"model": "fle:rock/rhyolite.resource"
+		"rock=peridotite,state=resource": {
+			"model": "fle:rock/peridotite.resource"
 		},
-		"rock=rhyolite,state=smooth": {
-			"model": "fle:rock/rhyolite.smooth"
+		"rock=peridotite,state=smooth": {
+			"model": "fle:rock/peridotite.smooth"
 		},
-		"rock=rhyolite,state=cobble": {
-			"model": "fle:rock/rhyolite.cobble"
+		"rock=peridotite,state=cobble": {
+			"model": "fle:rock/peridotite.cobble"
 		},
-		"rock=rhyolite,state=crush": {
-			"model": "fle:rock/rhyolite.crush"
-		},
-		"rock=stone,state=resource": {
-			"model": "fle:rock/stone.resource"
-		},
-		"rock=stone,state=smooth": {
-			"model": "fle:rock/stone.smooth"
-		},
-		"rock=stone,state=cobble": {
-			"model": "fle:rock/stone.cobble"
-		},
-		"rock=stone,state=crush": {
-			"model": "fle:rock/stone.crush"
-		},
-		"rock=limestone,state=resource": {
-			"model": "fle:rock/limestone.resource"
-		},
-		"rock=limestone,state=smooth": {
-			"model": "fle:rock/limestone.smooth"
-		},
-		"rock=limestone,state=cobble": {
-			"model": "fle:rock/limestone.cobble"
-		},
-		"rock=limestone,state=crush": {
-			"model": "fle:rock/limestone.crush"
+		"rock=peridotite,state=crush": {
+			"model": "fle:rock/peridotite.crush"
 		},
 		"rock=andesite,state=resource": {
 			"model": "fle:rock/andesite.resource"
@@ -84,17 +72,29 @@
 		"rock=andesite,state=crush": {
 			"model": "fle:rock/andesite.crush"
 		},
-		"rock=void,state=resource": {
-			"model": "fle:rock/void.resource"
+		"rock=limestone,state=resource": {
+			"model": "fle:rock/limestone.resource"
 		},
-		"rock=void,state=smooth": {
-			"model": "fle:rock/void.smooth"
+		"rock=limestone,state=smooth": {
+			"model": "fle:rock/limestone.smooth"
 		},
-		"rock=void,state=cobble": {
-			"model": "fle:rock/void.cobble"
+		"rock=limestone,state=cobble": {
+			"model": "fle:rock/limestone.cobble"
 		},
-		"rock=void,state=crush": {
-			"model": "fle:rock/void.crush"
+		"rock=limestone,state=crush": {
+			"model": "fle:rock/limestone.crush"
+		},
+		"rock=stone,state=resource": {
+			"model": "fle:rock/stone.resource"
+		},
+		"rock=stone,state=smooth": {
+			"model": "fle:rock/stone.smooth"
+		},
+		"rock=stone,state=cobble": {
+			"model": "fle:rock/stone.cobble"
+		},
+		"rock=stone,state=crush": {
+			"model": "fle:rock/stone.crush"
 		}
 	}
 }

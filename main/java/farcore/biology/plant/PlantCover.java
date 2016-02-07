@@ -17,7 +17,7 @@ import farcore.block.EnumDirtState;
 import farcore.block.IPropagatedableBlock;
 import farcore.world.IObjectInWorld;
 
-public class PlantCover implements ICoverablePlantSpecies
+public class PlantCover extends ICoverablePlantSpecies
 {
 	private class Instance implements IPlant
 	{

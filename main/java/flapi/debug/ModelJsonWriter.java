@@ -175,7 +175,7 @@ public class ModelJsonWriter
 			
 			FaceBuilder(EnumFacing facing)
 			{
-				this.facing = facing;
+				cullface = this.facing = facing;
 				this.texture = "#" + facing.getName();
 			}
 			
@@ -229,7 +229,6 @@ public class ModelJsonWriter
 		}
 		
 		EnumMap<EnumFacing, FaceBuilder> map = new EnumMap(EnumFacing.class);
-		FaceBuilder particle;
 		float[] from;
 		float[] to;
 		float[] origin;
@@ -312,11 +311,6 @@ public class ModelJsonWriter
 			return this;
 		}
 		
-		public FaceBuilder particle()
-		{
-			return new FaceBuilder();
-		}
-		
 		public FaceBuilder face(EnumFacing face)
 		{
 			if (map.containsKey(face))
@@ -364,21 +358,6 @@ public class ModelJsonWriter
 					if (builder.rotation != 0)
 						face.addProperty("rotation", builder.rotation);
 					faces.add(builder.facing.getName(), face);
-				}
-				if (particle != null)
-				{
-					JsonObject face = new JsonObject();
-					if (particle.uv != null)
-					{
-						face.add("uv", create(particle.uv));
-					}
-					face.addProperty("texture", particle.texture);
-					if (particle.cullface != null)
-						face.addProperty("cullface",
-								particle.cullface.getName());
-					if (particle.rotation != 0)
-						face.addProperty("rotation", particle.rotation);
-					faces.add("particle", face);
 				}
 				object.add("faces", faces);
 			}

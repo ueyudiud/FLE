@@ -19,6 +19,11 @@ import farcore.util.FleLog;
  */
 public class NBT implements NBTSaver, NBTLoader
 {
+	public static interface NBTControlor
+	{
+		;
+	}
+	
 	private static Map<Class<?>, NBT> nbtManagers = new HashMap();
 	
 	public static void register(Class<?> clazz, NBTControlor... controlors)
@@ -173,11 +178,6 @@ public class NBT implements NBTSaver, NBTLoader
 		}
 	}
 	
-	public static interface NBTControlor
-	{
-	
-	}
-	
 	@Override
 	public boolean canLoad(Class clazz)
 	{
@@ -254,5 +254,4 @@ public class NBT implements NBTSaver, NBTLoader
 			throw new IllegalArgumentException("Can not save tag named " + name
 					+ " with object " + obj.toString());
 	}
-	
 }

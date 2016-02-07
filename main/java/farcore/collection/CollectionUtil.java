@@ -12,7 +12,6 @@ import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
-import com.sun.istack.internal.Nullable;
 
 import farcore.collection.abs.Stack;
 
@@ -20,7 +19,7 @@ import farcore.collection.abs.Stack;
  * The util about collection.
  * 
  * @author ueyudiud
- *		
+ * 		
  */
 public class CollectionUtil
 {
@@ -199,7 +198,7 @@ public class CollectionUtil
 	 * @return Entry.
 	 * @see farcore.collection.CollectionUtil.FleEntry
 	 */
-	public static <K, V> Entry<K, V> e(@Nullable K k, @Nullable V v)
+	public static <K, V> Entry<K, V> e(K k, V v)
 	{
 		return new FleEntry(k, v);
 	}

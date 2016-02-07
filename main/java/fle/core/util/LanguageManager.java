@@ -85,7 +85,6 @@ public class LanguageManager implements ILanguageManager
 		if (!lang.canExecute())
 			return;
 		langRegister.clear();
-		@SuppressWarnings("resource")
 		JsonReader reader = null;
 		try
 		{

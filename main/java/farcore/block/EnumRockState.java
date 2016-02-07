@@ -1,11 +1,13 @@
 package farcore.block;
 
-public enum EnumRockState
+import farcore.util.IUnlocalized;
+
+public enum EnumRockState implements IUnlocalized
 {
 	resource, smooth, cobble, crush;
-
+	
 	public String getUnlocalized()
 	{
-		return "state." + name();
+		return "state.rock." + name();
 	}
 }

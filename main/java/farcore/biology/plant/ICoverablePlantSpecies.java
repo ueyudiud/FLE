@@ -12,16 +12,16 @@ import farcore.block.IPropagatedableBlock;
  * 
  * @author ueyudiud Entity Kingdom >> Plant Phylum >> Coverable Family
  */
-public interface ICoverablePlantSpecies extends IPlantSpecies
+public abstract class ICoverablePlantSpecies extends IPlantSpecies
 {
 	@Override
-	default String family()
+	public String family()
 	{
 		return "lichen";
 	}
 	
 	@Override
-	default boolean canPlant(World world, BlockPos pos)
+	public boolean canPlant(World world, BlockPos pos)
 	{
 		if (pos.getY() < 10)
 			return false;
@@ -40,7 +40,7 @@ public interface ICoverablePlantSpecies extends IPlantSpecies
 	 * @param pos
 	 * @return
 	 */
-	int getSpreadLoop(World world, BlockPos pos);
+	public abstract int getSpreadLoop(World world, BlockPos pos);
 	
 	/**
 	 * Get plant spread range.
@@ -49,7 +49,7 @@ public interface ICoverablePlantSpecies extends IPlantSpecies
 	 * @param pos
 	 * @return
 	 */
-	int getSpreadRange(World world, BlockPos pos);
+	public abstract int getSpreadRange(World world, BlockPos pos);
 	
 	/**
 	 * Match this plant can cover on this block.
@@ -59,5 +59,6 @@ public interface ICoverablePlantSpecies extends IPlantSpecies
 	 * @param state
 	 * @return
 	 */
-	boolean matchBlock(World world, BlockPos pos, IBlockState state);
+	public abstract boolean matchBlock(World world, BlockPos pos,
+			IBlockState state);
 }
