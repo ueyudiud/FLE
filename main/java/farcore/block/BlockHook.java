@@ -2,6 +2,7 @@ package farcore.block;
 
 import java.util.Set;
 
+import farcore.FarCore;
 import farcore.block.interfaces.IHarvestCheck;
 import farcore.substance.Substance;
 import farcore.util.SubTag;
@@ -67,7 +68,7 @@ public class BlockHook
 	
 	public static boolean isBlockWater(BlockPos pos)
 	{
-		return pos.block() == Blocks.water;
+		return FarCore.mod.getWorldManager().isWater(pos);
 	}
 	
 	public static boolean canHarvestBlock(Block block, EntityPlayer player, BlockPos pos)

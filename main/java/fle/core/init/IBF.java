@@ -1,13 +1,13 @@
 package fle.core.init;
 
-import static fle.init.Blocks.*;
-
 import farcore.util.FleCreativeTab;
 import flapi.util.Values;
 import fle.core.block.BlockDebug;
+import fle.core.block.MaterialWater;
 import fle.core.item.ItemDebug;
+import fle.init.Materials;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.item.Item;
 
 public class IBF
@@ -60,6 +60,7 @@ public class IBF
 	
 	public static void init()
 	{
+		Materials.gas = new MaterialWater(MapColor.airColor);
 		Values.tabFLE = new FleCreativeTab("fle", "FLE Main")
 		{
 			@Override

@@ -14,6 +14,7 @@ import farcore.util.IDebugable;
 import farcore.world.BlockPos;
 import farcore.world.BlockPos.ChunkPos;
 import flapi.item.ItemFle;
+import flapi.util.Values;
 import fle.core.handler.PlayerEventHandler;
 import fle.resource.block.auto.ResourceIcons;
 import net.minecraft.block.Block;
@@ -37,6 +38,13 @@ public class ItemDebug extends ItemFle
 	public ItemDebug()
 	{
 		super("debug", "Debugger");
+	}
+	
+	@Override
+	public void registerIcons(IIconRegister register)
+	{
+		super.registerIcons(register);
+		Values.EMPTY_ITEM_ICON = register.registerIcon(Values.TEXTURE_FILE + ":void");
 	}
 	
 	@Override

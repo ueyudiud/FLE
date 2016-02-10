@@ -1,32 +1,29 @@
-//package fle.core.world;
-//
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Map.Entry;
-//
-//import cpw.mods.fml.common.FMLCommonHandler;
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-//import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-//import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-//import farcore.net.IPacket;
-//import farcore.substance.Matter;
-//import farcore.util.FleLog;
-//import farcore.world.BlockPos;
-//import farcore.world.BlockPos.ChunkPos;
-//import fle.FLE;
-//import net.minecraft.entity.player.EntityPlayerMP;
-//import net.minecraft.nbt.NBTTagCompound;
-//import net.minecraft.world.World;
-//import net.minecraftforge.common.MinecraftForge;
-//import net.minecraftforge.event.world.ChunkDataEvent;
-//import net.minecraftforge.event.world.ChunkEvent;
-//import net.minecraftforge.event.world.WorldEvent;
-//import scala.reflect.internal.Types.CompoundType;
-//
-//public class FWM implements IWorldManager
-//{
+package fle.core.world;
+
+import farcore.world.BlockPos;
+import farcore.world.IWorldManager;
+import fle.init.Fluids;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+
+public class FWM implements IWorldManager
+{
+	@Override
+	public boolean isWater(BlockPos pos) 
+	{
+		Block block = pos.block();
+		return block == Blocks.water || block == Fluids.water.getBlock() || block == Fluids.saltyWater.getBlock();
+	}
+	
+	@Override
+	public boolean isSourceOfFire(BlockPos pos)
+	{
+		Block block = pos.block();
+		return block == Blocks.fire || block == Blocks.torch || 
+				block == Blocks.lit_furnace || block.getMaterial() == Material.lava;
+	}
+	
 //	public static boolean generateFlag = true;
 //	protected static final int maxNBTSize = EnumWorldNBT.values().length;
 //	protected Map<Integer, Map<ChunkPos, ChunkData>> nbts = new HashMap(3);
@@ -478,4 +475,4 @@
 //	{
 //		;
 //	}
-//}
+}

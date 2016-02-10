@@ -34,10 +34,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockMineral extends BlockResource<TileEntityMineral> 
+public class BlockUniversalMineral extends BlockResource<TileEntityMineral> 
 implements IHarvestCheck
 {
-	public BlockMineral(String unlocalized)
+	public BlockUniversalMineral(String unlocalized)
 	{
 		super(unlocalized, ItemMineral.class, Material.rock);
 		FarCore.registerTileEntity(TileEntityMineral.class, "fle.mineral",

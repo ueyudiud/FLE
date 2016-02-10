@@ -22,7 +22,7 @@ import flapi.util.Values;
 import fle.core.FLE;
 import fle.core.init.IBF;
 import fle.resource.block.auto.BlockUniversalDirt;
-import fle.resource.block.auto.BlockMineral;
+import fle.resource.block.auto.BlockUniversalMineral;
 import fle.resource.block.auto.BlockUniversalRock;
 import fle.resource.block.auto.BlockUniversalSand;
 import fle.resource.block.auto.BlockUniversalStoneChip;

@@ -203,11 +203,13 @@ public final class BlockPos implements IObjectInWorld
 	//--------------World set start-----------------
 	public void set(Block block)
 	{
-		world().setBlock(x, y, z, block);
+		if(y < 256 && y > 0)
+			world().setBlock(x, y, z, block);
 	}
 	public void set(Block block, int meta, int flag)
 	{
-		world().setBlock(x, y, z, block, meta, flag);
+		if(y < 256 && y > 0)
+			world().setBlock(x, y, z, block, meta, flag);
 	}
 	
 	public void setToAir()

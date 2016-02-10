@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -22,19 +21,18 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import farcore.FarCore;
 import farcore.FleMod;
-import farcore.util.ColorMap;
 import farcore.util.FleLog;
 import farcore.util.IColorMapHandler;
+import farcore.world.IWorldManager;
 import flapi.util.Values;
+import fle.core.init.Config;
 import fle.core.net.NWH;
-import fle.core.util.FleColorMap;
 import fle.core.util.FleServerColorMapHandler;
 import fle.core.util.FleSetup;
 import fle.core.util.Keyboard;
 import fle.core.util.LanguageManager;
 import fle.core.util.SideGateway;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureMap;
+import fle.core.world.FWM;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
 
@@ -43,7 +41,7 @@ public class FLE implements FleMod
 {	
     public static final String MODID = "fle";
     public static final String NAME = "Far Land Era";
-    public static final String VERSION = "2.06g";
+    public static final String VERSION = "3.00";
     public static final int minForge = 1420;
     
 //    private static final UUID modUUID = new UUID(-7834374458361585156L, -677774718L);
@@ -56,6 +54,7 @@ public class FLE implements FleMod
     public static Proxy proxy = new CommonProxy();
 //    private SideGateway<IPlatform> p;
 //    private SideGateway<FWM> wm;
+    private FWM wm;
     private NWH nw;
 //    private CropRegister cr;
 //    private FlePlantRegister pr;
@@ -74,6 +73,7 @@ public class FLE implements FleMod
 //    	p = new SideGateway<IPlatform>("fle.core.PlatformCommon", "fle.core.PlatformClient");
     	k = new SideGateway<Keyboard>("fle.core.util.Keyboard", "fle.core.util.KeyboardClient");
     	nw = NWH.init();
+    	wm = new FWM();
 //    	cr = new FleCropRegister();
 //    	pr = new FlePlantRegister();
 //    	wm = new SideGateway<FWM>("fle.core.world.FWM", "fle.core.world.FWMClient");
@@ -146,10 +146,10 @@ public class FLE implements FleMod
         	FleLog.getLogger().warn("Error while trying to access configuration! " + e);
         	config = null;
         }
-//        if(config != null)
-//        {
-//            Config.init(config);
-//        }
+        if(config != null)
+        {
+            Config.init(config);
+        }
     	FleLog.getLogger().info("Far Land Era start pre load.");
 		LanguageManager.load();
 		proxy.onPreload();
@@ -214,12 +214,6 @@ public class FLE implements FleMod
 //	}
 //
 //	@Override
-//	public FWM getWorldManager() 
-//	{
-//		return wm.get();
-//	}
-//
-//	@Override
 //	public FleTechManager getTechManager() 
 //	{
 //		return tm;
@@ -228,6 +222,12 @@ public class FLE implements FleMod
 	public Keyboard getKeyboard()
 	{
 		return k.get();
+	}
+
+	@Override
+	public FWM getWorldManager()
+	{
+		return wm;
 	}
 
 //	@Override

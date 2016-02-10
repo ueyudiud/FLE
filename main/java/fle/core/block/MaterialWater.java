@@ -1,4 +1,4 @@
-package fle.resource.block;
+package fle.core.block;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;

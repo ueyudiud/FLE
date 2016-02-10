@@ -1,5 +1,7 @@
 package flapi.util;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.util.FleCreativeTab;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.IIcon;
@@ -22,5 +24,8 @@ public class Values
 	public static FleCreativeTab tabFLEMachine;
 	public static FleCreativeTab tabFLEDecoration;
 	
+	@SideOnly(Side.CLIENT)
 	public static IIcon EMPTY_BLOCK_ICON;
+	@SideOnly(Side.CLIENT)
+	public static IIcon EMPTY_ITEM_ICON;
 }

@@ -2,16 +2,21 @@ package farcore.block;
 
 import static net.minecraft.block.BlockFalling.fallInstantly;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import farcore.block.interfaces.IFallable;
 import farcore.entity.EntityFleFallingBlock;
+import farcore.event.FluidEvent.FluidTouchBlockEvent;
+import farcore.event.FluidEvent.FluidTouchFluidEvent;
 import farcore.fluid.BlockFluidBase;
 import farcore.fluid.ISmartFluidBlock;
 import farcore.world.BlockPos;
 import farcore.world.Direction;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 
@@ -99,5 +104,40 @@ public class BlockFactory
 				return fluid.drain(pos.world(), pos.x, pos.y, pos.z, maxIn, process);
 		}
 		return null;
+	}
+
+	public static int onFluidTouchBlock(World world, int x, int y, int z, 
+			BlockFluidBase block, int amount)
+	{
+		Block target;
+		FluidTouchBlockEvent event = new FluidTouchBlockEvent(world, x, y, z, block, amount, target = world.getBlock(x, y, z));
+		MinecraftForge.EVENT_BUS.post(event);
+		if(event.getResult() == Result.ALLOW)
+		{
+			return event.amount;
+		}
+		else if(event.getResult() == Result.DENY)
+		{
+			return Integer.MAX_VALUE;
+		}
+		if(target.getMaterial() == Material.fire)
+		{
+			block.setQuantaValue(world, x, y, z, amount);
+			return 0;
+		}
+		return Integer.MAX_VALUE;
+	}
+
+	public static int onFluidTouchFluid(World world, int x, int y, int z, 
+			BlockFluidBase block, int amount)
+	{
+		FluidTouchFluidEvent event = new FluidTouchFluidEvent(world, x, y, z, block, 
+				amount, (net.minecraftforge.fluids.BlockFluidBase) world.getBlock(x, y, z));
+		MinecraftForge.EVENT_BUS.post(event);
+		if(event.getResult() == Result.ALLOW)
+		{
+			return event.amount;
+		}
+		return Integer.MAX_VALUE;
 	}
 }

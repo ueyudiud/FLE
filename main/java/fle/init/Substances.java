@@ -12,11 +12,14 @@ public class Substances
 {
 	public static Substance $void;
 	//Elemental Phylum
+	//IA Class
+	public static Substance hydrogen;
 	//IVA Class
-	public static Substance graphite;
-	public static Substance diamond;
-	public static Substance carbonLiquid;
-	public static Substance carbonVapor;
+	//Carbon mapping.
+	public static Substance graphite;//C s
+	public static Substance diamond;//C s
+	public static Substance carbonLiquid;//C l
+	public static Substance carbonVapor;//C g
 
 	public static Substance coal;
 	public static Substance coke;
@@ -25,8 +28,16 @@ public class Substances
 	public static Substance nitrogen;
 	//VIA Class
 	public static Substance oxygen;
+	//Sulphur mapping
+	public static Substance sulfur;//S shapeless
+	public static Substance rhombicSulfur;//α-S8 s
+	public static Substance monoclinicSulfur;//β-S8 s
+	public static Substance nacreousSulfur;//γ-S8 l
+	public static Substance disulfur;//S2 g
 	//IIB Class
 	public static Substance copper;
+	public static Substance silver;
+	public static Substance gold;
 	//Nonmetal Compound Phylum
 	//Oxide Class
 	public static Substance carbonDioxide;

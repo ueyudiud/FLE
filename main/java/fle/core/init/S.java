@@ -23,6 +23,8 @@ import flapi.FleResource;
 import fle.core.recipe.chem.ReactionRecipe;
 import fle.core.util.phase.PhaseCarbon1;
 import fle.core.util.phase.PhaseCarbon2;
+import fle.core.util.phase.PhaseSulfur1;
+import fle.core.util.phase.PhaseSulfur2;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -30,6 +32,15 @@ public class S
 {
 	public static void init()
 	{
+		hydrogen = new Substance("hydrogen")
+				.setColor(Phase.PLASMA, 0x005FFF44)
+				.setColor(Phase.GAS, 0xFFFFFF00)
+				.setColor(Phase.LIQUID, 0xFFFFFF11)
+				.setPhasePhaseDiagram(new PDPhase(14, 20, 12800))
+				.setThermalCfg(2883, 0.1805F)
+				.setDensity(-482)
+				.setFurnaceBurnTime(500)
+				.setMatter("H2");
 		Matter c = Matter.matter("carbon", "C");
 		graphite = new Substance("graphite")
 				.setColor(Phase.SOLID, 0x030303FF)
@@ -50,7 +61,7 @@ public class S
 				.setThermalCfg(928, 102F)
 				.setDensity(172)
 				.setFurnaceBurnTime(1200)
-				.setMatter("[C]9[S]1");
+				.setMatter("[C]125[S]2[N2]1");
 		diamond = new Substance("diamond")
 				.setColor(Phase.SOLID, 0xEFEFEF55)
 				.setSubstance(new PhaseCarbon1())
@@ -92,19 +103,92 @@ public class S
 				.setPhasePhaseDiagram(new PDPhase(54, 90))
 				.setThermalCfg(2937, 37.2F)
 				.setMatter("O2");
+		Matter matter = Matter.matter("sulfur", "S");
+		sulfur = new Substance("sulfur")
+				.setColor(Phase.SOLID, 0xD8D28AFF)
+				.setColor(Phase.LIQUID, 0xC4541399)
+				.setColor(Phase.GAS, 0xFFFFFF00)
+				.setDensity(181).setViscosity(381)
+				.setSubstance(new PhaseSulfur1(true))
+				.setPhasePhaseDiagram(new PhaseSulfur2())
+				.setThermalCfg(2216, 0.205F)
+				.setFurnaceBurnTime(175)
+				.setMatter(Matter.matter("shapeless sulfur", "[S]126[C]2"));
+		rhombicSulfur = new Substance("rhombic sulfur")
+				.setColor(Phase.SOLID, 0xD8D28AFF)
+				.setDensity(207).setViscosity(409)
+				.setSubstance(new PhaseSulfur1(false))
+				.setPhasePhaseDiagram(new PhaseSulfur2())
+				.setThermalCfg(2275, 0.205F)
+				.setElectrologyCfg(2E24F, 3.125E3F)
+				.setBlockInfo(3, 90)
+				.setFurnaceBurnTime(200)
+				.setMatter("S8");
+		monoclinicSulfur = new Substance("monoclinic sulfur")
+				.setColor(Phase.SOLID, 0xD8D28ACC)
+				.setDensity(196).setViscosity(427)
+				.setSubstance(new PhaseSulfur1(false))
+				.setPhasePhaseDiagram(new PhaseSulfur2())
+				.setThermalCfg(2275, 0.205F)
+				.setElectrologyCfg(2E24F, 3.25E3F)
+				.setBlockInfo(3, 90)
+				.setFurnaceBurnTime(200)
+				.setMatter("S8");
+		nacreousSulfur = new Substance("nacreous sulfur")
+				.setColor(Phase.LIQUID, 0xC4541399)
+				.setDensity(192).setViscosity(3817)
+				.setSubstance(new PhaseSulfur1(false))
+				.setPhasePhaseDiagram(new PhaseSulfur2())
+				.setThermalCfg(2275, 0.205F)
+				.setElectrologyCfg(2E24F, 8E3F)
+				.setBlockInfo(3, 250)
+				.setFurnaceBurnTime(200)
+				.setMatter("S128");
+		disulfur = new Substance("disulfur")
+				.setColor(Phase.GAS, 0xFFFFFF00)
+				.setDensity(11).setViscosity(371)
+				.setSubstance(new PhaseSulfur1(false))
+				.setPhasePhaseDiagram(new PhaseSulfur2())
+				.setFurnaceBurnTime(15)
+				.setMatter("S2");
 		copper = new Substance("copper")
 				.setColor(Phase.SOLID , 0xDB4E31FF)
 				.setColor(Phase.LIQUID, 0xFF7096FF)
 				.setColor(Phase.GAS   , 0xFFFFFF37)
+				.setPhasePhaseDiagram(new PDPhase(1358, 2835))
 				.setBlockInfo(17, 500)
-				.setToolInfo(71, 4.6F, 172, 0.0F)
+				.setToolInfo(16, 4.6F, 172, 0.0F)
 				.setViscosity(1281)
 				.setXReflectLevel((short) 38)
-				.setElectrologyCfg(16.78F, 0.1F)
-				.setThermalCfg(2444, 2831F)
+				.setElectrologyCfg(16.78F, 0.375F)
+				.setThermalCfg(2444, 401F)
 				.setDensity(896)
 				.setCrafting(48000000L, 117000000L)
 				.setMatter("Cu");
+		silver = new Substance("silver")
+				.setColor(Phase.SOLID, 0xF6F6F6FF)
+				.setPhasePhaseDiagram(new PDPhase(1235, 2435))
+				.setBlockInfo(8, 400)
+				.setToolInfo(9, 2.9F, 93, 0.0F)
+				.setViscosity(1471)
+				.setXReflectLevel((short) 41)
+				.setElectrologyCfg(15.87F, 0.0625F)
+				.setThermalCfg(2535, 429F)
+				.setDensity(1049)
+				.setCrafting(30000000L, 83000000L)
+				.setMatter("Ag");
+		gold = new Substance("gold")
+				.setColor(Phase.SOLID, 0xFAD651FF)
+				.setPhasePhaseDiagram(new PDPhase(1337, 3243))
+				.setBlockInfo(7, 380)
+				.setToolInfo(9, 3.1F, 47, 0.0F)
+				.setViscosity(1539)
+				.setXReflectLevel((short) 44)
+				.setElectrologyCfg(22.14F, 0.875F)
+				.setThermalCfg(2542, 318F)
+				.setDensity(1930)
+				.setCrafting(27000000L, 79000000L)
+				.setMatter("Au");
 		
 		Matter H2O = Matter.matter("water", "H2O");
 		

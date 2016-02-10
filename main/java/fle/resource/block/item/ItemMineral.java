@@ -10,9 +10,9 @@ import flapi.FleResource;
 import flapi.block.item.ItemFleMultipassRender;
 import flapi.item.ItemFle;
 import fle.core.enums.EnumRockState;
-import fle.resource.block.auto.BlockMineral;
+import fle.resource.block.auto.BlockUniversalMineral;
 
-public class ItemMineral extends ItemFleMultipassRender<BlockMineral>
+public class ItemMineral extends ItemFleMultipassRender<BlockUniversalMineral>
 implements IItemSize
 {
 	public ItemMineral(Block block)

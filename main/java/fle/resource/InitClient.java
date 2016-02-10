@@ -13,5 +13,6 @@ public class InitClient extends Init
 
 		Renders.RenderStoneChip = RenderStoneChip.class;
 		Renders.RenderThrownStone = new RenderThrownStone();
+//		MinecraftForgeClient.registerItemRenderer(Items.ingot, new RenderIngot());
 	}
 }

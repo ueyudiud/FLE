@@ -31,12 +31,12 @@ public class CommonProxy extends Proxy
 		Lang.init();
 		S.postInit();
 		Entities.init();
+		IBF.init();
 	}
 
 	@Override
 	public void onLoad() 
 	{
-		IBF.init();
 //		EntityRegistry.registerModEntity(EntityFleArrow.class, "fleArrow", EntityRegistry.findGlobalUniqueEntityId(), FLE.MODID, 10, 1, true);
 //		FleAPI.registerFuelHandler(new FuelHandler());
 //		GameRegistry.registerWorldGenerator(new FleWorldGen(), 1);

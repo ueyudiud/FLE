@@ -10,5 +10,6 @@ public class ItemBlockSub<T extends BlockSub> extends ItemBlockBase<T>
 	public ItemBlockSub(Block block)
 	{
 		super(block);
+		hasSubtypes = true;
 	}
 }
