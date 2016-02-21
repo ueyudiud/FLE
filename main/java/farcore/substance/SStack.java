@@ -1,17 +1,10 @@
 package farcore.substance;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import farcore.recipe.stack.IItemChecker;
-import farcore.substance.SubstanceRegistry.Key$;
 import farcore.util.Part;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
-public final class SStack implements IItemChecker
+public final class SStack
 {
 	Substance substance;
 	public Part part;
@@ -102,19 +95,4 @@ public final class SStack implements IItemChecker
 		nbt.setInteger("size", size);
 		return nbt;
 	}
-	
-	//========================Item checker start======================
-	@Override
-	public boolean match(ItemStack stack)
-	{
-		Key$ key = SubstanceRegistry.getSubstance(stack);
-		return key != null ? key.substance == substance && key.part == part : false;
-	}
-	
-	@Override
-	public List<ItemStack> list()
-	{
-		return Arrays.asList(toIS());
-	}
-	//========================Item checker end========================
 }

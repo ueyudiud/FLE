@@ -3,17 +3,10 @@ package farcore.collection;
 import java.util.ArrayList;
 import java.util.List;
 
-import farcore.util.IDataChecker;
-import farcore.util.IDataChecker.And;
-import farcore.util.IDataChecker.Or;
+import flapi.util.IDataChecker;
+import flapi.util.IDataChecker.And;
+import flapi.util.IDataChecker.Or;
 
-/**
- * The map with data check.
- * Not implements Map interface.
- * @author ueyudiud
- *
- * @param <T> The contain type in map.
- */
 public class TagMap<T>
 {
 	private int c;

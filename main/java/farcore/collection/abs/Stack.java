@@ -1,10 +1,10 @@
 package farcore.collection.abs;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Stack<T> implements IStack<T>
 {
-	@SerializedName("target")
 	public T obj;
 	public long size;
 

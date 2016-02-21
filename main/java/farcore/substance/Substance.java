@@ -2,25 +2,22 @@ package farcore.substance;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
 
-import farcore.FarCore;
 import farcore.collection.Register;
-import farcore.nbt.NBTLoader;
-import farcore.nbt.NBTSaver;
 import farcore.substance.PhaseDiagram.Phase;
-import farcore.util.ISubTagContainer;
-import farcore.util.SubTag;
-import farcore.util.Util;
-import net.minecraft.nbt.NBTTagCompound;
+import farcore.util.U;
+import flapi.FleAPI;
+import flapi.util.ISubTagContainer;
+import flapi.util.SubTag;
+import fle.core.util.Util;
 
 /**
  * Far Land Era Implementation
  * 
- * This class similar to class PropertyInfo in 1.7.10. This class contain a
- * property (for material) equivalent to "ToolMaterial." It describes the nature
- * of the property of a matter.
+ * This class similar to class PropertyInfo in version 2.06 before. This class 
+ * contain a property (for material) equivalent to "ToolMaterial." It describes 
+ * the nature of the property of a matter.
  * 
  * These properties do not have inherent gameplay mechanics - they are provided
  * so that mods may choose to take advantage of them.
@@ -33,37 +30,6 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class Substance implements ISubTagContainer
 {
-	/**
-	 * The nbt loader and saver to save or load substance.
-	 */
-	public static final NBTLoader LOADER = new NBTLoader()
-	{
-		@Override
-		public Object load(String name, NBTTagCompound tag)
-		{
-			return register.get(tag.getString(name));
-		}
-		
-		@Override
-		public boolean canLoad(Class clazz)
-		{
-			return Substance.class.equals(clazz);
-		}
-	};
-	public static final NBTSaver SAVER = new NBTSaver()
-	{
-		@Override
-		public void save(String name, Object obj, NBTTagCompound nbt)
-		{
-			nbt.setString(name, ((Substance) obj).getName());
-		}
-		
-		@Override
-		public boolean canSave(Class clazz)
-		{
-			return Substance.class.equals(clazz);
-		}
-	};
 	private static final Register<Substance> register = new Register<Substance>();
 	
 	public static Register<Substance> getRegister()
@@ -217,9 +183,14 @@ public class Substance implements ISubTagContainer
 	private final List<SubTag> tagList = new ArrayList();
 	
 	/**
-	 * The mass per mol.
+	 * The mass per kL.(Because of gas density is too small).
+	 * 
+	 * Unit : g / kL
 	 */
-	public long density;
+	public long gasDensity = 1000;
+	public long liquidDensity = 1000000;
+	public long solidDensity = 1000000;
+	
 	/**
 	 * The hardness of block. Higher value means more harder to mine.
 	 */
@@ -240,13 +211,13 @@ public class Substance implements ISubTagContainer
 	
 	public Substance setTranslate(String localized)
 	{
-		FarCore.lang.registerLocal(getTranslateName(), localized);
+		FleAPI.langManager.registerLocal(getTranslateName(), localized);
 		return this;
 	}
 	
 	public Substance setTranslate(String locale, String localized)
 	{
-		FarCore.lang.registerLocal(locale, getTranslateName(), localized);
+		FleAPI.langManager.registerLocal(locale, getTranslateName(), localized);
 		return this;
 	}
 	
@@ -330,7 +301,28 @@ public class Substance implements ISubTagContainer
 	
 	public Substance setDensity(long density)
 	{
-		this.density = density;
+		this.solidDensity = this.liquidDensity = this.gasDensity = density;
+		return this;
+	}
+	
+//	public Substance setMolarMass(double mass)
+//	{
+//		this.gasDensity = (long) (Vs.standard_condition_gas * mass);
+//		return this;
+//	}
+	
+	public Substance setDensity(long gasDensity, long slDensity)
+	{
+		this.gasDensity = gasDensity;
+		this.liquidDensity = this.solidDensity = slDensity;
+		return this;
+	}
+	
+	public Substance setDensity(long gasDensity, long liquidDensity, long solidDensity)
+	{
+		this.gasDensity = gasDensity;
+		this.liquidDensity = liquidDensity;
+		this.solidDensity = solidDensity;
 		return this;
 	}
 	
@@ -469,12 +461,14 @@ public class Substance implements ISubTagContainer
 	
 	public int getRGB(Phase phase)
 	{
-		return Util.valueOfInt(color[phase.ordinal()], 3);
+		short[] ss = color[phase.ordinal()];
+		return ss[0] << 24 | ss[1] << 16 | ss[2] << 8 | ss[3];
 	}
 	
 	public int getRGBa(Phase phase)
 	{
-		return Util.valueOfInt(color[phase.ordinal()], 4);
+		short[] ss = color[phase.ordinal()];
+		return ss[0] << 16 | ss[1] << 8 | ss[2];
 	}
 	
 	public int getLuminosity(Phase phase)

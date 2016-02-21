@@ -4,38 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import farcore.util.FleLog;
+import flapi.util.FleLog;
 import fle.core.util.FLEMath;
 
 public class VecNoiseHandler
 {	
-	/**
-	 * Debug mode.
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		long l = new Random().nextLong();
-		System.out.print(l);
-		//FLESurfaceChunkProvider.drawImage(128, "Debug Chunk");
-		drawImage(512, "Debug", 
-				new NoiseMix(l, 
-						new NoiseFuzzy(1L, 4, 1.6D, 3.2D, 0.4F), 
-						new NoiseSmooth(
-								new NoiseGauss(1L, 3, 
-										new NoiseSmooth(18F, 
-												new NoisePerlin(1L))))), 
-				new VecNoisePerlin(3759180L, 3, 1.0F));
-		drawImage(512, "Debug1", 
-				new NoiseMontain(l, 7, 2, .3F),
-				new VecNoisePerlin(35917541L, 2, 4.0F));
-	}
-	
 	final static double basic;
 	
 	static
@@ -46,7 +22,7 @@ public class VecNoiseHandler
 				a += FLEMath.alpha(2D, FLEMath.distance(j0, j1));
 		basic = a;
 	}
-	
+
 	public static double[] getValue(int x, int z, NoiseBase height, VecNoiseBase noise, int size)
 	{
 		/**

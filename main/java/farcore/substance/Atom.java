@@ -171,4 +171,16 @@ public enum Atom implements IParticle
 	{
 		return particle == this ? 1 : 0;
 	}
+	
+	private Substance substance;
+	
+	public void setSubstanceInstance(Substance substance)
+	{
+		this.substance = substance;
+	}
+	
+	public Substance getSubstanceInstance()
+	{
+		return substance;
+	}
 }

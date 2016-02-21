@@ -27,12 +27,12 @@ public class ArrayStandardStackList<T> extends ArrayStackList<Stack<T>, T>
 		for(Stack<T> stack : stacks)
 			size += stack.size;
 	}
-	public ArrayStandardStackList(Map<T, Long> map)
+	public ArrayStandardStackList(Map<T, Integer> map)
 	{
 		this(map.size());
 		list = CollectionUtil.asArray(map);
 		species = map.size();
-		for(Long i : map.values())
+		for(Integer i : map.values())
 			size += i;
 	}
 	
@@ -45,7 +45,7 @@ public class ArrayStandardStackList<T> extends ArrayStackList<Stack<T>, T>
 		}
 		
 		@Override
-		public Stack<T> make(T target, long size)
+		public Stack<T> make(T target, int size)
 		{
 			return new Stack(target, size);
 		}
@@ -57,7 +57,7 @@ public class ArrayStandardStackList<T> extends ArrayStackList<Stack<T>, T>
 		}
 
 		@Override
-		public long getSize(Stack<T> stack)
+		public int getSize(Stack<T> stack)
 		{
 			return stack == null ? 0 : stack.size;
 		}
@@ -87,22 +87,22 @@ public class ArrayStandardStackList<T> extends ArrayStackList<Stack<T>, T>
 		}
 
 		@Override
-		public void add(Stack<T> stack, long size)
+		public void add(Stack<T> stack, int size)
 		{
 			stack.size += size;
 		}
 		
 		@Override
-		public Stack<T> decr(Stack<T> stack, long size)
+		public Stack<T> decr(Stack<T> stack, int size)
 		{
 			if(stack == null) return null;
-			long s = Math.min(size, stack.size);
+			int s = Math.min(size, stack.size);
 			stack.size -= s;
 			return new Stack(stack.obj, s);
 		}
 
 		@Override
-		public void setSize(Stack<T> stack, long size)
+		public void setSize(Stack<T> stack, int size)
 		{
 			stack.size = size;
 		}

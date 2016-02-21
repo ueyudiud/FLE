@@ -7,17 +7,17 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import farcore.util.FleLog;
-import fle.core.util.noise.NoisePerlin;
-import fle.core.util.noise.NoiseSmooth;
-import fle.core.world.biome.FLEBiome;
-import fle.core.world.dim.FLEWorldType;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerSmooth;
 import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
 import net.minecraft.world.gen.layer.GenLayerZoom;
+import flapi.util.FleLog;
+import fle.core.util.noise.NoisePerlin;
+import fle.core.util.noise.NoiseSmooth;
+import fle.core.world.biome.FLEBiome;
+import fle.core.world.dim.FLEWorldType;
 
 public abstract class FLELayer extends GenLayer
 {	

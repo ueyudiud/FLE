@@ -1,10 +1,14 @@
 package farcore.substance;
 
-import farcore.chem.EnumReactionSystemType;
-
 public interface PhaseDiagram<K, T>
 {
 	T getPhase(K condition);
+
+	public enum EnumReactionSystemType
+	{
+		OPEN,
+		CLOSE;
+	}
 	
 	public enum Phase
 	{		

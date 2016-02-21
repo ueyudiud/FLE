@@ -1,18 +1,28 @@
 package fle.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import farcore.util.ColorMap;
-import farcore.util.FleLog;
-import farcore.util.IColorMapHandler;
-import farcore.util.IColorMapProvider;
-import fle.core.enums.EnumDirtState;
+import flapi.event.FluidIconRegisterEvent;
+import flapi.fluid.FluidBase;
+import flapi.gui.GuiCondition;
+import flapi.solid.Solid;
+import flapi.solid.SolidRegistry;
+import flapi.util.ColorMap;
+import flapi.util.FleLog;
+import flapi.util.FleValue;
+import flapi.util.IColorMapHandler;
 import fle.core.init.Renders;
 import fle.core.init.Rs;
 import fle.core.util.FleColorMap;
+import fle.core.util.FleTextureMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -24,7 +34,7 @@ import net.minecraftforge.common.MinecraftForge;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy implements IResourceManagerReloadListener, IColorMapHandler
 {
-	private List<IColorMapProvider> colorMapProviderList = new ArrayList();
+	private List<FleColorMap> cachedColorMap = new ArrayList();
 	
 	public ClientProxy() 
 	{
@@ -32,104 +42,82 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	}
 	
 	@Override
-	public void onPreload() 
+	public void load(FMLPreInitializationEvent event)
 	{
-		super.onPreload();
+		super.load(event);
     	((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 	}
 	
 	@Override
-	public void onPostload() 
+	public void load(FMLPostInitializationEvent event) 
 	{
-		super.onPostload();
+		super.load(event);
 		Renders.init();
 	}
 	
 	@Override
-	public void onCompleteLoad() 
+	public void load(FMLLoadCompleteEvent event) 
 	{
-		super.onCompleteLoad();
-		Renders.postInit();
-		Rs.completeInit();
+		super.load(event);
 	}
-
-	@Override
-	public void onIconRegister()
-	{
-//		FleTextureMap map = new FleTextureMap("textures/condition");
-//		for(GuiCondition c : GuiCondition.register)
-//		{
-//			c.registerIcon(map);
-//		}
-//		Minecraft.getMinecraft().renderEngine.loadTexture(FleValue.conditionLocate, map);
-	}
-	
-	private ThreadLocal<IResourceManager> resourceManager = new ThreadLocal();
 
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
-		FleLog.info("Fle start reload color map.");
-		int i = 0;
-		resourceManager.set(manager);
-		for(IColorMapProvider provider : colorMapProviderList)
+		FleTextureMap map = new FleTextureMap("textures/condition");
+		for(GuiCondition c : GuiCondition.register)
+		{
+			c.registerIcon(map);
+		}
+		try
+		{
+			Minecraft.getMinecraft().getTextureManager().loadTexture(FleValue.conditionLocate, map);
+		}
+		catch(NullPointerException exception)
+		{
+			;
+		}
+		for(FleColorMap colorMap : cachedColorMap)
 		{
 			try
 			{
-				provider.registerColorMap(this);
+				colorMap.setColors(TextureUtil.readImageData(manager, new ResourceLocation(colorMap.getLocate())));
 			}
-			catch(Exception exception)
+			catch (Exception e)
 			{
-				FleLog.addExceptionToCache(exception);
+				colorMap.setColors(new int[256 * 256]);
+				FleLog.addExceptionToCache(e);
 			}
-			++i;
 		}
-		resourceManager.set(null);
-		FleLog.info("Loaded " + i + " color maps.");
-		FleLog.resetAndCatchException("Catching exception during reload color maps.");
+		FleLog.resetAndCatchException("Fail to load these location.");
 	}
-	
+
 	@Override
-	public ColorMap registerColorMap(String name)
+	public ColorMap registerColorMap(String resourceName) 
 	{
-		if(resourceManager.get() == null)
-			throw new RuntimeException("It is not loading resource time, some mod register color map in wrong time!");
-		try
+		if(resourceName == null) return new FleColorMap();
+		for(FleColorMap map : cachedColorMap)
 		{
-			return new FleColorMap(
-					TextureUtil.readImageData(
-							resourceManager.get(), 
-							new ResourceLocation(name + ".png")));
+			if(resourceName.equals(map.getLocate()))
+			{
+				return map;
+			}
 		}
-		catch(Throwable e)
-		{
-			return new FleColorMap();
-		}
+		FleColorMap map = new FleColorMap(resourceName);
+		cachedColorMap.add(map);
+		return map;
 	}
 	
-	@Override
-	public void addColorMapProvider(IColorMapProvider provider)
+	@SubscribeEvent
+	public void onFluidIconRegister(FluidIconRegisterEvent evt)
 	{
-		if(!colorMapProviderList.contains(provider))
-			colorMapProviderList.add(provider);
-		else 
-			throw new RuntimeException("Already registered this provider.");
+		for(FluidBase tFluid : FluidBase.register)
+		{
+			tFluid.registerIcon(evt.register);
+		}
+		for(Solid tSoild : SolidRegistry.getSolidList())
+		{
+			tSoild.registerIcon(evt.register);
+		}
 	}
-	
-//	@SubscribeEvent
-//	public void onFluidIconRegister(FluidIconRegisterEvent evt)
-//	{
-//		for(FluidBase tFluid : FluidBase.register)
-//		{
-//			tFluid.registerIcon(evt.register);
-//		}
-//		for(Solid tSoild : SolidRegistry.getSolidList())
-//		{
-//			tSoild.registerIcon(evt.register);
-//		}
-//		for(Cover tCover : CoverRegistry.getCoverRegister())
-//		{
-//			tCover.registerIcon(evt.register);
-//		}
-//	}
 }

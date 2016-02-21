@@ -3,13 +3,15 @@ package farcore.util;
 import java.util.Locale;
 
 import farcore.collection.Register;
-import farcore.item.enums.EnumParticleSize;
+import farcore.enums.EnumParticleSize;
 import farcore.substance.PhaseDiagram.Phase;
-import farcore.substance.Substance;
+import flapi.util.SubTag;
 
 public class Part
 {
 	private static final Register<Part> partRegister = new Register();
+
+	public static final Part single			= part("single", EnumParticleSize.colloid, 1);
 	
 	public static final Part cube 			= part("cube", EnumParticleSize.block, 5184);
 	public static final Part dirt 			= part("dirt", EnumParticleSize.colloid, 5184);
@@ -23,6 +25,11 @@ public class Part
 	public static final Part dust			= part("dust",			EnumParticleSize.dust,		Phase.SOLID, 120F,	576);
 	public static final Part powder			= part("powder",		EnumParticleSize.dust,		Phase.SOLID, 225F,	576);
 	public static final Part ingot			= part("ingot",			EnumParticleSize.ingotic,	Phase.SOLID, 1F,	576);
+	public static final Part ingotDouble	= part("ingot.double",	EnumParticleSize.ingotic,	Phase.SOLID, 0.9F,	1152);
+	public static final Part ingotQuadruple	= part("ingot.quadruple",EnumParticleSize.ingotic,	Phase.SOLID, 0.8F,	2304);
+	public static final Part plate			= part("plate",			EnumParticleSize.ingotic,	Phase.SOLID, 2F,	576);
+	public static final Part plateDouble	= part("plate.double",	EnumParticleSize.ingotic,	Phase.SOLID, 1.7F,	1152);
+	public static final Part plateQuadruple	= part("plate.quadruple",EnumParticleSize.ingotic,	Phase.SOLID, 1.5F,	2304);
 	public static final Part nugget			= part("nugget",		EnumParticleSize.nuggetic,	Phase.SOLID, 4.0F,	64);
 	public static final Part chunk			= part("chunk",			EnumParticleSize.nuggetic,	Phase.SOLID, 2.5F,	144);
 	public static final Part waste			= part("waste",			EnumParticleSize.ingotic,	Phase.SOLID, 8.0F,	144);
@@ -71,6 +78,10 @@ public class Part
 		wasteSimple.setEquivalencePart(waste);
 		wasteSmall.setBasePart(waste);
 		wasteTiny.setBasePart(waste);
+		ingotDouble.setBasePart(ingot);
+		ingotQuadruple.setBasePart(ingot);
+		plateDouble.setBasePart(plate);
+		plateQuadruple.setBasePart(plate);
 	}
 	
 	public static Register<Part> values()

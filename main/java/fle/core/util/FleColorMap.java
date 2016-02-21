@@ -1,18 +1,31 @@
 package fle.core.util;
 
-import farcore.util.ColorMap;
+import flapi.util.ColorMap;
 
 public class FleColorMap implements ColorMap
 {
+	private String locate;
 	private int[] colors;
 
 	public FleColorMap() 
 	{
 		colors = null;
 	}
-	public FleColorMap(int[] aColors) 
+	public FleColorMap(String locate) 
 	{
-		colors = aColors;
+		this.locate = locate;
+	}
+	
+	public String getLocate()
+	{
+		return locate;
+	}
+	
+	public void setColors(int[] colors)
+	{
+		if(colors.length != 256) 
+			throw new IllegalArgumentException("Color map size must be 256x256!");
+		this.colors = colors;
 	}
 	
 	@Override

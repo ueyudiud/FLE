@@ -1,11 +1,15 @@
 package fle.core.world.biome;
 
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.CUSTOM;
+
 import java.util.Random;
 
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.event.terraingen.TerrainGen;
+import fle.resource.world.FleCrystalGen;
 
 public class FLEBiomeHellCrystalLand extends FLEBiomeHellBase
 {
@@ -21,14 +25,14 @@ public class FLEBiomeHellCrystalLand extends FLEBiomeHellBase
 	@Override
 	public void decorate(World aWorld, Random aRNG, int x, int z)
 	{
-//        boolean doGen = TerrainGen.decorate(aWorld, aRNG, x, z, CUSTOM);
-//        if (doGen)
-//        {
-//            for (int j = 0; j < 5; ++j)
-//            {
-//            	 new FleCrystalGen().generate(aWorld, aRNG, x * 16, aRNG.nextInt(100) + 10, z * 16);
-//            }
-//        }
+        boolean doGen = TerrainGen.decorate(aWorld, aRNG, x, z, CUSTOM);
+        if (doGen)
+        {
+            for (int j = 0; j < 5; ++j)
+            {
+            	 new FleCrystalGen().generate(aWorld, aRNG, x * 16, aRNG.nextInt(100) + 10, z * 16);
+            }
+        }
 		super.decorate(aWorld, aRNG, x, z);
 	}
 }

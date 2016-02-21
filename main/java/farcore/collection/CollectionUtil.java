@@ -7,26 +7,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 import farcore.collection.abs.Stack;
 
-/**
- * The util about collection.
- * 
- * @author ueyudiud
- * 		
- */
 public class CollectionUtil
 {
 	private static final Map eMap = new AbstractMap()
 	{
 		private Set set;
-		
+
 		@Override
 		public int size()
 		{
@@ -38,7 +32,7 @@ public class CollectionUtil
 		{
 			return null;
 		}
-		
+
 		@Override
 		public void putAll(Map map)
 		{
@@ -54,8 +48,7 @@ public class CollectionUtil
 		@Override
 		public Set entrySet()
 		{
-			if (set == null)
-				set = new HashSet();
+			if(set == null) set = new HashSet();
 			return set;
 		}
 		
@@ -89,7 +82,7 @@ public class CollectionUtil
 			{
 				return super.clone();
 			}
-			catch (Throwable e)
+			catch(Throwable e)
 			{
 				return this;
 			}
@@ -102,115 +95,60 @@ public class CollectionUtil
 		}
 	};
 	
-	/**
-	 * Return an empty map.
-	 * 
-	 * @return
-	 */
 	public static <K, V> Map<K, V> emptyMap()
 	{
 		return eMap;
 	}
-	
-	/**
-	 * Make a new map by function.
-	 * 
-	 * @param keys
-	 * @param entries
-	 * @return
-	 */
-	public static <K, V> Map<K, V> asMap(Iterator<K> keys,
-			Function<? super K, V> entries)
+	public static <K, V> Map<K, V> asMap(Iterator<K> keys, Function<? super K, V> entries)
 	{
 		return Maps.toMap(keys, entries);
 	}
-	
-	/**
-	 * Make a new map by entries.
-	 * 
-	 * @param keys
-	 * @param entries
-	 * @return The map. <K> The key of map. <V> The value of map.
-	 */
-	public static <K, V> Map<K, V> asMap(Iterator<K> keys,
-			Entry<K, V>... entries)
+	public static <K, V> Map<K, V> asMap(Iterator<K> keys, Entry<K, V>...entries)
 	{
-		Map<K, V> builder = new LinkedHashMap<K, V>();
-		while (keys.hasNext())
-		{
-			K key = keys.next();
-			for (Entry<K, V> entry : entries)
-			{
-				if (entry.getKey().equals(key))
-				{
-					builder.put(key, entry.getValue());
-					break;
-				}
-			}
-		}
-		return new HashMap<K, V>(builder);
+	    Map<K, V> builder = new LinkedHashMap<K, V>();
+	    while (keys.hasNext())
+	    {
+	    	K key = keys.next();
+	    	for(Entry<K, V> entry : entries)
+	    	{
+	    		if(entry.getKey().equals(key))
+	    		{
+	    			builder.put(key, entry.getValue());
+	    			break;
+	    		}
+	    	}
+	    }
+	    return new HashMap<K, V>(builder);
 	}
-	
-	/**
-	 * 
-	 * @param keys
-	 * @param entries
-	 * @return
-	 */
-	public static <K, V> Map<K, V> asMap(Iterable<K> keys,
-			Entry<K, V>... entries)
+	public static <K, V> Map<K, V> asMap(Iterable<K> keys, Entry<K, V>...entries)
 	{
 		return asMap(keys.iterator(), entries);
 	}
-	
-	public static <K, V> Map<K, V> asMap(Iterable<K> keys,
-			Function<? super K, V> entries)
+	public static <K, V> Map<K, V> asMap(Iterable<K> keys, Function<? super K, V> entries)
 	{
 		return Maps.toMap(keys, entries);
 	}
-	
-	/**
-	 * Make a new map with entries.
-	 * 
-	 * @param values
-	 * @return
-	 */
-	public static <K, V> Map<K, V> asMap(Entry<K, V>... values)
+	public static <K, V> Map<K, V> asMap(Entry<K, V>...values)
 	{
-		Map<K, V> builder = new LinkedHashMap<K, V>();
-		for (Entry<K, V> entry : values)
-		{
-			builder.put(entry.getKey(), entry.getValue());
-		}
-		return new HashMap<K, V>(builder);
+	    Map<K, V> builder = new LinkedHashMap<K, V>();
+	    for(Entry<K, V> entry : values)
+	    {
+	    	builder.put(entry.getKey(), entry.getValue());
+	    }
+	    return new HashMap<K, V>(builder);
 	}
-	
 	public static <K, V> Map<K, V> copy(Map<K, V> map)
 	{
 		return new HashMap<K, V>(map);
 	}
-	
-	/**
-	 * Create an entry with key and value.
-	 * 
-	 * @param k
-	 * @param v
-	 * @return Entry.
-	 * @see farcore.collection.CollectionUtil.FleEntry
-	 */
-	public static <K, V> Entry<K, V> e(K k, V v)
-	{
-		return new FleEntry(k, v);
-	}
-	
 	public static class FleEntry<K, V> implements Entry<K, V>
-	{
+	{		
 		K key;
 		V value;
 		
 		public FleEntry(K aKey, V aValue)
 		{
-			if (aKey == null)
+			if(aKey == null || aValue == null)
 				throw new NullPointerException();
 			key = aKey;
 			value = aValue;
@@ -235,83 +173,48 @@ public class CollectionUtil
 		}
 	}
 	
-	public static <T> Stack<T>[] asArray(Map<T, Long> map)
+	public static <T> Stack<T>[] asArray(Map<T, Integer> aMap)
 	{
-		return asArray(Long.class, map);
-	}
-	
-	/**
-	 * Change map as a array.
-	 * 
-	 * @param clazz
-	 * @param map
-	 * @return
-	 */
-	public static <T, N extends Number> Stack<T>[] asArray(Class<N> clazz,
-			Map<T, N> map)
-	{
-		Stack<T>[] sts = new Stack[map.size()];
+		Stack<T>[] sts = new Stack[aMap.size()];
 		int i = 0;
-		for (Entry<T, N> e : map.entrySet())
+		for(Entry<T, Integer> e : aMap.entrySet())
 		{
-			sts[i] = new Stack(e.getKey(), e.getValue().longValue());
+			sts[i] = new Stack(e.getKey(), e.getValue());
 			++i;
 		}
 		return sts;
 	}
-	
-	public static <T> Map<T, Long> asMap(Stack<T>... list)
+	public static <T> Map<T, Integer> asMap(Stack<T>...list)
 	{
-		Map<T, Long> map = new HashMap<T, Long>();
-		for (Stack<T> stack : list)
+		Map<T, Integer> map = new HashMap<T, Integer>();
+		for(Stack<T> stack : list)
 		{
-			map.put(stack.obj, (long) stack.size);
+			map.put(stack.obj, stack.size);
 		}
 		return map;
 	}
-	
-	public static <T, N extends Number> Map<T, N> asMap(Class<N> clazz,
-			Stack<T>... list)
+	public static <T> void add(Map<T, Integer> map, T e)
 	{
-		Map<T, N> map = new HashMap<T, N>();
-		for (Stack<T> stack : list)
+		if(e != null)
 		{
-			try
+			if(map.containsKey(e))
 			{
-				map.put(stack.obj, clazz.getConstructor(String.class)
-						.newInstance(String.valueOf(stack.size)));
-			}
-			catch (Throwable e)
-			{
-			}
-			;
-		}
-		return map;
-	}
-	
-	public static <T> void add(Map<T, Long> map, T e)
-	{
-		if (e != null)
-		{
-			if (map.containsKey(e))
-			{
-				long a = map.get(e) + 1;
+				int a = map.get(e) + 1;
 				map.put(e, a);
 			}
 			else
 			{
-				map.put(e, 1L);
+				map.put(e, 1);
 			}
 		}
 	}
-	
-	public static <T> void add(Map<T, Long> map, Stack<T> e)
+	public static <T> void add(Map<T, Integer> map, Stack<T> e)
 	{
-		if (e.obj != null && e.size > 0)
+		if(e.obj != null && e.size > 0)
 		{
-			if (map.containsKey(e.obj))
+			if(map.containsKey(e.obj))
 			{
-				long a = map.get(e.obj) + e.size;
+				int a = map.get(e.obj) + e.size;
 				map.put(e.obj, a);
 			}
 			else
@@ -320,12 +223,11 @@ public class CollectionUtil
 			}
 		}
 	}
-	
-	public static <T> void add(Map<T, Long> map, Stack<T> e, long size)
+	public static <T> void add(Map<T, Integer> map, Stack<T> e, int size)
 	{
-		if (map.containsKey(e.obj))
+		if(map.containsKey(e.obj))
 		{
-			long a = map.get(e.obj) + e.size * size;
+			int a = map.get(e.obj) + e.size * size;
 			map.put(e.obj, a);
 		}
 		else
@@ -333,52 +235,41 @@ public class CollectionUtil
 			map.put(e.obj, e.size * size);
 		}
 	}
-	
-	public static <T> void add(Map<T, Long> map, T... e)
+	public static <T> void add(Map<T, Integer> map, T...e)
 	{
-		for (T t : e)
-			add(map, t);
+		for(T t : e) add(map, t);
 	}
-	
-	public static <T> void add(Map<T, Long> map, long size, T... e)
+	public static <T> void add(Map<T, Integer> map, int size, T...e)
 	{
-		for (T t : e)
-			add(map, new Stack<T>(t, size));
+		for(T t : e) add(map, new Stack<T>(t, size));
 	}
-	
-	public static <T> void add(Map<T, Long> map, Stack<T>... e)
+	public static <T> void add(Map<T, Integer> map, Stack<T>...e)
 	{
-		for (Stack<T> ts : e)
-			add(map, ts);
+		for(Stack<T> ts : e) add(map, ts);
 	}
-	
-	public static <T> void add(Map<T, Long> map, long size, Stack<T>... e)
+	public static <T> void add(Map<T, Integer> map, int size, Stack<T>...e)
 	{
-		for (Stack<T> ts : e)
-			add(map, ts, size);
+		for(Stack<T> ts : e) add(map, ts, size);
 	}
-	
-	public static <T> void add(Map<T, Long> aMap, Map<T, Long> aValue)
+	public static <T> void add(Map<T, Integer> aMap,
+			Map<T, Integer> aValue)
 	{
-		for (Entry<T, Long> e : aValue.entrySet())
-			add(aMap, new Stack(e.getKey(), e.getValue()));
+		for(Entry<T, Integer> e : aValue.entrySet()) add(aMap, new Stack(e.getKey(), e.getValue()));
 	}
-	
-	public static <T> void add(Map<T, Long> aMap, long size,
-			Map<T, Long> aValue)
+	public static <T> void add(Map<T, Integer> aMap, int size,
+			Map<T, Integer> aValue)
 	{
-		for (Entry<T, Long> e : aValue.entrySet())
-			add(aMap, new Stack(e.getKey(), e.getValue() * size));
+		for(Entry<T, Integer> e : aValue.entrySet()) add(aMap, new Stack(e.getKey(), e.getValue() * size));
 	}
-	
-	public static <T> boolean remove(Map<T, Long> map, T e)
+
+	public static <T> boolean remove(Map<T, Integer> map, T e)
 	{
-		if (e != null)
+		if(e != null)
 		{
-			if (map.containsKey(e))
+			if(map.containsKey(e))
 			{
-				long a = map.get(e) - 1;
-				if (a > 0)
+				int a = map.get(e) - 1;
+				if(a > 0)
 					map.put(e, a);
 				else
 					map.remove(e);
@@ -391,15 +282,14 @@ public class CollectionUtil
 		}
 		return true;
 	}
-	
-	public static <T> long remove(Map<T, Long> map, Stack<T> e)
+	public static <T> int remove(Map<T, Integer> map, Stack<T> e)
 	{
-		if (e.obj != null && e.size > 0)
+		if(e.obj != null && e.size > 0)
 		{
-			if (map.containsKey(e.obj))
+			if(map.containsKey(e.obj))
 			{
-				long a = map.get(e.obj) - e.size;
-				if (a > 0)
+				int a = map.get(e.obj) - e.size;
+				if(a > 0)
 					map.put(e.obj, a);
 				else
 					map.remove(e.obj);
@@ -409,77 +299,46 @@ public class CollectionUtil
 		}
 		return 0;
 	}
-	
-	public static <T> long remove(Map<T, Long> map, Stack<T> e, long size)
+	public static <T> int remove(Map<T, Integer> map, Stack<T> e, int size)
 	{
 		return remove(map, new Stack(e.obj, e.size * size));
 	}
-	
-	public static <T> void remove(Map<T, Long> map, T... e)
+	public static <T> void remove(Map<T, Integer> map, T...e)
 	{
-		for (T t : e)
-			remove(map, t);
+		for(T t : e) remove(map, t);
 	}
-	
-	public static <T> void remove(Map<T, Long> map, long size, T... e)
+	public static <T> void remove(Map<T, Integer> map, int size, T...e)
 	{
-		for (T t : e)
-			remove(map, new Stack<T>(t, size));
+		for(T t : e) remove(map, new Stack<T>(t, size));
 	}
-	
-	public static <T> void remove(Map<T, Long> map, Stack<T>... e)
+	public static <T> void remove(Map<T, Integer> map, Stack<T>...e)
 	{
-		for (Stack<T> ts : e)
-			remove(map, ts);
+		for(Stack<T> ts : e) remove(map, ts);
 	}
-	
-	public static <T> void remove(Map<T, Long> map, long size, Stack<T>... e)
+	public static <T> void remove(Map<T, Integer> map, int size, Stack<T>...e)
 	{
-		for (Stack<T> ts : e)
-			remove(map, ts, size);
+		for(Stack<T> ts : e) remove(map, ts, size);
 	}
-	
-	public static <T> void remove(Map<T, Long> aMap, Map<T, Long> aValue)
+	public static <T> void remove(Map<T, Integer> aMap,
+			Map<T, Integer> aValue)
 	{
-		for (Entry<T, Long> e : aValue.entrySet())
-			remove(aMap, new Stack(e.getKey(), e.getValue()));
+		for(Entry<T, Integer> e : aValue.entrySet()) remove(aMap, new Stack(e.getKey(), e.getValue()));
 	}
-	
-	public static <T> void remove(Map<T, Long> aMap, int size,
-			Map<T, Long> aValue)
+	public static <T> void remove(Map<T, Integer> aMap, int size,
+			Map<T, Integer> aValue)
 	{
-		for (Entry<T, Long> e : aValue.entrySet())
-			remove(aMap, new Stack(e.getKey(), e.getValue() * size));
+		for(Entry<T, Integer> e : aValue.entrySet()) remove(aMap, new Stack(e.getKey(), e.getValue() * size));
 	}
-	
 	public static <T> Stack<T>[] multiply(Stack<T>[] aStacks, int size)
 	{
 		Stack<T>[] ret = new Stack[aStacks.length];
 		int i = 0;
-		for (Stack<T> stack : aStacks)
+		for(Stack<T> stack : aStacks)
 		{
 			ret[i] = stack.copy();
 			ret[i].size *= size;
 			++i;
 		}
 		return ret;
-	}
-	
-	public static <T> Set<T> asSet(T... elements)
-	{
-		Set<T> set = new HashSet<T>();
-		for (T ele : elements)
-			if (ele != null)
-				set.add(ele);
-		return set;
-	}
-	
-	public static <T> Set<T> asSetWith(Object... elements)
-	{
-		Set<T> set = new HashSet<T>();
-		for (Object ele : elements)
-			if (ele != null)
-				set.add((T) ele);
-		return set;
 	}
 }

@@ -11,10 +11,6 @@ import java.util.concurrent.Callable;
 
 import javax.imageio.ImageIO;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import farcore.util.FleLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.StitcherException;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -33,6 +29,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+import flapi.util.FleLog;
 
 public class FleTextureMap extends AbstractTexture implements IIconRegister, ITextureObject
 {

@@ -15,6 +15,8 @@ import net.minecraft.world.gen.feature.WorldGenTaiga1;
 import net.minecraft.world.gen.feature.WorldGenTaiga2;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import fle.core.init.Plants;
+import fle.resource.tree.FleTreeCardGen;
 
 public class FLEBiomeTaiga extends FLEBiome
 {
@@ -23,7 +25,7 @@ public class FLEBiomeTaiga extends FLEBiome
     private static final WorldGenMegaPineTree pine1 = new WorldGenMegaPineTree(false, false);
     private static final WorldGenMegaPineTree pine2 = new WorldGenMegaPineTree(false, true);
     private static final WorldGenBlockBlob blob = new WorldGenBlockBlob(Blocks.mossy_cobblestone, 0);
-//    private FleTreeCardGen beechGen = new FleTreeCardGen(Plants.beech);
+    private FleTreeCardGen beechGen = new FleTreeCardGen(Plants.beech);
     private int type;
     
 	public FLEBiomeTaiga(String name, int index, int aType)
@@ -50,8 +52,8 @@ public class FLEBiomeTaiga extends FLEBiome
 	public WorldGenAbstractTree getTreeGenerator(double noise, Random rand)
 	{
 		return ((this.type == 1 || this.type == 2) && rand.nextInt(3) == 0 ? 
-				(this.type != 2 && rand.nextInt(13) != 0 ? pine1 : pine2) : rand.nextInt(3) == 0 ? taiga1 : taiga2);
-					//(noise > 0.7 ? beechGen : rand.nextInt(3) == 0 ? taiga1 : taiga2));
+				(this.type != 2 && rand.nextInt(13) != 0 ? pine1 : pine2) : 
+					(noise > 0.7 ? beechGen : rand.nextInt(3) == 0 ? taiga1 : taiga2));
 	}
 
     /**

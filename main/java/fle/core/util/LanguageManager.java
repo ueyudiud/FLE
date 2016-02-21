@@ -15,22 +15,20 @@ import java.util.Map.Entry;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import farcore.util.FleLog;
+import farcore.enums.Langs;
 import farcore.util.ILanguageManager;
-import farcore.util.IUnlocalized;
-import farcore.util.Langs;
-import fle.core.FLE;
+import flapi.util.FleLog;
+import fle.FLE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class LanguageManager implements ILanguageManager
 {
-	private static final String defaultLocale = Langs.english;
+	private static final String defaultLocale = Langs.english.locale;
 	private static final String MOD = FLE.MODID.toLowerCase();
 	private static final char A = 'A';
 	private static final char Z = 'Z';
-		
-	@Override
+	
 	public String registerRecommended(String type, String localized)
 	{
 		String str = MOD;

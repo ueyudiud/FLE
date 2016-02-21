@@ -13,7 +13,7 @@ import farcore.substance.PhaseDiagram.Phase;
  */
 public class PDPhase implements PhaseDiagram<IPhaseCondition, Phase>
 {
-	public static final long STANDARD_PRESS = 101000;
+	public static final long STANDARD_PRESS = 101325;
 	public static final long STANDARD_TEMP = 273;
 	
 	final long pM;

@@ -1,19 +1,20 @@
 package farcore.collection;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.List;
 
-import farcore.collection.abs.AbstractRegister;
-import farcore.util.FleLog;
+import farcore.collection.abs.IRegister;
+import flapi.util.FleLog;
 
 /**
  * The register of object with name.
  * @author ueyudiud
  *
- * @param <T> The register o
- * j super type.
+ * @param <T> The register obj super type.
  */
-public class Register<T> extends AbstractRegister<T>
+public class Register<T> implements IRegister<T>
 {
 	private int size = 0;
 	private int i = 0;
@@ -71,7 +72,6 @@ public class Register<T> extends AbstractRegister<T>
 
 	public int serial(T t)
 	{
-		if(t == null) return -1;
 		for(int i = 0; i < oL.length; ++i)
 			if(oL[i] != null && oL[i].equals(t))
 				return i;
@@ -79,7 +79,6 @@ public class Register<T> extends AbstractRegister<T>
 	}
 	public int serial(String name)
 	{
-		if(name == null) return -1;
 		for(int i = 0; i < sL.length; ++i)
 			if(sL[i] != null && sL[i].equals(name))
 				return i;
@@ -102,6 +101,12 @@ public class Register<T> extends AbstractRegister<T>
 	public T get(int i)
 	{
 		return i < 0 || i > oL.length ? null : (T) oL[i];
+	}
+	
+	@Override
+	public Iterator<T> iterator() 
+	{
+		return new RegisterIterator();
 	}
 
 	public int size() 
@@ -145,62 +150,43 @@ public class Register<T> extends AbstractRegister<T>
 		i = 0;
 	}
 	
-	public Set<String> keySet()
+	public String[] keySet()
 	{
-		return CollectionUtil.asSet(sL);
+		return sL.clone();
 	}
-	
-	@Override
-	public Set<T> targetSet()
+
+	public class RegisterIterator implements Iterator<T>
 	{
-		return CollectionUtil.<T>asSetWith(oL);
-	}
-	
-	@Override
-	public String toString()
-	{
-		String str = "[";
-		int s = 0;
-		for(int i = 0; i < oL.length; ++i)
+		private int length = 0;
+		private int id = -1;
+
+		@Override
+		public boolean hasNext()
 		{
-			if(oL[i] == null) continue;
-			str += i + "|\"" + sL[i] + "\"" + ":" + oL[i].toString();
-			++s;
-			if(s < size) str += ", ";
+			return length < size;
 		}
-		str += "]";
-		return str;
-	}
-	
-	@Override
-	protected Object[] getObjectList()
-	{
-		return oL;
-	}
-	
-	@Override
-	protected boolean remove(String name)
-	{
-		if(name == null) return false;
-		int i;
-		if((i = serial(name)) != -1)
+
+		@Override
+		public T next()
 		{
-			remove(i);
-			return true;
+			while(id < oL.length)
+			{
+				++id;
+				if(get(id) != null) break;
+			}
+			++length;
+			return get(id);
 		}
-		return false;
-	}
-	
-	@Override
-	protected boolean remove(T target)
-	{
-		if(target == null) return false;
-		int i;
-		if((i = serial(target)) != -1)
+
+		@Override
+		public void remove()
 		{
-			remove(i);
-			return true;
+			throw new UnsupportedOperationException();
 		}
-		return false;
+	}
+
+	public List<T> toList()
+	{
+		return new ArrayList(Arrays.asList(oL));
 	}
 }

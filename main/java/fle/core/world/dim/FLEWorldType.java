@@ -2,13 +2,13 @@ package fle.core.world.dim;
 
 import java.util.Arrays;
 
-import farcore.FarCore;
-import farcore.util.Util;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderEnd;
+import flapi.FleAPI;
+import fle.core.util.Util;
 
 public class FLEWorldType extends WorldType
 {
@@ -34,13 +34,13 @@ public class FLEWorldType extends WorldType
 	public FLEWorldType(String name, String localized)
 	{
 		super(name);
-		FarCore.lang.registerLocal(super.getTranslateName(), localized);
+		FleAPI.langManager.registerLocal(super.getTranslateName(), localized);
 	}
 	
 	@Override
 	public String getTranslateName()
 	{
-		return FarCore.translateToLocal(super.getTranslateName(), new Object[0]);
+		return FleAPI.langManager.translateToLocal(super.getTranslateName(), new Object[0]);
 	}
 	
 	@Override

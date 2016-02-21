@@ -12,28 +12,16 @@ import farcore.collection.abs.IStackProvider;
 import farcore.collection.abs.Stack;
 
 /**
- * The array stack list, with <code>provider</code> to provide "stack" type.<br>
- * Save target by array with stack elements. 
- * The target type elements will add into another stack
- * when they are equals.
- * <code>
- * 	S stack = list[i];<br>
- * 	if(provider.contain(stack, t))<br>
- * 	{<br>
- * 		provider.add(stack, 1);<br>
- * 		continue label;<br>
- * 	}<br>
- * </code>
+ * 
  * @author ueyudiud
- * @see farcore.collection.abs.IStackList
- * @see farcore.collection.abs.IStackProvider
- * @param <S> Stack type, contain target information can let provider identify target.
- * @param <T> Target type.
+ *
+ * @param <S>
+ * @param <T>
  */
 public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 {
 	/**
-	 * The stack provider.
+	 * The stack provider.<br>
 	 */
 	private final IStackProvider<S, T> provider;
 	private final float scale;
@@ -83,7 +71,6 @@ public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 		label:
 		for(T t : targets)
 		{
-			if(t == null) continue;
 			int firstEmpty = -1;
 			for(int i = 0; i < list.length; ++i)
 			{
@@ -134,10 +121,8 @@ public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 	}
 	
 	@Override
-	public void add(T target, long size)
+	public void add(T target, int size)
 	{
-		if(target == null) throw new NullPointerException("Target can not be null!");
-		if(size < 0) throw new IllegalArgumentException("The size of target " + size + " must be an positive number!");
 		int firstEmpty = -1;
 		for(int i = 0; i < list.length; ++i)
 		{
@@ -172,7 +157,6 @@ public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 		label:
 		for(S t : stacks)
 		{
-			if(t == null) throw new NullPointerException("Stack can not be null.");
 			int firstEmpty = -1;
 			for(int i = 0; i < list.length; ++i)
 			{
@@ -312,19 +296,19 @@ public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 	}
 	
 	@Override
-	public long species()
+	public int species()
 	{
 		return species;
 	}
 	
 	@Override
-	public long size()
+	public int size()
 	{
 		return size;
 	}
 	
 	@Override
-	public long weight(T target)
+	public int weight(T target)
 	{
 		if(target == null) return 0;
 		for(int i = 0; i < list.length; ++i)
@@ -343,7 +327,7 @@ public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 	public T randomGet(Random rand)
 	{
 		if(size() == 0) return null;
-		long i = rand.nextLong() % size();
+		int i = rand.nextInt(size());
 		T ret = null;
 		Iterator<S> itr = iterator();
 		while(itr.hasNext())
@@ -360,9 +344,9 @@ public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 	}
 	
 	@Override
-	public Map<T, Long> toMap()
+	public Map<T, Integer> toMap()
 	{
-		Map<T, Long> ret = new HashMap();
+		Map<T, Integer> ret = new HashMap();
 		for(S stack : list)
 		{
 			ret.put(provider.getObj(stack), provider.getSize(stack));
@@ -406,7 +390,7 @@ public class ArrayStackList<S, T> extends AbstractStackList<S, T>
 		}
 
 		@Override
-		public synchronized S next()
+		public S next()
 		{
 			int c = cache;
 			while(list.length > c)

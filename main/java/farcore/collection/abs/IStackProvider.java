@@ -4,11 +4,11 @@ public interface IStackProvider<S, T>
 {
 	S[] newArray(int size);
 	
-	S make(T target, long size);
+	S make(T target, int size);
 	
 	T getObj(S stack);
 	
-	long getSize(S stack);
+	int getSize(S stack);
 	
 	boolean equal(T arg1, T arg2);
 
@@ -18,11 +18,11 @@ public interface IStackProvider<S, T>
 	
 	boolean contains(S arg, S targets);
 	
-	void add(S stack, long size);
+	void add(S stack, int size);
 	
-	S decr(S stack, long size);
+	S decr(S stack, int size);
 	
-	void setSize(S stack, long size);
+	void setSize(S stack, int size);
 	
 	S copy(S stack);
 }

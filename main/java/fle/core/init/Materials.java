@@ -1,105 +1,89 @@
-//package fle.core.init;
-//
-//import static flapi.chem.particle.Atoms.As;
-//import static flapi.chem.particle.Atoms.Cu;
-//import static flapi.chem.particle.Atoms.Pb;
-//import static flapi.chem.particle.Atoms.Sn;
-//import static flapi.enums.CompoundType.Alloy;
-//
-//import java.io.BufferedWriter;
-//import java.io.FileOutputStream;
-//import java.io.IOException;
-//import java.io.OutputStreamWriter;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import net.minecraft.init.Blocks;
-//import net.minecraft.item.ItemStack;
-//import flapi.chem.base.IChemCondition.EnumPH;
-//import flapi.chem.base.Matter;
-//import flapi.chem.base.Matter.AtomStack;
-//import flapi.chem.particle.Atoms;
-//import flapi.collection.CollectionUtil;
-//import flapi.collection.CollectionUtil.FleEntry;
-//import flapi.enums.EnumFLERock;
-//import flapi.material.MaterialAbstract;
-//import flapi.material.MaterialAlloy;
-//import flapi.material.MaterialOre;
-//import flapi.material.MaterialRock;
-//import flapi.material.PropertyInfo;
-//import flapi.util.SubTag;
-//import fle.core.util.FleAlloy;
-//import fle.matter.FleMatter;
-//import fle.tool.DitchInfo;
-//
-//public class Materials
-//{
-//	public static MaterialAbstract Void;
-//	
-//	public static MaterialOre NativeCopper;
-//	public static MaterialOre Tetrahedrite;
-//	public static MaterialOre Enargite;
-//	public static MaterialOre Cuprite;
-//	public static MaterialOre Tenorite;
-//	public static MaterialOre Covellite;
-//	public static MaterialOre Chalcocite;
-//	public static MaterialOre Malachite;
-//	public static MaterialOre Azurite;
-//	public static MaterialOre Chalcopyrite;
-//	public static MaterialOre Bornite;
-//	public static MaterialOre Orpiment;
-//	public static MaterialOre Realgar;
-//	public static MaterialOre Arsenolite;
-//	public static MaterialOre Nickeline;
-//	public static MaterialOre Arsenopyrite;
-//	public static MaterialOre Scorodite;
-//	public static MaterialOre Erythrite;
-//	public static MaterialOre Gelenite;
-//	public static MaterialOre Sphalerite;
-//	public static MaterialOre Cassiterite;
-//	public static MaterialOre Stannite;
-//
-//	public static MaterialAbstract SoftWood;
-//	public static MaterialAbstract HardWood;
-//	public static MaterialAbstract Charcoal;
-//	public static MaterialAbstract Flint;
-//	public static MaterialAbstract Bone;
-//	public static MaterialAbstract Obsidian;
-//	public static MaterialAbstract Argil;
-//	
-//	public static MaterialRock Stone;
-//	public static MaterialRock CompactStone;
-//	public static MaterialRock Limestone;
-//	public static MaterialRock Rhyolite;
-//	public static MaterialRock Andesite;
-//	public static MaterialRock Basalt;
-//	public static MaterialRock Peridotite;
-//
-//	public static MaterialAbstract Copper;
-//	public static MaterialAbstract Lead;
-//	public static MaterialAbstract Zinc;
-//	public static MaterialAbstract Tin;
-//	public static MaterialAbstract Arsenic;
-//	public static MaterialAlloy CuAs;
-//	public static MaterialAlloy CuAs2;
-//	public static MaterialAlloy CuSn;
-//	public static MaterialAlloy CuSn2;
-//	public static MaterialAlloy CuPb;
-//	public static MaterialAlloy CuPb2;
-//	public static MaterialAlloy CuSnPb;
-//	public static MaterialAlloy CuZn;
-//	public static MaterialAlloy CuZn2;
-//
-//	public static DitchInfo ditch_stone;
-//	public static DitchInfo ditch_wood0;
-//	public static DitchInfo ditch_wood1;
-//	public static DitchInfo ditch_wood2;
-//	public static DitchInfo ditch_wood3;
-//	public static DitchInfo ditch_wood4;
-//	public static DitchInfo ditch_wood5;
-//	
-//	public static void init()
-//	{
+package fle.core.init;
+
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+import flapi.enums.EnumFLERock;
+import flapi.material.MaterialAbstract;
+import flapi.material.MaterialAlloy;
+import flapi.material.MaterialOre;
+import flapi.material.MaterialRock;
+import flapi.material.PropertyInfo;
+import flapi.util.SubTag;
+import fle.tool.DitchInfo;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+
+public class Materials
+{
+	public static MaterialAbstract Void;
+	
+	public static MaterialOre NativeCopper;
+	public static MaterialOre Tetrahedrite;
+	public static MaterialOre Enargite;
+	public static MaterialOre Cuprite;
+	public static MaterialOre Tenorite;
+	public static MaterialOre Covellite;
+	public static MaterialOre Chalcocite;
+	public static MaterialOre Malachite;
+	public static MaterialOre Azurite;
+	public static MaterialOre Chalcopyrite;
+	public static MaterialOre Bornite;
+	public static MaterialOre Orpiment;
+	public static MaterialOre Realgar;
+	public static MaterialOre Arsenolite;
+	public static MaterialOre Nickeline;
+	public static MaterialOre Arsenopyrite;
+	public static MaterialOre Scorodite;
+	public static MaterialOre Erythrite;
+	public static MaterialOre Gelenite;
+	public static MaterialOre Sphalerite;
+	public static MaterialOre Cassiterite;
+	public static MaterialOre Stannite;
+
+	public static MaterialAbstract SoftWood;
+	public static MaterialAbstract HardWood;
+	public static MaterialAbstract Charcoal;
+	public static MaterialAbstract Flint;
+	public static MaterialAbstract Bone;
+	public static MaterialAbstract Obsidian;
+	public static MaterialAbstract Argil;
+	
+	public static MaterialRock Stone;
+	public static MaterialRock CompactStone;
+	public static MaterialRock Limestone;
+	public static MaterialRock Rhyolite;
+	public static MaterialRock Andesite;
+	public static MaterialRock Basalt;
+	public static MaterialRock Peridotite;
+
+	public static MaterialAbstract Copper;
+	public static MaterialAbstract Lead;
+	public static MaterialAbstract Zinc;
+	public static MaterialAbstract Tin;
+	public static MaterialAbstract Arsenic;
+	public static MaterialAlloy CuAs;
+	public static MaterialAlloy CuAs2;
+	public static MaterialAlloy CuSn;
+	public static MaterialAlloy CuSn2;
+	public static MaterialAlloy CuPb;
+	public static MaterialAlloy CuPb2;
+	public static MaterialAlloy CuSnPb;
+	public static MaterialAlloy CuZn;
+	public static MaterialAlloy CuZn2;
+
+	public static DitchInfo ditch_stone;
+	public static DitchInfo ditch_wood0;
+	public static DitchInfo ditch_wood1;
+	public static DitchInfo ditch_wood2;
+	public static DitchInfo ditch_wood3;
+	public static DitchInfo ditch_wood4;
+	public static DitchInfo ditch_wood5;
+	
+	public static void init()
+	{
 //		Void = new MaterialAbstract("Void", new PropertyInfo(0xAAAAAA, -1, -1, 1.0F, 1.0F, 1.0F, 0.0F, 10000000, -1.0F, 0.1F, 0.2F));
 //		
 //		NativeCopper = new MaterialOre("NativeCopper", Atoms.Cu.asMatter(),		new PropertyInfo(0xFF834C, 7, 14, 721, 1735, 698, 500, 0.0F, 1200, 1.2F, 0.8F, 1.0F, 0.2F, 12000000, 18.0F, 0.18F, 0.7F), SubTag.ORE_native);
@@ -125,21 +109,21 @@
 //		Cassiterite  = new MaterialOre("Cassiterite",  Matter.mSnO2,			new PropertyInfo(0xD1CBB0,                      13,  8,  1.5F, 0.1F, 1.0F, 0.18F, 8100000, -1.0F, 0.36F, 0.63F), SubTag.ORE_TYPE_default, SubTag.ORE_oxide);
 //		Stannite     = new MaterialOre("Stannite",     Matter.mCu2FeSnS4,		new PropertyInfo(0xD6CCCA,                      17,  9,  1.9F, 0.1F, 1.0F, 0.2F,  8400000, -1.0F, 0.35F, 0.67F), SubTag.ORE_TYPE_default, SubTag.ORE_sulfide);
 //		
-//		Stone        = new MaterialRock("Stone",        new PropertyInfo(0x626262                     , 8 , 16, 1.2F , 0.0F, 1.0F, 1.4F, 10000000, -1.0F, 0.38F, 1.6F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
-//		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868                     , 9 , 21, 1.2F , 0.1F, 2.0F, 1.3F, 12800000, -1.0F, 0.35F, 1.72F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
-//		Limestone    = new MaterialRock("Limestone",    new PropertyInfo(0xE4E4E5                     , 5 , 2 , 0.8F , 0.2F, 1.0F, 1.5F, 5600000));
-//		Rhyolite     = new MaterialRock("Rhyolite",     new PropertyInfo(new int[]{0x4F535A, 0x414140}, 9 , 48, 1.9F , 0F  , 1.0F, 1.1F, 18000000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Rhyolite);
-//		Andesite     = new MaterialRock("Andesite",     new PropertyInfo(new int[]{0x616162, 0x6C6C62}, 14, 41, 1.6F , 0F  , 1.0F, 1.1F, 16300000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Andesite);
-//		Basalt       = new MaterialRock("Basalt",       new PropertyInfo(0x3A3A3A                     , 13, 41, 1.65F, 0F  , 1.0F, 1.0F, 16350000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Basalt);
-//		Peridotite   = new MaterialRock("Peridotite",   new PropertyInfo(0x4A5435                     , 14, 49, 2.2F , 0F  , 1.1F, 1.0F, 19800000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Peridotite);
+		Stone        = new MaterialRock("Stone",        new PropertyInfo(0x626262                     , 8 , 16, 1.2F , 0.0F, 1.0F, 1.4F, 10000000, -1.0F, 0.38F, 1.6F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
+		CompactStone = new MaterialRock("CompactStone", new PropertyInfo(0x686868                     , 9 , 21, 1.2F , 0.1F, 2.0F, 1.3F, 12800000, -1.0F, 0.35F, 1.72F), SubTag.TOOL_stone, SubTag.TOOL_stone_real);
+		Limestone    = new MaterialRock("Limestone",    new PropertyInfo(0xE4E4E5                     , 5 , 2 , 0.8F , 0.2F, 1.0F, 1.5F, 5600000));
+		Rhyolite     = new MaterialRock("Rhyolite",     new PropertyInfo(new int[]{0x4F535A, 0x414140}, 9 , 48, 1.9F , 0F  , 1.0F, 1.1F, 18000000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Rhyolite);
+		Andesite     = new MaterialRock("Andesite",     new PropertyInfo(new int[]{0x616162, 0x6C6C62}, 14, 41, 1.6F , 0F  , 1.0F, 1.1F, 16300000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Andesite);
+		Basalt       = new MaterialRock("Basalt",       new PropertyInfo(0x3A3A3A                     , 13, 41, 1.65F, 0F  , 1.0F, 1.0F, 16350000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Basalt);
+		Peridotite   = new MaterialRock("Peridotite",   new PropertyInfo(0x4A5435                     , 14, 49, 2.2F , 0F  , 1.1F, 1.0F, 19800000), SubTag.TOOL_stone, SubTag.TOOL_stone_real).setRockType(EnumFLERock.Peridotite);
 //		
 //		Flint        = new MaterialAbstract("Flint",    Matter.mSiO2,           new PropertyInfo(0x5A5A5A, 8 , 12, 0.6F, 0.0F, 1.1F,  1.5F,  13500000), SubTag.TOOL_stone, SubTag.TOOL_flint);
 //		Obsidian     = new MaterialAbstract("Obsidian", Matter.mSiO2,           new PropertyInfo(0x33344F, 19, 16, 2.1F, 0.0F, 1.0F,  3.0F,  7500000), SubTag.TOOL_stone, SubTag.TOOL_flint);
-//		Bone         = new MaterialAbstract("Bone",                             new PropertyInfo(0xF9F7E7, 7 , 7 , 1.0F, 0.1F, 0.8F,  1.2F,  2800000), SubTag.TOOL_bone);
-//		HardWood     = new MaterialAbstract("HardWood",                         new PropertyInfo(0x7F643D, 4 , 20, 0.4F, 1.0F, 0.1F,  0.1F,  4600000,  -1F, 0.34F, 2.0F), SubTag.TOOL_wood);
-//		SoftWood     = new MaterialAbstract("SoftWood",                         new PropertyInfo(0x8F744D, 3 , 6 , 0.2F, 1.1F, 0.05F, 0.07F, 2800000,  -1F, 0.22F, 1.9F));
+		Bone         = new MaterialAbstract("Bone",                             new PropertyInfo(0xF9F7E7, 7 , 7 , 1.0F, 0.1F, 0.8F,  1.2F,  2800000), SubTag.TOOL_bone);
+		HardWood     = new MaterialAbstract("HardWood",                         new PropertyInfo(0x7F643D, 4 , 20, 0.4F, 1.0F, 0.1F,  0.1F,  4600000,  -1F, 0.34F, 2.0F), SubTag.TOOL_wood);
+		SoftWood     = new MaterialAbstract("SoftWood",                         new PropertyInfo(0x8F744D, 3 , 6 , 0.2F, 1.1F, 0.05F, 0.07F, 2800000,  -1F, 0.22F, 1.9F));
 //		Charcoal     = new MaterialAbstract("Charcoal", Atoms.C.asMatter(), new PropertyInfo(0x35322A, 2 , 2 , 0.1F, 0.0F, 0.08F, 0.5F,  4000000,  98F, 0.6F , 1.2F));
-//		Argil        = new MaterialAbstract("Argil",                            new PropertyInfo(0xAE9789, 5 , 29, 0.7F, 0.0F, 1.0F,  1.9F,  10800000, 59F, 0.26F, 1.8F));
+		Argil        = new MaterialAbstract("Argil",                            new PropertyInfo(0xAE9789, 5 , 29, 0.7F, 0.0F, 1.0F,  1.9F,  10800000, 59F, 0.26F, 1.8F));
 //		
 //		Arsenic      = new MaterialAbstract("Arsenic", Atoms.As.asMatter(), new PropertyInfo(0x555655, 8, 19, 887, 1090, 673, 481, 0.9F, 1550, 1.6F, 1.2F, 0.9F, 0.2F, 27927000, -1.0F, 0.2F, 0.21F));
 //		
@@ -257,69 +241,69 @@
 //		SubTag.addTagsTo(tags1, list1);
 //		SubTag.addTagsTo(tags1, CuAs, CuAs2, CuSn, CuSn2, CuPb, CuPb2, CuSnPb);//, CuZn, CuZn2);
 //		
-//		ditch_stone = new DitchInfo("Stone", Stone, new ItemStack(Blocks.stone), 9000, 0.01F, EnumPH.Strong_Acid, EnumPH.Weak_Alkali, 1500);
-//		ditch_wood0 = new DitchInfo("Wood0", HardWood, Blocks.planks, 0, 0.03F, 4000, 380);
-//		ditch_wood1 = new DitchInfo("Wood1", SoftWood, Blocks.planks, 1, 0.06F, 5000, 375);
-//		ditch_wood2 = new DitchInfo("Wood2", HardWood, Blocks.planks, 2, 0.03F, 4000, 380);
-//		ditch_wood3 = new DitchInfo("Wood3", HardWood, Blocks.planks, 3, 0.03F, 4000, 380);
-//		ditch_wood4 = new DitchInfo("Wood4", SoftWood, Blocks.planks, 4, 0.06F, 5000, 375);
-//		ditch_wood5 = new DitchInfo("Wood5", HardWood, Blocks.planks, 5, 0.03F, 4000, 380);
-//	}
-//	
-//	public static void postInit()
-//	{
-//		if(MaterialAbstract.property != null)
-//		{
-//			BufferedWriter fw = null;
-//			try
-//			{
-//				fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
-//						MaterialAbstract.property), "UTF-8"), 1024);
-//				fw.write("Material Name, Color A, Color B, Max Uses, Melting Point, "
-//						+ "Boiling Point, Viscosity, Hardness, Toughness, Brittleness, "
-//						+ "Denseness, Shear Strength, Resistance, Specific Heat, Thermal Conductivity"
-//						+ "\r\n");
-//				for(MaterialAbstract material : MaterialAbstract.getMaterialRegistry())
-//				{
-//					PropertyInfo i = material.getPropertyInfo();
-//					fw.write(String.format("%s, %d, %d, %d, %d, %d, %d, %g, %g, %g, %g, %d, %g, %g, %g\r\n", 
-//							MaterialAbstract.getMaterialRegistry().name(material),
-//							i.getColors()[0],
-//							i.getColors()[1],
-//							i.getMaxUses(),
-//							i.getMeltingPoint(),
-//							i.getBoilingPoint(),
-//							i.getViscosity(),
-//							i.getHardness(),
-//							i.getToughness(),
-//							i.getBrittleness(),
-//							i.getDenseness(),
-//							(int) Math.pow(10, i.getShearStrength()),
-//							i.getResistance(),
-//							(float) i.getSpecificHeat(),
-//							i.getThermalConductivity()));
-//				}
-//				fw.flush();
-//				fw.close();
-//			}
-//			catch(Throwable e)
-//			{
-//				e.printStackTrace();
-//			}
-//			finally
-//			{
-//				if(fw != null)
-//				{
-//					try
-//					{
-//						fw.close();
-//					}
-//					catch(IOException e)
-//					{
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		}
-//	}
-//}
+		ditch_stone = new DitchInfo("Stone", Stone, new ItemStack(Blocks.stone), 9000, 0.01F, 1500);
+		ditch_wood0 = new DitchInfo("Wood0", HardWood, Blocks.planks, 0, 0.03F, 4000, 380);
+		ditch_wood1 = new DitchInfo("Wood1", SoftWood, Blocks.planks, 1, 0.06F, 5000, 375);
+		ditch_wood2 = new DitchInfo("Wood2", HardWood, Blocks.planks, 2, 0.03F, 4000, 380);
+		ditch_wood3 = new DitchInfo("Wood3", HardWood, Blocks.planks, 3, 0.03F, 4000, 380);
+		ditch_wood4 = new DitchInfo("Wood4", SoftWood, Blocks.planks, 4, 0.06F, 5000, 375);
+		ditch_wood5 = new DitchInfo("Wood5", HardWood, Blocks.planks, 5, 0.03F, 4000, 380);
+	}
+	
+	public static void postInit()
+	{
+		if(MaterialAbstract.property != null)
+		{
+			BufferedWriter fw = null;
+			try
+			{
+				fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+						MaterialAbstract.property), "UTF-8"), 1024);
+				fw.write("Material Name, Color A, Color B, Max Uses, Melting Point, "
+						+ "Boiling Point, Viscosity, Hardness, Toughness, Brittleness, "
+						+ "Denseness, Shear Strength, Resistance, Specific Heat, Thermal Conductivity"
+						+ "\r\n");
+				for(MaterialAbstract material : MaterialAbstract.getMaterialRegistry())
+				{
+					PropertyInfo i = material.getPropertyInfo();
+					fw.write(String.format("%s, %d, %d, %d, %d, %d, %d, %g, %g, %g, %g, %d, %g, %g, %g\r\n", 
+							MaterialAbstract.getMaterialRegistry().name(material),
+							i.getColors()[0],
+							i.getColors()[1],
+							i.getMaxUses(),
+							i.getMeltingPoint(),
+							i.getBoilingPoint(),
+							i.getViscosity(),
+							i.getHardness(),
+							i.getToughness(),
+							i.getBrittleness(),
+							i.getDenseness(),
+							(int) Math.pow(10, i.getShearStrength()),
+							i.getResistance(),
+							(float) i.getSpecificHeat(),
+							i.getThermalConductivity()));
+				}
+				fw.flush();
+				fw.close();
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				if(fw != null)
+				{
+					try
+					{
+						fw.close();
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+}

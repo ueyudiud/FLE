@@ -18,29 +18,21 @@ import java.util.Random;
 public interface IStackList<S, T> extends Iterable<S>
 {
 	/**
-	 * Add target to list, the <code>null</code> element
-	 * to list is forbidden. <br>
-	 * The element <code>t1</code> which the method <code>t1.equals(t2)</code> 
-	 * return true is allowed.<br>
-	 * Provider will check added stack first when target
-	 * is equals to another target in stack, it will add
-	 * in to that stack, and then remainder target will
-	 * add into a new stack with size 1.
+	 * Add target to list, you can't add <code>null</code>
+	 * to list. But you can add <code>t1</code> which the 
+	 * method <code>t1.equals(t2)</code> return true.
 	 * @param targets
 	 */
 	void add(T...targets);
 	/**
-	 * Add a target with a size. (Tip: provider will auto 
-	 * create stack type)<br>
-	 * The target can not be <code>null</code>, and size 
-	 * must be an positive number.<br>
-	 * 
+	 * Add an target with a size.<br>
+	 * The target can not be <code>null</code>.
 	 * @param target
 	 * @param size
 	 */
-	void add(T target, long size);
+	void add(T target, int size);
 	/**
-	 * Add all stacks to list.
+	 * Add stacks to list.
 	 * @param stacks
 	 */
 	void addAll(S...stacks);
@@ -58,20 +50,10 @@ public interface IStackList<S, T> extends Iterable<S>
 	boolean contain(T target);
 	boolean contains(S stack);
 	
-	long species();
-	long size();
-	long weight(T target);
+	int species();
+	int size();
+	int weight(T target);
 	
-	/**
-	 * Get target scale in list.<br>
-	 * <code>1</code> is max scale, which means all
-	 * elements equals target contain in list.<br>
-	 * <code>0</code> is min scale, which means none
-	 * elements equals target contain in list,
-	 * <code>list.cotain(target)</code> will return false.<br>
-	 * @param target
-	 * @return A number range from 0 to 1(contain 0 and 1).
-	 */
 	double scale(T target);
 	
 	/**
@@ -85,7 +67,7 @@ public interface IStackList<S, T> extends Iterable<S>
 	 * Get elements of list by target map.
 	 * @return
 	 */
-	Map<T, Long> toMap();
+	Map<T, Integer> toMap();
 	/**
 	 * Get elements of list by stack list.
 	 * @return

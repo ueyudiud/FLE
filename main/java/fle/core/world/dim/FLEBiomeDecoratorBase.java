@@ -1,11 +1,23 @@
 package fle.core.world.dim;
 
-import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.*;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.BIG_SHROOM;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.CACTUS;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.CLAY;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.CUSTOM;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.DEAD_BUSH;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.FLOWERS;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.GRASS;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.LAKE;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.LILYPAD;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.PUMPKIN;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.REED;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.SAND;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.SAND_PASS2;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.SHROOM;
+import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.TREE;
 
 import java.util.Random;
 
-import fle.core.init.IBF;
-import fle.core.world.biome.FLEBiome;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -21,10 +33,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
+import fle.core.init.IB;
+import fle.core.world.biome.FLEBiome;
+import fle.resource.world.FleDirtDefaultGen;
+import fle.resource.world.FleDirtGen;
 
 public class FLEBiomeDecoratorBase extends BiomeDecorator
 {
-//	public FleDirtGen peatGen = new FleDirtDefaultGen(IBF.peat, 4);
+	public FleDirtGen peatGen = new FleDirtDefaultGen(IB.peat, 4);
 	public int peatPerChunk = 0;
 	public int waterLakePerChunk = 50;
 	public int lavaLakePerChunk = 20;
@@ -67,11 +83,11 @@ public class FLEBiomeDecoratorBase extends BiomeDecorator
         	generate(clayGen);
         }
 
-//        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, CUSTOM);
-//        for (i = 0; doGen && i < peatPerChunk; ++i)
-//        {
-//        	generate(peatGen);
-//        }
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, CUSTOM);
+        for (i = 0; doGen && i < peatPerChunk; ++i)
+        {
+        	generate(peatGen);
+        }
 
         doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, SAND_PASS2);
         for (i = 0; doGen && i < sandPerChunk; ++i)

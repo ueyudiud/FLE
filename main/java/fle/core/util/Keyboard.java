@@ -6,27 +6,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import farcore.util.IKey;
-import farcore.util.IKeyBoard;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class Keyboard implements IKeyBoard
+public class Keyboard
 {
-	public static enum Key implements IKey
+	public static enum Key
 	{
-		Forward('w'),
-		Place('p'),
-		Jump(' '),
-		Sneak('S'),
-		Tech('t');
+		Forward,
+		Place,
+		Jump,
+		Sneak,
+		Tech;
 		
-		char controlChar;
 		int flag;
 		
-		Key(char chr)
+		Key()
 		{
 			flag = 1 << ordinal();
-			controlChar = chr;
 		}
 		
 		public static int toInt(Iterable keySet)
@@ -53,12 +49,6 @@ public class Keyboard implements IKeyBoard
 			}
 
 			return ret;
-		}
-
-		@Override
-		public char getControlChar()
-		{
-			return 0;
 		}
 	}
 	
@@ -114,19 +104,5 @@ public class Keyboard implements IKeyBoard
 			return false;
 		else
 			return keys.contains(key);
-	}
-
-	@Override
-	public boolean isKeyDown(EntityPlayer player, IKey key)
-	{
-		switch(key.getControlChar())
-		{
-		case 'w' : return isForwardKeyDown(player);
-		case 'p' : return isPlaceKeyDown(player);
-		case ' ' : return isJumpKeyDown(player);
-		case 'S' : return isSneakKeyDown(player);
-		case 't' : return isTechKeyDown(player);
-		}
-		return false;
 	}
 }
