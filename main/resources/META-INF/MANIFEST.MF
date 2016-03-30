@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+FMLCorePlugin: fle.override.FarOverrideLoadingPlugin
+FMLCorePluginContainsFMLMod: true
+FMLAT: fle_at.cfg

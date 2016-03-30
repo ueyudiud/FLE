@@ -1,414 +1,640 @@
 package farcore.util;
 
-import flapi.FleAPI;
-import flapi.enums.EnumDamageResource;
-import flapi.enums.EnumWorldNBT;
-import flapi.item.ItemFle;
-import flapi.recipe.stack.AbstractStack;
-import flapi.util.Compact;
-import flapi.world.BlockPos;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.SidedProxy;
+import farcore.FarCore;
+import farcore.FarCoreSetup;
+import farcore.enums.Direction;
+import farcore.interfaces.ISmartPlantableBlock;
+import farcore.interfaces.ISmartSoildBlock;
+import farcore.lib.nbt.NBTTagCompoundEmpty;
+import farcore.lib.net.PacketSound;
+import farcore.lib.stack.AbstractStack;
+import farcore.lib.stack.BaseStack;
+import farcore.lib.stack.NBTPropertyStack;
+import farcore.lib.stack.OreStack;
+import farcore.lib.world.WorldCfg;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S07PacketRespawn;
+import net.minecraft.network.play.server.S1DPacketEntityEffect;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class U
 {
-	public static class F
+	public static class Lang
 	{
-		private static Fluid water;
-		private static Fluid lava;
-		private static Fluid steam;
-		
-		public static int id(Fluid fluid)
+		public static int[] cast(Integer[] integers)
 		{
-			return fluid.getID();
+			int[] ret = new int[integers.length];
+			for(int i = 0; i < ret.length; ret[i++] = cast(integers[i]));
+			return ret;
 		}
 		
-		public static int id(FluidStack stack)
+		public static int cast(Integer integer)
 		{
-			return stack == null ? -1 : id(stack.getFluid());
+			return integer == null ? 0 : integer.intValue();
 		}
 		
-		public static boolean equal(FluidStack stack1, FluidStack stack2)
+		public static short cast(Short short1)
 		{
-			return equal(stack1, stack2, false);
+			return short1 == null ? 0 : short1.shortValue();
 		}
 		
-		public static boolean equal(FluidStack stack1, FluidStack stack2, boolean checkNBT)
+		public static <T> T[] cast(List<? extends T> list, Class<T> clazz)
 		{
-			return stack1 == stack2 ? true :
-				stack1 == null ^ stack2 == null ? false :
-					stack1.getFluid() == stack2.getFluid() && (!checkNBT || 
-							FluidStack.areFluidStackTagsEqual(stack1, stack2));
+			T[] ret = (T[]) Array.newInstance(clazz, list.size());
+			return list.toArray(ret);
 		}
 		
-		public static FluidStack water(int amount)
+		public static <T> ImmutableList<T> castImmutable(T...list)
 		{
-			if(water == null)
+			return ImmutableList.copyOf(list);
+		}
+		
+		public static <T> ArrayList<T> castArray(T...list)
+		{
+			if(list == null || list.length == 0) return new ArrayList();
+			return new ArrayList(Arrays.asList(list));
+		}
+		
+		public static <T> boolean contain(Collection<? extends T> collection, IDataChecker<T> checker)
+		{
+			if(collection == null || collection.isEmpty()) return false;
+			for(T target : collection)
 			{
-				water = FluidRegistry.getFluid("water");
+				if(checker.isTrue(target)) return true;
 			}
-			return amount == 0 ? null : new FluidStack(water, amount);
+			return false;
 		}
 		
-		public static boolean isWater(Fluid fluid)
+		public static <T> Set<T> containSet(Collection<? extends T> collection, IDataChecker<T> checker)
 		{
-			if(water == null)
+			if(collection == null || collection.isEmpty()) return ImmutableSet.of();
+			Builder<T> builder = ImmutableSet.builder();
+			for(T target : collection)
 			{
-				water = FluidRegistry.getFluid("water");
+				if(checker.isTrue(target))
+				{
+					builder.add(target);
+				}
 			}
-			return water == fluid;
+			return builder.build();
 		}
 		
-		public static boolean isWater(FluidStack stack)
+		public static <T> T randomSelect(T[] list, Random random)
 		{
-			return stack == null ? false : isWater(stack.getFluid());
+			return list == null || list.length == 0 ? null : 
+				list.length == 1 ? list[0] :
+				list[random.nextInt(list.length)];
 		}
-		
-		public static FluidStack lava(int amount)
+
+		public static String validate(String string)
 		{
-			if(lava == null)
+			if(string == null) return "";
+			return string.trim();
+		}
+	}
+
+	public static class Reflect
+	{
+		private static final Map<String, Field> fieldCache = new HashMap();
+		private static Field modifiersField;
+		private static void initModifierField()
+		{
+			try
 			{
-				lava = FluidRegistry.getFluid("lava");
+				if(modifiersField == null)
+				{
+					modifiersField = Field.class.getDeclaredField("modifiers");
+					modifiersField.setAccessible(true);
+				}
 			}
-			return amount == 0 ? null : new FluidStack(lava, amount);
-		}
-		
-		public static boolean isLava(Fluid fluid)
-		{
-			if(lava == null)
+			catch(Throwable e)
 			{
-				lava = FluidRegistry.getFluid("lava");
+				e.printStackTrace();
 			}
-			return lava == fluid;
 		}
 		
-		public static boolean isLava(FluidStack stack)
+		public static <T, F> void overrideField(Class<? extends T> clazz, List<String> field, F override, boolean isPrivate) throws Exception
 		{
-			return stack == null ? false : isLava(stack.getFluid());
+			overrideField(clazz, field, null, override, isPrivate);
 		}
-		
-		public static FluidStack steam(int amount)
+		public static <T, F> void overrideField(Class<? extends T> clazz, List<String> field, T target, F override, boolean isPrivate) throws Exception
 		{
-			if(steam == null)
+			boolean flag = false;
+			List<Throwable> list = new ArrayList();
+			for(String str : field)
 			{
-				steam = FluidRegistry.getFluid("steam");
+				try
+				{
+					if(fieldCache.containsKey(clazz.getName() + "|" + str))
+					{
+						fieldCache.get(clazz.getName() + "|" + str).set(target, override);
+						return;
+					}
+					Field tField;
+					if(isPrivate) tField = clazz.getDeclaredField(str);
+					else tField = clazz.getField(str);
+					if(tField != null)
+					{
+						tField.setAccessible(true);
+						fieldCache.put(clazz.getName() + "|" + str, tField);
+						tField.set(target, override);
+						flag = true;
+						return;
+					}
+				}
+				catch(Throwable e)
+				{
+					list.add(e);
+					continue;
+				}
 			}
-			return amount == 0 ? null : new FluidStack(steam, amount);
-		}
-		
-		public static boolean isSteam(Fluid fluid)
-		{
-			if(steam == null)
+			if(!flag)
 			{
-				steam = FluidRegistry.getFluid("steam");
+				for(Throwable e : list) e.printStackTrace();
+				throw new RuntimeException();
 			}
-			return steam == fluid;
 		}
-		
-		public static boolean isSteam(FluidStack stack)
+				
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, List<String> field, F override, boolean isPrivate) throws Exception
 		{
-			return stack == null ? false : isSteam(stack.getFluid());
+			overrideFinalField(clazz, field, null, override, isPrivate);
 		}
-		
-		public static String name(FluidStack stack)
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, List<String> field, T target, F override, boolean isPrivate) throws Exception
 		{
-			return stack == null ? "" : stack.getFluid().getName();
-		}
-		
-		public static FluidStack stack(String fluid, int amount)
-		{
-			if(fluid == null || fluid.length() == 0) return null;
-			Fluid f = FluidRegistry.getFluid(fluid);
-			return f == null ? null : new FluidStack(f, amount);
-		}
-		
-		public static boolean contain(FluidStack resource, FluidStack target)
-		{
-			return target == null ? resource == null :
-				resource == null || resource.containsFluid(target);
-		}
-		
-		public static boolean contain(FluidStack resource, Fluid target)
-		{
-			return resource == null ? false : resource.getFluid() == target;
-		}
-		
-		public static FluidStack copy(FluidStack stack)
-		{
-			return stack == null ? null : stack.copy();
-		}
-		
-		public static int amount(FluidStack stack)
-		{
-			return stack == null ? 0 : stack.amount;
-		}
-		
-		public static int temperature(FluidStack stack)
-		{
-			return stack == null ? 298 : stack.getFluid().getTemperature(stack);
-		}
-		
-		public static Block toBlock(Fluid fluid)
-		{
-			return fluid.getBlock();
-		}
-		
-		public static FluidStack getContain(ItemStack stack)
-		{
-			if(stack == null) return null;
-			if(stack.getItem() instanceof IFluidContainerItem)
+			boolean flag = false;
+			List<Throwable> list = new ArrayList();
+			for(String str : field)
 			{
-				return ((IFluidContainerItem) stack.getItem()).getFluid(stack);
+				try
+				{
+					initModifierField();
+					if(fieldCache.containsKey(clazz.getName() + "|" + str))
+					{
+						fieldCache.get(clazz.getName() + "|" + str).set(target, override);
+						return;
+					}
+					Field tField;
+					if(isPrivate) tField = clazz.getDeclaredField(str);
+					else tField = clazz.getField(str);
+					modifiersField.setInt(tField, tField.getModifiers() & 0xFFFFFFEF);
+					if(tField != null)
+					{
+						tField.setAccessible(true);
+						fieldCache.put(clazz.getName() + "|" + str, tField);
+						tField.set(target, override);
+						flag = true;
+						break;
+					}
+				}
+				catch(Throwable e)
+				{
+					list.add(e);
+					continue;
+				}
 			}
-			return FluidContainerRegistry.getFluidForFilledItem(stack);
+			if(!flag)
+			{
+				for(Throwable e : list) e.printStackTrace();
+				throw new RuntimeException("FLE: fail to find and override field " + field.get(0));
+			}
 		}
 		
-		public static int getCapacity(ItemStack stack)
+		public static <T> Object getValue(Class<? extends T> clazz, List<String> field, T target)
 		{
-			if(stack == null) return 0;
-			if(stack.getItem() instanceof IFluidContainerItem)
+			for(String str : field)
 			{
-				return ((IFluidContainerItem) stack.getItem()).getCapacity(stack);
+				try
+				{
+					if(fieldCache.containsKey(clazz.getName() + "|" + str))
+					{
+						return fieldCache.get(clazz.getName() + "|" + str).get(target);
+					}
+					Field tField = clazz.getDeclaredField(str);
+					tField.setAccessible(true);
+					fieldCache.put(clazz.getName() + "|" + str, tField);
+					return tField.get(target);
+				}
+				catch(Throwable e)
+				{
+					continue;
+				}
 			}
-			return FluidContainerRegistry.getContainerCapacity(stack);
+			return null;
 		}
 		
-		public static int getRemainderCapacity(ItemStack stack)
+		public static void resetReflectCache()
 		{
-			if(stack == null) return 0;
-			if(stack.getItem() instanceof IFluidContainerItem)
-			{
-				return ((IFluidContainerItem) stack.getItem()).getCapacity(stack) -
-						amount(((IFluidContainerItem) stack.getItem()).getFluid(stack));
-			}
-			return FluidContainerRegistry.getContainerCapacity(stack);
+			int size = fieldCache.size();
+			fieldCache.clear();
+			FleLog.getCoreLogger().debug("Cleared " + size + " of cached fieldes.");
 		}
 		
-		public static FluidStack multiply(FluidStack stack, double scale)
+		public static Method getMethod(Class clazz, List<String> field, Class...classes)
 		{
-			if(stack != null)
+			for(String str : field)
 			{
-				stack = stack.copy();
-				stack.amount *= scale;
+				try
+				{
+					Method tMethod = clazz.getDeclaredMethod(str, classes);
+					return tMethod;
+				}
+				catch(Throwable e)
+				{
+					continue;
+				}
 			}
-			return stack;
+			return null;
+		}
+	}
+
+	public static class Mod
+	{
+		public static String getActiveModID()
+		{
+			if(Loader.instance().activeModContainer() == null)
+			{
+				return "minecraft";
+			}
+			return Loader.instance().activeModContainer().getModId();
+		}
+		
+		public static boolean isModLoaded(String name)
+		{
+			return Loader.isModLoaded(name);
 		}
 	}
 	
-	public static class I
+	public static class Sound
+	{		
+		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength)
+		{
+			return displaySound(soundName, timeUntilNextSound, soundStrength, Worlds.player());
+		}
+		
+		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength, EntityPlayer player)
+		{
+			if(!Sides.isClient() || player == null) return false;
+			return displaySound(soundName, timeUntilNextSound, soundStrength, player.posX, player.posY, player.posZ);
+		}
+		
+		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength, double x, double y, double z)
+		{
+			if(!Sides.isClient()) return false;
+			return displaySound(soundName, timeUntilNextSound, soundStrength, 0.9F + (float) Math.random() * 0.2F, x, y, z);
+		}
+
+		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength, float soundModulation, double x, double y, double z)
+		{
+			if(!Sides.isClient()) return false;
+			EntityPlayer player = Worlds.player();
+			if ((player == null) || (!player.worldObj.isRemote) || (soundName == null))
+			{
+		        return false;
+			}
+			new ThreadedSound(player.worldObj, x, y, z, timeUntilNextSound, soundName, soundStrength, soundModulation).run();	
+			return true;
+		}
+		
+		public static void callDisplaySound(World world, String soundName, float soundStrength, float soundModulation, double x, double y, double z)
+		{
+			if(world == null || world.isRemote) return;
+			FarCoreSetup.network.sendToNearBy(new PacketSound(x, y, z, soundName, soundStrength, soundModulation), world.provider.dimensionId, (int) x, (int) y, (int) z, soundStrength);
+		}
+		
+		private static class ThreadedSound implements Runnable
+		{
+			private final World world;
+			private final String name;
+			private final double x, y, z;
+			private final int time;
+			private final float strength, modulation;
+
+			public ThreadedSound(World world, double x, double y, double z, int timeUntilNextSound, String soundName,
+					float soundStrength, float soundModulation)
+			{
+				this.world = world;
+				this.name = soundName;
+				this.x = x;
+				this.y = y;
+				this.z = z;
+				this.time = timeUntilNextSound;
+				this.strength = soundStrength;
+				this.modulation = soundModulation;
+			}
+
+			@Override
+			public void run()
+			{
+				try
+				{
+					world.playSound(x, y, z, name, strength, modulation, true);
+				}
+				catch(Throwable throwable){}
+			}
+		}
+	}
+
+	public static class Sides
 	{
-		public static boolean equal(ItemStack stack1, ItemStack stack2)
+		public static boolean isClient()
 		{
-			return equal(stack1, stack2, true);
+			return FMLCommonHandler.instance().getSide().isClient();
 		}
 		
-		public static boolean equal(ItemStack stack1, ItemStack stack2, boolean checkNBT)
+		public static boolean isSimulating()
 		{
-			return equal(stack1, stack2, checkNBT, false);
+			return FMLCommonHandler.instance().getEffectiveSide().isServer();
+		}
+	}
+	
+	public static class Worlds
+	{
+		@SidedProxy(modId = FarCore.ID, serverSide = "farcore.lib.world.WorldCfg", clientSide = "farcore.lib.world.WorldCfgClient")
+		public static WorldCfg cfg;
+		
+		public static World world(int dim)
+		{
+			return cfg.a(dim);
 		}
 		
-		public static boolean equal(ItemStack stack1, ItemStack stack2, boolean checkNBT, boolean useGeneralMeta)
+		public static EntityPlayer player()
 		{
-			return stack1 == stack2 ? true :
-				stack1 == null ^ stack2 == null ? false :
-					(useGeneralMeta ? OreDictionary.itemMatches(stack1, stack2, false) : stack1.isItemEqual(stack2)) && 
-					(!checkNBT || ItemStack.areItemStackTagsEqual(stack1, stack2));
+			return cfg.b();
 		}
 		
-		public static ItemStack copy(ItemStack stack)
+		public static boolean setBlock(World world, int x, int y, int z, Block block, int updateType)
 		{
-			return stack == null ? null : stack.copy();
+			return setBlock(world, x, y, z, block, 0, updateType);
 		}
 		
-		public static ItemStack copyAndValidate(ItemStack stack, boolean oreDictCheck)
+		public static boolean setBlock(World world, int x, int y, int z, Block block, int meta, int updateType)
 		{
-			if(stack == null) return null;
-			ItemStack ret = stack.copy();
-			if(oreDictCheck && ret.getItemDamage() == OreDictionary.WILDCARD_VALUE)
-			{
-				ret.setItemDamage(0);
-			}
-			return ret;
+			return world.setBlock(x, y, z, block, meta, updateType);
+		}
+		
+		public static boolean setBlock(int dim, int x, int y, int z, Block block, int meta, int updateType)
+		{
+			World world = world(dim);
+			if(world == null) return false;
+			return setBlock(world, x, y, z, block, updateType);
+		}
+		
+		public static TileEntity setTileEntity(World world, int x, int y, int z, TileEntity tile)
+		{
+			return setTileEntity(world, x, y, z, tile, true);
 		}
 
-		public static ItemStack stack(String name, int size)
+		public static TileEntity setTileEntity(World world, int x, int y, int z, TileEntity tile, boolean update)
 		{
-			if(OreDictionary.getOres(name).isEmpty()) return null;
-			ItemStack stack = OreDictionary.getOres(name).get(0).copy();
-			stack.stackSize = size;
-			return stack;
-		}
-
-		
-		/**
-		 * Damage item when use it (throwing, using, crafting, etc).
-		 * Which compact with some mods (FLE, GT, etc.).
-		 * @see {@link net.minecraft.item.ItemStack}
-		 * @param player the user of this tool, null means no user.
-		 * @param stack the tool which will be damage.
-		 * @param resource the damage type of tool.
-		 * @param damage the value of damage level.
-		 */
-		public static void damageItem(EntityLivingBase player, ItemStack stack, EnumDamageResource resource, float damage)
-		{
-			if(stack == null) return;
-			else if(Compact.isFLETool(stack.getItem()))
+			if(update)
 			{
-				((ItemFle) stack.getItem()).damageItem(stack, player, resource, damage);
-				return;
-			}
-			else if(Compact.isGTTool(stack.getItem()))
-			{
-				Compact.damageGTTool(stack, damage);
-				return;
+				world.setTileEntity(x, y, z, tile);
 			}
 			else
 			{
-				stack.damageItem((int) Math.ceil(damage), player);
-				return;
+				Chunk chunk = world.getChunkFromBlockCoords(x, z);	
+				if(chunk != null)
+				{
+					world.addTileEntity(tile);
+					chunk.func_150812_a(x & 0xF, y, z & 0xF, tile);
+					chunk.isModified = true;
+				}
 			}
+			return tile;
+		}
+		
+		public static boolean moveEntityToDimensionAtCoords(Entity entity, int dim, double x, double y, double z)
+	    {
+			WorldServer targetWorld = DimensionManager.getWorld(dim);
+			WorldServer originalWorld = DimensionManager.getWorld(entity.worldObj.provider.dimensionId);
+			if ((targetWorld != null) && (originalWorld != null) && (targetWorld != originalWorld))
+			{
+				if (entity.ridingEntity != null)
+		        {
+					entity.mountEntity(null);
+		        }
+		        if (entity.riddenByEntity != null)
+		        {
+		        	entity.riddenByEntity.mountEntity(null);
+		        }
+		        if ((entity instanceof EntityPlayerMP))
+		        {
+		        	EntityPlayerMP player = (EntityPlayerMP)entity;
+		        	player.dimension = dim;
+		        	player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, player.worldObj.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
+		        	originalWorld.removePlayerEntityDangerously(player);
+		        	player.isDead = false;
+		        	player.setWorld(targetWorld);
+		        	MinecraftServer.getServer().getConfigurationManager().func_72375_a(player, originalWorld);
+		        	player.playerNetServerHandler.setPlayerLocation(x + 0.5D, y + 0.5D, z + 0.5D, player.rotationYaw, player.rotationPitch);
+		        	player.theItemInWorldManager.setWorld(targetWorld);
+		        	MinecraftServer.getServer().getConfigurationManager().updateTimeAndWeatherForPlayer(player, targetWorld);
+		        	MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory(player);
+		        	for (Object object : player.getActivePotionEffects())
+		        	{
+		        		PotionEffect potioneffect = (PotionEffect) object;
+		        		player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), potioneffect));
+		        	}
+		        	player.playerNetServerHandler.setPlayerLocation(x + 0.5D, y + 0.5D, z + 0.5D, player.rotationYaw, player.rotationPitch);
+		        	FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, originalWorld.provider.dimensionId, dim);
+		        }
+		        else
+		        {
+		        	entity.setPosition(x + 0.5D, y + 0.5D, z + 0.5D);
+		        	entity.worldObj.removeEntity(entity);
+		        	entity.dimension = dim;
+		        	entity.isDead = false;
+		        	Entity newEntity = EntityList.createEntityByName(EntityList.getEntityString(entity), targetWorld);
+		        	if (newEntity != null)
+		        	{
+		        		newEntity.copyDataFrom(entity, true);
+		        		entity.setDead();
+		        		newEntity.isDead = false;
+		        		boolean temp = newEntity.forceSpawn;
+		        		newEntity.forceSpawn = true;
+		        		targetWorld.spawnEntityInWorld(newEntity);
+		        		newEntity.forceSpawn = temp;
+		        		newEntity.isDead = false;
+		        		entity = newEntity;
+		        	}
+		        }
+		        if ((entity instanceof EntityLivingBase))
+		        {
+		        	((EntityLivingBase)entity).setPositionAndUpdate(x, y, z);
+		        } 
+		        else
+		        {
+		        	entity.setPosition(x, y, z);
+		        }
+		        originalWorld.resetUpdateEntityTick();
+		        targetWorld.resetUpdateEntityTick();
+		        return true;
+			}
+			return false;
+	    }
+
+		public static boolean isCatchingRain(World world, int x, int y, int z)
+		{
+			if(world.isRaining())
+			{
+				return world.canBlockSeeTheSky(x, y, z);
+			}
+			return false;
+		}
+
+		public static void removeBlock(World world, int x, int y, int z)
+		{
+			world.removeTileEntity(x, y, z);
+			world.setBlockToAir(x, y, z);
+		}
+
+		public static int getAirDensity(World world, int y)
+		{
+			if(world.provider.isHellWorld) return 30;
+			else if(world.provider.dimensionId == 1) return -800;
+			else return 0;
 		}
 	}
 	
-	public static class S
+	public static class Inventorys
 	{
-		
-	}
-	
-	public static class B
-	{
-		
-	}
-	
-	public static class N
-	{
-		/**
-		 * Get direction ordinal, without UNKNOWN and null.
-		 * @see net.minecraftforge.common.util.ForgeDirection
-		 * @param direction
-		 * @return The index of direction.
-		 */
-		public static int side(ForgeDirection direction)
+		public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
 		{
-			if(direction == ForgeDirection.UNKNOWN || direction == null)
-				return 3;
-			return direction.ordinal();
-		}		
-	}
-	
-	public static class R
-	{
-		
-	}
-	
-	public static class NBT
-	{
-		
-	}
-	
-	public static class Inventory
-	{
-		
-	}
-	
-	public static class P
-	{
-		/**
-		 * Check does player has a stack equals to target. 
-		 * @param aPlayer
-		 * @param aStack target to check.
-		 * @return slot ID found, -1 means don't have stack.
-		 */
-		public static int playerHas(EntityPlayer player, AbstractStack aStack)
-		{
-			if(player == null) return -1;
-			for(int i = 0; i < 36; ++i)
+			if(stacks == null || stacks.isEmpty()) return ImmutableList.of();
+			ImmutableList.Builder builder = ImmutableList.builder();
+			for(ItemStack stack : stacks)
 			{
-				if(player.inventory.getStackInSlot(i) != null)
+				if(stack != null)
 				{
-					if(aStack.contain(player.inventory.getStackInSlot(i)))
-					{
-						return i;
-					}
+					ItemStack stack2 = stack.copy();
+					stack2.stackSize = size;
+					builder.add(stack2);
+				}
+			}
+			return builder.build();
+		}
+
+		public static AbstractStack sizeOf(AbstractStack stack, int size)
+		{
+			if(stack == null) return null;
+			if(stack instanceof OreStack)
+			{
+				return OreStack.sizeOf((OreStack) stack, size);
+			}
+			else if(stack instanceof BaseStack)
+			{
+				return BaseStack.sizeOf((BaseStack) stack, size);
+			}
+			else if(stack instanceof NBTPropertyStack)
+			{
+				return NBTPropertyStack.sizeOf((NBTPropertyStack) stack, size);
+			}
+			return null;
+		}
+		
+		public static int dosePlayerHas(EntityPlayer player, AbstractStack target)
+		{
+			if(target == null) return -1;
+			AbstractStack stack = target;
+			for(int i = 0; i < player.inventory.mainInventory.length; ++i)
+			{
+				if(target.contain(player.inventory.mainInventory[i]))
+				{
+					return i;
 				}
 			}
 			return -1;
-		}		
-	}
-	
-	public static class W
-	{
-		/**
-		 * Get entity facing from world.
-		 * @param world
-		 * @param x
-		 * @param y
-		 * @param z
-		 * @param entity
-		 * @return
-		 */
-		public static ForgeDirection initFacing(EntityLivingBase entity)
-		{
-			int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-	
-			switch(l)
-			{
-			case 0 : return ForgeDirection.SOUTH;
-			case 1 : return ForgeDirection.WEST;
-			case 2 : return ForgeDirection.NORTH;
-			case 3 : return ForgeDirection.EAST;
-			default : return ForgeDirection.UNKNOWN;
-			}
-		}
-		
-		/**
-		 * Get facing from active position.
-		 * @param world
-		 * @param x
-		 * @param y
-		 * @param z
-		 * @param xPos
-		 * @param yPos
-		 * @param zPos
-		 * @return
-		 */
-		public static ForgeDirection initFacing(double xPos, double yPos, double zPos)
-		{
-			double a = xPos;
-			double b = yPos;
-			double c = zPos;
-			
-			ForgeDirection dir = ForgeDirection.UNKNOWN;
-			
-			if(b == 0.00D) dir = ForgeDirection.DOWN;
-			if(a == 0.00D) dir = ForgeDirection.WEST;
-			if(c == 0.00D) dir = ForgeDirection.SOUTH;
-			if(b == 1.00D) dir = ForgeDirection.UP;
-			if(a == 1.00D) dir = ForgeDirection.EAST;
-			if(c == 1.00D) dir = ForgeDirection.NORTH;
-			return dir;
 		}
 
-		public static int fwmMeta(BlockPos pos)
+		public static void givePlayer(EntityPlayer player, ItemStack target)
 		{
-			return FleAPI.mod.getWorldManager().getData(pos, EnumWorldNBT.Metadata);
+			if(!player.inventory.addItemStackToInventory(target))
+			{
+				player.dropPlayerItemWithRandomChoice(target, false);
+			}
 		}
-		
-		public static int fwmMeta(IBlockAccess world, int x, int y, int z)
+
+		public static void givePlayerToContainer(EntityPlayer player, ItemStack target)
 		{
-			return fwmMeta(new BlockPos(world, x, y, z));
+			if(player.inventory.getItemStack() == null)
+			{
+				player.inventory.setItemStack(target);
+			}
+			else if(!player.inventory.addItemStackToInventory(target))
+			{
+				player.dropPlayerItemWithRandomChoice(target, false);
+			}
+		}
+
+		public static NBTTagCompound setupNBT(ItemStack stack, boolean create)
+		{
+			if(!stack.hasTagCompound())
+			{
+				if(create)
+				{
+					return stack.stackTagCompound = new NBTTagCompound();
+				}
+				return NBTTagCompoundEmpty.instance;
+			}
+			return stack.getTagCompound();
+		}	
+	}
+	
+	public static class Plants
+	{
+		public static boolean canSustainPlant(IBlockAccess world, int x, int y, int z, ForgeDirection direction, ISmartPlantableBlock plantable)
+		{
+			Block block = world.getBlock(x, y, z);
+			if(block instanceof ISmartSoildBlock)
+			{
+				if(((ISmartSoildBlock) block).canSustainPlant(world, x, y, z, Direction.of(direction), plantable))
+				{
+					return true;
+				}
+			}
+			if(plantable.useDefaultType())
+			{
+				if(block.canSustainPlant(world, x, y, z, direction, plantable))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }
