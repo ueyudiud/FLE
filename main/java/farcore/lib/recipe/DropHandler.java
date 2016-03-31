@@ -16,7 +16,11 @@ public class DropHandler
 	private int allWeight;
 	private AbstractStack[] stacksList;
 	private int[] weightList;
-	
+
+	public DropHandler(int size, Entry<AbstractStack, Integer>...stacks)
+	{
+		this(size, size, stacks);
+	}
 	public DropHandler(int max, int min, Entry<AbstractStack, Integer>...stacks)
 	{
 		this.maxWeight = max;
@@ -30,6 +34,7 @@ public class DropHandler
 			size += entry.getValue().intValue();
 			stacksList[i] = entry.getKey();
 			weightList[i] = entry.getValue().intValue();
+			allWeight += weightList[i];
 		}
 	}
 	

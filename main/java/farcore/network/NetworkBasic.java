@@ -160,7 +160,7 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendTo(IPacket packet)
 	{
-		if(U.Worlds.isSimulating())
+		if(U.Sides.isSimulating())
 		{
 			if(U.Worlds.player() instanceof EntityPlayerMP)
 				sendToPlayer(packet, U.Worlds.player());

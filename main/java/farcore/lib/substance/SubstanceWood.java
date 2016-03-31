@@ -8,7 +8,7 @@ public class SubstanceWood implements ISubstance
 {
 	private static final Register<SubstanceWood> register = new Register();
 
-	public static final SubstanceWood WOOD_VOID = new SubstanceWood(0, "void");
+	public static final SubstanceWood WOOD_VOID = new SubstanceWood(0, "void").setMaxUses(1, 1);
 	
 	public static SubstanceWood getSubstance(String tag)
 	{
@@ -47,11 +47,13 @@ public class SubstanceWood implements ISubstance
 	 */
 	public int burnEnergyPerUnit = 1000;
 	
-	public boolean canMakeSoftTool = true;
+	public boolean canMakeSoftTool = false;
 	public boolean canMakeHardTool = false;
 
-	public int maxSoftUses = 100;
+	public int maxSoftUses = -1;
 	public int maxHardUses = -1;
+	
+	public SubstanceTool tool;
 	
 	public SubstanceWood(int id, String name)
 	{
@@ -91,6 +93,7 @@ public class SubstanceWood implements ISubstance
 	public SubstanceWood setMaxUses(int maxUses)
 	{
 		this.maxSoftUses = maxUses;
+		this.canMakeSoftTool = true;
 		return this;
 	}
 	
@@ -98,6 +101,10 @@ public class SubstanceWood implements ISubstance
 	{
 		this.maxSoftUses = maxSoftUses;
 		this.maxHardUses = maxHardUses;
+		if(maxSoftUses > 0)
+		{
+			this.canMakeSoftTool = true;
+		}
 		this.canMakeHardTool = true;
 		return this;
 	}
@@ -106,6 +113,27 @@ public class SubstanceWood implements ISubstance
 	{
 		this.burnEnergyPerUnit = energy;
 		return this;
+	}
+	
+	public SubstanceTool provide()
+	{
+		if(canMakeHardTool)
+		{
+			tool = new SubstanceTool(getID() + 4000, "wood_hard-" + name);
+			tool.setDigSpeed((hardness * 0.2F) + 1.0F);
+			tool.setHarvestLevel(5);
+			tool.setMaxUses(maxHardUses);
+			return tool;
+		}
+		else if(canMakeSoftTool)
+		{
+			tool = new SubstanceTool(getID() + 5000, "wood_soft-" + name);
+			tool.setDigSpeed(hardness + 1.0F);
+			tool.setHarvestLevel(3);
+			tool.setMaxUses(maxSoftUses);
+			return tool;
+		}
+		return null;
 	}
 	
 	//Override method

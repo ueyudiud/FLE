@@ -135,8 +135,7 @@ public class BaseStack implements AbstractStack
 		if(stack != null)
 		{
 			ItemStack ret = stack.copy();
-			if(ret.getItemDamage() == OreDictionary.WILDCARD_VALUE && 
-					ret.getHasSubtypes())
+			if(ret.getItemDamage() == OreDictionary.WILDCARD_VALUE)
 			{
 				ret.setItemDamage(0);
 			}

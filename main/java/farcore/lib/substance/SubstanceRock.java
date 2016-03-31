@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.enums.EnumToolType;
 import farcore.lib.collection.Register;
+import farcore.util.SubTag;
 import net.minecraft.util.IIcon;
 
 public class SubstanceRock extends SubstanceBlockAbstract
@@ -26,6 +27,8 @@ public class SubstanceRock extends SubstanceBlockAbstract
 	{
 		return register;
 	}
+	
+	public SubstanceTool toolBelong;
 	
 	public SubstanceRock(String name)
 	{
@@ -60,6 +63,18 @@ public class SubstanceRock extends SubstanceBlockAbstract
 	public SubstanceRock setHarvestLevel(String tool, int level)
 	{
 		super.setHarvestLevel(tool, level);
+		return this;
+	}
+	
+	public boolean isToolMaterial()
+	{
+		return toolBelong != null;
+	}
+	
+	public SubstanceRock setToolBelong(SubstanceTool tool)
+	{
+		this.toolBelong = tool;
+		toolBelong.add(SubTag.TOOL_stone, SubTag.TOOL_stone_real);
 		return this;
 	}
 	

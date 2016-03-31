@@ -8,6 +8,20 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+/**
+ * Far land era item enum type.<br>
+ * Current needed item register by far land era and other child mod.
+ * You can get fle item here with some required NBT.<br>
+ * A example:<br>
+ * Get a pickaxe with material stone.<br>
+ * <code>
+ * EnumItem.tool.instance(1, "pickaxe", SubstanceTool.getSubstance("stone"), SubstanceHandle.VOID_TOOL); 
+ * </code><br>
+ * You can see develop version to see what instance can be provide.
+ * Invalid provide will return a null.<br>
+ * @author ueyudiud
+ * 
+ */
 public enum EnumItem
 {
 	/**
@@ -28,7 +42,16 @@ public enum EnumItem
 	torch, 
 	fire, 
 	rock_block, 
-	cobble_block;
+	cobble_block,
+	/**
+	 * The stone chips.
+	 */
+	stone_chip,
+	/**
+	 * Far land era tools, registered by fle.<br>
+	 * There are all kinds of tools generated in fle.
+	 */
+	tool;
 	
 	boolean init = false;
 	AbstractStack stack;

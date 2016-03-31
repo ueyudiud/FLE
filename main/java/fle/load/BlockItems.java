@@ -8,10 +8,13 @@ import fle.core.block.BlockIce;
 import fle.core.block.BlockRock;
 import fle.core.block.BlockTorch;
 import fle.core.block.BlockWater;
+import fle.core.item.ItemToolFle;
+import fle.core.item.resource.ItemStoneChip;
 import fle.core.tile.TileEntityTorch;
 import fle.core.tile.statics.TileEntityRock;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 
 public class BlockItems
 {
@@ -21,6 +24,9 @@ public class BlockItems
 	public static Block ice;
 	public static Block rock;
 	public static Block cobble;
+	
+	public static Item tools;
+	public static Item stoneChip;
 	
 	public static void init()
 	{
@@ -33,5 +39,8 @@ public class BlockItems
 		rock = new BlockRock().setBlockTextureName("fle:rock").setCreativeTab(CreativeTabs.tabBlock);
 		cobble = new BlockCobble().setBlockTextureName("fle:rock").setCreativeTab(CreativeTabs.tabBlock);
 		GameRegistry.registerTileEntity(TileEntityRock.class, "rock");
+		
+		tools = new ItemToolFle().setCreativeTab(CreativeTabs.tabTools);
+		stoneChip = new ItemStoneChip().setCreativeTab(CreativeTabs.tabMaterials);
 	}
 }

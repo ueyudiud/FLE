@@ -17,6 +17,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.debug.BlockDebug;
+import farcore.handler.FarCoreCraftingHandler;
+import farcore.handler.FarCoreHarvestHandler;
 import farcore.handler.FarCorePlayerHandler;
 import farcore.lib.command.CommandWorldData;
 import farcore.lib.net.PacketSound;
@@ -35,11 +37,10 @@ import farcore.util.FleLog;
 import farcore.util.LanguageManager;
 import farcore.util.U;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = FarCore.ID, version = "0.2", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "0.3", name = "Far Core")
 public class FarCoreSetup
 {
     public static final int minForge = 1420;
@@ -78,6 +79,8 @@ public class FarCoreSetup
 		
     	MinecraftForge.EVENT_BUS.register(WorldDatas.instance);
     	MinecraftForge.EVENT_BUS.register(new FarCorePlayerHandler());
+    	MinecraftForge.EVENT_BUS.register(new FarCoreHarvestHandler());
+    	FMLCommonHandler.instance().bus().register(new FarCoreCraftingHandler());
 		FMLCommonHandler.instance().bus().register(WorldDatas.instance);
 		lang = new LanguageManager(
 				new File(Minecraft.getMinecraft().mcDataDir, "fle_lang.json"));

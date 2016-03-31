@@ -15,10 +15,13 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import farcore.FarCore;
 import farcore.util.FleLog;
+import farcore.util.U.OreDict;
 import fle.api.FleAPI;
 import fle.load.BlockItems;
+import fle.load.Drops;
 import fle.load.Handlers;
 import fle.load.Langs;
+import fle.load.OreDicts;
 import fle.load.Substances;
 
 @Mod(modid = FleAPI.ID, name = FLE.NAME, version = FLE.VERSION, dependencies = "required-after:" + FarCore.ID)
@@ -59,6 +62,8 @@ public class FLE
 		FleLog.getLogger().info("Start loading.");
 		Handlers.init();
 		Langs.init();
+		OreDicts.init();
+		Drops.init();
 	}
 	
 	@EventHandler

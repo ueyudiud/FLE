@@ -8,6 +8,7 @@ import fle.api.tile.TileEntitySubstance;
 import fle.core.tile.statics.TileEntityRock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ public class BlockCobble extends BlockSubstance<SubstanceRock>
 	public BlockCobble()
 	{
 		super("cobble", Material.rock);
+		EnumItem.cobble_block.set(new ItemStack(this));
 		EnumBlock.cobble.setBlock(this, EnumItem.cobble_block);
 	}
 	
@@ -25,7 +27,7 @@ public class BlockCobble extends BlockSubstance<SubstanceRock>
 	{
 		for(SubstanceRock rock : this.register)
 		{
-			rock.icon = register.registerIcon(getTextureName() + "/" + rock.getName() + "/cobble");
+			icons.put(rock, register.registerIcon(getTextureName() + "/" + rock.getName() + "/cobble"));
 		}
 	}
 

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -23,25 +22,35 @@ import cpw.mods.fml.common.SidedProxy;
 import farcore.FarCore;
 import farcore.FarCoreSetup;
 import farcore.enums.Direction;
+import farcore.enums.EnumDamageResource;
+import farcore.interfaces.ISmartHarvestBlock;
 import farcore.interfaces.ISmartPlantableBlock;
 import farcore.interfaces.ISmartSoildBlock;
+import farcore.interfaces.item.IBreakSpeedItem;
+import farcore.interfaces.item.ICustomDamageItem;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.net.PacketSound;
+import farcore.lib.recipe.ToolDestoryDropRecipes;
 import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.NBTPropertyStack;
 import farcore.lib.stack.OreStack;
 import farcore.lib.world.WorldCfg;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -50,7 +59,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class U
 {
@@ -125,6 +136,61 @@ public class U
 		{
 			if(string == null) return "";
 			return string.trim();
+		}
+
+		public static int[] fillIntArray(int length, int value) 
+		{
+			if(length == 0) return new int[0];
+			if(length == 1) return new int[]{value};
+			int[] ret = new int[length];
+			Arrays.fill(ret, value);
+			return ret;
+		}
+
+		public static boolean equal(Object arg1, Object arg2)
+		{
+			return arg1 == arg2 ? true :
+				(arg1 == null ^ arg2 == null) ? false :
+					arg1.equals(arg2);
+		}
+		
+		public static String validateOre(boolean upperFirst, String name)
+		{
+			String string = validate(name);
+			String ret = "";
+			boolean shouldUpperCase = upperFirst;
+			for(char chr : string.toCharArray())
+			{
+				if(chr == '_' || chr == ' ' || 
+						chr == '-' || chr == '$' || 
+						chr == '@' || chr == ' ')
+				{
+					shouldUpperCase = true;
+					continue;
+				}
+				else
+				{
+					if(shouldUpperCase)
+					{
+						ret += Character.toString(Character.toUpperCase(chr));
+						shouldUpperCase = false;
+					}
+					else
+					{
+						ret += Character.toString(chr);
+					}
+				}
+			}
+			return ret;
+		}
+
+		public static String upcaseFirst(String name)
+		{
+			String s = validate(name);
+			if(s.length() == 0) return s;
+			char chr = name.charAt(0);
+			String sub = name.substring(1);
+			return Character.toString(Character.toUpperCase(chr)) + sub;
 		}
 	}
 
@@ -529,6 +595,22 @@ public class U
 			else if(world.provider.dimensionId == 1) return -800;
 			else return 0;
 		}
+
+		public static void spawnDropsInWorld(World world, int x, int y, int z, List<ItemStack> drop)
+		{
+			if(world.isRemote || drop == null) return;
+			for(ItemStack stack : drop)
+			{
+				if(stack == null) continue;
+	            float f = 0.7F;
+	            double d0 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+	            double d1 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+	            double d2 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+	            EntityItem entityitem = new EntityItem(world, (double)x + d0, (double)y + d1, (double)z + d2, stack.copy());
+	            entityitem.delayBeforeCanPickup = 10;
+	            world.spawnEntityInWorld(entityitem);
+			}
+		}
 	}
 	
 	public static class Inventorys
@@ -543,7 +625,7 @@ public class U
 				{
 					ItemStack stack2 = stack.copy();
 					stack2.stackSize = size;
-					builder.add(stack2);
+					builder.add(valid(stack2.copy()));
 				}
 			}
 			return builder.build();
@@ -565,6 +647,52 @@ public class U
 				return NBTPropertyStack.sizeOf((NBTPropertyStack) stack, size);
 			}
 			return null;
+		}
+
+		public static void damage(ItemStack target, EntityLivingBase entity, int damage, EnumDamageResource resource)
+		{
+			damage(target, entity, damage, resource, entity != null);
+		}
+		public static void damage(ItemStack target, EntityLivingBase entity, int damage, EnumDamageResource resource, boolean isEntityCurrent)
+		{
+			if((entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode))
+				return;
+			if(target != null)
+			{
+				if(target.getItem() instanceof ICustomDamageItem)
+				{
+					ICustomDamageItem item = (ICustomDamageItem) target.getItem();
+					item.damangeItem(target, damage, entity, resource);
+					if(isEntityCurrent && target.stackSize <= 0)
+					{
+						if(entity instanceof EntityPlayer)
+						{
+							((EntityPlayer) entity).destroyCurrentEquippedItem();
+						}
+						else
+						{
+							entity.setCurrentItemOrArmor(0, null);
+						}
+					}
+					return;
+				}
+				else
+				{
+					target.damageItem(damage, entity);
+					if(isEntityCurrent && target.stackSize <= 0)
+					{
+						if(entity instanceof EntityPlayer)
+						{
+							((EntityPlayer) entity).destroyCurrentEquippedItem();
+						}
+						else
+						{
+							entity.setCurrentItemOrArmor(0, null);
+						}
+					}
+					return;
+				}
+			}
 		}
 		
 		public static int dosePlayerHas(EntityPlayer player, AbstractStack target)
@@ -612,6 +740,20 @@ public class U
 				return NBTTagCompoundEmpty.instance;
 			}
 			return stack.getTagCompound();
+		}
+
+		public static ItemStack valid(ItemStack stack)
+		{
+			if(stack == null || stack.stackSize <= 0)
+			{
+				return null;
+			}
+			if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+			{
+				stack = stack.copy();
+				stack.setItemDamage(0);
+			}
+			return stack;
 		}	
 	}
 	
@@ -635,6 +777,109 @@ public class U
 				}
 			}
 			return false;
+		}
+	}
+
+	public static class OreDict
+	{
+		public static void registerValid(String name, Block ore)
+		{
+			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
+		}
+		public static void registerValid(String name, Item ore)
+		{
+			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
+		}
+		public static void registerValid(String name, ItemStack ore)
+		{
+			if(U.Inventorys.valid(ore) == null) return;
+			ItemStack register = ore.copy();
+			register.stackSize = 1;
+			OreDictionary.registerOre(name, ore);
+		}
+	}
+
+	public static class Player
+	{
+		public static float getBaseDigspeed(EntityPlayer player, World world, int x, int y, int z, Block block, int meta)
+		{
+	        ItemStack stack = player.getCurrentEquippedItem();
+	        float f;
+	        if(stack == null)
+	        {
+	        	f = 1.0F;
+	        }
+	        else if(stack.getItem() instanceof IBreakSpeedItem)
+	        {
+	        	f = ((IBreakSpeedItem) stack.getItem()).getSpeed(stack, world, x, y, z, block, meta);
+	        }
+	        else
+	        {
+	        	f = stack.getItem().getDigSpeed(stack, block, meta);
+	        }
+
+	        if (f > 1.0F)
+	        {
+	            int i = EnchantmentHelper.getEfficiencyModifier(player);
+	            if (i > 0 && stack != null)
+	            {
+	                float f1 = (float)(i * i + 1);
+	                boolean canHarvest = U.Player.isToolEffective(player, world, x, y, z, block, meta, true);
+	                if (!canHarvest && f <= 1.0F)
+	                {
+	                    f += f1 * 0.08F;
+	                }
+	                else
+	                {
+	                    f += f1;
+	                }
+	            }
+	        }
+
+	        if (player.isPotionActive(Potion.digSpeed))
+	        {
+	            f *= Math.pow(1.2, player.getActivePotionEffect(Potion.digSpeed).getAmplifier() + 1);
+	        }
+
+	        if (player.isPotionActive(Potion.digSlowdown))
+	        {
+	            f *= Math.pow(0.8, player.getActivePotionEffect(Potion.digSlowdown).getAmplifier() + 1);
+	        }
+
+	        if (player.isInsideOfMaterial(Material.water) && !EnchantmentHelper.getAquaAffinityModifier(player))
+	        {
+	            f /= 5.0F;
+	        }
+
+	        if (!player.onGround)
+	        {
+	            f /= 5.0F;
+	        }
+			return f;
+		}
+
+		
+		public static boolean isToolEffective(EntityPlayer player, World world, int x, int y, int z, Block block, int meta, boolean checkHandler)
+		{
+			if(checkHandler && player.getCurrentEquippedItem() != null)
+			{
+				if(ToolDestoryDropRecipes.match(player.getCurrentEquippedItem(), world, x, y, z, block, meta) != null)
+				{
+					return true;
+				}
+				if(block instanceof ISmartHarvestBlock)
+				{
+					return ((ISmartHarvestBlock) block).canHarvestBlock(world, x, y, z, meta, player);
+				}
+			}
+			if(player.getCurrentEquippedItem() != null)
+			{
+				if(player.getCurrentEquippedItem().getItem().canHarvestBlock(block, player.getCurrentEquippedItem()))
+				{
+					return true;
+				}
+			}
+			return ForgeHooks.canHarvestBlock(block, player, meta);
 		}
 	}
 }

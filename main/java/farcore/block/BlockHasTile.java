@@ -125,7 +125,7 @@ public abstract class BlockHasTile extends BlockBase implements ITileEntityProvi
         else
         {
             int i1 = EnchantmentHelper.getFortuneModifier(player);
-        	ArrayList<ItemStack> items = getDrops(world, x, y, z, meta, 0, true, threadTile.get());
+        	ArrayList<ItemStack> items = getDrops(world, x, y, z, meta, 0, false, threadTile.get());
 
             ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, i1, 1.0f, false, player);
             for (ItemStack is : items)

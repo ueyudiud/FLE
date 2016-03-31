@@ -12,6 +12,9 @@ public class Langs
 	public static final String infoTorchBurnTime = "info.torch.burntime";
 	public static final String infoTorchWet1 = "info.torch.wet1";
 	public static final String infoTorchWet2 = "info.torch.wet2";
+	public static final String infoToolHeadMaterial = "info.tool.material.1";
+	public static final String infoToolHandleMaterial = "info.tool.material.2";
+	public static final String infoToolDamage = "info.tool.damage";
 	
 	public static void init()
 	{
@@ -22,5 +25,8 @@ public class Langs
 		FarCoreSetup.lang.registerLocal(infoTorchMaterial, "Material : " + EnumChatFormatting.WHITE + "%s");
 		FarCoreSetup.lang.registerLocal(infoTorchWet1, "This torch is wet.");
 		FarCoreSetup.lang.registerLocal(infoTorchWet2, "Please dried this torch before light it.");
+		FarCoreSetup.lang.registerLocal(infoToolHeadMaterial, "Head Material : " + EnumChatFormatting.WHITE + "%s");
+		FarCoreSetup.lang.registerLocal(infoToolHandleMaterial, "Handle Material : " + EnumChatFormatting.WHITE + "%s");
+		FarCoreSetup.lang.registerLocal(infoToolDamage, "Damage : " + EnumChatFormatting.RED + "%d / %d");
 	}
 }

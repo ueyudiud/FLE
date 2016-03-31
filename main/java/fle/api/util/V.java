@@ -7,6 +7,10 @@ import net.minecraft.util.IIcon;
 
 public class V
 {
+	public static boolean debug;
+	
 	@SideOnly(Side.CLIENT)
 	public static IIcon voidBlockIcon;
+	@SideOnly(Side.CLIENT)
+	public static IIcon voidItemIcon;
 }

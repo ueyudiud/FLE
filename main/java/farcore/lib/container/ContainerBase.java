@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import farcore.FarCoreSetup;
+import farcore.interfaces.tile.IToolClickHandler;
 import farcore.lib.net.gui.PacketFluidUpdate;
 import farcore.lib.net.gui.PacketFluidUpdateLarge;
+import farcore.util.U;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -19,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fluids.FluidStack;
+import scala.collection.generic.BitOperations.Int;
 
 public class ContainerBase<I extends IInventory> extends Container
 {
@@ -27,6 +31,9 @@ public class ContainerBase<I extends IInventory> extends Container
 	public List<FluidSlot> fluidSlotList = new ArrayList();
 	public List<FluidStack> fluidList;
 	public Map<String, TransLocate> locates = new HashMap();
+	protected TransLocate locateHand;
+	protected TransLocate locateBag;
+	protected TransLocate locatePlayer;
 
 	public ContainerBase(I inventory)
 	{
@@ -45,19 +52,28 @@ public class ContainerBase<I extends IInventory> extends Container
 	protected void addPlayerSlot(int xOffset, int yOffset)
 	{
 		int i;
+		int idOffset = inventorySlots.size();
 
         for (i = 0; i < 3; ++i)
         {
             for (int j = 0; j < 9; ++j)
             {
-                addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18 + xOffset, 84 + i * 18 + yOffset));
+                addSlotToContainer(addPlayerTransferInfo(new SlotBase(player, j + i * 9 + 9, 8 + j * 18 + xOffset, 84 + i * 18 + yOffset)).addTransferTargets("hand"));
             }
         }
 
         for (i = 0; i < 9; ++i)
         {
-            addSlotToContainer(new Slot(player, i, 8 + i * 18 + xOffset, 142 + yOffset));
+            addSlotToContainer(addPlayerTransferInfo(new SlotBase(player, i, 8 + i * 18 + xOffset, 142 + yOffset)).addTransferTargets("bag"));
         }
+        addTransLocate(locateBag = new TransLocate("bag", 0 + idOffset, 27 + idOffset, false, false));
+        addTransLocate(locateHand = new TransLocate("hand", 27 + idOffset, 36 + idOffset, false, false));
+        addTransLocate(locatePlayer = new TransLocate("player", 0 + idOffset, 36 + idOffset, true, false));
+	}
+	
+	protected SlotBase addPlayerTransferInfo(SlotBase slot)
+	{
+		return slot;
 	}
 
 	protected void addTransLocate(TransLocate locate)
@@ -66,10 +82,10 @@ public class ContainerBase<I extends IInventory> extends Container
 	}
 	
 	@Override
-	protected Slot addSlotToContainer(Slot slot)
+	protected SlotBase addSlotToContainer(Slot slot)
 	{
 		if(!(slot instanceof SlotBase)) throw new ClassCastException("The slot must extended SlotBase!");
-		return super.addSlotToContainer(slot);
+		return (SlotBase) super.addSlotToContainer(slot);
 	}
 	
 	protected FluidSlot addSlotToContainer(FluidSlot slot)
@@ -110,7 +126,9 @@ public class ContainerBase<I extends IInventory> extends Container
 				for(Object obj : crafters)
 				{
 					if(obj instanceof EntityPlayerMP)
+					{
 						FarCoreSetup.network.sendToPlayer(new PacketFluidUpdate(this, i), (EntityPlayerMP) obj);
+					}
 				}
 			}
 		}
@@ -149,6 +167,30 @@ public class ContainerBase<I extends IInventory> extends Container
 				detectAndSendChanges();
 			}
 		}
+	}
+	
+	@Override
+	public ItemStack slotClick(int id, int mouseClick, int shiftHold, EntityPlayer player)
+	{
+		if(id >= 0 && getSlot(id) instanceof SlotTool)
+		{
+			IInventory inv = getSlot(id).inventory;
+			if(inv instanceof IToolClickHandler)
+			{
+				ItemStack tStack = player.inventory.getItemStack();
+			    if (tStack != null)
+			    {
+			    	ItemStack stack = ((IToolClickHandler) inv).onToolClick(tStack, player, getSlot(id).getSlotIndex());
+			    	player.inventory.setItemStack(U.Inventorys.valid(stack));
+			    }
+			    return null;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		return super.slotClick(id, mouseClick, shiftHold, player);
 	}
 	
 	@Override
@@ -215,6 +257,18 @@ public class ContainerBase<I extends IInventory> extends Container
 			this.startID = start;
 			this.endID = end;
 			this.flag = flag;
+		}
+		
+		public void append(TransLocate locate)
+		{
+			if(next != null)
+			{
+				next.append(locate);
+			}
+			else
+			{
+				next = locate;
+			}
 		}
 		
 		public boolean isItemValid(ItemStack stack)

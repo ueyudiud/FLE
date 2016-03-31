@@ -30,7 +30,7 @@ public class WorldDataLocalServer extends WorldDataLocal
 		switch (type)
 		{
 		case CALL_CLIENT:
-			if(U.Worlds.isSimulating())
+			if(U.Sides.isSimulating())
 			{
 				FarCoreSetup.network.sendToNearBy(new PacketWorldDataUpdateSingle(world, x, y, z, data), world.provider.dimensionId, x, y, z, 256.0F);
 			}

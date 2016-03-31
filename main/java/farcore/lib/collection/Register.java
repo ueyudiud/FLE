@@ -1,6 +1,7 @@
 package farcore.lib.collection;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -207,7 +208,12 @@ public class Register<T> implements IRegister<T>
 	@Override
 	public Set<String> names()
 	{
-		return ImmutableSet.copyOf(names);
+		HashSet<String> set = new HashSet();
+		for(String string : names)
+		{
+			if(string != null) set.add(string);
+		}
+		return ImmutableSet.copyOf(set);
 	}
 
 	@Override

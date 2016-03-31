@@ -8,6 +8,7 @@ import java.util.Map;
 import farcore.block.BlockHasTile;
 import farcore.block.ItemBlockBase;
 import farcore.enums.EnumBlock.IInfoSpawnable;
+import farcore.interfaces.ISmartHarvestBlock;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.substance.ISubstance;
@@ -29,9 +30,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 public abstract class BlockSubstance<T extends SubstanceBlockAbstract> extends BlockHasTile
-implements IInfoSpawnable
+implements IInfoSpawnable, ISmartHarvestBlock
 {
 	public final ItemSubstance item;
 	protected Map<SubstanceBlockAbstract, IIcon> icons = new HashMap();
@@ -126,9 +128,12 @@ implements IInfoSpawnable
 		}
 	}
 	
+	private boolean harvestFlag = false;
+	
 	@Override
 	public boolean canHarvestBlock(EntityPlayer player, int meta)
 	{
+		if(!harvestFlag) return false;
 		if(threadTile.get() != null)
 		{
 			SubstanceBlockAbstract substance = ((TileEntitySubstance) threadTile.get()).substance;
@@ -147,6 +152,23 @@ implements IInfoSpawnable
 	public int getHarvestLevel(int metadata)
 	{
 		return register.get(metadata).harvestLevel;
+	}
+	
+	@Override
+	public boolean canHarvestBlock(World world, int x, int y, int z, int meta, EntityPlayer player)
+	{
+		harvestFlag = true;
+		threadTile.set(world.getTileEntity(x, y, z));
+		boolean ret = canHarvestBlock(player, meta);
+		threadTile.set(null);
+		harvestFlag = false;
+		return ret;
+	}
+	
+	@Override
+	public void harvestAndDropBlock(World world, int x, int y, int z, int meta, EntityPlayer player)
+	{
+		harvestBlock(world, player, x, y, z, meta);
 	}
 	
 	@Override

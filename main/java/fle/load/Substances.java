@@ -1,13 +1,13 @@
 package fle.load;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import farcore.lib.substance.SubstanceRock;
+import farcore.lib.substance.SubstanceTool;
 import farcore.lib.substance.SubstanceWood;
 import farcore.util.FleLog;
+import farcore.util.SubTag;
 
 public class Substances
-{
+{	
 	public static void init()
 	{
 		FleLog.getLogger().info("Far Land Era start register substances.");
@@ -20,12 +20,12 @@ public class Substances
 		new SubstanceWood(7, "anelique").setHardness(5.7F);
 		new SubstanceWood(8, "anime").setHardness(4.1F);
 		new SubstanceWood(9, "apple").setHardness(7.7F);
-		new SubstanceWood(10, "ash-black").setHardness(3.8F);
-		new SubstanceWood(11, "ash-blue").setHardness(9.0F);
-		new SubstanceWood(12, "ash-green").setHardness(5.3F);
-		new SubstanceWood(13, "ash-oregon").setHardness(5.2F);
-		new SubstanceWood(14, "ash-pumpkin").setHardness(4.4F);
-		new SubstanceWood(15, "ash-white").setHardness(5.9F);
+		new SubstanceWood(10, "ash-black").setHardness(3.8F).setMaxUses(8);
+		new SubstanceWood(11, "ash-blue").setHardness(9.0F).setMaxUses(12);
+		new SubstanceWood(12, "ash-green").setHardness(5.3F).setMaxUses(10);
+		new SubstanceWood(13, "ash-oregon").setHardness(5.2F).setMaxUses(10);
+		new SubstanceWood(14, "ash-pumpkin").setHardness(4.4F).setMaxUses(9);
+		new SubstanceWood(15, "ash-white").setHardness(5.9F).setMaxUses(10);
 		new SubstanceWood(16, "aspen-bigtooth").setHardness(1.9F);
 		new SubstanceWood(17, "aspen-quaking").setHardness(1.6F);
 		new SubstanceWood(18, "avodire").setHardness(4.8F);
@@ -251,12 +251,29 @@ public class Substances
 		new SubstanceWood(238, "witch-hazel").setHardness(6.8F);
 		new SubstanceWood(239, "yellow-poplar").setHardness(2.4F);
 		
-		new SubstanceRock(1, "stone").setDensity(2000).setHardness(2.5F).setHarvestLevel(6);
-		new SubstanceRock(2, "stone-compact").setDensity(2800).setHardness(3.75F).setHarvestLevel(8);
+		new SubstanceRock(1, "stone").setDensity(2000).setHardness(2.5F).setHarvestLevel(6)
+		.setToolBelong(new SubstanceTool(1, "stone").setColor(0x626262).setDigSpeed(1.2F).setHarvestLevel(8).setMaxUses(16));
+		new SubstanceRock(2, "stone-compact").setDensity(2800).setHardness(3.75F).setHarvestLevel(8)
+		.setToolBelong(new SubstanceTool(2, "stone-compact").setColor(0x686868).setDigSpeed(1.4F).setHarvestLevel(9).setMaxUses(18));
 		new SubstanceRock(3, "limestone").setDensity(1600).setHardness(1.85F).setHarvestLevel(4);
-		new SubstanceRock(4, "rhyolite").setDensity(2100).setHardness(6F).setHarvestLevel(11);
-		new SubstanceRock(5, "andesite").setDensity(1800).setHardness(4.85F).setHarvestLevel(9);
-		new SubstanceRock(6, "basalt").setDensity(2000).setHardness(5.25F).setHarvestLevel(10);
+		new SubstanceRock(4, "rhyolite").setDensity(2100).setHardness(6F).setHarvestLevel(11)
+		.setToolBelong(new SubstanceTool(3, "rhyolite").setColor(0x4F535A).setDigSpeed(1.9F).setHarvestLevel(15).setMaxUses(48));
+		new SubstanceRock(5, "andesite").setDensity(1800).setHardness(4.85F).setHarvestLevel(9)
+		.setToolBelong(new SubstanceTool(4, "andesite").setColor(0x616162).setDigSpeed(1.6F).setHarvestLevel(13).setMaxUses(41));
+		new SubstanceRock(6, "basalt").setDensity(2000).setHardness(5.25F).setHarvestLevel(10)
+		.setToolBelong(new SubstanceTool(5, "basalt").setColor(0x3A3A3A).setDigSpeed(1.65F).setHarvestLevel(14).setMaxUses(43));
 		new SubstanceRock(7, "peridotite").setDensity(1800).setHardness(7.05F).setHarvestLevel(14);
+
+		new SubstanceTool(10001, "flint").setColor(0x5A5A5A).setHarvestLevel(7).setDigSpeed(1.1F).setMaxUses(12).setTag(SubTag.TOOL_flint, SubTag.TOOL_stone);
+		new SubstanceTool(10002, "obsidian").setColor(0x33344F).setHarvestLevel(19).setDigSpeed(2.1F).setMaxUses(16).setTag(SubTag.TOOL_flint, SubTag.TOOL_stone);
+		
+		for(SubstanceWood wood : SubstanceWood.getWoods())
+		{
+			SubstanceTool tool = wood.provide();
+			if(tool != null)
+			{
+				tool.add(SubTag.TOOL_wood);
+			}
+		}
 	}
 }

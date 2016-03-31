@@ -8,6 +8,7 @@ import fle.api.tile.TileEntitySubstance;
 import fle.core.tile.statics.TileEntityRock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 	public BlockRock()
 	{
 		super("rock", Material.rock);
+		EnumItem.rock_block.set(new ItemStack(this));
 		EnumBlock.rock.setBlock(this, EnumItem.rock_block);
 	}
 	
