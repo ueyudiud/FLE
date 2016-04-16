@@ -41,7 +41,7 @@ implements ISmartFluidBlock, IInfoSpawnable
     public BlockStandardFluid(Fluid fluid, Material material)
     {
         super(fluid, material);
-        GameRegistry.registerBlock(this, fluid.getName());
+        GameRegistry.registerBlock(this, ItemStandardFluid.class, fluid.getName());
     }
     
     @Override
@@ -476,7 +476,7 @@ implements ISmartFluidBlock, IInfoSpawnable
 		}
 		else
 		{
-			world.setBlock(x, y, z, this, amount - 1, flag ? 2 : 3);
+			world.setBlock(x, y, z, this, Math.min(quantaPerBlock, amount - 1), flag ? 2 : 3);
 			world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 		}
 	}
@@ -506,16 +506,18 @@ implements ISmartFluidBlock, IInfoSpawnable
 	 * @param objects
 	 */
 	@Override
-	public void spawn(World world, int x, int y, int z, Object... objects)
+	public boolean spawn(World world, int x, int y, int z, Object... objects)
 	{
 		if(objects.length == 0)
 		{
-			world.setBlock(x, y, z, this, quantaPerBlock - 1, 3);
+			return world.setBlock(x, y, z, this, quantaPerBlock - 1, 3);
 		}
 		else if(objects.length == 1 && objects[0] instanceof Number)
 		{
 			int level = ((Number) objects[0]).intValue();
 			setFluidLevel(world, x, y, z, level, true);
+			return world.getBlock(x, y, z) == this;
 		}
+		return false;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import farcore.block.BlockBase;
 import farcore.block.BlockHasTile;
 import farcore.block.ItemBlockBase;
 import farcore.enums.EnumBlock.IInfoSpawnable;
@@ -15,9 +16,10 @@ import farcore.lib.substance.ISubstance;
 import farcore.lib.substance.SubstanceBlockAbstract;
 import farcore.lib.substance.SubstanceRock;
 import farcore.util.U;
+import farcore.util.V;
 import fle.api.tile.TileEntitySubstance;
-import fle.api.util.V;
 import fle.core.tile.statics.TileEntityRock;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -32,81 +34,73 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-public abstract class BlockSubstance<T extends SubstanceBlockAbstract> extends BlockHasTile
-implements IInfoSpawnable, ISmartHarvestBlock
+public abstract class BlockSubstance<T extends SubstanceBlockAbstract> extends BlockBase implements IInfoSpawnable, ISmartHarvestBlock
 {
 	public final ItemSubstance item;
-	protected Map<SubstanceBlockAbstract, IIcon> icons = new HashMap();
-	protected final IRegister<T> register = createNewTileEntity(null, 0).getRegister();
+	protected final IRegister<Block> register;
 	
-	protected BlockSubstance(String name, Material material)
+	protected final T substance;
+	
+	protected BlockSubstance(String name, Material material, T substance, IRegister<Block> register)
 	{
-		super(name, ItemSubstance.class, material);
+		super(name + "." + substance.getName(), ItemSubstance.class, material);
 		this.item = (ItemSubstance) Item.getItemFromBlock(this);
+		this.register = register;
+		this.substance = substance;
 		item.initRegister();
 	}
 
-	protected BlockSubstance(String name, Class<? extends ItemBlockBase> clazz, Material material, Object[] objects)
+	protected BlockSubstance(String name, Class<? extends ItemBlockBase> clazz, Material material, T substance, IRegister<Block> register, Object[] objects)
 	{
-		super(name, clazz, material, objects);
+		super(name + ":" + substance.getName(), clazz, material, objects);
 		this.item = (ItemSubstance) Item.getItemFromBlock(this);
+		this.register = register;
+		this.substance = substance;
 		item.initRegister();
-	}
-	
-	@Override
-	public String getMetadataName(int meta)
-	{
-		return U.Lang.validate(register.name(meta));
 	}
 	
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		for(T t : this.register)
-		{
-			icons.put(t, register.registerIcon(getTextureName() + "/" + t.getName()));
-		}
+		blockIcon = register.registerIcon(getTextureName() + "/" + substance.getName());
 	}
 	
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return icons.getOrDefault(((TileEntitySubstance<T>) world.getTileEntity(x, y, z)).substance, V.voidBlockIcon);
+		return blockIcon;
 	}
 	
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		return icons.getOrDefault(register.get(meta), V.voidBlockIcon);
+		return blockIcon;
 	}
 	
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List list)
 	{
-		for(T t : register)
-		{
-			list.add(this.item.provide(t));
-		}
+		list.add(new ItemStack(item));
 	}
 	
 	@Override
 	public int getDamageValue(World world, int x, int y, int z)
 	{
-		if(world.getTileEntity(x, y, z) instanceof TileEntitySubstance)
-		{
-			return register.id(((TileEntitySubstance<T>) world.getTileEntity(x, y, z)).substance);
-		}
+//		if(world.getTileEntity(x, y, z) instanceof TileEntitySubstance)
+//		{
+//			return register.id(((TileEntitySubstance<T>) world.getTileEntity(x, y, z)).substance);
+//		}
 		return super.getDamageValue(world, x, y, z);
 	}
 	
 	@Override
 	public float getBlockHardness(World world, int x, int y, int z)
 	{
-		if(world.getTileEntity(x, y, z) instanceof TileEntitySubstance)
-		{
-			return ((TileEntitySubstance) world.getTileEntity(x, y, z)).substance.hardness;
-		}
-		return 1.0F;
+//		if(world.getTileEntity(x, y, z) instanceof TileEntitySubstance)
+//		{
+//			return ((TileEntitySubstance) world.getTileEntity(x, y, z)).substance.hardness;
+//		}
+		return substance.hardness;
 	}
 	
 	@Override
@@ -120,12 +114,12 @@ implements IInfoSpawnable, ISmartHarvestBlock
 	public void onBlockPlacedBy(World world, int x, int y, int z,
 			EntityLivingBase entity, ItemStack stack)
 	{
-		if(world.getTileEntity(x, y, z) instanceof TileEntitySubstance)
-		{
-			TileEntitySubstance tile = (TileEntitySubstance) world.getTileEntity(x, y, z);
-			tile.substance = item.substance(stack);
-			addInfomationToTile((TileEntitySubstance) tile, stack);
-		}
+//		if(world.getTileEntity(x, y, z) instanceof TileEntitySubstance)
+//		{
+//			TileEntitySubstance tile = (TileEntitySubstance) world.getTileEntity(x, y, z);
+//			tile.substance = item.substance(stack);
+//			addInfomationToTile((TileEntitySubstance) tile, stack);
+//		}
 	}
 	
 	private boolean harvestFlag = false;
@@ -134,33 +128,28 @@ implements IInfoSpawnable, ISmartHarvestBlock
 	public boolean canHarvestBlock(EntityPlayer player, int meta)
 	{
 		if(!harvestFlag) return false;
-		if(threadTile.get() != null)
-		{
-			SubstanceBlockAbstract substance = ((TileEntitySubstance) threadTile.get()).substance;
-			return super.canHarvestBlock(player, register.id((T) substance));			
-		}
 		return super.canHarvestBlock(player, 0);
 	}
 	
 	@Override
 	public String getHarvestTool(int metadata)
 	{
-		return register.get(metadata).harvestTool;
+		return substance.harvestTool;
 	}
 	
 	@Override
 	public int getHarvestLevel(int metadata)
 	{
-		return register.get(metadata).harvestLevel;
+		return substance.harvestLevel;
 	}
 	
 	@Override
 	public boolean canHarvestBlock(World world, int x, int y, int z, int meta, EntityPlayer player)
 	{
 		harvestFlag = true;
-		threadTile.set(world.getTileEntity(x, y, z));
+//		threadTile.set(world.getTileEntity(x, y, z));
 		boolean ret = canHarvestBlock(player, meta);
-		threadTile.set(null);
+//		threadTile.set(null);
 		harvestFlag = false;
 		return ret;
 	}
@@ -172,22 +161,16 @@ implements IInfoSpawnable, ISmartHarvestBlock
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune, boolean silktouch,
-			TileEntity tile)
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune,
+			boolean silkTouching)
 	{
 		ArrayList<ItemStack> ret = new ArrayList();
-		if(tile == null)
-		{
-			return ret;
-		}
-		((TileEntitySubstance) tile).getDrops(this, item, ret, silktouch);
+		ret.add(new ItemStack(this));
 		return ret;
 	}
-	
+		
 	protected void addInfomationToTile(TileEntitySubstance tile, ItemStack stack)
 	{
 		
 	}
-
-	public abstract TileEntitySubstance<T> createNewTileEntity(World world, int meta);
 }

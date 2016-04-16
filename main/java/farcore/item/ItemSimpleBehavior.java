@@ -1,9 +1,10 @@
 package farcore.item;
 
 import farcore.interfaces.item.IBehavior;
+import farcore.interfaces.item.IBreakSpeedItem;
 import farcore.interfaces.item.IItemInfo;
 import farcore.util.FleLog;
-import fle.api.util.V;
+import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +15,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemSimpleBehavior extends ItemBase
+public class ItemSimpleBehavior extends ItemBase implements IBreakSpeedItem
 {
 	private IItemInfo behavior;
 	
@@ -242,7 +243,24 @@ public class ItemSimpleBehavior extends ItemBase
 	{
 		try
 		{
-			return behavior.getDigSpeed(stack, block, metadata);
+			return behavior.getDigSpeed(stack, null, 0, 0, 0, block, metadata);
+		}
+		catch(Throwable throwable)
+		{
+			if(V.debug)
+			{
+				FleLog.getCoreLogger().throwing(throwable);
+			}
+		}
+		return 1.0F;
+	}
+	
+	@Override
+	public float getSpeed(ItemStack stack, World world, int x, int y, int z, Block block, int meta)
+	{
+		try
+		{
+			return behavior.getDigSpeed(stack, world, x, y, z, block, meta);
 		}
 		catch(Throwable throwable)
 		{

@@ -18,7 +18,7 @@ import farcore.interfaces.item.IItemProperty;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.util.FleLog;
-import fle.api.util.V;
+import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;

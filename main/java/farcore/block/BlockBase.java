@@ -80,18 +80,12 @@ public class BlockBase extends Block
         if (this.canSilkHarvest(world, player, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(player))
         {
         	onBlockHarvest(world, player, x, y, z, meta, true);
-            ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-            ItemStack itemstack = createStackedBlock(meta);
-
-            if (itemstack != null)
-            {
-                items.add(itemstack);
-            }
-
+            ArrayList<ItemStack> items = getDrops(world, x, y, z, meta, 0, true);
+            
             ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, 0, 1.0f, true, player);
             for (ItemStack is : items)
             {
-                this.dropBlockAsItem(world, x, y, z, is);
+                dropBlockAsItem(world, x, y, z, is);
             }
         }
         else
@@ -99,9 +93,47 @@ public class BlockBase extends Block
         	onBlockHarvest(world, player, x, y, z, meta, false);
             harvesters.set(player);
             int i1 = EnchantmentHelper.getFortuneModifier(player);
-            this.dropBlockAsItem(world, x, y, z, meta, i1);
+            dropBlockAsItem(world, x, y, z, meta, i1);
             harvesters.set(null);
         }
+    }
+    
+    @Override
+    public void dropBlockAsItemWithChance(World world, int x, int y, int z,
+    		int meta, float chance, int fortune)
+    {
+        if (!world.isRemote && !world.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
+        {
+            ArrayList<ItemStack> items = getDrops(world, x, y, z, meta, fortune, false);
+            chance = ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, fortune, chance, false, harvesters.get());
+
+            for (ItemStack item : items)
+            {
+                if (world.rand.nextFloat() <= chance)
+                {
+                    this.dropBlockAsItem(world, x, y, z, item);
+                }
+            }
+        }
+    }
+    
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+    {
+    	return getDrops(world, x, y, z, metadata, fortune, false);
+    }
+    
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune, boolean silkTouching)
+    {
+    	if(silkTouching)
+    	{
+    		ArrayList<ItemStack> ret = new ArrayList();
+    		ItemStack stack = createStackedBlock(metadata);
+    		if(stack != null)
+    			ret.add(stack);
+    		return ret;
+    	}
+    	return super.getDrops(world, x, y, z, metadata, fortune);
     }
     
     protected void onBlockHarvest(World world, EntityPlayer player, int x, int y, int z, int meta, boolean silkTouching)

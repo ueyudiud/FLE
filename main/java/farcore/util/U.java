@@ -21,8 +21,13 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
 import farcore.FarCore;
 import farcore.FarCoreSetup;
+import farcore.energy.thermal.ThermalNet;
+import farcore.entity.EntityFallingBlockExtended;
 import farcore.enums.Direction;
 import farcore.enums.EnumDamageResource;
+import farcore.enums.UpdateType;
+import farcore.interfaces.ICalendar;
+import farcore.interfaces.ISmartFallableBlock;
 import farcore.interfaces.ISmartHarvestBlock;
 import farcore.interfaces.ISmartPlantableBlock;
 import farcore.interfaces.ISmartSoildBlock;
@@ -35,8 +40,12 @@ import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.NBTPropertyStack;
 import farcore.lib.stack.OreStack;
+import farcore.lib.world.IWorldDatas;
 import farcore.lib.world.WorldCfg;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFalling;
+import net.minecraft.block.BlockLeaves;
+import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -45,6 +54,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -54,6 +64,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -191,6 +203,33 @@ public class U
 			char chr = name.charAt(0);
 			String sub = name.substring(1);
 			return Character.toString(Character.toUpperCase(chr)) + sub;
+		}
+
+		public static int min(int...values)
+		{
+			int ret = Integer.MAX_VALUE;
+			for(int i : values)
+			{
+				if(i < ret) ret = i;
+			}
+			return ret;
+		}
+		
+		public static int max(int...values)
+		{
+			int ret = Integer.MIN_VALUE;
+			for(int i : values)
+			{
+				if(i > ret) ret = i;
+			}
+			return ret;
+		}
+
+		public static int range(int m1, int m2, int target)
+		{
+			int v;
+			return target > (v = Math.max(m1, m2)) ? v :
+				target < (v = Math.min(m1, m2)) ? v : target;
 		}
 	}
 
@@ -452,6 +491,8 @@ public class U
 	{
 		@SidedProxy(modId = FarCore.ID, serverSide = "farcore.lib.world.WorldCfg", clientSide = "farcore.lib.world.WorldCfgClient")
 		public static WorldCfg cfg;
+		@SidedProxy(modId = FarCore.ID, serverSide = "farcore.lib.world.WorldDatasServer", clientSide = "farcore.lib.world.WorldDatasClient")
+		public static IWorldDatas datas;
 		
 		public static World world(int dim)
 		{
@@ -463,17 +504,27 @@ public class U
 			return cfg.b();
 		}
 		
-		public static boolean setBlock(World world, int x, int y, int z, Block block, int updateType)
+		public static void setSmartMetadata(World world, int x, int y, int z, int meta, UpdateType updateType)
+		{
+			datas.setSmartMetadataWithNotify(world, x, y, z, meta, updateType.ordinal());
+		}
+		
+		public static int getSmartMetadata(World world, int x, int y, int z)
+		{
+			return datas.getSmartMetadata(world, x, y, z);
+		}
+		
+		public static boolean setBlock(World world, int x, int y, int z, Block block, UpdateType updateType)
 		{
 			return setBlock(world, x, y, z, block, 0, updateType);
 		}
 		
-		public static boolean setBlock(World world, int x, int y, int z, Block block, int meta, int updateType)
+		public static boolean setBlock(World world, int x, int y, int z, Block block, int meta, UpdateType updateType)
 		{
-			return world.setBlock(x, y, z, block, meta, updateType);
+			return world.setBlock(x, y, z, block, meta, updateType.ordinal());
 		}
 		
-		public static boolean setBlock(int dim, int x, int y, int z, Block block, int meta, int updateType)
+		public static boolean setBlock(int dim, int x, int y, int z, Block block, int meta, UpdateType updateType)
 		{
 			World world = world(dim);
 			if(world == null) return false;
@@ -609,6 +660,86 @@ public class U
 	            EntityItem entityitem = new EntityItem(world, (double)x + d0, (double)y + d1, (double)z + d2, stack.copy());
 	            entityitem.delayBeforeCanPickup = 10;
 	            world.spawnEntityInWorld(entityitem);
+			}
+		}
+
+		public static ChunkCoordinates makeCoordinate(TileEntity tile)
+		{
+			return tile == null ? new ChunkCoordinates() :
+				new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
+		}
+		
+		public static float getEnviormentTemp(World world, int x, int y, int z)
+		{
+			return ThermalNet.getEnviormentTemp(world, x, y, z);
+		}
+		
+		public static float getTemp(World world, int x, int y, int z)
+		{
+			return ThermalNet.getTemp(world, x, y, z, true);
+		}
+	
+		public static boolean checkAndFallBlock(World world, int x, int y, int z, Block block)
+		{
+			if(world.isRemote) return false;
+			if(block instanceof ISmartFallableBlock ?
+					!((ISmartFallableBlock) block).canFallingBlockStay(world, x, y, z, world.getBlockMetadata(x, y, z)) :
+						EntityFallingBlockExtended.canFallAt(world, x, y, z, block))
+			{
+				return fallBlock(world, x, y, z, block);
+			}
+			return false;
+		}
+
+		public static boolean fallBlock(World world, int x, int y, int z, Block block) 
+		{
+			if(!BlockFalling.fallInstantly && world.checkChunksExist(x - 32, y - 32, z - 32, x + 32, y + 32, z + 32))
+			{
+				return world.spawnEntityInWorld(new EntityFallingBlockExtended(world, x, y, z, block));
+			}
+			else
+			{
+				int meta = world.getBlockMetadata(x, y, z);
+				TileEntity tile = world.getTileEntity(x, y, z);
+				if(tile != null)
+				{
+					tile.invalidate();
+					world.removeTileEntity(x, y, z);
+				}
+				world.setBlockToAir(x, y, z);
+				if(block instanceof ISmartFallableBlock)
+				{
+					((ISmartFallableBlock) block).onStartFalling(world, x, y, z);
+				}
+				int height = 0;
+				while(!EntityFallingBlockExtended.canFallAt(world, x, y, z, block))
+				{
+					--y;
+					++height;
+				}
+				if(y > 0)
+				{
+					EntityFallingBlockExtended.replaceFallingBlock(world, x, y, z, block, meta);
+					NBTTagCompound nbt;
+					tile.writeToNBT(nbt = new NBTTagCompound());
+					if(block instanceof ISmartFallableBlock && ((ISmartFallableBlock) block).onFallOnGround(world, x, y, z, meta, height, nbt))
+					{
+						
+					}
+					else
+					{
+						world.setBlock(x, y, z, block, meta, 3);
+						TileEntity tile1 = world.getTileEntity(x, y, z);
+						if(tile1 != null)
+						{
+							tile1.writeToNBT(nbt);
+							tile1.xCoord = x;
+							tile1.yCoord = y;
+							tile1.zCoord = z;
+						}
+					}
+				}
+				return true;
 			}
 		}
 	}
@@ -881,5 +1012,75 @@ public class U
 			}
 			return ForgeHooks.canHarvestBlock(block, player, meta);
 		}
+	}
+
+	public static class Time
+	{
+		public static long getTime(World world)
+		{
+			return world.getWorldInfo().getWorldTime();
+		}
+		
+		public static long getTotalDay(World world, ICalendar calendar)
+		{
+			return calendar.getTotalDayL(getTime(world));
+		}
+		
+		public static long getTotalMonth(World world, ICalendar calendar)
+		{
+			return calendar.hasMonth() ?
+					calendar.getTotalMonthL(getTime(world)) :
+						getYear(world, calendar);
+		}
+		
+		public static long getYear(World world, ICalendar calendar)
+		{
+			return calendar.getYearL(getTime(world));
+		}
+		
+		public static long getMonth(World world, ICalendar calendar)
+		{
+			return calendar.hasMonth() ?
+					calendar.getMonthInYearL(getTime(world)) :
+						1;
+		}
+		
+		public static long getDayInMonth(World world, ICalendar calendar)
+		{
+			return calendar.hasMonth() ?
+					calendar.getDayInMonthL(getTime(world)) :
+						getDayInYear(world, calendar);
+		}
+		
+		public static long getDayInYear(World world, ICalendar calendar)
+		{
+			return calendar.getDayInYearL(getTime(world));
+		}
+
+		public static double getDayTimeD(World world, ICalendar calendar)
+		{
+			return calendar.getDayTimeD(getTime(world));
+		}
+		
+		public static String getDateDescription(World world, ICalendar calendar)
+		{
+			return calendar.hasMonth() ?
+					getYear(world, calendar) + "Y" + (getMonth(world, calendar) + 1) + "M" + (getDayInMonth(world, calendar) + 1) :
+						getYear(world, calendar) + "Y" + (getDayInMonth(world, calendar) + 1);
+		}
+	}
+	
+	public static class Weather
+	{
+		
+	}
+
+	public static class Client
+	{
+		public static boolean shouldRenderBetterLeaves()
+		{
+			return (boolean) Reflect.getValue(BlockLeavesBase.class, Arrays.asList("field_150121_P"), Blocks.leaves);
+		}
+		
 	}
 }

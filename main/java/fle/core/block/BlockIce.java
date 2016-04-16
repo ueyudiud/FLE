@@ -7,7 +7,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.block.BlockBase;
 import farcore.enums.EnumBlock;
-import farcore.interfaces.energy.IThermalProviderBlock;
+import farcore.interfaces.energy.thermal.IThermalProviderBlock;
+import farcore.util.U;
+import farcore.util.Unit;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,7 +85,7 @@ public class BlockIce extends BlockBase implements IThermalProviderBlock
 		int meta = world.getBlockMetadata(x, y, z);
         if (world.getSavedLightValue(EnumSkyBlock.Block, x, y, z) > 1 + meta)
         {
-        	if (meta + 1 < 10)
+        	if (meta < 16)
         	{
         		world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
         		return;
@@ -117,8 +119,32 @@ public class BlockIce extends BlockBase implements IThermalProviderBlock
 	}
 
 	@Override
-	public int getBlockTemperature(World world, int x, int y, int z)
+	public float getBlockTemperature(World world, int x, int y, int z)
 	{
-		return 203 + 7 * world.getBlockMetadata(x, y, z);
+		return Unit.minIceTemp + (Unit.C_0_Point - Unit.minIceTemp) * world.getBlockMetadata(x, y, z) / 16F;
+	}
+
+	@Override
+	public float getThermalConductivity(World world, int x, int y, int z)
+	{
+		return Unit.iceThermalConductivity;
+	}
+
+	@Override
+	public void onHeatChanged(World world, int x, int y, int z, float input)
+	{
+		if(input > Unit.iceSpecificHeat)
+		{
+			int floor = (int) (input / Unit.iceSpecificHeat);
+			int meta = world.getBlockMetadata(x, y, z);
+			if(meta + floor < 16)
+			{
+				world.setBlockMetadataWithNotify(x, y, z, meta - floor, 3);
+			}
+			else
+			{
+				EnumBlock.water.spawn(world, x, y, z);
+			}
+		}
 	}
 }

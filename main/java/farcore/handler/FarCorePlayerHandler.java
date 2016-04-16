@@ -1,15 +1,23 @@
 package farcore.handler;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import java.util.List;
+import java.util.Random;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import farcore.interfaces.item.IContainerItemCollectable;
+import farcore.util.FleLog;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition;
 
 public class FarCorePlayerHandler
 {
+	private static final int CHECK_LOOP = 2048;
+	
 	@SubscribeEvent
 	public void onItemPickup(EntityItemPickupEvent event)
 	{
@@ -42,5 +50,34 @@ public class FarCorePlayerHandler
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerSpawn(CreateSpawnPosition event)
+	{
+		if(event.world.provider.isHellWorld) return;
+		int i = 0;
+		Random rand = new Random(event.world.getSeed());
+		FleLog.getCoreLogger().info("Looking for spawn coord...");
+		List<BiomeGenBase> list = event.world.getWorldChunkManager().getBiomesToSpawnIn();
+		while(i < CHECK_LOOP)
+		{
+			int x = (rand.nextInt() ^ 24724927) & 0x7FFF;
+			int z = (rand.nextInt() ^ 19472847) & 0x7FFF;
+			BiomeGenBase biome = event.world.getBiomeGenForCoords(x, z);
+			if(list.contains(biome))
+			{
+				int y = event.world.getTopSolidOrLiquidBlock(x, z);
+				if(y > event.world.provider.getHorizon())
+				{
+					event.world.setSpawnLocation(x, y, z);
+					event.setCanceled(true);
+					FleLog.getCoreLogger().info("Get spawn coord at " + x + ", " + y + ", " + z + " checked " + i + " loop.");
+					return;
+				}
+			}
+			++i;
+		}
+		FleLog.getCoreLogger().info("Fail to get spawn coord.");
 	}
 }

@@ -38,6 +38,7 @@ public class FarCoreHarvestHandler
 	    		else
 	    		{
 	    			event.setCanceled(true);
+	    			return;
 	    		}
 	    	}
 	    }

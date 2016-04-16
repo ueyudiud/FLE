@@ -1,13 +1,10 @@
 package farcore.interfaces.tile;
 
+import farcore.interfaces.IDescribable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public interface IDescribableTile
-{	
-	NBTTagCompound writeDescriptionsToNBT(NBTTagCompound nbt);
+public interface IDescribableTile extends IDescribable
+{
 	
-	void readDescriptionsFromNBT(NBTTagCompound nbt);
-	
-	void markNBTSync(EntityPlayer player);
 }

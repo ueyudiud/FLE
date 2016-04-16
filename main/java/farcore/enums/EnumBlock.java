@@ -21,9 +21,11 @@ public enum EnumBlock
 	 * @see farcore.block.BlockStandardFluid
 	 */
 	water, 
+	lava, 
 	ice, 
 	rock,
-	cobble;
+	cobble, 
+	sand;
 	
 	boolean init = false;
 	Block block;
@@ -99,6 +101,15 @@ public enum EnumBlock
 	
 	public static interface IInfoSpawnable
 	{
-		void spawn(World world, int x, int y, int z, Object...objects);
+		/**
+		 * Spawn a block with custom data in world.
+		 * @param world
+		 * @param x
+		 * @param y
+		 * @param z
+		 * @param objects Custom data.
+		 * @return Whether spawn is succeed.
+		 */
+		boolean spawn(World world, int x, int y, int z, Object...objects);
 	}
 }

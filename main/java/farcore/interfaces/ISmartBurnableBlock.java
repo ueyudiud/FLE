@@ -41,6 +41,8 @@ public interface ISmartBurnableBlock
 	 */
 	boolean onFlame(World world, int x, int y, int z, ForgeDirection face, int level);
 	
+	boolean onBurned(World world, int x, int y, int z);
+	
 	int getFlammability(World world, int x, int y, int z, ForgeDirection face, int hardness);
 	
 	/**
@@ -122,6 +124,12 @@ public interface ISmartBurnableBlock
 		public int getBurningTemperature(World world, int x, int y, int z, int level)
 		{
 			return -1;
+		}
+		
+		@Override
+		public boolean onBurned(World world, int x, int y, int z)
+		{
+			return false;
 		}
 	}
 }

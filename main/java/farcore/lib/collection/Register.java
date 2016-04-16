@@ -9,8 +9,12 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
+import farcore.interfaces.IRegisterExceptionHandler;
+
 public class Register<T> implements IRegister<T>
 {
+	private IRegisterExceptionHandler handler;
+	
 	private int point = 0;
 	private float factor;
 	
@@ -21,12 +25,23 @@ public class Register<T> implements IRegister<T>
 	{
 		this(16);
 	}
+	public Register(IRegisterExceptionHandler handler)
+	{
+		this(16, 0.75F, RegisterExceptionHandler.handler);
+	}
 	public Register(int length)
 	{
 		this(length, 0.75F);
 	}
 	public Register(int length, float factor)
 	{
+		this.factor = factor;
+		this.targets = new Object[length];
+		this.names = new String[length];
+	}
+	public Register(int length, float factor, IRegisterExceptionHandler handler)
+	{
+		this.handler = handler;
 		this.factor = factor;
 		this.targets = new Object[length];
 		this.names = new String[length];
@@ -66,7 +81,7 @@ public class Register<T> implements IRegister<T>
 	{
 		if(contain(id))
 		{
-			throw new IllegalArgumentException("The id " + id + " has already registed!");
+			handler.onIDContain(id, targets[id]);
 		}
 		if(id >= names.length)
 		{
@@ -115,10 +130,13 @@ public class Register<T> implements IRegister<T>
 	{
 		if(contain(name))
 		{
-			throw new IllegalArgumentException("The name " + name + " has already registed!");
+			handler.onNameContain(id, name);
 		}
-		names[id] = name;
-		targets[id] = arg;
+		else
+		{
+			names[id] = name;
+			targets[id] = arg;
+		}
 	}
 
 	@Override
@@ -225,7 +243,10 @@ public class Register<T> implements IRegister<T>
 	@Override
 	public boolean contain(int id)
 	{
-		if(id < 0) throw new IllegalArgumentException("The id " + id + " must be an non-negtive number!");
+		if(id < 0)
+		{
+			throw new IllegalArgumentException("The id " + id + " must be an non-negtive number!");
+		}
 		return id >= names.length ? false : names[id] != null;
 	}
 
@@ -302,6 +323,23 @@ public class Register<T> implements IRegister<T>
 				++p;
 			}
 			return null;
+		}
+	}
+	
+	private static class RegisterExceptionHandler implements IRegisterExceptionHandler
+	{
+		static final RegisterExceptionHandler handler = new RegisterExceptionHandler();
+		
+		@Override
+		public void onIDContain(int id, Object registered)
+		{
+			throw new IllegalArgumentException("The id " + id + " has already registed with " + registered.toString() + "!");
+		}
+
+		@Override
+		public void onNameContain(int id, String registered)
+		{
+			throw new IllegalArgumentException("The name " + registered + " has already registed!");
 		}
 	}
 }

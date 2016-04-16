@@ -1,13 +1,21 @@
 package farcore.lib.substance;
 
+import java.util.ArrayList;
+
 import farcore.FarCore;
 import farcore.FarCoreSetup;
+import farcore.interfaces.ITreeGenerator;
 import farcore.lib.collection.Register;
+import farcore.lib.recipe.DropHandler;
+import farcore.lib.world.gen.tree.TreeGenEmpty;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class SubstanceWood implements ISubstance
 {
 	private static final Register<SubstanceWood> register = new Register();
 
+	private static final TreeGenEmpty VOID_GEN = new TreeGenEmpty();
 	public static final SubstanceWood WOOD_VOID = new SubstanceWood(0, "void").setMaxUses(1, 1);
 	
 	public static SubstanceWood getSubstance(String tag)
@@ -52,8 +60,15 @@ public class SubstanceWood implements ISubstance
 
 	public int maxSoftUses = -1;
 	public int maxHardUses = -1;
-	
+		
 	public SubstanceTool tool;
+	public boolean isTree = false;
+	/**
+	 * The generator that the root of tree is on generation coordinate.
+	 */
+	public ITreeGenerator generator = VOID_GEN;
+
+	public DropHandler leafDrop = DropHandler.EMPTY;
 	
 	public SubstanceWood(int id, String name)
 	{
@@ -109,9 +124,22 @@ public class SubstanceWood implements ISubstance
 		return this;
 	}
 	
+	public SubstanceWood setTreeGen(ITreeGenerator generator)
+	{
+		this.isTree = true;
+		this.generator = generator;
+		return this;
+	}
+	
 	public SubstanceWood setBurnEnergy(int energy)
 	{
 		this.burnEnergyPerUnit = energy;
+		return this;
+	}
+	
+	public SubstanceWood setLeafDrop(DropHandler handler)
+	{
+		this.leafDrop = handler;
 		return this;
 	}
 	

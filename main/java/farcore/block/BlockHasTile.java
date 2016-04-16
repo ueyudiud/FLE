@@ -114,6 +114,7 @@ public abstract class BlockHasTile extends BlockBase implements ITileEntityProvi
 
         if (EnchantmentHelper.getSilkTouchModifier(player) && canSilkHarvest(world, player, x, y, z, meta))
         {
+        	onBlockHarvest(world, player, x, y, z, meta, true);
         	ArrayList<ItemStack> items = getDrops(world, x, y, z, meta, 0, true, threadTile.get());
 
             ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, 0, 1.0f, true, player);
@@ -124,6 +125,7 @@ public abstract class BlockHasTile extends BlockBase implements ITileEntityProvi
         }
         else
         {
+        	onBlockHarvest(world, player, x, y, z, meta, false);
             int i1 = EnchantmentHelper.getFortuneModifier(player);
         	ArrayList<ItemStack> items = getDrops(world, x, y, z, meta, 0, false, threadTile.get());
 
@@ -137,13 +139,14 @@ public abstract class BlockHasTile extends BlockBase implements ITileEntityProvi
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune,
+			boolean silkTouching)
 	{
 		if(world.getTileEntity(x, y, z) != null)
 		{
 			return getDrops(world, x, y, z, metadata, fortune, false, world.getTileEntity(x, y, z));
 		}
-		return threadTile.get() == null ? new ArrayList() : getDrops(world, x, y, z, metadata, fortune, false, threadTile.get());
+		return threadTile.get() == null ? new ArrayList() : getDrops(world, x, y, z, metadata, fortune, silkTouching, threadTile.get());
 	}
 	
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune, boolean silktouch, TileEntity tile)
@@ -174,4 +177,6 @@ public abstract class BlockHasTile extends BlockBase implements ITileEntityProvi
 			}
 		}
 	}
+	
+	public abstract TileEntity createNewTileEntity(World world, int meta);
 }

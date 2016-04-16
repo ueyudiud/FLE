@@ -25,6 +25,30 @@ import net.minecraft.item.ItemStack;
 public enum EnumItem
 {
 	/**
+	 * Far core debugger.<br>
+	 * Use to get world&block information.
+	 */
+	debug, 
+	/**
+	 * Far core item to show fluid by item stack.<br>
+	 * The item implements IInfomationable,
+	 * and has four accessed input.<br>
+	 * <code>provide(Fluid fluid);</code><br>
+	 * Input with only a fluid with unknown amount.<br>
+	 * <code>provide(FluidStack stack);</code><br>
+	 * Provide a stack can display similar amount with stack amount.<br>
+	 * <code>provide(String fluid);</code><br> 
+	 * Get fluid by fluid name, if this name is not registered,
+	 * return a default stack (Current water, no amount).<br>
+	 * <code>provide(Fluid fluid, int amount);</code><br>
+	 * Provide a stack.<br>
+	 * This item is just use in NEI or somewhere should use fluid icon 
+	 * to display a recipe, etc.
+	 * @param fluid The display fluid.
+	 * @param amount The amount of fluid stack, or not display it.
+	 */
+	display_fluid,
+	/**
 	 * Far land era torch, registered by fle.<br>
 	 * This item implements IInfomationable,
 	 * and has three accessed input.<br>
@@ -42,16 +66,24 @@ public enum EnumItem
 	torch, 
 	fire, 
 	rock_block, 
-	cobble_block,
+	cobble_block, 
+	sand_block,
 	/**
-	 * The stone chips.
+	 * The stone chips.<br>
 	 */
 	stone_chip,
+	/**
+	 * The stone fragments.<br>
+	 */
+	stone_fragment,
+	pile,
 	/**
 	 * Far land era tools, registered by fle.<br>
 	 * There are all kinds of tools generated in fle.
 	 */
-	tool;
+	tool,
+	log, 
+	plant;
 	
 	boolean init = false;
 	AbstractStack stack;

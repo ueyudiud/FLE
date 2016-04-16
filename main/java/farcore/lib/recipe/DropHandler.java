@@ -1,16 +1,17 @@
 package farcore.lib.recipe;
 
-import java.util.Random;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import farcore.lib.stack.AbstractStack;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class DropHandler
 {
+	public static final DropHandler EMPTY = new DropHandler(0F, 0, 0);
+	
+	private float chance;
 	private int maxWeight;
 	private int minWeight;
 	private int allWeight;
@@ -23,6 +24,11 @@ public class DropHandler
 	}
 	public DropHandler(int max, int min, Entry<AbstractStack, Integer>...stacks)
 	{
+		this(1F, max, min, stacks);
+	}
+	public DropHandler(float chance, int max, int min, Entry<AbstractStack, Integer>...stacks)
+	{
+		this.chance = chance;
 		this.maxWeight = max;
 		this.minWeight = min;
 		int size = 0;
@@ -34,11 +40,11 @@ public class DropHandler
 			size += entry.getValue().intValue();
 			stacksList[i] = entry.getKey();
 			weightList[i] = entry.getValue().intValue();
-			allWeight += weightList[i];
 		}
+		allWeight = size;
 	}
 	
-	public List<ItemStack> randomDropsWithCast(Random random)
+	public ArrayList<ItemStack> randomDropsWithCast(Random random)
 	{
 		int weight;
 		if(minWeight == maxWeight)
@@ -49,16 +55,20 @@ public class DropHandler
 		{
 			weight = minWeight + random.nextInt(maxWeight - minWeight);
 		}
-		List<ItemStack> ret = new ArrayList();
-		while(weight-- > 0)
+		ArrayList<ItemStack> ret = new ArrayList();
+		if(random.nextFloat() < chance)
 		{
-			ret.add(randomDrop(random).instance());
+			while(weight-- > 0)
+			{
+				ret.add(randomDrop(random).instance());
+			}
 		}
 		return ret;
 	}
 	
 	public AbstractStack randomDrop(Random random)
 	{
+		if(this == EMPTY) return null;
 		int i = random.nextInt(allWeight);
 		int j = 0;
 		int k = 0;

@@ -1,5 +1,7 @@
 package farcore.lib.tile;
 
+import java.util.Random;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -11,6 +13,10 @@ public class TileEntityBase extends TileEntity
 	private boolean init = false;
 	
 	protected int light = 0;
+	/**
+	 * Tile random.
+	 */
+	protected Random rand = new Random();
 	
 	protected void markReinit()
 	{

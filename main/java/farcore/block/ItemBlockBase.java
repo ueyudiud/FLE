@@ -34,4 +34,10 @@ public class ItemBlockBase extends ItemBlock
 	{
 		return FarCore.translateToLocal(stack.getUnlocalizedName() + ".name", block.getTranslateObject(stack));
 	}
+	
+	@Override
+	public int getMetadata(int meta)
+	{
+		return hasSubtypes ? meta : 0;
+	}
 }

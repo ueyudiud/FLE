@@ -1,12 +1,11 @@
 package farcore.lib.command;
 
 import farcore.enums.UpdateType;
-import farcore.lib.world.WorldDatas;
+import farcore.util.U;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.command.server.CommandSetBlock;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
@@ -38,14 +37,14 @@ public class CommandWorldData extends CommandBase
 	@Override
 	public void processCommand(ICommandSender sender, String[] strings)
 	{
+		if("help".equals(strings[0]))
+		{
+			sender.addChatMessage(new ChatComponentTranslation("/fwm get [x] [y] [z] Get custom fle data."));
+			sender.addChatMessage(new ChatComponentTranslation("/fwm set [x] [y] [z] [value] Set custom fle data."));
+		}
 		if(strings.length >= 2)
 		{
-			if("help".equals(strings[0]))
-			{
-				sender.addChatMessage(new ChatComponentTranslation("/fwm get [x] [y] [z]"));
-				sender.addChatMessage(new ChatComponentTranslation("/fwm set [x] [y] [z] [value]"));
-			}
-			else if("get".equals(strings[0]))
+			if("get".equals(strings[0]))
 			{
 				if(strings.length != 4)
 				{
@@ -66,7 +65,7 @@ public class CommandWorldData extends CommandBase
 	            			Integer.toString(i), 
 	            			Integer.toString(j), 
 	            			Integer.toString(k), 
-	            			Short.toString(WorldDatas.getBlockData(world, i, j, k))));
+	            			Integer.toString(U.Worlds.getSmartMetadata(world, i, j, k))));
 	            }
 			}
 			else if("set".equals(strings[0]))
@@ -95,7 +94,7 @@ public class CommandWorldData extends CommandBase
 	            }
 	            else
 	            {
-	            	WorldDatas.setBlockData(world, i, j, k, value, UpdateType.CALL_CLIENT);
+	            	U.Worlds.setSmartMetadata(world, i, j, k, value, UpdateType.CALL_CLIENT);
 	            	sender.addChatMessage(new ChatComponentTranslation("Set data at %s, %s, %s.", 
 	            			Integer.toString(i), 
 	            			Integer.toString(j), 

@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.interfaces.IItemIconInfo;
 import farcore.lib.render.item.ItemRenderInfo;
-import fle.api.util.V;
+import farcore.util.V;
 import fle.core.item.ItemToolFle;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;

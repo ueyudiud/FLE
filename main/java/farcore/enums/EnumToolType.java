@@ -1,6 +1,7 @@
 package farcore.enums;
 
 import farcore.lib.stack.OreStack;
+import net.minecraft.item.ItemStack;
 
 public enum EnumToolType 
 {
@@ -27,5 +28,10 @@ public enum EnumToolType
 	public String ore()
 	{
 		return name;
+	}
+	
+	public boolean match(ItemStack stack)
+	{
+		return stack != null && stack().similar(stack);
 	}
 }

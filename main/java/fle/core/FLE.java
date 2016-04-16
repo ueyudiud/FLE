@@ -15,14 +15,15 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import farcore.FarCore;
 import farcore.util.FleLog;
-import farcore.util.U.OreDict;
 import fle.api.FleAPI;
+import fle.load.Biomes;
 import fle.load.BlockItems;
 import fle.load.Drops;
 import fle.load.Handlers;
 import fle.load.Langs;
 import fle.load.OreDicts;
 import fle.load.Substances;
+import fle.load.Worlds;
 
 @Mod(modid = FleAPI.ID, name = FLE.NAME, version = FLE.VERSION, dependencies = "required-after:" + FarCore.ID)
 public class FLE
@@ -50,7 +51,7 @@ public class FLE
 		meta.name = NAME;
 		meta.version = VERSION;
 		meta.credits = "ueyudiud";
-		meta.authorList = Arrays.asList("ueyudiud");
+		meta.authorList = Arrays.asList("ueyudiud", "huangziye812");
 		meta.logoFile = "";
 		Substances.init();
 		BlockItems.init();
@@ -64,6 +65,8 @@ public class FLE
 		Langs.init();
 		OreDicts.init();
 		Drops.init();
+		Worlds.init();
+		Biomes.init();
 	}
 	
 	@EventHandler

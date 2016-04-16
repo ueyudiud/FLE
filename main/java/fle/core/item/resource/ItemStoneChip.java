@@ -24,6 +24,7 @@ public class ItemStoneChip extends ItemResource
 		addSubItem(7, "peridotite", "peridotite");
 		addSubItem(8, "rhyolite", "rhyolite");
 		addSubItem(9, "sandstone", "sandstone");
+		addSubItem(10, "stone-compact", "stone_compact");
 		addSubItem(101, "flintSmall", "flint_small");
 		addSubItem(102, "flintSharp", "flint_sharp");
 	}

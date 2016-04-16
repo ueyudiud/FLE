@@ -4,21 +4,22 @@ import java.io.IOException;
 
 import farcore.enums.UpdateType;
 import farcore.lib.net.PacketBlockCoord;
-import farcore.lib.world.WorldDatas;
 import farcore.network.IPacket;
 import farcore.network.NetworkBasic;
+import farcore.util.U;
 import farcore.util.io.DataStream;
 import net.minecraft.world.World;
 
-@Deprecated
 public class PacketWorldDataUpdateSingle extends PacketBlockCoord
 {
 	short data;
+	int type;
 	
-	public PacketWorldDataUpdateSingle(World world, int x, int y, int z, int data)
+	public PacketWorldDataUpdateSingle(World world, int x, int y, int z, int data, int type)
 	{
 		super(world, x, y, z);
 		this.data = (short) data;
+		this.type = type;
 	}
 	
 	@Override
@@ -26,6 +27,7 @@ public class PacketWorldDataUpdateSingle extends PacketBlockCoord
 	{
 		super.encode(output);
 		output.writeShort(data);
+		output.writeByte((byte) type);
 	}
 	
 	@Override
@@ -33,12 +35,13 @@ public class PacketWorldDataUpdateSingle extends PacketBlockCoord
 	{
 		super.decode(input);
 		data = input.readShort();
+		type = input.readByte();
 	}
 	
 	@Override
 	public IPacket process(NetworkBasic network)
 	{
-		WorldDatas.setBlockData(dimID, x, y, z, data, UpdateType.ONLY);
+		U.Worlds.datas.setSmartMetadataWithNotify(dimID, x, y, z, data, type);
 		return null;
 	}
 }

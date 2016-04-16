@@ -2,10 +2,22 @@ package farcore.lib.collection;
 
 import java.util.Map.Entry;
 
+import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PropertyMap extends AbstractPropertyMap<ISaveableProperty>
 {
+	public PropertyMap(ISaveableProperty...properties)
+	{
+		this(ImmutableSet.copyOf(properties));
+	}
+	
+	public PropertyMap(ImmutableSet<ISaveableProperty> properties)
+	{
+		super(properties);
+	}
+	
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		writeToNBT(nbt, "properties");

@@ -13,14 +13,16 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCoreSetup;
 import farcore.block.BlockBase;
+import farcore.energy.thermal.ThermalNet;
 import farcore.enums.Direction;
 import farcore.enums.EnumBlock;
 import farcore.enums.EnumBlock.IInfoSpawnable;
 import farcore.enums.EnumItem;
 import farcore.interfaces.ISmartBurnableBlock;
-import farcore.interfaces.ISmartBurnableBlock.SmartBurnableBlock;
-import farcore.interfaces.energy.IThermalProviderBlock;
+import farcore.interfaces.energy.thermal.IThermalProviderBlock;
+import farcore.interfaces.energy.thermal.IThermalTile;
 import farcore.util.U;
+import farcore.util.Unit;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -52,7 +54,7 @@ implements IInfoSpawnable, IThermalProviderBlock
      * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
      * cleared to be reused)
      */
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_)
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
     {
         return null;
     }
@@ -190,6 +192,7 @@ implements IInfoSpawnable, IThermalProviderBlock
         	}
         }
         if(level <= 0) level = 1;
+        l1 = 15 - l1;
         label:
         if(!canPlaceBlockAt(world, x, y, z))
         {
@@ -224,11 +227,18 @@ implements IInfoSpawnable, IThermalProviderBlock
             		int chance = block.canBeBurned(world, x + direction.x, y + direction.y, z + direction.z, level);
             		if(chance > 0 && rand.nextInt(level) > chance)
             		{
-            			world.setBlockToAir(x + direction.x, y + direction.y, z + direction.z);
-            			if(canPlaceBlockAt(world, x + direction.x, y + direction.y, z + direction.z))
+            			if(block.onBurned(world, x + direction.x, y + direction.y, z + direction.z))
             			{
-            				world.setBlock(x + direction.x, y + direction.y, z + direction.z, this, l1, 3);
-            				world.setBlockToAir(x, y, z);
+            				
+            			}
+            			else
+            			{
+                			world.setBlockToAir(x + direction.x, y + direction.y, z + direction.z);
+                			if(canPlaceBlockAt(world, x + direction.x, y + direction.y, z + direction.z))
+                			{
+                				spawnFireSource(world, x + direction.x, y + direction.y, z + direction.z, Math.min(15, l1 + 4));
+                				world.setBlockToAir(x, y, z);
+                			}
             			}
             		}
         		}
@@ -251,6 +261,7 @@ implements IInfoSpawnable, IThermalProviderBlock
             				if(flammability > 0 && (flammability > level1 || rand.nextInt(level1) < flammability))
             				{
             					int l2 = l1 + rand.nextInt(5) / 2;
+            					if(l2 < 0) l2 = 0;
             					for(Direction direction2 : Direction.directions)
             					{
             						block = getBurnableBlock(world, x + xO + direction2.x, y + yO + direction2.y, z + zO + direction2.z);
@@ -287,20 +298,63 @@ implements IInfoSpawnable, IThermalProviderBlock
     }
 
 	@Override
-	public int getBlockTemperature(World world, int x, int y, int z)
+	public float getBlockTemperature(World world, int x, int y, int z)
 	{
 		int l = world.getBlockMetadata(x, y, z);
-		int level = (int) ((16 - l) * 40 - world.getBiomeGenForCoords(x, z).rainfall * 60);
-        if(world.isRaining())
-        {
-        	level -= 200;
-        }
         ISmartBurnableBlock block = getBurnableBlock(world, x, y - 1, z);
 		if(block != ISmartBurnableBlock.instance)
 		{
+			int level = (int) ((16 - l) * 40 - world.getBiomeGenForCoords(x, z).rainfall * 60);
+	        if(world.isRaining())
+	        {
+	        	level -= 200;
+	        }
 			return block.getBurningTemperature(world, x, y, z, level);
-		}		
-		return 293 - l * l + l * 48;
+		}
+		float envTemp = ThermalNet.getEnviormentTemp(world, x, y, z);
+		return envTemp + (Unit.maxFireTemp - envTemp) * (float) (16 - l) / 16F;
+	}
+
+	@Override
+	public float getThermalConductivity(World world, int x, int y, int z)
+	{
+		if(world.getTileEntity(x, y - 1, z) instanceof IThermalTile)
+		{
+			return Unit.fireThermalConductivity + ((IThermalTile) world.getTileEntity(x, y - 1, z)).getThermalConductivity(Direction.U);
+		}
+		else if(world.getBlock(x, y - 1, z) instanceof IThermalProviderBlock)
+		{
+			return Unit.fireThermalConductivity + ((IThermalProviderBlock) world.getBlock(x, y - 1, z)).getThermalConductivity(world, x, y - 1, z);
+		}
+		return Unit.fireThermalConductivity;
+	}
+
+	@Override
+	public void onHeatChanged(World world, int x, int y, int z, float input)
+	{
+		float input1 = input;
+		if(world.getTileEntity(x, y - 1, z) instanceof IThermalTile)
+		{
+			input1 /= 2;
+			if(input > 0)
+			{
+				((IThermalTile) world.getTileEntity(x, y - 1, z)).receiveThermalEnergy(Direction.U, input * .5F);
+			}
+			else if(input < 0)
+			{
+				((IThermalTile) world.getTileEntity(x, y - 1, z)).emitThermalEnergy(Direction.U, -input * .5F);
+			}
+		}
+		else if(world.getBlock(x, y - 1, z) instanceof IThermalProviderBlock)
+		{
+			input1 /= 2;
+			((IThermalProviderBlock) world.getBlock(x, y - 1, z)).onHeatChanged(world, x, y - 1, z, input1);
+		}
+		if(input < -5000F)
+		{
+			int floor = (int) (-input / 5000);
+			spawnFireSource(world, x, y, z, world.getBlockMetadata(x, y, z) - floor);
+		}
 	}
     
     /**
@@ -311,27 +365,28 @@ implements IInfoSpawnable, IThermalProviderBlock
      * @param z
      * @param level To show how many range can fire spread, from 1 to 15.
      */
-    public static void spawnFireSource(World world, int x, int y, int z, int level)
+    public static boolean spawnFireSource(World world, int x, int y, int z, int level)
     {
-    	world.setBlock(x, y, z, EnumBlock.fire.block(), 16 - level, 2);
+    	return world.setBlock(x, y, z, EnumBlock.fire.block(), 16 - level, 2);
     }
     
-    public static void spawnFireNoExtinguished(World world, int x, int y, int z)
+    public static boolean spawnFireNoExtinguished(World world, int x, int y, int z)
     {
-    	world.setBlock(x, y, z, EnumBlock.fire.block(), 15, 2);
+    	return world.setBlock(x, y, z, EnumBlock.fire.block(), 15, 2);
     }
 
 	@Override
-	public void spawn(World world, int x, int y, int z, Object... objects)
+	public boolean spawn(World world, int x, int y, int z, Object... objects)
 	{
 		if(objects.length == 0)
 		{
-			spawnFireNoExtinguished(world, x, y, z);
+			return spawnFireNoExtinguished(world, x, y, z);
 		}
 		else if(objects[0] instanceof Integer)
 		{
-			spawnFireSource(world, x, y, z, ((Integer) objects[0]).intValue());
+			return spawnFireSource(world, x, y, z, ((Integer) objects[0]).intValue());
 		}
+		return false;
 	}
 
     /**

@@ -15,6 +15,7 @@ public class Langs
 	public static final String infoToolHeadMaterial = "info.tool.material.1";
 	public static final String infoToolHandleMaterial = "info.tool.material.2";
 	public static final String infoToolDamage = "info.tool.damage";
+	public static final String infoLogLength = "info.log.length";
 	
 	public static void init()
 	{
@@ -28,5 +29,6 @@ public class Langs
 		FarCoreSetup.lang.registerLocal(infoToolHeadMaterial, "Head Material : " + EnumChatFormatting.WHITE + "%s");
 		FarCoreSetup.lang.registerLocal(infoToolHandleMaterial, "Handle Material : " + EnumChatFormatting.WHITE + "%s");
 		FarCoreSetup.lang.registerLocal(infoToolDamage, "Damage : " + EnumChatFormatting.RED + "%d / %d");
+		FarCoreSetup.lang.registerLocal(infoLogLength, "Length : " + EnumChatFormatting.GREEN + "%d");
 	}
 }

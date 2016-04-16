@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class AbstractPropertyMap<P extends IProperty> implements IPropertyMap<P>
@@ -17,6 +16,11 @@ public class AbstractPropertyMap<P extends IProperty> implements IPropertyMap<P>
 		set = ImmutableSet.copyOf(target);
 	}
 	
+	public AbstractPropertyMap(ImmutableSet<P> properties)
+	{
+		set = properties;
+	}
+	
 	@Override
 	public Set<P> propertySet()
 	{
@@ -26,7 +30,7 @@ public class AbstractPropertyMap<P extends IProperty> implements IPropertyMap<P>
 	@Override
 	public <T, O> T get(IProperty<T, O> property) 
 	{
-		return set.contains(property) ? property.get((O) map.get(property)) : null;
+		return set.contains(property) && map.containsKey(property) ? property.get((O) map.get(property)) : property.def();
 	}
 
 	@Override
