@@ -51,9 +51,11 @@ public class Debug
 		GenLayer out1 = new GenLayerSmooth(289471L, orLayer);
 		GenLayer out2 = new GenLayerVoronoiZoom(94719L, out1);
 		out2.initWorldGenSeed(3767946578827316380L);
-		draw("layer1", 1024, 1024, out1.getInts(17000, 6000, 1024, 1024));
-		draw("layer2", 1024, 1024, out1.getInts(17256, 6000, 1024, 1024));
-		draw("layer3", 1024, 1024, out1.getInts(17512, 6000, 1024, 1024));
+		int size = 4096;
+		for(int i = 0; i < size; ++i)
+		{
+			System.out.println(out2.getInts(i, 0, size, 1)[size - i - 1]);
+		}
 	}
 	
 	private static void draw(String string, int w, int h, int[] range)

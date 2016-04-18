@@ -188,21 +188,13 @@ public class FleSurfaceManager extends WorldChunkManager
             biomes = new BiomeGenBase[w * w];
         }
 
-        /**
-         * For a bug cause biome replace in world again and again
-         * (Such like similar biome generate in another place, which
-         * cause chunk can not connect smoothly), 
-         * I don't know why it happened, it seems remove these code
-         * can debug, but this operation might let terrain generate more 
-         * time...
-         */
-//        if (ignoreCache && w == 16 && h == 16 && (x & 0xF) == 0 && (z & 0xF) == 0)
-//        {
-//            BiomeGenBase[] abiomegenbase1 = biomeCache.getCachedBiomes(x, z);
-//            System.arraycopy(abiomegenbase1, 0, biomes, 0, 256);
-//            return biomes;
-//        }
-//        else
+        if (ignoreCache && w == 16 && h == 16 && (x & 0xF) == 0 && (z & 0xF) == 0)
+        {
+            BiomeGenBase[] abiomegenbase1 = biomeCache.getCachedBiomes(x, z);
+            System.arraycopy(abiomegenbase1, 0, biomes, 0, 256);
+            return biomes;
+        }
+        else
         {
             int[] aint = biomeIndexLayer.getInts(x, z, w, h);
 

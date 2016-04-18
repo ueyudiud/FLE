@@ -43,7 +43,7 @@ public class LayerZoom extends LayerBase
 
             for (int k3 = aint[i3 + 0 + (k2 + 1) * k1]; i3 < k1 - 1; ++i3)
             {
-                this.initChunkSeed((long)(i3 + i1 << 1), (long)(k2 + j1 << 1));
+                initChunkSeed((long)(i3 + i1 << 1), (long)(k2 + j1 << 1));
                 int l3 = aint[i3 + 1 + (k2 + 0) * k1];
                 int i4 = aint[i3 + 1 + (k2 + 1) * k1];
                 aint1[l2] = j3;

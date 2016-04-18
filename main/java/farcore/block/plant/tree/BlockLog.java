@@ -30,6 +30,8 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 			OreDict.registerValid("treeLeaves", leaves);
 			OreDict.registerValid("logWood", log1);
 			leaves.log = log;
+			wood.log = log;
+			wood.leaves = leaves;
 			wood.generator.initLogBlock(log, leaves);
 		}
 	}

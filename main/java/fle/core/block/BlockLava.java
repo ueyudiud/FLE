@@ -3,7 +3,7 @@ package fle.core.block;
 import farcore.block.BlockStandardFluid;
 import farcore.enums.EnumBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
-import farcore.util.Unit;
+import farcore.util.Values;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
@@ -34,7 +34,7 @@ public class BlockLava extends BlockStandardFluid implements IThermalProviderBlo
 	@Override
 	public float getThermalConductivity(World world, int x, int y, int z)
 	{
-		return Unit.lavaThermalConductivity;
+		return Values.lavaThermalConductivity;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package farcore.interfaces.energy.electric;
 
+import farcore.energy.electric.ElectricalPkt;
 import farcore.enums.Direction;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;

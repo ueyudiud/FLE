@@ -4,7 +4,12 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.interfaces.ITreeGenerator;
+import farcore.lib.substance.SubstanceWood;
 import farcore.lib.world.biome.BiomeBase;
+import farcore.lib.world.gen.tree.TreeGenCanopy;
+import farcore.lib.world.gen.tree.TreeGenSimple;
+import fle.api.world.gen.TreeGenStraight;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
@@ -15,29 +20,51 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
 public class BiomeSwamp extends BiomeBase
 {
+	private static boolean init = false;
+	
+	protected static final ITreeGenerator genOak1 = new TreeGenSimple(5, true);
+	
+	private void init()
+	{
+		if(!init)
+		{
+			SubstanceWood wood = SubstanceWood.getSubstance("oak");
+			genOak1.initLogBlock(wood.log, wood.leaves);
+			init = true;
+		}
+	}
+	
 	public BiomeSwamp(int id)
 	{
 		super(id);
-        this.theBiomeDecorator.treesPerChunk = 2;
-        this.theBiomeDecorator.flowersPerChunk = 1;
-        this.theBiomeDecorator.deadBushPerChunk = 1;
-        this.theBiomeDecorator.mushroomsPerChunk = 8;
-        this.theBiomeDecorator.reedsPerChunk = 10;
-        this.theBiomeDecorator.clayPerChunk = 1;
-        this.theBiomeDecorator.waterlilyPerChunk = 4;
-        this.theBiomeDecorator.sandPerChunk2 = 0;
-        this.theBiomeDecorator.sandPerChunk = 0;
-        this.theBiomeDecorator.grassPerChunk = 5;
+		init();
+        this.biomeDecorator.treesPerChunk = 2;
+        this.biomeDecorator.flowersPerChunk = 1;
+        this.biomeDecorator.deadBushPerChunk = 1;
+        this.biomeDecorator.redMushroomsPerChunk = 2;
+        this.biomeDecorator.brownMushroomsPerChunk = 4;
+        this.biomeDecorator.reedsPerChunk = 10;
+        this.biomeDecorator.clayPerChunk = 1;
+        this.biomeDecorator.waterlilyPerChunk = 4;
+        this.biomeDecorator.sandPerChunk2 = 0;
+        this.biomeDecorator.sandPerChunk = 0;
+        this.biomeDecorator.grassPerChunk = 5;
         this.waterColorMultiplier = 14745518;
         this.spawnableMonsterList.add(new SpawnListEntry(EntitySlime.class, 1, 1, 1));
         this.flowers.clear();
         this.addFlower(Blocks.red_flower, 1, 10);
 	}
+	
+	@Override
+	protected ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z, double treeNoise)
+	{
+		return genOak1;
+	}
 
-    public WorldGenAbstractTree func_150567_a(Random random)
-    {
-        return this.worldGeneratorSwamp;
-    }
+//    public WorldGenAbstractTree func_150567_a(Random random)
+//    {
+//        return this.worldGeneratorSwamp;
+//    }
 
     public String func_150572_a(Random random, int x, int y, int z)
     {

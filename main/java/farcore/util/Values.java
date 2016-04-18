@@ -1,6 +1,6 @@
 package farcore.util;
 
-public class Unit
+public class Values
 {
 	public static final int tiny_mol = 4;
 	public static final int small_mol = 9;
@@ -30,4 +30,6 @@ public class Unit
 	public static final long day_per_year = 96;
 	public static final long day_per_month = 8;
 	public static final long month_per_year = 12;
+	
+	public static final String key_place = "place";
 }

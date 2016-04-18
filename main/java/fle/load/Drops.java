@@ -8,6 +8,7 @@ import farcore.lib.recipe.ToolDestoryDropRecipes;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.substance.SubstanceRock;
 import farcore.lib.substance.SubstanceWood;
+import farcore.util.FleLog;
 import farcore.util.U;
 import fle.api.util.BlockConditionMatcherIS;
 import net.minecraft.init.Items;
@@ -17,6 +18,7 @@ public class Drops
 {
 	public static void init()
 	{
+		FleLog.getLogger().info("Start register block drops.");
 		for(SubstanceRock rock : SubstanceRock.getRocks())
 		{
 			ItemStack drop = EnumItem.stone_chip.instance(3, rock.getName());

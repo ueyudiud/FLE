@@ -27,17 +27,15 @@ public class LayerLinkMainland extends LayerBase
 		for(int i = 0; i < h; ++i)
 			for(int j = 0; j < w; ++j)
 			{
-				if((v1 = par[w1 * (i + 1) + j + 1]) != 0)
+				v1 = par[w1 * (i + 1) + j + 1];
+				v2 = par[w1 * (i + 0) + j + 1];
+				v3 = par[w1 * (i + 1) + j + 0];
+				v4 = par[w1 * (i + 2) + j + 1];
+				v5 = par[w1 * (i + 1) + j + 2];
+				is[w * i + j] = v1;
+				if((v2 | v3 | v4 | v5) != 0)
 				{
-					is[w * i + j] = v1;
-				}
-				else
-				{
-					v2 = par[w1 * i + j + 1];
-					v3 = par[w1 * (i + 1) + j];
-					v4 = par[w1 * (i + 2) + j + 1];
-					v5 = par[w1 * (i + 1) + j + 2];
-					initChunkSeed(x + j, y + i);
+					initChunkSeed((long) (x + j), (long)(y + i));
 					if(chance == 1)
 					{
 						is[w * i + j] = selectModeOrRandom(v2, v3, v4, v5);

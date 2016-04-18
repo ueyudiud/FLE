@@ -14,9 +14,9 @@ public class BiomePlain extends BiomeBase
 	{
 		super(id);
         spawnableCreatureList.add(new SpawnListEntry(EntityHorse.class, 5, 2, 6));
-        theBiomeDecorator.treesPerChunk = -999;
-        theBiomeDecorator.flowersPerChunk = 4;
-        theBiomeDecorator.grassPerChunk = 10;
+        biomeDecorator.treesPerChunk = -999;
+        biomeDecorator.flowersPerChunk = 4;
+        biomeDecorator.grassPerChunk = 10;
         flowers.clear();
         addFlower(Blocks.red_flower,    4,  3);
         addFlower(Blocks.red_flower,    5,  3);
@@ -59,13 +59,13 @@ public class BiomePlain extends BiomeBase
 
         if (d0 < -0.8D)
         {
-            this.theBiomeDecorator.flowersPerChunk = 15;
-            this.theBiomeDecorator.grassPerChunk = 5;
+            this.biomeDecorator.flowersPerChunk = 15;
+            this.biomeDecorator.grassPerChunk = 5;
         }
         else
         {
-            this.theBiomeDecorator.flowersPerChunk = 4;
-            this.theBiomeDecorator.grassPerChunk = 10;
+            this.biomeDecorator.flowersPerChunk = 4;
+            this.biomeDecorator.grassPerChunk = 10;
             genTallFlowers.func_150548_a(2);
 
             for (k = 0; k < 7; ++k)

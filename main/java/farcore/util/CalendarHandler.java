@@ -30,17 +30,17 @@ public class CalendarHandler
 		addCalendar(0, "earth", new ICalendar()
 		{
 			public boolean hasMonth() {return true;}
-			public long getYearL(long tick) {return Unit.earth_year_start + (tick + Unit.earth_tick_start) / Unit.tick_per_year;}
-			public long getTotalMonthL(long tick) {return (tick + Unit.earth_tick_start) / Unit.tick_per_month;}
-			public long getTotalDayL(long tick) {return (tick + Unit.earth_tick_start) / Unit.tick_per_day;}
-			public long getMonthInYearL(long tick) {return getTotalMonthL(tick) % Unit.month_per_year;}
-			public double getMonthInYearD(long tick) {return (double) getMonthInYearL(tick) / (double) Unit.month_per_year;}
-			public long getDayTimeL(long tick) {return (tick + Unit.earth_tick_start) % Unit.tick_per_day;}
-			public double getDayTimeD(long tick) {return (double) getDayTimeL(tick) / (double) Unit.tick_per_day;}
-			public long getDayInYearL(long tick) {return getTotalDayL(tick) % Unit.day_per_year;}
-			public double getDayInYearD(long tick) {return (double) getDayInYearL(tick) / (double) Unit.day_per_year;}
-			public long getDayInMonthL(long tick) {return getTotalDayL(tick) % Unit.day_per_month;}
-			public double getDayInMonthD(long tick) {return (double) getDayInMonthL(tick) / (double) Unit.day_per_month;}
+			public long getYearL(long tick) {return Values.earth_year_start + (tick + Values.earth_tick_start) / Values.tick_per_year;}
+			public long getTotalMonthL(long tick) {return (tick + Values.earth_tick_start) / Values.tick_per_month;}
+			public long getTotalDayL(long tick) {return (tick + Values.earth_tick_start) / Values.tick_per_day;}
+			public long getMonthInYearL(long tick) {return getTotalMonthL(tick) % Values.month_per_year;}
+			public double getMonthInYearD(long tick) {return (double) getMonthInYearL(tick) / (double) Values.month_per_year;}
+			public long getDayTimeL(long tick) {return (tick + Values.earth_tick_start) % Values.tick_per_day;}
+			public double getDayTimeD(long tick) {return (double) getDayTimeL(tick) / (double) Values.tick_per_day;}
+			public long getDayInYearL(long tick) {return getTotalDayL(tick) % Values.day_per_year;}
+			public double getDayInYearD(long tick) {return (double) getDayInYearL(tick) / (double) Values.day_per_year;}
+			public long getDayInMonthL(long tick) {return getTotalDayL(tick) % Values.day_per_month;}
+			public double getDayInMonthD(long tick) {return (double) getDayInMonthL(tick) / (double) Values.day_per_month;}
 		});
 		addCalendar(-1, "nether", new ICalendar()
 		{

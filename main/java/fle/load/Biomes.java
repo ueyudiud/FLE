@@ -1,6 +1,7 @@
 package fle.load;
 
 import farcore.enums.EnumBiome;
+import farcore.util.FleLog;
 import fle.core.world.biome.BiomeBeach;
 import fle.core.world.biome.BiomeBushveld;
 import fle.core.world.biome.BiomeDesert;
@@ -24,7 +25,7 @@ import net.minecraft.world.biome.BiomeGenBase.Height;
 
 public class Biomes
 {
-	static final Height height_River = new Height(-0.3F, 0.0F);
+	static final Height height_River = new Height(-0.5F, 0.02F);
 	static final Height height_Plain = new Height(0.1F, 0.05F);
 	static final Height height_LowHills = new Height(0.8F, 0.5F);
     static final Height height_MidHills = new Height(1.5F, 0.8F);
@@ -35,6 +36,7 @@ public class Biomes
     
 	public static void init()
 	{
+		FleLog.getLogger().info("Start register biomes.");
 		EnumBiome.plain.setBiome(						new BiomePlain(1).setColor(0x8DB360).setTemperatureRainfall(0.8F, 0.4F).setHeight(height_Plain));
 		EnumBiome.plain_subtropics.setBiome(			new BiomePlain(2).setColor(0x9EBC65).setTemperatureRainfall(1.2F, 0.4F).setHeight(height_Plain));
 		EnumBiome.desert.setBiome(						new BiomeDesert(3, true, true).setColor(0xFA9418).setDisableRain().setTemperatureRainfall(1.5F, 0F).setHeight(height_Plain));

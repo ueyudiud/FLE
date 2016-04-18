@@ -28,10 +28,7 @@ public class LayerAdd extends LayerBase
 				if(par[id] != 0)
 					is[id] = par[id];
 				initChunkSeed(x + j, y + i);
-				if(nextInt(chance) == 0)
-					is[id] = add;
-				else
-					is[id] = 0;
+				is[id] = nextInt(chance) == 0 ? add : 0;
 			}
 		return is;
 	}	

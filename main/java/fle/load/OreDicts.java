@@ -22,9 +22,10 @@ public class OreDicts
 		OreDict.registerValid(EnumToolType.axe.ore(), EnumItem.tool.instance(1, "rough_stone_adz"));
 		OreDict.registerValid("craftingToolStoneAxe", EnumItem.tool.instance(1, "stone_axe"));
 		OreDict.registerValid(EnumToolType.axe.ore(), EnumItem.tool.instance(1, "stone_axe"));
+		OreDict.registerValid(EnumToolType.firestarter.ore(), EnumItem.tool.instance(1, "firestarter"));
 		OreDict.registerValid(EnumToolType.hammer_digable_basic.ore(), EnumItem.tool.instance(1, "flint_hammer"));
-		OreDict.registerValid(EnumToolType.hammer_digable_basic.ore(), EnumItem.tool.instance(1, "stone_hammer"));
 		OreDict.registerValid(EnumToolType.hammer_digable_basic.ore(), EnumItem.tool.instance(1, "wood_hammer"));
+		OreDict.registerValid(EnumToolType.hammer_digable.ore(), EnumItem.tool.instance(1, "stone_hammer"));
 		OreDict.registerValid(EnumToolType.shovel.ore(), EnumItem.tool.instance(1, "stone_shovel"));
 		OreDict.registerValid("treeSapling", BlockItems.sapling);
 	}

@@ -1,15 +1,12 @@
 package farcore.lib.substance;
 
-import java.util.ArrayList;
-
 import farcore.FarCore;
 import farcore.FarCoreSetup;
 import farcore.interfaces.ITreeGenerator;
 import farcore.lib.collection.Register;
 import farcore.lib.recipe.DropHandler;
 import farcore.lib.world.gen.tree.TreeGenEmpty;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.block.Block;
 
 public class SubstanceWood implements ISubstance
 {
@@ -67,6 +64,11 @@ public class SubstanceWood implements ISubstance
 	 * The generator that the root of tree is on generation coordinate.
 	 */
 	public ITreeGenerator generator = VOID_GEN;
+	/**
+	 * This two block is for tree generation.
+	 */
+	public Block log;
+	public Block leaves;
 
 	public DropHandler leafDrop = DropHandler.EMPTY;
 	

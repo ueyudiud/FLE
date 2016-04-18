@@ -28,11 +28,26 @@ public abstract class LayerBase extends GenLayer
 {
 	public static GenLayer[] wrapSuface(long seed, WorldType type)
 	{
-		LayerBase orLayer = new LayerZoom(5, 47L, new LayerLinkMainland(1, 381L, new LayerZoom(9031L, new LayerLinkMainland(3, 381L, new LayerFuzzyZoom(7L, new LayerAdd(1, 3, 91L, new LayerFuzzyZoom(3, 8L, new LayerAdd(1, 5, 2L, new LayerFuzzyZoom(3L, new LayerStart(5, 1L))))))))));
+		LayerBase orLayer = new LayerStart(5, 1L);
+		orLayer = new LayerFuzzyZoom(3L, orLayer);
+		orLayer = new LayerAdd(1, 5, 2L, orLayer);
+		orLayer = new LayerFuzzyZoom(3, 8L, orLayer);
+		orLayer = new LayerAdd(1, 3, 91L, orLayer);
+		orLayer = new LayerFuzzyZoom(7L, orLayer);
+		orLayer = new LayerLinkMainland(3, 381L, orLayer);
+		orLayer = new LayerZoom(9031L, orLayer);
+		orLayer = new LayerLinkMainland(1, 381L, orLayer);
+		orLayer = new LayerZoom(5, 47L, orLayer);
 		LayerTemp tempLayer = new LayerTemp(16, 2839L);
-		LayerRainfall rainfallLayer = new LayerRainfall(10, 37292L, new LayerTerrainBase(10, 38917L));
+		LayerTerrainBase terrainLayer = new LayerTerrainBase(10, 38917L);
+		LayerRainfall rainfallLayer = new LayerRainfall(10, 37292L, terrainLayer);
 		orLayer = new LayerFloor(718L, orLayer, tempLayer, rainfallLayer);
-		orLayer = new LayerRiver(5819L, new LayerFuzzyZoom(2, 27L, orLayer), new LayerRing(2874L, new LayerFuzzyZoom(6, 127L, new LayerFuzzyZoom(2, 927L, new LayerAdd(2, 3, 273L, new LayerStart(2, 901L))))));
+		LayerBase riverLayer = new LayerStart(2, 901L);
+		riverLayer = new LayerAdd(2, 3, 273L, riverLayer);
+		riverLayer = new LayerFuzzyZoom(2, 927L, riverLayer);
+		riverLayer = new LayerFuzzyZoom(6, 127L, riverLayer);
+		riverLayer = new LayerRing(2874L, riverLayer);
+		orLayer = new LayerRiver(5819L, new LayerFuzzyZoom(2, 27L, orLayer), riverLayer);
 		orLayer = new LayerEdge(508L, orLayer);
 		orLayer = new LayerBeach(71628L, orLayer);
 		orLayer = new LayerZoom(3, 384918L, orLayer);

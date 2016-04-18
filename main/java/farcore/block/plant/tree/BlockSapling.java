@@ -9,9 +9,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCoreSetup;
 import farcore.block.BlockHasTile;
+import farcore.interfaces.ISmartPlantableBlock;
 import farcore.lib.substance.SubstanceWood;
 import farcore.util.FleLog;
+import farcore.util.SubTag;
+import farcore.util.U;
 import farcore.util.V;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -24,8 +28,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockSapling extends BlockHasTile
+public class BlockSapling extends BlockHasTile implements ISmartPlantableBlock
 {
 	@SideOnly(Side.CLIENT)
 	private Map<String, IIcon> icons;
@@ -106,10 +112,32 @@ public class BlockSapling extends BlockHasTile
 	}
 	
 	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+	{
+		if(!canBlockStay(world, x, y, z))
+		{
+			world.setBlockToAir(x, y, z);
+			world.removeTileEntity(x, y, z);
+		}
+	}
+	
+	@Override
 	public int onBlockPlaced(World world, int x, int y, int z, int side,
 			float hitX, float hitY, float hitZ, int meta)
 	{
 		return 0;
+	}
+	
+	@Override
+	public boolean canPlaceBlockAt(World world, int x, int y, int z)
+	{
+		return U.Plants.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, this);
+	}
+	
+	@Override
+	public boolean canPlaceBlockOnSide(World world, int x, int y, int z, int side)
+	{
+		return side == 1 && canPlaceBlockAt(world, x, y, z);
 	}
 	
 	@Override
@@ -127,5 +155,35 @@ public class BlockSapling extends BlockHasTile
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileEntitySpaling();
+	}
+
+	@Override
+	public Block getPlant(IBlockAccess world, int x, int y, int z)
+	{
+		return this;
+	}
+
+	@Override
+	public int getPlantMetadata(IBlockAccess world, int x, int y, int z)
+	{
+		return 0;
+	}
+
+	@Override
+	public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z)
+	{
+		return EnumPlantType.Plains;
+	}
+
+	@Override
+	public boolean useDefaultType()
+	{
+		return true;
+	}
+
+	@Override
+	public String getSmartPlantType(IBlockAccess world, int x, int y, int z)
+	{
+		return SubTag.PlantType_Plains.name();
 	}
 }

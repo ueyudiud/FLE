@@ -12,10 +12,10 @@ public class BiomeWasteland extends BiomeBase
 	public BiomeWasteland(int id)
 	{
 		super(id);
-		theBiomeDecorator.deadBushPerChunk = 3;
-		theBiomeDecorator.grassPerChunk = 3;
-		theBiomeDecorator.treesPerChunk = -999;
-		theBiomeDecorator.cactiPerChunk = 1;
+		biomeDecorator.deadBushPerChunk = 3;
+		biomeDecorator.grassPerChunk = 3;
+		biomeDecorator.treesPerChunk = -999;
+		biomeDecorator.cactiPerChunk = 1;
 		spawnableCreatureList.clear();
 	}
     

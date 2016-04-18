@@ -51,27 +51,19 @@ public class TreeGenStraight extends TreeGenAbstract
                     b0 = 0;
                 }
 
-                if (i1 >= y + 1 + l - 2)
-                {
-                    b0 = (byte) (checkRange + 1);
-                }
-
                 for (int j1 = x - b0; j1 <= x + b0 && flag; ++j1)
                 {
                     for (k1 = z - b0; k1 <= z + b0 && flag; ++k1)
                     {
+                    	if((j1 - x) * (j1 - x) + (k1 - z) * (k1 - z) > checkRange) continue;
                         if (i1 >= 0 && i1 < 256)
                         {
-                            block = world.getBlock(j1, i1, k1);
+                        	block = world.getBlock(j1, i1, k1);
 
-                            if (!isReplaceable(world, j1, i1, k1))
+                            if (isReplaceable(world, j1, i1, k1))
                             {
                                 flag = false;
                             }
-                        }
-                        else
-                        {
-                            flag = false;
                         }
                     }
                 }
@@ -99,7 +91,7 @@ public class TreeGenStraight extends TreeGenAbstract
                     boolean[][] cache = new boolean[b0 * 2 + 1][b0 * 2 + 1];
                     for(k = 0; k < l; ++k)
                     {
-                    	setBlockAndNotifyAdequately(world, x, y + k + 1, z, log, 0);
+                    	setBlockAndNotifyAdequately(world, x, y + k, z, log, 0);
                     	if(k >= minLeaveHeight)
                     	{
                     		cache[b0][b0] = true;
@@ -132,15 +124,14 @@ public class TreeGenStraight extends TreeGenAbstract
                         			}
                         			if(cache[i1 + b0][j1 + b0])
                         			{
-                        				setBlockAndNotifyAdequately(world, x + i1, y + k + 1, z + j1, leaves, 0);
+                        				setBlockAndNotifyAdequately(world, x + i1, y + k, z + j1, leaves, 0);
                         			}
                         		}
                     	}
                     }
-                    ++k;
-                    for(; k < km + 1; ++k)
+                    for(; k < km; ++k)
                     {
-                    	if(k == km)
+                    	if(k == km - 1)
                     	{
                     		if(isReplaceable(world, x, y + k, z))
                     			setBlockAndNotifyAdequately(world, x, y + k, z, leaves, 0);

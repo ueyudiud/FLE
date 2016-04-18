@@ -9,8 +9,8 @@ public class BiomeGlacier extends BiomeBase
 	{
 		super(id);
 		topBlock = Blocks.ice;
-		theBiomeDecorator.grassPerChunk = -999;
-		theBiomeDecorator.treesPerChunk = -999;
+		biomeDecorator.grassPerChunk = -999;
+		biomeDecorator.treesPerChunk = -999;
 		spawnableCreatureList.clear();
 	}
 }

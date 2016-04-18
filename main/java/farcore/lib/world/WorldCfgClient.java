@@ -1,5 +1,7 @@
 package farcore.lib.world;
 
+import java.io.File;
+
 import farcore.util.U;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,5 +27,11 @@ public class WorldCfgClient extends WorldCfg
 	public EntityPlayer b()
 	{
 		return Minecraft.getMinecraft().thePlayer;
+	}
+	
+	@Override
+	public File c()
+	{
+		return Minecraft.getMinecraft().mcDataDir;
 	}
 }

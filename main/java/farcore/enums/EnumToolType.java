@@ -10,7 +10,8 @@ public enum EnumToolType
 	hammer_digable("DigableHammer"),
 	hammer_digable_basic("DigableHammerBasic"),
 	pickaxe("Pickaxe"),
-	shovel("Shovel");
+	shovel("Shovel"), 
+	firestarter("Firestarter");
 	
 	String name;
 	OreStack stack;

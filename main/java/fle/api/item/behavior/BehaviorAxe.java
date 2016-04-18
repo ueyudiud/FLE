@@ -5,6 +5,7 @@ import java.util.Set;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
+import farcore.enums.EnumToolType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -15,7 +16,7 @@ import net.minecraft.item.ItemTool;
 public class BehaviorAxe extends BehaviorDigableTool
 {
 	private static final Set blockCanHeaverst = Sets.newHashSet(new Block[] { Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin });
-	private static final Set toolClasses = Sets.newHashSet("axe");
+	private static final Set toolClasses = Sets.newHashSet(EnumToolType.axe.name());
 	
 	private float damageVsEntity;
 	

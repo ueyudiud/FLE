@@ -26,6 +26,7 @@ public class ChunkBuilder
 {
 	private final Block[] blocks = new Block[16 * 16 * 256];
 	private final byte[] metas = new byte[16 * 16 * 256];
+	private final byte[] biomes = new byte[256];
 	private final Map<IntArray, TileEntity> tiles = new HashMap();
 	
 	public ChunkBuilder()
@@ -80,7 +81,20 @@ public class ChunkBuilder
 		}
 	}
 	
-	public Chunk build(World world, int x, int z, BiomeGenBase[] biomes)
+	public byte biome(int x, int z)
+	{
+		return biomes[z << 4 | x];
+	}
+	
+	public void setBiomes(BiomeGenBase[] biomes)
+	{
+        for (int k = 0; 
+        		k < this.biomes.length;
+        		this.biomes[k] = (byte) biomes[k].biomeID,
+        				++k);
+	}
+	
+	public Chunk build(World world, int x, int z)
 	{
 		Chunk chunk = new Chunk(world, blocks, metas, x, z);
 		for(Entry<IntArray, TileEntity> entry : tiles.entrySet())
@@ -89,12 +103,7 @@ public class ChunkBuilder
 			world.addTileEntity(entry.getValue());
 		}
 		chunk.generateSkylightMap();
-		byte[] bytes = chunk.getBiomeArray();
-
-        for (int k = 0; k < bytes.length; ++k)
-        {
-            bytes[k] = (byte) biomes[k].biomeID;
-        }
+		chunk.setBiomeArray(biomes.clone());
 		return chunk;
 	}
 	
@@ -102,6 +111,7 @@ public class ChunkBuilder
 	{
 		Arrays.fill(blocks, null);
 		Arrays.fill(metas, (byte) 0);
+		Arrays.fill(biomes, (byte) 0xFF);
 		tiles.clear();
 	}
 }

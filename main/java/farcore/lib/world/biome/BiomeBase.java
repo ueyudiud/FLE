@@ -4,6 +4,7 @@ import java.util.Random;
 
 import farcore.enums.EnumBiome;
 import farcore.enums.EnumBlock;
+import farcore.interfaces.ITreeGenerator;
 import farcore.util.FleLog;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,6 +21,8 @@ public class BiomeBase extends BiomeGenBase
 	private static final NoiseGeneratorPerlin noisePlantIII = new NoiseGeneratorPerlin(new Random(4918596729179L), 4);
 	private static final BiomeBase[] biomeList = new BiomeBase[256];
 	
+	public BD biomeDecorator = new BD();
+	
 	public BiomeBase(int id, boolean register)
 	{
 		super(id, register);
@@ -32,6 +35,22 @@ public class BiomeBase extends BiomeGenBase
 	public BiomeBase(int id)
 	{
 		this(id, true);
+	}
+	
+	@Override
+	public void decorate(World world, Random rand, int x, int z)
+	{
+		biomeDecorator.decorateChunk(world, rand, this, x, z);
+	}
+	
+	public final ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z)
+	{
+		return getTreeGenerator(world, rand, x, z, noiseTree.func_151601_a(x * 2D, z * 2D) / 32D);
+	}
+	
+	protected ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z, double treeNoise)
+	{
+		return null;
 	}
 	
     public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer)

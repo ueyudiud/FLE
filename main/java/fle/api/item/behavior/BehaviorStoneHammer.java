@@ -3,8 +3,10 @@ package fle.api.item.behavior;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
+import farcore.enums.EnumToolType;
 import farcore.interfaces.item.IItemInfo;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -22,6 +24,8 @@ import net.minecraft.world.World;
 
 public class BehaviorStoneHammer extends BehaviorDigableTool
 {
+	private static final Set<String> toolClasses = ImmutableSet.of(EnumToolType.hammer_digable.name());
+	
 	public BehaviorStoneHammer()
 	{
 		destroyBlockDamage = 1;
@@ -43,5 +47,11 @@ public class BehaviorStoneHammer extends BehaviorDigableTool
 	public void addAttributeModifiers(Multimap map, ItemStack stack)
 	{
 		map.put(SharedMonsterAttributes.knockbackResistance.getAttributeUnlocalizedName(), new AttributeModifier(itemDamageUUID, "Tool modifier", 1.0F, 0));
+	}
+	
+	@Override
+	public Set<String> getToolClasses(ItemStack stack)
+	{
+		return toolClasses;
 	}
 }

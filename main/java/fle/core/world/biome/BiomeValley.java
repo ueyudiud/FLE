@@ -7,8 +7,8 @@ public class BiomeValley extends BiomeBase
 	public BiomeValley(int id)
 	{
 		super(id);
-		theBiomeDecorator.treesPerChunk = 1;
-		theBiomeDecorator.mushroomsPerChunk = 2;
-		theBiomeDecorator.flowersPerChunk = -999;
+		biomeDecorator.treesPerChunk = 1;
+		biomeDecorator.brownMushroomsPerChunk = 2;
+		biomeDecorator.flowersPerChunk = -999;
 	}
 }

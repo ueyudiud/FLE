@@ -10,11 +10,12 @@ public class BiomeMushroomIsland extends BiomeBase
 	public BiomeMushroomIsland(int id)
 	{
 		super(id);
-        theBiomeDecorator.treesPerChunk = -100;
-        theBiomeDecorator.flowersPerChunk = -100;
-        theBiomeDecorator.grassPerChunk = -100;
-        theBiomeDecorator.mushroomsPerChunk = 1;
-        theBiomeDecorator.bigMushroomsPerChunk = 1;
+        biomeDecorator.treesPerChunk = -100;
+        biomeDecorator.flowersPerChunk = -100;
+        biomeDecorator.grassPerChunk = -100;
+        biomeDecorator.redMushroomsPerChunk = 1;
+        biomeDecorator.brownMushroomsPerChunk = 1;
+        biomeDecorator.bigMushroomsPerChunk = 1;
         topBlock = Blocks.mycelium;
         spawnableMonsterList.clear();
         spawnableCreatureList.clear();

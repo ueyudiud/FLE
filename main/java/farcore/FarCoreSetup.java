@@ -1,8 +1,15 @@
 package farcore;
 
+import static farcore.FarCoreRegistry.*;
+
 import java.io.File;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
+import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -10,6 +17,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -28,11 +36,13 @@ import farcore.entity.EntityFallingBlockExtended;
 import farcore.handler.FarCoreCraftingHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreHarvestHandler;
+import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCorePlayerHandler;
 import farcore.item.ItemDebugger;
 import farcore.item.ItemFluidDisplay;
 import farcore.lib.command.CommandCalendar;
 import farcore.lib.command.CommandWorldData;
+import farcore.lib.net.PacketKey;
 import farcore.lib.net.PacketSound;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
@@ -52,20 +62,24 @@ import farcore.util.CalendarHandler;
 import farcore.util.FleLog;
 import farcore.util.LanguageManager;
 import farcore.util.U;
+import farcore.util.Values;
 import farcore.util.V;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderFallingBlock;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.event.world.ChunkDataEvent.Load;
 
-@Mod(modid = FarCore.ID, version = "0.5", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "0.6", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 1420;
 	
+	@SideOnly(Side.CLIENT)
 	public static RenderHandler handlerA;
+	@SideOnly(Side.CLIENT)
 	public static RenderHandler handlerB;
 	
 	@Instance(FarCore.ID)
@@ -87,9 +101,28 @@ public class FarCoreSetup
 	}
 	
 	@EventHandler
-	public void load(FMLPreInitializationEvent event)
+	public void check(FMLFingerprintViolationEvent event)
 	{
-		FleLog.getLogger().info("Far Core start check forge version.");
+		FleLog.getLogger().info("Far Core start check java version...");
+		try
+		{
+			Map map = new HashMap();
+			map.getOrDefault("", "");
+		}
+		catch(Exception exception)
+		{
+			throw new IllegalArgumentException("Java version is out of date, this mod is suggested use java 8 to run.", exception);
+		}
+		FleLog.getLogger().info("Far Core checking mod version...");
+		try
+		{
+			new ChunkCoordinates(1, 2, 3);
+		}
+		catch(Exception exception)
+		{
+			throw new IllegalArgumentException("You may download dev version, please check your mod version and use default version.", exception);
+		}
+		FleLog.getLogger().info("Far Core checking forge version...");
 		int forge = ForgeVersion.getBuildVersion();
 		if ((forge > 0) && (forge < minForge))
 		{
@@ -99,8 +132,15 @@ public class FarCoreSetup
 					"Please update the Minecraft Forge.\n" + "\n" + 
 					"(Technical information: " + forge + " < " + minForge + ")");
 		}
+		FleLog.getCoreLogger().info("Checking end.");
+	}
+	
+	@EventHandler
+	public void load(FMLPreInitializationEvent event)
+	{
 		try
 		{
+			FleLog.getCoreLogger().info("Loading configuration.");
 			File file = event.getSuggestedConfigurationFile();
 			Configuration configuration = new Configuration(file);
 			configuration.load();
@@ -113,20 +153,21 @@ public class FarCoreSetup
 		}
 		CalendarHandler.init();
 		Object handler;
-		MinecraftForge.EVENT_BUS.register(new FarCorePlayerHandler());
-		MinecraftForge.EVENT_BUS.register(new FarCoreHarvestHandler());
+		registerMFEventHandler(new FarCorePlayerHandler());
+		registerMFEventHandler(new FarCoreHarvestHandler());
 		handler = new FarCoreEnergyHandler();
 		FarCoreEnergyHandler.BUS.register(handler);
-		MinecraftForge.EVENT_BUS.register(handler);
-		FMLCommonHandler.instance().bus().register(handler);
-		FMLCommonHandler.instance().bus().register(new FarCoreCraftingHandler());
+		registerMFEventHandler(handler);
+		registerFMLEventHandler(handler);
+		registerFMLEventHandler(new FarCoreCraftingHandler());
+		registerFMLEventHandler(new FarCoreKeyHandler());
 		
-		FarCoreEnergyHandler.addNet(FarCore.thermalNet);
-		FarCoreEnergyHandler.addNet(FarCore.kineticNet);
-		FarCoreEnergyHandler.addNet(FarCore.electricNet);
+		addEnergyNet(FarCore.thermalNet);
+		addEnergyNet(FarCore.kineticNet);
+		addEnergyNet(FarCore.electricNet);
 		
 		lang = new LanguageManager(
-				new File(Minecraft.getMinecraft().mcDataDir, "fle_lang.json"));
+				new File(U.Mod.getMCFile(), "fle_lang.json"));
 		lang.load();
 		
 		int id = V.fallingBlockEntityID;
@@ -143,6 +184,7 @@ public class FarCoreSetup
 	public void Load(FMLInitializationEvent event)
 	{
 		BlockLog.init();
+		registerKey(Values.key_place, Keyboard.KEY_P);
 	}
 	
 	@EventHandler
@@ -164,6 +206,7 @@ public class FarCoreSetup
 		network.registerPacket(PacketSound.class, Side.CLIENT);
 		network.registerPacket(PacketEntity.class, Side.CLIENT);
 		network.registerPacket(PacketEntityAsk.class, Side.SERVER);
+		network.registerPacket(PacketKey.class, Side.SERVER);
 	}
 
 	@EventHandler

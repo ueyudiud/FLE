@@ -54,6 +54,11 @@ public class TileEntitySpaling extends TileEntityAgeUpdatable
 	@Override
 	protected void updateServer2()
 	{
+		if(!getBlockType().canBlockStay(worldObj, xCoord, yCoord, zCoord))
+		{
+			removeBlock(0, 0, 0);
+			return;
+		}
 		if(wood == null) return;
 		++age;
 		if(age >= 50)

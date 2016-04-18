@@ -19,6 +19,8 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag TOOL_metal_tier1 = getNewSubTag("TOOL_METAL_TIER1");
 	public static final SubTag TOOL_metal = TOOL_metal_tier0;//Remove old tag of tool material.
 	public static final SubTag TOOL_fireable = getNewSubTag("TOOL_FIREABLE");
+
+	public static final SubTag PlantType_Plains = getNewSubTag("Plains");
 	
 	public static void addTagsTo(SubTag[] tags, ISubTagContainer...containers)
 	{
@@ -42,6 +44,11 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	{
 		this.name = name;
 		subTags.register(name, this);
+	}
+	
+	public String name()
+	{
+		return name;
 	}
 	
 	public String toString()

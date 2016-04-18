@@ -2,6 +2,8 @@ package fle.core.world.gen;
 
 import java.util.Arrays;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCore;
 import farcore.FarCoreSetup;
 import farcore.util.U;
@@ -18,9 +20,9 @@ public class FleWorldType extends WorldType
 	public static FleWorldType FLAT;
 	public static FleWorldType LARGE_BIOMES;
 	
-	public FleWorldType(int index, String name, String localized)
+	public FleWorldType(int index, String name)
 	{
-		this(name, localized);
+		this(name);
 		worldTypes[index] = this;
 		int oldIndex = getWorldTypeID();
 		worldTypes[oldIndex] = null;
@@ -33,13 +35,12 @@ public class FleWorldType extends WorldType
 			e.printStackTrace();
 		}
 	}
-	public FleWorldType(String name, String localized)
+	public FleWorldType(String name)
 	{
 		super(name);
-		FarCoreSetup.lang.registerLocal(getTranslateName(), localized);
 	}
 	
-	@Override
+	@SideOnly(Side.CLIENT)
 	public String getTranslateName()
 	{
 		return FarCore.translateToLocal(super.getTranslateName());

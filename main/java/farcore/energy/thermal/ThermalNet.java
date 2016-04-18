@@ -14,7 +14,7 @@ import farcore.interfaces.energy.thermal.IThermalTile;
 import farcore.interfaces.energy.thermal.IWorldThermalConductivityHandler;
 import farcore.util.FleLog;
 import farcore.util.U;
-import farcore.util.Unit;
+import farcore.util.Values;
 import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -29,16 +29,16 @@ public class ThermalNet implements IEnergyNet
 	
 	public static float getEnviormentTemp(World world, int x, int y, int z)
 	{
-		if(world == null) return Unit.C_0_Point;
+		if(world == null) return Values.C_0_Point;
 		float bioTemp = world.getBiomeGenForCoords(x, z).temperature;
 		float hor = (float) world.provider.getHorizon();
 		return Math.max(((bioTemp * 4.5F + 0.15F) * bioTemp + 1.4F) * bioTemp + 
-				Unit.C_0_Point - (hor < y ? ((float) y - hor) * 0.8F : 0), 0F);
+				Values.C_0_Point - (hor < y ? ((float) y - hor) * 0.8F : 0), 0F);
 	}
 	
 	public static float getBlockTemp(World world, int x, int y, int z, boolean checkNearby)
 	{
-		if(world == null) return Unit.C_0_Point;
+		if(world == null) return Values.C_0_Point;
 		Block block = world.getBlock(x, y, z);
 		TileEntity tile = world.getTileEntity(x, y, z);
 		thread.set(0);
@@ -129,7 +129,7 @@ public class ThermalNet implements IEnergyNet
 			if((a = handler.getThermalConductivity(world, x, y, z)) > 0)
 				return a;
 		}
-		return Unit.standardThermalConductivity;
+		return Values.standardThermalConductivity;
 	}
 	
 	public static void sendHeatToBlock(World world, int x, int y, int z, float amount)

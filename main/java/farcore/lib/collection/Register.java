@@ -16,6 +16,7 @@ public class Register<T> implements IRegister<T>
 	private IRegisterExceptionHandler handler;
 	
 	private int point = 0;
+	private int size = 0;
 	private float factor;
 	
 	private Object[] targets;
@@ -134,9 +135,16 @@ public class Register<T> implements IRegister<T>
 		}
 		else
 		{
+			size++;
 			names[id] = name;
 			targets[id] = arg;
 		}
+	}
+	
+	@Override
+	public int size()
+	{
+		return size;
 	}
 
 	@Override
@@ -266,6 +274,7 @@ public class Register<T> implements IRegister<T>
 			names[id] = null;
 			T ret = (T) targets[id];
 			targets[id] = null;
+			size--;
 			return ret;
 		}
 		return null;
@@ -281,6 +290,7 @@ public class Register<T> implements IRegister<T>
 			targets[id] = null;
 			String ret = names[id];
 			names[id] = null;
+			size--;
 			return ret;
 		}
 		return null;

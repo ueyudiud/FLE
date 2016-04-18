@@ -38,4 +38,6 @@ public interface IRegister<T> extends Iterable<T>
 	T remove(String name);
 	
 	String remove(T arg);
+
+	int size();
 }

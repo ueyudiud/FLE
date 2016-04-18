@@ -5,6 +5,7 @@ import farcore.lib.substance.SubstanceSand;
 import farcore.lib.substance.SubstanceTool;
 import farcore.lib.substance.SubstanceWood;
 import farcore.lib.world.gen.tree.TreeGenAcacia;
+import farcore.lib.world.gen.tree.TreeGenCanopy;
 import farcore.lib.world.gen.tree.TreeGenJungle;
 import farcore.lib.world.gen.tree.TreeGenPine;
 import farcore.lib.world.gen.tree.TreeGenSimple;
@@ -262,7 +263,7 @@ public class Substances
 		new SubstanceWood(3, "birch").setHardness(4.0F).setTreeGen(new TreeGenSimple(5, false));
 		new SubstanceWood(4, "ceiba").setHardness(1.1F).setTreeGen(new TreeGenJungle(30, 8));
 		new SubstanceWood(5, "acacia").setTreeGen(new TreeGenAcacia());
-		new SubstanceWood(6, "oak-black").setHardness(5.4F).setTreeGen(new TreeGenSimple(6, false));
+		new SubstanceWood(6, "oak-black").setHardness(5.4F).setTreeGen(new TreeGenCanopy());
 		new SubstanceWood(11, "aspen").setHardness(1.6F).setTreeGen(new TreeGenStraight(7, 4, 5, 8, 1.5F, true));
 		new SubstanceWood(12, "morus").setTreeGen(new TreeGenStraight(4, 3, 2, 5, 4.2F, true));
 		new SubstanceWood(13, "willow").setTreeGen(new TreeGenStraight(4, 4, 1, 6, 4.6F, false));

@@ -9,7 +9,7 @@ import farcore.block.BlockBase;
 import farcore.enums.EnumBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
 import farcore.util.U;
-import farcore.util.Unit;
+import farcore.util.Values;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -121,21 +121,21 @@ public class BlockIce extends BlockBase implements IThermalProviderBlock
 	@Override
 	public float getBlockTemperature(World world, int x, int y, int z)
 	{
-		return Unit.minIceTemp + (Unit.C_0_Point - Unit.minIceTemp) * world.getBlockMetadata(x, y, z) / 16F;
+		return Values.minIceTemp + (Values.C_0_Point - Values.minIceTemp) * world.getBlockMetadata(x, y, z) / 16F;
 	}
 
 	@Override
 	public float getThermalConductivity(World world, int x, int y, int z)
 	{
-		return Unit.iceThermalConductivity;
+		return Values.iceThermalConductivity;
 	}
 
 	@Override
 	public void onHeatChanged(World world, int x, int y, int z, float input)
 	{
-		if(input > Unit.iceSpecificHeat)
+		if(input > Values.iceSpecificHeat)
 		{
-			int floor = (int) (input / Unit.iceSpecificHeat);
+			int floor = (int) (input / Values.iceSpecificHeat);
 			int meta = world.getBlockMetadata(x, y, z);
 			if(meta + floor < 16)
 			{

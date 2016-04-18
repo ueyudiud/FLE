@@ -22,7 +22,7 @@ import farcore.interfaces.ISmartBurnableBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
 import farcore.interfaces.energy.thermal.IThermalTile;
 import farcore.util.U;
-import farcore.util.Unit;
+import farcore.util.Values;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -312,7 +312,7 @@ implements IInfoSpawnable, IThermalProviderBlock
 			return block.getBurningTemperature(world, x, y, z, level);
 		}
 		float envTemp = ThermalNet.getEnviormentTemp(world, x, y, z);
-		return envTemp + (Unit.maxFireTemp - envTemp) * (float) (16 - l) / 16F;
+		return envTemp + (Values.maxFireTemp - envTemp) * (float) (16 - l) / 16F;
 	}
 
 	@Override
@@ -320,13 +320,13 @@ implements IInfoSpawnable, IThermalProviderBlock
 	{
 		if(world.getTileEntity(x, y - 1, z) instanceof IThermalTile)
 		{
-			return Unit.fireThermalConductivity + ((IThermalTile) world.getTileEntity(x, y - 1, z)).getThermalConductivity(Direction.U);
+			return Values.fireThermalConductivity + ((IThermalTile) world.getTileEntity(x, y - 1, z)).getThermalConductivity(Direction.U);
 		}
 		else if(world.getBlock(x, y - 1, z) instanceof IThermalProviderBlock)
 		{
-			return Unit.fireThermalConductivity + ((IThermalProviderBlock) world.getBlock(x, y - 1, z)).getThermalConductivity(world, x, y - 1, z);
+			return Values.fireThermalConductivity + ((IThermalProviderBlock) world.getBlock(x, y - 1, z)).getThermalConductivity(world, x, y - 1, z);
 		}
-		return Unit.fireThermalConductivity;
+		return Values.fireThermalConductivity;
 	}
 
 	@Override

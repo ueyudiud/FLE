@@ -145,29 +145,33 @@ public class BlockLeaves extends BlockBase implements IShearable
     		}
     		boolean flag = false;
     		boolean flag2 = false;
-    		for(Direction direction : Direction.directions)
+    		if(U.Worlds.isBlockNearby(world, x, y, z, log, -1, false))
     		{
-    			if(isLog(world, x + direction.x, y + direction.y, z + direction.z))
-    			{
-    				flag2 = flag = true;
-    			}
-    			else if(isLeavesLife(world, x + direction.x, y + direction.y, z + direction.z))
-    			{
-    				flag = true;
-    				world.scheduleBlockUpdate(x + direction.x, y + direction.y, z + direction.z, this, tickRate(world) + world.rand.nextInt(10));
-    			}
+    			flag2 = flag = true;
     		}
+    		else if(isLeavesLife(world, x - 1, y, z) ||
+    				isLeavesLife(world, x + 1, y, z) ||
+    				isLeavesLife(world, x, y - 1, z) ||
+    				isLeavesLife(world, x, y + 1, z) ||
+    				isLeavesLife(world, x, y, z - 1) ||
+    				isLeavesLife(world, x, y, z + 1))
+    		{
+    			flag = true;
+    		}
+    		
     		if(!flag)
     		{
-    			for(Direction direction : Direction.directions)
-    			{
-    				beginLeavesDecay(world, x + direction.x, y + direction.y, z + direction.z);
-    			}
+    			beginLeavesDecay(world, x + 1, y, z);
+    			beginLeavesDecay(world, x - 1, y, z);
+    			beginLeavesDecay(world, x, y + 1, z);
+    			beginLeavesDecay(world, x, y - 1, z);
+    			beginLeavesDecay(world, x, y, z + 1);
+    			beginLeavesDecay(world, x, y, z - 1);
     			world.setBlockToAir(x, y, z);
     		}
     		else if(flag2)
     		{
-    			world.setBlockMetadataWithNotify(x, y, z, meta & 0xD, 4);
+    			world.setBlockMetadataWithNotify(x, y, z, meta & (~0x2), 4);
     		}
     	}
     }

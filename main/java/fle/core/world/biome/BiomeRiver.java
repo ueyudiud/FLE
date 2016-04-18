@@ -2,7 +2,6 @@ package fle.core.world.biome;
 
 import farcore.lib.world.biome.BiomeBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.biome.BiomeGenRiver;
 
 public class BiomeRiver extends BiomeBase
 {
@@ -10,12 +9,17 @@ public class BiomeRiver extends BiomeBase
 	{
 		super(id);
         spawnableCreatureList.clear();
+        biomeDecorator.treesPerChunk = -999;
         if(onDesert)
         {
         	topBlock = Blocks.sand;
-        	theBiomeDecorator.reedsPerChunk = 3;
-        	theBiomeDecorator.cactiPerChunk = 3;
-        	theBiomeDecorator.clayPerChunk = -999;
+        	biomeDecorator.reedsPerChunk = 3;
+        	biomeDecorator.cactiPerChunk = 3;
+        	biomeDecorator.clayPerChunk = -999;
+        }
+        else
+        {
+        	topBlock = Blocks.dirt;
         }
 	}
 }

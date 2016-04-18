@@ -1,5 +1,6 @@
 package farcore.util;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -26,6 +27,7 @@ import farcore.entity.EntityFallingBlockExtended;
 import farcore.enums.Direction;
 import farcore.enums.EnumDamageResource;
 import farcore.enums.UpdateType;
+import farcore.handler.FarCoreKeyHandler;
 import farcore.interfaces.ICalendar;
 import farcore.interfaces.ISmartFallableBlock;
 import farcore.interfaces.ISmartHarvestBlock;
@@ -44,7 +46,6 @@ import farcore.lib.world.IWorldDatas;
 import farcore.lib.world.WorldCfg;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -65,7 +66,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -94,6 +94,16 @@ public class U
 		public static short cast(Short short1)
 		{
 			return short1 == null ? 0 : short1.shortValue();
+		}
+		
+		public static void exit()
+		{
+			exit(0, false);
+		}
+		
+		public static void exit(int code, boolean hardExit)
+		{
+			FMLCommonHandler.instance().exitJava(code, hardExit);
 		}
 		
 		public static <T> T[] cast(List<? extends T> list, Class<T> clazz)
@@ -401,6 +411,11 @@ public class U
 		public static boolean isModLoaded(String name)
 		{
 			return Loader.isModLoaded(name);
+		}
+
+		public static File getMCFile()
+		{
+			return Worlds.cfg.c();
 		}
 	}
 	
@@ -742,6 +757,23 @@ public class U
 				return true;
 			}
 		}
+
+		public static boolean isBlockNearby(World world, int x, int y, int z, Block block, int meta, boolean ignoreUnloadChunk)
+		{
+			return isBlock(world, x + 1, y, z, block, meta, ignoreUnloadChunk) ||
+					isBlock(world, x - 1, y, z, block, meta, ignoreUnloadChunk) ||
+					isBlock(world, x, y + 1, z, block, meta, ignoreUnloadChunk) ||
+					isBlock(world, x, y - 1, z, block, meta, ignoreUnloadChunk) ||
+					isBlock(world, x, y, z + 1, block, meta, ignoreUnloadChunk) ||
+					isBlock(world, x, y, z - 1, block, meta, ignoreUnloadChunk);
+		}
+		
+		public static boolean isBlock(World world, int x, int y, int z, Block block, int meta, boolean ignoreUnloadChunk)
+		{
+			return (!ignoreUnloadChunk || world.blockExists(x, y, z)) &&
+					world.getBlock(x, y, z) == block &&
+					(meta < 0 || world.getBlockMetadata(x, y, z) == meta);
+		}
 	}
 	
 	public static class Inventorys
@@ -932,6 +964,11 @@ public class U
 
 	public static class Player
 	{
+		public static boolean isKeyDown(EntityPlayer player, String key)
+		{
+			return FarCoreKeyHandler.get(player, key);
+		}
+		
 		public static float getBaseDigspeed(EntityPlayer player, World world, int x, int y, int z, Block block, int meta)
 		{
 	        ItemStack stack = player.getCurrentEquippedItem();

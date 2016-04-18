@@ -1,7 +1,12 @@
 package fle.api.item.behavior;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
+import farcore.enums.EnumToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;

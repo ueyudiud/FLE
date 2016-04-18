@@ -3,15 +3,21 @@ package fle.core.block;
 import java.util.ArrayList;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.energy.thermal.ThermalNet;
 import farcore.enums.EnumBlock;
 import farcore.enums.EnumItem;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.substance.SubstanceRock;
+import farcore.util.U;
 import fle.api.block.BlockSubstance;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityDiggingFX;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -50,35 +56,107 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 	@Override
 	public int tickRate(World world)
 	{
-		return 4;
+		return 24;
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+	{
+		super.onNeighborBlockChange(world, x, y, z, block);
+		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 	}
 	
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		if(world.isRemote) return;
-		int deltaTemp = (int) ThermalNet.getTempDifference(world, x, y, z);
-		if(deltaTemp < 50) return;
-		if(deltaTemp > 149 || rand.nextInt(150) < deltaTemp)
+		int meta = world.getBlockMetadata(x, y, z);
+		if(meta < 3)
 		{
-			int meta = world.getBlockMetadata(x, y, z);
-			if(meta == 0)
-			{	
-				if(rand.nextInt(5) == 0)
+			if(U.Worlds.isBlockNearby(world, x, y, z, EnumBlock.water.block(), -1, true))
+			{
+				return;
+			}
+			int deltaTemp = (int) ThermalNet.getTempDifference(world, x, y, z);
+			if(deltaTemp < 30)
+			{
+				if(meta > 0)
 				{
-					world.setBlockMetadataWithNotify(x, y, z, 1, 3);
+					world.setBlockMetadataWithNotify(x, y, z, meta - 1, 2);
 				}
+			}
+			else if(deltaTemp > 149 || (deltaTemp >= 50 && rand.nextInt(150) < deltaTemp))
+			{
+				if(meta == 0)
+				{	
+					if(rand.nextInt(5) == 0)
+					{
+						world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+						world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+					}
+				}
+				else
+				{
+					if(rand.nextBoolean())
+					{
+						world.setBlockMetadataWithNotify(x, y, z, meta + 1, 2);
+					}
+					world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+				}
+			}
+		}
+		else if(meta == 3)
+		{
+			if(U.Worlds.isBlockNearby(world, x, y, z, EnumBlock.water.block(), -1, true))
+			{
+				EnumBlock.cobble.spawn(world, x, y, z, substance);
 			}
 			else
 			{
-				if(meta == 3)
-				{
-					EnumBlock.cobble.spawn(world, x, y, z, substance);
-				}
-				else if(rand.nextBoolean())
-				{
-					world.setBlockMetadataWithNotify(x, y, z, meta + 1, 3);
-				}
+				 if(ThermalNet.getTempDifference(world, x, y, z) < 30 && rand.nextBoolean())
+				 {
+					 world.setBlockMetadataWithNotify(x, y, z, meta - 1, 2);
+				 }
+				 else
+				 {
+					 world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+				 }
+			}
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(World world, int x, int y, int z, Random rand)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		if(meta == 3)
+		{
+			double u1, v1, t1;
+			for(int i = 0; i < 2; ++i)
+			{
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = -rand.nextDouble() * .05;
+				world.spawnParticle("depthsuspend", (double) x + u1, (double) y + v1, (double) z - 0.1, 0D, 0D, t1);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = -rand.nextDouble() * .1;
+				world.spawnParticle("depthsuspend", (double) x + u1, (double) y, (double) z + v1, 0D, t1, 0D);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = -rand.nextDouble() * .05;
+				world.spawnParticle("depthsuspend", (double) x - 0.1, (double) y + u1, (double) z + v1, t1, 0D, 0D);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = rand.nextDouble() * .05;
+				world.spawnParticle("depthsuspend", (double) x + u1, (double) y + v1, (double) z + 1.1, 0D, 0D, t1);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				world.spawnParticle("depthsuspend", (double) x + u1, (double) y + 1D, (double) z + v1, 0D, 0D, 0D);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = rand.nextDouble() * .05;
+				world.spawnParticle("depthsuspend", (double) x + 1.1, (double) y + u1, (double) z + v1, t1, 0D, 0D);
 			}
 		}
 	}

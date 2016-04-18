@@ -3,7 +3,7 @@ package fle.core.tile;
 import farcore.enums.Direction;
 import farcore.lib.substance.SubstanceWood;
 import farcore.lib.tile.TileEntityAgeUpdatable;
-import farcore.util.Unit;
+import farcore.util.Values;
 import fle.core.block.BlockTorch;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -13,7 +13,7 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 {
 	public static int getWoodBurnTime(SubstanceWood substance)
 	{
-		return substance.burnEnergyPerUnit * Unit.half_mol;
+		return substance.burnEnergyPerUnit * Values.half_mol;
 	}
 	
 	public SubstanceWood substance;

@@ -110,10 +110,8 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 		return true;
 	}
 	
-	protected void gen1(int x, int z)
+	protected void gen1(int x, int z, BiomeGenBase[] biomes)
 	{
-		biomes = world.getWorldChunkManager().getBiomesForGeneration(biomes, x - smoothSize, z - smoothSize, smoothBiomeSize, smoothBiomeSize);
-		
 		cache1 = noise1.generateNoiseOctaves(cache1, x, z, 5, 5, 100D, 100D, 100D);
 		cache2 = noise2.generateNoiseOctaves(cache2, x, 0, z, 5, 33, 5, 200D, 128D, 200D);
 		cache3 = noise3.generateNoiseOctaves(cache3, x, 0, z, 5, 33, 5, 200D, 128D, 200D);
@@ -162,27 +160,27 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 				
 				double d1 = cache1[id1] / 8000D;//Provide base height coefficient.
 				if (d1 < 0.0D)
-                {
-                    d1 = -d1 * 0.3D;
-                }
-                d1 = d1 * 3.0D - 2.0D;
-                if (d1 < 0.0D)
-                {
-                    d1 /= 2.0D;
-                    if (d1 < -1.0D)
-                    {
-                        d1 = -1.0D;
-                    }
-                    d1 /= 2.0D * 1.4D;
-                }
-                else
-                {
-                    if (d1 > 1.0D)
-                    {
-                        d1 = 1.0D;
-                    }
-                    d1 /= 8.0D;
-                }
+		        {
+		            d1 = -d1 * 0.5D;
+		        }
+		        d1 = d1 * 3.0D - 2.0D;
+		        if (d1 < 0.0D)
+		        {
+		            d1 /= 2.0D;
+		            if (d1 < -1.0D)
+		            {
+		                d1 = -1.0D;
+		            }
+		            d1 /= 4.0D;
+		        }
+		        else
+		        {
+		            if (d1 > 1.0D)
+		            {
+		                d1 = 1.0D;
+		            }
+		            d1 /= 4.0D;
+		        }
 
                 ++id1;
                 double d2 = (double)f1;
@@ -293,14 +291,14 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 		}
 	}
 
-	protected void gen3(int x, int z, Block[] blocks, byte[] metas)
+	protected void gen3(int x, int z, Block[] blocks, byte[] metas, BiomeGenBase[] biomes2)
     {
         ReplaceBiomeBlocks event = new ReplaceBiomeBlocks(this, x, z, blocks, metas, biomes, world);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) return;
 
         double d0 = 0.03125D;
-        cache6 = noise6.func_151599_a(cache6, (double)(x * 16), (double)(z * 16), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
+        cache6 = noise6.func_151599_a(cache6, (double)(x << 4), (double)(z << 4), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
 
         for (int k = 0; k < 16; ++k)
         {
@@ -400,15 +398,17 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 	}
 	
 	@Override
-	public Chunk provideChunk(int x, int z)
+	public synchronized Chunk provideChunk(int x, int z)
 	{
 		builder.reset();
-		gen1(x * 4, z * 4);//Generate height.
+		biomes = world.getWorldChunkManager().getBiomesForGeneration(biomes, (x << 2) - smoothSize, (z << 2) - smoothSize, smoothBiomeSize, smoothBiomeSize);
+		gen1(x << 2, z << 2, biomes);//Generate height.
 		gen2(builder.getBlocks(), builder.getMetas());//Generate base.
-		biomes = world.getWorldChunkManager().loadBlockGeneratorData(biomes, x * 16, z * 16, 16, 16);
-		gen3(x, z, builder.getBlocks(), builder.getMetas());//Replace block by biome.
+		biomes = world.getWorldChunkManager().loadBlockGeneratorData(biomes, x << 4, z << 4, 16, 16);
+		builder.setBiomes(biomes);
+		gen3(x, z, builder.getBlocks(), builder.getMetas(), biomes);//Replace block by biome.
 		gen4(x, z, builder);//Initialize rock layer.
-		return builder.build(world, x, z, biomes);
+		return builder.build(world, x, z);
 	}
 
 	@Override
@@ -421,13 +421,13 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 	public void populate(IChunkProvider provider, int x, int z)
 	{
         BlockFalling.fallInstantly = true;
-        int k = x * 16;
-        int l = z * 16;
-        BiomeGenBase biomegenbase = this.world.getBiomeGenForCoords(k + 16, l + 16);
+        int k = x << 4;
+        int l = z << 4;
+        BiomeGenBase biomegenbase = world.getBiomeGenForCoords(k + 16, l + 16);
         random.setSeed(world.getSeed());
         long i1 = this.random.nextLong() / 2L * 2L + 1L;
         long j1 = this.random.nextLong() / 2L * 2L + 1L;
-        this.random.setSeed((long)x * i1 + (long)z * j1 ^ this.world.getSeed());
+        random.setSeed((long)x * i1 + (long)z * j1 ^ this.world.getSeed());
         boolean flag = false;
 
         MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(provider, world, random, x, z, flag));

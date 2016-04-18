@@ -1,5 +1,7 @@
 package farcore.lib.world;
 
+import java.io.File;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -19,5 +21,10 @@ public class WorldCfg
 	public EntityPlayer b()
 	{
 		return null;
+	}
+	
+	public File c()
+	{
+		return new File(".");
 	}
 }

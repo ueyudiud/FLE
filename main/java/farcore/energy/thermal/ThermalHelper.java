@@ -1,6 +1,6 @@
 package farcore.energy.thermal;
 
-import farcore.util.Unit;
+import farcore.util.Values;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -22,7 +22,7 @@ public class ThermalHelper
 	{
 		this.specificHeat = specificHeat;
 		this.thermalConductivity = thermalConductivity;
-		maxHeat = Unit.TP * specificHeat;
+		maxHeat = Values.TP * specificHeat;
 	}
 
 	public void writeToNBT(NBTTagCompound nbt)

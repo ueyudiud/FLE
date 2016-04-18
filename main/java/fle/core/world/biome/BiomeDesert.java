@@ -19,12 +19,12 @@ public class BiomeDesert extends BiomeBase
         spawnableCreatureList.clear();
         topBlock = Blocks.sand;
         fillerBlock = Blocks.sand;
-        theBiomeDecorator.treesPerChunk = -999;
-        theBiomeDecorator.deadBushPerChunk = 2;
-        theBiomeDecorator.reedsPerChunk = 50;
+        biomeDecorator.treesPerChunk = -999;
+        biomeDecorator.deadBushPerChunk = 2;
+        biomeDecorator.reedsPerChunk = 50;
         if(genCacti)
         {
-        	theBiomeDecorator.cactiPerChunk = 10;
+        	biomeDecorator.cactiPerChunk = 10;
         }
         spawnableCreatureList.clear();
         this.genWell = genWell;

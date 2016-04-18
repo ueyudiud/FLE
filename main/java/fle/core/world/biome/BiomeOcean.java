@@ -22,7 +22,7 @@ public class BiomeOcean extends BiomeBase
 		{
 			setHeight(HEIGHT);
 		}
-		theBiomeDecorator.clayPerChunk = -1;
+		biomeDecorator.clayPerChunk = -1;
 		spawnableCreatureList.clear();
 	}
 

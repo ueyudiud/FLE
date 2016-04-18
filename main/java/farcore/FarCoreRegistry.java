@@ -1,0 +1,65 @@
+package farcore;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import farcore.handler.FarCoreEnergyHandler;
+import farcore.handler.FarCoreKeyHandler;
+import farcore.interfaces.ICalendar;
+import farcore.interfaces.energy.IEnergyNet;
+import farcore.lib.render.RenderBase;
+import farcore.util.CalendarHandler;
+import farcore.util.U;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+
+public class FarCoreRegistry
+{
+	public static void registerOre(String name, Item ore)
+	{
+		U.OreDict.registerValid(name, ore);
+	}
+	public static void registerOre(String name, Block ore)
+	{
+		U.OreDict.registerValid(name, ore);
+	}
+	public static void registerOre(String name, ItemStack ore)
+	{
+		U.OreDict.registerValid(name, ore);
+	}
+	
+	public static void registerKey(String name, int keycode)
+	{
+		FarCoreKeyHandler.register(name, keycode);
+	}
+	
+	public static void addEnergyNet(IEnergyNet net)
+	{
+		FarCoreEnergyHandler.addNet(net);
+	}
+	
+	public static void registerCustomRenderBlock(Block block, int meta, Class<RenderBase> clazz)
+	{
+		FarCoreSetup.handlerB.register(block, meta, clazz);
+	}
+	
+	public static void registerCustomRenderBlockWithoutInventory(Block block, int meta, Class<RenderBase> clazz)
+	{
+		FarCoreSetup.handlerA.register(block, meta, clazz);
+	}
+	
+	public static void registerMFEventHandler(Object object)
+	{
+		MinecraftForge.EVENT_BUS.register(object);
+	}
+	
+	public static void registerFMLEventHandler(Object object)
+	{
+		FMLCommonHandler.instance().bus().register(object);
+	}
+		
+	public static void addCalendar(int dim, String name, ICalendar calendar)
+	{
+		CalendarHandler.addCalendar(dim, name, calendar);
+	}
+}

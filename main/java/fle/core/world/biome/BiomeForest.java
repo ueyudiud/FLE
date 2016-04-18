@@ -4,7 +4,12 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.interfaces.ITreeGenerator;
+import farcore.lib.substance.SubstanceWood;
 import farcore.lib.world.biome.BiomeBase;
+import farcore.lib.world.gen.tree.TreeGenCanopy;
+import farcore.lib.world.gen.tree.TreeGenSimple;
+import fle.api.world.gen.TreeGenStraight;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.init.Blocks;
@@ -18,23 +23,51 @@ import net.minecraft.world.gen.feature.WorldGenForest;
 
 public class BiomeForest extends BiomeBase
 {
-    protected static final WorldGenForest genHighTree = new WorldGenForest(false, true);
-    protected static final WorldGenForest genLowTree = new WorldGenForest(false, false);
-    protected static final WorldGenCanopyTree genCanopyTree = new WorldGenCanopyTree(false);
+//    protected static final WorldGenForest genHighTree = new WorldGenForest(false, true);
+//    protected static final WorldGenForest genLowTree = new WorldGenForest(false, false);
+//    protected static final WorldGenCanopyTree genCanopyTree = new WorldGenCanopyTree(false);
+
+	private static boolean init = false;
+	
+	protected static final ITreeGenerator genOak1 = new TreeGenSimple(5, false);
+	protected static final ITreeGenerator genBirch1 = new TreeGenSimple(5, false);
+	protected static final ITreeGenerator genDarkOak = new TreeGenCanopy();
+	protected static final ITreeGenerator genAspen1 = new TreeGenStraight(7, 4, 5, 8, 1.5F, true);
+	protected static final ITreeGenerator genMorus1 = new TreeGenStraight(4, 3, 2, 5, 4.2F, true);
+	
+	private void init()
+	{
+		if(!init)
+		{
+			SubstanceWood wood = SubstanceWood.getSubstance("oak");
+			genOak1.initLogBlock(wood.log, wood.leaves);
+			wood = SubstanceWood.getSubstance("birch");
+			genBirch1.initLogBlock(wood.log, wood.leaves);
+			wood = SubstanceWood.getSubstance("oak-black");
+			genDarkOak.initLogBlock(wood.leaves, wood.leaves);
+			wood = SubstanceWood.getSubstance("aspen");
+			genAspen1.initLogBlock(wood.log, wood.leaves);
+			wood = SubstanceWood.getSubstance("morus");
+			genMorus1.initLogBlock(wood.log, wood.leaves);
+			init = true;
+		}
+	}
+	
     private int type;
 	
     public BiomeForest(int id, int type)
 	{
 		super(id);
+		init();
         this.type = type;
-        this.theBiomeDecorator.treesPerChunk = 10;
+        this.biomeDecorator.treesPerChunk = 10;
         this.theBiomeDecorator.grassPerChunk = 2;
 
         if (this.type == 1)
         {
-            this.theBiomeDecorator.treesPerChunk = 6;
-            this.theBiomeDecorator.flowersPerChunk = 100;
-            this.theBiomeDecorator.grassPerChunk = 1;
+            this.biomeDecorator.treesPerChunk = 6;
+            this.biomeDecorator.flowersPerChunk = 100;
+            this.biomeDecorator.grassPerChunk = 1;
         }
 
         func_76733_a(0x4EBA31);
@@ -52,7 +85,7 @@ public class BiomeForest extends BiomeBase
 
         if (this.type == 3)
         {
-            this.theBiomeDecorator.treesPerChunk = -999;
+            this.biomeDecorator.treesPerChunk = -999;
         }
 
         if (type == 1)
@@ -85,10 +118,37 @@ public class BiomeForest extends BiomeBase
         }
     }
 
-    public WorldGenAbstractTree func_150567_a(Random random)
+    @Override
+    protected ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z, double treeNoise)
     {
-        return (WorldGenAbstractTree)(this.type == 3 && random.nextInt(3) > 0 ? genCanopyTree : (this.type != 2 && random.nextInt(5) != 0 ? worldGeneratorTrees : genLowTree));
+    	if(type == 3)
+    	{
+    		return rand.nextInt(5) == 0 ? genOak1 : genDarkOak;
+    	}
+    	if(treeNoise > 0.8)
+    	{
+    		return genBirch1;
+    	}
+    	else if(treeNoise < -0.6)
+    	{
+    		return genOak1;
+    	}
+    	switch (rand.nextInt(6))
+    	{
+		case 0 : return genAspen1;
+		case 1 : return genMorus1;
+		case 2 : 
+		case 3 : return genOak1;
+		case 4 : return genBirch1;
+		default: return genOak1;
+		}
     }
+    
+//    @Deprecated
+//    public WorldGenAbstractTree func_150567_a(Random random)
+//    {
+//        return (WorldGenAbstractTree)(this.type == 3 && random.nextInt(3) > 0 ? genCanopyTree : (this.type != 2 && random.nextInt(5) != 0 ? worldGeneratorTrees : genLowTree));
+//    }
 
     public String func_150572_a(Random random, int x, int y, int z)
     {

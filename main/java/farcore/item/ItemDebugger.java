@@ -50,11 +50,11 @@ public class ItemDebugger extends ItemBase
 			}
 			try
 			{
-				SubstanceWood.getSubstance("oak").generator.generate(world, world.rand, x, y, z, false);
 				Block block = world.getBlock(x, y, z);
 				TileEntity tile = world.getTileEntity(x, y, z);
 				List<String> list = new ArrayList();
-				list.add("Block Type : " + block.getClass().getName() + "|| Metadata : " + world.getBlockMetadata(x, y, z));
+				list.add("Biome : " + world.getWorldChunkManager().getBiomeGenAt(null, x, z, 1, 1, false)[0].biomeName);
+				list.add("Block Type : " + block.getClass().getSimpleName() + "|| Metadata : " + world.getBlockMetadata(x, y, z));
 				if(block instanceof IDebugableBlock)
 				{
 					list.add("==========BLOCK INFO==========");

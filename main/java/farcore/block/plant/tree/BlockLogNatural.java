@@ -133,7 +133,7 @@ public class BlockLogNatural extends BlockLog
 	
 	public boolean isLog(World world, int x, int y, int z)
 	{
-		return (world.blockExists(x, y, z) && world.getBlock(x, y, z) == this);
+		return U.Worlds.isBlock(world, x, y, z, this, -1, false);
 	}
 	
 	public void breakTree(World world, int x, int y, int z)

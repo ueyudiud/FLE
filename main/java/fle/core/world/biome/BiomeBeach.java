@@ -20,9 +20,9 @@ public class BiomeBeach extends BiomeBase
         	topBlock = Blocks.sand;
         	fillerBlock = Blocks.sand;
         }
-        this.theBiomeDecorator.treesPerChunk = -999;
-        this.theBiomeDecorator.deadBushPerChunk = 0;
-        this.theBiomeDecorator.reedsPerChunk = 0;
-        this.theBiomeDecorator.cactiPerChunk = 0;
+        this.biomeDecorator.treesPerChunk = -999;
+        this.biomeDecorator.deadBushPerChunk = 0;
+        this.biomeDecorator.reedsPerChunk = 0;
+        this.biomeDecorator.cactiPerChunk = 0;
 	}
 }

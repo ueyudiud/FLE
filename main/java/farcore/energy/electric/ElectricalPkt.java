@@ -1,4 +1,4 @@
-package farcore.interfaces.energy.electric;
+package farcore.energy.electric;
 
 public class ElectricalPkt
 {

@@ -5,7 +5,7 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.enums.EnumBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
 import farcore.util.U;
-import farcore.util.Unit;
+import farcore.util.Values;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -28,7 +28,7 @@ public class BlockWater extends BlockStandardFluid implements IThermalProviderBl
 	@Override
 	public float getThermalConductivity(World world, int x, int y, int z)
 	{
-		return Unit.waterThermalConductivity;
+		return Values.waterThermalConductivity;
 	}
 
 	@Override

@@ -5,11 +5,11 @@ import java.util.List;
 
 import farcore.energy.electric.ElectricHelper;
 import farcore.energy.electric.ElectricNet;
+import farcore.energy.electric.ElectricalPkt;
 import farcore.energy.kinetic.KineticHelper;
 import farcore.energy.kinetic.KineticPkg;
 import farcore.enums.Direction;
 import farcore.event.EnergyEvent;
-import farcore.interfaces.energy.electric.ElectricalPkt;
 import farcore.interfaces.energy.electric.IElectricTile;
 import farcore.interfaces.energy.kinetic.IKineticAccess;
 import farcore.interfaces.energy.kinetic.IKineticTile;

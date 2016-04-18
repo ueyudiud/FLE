@@ -1,5 +1,7 @@
 package fle.api.item.behavior;
 
+import farcore.util.U.Player;
+import farcore.util.Values;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
