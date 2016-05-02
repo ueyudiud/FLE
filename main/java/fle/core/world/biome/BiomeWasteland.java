@@ -12,6 +12,7 @@ public class BiomeWasteland extends BiomeBase
 	public BiomeWasteland(int id)
 	{
 		super(id);
+		sedimentaryMultiply = 0.1F;
 		biomeDecorator.deadBushPerChunk = 3;
 		biomeDecorator.grassPerChunk = 3;
 		biomeDecorator.treesPerChunk = -999;
@@ -25,20 +26,20 @@ public class BiomeWasteland extends BiomeBase
         if (layer > 0.2)
         {
             this.topBlock = Blocks.sand;
-            this.field_150604_aj = 0;
-            this.fillerBlock = Blocks.dirt;
+            this.topMeta = 0;
+            this.fillerBlock = Blocks.gravel;
         }
         else if(layer < -0.3)
         {
         	this.topBlock = Blocks.dirt;
-        	this.field_150604_aj = 0;
-        	this.fillerBlock = Blocks.dirt;
+        	this.topMeta = 0;
+        	this.fillerBlock = Blocks.gravel;
         }
         else
         {
             this.topBlock = Blocks.grass;
-            this.field_150604_aj = 0;
-            this.fillerBlock = Blocks.dirt;
+            this.topMeta = 0;
+            this.fillerBlock = Blocks.gravel;
         }
     	super.genTerrainBlocks(world, rand, blocks, metas, x, z, layer);
     }

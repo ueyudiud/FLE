@@ -4,6 +4,7 @@ import farcore.lib.substance.SubstanceWood;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -25,6 +26,12 @@ public class BlockLogArtificial extends BlockLog
 		blockHardness = wood.hardness / 5F + 1F;
 		this.parent = parent;
 		this.wood = wood;
+	}
+	
+	@Override
+	public Object[] getTranslateObject(ItemStack stack)
+	{
+		return new Object[]{wood.getLocalName()};
 	}
 	
 	@Override

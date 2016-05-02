@@ -27,7 +27,7 @@ public class FarCoreCraftingHandler
 					{
 						if(stack.getItem() instanceof ICustomDamageItem)
 						{
-							ItemStack stack2 = ((ICustomDamageItem) stack.getItem()).getCraftedItem(stack, (InventoryCrafting) event.craftMatrix, j, i);
+							ItemStack stack2 = ((ICustomDamageItem) stack.getItem()).getCraftedItem(stack, null);
 							if(stack2 != null)
 							{
 								stack2 = stack2.copy();

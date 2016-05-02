@@ -39,6 +39,8 @@ public class BiomeBushveld extends BiomeBase
         biomeDecorator.treesPerChunk = 3;
         biomeDecorator.flowersPerChunk = 1;
         biomeDecorator.grassPerChunk = 8;
+        biomeDecorator.ivyPerChunk = 1;
+        biomeDecorator.rattanPerChunk = 1;
 	}
 	
 	@Override

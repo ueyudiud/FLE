@@ -1,18 +1,19 @@
 package farcore;
 
-import static farcore.FarCoreRegistry.*;
+import static farcore.FarCoreRegistry.addEnergyNet;
+import static farcore.FarCoreRegistry.newTextureMap;
+import static farcore.FarCoreRegistry.registerFMLEventHandler;
+import static farcore.FarCoreRegistry.registerKey;
+import static farcore.FarCoreRegistry.registerMFEventHandler;
 
 import java.io.File;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,6 +25,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.block.plant.tree.BlockLog;
@@ -35,9 +37,11 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.entity.EntityFallingBlockExtended;
 import farcore.handler.FarCoreCraftingHandler;
 import farcore.handler.FarCoreEnergyHandler;
+import farcore.handler.FarCoreGuiHandler;
 import farcore.handler.FarCoreHarvestHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCorePlayerHandler;
+import farcore.interfaces.item.ILocalizedRegisterListener;
 import farcore.item.ItemDebugger;
 import farcore.item.ItemFluidDisplay;
 import farcore.lib.command.CommandCalendar;
@@ -60,27 +64,24 @@ import farcore.lib.render.RenderHandler;
 import farcore.network.Network;
 import farcore.util.CalendarHandler;
 import farcore.util.FleLog;
+import farcore.util.FleTextureMap.TextureMapRegistry;
 import farcore.util.LanguageManager;
 import farcore.util.U;
-import farcore.util.Values;
 import farcore.util.V;
+import farcore.util.Values;
 import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.item.Item;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid = FarCore.ID, version = "0.6", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "0.7", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 1420;
-	
-	@SideOnly(Side.CLIENT)
-	public static RenderHandler handlerA;
-	@SideOnly(Side.CLIENT)
-	public static RenderHandler handlerB;
 	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
@@ -153,7 +154,9 @@ public class FarCoreSetup
 		}
 		CalendarHandler.init();
 		Object handler;
-		registerMFEventHandler(new FarCorePlayerHandler());
+		handler = new FarCorePlayerHandler();
+		registerMFEventHandler(handler);
+		registerFMLEventHandler(handler);
 		registerMFEventHandler(new FarCoreHarvestHandler());
 		handler = new FarCoreEnergyHandler();
 		FarCoreEnergyHandler.BUS.register(handler);
@@ -207,13 +210,22 @@ public class FarCoreSetup
 		network.registerPacket(PacketEntity.class, Side.CLIENT);
 		network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 		network.registerPacket(PacketKey.class, Side.SERVER);
+		proxy.load();
 	}
 
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
+		for(Item item : GameData.getItemRegistry().typeSafeIterable())
+		{
+			if(item instanceof ILocalizedRegisterListener)
+			{
+				((ILocalizedRegisterListener) item).registerLocalizedName(lang);
+			}
+		}
 		lang.save();
 		U.Reflect.resetReflectCache();
+		proxy.completeLoad();
 	}
 	
 	@EventHandler
@@ -234,19 +246,33 @@ public class FarCoreSetup
 		{
 			
 		}
+		
+		public void completeLoad()
+		{
+			
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static class ClientProxy extends Proxy
+	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
+		private boolean loadComplete = false;
+		
+		public ClientProxy()
+		{
+			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
+			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new TextureMapRegistry());
+			FarCore.bottonTextureMap = newTextureMap("bottons");
+		}
+		
 		@Override
 		public void registerClient()
 		{
 			super.registerClient();
 			int id1 = RenderingRegistry.getNextAvailableRenderId();
-			RenderingRegistry.registerBlockHandler(id1, handlerA = new RenderHandler(id1, false));
+			RenderingRegistry.registerBlockHandler(id1, FarCore.handlerA = new RenderHandler(id1, false));
 			int id2 = RenderingRegistry.getNextAvailableRenderId();
-			RenderingRegistry.registerBlockHandler(id2, handlerB = new RenderHandler(id2, true));
+			RenderingRegistry.registerBlockHandler(id2, FarCore.handlerB = new RenderHandler(id2, true));
 			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, new RenderFallingBlockExtended());
 		}
 		
@@ -254,6 +280,41 @@ public class FarCoreSetup
 		public void load()
 		{
 			super.load();
+			registerMFEventHandler(new FarCoreGuiHandler());
 		}
+		
+		@Override
+		public void completeLoad()
+		{
+			loadComplete = true;
+		}
+
+		@Override
+		public void onResourceManagerReload(IResourceManager manager)
+		{
+			if(loadComplete)
+			{
+				reloadLang();
+			}
+		}
+	}
+
+	public static void reloadLang()
+	{
+		FleLog.getCoreLogger().info("Reload localize map...");
+		lang.reset();
+		lang.load();
+		for(Item item : GameData.getItemRegistry().typeSafeIterable())
+		{
+			if(item instanceof ILocalizedRegisterListener)
+			{
+				((ILocalizedRegisterListener) item).registerLocalizedName(lang);
+			}
+		}
+//		for(Fluid fluid : FluidRegistry.getRegisteredFluids().values())
+//		{
+//			if(fluid instanceof Fluid)
+//		}
+		lang.save();
 	}
 }

@@ -26,9 +26,14 @@ public class LayerAdd extends LayerBase
 			{
 				int id = i * w + j;
 				if(par[id] != 0)
+				{
 					is[id] = par[id];
-				initChunkSeed(x + j, y + i);
-				is[id] = nextInt(chance) == 0 ? add : 0;
+				}
+				else
+				{
+					initChunkSeed(x + j, y + i);
+					is[id] = nextInt(chance) == 0 ? add : 0;
+				}
 			}
 		return is;
 	}	

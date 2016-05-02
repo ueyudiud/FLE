@@ -12,14 +12,24 @@ import net.minecraft.world.World;
 public class ToolDestoryDropRecipes
 {
 	private static final Map<AbstractStack, Map<IBlockConditionMacher, DropHandler>> map = new HashMap();
-	
+	private static final Map<IBlockConditionMacher, DropHandler> map1 = new HashMap();
+
 	public static void add(AbstractStack tool, IBlockConditionMacher macher, DropHandler handler)
 	{
+		if(tool == null)
+		{
+			add(macher, handler);
+			return;
+		}
 		if(!map.containsKey(tool))
 		{
 			map.put(tool, new HashMap());
 		}
 		map.get(tool).put(macher, handler);
+	}
+	public static void add(IBlockConditionMacher macher, DropHandler handler)
+	{
+		map1.put(macher, handler);
 	}
 	
 	public static DropHandler match(ItemStack stack, World world, int x, int y, int z, Block block, int meta)
@@ -39,6 +49,13 @@ public class ToolDestoryDropRecipes
 						return entry2.getValue();
 					}
 				}
+			}
+		}
+		for(Entry<IBlockConditionMacher, DropHandler> entry : map1.entrySet())
+		{
+			if(entry.getKey().match(world, x, y, z, block, meta))
+			{
+				return entry.getValue();
 			}
 		}
 		return null;

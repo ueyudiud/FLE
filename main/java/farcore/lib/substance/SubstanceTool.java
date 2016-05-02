@@ -69,6 +69,11 @@ public class SubstanceTool implements ISubstance, ISubTagContainer
 	 */
 	public int color = 0xFFFFFF;
 
+	public SubstanceTool(int id, String name, String local)
+	{
+		this(id, name);
+		registerLocalName(local);
+	}
 	public SubstanceTool(int id, String name)
 	{
 		this.name = name;
@@ -114,16 +119,7 @@ public class SubstanceTool implements ISubstance, ISubTagContainer
 	public final String getName(){return name;}
 	public final int getID(){return register.id(this);}
 	public final Register<SubstanceTool> getRegister(){return register;}
-
-	public void registerLocalName(String name)
-	{
-		FarCoreSetup.lang.registerLocal("substance.tool." + name, name);
-	}
-	
-	public String getLocalName()
-	{
-		return FarCore.translateToLocal("substance.tool." + name);
-	}
+	public final String getType(){return "tool";}
 
 	@Override
 	public void add(SubTag... tags)

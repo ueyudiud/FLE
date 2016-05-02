@@ -41,6 +41,12 @@ public class BlockLogNatural extends BlockLog
 	}
 	
 	@Override
+	public Object[] getTranslateObject(ItemStack stack)
+	{
+		return new Object[]{wood.getLocalName()};
+	}
+	
+	@Override
 	public int tickRate(World world)
 	{
 		return 20;
@@ -155,8 +161,8 @@ public class BlockLogNatural extends BlockLog
 					offsetY = 0,
 					offsetZ = 0;
 			array[x + V.treeScanRange][y][z + V.treeScanRange] = true;
-			for (offsetX = -3; offsetX <= 3; offsetX++)
-				for (offsetZ = -3; offsetZ <= 3; offsetZ++)
+			for (offsetX = -1; offsetX <= 1; offsetX++)
+				for (offsetZ = -1; offsetZ <= 1; offsetZ++)
 					for (offsetY = 0; offsetY <= 2; offsetY++)
 						if((offsetX != 0 || offsetY != 0 || offsetZ != 0) &&
 								Math.abs(x + offsetX) <= V.treeScanRange &&

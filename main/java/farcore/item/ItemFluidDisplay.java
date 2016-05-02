@@ -2,6 +2,8 @@ package farcore.item;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.enums.EnumItem;
 import farcore.enums.EnumItem.IInfomationable;
 import farcore.util.U;
@@ -26,27 +28,27 @@ public class ItemFluidDisplay extends ItemBase implements IFluidContainerItem, I
 		EnumItem.display_fluid.set(new ItemStack(this));
 		hasSubtypes = true;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public int getSpriteNumber()
 	{
 		return 0;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
 		V.voidBlockIcon = register.registerIcon("fle:void");
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta)
 	{
 		Fluid fluid = FluidRegistry.getFluid(meta);
 		return fluid == null ? FluidRegistry.WATER.getStillIcon() : fluid.getStillIcon();
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int pass)
 	{
 		Fluid fluid = FluidRegistry.getFluid(stack.getItemDamage());
@@ -74,14 +76,14 @@ public class ItemFluidDisplay extends ItemBase implements IFluidContainerItem, I
 		}
 		return "Unknown";
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list)
 	{
 		;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag)
 	{
 		Fluid fluid = FluidRegistry.getFluid(stack.getItemDamage());

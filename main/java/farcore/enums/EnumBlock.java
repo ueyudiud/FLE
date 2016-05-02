@@ -16,16 +16,24 @@ public enum EnumBlock
 	 */
 	fire,
 	/**
-	 * Far Land Era water, registed by fle.<br>
+	 * Far Land Era water, registered by fle.<br>
 	 * The method spawn use way see fluid block type.
 	 * @see farcore.block.BlockStandardFluid
 	 */
-	water, 
+	water,
+	/**
+	 * Far Land Era ore, registered by fle.<br>
+	 * This block provide ore or custom ore block.
+	 */
+	ore,
 	lava, 
 	ice, 
 	rock,
 	cobble, 
-	sand;
+	sand, 
+	bush, 
+	vine, 
+	snow;
 	
 	boolean init = false;
 	Block block;

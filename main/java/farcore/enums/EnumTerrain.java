@@ -6,10 +6,10 @@ public enum EnumTerrain
 	depression(0F),
 	plain(0.15F),
 	basin(0.3F),
-	hills(0.3F),
-	mountain(0.6F),
-	plateau(0.75F),
-	ex_mountain(1.0F);
+	hills(0.5F),
+	mountain(0.75F),
+	plateau(0.9F),
+	ex_mountain(0.96F);
 	
 	public static EnumTerrain get(float height)
 	{

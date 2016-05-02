@@ -27,14 +27,14 @@ public class ItemResource extends ItemSubBehavior implements IInfomationable
 		super(modid, unlocalized, unlocalizedTooltip);
 	}
 	
-	public void addSubItem(int id, String name, String iconName)
+	public void addSubItem(int id, String name, String local, String iconName)
 	{
-		addSubItem(id, name, new BehaviorBase(), iconName);
+		addSubItem(id, name, local, new BehaviorBase(), iconName);
 	}
 	
-	public void addSubItem(int id, String name, IItemInfo itemInfo, String iconName)
+	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName)
 	{
-		super.addSubItem(id, name, itemInfo, new ItemRenderInfoSimple(iconName));
+		super.addSubItem(id, name, local, itemInfo, new ItemRenderInfoSimple(iconName));
 	}
 	
 	@Override

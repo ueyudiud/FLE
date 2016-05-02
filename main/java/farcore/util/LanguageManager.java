@@ -35,6 +35,12 @@ public class LanguageManager
 	
 	private static Map<String, Map<String, String>> langRegister = new HashMap();
 	
+	public void reset()
+	{
+		FleLog.getCoreLogger().info("Far Core reset language manager.");
+		langRegister.clear();
+	}
+	
 	public void load()
 	{
 		if (!lang.canExecute())

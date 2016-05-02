@@ -60,14 +60,15 @@ public class BiomeForest extends BiomeBase
 		super(id);
 		init();
         this.type = type;
-        this.biomeDecorator.treesPerChunk = 10;
-        this.theBiomeDecorator.grassPerChunk = 2;
+        biomeDecorator.treesPerChunk = 10;
+        biomeDecorator.grassPerChunk = 2;
+        biomeDecorator.ivyPerChunk = 1;
 
         if (this.type == 1)
         {
-            this.biomeDecorator.treesPerChunk = 6;
-            this.biomeDecorator.flowersPerChunk = 100;
-            this.biomeDecorator.grassPerChunk = 1;
+            biomeDecorator.treesPerChunk = 6;
+            biomeDecorator.flowersPerChunk = 100;
+            biomeDecorator.grassPerChunk = 1;
         }
 
         func_76733_a(0x4EBA31);
@@ -78,14 +79,14 @@ public class BiomeForest extends BiomeBase
             color = 3175492;
         }
 
-        if (this.type == 0)
+        if (type == 1)
         {
-            this.spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 4));
+            spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 4));
         }
 
         if (this.type == 3)
         {
-            this.biomeDecorator.treesPerChunk = -999;
+            biomeDecorator.treesPerChunk = -999;
         }
 
         if (type == 1)

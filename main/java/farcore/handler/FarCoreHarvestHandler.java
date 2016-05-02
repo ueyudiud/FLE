@@ -6,6 +6,8 @@ import farcore.interfaces.ISmartHarvestBlock;
 import farcore.lib.recipe.DropHandler;
 import farcore.lib.recipe.ToolDestoryDropRecipes;
 import farcore.util.U;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -17,29 +19,30 @@ public class FarCoreHarvestHandler
 	public void onHarvestCheck(BreakEvent event)
 	{
 	    if ((event.getPlayer() != null) && 
-	    	      (!event.getPlayer().capabilities.isCreativeMode) && 
-	    	      (event.getPlayer().getCurrentEquippedItem() != null))
+	    	      (!event.getPlayer().capabilities.isCreativeMode))
 	    {
 	    	ItemStack stack = event.getPlayer().getCurrentEquippedItem();
-	    	DropHandler info = ToolDestoryDropRecipes.match(stack, event.world, event.x, event.y, event.z, event.block, event.blockMetadata);
-	    	if(info != null)
+	    	if(!EnchantmentHelper.getSilkTouchModifier(event.getPlayer()))
 	    	{
-	    		event.getPlayer().addExhaustion(0.025F);
-	    		U.Worlds.spawnDropsInWorld(event.world, event.x, event.y, event.z, info.randomDropsWithCast(event.world.rand));
-	    		return;
+		    	DropHandler info = ToolDestoryDropRecipes.match(stack, event.world, event.x, event.y, event.z, event.block, event.blockMetadata);
+		    	if(info != null)
+		    	{
+		    		event.getPlayer().addExhaustion(0.025F);
+		    		U.Worlds.spawnDropsInWorld(event.world, event.x, event.y, event.z, info.randomDrops(event.world.rand));
+		    		return;
+		    	}
 	    	}
 	    	if(event.block instanceof ISmartHarvestBlock)
 	    	{
 	    		if(((ISmartHarvestBlock) event.block).canHarvestBlock(event.world, event.x, event.y, event.z, event.blockMetadata, event.getPlayer()))
 	    		{
 	    			((ISmartHarvestBlock) event.block).harvestAndDropBlock(event.world, event.x, event.y, event.z, event.blockMetadata, event.getPlayer());
-	    			return;
 	    		}
 	    		else
 	    		{
 	    			event.setCanceled(true);
-	    			return;
 	    		}
+	    		return;
 	    	}
 	    }
 	    if(event.getPlayer() == null || event.getPlayer().capabilities.isCreativeMode) return;
@@ -70,8 +73,7 @@ public class FarCoreHarvestHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void disableClassicCheck(HarvestDropsEvent event)
 	{
-		if(event.harvester != null && 
-				event.harvester.getCurrentEquippedItem() != null)
+		if(event.harvester != null && !event.isSilkTouching)
 		{
 			DropHandler info = ToolDestoryDropRecipes.match(event.harvester.getCurrentEquippedItem(), event.world, event.x, event.y, event.z, event.block, event.blockMetadata);
 	    	if(info != null)

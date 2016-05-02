@@ -11,13 +11,13 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import fle.override.FarOverrideLoadingPlugin;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 public class ClassTransformer
@@ -25,7 +25,8 @@ public class ClassTransformer
 {
 	public static final Logger LOG = LogManager.getLogger("FarLandEra ASM");
 	private int numInsertions;
-	protected Map<String, List<OperationInfo>> methods = new HashMap();
+	protected Map<String, List<OperationInfo>> mcpMethods = new HashMap();
+	protected Map<String, List<OperationInfo>> obfMethods = new HashMap();
 	protected String mcpClassName;
 	protected String obfClassName;
   
@@ -50,46 +51,63 @@ public class ClassTransformer
 		ClassReader classReader = new ClassReader(bytes);
 		classReader.accept(classNode, 0);
 		LOG.info("Attempting to Transform: " + classNode.name + " searching for injection...");
-//		for(MethodNode node : classNode.methods)
-//		{
-//			if(!methods.containsKey(node.name + "|" + node.desc)) continue;
-//			List<OperationInfo> info = new ArrayList(methods.get(node.name + "|" + node.desc));
-//			if(info != null)
-//			{
-//				LOG.info("Attempting to Transform: " + classNode.name + " | Found method " + node.name + " for injection.");
-//				for (int index = 0; (index < node.instructions.size()) && (!info.isEmpty()); index++)
-//				{
-//					numInsertions = 0;
-//					OperationInfo target = null;
-//					if (!info.isEmpty())
-//					{
-//						target = info.get(0);
-//					}
-//					else
-//					{
-//						LOG.error("Error in: {" + node.name + " | " + node.desc + "} No Instructions");
-//					}
-//					int count = 0;
-//					while (target != null)
-//		            {
-//						performDirectOperation(node.instructions, target);
-//						info.remove(0);
-//						if (!info.isEmpty())
-//						{
-//							target = info.get(0);
-//						} 
-//						else
-//						{
-//							target = null;
-//						}
-//					}
-//				}
-//			}
-//		}
+		Map<String, List<OperationInfo>> map = getInfos();
+		for(MethodNode m : classNode.methods)
+		{
+			List<OperationInfo> list = map.get(m.name + "|" + m.desc);
+			if(list != null)
+			{
+				list = new ArrayList(list);
+				OperationInfo info = null;
+				if(!list.isEmpty())
+				{
+					info = list.get(0);
+				}
+				else
+				{
+					LOG.warn("No instructions in method named " + m.name + "()");
+				}
+				for(int idx = 0; (idx < m.instructions.size() && !list.isEmpty()); ++idx)
+				{
+					numInsertions = 0;
+					while (info != null)
+					{
+						if (info.count == -1)
+						{
+							performDirectOperation(m.instructions, info);
+							list.remove(0);
+						}
+						else
+						{
+							if (!isLineNumber(m.instructions.get(idx), info.count))
+							{
+								break;
+							}
+							performAnchorOperation(m.instructions, info, idx);
+							AbstractInsnNode node = m.instructions.get(idx + info.offset);
+							list.remove(0);
+						}
+						if (!list.isEmpty())
+						{
+							info = list.get(0);
+						}
+						else
+						{
+							info = null;
+						}
+					}
+				}
+			}
+		}
 		LOG.info("Attempting to Transform: " + classNode.name + " Complete");
 		ClassWriter writer = new ClassWriter(1);
 		classNode.accept(writer);
 		return writer.toByteArray();
+	}
+	
+	private Map<String, List<OperationInfo>> getInfos()
+	{
+		return FarOverrideLoadingPlugin.runtimeDeobf ? obfMethods : mcpMethods;
 	}
 	
 	private int findLine(InsnList methodList, int line)
@@ -132,12 +150,40 @@ public class ClassTransformer
 			break;
 		}
 	}
+	  
+	private void performAnchorOperation(InsnList methodInsn, OperationInfo input, int anchor)
+	{
+		AbstractInsnNode current = methodInsn.get(anchor + input.offset + numInsertions);
+		if ((input.list.get(0) instanceof JumpInsnNode))
+		{
+			input.list.set(input.list.get(0), new JumpInsnNode(input.list.get(0).getOpcode(), (LabelNode) current.getPrevious()));
+		}
+		switch (input.type)
+		{
+		case InsertAfter: 
+			numInsertions += input.list.size();
+			methodInsn.insert(current, input.list);
+			break;
+		case InsertBefore: 
+			numInsertions += input.list.size();
+			methodInsn.insertBefore(current, input.list);
+			break;
+		case Remove: 
+			numInsertions -= 1;
+			methodInsn.remove(current);
+			break;
+		case Replace: 
+			methodInsn.insert(current, input.list);
+			methodInsn.remove(current);
+			break;
+		}
+	}
 	
 	private boolean isLineNumber(AbstractInsnNode current, int line)
 	{
 		if ((current instanceof LineNumberNode))
 		{
-			int l = ((LineNumberNode)current).line;
+			int l = ((LineNumberNode) current).line;
 			if (l == line)
 			{
 				return true;
@@ -194,17 +240,12 @@ public class ClassTransformer
 		}
 	}
 	
-	public static class OperationList
-	{
-		List<OperationInfo> infos;
-	}
-	
 	public static enum OperationType
 	{
-		InsertAfter, 
-		InsertBefore, 
+		InsertAfter,
+		InsertBefore,
 		//Switch,
-		Replace, 
+		Replace,
 		Remove;
 	}
 }

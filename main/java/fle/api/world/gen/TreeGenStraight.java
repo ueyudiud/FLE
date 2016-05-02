@@ -60,7 +60,7 @@ public class TreeGenStraight extends TreeGenAbstract
                         {
                         	block = world.getBlock(j1, i1, k1);
 
-                            if (isReplaceable(world, j1, i1, k1))
+                            if (!isReplaceable(world, j1, i1, k1))
                             {
                                 flag = false;
                             }

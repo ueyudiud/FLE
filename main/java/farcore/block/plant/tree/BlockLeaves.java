@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import farcore.block.BlockBase;
 import farcore.enums.Direction;
 import farcore.lib.substance.SubstanceWood;
+import farcore.util.LanguageManager;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -46,6 +47,18 @@ public class BlockLeaves extends BlockBase implements IShearable
 		setTickRandomly(true);
 		setHardness(0.5F);
 		this.wood = wood;
+	}
+	
+	@Override
+	public Object[] getTranslateObject(ItemStack stack)
+	{
+		return new Object[]{wood.getLocalName()};
+	}
+	
+	@Override
+	public void registerLocalizedName(LanguageManager manager) 
+	{
+		manager.registerLocal(getUnlocalizedName() + ".name", "%s Leaves");
 	}
 	
 	@Override
@@ -223,7 +236,7 @@ public class BlockLeaves extends BlockBase implements IShearable
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune,
     		boolean silkTouching)
     {
-    	return wood.leafDrop.randomDropsWithCast(world.rand);
+    	return wood.leafDrop.randomDrops(world.rand);
     }
 
 	@Override

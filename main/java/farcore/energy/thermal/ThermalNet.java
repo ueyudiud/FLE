@@ -30,10 +30,14 @@ public class ThermalNet implements IEnergyNet
 	public static float getEnviormentTemp(World world, int x, int y, int z)
 	{
 		if(world == null) return Values.C_0_Point;
-		float bioTemp = world.getBiomeGenForCoords(x, z).temperature;
+		float bioTemp = 0;
+		for(int i = -2; i <= 2; ++i)
+			for(int j = -2; j <= 2; ++j)
+				bioTemp += world.getBiomeGenForCoords(x + i, z + j).temperature;
+		bioTemp /= 25;
 		float hor = (float) world.provider.getHorizon();
-		return Math.max(((bioTemp * 4.5F + 0.15F) * bioTemp + 1.4F) * bioTemp + 
-				Values.C_0_Point - (hor < y ? ((float) y - hor) * 0.8F : 0), 0F);
+		return Math.max(((bioTemp * 0.8F - 12F) * bioTemp + 44F) * (bioTemp - 0.15F) + 
+				Values.C_0_Point - (hor < y ? ((float) y - hor) * .15F : 0), 0F);
 	}
 	
 	public static float getBlockTemp(World world, int x, int y, int z, boolean checkNearby)
@@ -59,6 +63,7 @@ public class ThermalNet implements IEnergyNet
 		int count = 0;
 		for(Direction direction : Direction.directions)
 		{
+			if(!world.blockExists(x + direction.x, y + direction.y, z + direction.z)) continue;
 			block = world.getBlock(x + direction.x, y + direction.y, z + direction.z);
 			if(block instanceof IThermalProviderBlock)
 			{

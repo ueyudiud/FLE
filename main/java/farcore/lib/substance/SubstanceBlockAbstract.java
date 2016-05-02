@@ -37,8 +37,6 @@ public abstract class SubstanceBlockAbstract implements ISubstance
 		getRegister().register(name, this);
 	}
 	
-	protected abstract String getType();
-	
 	public SubstanceBlockAbstract setHardness(float hardness)
 	{
 		this.hardness = hardness;
@@ -62,14 +60,4 @@ public abstract class SubstanceBlockAbstract implements ISubstance
 	public final String getName(){return name;}
 	public final int getID(){return getRegister().id(this);}
 	public abstract Register getRegister();
-
-	public void registerLocalName(String name)
-	{
-		FarCoreSetup.lang.registerLocal("substance." + getType() + "." + name, name);
-	}
-	
-	public String getLocalName()
-	{
-		return FarCore.translateToLocal("substance." + getType() + "." + name);
-	}
 }

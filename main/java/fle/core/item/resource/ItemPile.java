@@ -15,16 +15,16 @@ public class ItemPile extends ItemResource
 
 	private void init()
 	{
-		addSubItem(1, "gravel", "gravel");
-		addSubItem(2, "sand", "sand");
-		addSubItem(3, "dirt", "dirt");
-		addSubItem(4, "humus", "humus");
-		addSubItem(5, "sludge", "sludge");
+		addSubItem(1, "gravel", "Gravel Pile", "gravel");
+		addSubItem(2, "sand", "Sand Pile", "sand");
+		addSubItem(3, "dirt", "Dirt Pile", "dirt");
+		addSubItem(4, "humus", "Humus Pile", "humus");
+		addSubItem(5, "sludge", "Sludge Pile", "sludge");
 	}
 	
 	@Override
-	public void addSubItem(int id, String name, String iconName)
+	public void addSubItem(int id, String name, String local, String iconName)
 	{
-		super.addSubItem(id, name, "fle:resource/pile/" + iconName);
+		super.addSubItem(id, name, local, "fle:resource/pile/" + iconName);
 	}
 }

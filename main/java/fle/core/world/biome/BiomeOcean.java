@@ -22,6 +22,11 @@ public class BiomeOcean extends BiomeBase
 		{
 			setHeight(HEIGHT);
 		}
+		sedimentaryMultiply = 1.5F;
+		metamorphismMultiply = 0.8F;
+		topBlock = Blocks.gravel;
+		secondBlock = Blocks.gravel;
+		fillerBlock = Blocks.gravel;
 		biomeDecorator.clayPerChunk = -1;
 		spawnableCreatureList.clear();
 	}

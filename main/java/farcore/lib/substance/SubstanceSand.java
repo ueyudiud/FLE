@@ -33,6 +33,12 @@ public class SubstanceSand extends SubstanceBlockAbstract
 		super(id, name);
 	}
 
-	protected String getType(){return "sand";}
+	public SubstanceSand(int id, String name, String local)
+	{
+		this(id, name);
+		registerLocalName(local);
+	}
+
+	public final String getType(){return "sand";}
 	public Register getRegister(){return register;}
 }

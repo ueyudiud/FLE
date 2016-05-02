@@ -27,27 +27,8 @@ public class SlotBase extends Slot
 		return new SlotArmor(inventory, player, id, x, y, id);
 	}
 	
-	private List<String> transferTarget = new ArrayList(4);
-	
 	public SlotBase(IInventory inventory, int id, int x, int y)
 	{
 		super(inventory, id, x, y);
-	}
-	
-	public SlotBase addTransferTargets(String...strings)
-	{
-		for(int i = 0; i < strings.length; ++i)
-		{
-			if(strings[i] != null)
-			{
-				this.transferTarget.add(transferTarget.size(), strings[i]);
-			}
-		}
-		return this;
-	}
-	
-	public List<String> getTransferTarget()
-	{
-		return transferTarget;
 	}
 }

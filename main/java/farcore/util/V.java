@@ -24,6 +24,7 @@ public class V
 	public static IIcon voidItemIcon;
 	public static int fallingBlockEntityID;
 	public static int treeScanRange;
+	public static boolean spawnWaterBySnow;
 	
 	public static void init(Configuration config)
 	{
@@ -34,5 +35,6 @@ public class V
 		fallingBlockEntityID = config.getInt("fallingBlockExtended", "entity", 1, 0, 256, "");
 		treeScanRange = config.getInt("treeScanRange", "general", 10, 5, 32, "To select a scan range, too small may cause can not,"
 				+ "cut a tree in once, too big will use more memory.");
+		spawnWaterBySnow = config.getBoolean("spawnWaterWhenMeltingSnow", "general", false, "If enable this option, the water will spawn when snow is melting.");
 	}
 }

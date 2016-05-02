@@ -26,8 +26,8 @@ public class ItemToolRenderInfo implements IItemIconInfo
 	{
 		this.textureName = textureName;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
 		headIcon = register.registerIcon(textureName + "/head");
@@ -35,8 +35,8 @@ public class ItemToolRenderInfo implements IItemIconInfo
 		tieIcon = register.registerIcon(textureName + "/tie");
 		otherIcon = register.registerIcon(textureName + "/override");
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass)
 	{
 		switch (pass)
@@ -52,7 +52,7 @@ public class ItemToolRenderInfo implements IItemIconInfo
 		}
 	}
 
-	@Override
+	@SideOnly(Side.CLIENT)
 	public int getColor(ItemStack stack, int pass)
 	{
 		switch (pass)
@@ -68,7 +68,7 @@ public class ItemToolRenderInfo implements IItemIconInfo
 		}
 	}
 
-	@Override
+	@SideOnly(Side.CLIENT)
 	public int getPasses()
 	{
 		return 4;

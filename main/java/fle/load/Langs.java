@@ -17,6 +17,8 @@ public class Langs
 	public static final String infoToolDamage = "info.tool.damage";
 	public static final String infoLogLength = "info.log.length";
 	
+	public static final String inventoryWashing = "inventory.washing";
+	
 	public static void init()
 	{
 		FleLog.getLogger().info("Start register localized names.");

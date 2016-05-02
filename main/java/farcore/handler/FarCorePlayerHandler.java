@@ -5,10 +5,14 @@ import java.util.Random;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.relauncher.Side;
 import farcore.interfaces.item.IContainerItemCollectable;
 import farcore.util.FleLog;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -79,5 +83,20 @@ public class FarCorePlayerHandler
 			++i;
 		}
 		FleLog.getCoreLogger().info("Fail to get spawn coord.");
+	}
+
+	@SubscribeEvent
+	public void onPlayerTick(TickEvent.PlayerTickEvent event)
+	{
+		if(event.side == Side.SERVER)
+		{
+			if(event.phase == Phase.START)
+			{
+				if(event.player.openContainer instanceof IUpdatePlayerListBox)
+				{
+					((IUpdatePlayerListBox) event.player.openContainer).update();
+				}
+			}
+		}
 	}
 }

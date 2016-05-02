@@ -2,7 +2,9 @@ package farcore.lib.world.biome;
 
 import java.util.Random;
 
+import farcore.enums.EnumBlock;
 import farcore.interfaces.ITreeGenerator;
+import farcore.lib.world.gen.WorldGenVine;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -23,6 +25,30 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 
 public class BD
 {
+	private static boolean init = false;
+	
+	private static void init()
+	{
+		if(!init)
+		{
+			clayGen = new WorldGenClay(4);
+			sandGen = new WorldGenSand(Blocks.sand, 7);
+			gravelAsSandGen = new WorldGenSand(Blocks.gravel, 6);
+			dirtGen = new WorldGenMinable(Blocks.dirt, 32);
+			gravelGen = new WorldGenMinable(Blocks.gravel, 32);
+			mushroomBrownGen = new WorldGenFlowers(Blocks.brown_mushroom);
+			mushroomRedGen = new WorldGenFlowers(Blocks.red_mushroom);
+			bigMushroomGen = new WorldGenBigMushroom();
+			cactusGen = new WorldGenCactus();
+			reedGen = new WorldGenReed();
+			waterlilyGen = new WorldGenWaterlily();
+			deadBushGen = new WorldGenDeadBush(Blocks.deadbush);
+			ivyGen = new WorldGenVine(EnumBlock.bush.block(), EnumBlock.vine.block(), 0, 1);
+			rattanGen = new WorldGenVine(EnumBlock.bush.block(), EnumBlock.vine.block(), 1, 1);
+			init = true;
+		}
+	}
+	
     /** The world the BiomeDecorator is currently decorating */
     public World currentWorld;
     /** The Biome Decorator's random number generator. */
@@ -32,30 +58,38 @@ public class BD
     /** The Z-coordinate of the chunk currently being decorated */
     public int chunkZ;
     /** The clay generator. */
-    public WorldGenerator clayGen;
+    public static WorldGenerator clayGen;
     /** The sand generator. */
-    public WorldGenerator sandGen;
+    public static WorldGenerator sandGen;
     /** The gravel as sand generator. */
-    public WorldGenerator gravelAsSandGen;
+    public static WorldGenerator gravelAsSandGen;
     /** The dirt generator. */
-    public WorldGenerator dirtGen;
+    public static WorldGenerator dirtGen;
     /** The gravel generator. */
-    public WorldGenerator gravelGen;
-    public WorldGenFlowers yellowFlowerGen;
+    public static WorldGenerator gravelGen;
+    @Deprecated
+    public static WorldGenFlowers yellowFlowerGen;
     /** Field that holds mushroomBrown WorldGenFlowers */
-    public WorldGenerator mushroomBrownGen;
+    public static WorldGenerator mushroomBrownGen;
     /** Field that holds mushroomRed WorldGenFlowers */
-    public WorldGenerator mushroomRedGen;
+    public static WorldGenerator mushroomRedGen;
     /** Field that holds big mushroom generator */
-    public WorldGenerator bigMushroomGen;
+    public static WorldGenerator bigMushroomGen;
     /** Field that holds WorldGenReed */
-    public WorldGenerator reedGen;
+    public static WorldGenerator reedGen;
     /** Field that holds WorldGenCactus */
-    public WorldGenerator cactusGen;
+    public static WorldGenerator cactusGen;
     /** The water lily generation! */
-    public WorldGenerator waterlilyGen;
+    public static WorldGenerator waterlilyGen;
     /** The dead bush generation */
-    public WorldGenerator deadBushGen;
+    public static WorldGenerator deadBushGen;
+    
+    public static WorldGenerator rattanGen;
+    
+    public static WorldGenerator ivyGen;
+    
+    public int rattanPerChunk;
+    public int ivyPerChunk;
     /** Amount of waterlilys per chunk. */
     public int waterlilyPerChunk;
     /** The number of trees to attempt to generate per chunk. Up to 10 in forests, none in deserts. */
@@ -91,20 +125,7 @@ public class BD
 
     public BD()
     {
-    	this.clayGen = new WorldGenClay(4);
-        this.sandGen = new WorldGenSand(Blocks.sand, 7);
-        this.gravelAsSandGen = new WorldGenSand(Blocks.gravel, 6);
-        this.dirtGen = new WorldGenMinable(Blocks.dirt, 32);
-        this.gravelGen = new WorldGenMinable(Blocks.gravel, 32);
-        
-        this.yellowFlowerGen = new WorldGenFlowers(Blocks.yellow_flower);
-        this.mushroomBrownGen = new WorldGenFlowers(Blocks.brown_mushroom);
-        this.mushroomRedGen = new WorldGenFlowers(Blocks.red_mushroom);
-        this.bigMushroomGen = new WorldGenBigMushroom();
-        this.reedGen = new WorldGenReed();
-        this.cactusGen = new WorldGenCactus();
-        this.waterlilyGen = new WorldGenWaterlily();
-        this.deadBushGen = new WorldGenDeadBush(Blocks.deadbush);
+//        this.yellowFlowerGen = new WorldGenFlowers(Blocks.yellow_flower);
         this.flowersPerChunk = 2;
         this.grassPerChunk = 1;
         this.sandPerChunk = 1;
@@ -115,6 +136,7 @@ public class BD
 
     public void decorateChunk(World world, Random random, BiomeBase biome, int x, int z)
     {
+    	init();
         if (this.currentWorld != null)
         {
             throw new RuntimeException("Already decorating!!");
@@ -200,6 +222,11 @@ public class BD
         if(TerrainGen.decorate(currentWorld, randomGenerator, chunkX, chunkZ, EventType.CACTUS))
         {
         	generateWithDoubleHeightRand(cactusGen, cactiPerChunk);
+        }
+        if(TerrainGen.decorate(currentWorld, randomGenerator, chunkX, chunkZ, EventType.CUSTOM))
+        {
+        	generateAtTop(ivyGen, nextInt(ivyPerChunk + 1));
+        	generateAtTop(rattanGen, nextInt(rattanPerChunk + 1));
         }
         MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(currentWorld, randomGenerator, chunkX, chunkZ));
 	}

@@ -14,6 +14,7 @@ import farcore.util.ChunkBuilder;
 import fle.api.block.ItemSubstance;
 import fle.core.block.BlockRock;
 import fle.core.tile.statics.TileEntityRock;
+import fle.core.world.rock.RockEtMineralGenerator;
 import fle.core.world.rock.RockLayer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -71,11 +72,13 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 	protected NoiseGeneratorOctaves noise5;
 	/** Stone height noise. */
     protected NoiseGeneratorPerlin noise6;
-	/** Stone ph noise. */
-    protected NoiseGeneratorPerlin noise7;
-	/** Stone deepness noise. */
-    protected NoiseGeneratorPerlin noise8;
+//	/** Stone ph noise. */
+//    protected NoiseGeneratorPerlin noise7;
+//	/** Stone deepness noise. */
+//    protected NoiseGeneratorPerlin noise8;
 
+    protected RockEtMineralGenerator rockEtMineralGenerator;
+    
 	private BiomeGenBase[] biomes;
 	
 	protected double[] cache1;
@@ -99,8 +102,9 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 		this.noise4 = new NoiseGeneratorOctaves(random, 8);
 //		this.noise5 = new NoiseGeneratorOctaves(random, 6);
 		this.noise6 = new NoiseGeneratorPerlin(random, 4);
-		this.noise7 = new NoiseGeneratorPerlin(random, 6);
-		this.noise8 = new NoiseGeneratorPerlin(random, 6);
+//		this.noise7 = new NoiseGeneratorPerlin(random, 6);
+//		this.noise8 = new NoiseGeneratorPerlin(random, 6);
+		this.rockEtMineralGenerator = new RockEtMineralGenerator(random);
 		this.cache5 = new double[825];
 	}
 
@@ -311,90 +315,91 @@ public class FleSurfaceChunkProvider implements IChunkProvider
     
 	protected void gen4(int x, int z, ChunkBuilder builder)
 	{
-		cache7 = noise7.func_151599_a(cache7, x * 4, z * 4, 5, 5, .2D, .2D, .2D);
-		cache8 = noise8.func_151599_a(cache8, x * 4, z * 4, 5, 5, .2D, .2D, .2D);
-		double d1, d2;
-		int l = 0;
-		for(int i = 0; i < 5; ++i)
-			for(int j = 0; j < 5; ++j)
-			{
-				d1 = cache7[l] / 20D;
-				d2 = cache8[l] / 20D;
-				if(d1 > 1D)
-				{
-					d1 = 1D;
-				}
-				else if(d1 < -1D)
-				{
-					d1 = -1D;
-				}
-				d1 += 1D;
-				d1 *= 4D;
-				if(d2 < 0D)
-				{
-					d2 = -d2 * .5D;
-				}
-				d2 = d2 * 1.2D + 0.1D;
-				if(d2 < .2D)
-				{
-					d2 += .4D;
-					d2 /= 4D;
-				}
-				else if(d2 < .5D)
-				{
-					d2 = .5D;
-				}
-				else
-				{
-					d2 -= .5D;
-					d2 *= .8D;
-					d2 += .5D;
-				}
-				cache5[l] = d1;
-				cache5[l + 25] = d2;
-				l++;
-			}
-		double d3, d4, d5, d6, d7, d8, d9, d10, d11, d12;
-		for(int i = 0; i < 4; ++i)
-			for(int j = 0; j < 4; ++j)
-			{
-				d1 = cache5[j * 5 + i];
-				d2 = cache5[j * 5 + i + 1];
-				d3 = cache5[(j + 1) * 5 + i];
-				d4 = cache5[(j + 1) * 5 + i + 1];
-				d3 = (d3 - d1) * .25D;
-				d4 = (d4 - d2) * .25D;
-
-				d7 = cache5[j * 5 + i];
-				d8 = cache5[j * 5 + i + 1];
-				d9 = cache5[(j + 1) * 5 + i];
-				d10 = cache5[(j + 1) * 5 + i + 1];
-				d9 = (d9 - d7) * .25D;
-				d10 = (d10 - d8) * .25D;
-				for(int j1 = 0; j1 < 4; ++j1)
-				{
-					d5 = d1;
-					d6 = (d2 - d1) * .25D;
-					d11 = d7;
-					d12 = (d8 - d7) * .25D;
-					for(int i1 = 0; i1 < 5; ++i1)
-					{
-						for(int k = 0; k < 255; ++k)
-						{
-							if(builder.get(i * 4 + i1, k, j * 4 + j1) == Blocks.stone)
-							{
-								builder.add(i * 4 + i1, k, j * 4 + j1, RockLayer.provide(d5, (double) k * d11), 0);
-							}
-						}
-						d5 += d6;
-						d11 += d12;
-					}
-					d1 += d3;
-					d2 += d4;
-					d7 += d9;
-					d8 += d10;
-				}
-			}
+		rockEtMineralGenerator.generateRockAndMineral(x * 16, z * 16, builder, world.getWorldChunkManager());
+//		cache7 = noise7.func_151599_a(cache7, x * 4, z * 4, 5, 5, .2D, .2D, .2D);
+//		cache8 = noise8.func_151599_a(cache8, x * 4, z * 4, 5, 5, .2D, .2D, .2D);
+//		double d1, d2;
+//		int l = 0;
+//		for(int i = 0; i < 5; ++i)
+//			for(int j = 0; j < 5; ++j)
+//			{
+//				d1 = cache7[l] / 20D;
+//				d2 = cache8[l] / 20D;
+//				if(d1 > 1D)
+//				{
+//					d1 = 1D;
+//				}
+//				else if(d1 < -1D)
+//				{
+//					d1 = -1D;
+//				}
+//				d1 += 1D;
+//				d1 *= 4D;
+//				if(d2 < 0D)
+//				{
+//					d2 = -d2 * .5D;
+//				}
+//				d2 = d2 * 1.2D + 0.1D;
+//				if(d2 < .2D)
+//				{
+//					d2 += .4D;
+//					d2 /= 4D;
+//				}
+//				else if(d2 < .5D)
+//				{
+//					d2 = .5D;
+//				}
+//				else
+//				{
+//					d2 -= .5D;
+//					d2 *= .8D;
+//					d2 += .5D;
+//				}
+//				cache5[l] = d1;
+//				cache5[l + 25] = d2;
+//				l++;
+//			}
+//		double d3, d4, d5, d6, d7, d8, d9, d10, d11, d12;
+//		for(int i = 0; i < 4; ++i)
+//			for(int j = 0; j < 4; ++j)
+//			{
+//				d1 = cache5[j * 5 + i];
+//				d2 = cache5[j * 5 + i + 1];
+//				d3 = cache5[(j + 1) * 5 + i];
+//				d4 = cache5[(j + 1) * 5 + i + 1];
+//				d3 = (d3 - d1) * .25D;
+//				d4 = (d4 - d2) * .25D;
+//
+//				d7 = cache5[j * 5 + i];
+//				d8 = cache5[j * 5 + i + 1];
+//				d9 = cache5[(j + 1) * 5 + i];
+//				d10 = cache5[(j + 1) * 5 + i + 1];
+//				d9 = (d9 - d7) * .25D;
+//				d10 = (d10 - d8) * .25D;
+//				for(int j1 = 0; j1 < 4; ++j1)
+//				{
+//					d5 = d1;
+//					d6 = (d2 - d1) * .25D;
+//					d11 = d7;
+//					d12 = (d8 - d7) * .25D;
+//					for(int i1 = 0; i1 < 5; ++i1)
+//					{
+//						for(int k = 0; k < 255; ++k)
+//						{
+//							if(builder.get(i * 4 + i1, k, j * 4 + j1) == Blocks.stone)
+//							{
+//								builder.add(i * 4 + i1, k, j * 4 + j1, RockLayer.provide(d5, (double) k * d11), 0);
+//							}
+//						}
+//						d5 += d6;
+//						d11 += d12;
+//					}
+//					d1 += d3;
+//					d2 += d4;
+//					d7 += d9;
+//					d8 += d10;
+//				}
+//			}
 	}
 	
 	@Override
@@ -491,12 +496,12 @@ public class FleSurfaceChunkProvider implements IChunkProvider
 
                 if (world.isBlockFreezable(k1 + k, i2 - 1, l1 + l))
                 {
-                    world.setBlock(k1 + k, i2 - 1, l1 + l, Blocks.ice, 0, 2);
+                    world.setBlock(k1 + k, i2 - 1, l1 + l, EnumBlock.ice.block(), 0, 2);
                 }
 
                 if (world.func_147478_e(k1 + k, i2, l1 + l, true))
                 {
-                    world.setBlock(k1 + k, i2, l1 + l, Blocks.snow_layer, 0, 2);
+                    world.setBlock(k1 + k, i2, l1 + l, EnumBlock.snow.block(), 0, 2);
                 }
             }
         }

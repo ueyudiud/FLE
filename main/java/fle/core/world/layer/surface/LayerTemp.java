@@ -1,6 +1,7 @@
 package fle.core.world.layer.surface;
 
 import farcore.enums.EnumTemp;
+import farcore.util.noise.NoiseBasic;
 import fle.core.world.layer.LayerNoise;
 import net.minecraft.world.gen.layer.IntCache;
 
@@ -8,9 +9,9 @@ public class LayerTemp extends LayerNoise
 {
 	private double[] cache;
 	
-	public LayerTemp(int octave, long seed)
+	public LayerTemp(NoiseBasic noise, long seed)
 	{
-		super(octave, seed);
+		super(noise, seed);
 	}
 
 	@Override
@@ -18,31 +19,30 @@ public class LayerTemp extends LayerNoise
 	{
 		if(cache == null || cache.length < w * h)
 			cache = new double[w * h];
-		cache = octaves.generateNoiseOctaves(cache, x, y, w, h, 120D, 120D, 120D);
-		double mul = 1D / (double) (1 << (octave - 1));
+		cache = noise.noise(cache, w, h, x, y);
 		int[] ret = IntCache.getIntCache(w * h);
 		for(int i = 0; i < h; ++i)
 			for(int j = 0; j < w; ++j)
 			{
-				double v = cache[i + j * h] * mul;
+				double v = cache[i * w + j];
 				int k;
-				if(v < -0.66)
+				if(v < 0.125)
 				{
 					k = EnumTemp.freeze.ordinal();
 				}
-				else if(v < -0.33)
+				else if(v < 0.3)
 				{
 					k = EnumTemp.cold.ordinal();
 				}
-				else if(v < 0)
+				else if(v < 0.45)
 				{
 					k = EnumTemp.cool.ordinal();
 				}
-				else if(v < 0.33)
+				else if(v < 0.625)
 				{
 					k = EnumTemp.warm.ordinal();
 				}
-				else if(v < 0.67)
+				else if(v < 0.8)
 				{
 					k = EnumTemp.hot.ordinal();
 				}

@@ -1,5 +1,6 @@
 package fle.load;
 
+import farcore.lib.substance.SubstanceMineral;
 import farcore.lib.substance.SubstanceRock;
 import farcore.lib.substance.SubstanceSand;
 import farcore.lib.substance.SubstanceTool;
@@ -258,33 +259,45 @@ public class Substances
 //		new SubstanceWood(238, "witch-hazel").setHardness(6.8F);
 //		new SubstanceWood(239, "yellow-poplar").setHardness(2.4F);
 		
-		new SubstanceWood(1, "oak").setHardness(5.3F).setTreeGen(new TreeGenSimple(5, false));
-		new SubstanceWood(2, "spruce").setHardness(2.3F).setTreeGen(new TreeGenPine());
-		new SubstanceWood(3, "birch").setHardness(4.0F).setTreeGen(new TreeGenSimple(5, false));
-		new SubstanceWood(4, "ceiba").setHardness(1.1F).setTreeGen(new TreeGenJungle(30, 8));
-		new SubstanceWood(5, "acacia").setTreeGen(new TreeGenAcacia());
-		new SubstanceWood(6, "oak-black").setHardness(5.4F).setTreeGen(new TreeGenCanopy());
-		new SubstanceWood(11, "aspen").setHardness(1.6F).setTreeGen(new TreeGenStraight(7, 4, 5, 8, 1.5F, true));
-		new SubstanceWood(12, "morus").setTreeGen(new TreeGenStraight(4, 3, 2, 5, 4.2F, true));
-		new SubstanceWood(13, "willow").setTreeGen(new TreeGenStraight(4, 4, 1, 6, 4.6F, false));
+		new SubstanceWood(1, "oak", "Oak").setHardness(5.3F).setTreeGen(new TreeGenSimple(5, false));
+		new SubstanceWood(2, "spruce", "Spruce").setHardness(2.3F).setTreeGen(new TreeGenPine());
+		new SubstanceWood(3, "birch", "Birch").setHardness(4.0F).setTreeGen(new TreeGenSimple(5, false));
+		new SubstanceWood(4, "ceiba", "Ceiba").setHardness(1.1F).setTreeGen(new TreeGenJungle(30, 8));
+		new SubstanceWood(5, "acacia", "Acacia").setTreeGen(new TreeGenAcacia());
+		new SubstanceWood(6, "oak-black", "Dark Oak").setHardness(5.4F).setTreeGen(new TreeGenCanopy());
+		new SubstanceWood(11, "aspen", "Aspen").setHardness(1.6F).setTreeGen(new TreeGenStraight(7, 4, 5, 8, 1.5F, true));
+		new SubstanceWood(12, "morus", "Morus").setTreeGen(new TreeGenStraight(4, 3, 2, 5, 4.2F, true));
+		new SubstanceWood(13, "willow", "Willow").setTreeGen(new TreeGenStraight(4, 4, 1, 6, 4.6F, false));
 		
-		new SubstanceRock(1, "stone").setDensity(2000).setHardness(2.5F).setHarvestLevel(6)
+		new SubstanceRock(1, "stone", "Stome").setDensity(2000).setHardness(2.5F).setHarvestLevel(6)
 		.setToolBelong(new SubstanceTool(1, "stone").setColor(0x626262).setDigSpeed(1.2F).setHarvestLevel(8).setMaxUses(16));
-		new SubstanceRock(2, "stone-compact").setDensity(2800).setHardness(3.75F).setHarvestLevel(8)
+		new SubstanceRock(2, "stone-compact", "Compact Stone").setDensity(2800).setHardness(3.75F).setHarvestLevel(8)
 		.setToolBelong(new SubstanceTool(2, "stone-compact").setColor(0x686868).setDigSpeed(1.4F).setHarvestLevel(9).setMaxUses(18));
-		new SubstanceRock(3, "limestone").setDensity(1600).setHardness(1.85F).setHarvestLevel(4);
-		new SubstanceRock(4, "rhyolite").setDensity(2100).setHardness(6F).setHarvestLevel(11)
+		new SubstanceRock(3, "limestone", "Limestone").setDensity(1600).setHardness(3.1F).setHarvestLevel(4);
+		new SubstanceRock(4, "rhyolite", "Rhyolite").setDensity(2100).setHardness(6F).setHarvestLevel(11)
 		.setToolBelong(new SubstanceTool(3, "rhyolite").setColor(0x4F535A).setDigSpeed(1.9F).setHarvestLevel(15).setMaxUses(48));
-		new SubstanceRock(5, "andesite").setDensity(1800).setHardness(4.85F).setHarvestLevel(9)
+		new SubstanceRock(5, "andesite", "Andesite").setDensity(1800).setHardness(4.85F).setHarvestLevel(9)
 		.setToolBelong(new SubstanceTool(4, "andesite").setColor(0x616162).setDigSpeed(1.6F).setHarvestLevel(13).setMaxUses(41));
-		new SubstanceRock(6, "basalt").setDensity(2000).setHardness(5.25F).setHarvestLevel(10)
+		new SubstanceRock(6, "basalt", "Basalt").setDensity(2000).setHardness(5.25F).setHarvestLevel(10)
 		.setToolBelong(new SubstanceTool(5, "basalt").setColor(0x3A3A3A).setDigSpeed(1.65F).setHarvestLevel(14).setMaxUses(43));
-		new SubstanceRock(7, "peridotite").setDensity(1800).setHardness(7.05F).setHarvestLevel(14);
+		new SubstanceRock(7, "peridotite", "Peridotite").setDensity(1800).setHardness(7.05F).setHarvestLevel(14)
+		.setToolBelong(new SubstanceTool(6, "peridotite").setColor(0x717A5C).setDigSpeed(1.8F).setHarvestLevel(15).setMaxUses(51));
+		new SubstanceRock(8, "granite", "Granite").setDensity(1900).setHardness(7.4F).setHarvestLevel(13)
+		.setToolBelong(new SubstanceTool(7, "granite").setColor(0x5C6461).setDigSpeed(1.73F).setHarvestLevel(14).setMaxUses(44));
+		new SubstanceRock(9, "diorite", "Diorite").setDensity(1880).setHardness(6.5F).setHarvestLevel(12)
+		.setToolBelong(new SubstanceTool(8, "diorite").setColor(0xC9C9CD).setDigSpeed(1.6F).setHarvestLevel(12).setMaxUses(40));
+		new SubstanceRock(10, "gabbro", "Gabbro").setDensity(1930).setHardness(6.9F).setHarvestLevel(13)
+		.setToolBelong(new SubstanceTool(9, "gabbro").setColor(0x53524E).setDigSpeed(1.64F).setHarvestLevel(12).setMaxUses(42));
+				
+		new SubstanceMineral(1, "native_copper", "Native Copper").setHarvestLevel(7).setHardness(8.0F);
+		new SubstanceMineral(2, "malachite", "Malachite").setHarvestLevel(8).setHardness(7.2F);
+		new SubstanceMineral(3, "cuprite", "Cuprite").setHarvestLevel(10).setHardness(11.5F);
+		new SubstanceMineral(4, "azurite", "Azurite").setHarvestLevel(10).setHardness(11.0F);
 		
-		new SubstanceSand(1, "yellow").setDensity(1000).setHardness(0.3F);
+		new SubstanceSand(1, "yellow", "Yellow").setDensity(1000).setHardness(0.3F);
 
-		new SubstanceTool(10001, "flint").setColor(0x5A5A5A).setHarvestLevel(7).setDigSpeed(1.1F).setMaxUses(12).setTag(SubTag.TOOL_flint, SubTag.TOOL_stone);
-		new SubstanceTool(10002, "obsidian").setColor(0x33344F).setHarvestLevel(19).setDigSpeed(2.1F).setMaxUses(16).setTag(SubTag.TOOL_flint, SubTag.TOOL_stone);
+		new SubstanceTool(10001, "flint", "Flint").setColor(0x5A5A5A).setHarvestLevel(7).setDigSpeed(1.1F).setMaxUses(12).setTag(SubTag.TOOL_flint, SubTag.TOOL_stone);
+		new SubstanceTool(10002, "obsidian", "Obsidian").setColor(0x33344F).setHarvestLevel(19).setDigSpeed(2.1F).setMaxUses(16).setTag(SubTag.TOOL_flint, SubTag.TOOL_stone);
 		
 		for(SubstanceWood wood : SubstanceWood.getWoods())
 		{

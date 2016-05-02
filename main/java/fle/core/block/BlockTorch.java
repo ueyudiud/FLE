@@ -12,11 +12,12 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import farcore.FarCoreSetup;
+import farcore.FarCore;
 import farcore.block.BlockHasTile;
 import farcore.enums.Direction;
 import farcore.enums.EnumItem;
 import farcore.lib.substance.SubstanceWood;
+import farcore.util.LanguageManager;
 import farcore.util.U;
 import fle.core.tile.TileEntityTorch;
 import net.minecraft.block.Block;
@@ -47,6 +48,12 @@ public class BlockTorch extends BlockHasTile
 		super("torch", ItemTorch.class, Material.circuits);
 		setTickRandomly(true);
 		EnumItem.torch.set(new ItemStack(this, 1));
+	}
+		
+	@Override
+	public void registerLocalizedName(LanguageManager manager)
+	{
+		manager.registerLocal(getUnlocalizedName() + ".name", "Torch");
 	}
 
     /**
@@ -80,7 +87,7 @@ public class BlockTorch extends BlockHasTile
      */
     public int getRenderType()
     {
-        return FarCoreSetup.handlerA.getRenderId();
+        return FarCore.handlerA.getRenderId();
     }
     
     @Override

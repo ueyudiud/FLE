@@ -23,6 +23,8 @@ import net.minecraft.item.Item.ToolMaterial;
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 public class FarOverride extends DummyModContainer
 {
+	public static boolean isFleLoad;
+	
 	@Instance(FarCore.OVERRIDE_ID)
 	public static FarOverride override;
 	
@@ -51,6 +53,7 @@ public class FarOverride extends DummyModContainer
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
+		isFleLoad = U.Mod.isModLoaded("Far Land Era");
 		overrideMaterialProperties();
 	}
 	

@@ -83,7 +83,8 @@ public enum EnumItem
 	 */
 	tool,
 	log, 
-	plant;
+	plant, 
+	ore_block;
 	
 	boolean init = false;
 	AbstractStack stack;

@@ -1,11 +1,14 @@
 package farcore.inventory;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import farcore.lib.stack.AbstractStack;
+import farcore.util.U;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -37,6 +40,7 @@ public class Inventory implements IInventory
 	
 	private static final TileEntity INSTANCE = new TileEntity();
 	
+	protected Random rand = new Random();
 	private TileEntity tile = INSTANCE;
 	
 	private final String name;
@@ -119,6 +123,34 @@ public class Inventory implements IInventory
 		}
 	}
 	
+	public boolean decrStack(int i, AbstractStack stack, boolean process)
+	{
+		if(stacks[i] == null) return false;
+		else
+		{
+			if(stack.contain(stacks[i]))
+			{
+				int size = stack.size(stacks[i]);
+				if(stacks[i].stackSize >= size)
+				{
+					if(process)
+					{
+						if(stacks[i].stackSize > size)
+						{
+							stacks[i].stackSize -= size;
+						}
+						else
+						{
+							stacks[i] = null;
+						}
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	
 	public int addStack(int i, ItemStack stack, boolean process)
 	{
 		if(stack == null || stack.stackSize == 0) return 0;
@@ -146,120 +178,132 @@ public class Inventory implements IInventory
 		return 0;
 	}
 	
-	public boolean addStacks(int min, int max, boolean process, AbstractStack...stacks)
+	private ItemStack[] simulate()
 	{
-		for(AbstractStack stack : stacks)
+		ItemStack[] sim = new ItemStack[stacks.length];
+		for(int i = 0; i < sim.length; 
+				sim[i] = ItemStack.copyItemStack(stacks[i]), ++i);
+		return sim;
+	}
+
+	public boolean addStacks(int start, int end, ItemStack[] stack, boolean process)
+	{
+		ItemStack[] simulte = simulate();
+		for(ItemStack s : stack)
 		{
-			if(!addStack(min, max, stack, false))
-			{
+			if(!addStacks(simulte, start, end, s, true, true))
 				return false;
-			}
 		}
 		if(process)
 		{
-			for(AbstractStack stack : stacks)
+			for(ItemStack s : stack)
 			{
-				addStack(min, max, stack, true);
+				addStacks(stacks, start, end, s, true, true);
 			}
 		}
 		return true;
 	}
-	
-	public boolean addStack(int min, int max, AbstractStack stack, boolean process)
+	public boolean addStacks(int start, int end, ItemStack stack, boolean process)
 	{
-		if(stack == null || stack.instance() == null) return true;
-		AbstractStack input = stack;
-		input = addStack(min, max, input, true, false);
-		if(input != null)
+		return addStacks(stacks, start, end, stack, process, !process);
+	}
+	public boolean addStacks(ItemStack[] stacks, int start, int end, ItemStack stack, boolean process, boolean ignoreCheck)
+	{
+		if(!ignoreCheck)
 		{
-			input = addStack(min, max, input, false, false);
-		}
-		if(input == null)
-		{
+			ItemStack[] simulte = simulate();
+			ItemStack current = stack;
+			label:
+			{
+				for(int i = start; i < end; ++i)
+				{
+					if((current = addStack(simulte, i, current, 0x5)) == null)
+						break label;
+				}
+				for(int i = start; i < end; ++i)
+				{
+					if((current = addStack(simulte, i, current, 0x3)) == null)
+						break label;
+				}
+				return false;
+			}
 			if(process)
 			{
-				input = stack;
-				input = addStack(min, max, input, true, true);
-				if(input != null)
+				current = stack;
+				for(int i = start; i < end; ++i)
 				{
-					input = addStack(min, max, input, false, true);
+					if((current = addStack(stacks, i, current, 0x5)) == null)
+						return true;
+				}
+				for(int i = start; i < end; ++i)
+				{
+					if((current = addStack(stacks, i, current, 0x3)) == null)
+						return true;
 				}
 			}
 			return true;
 		}
-		return false;
-	}
-	
-	private AbstractStack addStack(int min, int max, AbstractStack stack, boolean addToNoEmpty, boolean process)
-	{
-		if(stack == null || stack.instance() == null) return null;
-		AbstractStack input = stack;
-		for(int i = min; i < max; ++i)
+		else
 		{
-			if((input = $addStack(i, input, !addToNoEmpty, addToNoEmpty, true, process)) == null)
+			if(!process) return true;
+			ItemStack current = stack;
+			for(int i = start; i < end; ++i)
 			{
-				return null;
+				if((current = addStack(stacks, i, current, 0x5)) == null)
+					return true;
 			}
+			for(int i = start; i < end; ++i)
+			{
+				if((current = addStack(stacks, i, current, 0x3)) == null)
+					return true;
+			}
+			return false;
 		}
-		return input;
 	}
 	
-	public boolean addStack(int i, AbstractStack stack, boolean process)
+	private ItemStack addStack(ItemStack[] container, int id, ItemStack stack, int flag)
 	{
-		if(stack == null || stack.instance() == null) return true;
-		return $addStack(i, stack, true, true, false, process) == null;
-	}
-	
-	public AbstractStack $addStack(int i, AbstractStack stack, boolean addToEmpty, boolean addToNoEmpty, boolean inputWithoutStack, boolean process)
-	{
-		if(stacks[i] == null)
+		if(stack == null || stack.stackSize <= 0) return null;
+		boolean process = (flag & 0x1) != 0;
+		boolean addToEmpty = (flag & 0x2) != 0;
+		boolean addToFull = (flag & 0x4) != 0;
+		ItemStack input = stack.copy();
+		if(container[id] == null)
 		{
-			if(!addToEmpty) return stack;
-			ItemStack stack2 = stack.instance().copy();
-			int size = addStack(i, stack2, false);
-			if(size == stack2.stackSize)
+			if(addToEmpty)
 			{
 				if(process)
 				{
-					addStack(i, stack2, true);
+					container[id] = input;
 				}
 				return null;
 			}
-			else if(inputWithoutStack)
-			{
-				stack2.stackSize = size;
-				addStack(i, stack2, process);
-				return stack.split(stack2);
-			}
-			return stack;
+			return input;
 		}
-		else if(stack.similar(stacks[i]))
+		else if(addToFull)
 		{
-			if(!addToNoEmpty) return stack;
-			int size = Math.min(limit, stacks[i].getMaxStackSize());
-			int size1 = (int) stack.size(stacks[i]);
-			if(size1 > size - stacks[i].stackSize)
+			if(U.Inventorys.areStackSimilar(stack, container[id]))
 			{
-				if(inputWithoutStack)
+				int size = container[id].stackSize + stack.stackSize;
+				int max = container[id].getMaxStackSize();
+				if(size > max)
 				{
-					int ret = size - stacks[i].stackSize;
+					int size1 = max - container[id].stackSize;
 					if(process)
 					{
-						stacks[i].stackSize = size;
+						container[id].stackSize = max;
 					}
-					ItemStack add = stacks[i].copy();
-					add.stackSize = ret;
-					return stack.split(add);
+					return input.splitStack(size1);
 				}
-				return stack;
+				if(process)
+				{
+					container[id].stackSize = size;
+				}
+				return null;
 			}
-			if(process)
-			{
-				stacks[i].stackSize += size1;
-			}
-			return null;
+			return input;
 		}
-		return stack;
+		return input;
 	}
 	
 	public boolean matchShapeless(int startSlot, int endSlot, AbstractStack...inputs)
@@ -382,6 +426,7 @@ public class Inventory implements IInventory
 	{
 		return fillOrDrainInventoryTank(tank, inputSlot, outputSlot, FDType.FD);
 	}
+	
 	public boolean fillOrDrainInventoryTank(IFluidTank tank, int inputSlot, int outputSlot, FDType type)
 	{
 		ItemStack input = stacks[inputSlot];

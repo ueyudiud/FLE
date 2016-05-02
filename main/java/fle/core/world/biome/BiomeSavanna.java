@@ -42,6 +42,7 @@ public class BiomeSavanna extends BiomeBase
         biomeDecorator.treesPerChunk = 1;
         biomeDecorator.flowersPerChunk = 4;
         biomeDecorator.grassPerChunk = 20;
+        biomeDecorator.rattanPerChunk = 1;
 	}
 	
 	@Override

@@ -10,5 +10,6 @@ public class BiomeValley extends BiomeBase
 		biomeDecorator.treesPerChunk = 1;
 		biomeDecorator.brownMushroomsPerChunk = 2;
 		biomeDecorator.flowersPerChunk = -999;
+		biomeDecorator.ivyPerChunk = 1;
 	}
 }

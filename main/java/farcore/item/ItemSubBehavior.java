@@ -9,6 +9,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.interfaces.IItemIconInfo;
 import farcore.interfaces.item.IBehavior;
 import farcore.interfaces.item.IBreakSpeedItem;
@@ -18,6 +20,7 @@ import farcore.interfaces.item.IItemProperty;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.util.FleLog;
+import farcore.util.LanguageManager;
 import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -38,6 +41,7 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 {
 	protected final IRegister<IItemInfo> register;
 	private Map<String, IItemIconInfo> infos = new HashMap();
+	private Map<String, String> localizes = new HashMap();
 	
 	protected ItemSubBehavior(String unlocalized)
 	{
@@ -63,15 +67,26 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		return new Register();
 	}
 	
-	public void addSubItem(int id, String name, IBehavior behavior, IItemProperty property, IItemIconInfo iconInfo)
+	public void addSubItem(int id, String name, String local, IBehavior behavior, IItemProperty property, IItemIconInfo iconInfo)
 	{
-		addSubItem(id, name, new ItemInfoMix(behavior, property), iconInfo);
+		addSubItem(id, name, local, new ItemInfoMix(behavior, property), iconInfo);
 	}
 	
-	public void addSubItem(int id, String name, IItemInfo itemInfo, IItemIconInfo iconInfo)
+	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, IItemIconInfo iconInfo)
 	{
 		register.register(id, name, itemInfo);
 		infos.put(name, iconInfo);
+		localizes.put(name, local);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void registerLocalizedName(LanguageManager manager)
+	{
+		String unlocalized = getUnlocalizedName();
+		for(String tag : register.names())
+		{
+			manager.registerLocal(unlocalized + ":" + tag, localizes.get(tag));
+		}
 	}
 	
 	@Override
@@ -79,8 +94,8 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 	{
 		return register.name(metadata);
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
 		for(IItemIconInfo info : infos.values())
@@ -95,14 +110,14 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 			}
 		}
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public boolean requiresMultipleRenderPasses()
 	{
 		return true;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public int getRenderPasses(int metadata)
 	{
 		try
@@ -118,8 +133,8 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		}
 		return 1;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int pass)
 	{
 		try
@@ -135,8 +150,8 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		}
 		return 0xFFFFFF;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass)
 	{
 		try
@@ -152,8 +167,8 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		}
 		return V.voidItemIcon;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public IIcon getIconIndex(ItemStack stack)
 	{
 		return getIcon(stack, 0);
@@ -521,8 +536,8 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		}
 		return multimap;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag)
 	{
 		super.addInformation(stack, player, list, flag);

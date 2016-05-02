@@ -48,19 +48,21 @@ public class BiomeJungle extends BiomeBase
 	{
 		super(id);
 		init();
+		sedimentaryMultiply = 0.3F;
         this.type = flag;
 
         if (flag)
         {
-            this.biomeDecorator.treesPerChunk = 2;
+            biomeDecorator.treesPerChunk = 2;
         }
         else
         {
-            this.biomeDecorator.treesPerChunk = 50;
+            biomeDecorator.treesPerChunk = 6;
         }
 
-        this.biomeDecorator.grassPerChunk = 25;
-        this.biomeDecorator.flowersPerChunk = 4;
+        biomeDecorator.grassPerChunk = 25;
+        biomeDecorator.rattanPerChunk = 3;
+        biomeDecorator.flowersPerChunk = 4;
 
         if (!flag)
         {

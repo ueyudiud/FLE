@@ -2,7 +2,11 @@ package fle.core.world.biome;
 
 import java.util.Random;
 
+import farcore.interfaces.ITreeGenerator;
+import farcore.lib.substance.SubstanceWood;
 import farcore.lib.world.biome.BiomeBase;
+import farcore.lib.world.gen.tree.TreeGenPine;
+import farcore.lib.world.gen.tree.TreeGenPine2;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -13,8 +17,24 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class BiomeMountain extends BiomeBase
 {
-    private static final WorldGenerator theWorldGenerator = new WorldGenMinable(Blocks.monster_egg, 8);
-    private WorldGenTaiga2 taigaTrees;
+	private static final WorldGenerator theWorldGenerator = new WorldGenMinable(Blocks.monster_egg, 8);
+	private static final ITreeGenerator genSpruce1 = new TreeGenPine();
+	private static final ITreeGenerator genSpruce2 = new TreeGenPine2();
+    
+	private static boolean init = false;
+
+	private void init()
+	{
+		if(!init)
+		{
+			SubstanceWood wood = SubstanceWood.getSubstance("spruce");
+			genSpruce1.initLogBlock(wood.log, wood.leaves);
+			genSpruce2.initLogBlock(wood.log, wood.leaves);
+			init = true;
+		}
+	}
+	
+//	private WorldGenTaiga2 taigaTrees;
     private int field_150635_aE;
     private int field_150636_aF;
     private int field_150637_aG;
@@ -23,7 +43,8 @@ public class BiomeMountain extends BiomeBase
 	public BiomeMountain(int id, boolean enableTree, boolean enableGrass)
 	{
 		super(id);
-        this.taigaTrees = new WorldGenTaiga2(false);
+		init();
+//        this.taigaTrees = new WorldGenTaiga2(false);
         this.field_150635_aE = 0;
         this.field_150636_aF = 1;
         this.field_150637_aG = 2;
@@ -42,12 +63,22 @@ public class BiomeMountain extends BiomeBase
         {
         	biomeDecorator.grassPerChunk = -999;
         }
+        else
+        {
+            biomeDecorator.ivyPerChunk = 2;
+        }
+	}
+	
+	@Override
+	protected ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z, double treeNoise)
+	{
+		return rand.nextInt(3) > 0 ? genSpruce2 : genSpruce1;
 	}
 
-    public WorldGenAbstractTree func_150567_a(Random random)
-    {
-        return (WorldGenAbstractTree)(random.nextInt(3) > 0 ? this.taigaTrees : super.func_150567_a(random));
-    }
+//    public WorldGenAbstractTree func_150567_a(Random random)
+//    {
+//        return (WorldGenAbstractTree)(random.nextInt(3) > 0 ? this.taigaTrees : super.func_150567_a(random));
+//    }
 
     public void decorate(World world, Random random, int x, int z)
     {
@@ -80,21 +111,24 @@ public class BiomeMountain extends BiomeBase
 
     public void genTerrainBlocks(World world, Random random, Block[] blocks, byte[] metas, int x, int z, double layer)
     {
-        this.topBlock = Blocks.grass;
-        this.field_150604_aj = 0;
-        this.fillerBlock = Blocks.dirt;
+        topBlock = Blocks.grass;
+        topMeta = 0;
+        secondBlock = Blocks.dirt;
+        fillerBlock = Blocks.gravel;
 
         if ((layer < -1.0D || layer > 2.0D) && this.field_150638_aH == this.field_150637_aG)
         {
             topBlock = Blocks.gravel;
+            secondBlock = Blocks.gravel;
             fillerBlock = Blocks.gravel;
         }
         else if (layer > 1.0D && this.field_150638_aH != this.field_150636_aF)
         {
             topBlock = Blocks.stone;
+            secondBlock = Blocks.stone;
             fillerBlock = Blocks.stone;
         }
 
-        genBiomeTerrain(world, random, blocks, metas, x, z, layer);
+        super.genTerrainBlocks(world, random, blocks, metas, x, z, layer);
     }
 }

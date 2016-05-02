@@ -4,6 +4,7 @@ import java.util.Random;
 
 import farcore.enums.EnumTerrain;
 import farcore.util.U;
+import farcore.util.noise.NoiseBasic;
 import fle.core.world.layer.LayerNoise;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.layer.IntCache;
@@ -12,9 +13,9 @@ public class LayerTerrainBase extends LayerNoise
 {
 	private double[] cache;
 	
-	public LayerTerrainBase(int octave, long seed)
+	public LayerTerrainBase(NoiseBasic noise, long seed)
 	{
-		super(octave, seed);
+		super(noise, seed);
 	}
 	
 	@Override
@@ -26,13 +27,12 @@ public class LayerTerrainBase extends LayerNoise
 		int h1 = h + 2;
 		if(cache == null || cache.length < w1 * h1)
 			cache = new double[w1 * h1];
-		cache = octaves.generateNoiseOctaves(cache, x1, y1, w1, h1, 25D, 25D, 25D);
-		double mul = 1D / (double) (1 << (octave - 1));
+		cache = noise.noise(cache, w1, h1, x1, y1);
 		int[] array = IntCache.getIntCache(w1 * h1);
 		for(int i = 0; i < w1; ++i)
 			for(int j = 0; j < h1; ++j)
 			{
-				array[j * w1 + i] = EnumTerrain.get((float) (cache[j + i * h1] * mul)).ordinal();
+				array[j * w1 + i] = EnumTerrain.get((float) (cache[j * w1 + i] )).ordinal();
 			}
 		int[] ret = IntCache.getIntCache(w * h);
 		for(int i = 0; i < h; ++i)

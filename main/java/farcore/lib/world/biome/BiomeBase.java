@@ -21,6 +21,19 @@ public class BiomeBase extends BiomeGenBase
 	private static final NoiseGeneratorPerlin noisePlantIII = new NoiseGeneratorPerlin(new Random(4918596729179L), 4);
 	private static final BiomeBase[] biomeList = new BiomeBase[256];
 	
+	public float rareMultiply = 0.2F;
+	public float sedimentaryMultiply = 0.0F;
+	public float metamorphismMultiply = 1.0F;
+	
+	public Block topBlock = Blocks.grass;
+	public int topMeta = 0;
+	public Block waterTop = Blocks.dirt;
+	public int waterTopMeta = 0;
+	public Block secondBlock = Blocks.dirt;
+	public int secondMeta = 0;
+	public Block fillerBlock = Blocks.gravel;
+	public int fillerMeta = 0;
+	
 	public BD biomeDecorator = new BD();
 	
 	public BiomeBase(int id, boolean register)
@@ -61,10 +74,8 @@ public class BiomeBase extends BiomeGenBase
     public void genTerrain(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer)
     {
         boolean flag = true;
-        Block block = this.topBlock;
-        byte b0 = (byte)(this.field_150604_aj & 255);
-        Block block1 = this.fillerBlock;
         int k = -1;
+        int r = 0;
         int l = (int)(layer / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
         int i1 = x & 15;
         int j1 = z & 15;
@@ -73,84 +84,116 @@ public class BiomeBase extends BiomeGenBase
         for (int l1 = 255; l1 >= 0; --l1)
         {
             int i2 = (j1 * 16 + i1) * k1 + l1;
-
-            if (l1 <= 0 + rand.nextInt(5))
+            if(l1 == 0)
             {
-                blocks[i2] = Blocks.bedrock;
+            	blocks[i2] = Blocks.bedrock;
+            }
+            else if(l1 < 10)
+            {
+            	blocks[i2] = EnumBlock.lava.block();
+            	metas[i2] = 15;
+            }
+            else if(l1 < 14 + rand.nextInt(2))
+            {
+            	blocks[i2] = Blocks.air;
+            	metas[i2] = 0;
             }
             else
             {
-                Block block2 = blocks[i2];
-
-                if (block2 != null && block2.getMaterial() != Material.air)
-                {
-                    if (block2 == Blocks.stone)
-                    {
-                        if (k == -1)
-                        {
-                            if (l <= 0)
-                            {
-                                block = null;
-                                b0 = 0;
-                                block1 = Blocks.stone;
-                            }
-                            else if (l1 >= 120 && l1 <= 128)
-                            {
-                                block = topBlock;
-                                b0 = (byte)(field_150604_aj & 255);
-                                block1 = fillerBlock;
-                            }
-
-                            if (l1 < 127 && (block == null || block.getMaterial() == Material.air))
-                            {
-                                if (getFloatTemperature(x, l1, z) < 0.15F)
-                                {
-                                    block = EnumBlock.ice.block();
-                                    b0 = 0;
-                                }
-                                else
-                                {
-                                    block = EnumBlock.water.block();
-                                    b0 = 15;
-                                }
-                            }
-
-                            k = l;
-
-                            if (l1 >= 62)
-                            {
-                                blocks[i2] = block;
-                                metas[i2] = b0;
-                            }
-                            else if (l1 < 56 - l)
-                            {
-                                block = null;
-                                block1 = Blocks.stone;
-                                blocks[i2] = Blocks.gravel;
-                            }
-                            else
-                            {
-                                blocks[i2] = block1;
-                            }
-                        }
-                        else if (k > 0)
-                        {
-                            --k;
-                            blocks[i2] = block1;
-
-                            if (k == 0 && block1 == Blocks.sand)
-                            {
-                                k = rand.nextInt(4) + Math.max(0, l1 - 127);
-                                block1 = Blocks.sandstone;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    k = -1;
-                }
-            }
+            	Block block2 = blocks[i2];
+            	if(block2 != null && block2.getMaterial() != Material.air)
+            	{
+            		if(block2 == Blocks.stone)
+            		{
+            			if(k == -1 && (r & 0x4) == 0)
+            			{
+            				if((r & 0x1) == 0)
+            				{
+            					if(l < 0)
+            					{
+            						blocks[i2] = Blocks.stone;
+            						metas[i2] = (byte) 0;
+            					}
+            					else
+            					{
+            						if((r & 0x2) != 0)
+            						{
+            							blocks[i2] = waterTop;
+            							metas[i2] = (byte) (waterTopMeta & 0xF);
+            							k = l - 1;
+            							r |= 0x1;
+            						}
+            						else
+            						{
+            							blocks[i2] = topBlock;
+            							metas[i2] = (byte) (topMeta & 0xF);
+            							k = l;
+            							r |= 0x1;
+            						}
+            					}
+            				}
+            				else if(l1 > 112)
+            				{
+            					if(l < 0)
+            					{
+            						blocks[i2] = Blocks.stone;
+            						metas[i2] = (byte) 0;
+            					}
+            					else
+            					{
+            						if((r & 0x2) != 0)
+            						{
+            							blocks[i2] = waterTop;
+            							metas[i2] = (byte) (waterTopMeta & 0xF);
+            							k = l - 1;
+            							r |= 0x1;
+            						}
+            						else
+            						{
+            							blocks[i2] = topBlock;
+            							metas[i2] = (byte) (topMeta & 0xF);
+            							k = l;
+            							r |= 0x1;
+            						}
+            					}
+            				}
+            				else
+            				{
+            					k = -2;
+            				}
+            			}
+            			else if(k > 0)
+            			{
+            				blocks[i2] = secondBlock;
+            				metas[i2] = (byte) (secondMeta & 0xF);
+            				--k;
+            			}
+            			else if(k == 0)
+            			{
+            				blocks[i2] = fillerBlock;
+            				metas[i2] = (byte) (fillerMeta & 0xF);
+            				--k;
+            			}
+            			r |= 0x4;
+            		}
+            		else if(block2 == EnumBlock.water.block())
+            		{
+            			if((r & 0x2) == 0)
+            			{
+            				if(getFloatTemperature(x, l1, z) < 0.15F)
+            				{
+            					blocks[i2] = EnumBlock.ice.block();
+                				metas[i2] = (byte) 0;
+            				}
+            				r |= 0x2;
+            			}
+            		}
+            	}
+            	else
+            	{
+            		r &= (~0x4);
+            	}
+			}
         }
     }
 

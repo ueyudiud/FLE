@@ -13,7 +13,7 @@ public class SubstanceWood implements ISubstance
 	private static final Register<SubstanceWood> register = new Register();
 
 	private static final TreeGenEmpty VOID_GEN = new TreeGenEmpty();
-	public static final SubstanceWood WOOD_VOID = new SubstanceWood(0, "void").setMaxUses(1, 1);
+	public static final SubstanceWood WOOD_VOID = new SubstanceWood(0, "void", "Void").setMaxUses(1, 1);
 	
 	public static SubstanceWood getSubstance(String tag)
 	{
@@ -71,7 +71,12 @@ public class SubstanceWood implements ISubstance
 	public Block leaves;
 
 	public DropHandler leafDrop = DropHandler.EMPTY;
-	
+
+	public SubstanceWood(int id, String name, String local)
+	{
+		this(id, name);
+		registerLocalName(local);
+	}
 	public SubstanceWood(int id, String name)
 	{
 		this.name = name;
@@ -170,14 +175,5 @@ public class SubstanceWood implements ISubstance
 	public final String getName(){return name;}
 	public final int getID(){return register.id(this);}
 	public final Register<SubstanceWood> getRegister(){return register;}
-
-	public void registerLocalName(String name)
-	{
-		FarCoreSetup.lang.registerLocal("substance.wood." + name, name);
-	}
-	
-	public String getLocalName()
-	{
-		return FarCore.translateToLocal("substance.wood." + name);
-	}
+	public final String getType(){return "wood";}
 }

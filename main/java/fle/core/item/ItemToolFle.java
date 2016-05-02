@@ -5,6 +5,8 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.enums.EnumItem;
 import farcore.interfaces.IItemIconInfo;
 import farcore.interfaces.item.IItemInfo;
@@ -14,6 +16,8 @@ import farcore.lib.substance.SubstanceTool;
 import farcore.util.SubTag;
 import farcore.util.U;
 import fle.api.item.behavior.BehaviorAxe;
+import fle.api.item.behavior.BehaviorBarGrizzly;
+import fle.api.item.behavior.BehaviorBase;
 import fle.api.item.behavior.BehaviorFireStarter;
 import fle.api.item.behavior.BehaviorShovel;
 import fle.api.item.behavior.BehaviorStoneHammer;
@@ -35,38 +39,46 @@ public class ItemToolFle extends ItemSubTool
 
 	private void init()
 	{
-		addSubItem(1, "rough_stone_adz", new BehaviorAxe(1F), "axe/stone_rough", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
-		addSubItem(3, "wood_hammer", new BehaviorWoodHammer(), "hammer/wood", true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_wood), SubstanceTool.class));
-		addSubItem(4, "flint_hammer", new BehaviorStoneHammer(), "hammer/flint", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
-		addSubItem(5, "firestarter", new BehaviorFireStarter(0.4F), new ItemToolCustomInfo("fle:tools/firestarter", "raw_wood_fire", "wood_fire"), 
+		addSubItem(1, "rough_stone_adz", "Rough Stone Adz", new BehaviorAxe(1F), "axe/stone_rough", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
+		addSubItem(3, "wood_hammer", "Wooden Hammer", new BehaviorWoodHammer(), "hammer/wood", true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_wood), SubstanceTool.class));
+		addSubItem(4, "flint_hammer", "Flint Hammer", new BehaviorStoneHammer(), "hammer/flint", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
+		addSubItem(5, "firestarter", "Firestarter", new BehaviorFireStarter(0.4F), new ItemToolCustomInfo("fle:tools/firestarter", "raw_wood_fire", "wood_fire"), 
 				new SubstanceTool("raw_wood_fire").setMaxUses(12), new SubstanceTool("wood_fire").setMaxUses(32));
-		addSubItem(11, "stone_axe", new BehaviorAxe(2F), "axe/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
-		addSubItem(12, "stone_shovel", new BehaviorShovel(1F), "shovel/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
-		addSubItem(13, "stone_hammer", new BehaviorStoneHammer(), "hammer/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(6, "bar_grizzly", "Bar Grizzly", new BehaviorBarGrizzly(), new ItemToolCustomInfo("fle:tools/bar_grizzly", "simple_bar_grizzly"), 
+				new SubstanceTool("simple_bar_grizzly").setMaxUses(128));
+		addSubItem(11, "stone_axe", "Stone Axe", new BehaviorAxe(2F), "axe/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(13, "stone_hammer", "Stone Hammer", new BehaviorStoneHammer(), "hammer/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 	}
 	
-	public void addSubItem(int id, String name, IItemInfo itemInfo, String iconName, boolean useSingleIcon, SubstanceTool...tools)
+	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName, boolean useSingleIcon, SubstanceTool...tools)
 	{
 		validTools.put(name, ImmutableList.copyOf(tools));
 		if(useSingleIcon)
 		{
-			super.addSubItem(id, name, itemInfo, new ItemRenderInfoSimple("fle:tools/" + iconName));
+			super.addSubItem(id, name, local, itemInfo, new ItemRenderInfoSimple("fle:tools/" + iconName));
 		}
 		else
 		{
-			super.addSubItem(id, name, itemInfo, new ItemToolRenderInfo("fle:tools/" + iconName));
+			super.addSubItem(id, name, local, itemInfo, new ItemToolRenderInfo("fle:tools/" + iconName));
 		}
 	}
 	
-	public void addSubItem(int id, String name, IItemInfo itemInfo, IItemIconInfo iconInfo, SubstanceTool...tools)
+	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, IItemIconInfo iconInfo, SubstanceTool...tools)
 	{
 		validTools.put(name, ImmutableList.copyOf(tools));
-		super.addSubItem(id, name, itemInfo, iconInfo);
+		super.addSubItem(id, name, local, itemInfo, iconInfo);
 	}
 	
-	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag)
 	{
 		super.addInformation(stack, player, list, flag);
+	}
+	
+	@Override
+	public int getItemStackLimit(ItemStack stack)
+	{
+		return 1;
 	}
 }

@@ -6,6 +6,7 @@ import farcore.interfaces.item.IBehavior;
 import farcore.interfaces.item.ICustomDamageItem;
 import farcore.interfaces.item.IItemInfo;
 import farcore.interfaces.item.IItemProperty;
+import farcore.lib.recipe.ICraftingInventory;
 import farcore.util.U;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.InventoryCrafting;
@@ -35,15 +36,15 @@ public class ItemSubDamagable extends ItemSubBehavior implements ICustomDamageIt
 	}
 	
 	@Override
-	public void addSubItem(int id, String name, IBehavior behavior, IItemProperty property, IItemIconInfo iconInfo)
+	public void addSubItem(int id, String name, String local, IBehavior behavior, IItemProperty property, IItemIconInfo iconInfo)
 	{
-		super.addSubItem(id, name, behavior, property, iconInfo);
+		super.addSubItem(id, name, local, behavior, property, iconInfo);
 	}
 	
 	@Override
-	public void addSubItem(int id, String name, IItemInfo itemInfo, IItemIconInfo iconInfo)
+	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, IItemIconInfo iconInfo)
 	{
-		super.addSubItem(id, name, itemInfo, iconInfo);
+		super.addSubItem(id, name, local, itemInfo, iconInfo);
 	}
 	
 	protected int getMaxCustomDamgae(ItemStack stack)
@@ -96,7 +97,7 @@ public class ItemSubDamagable extends ItemSubBehavior implements ICustomDamageIt
 	}
 
 	@Override
-	public ItemStack getCraftedItem(ItemStack stack, InventoryCrafting crafting, int x, int y)
+	public ItemStack getCraftedItem(ItemStack stack, ICraftingInventory crafting)
 	{
 		damangeItem(stack, craftingDamage, null, EnumDamageResource.CRAFT);
 		return U.Inventorys.valid(stack);

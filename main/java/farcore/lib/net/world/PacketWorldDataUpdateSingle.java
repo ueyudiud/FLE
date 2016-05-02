@@ -2,7 +2,7 @@ package farcore.lib.net.world;
 
 import java.io.IOException;
 
-import farcore.enums.UpdateType;
+import farcore.enums.EnumUpdateType;
 import farcore.lib.net.PacketBlockCoord;
 import farcore.network.IPacket;
 import farcore.network.NetworkBasic;

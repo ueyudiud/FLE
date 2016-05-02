@@ -1,6 +1,6 @@
 package farcore.lib.command;
 
-import farcore.enums.UpdateType;
+import farcore.enums.EnumUpdateType;
 import farcore.util.U;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -94,7 +94,7 @@ public class CommandWorldData extends CommandBase
 	            }
 	            else
 	            {
-	            	U.Worlds.setSmartMetadata(world, i, j, k, value, UpdateType.CALL_CLIENT);
+	            	U.Worlds.setSmartMetadata(world, i, j, k, value, EnumUpdateType.CALL_CLIENT);
 	            	sender.addChatMessage(new ChatComponentTranslation("Set data at %s, %s, %s.", 
 	            			Integer.toString(i), 
 	            			Integer.toString(j), 

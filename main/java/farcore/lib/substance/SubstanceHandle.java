@@ -60,14 +60,5 @@ public class SubstanceHandle implements ISubstance
 	public final String getName(){return name;}
 	public final int getID(){return register.id(this);}
 	public final Register<SubstanceHandle> getRegister(){return register;}
-
-	public void registerLocalName(String name)
-	{
-		FarCoreSetup.lang.registerLocal("substance.handle." + name, name);
-	}
-	
-	public String getLocalName()
-	{
-		return FarCore.translateToLocal("substance.handle." + name);
-	}
+	public final String getType(){return "handle";}
 }

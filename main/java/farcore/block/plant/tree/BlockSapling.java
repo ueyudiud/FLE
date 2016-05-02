@@ -7,7 +7,7 @@ import java.util.Map;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import farcore.FarCoreSetup;
+import farcore.FarCore;
 import farcore.block.BlockHasTile;
 import farcore.interfaces.ISmartPlantableBlock;
 import farcore.lib.substance.SubstanceWood;
@@ -46,7 +46,7 @@ public class BlockSapling extends BlockHasTile implements ISmartPlantableBlock
 	@Override
 	public int getRenderType()
 	{
-		return FarCoreSetup.handlerA.getRenderId();
+		return FarCore.handlerA.getRenderId();
 	}
 	
 	@Override

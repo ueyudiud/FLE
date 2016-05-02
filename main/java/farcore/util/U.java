@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,7 +27,7 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.entity.EntityFallingBlockExtended;
 import farcore.enums.Direction;
 import farcore.enums.EnumDamageResource;
-import farcore.enums.UpdateType;
+import farcore.enums.EnumUpdateType;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.interfaces.ICalendar;
 import farcore.interfaces.ISmartFallableBlock;
@@ -56,6 +57,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -66,6 +68,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -73,12 +78,15 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class U
 {
 	public static class Lang
 	{
+		private static final DecimalFormat format1 = new DecimalFormat("##0.0%");
+		
 		public static int[] cast(Integer[] integers)
 		{
 			int[] ret = new int[integers.length];
@@ -160,6 +168,11 @@ public class U
 			return string.trim();
 		}
 
+		public static String progress(double value)
+		{
+			return format1.format(value);
+		}
+
 		public static int[] fillIntArray(int length, int value) 
 		{
 			if(length == 0) return new int[0];
@@ -238,6 +251,13 @@ public class U
 		public static int range(int m1, int m2, int target)
 		{
 			int v;
+			return target > (v = Math.max(m1, m2)) ? v :
+				target < (v = Math.min(m1, m2)) ? v : target;
+		}
+
+		public static double range(double m1, double m2, double target)
+		{
+			double v;
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
@@ -519,7 +539,7 @@ public class U
 			return cfg.b();
 		}
 		
-		public static void setSmartMetadata(World world, int x, int y, int z, int meta, UpdateType updateType)
+		public static void setSmartMetadata(World world, int x, int y, int z, int meta, EnumUpdateType updateType)
 		{
 			datas.setSmartMetadataWithNotify(world, x, y, z, meta, updateType.ordinal());
 		}
@@ -529,17 +549,17 @@ public class U
 			return datas.getSmartMetadata(world, x, y, z);
 		}
 		
-		public static boolean setBlock(World world, int x, int y, int z, Block block, UpdateType updateType)
+		public static boolean setBlock(World world, int x, int y, int z, Block block, EnumUpdateType updateType)
 		{
 			return setBlock(world, x, y, z, block, 0, updateType);
 		}
 		
-		public static boolean setBlock(World world, int x, int y, int z, Block block, int meta, UpdateType updateType)
+		public static boolean setBlock(World world, int x, int y, int z, Block block, int meta, EnumUpdateType updateType)
 		{
 			return world.setBlock(x, y, z, block, meta, updateType.ordinal());
 		}
 		
-		public static boolean setBlock(int dim, int x, int y, int z, Block block, int meta, UpdateType updateType)
+		public static boolean setBlock(int dim, int x, int y, int z, Block block, int meta, EnumUpdateType updateType)
 		{
 			World world = world(dim);
 			if(world == null) return false;
@@ -678,6 +698,21 @@ public class U
 			}
 		}
 
+		public static void spawnDropsInWorldByPlayer(EntityPlayer player, ItemStack drop)
+		{
+			if(drop == null || drop.stackSize == 0) return;
+			player.dropPlayerItemWithRandomChoice(drop, false);
+		}
+
+		public static void spawnDropsInWorldByPlayerOpeningContainer(EntityPlayer player, IInventory inventory)
+		{
+			if(player.worldObj.isRemote) return;
+			for(int i = 0; i < inventory.getSizeInventory(); ++i)
+			{
+				spawnDropsInWorldByPlayer(player, inventory.getStackInSlotOnClosing(i));
+			}
+		}
+
 		public static ChunkCoordinates makeCoordinate(TileEntity tile)
 		{
 			return tile == null ? new ChunkCoordinates() :
@@ -774,6 +809,30 @@ public class U
 					world.getBlock(x, y, z) == block &&
 					(meta < 0 || world.getBlockMetadata(x, y, z) == meta);
 		}
+
+		public static MovingObjectPosition getMovingObjectPosition(World world, EntityPlayer player, boolean checkFluid)
+		{
+	        float f = 1.0F;
+	        float f1 = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * f;
+	        float f2 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * f;
+	        double d0 = player.prevPosX + (player.posX - player.prevPosX) * (double)f;
+	        double d1 = player.prevPosY + (player.posY - player.prevPosY) * (double)f + (double)(world.isRemote ? player.getEyeHeight() - player.getDefaultEyeHeight() : player.getEyeHeight()); // isRemote check to revert changes to ray trace position due to adding the eye height clientside and player yOffset differences
+	        double d2 = player.prevPosZ + (player.posZ - player.prevPosZ) * (double)f;
+	        Vec3 vec3 = Vec3.createVectorHelper(d0, d1, d2);
+	        float f3 = MathHelper.cos(-f2 * 0.017453292F - (float)Math.PI);
+	        float f4 = MathHelper.sin(-f2 * 0.017453292F - (float)Math.PI);
+	        float f5 = -MathHelper.cos(-f1 * 0.017453292F);
+	        float f6 = MathHelper.sin(-f1 * 0.017453292F);
+	        float f7 = f4 * f5;
+	        float f8 = f3 * f5;
+	        double d3 = 5.0D;
+	        if (player instanceof EntityPlayerMP)
+	        {
+	            d3 = ((EntityPlayerMP)player).theItemInWorldManager.getBlockReachDistance();
+	        }
+	        Vec3 vec31 = vec3.addVector((double)f7 * d3, (double)f6 * d3, (double)f8 * d3);
+	        return world.func_147447_a(vec3, vec31, checkFluid, !checkFluid, false);
+		}
 	}
 	
 	public static class Inventorys
@@ -792,6 +851,13 @@ public class U
 				}
 			}
 			return builder.build();
+		}
+
+		public static ItemStack sizeOf(ItemStack stack, int size)
+		{
+			ItemStack ret;
+			(ret = stack.copy()).stackSize = size;
+			return ret;
 		}
 
 		public static AbstractStack sizeOf(AbstractStack stack, int size)
@@ -917,7 +983,46 @@ public class U
 				stack.setItemDamage(0);
 			}
 			return stack;
-		}	
+		}
+
+		public static boolean areStackSimilar(ItemStack stack1, ItemStack stack2)
+		{
+			return stack1 == null || stack2 == null ? stack1 == stack2 :
+				stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		}
+
+		public static AbstractStack asStack(Object arg, boolean throwInvalid)
+		{
+			if(arg == null)
+			{
+				return BaseStack.EMPTY;
+			}
+			else if(arg instanceof Item)
+			{
+				return new BaseStack((Item) arg);
+			}
+			else if(arg instanceof Block)
+			{
+				return new BaseStack((Block) arg);
+			}
+			else if(arg instanceof ItemStack)
+			{
+				return new BaseStack((ItemStack) arg);
+			}
+			else if(arg instanceof String)
+			{
+				return new OreStack((String) arg);
+			}
+			else if(arg instanceof AbstractStack)
+			{
+				return (AbstractStack) arg;
+			}
+			else if(throwInvalid)
+			{
+				throw new IllegalArgumentException("Invalid object " + arg + ", can not cast to stack.");
+			}
+			return null;
+		}
 	}
 	
 	public static class Plants
@@ -959,6 +1064,14 @@ public class U
 			ItemStack register = ore.copy();
 			register.stackSize = 1;
 			OreDictionary.registerOre(name, ore);
+		}
+		public static void registerValid(String name, ItemStack ore, boolean autoValid)
+		{
+			if(autoValid)
+			{
+				name = U.Lang.validateOre(false, name);
+			}
+			registerValid(name, ore);
 		}
 	}
 

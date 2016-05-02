@@ -16,9 +16,11 @@ public class BiomeDesert extends BiomeBase
 	public BiomeDesert(int id, boolean genWell, boolean genCacti)
 	{
 		super(id);
+		metamorphismMultiply = 1.0F;
         spawnableCreatureList.clear();
         topBlock = Blocks.sand;
-        fillerBlock = Blocks.sand;
+    	secondBlock = Blocks.sand;
+        fillerBlock = Blocks.sandstone;
         biomeDecorator.treesPerChunk = -999;
         biomeDecorator.deadBushPerChunk = 2;
         biomeDecorator.reedsPerChunk = 50;

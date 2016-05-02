@@ -3,22 +3,24 @@ package farcore.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.energy.thermal.ThermalNet;
 import farcore.enums.Direction;
 import farcore.enums.EnumItem;
 import farcore.interfaces.IDebugableBlock;
 import farcore.interfaces.tile.IDebugableTile;
-import farcore.lib.substance.SubstanceWood;
 import farcore.util.FleLog;
 import farcore.util.V;
+import fle.api.FleAPI;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFurnace;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class ItemDebugger extends ItemBase
 {
@@ -26,9 +28,10 @@ public class ItemDebugger extends ItemBase
 	{
 		super("debug", "debug");
 		EnumItem.debug.set(new ItemStack(this));
+		localized = "Debugger";
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
 		super.registerIcons(register);

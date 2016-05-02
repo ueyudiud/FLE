@@ -20,9 +20,9 @@ public class BiomeTaiga extends BiomeBase
 {
 //    private static final WorldGenTaiga1 field_150639_aC = new WorldGenTaiga1();
 //    private static final WorldGenTaiga2 field_150640_aD = new WorldGenTaiga2(false);
-    private static final WorldGenMegaPineTree field_150641_aE = new WorldGenMegaPineTree(false, false);
-    private static final WorldGenMegaPineTree field_150642_aF = new WorldGenMegaPineTree(false, true);
-    private static final WorldGenBlockBlob field_150643_aG = new WorldGenBlockBlob(Blocks.mossy_cobblestone, 0);
+//    private static final WorldGenMegaPineTree field_150641_aE = new WorldGenMegaPineTree(false, false);
+//    private static final WorldGenMegaPineTree field_150642_aF = new WorldGenMegaPineTree(false, true);
+    private static final WorldGenBlockBlob blob = new WorldGenBlockBlob(Blocks.mossy_cobblestone, 0);
 
 	private static boolean init = false;
 
@@ -45,8 +45,8 @@ public class BiomeTaiga extends BiomeBase
         super(id);
         init();
         this.type = type;
-        this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityWolf.class, 8, 4, 4));
-        this.biomeDecorator.treesPerChunk = 10;
+        spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityWolf.class, 8, 4, 4));
+        biomeDecorator.treesPerChunk = 10;
 
         if (type != 1 && type != 2)
         {
@@ -96,7 +96,7 @@ public class BiomeTaiga extends BiomeBase
                 i1 = x + random.nextInt(16) + 8;
                 j1 = z + random.nextInt(16) + 8;
                 int k1 = world.getHeightValue(i1, j1);
-                field_150643_aG.generate(world, random, i1, k1, j1);
+                blob.generate(world, random, i1, k1, j1);
             }
         }
 
@@ -118,21 +118,20 @@ public class BiomeTaiga extends BiomeBase
         if (this.type == 1 || this.type == 2)
         {
             this.topBlock = Blocks.grass;
-            this.field_150604_aj = 0;
-            this.fillerBlock = Blocks.dirt;
-
+            this.topMeta = 0;
+            
             if (layer > 1.75D)
             {
                 this.topBlock = Blocks.dirt;
-                this.field_150604_aj = 1;
+                this.topMeta = 1;
             }
             else if (layer > -0.95D)
             {
                 this.topBlock = Blocks.dirt;
-                this.field_150604_aj = 2;
+                this.topMeta = 2;
             }
         }
 
-        this.genBiomeTerrain(world, random, blocks, metas, x, z, layer);
+        super.genTerrainBlocks(world, random, blocks, metas, x, z, layer);
     }
 }

@@ -6,6 +6,8 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.interfaces.IItemIconInfo;
 import farcore.util.U;
 import farcore.util.V;
@@ -13,6 +15,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+@SideOnly(Side.CLIENT)
 public class ItemToolCustomInfo implements IItemIconInfo
 {
 	private final String locate;

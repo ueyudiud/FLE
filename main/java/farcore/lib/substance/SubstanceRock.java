@@ -28,16 +28,23 @@ public class SubstanceRock extends SubstanceBlockAbstract
 		return register;
 	}
 	
+	public String localized;
 	public SubstanceTool toolBelong;
 	
 	public SubstanceRock(String name)
 	{
 		super(name);
 	}
-	
+
 	public SubstanceRock(int id, String name)
 	{
 		super(id, name);
+	}
+	
+	public SubstanceRock(int id, String name, String local)
+	{
+		this(id, name);
+		registerLocalName(localized = local);
 	}
 	
 	@Override
@@ -75,9 +82,10 @@ public class SubstanceRock extends SubstanceBlockAbstract
 	{
 		this.toolBelong = tool;
 		toolBelong.add(SubTag.TOOL_stone, SubTag.TOOL_stone_real);
+		toolBelong.registerLocalName(localized);
 		return this;
 	}
-	
-	protected String getType(){return "rock";}
+
+	public final String getType(){return "rock";}
 	public Register getRegister() {return register;}
 }

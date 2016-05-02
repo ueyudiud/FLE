@@ -7,9 +7,11 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import farcore.debug.Debug;
 import farcore.lib.world.biome.BiomeBase;
 import farcore.util.FleLog;
 import farcore.util.V;
+import farcore.util.noise.NoisePerlin;
 import fle.core.world.layer.surface.LayerBeach;
 import fle.core.world.layer.surface.LayerEdge;
 import fle.core.world.layer.surface.LayerFloor;
@@ -28,30 +30,38 @@ public abstract class LayerBase extends GenLayer
 {
 	public static GenLayer[] wrapSuface(long seed, WorldType type)
 	{
-		LayerBase orLayer = new LayerStart(5, 1L);
+		LayerBase orLayer = new LayerStart(11, 1L);
+		drawImage(256, orLayer, "layer1.0");
 		orLayer = new LayerFuzzyZoom(3L, orLayer);
-		orLayer = new LayerAdd(1, 5, 2L, orLayer);
+		drawImage(256, orLayer, "layer1.1");
+		orLayer = new LayerAdd(1, 9, 2L, orLayer);
+		drawImage(256, orLayer, "layer1.2");
 		orLayer = new LayerFuzzyZoom(3, 8L, orLayer);
-		orLayer = new LayerAdd(1, 3, 91L, orLayer);
-		orLayer = new LayerFuzzyZoom(7L, orLayer);
+		drawImage(256, orLayer, "layer1.3");
 		orLayer = new LayerLinkMainland(3, 381L, orLayer);
+		drawImage(256, orLayer, "layer2");
 		orLayer = new LayerZoom(9031L, orLayer);
 		orLayer = new LayerLinkMainland(1, 381L, orLayer);
 		orLayer = new LayerZoom(5, 47L, orLayer);
-		LayerTemp tempLayer = new LayerTemp(16, 2839L);
-		LayerTerrainBase terrainLayer = new LayerTerrainBase(10, 38917L);
-		LayerRainfall rainfallLayer = new LayerRainfall(10, 37292L, terrainLayer);
+		drawImage(256, orLayer, "layer3");
+		LayerTemp tempLayer = new LayerTemp(new NoisePerlin(1L, 8, 0.81D, 2D, 3D), 2839L);
+		LayerTerrainBase terrainLayer = new LayerTerrainBase(new NoisePerlin(101L, 6, 5L, 0.48D, 1.8D), 38917L);
+		LayerRainfall rainfallLayer = new LayerRainfall(new NoisePerlin(201L, 7, 0.32D, 1.4D, 1.5D), 37292L, terrainLayer);
 		orLayer = new LayerFloor(718L, orLayer, tempLayer, rainfallLayer);
+		drawImage(256, orLayer, "layer4");
 		LayerBase riverLayer = new LayerStart(2, 901L);
 		riverLayer = new LayerAdd(2, 3, 273L, riverLayer);
 		riverLayer = new LayerFuzzyZoom(2, 927L, riverLayer);
 		riverLayer = new LayerFuzzyZoom(6, 127L, riverLayer);
 		riverLayer = new LayerRing(2874L, riverLayer);
 		orLayer = new LayerRiver(5819L, new LayerFuzzyZoom(2, 27L, orLayer), riverLayer);
+		drawImage(256, orLayer, "layer5");
 		orLayer = new LayerEdge(508L, orLayer);
 		orLayer = new LayerBeach(71628L, orLayer);
+		drawImage(256, orLayer, "layer6");
 		orLayer = new LayerZoom(3, 384918L, orLayer);
 		orLayer = new LayerSort(381L, orLayer, new LayerZoom(27048L, new LayerRing(381L, new LayerZoom(4, 283L, new LayerAdd(2, 3, 29L, new LayerZoom(2, 2L, new LayerStart(3, -2L)))))));
+		drawImage(256, orLayer, "layer7");
 		GenLayer out1 = new GenLayerSmooth(289471L, orLayer);
 		GenLayer out2 = new GenLayerVoronoiZoom(94719L, out1);
 		out2.initWorldGenSeed(seed);

@@ -2,9 +2,12 @@ package farcore.lib.container;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCoreSetup;
 import farcore.interfaces.tile.IToolClickHandler;
 import farcore.lib.net.gui.PacketFluidUpdate;
@@ -27,7 +30,7 @@ import scala.collection.generic.BitOperations.Int;
 public class ContainerBase<I extends IInventory> extends Container
 {
 	public I inventory;
-	InventoryPlayer player;
+	protected EntityPlayer player;
 	public List<FluidSlot> fluidSlotList = new ArrayList();
 	public List<FluidStack> fluidList;
 	public Map<String, TransLocate> locates = new HashMap();
@@ -39,7 +42,7 @@ public class ContainerBase<I extends IInventory> extends Container
 	{
 		this.inventory = inventory;
 	}
-	public ContainerBase(I inventory, InventoryPlayer player)
+	public ContainerBase(I inventory, EntityPlayer player)
 	{
 		this.inventory = inventory;
 		this.player = player;
@@ -58,22 +61,17 @@ public class ContainerBase<I extends IInventory> extends Container
         {
             for (int j = 0; j < 9; ++j)
             {
-                addSlotToContainer(addPlayerTransferInfo(new SlotBase(player, j + i * 9 + 9, 8 + j * 18 + xOffset, 84 + i * 18 + yOffset)).addTransferTargets("hand"));
+                addSlotToContainer(new SlotBase(player.inventory, j + i * 9 + 9, 8 + j * 18 + xOffset, 84 + i * 18 + yOffset));
             }
         }
 
         for (i = 0; i < 9; ++i)
         {
-            addSlotToContainer(addPlayerTransferInfo(new SlotBase(player, i, 8 + i * 18 + xOffset, 142 + yOffset)).addTransferTargets("bag"));
+            addSlotToContainer(new SlotBase(player.inventory, i, 8 + i * 18 + xOffset, 142 + yOffset));
         }
         addTransLocate(locateBag = new TransLocate("bag", 0 + idOffset, 27 + idOffset, false, false));
         addTransLocate(locateHand = new TransLocate("hand", 27 + idOffset, 36 + idOffset, false, false));
         addTransLocate(locatePlayer = new TransLocate("player", 0 + idOffset, 36 + idOffset, true, false));
-	}
-	
-	protected SlotBase addPlayerTransferInfo(SlotBase slot)
-	{
-		return slot;
 	}
 
 	protected void addTransLocate(TransLocate locate)
@@ -147,6 +145,12 @@ public class ContainerBase<I extends IInventory> extends Container
 //		}
     }
 	
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int id, int value)
+	{
+		
+	}
+	
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
@@ -204,12 +208,14 @@ public class ContainerBase<I extends IInventory> extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            for(String string : slot.getTransferTarget())
+            for(TransLocate locate : locates.values())
             {
-            	TransLocate locate = locates.get(string);
-            	if(locate == null) continue;
             	if(!locate.match(slot, itemstack, itemstack1))
             	{
+            		if (itemstack1.stackSize == 0)
+                    {
+                        slot.putStack((ItemStack) null);
+                    }
             		return null;
             	}
             }
@@ -241,7 +247,7 @@ public class ContainerBase<I extends IInventory> extends Container
 		boolean flag;
 		boolean causeSlotChange;
 		String tag;
-		TransLocate next;
+		LinkedList<TransLocate> target = new LinkedList();
 
 		public TransLocate(String tag, int locate)
 		{
@@ -259,16 +265,16 @@ public class ContainerBase<I extends IInventory> extends Container
 			this.flag = flag;
 		}
 		
-		public void append(TransLocate locate)
+		public TransLocate append(TransLocate locate)
 		{
-			if(next != null)
-			{
-				next.append(locate);
-			}
-			else
-			{
-				next = locate;
-			}
+			target.addLast(locate);
+			return this;
+		}
+		
+		public TransLocate appendFirst(TransLocate locate)
+		{
+			target.addFirst(locate);
+			return this;
 		}
 		
 		public boolean isItemValid(ItemStack stack)
@@ -278,22 +284,29 @@ public class ContainerBase<I extends IInventory> extends Container
 		
 		public boolean match(SlotBase slot, ItemStack old, ItemStack stack)
 		{
-			if(isItemValid(stack))
+			if(!contain(slot.slotNumber)) return true;
+			boolean flag = false;
+			for(TransLocate locate : target)
 			{
-				if(!mergeItemStack(stack, startID, endID, flag))
+				if(locate.isItemValid(stack))
 				{
-					return false;
+					if(!mergeItemStack(stack, locate.startID, locate.endID, locate.flag))
+					{
+						continue;
+					}
+					flag = true;
+					if(causeSlotChange)
+					{
+						slot.onSlotChange(old, stack);
+					}
 				}
-				if(causeSlotChange)
-				{
-					slot.onSlotChange(old, stack);
-				}
-			}
-			if(next != null)
-			{
-				return next.match(slot, old, stack);
-			}
-			return true;
+			}			
+			return flag;
+		}
+		
+		public boolean contain(int id)
+		{
+			return startID <= id && endID > id;
 		}
 	}
 }

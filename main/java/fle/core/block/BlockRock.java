@@ -11,6 +11,7 @@ import farcore.enums.EnumItem;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.substance.SubstanceRock;
+import farcore.util.LanguageManager;
 import farcore.util.U;
 import fle.api.block.BlockSubstance;
 import net.minecraft.block.Block;
@@ -54,9 +55,21 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 	}
 	
 	@Override
+	public Object[] getTranslateObject(ItemStack stack)
+	{
+		return new Object[]{substance.getLocalName()};
+	}
+	
+	@Override
+	public void registerLocalizedName(LanguageManager manager)
+	{
+		manager.registerLocal(getUnlocalizedName() + ".name", "%s Rock");
+	}
+	
+	@Override
 	public int tickRate(World world)
 	{
-		return 24;
+		return 360;
 	}
 	
 	@Override
@@ -82,7 +95,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 			{
 				if(meta > 0)
 				{
-					world.setBlockMetadataWithNotify(x, y, z, meta - 1, 2);
+					world.setBlockMetadataWithNotify(x, y, z, meta - 1, 0);
 				}
 			}
 			else if(deltaTemp > 149 || (deltaTemp >= 50 && rand.nextInt(150) < deltaTemp))
@@ -91,7 +104,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 				{	
 					if(rand.nextInt(5) == 0)
 					{
-						world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+						world.setBlockMetadataWithNotify(x, y, z, 1, 0);
 						world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 					}
 				}
@@ -99,7 +112,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 				{
 					if(rand.nextBoolean())
 					{
-						world.setBlockMetadataWithNotify(x, y, z, meta + 1, 2);
+						world.setBlockMetadataWithNotify(x, y, z, meta + 1, 0);
 					}
 					world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 				}
@@ -115,7 +128,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 			{
 				 if(ThermalNet.getTempDifference(world, x, y, z) < 30 && rand.nextBoolean())
 				 {
-					 world.setBlockMetadataWithNotify(x, y, z, meta - 1, 2);
+					 world.setBlockMetadataWithNotify(x, y, z, meta - 1, 0);
 				 }
 				 else
 				 {

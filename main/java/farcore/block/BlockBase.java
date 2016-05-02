@@ -3,6 +3,7 @@ package farcore.block;
 import java.util.ArrayList;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import farcore.util.LanguageManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -33,6 +34,11 @@ public class BlockBase extends Block
 	{
 		super(material);
 	}
+
+	public void registerLocalizedName(LanguageManager manager)
+	{
+		
+	}
 	
 	public ItemBlockBase getItem()
 	{
@@ -50,6 +56,12 @@ public class BlockBase extends Block
 	public String getUnlocalizedName()
 	{
 		return "block.fle." + unlocalized;
+	}
+	
+	@Override
+	public int damageDropped(int meta)
+	{
+		return meta;
 	}
 	
 	public String getMetadataName(int meta)
@@ -111,7 +123,7 @@ public class BlockBase extends Block
             {
                 if (world.rand.nextFloat() <= chance)
                 {
-                    this.dropBlockAsItem(world, x, y, z, item);
+                    dropBlockAsItem(world, x, y, z, item);
                 }
             }
         }

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import fle.override.asm.O_ItemFlintAndSteel;
+import fle.override.asm.O_WorldServer;
 
 @IFMLLoadingPlugin.TransformerExclusions({"fle.override.asm"})
 public class FarOverrideLoadingPlugin implements IFMLLoadingPlugin
@@ -17,7 +17,7 @@ public class FarOverrideLoadingPlugin implements IFMLLoadingPlugin
 	{
 		return new String[]
 				{
-				O_ItemFlintAndSteel.class.getName()
+				O_WorldServer.class.getName()
 				};
 	}
 

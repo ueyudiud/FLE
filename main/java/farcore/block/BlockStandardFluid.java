@@ -76,8 +76,8 @@ implements ISmartFluidBlock, IInfoSpawnable
     	return side == 0 || side == 1 ? getFluid().getStillIcon() :
     		getFluid().getFlowingIcon();
     }
-    
-    @Override
+
+	@SideOnly(Side.CLIENT)
     public void getSubBlocks(Item item, CreativeTabs tab, List list)
     {
     	;
@@ -112,6 +112,7 @@ implements ISmartFluidBlock, IInfoSpawnable
     @Override
     public void updateTick(World world, int x, int y, int z, Random rand)
     {
+    	if(world.isRemote) return;
         boolean changed = false;
         int level1 = getFluidLevel(world, x, y, z);
         int level0 = level1;
@@ -137,10 +138,10 @@ implements ISmartFluidBlock, IInfoSpawnable
         if(level1 == 0) return;
         level1 = Math.abs(displaceBlock(world, x, y, z + 1, level1));
         if(level1 == 0) return;
-        int xNeg = getFluidLevel(world, x - 1, y, z);
-        int xPos = getFluidLevel(world, x + 1, y, z);
-        int zNeg = getFluidLevel(world, x, y, z - 1);
-        int zPos = getFluidLevel(world, x, y, z + 1);
+        int xNeg = !world.blockExists(x - 1, y, z) ? -1 : getFluidLevel(world, x - 1, y, z);
+        int xPos = !world.blockExists(x + 1, y, z) ? -1 : getFluidLevel(world, x + 1, y, z);
+        int zNeg = !world.blockExists(x, y, z - 1) ? -1 : getFluidLevel(world, x, y, z - 1);
+        int zPos = !world.blockExists(x, y, z + 1) ? -1 : getFluidLevel(world, x, y, z + 1);
         if(xNeg > level1) xNeg = -1;
         if(xPos > level1) xPos = -1;
         if(zNeg > level1) zNeg = -1;
@@ -268,16 +269,26 @@ implements ISmartFluidBlock, IInfoSpawnable
 	            return 0;
 	        }
 	        int amt = getFluidLevel(world, x, otherY, z);
-	        if(amt >= 0 && amt < quantaPerBlock)
+	        if(amt > 0 && amt <= quantaPerBlock)
 	        {
 	        	int input = Math.min(level, quantaPerBlock - amt);
-                setFluidLevel(world, x, otherY, z, amt + input, false);
-	            if (level == input)
-	            {
-	                world.setBlock(x, y, z, Blocks.air);
-	                return 0;
-	            }
-	            return level - input;
+	        	if(input > 0)
+	        	{
+	                setFluidLevel(world, x, otherY, z, amt + input, false);
+		            if (level == input)
+		            {
+		                world.setBlock(x, y, z, Blocks.air);
+		                return 0;
+		            }
+		            return level - input;
+	        	}
+	        	return level;
+	        }
+	        else if(amt == 0)
+	        {
+	        	setFluidLevel(world, x, otherY, z, level, false);
+	        	world.setBlockToAir(x, y, z);
+	        	return 0;
 	        }
 	        else
 	        {
@@ -285,9 +296,11 @@ implements ISmartFluidBlock, IInfoSpawnable
 	        	if(world.isAirBlock(x, otherY, z))
 	        	{
 	        		density_other = U.Worlds.getAirDensity(world, y);
-	        		
 	        	}
-	            density_other = getDensity(world, x, otherY, z);
+	        	else
+	        	{
+	        		density_other = getDensity(world, x, otherY, z);
+	        	}
 	            if (density_other == Integer.MAX_VALUE)
 	            {
 	            	int level1 = displaceBlock(world, x, otherY, z, level);
@@ -343,8 +356,10 @@ implements ISmartFluidBlock, IInfoSpawnable
     		level = -level;
     	}
     	if(level > 1 || level == 0)
+    	{
     		return level;
-		if(world.isAirBlock(oppsetX, y, oppsetZ))
+    	}
+		if(world.isAirBlock(oppsetX, oppsetY, oppsetZ))
 		{
 			int l1 = getFluidLevel(world, oppsetX, oppsetY, oppsetZ);
 			if(l1 >= 0 && l1 < quantaPerBlock)
@@ -365,6 +380,7 @@ implements ISmartFluidBlock, IInfoSpawnable
      */
     public int displaceBlock(World world, int x, int y, int z, int level)
     {
+    	if (!world.blockExists(x, y, z)) return -level;
         if (world.getBlock(x, y, z).isAir(world, x, y, z))
         {
             return level;

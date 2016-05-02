@@ -21,7 +21,7 @@ public class LayerStart extends LayerBase
         {
             for (int j1 = 0; j1 < w; ++j1)
             {
-        		if((x + j1) == 0 && (y + i1) == 0)
+        		if((x + j1) * (x + j1) + (y + i1) * (y + i1) < 10)
         		{
         			ret[j1 + i1 * w] = 1;
         		}

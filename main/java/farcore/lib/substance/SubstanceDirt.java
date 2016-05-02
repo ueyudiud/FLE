@@ -33,6 +33,6 @@ public class SubstanceDirt extends SubstanceBlockAbstract
 		super(id, name);
 	}
 
-	protected String getType(){return "dirt";}
+	public final String getType(){return "dirt";}
 	public Register getRegister(){return register;}
 }

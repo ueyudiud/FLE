@@ -14,14 +14,17 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import farcore.FarCore;
+import farcore.lib.container.GuiFactory;
 import farcore.util.FleLog;
 import fle.api.FleAPI;
+import fle.core.util.FleGuiFactory;
 import fle.load.Biomes;
 import fle.load.BlockItems;
 import fle.load.Drops;
 import fle.load.Handlers;
 import fle.load.Langs;
 import fle.load.OreDicts;
+import fle.load.Recipes;
 import fle.load.Substances;
 import fle.load.Worlds;
 
@@ -53,6 +56,7 @@ public class FLE
 		meta.credits = "ueyudiud";
 		meta.authorList = Arrays.asList("ueyudiud", "huangziye812");
 		meta.logoFile = "";
+		FleAPI.guiFactory = new FleGuiFactory();
 		Substances.init();
 		BlockItems.init();
 	}
@@ -73,6 +77,7 @@ public class FLE
 	public void load(FMLPostInitializationEvent event)
 	{
 		FleLog.getLogger().info("Start post-loading.");
+		Recipes.init();
 		proxy.load();
 	}
 	

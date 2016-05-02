@@ -1,12 +1,15 @@
 package farcore;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.interfaces.ICalendar;
 import farcore.interfaces.energy.IEnergyNet;
 import farcore.lib.render.RenderBase;
 import farcore.util.CalendarHandler;
+import farcore.util.FleTextureMap;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -37,15 +40,17 @@ public class FarCoreRegistry
 	{
 		FarCoreEnergyHandler.addNet(net);
 	}
-	
+
+	@SideOnly(Side.CLIENT)
 	public static void registerCustomRenderBlock(Block block, int meta, Class<RenderBase> clazz)
 	{
-		FarCoreSetup.handlerB.register(block, meta, clazz);
+		FarCore.handlerB.register(block, meta, clazz);
 	}
-	
+
+	@SideOnly(Side.CLIENT)
 	public static void registerCustomRenderBlockWithoutInventory(Block block, int meta, Class<RenderBase> clazz)
 	{
-		FarCoreSetup.handlerA.register(block, meta, clazz);
+		FarCore.handlerA.register(block, meta, clazz);
 	}
 	
 	public static void registerMFEventHandler(Object object)
@@ -61,5 +66,16 @@ public class FarCoreRegistry
 	public static void addCalendar(int dim, String name, ICalendar calendar)
 	{
 		CalendarHandler.addCalendar(dim, name, calendar);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static FleTextureMap newTextureMap(String name)
+	{
+		return FleTextureMap.TextureMapRegistry.newTextureMap(name);
+	}
+	@SideOnly(Side.CLIENT)
+	public static FleTextureMap newTextureMap(String name, boolean skipFirst)
+	{
+		return FleTextureMap.TextureMapRegistry.newTextureMap(name, skipFirst);
 	}
 }

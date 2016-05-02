@@ -11,7 +11,7 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import farcore.FarCoreSetup;
+import farcore.FarCore;
 import farcore.block.BlockBase;
 import farcore.energy.thermal.ThermalNet;
 import farcore.enums.Direction;
@@ -21,7 +21,9 @@ import farcore.enums.EnumItem;
 import farcore.interfaces.ISmartBurnableBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
 import farcore.interfaces.energy.thermal.IThermalTile;
+import farcore.util.LanguageManager;
 import farcore.util.U;
+import farcore.util.V;
 import farcore.util.Values;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -48,6 +50,12 @@ implements IInfoSpawnable, IThermalProviderBlock
 		setLightLevel(11);
 		EnumItem.fire.set(new ItemStack(this));
 		EnumBlock.fire.setBlock(this, EnumItem.fire);
+	}
+	
+	@Override
+	public void registerLocalizedName(LanguageManager manager)
+	{
+		manager.registerLocal(getUnlocalizedName() + ".name", "Fire");
 	}
 	
 	/**
@@ -81,7 +89,7 @@ implements IInfoSpawnable, IThermalProviderBlock
      */
     public int getRenderType()
     {
-        return FarCoreSetup.handlerA.getRenderId();
+        return FarCore.handlerA.getRenderId();
     }
     
     @Override
@@ -311,8 +319,7 @@ implements IInfoSpawnable, IThermalProviderBlock
 	        }
 			return block.getBurningTemperature(world, x, y, z, level);
 		}
-		float envTemp = ThermalNet.getEnviormentTemp(world, x, y, z);
-		return envTemp + (Values.maxFireTemp - envTemp) * (float) (16 - l) / 16F;
+		return Values.maxFireTemp;
 	}
 
 	@Override

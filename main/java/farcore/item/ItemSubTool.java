@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCore;
 import farcore.enums.EnumItem.IInfomationable;
 import farcore.lib.substance.SubstanceHandle;
@@ -38,8 +40,8 @@ public class ItemSubTool extends ItemSubDamagable implements IInfomationable
 		super(modid, unlocalized, unlocalizedTooltip);
 		hasSubtypes = true;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public boolean isFull3D()
 	{
 		return true;
@@ -56,19 +58,23 @@ public class ItemSubTool extends ItemSubDamagable implements IInfomationable
 	{
 		return true;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag)
 	{
 		int maxUse = getMaxCustomDamgae(stack);
 		int lastUse = maxUse - getCustomDamage(stack);
 		list.add(FarCore.translateToLocal(Langs.infoToolHeadMaterial, getToolMaterial(stack).getLocalName()));
-		list.add(FarCore.translateToLocal(Langs.infoToolHandleMaterial, getHandleMaterial(stack).getLocalName()));
+		SubstanceHandle handle = getHandleMaterial(stack);
+		if(handle != SubstanceHandle.VOID_TOOL)
+		{
+			list.add(FarCore.translateToLocal(Langs.infoToolHandleMaterial, handle.getLocalName()));
+		}
 		list.add(FarCore.translateToLocal(Langs.infoToolDamage, lastUse, maxUse));
 		super.addInformation(stack, player, list, flag);
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list)
 	{
 		for(Entry<String, ImmutableList<SubstanceTool>> entry : validTools.entrySet())
@@ -131,6 +137,17 @@ public class ItemSubTool extends ItemSubDamagable implements IInfomationable
 			if(objects[0] instanceof String)
 			{
 				return a((String) objects[0], SubstanceTool.VOID_TOOL, SubstanceHandle.VOID_TOOL);
+			}
+		}
+		else if(objects.length == 2)
+		{
+			if(objects[0] instanceof String && objects[1] instanceof SubstanceTool)
+			{
+				return a((String) objects[0], (SubstanceTool) objects[1], SubstanceHandle.VOID_TOOL);
+			}
+			else if(objects[0] instanceof String && objects[1] instanceof String)
+			{
+				return a((String) objects[0], SubstanceTool.getSubstance((String) objects[1]), SubstanceHandle.VOID_TOOL);
 			}
 		}
 		else if(objects.length == 3)

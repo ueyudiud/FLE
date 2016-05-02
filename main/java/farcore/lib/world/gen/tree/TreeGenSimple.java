@@ -217,7 +217,7 @@ public class TreeGenSimple extends TreeGenAbstract
                             }
                         }
 
-                        if (random.nextInt(5) == 0 && l > 5)
+                        if (random.nextInt(5) == 0 && l > 5 && isNatural)
                         {
                             for (k1 = 0; k1 < 2; ++k1)
                             {

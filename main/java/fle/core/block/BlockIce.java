@@ -6,8 +6,10 @@ import java.util.Random;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.block.BlockBase;
+import farcore.enums.Direction;
 import farcore.enums.EnumBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
+import farcore.util.LanguageManager;
 import farcore.util.U;
 import farcore.util.Values;
 import net.minecraft.block.material.Material;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockIce extends BlockBase implements IThermalProviderBlock
 {
@@ -27,6 +30,12 @@ public class BlockIce extends BlockBase implements IThermalProviderBlock
 		this.blockHardness = 0.6F;
 		this.setTickRandomly(true);
 		EnumBlock.ice.setBlock(this);
+	}
+	
+	@Override
+	public void registerLocalizedName(LanguageManager manager)
+	{
+		manager.registerLocal(getUnlocalizedName() + ".name", "Ice");
 	}
 	
 	/**
@@ -60,7 +69,7 @@ public class BlockIce extends BlockBase implements IThermalProviderBlock
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return true;  
+		return world.getBlock(x, y, z) != this;  
 	}
 	
 	@Override
@@ -113,7 +122,8 @@ public class BlockIce extends BlockBase implements IThermalProviderBlock
     }
 	
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune,
+			boolean silkTouching)
 	{
 		return new ArrayList();
 	}

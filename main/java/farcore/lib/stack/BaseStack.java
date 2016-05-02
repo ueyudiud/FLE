@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -13,6 +12,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class BaseStack implements AbstractStack
 {
+	public static final BaseStack EMPTY = new BaseStack((ItemStack) null);
+	
 	public static BaseStack sizeOf(BaseStack stack, int size)
 	{
 		return size <= 0 ? null : new BaseStack(stack.stack, size, stack.useContainer);
@@ -120,7 +121,7 @@ public class BaseStack implements AbstractStack
 	public int size(ItemStack stack)
 	{
 		return this.stack == null ? 0 :
-			stack.stackSize;
+			this.stack.stackSize;
 	}
 	
 	@Override

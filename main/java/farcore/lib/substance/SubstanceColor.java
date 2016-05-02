@@ -152,14 +152,5 @@ public class SubstanceColor implements ISubstance
 	public final String getName(){return name;}
 	public final int getID(){return register.id(this);}
 	public final Register<SubstanceColor> getRegister(){return register;}
-
-	public void registerLocalName(String name)
-	{
-		FarCoreSetup.lang.registerLocal("substance.color." + name, name);
-	}
-	
-	public String getLocalName()
-	{
-		return FarCore.translateToLocal("substance.color." + name);
-	}
+	public final String getType(){return "color";}
 }

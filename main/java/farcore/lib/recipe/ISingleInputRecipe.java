@@ -23,10 +23,16 @@ public interface ISingleInputRecipe
 	 * You also should take operation
 	 * for input stack (Such as mius
 	 * stack size, etc).
-	 * @param stack
+	 * @param stack With length of two, first is output, second is input used.
 	 * @return
 	 */
-	ItemStack output(ItemStack stack);
+	ItemStack[] output(ItemStack stack);
+
+	/**
+	 * Provide a instance of output.
+	 * @return
+	 */
+	ItemStack instance();
 	
 	/**
 	 * Display most of stack matched.

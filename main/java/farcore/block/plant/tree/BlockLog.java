@@ -7,11 +7,13 @@ import farcore.block.ItemBlockBase;
 import farcore.interfaces.ISmartBurnableBlock;
 import farcore.lib.collection.Register;
 import farcore.lib.substance.SubstanceWood;
+import farcore.util.LanguageManager;
 import farcore.util.U.OreDict;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -46,6 +48,12 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 	protected BlockLog(String name, Class<? extends ItemBlockBase> clazz, Material material, Object...objects)
 	{
 		super(name, clazz, material, objects);
+	}
+	
+	@Override
+	public void registerLocalizedName(LanguageManager manager) 
+	{
+		manager.registerLocal(getUnlocalizedName() + ".name", "%s Log");
 	}
 
 	@Override

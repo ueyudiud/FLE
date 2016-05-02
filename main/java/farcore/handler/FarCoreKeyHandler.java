@@ -134,17 +134,22 @@ public class FarCoreKeyHandler
 					FarCoreSetup.network.sendToServer(new PacketKey(v));
 				}
 				reset(U.Worlds.player());
-				if(event.phase == Phase.START)
+				for(int i = 0; i < keys.size(); ++i)
 				{
-					for(int i = 0; i < keys.size(); ++i)
+					if(GameSettings.isKeyDown(keys.get(i)))
 					{
-						if(GameSettings.isKeyDown(keys.get(i)))
-						{
-							add(U.Worlds.player(), keys.name(i));
-						}
-					}				
+						add(U.Worlds.player(), keys.name(i));
+					}
 				}
 			}
+		}
+		else
+		{
+			if(U.Sides.isSimulating())
+			{
+				FarCoreSetup.network.sendToServer(new PacketKey(0L));
+			}
+			reset(U.Worlds.player());
 		}
 	}
 }

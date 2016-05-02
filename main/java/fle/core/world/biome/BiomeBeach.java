@@ -8,17 +8,21 @@ public class BiomeBeach extends BiomeBase
 	public BiomeBeach(int id, boolean isStone)
 	{
 		super(id);
+		sedimentaryMultiply = 0.3F;
+		metamorphismMultiply = 1.2F;
 		setHeight(height_Shores);
         this.spawnableCreatureList.clear();
         if(isStone)
         {
         	topBlock = Blocks.stone;
+        	secondBlock = Blocks.stone;
         	fillerBlock = Blocks.stone;
         }
         else
         {
         	topBlock = Blocks.sand;
-        	fillerBlock = Blocks.sand;
+        	secondBlock = Blocks.sand;
+        	fillerBlock = Blocks.sandstone;
         }
         this.biomeDecorator.treesPerChunk = -999;
         this.biomeDecorator.deadBushPerChunk = 0;

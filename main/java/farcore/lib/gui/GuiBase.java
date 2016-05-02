@@ -30,29 +30,39 @@ import net.minecraftforge.fluids.IFluidTank;
 @SideOnly(Side.CLIENT)
 public abstract class GuiBase<I extends IInventory> extends GuiContainer
 {
+	private ResourceLocation location;
 	protected I inventory;
 
-	public ContainerBase<I> container;
+	public ContainerBase<? extends I> container;
 	protected int xoffset;
 	protected int yoffset;
 
-	public GuiBase(ContainerBase<I> container)
+	public GuiBase(ContainerBase<? extends I> container)
 	{
 		this(container, 176, 166);
 	}
 
-	public GuiBase(ContainerBase<I> container, int ySize)
+	public GuiBase(ContainerBase<? extends I> container, int ySize)
 	{
 		this(container, 176, ySize);
 	}
 
-	public GuiBase(ContainerBase<I> container, int xSize, int ySize)
+	public GuiBase(ContainerBase<? extends I> container, int xSize, int ySize)
 	{
 		super(container);
 		this.container = container;
 		this.inventory = container.inventory;
 		this.ySize = ySize;
 		this.xSize = xSize;
+		this.location = getResourceLocation();
+	}
+	
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+	    this.xoffset = ((this.width - this.xSize) / 2);
+	    this.yoffset = ((this.height - this.ySize) / 2);
 	}
 	
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
@@ -75,7 +85,7 @@ public abstract class GuiBase<I extends IInventory> extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(getResourceLocation());
+		mc.getTextureManager().bindTexture(location);
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
 		drawTexturedModalRect(xoffset, yoffset, 0, 0, xSize, ySize);
@@ -93,7 +103,7 @@ public abstract class GuiBase<I extends IInventory> extends GuiContainer
 		GL11.glPopMatrix();
 	}
 	
-	protected abstract void drawOther(int xOffset, int uOffset, int mouseXPosition, int mouseYPosition);
+	protected abstract void drawOther(int xOffset, int yOffset, int mouseXPosition, int mouseYPosition);
 
 	public boolean hasCustomName()
 	{
@@ -175,7 +185,7 @@ public abstract class GuiBase<I extends IInventory> extends GuiContainer
 				else
 					drawRepeated(fluidIcon, xoffset + x, yoffset + y + height - (double) (info.fluid.amount * height) / (double) info.capacity, width, (double) (info.fluid.amount * height) / (double) info.capacity, zLevel);
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				mc.renderEngine.bindTexture(getResourceLocation());
+				mc.renderEngine.bindTexture(location);
 			}
 		}
 	}

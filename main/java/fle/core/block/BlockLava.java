@@ -5,6 +5,7 @@ import farcore.enums.EnumBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
 import farcore.util.Values;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -15,8 +16,14 @@ public class BlockLava extends BlockStandardFluid implements IThermalProviderBlo
 	public BlockLava()
 	{
 		super(FluidRegistry.LAVA, Material.lava);
-		setQuantaPerBlock(8);
+		setQuantaPerBlock(16);
 		EnumBlock.lava.setBlock(this);
+	}
+	
+	@Override
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+	{
+		entity.setFire(50);
 	}
 	
 	@Override
