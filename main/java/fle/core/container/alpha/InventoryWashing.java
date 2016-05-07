@@ -6,7 +6,7 @@ import farcore.enums.EnumToolType;
 import farcore.inventory.Inventory;
 import farcore.lib.stack.AbstractStack;
 import farcore.util.U;
-import fle.api.recipe.WashingRecipe;
+import fle.api.recipe.machine.WashingRecipe;
 import fle.load.Langs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

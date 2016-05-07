@@ -81,10 +81,17 @@ public enum EnumItem
 	 * Far land era tools, registered by fle.<br>
 	 * There are all kinds of tools generated in fle.
 	 */
-	tool,
+	tool, 
+	tool_head,
 	log, 
 	plant, 
-	ore_block;
+	ore_block,
+	/**
+	 * The cut tree log (The natural generate please use
+	 * SubstanceWood field log).
+	 */
+	log_block,
+	brick_block;
 	
 	boolean init = false;
 	AbstractStack stack;
@@ -161,6 +168,11 @@ public enum EnumItem
 	public Block block()
 	{
 		return Block.getBlockFromItem(item);
+	}
+	
+	public boolean initialised()
+	{
+		return init;
 	}
 	
 	public static interface IInfomationable

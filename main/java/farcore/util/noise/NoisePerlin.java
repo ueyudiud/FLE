@@ -8,7 +8,17 @@ public class NoisePerlin extends NoiseBasic
 	private double persistence;
 	
 	private NoiseCoherent[] octaves;
-	
+
+	public NoisePerlin(Random random, int size, double start, double frequency, double persistence)
+	{
+		super(random.nextLong());
+		this.frequency = frequency;
+		this.persistence = persistence;
+		this.octaves = new NoiseCoherent[size];
+		double t = start;
+		for(int i = 0; i < size; octaves[i++] = new NoiseCoherent(seed + i, t),
+				t *= frequency);
+	}
 	public NoisePerlin(long seed, int size, double start, double frequency, double persistence)
 	{
 		super(seed);

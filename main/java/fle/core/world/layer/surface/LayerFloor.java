@@ -9,16 +9,12 @@ import net.minecraft.world.gen.layer.IntCache;
 public class LayerFloor extends LayerBase
 {
 	private LayerTerrainBase layer1;
-	private LayerTemp layer2;
-	private LayerRainfall layer3;
 	
-	public LayerFloor(long seed, LayerBase layer, LayerTemp temp, LayerRainfall rainfall)
+	public LayerFloor(long seed, LayerBase layer, LayerTerrainBase layerTerrain)
 	{
 		super(seed);
 		this.parent = layer;
-		this.layer1 = rainfall.getTerrain();
-		this.layer2 = temp;
-		this.layer3 = rainfall;
+		this.layer1 = layerTerrain;
 	}
 
 	@Override
@@ -30,8 +26,6 @@ public class LayerFloor extends LayerBase
 		int h1 = h + 2;
 		int[] is1 = parent.getInts(x1, y1, w1, h1);
 		int[] terrain = layer1.getInts(x, y, w, h);
-		int[] temps = layer2.getInts(x, y, w, h);
-		int[] rainfalls = layer3.getInts(x, y, w, h);
 		int[] ret = IntCache.getIntCache(w * h);
 		for(int i = 0; i < h; ++i)
 			for(int j = 0; j < w; ++j)
@@ -48,15 +42,11 @@ public class LayerFloor extends LayerBase
 					if(is1[id1 + w1] != 0) ++height;
 					if(height < EnumTerrain.hills.ordinal())
 					{
-						type = (temps[id] == EnumTemp.freeze.ordinal() ?
-								EnumBiome.ocean_icy_deep.id() :
-									EnumBiome.ocean_deep.id());
+						type = EnumBiome.ocean_deep.id();
 					}
 					else
 					{
-						type = (temps[id] == EnumTemp.freeze.ordinal() ?
-								EnumBiome.ocean_icy.id() :
-									EnumBiome.ocean.id());
+						type = EnumBiome.ocean.id();
 					}
 				}
 				else
@@ -86,191 +76,33 @@ public class LayerFloor extends LayerBase
 								--height;
 						}
 						float rainfall, temp;
-						if(height < 0 || height == EnumTerrain.channel.ordinal() || height == EnumTerrain.plain.ordinal())
+						if(height < 0 || height == EnumTerrain.depression.ordinal())
 						{
-							temp = temps[id];
-							rainfall = rainfalls[id];
-							if(temp == EnumTemp.freeze.ordinal())
-							{
-								type = EnumBiome.glacier.id();
-							}
-							else if(temp == EnumTemp.cold.ordinal())
-							{
-								type = rainfall > 6 ?
-										EnumBiome.forest_coniferous_snowy.id() :
-											EnumBiome.tundra.id();
-							}
-							else if(temp == EnumTemp.cool.ordinal())
-							{
-								type = rainfall > 6 ?
-										EnumBiome.forest_coniferous.id() :
-											EnumBiome.tundra.id();
-							}
-							else if(temp == EnumTemp.warm.ordinal())
-							{
-								type = rainfall > 7 ?
-										EnumBiome.forest_deciduous.id() :
-											rainfall > 4 ?
-												EnumBiome.plain.id() :
-													rainfall > 2 ?
-															EnumBiome.wasteland.id() : EnumBiome.desert.id();
-							}
-							else if(temp == EnumTemp.hot.ordinal())
-							{
-								type = rainfall > 7 ?
-										EnumBiome.forest_evergreen.id() :
-											rainfall > 4 ?
-												EnumBiome.plain_subtropics.id() :
-													rainfall > 2 ?
-															EnumBiome.wasteland_subtropis.id() : EnumBiome.desert_subtropics.id();
-							}
-							else if(temp == EnumTemp.blazing.ordinal())
-							{
-								type = rainfall > 8 ?
-										EnumBiome.rainforest.id() :
-											rainfall > 6 ?
-												EnumBiome.forest_tropic.id() :
-													rainfall > 4 ?
-															EnumBiome.savanna.id() :
-																rainfall > 2 ? EnumBiome.bushveld.id() :
-																	EnumBiome.desert_hot.id();
-							}
+							type = EnumBiome.swamp.id();
+						}
+						else if(height == EnumTerrain.plain.ordinal())
+						{
+							type = EnumBiome.plain.id();
 						}
 						else if(height == EnumTerrain.basin.ordinal())
 						{
-							temp = temps[id];
-							rainfall = rainfalls[id];
-							if(temp == EnumTemp.freeze.ordinal())
-							{
-								type = EnumBiome.glacier.id();
-							}
-							else if(temp == EnumTemp.cold.ordinal())
-							{
-								type = rainfall > 6 ?
-										EnumBiome.forest_coniferous_snowy.id() :
-											EnumBiome.tundra.id();
-							}
-							else if(temp == EnumTemp.cool.ordinal())
-							{
-								type = rainfall > 6 ?
-										EnumBiome.forest_coniferous.id() :
-											EnumBiome.tundra.id();
-							}
-							else if(temp == EnumTemp.warm.ordinal())
-							{
-								type = rainfall > 8 ?
-										EnumBiome.swamp.id() :
-											rainfall > 6 ?
-													EnumBiome.forest_deciduous.id() :
-														rainfall > 4 ?
-																EnumBiome.plain.id() :
-																	EnumBiome.wasteland.id();
-							}
-							else if(temp == EnumTemp.hot.ordinal())
-							{
-								type = rainfall > 7 ?
-										EnumBiome.forest_evergreen.id() :
-											rainfall > 4 ?
-												EnumBiome.plain_subtropics.id() :
-													EnumBiome.wasteland_subtropis.id();
-							}
-							else if(temp == EnumTemp.blazing.ordinal())
-							{
-								type = rainfall > 8 ?
-										EnumBiome.rainforest.id() :
-											rainfall > 6 ?
-												EnumBiome.forest_tropic.id() :
-													rainfall > 4 ?
-															EnumBiome.savanna.id() : EnumBiome.bushveld.id();
-							}
+							type = EnumBiome.plain.id();
 						}
 						else if(height == EnumTerrain.hills.ordinal())
 						{
-							temp = temps[id];
-							rainfall = rainfalls[id];
-							if(temp == EnumTemp.freeze.ordinal())
-							{
-								type = EnumBiome.glacier.id();
-							}
-							else if(temp == EnumTemp.cold.ordinal())
-							{
-								type = rainfall > 6 ?
-										EnumBiome.forest_coniferous_snowy_hill.id() :
-											EnumBiome.tundra_hill.id();
-							}
-							else if(temp == EnumTemp.cool.ordinal())
-							{
-								type = rainfall > 6 ?
-										EnumBiome.forest_coniferous_hill.id() :
-											EnumBiome.tundra_hill.id();
-							}
-							else if(temp == EnumTemp.warm.ordinal())
-							{
-								type = rainfall > 7 ?
-										EnumBiome.forest_deciduous_hill.id() :
-											EnumBiome.grass_hill.id();
-							}
-							else if(temp == EnumTemp.hot.ordinal())
-							{
-								type = rainfall > 7 ?
-										EnumBiome.forest_evergreen_hill.id() :
-											rainfall > 3 ?
-												EnumBiome.grassland_hill.id() : 
-													EnumBiome.desert_subtropics_hill.id();
-							}
-							else if(temp == EnumTemp.blazing.ordinal())
-							{
-								type = rainfall > 8 ?
-										EnumBiome.rainforest.id() :
-											rainfall > 6 ?
-												EnumBiome.forest_tropic.id() :
-													rainfall > 4 ?
-															EnumBiome.savanna.id() :
-																rainfall > 2 ? EnumBiome.bushveld.id() :
-																	EnumBiome.desert_hot.id();
-							}
+							type = EnumBiome.low_hill.id();
 						}
 						else if(height == EnumTerrain.mountain.ordinal())
 						{
-							temp = temps[id];
-							if(temp == EnumTemp.freeze.ordinal())
-							{
-								type = EnumBiome.mountain_frigid.id();
-							}
-							else
-							{
-								rainfall = rainfalls[id];
-								type = rainfall > 4 ?
-										EnumBiome.mountain_deciduous_forest.id() :
-											EnumBiome.mountain_meadow.id();
-							}
+							type = EnumBiome.mid_mountain.id();
 						}
 						else if(height == EnumTerrain.plateau.ordinal())
 						{
-							temp = temps[id];
-							if(temp == EnumTemp.freeze.ordinal())
-							{
-								type = EnumBiome.tundra_plateau.id();
-							}
-							else if(temp < EnumTemp.warm.ordinal())
-							{
-								type = EnumBiome.grassland_plateau.id();
-							}
-							else if(temp < EnumTemp.blazing.ordinal())
-							{
-								rainfall = rainfalls[id];
-								type = rainfall > 6 ?
-										EnumBiome.forest_plateau.id() :
-											EnumBiome.grassland_plateau.id();
-							}
-							else
-							{
-								type = EnumBiome.savanna_plateau.id();
-							}
+							type = EnumBiome.plateau.id();
 						}
 						else if(height == EnumTerrain.ex_mountain.ordinal())
 						{
-							type = EnumBiome.mountain_snowy.id();
+							type = EnumBiome.high_mountain.id();
 						}
 					}
 				}
@@ -284,7 +116,5 @@ public class LayerFloor extends LayerBase
 	{
 		super.initWorldGenSeed(seed);
 		layer1.initWorldGenSeed(seed);
-		layer2.initWorldGenSeed(seed);
-		layer3.initWorldGenSeed(seed);
 	}
 }

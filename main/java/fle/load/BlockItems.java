@@ -1,10 +1,8 @@
 package fle.load;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import farcore.block.plant.tree.BlockLog;
 import farcore.block.plant.tree.BlockSapling;
 import farcore.util.FleLog;
-import fle.core.block.BlockCobble;
 import fle.core.block.BlockFire;
 import fle.core.block.BlockIce;
 import fle.core.block.BlockLava;
@@ -18,6 +16,7 @@ import fle.core.block.plant.BlockBush1;
 import fle.core.block.plant.BlockVine1;
 import fle.core.item.ItemLog;
 import fle.core.item.ItemToolFle;
+import fle.core.item.ItemToolHeadFle;
 import fle.core.item.resource.ItemPile;
 import fle.core.item.resource.ItemPlant;
 import fle.core.item.resource.ItemStoneChip;
@@ -44,6 +43,7 @@ public class BlockItems
 	
 	public static Item plant;
 	public static Item tools;
+	public static Item toolHead;
 	public static Item stoneChip;
 	public static Item stoneFragment;
 	public static Item pile;
@@ -69,6 +69,7 @@ public class BlockItems
 		GameRegistry.registerTileEntity(TileEntityRock.class, "rock");
 		
 		tools = new ItemToolFle().setCreativeTab(CreativeTabs.tabTools);
+		toolHead = new ItemToolHeadFle().setCreativeTab(CreativeTabs.tabMaterials);
 		stoneChip = new ItemStoneChip().setCreativeTab(CreativeTabs.tabMaterials);
 		stoneFragment = new ItemStoneFragment().setCreativeTab(CreativeTabs.tabMaterials);
 		pile = new ItemPile().setCreativeTab(CreativeTabs.tabMaterials);

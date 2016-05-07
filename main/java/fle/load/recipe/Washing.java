@@ -6,7 +6,7 @@ import farcore.enums.EnumItem;
 import farcore.lib.recipe.DropHandler;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.OreStack;
-import fle.api.recipe.WashingRecipe;
+import fle.api.recipe.machine.WashingRecipe;
 import net.minecraft.init.Items;
 
 public class Washing

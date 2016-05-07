@@ -34,6 +34,7 @@ public class TreeGenStraight extends TreeGenAbstract
 	@Override
 	public boolean generate(World world, Random random, int x, int y, int z, boolean isNatural)
 	{
+		if(!isReplaceable(world, x, y, z)) return false;
 		int r = randTreeHeight == 0 ? 0 : random.nextInt(randTreeHeight);
 		int l = minTreeHeight + r;
         boolean flag = true;
@@ -163,7 +164,7 @@ public class TreeGenStraight extends TreeGenAbstract
                     					else if(j1 < b0 && cache[i1 + b0][j1 + b0 + 1]) --c;
                     					else if(j1 + b0 - 1 >= 0 && cache[i1 + b0][j1 + b0 - 1]) --c;
                         				if(leaveConnect ? c > 2 : (c > 2 || (c == 2 && random.nextBoolean())))
-                    						cache[i1 + b0 + 1][j1 + b0] = false;
+                    						cache[i1 + b0][j1 + b0] = false;
                         			}
                         			if(cache[i1 + b0][j1 + b0])
                         			{

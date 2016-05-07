@@ -17,7 +17,7 @@ public class BlockLogArtificial extends BlockLog
 	
 	protected BlockLogArtificial(BlockLog parent, SubstanceWood wood)
 	{
-		super("log.artificial." + wood.getName(), Material.wood);
+		super("log.artificial." + wood.getName(), ItemLogArtificial.class, Material.wood);
 		setTickRandomly(true);
 		setBlockTextureName("fle:log/" + wood.getName());
 		setHarvestLevel("axe", 0);

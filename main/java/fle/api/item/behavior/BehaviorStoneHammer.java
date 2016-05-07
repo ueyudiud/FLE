@@ -28,7 +28,8 @@ public class BehaviorStoneHammer extends BehaviorDigableTool
 	
 	public BehaviorStoneHammer()
 	{
-		destroyBlockDamage = 1;
+		destroyBlockDamageBase = 0.8F;
+		destroyBlockDamageHardnessMul = 0.1F;
 		hitEntityDamage = 3;
 	}
 	

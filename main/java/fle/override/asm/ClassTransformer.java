@@ -97,6 +97,7 @@ public class ClassTransformer
 						}
 					}
 				}
+				LOG.info("Injected method {" + m.name + "|" + m.desc + "}.");
 			}
 		}
 		LOG.info("Attempting to Transform: " + classNode.name + " Complete");
@@ -154,7 +155,7 @@ public class ClassTransformer
 	private void performAnchorOperation(InsnList methodInsn, OperationInfo input, int anchor)
 	{
 		AbstractInsnNode current = methodInsn.get(anchor + input.offset + numInsertions);
-		if ((input.list.get(0) instanceof JumpInsnNode))
+		if (input.list.size() > 0 && (input.list.get(0) instanceof JumpInsnNode))
 		{
 			input.list.set(input.list.get(0), new JumpInsnNode(input.list.get(0).getOpcode(), (LabelNode) current.getPrevious()));
 		}

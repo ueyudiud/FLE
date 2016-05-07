@@ -43,7 +43,9 @@ public class Debug
 {
 	public static void main(String[] args)
 	{
-		
+		NoiseCoherent noise = new NoiseCoherent(3859175L);
+		System.out.println(noise.noise(null, 1, 1, 0D, 0D)[0]);
+		System.out.println(noise.noise(0, 0, 0));
 	}
 	
 	public static void draw(String string, int w, int h, int[] range)

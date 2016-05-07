@@ -29,7 +29,7 @@ public class ItemResource extends ItemSubBehavior implements IInfomationable
 	
 	public void addSubItem(int id, String name, String local, String iconName)
 	{
-		addSubItem(id, name, local, new BehaviorBase(), iconName);
+		addSubItem(id, name, local, BehaviorBase.SIMPLE, iconName);
 	}
 	
 	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName)

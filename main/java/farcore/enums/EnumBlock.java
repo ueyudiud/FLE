@@ -33,7 +33,8 @@ public enum EnumBlock
 	sand, 
 	bush, 
 	vine, 
-	snow;
+	snow,
+	brick;
 	
 	boolean init = false;
 	Block block;

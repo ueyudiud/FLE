@@ -5,8 +5,8 @@ public enum EnumTerrain
 	channel(-0.3F),
 	depression(0F),
 	plain(0.15F),
-	basin(0.3F),
-	hills(0.5F),
+	basin(0.5F),
+	hills(0.6F),
 	mountain(0.75F),
 	plateau(0.9F),
 	ex_mountain(0.96F);

@@ -25,7 +25,7 @@ public class BiomeTundra extends BiomeBase
 		if(!init)
 		{
 			SubstanceWood wood = SubstanceWood.getSubstance("spruce");
-			genSpruce1.initLogBlock(wood.log, wood.leaves);
+			genSpruce1.initLogBlock(wood);
 			init = true;
 		}
 	}

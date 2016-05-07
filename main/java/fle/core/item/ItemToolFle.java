@@ -30,28 +30,36 @@ import net.minecraft.item.ItemStack;
 
 public class ItemToolFle extends ItemSubTool
 {
+	public static void callInit()
+	{
+		if(EnumItem.tool.initialised() && EnumItem.tool_head.initialised())
+		{
+			((ItemToolFle) EnumItem.tool.item()).init();
+		}
+	}
+	
 	public ItemToolFle()
 	{
 		super("tools");
 		EnumItem.tool.set(new ItemStack(this));
-		init();
+		callInit();
 	}
 
 	private void init()
 	{
-		addSubItem(1, "rough_stone_adz", "Rough Stone Adz", new BehaviorAxe(1F), "axe/stone_rough", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
-		addSubItem(3, "wood_hammer", "Wooden Hammer", new BehaviorWoodHammer(), "hammer/wood", true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_wood), SubstanceTool.class));
-		addSubItem(4, "flint_hammer", "Flint Hammer", new BehaviorStoneHammer(), "hammer/flint", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
-		addSubItem(5, "firestarter", "Firestarter", new BehaviorFireStarter(0.4F), new ItemToolCustomInfo("fle:tools/firestarter", "raw_wood_fire", "wood_fire"), 
+		addSubItem(1, "rough_stone_adz", "Rough Stone Adz", new BehaviorAxe(1F), "axe/stone_rough", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
+		addSubItem(3, "wood_hammer", "Wooden Hammer", new BehaviorWoodHammer(), "hammer/wood", true, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_wood), SubstanceTool.class));
+		addSubItem(4, "flint_hammer", "Flint Hammer", new BehaviorStoneHammer(), "hammer/flint", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
+		addSubItem(5, "firestarter", "Firestarter", new BehaviorFireStarter(0.4F), new ItemToolCustomInfo("fle:tools/firestarter", "raw_wood_fire", "wood_fire"),
 				new SubstanceTool("raw_wood_fire").setMaxUses(12), new SubstanceTool("wood_fire").setMaxUses(32));
 		addSubItem(6, "bar_grizzly", "Bar Grizzly", new BehaviorBarGrizzly(), new ItemToolCustomInfo("fle:tools/bar_grizzly", "simple_bar_grizzly"), 
 				new SubstanceTool("simple_bar_grizzly").setMaxUses(128));
-		addSubItem(11, "stone_axe", "Stone Axe", new BehaviorAxe(2F), "axe/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
-		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
-		addSubItem(13, "stone_hammer", "Stone Hammer", new BehaviorStoneHammer(), "hammer/stone", false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(11, "stone_axe", "Stone Axe", new BehaviorAxe(2F), "axe/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(13, "stone_hammer", "Stone Hammer", new BehaviorStoneHammer(), "hammer/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 	}
 	
-	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName, boolean useSingleIcon, SubstanceTool...tools)
+	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName, boolean useSingleIcon, boolean hasHead, SubstanceTool...tools)
 	{
 		validTools.put(name, ImmutableList.copyOf(tools));
 		if(useSingleIcon)
@@ -61,6 +69,10 @@ public class ItemToolFle extends ItemSubTool
 		else
 		{
 			super.addSubItem(id, name, local, itemInfo, new ItemToolRenderInfo("fle:tools/" + iconName));
+		}
+		if(hasHead)
+		{
+			((ItemToolHeadFle) EnumItem.tool_head.item()).addSubItem(id, name, local, iconName, tools);
 		}
 	}
 	

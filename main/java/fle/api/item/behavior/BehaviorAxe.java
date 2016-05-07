@@ -22,7 +22,8 @@ public class BehaviorAxe extends BehaviorDigableTool
 	
 	public BehaviorAxe(float dve)
 	{
-		destroyBlockDamage = 1;
+		destroyBlockDamageBase = 1F;
+		destroyBlockDamageHardnessMul = 0.2F;
 		hitEntityDamage = 3;
 		damageVsEntity = dve;
 	}

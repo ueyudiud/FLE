@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import farcore.interfaces.item.ICustomDamageItem;
 import farcore.lib.collection.Ety;
 import farcore.lib.stack.AbstractStack;
+import farcore.lib.stack.BaseStack;
 import farcore.util.U;
 import net.minecraft.item.ItemStack;
 
@@ -90,7 +91,7 @@ public abstract class AbstractFleRecipe implements IFleRecipe
 						{
 							AbstractStack tool = entry.getKey();
 							AbstractStack material = entry.getValue();
-							if(tool != null)
+							if(tool != null && material != BaseStack.EMPTY)
 							{
 								if(tool.useContainer() || ! stack.getItem().hasContainerItem(stack))
 								{
@@ -108,7 +109,7 @@ public abstract class AbstractFleRecipe implements IFleRecipe
 									}
 								}
 							}
-							if(material != null)
+							if(material != null && material != BaseStack.EMPTY)
 							{
 								if(material.useContainer() || ! stack2.getItem().hasContainerItem(stack2))
 								{

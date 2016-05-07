@@ -10,12 +10,14 @@ import com.google.common.collect.ImmutableList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCore;
+import farcore.enums.EnumDamageResource;
 import farcore.enums.EnumItem.IInfomationable;
 import farcore.lib.substance.SubstanceHandle;
 import farcore.lib.substance.SubstanceTool;
 import farcore.util.U;
 import fle.load.Langs;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -63,14 +65,14 @@ public class ItemSubTool extends ItemSubDamagable implements IInfomationable
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag)
 	{
 		int maxUse = getMaxCustomDamgae(stack);
-		int lastUse = maxUse - getCustomDamage(stack);
+		float lastUse = (float) maxUse - getCustomDamage(stack);
 		list.add(FarCore.translateToLocal(Langs.infoToolHeadMaterial, getToolMaterial(stack).getLocalName()));
 		SubstanceHandle handle = getHandleMaterial(stack);
 		if(handle != SubstanceHandle.VOID_TOOL)
 		{
 			list.add(FarCore.translateToLocal(Langs.infoToolHandleMaterial, handle.getLocalName()));
 		}
-		list.add(FarCore.translateToLocal(Langs.infoToolDamage, lastUse, maxUse));
+		list.add(FarCore.translateToLocal(Langs.infoToolDamage, (int) (lastUse * 100), (int) (maxUse * 100)));
 		super.addInformation(stack, player, list, flag);
 	}
 
@@ -85,6 +87,18 @@ public class ItemSubTool extends ItemSubDamagable implements IInfomationable
 				list.add(a(type, tool, SubstanceHandle.VOID_TOOL));
 			}
 		}
+	}
+	
+	@Override
+	protected float applyDamage(ItemStack target, float amount, float damage, int max, EntityLivingBase user,
+			EnumDamageResource resource)
+	{
+		SubstanceTool tool = getToolMaterial(target);
+		if(tool.brittleness > 0 && Math.random() < tool.brittleness / 10F)
+		{
+			return amount + damage * (3F + tool.brittleness);
+		}
+		return amount + damage;
 	}
 	
 	@Override
@@ -117,7 +131,7 @@ public class ItemSubTool extends ItemSubDamagable implements IInfomationable
 	{
 		return a(type, head, handle, maxDamage, 0);
 	}
-	private ItemStack a(String type, SubstanceTool head, SubstanceHandle handle, int maxDamage, int damage)
+	public ItemStack a(String type, SubstanceTool head, SubstanceHandle handle, int maxDamage, float damage)
 	{
 		if(!register.contain(type)) return null;
 		ItemStack ret = new ItemStack(this, 1, register.id(type));

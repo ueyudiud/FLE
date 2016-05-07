@@ -107,7 +107,8 @@ public class BaseStack implements AbstractStack
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		return OreDictionary.itemMatches(this.stack, stack, false);
+		return this.stack == null ? stack == null :
+			OreDictionary.itemMatches(this.stack, stack, false);
 	}
 
 	@Override

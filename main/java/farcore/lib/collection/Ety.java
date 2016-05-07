@@ -52,6 +52,6 @@ public class Ety<K, V> implements Entry<K, V>
 	@Override
 	public String toString()
 	{
-		return "K=" + key.toString() + ",V=" + value.toString();
+		return "K=" + key + ",V=" + value;
 	}
 }

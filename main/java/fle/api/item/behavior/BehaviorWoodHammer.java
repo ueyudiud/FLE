@@ -20,7 +20,7 @@ public class BehaviorWoodHammer extends BehaviorDigableTool
 {
 	public BehaviorWoodHammer()
 	{
-		destroyBlockDamage = 1;
+		destroyBlockDamageBase = 2F;
 		hitEntityDamage = 4;
 	}
 	

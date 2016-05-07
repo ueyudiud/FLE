@@ -13,7 +13,8 @@ import net.minecraftforge.common.ForgeHooks;
 
 public class BehaviorDigableTool extends BehaviorBase
 {
-	protected int destroyBlockDamage;
+	protected float destroyBlockDamageBase;
+	protected float destroyBlockDamageHardnessMul;
 	protected int hitEntityDamage;
 	
 	@Override
@@ -41,9 +42,10 @@ public class BehaviorDigableTool extends BehaviorBase
 	public boolean onBlockDestroyed(ItemStack stack, World world, Block block, int x, int y, int z,
 			EntityLivingBase entity)
 	{
-		if(block.getBlockHardness(world, x, y, z) > 0)
+		float hardness = block.getBlockHardness(world, x, y, z);
+		if(hardness > 0)
 		{
-			U.Inventorys.damage(stack, entity, destroyBlockDamage, EnumDamageResource.KNOCK);
+			U.Inventorys.damage(stack, entity, destroyBlockDamageBase + destroyBlockDamageHardnessMul * hardness, EnumDamageResource.KNOCK);
 		}
 		return true;
 	}

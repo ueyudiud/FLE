@@ -21,6 +21,7 @@ import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -30,18 +31,23 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 	{
 		Register<Block> registerRock = new Register();
 		Register<Block> registerCobble = new Register();
+		Register<Block> registerBrick = new Register();
 		for(SubstanceRock rock : SubstanceRock.getRocks())
 		{
 			Block block1 = new BlockRock(rock, registerRock),
-					block2 = new BlockCobble(rock, registerCobble);
+					block2 = new BlockCobble(rock, registerCobble),
+					block3 = new BlockBrick(rock, registerBrick);
 			registerRock.register(rock.getName(), block1);
 			registerCobble.register(rock.getName(), block2);
+			registerBrick.register(rock.getName(), block3);
 			if(rock == SubstanceRock.VOID_ROCK)
 			{
 				EnumItem.rock_block.set(new ItemStack(block1));
 				EnumBlock.rock.setBlock(block1, EnumItem.rock_block);	
 				EnumItem.cobble_block.set(new ItemStack(block2));
-				EnumBlock.cobble.setBlock(block2, EnumItem.cobble_block);				
+				EnumBlock.cobble.setBlock(block2, EnumItem.cobble_block);
+				EnumItem.brick_block.set(new ItemStack(block3));		
+				EnumBlock.brick.setBlock(block3, EnumItem.brick_block);
 			}
 		}
 	}
@@ -69,7 +75,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 	@Override
 	public int tickRate(World world)
 	{
-		return 360;
+		return 240;
 	}
 	
 	@Override
@@ -83,6 +89,10 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		if(world.isRemote) return;
+		if(!U.Worlds.isBlockNearby(world, x, y, z, Blocks.air, -1, true))
+		{
+			return;
+		}
 		int meta = world.getBlockMetadata(x, y, z);
 		if(meta < 3)
 		{
@@ -102,7 +112,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 			{
 				if(meta == 0)
 				{	
-					if(rand.nextInt(5) == 0)
+					if(rand.nextBoolean())
 					{
 						world.setBlockMetadataWithNotify(x, y, z, 1, 0);
 						world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
@@ -113,8 +123,8 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 					if(rand.nextBoolean())
 					{
 						world.setBlockMetadataWithNotify(x, y, z, meta + 1, 0);
+						 world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 					}
-					world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 				}
 			}
 		}

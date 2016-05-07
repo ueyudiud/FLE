@@ -1,14 +1,19 @@
 package fle.core.world.gen;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.enums.EnumBiome;
+import farcore.interfaces.ICustomTempGenerate;
+import farcore.lib.collection.IntArray;
 import farcore.lib.world.biome.BiomeBase;
+import farcore.util.noise.NoiseBasic;
+import farcore.util.noise.NoisePerlin;
 import fle.core.world.layer.LayerBase;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -21,8 +26,16 @@ import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 
-public class FleSurfaceManager extends WorldChunkManager
+public class FleSurfaceManager extends WorldChunkManager implements ICustomTempGenerate
 {
+	private double[] cacheRainfall;
+	
+	public NoisePerlin tempNoise;
+	public NoisePerlin rainfallNoise;
+	
+	protected DoubleCache tempCache = new DoubleCache();
+	protected DoubleCache rainfallCache = new DoubleCache();
+	
     protected GenLayer genBiomes;
     /** A GenLayer containing the indices into BiomeBase.biomeList[] */
     protected GenLayer biomeIndexLayer;
@@ -35,19 +48,14 @@ public class FleSurfaceManager extends WorldChunkManager
 	{
 		super(world);
 
+		Random random = new Random(world.getSeed());
+		tempNoise = new NoisePerlin(random, 7, 1.8D, 3D, 2D);
+		rainfallNoise = new NoisePerlin(random, 6, 2.3D, 2.6D, 2D);
+		
         biomeCache = new BiomeCache(this);
         biomesToSpawnIn = new ArrayList();
-        biomesToSpawnIn.add(EnumBiome.rainforest.biome());
-        biomesToSpawnIn.add(EnumBiome.rainforest_hill.biome());
-        biomesToSpawnIn.add(EnumBiome.rainforest_edge.biome());
-        biomesToSpawnIn.add(EnumBiome.savanna.biome());
-        biomesToSpawnIn.add(EnumBiome.savanna_hill.biome());
-        biomesToSpawnIn.add(EnumBiome.savanna_plateau.biome());
         biomesToSpawnIn.add(EnumBiome.plain.biome());
-        biomesToSpawnIn.add(EnumBiome.plain_subtropics.biome());
-        biomesToSpawnIn.add(EnumBiome.forest_evergreen.biome());
-        biomesToSpawnIn.add(EnumBiome.desert_subtropics.biome());
-        biomesToSpawnIn.add(EnumBiome.desert_hot.biome());
+        biomesToSpawnIn.add(EnumBiome.low_hill.biome());
         
         GenLayer[] agenlayer = LayerBase.wrapSuface(world.getSeed(), world.getWorldInfo().getTerrainType());
         agenlayer = getModdedBiomeGenerators(world.getWorldInfo().getTerrainType(), world.getSeed(), agenlayer);
@@ -86,14 +94,13 @@ public class FleSurfaceManager extends WorldChunkManager
             list = new float[w * h];
         }
 
-        int[] aint = biomeIndexLayer.getInts(x, z, w, h);
+        cacheRainfall = rainfallNoise.noise(cacheRainfall, w, h, x, z);
 
         for (int i1 = 0; i1 < w * h; ++i1)
         {
             try
             {
-                float f = (float) BiomeBase.getBiome(aint[i1]).getIntRainfall() / 65536.0F;
-
+                float f = (float) cacheRainfall[i1];
                 if (f > 1.0F)
                 {
                     f = 1.0F;
@@ -105,7 +112,6 @@ public class FleSurfaceManager extends WorldChunkManager
             {
                 CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Invalid Biome id");
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("DownfallBlock");
-                crashreportcategory.addCrashSection("biome id", Integer.valueOf(aint[i1]));
                 crashreportcategory.addCrashSection("downfalls[] size", Integer.valueOf(list.length));
                 crashreportcategory.addCrashSection("x", Integer.valueOf(x));
                 crashreportcategory.addCrashSection("z", Integer.valueOf(z));
@@ -286,5 +292,48 @@ public class FleSurfaceManager extends WorldChunkManager
     public void cleanupCache()
     {
         this.biomeCache.cleanupCache();
+        this.tempCache.reset();
+        this.rainfallCache.reset();
     }
+
+	@Override
+	public float getBaseTemperature(int x, int z)
+	{
+		return (float) tempCache.cache(x, z, tempNoise) * 2F - .5F;
+	}
+
+	@Override
+	public float getBaseRainfall(int x, int z)
+	{
+		return (float) rainfallCache.cache(x, z, rainfallNoise) * 1.5F;
+	}
+	
+	private static class DoubleCache
+	{
+		private IntArray array = new IntArray(2);
+		private Map<IntArray, double[]> cache = new HashMap();
+		
+		public double cache(int x, int z, NoiseBasic noise)
+		{
+			array.array[0] = x >> 4;
+			array.array[1] = z >> 4;
+            double[] values = cache.get(array);
+			if(values != null)
+			{
+				return values[(z & 0xF) << 4 | (x & 0xF)];
+			}
+			else
+			{
+				values = noise.noise(null, 16, 16, x >> 4, z >> 4);
+				cache.put(array.copy(), values);
+				return values[(z & 0xF) << 4 | (x & 0xF)];
+			}
+		}
+		
+		public void reset()
+		{
+			array = new IntArray(2);
+			cache.clear();
+		}
+	}
 }

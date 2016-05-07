@@ -19,6 +19,7 @@ public class OreDicts
 			registerValid("chip" + ore, EnumItem.stone_chip.instance(1, rock.getName()));
 			registerValid("fragment" + ore, EnumItem.stone_fragment.instance(1, rock.getName()));
 		}
+		registerValid("fragmentFlint", EnumItem.stone_fragment.instance(1, "flint"));
 		registerValid("chipSharpFlint", EnumItem.stone_chip.instance(1, "flintSharp"));
 		registerValid("chipObsidian", EnumItem.stone_chip.instance(1, "obsidian"));
 		registerValid(EnumToolType.adz.ore(), EnumItem.tool.instance(1, "rough_stone_adz"));

@@ -64,6 +64,7 @@ public class SubstanceTool implements ISubstance, ISubTagContainer
 	public int maxUses;
 	public int harvestLevel;
 	public float digSpeed;
+	public float brittleness;
 	/**
 	 * The color of tool material, render in items.
 	 */
@@ -100,6 +101,12 @@ public class SubstanceTool implements ISubstance, ISubTagContainer
 	public SubstanceTool setDigSpeed(float digSpeed)
 	{
 		this.digSpeed = digSpeed;
+		return this;
+	}
+	
+	public SubstanceTool setBrittleness(float brittleness)
+	{
+		this.brittleness = brittleness;
 		return this;
 	}
 	

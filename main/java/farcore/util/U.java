@@ -45,6 +45,7 @@ import farcore.lib.stack.NBTPropertyStack;
 import farcore.lib.stack.OreStack;
 import farcore.lib.world.IWorldDatas;
 import farcore.lib.world.WorldCfg;
+import farcore.lib.world.biome.BiomeBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockLeavesBase;
@@ -74,6 +75,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeHooks;
@@ -719,6 +721,24 @@ public class U
 				new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
 		}
 		
+		/**
+		 * With custom temperature use ASM to override method in world.
+		 * @param world
+		 * @param x
+		 * @param y
+		 * @param z
+		 * @return
+		 */
+		public static float getBiomeBaseTemperature(World world, int x, int y, int z)
+		{
+			BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+			if(biome instanceof BiomeBase)
+			{
+				return ((BiomeBase) biome).getTemperature(world, x, y, z);
+			}
+			return biome.getFloatTemperature(x, y, z);
+		}
+		
 		public static float getEnviormentTemp(World world, int x, int y, int z)
 		{
 			return ThermalNet.getEnviormentTemp(world, x, y, z);
@@ -878,11 +898,11 @@ public class U
 			return null;
 		}
 
-		public static void damage(ItemStack target, EntityLivingBase entity, int damage, EnumDamageResource resource)
+		public static void damage(ItemStack target, EntityLivingBase entity, float damage, EnumDamageResource resource)
 		{
 			damage(target, entity, damage, resource, entity != null);
 		}
-		public static void damage(ItemStack target, EntityLivingBase entity, int damage, EnumDamageResource resource, boolean isEntityCurrent)
+		public static void damage(ItemStack target, EntityLivingBase entity, float damage, EnumDamageResource resource, boolean isEntityCurrent)
 		{
 			if((entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode))
 				return;
@@ -907,7 +927,7 @@ public class U
 				}
 				else
 				{
-					target.damageItem(damage, entity);
+					target.damageItem((int) damage, entity);
 					if(isEntityCurrent && target.stackSize <= 0)
 					{
 						if(entity instanceof EntityPlayer)

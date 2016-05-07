@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import farcore.lib.stack.AbstractStack;
+import farcore.lib.stack.BaseStack;
 import farcore.util.U;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -136,7 +137,7 @@ public class ShapedFleRecipe extends AbstractFleRecipe
 					check = input[j - v][mirror ? (width - 1 - (i - u)) : i - u];
 				}
 				ItemStack stack = inventory.getStackByCoord(i, j);
-				if(check == null ^ stack == null)
+				if((check == null || check == BaseStack.EMPTY) ^ stack == null)
 				{
 					return false;
 				}
@@ -177,7 +178,7 @@ public class ShapedFleRecipe extends AbstractFleRecipe
 			{
 				AbstractStack check = input[j][mirror ? (width - 1 - i) : i];
 				ItemStack stack = inventory.getStackByCoord(u + i, v + j);
-				if(check == null || stack == null)
+				if((check == null || check == BaseStack.EMPTY) || stack == null)
 				{
 					continue;
 				}

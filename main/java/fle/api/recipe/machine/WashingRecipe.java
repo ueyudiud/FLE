@@ -1,4 +1,4 @@
-package fle.api.recipe;
+package fle.api.recipe.machine;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,16 @@
 package farcore.block.plant.tree;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.block.BlockBase;
 import farcore.block.ItemBlockBase;
+import farcore.enums.EnumItem;
 import farcore.interfaces.ISmartBurnableBlock;
 import farcore.lib.collection.Register;
 import farcore.lib.substance.SubstanceWood;
@@ -23,19 +30,29 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 {
 	public static void init()
 	{
+		Builder<String, BlockLogArtificial> builder = ImmutableMap.builder();
 		for(SubstanceWood wood : SubstanceWood.getWoods())
 		{
-			if(wood == SubstanceWood.WOOD_VOID) continue;
 			BlockLogNatural log = new BlockLogNatural(wood);
 			BlockLogArtificial log1 = new BlockLogArtificial(log, wood);
 			BlockLeaves leaves = new BlockLeaves(wood);
-			OreDict.registerValid("treeLeaves", leaves);
-			OreDict.registerValid("logWood", log1);
+			builder.put(wood.getName(), log1);
 			leaves.log = log;
 			wood.log = log;
 			wood.leaves = leaves;
+			if(wood == SubstanceWood.WOOD_VOID)
+			{
+				log.setCreativeTab(null);
+				log1.setCreativeTab(null);
+				leaves.setCreativeTab(null);
+				EnumItem.log_block.set(new ItemStack(log1));
+				continue;
+			}
+			OreDict.registerValid("treeLeaves", leaves);
+			OreDict.registerValid("logWood", log1);
 			wood.generator.initLogBlock(log, leaves);
 		}
+		ItemLogArtificial.map = builder.build();
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -76,14 +93,14 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 	@Override
 	public int getDamageValue(World world, int x, int y, int z)
 	{
-		return world.getBlockMetadata(x, y, z) & 0xC;
+		return world.getBlockMetadata(x, y, z) & (~0x3);
 	}
 	
 	@Override
 	public int onBlockPlaced(World world, int x, int y, int z, int side,
 			float hitX, float hitY, float hitZ, int meta)
 	{
-		meta &= 0xC;
+		meta &= (~0x3);
 		if(side == 0 || side == 1)
 		{
 			meta |= 0x0;
@@ -102,7 +119,7 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 	@Override
 	public int damageDropped(int meta)
 	{
-		return meta & 0xD;
+		return meta & (~0x3);
 	}
 	
 	@Override

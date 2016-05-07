@@ -38,17 +38,12 @@ public class FarCoreHarvestHandler
 	    		{
 	    			((ISmartHarvestBlock) event.block).harvestAndDropBlock(event.world, event.x, event.y, event.z, event.blockMetadata, event.getPlayer());
 	    		}
-	    		else
+	    		else if(((ISmartHarvestBlock) event.block).preventDestoryWhenFailedToHarvestBlock())
 	    		{
 	    			event.setCanceled(true);
 	    		}
 	    		return;
 	    	}
-	    }
-	    if(event.getPlayer() == null || event.getPlayer().capabilities.isCreativeMode) return;
-	    if(!U.Player.isToolEffective(event.getPlayer(), event.world, event.x, event.y, event.z, event.block, event.blockMetadata, false))
-	    {
-	    	event.setCanceled(true);
 	    }
 	}
 	

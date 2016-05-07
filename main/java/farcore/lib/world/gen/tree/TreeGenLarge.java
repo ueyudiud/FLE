@@ -2,13 +2,10 @@ package farcore.lib.world.gen.tree;
 
 import java.util.Random;
 
-import fle.core.world.biome.BiomeJungle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenJungle;
-import net.minecraft.world.gen.feature.WorldGenBigTree;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TreeGenLarge extends TreeGenAbstract

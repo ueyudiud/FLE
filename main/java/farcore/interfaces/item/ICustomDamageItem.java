@@ -18,7 +18,7 @@ public interface ICustomDamageItem
 	 * @param user
 	 * @param resource
 	 */
-	void damangeItem(ItemStack stack, int amount, EntityLivingBase user, EnumDamageResource resource);
+	void damangeItem(ItemStack stack, float amount, EntityLivingBase user, EnumDamageResource resource);
 	
 	/**
 	 * Called when crafted item in crafting matrix.

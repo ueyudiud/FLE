@@ -8,4 +8,9 @@ public interface ISmartHarvestBlock
 	boolean canHarvestBlock(World world, int x, int y, int z, int meta, EntityPlayer player);
 
 	void harvestAndDropBlock(World world, int x, int y, int z, int meta, EntityPlayer player);
+	
+	default boolean preventDestoryWhenFailedToHarvestBlock()
+	{
+		return true;
+	}
 }

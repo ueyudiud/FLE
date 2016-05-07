@@ -35,8 +35,10 @@ public class BiomeOcean extends BiomeBase
     {
         return TempCategory.OCEAN;
     }
-
-    public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer)
+    
+    @Override
+    public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer,
+    		float temp, float rainfall)
     {
     	if(layer > 0.8)
     	{
@@ -46,6 +48,6 @@ public class BiomeOcean extends BiomeBase
     	{
     		topBlock = Blocks.gravel;
     	}
-    	super.genTerrainBlocks(world, rand, blocks, metas, x, z, layer);
+    	super.genTerrainBlocks(world, rand, blocks, metas, x, z, layer, temp, rainfall);
     }
 }

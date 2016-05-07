@@ -42,21 +42,13 @@ public class LayerBeach extends LayerBase
 					{
 						
 					}
-					else if(mix == EnumBiome.mountain_deciduous_forest.id())
+					else if(mix == EnumBiome.high_mountain.id())
 					{
-						i1 = EnumBiome.valley_tropic.id();
+						i1 = EnumBiome.plateau.id();
 					}
-					else if(mix == EnumBiome.mountain_meadow.id())
+					else if(mix == EnumBiome.mid_mountain.id())
 					{
-						i1 = EnumBiome.valley_temperate.id();
-					}
-					else if(mix == EnumBiome.mountain_frigid.id())
-					{
-						i1 = EnumBiome.valley_frigid.id();
-					}
-					else if(mix == EnumBiome.mountain_snowy.id())
-					{
-						i1 = EnumBiome.grassland_plateau.id();
+						i1 = EnumBiome.valley.id();
 					}
 				}
 				else if(isOcean(i1) ? 
@@ -67,26 +59,7 @@ public class LayerBeach extends LayerBase
 					{
 						i1 = EnumBiome.continental_shelf.id();
 					}
-					else if(i1 == EnumBiome.ocean_icy.id() || i1 == EnumBiome.ocean_icy_deep.id())
-					{
-						i1 = EnumBiome.continental_shelf_snowy.id();
-					}
-					else if(i1 == EnumBiome.mountain_meadow.id())
-					{
-						i1 = EnumBiome.beach_stone_snowy.id();
-					}
-					else if(i1 == EnumBiome.mountain_deciduous_forest.id() || i1 == EnumBiome.mountain_frigid.id() ||
-							i1 == EnumBiome.mountain_snowy.id())
-					{
-						i1 = EnumBiome.beach_stone.id();
-					}
-					else if(i1 == EnumBiome.glacier.id() || i1 == EnumBiome.forest_coniferous_snowy_hill.id() ||
-							i1 == EnumBiome.forest_coniferous_snowy.id() || i1 == EnumBiome.river_freeze.id())
-					{
-						i1 = EnumBiome.beach_sand_snowy.id();
-					}
-					else if(i1 == EnumBiome.river_desert.id() || i1 == EnumBiome.river_grass.id() ||
-							i1 == EnumBiome.river_rainforest.id())
+					else if(i1 == EnumBiome.river.id())
 					{
 						if(!(isRiver(i2) || isRiver(i3) || isRiver(i4) || isRiver(i5)))
 						{
@@ -97,25 +70,9 @@ public class LayerBeach extends LayerBase
 							i1 = EnumBiome.continental_shelf.id();
 						}
 					}
-					else if(i1 == EnumBiome.river_freeze.id())
-					{
-						if(!(isRiver(i2) || isRiver(i3) || isRiver(i4) || isRiver(i5)))
-						{
-							i1 = EnumBiome.tundra.id();
-						}
-						else
-						{
-							i1 = EnumBiome.continental_shelf_snowy.id();
-						}
-					}
-					else if(i1 == EnumBiome.tropic_island.id() || i1 == EnumBiome.volcanic_island.id() ||
-							i1 == EnumBiome.mushroom_island.id())
-					{
-						
-					}
 					else
 					{
-						i1 = EnumBiome.beach_sand.id();
+						i1 = EnumBiome.beach.id();
 					}
 				}
 				ret[i * w + j] = i1;
@@ -130,13 +87,11 @@ public class LayerBeach extends LayerBase
 	
 	private boolean isRiver(int id)
 	{
-		return id == EnumBiome.river_freeze.id() || id == EnumBiome.river_grass.id() ||
-				id == EnumBiome.river_rainforest.id();
+		return id == EnumBiome.river.id();
 	}
 	
 	private boolean isOcean(int id)
 	{
-		return id == EnumBiome.ocean.id() || id == EnumBiome.ocean_deep.id() ||
-				id == EnumBiome.ocean_icy.id() || id == EnumBiome.ocean_icy_deep.id();
+		return id == EnumBiome.ocean.id() || id == EnumBiome.ocean_deep.id();
 	}
 }

@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 public class BehaviorBase implements IItemInfo
 {
     protected static final UUID itemDamageUUID = new UUID(471928472827199838L, 37491287194719L);
+	public static final IItemInfo SIMPLE = new BehaviorBase();
     
 	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World world, Block block, int x, int y, int z,

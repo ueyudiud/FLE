@@ -21,7 +21,8 @@ public class BehaviorShovel extends BehaviorDigableTool
 	
 	public BehaviorShovel(float dve)
 	{
-		destroyBlockDamage = 1;
+		destroyBlockDamageBase = 0.25F;
+		destroyBlockDamageHardnessMul = 0.3F;
 		hitEntityDamage = 2;
 		damageVsEntity = dve;
 	}

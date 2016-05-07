@@ -269,7 +269,7 @@ public class Substances
 		new SubstanceWood(12, "morus", "Morus").setTreeGen(new TreeGenStraight(4, 3, 2, 5, 4.2F, true));
 		new SubstanceWood(13, "willow", "Willow").setTreeGen(new TreeGenStraight(4, 4, 1, 6, 4.6F, false));
 		
-		new SubstanceRock(1, "stone", "Stome").setDensity(2000).setHardness(2.5F).setHarvestLevel(6)
+		new SubstanceRock(1, "stone", "Stone").setDensity(2000).setHardness(2.5F).setHarvestLevel(6)
 		.setToolBelong(new SubstanceTool(1, "stone").setColor(0x626262).setDigSpeed(1.2F).setHarvestLevel(8).setMaxUses(16));
 		new SubstanceRock(2, "stone-compact", "Compact Stone").setDensity(2800).setHardness(3.75F).setHarvestLevel(8)
 		.setToolBelong(new SubstanceTool(2, "stone-compact").setColor(0x686868).setDigSpeed(1.4F).setHarvestLevel(9).setMaxUses(18));

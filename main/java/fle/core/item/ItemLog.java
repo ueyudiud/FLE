@@ -45,7 +45,7 @@ public class ItemLog extends ItemBase implements IInfomationable
 		return SubstanceWood.getWoods().name(metadata);
 	}
 	
-	@Override
+	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs tab, List list)
 	{
 		for(SubstanceWood wood : SubstanceWood.getWoods())
@@ -57,7 +57,7 @@ public class ItemLog extends ItemBase implements IInfomationable
 		}
 	}
 	
-	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
 		icons = new HashMap();
@@ -66,8 +66,8 @@ public class ItemLog extends ItemBase implements IInfomationable
 			icons.put(Integer.valueOf(wood.getID()), register.registerIcon(getIconString() + "/" + wood.getName()));
 		}
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta)
 	{
 		IIcon icon = icons.get(meta);
@@ -77,8 +77,8 @@ public class ItemLog extends ItemBase implements IInfomationable
 		}
 		return icon;
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag)
 	{
 		super.addInformation(stack, player, list, flag);

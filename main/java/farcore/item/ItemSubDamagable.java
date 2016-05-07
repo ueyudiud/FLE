@@ -52,14 +52,14 @@ public class ItemSubDamagable extends ItemSubBehavior implements ICustomDamageIt
 		return 1;
 	}
 	
-	protected void setCustomDamage(ItemStack stack, int damage)
+	public static void setCustomDamage(ItemStack stack, float damage)
 	{
-		U.Inventorys.setupNBT(stack, true).setInteger("damage", damage);
+		U.Inventorys.setupNBT(stack, true).setFloat("damage", damage);
 	}
 	
-	protected int getCustomDamage(ItemStack stack)
+	public static float getCustomDamage(ItemStack stack)
 	{
-		return U.Inventorys.setupNBT(stack, false).getInteger("damage");
+		return U.Inventorys.setupNBT(stack, false).getFloat("damage");
 	}
 	
 	@Override
@@ -75,14 +75,14 @@ public class ItemSubDamagable extends ItemSubBehavior implements ICustomDamageIt
 	}
 
 	@Override
-	public void damangeItem(ItemStack stack, int amount, EntityLivingBase user, EnumDamageResource resource) 
+	public void damangeItem(ItemStack stack, float amount, EntityLivingBase user, EnumDamageResource resource) 
 	{
-		int damage = getCustomDamage(stack);
+		float damage = getCustomDamage(stack);
 		int max = getMaxCustomDamgae(stack);
-		int ret = applyDamage(stack, amount, damage, max, user, resource);
+		float ret = applyDamage(stack, amount, damage, max, user, resource);
 		if(ret >= max)
 		{
-			stack.stackSize --;
+			stack.stackSize--;
 			setCustomDamage(stack, 0);
 		}
 		else
@@ -91,7 +91,7 @@ public class ItemSubDamagable extends ItemSubBehavior implements ICustomDamageIt
 		}
 	}
 	
-	protected int applyDamage(ItemStack target, int amount, int damage, int max, EntityLivingBase user, EnumDamageResource resource)
+	protected float applyDamage(ItemStack target, float amount, float damage, int max, EntityLivingBase user, EnumDamageResource resource)
 	{
 		return amount + damage;
 	}

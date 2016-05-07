@@ -31,8 +31,6 @@ public abstract class TreeGenAbstract extends WorldGenerator implements ITreeGen
 	{
         return block.getMaterial() == Material.air ||
         		block.getMaterial() == Material.leaves || 
-        		block == Blocks.grass || 
-        		block == Blocks.dirt || 
         		block == Blocks.sapling || 
         		block == Blocks.vine;
 	}

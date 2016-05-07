@@ -2,11 +2,17 @@ package farcore.interfaces;
 
 import java.util.Random;
 
+import farcore.lib.substance.SubstanceWood;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
 public interface ITreeGenerator
 {
+	default void initLogBlock(SubstanceWood wood)
+	{
+		initLogBlock(wood.log, wood.leaves);
+	}
+	
 	void initLogBlock(Block log, Block leaves);
 	
 	/**

@@ -7,16 +7,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import farcore.interfaces.ITreeGenerator;
 import farcore.lib.substance.SubstanceWood;
 import farcore.lib.world.biome.BiomeBase;
-import farcore.lib.world.gen.tree.TreeGenCanopy;
 import farcore.lib.world.gen.tree.TreeGenSimple;
-import fle.api.world.gen.TreeGenStraight;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
 public class BiomeSwamp extends BiomeBase
 {
@@ -29,7 +26,7 @@ public class BiomeSwamp extends BiomeBase
 		if(!init)
 		{
 			SubstanceWood wood = SubstanceWood.getSubstance("oak");
-			genOak1.initLogBlock(wood.log, wood.leaves);
+			genOak1.initLogBlock(wood);
 			init = true;
 		}
 	}
@@ -52,15 +49,15 @@ public class BiomeSwamp extends BiomeBase
         biomeDecorator.rattanPerChunk = 1;
         biomeDecorator.ivyPerChunk = 1;
         waterColorMultiplier = 14745518;
-        this.spawnableMonsterList.add(new SpawnListEntry(EntitySlime.class, 1, 1, 1));
-        this.flowers.clear();
-        this.addFlower(Blocks.red_flower, 1, 10);
+        spawnableMonsterList.add(new SpawnListEntry(EntitySlime.class, 1, 1, 1));
+        flowers.clear();
+        addFlower(Blocks.red_flower, 1, 10);
 	}
 	
 	@Override
 	protected ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z, double treeNoise)
 	{
-		return genOak1;
+		return getTemperature(world, x, 0, z) > 0.5F && getRainfall(world, x, 0, z) > 0.3F ? genOak1 : null;
 	}
 
 //    public WorldGenAbstractTree func_150567_a(Random random)
@@ -73,9 +70,9 @@ public class BiomeSwamp extends BiomeBase
         return BlockFlower.field_149859_a[1];
     }
 
-    public void genTerrainBlocks(World world, Random random, Block[] blocks, byte[] metas, int x, int z, double layer)
+    public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer, float temp, float rainfall)
     {
-        double d1 = plantNoise.func_151601_a((double)x * 0.25D, (double)z * 0.25D);
+        double d1 = customPlantNoise.noise((double)x * 0.25D, 0, (double)z * 0.25D);
 
         if (d1 > 0.0D)
         {
@@ -103,7 +100,7 @@ public class BiomeSwamp extends BiomeBase
                 }
             }
         }
-        super.genTerrainBlocks(world, random, blocks, metas, x, z, layer);
+    	super.genTerrainBlocks(world, rand, blocks, metas, x, z, layer, temp, rainfall);
     }
 
     /**
@@ -112,7 +109,7 @@ public class BiomeSwamp extends BiomeBase
     @SideOnly(Side.CLIENT)
     public int getBiomeGrassColor(int x, int y, int z)
     {
-        double d0 = plantNoise.func_151601_a((double)x * 0.0225D, (double)z * 0.0225D);
+        double d0 = customPlantNoise.noise((double)x * 0.0225D, 0F, (double)z * 0.0225D);
         return d0 < -0.1D ? 5011004 : 6975545;
     }
 

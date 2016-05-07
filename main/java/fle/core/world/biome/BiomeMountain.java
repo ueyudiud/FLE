@@ -28,8 +28,8 @@ public class BiomeMountain extends BiomeBase
 		if(!init)
 		{
 			SubstanceWood wood = SubstanceWood.getSubstance("spruce");
-			genSpruce1.initLogBlock(wood.log, wood.leaves);
-			genSpruce2.initLogBlock(wood.log, wood.leaves);
+			genSpruce1.initLogBlock(wood);
+			genSpruce2.initLogBlock(wood);
 			init = true;
 		}
 	}
@@ -109,7 +109,9 @@ public class BiomeMountain extends BiomeBase
         }
     }
 
-    public void genTerrainBlocks(World world, Random random, Block[] blocks, byte[] metas, int x, int z, double layer)
+    @Override
+    public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer,
+    		float temp, float rainfall)
     {
         topBlock = Blocks.grass;
         topMeta = 0;
@@ -129,6 +131,6 @@ public class BiomeMountain extends BiomeBase
             fillerBlock = Blocks.stone;
         }
 
-        super.genTerrainBlocks(world, random, blocks, metas, x, z, layer);
+        super.genTerrainBlocks(world, rand, blocks, metas, x, z, layer, temp, rainfall);
     }
 }

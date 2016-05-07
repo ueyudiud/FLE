@@ -2,6 +2,8 @@ package farcore.lib.collection;
 
 import java.util.Arrays;
 
+import scala.collection.generic.BitOperations.Int;
+
 public class IntArray
 {
 	public int[] array;
@@ -27,7 +29,8 @@ public class IntArray
 	{
 		return obj == null ? false :
 				obj == this ? true :
-					!(obj instanceof IntArray) ? false : Arrays.equals(array, ((IntArray) obj).array);
+					!(obj instanceof IntArray) ? 
+							!(obj instanceof int[] ? false : Arrays.equals(array, (int[]) obj)) : Arrays.equals(array, ((IntArray) obj).array);
 	}
 	
 	@Override

@@ -1,25 +1,34 @@
 package farcore.lib.world.biome;
 
+import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.enums.EnumBiome;
 import farcore.enums.EnumBlock;
+import farcore.interfaces.ICustomTempGenerate;
 import farcore.interfaces.ITreeGenerator;
 import farcore.util.FleLog;
+import farcore.util.noise.NoiseBasic;
+import farcore.util.noise.NoiseCoherent;
+import farcore.util.noise.NoisePerlin;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.gen.NoiseGeneratorPerlin;
 
 public class BiomeBase extends BiomeGenBase
 {
-	private static final NoiseGeneratorPerlin noiseTree = new NoiseGeneratorPerlin(new Random(3719371912701L), 6);
-	private static final NoiseGeneratorPerlin noisePlantI = new NoiseGeneratorPerlin(new Random(371937191273L), 4);
-	private static final NoiseGeneratorPerlin noisePlantII = new NoiseGeneratorPerlin(new Random(291849181907L), 4);
-	private static final NoiseGeneratorPerlin noisePlantIII = new NoiseGeneratorPerlin(new Random(4918596729179L), 4);
 	private static final BiomeBase[] biomeList = new BiomeBase[256];
+	
+	protected static final NoiseBasic customTreeNoise = new NoisePerlin(481945937195L, 6, 1.8D, 2.4D, 2D);
+	protected static final NoiseBasic customPlantNoise = new NoisePerlin(39571194729417L, 5, 3.2D, 2D, 2D);
 	
 	public float rareMultiply = 0.2F;
 	public float sedimentaryMultiply = 0.0F;
@@ -43,6 +52,7 @@ public class BiomeBase extends BiomeGenBase
 		{
 			biomeList[id] = this;
 		}
+		rainfall = 1.0F;
 	}
 
 	public BiomeBase(int id)
@@ -55,10 +65,10 @@ public class BiomeBase extends BiomeGenBase
 	{
 		biomeDecorator.decorateChunk(world, rand, this, x, z);
 	}
-	
+		
 	public final ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z)
 	{
-		return getTreeGenerator(world, rand, x, z, noiseTree.func_151601_a(x * 2D, z * 2D) / 32D);
+		return getTreeGenerator(world, rand, x, z, customTreeNoise.noise(x, 0, z));
 	}
 	
 	protected ITreeGenerator getTreeGenerator(World world, Random rand, int x, int z, double treeNoise)
@@ -66,7 +76,42 @@ public class BiomeBase extends BiomeGenBase
 		return null;
 	}
 	
-    public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer)
+	public float getTemperature(World world, int x, int y, int z)
+	{
+		float temp = temperature;
+		if(world.getWorldChunkManager() instanceof ICustomTempGenerate)
+		{
+			temp = ((ICustomTempGenerate) world.getWorldChunkManager()).getBaseTemperature(x, z);
+		}
+		if(y > 128)
+		{
+			temp -= (y - 128) * 0.00028F;
+		}
+		return temp;
+	}
+
+    public float getRainfall(World world, int x, int y, int z)
+    {
+    	float rain = rainfall;
+    	if(world.getWorldChunkManager() instanceof ICustomTempGenerate)
+    	{
+    		rain = ((ICustomTempGenerate) world.getWorldChunkManager()).getBaseRainfall(x, z);
+    	}
+		return rain;
+	}
+	
+	@Override
+	public boolean isHighHumidity()
+	{
+		return rainfall >= 1.25F;
+	}
+	
+    public final void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer)
+    {
+    	genTerrainBlocks(world, rand, blocks, metas, x, z, layer, getTemperature(world, x, 0, z), getRainfall(world, x, 0, z));
+    }
+	
+    public void genTerrainBlocks(World world, Random rand, Block[] blocks, byte[] metas, int x, int z, double layer, float temp, float rainfall)
     {
         genTerrain(world, rand, blocks, metas, x, z, layer);
     }
@@ -180,7 +225,7 @@ public class BiomeBase extends BiomeGenBase
             		{
             			if((r & 0x2) == 0)
             			{
-            				if(getFloatTemperature(x, l1, z) < 0.15F)
+            				if(getTemperature(world, x, l1, z) < 0.15F)
             				{
             					blocks[i2] = EnumBlock.ice.block();
                 				metas[i2] = (byte) 0;
@@ -195,6 +240,28 @@ public class BiomeBase extends BiomeGenBase
             	}
 			}
         }
+    }
+
+    /**
+     * Provides the basic grass color based on the biome temperature and rainfall
+     */
+    @SideOnly(Side.CLIENT)
+    public int getBiomeGrassColor(int x, int y, int z)
+    {
+        double d0 = (double)MathHelper.clamp_float(getTemperature(Minecraft.getMinecraft().theWorld, x, y, z), 0.0F, 1.0F);
+        double d1 = (double)MathHelper.clamp_float(getRainfall(Minecraft.getMinecraft().theWorld, x, y, z), 0.0F, 1.0F);
+        return getModdedBiomeGrassColor(ColorizerGrass.getGrassColor(d0, d1));
+    }
+
+	/**
+     * Provides the basic foliage color based on the biome temperature and rainfall
+     */
+    @SideOnly(Side.CLIENT)
+    public int getBiomeFoliageColor(int x, int y, int z)
+    {
+        double d0 = (double)MathHelper.clamp_float(getTemperature(Minecraft.getMinecraft().theWorld, x, y, z), 0.0F, 1.0F);
+        double d1 = (double)MathHelper.clamp_float(getRainfall(Minecraft.getMinecraft().theWorld, x, y, z), 0.0F, 1.0F);
+        return getModdedBiomeFoliageColor(ColorizerFoliage.getFoliageColor(d0, d1));
     }
 
     /**

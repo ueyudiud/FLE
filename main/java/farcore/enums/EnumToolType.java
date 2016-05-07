@@ -9,6 +9,7 @@ public enum EnumToolType
 	axe("Axe"),
 	hammer_digable("DigableHammer"),
 	hammer_digable_basic("DigableHammerBasic"),
+	wooden_hammer("WoodenHammer"),
 	pickaxe("Pickaxe"),
 	shovel("Shovel"), 
 	firestarter("Firestarter"), 

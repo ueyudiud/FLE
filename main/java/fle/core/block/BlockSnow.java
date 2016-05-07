@@ -24,6 +24,7 @@ public class BlockSnow extends BlockBase
 		super("snow", ItemSnow.class, Material.snow);
         setBlockBounds(0);
         setTickRandomly(true);
+        setHardness(0.1F);
         EnumBlock.snow.setBlock(this);
 	}
 
