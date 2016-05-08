@@ -72,7 +72,7 @@ local.properties
 .idea_modules/
 
 /out/
-gradle/wrapper/gradle-wrapper.properties
+#gradle/wrapper/gradle-wrapper.properties
 #gradlew
 #gradlew.bat
 
