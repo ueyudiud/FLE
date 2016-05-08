@@ -73,7 +73,7 @@ local.properties
 
 /out/
 gradle/wrapper/gradle-wrapper.properties
-gradlew
+#gradlew
 #gradlew.bat
 
 build.bat
