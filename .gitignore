@@ -76,7 +76,6 @@ gradle/wrapper/gradle-wrapper.properties
 gradlew
 gradlew.bat
 
-build.bat
 src-ttr
 src-fle
 logs
