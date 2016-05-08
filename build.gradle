@@ -1,0 +1,124 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+apply plugin: 'forge'
+
+version = "${config.fle.version}"
+group= "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "${config.fle.name}"
+
+sourceCompatibility = 8
+targetCompatibility = 8
+
+minecraft {
+    version = "1.7.10-10.13.4.1558-1.7.10"
+    runDir = "eclipse"
+}
+
+configurations {
+    provided
+    embedded
+    compile.extendsFrom provided, embedded
+}
+
+repositories {
+    maven {
+        name 'CB Repo'
+        url "http://chickenbones.net/maven/"
+    }
+    //maven {
+    //    name = "ic2"
+    //    url = "http://maven.ic2.player.to/"
+    //}
+    //ivy {
+    //    name "BuildCraft"
+    //    artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+    //}
+}
+
+dependencies {
+    // you may put jars on which you depend on in ./libs
+    // or you may define them like so..
+    //compile "some.group:artifact:version:classifier"
+    //compile "some.group:artifact:version"
+      
+   	provided "codechicken:CodeChickenLib:1.7.10-1.1.3.136:dev"
+    provided "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+    provided "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
+    //provided "net.industrial-craft:industrialcraft-2:2.2.2.813-experimental:dev"
+    // real examples
+    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // for more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+	
+	tasks.withType(JavaCompile) {
+    	options.encoding = "UTF-8"
+	}
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+    manifest {
+        //attributes 'FMLCorePlugin': 'WhateverLoaderClass'
+        //attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
+task apiJar(type: Jar, dependsOn: 'jar') {
+    classifier 'api'
+    from (sourceSets.main.output) {
+        include "**/farcore/**"
+        //include "**/flapi/**"
+        include "**/api/**"
+    }
+}
+
+artifacts {
+	archives deobfJar
+	archives apiJar
+}
