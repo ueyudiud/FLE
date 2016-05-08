@@ -74,8 +74,9 @@ local.properties
 /out/
 gradle/wrapper/gradle-wrapper.properties
 gradlew
-gradlew.bat
+#gradlew.bat
 
+build.bat
 src-ttr
 src-fle
 logs
