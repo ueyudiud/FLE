@@ -10,6 +10,7 @@ import farcore.lib.recipe.ShapedFleRecipe;
 import farcore.lib.recipe.ShapelessFleRecipe;
 import fle.api.recipe.LogCutRecipe;
 import fle.api.recipe.ToolSingleCraftingRecipe;
+import fle.load.BlockItems;
 import net.minecraft.item.ItemStack;
 
 public class Crafting
@@ -25,6 +26,9 @@ public class Crafting
 				{"peridotite", "Peridotite"},
 				{"rhyolite", "Rhyolite"},
 				{"stone-compact", "StoneCompact"}};
+		
+		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 0), 180, "x", "o", 'x', "logWood", 'o', "pileGravel");
+		
 		for(Object[] element : inputs2)
 		{
 			registerShapelessRecipe(EnumItem.cobble_block.instance(1, element[0]), 8, "chip" + element[1], "chip" + element[1], "chip" + element[1], "chip" + element[1]);

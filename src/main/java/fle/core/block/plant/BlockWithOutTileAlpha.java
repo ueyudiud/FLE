@@ -12,7 +12,6 @@ import fle.api.FleAPI;
 import fle.core.container.alpha.ContainerPolish;
 import fle.core.gui.alpha.GuiPolish;
 import fle.load.Icons;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.IIconRegister;

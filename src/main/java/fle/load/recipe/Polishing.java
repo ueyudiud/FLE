@@ -5,6 +5,7 @@ import farcore.enums.EnumToolType;
 import farcore.item.ItemSubTool;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.OreStack;
+import farcore.lib.substance.SubstanceTool;
 import fle.api.recipe.machine.PolishRecipe;
 import fle.api.recipe.machine.PolishRecipe.PolishCondition;
 import net.minecraft.init.Items;
@@ -27,5 +28,8 @@ public class Polishing
 		PolishRecipe.registerResource(new BaseStack(EnumItem.stone_fragment.instance(1, "flint")), 5);
 		
 		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), "c c      ", new ItemStack(Items.flint));
+		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), " c ccc c ", EnumItem.stone_chip.instance(4, "flint_small"));
+		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), "     cccc", EnumItem.tool_head.instance(1, "flint_hammer", SubstanceTool.getSubstance("flint")));
+		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), "c ccccccc", EnumItem.tool_head.instance(1, "stone_shovel", SubstanceTool.getSubstance("flint")));
 	}
 }

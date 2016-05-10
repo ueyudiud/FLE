@@ -55,7 +55,7 @@ public class ItemToolFle extends ItemSubTool
 		addSubItem(6, "bar_grizzly", "Bar Grizzly", new BehaviorBarGrizzly(), new ItemToolCustomInfo("fle:tools/bar_grizzly", "simple_bar_grizzly"), 
 				new SubstanceTool("simple_bar_grizzly").setMaxUses(128));
 		addSubItem(11, "stone_axe", "Stone Axe", new BehaviorAxe(2F), "axe/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
-		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
 		addSubItem(13, "stone_hammer", "Stone Hammer", new BehaviorStoneHammer(), "hammer/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 	}
 	

@@ -42,7 +42,7 @@ public class OreStack implements AbstractStack
 	{
 		for(ItemStack target : ore)
 		{
-			if(OreDictionary.itemMatches(stack, target, false))
+			if(OreDictionary.itemMatches(target, stack, false))
 				return true;
 		}
 		return false;

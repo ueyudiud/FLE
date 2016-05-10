@@ -16,10 +16,29 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.oredict.OreDictionary;
 
 @SideOnly(Side.CLIENT)
 public class FarCoreGuiHandler
 {
+	@SubscribeEvent
+	public void onItemToolTip(ItemTooltipEvent event)
+	{
+		if(V.debug)
+		{
+			int[] ids = OreDictionary.getOreIDs(event.itemStack);
+			if(ids.length > 0)
+			{
+				event.toolTip.add("Ore Dictionary Name:");
+				for(int id : ids)
+				{
+					event.toolTip.add(OreDictionary.getOreName(id));
+				}
+			}
+		}
+	}
+	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onRenderHUD(RenderGameOverlayEvent.Text event)
 	{

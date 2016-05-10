@@ -94,7 +94,7 @@ public class ContainerPolish extends ContainerBase<Inventory> implements IGuiUpd
 				int y = locate / 3;
 				conditions[y][x] = PolishRecipe.onCrafting(inventory.stacks[1], conditions[y][x]);
 				inventory.stacks[2] = PolishRecipe.getResult(polish, conditions);
-				U.Inventorys.damage(inventory.stacks[1], null, 1F, EnumDamageResource.USE);
+				U.Inventorys.damage(inventory.stacks[1], null, .25F, EnumDamageResource.USE);
 				if(inventory.stacks[1].stackSize <= 0)
 					inventory.stacks[1] = null;
 				detectAndSendChanges();
@@ -105,7 +105,7 @@ public class ContainerPolish extends ContainerBase<Inventory> implements IGuiUpd
 			AbstractStack stack;
 			if((stack = PolishRecipe.isResource(inventory.stacks[0])) != null)
 			{
-				polish = inventory.decrStackSize(locate, stack.size(inventory.stacks[0]));
+				polish = inventory.decrStackSize(0, stack.size(inventory.stacks[0]));
 				if(polish != null)
 				{
 					conditions = new PolishCondition[3][3];
