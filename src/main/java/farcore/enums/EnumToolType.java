@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 public enum EnumToolType 
 {
 	adz("Adz"),
+	awl("Awl"),
 	axe("Axe"),
 	hammer_digable("DigableHammer"),
 	hammer_digable_basic("DigableHammerBasic"),

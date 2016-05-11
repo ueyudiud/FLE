@@ -28,6 +28,8 @@ public class BlockWithOutTileAlpha extends BlockBase implements IHasGui
 	public BlockWithOutTileAlpha()
 	{
 		super("machine.i.alpha", ItemBlockBase.class, Material.wood, Boolean.TRUE);
+		blockHardness = 1.5F;
+		blockResistance = 1.0F;
 	}
 
 	@SideOnly(Side.CLIENT)

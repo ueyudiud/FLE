@@ -30,6 +30,12 @@ public class FarCore
 	public static FleTextureMap bottonTextureMap;
 	@SideOnly(Side.CLIENT)
 	public static FleTextureMap conditionTextureMap;
+	/**
+	 * The far core texture map of potion effects.
+	 * DO NOT USE 18x18 ICON.
+	 */
+	@SideOnly(Side.CLIENT)
+	public static FleTextureMap potionTextureMap;
 	
 	public static String translateToLocal(String unlocalized, Object...arg)
 	{

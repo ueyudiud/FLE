@@ -81,6 +81,7 @@ public class ContainerPolish extends ContainerBase<Inventory> implements IGuiUpd
 	{
 		polish = null;
 		conditions = null;
+		inventory.stacks[2] = null;
 	}
 	
 	public void polishItem(int locate)
@@ -88,13 +89,14 @@ public class ContainerPolish extends ContainerBase<Inventory> implements IGuiUpd
 		if(polish != null)
 		{
 			int level = PolishRecipe.getResourceLevel(polish);
-			if(PolishRecipe.getToolLevel(inventory.stacks[1]) >= level)
+			int level1;
+			if((level1 = PolishRecipe.getToolLevel(inventory.stacks[1])) >= level)
 			{
 				int x = locate % 3;
 				int y = locate / 3;
 				conditions[y][x] = PolishRecipe.onCrafting(inventory.stacks[1], conditions[y][x]);
 				inventory.stacks[2] = PolishRecipe.getResult(polish, conditions);
-				U.Inventorys.damage(inventory.stacks[1], null, .25F, EnumDamageResource.USE);
+				U.Inventorys.damage(inventory.stacks[1], null, .25F * (float) level / (float) level1, EnumDamageResource.USE);
 				if(inventory.stacks[1].stackSize <= 0)
 					inventory.stacks[1] = null;
 				detectAndSendChanges();

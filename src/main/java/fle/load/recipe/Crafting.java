@@ -19,6 +19,7 @@ public class Crafting
 	{
 		registerRecipe(new LogCutRecipe(new Ety(EnumToolType.axe.stack(), null)));
 		registerShapelessRecipe(EnumItem.plant.instance(1, "vine_rope"), 40, "vine", "vine", "vine", "vine");
+		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 0), 180, "x", "o", 'x', "logWood", 'o', "pileGravel");
 		Object[][] inputs2 = {
 				{"stone", "Stone"},
 				{"andesite", "Andesite"},
@@ -26,9 +27,7 @@ public class Crafting
 				{"peridotite", "Peridotite"},
 				{"rhyolite", "Rhyolite"},
 				{"stone-compact", "StoneCompact"}};
-		
-		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 0), 180, "x", "o", 'x', "logWood", 'o', "pileGravel");
-		
+				
 		for(Object[] element : inputs2)
 		{
 			registerShapelessRecipe(EnumItem.cobble_block.instance(1, element[0]), 8, "chip" + element[1], "chip" + element[1], "chip" + element[1], "chip" + element[1]);

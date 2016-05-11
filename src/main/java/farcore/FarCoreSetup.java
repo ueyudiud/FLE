@@ -59,6 +59,7 @@ import farcore.lib.net.tile.PacketTileSyncable;
 import farcore.lib.net.world.PacketWorldDataAskUpdate;
 import farcore.lib.net.world.PacketWorldDataUpdateAll;
 import farcore.lib.net.world.PacketWorldDataUpdateSingle;
+import farcore.lib.potion.PotionBase;
 import farcore.lib.render.RenderFallingBlockExtended;
 import farcore.lib.render.RenderHandler;
 import farcore.network.Network;
@@ -70,6 +71,7 @@ import farcore.util.U;
 import farcore.util.V;
 import farcore.util.Values;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -264,6 +266,7 @@ public class FarCoreSetup
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new TextureMapRegistry());
 			FarCore.bottonTextureMap = newTextureMap("bottons");
 			FarCore.conditionTextureMap = newTextureMap("conditions");
+			FarCore.potionTextureMap = newTextureMap("potions");
 		}
 		
 		@Override
@@ -275,6 +278,13 @@ public class FarCoreSetup
 			int id2 = RenderingRegistry.getNextAvailableRenderId();
 			RenderingRegistry.registerBlockHandler(id2, FarCore.handlerB = new RenderHandler(id2, true));
 			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, new RenderFallingBlockExtended());
+			FarCore.potionTextureMap.registerTextureListener((IIconRegister register) -> 
+			{
+				for(PotionBase potion : PotionBase.list)
+				{
+					potion.registerIcon(register);
+				}
+			});
 		}
 		
 		@Override

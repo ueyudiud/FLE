@@ -14,7 +14,6 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import farcore.FarCore;
-import farcore.lib.container.GuiFactory;
 import farcore.util.FleLog;
 import fle.api.FleAPI;
 import fle.core.util.FleGuiFactory;
@@ -24,6 +23,7 @@ import fle.load.Drops;
 import fle.load.Handlers;
 import fle.load.Langs;
 import fle.load.OreDicts;
+import fle.load.Potions;
 import fle.load.Recipes;
 import fle.load.Substances;
 import fle.load.Worlds;
@@ -65,6 +65,7 @@ public class FLE
 	public void load(FMLInitializationEvent event)
 	{
 		FleLog.getLogger().info("Start loading.");
+		Potions.init();
 		Handlers.init();
 		Langs.init();
 		OreDicts.init();
