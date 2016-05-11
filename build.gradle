@@ -23,16 +23,16 @@ file "build.properties" withReader {
 
 apply plugin: 'forge'
 
-def getVersionAppendage() {
-    if (System.env.BUILD_NUMBER)
-        return System.env.BUILD_NUMBER
+//def getVersionAppendage() {
+//    if (System.env.BUILD_NUMBER)
+//        return System.env.BUILD_NUMBER
+//
+//    def proc = "git rev-parse --short HEAD".execute()
+//    proc.waitFor()
+//    return "DEV." + proc.exitValue() ? "-1" : proc.text.trim()
+//}
 
-    def proc = "git rev-parse --short HEAD".execute()
-    proc.waitFor()
-    return "DEV." + proc.exitValue() ? "-1" : proc.text.trim()
-}
-
-version = "${config.fle.version}." + getVersionAppendage()
+version = "${config.fle.version}"// + getVersionAppendage()
 group= "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "${config.fle.name}"
 

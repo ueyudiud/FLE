@@ -17,6 +17,8 @@ import farcore.util.U;
 import farcore.util.Values;
 import farcore.util.V;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -90,6 +92,11 @@ public class ThermalNet implements IEnergyNet
 		if(count == 0) return -1;
 		thread.set(count);
 		return temp / (float) count;
+	}
+
+	public static float getTemp(Entity entity)
+	{
+		return getTemp(entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ, true);
 	}
 	
 	public static float getTemp(World world, int x, int y, int z, boolean checkNearby)

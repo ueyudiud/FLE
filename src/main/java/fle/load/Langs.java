@@ -19,6 +19,7 @@ public class Langs
 	
 	public static final String inventoryWashing = "inventory.washing";
 	public static final String inventoryPolish = "inventory.polish";
+	public static final String inventoryCampfire = "inventory.campfire";
 	
 	public static void init()
 	{

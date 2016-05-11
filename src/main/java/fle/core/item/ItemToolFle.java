@@ -49,7 +49,7 @@ public class ItemToolFle extends ItemSubTool
 	private void init()
 	{
 		addSubItem(1, "rough_stone_adz", "Rough Stone Adz", new BehaviorAxe(1F), "axe/stone_rough", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
-		addSubItem(2, "flint_awl", "Flint Awl", new BehaviorAwl(), "fle:tools/awl", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
+		addSubItem(2, "flint_awl", "Flint Awl", new BehaviorAwl(), "awl", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
 		addSubItem(3, "wood_hammer", "Wooden Hammer", new BehaviorWoodHammer(), "hammer/wood", true, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_wood), SubstanceTool.class));
 		addSubItem(4, "flint_hammer", "Flint Hammer", new BehaviorStoneHammer(), "hammer/flint", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
 		addSubItem(5, "firestarter", "Firestarter", new BehaviorFireStarter(0.4F), new ItemToolCustomInfo("fle:tools/firestarter", "raw_wood_fire", "wood_fire"),
