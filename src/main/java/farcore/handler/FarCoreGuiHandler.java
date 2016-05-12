@@ -1,9 +1,6 @@
 package farcore.handler;
 
-import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.DEBUG;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DecimalFormat;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -17,13 +14,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 @SideOnly(Side.CLIENT)
 public class FarCoreGuiHandler
 {
+	private static final DecimalFormat formatK = new DecimalFormat("#0.0K");
+	
 	@SubscribeEvent
 	public void onItemToolTip(ItemTooltipEvent event)
 	{
@@ -42,7 +40,7 @@ public class FarCoreGuiHandler
 			{
 				IThermalItem item = (IThermalItem) event.itemStack.getItem();
 				event.toolTip.add("====Thermal Info====");
-				event.toolTip.add("Temperature : " + EnumChatFormatting.RED + item.getTemperature(event.itemStack) + "K");
+				event.toolTip.add("Temperature : " + EnumChatFormatting.RED + formatK.format(item.getTemperature(event.itemStack)));
 				event.toolTip.add("Thermal Conductivity : " + EnumChatFormatting.WHITE + item.getThermalConductivity(event.itemStack) + "W/m");
 				event.toolTip.add("====================");
 			}

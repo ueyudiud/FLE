@@ -127,6 +127,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	@Override
 	protected void updateServer1()
 	{
+		float envior = ThermalNet.getEnviormentTemp(worldObj, xCoord, yCoord, zCoord);
 		if(burningEnergy <= 0)
 		{
 			if(inventory.addStack(fuel1, inventory.stacks[fuel2], false) != 0)
@@ -169,7 +170,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 		}
 		if(burnedEnergy > 0)
 		{
-			amount = Math.min((burningTemp - helper.temperature() + 1) * helper.thermalConductivity, burnedEnergy);
+			amount = Math.min((burningTemp - helper.temperature() - envior + 1) * helper.thermalConductivity, burnedEnergy);
 			helper.receive(amount);
 			burnedEnergy -= amount;
 		}
@@ -183,13 +184,13 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 				progress1 = 0;
 				recipe1 = recipe;
 			}
-			amount = (helper.temperature() - recipe1.minTemp1) * helper.thermalConductivity;
+			amount = (helper.temperature() + envior - recipe1.minTemp1) * helper.thermalConductivity;
 			helper.emit(amount);
 			progress1 += amount;
 			if(progress1 >= recipe1.energy)
 			{
 				ItemStack output = recipe1.getOutput(inventory.stacks[smeltingInput1]);
-				if(inventory.addStack(smeltingOutput1, output, false) == output.stackSize)
+				if(output == null || inventory.addStack(smeltingOutput1, output, false) == output.stackSize)
 				{
 					inventory.decrStack(smeltingInput1, recipe1.input, true);
 					inventory.addStack(smeltingOutput1, output, true);
@@ -210,7 +211,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 				progress2 = 0;
 				recipe2 = recipe;
 			}
-			amount = (helper.temperature() - recipe2.minTemp1) * helper.thermalConductivity;
+			amount = (helper.temperature() + envior - recipe2.minTemp1) * helper.thermalConductivity;
 			helper.emit(amount);
 			progress2 += amount;
 			if(progress2 >= recipe2.energy)
@@ -271,7 +272,11 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	@Override
 	public void addDebugInformation(List<String> list)
 	{
-		list.add("temp : " + getTemperature(Direction.Q));
+		list.add("Temp : " + getTemperature(Direction.Q));
+		if(recipe1 != null)
+		{
+			list.add("Progress : " + progress1 / recipe1.energy);
+		}
 	}
 
 	@Override

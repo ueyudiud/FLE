@@ -17,6 +17,8 @@ public class FarFoodStats extends FoodStats
 {
 	protected static final float maxFoodLevel = 1000F;
 	
+	protected long tick = Long.MIN_VALUE;
+	
     /** The player's food level. */
     protected float foodLevel = 1000F;
     /** The player's food saturation. */
@@ -28,9 +30,6 @@ public class FarFoodStats extends FoodStats
     /** The player's food timer value. */
     protected int foodTimer;
     
-    protected int hungerTimer;
-    
-    protected int digestTimer;
     protected float prevFoodLevel = 1000F;
     
     @Override
@@ -62,31 +61,28 @@ public class FarFoodStats extends FoodStats
     	EnumDifficulty difficulty = player.worldObj.difficultySetting;
     	prevFoodLevel = foodLevel;
 
-    	++hungerTimer;
-    	if (hungerTimer >= 1500)
+    	long tick1 = U.Time.getTime(player.worldObj);
+    	if(tick == Long.MIN_VALUE)
+    		tick = tick1;
+    	if(tick1 - tick > 150)
     	{
-    		hungerTimer = 0;
-    		addExhaustion(12.5F);
-    	}
-    	if (foodDigestionLevel > 0F && foodLevel > 100F)
-    	{
-    		digestTimer++;
-    		if(digestTimer >= 8)
-    		{
-    			digestTimer = 0;
-    			float a = Math.min(foodDigestionLevel, 1F);
-    			foodDigestionLevel -= a;
-    			addFoodStats(a);
-    		}
-    	}
-    	if (foodExhaustionLevel > 1.0F)
-        {
-            foodExhaustionLevel -= 1.0F;
+    		tick += 150;
+    		addExhaustion(1.5F);
+        	if (foodDigestionLevel > 0F && foodLevel > 100F)
+        	{
+        		float a = Math.min(foodDigestionLevel, 15F);
+        		foodDigestionLevel -= a;
+        		addFoodStats(a);
+        	}
+        	if (foodExhaustionLevel > 1.0F)
+            {
+                foodExhaustionLevel -= 1.0F;
 
-            float a = Math.min(1F, foodSaturationLevel);
-            foodSaturationLevel -= a;
-            foodLevel = Math.max(foodLevel - (1F - a), 0);
-        }
+                float a = Math.min(1F, foodSaturationLevel);
+                foodSaturationLevel -= a;
+                foodLevel = Math.max(foodLevel - (1F - a), 0);
+            }
+    	}
     	if(player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && foodLevel >= 400F && player.shouldHeal())
     	{
     		++foodTimer;
@@ -127,10 +123,10 @@ public class FarFoodStats extends FoodStats
         {
             this.foodLevel = nbt.getFloat("foodLevel");
             this.foodTimer = nbt.getInteger("foodTickTimer");
-            this.hungerTimer = nbt.getInteger("hungerTimer");
             this.foodSaturationLevel = nbt.getFloat("foodSaturationLevel");
             this.foodExhaustionLevel = nbt.getFloat("foodExhaustionLevel");
             this.foodDigestionLevel = nbt.getFloat("foodDigestionLevel");
+            this.tick = nbt.getLong("tick");
         }
     }
     
@@ -139,10 +135,10 @@ public class FarFoodStats extends FoodStats
     {
         nbt.setFloat("foodLevel", this.foodLevel);
         nbt.setInteger("foodTickTimer", this.foodTimer);
-        nbt.setInteger("hungerTimer", this.hungerTimer);
         nbt.setFloat("foodSaturationLevel", this.foodSaturationLevel);
         nbt.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
         nbt.setFloat("foodDigestionLevel", this.foodDigestionLevel);
+        nbt.setLong("tick", tick);
     }
     
     /**

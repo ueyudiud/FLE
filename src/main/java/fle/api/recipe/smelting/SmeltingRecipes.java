@@ -91,6 +91,10 @@ public class SmeltingRecipes
 		
 		public ItemStack getOutput(ItemStack stack)
 		{
+			if(minTemp2 < 0)
+			{
+				return output1.copy();
+			}
 			float temp;
 			if(stack.getItem() instanceof IThermalItem)
 			{

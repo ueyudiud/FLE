@@ -22,7 +22,7 @@ public class GuiCampfire extends GuiBase<TileEntityCampfire>
 		if(inventory.isBurning())
 		{
 			int scale = inventory.getBurningProgress(42);
-			drawTexturedModalRect(xOffset + 98, yOffset + 44 + 42 - scale, 176, 42 - scale, 38, scale);
+			drawTexturedModalRect(xOffset + 94, yOffset + 44 + 42 - scale, 176, 42 - scale, 38, scale);
 		}
 	}
 
