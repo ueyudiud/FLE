@@ -4,13 +4,13 @@ import net.minecraft.item.ItemStack;
 
 public interface IFuelValue
 {
-	float getMaxTempreture();
+	float getMaxTempreture(ItemStack stack);
 	
-	float getMinBurnPoint();
+	float getMinBurnPoint(ItemStack stack);
 	
-	float getMaxPower(float tempreture);
+	float getMaxPower(ItemStack stack, float tempreture);
 	
-	int getEnergyCurrent();
+	int getEnergyCurrent(ItemStack stack);
 	
-	ItemStack getOutput();
+	ItemStack getOutput(ItemStack stack);
 }

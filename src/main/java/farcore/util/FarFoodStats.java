@@ -38,6 +38,11 @@ public class FarFoodStats extends FoodStats
     {
     	addFoodDigestionStats(level * 50F, saturation * 50F);
     }
+
+	public void addFoodDigestionStats(NutritionInfo info)
+	{
+		addFoodDigestionStats(info.hungerApply, info.nutrApply);
+	}
     
     public void addFoodDigestionStats(float level, float saturation)
     {

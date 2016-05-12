@@ -73,12 +73,12 @@ public class Inventory implements IInventory
 	    }
 	}
 	  
-	public void writeToNBT(NBTTagCompound data)
+	public void writeToNBT(NBTTagCompound nbt)
 	{
-		writeToNBT(data, "items");
+		writeToNBT(nbt, "items");
 	}
 	  
-	public void writeToNBT(NBTTagCompound data, String tag)
+	public void writeToNBT(NBTTagCompound nbt, String tag)
 	{
 		NBTTagList slots = new NBTTagList();
 		for (byte index = 0; index < stacks.length; index = (byte)(index + 1))
@@ -91,7 +91,7 @@ public class Inventory implements IInventory
 				slots.appendTag(slot);
 			}
 	    }
-	    data.setTag(tag, slots);
+	    nbt.setTag(tag, slots);
 	}
 	  
 	@Override
@@ -394,7 +394,7 @@ public class Inventory implements IInventory
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player)
 	{
-		return tile == INSTANCE ? true : 
+		return tile == INSTANCE ? true : !tile.isInvalid() &&
 			player.getDistanceSq(tile.xCoord + 0.5, tile.yCoord + 0.5, tile.zCoord + 0.5) <= 64;
 	}
 

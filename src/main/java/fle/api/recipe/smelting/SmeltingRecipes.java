@@ -7,6 +7,7 @@ import farcore.interfaces.energy.thermal.IThermalItem;
 import farcore.lib.stack.AbstractStack;
 import fle.api.util.TemperatureHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class SmeltingRecipes
 {
@@ -16,6 +17,19 @@ public class SmeltingRecipes
 	{
 		recipes.put(name, recipe);
 		recipe.name = name;
+	}
+	
+	public static SmeltingRecipe loadRecipe(NBTTagCompound nbt, String tag)
+	{
+		return !nbt.hasKey(tag) ? null : recipes.get(nbt.getString(tag));
+	}
+	
+	public static void saveRecipe(NBTTagCompound nbt, String tag, SmeltingRecipe recipe)
+	{
+		if(recipe != null)
+		{
+			nbt.setString(tag, recipe.name);
+		}
 	}
 	
 	public static SmeltingRecipe getMatchedRecipe(ItemStack input)

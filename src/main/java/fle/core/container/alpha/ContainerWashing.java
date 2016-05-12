@@ -12,9 +12,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.world.World;
 
 public class ContainerWashing extends ContainerBase<InventoryWashing> implements IGuiUpdatable
-{
-	private int lastTick;
-	
+{	
 	public ContainerWashing(EntityPlayer player, World world, int x, int y, int z)
 	{
 		super(new InventoryWashing(), player);
@@ -41,35 +39,24 @@ public class ContainerWashing extends ContainerBase<InventoryWashing> implements
 	}
 	
 	@Override
-	public void addCraftingToCrafters(ICrafting crafter)
+	protected int getUpdateSize()
 	{
-		super.addCraftingToCrafters(crafter);
-		crafter.sendProgressBarUpdate(this, 0, lastTick);
+		return 1;
 	}
 	
 	@Override
-	public void detectAndSendChanges()
+	protected int getUpdate(int id)
 	{
-		super.detectAndSendChanges();
-		for(Object rawCrafter : crafters)
-		{
-			ICrafting crafter = (ICrafting) rawCrafter;
-			if(inventory.progress != lastTick)
-			{
-				crafter.sendProgressBarUpdate(this, 0, inventory.progress);
-			}
-		}
-		lastTick = inventory.progress;
+		return id == 0 ? inventory.progress : 0;
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int value)
+	@Override
+	protected void setUpdate(int id, int value)
 	{
 		if(id == 0)
 		{
-			lastTick = value;
+			inventory.progress = value;
 		}
-		inventory.progress = lastTick;
 	}
 	
 	@Override

@@ -15,20 +15,16 @@ import farcore.lib.net.gui.PacketFluidUpdateLarge;
 import farcore.util.U;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fluids.FluidStack;
-import scala.collection.generic.BitOperations.Int;
 
 public class ContainerBase<I extends IInventory> extends Container
 {
+	protected int[] lastCache;
 	public I inventory;
 	protected EntityPlayer player;
 	public List<FluidSlot> fluidSlotList = new ArrayList();
@@ -50,7 +46,7 @@ public class ContainerBase<I extends IInventory> extends Container
 
 	protected void addPlayerSlot()
 	{
-		addPlayerSlot(0, 0);
+		addPlayerSlot(8, 142);
 	}
 	protected void addPlayerSlot(int xOffset, int yOffset)
 	{
@@ -61,17 +57,32 @@ public class ContainerBase<I extends IInventory> extends Container
         {
             for (int j = 0; j < 9; ++j)
             {
-                addSlotToContainer(new SlotBase(player.inventory, j + i * 9 + 9, 8 + j * 18 + xOffset, 84 + i * 18 + yOffset));
+                addSlotToContainer(new SlotBase(player.inventory, j + i * 9 + 9, j * 18 + xOffset, i * 18 + yOffset));
             }
         }
 
         for (i = 0; i < 9; ++i)
         {
-            addSlotToContainer(new SlotBase(player.inventory, i, 8 + i * 18 + xOffset, 142 + yOffset));
+            addSlotToContainer(new SlotBase(player.inventory, i, i * 18 + xOffset, 58 + yOffset));
         }
         addTransLocate(locateBag = new TransLocate("bag", 0 + idOffset, 27 + idOffset, false, false));
         addTransLocate(locateHand = new TransLocate("hand", 27 + idOffset, 36 + idOffset, false, false));
         addTransLocate(locatePlayer = new TransLocate("player", 0 + idOffset, 36 + idOffset, true, false));
+	}
+	
+	protected int getUpdateSize()
+	{
+		return 0;
+	}
+	
+	protected void setUpdate(int id, int value)
+	{
+		
+	}
+	
+	protected int getUpdate(int id)
+	{
+		return 0;
 	}
 
 	protected void addTransLocate(TransLocate locate)
@@ -97,6 +108,10 @@ public class ContainerBase<I extends IInventory> extends Container
 	public void addCraftingToCrafters(ICrafting crafter)
     {
     	super.addCraftingToCrafters(crafter);
+    	for(int i = 0; i < getUpdateSize(); ++i)
+    	{
+    		crafter.sendProgressBarUpdate(this, i, getUpdate(i));
+    	}
 		if(crafter instanceof EntityPlayerMP)
 		{
 			if(!fluidSlotList.isEmpty())
@@ -130,6 +145,38 @@ public class ContainerBase<I extends IInventory> extends Container
 				}
 			}
 		}
+		if(lastCache == null)
+		{
+			lastCache = new int[getUpdateSize()];
+			int value;
+			for(int i = 0; i < getUpdateSize(); ++i)
+			{
+				value = getUpdate(i);
+				for(Object obj : crafters)
+				{
+					ICrafting crafter = (ICrafting) obj;
+					crafter.sendProgressBarUpdate(this, i, value);
+				}
+				lastCache[i] = value;
+			}
+		}
+		else
+		{
+			List<int[]> changed = new ArrayList();
+			int value;
+			for(int i = 0; i < getUpdateSize(); ++i)
+			{
+				if((value = getUpdate(i)) != lastCache[i])
+				{
+					for(Object obj : crafters)
+					{
+						ICrafting crafter = (ICrafting) obj;
+						crafter.sendProgressBarUpdate(this, i, value);
+					}
+					lastCache[i] = value;
+				}
+			}
+		}
 //		for(int i = 0; i < solidSlotList.size(); ++i)
 //		{
 //			SolidStack solid1 = solidSlotList.get(i).getStack();
@@ -148,7 +195,11 @@ public class ContainerBase<I extends IInventory> extends Container
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int id, int value)
 	{
-		
+		if(lastCache == null)
+		{
+			lastCache = new int[getUpdateSize()];
+		}
+		setUpdate(id, lastCache[id] = value);
 	}
 	
 	@Override

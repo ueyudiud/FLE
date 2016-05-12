@@ -10,10 +10,12 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.interfaces.energy.thermal.IThermalItem;
 import farcore.util.U;
 import farcore.util.V;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -35,6 +37,14 @@ public class FarCoreGuiHandler
 				{
 					event.toolTip.add(OreDictionary.getOreName(id));
 				}
+			}
+			if(event.itemStack.getItem() instanceof IThermalItem)
+			{
+				IThermalItem item = (IThermalItem) event.itemStack.getItem();
+				event.toolTip.add("====Thermal Info====");
+				event.toolTip.add("Temperature : " + EnumChatFormatting.RED + item.getTemperature(event.itemStack) + "K");
+				event.toolTip.add("Thermal Conductivity : " + EnumChatFormatting.WHITE + item.getThermalConductivity(event.itemStack) + "W/m");
+				event.toolTip.add("====================");
 			}
 		}
 	}

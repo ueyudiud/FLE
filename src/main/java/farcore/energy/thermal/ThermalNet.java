@@ -84,7 +84,7 @@ public class ThermalNet implements IEnergyNet
 			tile = world.getTileEntity(x + direction.x, y + direction.y, z + direction.z);
 			if(tile instanceof IThermalTile)
 			{
-				temp += ((IThermalTile) block).getTemperature(direction.getOpposite());
+				temp += ((IThermalTile) tile).getTemperature(direction.getOpposite());
 				++count;
 				continue;
 			}

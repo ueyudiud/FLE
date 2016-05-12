@@ -5,6 +5,7 @@ import static farcore.util.U.OreDict.registerValid;
 import farcore.enums.EnumItem;
 import farcore.enums.EnumToolType;
 import farcore.lib.substance.SubstanceRock;
+import farcore.lib.substance.SubstanceWood;
 import farcore.util.U;
 
 public class OreDicts
@@ -18,6 +19,10 @@ public class OreDicts
 			registerValid("cobble" + ore, EnumItem.cobble_block.instance(1, rock));
 			registerValid("chip" + ore, EnumItem.stone_chip.instance(1, rock.getName()));
 			registerValid("fragment" + ore, EnumItem.stone_fragment.instance(1, rock.getName()));
+		}
+		for(SubstanceWood wood : SubstanceWood.getWoods())
+		{
+			registerValid("firewood", EnumItem.plant.instance(1, "firewood_" + wood.getName()));
 		}
 		registerValid("fragmentFlint", EnumItem.stone_fragment.instance(1, "flint"));
 		registerValid("chipSharpFlint", EnumItem.stone_chip.instance(1, "flintSharp"));

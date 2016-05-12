@@ -91,7 +91,8 @@ public enum EnumItem
 	 * SubstanceWood field log).
 	 */
 	log_block,
-	brick_block;
+	brick_block, 
+	food_smeltable;
 	
 	boolean init = false;
 	AbstractStack stack;

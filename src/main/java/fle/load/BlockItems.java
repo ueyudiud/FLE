@@ -12,16 +12,19 @@ import fle.core.block.BlockSand;
 import fle.core.block.BlockSnow;
 import fle.core.block.BlockTorch;
 import fle.core.block.BlockWater;
+import fle.core.block.machine.alpha.BlockCampfire;
+import fle.core.block.machine.alpha.BlockWithOutTileAlpha;
 import fle.core.block.plant.BlockBush1;
 import fle.core.block.plant.BlockVine1;
-import fle.core.block.plant.BlockWithOutTileAlpha;
 import fle.core.item.ItemLog;
 import fle.core.item.ItemToolFle;
 import fle.core.item.ItemToolHeadFle;
+import fle.core.item.resource.ItemFleSmeltableFood;
 import fle.core.item.resource.ItemPile;
 import fle.core.item.resource.ItemPlant;
 import fle.core.item.resource.ItemStoneChip;
 import fle.core.item.resource.ItemStoneFragment;
+import fle.core.tile.TileEntityCampfire;
 import fle.core.tile.TileEntityTorch;
 import fle.core.tile.statics.TileEntityOre;
 import fle.core.tile.statics.TileEntityRock;
@@ -41,6 +44,7 @@ public class BlockItems
 	public static Block bush1;
 	public static Block ore;
 	public static Block snow;
+	public static Block campfire;
 	
 	public static Block machineIAlpha;
 	
@@ -51,6 +55,7 @@ public class BlockItems
 	public static Item stoneFragment;
 	public static Item pile;
 	public static Item log;
+	public static Item smeltableFood;
 	
 	public static void init()
 	{
@@ -65,11 +70,12 @@ public class BlockItems
 		bush1 = new BlockBush1("bush1").setBlockTextureName("fle:plant");
 		vine1 = new BlockVine1("vine1").setBlockTextureName("fle:plant");
 		ore = new BlockOre().setBlockTextureName("fle:ore");
-		snow = new BlockSnow().setBlockTextureName("fle:snow");
 		GameRegistry.registerTileEntity(TileEntityOre.class, "fle.ore");
+		snow = new BlockSnow().setBlockTextureName("fle:snow");
 		BlockRock.init();
 		BlockSand.init();
-		GameRegistry.registerTileEntity(TileEntityRock.class, "rock");
+		campfire = new BlockCampfire().setBlockTextureName("fle:campfire");
+		GameRegistry.registerTileEntity(TileEntityCampfire.class, "fle.campfire");
 		machineIAlpha = new BlockWithOutTileAlpha().setBlockTextureName("fle:machine/alpha");
 		
 		tools = new ItemToolFle().setCreativeTab(CreativeTabs.tabTools);
@@ -79,5 +85,6 @@ public class BlockItems
 		pile = new ItemPile().setCreativeTab(CreativeTabs.tabMaterials);
 		log = new ItemLog().setCreativeTab(CreativeTabs.tabMaterials);
 		plant = new ItemPlant().setCreativeTab(CreativeTabs.tabMaterials);
+		smeltableFood = new ItemFleSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
 	}
 }

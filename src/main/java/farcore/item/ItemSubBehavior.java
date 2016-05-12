@@ -569,4 +569,10 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		}
 		return 1.0F;
 	}
+	
+	@Override
+	public boolean isRepairable()
+	{
+		return false;
+	}
 }
