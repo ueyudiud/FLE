@@ -183,13 +183,21 @@ implements IDescribableTile
 		}
 	}
 	
-	@Override
+	@Override	
 	public void setLightValue(int value)
 	{
 		if(light != value)
 		{
 			light = value;
-			worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
+			if(!worldObj.isRemote)
+			{
+				syncToNearby();
+			}
+			else
+			{
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
+			}
 		}
 	}
 }

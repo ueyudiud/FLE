@@ -67,7 +67,7 @@ public class ItemSmeltableFood extends ItemFood implements IInfomationable, IThe
 		{
 			return ((IThermalBehavior) behavior).canOutputThermalEnergy();
 		}
-		return false;
+		return true;
 	}
 	
 	@Override

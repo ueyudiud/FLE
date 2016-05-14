@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.EnumSkyBlock;
 
 public class TileEntityBase extends TileEntity
 {
@@ -78,6 +79,11 @@ public class TileEntityBase extends TileEntity
 				updateServer();
 			}
 		}
+		int value = calculateLightValue();
+		if(value != light)
+		{
+			setLightValue(value);
+		}
 	}
 	
 	protected boolean init()
@@ -115,6 +121,11 @@ public class TileEntityBase extends TileEntity
 		
 	}
 	
+	protected int calculateLightValue()
+	{
+		return 0;
+	}
+	
 	public int getLightValue()
 	{
 		return light;
@@ -132,7 +143,15 @@ public class TileEntityBase extends TileEntity
 		if(light != value)
 		{
 			light = value;
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			if(!worldObj.isRemote)
+			{
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
+			else
+			{
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
+			}
 		}
 	}
 }

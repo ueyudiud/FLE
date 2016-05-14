@@ -18,6 +18,8 @@ public class Icons
 	public static IIcon block_polish_top;
 	public static IIcon block_polish_side;
 	public static IIcon block_polish_bottom;
+	public static IIcon firewood_top;
+	public static IIcon firewood_side;
 
 	@SideOnly(Side.CLIENT)
 	public static class Bottoms implements ITextureLoadListener

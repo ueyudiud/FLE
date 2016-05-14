@@ -22,6 +22,7 @@ import fle.core.item.ItemToolHeadFle;
 import fle.core.item.resource.ItemFleSmeltableFood;
 import fle.core.item.resource.ItemPile;
 import fle.core.item.resource.ItemPlant;
+import fle.core.item.resource.ItemStick;
 import fle.core.item.resource.ItemStoneChip;
 import fle.core.item.resource.ItemStoneFragment;
 import fle.core.tile.TileEntityCampfire;
@@ -56,6 +57,7 @@ public class BlockItems
 	public static Item pile;
 	public static Item log;
 	public static Item smeltableFood;
+	public static Item stick;
 	
 	public static void init()
 	{
@@ -74,7 +76,7 @@ public class BlockItems
 		snow = new BlockSnow().setBlockTextureName("fle:snow");
 		BlockRock.init();
 		BlockSand.init();
-		campfire = new BlockCampfire().setBlockTextureName("fle:campfire");
+		campfire = new BlockCampfire().setBlockTextureName("fle:machine/alpha");
 		GameRegistry.registerTileEntity(TileEntityCampfire.class, "fle.campfire");
 		machineIAlpha = new BlockWithOutTileAlpha().setBlockTextureName("fle:machine/alpha");
 		
@@ -86,5 +88,6 @@ public class BlockItems
 		log = new ItemLog().setCreativeTab(CreativeTabs.tabMaterials);
 		plant = new ItemPlant().setCreativeTab(CreativeTabs.tabMaterials);
 		smeltableFood = new ItemFleSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
+		stick = new ItemStick().setTextureName("fle:resource/stick").setCreativeTab(CreativeTabs.tabMaterials);
 	}
 }

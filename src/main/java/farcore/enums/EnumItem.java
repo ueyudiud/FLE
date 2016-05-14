@@ -92,7 +92,8 @@ public enum EnumItem
 	 */
 	log_block,
 	brick_block, 
-	food_smeltable;
+	food_smeltable,
+	stick;
 	
 	boolean init = false;
 	AbstractStack stack;

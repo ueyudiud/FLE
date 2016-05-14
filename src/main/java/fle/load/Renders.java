@@ -6,6 +6,7 @@ import farcore.FarCore;
 import farcore.lib.render.RenderTreeSapling;
 import farcore.lib.render.RenderVine;
 import farcore.util.FleLog;
+import fle.core.render.RenderCampfire;
 import fle.core.render.RenderFire;
 import fle.core.render.RenderOre;
 import fle.core.render.RenderTorch;
@@ -21,6 +22,7 @@ public class Renders
 		FarCore.handlerA.register(BlockItems.fire, OreDictionary.WILDCARD_VALUE, RenderFire.class);
 		FarCore.handlerA.register(BlockItems.sapling, OreDictionary.WILDCARD_VALUE, RenderTreeSapling.class);
 		FarCore.handlerA.register(BlockItems.vine1, OreDictionary.WILDCARD_VALUE, RenderVine.class);
+		FarCore.handlerA.register(BlockItems.campfire, OreDictionary.WILDCARD_VALUE, RenderCampfire.class);
 		FarCore.handlerB.register(BlockItems.ore, OreDictionary.WILDCARD_VALUE, RenderOre.class);
 	}
 }

@@ -11,7 +11,7 @@ public class Values
 	public static final int large_mol = 324;
 	
 	public static final float C_0_Point = 273.15F;
-	public static final float standardThermalConductivity = 10F;
+	public static final float standardThermalConductivity = 8E-2F;
 	public static final float TP = 1.416833E32F;
 
 	public static final float minIceTemp = 247F;

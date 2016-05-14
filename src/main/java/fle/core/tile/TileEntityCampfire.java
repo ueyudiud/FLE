@@ -9,6 +9,8 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.enums.Direction;
 import farcore.enums.EnumDamageResource;
 import farcore.enums.EnumToolType;
+import farcore.event.EnergyEvent;
+import farcore.handler.FarCoreEnergyHandler;
 import farcore.interfaces.energy.thermal.IThermalTile;
 import farcore.interfaces.gui.IHasGui;
 import farcore.interfaces.tile.IDebugableTile;
@@ -44,7 +46,8 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	public static final int fuel2 = 10;
 	public static final int fuelOutput = 11;
 	
-	private ThermalHelper helper = new ThermalHelper(1.6E4F, 30F);
+	private ThermalHelper helper = new ThermalHelper(1.6E4F, 1.8E-1F);
+	private float enviorTempCache = -1;
 	private boolean isBurning;
 	private long upgrades = 0L;
 	private float burningTemp;
@@ -125,9 +128,39 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	}
 	
 	@Override
+	protected boolean init()
+	{
+		if(super.init())
+		{
+			FarCoreEnergyHandler.BUS.post(new EnergyEvent.Add(this));
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		FarCoreEnergyHandler.BUS.post(new EnergyEvent.Remove(this));
+	}
+	
+	@Override
+	public void onChunkUnload()
+	{
+		super.onChunkUnload();
+		FarCoreEnergyHandler.BUS.post(new EnergyEvent.Remove(this));
+	}
+	
+	@Override
+	protected void updateGeneral() 
+	{
+		enviorTempCache = ThermalNet.getEnviormentTemp(worldObj, xCoord, yCoord, zCoord);
+	}
+	
+	@Override
 	protected void updateServer1()
 	{
-		float envior = ThermalNet.getEnviormentTemp(worldObj, xCoord, yCoord, zCoord);
 		if(burningEnergy <= 0)
 		{
 			if(inventory.addStack(fuel1, inventory.stacks[fuel2], false) != 0)
@@ -170,12 +203,14 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 		}
 		if(burnedEnergy > 0)
 		{
-			amount = Math.min((burningTemp - helper.temperature() - envior + 1) * helper.thermalConductivity, burnedEnergy);
+			amount = Math.min((burningTemp - helper.temperature() - enviorTempCache + 1) * helper.thermalConductivity * 100, burnedEnergy);
 			helper.receive(amount);
 			burnedEnergy -= amount;
 		}
 		inventory.stacks[smeltingInput1] = TemperatureHandler.updateThermalItem(this, inventory.stacks[smeltingInput1]);
 		inventory.stacks[smeltingInput2] = TemperatureHandler.updateThermalItem(this, inventory.stacks[smeltingInput2]);
+		inventory.stacks[smeltingOutput1] = TemperatureHandler.updateThermalItem(this, inventory.stacks[smeltingOutput1]);
+		inventory.stacks[smeltingOutput2] = TemperatureHandler.updateThermalItem(this, inventory.stacks[smeltingOutput2]);
 		SmeltingRecipe recipe;
 		if((recipe = SmeltingRecipes.getMatchedRecipe(inventory.stacks[smeltingInput1])) != null)
 		{
@@ -184,7 +219,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 				progress1 = 0;
 				recipe1 = recipe;
 			}
-			amount = (helper.temperature() + envior - recipe1.minTemp1) * helper.thermalConductivity;
+			amount = (helper.temperature() + enviorTempCache - recipe1.minTemp1) * helper.thermalConductivity * 100;
 			helper.emit(amount);
 			progress1 += amount;
 			if(progress1 >= recipe1.energy)
@@ -211,7 +246,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 				progress2 = 0;
 				recipe2 = recipe;
 			}
-			amount = (helper.temperature() + envior - recipe2.minTemp1) * helper.thermalConductivity;
+			amount = (helper.temperature() + enviorTempCache - recipe2.minTemp1) * helper.thermalConductivity * 100;
 			helper.emit(amount);
 			progress2 += amount;
 			if(progress2 >= recipe2.energy)
@@ -240,6 +275,12 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	}
 
 	@Override
+	protected int calculateLightValue()
+	{
+		return burningEnergy > 0 ? 10 : 0;
+	}
+	
+	@Override
 	public boolean canConnectTo(Direction direction)
 	{
 		return true;
@@ -248,7 +289,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	@Override
 	public float getTemperature(Direction direction)
 	{
-		return helper.temperature() + ThermalNet.getEnviormentTemp(worldObj, xCoord, yCoord, zCoord);
+		return helper.temperature() + enviorTempCache;
 	}
 
 	@Override
