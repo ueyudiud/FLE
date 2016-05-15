@@ -1,9 +1,12 @@
 package fle.core.render;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.enums.Direction;
 import farcore.lib.render.RenderBase;
 import fle.load.BlockItems;
 
+@SideOnly(Side.CLIENT)
 public class RenderTorch extends RenderBase
 {
 	private RenderBox box_U;

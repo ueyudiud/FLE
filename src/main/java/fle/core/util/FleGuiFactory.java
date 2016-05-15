@@ -1,5 +1,7 @@
 package fle.core.util;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.lib.container.GuiFactory;
 import fle.api.gui.ContainerPlayerCraftingFle;
 import fle.api.gui.GuiPlayerCraftingFle;
@@ -25,8 +27,8 @@ public class FleGuiFactory extends GuiFactory
 		default: return null;
 		}
 	}
-	
-	@Override
+
+	@SideOnly(Side.CLIENT)
 	protected Object openClientGui(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		switch (ID)

@@ -68,6 +68,10 @@ public class SubstanceWood implements ISubstance
 	 * This two block is for tree generation.
 	 */
 	public Block log;
+	/**
+	 * The log which is already cut off from tree.
+	 */
+	public Block logArt;
 	public Block leaves;
 
 	public DropHandler leafDrop = DropHandler.EMPTY;

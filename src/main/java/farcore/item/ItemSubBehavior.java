@@ -67,6 +67,16 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		return new Register();
 	}
 	
+	public boolean hasSubItem(String name)
+	{
+		return register.contain(name);
+	}
+	
+	public boolean hasSubItem(int id)
+	{
+		return register.contain(id);
+	}
+	
 	public void addSubItem(int id, String name, String local, IBehavior behavior, IItemProperty property, IItemIconInfo iconInfo)
 	{
 		addSubItem(id, name, local, new ItemInfoMix(behavior, property), iconInfo);

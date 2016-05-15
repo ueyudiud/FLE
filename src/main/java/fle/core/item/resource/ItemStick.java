@@ -31,6 +31,12 @@ public class ItemStick extends ItemSubBehavior implements IThermalItem
 		}
 	}
 	
+	@Override
+	public String getMetaUnlocalizedName(int metadata)
+	{
+		return metadata == 0 ? "standard" : super.getMetaUnlocalizedName(metadata);
+	}
+	
 	public void addSubItem(int id, String name, String local)
 	{
 		super.addSubItem(id, name, local, BehaviorBase.SIMPLE, null);
@@ -64,6 +70,12 @@ public class ItemStick extends ItemSubBehavior implements IThermalItem
 	public IIcon getIconFromDamage(int meta)
 	{
 		return icon;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public int getColorFromItemStack(ItemStack stack, int pass) 
+	{
+		return 0xFFFFFF;
 	}
 
 	@Override

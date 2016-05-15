@@ -39,6 +39,7 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 			builder.put(wood.getName(), log1);
 			leaves.log = log;
 			wood.log = log;
+			wood.logArt = log1;
 			wood.leaves = leaves;
 			if(wood == SubstanceWood.WOOD_VOID)
 			{

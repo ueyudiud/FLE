@@ -410,7 +410,8 @@ public abstract class RenderBase
 		render.renderStandardBlock(block, x, y, z);
 		render.clearOverrideBlockTexture();
 	}
-	
+
+	@SideOnly(Side.CLIENT)
 	protected class RenderBox
 	{
 		IIcon[] icon = new IIcon[6];

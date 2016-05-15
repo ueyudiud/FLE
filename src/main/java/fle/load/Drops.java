@@ -1,5 +1,6 @@
 package fle.load;
 
+import farcore.block.plant.tree.BlockLog;
 import farcore.enums.EnumBlock;
 import farcore.enums.EnumItem;
 import farcore.enums.EnumToolType;
@@ -11,6 +12,7 @@ import farcore.lib.substance.SubstanceRock;
 import farcore.lib.substance.SubstanceWood;
 import farcore.util.FleLog;
 import farcore.util.U;
+import fle.api.item.ItemResource;
 import fle.api.util.BlockConditionMatcherIS;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -53,6 +55,13 @@ public class Drops
 		ToolDestoryDropRecipes.add(new BlockConditionMatcherIS(Blocks.dirt), new DropHandler(4, new Ety(new BaseStack(EnumItem.pile.instance(1, "dirt")), 1)));
 		ToolDestoryDropRecipes.add(new BlockConditionMatcherIS(Blocks.grass), new DropHandler(4, new Ety(new BaseStack(EnumItem.pile.instance(1, "dirt")), 1)));
 		ToolDestoryDropRecipes.add(new BlockConditionMatcherIS(EnumItem.sand_block.instance(1, "yellow")), new DropHandler(4, new Ety(new BaseStack(EnumItem.pile.instance(1, "sand")), 1)));
+		for(SubstanceWood wood : SubstanceWood.getWoods())
+		{
+			if(wood.logArt != null && ((ItemResource) EnumItem.plant.item()).hasSubItem("firewood_" + wood.getName()))
+			{
+				ToolDestoryDropRecipes.add(EnumToolType.axe.stack(), new BlockConditionMatcherIS(wood.logArt), new DropHandler(4, 2, new Ety(new BaseStack(EnumItem.plant.instance(1, "firewood_" + wood.getName())), 1)));
+			}
+		}
 		SubstanceWood.getSubstance("oak").setLeafDrop(
 				new DropHandler(0.125F, 1, 1, 
 						new Ety(EnumItem.plant.instance(1, "seed_oak"), 1),

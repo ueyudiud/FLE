@@ -15,11 +15,11 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-@SideOnly(Side.CLIENT)
 public class ItemToolCustomInfo implements IItemIconInfo
 {
 	private final String locate;
 	private final Set<String> set;
+	@SideOnly(Side.CLIENT)
 	private Map<String, IIcon> icons;
 	
 	public ItemToolCustomInfo(String locate, String...strings)
@@ -28,7 +28,7 @@ public class ItemToolCustomInfo implements IItemIconInfo
 		this.set = ImmutableSet.copyOf(strings);
 	}
 
-	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
 		icons = new HashMap();
@@ -38,7 +38,7 @@ public class ItemToolCustomInfo implements IItemIconInfo
 		}
 	}
 
-	@Override
+	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass)
 	{
 		try
@@ -51,13 +51,13 @@ public class ItemToolCustomInfo implements IItemIconInfo
 		}
 	}
 
-	@Override
+	@SideOnly(Side.CLIENT)
 	public int getColor(ItemStack stack, int pass)
 	{
 		return 0xFFFFFF;
 	}
 
-	@Override
+	@SideOnly(Side.CLIENT)
 	public int getPasses()
 	{
 		return 1;
