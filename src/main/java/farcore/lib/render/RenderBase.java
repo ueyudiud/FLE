@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 @SideOnly(Side.CLIENT)
 public abstract class RenderBase 
 {
-    private static final double RENDER_OFFSET = 0.001D;
+    private static final double RENDER_OFFSET = 1E-6D;
     protected static final double PIXEL_LENGTH = 0.0625D;
     static final float LIGHT_Y_POS = 1.0F;
 

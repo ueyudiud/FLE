@@ -6,6 +6,7 @@ import farcore.interfaces.item.IItemInfo;
 import farcore.lib.substance.SubstanceWood;
 import fle.api.item.ItemResource;
 import fle.api.item.behavior.BehaviorBlockable;
+import fle.core.item.behavior.BehaviorFirewood;
 import fle.load.BlockItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -39,15 +40,15 @@ public class ItemPlant extends ItemResource
 		addSubItem(2006, "branch_oak-black", "Dark Oak Branch", "branch_oak-black");
 		addSubItem(2101, "branch_bush", "Bush Branch", "branch_bush");
 
-		addSubItem(3001, "firewood_oak", "Oak Firewood", "firewood/oak");
-		addSubItem(3002, "firewood_spruce", "Spruce Firewood", "firewood/spruce");
-		addSubItem(3003, "firewood_birch", "Birch Firewood", "firewood/birch");
-		addSubItem(3004, "firewood_ceiba", "Ceiba Firewood", "firewood/ceiba");
-		addSubItem(3005, "firewood_acacia", "Acacia Firewood", "firewood/acacia");
-		addSubItem(3006, "firewood_oak-black", "Dark Oak Firewood", "firewood/oak-black");
-		addSubItem(3011, "firewood_aspen", "Aspen Firewood", "firewood/aspen");
-		addSubItem(3012, "firewood_morus", "Morus Firewood", "firewood/morus");
-		addSubItem(3013, "firewood_willow", "Willow Firewood", "firewood/willow");
+		addSubItem(3001, "firewood_oak", "Oak Firewood", new BehaviorFirewood(), "firewood/oak");
+		addSubItem(3002, "firewood_spruce", "Spruce Firewood", new BehaviorFirewood(), "firewood/spruce");
+		addSubItem(3003, "firewood_birch", "Birch Firewood", new BehaviorFirewood(), "firewood/birch");
+		addSubItem(3004, "firewood_ceiba", "Ceiba Firewood", new BehaviorFirewood(), "firewood/ceiba");
+		addSubItem(3005, "firewood_acacia", "Acacia Firewood", new BehaviorFirewood(), "firewood/acacia");
+		addSubItem(3006, "firewood_oak-black", "Dark Oak Firewood", new BehaviorFirewood(), "firewood/oak-black");
+		addSubItem(3011, "firewood_aspen", "Aspen Firewood", new BehaviorFirewood(), "firewood/aspen");
+		addSubItem(3012, "firewood_morus", "Morus Firewood", new BehaviorFirewood(), "firewood/morus");
+		addSubItem(3013, "firewood_willow", "Willow Firewood", new BehaviorFirewood(), "firewood/willow");
 		
 		addSubItem(10001, "vine", "Vine", "vine");
 		addSubItem(10002, "vine_rope", "Vine Rope", "vine_rope");

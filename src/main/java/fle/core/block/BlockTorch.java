@@ -15,7 +15,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCore;
 import farcore.block.BlockHasTile;
 import farcore.enums.Direction;
+import farcore.enums.EnumDamageResource;
 import farcore.enums.EnumItem;
+import farcore.enums.EnumToolType;
 import farcore.lib.substance.SubstanceWood;
 import farcore.util.LanguageManager;
 import farcore.util.U;
@@ -35,6 +37,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -89,8 +92,8 @@ public class BlockTorch extends BlockHasTile
     {
         return FarCore.handlerA.getRenderId();
     }
-    
-    @Override
+
+    @SideOnly(Side.CLIENT)
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
     {
     	TileEntity tile = world.getTileEntity(x, y, z);
@@ -101,14 +104,14 @@ public class BlockTorch extends BlockHasTile
     	return iconExtinguished;
     }
     
-    @Override
+    @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister register)
     {
     	iconExtinguished = register.registerIcon(getTextureName() + "_extinguished");
     	blockIcon = register.registerIcon(getTextureName() + "_burning");
     }
-	
-    @Override
+
+    @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item item, CreativeTabs tag, List list)
     {
     	for(SubstanceWood wood : SubstanceWood.getWoods())
@@ -116,6 +119,14 @@ public class BlockTorch extends BlockHasTile
     		ItemStack stack = new ItemStack(item, 1);
     		list.add(setSubstance(stack, wood));
     	}
+    }
+    
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z)
+    {
+    	TileEntity tile;
+    	return ((tile = world.getTileEntity(x, y, z)) instanceof TileEntityTorch ?
+    			((TileEntityTorch) tile).isBurning() ? 13 : 0 : 0);
     }
     
 	@Override
@@ -183,13 +194,14 @@ public class BlockTorch extends BlockHasTile
 			EntityPlayer player, int side, float xPos, float yPos, float zPos)
 	{
 		if(player.getCurrentEquippedItem() != null &&
-				player.getCurrentEquippedItem().getItem() == Items.flint_and_steel)
+				EnumToolType.firestarter.match(player.getCurrentEquippedItem()))
 		{
-			player.getCurrentEquippedItem().damageItem(1, player);
+			U.Inventorys.damage(player.getCurrentEquippedItem(), player, 0.08F, EnumDamageResource.USE);
 			if(!world.isRemote && world.getTileEntity(x, y, z) instanceof TileEntityTorch)
 			{
 				((TileEntityTorch) world.getTileEntity(x, y, z)).setBurnState(true);
 			}
+			world.updateLightByType(EnumSkyBlock.Block, x, y, z);
 			return true;
 		}
 		return false;
