@@ -2,6 +2,7 @@ package fle.api.gui;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.handler.FarCoreAchievementHandler;
 import farcore.inventory.Inventory;
 import farcore.lib.container.ContainerBase;
 import farcore.lib.container.SlotBase;
@@ -27,10 +28,7 @@ public class ContainerPlayerCraftingFle extends ContainerBase<InventoryCraftingF
     private int posX;
     private int posY;
     private int posZ;
-    
-    private int lastTick;
-    private int lastMaxTick;
-    
+        
     private boolean isChecking = false;
     private boolean isCrafting = false;
     private IFleRecipe recipe;
@@ -105,35 +103,19 @@ public class ContainerPlayerCraftingFle extends ContainerBase<InventoryCraftingF
 	}
 	
 	@Override
-	public void addCraftingToCrafters(ICrafting crafter)
+	protected int getUpdateSize()
 	{
-		super.addCraftingToCrafters(crafter);
-		crafter.sendProgressBarUpdate(this, 0, tick);
-		crafter.sendProgressBarUpdate(this, 1, maxTick);
+		return 2;
 	}
 	
 	@Override
-	public void detectAndSendChanges()
+	protected int getUpdate(int id)
 	{
-		super.detectAndSendChanges();
-		for(Object object : crafters)
-		{
-			ICrafting crafter = (ICrafting) object;
-			if(lastTick != tick)
-			{
-				crafter.sendProgressBarUpdate(this, 0, tick);
-			}
-			if(lastMaxTick != maxTick)
-			{
-				crafter.sendProgressBarUpdate(this, 1, maxTick);
-			}
-		}
-		lastTick = tick;
-		lastMaxTick = maxTick;
+		return id == 0 ? tick : maxTick;
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int value)
+	@Override
+	protected void setUpdate(int id, int value)
 	{
 		if(id == 0)
 		{
@@ -143,9 +125,8 @@ public class ContainerPlayerCraftingFle extends ContainerBase<InventoryCraftingF
 		{
 			maxTick = value;
 		}
-		super.updateProgressBar(id, value);
 	}
-    
+	
 	@Override
 	public void update()
 	{
