@@ -53,19 +53,11 @@ public class FarCoreRegistry
 		FarCore.handlerA.register(block, meta, clazz);
 	}
 	
-	/**
-	 * Register event listener to MF event bus.
-	 * @param object
-	 */
 	public static void registerMFEventHandler(Object object)
 	{
 		MinecraftForge.EVENT_BUS.register(object);
 	}
 	
-	/**
-	 * Register event listener to FML event bus.
-	 * @param object
-	 */
 	public static void registerFMLEventHandler(Object object)
 	{
 		FMLCommonHandler.instance().bus().register(object);
@@ -81,13 +73,6 @@ public class FarCoreRegistry
 	{
 		return FleTextureMap.TextureMapRegistry.newTextureMap(name);
 	}
-	
-	/**
-	 * Create a new texture map.
-	 * @param name The name and locate of texture map.
-	 * @param skipFirst
-	 * @return
-	 */
 	@SideOnly(Side.CLIENT)
 	public static FleTextureMap newTextureMap(String name, boolean skipFirst)
 	{

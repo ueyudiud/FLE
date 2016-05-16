@@ -35,7 +35,6 @@ import farcore.energy.electric.ElectricNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.ThermalNet;
 import farcore.entity.EntityFallingBlockExtended;
-import farcore.handler.FarCoreAchievementHandler;
 import farcore.handler.FarCoreCraftingHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreGuiHandler;
@@ -163,9 +162,6 @@ public class FarCoreSetup
 		registerMFEventHandler(new FarCoreHarvestHandler());
 		handler = new FarCoreEnergyHandler();
 		FarCoreEnergyHandler.BUS.register(handler);
-		registerMFEventHandler(handler);
-		registerFMLEventHandler(handler);
-		handler = new FarCoreAchievementHandler();
 		registerMFEventHandler(handler);
 		registerFMLEventHandler(handler);
 		registerFMLEventHandler(new FarCoreCraftingHandler());

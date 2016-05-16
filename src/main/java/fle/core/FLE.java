@@ -17,7 +17,6 @@ import farcore.FarCore;
 import farcore.util.FleLog;
 import fle.api.FleAPI;
 import fle.core.util.FleGuiFactory;
-import fle.load.Achievements;
 import fle.load.Biomes;
 import fle.load.BlockItems;
 import fle.load.Drops;
@@ -73,7 +72,6 @@ public class FLE
 		Drops.init();
 		Worlds.init();
 		Biomes.init();
-		Achievements.init();
 	}
 	
 	@EventHandler
