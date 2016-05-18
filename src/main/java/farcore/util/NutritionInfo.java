@@ -48,7 +48,20 @@ public final class NutritionInfo
 	public NutritionInfo copy()
 	{
 		NutritionInfo info = make();
+		info.hungerApply = hungerApply;
+		info.nutrApply = nutrApply;
 		info.amountN = amountN.clone();
+		info.amountT = amountT.clone();
+		return info;
+	}
+	
+	public NutritionInfo multiply(float mul)
+	{
+		NutritionInfo info = make();
+		info.hungerApply = (int) (hungerApply * mul);
+		info.nutrApply = nutrApply * mul;
+		info.amountN = amountN.clone();
+		for(int i = 0; i < info.amountN.length; info.amountN[i++] *= mul);
 		info.amountT = amountT.clone();
 		return info;
 	}

@@ -1,7 +1,5 @@
 package fle.load;
 
-import farcore.block.plant.tree.BlockLog;
-import farcore.enums.EnumBlock;
 import farcore.enums.EnumItem;
 import farcore.enums.EnumToolType;
 import farcore.lib.collection.Ety;
@@ -15,7 +13,6 @@ import farcore.util.U;
 import fle.api.item.ItemResource;
 import fle.api.util.BlockConditionMatcherIS;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class Drops

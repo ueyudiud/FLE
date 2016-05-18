@@ -48,6 +48,7 @@ public class OreDicts
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_acacia"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_oak-black"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_bush"));
+		registerValid("stickWood", BlockItems.stick);
 		registerValid("vine", EnumItem.plant.instance(1, "vine"));
 		registerValid("ropeVine", EnumItem.plant.instance(1, "vine_rope"));
 	}

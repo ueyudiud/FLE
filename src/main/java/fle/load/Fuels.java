@@ -1,12 +1,10 @@
 package fle.load;
 
-import farcore.enums.EnumItem;
 import farcore.lib.stack.OreStack;
 import fle.api.fuel.FuelHandler;
 import fle.api.fuel.IFuelManager;
 import fle.api.fuel.IFuelValue;
 import net.minecraft.item.ItemStack;
-import scala.annotation.varargs;
 
 public class Fuels implements IFuelManager
 {

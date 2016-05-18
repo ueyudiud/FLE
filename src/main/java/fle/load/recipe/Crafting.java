@@ -1,6 +1,5 @@
 package fle.load.recipe;
 
-import farcore.enums.EnumBlock;
 import farcore.enums.EnumItem;
 import farcore.enums.EnumToolType;
 import farcore.lib.collection.Ety;
@@ -8,6 +7,7 @@ import farcore.lib.recipe.FleCraftingManager;
 import farcore.lib.recipe.IFleRecipe;
 import farcore.lib.recipe.ShapedFleRecipe;
 import farcore.lib.recipe.ShapelessFleRecipe;
+import fle.api.recipe.FoodUseCraftingRecipe;
 import fle.api.recipe.LogCutRecipe;
 import fle.api.recipe.ToolSingleCraftingRecipe;
 import fle.load.BlockItems;
@@ -41,6 +41,11 @@ public class Crafting
 		{
 			registerShapelessRecipe(EnumItem.tool.instance(1, "rough_stone_adz", element[0]), 100, "branchWood", "ropeVine", "chip" + element[1]);
 		}
+		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "beef_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "beef_raw"), "stickWood"));
+		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "chicken_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "chicken_raw"), "stickWood"));
+		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "fish_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "fish_raw"), "stickWood"));
+		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "pork_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "pork_raw"), "stickWood"));
+		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "squid_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "squid_raw"), "stickWood"));
 		registerRecipe(new ToolSingleCraftingRecipe("flint_hammer", 0.7F, 140, "branchWood", "ropeVine"));
 		registerRecipe(new ToolSingleCraftingRecipe("flint_hammer", 1.0F, 100, "stickWood", "ropeVine"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_axe", 0.7F, 140, "branchWood", "ropeVine"));

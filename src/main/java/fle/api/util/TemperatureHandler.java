@@ -9,15 +9,17 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TemperatureHandler
 {
+	public static final String temperatureKey = "temp";
+	
 	public static float getTemperature(ItemStack stack)
 	{
 		NBTTagCompound nbt = U.Inventorys.setupNBT(stack, false);
-		return nbt.hasKey("temp") ? nbt.getFloat("temp") : Values.C_0_Point;
+		return nbt.hasKey(temperatureKey) ? nbt.getFloat(temperatureKey) : Values.C_0_Point;
 	}
 	
 	public static ItemStack setTemperature(ItemStack stack, float temp)
 	{
-		U.Inventorys.setupNBT(stack, true).setFloat("temp", temp);
+		U.Inventorys.setupNBT(stack, true).setFloat(temperatureKey, temp);
 		return stack;
 	}
 	

@@ -21,6 +21,7 @@ public class ItemStick extends ItemSubBehavior implements IThermalItem
 	{
 		super("stick");
 		EnumItem.stick.set(new ItemStack(this));
+		init();
 	}
 	
 	private void init()

@@ -61,6 +61,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
@@ -80,6 +81,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -1009,10 +1011,46 @@ public class U
 			return stack;
 		}
 
+		public static boolean areTagSimilarWithoutIgnore(NBTTagCompound nbt1, NBTTagCompound nbt2, String...ignore)
+		{
+			if(nbt1 == nbt2) return true;
+			if(ignore.length == 0)
+			{
+				return nbt1 != null ? nbt1.equals(nbt2) : nbt2.equals(NBTTagCompoundEmpty.instance);
+			}
+			if(nbt1 == null) nbt1 = NBTTagCompoundEmpty.instance;
+			else nbt1 = (NBTTagCompound) nbt1.copy();
+			if(nbt2 == null) nbt2 = NBTTagCompoundEmpty.instance;
+			else nbt2 = (NBTTagCompound) nbt2.copy();
+			label:
+			for(Object tagRaw : nbt2.func_150296_c())
+			{
+				String tag = (String) tagRaw;
+				for(String i : ignore)
+				{
+					if(i.equals(i)) continue label;
+				}
+				NBTBase nbt3 = nbt1.getTag(tag);
+				NBTBase nbt4 = nbt2.getTag(tag);
+				if(nbt3 == null || nbt4 == null)
+					if(nbt3 != null ^ nbt4 != null) return false;
+				if(!nbt3.equals(nbt4)) return false;
+			}
+			return true;
+		}
+		
 		public static boolean areStackSimilar(ItemStack stack1, ItemStack stack2)
 		{
 			return stack1 == null || stack2 == null ? stack1 == stack2 :
-				stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+				stack1.getItem() == stack2.getItem() &&
+				stack1.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		}
+		
+		public static boolean areStackSimilarWithIgnore(ItemStack stack1, ItemStack stack2, String...ignores)
+		{
+			return stack1 == null || stack2 == null ? stack1 == stack2 :
+				stack1.getItem() == stack2.getItem() &&
+				stack1.getItemDamage() == stack2.getItemDamage() && areTagSimilarWithoutIgnore(stack1.stackTagCompound, stack2.stackTagCompound, ignores);
 		}
 
 		public static AbstractStack asStack(Object arg, boolean throwInvalid)

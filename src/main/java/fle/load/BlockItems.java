@@ -19,6 +19,7 @@ import fle.core.block.plant.BlockVine1;
 import fle.core.item.ItemLog;
 import fle.core.item.ItemToolFle;
 import fle.core.item.ItemToolHeadFle;
+import fle.core.item.resource.ItemFleDividableSmeltableFood;
 import fle.core.item.resource.ItemFleSmeltableFood;
 import fle.core.item.resource.ItemPile;
 import fle.core.item.resource.ItemPlant;
@@ -57,6 +58,7 @@ public class BlockItems
 	public static Item pile;
 	public static Item log;
 	public static Item smeltableFood;
+	public static Item divideSmeltableFood;
 	public static Item stick;
 	
 	public static void init()
@@ -88,6 +90,7 @@ public class BlockItems
 		log = new ItemLog().setCreativeTab(CreativeTabs.tabMaterials);
 		plant = new ItemPlant().setCreativeTab(CreativeTabs.tabMaterials);
 		smeltableFood = new ItemFleSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
+		divideSmeltableFood = new ItemFleDividableSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
 		stick = new ItemStick().setTextureName("fle:resource/stick").setCreativeTab(CreativeTabs.tabMaterials);
 	}
 }

@@ -23,7 +23,7 @@ public class ToolSingleCraftingRecipe extends ShapelessFleRecipe
 	}
 	public ToolSingleCraftingRecipe(String tool, float coefficient, int tick, Object...objects)
 	{
-		super(tick, ObjectArrays.concat(new ToolMatchRecipe(tool, coefficient), objects));
+		super(tick, ObjectArrays.concat(objects, new ToolMatchRecipe(tool, coefficient)));
 	}
 	
 	private static class ToolMatchRecipe implements ISingleInputRecipe

@@ -65,6 +65,11 @@ public class ShapelessFleRecipe extends AbstractFleRecipe
             throw new RuntimeException(ret, throwable);
 		}
 	}
+	
+	protected boolean matchInput(ItemStack target, AbstractStack input)
+	{
+		return input.contain(target);
+	}
 
 	@Override
 	public boolean matchRecipe(ICraftingInventoryMatching inventory)
@@ -79,7 +84,7 @@ public class ShapelessFleRecipe extends AbstractFleRecipe
 			if(stack == null) continue;
 			for(int j = 0; j < check.size(); ++j)
 			{
-				if(check.get(j).contain(stack))
+				if(matchInput(stack, check.get(j)))
 				{
 					check.remove(j);
 					continue label;
@@ -112,7 +117,7 @@ public class ShapelessFleRecipe extends AbstractFleRecipe
 			for(int j = 0; j < check.size(); ++j)
 			{
 				AbstractStack check1 = check.get(j);
-				if(check1.contain(stack))
+				if(matchInput(stack, check1))
 				{
 					if(check1.useContainer() || !stack.getItem().hasContainerItem(stack))
 					{
