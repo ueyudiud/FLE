@@ -359,7 +359,7 @@ public class ContainerBase<I extends IInventory> extends Container
 
 	private int mouseMode;
 	private int mouseMode2;
-    private final Set clickedSet = new HashSet();
+    private final Set<Slot> clickedSet = new HashSet();
 	private byte[] clickCache;
 	
     @Override
@@ -419,16 +419,13 @@ public class ContainerBase<I extends IInventory> extends Container
             }
             else if (this.mouseMode == 2)
             {
-                if (!this.clickedSet.isEmpty())
+                if (!clickedSet.isEmpty())
                 {
                     itemstack3 = inventoryplayer.getItemStack().copy();
                     i1 = inventoryplayer.getItemStack().stackSize;
-                    Iterator iterator = this.clickedSet.iterator();
-
-                    while (iterator.hasNext())
+                    
+                    for(Slot slot1 : clickedSet)
                     {
-                        Slot slot1 = (Slot)iterator.next();
-
                         if (slot1 != null && func_94527_a(slot1, inventoryplayer.getItemStack(), true) && slot1.isItemValid(inventoryplayer.getItemStack()) && inventoryplayer.getItemStack().stackSize >= this.clickedSet.size() && this.canDragIntoSlot(slot1))
                         {
                             ItemStack itemstack1 = itemstack3.copy();
@@ -691,8 +688,15 @@ public class ContainerBase<I extends IInventory> extends Container
                                         l1 = inventoryplayer.getFirstEmptyStack();
                                         if(l1 == -1) break label;
                                         itemstack3.stackSize += m1;
+                                        itemstack5 = itemstack5.copy();
                                         itemstack5.stackSize -= m1;
-                                    	inventoryplayer.setInventorySlotContents(l1, itemstack5.copy());
+                                        slot2.decrStackSize(m1);
+                                    	inventoryplayer.setInventorySlotContents(l1, itemstack5);
+                                    }
+                                    else
+                                    {
+                                        itemstack3.stackSize += m1;
+                                        slot2.decrStackSize(m1);
                                     }
                                     itemstack5.stackSize = 0;
                                 	slot2.putStack(null);

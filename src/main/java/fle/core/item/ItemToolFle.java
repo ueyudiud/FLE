@@ -22,6 +22,7 @@ import fle.api.item.behavior.BehaviorBase;
 import fle.api.item.behavior.BehaviorFireStarter;
 import fle.api.item.behavior.BehaviorShovel;
 import fle.api.item.behavior.BehaviorStoneHammer;
+import fle.api.item.behavior.BehaviorWhetstone;
 import fle.api.item.behavior.BehaviorWoodHammer;
 import fle.core.render.ItemToolCustomInfo;
 import fle.core.render.ItemToolRenderInfo;
@@ -59,6 +60,7 @@ public class ItemToolFle extends ItemSubTool
 		addSubItem(11, "stone_axe", "Stone Axe", new BehaviorAxe(2F), "axe/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
 		addSubItem(13, "stone_hammer", "Stone Hammer", new BehaviorStoneHammer(), "hammer/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(14, "whetstone", "Whetstone", new BehaviorWhetstone(), "whetstone", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 	}
 	
 	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName, boolean useSingleIcon, boolean hasHead, SubstanceTool...tools)

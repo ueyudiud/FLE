@@ -38,13 +38,24 @@ public class ContainerPolish extends ContainerBase<Inventory> implements IGuiUpd
 		addSlotToContainer(new SlotBase(inventory, 0, 20, 35));
 		addSlotToContainer(new SlotBase(inventory, 1, 104, 22));
 		addSlotToContainer(new SlotOutput(inventory, 2, 133, 35)
+		{
+			@Override
+			public void onSlotChanged()
+			{
+				super.onSlotChanged();
+				if(ContainerPolish.this.inventory.stacks[2] == null)
 				{
+					polish = null;
+					conditions = null;
+				}
+			}
+			
 			@Override
 			public void onSlotChange(ItemStack old, ItemStack stack)
 			{
 				super.onSlotChange(old, stack);
-				polish = null;
-				conditions = null;
+//				polish = null;
+//				conditions = null;
 			}
 			
 			@Override

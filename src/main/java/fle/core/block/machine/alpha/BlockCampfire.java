@@ -8,17 +8,21 @@ import farcore.FarCore;
 import farcore.block.BlockHasTile;
 import farcore.block.ItemBlockBase;
 import fle.api.FleAPI;
+import fle.api.fuel.FuelHandler;
 import fle.core.tile.TileEntityCampfire;
 import fle.load.Icons;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import scala.collection.mutable.ArrayBuilder.ofBoolean;
 
 public class BlockCampfire extends BlockHasTile
 {
@@ -91,6 +95,19 @@ public class BlockCampfire extends BlockHasTile
 		TileEntity tile;
 		if((tile = world.getTileEntity(x, y, z)) instanceof TileEntityCampfire)
 		{
+			if(entity instanceof EntityItem && !world.isRemote)
+			{
+				ItemStack stack = ItemStack.copyItemStack(((EntityItem) entity).getEntityItem());
+				if(FuelHandler.getFuelValue(stack) != null)
+				{
+					stack.stackSize = 1;
+					if(((TileEntityCampfire) tile).getInventory().addStacks(TileEntityCampfire.fuel1, TileEntityCampfire.fuel2 + 1, stack, false))
+					{
+						((TileEntityCampfire) tile).getInventory().addStacks(TileEntityCampfire.fuel1, TileEntityCampfire.fuel2 + 1, stack, true);
+					}
+					((EntityItem) entity).getEntityItem().stackSize--;
+				}
+			}
 			if(((TileEntityCampfire) tile).isBurning())
 			{
 				entity.setFire(40);

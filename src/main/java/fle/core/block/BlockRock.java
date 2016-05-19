@@ -21,6 +21,7 @@ import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -84,7 +85,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 		super.onNeighborBlockChange(world, x, y, z, block);
 		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 	}
-	
+		
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{

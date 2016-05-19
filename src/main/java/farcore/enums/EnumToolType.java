@@ -14,7 +14,8 @@ public enum EnumToolType
 	pickaxe("Pickaxe"),
 	shovel("Shovel"), 
 	firestarter("Firestarter"), 
-	bar_grizzly("BarGrizzly");
+	bar_grizzly("BarGrizzly"), 
+	whetstone("Whetstone");
 	
 	String name;
 	OreStack stack;

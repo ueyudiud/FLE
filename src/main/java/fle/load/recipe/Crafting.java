@@ -31,6 +31,7 @@ public class Crafting
 		for(Object[] element : inputs2)
 		{
 			registerShapelessRecipe(EnumItem.cobble_block.instance(1, element[0]), 8, "chip" + element[1], "chip" + element[1], "chip" + element[1], "chip" + element[1]);
+			registerShapelessRecipe(EnumItem.tool.instance(1, "whetstone", (String) element[0]), 12, "fragment" + element[1], "fragment" + element[1], "fragment" + element[1]);
 		}
 		
 		registerShapedRecipe(EnumItem.tool.instance(1, "bar_grizzly", "simple_bar_grizzly"), 120, true, "xo", "ox", 'x', "branchWood", 'o', "ropeVine");

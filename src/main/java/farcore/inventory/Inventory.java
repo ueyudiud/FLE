@@ -285,15 +285,17 @@ public class Inventory implements IInventory
 			if(U.Inventorys.areStackSimilar(stack, container[id]))
 			{
 				int size = container[id].stackSize + stack.stackSize;
-				int max = container[id].getMaxStackSize();
+				int max = Math.min(getInventoryStackLimit(), container[id].getMaxStackSize());
 				if(size > max)
 				{
 					int size1 = max - container[id].stackSize;
+					if(size1 == 0) return input;
 					if(process)
 					{
 						container[id].stackSize = max;
 					}
-					return input.splitStack(size1);
+					input.splitStack(size1);
+					return input;
 				}
 				if(process)
 				{

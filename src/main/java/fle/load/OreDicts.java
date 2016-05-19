@@ -32,6 +32,7 @@ public class OreDicts
 		registerValid("craftingToolStoneAxe", EnumItem.tool.instance(1, "stone_axe"));
 		registerValid(EnumToolType.awl.ore(), EnumItem.tool.instance(1, "flint_awl"));
 		registerValid(EnumToolType.axe.ore(), EnumItem.tool.instance(1, "stone_axe"));
+		registerValid(EnumToolType.whetstone.ore(), EnumItem.tool.instance(1, "whetstone"));
 		registerValid(EnumToolType.firestarter.ore(), EnumItem.tool.instance(1, "firestarter"));
 		registerValid(EnumToolType.hammer_digable_basic.ore(), EnumItem.tool.instance(1, "flint_hammer"));
 		registerValid(EnumToolType.hammer_digable_basic.ore(), EnumItem.tool.instance(1, "wood_hammer"));

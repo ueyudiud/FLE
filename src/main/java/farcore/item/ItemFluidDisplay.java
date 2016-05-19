@@ -98,7 +98,7 @@ public class ItemFluidDisplay extends ItemBase implements IFluidContainerItem, I
 			list.add(EnumChatFormatting.BLUE + "Amount : " + amount + "L");
 		}
 		list.add(EnumChatFormatting.RED + "Temperature : " + fluid.getTemperature() + "K");
-		list.add(EnumChatFormatting.GREEN + "Viscosity : " + fluid.getViscosity() + "mm/s");
+		list.add(EnumChatFormatting.GREEN + "Viscosity : " + (int) (1E6 / fluid.getViscosity()) / 1000F + "mm/s^2");
 		list.add(EnumChatFormatting.YELLOW + "State : " + (fluid.isGaseous() ? "Gas" : "Liquid"));
 	}
 
