@@ -51,14 +51,6 @@ public class ContainerPolish extends ContainerBase<Inventory> implements IGuiUpd
 			}
 			
 			@Override
-			public void onSlotChange(ItemStack old, ItemStack stack)
-			{
-				super.onSlotChange(old, stack);
-//				polish = null;
-//				conditions = null;
-			}
-			
-			@Override
 			public ItemStack decrStackSize(int size)
 			{
 				ItemStack stack = super.decrStackSize(size);
