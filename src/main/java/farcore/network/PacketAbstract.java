@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import farcore.util.U;
 import farcore.util.io.DataStream;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 
@@ -34,9 +34,9 @@ public abstract class PacketAbstract implements IPacket
 	}
 
 	@Override
-	public EntityPlayerMP getPlayer()
+	public EntityPlayer getPlayer()
 	{
-		return (EntityPlayerMP) 
+		return (EntityPlayer) 
 				((handler instanceof NetHandlerPlayServer) ? 
 						((NetHandlerPlayServer) handler).playerEntity : 
 							U.Worlds.player());
@@ -58,4 +58,10 @@ public abstract class PacketAbstract implements IPacket
 	}
 
 	protected abstract void decode(DataStream input) throws IOException;
+	
+	@Override
+	public boolean needToSend()
+	{
+		return true;
+	}
 }

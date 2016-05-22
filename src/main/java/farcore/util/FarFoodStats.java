@@ -2,6 +2,8 @@ package farcore.util;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.FarCoreSetup;
+import farcore.lib.net.entity.player.PacketPlayerStatUpdate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -14,15 +16,16 @@ import net.minecraft.world.EnumDifficulty;
  *
  */
 public class FarFoodStats extends FoodStats
-{
+{	
 	protected static final float maxFoodLevel = 1000F;
+	protected static final float maxWaterLevel = 1000F;
 	
 	protected long tick = Long.MIN_VALUE;
 	
     /** The player's food level. */
-    protected float foodLevel = 1000F;
+    public float foodLevel = 1000F;    
     /** The player's food saturation. */
-    protected float foodSaturationLevel = 250F;
+    public float foodSaturationLevel = 250F;
     /** The player's food exhaustion. */
     protected float foodExhaustionLevel = 0F;
     
@@ -30,12 +33,24 @@ public class FarFoodStats extends FoodStats
     /** The player's food timer value. */
     protected int foodTimer;
     
-    protected float prevFoodLevel = 1000F;
+    public float waterLevel = 1000F;
     
+    public float waterExhaustionLevel = 0F;
+
+    public float prevFoodLevel = 1000F;
+    public float prevFoodSaturationLevel = 250F;
+    public float prevWaterLevel = 1000F;
+    
+    public void addWaterLevel(float level)
+    {
+    	waterLevel = Math.min(maxWaterLevel, waterLevel + level);
+    }
+    
+    @Deprecated
     @Override
     public void addStats(int level, float saturation)
     {
-    	addFoodDigestionStats(level * 50F, saturation * 50F);
+//    	addFoodDigestionStats(level * 50F, saturation * 50F);
     }
 
 	public void addFoodDigestionStats(NutritionInfo info)
@@ -59,7 +74,9 @@ public class FarFoodStats extends FoodStats
     {
     	if(player.capabilities.isCreativeMode) return;
     	EnumDifficulty difficulty = player.worldObj.difficultySetting;
-    	prevFoodLevel = foodLevel;
+//    	prevFoodLevel = foodLevel;
+//    	prevFoodSaturationLevel = foodSaturationLevel;
+//    	prevWaterLevel = waterLevel;
 
     	long tick1 = U.Time.getTime(player.worldObj);
     	if(tick == Long.MIN_VALUE)
@@ -68,6 +85,7 @@ public class FarFoodStats extends FoodStats
     	{
     		tick += 150;
     		addExhaustion(1.5F);
+    		addWaterExhaustion(3F);
         	if (foodDigestionLevel > 0F && foodLevel > 100F)
         	{
         		float a = Math.min(foodDigestionLevel, 15F);
@@ -82,6 +100,12 @@ public class FarFoodStats extends FoodStats
                 foodSaturationLevel -= a;
                 foodLevel = Math.max(foodLevel - (1F - a), 0);
             }
+        	if(waterExhaustionLevel > 4.0F)
+        	{
+        		waterExhaustionLevel -= 4.0F;
+        		waterLevel = Math.max(waterLevel - 1F, 0F);
+        	}
+        	FarCoreSetup.network.sendToPlayer(new PacketPlayerStatUpdate(this), player);
     	}
     	if(player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && foodLevel >= 400F && player.shouldHeal())
     	{
@@ -128,6 +152,11 @@ public class FarFoodStats extends FoodStats
             this.foodDigestionLevel = nbt.getFloat("foodDigestionLevel");
             this.tick = nbt.getLong("tick");
         }
+        if(nbt.hasKey("waterLevel"))
+        {
+        	this.waterLevel = nbt.getFloat("waterLevel");
+        	this.waterExhaustionLevel = nbt.getFloat("waterExhaustionLevel");
+        }
     }
     
     @Override
@@ -139,6 +168,8 @@ public class FarFoodStats extends FoodStats
         nbt.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
         nbt.setFloat("foodDigestionLevel", this.foodDigestionLevel);
         nbt.setLong("tick", tick);
+        nbt.setFloat("waterLevel", waterLevel);
+        nbt.setFloat("waterExhaustionLevel", waterExhaustionLevel);
     }
     
     /**
@@ -148,6 +179,22 @@ public class FarFoodStats extends FoodStats
     {
         return (int) (foodLevel / 50F);
     }
+
+    public float getFoodLevelFar()
+    {
+        return foodLevel;
+    }
+    
+    public float getWaterLevel()
+    {
+		return waterLevel;
+	}
+    
+    @SideOnly(Side.CLIENT)
+    public int getWaterProgress()
+    {
+		return (int) (getWaterLevel() / 50F);
+	}
 
     @SideOnly(Side.CLIENT)
     public int getPrevFoodLevel()
@@ -166,9 +213,20 @@ public class FarFoodStats extends FoodStats
     /**
      * adds input to foodExhaustionLevel to a max of 1000
      */
+    @Deprecated
     public void addExhaustion(float exhaustion)
     {
+//        foodExhaustionLevel = Math.min(foodExhaustionLevel + exhaustion, 50.0F);
+    }
+    
+    public void addFoodExhaustion(float exhaustion)
+    {
         foodExhaustionLevel = Math.min(foodExhaustionLevel + exhaustion, 50.0F);
+    }
+    
+    public void addWaterExhaustion(float thirst)
+    {
+    	waterExhaustionLevel = Math.min(waterExhaustionLevel + thirst, 50.0F);
     }
 
     /**
@@ -179,16 +237,28 @@ public class FarFoodStats extends FoodStats
     {
         return foodSaturationLevel;
     }
+    
+    @SideOnly(Side.CLIENT)
+    public void setFoodLevel(float level)
+    {
+    	this.foodLevel = level;
+    }
 
     @SideOnly(Side.CLIENT)
     public void setFoodLevel(int level)
     {
-        this.foodLevel = level * 50F;
+//        this.foodLevel = level * 50F;
     }
 
     @SideOnly(Side.CLIENT)
     public void setFoodSaturationLevel(float level)
     {
         this.foodSaturationLevel = level;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void setWaterLevel(float level)
+    {
+    	this.waterLevel = level;
     }
 }

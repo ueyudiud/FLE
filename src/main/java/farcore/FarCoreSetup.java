@@ -51,6 +51,7 @@ import farcore.lib.net.PacketKey;
 import farcore.lib.net.PacketSound;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
+import farcore.lib.net.entity.player.PacketPlayerStatUpdate;
 import farcore.lib.net.gui.PacketFluidSlotClicked;
 import farcore.lib.net.gui.PacketFluidUpdate;
 import farcore.lib.net.gui.PacketFluidUpdateLarge;
@@ -81,10 +82,10 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid = FarCore.ID, version = "0.7", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "0.8", name = "Far Core")
 public class FarCoreSetup
 {
-	public static final int minForge = 1420;
+	public static final int minForge = 1558;
 	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
@@ -216,6 +217,7 @@ public class FarCoreSetup
 		network.registerPacket(PacketEntity.class, Side.CLIENT);
 		network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 		network.registerPacket(PacketKey.class, Side.SERVER);
+		network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
 		proxy.load();
 	}
 

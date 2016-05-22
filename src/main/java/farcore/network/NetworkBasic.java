@@ -158,8 +158,19 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		return channel.get(side);
 	}
 	
+	/**
+	 * To check is packet needed to send.
+	 * @param packet
+	 * @return
+	 */
+	private boolean needToSend(IPacket packet)
+	{
+		return packet != null && packet.needToSend();
+	}
+	
 	public void sendTo(IPacket packet)
 	{
+		if(!needToSend(packet)) return;
 		if(U.Sides.isSimulating())
 		{
 			if(U.Worlds.player() instanceof EntityPlayerMP)
@@ -173,10 +184,7 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendToAll(IPacket packet)
 	{
-		if (packet == null)
-		{
-			return;
-		}
+		if(!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
 	    tChannel.writeAndFlush(packet);
@@ -188,10 +196,7 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		{
 			return;
 		}
-		if (packet == null)
-		{
-			return;
-		}
+		if(!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
@@ -200,10 +205,7 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 
 	public void sendToDim(IPacket packet, int dim)
 	{
-		if (packet == null)
-		{
-			return;
-		}
+		if(!needToSend(packet)) return;
 		FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 		tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dim);
@@ -212,10 +214,7 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 
 	public void sendToServer(IPacket packet)
 	{
-	    if (packet == null)
-	    {
-	    	return;
-	    }
+		if(!needToSend(packet)) return;
 	    FMLEmbeddedChannel tChannel = getChannel(Side.CLIENT);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
 	    tChannel.writeAndFlush(packet);
@@ -224,10 +223,7 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	public void sendToNearBy(IPacket packet, int dim, int x, int y,
 			int z, float range)
 	{
-	    if (packet == null)
-	    {
-	    	return;
-	    }
+		if(!needToSend(packet)) return;
 	    FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new TargetPoint(dim, x + 0.5D, y + 0.5D, z + 0.5D, range));
@@ -236,10 +232,7 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 
 	public void sendToNearBy(IPacket packet, TargetPoint point)
 	{
-	    if (packet == null)
-	    {
-	    	return;
-	    }
+		if(!needToSend(packet)) return;
 	    FMLEmbeddedChannel tChannel = getChannel(Side.SERVER);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);

@@ -69,7 +69,7 @@ public class DataStream
 	{
 		int length = readInt();
 		int[] array = new int[length];
-		for(int i = 0; i < length; array[i++] = buf.readInt());
+		for(int i = 0; i < length; array[i++] = readInt());
 		return array;
 	}
 		
@@ -152,7 +152,7 @@ public class DataStream
 	{
 		writeInt(value.length);
 		for(int i = 0; i < value.length; ++i)
-			writeInt(i);
+			writeInt(value[i]);
 	}
 	
 	public void writeNBT(NBTTagCompound value) throws IOException

@@ -9,10 +9,16 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import farcore.interfaces.item.IContainerItemCollectable;
+import farcore.util.FarFoodStats;
 import farcore.util.FleLog;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.stats.StatList;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -84,7 +90,7 @@ public class FarCorePlayerHandler
 		}
 		FleLog.getCoreLogger().info("Fail to get spawn coord.");
 	}
-
+	
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event)
 	{
@@ -97,6 +103,91 @@ public class FarCorePlayerHandler
 					((IUpdatePlayerListBox) event.player.openContainer).update();
 				}
 			}
+			else if(event.phase == Phase.END)
+			{
+				updatePlayStat(event.player);
+			}
 		}
+	}
+
+	public static void jump(EntityPlayer player)
+	{
+		FarFoodStats stats = (FarFoodStats) player.getFoodStats();
+		if(player.isSprinting())
+		{
+			stats.addFoodExhaustion(0.1F);
+		}
+		else
+		{
+			stats.addFoodExhaustion(0.025F);
+		}
+	}
+	
+	private void updatePlayStat(EntityPlayer player)
+	{
+		FarFoodStats stats = (FarFoodStats) player.getFoodStats();
+		double xM = player.posX - player.prevPosX;
+		double yM = player.posY - player.prevPosY;
+		double zM = player.posZ - player.prevPosZ;
+		if (player.ridingEntity == null)
+        {
+            int i;
+
+            if (player.isInsideOfMaterial(Material.water))
+            {
+                i = Math.round(MathHelper.sqrt_double(xM * xM + yM * yM + zM * zM) * 100.0F);
+
+                if (i > 0)
+                {
+                    stats.addFoodExhaustion(0.015F * (float)i * 0.01F);
+                    stats.addWaterExhaustion(0.08F * (float)i * 0.01F);
+                }
+            }
+            else if (player.isInWater())
+            {
+                i = Math.round(MathHelper.sqrt_double(xM * xM + zM * zM) * 100.0F);
+
+                if (i > 0)
+                {
+                	stats.addFoodExhaustion(0.015F * (float)i * 0.01F);
+                    stats.addWaterExhaustion(0.05F * (float)i * 0.01F);
+                }
+            }
+            else if (player.isOnLadder())
+            {
+                if (yM > 0.0D)
+                {
+                	stats.addFoodExhaustion(0.01F * (float) yM);
+                    stats.addWaterExhaustion(0.8F * (float) yM);
+                }
+            }
+            else if (player.onGround)
+            {
+                i = Math.round(MathHelper.sqrt_double(xM * xM + zM * zM) * 100.0F);
+
+                if (i > 0)
+                {
+                	if (player.isSprinting())
+                	{
+                		stats.addFoodExhaustion(0.1F * (float)i * 0.01F);
+                        stats.addWaterExhaustion(0.3F * (float)i * 0.01F);
+                	}
+                	else
+                	{
+                		stats.addFoodExhaustion(0.01F * (float)i * 0.01F);
+                        stats.addWaterExhaustion(0.06F * (float)i * 0.01F);
+                	}
+                }
+            }
+//            else
+//            {
+//            	i = Math.round(MathHelper.sqrt_double(xM * xM + zM * zM) * 100.0F);
+//
+//                if (i > 25)
+//                {
+//                    this.addStat(StatList.distanceFlownStat, i);
+//                }
+//            }
+        }
 	}
 }

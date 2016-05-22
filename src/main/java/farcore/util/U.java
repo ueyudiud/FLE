@@ -29,6 +29,7 @@ import farcore.enums.Direction;
 import farcore.enums.EnumDamageResource;
 import farcore.enums.EnumUpdateType;
 import farcore.handler.FarCoreKeyHandler;
+import farcore.handler.FarCorePlayerHandler;
 import farcore.interfaces.ICalendar;
 import farcore.interfaces.ISmartFallableBlock;
 import farcore.interfaces.ISmartHarvestBlock;
@@ -1139,6 +1140,11 @@ public class U
 
 	public static class Player
 	{
+		public static void jump(EntityPlayer player)
+		{
+			FarCorePlayerHandler.jump(player);
+		}
+		
 		public static boolean isKeyDown(EntityPlayer player, String key)
 		{
 			return FarCoreKeyHandler.get(player, key);
