@@ -13,10 +13,10 @@ public class FarOverrideLoadingPlugin implements IFMLLoadingPlugin
 {
 	public static boolean runtimeDeobf;
 	public static File location;
-
+	
 	@Override
 	public String[] getASMTransformerClass()
-	{
+	{		
 		return new String[]
 				{
 				O_WorldServer.class.getName(),

@@ -2,11 +2,11 @@ package farcore.handler;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import farcore.enums.EnumBlock;
 import farcore.interfaces.ISmartHarvestBlock;
 import farcore.lib.recipe.DropHandler;
 import farcore.lib.recipe.ToolDestoryDropRecipes;
 import farcore.util.U;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;

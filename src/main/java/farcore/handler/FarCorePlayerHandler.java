@@ -1,5 +1,6 @@
 package farcore.handler;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -11,12 +12,15 @@ import cpw.mods.fml.relauncher.Side;
 import farcore.interfaces.item.IContainerItemCollectable;
 import farcore.util.FarFoodStats;
 import farcore.util.FleLog;
+import farcore.util.U;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -109,7 +113,7 @@ public class FarCorePlayerHandler
 			}
 		}
 	}
-
+	
 	public static void jump(EntityPlayer player)
 	{
 		FarFoodStats stats = (FarFoodStats) player.getFoodStats();
@@ -119,7 +123,7 @@ public class FarCorePlayerHandler
 		}
 		else
 		{
-			stats.addFoodExhaustion(0.025F);
+			stats.addFoodExhaustion(0.02F);
 		}
 	}
 	
@@ -129,6 +133,15 @@ public class FarCorePlayerHandler
 		double xM = player.posX - player.prevPosX;
 		double yM = player.posY - player.prevPosY;
 		double zM = player.posZ - player.prevPosZ;
+		if (player instanceof EntityPlayerMP)
+		{
+			EntityPlayerMP playerMP = (EntityPlayerMP) player;
+			boolean destorying = (boolean) U.Reflect.getValue(ItemInWorldManager.class, Arrays.asList("isDestroyingBlock"), playerMP.theItemInWorldManager);
+			if(destorying)
+			{
+				stats.addFoodExhaustion(0.000625F);
+			}
+		}
 		if (player.ridingEntity == null)
         {
             int i;
@@ -139,8 +152,8 @@ public class FarCorePlayerHandler
 
                 if (i > 0)
                 {
-                    stats.addFoodExhaustion(0.015F * (float)i * 0.01F);
-                    stats.addWaterExhaustion(0.08F * (float)i * 0.01F);
+                    stats.addFoodExhaustion(0.03F * (float)i * .01F);
+                    stats.addWaterExhaustion(0.1F * (float)i * .01F);
                 }
             }
             else if (player.isInWater())
@@ -149,16 +162,16 @@ public class FarCorePlayerHandler
 
                 if (i > 0)
                 {
-                	stats.addFoodExhaustion(0.015F * (float)i * 0.01F);
-                    stats.addWaterExhaustion(0.05F * (float)i * 0.01F);
+                	stats.addFoodExhaustion(0.03F * (float)i * .01F);//Use the shortest width of English Channel to divide 1000 unit.
+                    stats.addWaterExhaustion(0.075F * (float)i * .01F);
                 }
             }
             else if (player.isOnLadder())
             {
                 if (yM > 0.0D)
                 {
-                	stats.addFoodExhaustion(0.01F * (float) yM);
-                    stats.addWaterExhaustion(0.8F * (float) yM);
+                	stats.addFoodExhaustion(0.05F * (float) yM);
+                    stats.addWaterExhaustion(0.08F * (float) yM);
                 }
             }
             else if (player.onGround)
@@ -169,13 +182,13 @@ public class FarCorePlayerHandler
                 {
                 	if (player.isSprinting())
                 	{
-                		stats.addFoodExhaustion(0.1F * (float)i * 0.01F);
-                        stats.addWaterExhaustion(0.3F * (float)i * 0.01F);
+                		stats.addFoodExhaustion(0.08F * (float)i * .01F);
+                        stats.addWaterExhaustion(0.25F * (float)i * .01F);
                 	}
                 	else
                 	{
-                		stats.addFoodExhaustion(0.01F * (float)i * 0.01F);
-                        stats.addWaterExhaustion(0.06F * (float)i * 0.01F);
+                		stats.addFoodExhaustion(0.0125F * (float)i * .01F);
+                        stats.addWaterExhaustion(0.06F * (float)i * .01F);
                 	}
                 }
             }

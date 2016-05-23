@@ -17,15 +17,15 @@ import net.minecraft.world.EnumDifficulty;
  */
 public class FarFoodStats extends FoodStats
 {	
-	protected static final float maxFoodLevel = 1000F;
-	protected static final float maxWaterLevel = 1000F;
+	protected static final float maxFoodLevel = 200F;
+	protected static final float maxWaterLevel = 200F;
 	
 	protected long tick = Long.MIN_VALUE;
 	
     /** The player's food level. */
-    public float foodLevel = 1000F;    
+    public float foodLevel = maxFoodLevel;    
     /** The player's food saturation. */
-    public float foodSaturationLevel = 250F;
+    public float foodSaturationLevel = foodLevel;
     /** The player's food exhaustion. */
     protected float foodExhaustionLevel = 0F;
     
@@ -33,13 +33,13 @@ public class FarFoodStats extends FoodStats
     /** The player's food timer value. */
     protected int foodTimer;
     
-    public float waterLevel = 1000F;
+    public float waterLevel = maxWaterLevel;
     
     public float waterExhaustionLevel = 0F;
 
-    public float prevFoodLevel = 1000F;
-    public float prevFoodSaturationLevel = 250F;
-    public float prevWaterLevel = 1000F;
+    public float prevFoodLevel = foodLevel;
+    public float prevFoodSaturationLevel = foodSaturationLevel;
+    public float prevWaterLevel = waterLevel;
     
     public void addWaterLevel(float level)
     {
@@ -69,6 +69,42 @@ public class FarFoodStats extends FoodStats
     	foodLevel = Math.min(foodLevel + level, maxFoodLevel);
     }
     
+    public void refreshStat(EntityPlayer player)
+    {
+		addFoodExhaustion(2.5F);
+		addWaterExhaustion(3F);
+    	if (foodDigestionLevel > 0F && foodLevel > 20F)
+    	{
+    		float a = Math.min(foodDigestionLevel, 15F);
+    		foodDigestionLevel -= a;
+    		addFoodStats(a);
+    	}
+    	if(foodLevel >= 80F && player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && player.shouldHeal())
+    	{
+    		++foodTimer;
+    		if(foodTimer >= getHealTick())
+    		{
+    			player.heal(1.0F);
+    			addFoodExhaustion(8.0F);
+    			foodTimer = 0;
+    		}
+    	}
+    	if (foodExhaustionLevel > 5.0F)
+        {
+            foodExhaustionLevel -= 5.0F;
+
+            float a = Math.min(1F, foodSaturationLevel);
+            foodSaturationLevel -= a;
+            foodLevel = Math.max(foodLevel - (1F - a), 0);
+        }
+    	if(waterExhaustionLevel > 5.0F)
+    	{
+    		waterExhaustionLevel -= 5.0F;
+    		waterLevel = Math.max(waterLevel - 1F, 0F);
+    	}
+    	FarCoreSetup.network.sendToPlayer(new PacketPlayerStatUpdate(this), player);
+    }
+    
     @Override
     public void onUpdate(EntityPlayer player)
     {
@@ -81,63 +117,27 @@ public class FarFoodStats extends FoodStats
     	long tick1 = U.Time.getTime(player.worldObj);
     	if(tick == Long.MIN_VALUE)
     		tick = tick1;
-    	if(tick1 - tick > 150)
+    	if(tick1 - tick > 200)
     	{
-    		tick += 150;
-    		addExhaustion(1.5F);
-    		addWaterExhaustion(3F);
-        	if (foodDigestionLevel > 0F && foodLevel > 100F)
-        	{
-        		float a = Math.min(foodDigestionLevel, 15F);
-        		foodDigestionLevel -= a;
-        		addFoodStats(a);
-        	}
-        	if (foodExhaustionLevel > 1.0F)
-            {
-                foodExhaustionLevel -= 1.0F;
-
-                float a = Math.min(1F, foodSaturationLevel);
-                foodSaturationLevel -= a;
-                foodLevel = Math.max(foodLevel - (1F - a), 0);
-            }
-        	if(waterExhaustionLevel > 4.0F)
-        	{
-        		waterExhaustionLevel -= 4.0F;
-        		waterLevel = Math.max(waterLevel - 1F, 0F);
-        	}
-        	FarCoreSetup.network.sendToPlayer(new PacketPlayerStatUpdate(this), player);
+    		tick += 200;
+    		refreshStat(player);
     	}
-    	if(player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && foodLevel >= 400F && player.shouldHeal())
+    	if(foodLevel <= 0F)
     	{
-    		++foodTimer;
-    		if(foodTimer >= getHealTick())
+    		if(difficulty != EnumDifficulty.PEACEFUL)
     		{
-    			player.heal(1.0F);
-    			addExhaustion(2.5F);
-    			foodTimer = 0;
+    			player.attackEntityFrom(DamageSource.starve, 1E10F);
     		}
-    	}
-    	else if(foodLevel <= 0F)
-    	{
-    		++foodTimer;
-    		if(foodTimer >= 3000)
+    		else
     		{
-    			if(difficulty != EnumDifficulty.PEACEFUL)
-    			{
-    				player.attackEntityFrom(DamageSource.starve, 1E10F);
-    			}
-    			else
-    			{
-    				player.attackEntityFrom(DamageSource.starve, 10F);
-    			}
+    			player.attackEntityFrom(DamageSource.starve, 10F);
     		}
-    		foodTimer = 0;
     	}
     }
     
     protected int getHealTick()
     {
-    	return (int) ((1800F - foodLevel) / 4F);
+    	return (int) ((320F - foodLevel) / 40F) + 1;
     }
     
     @Override
@@ -173,11 +173,11 @@ public class FarFoodStats extends FoodStats
     }
     
     /**
-     * Get the player's food level.
+     * Get the player's food level(For progress bar).
      */
     public int getFoodLevel()
     {
-        return (int) (foodLevel / 50F);
+        return (int) (foodLevel / 10F);
     }
 
     public float getFoodLevelFar()
@@ -193,13 +193,13 @@ public class FarFoodStats extends FoodStats
     @SideOnly(Side.CLIENT)
     public int getWaterProgress()
     {
-		return (int) (getWaterLevel() / 50F);
+		return (int) (getWaterLevel() / 10F);
 	}
 
     @SideOnly(Side.CLIENT)
     public int getPrevFoodLevel()
     {
-        return (int) (prevFoodLevel / 50F);
+        return (int) (prevFoodLevel / 10F);
     }
 
     /**

@@ -1,6 +1,7 @@
 package farcore.enums;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public enum EnumBlock 
@@ -14,26 +15,152 @@ public enum EnumBlock
 	 * @param level The level of fire, higher level will cause fire spread in a larger range.
 	 * The value is from 1 to 15.
 	 */
-	fire,
+	fire
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.lava);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	},
 	/**
 	 * Far Land Era water, registered by fle.<br>
 	 * The method spawn use way see fluid block type.
 	 * @see farcore.block.BlockStandardFluid
 	 */
-	water,
+	water
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.water);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	},
 	/**
 	 * Far Land Era ore, registered by fle.<br>
 	 * This block provide ore or custom ore block.
 	 */
 	ore,
 	lava, 
-	ice, 
-	rock,
-	cobble, 
-	sand, 
-	bush, 
-	vine, 
-	snow,
+	ice
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.ice);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	},
+	rock
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.stone);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	},
+	cobble
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.cobblestone);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	}, 
+	sand
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.sand);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	}, 
+	bush
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.deadbush);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	}, 
+	vine
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.vine);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	}, 
+	snow
+	{
+		@Override
+		public void spawn(World world, int x, int y, int z, int meta, int type)
+		{
+			if(!init)
+			{
+				world.setBlock(x, y, z, Blocks.snow_layer);
+			}
+			else
+			{
+				super.spawn(world, x, y, z, meta, type);
+			}
+		}
+	},
 	brick;
 	
 	boolean init = false;
@@ -69,7 +196,7 @@ public enum EnumBlock
 	{
 		if(init)
 		{
-			world.setBlock(x, y, z, block);
+			spawn(world, x, y, z, 0);
 		}
 	}
 	
