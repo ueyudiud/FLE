@@ -225,10 +225,9 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 			if(progress1 >= recipe1.energy)
 			{
 				ItemStack output = recipe1.getOutput(inventory.stacks[smeltingInput1]);
-				if(output == null || inventory.addStack(smeltingOutput1, output, false) == output.stackSize)
+				if(inventory.addStack(smeltingOutput1, output))
 				{
 					inventory.decrStack(smeltingInput1, recipe1.input, true);
-					inventory.addStack(smeltingOutput1, output, true);
 					recipe1 = null;
 					progress1 = 0;
 				}
@@ -252,10 +251,9 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 			if(progress2 >= recipe2.energy)
 			{
 				ItemStack output = recipe2.getOutput(inventory.stacks[smeltingInput2]);
-				if(inventory.addStack(smeltingOutput2, output, false) == output.stackSize)
+				if(inventory.addStack(smeltingOutput2, output))
 				{
 					inventory.decrStack(smeltingInput2, recipe2.input, true);
-					inventory.addStack(smeltingOutput2, output, true);
 					recipe2 = null;
 					progress2 = 0;
 				}

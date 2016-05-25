@@ -150,6 +150,17 @@ public class Inventory implements IInventory
 			return false;
 		}
 	}
+
+	public boolean addStack(int i, ItemStack stack)
+	{
+		if(stack == null) return true;
+		if(addStack(i, stack, false) == stack.stackSize)
+		{
+			addStack(i, stack, true);
+			return true;
+		}
+		return false;
+	}
 	
 	public int addStack(int i, ItemStack stack, boolean process)
 	{

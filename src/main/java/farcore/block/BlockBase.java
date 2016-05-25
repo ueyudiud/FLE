@@ -10,6 +10,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.stats.StatList;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -87,7 +88,8 @@ public class BlockBase extends Block
     public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta)
     {
         player.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
-        player.addExhaustion(0.025F);
+        //Instead by cause food exhaustion during digging.
+//        player.addExhaustion(0.025F);
 
         if (this.canSilkHarvest(world, player, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(player))
         {
@@ -151,5 +153,12 @@ public class BlockBase extends Block
     protected void onBlockHarvest(World world, EntityPlayer player, int x, int y, int z, int meta, boolean silkTouching)
     {
     	
+    }
+    
+    @Override
+    public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int x,
+    		int y, int z)
+    {
+    	return super.getPlayerRelativeBlockHardness(player, world, x, y, z);
     }
 }

@@ -14,7 +14,8 @@ public class Icons
 {
 	public static IIcon washing;
 	public static IIcon polish_delete;
-	
+
+	public static IIcon block_drying_table;
 	public static IIcon block_polish_top;
 	public static IIcon block_polish_side;
 	public static IIcon block_polish_bottom;

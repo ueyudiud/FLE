@@ -20,6 +20,7 @@ public class Langs
 	public static final String inventoryWashing = "inventory.washing";
 	public static final String inventoryPolish = "inventory.polish";
 	public static final String inventoryCampfire = "inventory.campfire";
+	public static final String inventoryDrying = "inventory.drying";
 	
 	public static void init()
 	{
@@ -37,5 +38,6 @@ public class Langs
 		
 		FarCoreSetup.lang.registerLocal(inventoryWashing, "Washing");
 		FarCoreSetup.lang.registerLocal(inventoryPolish, "Polishing");
+		FarCoreSetup.lang.registerLocal(inventoryDrying, "Drying");
 	}
 }
