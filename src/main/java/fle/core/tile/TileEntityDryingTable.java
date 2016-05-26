@@ -38,11 +38,21 @@ implements IHasGui
 	}
 	
 	@Override
+	protected void writeDescriptionsToNBT1(NBTTagCompound nbt)
+	{
+		super.writeDescriptionsToNBT1(nbt);
+		for(int i = 0; i < recipes.length; 
+				DryingRecipe.saveRecipe(nbt, "r" + i, recipes[i]),
+				i++);
+	}
+	
+	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 		for(int i = 0; i < recipes.length;
-				recipes[i] = DryingRecipe.loadRecipe(nbt, "recipe_" + i));
+				recipes[i] = DryingRecipe.loadRecipe(nbt, "recipe_" + i),
+						++i);
 		ticks = nbt.getIntArray("progress");
 		if(ticks.length == 0)
 		{
@@ -51,10 +61,31 @@ implements IHasGui
 	}
 	
 	@Override
+	protected void readDescriptionsFromNBT1(NBTTagCompound nbt)
+	{
+		super.readDescriptionsFromNBT1(nbt);
+		for(int i = 0; i < recipes.length;
+				recipes[i] = DryingRecipe.loadRecipe(nbt, "r" + i),
+						++i);
+	}
+	
+	protected void updateClient1()
+	{
+		super.updateClient1();
+	}
+	
+	@Override
+	protected void updateGeneral()
+	{
+		super.updateGeneral();
+	}
+	
+	@Override
 	protected void updateServer1()
 	{
 		float temp = U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
 		super.updateServer1();
+		boolean flag = false;
 		for(int i = 0; i < 3; ++i)
 		{
 			if(recipes[i] == null)
@@ -63,19 +94,25 @@ implements IHasGui
 				{
 					inventory.decrStack(i, recipes[i].input, true);
 					ticks[i] = 0;
+					flag = true;
 				}
 			}
 			if(recipes[i] != null)
 			{
 				if(temp > recipes[i].maxTemp) continue;
-				if(++ticks[i] >= recipes[i].tick)
+				if(ticks[i]++ >= recipes[i].tick)
 				{
 					if(inventory.addStack(i + 3, recipes[i].output))
 					{
 						recipes[i] = null;
 						ticks[i] = 0;
+						flag = true;
 					}
 				}
+			}
+			if(flag)
+			{
+				syncToNearby();
 			}
 		}
 	}

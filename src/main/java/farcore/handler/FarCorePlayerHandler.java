@@ -120,10 +120,12 @@ public class FarCorePlayerHandler
 		if(player.isSprinting())
 		{
 			stats.addFoodExhaustion(0.1F);
+			stats.addWaterExhaustion(0.3F);
 		}
 		else
 		{
 			stats.addFoodExhaustion(0.02F);
+			stats.addWaterExhaustion(0.08F);
 		}
 	}
 	

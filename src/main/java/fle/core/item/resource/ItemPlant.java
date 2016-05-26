@@ -51,7 +51,6 @@ public class ItemPlant extends ItemResource
 		addSubItem(3013, "firewood_willow", "Willow Firewood", new BehaviorFirewood(), "firewood/willow");
 		
 		addSubItem(10001, "vine", "Vine", "vine");
-		addSubItem(10002, "vine_rope", "Vine Rope", "vine_rope");
 	}
 	
 	@Override

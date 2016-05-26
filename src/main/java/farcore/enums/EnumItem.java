@@ -85,6 +85,7 @@ public enum EnumItem
 	tool_head,
 	log, 
 	plant, 
+	plant_production, 
 	ore_block,
 	/**
 	 * The cut tree log (The natural generate please use

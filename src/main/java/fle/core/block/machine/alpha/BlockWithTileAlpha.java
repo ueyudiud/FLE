@@ -6,12 +6,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCore;
 import farcore.block.BlockBase;
+import farcore.block.BlockHasTile;
 import farcore.block.ItemBlockBase;
 import farcore.interfaces.gui.IHasGui;
 import farcore.util.V;
 import fle.api.FleAPI;
 import fle.core.container.alpha.ContainerPolish;
 import fle.core.gui.alpha.GuiPolish;
+import fle.core.tile.TileEntityDryingTable;
 import fle.load.Icons;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.Gui;
@@ -21,10 +23,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public class BlockWithTileAlpha extends BlockBase
+public class BlockWithTileAlpha extends BlockHasTile
 {
 	public BlockWithTileAlpha()
 	{
@@ -91,5 +94,17 @@ public class BlockWithTileAlpha extends BlockBase
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
+		switch (meta)
+		{
+		case 0 : return new TileEntityDryingTable();
+		default:
+			break;
+		}
+		return null;
 	}
 }

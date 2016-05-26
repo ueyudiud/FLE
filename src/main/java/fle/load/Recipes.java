@@ -1,6 +1,7 @@
 package fle.load;
 
 import fle.load.recipe.Crafting;
+import fle.load.recipe.Drying;
 import fle.load.recipe.Polishing;
 import fle.load.recipe.Smelting;
 import fle.load.recipe.Washing;
@@ -14,5 +15,6 @@ public class Recipes
 		Washing.init();
 		Polishing.init();
 		Smelting.init();
+		Drying.init();
 	}
 }

@@ -18,7 +18,7 @@ public class Crafting
 	public static void init()
 	{
 		registerRecipe(new LogCutRecipe(new Ety(EnumToolType.axe.stack(), null)));
-		registerShapelessRecipe(EnumItem.plant.instance(1, "vine_rope"), 40, "vine", "vine", "vine", "vine");
+		registerShapelessRecipe(EnumItem.plant_production.instance(1, "vine_rope"), 40, "vine", "vine", "vine", "vine");
 		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 0), 180, "x", "o", 'x', "logWood", 'o', "pileGravel");
 		Object[][] inputs2 = {
 				{"stone", "Stone"},

@@ -121,63 +121,83 @@ public class FarCoreGuiHandler
 			FarFoodStats stats = (FarFoodStats) U.Worlds.player().getFoodStats();
         	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	        GL11.glDisable(GL11.GL_BLEND);
-//	        level = stats.getFoodLevel();
-//	        left = width / 2 + 91;
-//	        top = height - GuiIngameForge.right_height;
-//	        GuiIngameForge.right_height += 10;
+			if(V.debug)
+			{
+				event.setCanceled(true);
+		        left = width / 2 + 91 - 89;
+		        top = height - GuiIngameForge.right_height;
+		        GuiIngameForge.right_height += 10;
+				String info = "Hunger:" + (int) (stats.getFoodLevelFar()) + "/" + 200;
+				Minecraft.getMinecraft().fontRenderer.drawString(info, left + 1, top + 1, 0xFF113322);
+				Minecraft.getMinecraft().fontRenderer.drawString(info, left, top, 0xFF00FF88);
+		        level = stats.getWaterProgress();
+		        left = width / 2 + 91 - 89;
+		        top = height - GuiIngameForge.right_height;
+		        GuiIngameForge.right_height += 10;
+		        info = "Water:" + (int) (stats.getWaterLevel()) + "/" + 200;
+				Minecraft.getMinecraft().fontRenderer.drawString(info, left + 1, top + 1, 0xFF111133);
+				Minecraft.getMinecraft().fontRenderer.drawString(info, left, top, 0xFF0000FF);
+			}
+			else
+			{
+//		        level = stats.getFoodLevel();
+//		        left = width / 2 + 91;
+//		        top = height - GuiIngameForge.right_height;
+//		        GuiIngameForge.right_height += 10;
 
-//	        for (int i = 0; i < 10; ++i)
-//	        {
-//	            int idx = i * 2 + 1;
-//	            int x = left - i * 8 - 9;
-//	            int y = top;
-//	            int icon = 16;
-//	            byte backgound = 0;
+//		        for (int i = 0; i < 10; ++i)
+//		        {
+//		            int idx = i * 2 + 1;
+//		            int x = left - i * 8 - 9;
+//		            int y = top;
+//		            int icon = 16;
+//		            byte backgound = 0;
 
-//	            if (thePlayer.isPotionActive(Potion.hunger))
-//	            {
-//	                icon += 36;
-//	                backgound = 13;
-//	            }		            
-//	            if (thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && evt.resolution % (level * 3 + 1) == 0)
-//	            {
-//	                y = top + (rand.nextInt(3) - 1);
-//	            }
-//	            drawTexturedModalRect(x, y, 16 + backgound * 9, 27, 9, 9);
-//	            if (idx < level)
-//	            {
-//	            	drawTexturedModalRect(x, y, icon + 36, 27, 9, 9);
-//	            }
-//	            else if (idx == level)
-//	            {
-//	            	drawTexturedModalRect(x, y, icon + 45, 27, 9, 9);
-//	            }
-//	        }
-	        Minecraft.getMinecraft().renderEngine.bindTexture(override);
-	        level = stats.getWaterProgress();
-	        left = width / 2 + 91;
-	        top = height - GuiIngameForge.right_height;
-	        GuiIngameForge.right_height += 10;
+//		            if (thePlayer.isPotionActive(Potion.hunger))
+//		            {
+//		                icon += 36;
+//		                backgound = 13;
+//		            }		            
+//		            if (thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && evt.resolution % (level * 3 + 1) == 0)
+//		            {
+//		                y = top + (rand.nextInt(3) - 1);
+//		            }
+//		            drawTexturedModalRect(x, y, 16 + backgound * 9, 27, 9, 9);
+//		            if (idx < level)
+//		            {
+//		            	drawTexturedModalRect(x, y, icon + 36, 27, 9, 9);
+//		            }
+//		            else if (idx == level)
+//		            {
+//		            	drawTexturedModalRect(x, y, icon + 45, 27, 9, 9);
+//		            }
+//		        }
+		        Minecraft.getMinecraft().renderEngine.bindTexture(override);
+		        level = stats.getWaterProgress();
+		        left = width / 2 + 91;
+		        top = height - GuiIngameForge.right_height;
+		        GuiIngameForge.right_height += 10;
 
-	        for (int i = 0; i < 10; ++i)
-	        {
-	            int idx = i * 2 + 1;
-	            int x = left - i * 8 - 9;
-	            int y = top;
-	            byte backgound = 0;
-	            byte state = 0;
+		        for (int i = 0; i < 10; ++i)
+		        {
+		            int idx = i * 2 + 1;
+		            int x = left - i * 8 - 9;
+		            int y = top;
+		            byte backgound = 0;
+		            byte state = 0;
 
-	            drawTexturedModalRect(x, y, backgound * 9, 0, 9, 9);
-	            if (idx < level)
-	            {
-	            	drawTexturedModalRect(x, y, 0, 9 + state * 9, 9, 9);
-	            }
-	            else if (idx == level)
-	            {
-	            	drawTexturedModalRect(x, y, 9, 9 + state * 9, 9, 9);
-	            }
-	        }
-			Minecraft.getMinecraft().renderEngine.bindTexture(Gui.icons);
+		            drawTexturedModalRect(x, y, backgound * 9, 0, 9, 9);
+		            if (idx < level)
+		            {
+		            	drawTexturedModalRect(x, y, 0, 9 + state * 9, 9, 9);
+		            }
+		            else if (idx == level)
+		            {
+		            	drawTexturedModalRect(x, y, 9, 9 + state * 9, 9, 9);
+		            }
+		        }
+				Minecraft.getMinecraft().renderEngine.bindTexture(Gui.icons);
+			}
 	        GL11.glEnable(GL11.GL_BLEND);
 		}
 	}

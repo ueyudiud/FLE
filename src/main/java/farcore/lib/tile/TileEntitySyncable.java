@@ -3,6 +3,8 @@ package farcore.lib.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCoreSetup;
 import farcore.interfaces.tile.IDescribableTile;
 import farcore.lib.net.tile.PacketTileAskSync;
@@ -144,7 +146,6 @@ implements IDescribableTile
 		
 	}
 	
-	@Override
 	protected final void updateClient()
 	{
 		updateClient1();

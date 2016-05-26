@@ -29,4 +29,22 @@ public class ContainerDrying extends ContainerBase<TileEntityDryingTable>
 		locateBag.append(locate1).append(locateHand);
 		locateHand.append(locate1).append(locateBag);
 	}
+	
+	@Override
+	protected int getUpdateSize()
+	{
+		return 3;
+	}
+	
+	@Override
+	protected int getUpdate(int id)
+	{
+		return inventory.ticks[id];
+	}
+	
+	@Override
+	protected void setUpdate(int id, int value)
+	{
+		inventory.ticks[id] = value;
+	}
 }

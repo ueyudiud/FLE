@@ -6,6 +6,11 @@ import farcore.interfaces.energy.kinetic.IKineticAccess;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+/**
+ * A example kinetic energy handler, make an instance in tile.
+ * @author ueyudiud
+ *
+ */
 public class KineticHelper
 {
 	public final float minTorque;

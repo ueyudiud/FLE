@@ -14,5 +14,4 @@ public class FleStat extends StatBase
 	{
 		super(id, name, type);
 	}
-
 }

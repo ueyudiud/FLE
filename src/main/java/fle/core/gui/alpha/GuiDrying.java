@@ -30,7 +30,7 @@ public class GuiDrying extends GuiBase<TileEntityDryingTable>
 			s = inventory.getProgressScale(i, 25);
 		    if (s > 0)
 		    {
-		    	drawTexturedModalRect(xoffset + 75, yoffset + 16 + 18 * i, 176, 0, i, 18);
+		    	drawTexturedModalRect(xoffset + 75, yoffset + 16 + 18 * i, 176, 0, s, 18);
 		    }
 		}
 	}

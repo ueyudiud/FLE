@@ -29,8 +29,6 @@ import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.block.plant.tree.BlockLog;
-import farcore.debug.BlockDebug;
-import farcore.debug.BlockDebug1;
 import farcore.energy.electric.ElectricNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.ThermalNet;
@@ -82,7 +80,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid = FarCore.ID, version = "0.8", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "0.9", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 1558;
@@ -182,8 +180,6 @@ public class FarCoreSetup
 		
 		int id = V.fallingBlockEntityID;
 		EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id, FarCore.ID, 32, 20, true);
-		new BlockDebug();//Just for debug.
-		new BlockDebug1();//Just for debug.
 		
 		new ItemFluidDisplay();//Initialize fluid and void block icon.
 		new ItemDebugger().setTextureName("farcore:fle");//Initialize debugger for fle and void item icon.
