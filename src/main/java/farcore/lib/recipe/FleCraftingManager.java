@@ -13,6 +13,11 @@ public class FleCraftingManager
 	
 	private static List<IFleRecipe> recipes = new ArrayList();
 	
+	public static List<IFleRecipe> getRecipes()
+	{
+		return recipes;
+	}
+	
 	public static void registerRecipe(IFleRecipe recipe)
 	{
 		recipes.add(recipe);

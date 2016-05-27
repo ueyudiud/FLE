@@ -14,9 +14,11 @@ import org.apache.logging.log4j.LogManager;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -141,6 +143,14 @@ public class FarCoreSetup
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
+		for(ModContainer container : Loader.instance().getModList())
+		{
+			if(FarCore.OVERRIDE_ID.equals(container.getName()))
+			{
+				event.getModMetadata().childMods.add(container);
+				break;
+			}
+		}
 		try
 		{
 			FleLog.getCoreLogger().info("Loading configuration.");

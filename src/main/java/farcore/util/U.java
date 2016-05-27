@@ -41,6 +41,7 @@ import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.net.PacketSound;
 import farcore.lib.recipe.ToolDestoryDropRecipes;
 import farcore.lib.stack.AbstractStack;
+import farcore.lib.stack.ArrayStack;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.NBTPropertyStack;
 import farcore.lib.stack.OreStack;
@@ -897,6 +898,10 @@ public class U
 			else if(stack instanceof NBTPropertyStack)
 			{
 				return NBTPropertyStack.sizeOf((NBTPropertyStack) stack, size);
+			}
+			else if(stack instanceof ArrayStack)
+			{
+				return ArrayStack.sizeOf((ArrayStack) stack, size);
 			}
 			return null;
 		}

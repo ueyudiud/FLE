@@ -12,9 +12,11 @@ public class Fuels implements IFuelManager
 	{
 		FuelHandler.addFuelManager(new Fuels());
 	}
-	
+
 	private OreStack firewood = new OreStack("firewood");
-	private IFuelValue a = make(320000000, 16000F, 680, 350, null);
+	private OreStack branchwood = new OreStack("branchWood");
+	private IFuelValue a = make(320000000, 16000F, 680, 400, null);
+	private IFuelValue b = make(48000000, 9000F, 640, 350, null);
 
 	@Override
 	public IFuelValue getFuelValue(ItemStack fuel)
@@ -22,6 +24,10 @@ public class Fuels implements IFuelManager
 		if(firewood.similar(fuel))
 		{
 			return a;
+		}
+		if(branchwood.similar(fuel))
+		{
+			return b;
 		}
 		return null;
 	}
