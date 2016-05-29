@@ -47,7 +47,6 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 				log1.setCreativeTab(null);
 				leaves.setCreativeTab(null);
 				EnumItem.log_block.set(new ItemStack(log1));
-				continue;
 			}
 			OreDict.registerValid("treeLeaves", leaves);
 			OreDict.registerValid("logWood", log1);

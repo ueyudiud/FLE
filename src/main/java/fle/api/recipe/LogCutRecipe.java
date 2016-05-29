@@ -89,7 +89,7 @@ public class LogCutRecipe extends ShapelessFleRecipe
 				{
 					if(wood != SubstanceWood.WOOD_VOID)
 					{
-						builder.add(EnumItem.log_block.instance(1, wood));
+						builder.add(EnumItem.log.instance(1, wood));
 					}
 				}
 				display = builder.build();

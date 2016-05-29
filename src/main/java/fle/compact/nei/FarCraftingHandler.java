@@ -11,6 +11,7 @@ import farcore.lib.recipe.IFleRecipe;
 import farcore.lib.recipe.ShapedFleRecipe;
 import farcore.lib.recipe.ShapelessFleRecipe;
 import farcore.lib.stack.AbstractStack;
+import farcore.lib.stack.BaseStack;
 
 public class FarCraftingHandler extends FarTemplateRecipeHandler
 {
@@ -36,32 +37,32 @@ public class FarCraftingHandler extends FarTemplateRecipeHandler
 			try
 			{
 				AbstractStack stack;
-				if(recipe.tools[0] != null)
+				if(recipe.tools.length > 0)
 				{
 					stack = recipe.tools[0].getKey();
-					if(stack != null)
-						resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 18 - sOffsetX));
+					if(stack != BaseStack.EMPTY)
+						resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 18 - sOffsetY));
 					stack = recipe.tools[0].getValue();
-					if(stack != null)
+					if(stack != BaseStack.EMPTY)
 						resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 15 - sOffsetY));
-				}
-				if(recipe.tools[1] != null)
-				{
-					stack = recipe.tools[1].getKey();
-					if(stack != null)
-						resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 35 - sOffsetX));
-					stack = recipe.tools[1].getValue();
-					if(stack != null)
-						resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 35 - sOffsetY));
-				}
-				if(recipe.tools[2] != null)
-				{
-					stack = recipe.tools[2].getKey();
-					if(stack != null)
-						resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 52 - sOffsetX));
-					stack = recipe.tools[2].getValue();
-					if(stack != null)
-						resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 55 - sOffsetY));
+					if(recipe.tools.length > 1)
+					{
+						stack = recipe.tools[1].getKey();
+						if(stack != BaseStack.EMPTY)
+							resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 35 - sOffsetY));
+						stack = recipe.tools[1].getValue();
+						if(stack != BaseStack.EMPTY)
+							resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 35 - sOffsetY));
+						if(recipe.tools.length > 2)
+						{
+							stack = recipe.tools[2].getKey();
+							if(stack != BaseStack.EMPTY)
+								resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 52 - sOffsetY));
+							stack = recipe.tools[2].getValue();
+							if(stack != BaseStack.EMPTY)
+								resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 55 - sOffsetY));
+						}
+					}
 				}
 				for(int x = 0; x < recipe.width; ++x)
 					for(int y = 0; y < recipe.height; ++y)
@@ -90,31 +91,36 @@ public class FarCraftingHandler extends FarTemplateRecipeHandler
 				if(recipe.tools.length > 0)
 				{
 					stack = recipe.tools[0].getKey();
-					if(stack != null)
-						resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 18 - sOffsetX));
+					if(stack != BaseStack.EMPTY)
+						resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 18 - sOffsetY));
 					stack = recipe.tools[0].getValue();
-					if(stack != null)
+					if(stack != BaseStack.EMPTY)
 						resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 15 - sOffsetY));
 					if(recipe.tools.length > 1)
 					{
 						stack = recipe.tools[1].getKey();
-						if(stack != null)
-							resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 35 - sOffsetX));
+						if(stack != BaseStack.EMPTY)
+							resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 35 - sOffsetY));
 						stack = recipe.tools[1].getValue();
-						if(stack != null)
+						if(stack != BaseStack.EMPTY)
 							resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 35 - sOffsetY));
 						if(recipe.tools.length > 2)
 						{
 							stack = recipe.tools[2].getKey();
-							if(stack != null)
-								resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 52 - sOffsetX));
+							if(stack != BaseStack.EMPTY)
+								resources.add(new FarPositionedStack(stack, 16 - sOffsetX, 52 - sOffsetY));
 							stack = recipe.tools[2].getValue();
-							if(stack != null)
+							if(stack != BaseStack.EMPTY)
 								resources.add(new FarPositionedStack(stack, 36 - sOffsetX, 55 - sOffsetY));
 						}
 					}
 				}
 				int c = 0;
+				if(recipe.outputDetect != null)
+				{
+					resources.add(new FarPositionedStack(recipe.outputDetect.display(), 69 - sOffsetX, 18 - sOffsetY));
+					c = 1;
+				}
 				for(AbstractStack stack2 : recipe.input)
 				{
 					resources.add(new FarPositionedStack(stack2, 69 - sOffsetX + 17 * shapless_set[c][0], 18 - sOffsetY + 17 * shapless_set[c][1]));

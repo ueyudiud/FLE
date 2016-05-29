@@ -45,6 +45,7 @@ public class ShapelessFleRecipe extends AbstractFleRecipe
 					ISingleInputRecipe recipe = (ISingleInputRecipe) objects[i];
 					if(outputDetect != null) throw new IllegalArgumentException("The recipe can only contain one input check!");
 					outputDetect = recipe;
+					this.output = recipe.instance();
 				}
 				else
 				{
