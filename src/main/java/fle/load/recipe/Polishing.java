@@ -38,11 +38,15 @@ public class Polishing
 		
 		PolishRecipe.registerResource(new BaseStack(EnumItem.stone_fragment.instance(1, "flint")), 5);
 		
-		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), "c c      ", new ItemStack(Items.flint));
-		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), " c ccc c ", EnumItem.stone_chip.instance(4, "flintSmall"));
-		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), "     cccc", EnumItem.tool_head.instance(1, "flint_hammer", SubstanceTool.getSubstance("flint")));
-		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), "c ccccccc", EnumItem.tool_head.instance(1, "stone_shovel", SubstanceTool.getSubstance("flint")));
-		PolishRecipe.registerRecipe(new OreStack("fragmentFlint"), "   c cc c", EnumItem.tool.instance(1, "flint_awl", SubstanceTool.getSubstance("flint")));
+		SubstanceTool tool = SubstanceTool.getSubstance("flint");
+		OreStack input = new OreStack("fragmentFlint");
+		PolishRecipe.registerRecipe(input, "c c      ", new ItemStack(Items.flint));
+		PolishRecipe.registerRecipe(input, " c ccc c ", EnumItem.stone_chip.instance(4, "flintSmall"));
+		PolishRecipe.registerRecipe(input, "     cccc", EnumItem.tool_head.instance(1, "flint_hammer", tool));
+		PolishRecipe.registerRecipe(input, "c ccccccc", EnumItem.tool_head.instance(1, "stone_shovel", tool));
+		PolishRecipe.registerRecipe(input, "   c cc c", EnumItem.tool.instance(1, "flint_awl", tool));
+		PolishRecipe.registerRecipe(input, "c cc cc c", EnumItem.tool_head.instance(1, "flint_knife", tool));
+		PolishRecipe.registerRecipe(input, " c  c  c ", EnumItem.tool_head.instance(2, "flint_knife", tool));
 		Object[][] inputs1 = {
 				{"stone", "Stone"},
 				{"andesite", "Andesite"},
@@ -54,7 +58,7 @@ public class Polishing
 		for(Object[] element : inputs1)
 		{
 			SubstanceRock rock = SubstanceRock.getSubstance((String) element[0]);
-			SubstanceTool tool = rock.toolBelong;
+			tool = rock.toolBelong;
 			OreStack chip = new OreStack("chip" + element[1]);
 			PolishRecipe.registerResource(chip, rock.harvestLevel);
 			PolishRecipe.registerRecipe(chip, "p cpccccc", EnumItem.tool_head.instance(1, "stone_axe", tool));

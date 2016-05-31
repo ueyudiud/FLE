@@ -1,18 +1,27 @@
 package farcore.lib.collection;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Sets;
 
 import farcore.interfaces.IRegisterExceptionHandler;
 
 public class Register<T> implements IRegister<T>
 {
+	private static final Comparator<Object[]> COMPARATOR = (Object[] e1, Object[] e2) ->
+	{
+		return ((String) e1[0]).compareTo((String) e2[0]);
+	};
 	private IRegisterExceptionHandler handler;
 	
 	private int point = 0;
@@ -350,6 +359,71 @@ public class Register<T> implements IRegister<T>
 		public void onNameContain(int id, String registered)
 		{
 			throw new IllegalArgumentException("The name " + registered + " has already registed!");
+		}
+	}
+	
+	@Override
+	public void arrange()
+	{
+		if(size == 0) return;
+		int i = 0;
+		List<Object[]> list = new ArrayList();
+		for(; i < names.length; ++i)
+		{
+			if(names[i] != null)
+			{
+				list.add(new Object[]{names[i], targets[i]});
+			}
+		}
+		Object[][] objects = list.toArray(new Object[0][]);
+		Arrays.sort(objects, COMPARATOR);
+		size = objects.length;
+		names = new String[size];
+		targets = new Object[size];
+		for(i = 0; i < size; ++i)
+		{
+			names[i] = (String) objects[i][0];
+			targets[i] = objects[i][1];
+		}
+	}
+	
+	@Override
+	public void arrange(String... strings)
+	{
+		if(size == 0) return;
+		List<String> l = Arrays.asList(strings);
+		int id, i = 0;
+		List<Object[]> list = new ArrayList();
+		Object[][] objList2, objList = new Object[strings.length][];
+		for(; i < names.length; ++i)
+		{
+			if(names[i] != null)
+			{
+				id = list.indexOf(names[i]);
+				if(id == -1)
+				{
+					list.add(new Object[]{names[i], targets[i]});
+				}
+				else
+				{
+					objList[id] = new Object[]{names[i], targets[i]};
+				}
+			}
+		}
+		objList2 = list.toArray(new Object[0][]);
+		Arrays.sort(objList2, COMPARATOR);
+		objList = ObjectArrays.concat(objList, objList2, Object[].class);
+
+		size = objList.length;
+		names = new String[size];
+		targets = new Object[size];
+		for(i = 0; i < size; ++i)
+		{
+			if(objList[i] != null)
+			{
+				names[i] = (String) objList[i][0];
+				targets[i] = objList[i][1];
+			}
 		}
 	}
 }

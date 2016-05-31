@@ -42,6 +42,7 @@ import farcore.handler.FarCoreGuiHandler;
 import farcore.handler.FarCoreHarvestHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCorePlayerHandler;
+import farcore.handler.FarCoreDataHandler;
 import farcore.interfaces.item.ILocalizedRegisterListener;
 import farcore.item.ItemDebugger;
 import farcore.item.ItemFluidDisplay;
@@ -52,12 +53,14 @@ import farcore.lib.net.PacketSound;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
 import farcore.lib.net.entity.player.PacketPlayerStatUpdate;
+import farcore.lib.net.entity.player.PacketRegisterSynclizeAsk;
 import farcore.lib.net.gui.PacketFluidSlotClicked;
 import farcore.lib.net.gui.PacketFluidUpdate;
 import farcore.lib.net.gui.PacketFluidUpdateLarge;
 import farcore.lib.net.gui.PacketGuiAction;
 import farcore.lib.net.tile.PacketTileAskSync;
 import farcore.lib.net.tile.PacketTileSyncable;
+import farcore.lib.net.world.PacketRegisterSynclize;
 import farcore.lib.net.world.PacketWorldDataAskUpdate;
 import farcore.lib.net.world.PacketWorldDataUpdateAll;
 import farcore.lib.net.world.PacketWorldDataUpdateSingle;
@@ -177,6 +180,9 @@ public class FarCoreSetup
 		handler = new FarCoreAchievementHandler();
 		registerMFEventHandler(handler);
 		registerFMLEventHandler(handler);
+		handler = new FarCoreDataHandler();
+		registerMFEventHandler(handler);
+		registerFMLEventHandler(handler);
 		registerFMLEventHandler(new FarCoreCraftingHandler());
 		registerFMLEventHandler(new FarCoreKeyHandler());
 		
@@ -224,6 +230,8 @@ public class FarCoreSetup
 		network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 		network.registerPacket(PacketKey.class, Side.SERVER);
 		network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
+		network.registerPacket(PacketRegisterSynclizeAsk.class, Side.SERVER);
+		network.registerPacket(PacketRegisterSynclize.class, Side.CLIENT);
 		proxy.load();
 	}
 

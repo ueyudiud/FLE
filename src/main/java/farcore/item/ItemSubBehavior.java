@@ -9,8 +9,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.handler.FarCoreDataHandler;
 import farcore.interfaces.IItemIconInfo;
 import farcore.interfaces.item.IBehavior;
 import farcore.interfaces.item.IBreakSpeedItem;
@@ -21,6 +23,7 @@ import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.util.FleLog;
 import farcore.util.LanguageManager;
+import farcore.util.U;
 import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -42,12 +45,28 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 	protected final IRegister<IItemInfo> register;
 	private Map<String, IItemIconInfo> infos = new HashMap();
 	private Map<String, String> localizes = new HashMap();
-	
+
 	protected ItemSubBehavior(String unlocalized)
+	{
+		this(unlocalized, false);
+	}
+	
+	/**
+	 * Raw typing, may cause lots of bug when enable flag.
+	 * Use init(String unlocalized) instead.
+	 * @param unlocalized
+	 * @param flag Sort registered name to same id list from old version.
+	 */
+	@Deprecated
+	protected ItemSubBehavior(String unlocalized, boolean flag)
 	{
 		super(unlocalized);
 		register = provideRegister();
 		hasSubtypes = true;
+		if(flag)
+		{
+			FarCoreDataHandler.registerRegister(GameData.getItemRegistry().getNameForObject(this), register);
+		}
 	}
 	protected ItemSubBehavior(String unlocalized, String unlocalizedTooltip)
 	{
@@ -585,4 +604,19 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 	{
 		return false;
 	}
+	
+	//Raw method.
+//	@Override
+//	public void setDamage(ItemStack stack, int damage)
+//	{
+//		super.setDamage(stack, damage);
+//		if(register.contain(damage))
+//			U.Inventorys.setupNBT(stack, true).setString("meta", register.name(damage));
+//	}
+//	
+//	@Override
+//	public int getDamage(ItemStack stack)
+//	{
+//		return stack.hasTagCompound() && stack.stackTagCompound.hasKey("meta") ? register.id(stack.stackTagCompound.getString("meta")) : super.getDamage(stack);
+//	}
 }

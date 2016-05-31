@@ -1,5 +1,8 @@
 package farcore.network;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -21,6 +24,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.MessageToMessageCodec;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.INetHandler;
 
 public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 {
@@ -70,19 +74,11 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	    } 
 	    else
 	    {
-	    	IPacket packet;
-	    	try
-	    	{
-	    		packet = packetTypes.get(id).newInstance();
-	    		packet.decode(buf);
-	    		packet.side(msg.getTarget());
-	    		packet.handler(msg.handler());
-	    		out.add(packet);
-	    	}
-	    	catch(Exception e)
-	    	{
-	    		throw e;
-	    	}
+	    	IPacket packet = processPacket(id, buf, msg.getTarget(), msg.handler());
+    		if(packet != null)
+    		{
+    			out.add(packet);
+    		}
 	    }
 	}
 	
@@ -237,5 +233,112 @@ public class NetworkBasic extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 	    tChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
 	    tChannel.writeAndFlush(packet);
+	}
+	
+	public void sendLargeToPlayer(IPacket packet, EntityPlayer player)
+	{
+		if(!needToSend(packet)) return;
+		try
+		{
+			ByteBuf buffer = Unpooled.buffer();
+		    byte[] data = packet.encode(buffer).array();
+			ByteArrayInputStream input = new ByteArrayInputStream(data);
+			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
+	        int len;
+			byte[] cache = new byte[4096];
+			while ((len = input.read(cache)) != -1)
+			{
+				buf.write(cache, 0, len);
+			}
+			data = buf.toByteArray();
+		    
+		    int maxSize = Short.MAX_VALUE - 5;
+		    for (int offset = 0; offset < data.length; offset += maxSize)
+		    {
+		    	ByteArrayOutputStream osRaw = new ByteArrayOutputStream();
+		    	DataOutputStream os = new DataOutputStream(osRaw);
+		    	int state = 0;
+		    	if (offset == 0)
+		    	{
+		    		state |= 0x1;
+		    	}
+		    	
+		    	if (offset + maxSize > data.length)
+		    	{
+		    		state |= 0x2;
+		    	}
+		    	int id = packetTypes.id(packet.getClass());
+		    	state |= id << 2;
+		    	os.writeInt(state);
+		    	os.write(data, offset, Math.min(maxSize, data.length - offset));
+		    	sendToPlayer(new PacketLarge(osRaw.toByteArray()), player);
+		    }
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendLargeToAll(IPacket packet)
+	{
+		if(!needToSend(packet)) return;
+		try
+		{
+			ByteBuf buffer = Unpooled.buffer();
+		    byte[] data = packet.encode(buffer).array();
+			ByteArrayInputStream input = new ByteArrayInputStream(data);
+			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
+	        int len;
+			byte[] cache = new byte[4096];
+			while ((len = input.read(cache)) != -1)
+			{
+				buf.write(cache, 0, len);
+			}
+			data = buf.toByteArray();
+		    
+		    int maxSize = Short.MAX_VALUE - 5;
+		    for (int offset = 0; offset < data.length; offset += maxSize)
+		    {
+		    	ByteArrayOutputStream osRaw = new ByteArrayOutputStream();
+		    	DataOutputStream os = new DataOutputStream(osRaw);
+		    	int state = 0;
+		    	if (offset == 0)
+		    	{
+		    		state |= 0x1;
+		    	}
+		    	
+		    	if (offset + maxSize > data.length)
+		    	{
+		    		state |= 0x2;
+		    	}
+		    	int id = packetTypes.id(packet.getClass());
+		    	state |= id << 2;
+		    	os.writeInt(state);
+		    	os.write(data, offset, Math.min(maxSize, data.length - offset));
+		    	sendToAll(new PacketLarge(osRaw.toByteArray()));
+		    }
+		}
+		catch(Throwable e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public IPacket processPacket(int id, ByteBuf buf, Side side, INetHandler handler) throws Exception
+	{
+    	IPacket packet;
+    	try
+    	{
+    		packet = packetTypes.get(id).newInstance();
+    		packet.decode(buf);
+    		packet.side(side);
+    		packet.handler(handler);
+    		return packet.process(this);
+    	}
+    	catch(Exception e)
+    	{
+    		throw e;
+    	}
 	}
 }

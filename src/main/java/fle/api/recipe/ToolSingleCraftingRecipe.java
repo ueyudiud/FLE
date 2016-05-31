@@ -31,14 +31,16 @@ public class ToolSingleCraftingRecipe extends ShapelessFleRecipe
 		String toolName;
 		float usesCoefficient;
 		int tool;
-		ItemStack instance;
+		ItemStack instance1;
+		ItemStack instance2;
 		
 		public ToolMatchRecipe(String tool, float coefficient)
 		{
 			this.toolName = tool;
 			this.usesCoefficient = coefficient;
-			this.tool = EnumItem.tool_head.instance(1, tool).getItemDamage();
-			this.instance = EnumItem.tool.instance(1, tool);
+			this.instance1 = EnumItem.tool_head.instance(1, tool);
+			this.tool = instance1.getItemDamage();
+			this.instance2 = EnumItem.tool.instance(1, tool);
 		}
 
 		@Override
@@ -76,19 +78,19 @@ public class ToolSingleCraftingRecipe extends ShapelessFleRecipe
 		@Override
 		public ItemStack instance()
 		{
-			return instance;
+			return instance2;
 		}
 
 		@Override
 		public List<ItemStack> display()
 		{
-			return ImmutableList.of(instance);
+			return ImmutableList.of(instance1);
 		}
 
 		@Override
 		public boolean valid()
 		{
-			return instance != null;
+			return instance() != null;
 		}
 	}
 }

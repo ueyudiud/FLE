@@ -37,7 +37,31 @@ public interface IRegister<T> extends Iterable<T>
 	
 	T remove(String name);
 	
+	/**
+	 * Remove an element from register.
+	 * @param arg The remove element.
+	 * @return The element registered name.
+	 */
 	String remove(T arg);
 
+	/**
+	 * Give the element size of register.
+	 * @return
+	 */
 	int size();
+	
+	/**
+	 * Arrange and remove empty slot,
+	 * give all element new id by name.
+	 */
+	void arrange();
+	
+	/**
+	 * Arrange elements, the first is
+	 * strings name contains, and
+	 * move other not contain in this
+	 * element to other id.
+	 * @param list The name serialized list.
+	 */
+	void arrange(String...list);
 }

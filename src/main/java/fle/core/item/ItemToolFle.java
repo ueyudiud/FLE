@@ -7,10 +7,13 @@ import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.enums.EnumDamageResource;
 import farcore.enums.EnumItem;
 import farcore.interfaces.IItemIconInfo;
+import farcore.interfaces.item.ICustomDamageBehavior;
 import farcore.interfaces.item.IItemInfo;
 import farcore.item.ItemSubTool;
+import farcore.lib.recipe.ICraftingInventory;
 import farcore.lib.render.item.ItemRenderInfoSimple;
 import farcore.lib.substance.SubstanceTool;
 import farcore.util.SubTag;
@@ -20,6 +23,7 @@ import fle.api.item.behavior.BehaviorAxe;
 import fle.api.item.behavior.BehaviorBarGrizzly;
 import fle.api.item.behavior.BehaviorBase;
 import fle.api.item.behavior.BehaviorFireStarter;
+import fle.api.item.behavior.BehaviorKnife;
 import fle.api.item.behavior.BehaviorShovel;
 import fle.api.item.behavior.BehaviorStoneHammer;
 import fle.api.item.behavior.BehaviorWhetstone;
@@ -57,6 +61,7 @@ public class ItemToolFle extends ItemSubTool
 				new SubstanceTool("raw_wood_fire").setMaxUses(12), new SubstanceTool("wood_fire").setMaxUses(32));
 		addSubItem(6, "bar_grizzly", "Bar Grizzly", new BehaviorBarGrizzly(), new ItemToolCustomInfo("fle:tools/bar_grizzly", "simple_bar_grizzly"), 
 				new SubstanceTool("simple_bar_grizzly").setMaxUses(128));
+		addSubItem(7, "flint_knife", "Flint Knife", new BehaviorKnife(), "knife/flint", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_flint), SubstanceTool.class));
 		addSubItem(11, "stone_axe", "Stone Axe", new BehaviorAxe(2F), "axe/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
 		addSubItem(13, "stone_hammer", "Stone Hammer", new BehaviorStoneHammer(), "hammer/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
@@ -96,5 +101,20 @@ public class ItemToolFle extends ItemSubTool
 	public int getItemStackLimit(ItemStack stack)
 	{
 		return 1;
+	}
+	
+	@Override
+	public ItemStack getCraftedItem(ItemStack stack, ICraftingInventory crafting)
+	{
+		IItemInfo info = register.get(getDamage(stack));
+		if(info instanceof ICustomDamageBehavior)
+		{
+			return ((ICustomDamageBehavior) info).getCraftedItem(stack, crafting);
+		}
+		else
+		{
+			damangeItem(stack, 1F, null, EnumDamageResource.CRAFT);
+		}
+		return U.Inventorys.valid(stack);
 	}
 }

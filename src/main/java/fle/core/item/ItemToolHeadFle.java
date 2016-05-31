@@ -27,7 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemToolHeadFle extends ItemSubDamagable implements IInfomationable
-{
+{	
 	protected Map<String, ImmutableList<SubstanceTool>> validTools = new HashMap();
 
 	public ItemToolHeadFle()

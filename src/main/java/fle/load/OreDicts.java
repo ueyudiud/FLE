@@ -14,6 +14,7 @@ public class OreDicts
 	{
 		for(SubstanceRock rock : SubstanceRock.getRocks())
 		{
+			if(rock == SubstanceRock.VOID_ROCK) continue;
 			String ore = U.Lang.validateOre(true, rock.getName());
 			registerValid("stone" + ore, EnumItem.rock_block.instance(1, rock));
 			registerValid("cobble" + ore, EnumItem.cobble_block.instance(1, rock));

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import farcore.interfaces.item.ICustomDamageItem;
 import farcore.lib.stack.AbstractStack;
 import farcore.util.U;
 import net.minecraft.item.ItemStack;
@@ -120,7 +121,12 @@ public class ShapelessFleRecipe extends AbstractFleRecipe
 				AbstractStack check1 = check.get(j);
 				if(matchInput(stack, check1))
 				{
-					if(check1.useContainer() || !stack.getItem().hasContainerItem(stack))
+//					if(stack.getItem() instanceof ICustomDamageItem)
+//					{
+//						inventory.setStackInMatrix(i, ((ICustomDamageItem) stack.getItem()).getCraftedItem(stack, inventory));
+//					}
+//					else 
+						if(check1.useContainer() || !stack.getItem().hasContainerItem(stack))
 					{
 						inventory.decrStackInMatrix(i, check1.size(stack));
 					}

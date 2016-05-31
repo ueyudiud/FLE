@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import farcore.interfaces.item.ICustomDamageItem;
 import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.BaseStack;
 import farcore.util.U;
@@ -182,7 +183,12 @@ public class ShapedFleRecipe extends AbstractFleRecipe
 				{
 					continue;
 				}
-				if(check.useContainer() || !stack.getItem().hasContainerItem(stack))
+//				if(stack.getItem() instanceof ICustomDamageItem)
+//				{
+//					inventory.setStackInMatrix(u + i, v + j, ((ICustomDamageItem) stack.getItem()).getCraftedItem(stack, inventory));
+//				}
+//				else 
+					if(check.useContainer() || !stack.getItem().hasContainerItem(stack))
 				{
 					inventory.decrStackInMatrix(u + i, v + j, check.size(stack));
 				}

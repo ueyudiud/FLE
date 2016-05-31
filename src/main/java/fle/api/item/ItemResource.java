@@ -51,7 +51,7 @@ public class ItemResource extends ItemSubBehavior implements IInfomationable
 	{
 		if(objects.length == 1)
 		{
-			if(objects[0] instanceof String)
+			if(objects[0] instanceof String && register.contain((String) objects[0]))
 			{
 				return new ItemStack(this, size, register.id((String) objects[0]));
 			}

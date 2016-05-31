@@ -1,6 +1,8 @@
 package fle.api.item.behavior;
 
 import farcore.enums.EnumDamageResource;
+import farcore.interfaces.item.ICustomDamageBehavior;
+import farcore.lib.recipe.ICraftingInventory;
 import farcore.util.U;
 import fle.core.item.ItemToolFle;
 import net.minecraft.block.Block;
@@ -11,11 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-public class BehaviorDigableTool extends BehaviorBase
+public class BehaviorDigableTool extends BehaviorBase implements ICustomDamageBehavior
 {
 	protected float destroyBlockDamageBase;
 	protected float destroyBlockDamageHardnessMul;
-	protected int hitEntityDamage;
+	protected float hitEntityDamage;
+	protected float craftingDamage = 1.0F;
 	
 	@Override
 	public float getDigSpeed(ItemStack stack, World world, int x, int y, int z, Block block, int metadata)
@@ -61,5 +64,12 @@ public class BehaviorDigableTool extends BehaviorBase
 	public int getItemStackLimit(ItemStack stack)
 	{
 		return 1;
+	}
+
+	@Override
+	public ItemStack getCraftedItem(ItemStack stack, ICraftingInventory crafting)
+	{
+		U.Inventorys.damage(stack, null, craftingDamage, EnumDamageResource.USE, false);
+		return U.Inventorys.valid(stack);
 	}
 }

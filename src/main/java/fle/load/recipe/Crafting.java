@@ -49,6 +49,8 @@ public class Crafting
 		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "squid_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "squid_raw"), "stickWood"));
 		registerRecipe(new ToolSingleCraftingRecipe("flint_hammer", 0.7F, 140, "branchWood", "ropeVine"));
 		registerRecipe(new ToolSingleCraftingRecipe("flint_hammer", 1.0F, 100, "stickWood", "ropeVine"));
+		registerRecipe(new ToolSingleCraftingRecipe("flint_knife", 0.7F, 100, "branchWood", "ropeVine"));
+		registerRecipe(new ToolSingleCraftingRecipe("flint_knife", 1.0F, 60, "stickWood", "ropeVine"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_axe", 0.7F, 140, "branchWood", "ropeVine"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_axe", 1.0F, 100, "stickWood", "ropeVine"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_shovel", 0.7F, 140, "branchWood", "ropeVine"));

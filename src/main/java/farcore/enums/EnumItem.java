@@ -94,8 +94,11 @@ public enum EnumItem
 	log_block,
 	brick_block, 
 	food_smeltable, 
-	food_divide_smeltable,
-	stick;
+	food_divide_smeltable, 
+	@Deprecated
+	food_drinkable,
+	stick,
+	bowl;
 	
 	boolean init = false;
 	AbstractStack stack;
