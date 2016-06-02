@@ -9,10 +9,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
-import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import farcore.handler.FarCoreDataHandler;
 import farcore.interfaces.IItemIconInfo;
 import farcore.interfaces.item.IBehavior;
 import farcore.interfaces.item.IBreakSpeedItem;
@@ -23,7 +21,6 @@ import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.util.FleLog;
 import farcore.util.LanguageManager;
-import farcore.util.U;
 import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -33,40 +30,20 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 
 public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 {
 	protected final IRegister<IItemInfo> register;
-	private Map<String, IItemIconInfo> infos = new HashMap();
 	private Map<String, String> localizes = new HashMap();
 
 	protected ItemSubBehavior(String unlocalized)
 	{
-		this(unlocalized, false);
-	}
-	
-	/**
-	 * Raw typing, may cause lots of bug when enable flag.
-	 * Use init(String unlocalized) instead.
-	 * @param unlocalized
-	 * @param flag Sort registered name to same id list from old version.
-	 */
-	@Deprecated
-	protected ItemSubBehavior(String unlocalized, boolean flag)
-	{
 		super(unlocalized);
 		register = provideRegister();
 		hasSubtypes = true;
-		if(flag)
-		{
-			FarCoreDataHandler.registerRegister(GameData.getItemRegistry().getNameForObject(this), register);
-		}
 	}
 	protected ItemSubBehavior(String unlocalized, String unlocalizedTooltip)
 	{
@@ -96,15 +73,14 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 		return register.contain(id);
 	}
 	
-	public void addSubItem(int id, String name, String local, IBehavior behavior, IItemProperty property, IItemIconInfo iconInfo)
+	public void addSubItem(int id, String name, String local, IBehavior behavior, IItemProperty property)
 	{
-		addSubItem(id, name, local, new ItemInfoMix(behavior, property), iconInfo);
+		addSubItem(id, name, local, new ItemInfoMix(behavior, property));
 	}
 	
-	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, IItemIconInfo iconInfo)
+	public void addSubItem(int id, String name, String local, IItemInfo itemInfo)
 	{
 		register.register(id, name, itemInfo);
-		infos.put(name, iconInfo);
 		localizes.put(name, local);
 	}
 
@@ -122,85 +98,6 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 	public String getMetaUnlocalizedName(int metadata)
 	{
 		return register.name(metadata);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister register)
-	{
-		for(IItemIconInfo info : infos.values())
-		{
-			try 
-			{
-				info.registerIcons(register);
-			}
-			catch (Exception e)
-			{
-				
-			}
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public boolean requiresMultipleRenderPasses()
-	{
-		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public int getRenderPasses(int metadata)
-	{
-		try
-		{
-			return infos.get(register.name(metadata)).getPasses();
-		}
-		catch(Throwable throwable)
-		{
-			if(V.debug)
-			{
-				FleLog.getCoreLogger().throwing(throwable);
-			}
-		}
-		return 1;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack stack, int pass)
-	{
-		try
-		{
-			return infos.get(register.name(getDamage(stack))).getColor(stack, pass);
-		}
-		catch(Throwable throwable)
-		{
-			if(V.debug)
-			{
-				FleLog.getCoreLogger().throwing(throwable);
-			}
-		}
-		return 0xFFFFFF;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(ItemStack stack, int pass)
-	{
-		try
-		{
-			return infos.get(register.name(getDamage(stack))).getIcon(stack, pass);
-		}
-		catch(Throwable throwable)
-		{
-			if(V.debug)
-			{
-				FleLog.getCoreLogger().throwing(throwable);
-			}
-		}
-		return V.voidItemIcon;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconIndex(ItemStack stack)
-	{
-		return getIcon(stack, 0);
 	}
 
 	@Override

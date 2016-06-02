@@ -3,16 +3,15 @@ package fle.api.item;
 import java.util.List;
 
 import farcore.enums.EnumItem.IInfomationable;
-import farcore.interfaces.IItemIconInfo;
 import farcore.interfaces.item.IItemInfo;
-import farcore.item.ItemSubBehavior;
+import farcore.item.ItemSubBehaviorII;
 import farcore.lib.render.item.ItemRenderInfoSimple;
 import fle.api.item.behavior.BehaviorBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ItemResource extends ItemSubBehavior implements IInfomationable
+public class ItemResource extends ItemSubBehaviorII implements IInfomationable
 {
 	protected ItemResource(String unlocalized)
 	{

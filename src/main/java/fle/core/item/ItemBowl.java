@@ -1,17 +1,28 @@
 package fle.core.item;
 
-import farcore.enums.EnumItem;
-import farcore.item.ItemBase;
-import farcore.lib.collection.Register;
-import fle.api.util.BowlBehavior;
-import fle.core.item.resource.ItemFleDrinkableFood;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-public class ItemBowl extends ItemBase
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import farcore.enums.EnumItem;
+import farcore.interfaces.item.IBehavior;
+import farcore.interfaces.item.IItemInfo;
+import farcore.interfaces.item.IItemProperty;
+import farcore.item.ItemSubBehavior;
+import farcore.util.V;
+import fle.core.item.behavior.BehaviorBowl;
+import fle.core.item.resource.ItemFleDrinkableFood;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+
+public class ItemBowl extends ItemSubBehavior
 {
-	private final Register<BowlBehavior> behaviors = new Register();
+	private Map<String, String> textureNameMap = new HashMap();
+	@SideOnly(Side.CLIENT)
+	private Map<String, IIcon> iconMap = new HashMap();
 	
 	public ItemBowl()
 	{
@@ -22,17 +33,48 @@ public class ItemBowl extends ItemBase
 	
 	private void init()
 	{
-		ItemFleDrinkableFood.registerFoods(behaviors);
+		addSubItem(0, "empty", "Bowl", "empty", new BehaviorBowl());
+		ItemFleDrinkableFood.registerFoods(this, register);
 	}
 	
-	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public void addSubItem(int id, String name, String local, String iconName, IBehavior behavior, IItemProperty property)
 	{
-		BowlBehavior behavior;
-		if((behavior = behaviors.get(getDamage(stack))) != null)
+		super.addSubItem(id, name, local, behavior, property);
+		textureNameMap.put(name, iconName);
+	}
+	
+	public void addSubItem(int id, String name, String local, String iconName, IItemInfo itemInfo)
+	{
+		super.addSubItem(id, name, local, itemInfo);
+		textureNameMap.put(name, iconName);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister register)
+	{
+		icon = register.registerIcon(getIconString() + "/base");
+		iconMap = new HashMap();
+		for(Entry<String, String> entry : textureNameMap.entrySet())
 		{
-			return behavior.onItemRightClick(stack, world, player);
+			iconMap.put(entry.getKey(), register.registerIcon(getIconString() + "/" + entry.getValue()));
 		}
-		return stack;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public int getRenderPasses(int metadata)
+	{
+		return 2;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public IIcon getIconIndex(ItemStack stack)
+	{
+		return getIcon(stack, 0);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public IIcon getIconFromDamageForRenderPass(int meta, int pass)
+	{
+		return pass == 0 ? icon : iconMap.getOrDefault(register.name(meta), V.voidItemIcon);
 	}
 }

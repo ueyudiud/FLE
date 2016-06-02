@@ -9,10 +9,9 @@ import farcore.interfaces.item.IItemProperty;
 import farcore.lib.recipe.ICraftingInventory;
 import farcore.util.U;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 
-public class ItemSubDamagable extends ItemSubBehavior implements ICustomDamageItem
+public class ItemSubDamagable extends ItemSubBehaviorII implements ICustomDamageItem
 {
 	private int craftingDamage;
 
