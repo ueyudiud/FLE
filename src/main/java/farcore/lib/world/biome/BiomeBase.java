@@ -14,6 +14,7 @@ import farcore.util.noise.NoiseBasic;
 import farcore.util.noise.NoiseCoherent;
 import farcore.util.noise.NoisePerlin;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
@@ -22,6 +23,7 @@ import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 
 public class BiomeBase extends BiomeGenBase
 {

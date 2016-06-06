@@ -1,5 +1,7 @@
 package farcore.util.noise;
 
+import farcore.interfaces.INoise;
+
 public abstract class NoiseBasic
 {
 	protected long seed;

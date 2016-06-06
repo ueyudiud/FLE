@@ -42,6 +42,7 @@ public class Crafting
 		{
 			registerShapelessRecipe(EnumItem.tool.instance(1, "rough_stone_adz", element[0]), 100, "branchWood", "ropeVine", "chip" + element[1]);
 		}
+		registerShapedRecipe(EnumItem.bowl.instance(4), 80, new Ety(EnumToolType.knife.stack(), null), "x", 'x', "logWood");
 		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "beef_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "beef_raw"), "stickWood"));
 		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "chicken_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "chicken_raw"), "stickWood"));
 		registerRecipe(new FoodUseCraftingRecipe(EnumItem.food_smeltable.instance(1, "fish_kebab_raw"), 4.0F, 40, EnumItem.food_divide_smeltable.instance(1, "fish_raw"), "stickWood"));

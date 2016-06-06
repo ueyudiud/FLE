@@ -24,12 +24,14 @@ import farcore.util.LanguageManager;
 import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -500,6 +502,15 @@ public class ItemSubBehavior extends ItemBase implements IBreakSpeedItem
 	public boolean isRepairable()
 	{
 		return false;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs tab, List list)
+	{
+		for(String string : register.names())
+		{
+			list.add(new ItemStack(item, 1, register.id(string)));
+		}
 	}
 	
 	//Raw method.

@@ -15,7 +15,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemFood extends ItemSubBehavior
+public class ItemFood extends ItemSubBehaviorII
 {
 	protected final Map<String, IFoodStat> foodStats = new HashMap();
 	

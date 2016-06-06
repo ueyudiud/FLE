@@ -41,6 +41,7 @@ public class OreDicts
 		registerValid(EnumToolType.shovel.ore(), EnumItem.tool.instance(1, "stone_shovel"));
 		registerValid(EnumToolType.bar_grizzly.ore(), EnumItem.tool.instance(1, "bar_grizzly"));
 		registerValid(EnumToolType.wooden_hammer.ore(), EnumItem.tool.instance(1, "wood_hammer"));
+		registerValid(EnumToolType.knife.ore(), EnumItem.tool.instance(1, "flint_knife"));
 		registerValid("pileGravel", EnumItem.pile.instance(1, "gravel"));
 		registerValid("treeSapling", BlockItems.sapling);
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_oak"));

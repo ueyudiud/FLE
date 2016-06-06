@@ -17,6 +17,7 @@ import fle.core.block.machine.alpha.BlockWithOutTileAlpha;
 import fle.core.block.machine.alpha.BlockWithTileAlpha;
 import fle.core.block.plant.BlockBush1;
 import fle.core.block.plant.BlockVine1;
+import fle.core.item.ItemBowl;
 import fle.core.item.ItemLog;
 import fle.core.item.ItemToolFle;
 import fle.core.item.ItemToolHeadFle;
@@ -64,6 +65,7 @@ public class BlockItems
 	public static Item smeltableFood;
 	public static Item divideSmeltableFood;
 	public static Item stick;
+	public static Item bowl;
 	
 	public static void init()
 	{
@@ -99,5 +101,6 @@ public class BlockItems
 		smeltableFood = new ItemFleSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
 		divideSmeltableFood = new ItemFleDividableSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
 		stick = new ItemStick().setTextureName("fle:resource/stick").setCreativeTab(CreativeTabs.tabMaterials);
+		bowl = new ItemBowl().setTextureName("fle:resource/bowl").setCreativeTab(CreativeTabs.tabMaterials);
 	}
 }

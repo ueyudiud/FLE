@@ -191,6 +191,7 @@ public class BaseStack implements AbstractStack
 	@Override
 	public boolean equals(Object obj)
 	{
+		if(stack == null) return obj == EMPTY;
 		if(obj == this)
 		{
 			return true;

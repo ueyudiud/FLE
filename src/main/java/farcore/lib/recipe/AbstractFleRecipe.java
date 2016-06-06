@@ -91,9 +91,9 @@ public abstract class AbstractFleRecipe implements IFleRecipe
 						{
 							AbstractStack tool = entry.getKey();
 							AbstractStack material = entry.getValue();
-							if(tool != null && material != BaseStack.EMPTY)
+							if(tool != BaseStack.EMPTY)
 							{
-								if(tool.useContainer() || ! stack.getItem().hasContainerItem(stack))
+								if(tool.useContainer() || !(stack.getItem() instanceof ICustomDamageItem || stack.getItem().hasContainerItem(stack)))
 								{
 									inventory.decrStackInTool(i, tool.size(stack));
 								}
@@ -109,9 +109,9 @@ public abstract class AbstractFleRecipe implements IFleRecipe
 									}
 								}
 							}
-							if(material != null && material != BaseStack.EMPTY)
+							if(material != BaseStack.EMPTY)
 							{
-								if(material.useContainer() || ! stack2.getItem().hasContainerItem(stack2))
+								if(material.useContainer() || !(stack2.getItem() instanceof ICustomDamageItem || stack2.getItem().hasContainerItem(stack2)))
 								{
 									inventory.decrStackInToolMatrial(i, material.size(stack2));
 								}

@@ -1,10 +1,12 @@
 package fle.core.world.layer;
 
+import farcore.util.noise.NoiseBasic;
+import farcore.util.noise.NoisePerlin;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 
 public class LayerRing extends LayerBase
-{
+{	
 	public LayerRing(long seed, GenLayer layer)
 	{
 		super(seed);
