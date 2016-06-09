@@ -58,6 +58,7 @@ public class ItemPlant extends ItemResource
 		addSubItem(5102, "brussels_sprouts", "Brussels Sprouts", "brussels_sprouts");
 		addSubItem(5103, "cabbage", "Cabbage", "cabbage");
 		addSubItem(5104, "cauliflower", "Cauliflower", "cauliflower");
+		addSubItem(5105, "purple_cabbage", "Purple Cabbage", "purple_cabbage");
 		
 		addSubItem(10001, "vine", "Vine", "vine");
 	}

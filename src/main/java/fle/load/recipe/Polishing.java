@@ -66,6 +66,10 @@ public class Polishing
 			PolishRecipe.registerRecipe(chip, "c pcpcccc", EnumItem.tool_head.instance(1, "stone_axe", tool));
 			PolishRecipe.registerRecipe(chip, "c ccpcccc", EnumItem.tool_head.instance(1, "stone_shovel", tool));
 			PolishRecipe.registerRecipe(chip, "      ccc", EnumItem.tool_head.instance(1, "stone_hammer", tool));
+			PolishRecipe.registerRecipe(chip, "p c     p", EnumItem.tool_head.instance(1, "stone_spade_hoe", tool));
+			PolishRecipe.registerRecipe(chip, "c p   p  ", EnumItem.tool_head.instance(1, "stone_spade_hoe", tool));
+			PolishRecipe.registerRecipe(chip, "  pcc ccc", EnumItem.tool_head.instance(1, "stone_sickle", tool));
+			PolishRecipe.registerRecipe(chip, "p   ccccc", EnumItem.tool_head.instance(1, "stone_sickle", tool));
 			PolishRecipe.registerRecipe(chip, "ppp   ppp", EnumItem.tool.instance(1, "whetstone", tool));
 		}
 	}

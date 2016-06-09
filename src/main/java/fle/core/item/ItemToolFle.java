@@ -25,6 +25,8 @@ import fle.api.item.behavior.BehaviorBase;
 import fle.api.item.behavior.BehaviorFireStarter;
 import fle.api.item.behavior.BehaviorKnife;
 import fle.api.item.behavior.BehaviorShovel;
+import fle.api.item.behavior.BehaviorSickle;
+import fle.api.item.behavior.BehaviorSpadeHoe;
 import fle.api.item.behavior.BehaviorStoneHammer;
 import fle.api.item.behavior.BehaviorWhetstone;
 import fle.api.item.behavior.BehaviorWoodHammer;
@@ -66,6 +68,8 @@ public class ItemToolFle extends ItemSubTool
 		addSubItem(12, "stone_shovel", "Stone Shovel", new BehaviorShovel(1F), "shovel/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone), SubstanceTool.class));
 		addSubItem(13, "stone_hammer", "Stone Hammer", new BehaviorStoneHammer(), "hammer/stone", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 		addSubItem(14, "whetstone", "Whetstone", new BehaviorWhetstone(), "whetstone", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(15, "stone_spade_hoe", "Stone Spade Hoe", new BehaviorSpadeHoe(), "hoe/spade_hoe", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(16, "stone_sickle", "Stone Sickle", new BehaviorSickle(), "hoe/stone_sickle", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 	}
 	
 	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName, boolean useSingleIcon, boolean hasHead, SubstanceTool...tools)

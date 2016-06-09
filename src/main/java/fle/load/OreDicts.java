@@ -54,6 +54,8 @@ public class OreDicts
 		registerValid("broadleaves", EnumItem.plant.instance(1, "leaves_1"));
 		registerValid("stickWood", BlockItems.stick);
 		registerValid("vine", EnumItem.plant.instance(1, "vine"));
-		registerValid("ropeVine", EnumItem.plant_production.instance(1, "vine_rope"));
+		registerValid("rope", EnumItem.plant_production.instance(1, "vine_rope"));
+		registerValid("rope", EnumItem.plant_production.instance(1, "ramie_rope"));
+		registerValid("ropeII", EnumItem.plant_production.instance(1, "ramie_rope"));
 	}
 }

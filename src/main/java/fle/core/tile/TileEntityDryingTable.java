@@ -86,6 +86,7 @@ implements IHasGui
 		float temp = U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
 		super.updateServer1();
 		boolean flag = false;
+		if(!U.Worlds.isCatchingRain(worldObj, xCoord, yCoord, zCoord))
 		for(int i = 0; i < 3; ++i)
 		{
 			if(recipes[i] == null)
