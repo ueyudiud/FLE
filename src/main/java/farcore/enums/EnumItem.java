@@ -98,7 +98,8 @@ public enum EnumItem
 	@Deprecated
 	food_drinkable,
 	stick,
-	bowl;
+	bowl,
+	crop_seed;
 	
 	boolean init = false;
 	AbstractStack stack;

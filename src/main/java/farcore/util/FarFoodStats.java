@@ -93,14 +93,20 @@ public class FarFoodStats extends FoodStats
         {
             foodExhaustionLevel -= 5.0F;
 
-            float a = Math.min(1F, foodSaturationLevel);
-            foodSaturationLevel -= a;
-            foodLevel = Math.max(foodLevel - (1F - a), 0);
+            if(!player.capabilities.isCreativeMode)
+            {
+                float a = Math.min(1F, foodSaturationLevel);
+                foodSaturationLevel -= a;
+                foodLevel = Math.max(foodLevel - (1F - a), 0);
+            }
         }
     	if(waterExhaustionLevel > 5.0F)
     	{
     		waterExhaustionLevel -= 5.0F;
-    		waterLevel = Math.max(waterLevel - 1F, 0F);
+            if(!player.capabilities.isCreativeMode)
+            {
+            	waterLevel = Math.max(waterLevel - 1F, 0F);
+            }
     	}
     	FarCoreSetup.network.sendToPlayer(new PacketPlayerStatUpdate(this), player);
     }
@@ -108,7 +114,6 @@ public class FarFoodStats extends FoodStats
     @Override
     public void onUpdate(EntityPlayer player)
     {
-    	if(player.capabilities.isCreativeMode) return;
     	EnumDifficulty difficulty = player.worldObj.difficultySetting;
 //    	prevFoodLevel = foodLevel;
 //    	prevFoodSaturationLevel = foodSaturationLevel;
@@ -122,7 +127,7 @@ public class FarFoodStats extends FoodStats
     		tick += 200;
     		refreshStat(player);
     	}
-    	if(foodLevel <= 0F)
+    	if(foodLevel <= 0F || waterLevel <= 0F)
     	{
     		if(difficulty != EnumDifficulty.PEACEFUL)
     		{
@@ -143,6 +148,10 @@ public class FarFoodStats extends FoodStats
     @Override
     public void readNBT(NBTTagCompound nbt)
     {
+    	if (nbt.hasKey("tick"))
+    	{
+            this.tick = nbt.getLong("tick");
+    	}
         if (nbt.hasKey("foodLevel", 99))
         {
             this.foodLevel = nbt.getFloat("foodLevel");
@@ -150,7 +159,6 @@ public class FarFoodStats extends FoodStats
             this.foodSaturationLevel = nbt.getFloat("foodSaturationLevel");
             this.foodExhaustionLevel = nbt.getFloat("foodExhaustionLevel");
             this.foodDigestionLevel = nbt.getFloat("foodDigestionLevel");
-            this.tick = nbt.getLong("tick");
         }
         if(nbt.hasKey("waterLevel"))
         {

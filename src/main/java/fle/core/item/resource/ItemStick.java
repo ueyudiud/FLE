@@ -40,7 +40,7 @@ public class ItemStick extends ItemSubBehavior implements IThermalItem
 	
 	public void addSubItem(int id, String name, String local)
 	{
-		super.addSubItem(id, name, local, BehaviorBase.SIMPLE, null);
+		super.addSubItem(id, name, local, BehaviorBase.SIMPLE);
 	}
 	
 	@SideOnly(Side.CLIENT)

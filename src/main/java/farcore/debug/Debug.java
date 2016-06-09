@@ -5,16 +5,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import farcore.enums.EnumCharacter;
-import farcore.lib.bio.DNA;
-import farcore.lib.bio.DNACol;
-import farcore.lib.bio.DNAHandler;
-import farcore.lib.bio.DNAPart;
 import farcore.lib.world.biome.BiomeBase;
 
 @Deprecated
@@ -22,14 +15,7 @@ public class Debug
 {
 	public static void main(String[] args)
 	{
-		DNAHandler.map.put("debuging", 
-				Arrays.asList(new DNACol('d', new DNAPart('s', EnumCharacter.Dominance), new DNAPart('m', EnumCharacter.Recessive))));
-		DNA dna = new DNA();
-		DNAPart part = DNAHandler.map.get("debuging").get(0).randomGet(new Random());
-		dna.species = "debuging";
-		dna.map.put('d', new DNAPart[]{part, part});
-		String string = dna.encode();
-		System.out.println(string);
+		
 	}
 	
 	public static void draw(String string, int w, int h, int[] range)

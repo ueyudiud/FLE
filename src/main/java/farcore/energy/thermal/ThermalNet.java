@@ -46,8 +46,7 @@ public class ThermalNet implements IEnergyNet
 		if(count == 0) return Values.C_0_Point;
 		bioTemp /= count;
 		float hor = (float) world.provider.getHorizon();
-		return Math.max(((bioTemp * 0.8F - 12F) * bioTemp + 44F) * (bioTemp - 0.15F) + 
-				Values.C_0_Point - (hor < y ? ((float) y - hor) * .15F : 0), 0F);
+		return Math.max(5 * bioTemp * bioTemp + 30 * (float) Math.pow(bioTemp, 1D /3D) + 10 * bioTemp - 5 + Values.C_0_Point - (hor < y ? ((float) y - hor) * .15F : 0), 0F);
 	}
 	
 	public static float getBlockTemp(World world, int x, int y, int z, boolean checkNearby)

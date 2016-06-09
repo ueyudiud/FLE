@@ -28,13 +28,16 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.block.plant.crop.BlockCrop;
 import farcore.block.plant.tree.BlockLog;
 import farcore.energy.electric.ElectricNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.ThermalNet;
 import farcore.entity.EntityFallingBlockExtended;
+import farcore.enums.EnumBlock;
 import farcore.handler.FarCoreAchievementHandler;
 import farcore.handler.FarCoreCraftingHandler;
 import farcore.handler.FarCoreEnergyHandler;
@@ -47,6 +50,7 @@ import farcore.item.ItemDebugger;
 import farcore.item.ItemFluidDisplay;
 import farcore.lib.command.CommandCalendar;
 import farcore.lib.command.CommandWorldData;
+import farcore.lib.crop.TileEntityCrop;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.PacketSound;
 import farcore.lib.net.entity.PacketEntity;
@@ -62,12 +66,14 @@ import farcore.lib.net.world.PacketWorldDataAskUpdate;
 import farcore.lib.net.world.PacketWorldDataUpdateAll;
 import farcore.lib.net.world.PacketWorldDataUpdateSingle;
 import farcore.lib.potion.PotionBase;
+import farcore.lib.render.RenderCrop;
 import farcore.lib.render.RenderFallingBlockExtended;
 import farcore.lib.render.RenderHandler;
 import farcore.network.Network;
 import farcore.util.CalendarHandler;
 import farcore.util.FleLog;
 import farcore.util.FleTextureMap.TextureMapRegistry;
+import farcore.util.U.OreDict;
 import farcore.util.LanguageManager;
 import farcore.util.U;
 import farcore.util.V;
@@ -77,10 +83,12 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 
 @Mod(modid = FarCore.ID, version = "0.9", name = "Far Core")
 public class FarCoreSetup
@@ -192,7 +200,7 @@ public class FarCoreSetup
 		EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id, FarCore.ID, 32, 20, true);
 		
 		new ItemFluidDisplay();//Initialize fluid and void block icon.
-		new ItemDebugger().setTextureName("farcore:fle");//Initialize debugger for fle and void item icon.
+		new ItemDebugger().setTextureName("farcore:fle").setCreativeTab(CreativeTabs.tabRedstone);//Initialize debugger for fle and void item icon.
 		proxy.registerClient();
 	}
 	
@@ -200,6 +208,8 @@ public class FarCoreSetup
 	public void Load(FMLInitializationEvent event)
 	{
 		BlockLog.init();
+		new BlockCrop("crop");
+		GameRegistry.registerTileEntity(TileEntityCrop.class, "farcore.crop");
 		registerKey(Values.key_place, Keyboard.KEY_P);
 	}
 	
@@ -298,7 +308,7 @@ public class FarCoreSetup
 				}
 			});
 		}
-		
+				
 		@Override
 		public void load()
 		{
@@ -309,6 +319,8 @@ public class FarCoreSetup
 		@Override
 		public void completeLoad()
 		{
+			super.completeLoad();
+			FarCore.handlerA.register(EnumBlock.crop.block(), OreDictionary.WILDCARD_VALUE, RenderCrop.class);
 			loadComplete = true;
 		}
 

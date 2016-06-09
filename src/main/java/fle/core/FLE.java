@@ -20,6 +20,7 @@ import fle.core.util.FleGuiFactory;
 import fle.load.Achievements;
 import fle.load.Biomes;
 import fle.load.BlockItems;
+import fle.load.Crops;
 import fle.load.Drops;
 import fle.load.Handlers;
 import fle.load.Langs;
@@ -70,6 +71,7 @@ public class FLE
 		Handlers.init();
 		Langs.init();
 		OreDicts.init();
+		Crops.init();
 		Drops.init();
 		Worlds.init();
 		Biomes.init();

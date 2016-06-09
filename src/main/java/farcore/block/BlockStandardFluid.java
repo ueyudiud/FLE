@@ -484,6 +484,11 @@ implements ISmartFluidBlock, IInfoSpawnable
 		return (int) ((float) level1 * FluidContainerRegistry.BUCKET_VOLUME / quantaPerBlockFloat);
 	}
 	
+	public void setQunataValue(World world, int x, int y, int z, int amount)
+	{
+		setFluidLevel(world, x, y, z, amount, true);
+	}
+	
 	protected void setFluidLevel(World world, int x, int y, int z, int amount, boolean flag)
 	{
 		if(amount <= 0)

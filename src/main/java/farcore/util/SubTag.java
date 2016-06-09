@@ -21,6 +21,7 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag TOOL_fireable = getNewSubTag("TOOL_FIREABLE");
 
 	public static final SubTag PlantType_Plains = getNewSubTag("Plains");
+	public static final SubTag PlantType_Crop = getNewSubTag("Crop");
 	
 	public static void addTagsTo(SubTag[] tags, ISubTagContainer...containers)
 	{

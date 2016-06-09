@@ -279,6 +279,22 @@ public class U
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
+
+		public static String[] split(String str, char split)
+		{
+			if(str == null) return new String[0];
+			else
+			{
+				if(str.indexOf(split) != -1)
+				{
+					return str.split(Character.toString(split));
+				}
+				else
+				{
+					return new String[]{str};
+				}
+			}
+		}
 	}
 
 	public static class Reflect

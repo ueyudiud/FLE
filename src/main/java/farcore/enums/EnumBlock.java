@@ -161,7 +161,8 @@ public enum EnumBlock
 			}
 		}
 	},
-	brick;
+	brick,
+	crop;
 	
 	boolean init = false;
 	Block block;

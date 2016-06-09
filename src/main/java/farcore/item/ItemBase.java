@@ -73,7 +73,7 @@ public class ItemBase extends Item implements ILocalizedRegisterListener
 		return hasSubtypes ? getUnlocalizedName() + ":" + getMetaUnlocalizedName(getDamage(stack)) : getUnlocalizedName();
 	}
 	
-	protected Object[] getTranslateObkect(ItemStack stack)
+	protected Object[] getTranslateObject(ItemStack stack)
 	{
 		return new Object[0];
 	}
@@ -81,7 +81,7 @@ public class ItemBase extends Item implements ILocalizedRegisterListener
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
 	{
-		return FarCore.translateToLocal(getUnlocalizedName(stack), getTranslateObkect(stack));
+		return FarCore.translateToLocal(getUnlocalizedName(stack), getTranslateObject(stack));
 	}
 	
 	public String getMetaUnlocalizedName(int metadata)

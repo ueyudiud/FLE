@@ -50,6 +50,15 @@ public class ItemPlant extends ItemResource
 		addSubItem(3012, "firewood_morus", "Morus Firewood", new BehaviorFirewood(), "firewood/morus");
 		addSubItem(3013, "firewood_willow", "Willow Firewood", new BehaviorFirewood(), "firewood/willow");
 		
+		addSubItem(5001, "millet", "Millet", "millet");
+		addSubItem(5002, "ramie_fiber", "Ramie Fiber", "ramie_fiber");
+		addSubItem(5003, "wheat", "Wheat", "wheat");
+		addSubItem(5004, "cotton", "Cotton", "cotton");
+		addSubItem(5101, "wild_cabbage_leaf", "Wild Cabbage Leaf", "wild_cabbage_leaf");
+		addSubItem(5102, "brussels_sprouts", "Brussels Sprouts", "brussels_sprouts");
+		addSubItem(5103, "cabbage", "Cabbage", "cabbage");
+		addSubItem(5104, "cauliflower", "Cauliflower", "cauliflower");
+		
 		addSubItem(10001, "vine", "Vine", "vine");
 	}
 	
