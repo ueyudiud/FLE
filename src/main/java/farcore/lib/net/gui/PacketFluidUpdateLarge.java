@@ -8,6 +8,7 @@ import farcore.lib.container.FluidSlot;
 import farcore.network.IPacket;
 import farcore.network.NetworkBasic;
 import farcore.network.PacketAbstract;
+import farcore.util.U;
 import farcore.util.io.DataStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,7 +23,7 @@ public class PacketFluidUpdateLarge extends PacketAbstract
 		stacks = new FluidStack[container.fluidSlotList.size()];
 		for(int i = 0; i < stacks.length; ++i)
 		{
-			stacks[i] = container.fluidSlotList.get(i).getStack().copy();
+			stacks[i] = U.Fluids.copyOf(container.fluidSlotList.get(i).getStack());
 		}
 	}
 	
@@ -52,7 +53,7 @@ public class PacketFluidUpdateLarge extends PacketAbstract
 	@Override
 	protected void decode(DataStream input) throws IOException
 	{
-		stacks = new FluidStack[stacks.length];
+		stacks = new FluidStack[input.readInt()];
 		for(int i = 0; i < stacks.length; 
 				stacks[i++] = input.readFluidStack());
 	}

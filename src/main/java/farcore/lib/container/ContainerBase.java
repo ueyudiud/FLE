@@ -34,7 +34,7 @@ public class ContainerBase<I extends IInventory> extends Container
 	public I inventory;
 	protected EntityPlayer player;
 	public List<FluidSlot> fluidSlotList = new ArrayList();
-	public List<FluidStack> fluidList;
+	public List<FluidStack> fluidList = new ArrayList();
 	public Map<String, TransLocate> locates = new HashMap();
 	protected TransLocate locateHand;
 	protected TransLocate locateBag;

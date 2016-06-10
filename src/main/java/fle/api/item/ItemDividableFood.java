@@ -196,6 +196,24 @@ public class ItemDividableFood extends ItemFood implements IInfomationable, ICon
 				return new ItemStack(this, size, ((Number) objects[0]).intValue());
 			}
 		}
+		else if(objects.length == 2)
+		{
+			if(objects[1] instanceof Number)
+			{
+				if(objects[0] instanceof String)
+				{
+					ItemStack stack = new ItemStack(this, size, register.id((String) objects[0]));
+					setFoodAmount(stack, ((Number) objects[1]).floatValue());
+					return stack;
+				}
+				else if(objects[0] instanceof Number)
+				{
+					ItemStack stack = new ItemStack(this, size, ((Number) objects[0]).intValue());
+					setFoodAmount(stack, ((Number) objects[1]).floatValue());
+					return stack;
+				}
+			}
+		}
 		return null;
 	}
 }

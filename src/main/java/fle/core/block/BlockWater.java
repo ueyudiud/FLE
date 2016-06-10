@@ -6,6 +6,8 @@ import farcore.enums.EnumBlock;
 import farcore.interfaces.energy.thermal.IThermalProviderBlock;
 import farcore.util.U;
 import farcore.util.Values;
+import net.minecraft.block.BlockGrass;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -15,6 +17,7 @@ public class BlockWater extends BlockStandardFluid implements IThermalProviderBl
 	public BlockWater()
 	{
 		super(FluidRegistry.WATER, Material.water);
+		lightOpacity = 3;
 		setQuantaPerBlock(16);
 		EnumBlock.water.setBlock(this);
 	}

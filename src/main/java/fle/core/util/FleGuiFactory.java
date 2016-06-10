@@ -5,9 +5,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 import farcore.lib.container.GuiFactory;
 import fle.api.gui.ContainerPlayerCraftingFle;
 import fle.api.gui.GuiPlayerCraftingFle;
+import fle.core.container.alpha.ContainerCeramics;
 import fle.core.container.alpha.ContainerWashing;
+import fle.core.gui.alpha.GuiCeramics;
 import fle.core.gui.alpha.GuiWashing;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class FleGuiFactory extends GuiFactory
@@ -24,6 +27,7 @@ public class FleGuiFactory extends GuiFactory
 		{
 		case 1 : return new ContainerWashing(player, world, x, y, z);
 		case 2 : return new ContainerPlayerCraftingFle(world, player);
+		case 3 : return new ContainerCeramics(player);
 		default: return null;
 		}
 	}
@@ -35,6 +39,7 @@ public class FleGuiFactory extends GuiFactory
 		{
 		case 1 : return new GuiWashing(player, world, x, y, z);
 		case 2 : return new GuiPlayerCraftingFle(world, player);
+		case 3 : return new GuiCeramics(player);
 		default: return null;
 		}
 	}

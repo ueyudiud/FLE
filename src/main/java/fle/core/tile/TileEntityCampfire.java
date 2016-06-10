@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 public class TileEntityCampfire extends TileEntityInventory
 implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 {
-	private static final float efficiency = 0.08F;
+	private static final float efficiency = 0.2F;
 
 	public static final int smeltingInput1 = 0;
 	public static final int smeltingInput2 = 1;
@@ -46,7 +46,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	public static final int fuel2 = 10;
 	public static final int fuelOutput = 11;
 	
-	private ThermalHelper helper = new ThermalHelper(1.6E4F, 1.8E-1F);
+	private ThermalHelper helper = new ThermalHelper(8.0E3F, 5.2F);
 	private float enviorTempCache = -1;
 	private boolean isBurning;
 	private long upgrades = 0L;
@@ -161,6 +161,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 	@Override
 	protected void updateServer1()
 	{
+		helper.update(this);
 		if(burningEnergy <= 0)
 		{
 			if(inventory.addStack(fuel1, inventory.stacks[fuel2], false) != 0)
@@ -219,7 +220,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 				progress1 = 0;
 				recipe1 = recipe;
 			}
-			amount = (helper.temperature() + enviorTempCache - recipe1.minTemp1) * helper.thermalConductivity * 100;
+			amount = (helper.temperature() + enviorTempCache - recipe1.minTemp1) * helper.thermalConductivity * 10;
 			helper.emit(amount);
 			progress1 += amount;
 			if(progress1 >= recipe1.energy)
@@ -245,7 +246,7 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 				progress2 = 0;
 				recipe2 = recipe;
 			}
-			amount = (helper.temperature() + enviorTempCache - recipe2.minTemp1) * helper.thermalConductivity * 100;
+			amount = (helper.temperature() + enviorTempCache - recipe2.minTemp1) * helper.thermalConductivity * 10;
 			helper.emit(amount);
 			progress2 += amount;
 			if(progress2 >= recipe2.energy)
@@ -308,6 +309,12 @@ implements IThermalTile, IDebugableTile, IToolClickHandler, IHasGui
 		helper.emit(value);
 	}
 
+	@Override
+	public float getDeltaHeat()
+	{
+		return helper.getDeltaHeat();
+	}
+	
 	@Override
 	public void addDebugInformation(List<String> list)
 	{

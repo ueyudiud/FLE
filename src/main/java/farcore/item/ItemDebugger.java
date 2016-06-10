@@ -9,6 +9,7 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.enums.Direction;
 import farcore.enums.EnumItem;
 import farcore.interfaces.IDebugableBlock;
+import farcore.interfaces.energy.thermal.IThermalTile;
 import farcore.interfaces.tile.IDebugableTile;
 import farcore.util.FleLog;
 import farcore.util.V;
@@ -77,6 +78,11 @@ public class ItemDebugger extends ItemBase
 				list.add("===========FTN INFO===========");
 				list.add("Temperature : " + (int) ThermalNet.getTemp(world, x, y, z, true) + "K");
 				list.add("Delta Temperature : " + (int) ThermalNet.getTempDifference(world, x, y, z) + "K");
+				if(tile instanceof IThermalTile)
+				{
+					list.add("Tile Temperature : " + (int) ((IThermalTile) tile).getTemperature(Direction.Q) + "K");
+					list.add("Tile IO Heat : " + (int) ((IThermalTile) tile).getDeltaHeat() + "J");
+				}
 				list.add("==============================");
 				for(String string : list)
 				{

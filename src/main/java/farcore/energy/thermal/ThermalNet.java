@@ -319,7 +319,9 @@ public class ThermalNet implements IEnergyNet
 								{
 									tc2 = getThermalConductivity(world, cachedCoordinates.posX, cachedCoordinates.posY, cachedCoordinates.posZ);
 									temp2 = getTemp(world, cachedCoordinates.posX, cachedCoordinates.posY, cachedCoordinates.posZ, false);
-									sendHeatToBlock(world, cachedCoordinates.posX, cachedCoordinates.posY, cachedCoordinates.posZ, current[direction.ordinal()] = (temp - temp2) * (tc1 + tc2) * 0.5F);
+									float v = (float) (Math.sqrt(tc1) + Math.sqrt(tc2)) / 2F;
+									v = v * v;
+									sendHeatToBlock(world, cachedCoordinates.posX, cachedCoordinates.posY, cachedCoordinates.posZ, current[direction.ordinal()] = (temp - temp2) * v * 0.5F);
 								}
 							}
 							catch(Exception exception)

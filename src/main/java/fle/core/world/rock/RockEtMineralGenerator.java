@@ -120,15 +120,19 @@ public class RockEtMineralGenerator
 	public RockLayer provideLayer(double ph, double ca)
 	{
 		RockLayer.init();
-		if(ph > 0.8D)
+		if(ca > 0.6F && ca < 0.68F)
+		{
+			return RockLayer.layerLime;
+		}
+		if(ph > 0.8F)
 		{
 			return RockLayer.layerAcid;
 		}
-		else if(ph > 0.5)
+		else if(ph > 0.5F)
 		{
 			return RockLayer.layerBasic;
 		}
-		else if(ph > 0.3)
+		else if(ph > 0.3F)
 		{
 			return RockLayer.layerAcid;
 		}

@@ -127,7 +127,7 @@ public class FarCoreGuiHandler
 		        left = width / 2 + 91 - 89;
 		        top = height - GuiIngameForge.right_height;
 		        GuiIngameForge.right_height += 10;
-				String info = "Hunger:" + (int) (stats.getFoodLevelFar()) + "/" + 200;
+				String info = "Hunger:" + (int) stats.getFoodLevelFar() + "(" + (int) stats.getSaturationLevel() + ")" + "/" + 400;
 				Minecraft.getMinecraft().fontRenderer.drawString(info, left + 1, top + 1, 0xFF113322);
 				Minecraft.getMinecraft().fontRenderer.drawString(info, left, top, 0xFF00FF88);
 		        level = stats.getWaterProgress();
@@ -196,8 +196,9 @@ public class FarCoreGuiHandler
 		            	drawTexturedModalRect(x, y, 9, 9 + state * 9, 9, 9);
 		            }
 		        }
-				Minecraft.getMinecraft().renderEngine.bindTexture(Gui.icons);
 			}
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			Minecraft.getMinecraft().renderEngine.bindTexture(Gui.icons);
 	        GL11.glEnable(GL11.GL_BLEND);
 		}
 	}

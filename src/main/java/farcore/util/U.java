@@ -734,7 +734,7 @@ public class U
 
 		public static void spawnDropsInWorldByPlayer(EntityPlayer player, ItemStack drop)
 		{
-			if(drop == null || drop.stackSize == 0) return;
+			if(drop == null || drop.stackSize == 0 || player.worldObj.isRemote) return;
 			player.dropPlayerItemWithRandomChoice(drop, false);
 		}
 
@@ -1119,6 +1119,14 @@ public class U
 			}
 			return null;
 		}
+	}
+	
+	public static class Fluids
+	{
+		public static FluidStack copyOf(FluidStack stack)
+		{
+			return stack == null ? null : stack.copy();
+		}		
 	}
 	
 	public static class Plants

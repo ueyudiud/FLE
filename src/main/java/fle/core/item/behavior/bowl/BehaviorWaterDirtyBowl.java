@@ -12,7 +12,7 @@ public class BehaviorWaterDirtyBowl extends BehaviorWaterBowl
 	{
 		if(player.getRNG().nextFloat() < 0.5F)
 		{
-			player.addPotionEffect(new PotionEffect(Potion.confusion.getId(), 240));
+			player.addPotionEffect(new PotionEffect(Potion.confusion.getId(), 2400));
 		}
 		super.onPlayerDrink(stack, player);
 	}

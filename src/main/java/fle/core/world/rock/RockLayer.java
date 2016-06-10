@@ -15,6 +15,7 @@ public class RockLayer
 	public static RockLayer layerMid;
 	public static RockLayer layerBasic;
 	public static RockLayer layerUltramafic;
+	public static RockLayer layerLime;
 	
 	private static boolean init = false;
 	
@@ -29,10 +30,12 @@ public class RockLayer
 			SubstanceRock granite = SubstanceRock.getSubstance("granite");
 			SubstanceRock diorite = SubstanceRock.getSubstance("diorite");
 			SubstanceRock gabbro = SubstanceRock.getSubstance("gabbro");
+			SubstanceRock limestone = SubstanceRock.getSubstance("limestone");
 			layerAcid		= new RockLayer(rhyolite, granite, granite, null, null);
 			layerMid		= new RockLayer(andesite, diorite, diorite, null, null);
 			layerBasic		= new RockLayer(basalt, gabbro, gabbro, null, null);
 			layerUltramafic	= new RockLayer(peridotite, peridotite, peridotite, null, null);
+			layerLime		= new RockLayer(limestone, limestone, limestone, null, null);
 			init = true;
 		}
 	}

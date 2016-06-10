@@ -61,7 +61,7 @@ public class GuiIconButton extends GuiButton
 				{
 					w = 0;
 				}
-				else if(width == 8)
+				else if(width == 10)
 				{
 					w = 18;
 				}

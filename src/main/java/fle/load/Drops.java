@@ -22,6 +22,19 @@ public class Drops
 		FleLog.getLogger().info("Start register block drops.");
 		for(SubstanceRock rock : SubstanceRock.getRocks())
 		{
+			if(rock.getName() == "limestone")
+			{
+				ItemStack drop = EnumItem.stone_chip.instance(2, rock.getName());
+				ItemStack drop2 = EnumItem.stone_fragment.instance(1, rock.getName());
+				ItemStack drop3 = EnumItem.stone_production.instance(1, "lime_dust");
+				ToolDestoryDropRecipes.add(EnumToolType.hammer_digable.stack(), new BlockConditionMatcherIS("stone" + U.Lang.validateOre(true, rock.getName())), 
+						new DropHandler(2, new Ety(new BaseStack(drop), 3), new Ety(new BaseStack(drop2), 1), new Ety(new BaseStack(drop3), 2)));
+				ToolDestoryDropRecipes.add(EnumToolType.hammer_digable.stack(), new BlockConditionMatcherIS("cobble" + U.Lang.validateOre(true, rock.getName())), 
+						new DropHandler(4, new Ety(new BaseStack(drop, 1), 3), new Ety(new BaseStack(drop3), 1)));
+				ToolDestoryDropRecipes.add(EnumToolType.hammer_digable_basic.stack(), new BlockConditionMatcherIS("cobble" + U.Lang.validateOre(true, rock.getName())), 
+						new DropHandler(1, new Ety(new BaseStack(drop), 3), new Ety(new BaseStack(drop2), 1), new Ety(new BaseStack(drop3), 2)));
+				continue;
+			}
 			ItemStack drop = EnumItem.stone_chip.instance(3, rock.getName());
 			ItemStack drop2 = EnumItem.stone_fragment.instance(1, rock.getName());
 			if(drop == null)
@@ -34,9 +47,9 @@ public class Drops
 				ToolDestoryDropRecipes.add(EnumToolType.hammer_digable.stack(), new BlockConditionMatcherIS("stone" + U.Lang.validateOre(true, rock.getName())), 
 						new DropHandler(2, new Ety(new BaseStack(drop, 2), 3), new Ety(new BaseStack(drop2), 1)));
 				ToolDestoryDropRecipes.add(EnumToolType.hammer_digable.stack(), new BlockConditionMatcherIS("cobble" + U.Lang.validateOre(true, rock.getName())), 
-						new DropHandler(1, new Ety(new BaseStack(drop2), 4)));
+						new DropHandler(1, new Ety(new BaseStack(drop), 4)));
 				ToolDestoryDropRecipes.add(EnumToolType.hammer_digable_basic.stack(), new BlockConditionMatcherIS("cobble" + U.Lang.validateOre(true, rock.getName())), 
-						new DropHandler(1, new Ety(new BaseStack(drop2), 4)));
+						new DropHandler(1, new Ety(new BaseStack(drop), 4)));
 			}
 			else
 			{
@@ -89,5 +102,20 @@ public class Drops
 						new Ety(EnumItem.plant.instance(1, "seed_oak-black"), 1),
 						new Ety(EnumItem.plant.instance(1, "leaves_1"), 3),
 						new Ety(EnumItem.plant.instance(1, "branch_oak-black"), 2)));
+		SubstanceWood.getSubstance("aspen").setLeafDrop(
+				new DropHandler(0.125F, 1, 1, 
+//						new Ety(EnumItem.plant.instance(1, "seed_oak-black"), 1),
+						new Ety(EnumItem.plant.instance(1, "leaves_1"), 3),
+						new Ety(EnumItem.plant.instance(1, "branch_aspen"), 2)));
+		SubstanceWood.getSubstance("morus").setLeafDrop(
+				new DropHandler(0.15F, 1, 1, 
+//						new Ety(EnumItem.plant.instance(1, "seed_oak-black"), 1),
+						new Ety(EnumItem.plant.instance(1, "leaves_1"), 3),
+						new Ety(EnumItem.plant.instance(1, "branch_morus"), 2)));
+		SubstanceWood.getSubstance("willow").setLeafDrop(
+				new DropHandler(0.1F, 1, 1, 
+//						new Ety(EnumItem.plant.instance(1, "seed_oak-black"), 1),
+						new Ety(EnumItem.plant.instance(1, "leaves_1"), 3),
+						new Ety(EnumItem.plant.instance(1, "branch_willow"), 2)));
 	}
 }

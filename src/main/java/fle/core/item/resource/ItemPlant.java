@@ -38,6 +38,9 @@ public class ItemPlant extends ItemResource
 		addSubItem(2004, "branch_ceiba", "Ceiba Branch", "branch_ceiba");
 		addSubItem(2005, "branch_acacia", "Acacia Branch", "branch_acacia");
 		addSubItem(2006, "branch_oak-black", "Dark Oak Branch", "branch_oak-black");
+		addSubItem(2011, "branch_aspen", "Aspen Branch", "branch_aspen");
+		addSubItem(2012, "branch_morus", "Morus Branch", "branch_morus");
+		addSubItem(2013, "branch_willow", "Willow Branch", "branch_willow");
 		addSubItem(2101, "branch_bush", "Bush Branch", "branch_bush");
 
 		addSubItem(3001, "firewood_oak", "Oak Firewood", new BehaviorFirewood(), "firewood/oak");

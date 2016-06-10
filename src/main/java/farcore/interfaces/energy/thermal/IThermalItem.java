@@ -15,7 +15,16 @@ public interface IThermalItem
 		}
 		else if(temp1 > temp || canOutputThermalEnergy(target))
 		{
-			return onHeatChanged(target, (temp1 - temp) * (tile.getThermalConductivity(Direction.Q) + getThermalConductivity(target)) * .5F);
+			float value = (temp1 - temp) * (tile.getThermalConductivity(Direction.Q) + getThermalConductivity(target)) * .5F;
+			if(value > 0)
+			{
+				tile.emitThermalEnergy(Direction.Q, value);
+			}
+			else if(value < 0)
+			{
+				tile.receiveThermalEnergy(Direction.Q, value);
+			}
+			return onHeatChanged(target, value);
 		}
 		else
 		{

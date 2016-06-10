@@ -1,5 +1,6 @@
 package fle.load;
 
+import fle.load.recipe.Ceramics;
 import fle.load.recipe.Crafting;
 import fle.load.recipe.Drying;
 import fle.load.recipe.Polishing;
@@ -16,5 +17,6 @@ public class Recipes
 		Polishing.init();
 		Smelting.init();
 		Drying.init();
+		Ceramics.init();
 	}
 }

@@ -45,9 +45,7 @@ public class Register<T> implements IRegister<T>
 	}
 	public Register(int length, float factor)
 	{
-		this.factor = factor;
-		this.targets = new Object[length];
-		this.names = new String[length];
+		this(length, factor, RegisterExceptionHandler.handler);
 	}
 	public Register(int length, float factor, IRegisterExceptionHandler handler)
 	{

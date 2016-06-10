@@ -11,6 +11,7 @@ import fle.api.recipe.FoodUseCraftingRecipe;
 import fle.api.recipe.LogCutRecipe;
 import fle.api.recipe.ToolSingleCraftingRecipe;
 import fle.load.BlockItems;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class Crafting
@@ -25,6 +26,8 @@ public class Crafting
 		registerShapelessRecipe(EnumItem.plant_production.instance(1, "ramie_bundle"), 90, object, object, object, object);
 		object = EnumItem.plant_production.instance(1, "ramie_bundle");
 		registerShapelessRecipe(EnumItem.plant_production.instance(4, "ramie_rope"), 90, object);
+		registerShapelessRecipe(EnumItem.stone_production.instance(1, "lime_dust"), 40, new Ety(EnumToolType.hammer_digable.stack(), null), "chipLimestone");
+		registerShapelessRecipe(EnumItem.stone_production.instance(4, "argil_ball"), 50, "dustLimestone", "dustSand", Items.clay_ball, Items.clay_ball, Items.clay_ball, Items.clay_ball);
 		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 0), 180, "x", "o", 'x', "logWood", 'o', "pileGravel");
 		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 1), 240, "xx", "oo", 'o', "logWood", 'x', "plateStone");
 		

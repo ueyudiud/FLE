@@ -13,6 +13,8 @@ import fle.core.block.BlockSnow;
 import fle.core.block.BlockTorch;
 import fle.core.block.BlockWater;
 import fle.core.block.machine.alpha.BlockCampfire;
+import fle.core.block.machine.alpha.BlockCeramics;
+import fle.core.block.machine.alpha.BlockCeramicsUnsmelted;
 import fle.core.block.machine.alpha.BlockWithOutTileAlpha;
 import fle.core.block.machine.alpha.BlockWithTileAlpha;
 import fle.core.block.plant.BlockBush1;
@@ -31,8 +33,10 @@ import fle.core.item.resource.ItemStick;
 import fle.core.item.resource.ItemStoneChip;
 import fle.core.item.resource.ItemStoneFragment;
 import fle.core.item.resource.ItemStoneProduction;
+import fle.core.tile.TileEntityArgilUnsmelted;
 import fle.core.tile.TileEntityCampfire;
 import fle.core.tile.TileEntityDryingTable;
+import fle.core.tile.TileEntityTerrine;
 import fle.core.tile.TileEntityTorch;
 import fle.core.tile.statics.TileEntityOre;
 import net.minecraft.block.Block;
@@ -55,6 +59,8 @@ public class BlockItems
 
 	public static Block machineIAlpha;
 	public static Block machineIIAlpha;
+	public static Block argilUnsmelted;
+	public static Block argil;
 
 	public static Item plant;
 	public static Item plant_production;
@@ -93,6 +99,10 @@ public class BlockItems
 		machineIAlpha = new BlockWithOutTileAlpha().setBlockTextureName("fle:machine/alpha");
 		machineIIAlpha = new BlockWithTileAlpha().setBlockTextureName("fle:machine/alpha");
 		GameRegistry.registerTileEntity(TileEntityDryingTable.class, "fle.drying.table");
+		argil = new BlockCeramics().setBlockTextureName("fle:machine/ceramics");
+		GameRegistry.registerTileEntity(TileEntityTerrine.class, "terrine");
+		argilUnsmelted = new BlockCeramicsUnsmelted().setBlockTextureName("fle:machine/ceramics");
+		GameRegistry.registerTileEntity(TileEntityArgilUnsmelted.class, "fle/unsmelt.argil");
 		
 		tools = new ItemToolFle().setCreativeTab(CreativeTabs.tabTools);
 		toolHead = new ItemToolHeadFle().setCreativeTab(CreativeTabs.tabMaterials);

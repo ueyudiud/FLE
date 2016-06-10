@@ -16,4 +16,6 @@ public interface IThermalTile
 	void receiveThermalEnergy(Direction direction, float value);
 
 	void emitThermalEnergy(Direction direction, float value);
+	
+	float getDeltaHeat();
 }

@@ -29,7 +29,7 @@ public class BehaviorWaterBowl extends BehaviorBase
 	
 	protected void onPlayerDrink(ItemStack stack, EntityPlayer player)
 	{
-		((FarFoodStats) player.getFoodStats()).addWaterLevel(20F);
+		((FarFoodStats) player.getFoodStats()).addWaterLevel(100F);
 	}
 	
 	@Override

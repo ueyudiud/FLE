@@ -19,5 +19,10 @@ public class Washing
 						info(new BaseStack(EnumItem.stone_chip.instance(1, "flintSharp")), 0.8F, 1), 
 						info(new BaseStack(EnumItem.stone_fragment.instance(1, "flint")), 0.8F, 3), 
 						info(new BaseStack(Items.flint), 0.8F, 4)));
+		WashingRecipe.addRecipe("sandI", new OreStack("pileSand"), 
+				new DropHandler(3, 
+						info(new BaseStack(EnumItem.stone_production.instance(1, "sand_dust")), 0.9F, 8),
+						info(new BaseStack(EnumItem.stone_chip.instance(1, "sandstone")), 0.8F, 3),
+						info(new BaseStack(EnumItem.stone_chip.instance(1, "flintSmall")), 0.6F, 2)));
 	}
 }

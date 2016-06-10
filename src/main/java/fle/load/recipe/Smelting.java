@@ -20,6 +20,8 @@ public class Smelting
 				new DiviableFoodSmeltingRecipe(new BaseStack(EnumItem.food_divide_smeltable.instance(1, "pork_raw")), 4800000, 450, EnumItem.food_divide_smeltable.instance(1, "pork")));
 		SmeltingRecipes.addSmeltingRecipe("fle:squid", 
 				new DiviableFoodSmeltingRecipe(new BaseStack(EnumItem.food_divide_smeltable.instance(1, "squid_raw")), 4800000, 450, EnumItem.food_divide_smeltable.instance(1, "squid")));
+		SmeltingRecipes.addSmeltingRecipe("fle:lamb", 
+				new DiviableFoodSmeltingRecipe(new BaseStack(EnumItem.food_divide_smeltable.instance(1, "lamb_raw")), 4800000, 450, EnumItem.food_divide_smeltable.instance(1, "lamb")));
 		
 		SmeltingRecipes.addSmeltingRecipe("fle:beef_kebab", 
 				new SmeltingRecipe(new BaseStack(EnumItem.food_smeltable.instance(1, "beef_kebab_raw")), 80000, 450, EnumItem.food_smeltable.instance(1, "beef_kebab")));

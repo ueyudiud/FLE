@@ -45,6 +45,7 @@ public class OreDicts
 		registerValid(EnumToolType.decorticating_plate.ore(), EnumItem.tool.instance(1, "decorticating_plate"));
 		registerValid(EnumToolType.decorticating_stick.ore(), EnumItem.tool.instance(1, "decorticating_stick"));
 		registerValid("pileGravel", EnumItem.pile.instance(1, "gravel"));
+		registerValid("pileSand", EnumItem.pile.instance(1, "sand"));
 		registerValid("treeSapling", BlockItems.sapling);
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_oak"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_spruce"));
@@ -52,6 +53,9 @@ public class OreDicts
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_ceiba"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_acacia"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_oak-black"));
+		registerValid("branchWood", EnumItem.plant.instance(1, "branch_aspen"));
+		registerValid("branchWood", EnumItem.plant.instance(1, "branch_morus"));
+		registerValid("branchWood", EnumItem.plant.instance(1, "branch_willow"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_bush"));
 		registerValid("broadleaves", EnumItem.plant.instance(1, "leaves_1"));
 		registerValid("stickWood", BlockItems.stick);
@@ -59,6 +63,9 @@ public class OreDicts
 		registerValid("rope", EnumItem.plant_production.instance(1, "vine_rope"));
 		registerValid("rope", EnumItem.plant_production.instance(1, "ramie_rope"));
 		registerValid("ropeII", EnumItem.plant_production.instance(1, "ramie_rope"));
+		registerValid("argil", EnumItem.stone_production.instance(1, "argil_ball"));
 		registerValid("plateStone", EnumItem.stone_production.instance(1, "stone_plate"));
+		registerValid("dustLimestone", EnumItem.stone_production.instance(1, "lime_dust"));
+		registerValid("dustSand", EnumItem.stone_production.instance(1, "sand_dust"));
 	}
 }

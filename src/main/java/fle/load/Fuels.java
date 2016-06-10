@@ -15,8 +15,8 @@ public class Fuels implements IFuelManager
 
 	private OreStack firewood = new OreStack("firewood");
 	private OreStack branchwood = new OreStack("branchWood");
-	private IFuelValue a = make(320000000, 16000F, 680, 400, null);
-	private IFuelValue b = make(48000000, 9000F, 640, 350, null);
+	private IFuelValue a = make(320000000, 16000F, 750, 400, null);
+	private IFuelValue b = make(48000000, 9000F, 680, 350, null);
 
 	@Override
 	public IFuelValue getFuelValue(ItemStack fuel)

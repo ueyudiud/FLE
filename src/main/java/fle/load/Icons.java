@@ -14,6 +14,8 @@ public class Icons
 {
 	public static IIcon washing;
 	public static IIcon polish_delete;
+	public static IIcon next;
+	public static IIcon last;
 
 	public static IIcon block_drying_table;
 	public static IIcon block_polish_top;
@@ -24,6 +26,8 @@ public class Icons
 	public static IIcon block_manual_operating_platform_top;
 	public static IIcon block_manual_operating_platform_side;
 	public static IIcon block_manual_operating_platform_bottom;
+	public static IIcon block_ceramics;
+	public static IIcon block_ceramics_unsmelted;
 
 	@SideOnly(Side.CLIENT)
 	public static class Bottoms implements ITextureLoadListener
@@ -33,6 +37,8 @@ public class Icons
 		{
 			washing = register.registerIcon("fle:washing");
 			polish_delete = register.registerIcon("fle:polish_delete");
+			next = register.registerIcon("fle:next");
+			last = register.registerIcon("fle:last");
 		}
 	}
 
