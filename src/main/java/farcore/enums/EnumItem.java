@@ -99,7 +99,8 @@ public enum EnumItem
 	food_drinkable,
 	stick,
 	bowl,
-	crop_seed;
+	crop_seed,
+	stone_production;
 	
 	boolean init = false;
 	AbstractStack stack;

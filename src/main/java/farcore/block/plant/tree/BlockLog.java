@@ -141,7 +141,7 @@ public abstract class BlockLog extends BlockBase implements ISmartBurnableBlock
 	}
 	
 	@Override
-	public boolean isFlammable(World world, int x, int y, int z, ForgeDirection face, int level)
+	public boolean isFlammable(IBlockAccess world, int x, int y, int z, ForgeDirection face, int level)
 	{
 		return true;
 	}

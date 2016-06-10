@@ -22,6 +22,7 @@ import fle.api.item.behavior.BehaviorAwl;
 import fle.api.item.behavior.BehaviorAxe;
 import fle.api.item.behavior.BehaviorBarGrizzly;
 import fle.api.item.behavior.BehaviorBase;
+import fle.api.item.behavior.BehaviorCraftableTool;
 import fle.api.item.behavior.BehaviorFireStarter;
 import fle.api.item.behavior.BehaviorKnife;
 import fle.api.item.behavior.BehaviorShovel;
@@ -70,6 +71,8 @@ public class ItemToolFle extends ItemSubTool
 		addSubItem(14, "whetstone", "Whetstone", new BehaviorWhetstone(), "whetstone", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 		addSubItem(15, "stone_spade_hoe", "Stone Spade Hoe", new BehaviorSpadeHoe(), "hoe/spade_hoe", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 		addSubItem(16, "stone_sickle", "Stone Sickle", new BehaviorSickle(), "hoe/stone_sickle", false, true, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(17, "decorticating_plate", "Decorticating Plate", new BehaviorCraftableTool(0.08F), "decorticating/plate", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
+		addSubItem(18, "decorticating_stick", "Decorticating Stick", new BehaviorCraftableTool(0.08F), "decorticating/stick", false, false, U.Lang.cast(SubstanceTool.getSubstances(SubTag.TOOL_stone_real), SubstanceTool.class));
 	}
 	
 	public void addSubItem(int id, String name, String local, IItemInfo itemInfo, String iconName, boolean useSingleIcon, boolean hasHead, SubstanceTool...tools)

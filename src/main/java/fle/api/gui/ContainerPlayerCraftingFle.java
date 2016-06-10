@@ -143,7 +143,6 @@ public class ContainerPlayerCraftingFle extends ContainerBase<InventoryCraftingF
 					result.addStack(0, output, true);
 					if(!recipe.matchRecipe(this))
 					{
-						isChecking = false;
 						recipe = null;
 						isCrafting = false;
 						maxTick = 0;
@@ -153,6 +152,7 @@ public class ContainerPlayerCraftingFle extends ContainerBase<InventoryCraftingF
 					{
 						
 					}
+					isChecking = false;
 					tick = 0;
 					detectAndSendChanges();
 				}
@@ -167,6 +167,7 @@ public class ContainerPlayerCraftingFle extends ContainerBase<InventoryCraftingF
 	@Override
 	public void onCraftMatrixChanged(IInventory inventory)
 	{
+		super.onCraftMatrixChanged(inventory);
 		if(isChecking) return;
 		if(isCrafting)
 		{

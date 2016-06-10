@@ -5,10 +5,12 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.util.LanguageManager;
 import farcore.util.V;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
 public class CropVoid implements CropCard
 {
@@ -86,5 +88,23 @@ public class CropVoid implements CropCard
 	public IIcon getIcon(ICropAccess access)
 	{
 		return V.voidBlockIcon;
+	}
+
+	@Override
+	public String makeChildDNA(int generation, String par)
+	{
+		return par;
+	}
+
+	@Override
+	public void registerLocalizedName(LanguageManager manager)
+	{
+		
+	}
+
+	@Override
+	public boolean canPlantAt(World world, int x, int y, int z)
+	{
+		return true;
 	}
 }

@@ -8,6 +8,7 @@ public class NEIFLEConfig implements IConfigureNEI
 	public void loadConfig()
 	{
 		new FarCraftingHandler();
+		new PolishRecipeHandler();
 	}
 
 	@Override

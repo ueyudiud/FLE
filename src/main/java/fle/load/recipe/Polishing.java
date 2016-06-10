@@ -60,7 +60,9 @@ public class Polishing
 			SubstanceRock rock = SubstanceRock.getSubstance((String) element[0]);
 			tool = rock.toolBelong;
 			OreStack chip = new OreStack("chip" + element[1]);
+			OreStack fragment = new OreStack("fragment" + element[1]);
 			PolishRecipe.registerResource(chip, rock.harvestLevel);
+			PolishRecipe.registerResource(fragment, rock.harvestLevel);
 			PolishRecipe.registerRecipe(chip, "p cpccccc", EnumItem.tool_head.instance(1, "stone_axe", tool));
 			PolishRecipe.registerRecipe(chip, "c pcpcccc", EnumItem.tool_head.instance(1, "stone_axe", tool));
 			PolishRecipe.registerRecipe(chip, "c pcpcccc", EnumItem.tool_head.instance(1, "stone_axe", tool));
@@ -71,6 +73,9 @@ public class Polishing
 			PolishRecipe.registerRecipe(chip, "  pcc ccc", EnumItem.tool_head.instance(1, "stone_sickle", tool));
 			PolishRecipe.registerRecipe(chip, "p   ccccc", EnumItem.tool_head.instance(1, "stone_sickle", tool));
 			PolishRecipe.registerRecipe(chip, "ppp   ppp", EnumItem.tool.instance(1, "whetstone", tool));
+			PolishRecipe.registerRecipe(fragment, "ppp p    ", EnumItem.tool.instance(1, "decorticating_plate", tool));
+			PolishRecipe.registerRecipe(fragment, "p pp pp p", EnumItem.tool.instance(1, "decorticating_stick", tool));
+			PolishRecipe.registerRecipe(fragment, "ppp   ppp", EnumItem.stone_production.instance(1, "stone_plate"));
 		}
 	}
 }

@@ -42,6 +42,8 @@ public class OreDicts
 		registerValid(EnumToolType.bar_grizzly.ore(), EnumItem.tool.instance(1, "bar_grizzly"));
 		registerValid(EnumToolType.wooden_hammer.ore(), EnumItem.tool.instance(1, "wood_hammer"));
 		registerValid(EnumToolType.knife.ore(), EnumItem.tool.instance(1, "flint_knife"));
+		registerValid(EnumToolType.decorticating_plate.ore(), EnumItem.tool.instance(1, "decorticating_plate"));
+		registerValid(EnumToolType.decorticating_stick.ore(), EnumItem.tool.instance(1, "decorticating_stick"));
 		registerValid("pileGravel", EnumItem.pile.instance(1, "gravel"));
 		registerValid("treeSapling", BlockItems.sapling);
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_oak"));
@@ -57,5 +59,6 @@ public class OreDicts
 		registerValid("rope", EnumItem.plant_production.instance(1, "vine_rope"));
 		registerValid("rope", EnumItem.plant_production.instance(1, "ramie_rope"));
 		registerValid("ropeII", EnumItem.plant_production.instance(1, "ramie_rope"));
+		registerValid("plateStone", EnumItem.stone_production.instance(1, "stone_plate"));
 	}
 }

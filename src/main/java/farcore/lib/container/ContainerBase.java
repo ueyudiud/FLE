@@ -599,11 +599,11 @@ public class ContainerBase<I extends IInventory> extends Container
                                     }
                             	}
                             	else
-                                if (itemstack3.getItem() == itemstack4.getItem() && itemstack3.getItemDamage() == itemstack4.getItemDamage() && ItemStack.areItemStackTagsEqual(itemstack3, itemstack4))
+                                if (U.Inventorys.areStackSimilar(itemstack3, itemstack4))
                                 {
                                     l1 = mouseClick == 0 ? itemstack4.stackSize : 1;
-                                    int m;
-                                    if (l1 > (m = Math.min(slot2.getSlotStackLimit(), itemstack4.getMaxStackSize()) - itemstack3.stackSize))
+                                    int m = Math.min(slot2.getSlotStackLimit(), itemstack4.getMaxStackSize());
+                                    if (l1 > m - itemstack3.stackSize)
                                     {
                                         l1 = m - itemstack3.stackSize;
                                     }

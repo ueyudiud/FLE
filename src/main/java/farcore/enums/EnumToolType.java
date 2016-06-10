@@ -16,7 +16,9 @@ public enum EnumToolType
 	firestarter("Firestarter"), 
 	bar_grizzly("BarGrizzly"), 
 	whetstone("Whetstone"), 
-	knife("Knife");
+	knife("Knife"),
+	decorticating_plate("DecorticatingPlate"),
+	decorticating_stick("DecorticatingStick");
 	
 	String name;
 	OreStack stack;

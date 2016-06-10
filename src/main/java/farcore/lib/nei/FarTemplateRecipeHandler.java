@@ -10,11 +10,13 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.collect.ImmutableList;
 
 import codechicken.lib.gui.GuiDraw;
+import codechicken.lib.gui.GuiDraw.GuiHook;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.api.API;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -24,6 +26,7 @@ public abstract class FarTemplateRecipeHandler extends TemplateRecipeHandler
 {
 	public static int sOffsetY = 11;
 	public static int sOffsetX = 5;
+	private int tick;
 
 	public FarTemplateRecipeHandler()
 	{
@@ -50,7 +53,7 @@ public abstract class FarTemplateRecipeHandler extends TemplateRecipeHandler
 		
 		public List<PositionedStack> getIngredients()
 		{
-			return getCycledIngredients(FarTemplateRecipeHandler.this.cycleticks / 20, this.resources);
+			return getCycledIngredients(FarTemplateRecipeHandler.this.tick / 20, this.resources);
 		}
 		
 		@Override
@@ -117,6 +120,20 @@ public abstract class FarTemplateRecipeHandler extends TemplateRecipeHandler
 	public static void drawText(int x, int y, String str, int color)
 	{
 		Minecraft.getMinecraft().fontRenderer.drawString(str, x, y, color);
+	}
+	
+	public static void drawTexturedModelRectFromIcon(int x, int y, IIcon icon, int w, int h)
+	{
+		x -= sOffsetX;
+		y -= sOffsetY;
+        Tessellator tessellator = Tessellator.instance;
+        float zLevel = GuiDraw.gui.getZLevel();
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV((double)(x + 0), (double)(y + h), (double) zLevel, (double)icon.getMinU(), (double)icon.getMaxV());
+        tessellator.addVertexWithUV((double)(x + w), (double)(y + h), (double) zLevel, (double)icon.getMaxU(), (double)icon.getMaxV());
+        tessellator.addVertexWithUV((double)(x + w), (double)(y + 0), (double) zLevel, (double)icon.getMaxU(), (double)icon.getMinV());
+        tessellator.addVertexWithUV((double)(x + 0), (double)(y + 0), (double) zLevel, (double)icon.getMinU(), (double)icon.getMinV());
+        tessellator.draw();
 	}
 	
 //	public void drawFluid(int x, int y, FluidTankInfo tank, int width, int height)
@@ -215,6 +232,13 @@ public abstract class FarTemplateRecipeHandler extends TemplateRecipeHandler
 	}
 	
 	@Override
+	public void onUpdate()
+	{
+		super.onUpdate();
+		++tick;
+	}
+	
+	@Override
 	public List<String> handleItemTooltip(GuiRecipe gui, ItemStack stack, List<String> currenttip, int recipe)
 	{
 		List<String> ret = super.handleItemTooltip(gui, stack, currenttip, recipe);
@@ -223,6 +247,22 @@ public abstract class FarTemplateRecipeHandler extends TemplateRecipeHandler
 //			ItemInformation.addInformation(stack, ret);
 //		}
 		return ret;
+	}
+	
+	@Override
+	public void loadTransferRects()
+	{
+		super.loadTransferRects();
+	}
+	
+	protected void addTransfetRect(int x, int y, int w, int h)
+	{
+		addTransfetRect(x, y, w, h, getRecipeId());
+	}
+	
+	protected void addTransfetRect(int x, int y, int w, int h, String id)
+	{
+		transferRects.add(new RecipeTransferRect(new Rectangle(x - sOffsetX, y - sOffsetY, w, h), id));
 	}
 	
 	void registerTransferRect(int x, int y, int w, int h, Class<? extends GuiContainer>...clazzs)

@@ -189,4 +189,11 @@ public class FarCraftingHandler extends FarTemplateRecipeHandler
 	{
 		return 2;
 	}
+	
+	@Override
+	public void loadTransferRects()
+	{
+		super.loadTransferRects();
+		addTransfetRect(122, 34, 12, 18);
+	}
 }

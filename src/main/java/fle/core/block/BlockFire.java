@@ -27,6 +27,7 @@ import farcore.util.V;
 import farcore.util.Values;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -56,6 +57,25 @@ implements IInfoSpawnable, IThermalProviderBlock
 	public void registerLocalizedName(LanguageManager manager)
 	{
 		manager.registerLocal(getUnlocalizedName() + ".name", "Fire");
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister register)
+	{
+		super.registerBlockIcons(register);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	{
+		Block block = world.getBlock(x, y - 1, z);
+		if(block instanceof ISmartBurnableBlock)
+		{
+			IIcon icon = ((ISmartBurnableBlock) block).getFireIcon(world, x, y, z);
+			return icon != null ? icon :
+				blockIcon;
+		}
+		return blockIcon;
 	}
 	
 	/**
@@ -382,6 +402,13 @@ implements IInfoSpawnable, IThermalProviderBlock
     	return world.setBlock(x, y, z, EnumBlock.fire.block(), 15, 2);
     }
 
+    public static boolean canCatchFire(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+    {
+        Block block = world.getBlock(x, y, z);
+        return block instanceof ISmartBurnableBlock ?
+        		((ISmartBurnableBlock) block).isFlammable(world, x, y, z, face, 1000) : block.isFlammable(world, x, y, z, face);
+    }
+    
 	@Override
 	public boolean spawn(World world, int x, int y, int z, Object... objects)
 	{

@@ -72,6 +72,28 @@ public class ContainerCraftingFle extends ContainerBase<InventoryCraftingFle> im
 	}
 	
 	@Override
+	public ItemStack slotClick(int id, int mouseClick, int shiftHold, EntityPlayer player)
+	{
+		if(id >= 0 && id < inventorySlots.size())
+		{
+			Slot slot = getSlot(id);
+			if(slot.inventory == display)
+			{
+				if(isCrafting) return null;
+				else
+				{
+					if(recipe != null)
+					{
+						isCrafting = true;
+					}
+					return null;
+				}
+			}
+		}
+		return super.slotClick(id, mouseClick, shiftHold, player);
+	}
+	
+	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int idx)
 	{
 		ItemStack stack = super.transferStackInSlot(player, idx);
@@ -89,35 +111,19 @@ public class ContainerCraftingFle extends ContainerBase<InventoryCraftingFle> im
 	}
 	
 	@Override
-	public void addCraftingToCrafters(ICrafting crafter)
+	protected int getUpdateSize()
 	{
-		super.addCraftingToCrafters(crafter);
-		crafter.sendProgressBarUpdate(this, 0, tick);
-		crafter.sendProgressBarUpdate(this, 1, maxTick);
+		return 2;
 	}
 	
 	@Override
-	public void detectAndSendChanges()
+	protected int getUpdate(int id)
 	{
-		super.detectAndSendChanges();
-		for(Object object : crafters)
-		{
-			ICrafting crafter = (ICrafting) object;
-			if(lastTick != tick)
-			{
-				crafter.sendProgressBarUpdate(this, 0, tick);
-			}
-			if(lastMaxTick != maxTick)
-			{
-				crafter.sendProgressBarUpdate(this, 1, maxTick);
-			}
-		}
-		lastTick = tick;
-		lastMaxTick = maxTick;
+		return id == 0 ? tick : maxTick;
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int value)
+	@Override
+	protected void setUpdate(int id, int value)
 	{
 		if(id == 0)
 		{
@@ -127,9 +133,8 @@ public class ContainerCraftingFle extends ContainerBase<InventoryCraftingFle> im
 		{
 			maxTick = value;
 		}
-		super.updateProgressBar(id, value);
 	}
-    
+	
 	@Override
 	public void update()
 	{
@@ -206,7 +211,7 @@ public class ContainerCraftingFle extends ContainerBase<InventoryCraftingFle> im
 	
     public boolean canInteractWith(EntityPlayer player)
     {
-        return player.getDistanceSq((double)this.posX + 0.5D, (double)this.posY + 0.5D, (double)this.posZ + 0.5D) <= 64.0D;
+        return true;
     }
     
     @Override

@@ -151,7 +151,12 @@ public class PolishRecipe
 		recipes.add(recipe);
 	}
 	
-	private static class $Recipe
+	public static List<$Recipe> getRecipes()
+	{
+		return recipes;
+	}
+	
+	public static class $Recipe
 	{
 		public AbstractStack input;
 		public PolishCondition[][] conditions;

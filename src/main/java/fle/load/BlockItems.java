@@ -30,6 +30,7 @@ import fle.core.item.resource.ItemPlantProduction;
 import fle.core.item.resource.ItemStick;
 import fle.core.item.resource.ItemStoneChip;
 import fle.core.item.resource.ItemStoneFragment;
+import fle.core.item.resource.ItemStoneProduction;
 import fle.core.tile.TileEntityCampfire;
 import fle.core.tile.TileEntityDryingTable;
 import fle.core.tile.TileEntityTorch;
@@ -68,6 +69,7 @@ public class BlockItems
 	public static Item stick;
 	public static Item bowl;
 	public static Item cropSeed;
+	public static Item stone_production;
 	
 	public static void init()
 	{
@@ -100,6 +102,7 @@ public class BlockItems
 		log = new ItemLog().setCreativeTab(CreativeTabs.tabMaterials);
 		plant = new ItemPlant().setCreativeTab(CreativeTabs.tabMaterials);
 		plant_production = new ItemPlantProduction().setCreativeTab(CreativeTabs.tabMaterials);
+		stone_production = new ItemStoneProduction().setCreativeTab(CreativeTabs.tabMaterials);
 		smeltableFood = new ItemFleSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
 		divideSmeltableFood = new ItemFleDividableSmeltableFood().setCreativeTab(CreativeTabs.tabFood);
 		stick = new ItemStick().setTextureName("fle:resource/stick").setCreativeTab(CreativeTabs.tabMaterials);

@@ -9,7 +9,9 @@ import static net.minecraftforge.common.util.ForgeDirection.WEST;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.enums.EnumBlock;
 import farcore.lib.render.RenderBase;
+import fle.core.block.BlockFire;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
@@ -41,7 +43,7 @@ public class RenderFire extends RenderBase
         float f = 1.4F;
         double d4, d5, d6, d7, d8, d9, d10, d11, d12;
 
-        if (!World.doesBlockHaveSolidTopSurface(this.world, x, y - 1, z) && !Blocks.fire.canCatchFire(this.world, x, y - 1, z, UP))
+        if (!World.doesBlockHaveSolidTopSurface(this.world, x, y - 1, z) && !BlockFire.canCatchFire(this.world, x, y - 1, z, UP))
         {
             float f2 = 0.2F;
             float f1 = 0.0625F;
@@ -58,27 +60,27 @@ public class RenderFire extends RenderBase
                 d2 = d0;
                 d0 = d5;
             }
-            if (Blocks.fire.canCatchFire(this.world, x - 1, y, z, EAST))
+            if (BlockFire.canCatchFire(this.world, x - 1, y, z, EAST))
             {
             	renderFace(f2, f + f1, 1F, 0, f1, 1F, 0, f1, 0, f2, f + f1, 0);
             }
 
-            if (Blocks.fire.canCatchFire(this.world, x + 1, y, z, WEST))
+            if (BlockFire.canCatchFire(this.world, x + 1, y, z, WEST))
             {
             	renderFace(1F - f2, f + f1, 0, 1F, f1, 0, 1F, f1, 1F, 1F - f2, f + f1, 1F);
             }
 
-            if (Blocks.fire.canCatchFire(this.world, x, y, z - 1, SOUTH))
+            if (BlockFire.canCatchFire(this.world, x, y, z - 1, SOUTH))
             {
             	renderFace(0, f + f1, f2, 0, f1, 0, 1F, f1, 0, 1F, f + f1, f2);
             }
 
-            if (Blocks.fire.canCatchFire(this.world, x, y, z + 1, NORTH))
+            if (BlockFire.canCatchFire(this.world, x, y, z + 1, NORTH))
             {
             	renderFace(1F, f + f1, 1F - f2, 1F, f1, 1F, 0, f1, 1F, 0, f + f1, 1F - f2);
             }
 
-            if (Blocks.fire.canCatchFire(this.world, x, y + 1, z, DOWN))
+            if (BlockFire.canCatchFire(this.world, x, y + 1, z, DOWN))
             {
                 d5 = (double)0.5D + 0.5D;
                 d6 = (double)0.5D - 0.5D;

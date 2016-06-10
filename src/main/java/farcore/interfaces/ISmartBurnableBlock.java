@@ -27,7 +27,7 @@ public interface ISmartBurnableBlock
 
 	boolean isFireSource(World world, int x, int y, int z, ForgeDirection face);
 	
-	boolean isFlammable(World world, int x, int y, int z, ForgeDirection face, int level);
+	boolean isFlammable(IBlockAccess world, int x, int y, int z, ForgeDirection face, int level);
 
 	/**
 	 * Called when block is flame.
@@ -94,7 +94,7 @@ public interface ISmartBurnableBlock
 		}
 
 		@Override
-		public boolean isFlammable(World world, int x, int y, int z, ForgeDirection face, int level)
+		public boolean isFlammable(IBlockAccess world, int x, int y, int z, ForgeDirection face, int level)
 		{
 			Block block = world.getBlock(x, y, z);
 			return block.isFlammable(world, x, y, z, face);
