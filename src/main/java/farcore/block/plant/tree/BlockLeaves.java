@@ -7,14 +7,13 @@ import java.util.Random;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.block.BlockBase;
-import farcore.enums.Direction;
 import farcore.lib.substance.SubstanceWood;
 import farcore.util.LanguageManager;
 import farcore.util.U;
+import farcore.util.V;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -61,7 +60,7 @@ public class BlockLeaves extends BlockBase implements IShearable
 		manager.registerLocal(getUnlocalizedName() + ".name", "%s Leaves");
 	}
 	
-	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister register)
 	{
 		simpleIcon = register.registerIcon(getTextureName() + "_opaque");
@@ -153,7 +152,7 @@ public class BlockLeaves extends BlockBase implements IShearable
     							break label;
     						}
     					}
-    			world.setBlockToAir(x, y, z);
+    			decayLeaves(world, x, y, z);
     			return;
     		}
     		boolean flag = false;
@@ -209,6 +208,15 @@ public class BlockLeaves extends BlockBase implements IShearable
     		world.setBlockMetadataWithNotify(x, y, z, meta | 0x2, 2);
     		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
     	}
+    }
+    
+    public void decayLeaves(World world, int x, int y, int z)
+    {
+    	if(V.dropItemWhenLeavesDecay)
+    	{
+    		dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+    	}
+    	world.setBlockToAir(x, y, z);
     }
     
     @Override

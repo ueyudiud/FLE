@@ -40,7 +40,7 @@ public class FarFoodStats extends FoodStats
     public float prevFoodLevel = foodLevel;
     public float prevFoodSaturationLevel = foodSaturationLevel;
     public float prevWaterLevel = waterLevel;
-    
+	    
     public void addWaterLevel(float level)
     {
     	waterLevel = Math.min(maxWaterLevel, waterLevel + level);

@@ -124,7 +124,7 @@ public class BlockRock extends BlockSubstance<SubstanceRock>
 					if(rand.nextBoolean())
 					{
 						world.setBlockMetadataWithNotify(x, y, z, meta + 1, 0);
-						 world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+						world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
 					}
 				}
 			}

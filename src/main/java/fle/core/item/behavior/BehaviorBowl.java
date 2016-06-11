@@ -45,7 +45,7 @@ public class BehaviorBowl extends BehaviorBase
 						}
 					}
 					
-					ItemStack output = c > 4 ? EnumItem.bowl.instance(1, "water_purified") : EnumItem.bowl.instance(1, "water_dirty");
+					ItemStack output = c > 3 ? EnumItem.bowl.instance(1, "water_purified") : EnumItem.bowl.instance(1, "water_dirty");
 					if(stack.stackSize <= 1)
 					{
 						return output;

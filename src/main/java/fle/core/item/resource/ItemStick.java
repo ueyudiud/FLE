@@ -7,6 +7,7 @@ import farcore.interfaces.IItemIconInfo;
 import farcore.interfaces.energy.thermal.IThermalItem;
 import farcore.interfaces.energy.thermal.IThermalTile;
 import farcore.interfaces.item.IItemInfo;
+import farcore.item.ItemBase;
 import farcore.item.ItemSubBehavior;
 import farcore.lib.substance.SubstanceWood;
 import fle.api.item.behavior.BehaviorBase;
@@ -15,34 +16,14 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-public class ItemStick extends ItemSubBehavior implements IThermalItem
+public class ItemStick extends ItemBase implements IThermalItem
 {
 	public ItemStick()
 	{
 		super("stick");
 		EnumItem.stick.set(new ItemStack(this));
-		init();
 	}
-	
-	private void init()
-	{
-		for(SubstanceWood wood : SubstanceWood.getWoods())
-		{
-			addSubItem(wood.getID(), wood.getName(), wood.getLocalName());
-		}
-	}
-	
-	@Override
-	public String getMetaUnlocalizedName(int metadata)
-	{
-		return metadata == 0 ? "standard" : super.getMetaUnlocalizedName(metadata);
-	}
-	
-	public void addSubItem(int id, String name, String local)
-	{
-		super.addSubItem(id, name, local, BehaviorBase.SIMPLE);
-	}
-	
+		
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
@@ -103,7 +84,7 @@ public class ItemStick extends ItemSubBehavior implements IThermalItem
 		float temp = TemperatureHandler.getTemperature(target);
 		if((temp += deltaHeat / 10F) >= 420)
 		{
-			return EnumItem.torch.instance(target.stackSize, SubstanceWood.getSubstance(target.getItemDamage()));
+			return EnumItem.torch.instance(target.stackSize);
 		}
 		else
 		{

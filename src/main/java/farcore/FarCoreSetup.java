@@ -313,7 +313,9 @@ public class FarCoreSetup
 		public void load()
 		{
 			super.load();
-			registerMFEventHandler(new FarCoreGuiHandler());
+			Object handler = new FarCoreGuiHandler();
+			registerMFEventHandler(handler);
+			registerFMLEventHandler(handler);
 		}
 		
 		@Override

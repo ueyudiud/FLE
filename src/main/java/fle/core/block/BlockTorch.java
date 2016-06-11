@@ -28,7 +28,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -133,10 +132,10 @@ public class BlockTorch extends BlockHasTile
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof TileEntityTorch)
-		{
-			((TileEntityTorch) tile).substance = SubstanceWood.WOOD_VOID;
-		}
+//		if(tile instanceof TileEntityTorch)
+//		{
+//			((TileEntityTorch) tile).substance = SubstanceWood.WOOD_VOID;
+//		}
 	}
 	
 	@Override
@@ -146,7 +145,7 @@ public class BlockTorch extends BlockHasTile
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileEntityTorch)
 		{
-			((TileEntityTorch) tile).substance = getSubstance(stack);
+//			((TileEntityTorch) tile).substance = getSubstance(stack);
 			((TileEntityTorch) tile).currentBurnTick = getBurnTick(stack);
 			((TileEntityTorch) tile).isWet = getIsWet(stack);
 		}
@@ -358,7 +357,8 @@ public class BlockTorch extends BlockHasTile
 
 	public static SubstanceWood getSubstance(ItemStack stack)
 	{
-		return SubstanceWood.getSubstance(U.Inventorys.setupNBT(stack, false).getString("material"));
+//		return SubstanceWood.getSubstance(U.Inventorys.setupNBT(stack, false).getString("material"));
+		return SubstanceWood.WOOD_VOID;
 	}
 	
 	public static int getBurnTick(ItemStack stack)
@@ -374,7 +374,7 @@ public class BlockTorch extends BlockHasTile
 	public static ItemStack setItemStack(ItemStack stack, SubstanceWood substance, int tick, boolean isWet)
 	{
 		NBTTagCompound nbt = U.Inventorys.setupNBT(stack, true);
-		nbt.setString("material", substance.getName());
+//		nbt.setString("material", substance.getName());
 		nbt.setInteger("tick", tick);
 		nbt.setBoolean("wet", isWet);
 		return stack;
@@ -383,7 +383,7 @@ public class BlockTorch extends BlockHasTile
 	public static ItemStack setSubstance(ItemStack stack, SubstanceWood substance)
 	{
 		NBTTagCompound nbt = U.Inventorys.setupNBT(stack, true);
-		nbt.setString("material", substance.getName());
+//		nbt.setString("material", substance.getName());
 		nbt.setInteger("tick", TileEntityTorch.getWoodBurnTime(substance));
 		return stack;
 	}

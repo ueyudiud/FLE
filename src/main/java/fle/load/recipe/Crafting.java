@@ -20,6 +20,7 @@ public class Crafting
 	{
 		registerRecipe(new LogCutRecipe(new Ety(EnumToolType.axe.stack(), null)));
 		registerShapelessRecipe(EnumItem.plant_production.instance(1, "vine_rope"), 40, "vine", "vine", "vine", "vine");
+		registerShapelessRecipe(EnumItem.plant_production.instance(1, "tinder"), 18, "broadleaves", "broadleaves", "broadleaves", "broadleaves");
 		Object object = EnumItem.plant_production.instance(1, "dry_ramie_fiber");
 		registerShapelessRecipe(EnumItem.plant_production.instance(5, "ramie_rope"), 80, object, object, object, object);
 		object = EnumItem.plant_production.instance(1, "ramie_rope");
@@ -30,6 +31,7 @@ public class Crafting
 		registerShapelessRecipe(EnumItem.stone_production.instance(4, "argil_ball"), 50, "dustLimestone", "dustSand", Items.clay_ball, Items.clay_ball, Items.clay_ball, Items.clay_ball);
 		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 0), 180, "x", "o", 'x', "logWood", 'o', "pileGravel");
 		registerShapedRecipe(new ItemStack(BlockItems.machineIAlpha, 1, 1), 240, "xx", "oo", 'o', "logWood", 'x', "plateStone");
+		registerShapedRecipe(new ItemStack(BlockItems.machineIIAlpha, 1, 0), 200, "xx", "xx", 'x', "stickWood");
 		
 		Object[][] inputs2 = {
 				{"stone", "Stone"},
@@ -73,7 +75,9 @@ public class Crafting
 		registerRecipe(new ToolSingleCraftingRecipe("stone_spade_hoe", 1.0F, 100, "stickWood", "rope"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_sickle", 0.7F, 140, "branchWood", "rope"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_sickle", 1.0F, 100, "stickWood", "rope"));
-		registerShapelessRecipe(EnumItem.tool.instance(1, "wood_hammer", "wood_hard-void"), 160, "branchWood", "logWood");
+		registerShapedRecipe(EnumItem.tool.instance(1, "wood_hammer", "wood_hard-void"), 160, "h", "s", 's', "branchWood", 'h', "logWood");
+		registerShapedRecipe(EnumItem.tool.instance(1, "firestarter", "raw_wood_fire"), 120, true, " x", "o ", 'x', "branchWood", 'o', "logWood");
+		registerShapedRecipe(EnumItem.tool.instance(1, "firestarter", "wood_fire"), 80, true, " x", "ol", 'x', "branchWood", 'o', "logWood", 'l', EnumItem.plant_production.instance(1, "tinder"));
 	}
 	
 	public static void registerShapedRecipe(ItemStack output, int tick, Object...objects)

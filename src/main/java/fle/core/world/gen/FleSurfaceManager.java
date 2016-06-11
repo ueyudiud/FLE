@@ -55,7 +55,7 @@ public class FleSurfaceManager extends WorldChunkManager implements ICustomTempG
         biomeCache = new BiomeCache(this);
         biomesToSpawnIn = new ArrayList();
         biomesToSpawnIn.add(EnumBiome.plain.biome());
-        biomesToSpawnIn.add(EnumBiome.low_hill.biome());
+        biomesToSpawnIn.add(EnumBiome.plateau.biome());
         
         GenLayer[] agenlayer = LayerBase.wrapSuface(world.getSeed(), world.getWorldInfo().getTerrainType());
         agenlayer = getModdedBiomeGenerators(world.getWorldInfo().getTerrainType(), world.getSeed(), agenlayer);

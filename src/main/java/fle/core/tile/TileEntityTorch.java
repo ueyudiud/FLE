@@ -16,7 +16,7 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 		return substance.burnEnergyPerUnit * Values.half_mol;
 	}
 	
-	public SubstanceWood substance;
+//	public SubstanceWood substance;
 	private boolean isBurning;
 	private boolean postBurning;
 	public boolean isWet = false;
@@ -28,7 +28,7 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 		super.readFromNBT(nbt);
 		isBurning = nbt.getBoolean("burning");
 		currentBurnTick = nbt.getInteger("tick");
-		substance = SubstanceWood.getSubstance(nbt.getString("material"));
+//		substance = SubstanceWood.getSubstance(nbt.getString("material"));
 		isWet = nbt.getBoolean("wet");
 	}
 	
@@ -37,7 +37,7 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 	{
 		super.readDescriptionsFromNBT1(nbt);
 		currentBurnTick = nbt.getInteger("t");
-		substance = SubstanceWood.getSubstance(nbt.getShort("s"));
+//		substance = SubstanceWood.getSubstance(nbt.getShort("s"));
 		isBurning = nbt.getBoolean("b");
 		if(isBurning)
 		{
@@ -53,7 +53,7 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setString("material", substance.getName());
+//		nbt.setString("material", substance.getName());
 		nbt.setInteger("tick", currentBurnTick);
 		nbt.setBoolean("burning", isBurning);
 		nbt.setBoolean("wet", isWet);
@@ -64,7 +64,7 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 	{
 		super.writeDescriptionsToNBT1(nbt);
 		nbt.setInteger("t", currentBurnTick);
-		nbt.setString("s", substance.getName());
+//		nbt.setString("s", substance.getName());
 		nbt.setBoolean("b", isBurning);
 	}
 	
@@ -75,7 +75,8 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 		{
 			if(currentBurnTick == -1)
 			{
-				currentBurnTick = substance.burnEnergyPerUnit;
+//				currentBurnTick = substance.burnEnergyPerUnit;
+				currentBurnTick = 18000;
 			}
 			return true;
 		}
@@ -89,8 +90,8 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 	
 	public int getBurnLength(int length)
 	{
-		return substance == null ? length : 
-			(int) ((float) currentBurnTick * length / (float) getWoodBurnTime(substance));
+//		return substance == null ? length : 
+		return (int) ((float) currentBurnTick * length / 18000F);
 	}
 	
 	@Override
@@ -177,7 +178,7 @@ public class TileEntityTorch extends TileEntityAgeUpdatable
 	public ItemStack getDrop(Block block)
 	{
 		ItemStack ret = new ItemStack(block);
-		BlockTorch.setItemStack(ret, substance, currentBurnTick, isWet);
+		BlockTorch.setItemStack(ret, SubstanceWood.WOOD_VOID, currentBurnTick, isWet);
 		return ret;
 	}
 }

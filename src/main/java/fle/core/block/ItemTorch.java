@@ -28,7 +28,7 @@ public class ItemTorch extends ItemBlockBase implements IInfomationable
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag)
 	{
-		list.add(FarCore.translateToLocal(Langs.infoTorchMaterial, BlockTorch.getSubstance(stack).getLocalName()));
+//		list.add(FarCore.translateToLocal(Langs.infoTorchMaterial, BlockTorch.getSubstance(stack).getLocalName()));
 		list.add(FarCore.translateToLocal(Langs.infoTorchBurnTime, BlockTorch.getBurnTick(stack)));
 		if(BlockTorch.getIsWet(stack))
 		{
@@ -42,18 +42,18 @@ public class ItemTorch extends ItemBlockBase implements IInfomationable
 	{
 		if(objects.length == 2)
 		{
-			SubstanceWood wood = (SubstanceWood) objects[0];
+//			SubstanceWood wood = (SubstanceWood) objects[0];
 			int tick = ((Integer) objects[1]).intValue();
 			ItemStack ret = new ItemStack(this, size);
-			BlockTorch.setSubstance(ret, wood);
+//			BlockTorch.setSubstance(ret, SubstanceWood.WOOD_VOID);
 			BlockTorch.setBurnTick(ret, tick);
 			return ret;
 		}
 		if(objects.length == 1)
 		{
-			SubstanceWood wood = (SubstanceWood) objects[0];
+//			SubstanceWood wood = (SubstanceWood) objects[0];
 			ItemStack ret = new ItemStack(this, size);
-			BlockTorch.setSubstance(ret, wood);
+//			BlockTorch.setSubstance(ret, wood);
 			return ret;
 		}
 		return provide(size, SubstanceWood.WOOD_VOID);

@@ -25,6 +25,7 @@ public class ItemPlantProduction extends ItemResource
 		addSubItem(1002, "dry_ramie_fiber", "Dry Ramie Fiber", "dry_ramie_fiber");
 		addSubItem(1003, "ramie_rope", "Ramie Rope", "ramie_rope");
 		addSubItem(1004, "ramie_bundle", "Ramie Rope Bundle", "ramie_rope_bundle");
+		addSubItem(1005, "tinder", "Tinder", "tinder");
 	}
 	
 	@Override

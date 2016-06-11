@@ -127,6 +127,13 @@ task apiJar(type: Jar, dependsOn: 'jar') {
     }
 }
 
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'fle.override.FarOverrideLoadingPlugin',
+        'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 artifacts {
 	archives deobfJar
 	archives apiJar

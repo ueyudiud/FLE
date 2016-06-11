@@ -13,7 +13,6 @@ import farcore.interfaces.item.IContainerItemCollectable;
 import farcore.util.FarFoodStats;
 import farcore.util.FleLog;
 import farcore.util.U;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,17 +20,15 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.server.management.ItemInWorldManager;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition;
 
 public class FarCorePlayerHandler
 {
 	private static final int CHECK_LOOP = 2048;
-	
+		
 	@SubscribeEvent
 	public void onItemPickup(EntityItemPickupEvent event)
 	{

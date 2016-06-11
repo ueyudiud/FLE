@@ -30,7 +30,7 @@ public class Polishing
 		PolishRecipe.registerTool(EnumToolType.awl, 
 				(ItemStack stack) -> {
 					return OreDictionary.itemMatches(EnumItem.tool.instance(1, "flint_awl"), stack, false) ? 
-						ItemSubTool.getToolMaterial(stack).harvestLevel : -1;});
+						ItemSubTool.getToolMaterial(stack).harvestLevel + 8 : -1;});
 		PolishRecipe.registerTool(EnumToolType.whetstone, 
 				(ItemStack stack) -> {
 					return OreDictionary.itemMatches(EnumItem.tool.instance(1, "whetstone"), stack, false) ? 
@@ -47,6 +47,9 @@ public class Polishing
 		PolishRecipe.registerRecipe(input, "   c cc c", EnumItem.tool.instance(1, "flint_awl", tool));
 		PolishRecipe.registerRecipe(input, "c cc cc c", EnumItem.tool_head.instance(1, "flint_knife", tool));
 		PolishRecipe.registerRecipe(input, " c  c  c ", EnumItem.tool_head.instance(2, "flint_knife", tool));
+		input = new OreStack("branchWood");
+		PolishRecipe.registerResource(input, 0);
+		PolishRecipe.registerRecipe(input, "p pp pp p", EnumItem.stick.instance(1));
 		Object[][] inputs1 = {
 				{"stone", "Stone"},
 				{"andesite", "Andesite"},
