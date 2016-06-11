@@ -16,6 +16,8 @@ public class Icons
 	public static IIcon polish_delete;
 	public static IIcon next;
 	public static IIcon last;
+	public static IIcon green;
+	public static IIcon blue;
 
 	public static IIcon block_drying_table;
 	public static IIcon block_polish_top;
@@ -39,6 +41,8 @@ public class Icons
 			polish_delete = register.registerIcon("fle:polish_delete");
 			next = register.registerIcon("fle:next");
 			last = register.registerIcon("fle:last");
+			green = register.registerIcon("fle:green");
+			blue = register.registerIcon("fle:blue");
 		}
 	}
 

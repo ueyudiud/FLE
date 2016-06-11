@@ -45,7 +45,7 @@ public abstract class LayerBase extends GenLayer
 		orLayer = new LayerZoom(5, 47L, orLayer);
 		drawImage(256, orLayer, "layer3");
 //		LayerTemp tempLayer = new LayerTemp(new NoisePerlin(1L, 8, 0.81D, 2D, 3D), 2839L);
-		LayerTerrainBase terrainLayer = new LayerTerrainBase(new NoisePerlin(101L, 6, 5L, 0.48D, 1.8D), 38917L);
+		LayerTerrainBase terrainLayer = new LayerTerrainBase(new NoisePerlin(101L, 5, 3.8F, 1.52D, 1.8D), 38917L);
 //		LayerRainfall rainfallLayer = new LayerRainfall(new NoisePerlin(201L, 7, 0.32D, 1.4D, 1.5D), 37292L, terrainLayer);
 		orLayer = new LayerFloor(718L, orLayer, terrainLayer);
 //		drawImage(256, orLayer, "layer4");

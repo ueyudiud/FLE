@@ -17,8 +17,8 @@ public class GuiIconButton extends GuiButton
 	private static final ResourceLocation backgroundLocation = new ResourceLocation("fle", "textures/gui/button_background.png");
 	
 	private ResourceLocation location;
-	private IIcon icon;
-	private boolean drawBackground;
+	protected IIcon icon;
+	protected boolean drawBackground;
 
 	public GuiIconButton(int id, int x, int z, int s)
 	{

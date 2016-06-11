@@ -73,6 +73,7 @@ public class Crafting
 		registerRecipe(new ToolSingleCraftingRecipe("stone_spade_hoe", 1.0F, 100, "stickWood", "rope"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_sickle", 0.7F, 140, "branchWood", "rope"));
 		registerRecipe(new ToolSingleCraftingRecipe("stone_sickle", 1.0F, 100, "stickWood", "rope"));
+		registerShapelessRecipe(EnumItem.tool.instance(1, "wood_hammer", "wood_hard-void"), 160, "branchWood", "logWood");
 	}
 	
 	public static void registerShapedRecipe(ItemStack output, int tick, Object...objects)

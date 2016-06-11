@@ -3,8 +3,11 @@ package fle.core.gui.alpha;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.lib.gui.GuiBase;
+import farcore.lib.gui.GuiIconButton;
 import fle.core.container.alpha.ContainerTerrine;
 import fle.core.tile.TileEntityTerrine;
+import fle.load.Icons;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -12,38 +15,31 @@ import net.minecraft.util.ResourceLocation;
 @SideOnly(Side.CLIENT)
 public class GuiTerrine extends GuiBase<TileEntityTerrine>
 {
-	private TileEntityTerrine tile;
-	
-	public GuiTerrine(TileEntityTerrine tile, EntityPlayer player) 
+	public GuiTerrine(TileEntityTerrine inventory, EntityPlayer player) 
 	{
-		super(new ContainerTerrine(tile, player));
-		this.tile = tile;
+		super(new ContainerTerrine(inventory, player));
 	}
 
 	@Override
-	protected void drawOther(int aXOffset, int aYOffset, int aMouseXPosition,
-			int aMouseYPosition)
-	{		
-		//drawCondition(107, 46, );
+	protected void drawOther(int xOffset, int yOffset, int mouseXPosition,
+			int mouseYPosition)
+	{
+		drawTexturedModalRect(xOffset + 75, yoffset + 32, 176, 0, 8, 30);
 		
-		drawTexturedModalRect(aXOffset + 75, aYOffset + 32, 176, 0, 8, 30);
-		
-		switch(tile.getMode())
+		switch(inventory.getMode())
 		{
 		case 0 :
 		{
-			if(tile.getTank(0).getFluidAmount() > 0)
-			{
-				drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 34, 18, 36);
-			}
+			
 		}
 		break;
 		case 1 :
 		{
-			drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 72, 18, 36);
-//			if(tile.getProgress() > 0)
+			drawTexturedModalRect(xOffset + 88, yoffset + 27, 176, 34, 18, 36);
+//			drawTexturedModalRect(aXOffset + 88, aYOffset + 27, 176, 72, 18, 36);
+//			if(inventory.getProgress() > 0)
 //			{
-//				int i = (int) (tile.getProgress() * 34);
+//				int i = (int) (inventory.getProgress() * 34);
 //				drawFleRect(aXOffset + 107, aYOffset + 28 + 34 - i, 2, i, 0xC10900);
 //			}
 		}
@@ -58,9 +54,9 @@ public class GuiTerrine extends GuiBase<TileEntityTerrine>
 		xoffset = (width - xSize) / 2;
 		yoffset = (height - ySize) / 2;
 
-		if(tile.getFluidStackInTank(0) != null)
+		if(inventory.getFluidStackInTank(0) != null)
 		{
-			drawAreaTooltip(par1, par2, tile.getFluidStackInTank(0).getLocalizedName() + " " + tile.getTank(0).getFluidAmount() + "L", xoffset + 75, yoffset + 32, 8, 30);
+			drawAreaTooltip(par1, par2, inventory.getFluidStackInTank(0).getLocalizedName() + " " + inventory.getTank(0).getFluidAmount() + "L", xoffset + 75, yoffset + 32, 8, 30);
 		}
 	}
 	
@@ -68,17 +64,31 @@ public class GuiTerrine extends GuiBase<TileEntityTerrine>
 	public void initGui() 
 	{
 		super.initGui();
-//		xoffset = (width - xSize) / 2;
-//		yoffset = (height - ySize) / 2;
-//		buttonList.add(new GuiIconButton(0, xoffset + 74, yoffset + 21, ButtonSize.Small, GuiIconButton.buttonLocate, 80, 8));
+		xoffset = (width - xSize) / 2;
+		yoffset = (height - ySize) / 2;
+		buttonList.add(new GuiIconButton(0, xoffset + 74, yoffset + 21, 10, null)
+				{
+			@Override
+			public void drawButton(Minecraft minecraft, int i, int j)
+			{
+				switch (inventory.getMode())
+				{
+				case 0 :
+					icon = Icons.green;
+					break;
+				case 1 :
+					icon = Icons.blue;
+					break;
+				}
+				super.drawButton(minecraft, i, j);
+			}
+				});
 //		buttonList.add(new GuiIconButton(1, xoffset + 64, yoffset + 53, ButtonSize.Small, GuiIconButton.buttonLocate, 88, 8));
 	}
 //	
 	protected void actionPerformed(GuiButton guibutton)
 	{
-//		sendToContainer(1, guibutton.id);
-//		if(guibutton.id == 0) tile.getTank(0).drain(tile.getTank(0).getCapacity(), true);
-//		else if(guibutton.id == 1) tile.setClose();
+		sendToContainer(1, guibutton.id);
 		super.actionPerformed(guibutton);
 	}
 

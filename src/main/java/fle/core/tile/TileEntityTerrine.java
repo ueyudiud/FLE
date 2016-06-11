@@ -22,9 +22,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -33,7 +35,7 @@ implements IFluidHandler, IFluidTanks, ITileInventory, IHasGui
 {
 	private int mode = 0;
 	private FluidTank tank = new FluidTank(16000);
-	private Inventory inventory = new Inventory(2, "terrine", 1);
+	private Inventory inventory = new Inventory(2, "terrine", 64);
 	
 	public TileEntityTerrine()
 	{
@@ -67,22 +69,41 @@ implements IFluidHandler, IFluidTanks, ITileInventory, IHasGui
 	{
 		super.writeToNBT(nbt);
 		nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		nbt.setByte("mode", (byte) mode);
+	}
+	
+	@Override
+	protected void writeDescriptionsToNBT1(NBTTagCompound nbt)
+	{
+		super.writeDescriptionsToNBT1(nbt);
+		nbt.setByte("m", (byte) mode);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		mode = nbt.getByte("mode");
 		if(nbt.hasKey("tank"))
 		{
 			tank.readFromNBT(nbt.getCompoundTag("tank"));
 		}
 	}
+	
+	@Override
+	protected void readDescriptionsFromNBT1(NBTTagCompound nbt)
+	{
+		super.readDescriptionsFromNBT1(nbt);
+		mode = nbt.getByte("m");
+	}
 
 	@Override
 	protected void updateServer2()
 	{
-		
+		if(mode == 1)
+		{
+			inventory.fillOrDrainInventoryTank(tank, 0, 1);
+		}
 	}
 	
 	@Override
@@ -133,7 +154,6 @@ implements IFluidHandler, IFluidTanks, ITileInventory, IHasGui
 	{
 		return inventory;
 	}
-
 	
 	public int getTankSize()
 	{
@@ -145,26 +165,51 @@ implements IFluidHandler, IFluidTanks, ITileInventory, IHasGui
 		return tank;
 	}
 	
-
 	@Override
 	public void setFluidStackInTank(int index, FluidStack stack)
 	{
 		tank.setFluid(stack);
 	}
-
 	
-
 	@SideOnly(Side.CLIENT)
 	public Gui openGUI(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
 		return new GuiTerrine(this, player);
 	}
 	
-
 	@Override
 	public Container openContainer(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
 		return new ContainerTerrine(this, player);
+	}
+
+	public void switchMode()
+	{
+		switch(mode)
+		{
+		case 0 :
+			ItemStack stack;
+			if(inventory.stacks[0] != null)
+			{
+				stack = inventory.stacks[0];
+				if(!(FluidContainerRegistry.isContainer(stack) ||
+						stack.getItem() instanceof IFluidContainerItem))
+				{
+					return;
+				}
+			}
+			if(inventory.stacks[1] != null) return;
+			mode = 1;
+			break;
+		case 1 :
+			if(tank.getFluid() != null)
+			{
+				return;
+			}
+			mode = 0;
+			break;
+		}
+		syncToNearby();
 	}
 
 	public int getMode()

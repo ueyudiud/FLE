@@ -453,7 +453,7 @@ public class Inventory implements IInventory
 				int i = FluidContainerRegistry.getContainerCapacity(tank.getFluid(), input);
 				stack = FluidContainerRegistry.fillFluidContainer(tank.getFluid(), input);
 				if(stack == null) return false;
-				if(addStack(i, stack, false) == stack.stackSize)
+				if(addStack(outputSlot, stack, false) == stack.stackSize)
 				{
 					tank.drain(i, true);
 					decrStackSize(inputSlot, 1);
