@@ -22,11 +22,16 @@ public class O_EntityPlayer extends ClassTransformer
 	{
 		super("net.minecraft.entity.player.EntityPlayer", "yz");
 		
-		List<OperationInfo> list = Arrays.asList(
-				new OperationInfo(OperationType.Replace, 2, 109, 
-						new TypeInsnNode(NEW, "farcore/util/FarFoodStats")),
-				new OperationInfo(OperationType.Replace, 4, 109, 
-						new MethodInsnNode(INVOKESPECIAL, "farcore/util/FarFoodStats", "<init>", "()V", false)));
+		List<OperationInfo> list;
+//		= Arrays.asList(
+//				new OperationInfo(OperationType.InsertAfter, 2, 109, 
+//						new TypeInsnNode(NEW, "farcore/util/FarFoodStats")),
+//				new OperationInfo(OperationType.Replace, 4, 109, 
+//						new MethodInsnNode(INVOKESPECIAL, "farcore/util/FarFoodStats", "<init>", "()V", false)));
+		list = Arrays.asList(
+				new OperationInfo(OperationType.InsertAfter, 4, 175, 
+						new VarInsnNode(ALOAD, 0),
+						new MethodInsnNode(INVOKESTATIC, "fle/override/helper/Player", "initStat", "(Lnet/minecraft/entity/player/EntityPlayer;)V", false)));
 		OperationInfo info1;
 		mcpMethods.put("<init>|(Lnet/minecraft/world/World;Lcom/mojang/authlib/GameProfile;)V", list);
 		obfMethods.put("<init>|(Lahb;Lcom/mojang/authlib/GameProfile;)V", list);

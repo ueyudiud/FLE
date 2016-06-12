@@ -67,6 +67,7 @@ public class ClassTransformer
 				{
 					LOG.warn("No instructions in method named " + m.name + "()");
 				}
+				boolean success = false;
 				for(int idx = 0; (idx < m.instructions.size() && !list.isEmpty()); ++idx)
 				{
 					numInsertions = 0;
@@ -97,7 +98,15 @@ public class ClassTransformer
 						}
 					}
 				}
-				LOG.info("Injected method {" + m.name + "|" + m.desc + "}.");
+				success = list.isEmpty();
+				if(success)
+				{
+					LOG.info("Injected method {" + m.name + "|" + m.desc + "}.");
+				}
+				else
+				{
+					LOG.warn("The method {" + m.name + "|" + m.desc + "} might failed to inject, this might cuase game crash.");
+				}
 			}
 		}
 		LOG.info("Attempting to Transform: " + classNode.name + " Complete");
@@ -182,7 +191,7 @@ public class ClassTransformer
 	
 	private boolean isLineNumber(AbstractInsnNode current, int line)
 	{
-		if ((current instanceof LineNumberNode))
+		if (current instanceof LineNumberNode)
 		{
 			int l = ((LineNumberNode) current).line;
 			if (l == line)

@@ -1,6 +1,5 @@
 package fle.compact.nei;
 
-import codechicken.nei.recipe.TemplateRecipeHandler.CachedRecipe;
 import cpw.mods.fml.common.eventhandler.Event;
 import farcore.lib.nei.FarTemplateRecipeHandler.BaseCachedRecipe;
 import farcore.lib.recipe.IFleRecipe;
