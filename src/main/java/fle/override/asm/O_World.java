@@ -26,6 +26,17 @@ public class O_World extends ClassTransformer
 						new VarInsnNode(ILOAD, 3),
 						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "getBiomeBaseTemperature", "(Lnet/minecraft/world/World;III)F", false)));
 		mcpMethods.put("canSnowAtBody|(IIIZ)Z", infos);
+		infos = Arrays.asList(
+				new OperationInfo(OperationType.Remove, 1, 2942),
+				new OperationInfo(OperationType.Remove, 2, 2942),
+				new OperationInfo(OperationType.Remove, 3, 2942),
+				new OperationInfo(OperationType.Remove, 4, 2942),
+				new OperationInfo(OperationType.Replace, 5, 2942,
+						new VarInsnNode(ALOAD, 0),
+						new VarInsnNode(ILOAD, 1),
+						new VarInsnNode(ILOAD, 2),
+						new VarInsnNode(ILOAD, 3),
+						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "getBiomeBaseTemperature", "(Lahb;III)F", false)));
 		obfMethods.put("canSnowAtBody|(IIIZ)Z", infos);
 	}
 }

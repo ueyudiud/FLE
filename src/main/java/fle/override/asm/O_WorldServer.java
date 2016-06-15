@@ -22,12 +22,12 @@ public class O_WorldServer extends ClassTransformer
 						new FieldInsnNode(GETSTATIC, "farcore/enums/EnumBlock", "snow", "Lfarcore/enums/EnumBlock;"), 
 						new MethodInsnNode(INVOKEVIRTUAL, "farcore/enums/EnumBlock", "block", "()Lnet/minecraft/block/Block;", false))));
 		mcpMethods.put("g|()V", Arrays.asList(
-				new OperationInfo(OperationType.Replace, 11, 366,
+				new OperationInfo(OperationType.Replace, 11, 349,
 						new FieldInsnNode(GETSTATIC, "farcore/enums/EnumBlock", "ice", "Lfarcore/enums/EnumBlock;"), 
-						new MethodInsnNode(INVOKEVIRTUAL, "farcore/enums/EnumBlock", "block", "()Lnet/minecraft/block/Block;", false)),
-				new OperationInfo(OperationType.Replace, 9, 371, 
+						new MethodInsnNode(INVOKEVIRTUAL, "farcore/enums/EnumBlock", "block", "()Laji;", false)),
+				new OperationInfo(OperationType.Replace, 9, 354, 
 						new FieldInsnNode(GETSTATIC, "farcore/enums/EnumBlock", "snow", "Lfarcore/enums/EnumBlock;"), 
-						new MethodInsnNode(INVOKEVIRTUAL, "farcore/enums/EnumBlock", "block", "()Lnet/minecraft/block/Block;", false))));
+						new MethodInsnNode(INVOKEVIRTUAL, "farcore/enums/EnumBlock", "block", "()Laji;", false))));
 	}
 
 }

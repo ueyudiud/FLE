@@ -13,14 +13,14 @@ public class O_ItemStack extends ClassTransformer
 	{
 		super("net.minecraft.item.ItemStack", "?");
 
-		mcpMethods.put("<init>|(Lnet/minecraft/item/Item;II)V", Arrays.asList(
-				new OperationInfo(OperationType.Remove, 1, 84),
-				new OperationInfo(OperationType.Remove, 2, 84),
-				new OperationInfo(OperationType.Replace, 3, 84, 
-						new VarInsnNode(ALOAD, 1),
-						new VarInsnNode(ALOAD, 0),
-						new VarInsnNode(ILOAD, 3),
-						new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/Item", "setDamage", "(Lnet/minecraft/item/ItemStack;I)V", false))));
+//		mcpMethods.put("<init>|(Lnet/minecraft/item/Item;II)V", Arrays.asList(
+//				new OperationInfo(OperationType.Remove, 1, 84),
+//				new OperationInfo(OperationType.Remove, 2, 84),
+//				new OperationInfo(OperationType.Replace, 3, 84, 
+//						new VarInsnNode(ALOAD, 1),
+//						new VarInsnNode(ALOAD, 0),
+//						new VarInsnNode(ILOAD, 3),
+//						new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/item/Item", "setDamage", "(Lnet/minecraft/item/ItemStack;I)V", false))));
 	}
 
 }

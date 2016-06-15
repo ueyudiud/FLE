@@ -135,7 +135,7 @@ public class FarCorePlayerHandler
 		if (player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP playerMP = (EntityPlayerMP) player;
-			boolean destorying = (boolean) U.Reflect.getValue(ItemInWorldManager.class, Arrays.asList("isDestroyingBlock"), playerMP.theItemInWorldManager);
+			boolean destorying = (boolean) U.Reflect.getValue(ItemInWorldManager.class, Arrays.asList("isDestroyingBlock", "field_73088_d"), playerMP.theItemInWorldManager);
 			if(destorying)
 			{
 				stats.addFoodExhaustion(0.000625F);

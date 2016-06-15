@@ -2,20 +2,37 @@ package fle.override.asm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FrameNode;
+import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
+import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import fle.override.FarOverrideLoadingPlugin;
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -23,6 +40,7 @@ import net.minecraft.launchwrapper.IClassTransformer;
 public class ClassTransformer
   implements IClassTransformer
 {
+	private static final boolean DEBUG = true;
 	public static final Logger LOG = LogManager.getLogger("FarLandEra ASM");
 	private int numInsertions;
 	protected Map<String, List<OperationInfo>> mcpMethods = new HashMap();
@@ -57,6 +75,11 @@ public class ClassTransformer
 			List<OperationInfo> list = map.get(m.name + "|" + m.desc);
 			if(list != null)
 			{
+				if(DEBUG)
+				{
+					LOG.info("===========Injecting==========");
+					info(m);
+				}
 				list = new ArrayList(list);
 				OperationInfo info = null;
 				if(!list.isEmpty())
@@ -99,6 +122,11 @@ public class ClassTransformer
 					}
 				}
 				success = list.isEmpty();
+				if(DEBUG)
+				{
+					LOG.info("===========Injected==========");
+					info(m);
+				}
 				if(success)
 				{
 					LOG.info("Injected method {" + m.name + "|" + m.desc + "}.");
@@ -113,6 +141,68 @@ public class ClassTransformer
 		ClassWriter writer = new ClassWriter(1);
 		classNode.accept(writer);
 		return writer.toByteArray();
+	}
+	
+	private void info(MethodNode node)
+	{
+		LOG.debug(node.name + " | " + node.desc);
+		for(int i = 0; i < node.instructions.size(); ++i)
+		{
+			AbstractInsnNode node3 = node.instructions.get(i);
+			int idx = i;
+			int type = node3.getOpcode();
+			switch (node3.getType())
+			{
+			case AbstractInsnNode.VAR_INSN :
+				LOG.debug(i + " " + type + " " + ((VarInsnNode) node3).var);
+				break;
+			case AbstractInsnNode.TYPE_INSN : 
+				LOG.debug(i + " " + type + " " + ((TypeInsnNode) node3).desc);
+				break;
+			case AbstractInsnNode.TABLESWITCH_INSN :
+				LOG.debug(i + " " + type + " " + ((TableSwitchInsnNode) node3).min + "," + ((TableSwitchInsnNode) node3).max);
+				break;
+			case AbstractInsnNode.MULTIANEWARRAY_INSN :
+				LOG.debug(i + " " + type + " " + ((MultiANewArrayInsnNode) node3).desc + "[" + ((MultiANewArrayInsnNode) node3).dims + "]");
+				break;
+			case AbstractInsnNode.METHOD_INSN :
+				LOG.debug(i + " " + type + " " + ((MethodInsnNode) node3).owner + "." + ((MethodInsnNode) node3).name + " " + ((MethodInsnNode) node3).desc);
+				break;
+			case AbstractInsnNode.LOOKUPSWITCH_INSN :
+				LOG.debug(i + " " + type);
+				break;
+			case AbstractInsnNode.LINE :
+				LOG.debug(i + " " + type + " line:" + ((LineNumberNode) node3).line);
+				break;
+			case AbstractInsnNode.LDC_INSN :
+				LOG.debug(i + " " + type);
+				break;
+			case AbstractInsnNode.LABEL :
+				LOG.debug(i + " " + type + " label:" + ((LabelNode) node3).getLabel());
+				break;
+			case AbstractInsnNode.JUMP_INSN :
+				LOG.debug(i + " " + type + " jump: label:" + ((JumpInsnNode) node3).label.getLabel());
+				break;
+			case AbstractInsnNode.INVOKE_DYNAMIC_INSN :
+				LOG.debug(i + " " + type + " " + ((InvokeDynamicInsnNode) node3).name + " " + ((InvokeDynamicInsnNode) node3).desc);
+				break;
+			case AbstractInsnNode.INT_INSN :
+				LOG.debug(i + " " + type + " " + ((IntInsnNode) node3).operand);
+				break;
+			case AbstractInsnNode.INSN :
+				LOG.debug(i + " " + type);
+				break;
+			case AbstractInsnNode.IINC_INSN :
+				LOG.debug(i + " " + type + " " + ((IincInsnNode) node3).var + ":" + ((IincInsnNode) node3).incr);
+				break;
+			case AbstractInsnNode.FRAME :
+				LOG.debug(i + " " + type + " " + ((FrameNode) node3).type);
+				break;
+			case AbstractInsnNode.FIELD_INSN :
+				LOG.debug(i + " " + type + " " + ((FieldInsnNode) node3).owner + "." + ((FieldInsnNode) node3).name + "." + ((FieldInsnNode) node3).desc);
+				break;
+			}
+		}
 	}
 	
 	private Map<String, List<OperationInfo>> getInfos()

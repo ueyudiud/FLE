@@ -18,7 +18,11 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import farcore.FarCore;
 import farcore.util.FleLog;
 import farcore.util.U;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 public class FarOverride extends DummyModContainer
