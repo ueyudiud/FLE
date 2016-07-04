@@ -39,7 +39,7 @@ public class Drops
 			ItemStack drop2 = EnumItem.stone_fragment.instance(1, rock.getName());
 			if(drop == null)
 			{
-				drop = EnumItem.cobble_block.instance(1, rock);
+				drop = EnumItem.rock_block.instance(1, rock);
 				drop2 = null;
 			}
 			if(drop2 != null)

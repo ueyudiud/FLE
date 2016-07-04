@@ -1,6 +1,8 @@
 package farcore.lib.render;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -8,14 +10,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.Item;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.oredict.OreDictionary;
 
 @SideOnly(Side.CLIENT)
 public class RenderHandler implements ISimpleBlockRenderingHandler
 {
+	private final Map<Class, RenderBase> renderMap = new HashMap();
 	private final Map<String, RenderBase> blockRenders = new HashMap();
 	public static RenderHandler instance;
 	private final int id;
@@ -26,12 +27,23 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 		this.id = id;
 		renderingInInventory = flag;
 	}
+	
+	private RenderBase getInstance(Class<? extends RenderBase> clazz) throws InstantiationException, IllegalAccessException
+	{
+		if(!renderMap.containsKey(clazz))
+		{
+			RenderBase render;
+			renderMap.put(clazz, render = clazz.newInstance());
+			return render;
+		}
+		return renderMap.get(clazz);
+	}
 
 	public void register(Block block, int meta, Class<? extends RenderBase> clazz)
 	{
 		try
 		{
-			blockRenders.put(Block.blockRegistry.getNameForObject(block) + ":" + meta, clazz.newInstance());
+			blockRenders.put(Block.blockRegistry.getNameForObject(block) + ":" + meta, getInstance(clazz));
 		}
 		catch(Exception e)
 		{

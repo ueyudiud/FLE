@@ -10,6 +10,13 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 {
 	private static final Register<SubTag> subTags = new Register();
 
+	public static final SubTag WOOD = getNewSubTag("WOOD");
+	public static final SubTag DIRT = getNewSubTag("DIRT");
+	public static final SubTag SAND = getNewSubTag("SAND");
+	public static final SubTag ROCK = getNewSubTag("ROCK");
+	public static final SubTag TOOL = getNewSubTag("TOOL");
+	public static final SubTag HANDLE = getNewSubTag("HANDLE");
+	
 	public static final SubTag TOOL_wood = getNewSubTag("TOOL_WOOD");
 	public static final SubTag TOOL_stone = getNewSubTag("TOOL_STONE");
 	public static final SubTag TOOL_flint = getNewSubTag("TOOL_FLINT");

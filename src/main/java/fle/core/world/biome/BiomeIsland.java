@@ -26,7 +26,7 @@ public class BiomeIsland extends BiomeBase
 		super(id);
 		this.topBlock = top;
 		this.genRainforestTree = genRainforestTree;
-        this.biomeDecorator.treesPerChunk = 2;
+//        this.biomeDecorator.treesPerChunk = 2;
 	}
 
     public WorldGenAbstractTree func_150567_a(Random random)

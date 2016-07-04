@@ -26,6 +26,7 @@ public enum Direction
 			{D, U, N, S, W, E, A, B, Q}
 		};
 
+	public static final int[] oppsite = {1, 0, 3, 2, 5, 4, 7, 6, 8};
 	public static final Direction[] directions_2D = {N, S, W, E};
 	public static final Direction[] directions = {D, U, N, S, W, E};
 	public static final Direction[] directions_adv = {D, U, N, S, W, E, A, B};

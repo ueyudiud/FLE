@@ -14,9 +14,14 @@ import farcore.lib.collection.IntArray;
 import farcore.lib.world.biome.BiomeBase;
 import farcore.util.noise.NoiseBasic;
 import farcore.util.noise.NoisePerlin;
+import fle.core.world.climate.Climate;
+import fle.core.world.climate.IClimateHandler;
 import fle.core.world.layer.LayerBase;
+import fle.core.world.layer.climate.LayerClimateSurface;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.LongHashMap;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
@@ -26,7 +31,7 @@ import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 
-public class FleSurfaceManager extends WorldChunkManager implements ICustomTempGenerate
+public class FleSurfaceManager extends WorldChunkManager implements ICustomTempGenerate, IClimateHandler
 {
 	private double[] cacheRainfall;
 	
@@ -39,8 +44,10 @@ public class FleSurfaceManager extends WorldChunkManager implements ICustomTempG
     protected GenLayer genBiomes;
     /** A GenLayer containing the indices into BiomeBase.biomeList[] */
     protected GenLayer biomeIndexLayer;
+    protected LayerClimateSurface climateLayer;
     /** The BiomeCache object for this world. */
     protected BiomeCache biomeCache;
+	protected ClimateCache climateCache;
     /** A list of biomes that the player can spawn in. */
     protected List<BiomeGenBase> biomesToSpawnIn;
     
@@ -49,15 +56,16 @@ public class FleSurfaceManager extends WorldChunkManager implements ICustomTempG
 		super(world);
 
 		Random random = new Random(world.getSeed());
-		tempNoise = new NoisePerlin(random, 7, 1.8D, 3D, 2D);
-		rainfallNoise = new NoisePerlin(random, 6, 2.3D, 2.6D, 2D);
 		
         biomeCache = new BiomeCache(this);
+        climateCache = new ClimateCache(this);
         biomesToSpawnIn = new ArrayList();
         biomesToSpawnIn.add(EnumBiome.plain.biome());
-        biomesToSpawnIn.add(EnumBiome.plateau.biome());
         
         GenLayer[] agenlayer = LayerBase.wrapSuface(world.getSeed(), world.getWorldInfo().getTerrainType());
+        climateLayer = (LayerClimateSurface) agenlayer[3];
+        tempNoise = (NoisePerlin) climateLayer.noise3;
+        rainfallNoise = (NoisePerlin) climateLayer.noise2;
         agenlayer = getModdedBiomeGenerators(world.getWorldInfo().getTerrainType(), world.getSeed(), agenlayer);
         genBiomes = agenlayer[0];
         biomeIndexLayer = agenlayer[1];
@@ -180,6 +188,34 @@ public class FleSurfaceManager extends WorldChunkManager implements ICustomTempG
         return getBiomeGenAt(biomes, x, y, w, h, true);
     }
 
+    public Climate[] getClimateAt(Climate[] climates, int x, int z, int w, int h, boolean ignoreCache)
+    {
+        IntCache.resetIntCache();
+
+        if (climates == null || climates.length < w * h)
+        {
+            climates = new Climate[w * h];
+        }
+
+        if (ignoreCache && w == 16 && h == 16 && (x & 0xF) == 0 && (z & 0xF) == 0)
+        {
+            Climate[] abiomegenbase1 = climateCache.getClimatesAt(x, z);
+            System.arraycopy(abiomegenbase1, 0, climates, 0, 256);
+            return climates;
+        }
+        else
+        {
+            int[] aint = climateLayer.getInts(x, z, w, h);
+
+            for (int i1 = 0; i1 < w * h; ++i1)
+            {
+                climates[i1] = Climate.climates.get(aint[i1]);
+            }
+
+            return climates;
+        }
+    }
+
     /**
      * Return a list of biomes for the specified blocks. Args: listToReuse, x, y, width, length, cacheFlag (if false,
      * don't check biomeCache to avoid infinite loop in BiomeCacheBlock)
@@ -292,10 +328,17 @@ public class FleSurfaceManager extends WorldChunkManager implements ICustomTempG
     public void cleanupCache()
     {
         this.biomeCache.cleanupCache();
+        this.climateCache.cleanupCache();
         this.tempCache.reset();
         this.rainfallCache.reset();
     }
 
+	@Override
+	public Climate getClimateAt(int x, int z)
+	{
+		return climateCache.getClimateAt(x, z);
+	}
+	
 	@Override
 	public float getBaseTemperature(int x, int z)
 	{
@@ -306,6 +349,117 @@ public class FleSurfaceManager extends WorldChunkManager implements ICustomTempG
 	public float getBaseRainfall(int x, int z)
 	{
 		return (float) rainfallCache.cache(x, z, rainfallNoise) * 1.5F;
+	}
+	
+	private static class ClimateCache
+	{
+	    /** Reference to the WorldChunkManager */
+	    private final FleSurfaceManager chunkManager;
+	    /** The last time this BiomeCache was cleaned, in milliseconds. */
+	    private long lastCleanupTime;
+	    /** The map of keys to BiomeCacheBlocks. Keys are based on the chunk x, z coordinates as (x | z << 32). */
+	    private LongHashMap cacheMap = new LongHashMap();
+	    /** The list of cached BiomeCacheBlocks */
+	    private List cache = new ArrayList();
+
+	    public ClimateCache(FleSurfaceManager manager)
+	    {
+	        this.chunkManager = manager;
+	    }
+
+	    /**
+	     * Returns a biome cache block at location specified.
+	     */
+	    public Block getClimateCacheBlock(int x, int z)
+	    {
+	        x >>= 4;
+	        z >>= 4;
+	        long k = (long)x & 4294967295L | ((long)z & 4294967295L) << 32;
+	        Block block = (Block) this.cacheMap.getValueByKey(k);
+
+	        if (block == null)
+	        {
+	            block = new Block(x, z);
+	            this.cacheMap.add(k, block);
+	            this.cache.add(block);
+	        }
+
+	        block.lastAccessTime = MinecraftServer.getSystemTimeMillis();
+	        return block;
+	    }
+
+	    /**
+	     * Returns the BiomeGenBase related to the x, z position from the cache.
+	     */
+	    public Climate getClimateAt(int x, int z)
+	    {
+	        return this.getClimateCacheBlock(x, z).getClimateAt(x, z);
+	    }
+
+	    /**
+	     * Removes BiomeCacheBlocks from this cache that haven't been accessed in at least 30 seconds.
+	     */
+	    public void cleanupCache()
+	    {
+	        long i = MinecraftServer.getSystemTimeMillis();
+	        long j = i - this.lastCleanupTime;
+
+	        if (j > 7500L || j < 0L)
+	        {
+	            this.lastCleanupTime = i;
+
+	            for (int k = 0; k < this.cache.size(); ++k)
+	            {
+	                BiomeCache.Block block = (BiomeCache.Block)this.cache.get(k);
+	                long l = i - block.lastAccessTime;
+
+	                if (l > 30000L || l < 0L)
+	                {
+	                    this.cache.remove(k--);
+	                    long i1 = (long)block.xPosition & 4294967295L | ((long)block.zPosition & 4294967295L) << 32;
+	                    this.cacheMap.remove(i1);
+	                }
+	            }
+	        }
+	    }
+
+	    /**
+	     * Returns the array of cached biome types in the BiomeCacheBlock at the given location.
+	     */
+	    public Climate[] getClimatesAt(int x, int z)
+	    {
+	        return this.getClimateCacheBlock(x, z).biomes;
+	    }
+
+	    public class Block
+	    {
+	        /** An array of chunk rainfall values saved by this cache. */
+	        public float[] rainfallValues = new float[256];
+	        /** The array of biome types stored in this BiomeCacheBlock. */
+	        public Climate[] biomes = new Climate[256];
+	        /** The x coordinate of the BiomeCacheBlock. */
+	        public int xPosition;
+	        /** The z coordinate of the BiomeCacheBlock. */
+	        public int zPosition;
+	        /** The last time this BiomeCacheBlock was accessed, in milliseconds. */
+	        public long lastAccessTime;
+
+	        public Block(int x, int z)
+	        {
+	            this.xPosition = x;
+	            this.zPosition = z;
+	            ClimateCache.this.chunkManager.getRainfall(this.rainfallValues, x << 4, z << 4, 16, 16);
+	            ClimateCache.this.chunkManager.getClimateAt(this.biomes, x << 4, z << 4, 16, 16, false);
+	        }
+
+	        /**
+	         * Returns the BiomeGenBase related to the x, z position from the cache block.
+	         */
+	        public Climate getClimateAt(int x, int z)
+	        {
+	            return this.biomes[x & 15 | (z & 15) << 4];
+	        }
+	    }
 	}
 	
 	private static class DoubleCache

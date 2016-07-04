@@ -1,7 +1,6 @@
 package fle.load;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import farcore.block.plant.tree.BlockSapling;
 import farcore.util.FleLog;
 import fle.core.block.BlockFire;
 import fle.core.block.BlockIce;
@@ -50,7 +49,6 @@ public class BlockItems
 	public static Block water;
 	public static Block lava;
 	public static Block ice;
-	public static Block sapling;
 	public static Block vine1;
 	public static Block bush1;
 	public static Block ore;
@@ -86,7 +84,6 @@ public class BlockItems
 		water = new BlockWater().setBlockTextureName("fle:fluids/water");
 		lava = new BlockLava().setBlockTextureName("fle:fluids/lava");
 		ice = new BlockIce().setBlockTextureName("fle:iconsets/ice");
-		sapling = new BlockSapling().setBlockTextureName("fle:sapling");
 		bush1 = new BlockBush1("bush1").setBlockTextureName("fle:plant");
 		vine1 = new BlockVine1("vine1").setBlockTextureName("fle:plant");
 		ore = new BlockOre().setBlockTextureName("fle:ore");

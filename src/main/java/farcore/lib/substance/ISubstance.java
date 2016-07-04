@@ -2,6 +2,7 @@ package farcore.lib.substance;
 
 import farcore.FarCore;
 import farcore.FarCoreSetup;
+import farcore.alpha.interfaces.IRegisteredNameable;
 import farcore.lib.collection.Register;
 
 /**
@@ -9,9 +10,15 @@ import farcore.lib.collection.Register;
  * @author ueyudiud
  *
  */
-public interface ISubstance
+@Deprecated
+public interface ISubstance extends IRegisteredNameable
 {
 	String getType();
+	
+	default String getRegisteredName() 
+	{
+		return getName();
+	}
 	
 	String getName();
 	

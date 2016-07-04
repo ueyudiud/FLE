@@ -31,14 +31,20 @@ import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.alpha.block.BlockRockSlab;
+import farcore.alpha.item.ItemDebugger;
+import farcore.alpha.lib.PacketTEAsk;
+import farcore.alpha.lib.PacketTESAskRender;
+import farcore.alpha.lib.PacketTESync;
+import farcore.alpha.render.RenderSlab;
 import farcore.block.plant.crop.BlockCrop;
-import farcore.block.plant.tree.BlockLog;
 import farcore.energy.electric.ElectricNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.ThermalNet;
 import farcore.entity.EntityFallingBlockExtended;
 import farcore.enums.EnumBlock;
 import farcore.handler.FarCoreAchievementHandler;
+import farcore.handler.FarCoreChunkHandler;
 import farcore.handler.FarCoreCraftingHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreGuiHandler;
@@ -46,7 +52,6 @@ import farcore.handler.FarCoreHarvestHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCorePlayerHandler;
 import farcore.interfaces.item.ILocalizedRegisterListener;
-import farcore.item.ItemDebugger;
 import farcore.item.ItemFluidDisplay;
 import farcore.lib.command.CommandCalendar;
 import farcore.lib.command.CommandWorldData;
@@ -69,27 +74,24 @@ import farcore.lib.potion.PotionBase;
 import farcore.lib.render.RenderCrop;
 import farcore.lib.render.RenderFallingBlockExtended;
 import farcore.lib.render.RenderHandler;
+import farcore.lib.render.RenderTreeSapling;
 import farcore.network.Network;
 import farcore.util.CalendarHandler;
 import farcore.util.FleLog;
 import farcore.util.FleTextureMap.TextureMapRegistry;
-import farcore.util.U.OreDict;
 import farcore.util.LanguageManager;
 import farcore.util.U;
 import farcore.util.V;
 import farcore.util.Values;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
@@ -189,6 +191,9 @@ public class FarCoreSetup
 		handler = new FarCoreAchievementHandler();
 		registerMFEventHandler(handler);
 		registerFMLEventHandler(handler);
+		handler = new FarCoreChunkHandler();
+		registerMFEventHandler(handler);
+		registerFMLEventHandler(handler);
 		registerFMLEventHandler(new FarCoreCraftingHandler());
 		registerFMLEventHandler(new FarCoreKeyHandler());
 		
@@ -211,7 +216,7 @@ public class FarCoreSetup
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
-		BlockLog.init();
+		farcore.alpha.block.tree.BlockLog.init();
 		new BlockCrop("crop");
 		GameRegistry.registerTileEntity(TileEntityCrop.class, "farcore.crop");
 		registerKey(Values.key_place, Keyboard.KEY_P);
@@ -238,6 +243,10 @@ public class FarCoreSetup
 		network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 		network.registerPacket(PacketKey.class, Side.SERVER);
 		network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
+
+		network.registerPacket(PacketTESync.class, Side.CLIENT);
+		network.registerPacket(PacketTESAskRender.class, Side.CLIENT);
+		network.registerPacket(PacketTEAsk.class, Side.SERVER);
 		proxy.load();
 	}
 
@@ -327,6 +336,15 @@ public class FarCoreSetup
 		{
 			super.completeLoad();
 			FarCore.handlerA.register(EnumBlock.crop.block(), OreDictionary.WILDCARD_VALUE, RenderCrop.class);
+			FarCore.handlerA.register(EnumBlock.sapling.block(), OreDictionary.WILDCARD_VALUE, RenderTreeSapling.class);
+			for(Object key : GameData.getBlockRegistry().getKeys())
+			{
+				Block block = (Block) GameData.getBlockRegistry().getObject(key);
+				if(block instanceof BlockRockSlab)
+				{
+					FarCore.handlerB.register(block, OreDictionary.WILDCARD_VALUE, RenderSlab.class);
+				}
+			}
 			loadComplete = true;
 		}
 

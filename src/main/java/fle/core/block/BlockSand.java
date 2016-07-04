@@ -2,11 +2,11 @@ package fle.core.block;
 
 import java.util.Random;
 
+import farcore.alpha.interfaces.block.ISmartFallableBlock;
 import farcore.block.ItemBlockBase;
 import farcore.entity.EntityFallingBlockExtended;
 import farcore.enums.EnumBlock;
 import farcore.enums.EnumItem;
-import farcore.interfaces.ISmartFallableBlock;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.substance.SubstanceRock;

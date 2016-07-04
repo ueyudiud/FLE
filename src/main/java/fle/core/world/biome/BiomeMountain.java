@@ -52,21 +52,21 @@ public class BiomeMountain extends BiomeBase
 
         if(!enableTree)
         {
-        	biomeDecorator.treesPerChunk = -999;
+//        	biomeDecorator.treesPerChunk = -999;
         }
         else
         {
-            biomeDecorator.treesPerChunk = 3;
+//            biomeDecorator.treesPerChunk = 3;
             this.field_150638_aH = this.field_150636_aF;
         }
-        if(!enableGrass)
-        {
-        	biomeDecorator.grassPerChunk = -999;
-        }
-        else
-        {
-            biomeDecorator.ivyPerChunk = 2;
-        }
+//        if(!enableGrass)
+//        {
+//        	biomeDecorator.grassPerChunk = -999;
+//        }
+//        else
+//        {
+//            biomeDecorator.ivyPerChunk = 2;
+//        }
 	}
 	
 	@Override

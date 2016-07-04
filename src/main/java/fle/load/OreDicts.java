@@ -46,7 +46,6 @@ public class OreDicts
 		registerValid(EnumToolType.decorticating_stick.ore(), EnumItem.tool.instance(1, "decorticating_stick"));
 		registerValid("pileGravel", EnumItem.pile.instance(1, "gravel"));
 		registerValid("pileSand", EnumItem.pile.instance(1, "sand"));
-		registerValid("treeSapling", BlockItems.sapling);
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_oak"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_spruce"));
 		registerValid("branchWood", EnumItem.plant.instance(1, "branch_birch"));

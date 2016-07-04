@@ -32,9 +32,9 @@ apply plugin: 'forge'
 //    return "DEV." + proc.exitValue() ? "-1" : proc.text.trim()
 //}
 
-version = "${config.fle.version}"// + getVersionAppendage()
-group= "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${config.fle.name}"
+version = "${config.ttr.version}"// + getVersionAppendage()
+group= "com.ueyudiud.ttr" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "${config.ttr.name}"
 
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -55,10 +55,10 @@ repositories {
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
     }
-    //maven {
-    //    name = "ic2"
-    //    url = "http://maven.ic2.player.to/"
-    //}
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
     //ivy {
     //    name "BuildCraft"
     //    artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
@@ -128,10 +128,11 @@ task apiJar(type: Jar, dependsOn: 'jar') {
 }
 
 jar {
-    manifest {
-        attributes 'FMLCorePlugin': 'fle.override.FarOverrideLoadingPlugin',
-        'FMLCorePluginContainsFMLMod': 'true'
-    }
+	exclude "**/ic2/**"
+   // manifest {
+   //     attributes 'FMLCorePlugin': 'fle.override.FarOverrideLoadingPlugin',
+   //     'FMLCorePluginContainsFMLMod': 'true'
+   // }
 }
 
 artifacts {

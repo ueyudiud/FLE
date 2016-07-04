@@ -12,6 +12,7 @@ import farcore.lib.world.biome.BiomeBase;
 import farcore.util.FleLog;
 import farcore.util.V;
 import farcore.util.noise.NoisePerlin;
+import fle.core.world.layer.climate.LayerClimateSurface;
 import fle.core.world.layer.surface.LayerBeach;
 import fle.core.world.layer.surface.LayerEdge;
 import fle.core.world.layer.surface.LayerFloor;
@@ -73,9 +74,10 @@ public abstract class LayerBase extends GenLayer
 		drawImage(256, orLayer, "layer6");
 		GenLayer out1 = new GenLayerSmooth(289471L, orLayer);
 		GenLayer out2 = new GenLayerVoronoiZoom(94719L, out1);
-		out2.initWorldGenSeed(seed);
+		GenLayer out3 = new LayerClimateSurface(3819L, out2);
+		out3.initWorldGenSeed(seed);
 		orLayer.setScale(1);
-		return new GenLayer[]{out1, out2, out1};
+		return new GenLayer[]{out1, out2, out1, out3};
 	}
 	
 	protected int expand = 1;
@@ -118,7 +120,7 @@ public abstract class LayerBase extends GenLayer
 	    	}
 	    	int[] ints = genlayer.getInts(0, 0, size, size);
 	    	BufferedImage outBitmap = new BufferedImage(size, size, 1);
-	    	Graphics2D graphics = (Graphics2D)outBitmap.getGraphics();
+	    	Graphics2D graphics = (Graphics2D) outBitmap.getGraphics();
 	    	graphics.clearRect(0, 0, size, size);
 	    	FleLog.getLogger().info(name + ".png");
 	    	for (int x = 0; x < size; x++)

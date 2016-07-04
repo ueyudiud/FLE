@@ -17,6 +17,12 @@ public class IntArray
 	{
 		this.array = array;
 	}
+	
+	public IntArray set(int id, int value)
+	{
+		array[id] = value;
+		return this;
+	}
 
 	@Override
 	public int hashCode()

@@ -1,6 +1,5 @@
 package farcore.enums;
 
-import cpw.mods.fml.common.registry.GameData;
 import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.BaseStack;
 import farcore.util.U;
@@ -66,6 +65,7 @@ public enum EnumItem
 	torch, 
 	fire, 
 	rock_block, 
+	@Deprecated
 	cobble_block, 
 	sand_block,
 	/**
@@ -92,6 +92,7 @@ public enum EnumItem
 	 * SubstanceWood field log).
 	 */
 	log_block,
+	@Deprecated
 	brick_block, 
 	food_smeltable, 
 	food_divide_smeltable, 
@@ -103,6 +104,7 @@ public enum EnumItem
 	stone_production;
 	
 	boolean init = false;
+	IInfomationable infomationable;
 	AbstractStack stack;
 	ItemStack instance;
 	Item item;
@@ -110,6 +112,14 @@ public enum EnumItem
 	public void set(AbstractStack stack)
 	{
 		set(stack, stack.instance());
+	}
+	public void set(Item item)
+	{
+		set(new ItemStack(item));
+	}
+	public void set(Block item)
+	{
+		set(new ItemStack(item));
 	}
 	public void set(ItemStack stack)
 	{
@@ -124,10 +134,19 @@ public enum EnumItem
 		if(instance != null)
 		{
 			this.item = instance.getItem();
+			if(item instanceof IInfomationable)
+			{
+				infomationable = (IInfomationable) item;
+			}
 		}
 		this.stack = stack;
 		this.instance = instance.copy();
 		init = true;
+	}
+	
+	public void setInfomationable(IInfomationable infomationable)
+	{
+		this.infomationable = infomationable;
 	}
 	
 	public ItemStack instance()
@@ -150,8 +169,10 @@ public enum EnumItem
 	{
 		if(init)
 		{
-			if(item instanceof IInfomationable)
-				return ((IInfomationable) item).provide(size, objects);
+			if(infomationable != null)
+			{
+				return infomationable.provide(size, objects);
+			}
 			ItemStack stack = instance.copy();
 			stack.stackSize = size;
 			return stack;

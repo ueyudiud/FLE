@@ -91,7 +91,7 @@ public class BlockBase extends Block
         //Instead by cause food exhaustion during digging.
 //        player.addExhaustion(0.025F);
 
-        if (this.canSilkHarvest(world, player, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(player))
+        if (canSilkHarvest(world, player, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(player))
         {
         	onBlockHarvest(world, player, x, y, z, meta, true);
             ArrayList<ItemStack> items = getDrops(world, x, y, z, meta, 0, true);

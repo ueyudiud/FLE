@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.google.common.collect.Multimap;
 
+import farcore.alpha.util.LangHook.UnlocalizedList;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 
 public interface IItemProperty
 {
-	void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag);
+	void addInformation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean flag);
 	
 	boolean canHarvestBlock(Block block, ItemStack stack);
 

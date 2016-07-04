@@ -71,10 +71,10 @@ public class BiomeValley extends BiomeBase
 	{
 		super(id);
 		init();
-		biomeDecorator.treesPerChunk = 1;
-		biomeDecorator.brownMushroomsPerChunk = 2;
-		biomeDecorator.flowersPerChunk = -999;
-		biomeDecorator.ivyPerChunk = 1;
+//		biomeDecorator.treesPerChunk = 1;
+//		biomeDecorator.brownMushroomsPerChunk = 2;
+//		biomeDecorator.flowersPerChunk = -999;
+//		biomeDecorator.ivyPerChunk = 1;
 	}
 	
 	@Override

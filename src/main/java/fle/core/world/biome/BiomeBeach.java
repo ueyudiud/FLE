@@ -16,10 +16,10 @@ public class BiomeBeach extends BiomeBase
 		metamorphismMultiply = 1.2F;
 		setHeight(height_Shores);
         spawnableCreatureList.clear();
-        biomeDecorator.treesPerChunk = -999;
-        biomeDecorator.deadBushPerChunk = 0;
-        biomeDecorator.reedsPerChunk = 0;
-        biomeDecorator.cactiPerChunk = 0;
+//        biomeDecorator.treesPerChunk = -999;
+//        biomeDecorator.deadBushPerChunk = 0;
+//        biomeDecorator.reedsPerChunk = 0;
+//        biomeDecorator.cactiPerChunk = 0;
 	}
 	
 	@Override

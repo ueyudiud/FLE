@@ -7,8 +7,6 @@ import farcore.lib.substance.SubstanceWood;
 import fle.api.item.ItemResource;
 import fle.api.item.behavior.BehaviorBlockable;
 import fle.core.item.behavior.BehaviorFirewood;
-import fle.load.BlockItems;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 public class ItemPlant extends ItemResource
@@ -22,12 +20,12 @@ public class ItemPlant extends ItemResource
 
 	private void init()
 	{
-		addSubItem(1, "seed_oak", "Acorn", new BehaviorBlockable(1, BlockItems.sapling, SubstanceWood.getWoods().id("oak")), "seed_oak");
-		addSubItem(2, "seed_spruce", "Spruce Cone", new BehaviorBlockable(1, BlockItems.sapling, SubstanceWood.getWoods().id("spruce")), "seed_spruce");
-		addSubItem(3, "seed_birch", "Birch Fruit", new BehaviorBlockable(1, BlockItems.sapling, SubstanceWood.getWoods().id("birch")), "seed_birch");
-		addSubItem(4, "seed_ceiba", "Ceiba Seed", new BehaviorBlockable(1, BlockItems.sapling, SubstanceWood.getWoods().id("ceiba")), "seed_ceiba");
-		addSubItem(5, "seed_acacia", "Acacia Seed", new BehaviorBlockable(1, BlockItems.sapling, SubstanceWood.getWoods().id("acacia")), "seed_acacia");
-		addSubItem(6, "seed_oak-black", "Dark Acorn", new BehaviorBlockable(1, BlockItems.sapling, SubstanceWood.getWoods().id("oak-black")), "seed_oak-black");
+		addSubItem(1, "seed_oak", "Acorn", new BehaviorBlockable(1, EnumBlock.sapling.block(), SubstanceWood.getWoods().id("oak")), "seed_oak");
+		addSubItem(2, "seed_spruce", "Spruce Cone", new BehaviorBlockable(1, EnumBlock.sapling.block(), SubstanceWood.getWoods().id("spruce")), "seed_spruce");
+		addSubItem(3, "seed_birch", "Birch Fruit", new BehaviorBlockable(1, EnumBlock.sapling.block(), SubstanceWood.getWoods().id("birch")), "seed_birch");
+		addSubItem(4, "seed_ceiba", "Ceiba Seed", new BehaviorBlockable(1, EnumBlock.sapling.block(), SubstanceWood.getWoods().id("ceiba")), "seed_ceiba");
+		addSubItem(5, "seed_acacia", "Acacia Seed", new BehaviorBlockable(1, EnumBlock.sapling.block(), SubstanceWood.getWoods().id("acacia")), "seed_acacia");
+		addSubItem(6, "seed_oak-black", "Dark Acorn", new BehaviorBlockable(1, EnumBlock.sapling.block(), SubstanceWood.getWoods().id("oak-black")), "seed_oak-black");
 		
 		addSubItem(1001, "leaves_1", "Leaves", "leaves_1");
 		addSubItem(1002, "leaves_2", "Leaves", "leaves_2");

@@ -36,7 +36,6 @@ public class BiomeTundra extends BiomeBase
 		init();
 		topBlock = Blocks.dirt;
 		field_150604_aj = 2;
-		biomeDecorator.grassPerChunk = 2;
 		spawnableCreatureList.clear();
 
         spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 4));

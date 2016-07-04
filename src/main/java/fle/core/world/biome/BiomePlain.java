@@ -121,13 +121,13 @@ public class BiomePlain extends BiomeBase
 
         if (d0 < -0.8D)
         {
-            this.biomeDecorator.flowersPerChunk = 15;
-            this.biomeDecorator.grassPerChunk = 5;
+//            this.biomeDecorator.flowersPerChunk = 15;
+//            this.biomeDecorator.grassPerChunk = 5;
         }
         else
         {
-            this.biomeDecorator.flowersPerChunk = 4;
-            this.biomeDecorator.grassPerChunk = 10;
+//            this.biomeDecorator.flowersPerChunk = 4;
+//            this.biomeDecorator.grassPerChunk = 10;
             genTallFlowers.func_150548_a(2);
 
             for (k = 0; k < 7; ++k)
@@ -207,75 +207,75 @@ public class BiomePlain extends BiomeBase
     	float plant = 0.5F + (float) customPlantNoise.noise(x, 0, z);
     	if(rainfall > 0.6F)
     	{
-    		biomeDecorator.deadBushPerChunk = 0;
-            biomeDecorator.reedsPerChunk = 6;
-            biomeDecorator.cactiPerChunk = 0;
+//    		biomeDecorator.deadBushPerChunk = 0;
+//            biomeDecorator.reedsPerChunk = 6;
+//            biomeDecorator.cactiPerChunk = 0;
     		if(temp > 1.3F)
     		{
     			decorateJungle(world, random, x, z);
-    	        biomeDecorator.treesPerChunk = 2;
-    	        biomeDecorator.flowersPerChunk = 1;
-    	        biomeDecorator.grassPerChunk = (int) (4 * plant);
-    	        biomeDecorator.rattanPerChunk = 1;
-    	        biomeDecorator.ivyPerChunk = 0;
-                biomeDecorator.brownMushroomsPerChunk = 0;
+//    	        biomeDecorator.treesPerChunk = 2;
+//    	        biomeDecorator.flowersPerChunk = 1;
+//    	        biomeDecorator.grassPerChunk = (int) (4 * plant);
+//    	        biomeDecorator.rattanPerChunk = 1;
+//    	        biomeDecorator.ivyPerChunk = 0;
+//                biomeDecorator.brownMushroomsPerChunk = 0;
     		}
     		else if(temp > 1.0F)
     		{
     			decorateJungle(world, random, x, z);
-    	        biomeDecorator.treesPerChunk = 6;
-    	        biomeDecorator.flowersPerChunk = 3;
-    	        biomeDecorator.grassPerChunk = (int) (20 * plant);
-    	        biomeDecorator.rattanPerChunk = 1;
-    	        biomeDecorator.ivyPerChunk = 0;
-                biomeDecorator.brownMushroomsPerChunk = 0;
+//    	        biomeDecorator.treesPerChunk = 6;
+//    	        biomeDecorator.flowersPerChunk = 3;
+//    	        biomeDecorator.grassPerChunk = (int) (20 * plant);
+//    	        biomeDecorator.rattanPerChunk = 1;
+//    	        biomeDecorator.ivyPerChunk = 0;
+//              biomeDecorator.brownMushroomsPerChunk = 0;
     		}
     		else if(temp > 0.6F)
     		{
     			if(plant > 1.1F)
     			{
     				decrateRoofedForest(world, random, x, z);
-        	        biomeDecorator.treesPerChunk = -999;
-        	        biomeDecorator.flowersPerChunk = 3;
-        	        biomeDecorator.grassPerChunk = (int) (3 * plant);
-        	        biomeDecorator.rattanPerChunk = 0;
-        	        biomeDecorator.ivyPerChunk = 1;
-                    biomeDecorator.brownMushroomsPerChunk = 2;
+//        	        biomeDecorator.treesPerChunk = -999;
+//        	        biomeDecorator.flowersPerChunk = 3;
+//        	        biomeDecorator.grassPerChunk = (int) (3 * plant);
+//        	        biomeDecorator.rattanPerChunk = 0;
+//        	        biomeDecorator.ivyPerChunk = 1;
+//                    biomeDecorator.brownMushroomsPerChunk = 2;
     			}
     			else
     			{
-        	        biomeDecorator.treesPerChunk = plant >= 1.0F ? (int) (8 * plant) : 8;
-        	        biomeDecorator.flowersPerChunk = 3;
-        	        biomeDecorator.grassPerChunk = (int) (3 * plant);
-        	        biomeDecorator.rattanPerChunk = 0;
-        	        biomeDecorator.ivyPerChunk = 1;
-                    biomeDecorator.brownMushroomsPerChunk = 0;
+//        	        biomeDecorator.treesPerChunk = plant >= 1.0F ? (int) (8 * plant) : 8;
+//        	        biomeDecorator.flowersPerChunk = 3;
+//        	        biomeDecorator.grassPerChunk = (int) (3 * plant);
+//        	        biomeDecorator.rattanPerChunk = 0;
+//        	        biomeDecorator.ivyPerChunk = 1;
+//                    biomeDecorator.brownMushroomsPerChunk = 0;
     			}
     		}
     		else if(temp > 0.05F)
     		{
-    	        biomeDecorator.treesPerChunk = 5;
-    	        biomeDecorator.flowersPerChunk = 1;
-    	        biomeDecorator.grassPerChunk = (int) (5 * plant);
-    	        biomeDecorator.rattanPerChunk = 0;
-    	        biomeDecorator.ivyPerChunk = 1;
-                biomeDecorator.brownMushroomsPerChunk = 1;
-    		}
-    		else
-    		{
-    	        biomeDecorator.treesPerChunk = -999;
-    	        biomeDecorator.flowersPerChunk = 0;
-    	        biomeDecorator.grassPerChunk = (int) (4 * plant);
-    	        biomeDecorator.rattanPerChunk = 0;
-    	        biomeDecorator.ivyPerChunk = 0;
-                biomeDecorator.brownMushroomsPerChunk = 0;
+//    	        biomeDecorator.treesPerChunk = 5;
+//    	        biomeDecorator.flowersPerChunk = 1;
+//    	        biomeDecorator.grassPerChunk = (int) (5 * plant);
+//    	        biomeDecorator.rattanPerChunk = 0;
+//    	        biomeDecorator.ivyPerChunk = 1;
+//                biomeDecorator.brownMushroomsPerChunk = 1;
+//    		}
+//    		else
+//    		{
+//    	        biomeDecorator.treesPerChunk = -999;
+//    	        biomeDecorator.flowersPerChunk = 0;
+//    	        biomeDecorator.grassPerChunk = (int) (4 * plant);
+//    	        biomeDecorator.rattanPerChunk = 0;
+//    	        biomeDecorator.ivyPerChunk = 0;
+//                biomeDecorator.brownMushroomsPerChunk = 0;
     		}
     	}
     	else if(rainfall > 0.2F)
     	{
-    		biomeDecorator.deadBushPerChunk = 0;
-            biomeDecorator.reedsPerChunk = 4;
-            biomeDecorator.cactiPerChunk = 0;
+//    		biomeDecorator.deadBushPerChunk = 0;
+//            biomeDecorator.reedsPerChunk = 4;
+//            biomeDecorator.cactiPerChunk = 0;
     		if(temp > 1.0F)
     		{
     	        genTallFlowers.func_150548_a(2);
@@ -287,44 +287,44 @@ public class BiomePlain extends BiomeBase
     	            int j1 = random.nextInt(world.getHeightValue(l, i1) + 32);
     	            genTallFlowers.generate(world, random, l, j1, i1);
     	        }
-    	        biomeDecorator.treesPerChunk = 1;
-    	        biomeDecorator.flowersPerChunk = 4;
-    	        biomeDecorator.grassPerChunk = (int) (20 * plant);
-    	        biomeDecorator.rattanPerChunk = 1;
-    	        biomeDecorator.ivyPerChunk = 0;
-                biomeDecorator.brownMushroomsPerChunk = 0;
+//    	        biomeDecorator.treesPerChunk = 1;
+//    	        biomeDecorator.flowersPerChunk = 4;
+//    	        biomeDecorator.grassPerChunk = (int) (20 * plant);
+//    	        biomeDecorator.rattanPerChunk = 1;
+//    	        biomeDecorator.ivyPerChunk = 0;
+//                biomeDecorator.brownMushroomsPerChunk = 0;
     		}
     		else if(temp > 0.5F)
     		{
-        		decorateFlower(world, random, x, z);
-                biomeDecorator.treesPerChunk = -999;
-                biomeDecorator.flowersPerChunk = 4;
-                biomeDecorator.grassPerChunk = (int) (10 * plant);
-    	        biomeDecorator.rattanPerChunk = 0;
-                biomeDecorator.ivyPerChunk = 0;
-                biomeDecorator.brownMushroomsPerChunk = 1;
-    		}
-    		else
-    		{
-                biomeDecorator.treesPerChunk = -999;
-                biomeDecorator.flowersPerChunk = 0;
-                biomeDecorator.grassPerChunk = (int) (2 * plant);
-    	        biomeDecorator.rattanPerChunk = 0;
-                biomeDecorator.ivyPerChunk = 0;
-                biomeDecorator.brownMushroomsPerChunk = 0;
+//        		decorateFlower(world, random, x, z);
+//                biomeDecorator.treesPerChunk = -999;
+//                biomeDecorator.flowersPerChunk = 4;
+//                biomeDecorator.grassPerChunk = (int) (10 * plant);
+//    	        biomeDecorator.rattanPerChunk = 0;
+//                biomeDecorator.ivyPerChunk = 0;
+//                biomeDecorator.brownMushroomsPerChunk = 1;
+//    		}
+//    		else
+//    		{
+//                biomeDecorator.treesPerChunk = -999;
+//                biomeDecorator.flowersPerChunk = 0;
+//                biomeDecorator.grassPerChunk = (int) (2 * plant);
+//    	        biomeDecorator.rattanPerChunk = 0;
+//                biomeDecorator.ivyPerChunk = 0;
+//                biomeDecorator.brownMushroomsPerChunk = 0;
     		}
     	}
     	else
     	{
-            biomeDecorator.reedsPerChunk = 50;
-            biomeDecorator.cactiPerChunk = 10;
-    		biomeDecorator.deadBushPerChunk = 3;
-            biomeDecorator.brownMushroomsPerChunk = 0;
-            biomeDecorator.treesPerChunk = -999;
-            biomeDecorator.flowersPerChunk = 0;
-            biomeDecorator.grassPerChunk = 0;
-	        biomeDecorator.rattanPerChunk = 0;
-            biomeDecorator.ivyPerChunk = 0;
+//            biomeDecorator.reedsPerChunk = 50;
+//            biomeDecorator.cactiPerChunk = 10;
+//    		biomeDecorator.deadBushPerChunk = 3;
+//            biomeDecorator.brownMushroomsPerChunk = 0;
+//            biomeDecorator.treesPerChunk = -999;
+//            biomeDecorator.flowersPerChunk = 0;
+//            biomeDecorator.grassPerChunk = 0;
+//	        biomeDecorator.rattanPerChunk = 0;
+//            biomeDecorator.ivyPerChunk = 0;
             if(temp > 0.6F)
             {
                 if (random.nextInt(1000) == 0)

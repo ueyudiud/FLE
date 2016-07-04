@@ -39,13 +39,13 @@ public class BiomeRiver extends BiomeBase
 		sedimentaryMultiply = 3.0F;
 		metamorphismMultiply = 1.1F;
         spawnableCreatureList.clear();
-        biomeDecorator.treesPerChunk = 1;
-        biomeDecorator.ivyPerChunk = 1;
+//        biomeDecorator.treesPerChunk = 1;
+//        biomeDecorator.ivyPerChunk = 1;
         if(onDesert)
         {
         	waterTop = Blocks.sand;
-        	biomeDecorator.reedsPerChunk = 3;
-        	biomeDecorator.cactiPerChunk = 3;
+//        	biomeDecorator.reedsPerChunk = 3;
+//        	biomeDecorator.cactiPerChunk = 3;
         	biomeDecorator.clayPerChunk = -999;
         }
         else

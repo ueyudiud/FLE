@@ -86,6 +86,7 @@ public enum EnumBlock
 			}
 		}
 	},
+	@Deprecated
 	cobble
 	{
 		@Override
@@ -161,10 +162,13 @@ public enum EnumBlock
 			}
 		}
 	},
+	sapling,
+	@Deprecated
 	brick,
 	crop;
 	
 	boolean init = false;
+	IInfoSpawnable spawnable;
 	Block block;
 	EnumItem item;
 
@@ -181,6 +185,15 @@ public enum EnumBlock
 		this.item = item;
 		this.block = block;
 		this.init = true;
+		if(block instanceof IInfoSpawnable)
+		{
+			spawnable = (IInfoSpawnable) block;
+		}
+	}
+	
+	public void setSpawnable(IInfoSpawnable spawnable)
+	{
+		this.spawnable = spawnable;
 	}
 	
 	public Block block()
@@ -221,9 +234,9 @@ public enum EnumBlock
 	{
 		if(init)
 		{
-			if(block instanceof IInfoSpawnable)
+			if(spawnable != null)
 			{
-				((IInfoSpawnable) block).spawn(world, x, y, z, objects);
+				spawnable.spawn(world, x, y, z, objects);
 			}
 			else if(objects.length == 0)
 			{

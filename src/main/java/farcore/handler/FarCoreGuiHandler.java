@@ -59,7 +59,15 @@ public class FarCoreGuiHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onRenderHUD(RenderGameOverlayEvent.Text event)
 	{
-		if(V.debug) return;
+		if(V.debug)
+		{
+	        EntityPlayer player = U.Worlds.player();
+			if(player != null)
+			{
+				event.left.add(FarCoreChunkHandler.getChunkCountInfo(player.worldObj));
+			}
+			return;
+		}
 		String string;
 		label:
 		for(int i = 0; i < event.right.size(); ++i)
@@ -98,14 +106,12 @@ public class FarCoreGuiHandler
 			}
 		}
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo)
+        {
             for (String brand : FMLCommonHandler.instance().getBrandings(false))
             {
                 event.right.add(brand);
             }
-		EntityPlayer player = U.Worlds.player();
-		int x = (int) player.posX;
-		int y = (int) player.posY;
-		int z = (int) player.posZ;
+        }
 	}
 
 	@SubscribeEvent

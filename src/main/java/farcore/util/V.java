@@ -26,6 +26,7 @@ public class V
 	public static int treeScanRange;
 	public static boolean spawnWaterBySnow;
 	public static boolean dropItemWhenLeavesDecay;
+	public static boolean multiThread;
 	
 	public static void init(Configuration config)
 	{
@@ -34,9 +35,10 @@ public class V
 				"Which algorithms is used for solving matrix.", 
 				new String[]{"QR", "Gaussian"});
 		fallingBlockEntityID = config.getInt("fallingBlockExtended", "entity", 1, 0, 256, "");
-		treeScanRange = config.getInt("treeScanRange", "general", 10, 5, 32, "To select a scan range, too small may cause can not,"
+		treeScanRange = config.getInt("treeScanRange", "general", 10, 5, 64, "To select a scan range, too small may cause can not,"
 				+ "cut a tree in once, too big will use more memory.");
 		spawnWaterBySnow = config.getBoolean("spawnWaterWhenMeltingSnow", "general", false, "If enable this option, the water will spawn when snow is melting.");
 		dropItemWhenLeavesDecay = config.getBoolean("dropItemWhenLeavesDecay", "general", false, "If enable this option, the leaves will drop item when decay.");
+		multiThread = config.getBoolean("multiThread", "general", false, "Use multi thread to handle some event.");
 	}
 }

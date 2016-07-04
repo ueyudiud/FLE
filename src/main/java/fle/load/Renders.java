@@ -22,7 +22,6 @@ public class Renders
 		FleLog.getLogger().info("Start register renderers.");
 		FarCore.handlerA.register(BlockItems.torch, OreDictionary.WILDCARD_VALUE, RenderTorch.class);
 		FarCore.handlerA.register(BlockItems.fire, OreDictionary.WILDCARD_VALUE, RenderFire.class);
-		FarCore.handlerA.register(BlockItems.sapling, OreDictionary.WILDCARD_VALUE, RenderTreeSapling.class);
 		FarCore.handlerA.register(BlockItems.vine1, OreDictionary.WILDCARD_VALUE, RenderVine.class);
 		FarCore.handlerA.register(BlockItems.campfire, OreDictionary.WILDCARD_VALUE, RenderCampfire.class);
 		FarCore.handlerA.register(BlockItems.argil, 0, RenderTerrine.class);

@@ -9,8 +9,10 @@ public class Values
 	public static final int double_mol = 72;
 	public static final int big_mol = 144;
 	public static final int large_mol = 324;
-	
+
+	public static final int ROOM_Point_INT = 298;
 	public static final float C_0_Point = 273.15F;
+	public static final float ROOM_Point = 298.15F;
 	public static final float standardThermalConductivity = 8E-2F;
 	public static final float TP = 1.416833E32F;
 

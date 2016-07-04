@@ -23,6 +23,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
 import farcore.FarCore;
 import farcore.FarCoreSetup;
+import farcore.alpha.interfaces.block.ISmartFallableBlock;
 import farcore.energy.thermal.ThermalNet;
 import farcore.entity.EntityFallingBlockExtended;
 import farcore.enums.Direction;
@@ -31,7 +32,6 @@ import farcore.enums.EnumUpdateType;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCorePlayerHandler;
 import farcore.interfaces.ICalendar;
-import farcore.interfaces.ISmartFallableBlock;
 import farcore.interfaces.ISmartHarvestBlock;
 import farcore.interfaces.ISmartPlantableBlock;
 import farcore.interfaces.ISmartSoildBlock;
@@ -571,6 +571,43 @@ public class U
 		public static EntityPlayer player()
 		{
 			return cfg.b();
+		}
+		
+		private static final int[][] rotateFix = {
+				{3, 2, 5, 4},
+				{1, 0, 5, 4},
+				{1, 0, 3, 2}};
+		
+		public static int fixSide(int side, float hitX, float hitY, float hitZ)
+		{
+			float u, v;
+			if(side == 0 || side == 1)
+			{
+				u = hitX;
+				v = hitZ;
+			}
+			else if(side == 2 || side == 3)
+			{
+				u = hitX;
+				v = hitY;
+			}
+			else if(side == 4 || side == 5)
+			{
+				u = hitZ;
+				v = hitY;
+			}
+			else
+			{
+				u = 0.5F;
+				v = 0.5F;
+			}
+			int id;
+			boolean b1 = u >= 0.25F, b2 = v >= 0.25F, b3 = u <= 0.75F, b4 = v <= 0.75F;
+			return b1 && b2 && b3 && b4 ?
+					side : (id = (b1 && b3 ? (!b4 ? 1 : 0) :
+						(b2 && b4) ? (!b3 ? 3 : 2) : -1)) == -1 ?
+							Direction.oppsite[side] :
+								rotateFix[side / 2][id];
 		}
 		
 		public static void setSmartMetadata(World world, int x, int y, int z, int meta, EnumUpdateType updateType)
