@@ -6,6 +6,9 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import farcore.lib.collection.prop.IProperty;
+import farcore.lib.collection.prop.IPropertyMap;
+
 public class AbstractPropertyMap<P extends IProperty> implements IPropertyMap<P>
 {
 	private final ImmutableSet<P> set;

@@ -5,7 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import cpw.mods.fml.relauncher.Side;
-import farcore.util.FleLog;
+import farcore.lib.util.Log;
 import farcore.util.U;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -57,7 +57,7 @@ public class PacketLarge implements IPacket
 		return (EntityPlayer) 
 				((handler instanceof NetHandlerPlayServer) ? 
 						((NetHandlerPlayServer) handler).playerEntity : 
-							U.Worlds.player());
+							U.Players.player());
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class PacketLarge implements IPacket
 	}
 	
 	@Override
-	public IPacket process(NetworkBasic network)
+	public IPacket process(Network network)
 	{
 		if(!flag) return null;
 		try
@@ -103,7 +103,7 @@ public class PacketLarge implements IPacket
 		}
 		catch(Throwable e)
 		{
-			FleLog.getCoreLogger().catching(e);
+			Log.warn("Fail to process packet.", e);
 		}
 		return null;
 	}

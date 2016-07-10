@@ -5,16 +5,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ObjectArrays;
-import com.google.common.collect.Sets;
-
-import farcore.interfaces.IRegisterExceptionHandler;
 
 public class Register<T> implements IRegister<T>
 {
@@ -22,7 +17,6 @@ public class Register<T> implements IRegister<T>
 	{
 		return ((String) e1[0]).compareTo((String) e2[0]);
 	};
-	private IRegisterExceptionHandler handler;
 	
 	private int point = 0;
 	private int size = 0;
@@ -35,21 +29,12 @@ public class Register<T> implements IRegister<T>
 	{
 		this(16);
 	}
-	public Register(IRegisterExceptionHandler handler)
-	{
-		this(16, 0.75F, RegisterExceptionHandler.handler);
-	}
 	public Register(int length)
 	{
 		this(length, 0.75F);
 	}
 	public Register(int length, float factor)
 	{
-		this(length, factor, RegisterExceptionHandler.handler);
-	}
-	public Register(int length, float factor, IRegisterExceptionHandler handler)
-	{
-		this.handler = handler;
 		this.factor = factor;
 		this.targets = new Object[length];
 		this.names = new String[length];
@@ -89,7 +74,7 @@ public class Register<T> implements IRegister<T>
 	{
 		if(contain(id))
 		{
-			handler.onIDContain(id, targets[id]);
+			throw new IllegalArgumentException("The id " + id + " has already registed with " + targets[id] + "!");
 		}
 		if(id >= names.length)
 		{
@@ -138,7 +123,7 @@ public class Register<T> implements IRegister<T>
 	{
 		if(contain(name))
 		{
-			handler.onNameContain(id, name);
+			throw new IllegalArgumentException("The name " + name + " has already registed!");
 		}
 		else
 		{
@@ -211,25 +196,11 @@ public class Register<T> implements IRegister<T>
 		int id = id(name);
 		return id == -1 ? null : (T) targets[id];
 	}
-	
-	@Override
-	public T get(String name, T def)
-	{
-		T ret = get(name);
-		return ret == null ? def : ret;
-	}
 
 	@Override
 	public T get(int id)
 	{
 		return id >= targets.length || id < 0 ? null : (T) targets[id];
-	}
-
-	@Override
-	public T get(int id, T def)
-	{
-		T ret = get(id);
-		return ret == null ? def : ret;
 	}
 	
 	@Override
@@ -340,23 +311,6 @@ public class Register<T> implements IRegister<T>
 				++p;
 			}
 			return null;
-		}
-	}
-	
-	private static class RegisterExceptionHandler implements IRegisterExceptionHandler
-	{
-		static final RegisterExceptionHandler handler = new RegisterExceptionHandler();
-		
-		@Override
-		public void onIDContain(int id, Object registered)
-		{
-			throw new IllegalArgumentException("The id " + id + " has already registed with " + registered.toString() + "!");
-		}
-
-		@Override
-		public void onNameContain(int id, String registered)
-		{
-			throw new IllegalArgumentException("The name " + registered + " has already registed!");
 		}
 	}
 	

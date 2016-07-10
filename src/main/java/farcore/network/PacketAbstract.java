@@ -3,8 +3,8 @@ package farcore.network;
 import java.io.IOException;
 
 import cpw.mods.fml.relauncher.Side;
+import farcore.lib.io.DataStream;
 import farcore.util.U;
-import farcore.util.io.DataStream;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
@@ -39,7 +39,7 @@ public abstract class PacketAbstract implements IPacket
 		return (EntityPlayer) 
 				((handler instanceof NetHandlerPlayServer) ? 
 						((NetHandlerPlayServer) handler).playerEntity : 
-							U.Worlds.player());
+							U.Players.player());
 	}
 	
 	@Override

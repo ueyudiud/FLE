@@ -9,7 +9,7 @@ import net.minecraft.network.INetHandler;
 
 public interface IPacket
 {
-	IPacket process(NetworkBasic network);
+	IPacket process(Network network);
 	
 	Side getSide();
 

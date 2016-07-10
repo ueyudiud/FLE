@@ -13,6 +13,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import farcore.FarCore;
 import farcore.FarCoreSetup;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
@@ -84,7 +85,7 @@ public class FarCoreKeyHandler
 		@Override
 		public void register(String name, int keycode, String modid)
 		{
-			KeyBinding binding = new KeyBinding(U.Lang.validate(name), keycode, modid);
+			KeyBinding binding = new KeyBinding(U.Strings.validate(name), keycode, modid);
 			ClientRegistry.registerKeyBinding(binding);
 			keys.register(name, binding);
 		}
@@ -131,14 +132,14 @@ public class FarCoreKeyHandler
 							v |= (1L << i);
 						}
 					}
-					FarCoreSetup.network.sendToServer(new PacketKey(v));
+					FarCore.network.sendToServer(new PacketKey(v));
 				}
-				reset(U.Worlds.player());
+				reset(U.Players.player());
 				for(int i = 0; i < keys.size(); ++i)
 				{
 					if(GameSettings.isKeyDown(keys.get(i)))
 					{
-						add(U.Worlds.player(), keys.name(i));
+						add(U.Players.player(), keys.name(i));
 					}
 				}
 			}
@@ -147,9 +148,9 @@ public class FarCoreKeyHandler
 		{
 			if(U.Sides.isSimulating())
 			{
-				FarCoreSetup.network.sendToServer(new PacketKey(0L));
+				FarCore.network.sendToServer(new PacketKey(0L));
 			}
-			reset(U.Worlds.player());
+			reset(U.Players.player());
 		}
 	}
 }

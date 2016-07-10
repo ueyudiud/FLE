@@ -21,53 +21,27 @@ import com.google.common.collect.ImmutableSet.Builder;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
-import farcore.FarCore;
-import farcore.FarCoreSetup;
-import farcore.alpha.interfaces.block.ISmartFallableBlock;
-import farcore.energy.thermal.ThermalNet;
-import farcore.entity.EntityFallingBlockExtended;
-import farcore.enums.Direction;
-import farcore.enums.EnumDamageResource;
-import farcore.enums.EnumUpdateType;
-import farcore.handler.FarCoreKeyHandler;
-import farcore.handler.FarCorePlayerHandler;
-import farcore.interfaces.ICalendar;
-import farcore.interfaces.ISmartHarvestBlock;
-import farcore.interfaces.ISmartPlantableBlock;
-import farcore.interfaces.ISmartSoildBlock;
-import farcore.interfaces.item.IBreakSpeedItem;
-import farcore.interfaces.item.ICustomDamageItem;
-import farcore.lib.nbt.NBTTagCompoundEmpty;
-import farcore.lib.net.PacketSound;
-import farcore.lib.recipe.ToolDestoryDropRecipes;
-import farcore.lib.stack.AbstractStack;
-import farcore.lib.stack.ArrayStack;
-import farcore.lib.stack.BaseStack;
-import farcore.lib.stack.NBTPropertyStack;
-import farcore.lib.stack.OreStack;
-import farcore.lib.world.IWorldDatas;
-import farcore.lib.world.WorldCfg;
-import farcore.lib.world.biome.BiomeBase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import farcore.lib.block.ISmartFallableBlock;
+import farcore.lib.entity.EntityFallingBlockExtended;
+import farcore.lib.util.Direction;
+import farcore.lib.util.IDataChecker;
+import farcore.lib.util.LanguageManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockLeavesBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -75,24 +49,18 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class U
 {
-	public static class Lang
-	{
-		private static final DecimalFormat format1 = new DecimalFormat("##0.0%");
-		
+	@SidedProxy(serverSide = "farcore.util.U$CommonHandler", clientSide = "farcore.util.U$ClientHandler")
+	static CommonHandler handlerGatway;
+	
+	public static class L
+	{		
 		public static int[] cast(Integer[] integers)
 		{
 			int[] ret = new int[integers.length];
@@ -161,14 +129,14 @@ public class U
 			return builder.build();
 		}
 		
-		public static <T> T randomSelect(T[] list, Random random)
+		public static <T> T random(T[] list, Random random)
 		{
 			return list == null || list.length == 0 ? null : 
 				list.length == 1 ? list[0] :
 				list[random.nextInt(list.length)];
 		}
 		
-		public static <T> T randomSelect(Collection<T> collection, Random random)
+		public static <T> T random(Collection<T> collection, Random random)
 		{
 			if(collection instanceof List)
 			{
@@ -176,19 +144,8 @@ public class U
 			}
 			else
 			{
-				return (T) randomSelect(collection.toArray(), random);
+				return (T) random(collection.toArray(), random);
 			}
-		}
-
-		public static String validate(String string)
-		{
-			if(string == null) return "";
-			return string.trim();
-		}
-
-		public static String progress(double value)
-		{
-			return format1.format(value);
 		}
 
 		public static int[] fillIntArray(int length, int value) 
@@ -205,45 +162,6 @@ public class U
 			return arg1 == arg2 ? true :
 				(arg1 == null ^ arg2 == null) ? false :
 					arg1.equals(arg2);
-		}
-		
-		public static String validateOre(boolean upperFirst, String name)
-		{
-			String string = validate(name);
-			String ret = "";
-			boolean shouldUpperCase = upperFirst;
-			for(char chr : string.toCharArray())
-			{
-				if(chr == '_' || chr == ' ' || 
-						chr == '-' || chr == '$' || 
-						chr == '@' || chr == ' ')
-				{
-					shouldUpperCase = true;
-					continue;
-				}
-				else
-				{
-					if(shouldUpperCase)
-					{
-						ret += Character.toString(Character.toUpperCase(chr));
-						shouldUpperCase = false;
-					}
-					else
-					{
-						ret += Character.toString(chr);
-					}
-				}
-			}
-			return ret;
-		}
-
-		public static String upcaseFirst(String name)
-		{
-			String s = validate(name);
-			if(s.length() == 0) return s;
-			char chr = name.charAt(0);
-			String sub = name.substring(1);
-			return Character.toString(Character.toUpperCase(chr)) + sub;
 		}
 
 		public static int min(int...values)
@@ -279,6 +197,62 @@ public class U
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
+	}
+
+	
+	public static class Strings
+	{
+		static final DecimalFormat format1 = new DecimalFormat("##0.0%");
+		
+		public static String locale()
+		{
+			return handlerGatway.getLocale();
+		}
+		
+		public static String validate(String string)
+		{
+			if(string == null) return "";
+			return string.trim();
+		}
+
+		public static String upcaseFirst(String name)
+		{
+			String s = validate(name);
+			if(s.length() == 0) return s;
+			char chr = name.charAt(0);
+			String sub = name.substring(1);
+			return Character.toString(Character.toUpperCase(chr)) + sub;
+		}
+		
+		public static String validateOre(boolean upperFirst, String name)
+		{
+			String string = validate(name);
+			String ret = "";
+			boolean shouldUpperCase = upperFirst;
+			for(char chr : string.toCharArray())
+			{
+				if(chr == '_' || chr == ' ' || 
+						chr == '-' || chr == '$' || 
+						chr == '@' || chr == ' ')
+				{
+					shouldUpperCase = true;
+					continue;
+				}
+				else
+				{
+					if(shouldUpperCase)
+					{
+						ret += Character.toString(Character.toUpperCase(chr));
+						shouldUpperCase = false;
+					}
+					else
+					{
+						ret += Character.toString(chr);
+					}
+				}
+			}
+			return ret;
+		}
 
 		public static String[] split(String str, char split)
 		{
@@ -295,12 +269,66 @@ public class U
 				}
 			}
 		}
-	}
 
-	public static class Reflect
+		public static String progress(double value)
+		{
+			return format1.format(value);
+		}
+		
+		public static String toOrdinalNumber(int value)
+		{
+			if(value < 0)
+			{
+				return Integer.toString(value);
+			}
+			int i1 = Maths.mod(value, 100);
+			if(i1 <= 20 && i1 > 3)
+			{
+				return value + "th";
+			}
+			int i2 = Maths.mod(i1, 10);
+			switch(i2)
+			{
+			case 1 : return value + "st";
+			case 2 : return value + "nd";
+			case 3 : return value + "rd";
+			default: return value + "th";
+			}
+		}
+		
+		public static String toOrdinalNumber(long value)
+		{
+			if(value < 0)
+			{
+				return Long.toString(value);
+			}
+			int i1 = (int) Maths.mod(value, 100L);
+			if(i1 <= 20 && i1 > 3)
+			{
+				return value + "th";
+			}
+			int i2 = (int) Maths.mod(i1, 10);
+			switch(i2)
+			{
+			case 1 : return value + "st";
+			case 2 : return value + "nd";
+			case 3 : return value + "rd";
+			default: return value + "th";
+			}
+		}
+	}
+	
+	
+	public static class R
 	{
 		private static final Map<String, Field> fieldCache = new HashMap();
 		private static Field modifiersField;
+		
+		public static void resetFieldCache()
+		{
+			fieldCache.clear();
+		}
+		
 		private static void initModifierField()
 		{
 			try
@@ -317,19 +345,19 @@ public class U
 			}
 		}
 		
-		public static <T, F> void overrideField(Class<? extends T> clazz, List<String> field, F override, boolean isPrivate) throws Exception
+		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
-			overrideField(clazz, field, null, override, isPrivate);
+			overrideField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 		}
-		public static <T, F> void overrideField(Class<? extends T> clazz, List<String> field, T target, F override, boolean isPrivate) throws Exception
+		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, T target, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			boolean flag = false;
 			List<Throwable> list = new ArrayList();
-			for(String str : field)
+			for(String str : new String[]{mcpName, obfName})
 			{
 				try
 				{
-					if(fieldCache.containsKey(clazz.getName() + "|" + str))
+					if(!alwaysInit && fieldCache.containsKey(clazz.getName() + "|" + str))
 					{
 						fieldCache.get(clazz.getName() + "|" + str).set(target, override);
 						return;
@@ -359,20 +387,20 @@ public class U
 			}
 		}
 				
-		public static <T, F> void overrideFinalField(Class<? extends T> clazz, List<String> field, F override, boolean isPrivate) throws Exception
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
-			overrideFinalField(clazz, field, null, override, isPrivate);
+			overrideFinalField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 		}
-		public static <T, F> void overrideFinalField(Class<? extends T> clazz, List<String> field, T target, F override, boolean isPrivate) throws Exception
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, T target, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			boolean flag = false;
 			List<Throwable> list = new ArrayList();
-			for(String str : field)
+			for(String str : new String[]{mcpName, obfName})
 			{
 				try
 				{
 					initModifierField();
-					if(fieldCache.containsKey(clazz.getName() + "|" + str))
+					if(!alwaysInit && fieldCache.containsKey(clazz.getName() + "|" + str))
 					{
 						fieldCache.get(clazz.getName() + "|" + str).set(target, override);
 						return;
@@ -399,17 +427,17 @@ public class U
 			if(!flag)
 			{
 				for(Throwable e : list) e.printStackTrace();
-				throw new RuntimeException("FLE: fail to find and override field " + field.get(0));
+				throw new RuntimeException("FLE: fail to find and override field " + mcpName);
 			}
 		}
 		
-		public static <T> Object getValue(Class<? extends T> clazz, List<String> field, T target)
+		public static <T> Object getValue(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
 		{
-			for(String str : field)
+			for(String str : new String[]{mcpName, obfName})
 			{
 				try
 				{
-					if(fieldCache.containsKey(clazz.getName() + "|" + str))
+					if(!alwaysInit && fieldCache.containsKey(clazz.getName() + "|" + str))
 					{
 						return fieldCache.get(clazz.getName() + "|" + str).get(target);
 					}
@@ -426,16 +454,9 @@ public class U
 			return null;
 		}
 		
-		public static void resetReflectCache()
+		public static Method getMethod(Class clazz, String mcpName, String obfName, Class...classes)
 		{
-			int size = fieldCache.size();
-			fieldCache.clear();
-			FleLog.getCoreLogger().debug("Cleared " + size + " of cached fieldes.");
-		}
-		
-		public static Method getMethod(Class clazz, List<String> field, Class...classes)
-		{
-			for(String str : field)
+			for(String str : new String[]{mcpName, obfName})
 			{
 				try
 				{
@@ -451,6 +472,21 @@ public class U
 		}
 	}
 
+	public static class Maths
+	{
+		public static int mod(int a, int b)
+		{
+			int v;
+			return (v = a % b) > 0 ? v : v + b;
+		}
+		
+		public static long mod(long a, long b)
+		{
+			long v;
+			return (v = a % b) > 0 ? v : v + b;
+		}
+	}
+	
 	public static class Mod
 	{
 		public static String getActiveModID()
@@ -469,80 +505,11 @@ public class U
 
 		public static File getMCFile()
 		{
-			return Worlds.cfg.c();
+			return handlerGatway.fileDir();
 		}
 	}
 	
-	public static class Sound
-	{		
-		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength)
-		{
-			return displaySound(soundName, timeUntilNextSound, soundStrength, Worlds.player());
-		}
-		
-		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength, EntityPlayer player)
-		{
-			if(!Sides.isClient() || player == null) return false;
-			return displaySound(soundName, timeUntilNextSound, soundStrength, player.posX, player.posY, player.posZ);
-		}
-		
-		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength, double x, double y, double z)
-		{
-			if(!Sides.isClient()) return false;
-			return displaySound(soundName, timeUntilNextSound, soundStrength, 0.9F + (float) Math.random() * 0.2F, x, y, z);
-		}
-
-		public static boolean displaySound(String soundName, int timeUntilNextSound, float soundStrength, float soundModulation, double x, double y, double z)
-		{
-			if(!Sides.isClient()) return false;
-			EntityPlayer player = Worlds.player();
-			if ((player == null) || (!player.worldObj.isRemote) || (soundName == null))
-			{
-		        return false;
-			}
-			new ThreadedSound(player.worldObj, x, y, z, timeUntilNextSound, soundName, soundStrength, soundModulation).run();	
-			return true;
-		}
-		
-		public static void callDisplaySound(World world, String soundName, float soundStrength, float soundModulation, double x, double y, double z)
-		{
-			if(world == null || world.isRemote) return;
-			FarCoreSetup.network.sendToNearBy(new PacketSound(x, y, z, soundName, soundStrength, soundModulation), world.provider.dimensionId, (int) x, (int) y, (int) z, soundStrength);
-		}
-		
-		private static class ThreadedSound implements Runnable
-		{
-			private final World world;
-			private final String name;
-			private final double x, y, z;
-			private final int time;
-			private final float strength, modulation;
-
-			public ThreadedSound(World world, double x, double y, double z, int timeUntilNextSound, String soundName,
-					float soundStrength, float soundModulation)
-			{
-				this.world = world;
-				this.name = soundName;
-				this.x = x;
-				this.y = y;
-				this.z = z;
-				this.time = timeUntilNextSound;
-				this.strength = soundStrength;
-				this.modulation = soundModulation;
-			}
-
-			@Override
-			public void run()
-			{
-				try
-				{
-					world.playSound(x, y, z, name, strength, modulation, true);
-				}
-				catch(Throwable throwable){}
-			}
-		}
-	}
-
+	
 	public static class Sides
 	{
 		public static boolean isClient()
@@ -550,27 +517,22 @@ public class U
 			return FMLCommonHandler.instance().getSide().isClient();
 		}
 		
+		public static boolean isServer()
+		{
+			return FMLCommonHandler.instance().getSide().isServer();
+		}
+		
 		public static boolean isSimulating()
 		{
 			return FMLCommonHandler.instance().getEffectiveSide().isServer();
 		}
 	}
-	
+
 	public static class Worlds
 	{
-		@SidedProxy(modId = FarCore.ID, serverSide = "farcore.lib.world.WorldCfg", clientSide = "farcore.lib.world.WorldCfgClient")
-		public static WorldCfg cfg;
-		@SidedProxy(modId = FarCore.ID, serverSide = "farcore.lib.world.WorldDatasServer", clientSide = "farcore.lib.world.WorldDatasClient")
-		public static IWorldDatas datas;
-		
 		public static World world(int dim)
 		{
-			return cfg.a(dim);
-		}
-		
-		public static EntityPlayer player()
-		{
-			return cfg.b();
+			return handlerGatway.worldInstance(dim);
 		}
 		
 		private static final int[][] rotateFix = {
@@ -609,32 +571,12 @@ public class U
 							Direction.oppsite[side] :
 								rotateFix[side / 2][id];
 		}
-		
-		public static void setSmartMetadata(World world, int x, int y, int z, int meta, EnumUpdateType updateType)
-		{
-			datas.setSmartMetadataWithNotify(world, x, y, z, meta, updateType.ordinal());
-		}
-		
-		public static int getSmartMetadata(World world, int x, int y, int z)
-		{
-			return datas.getSmartMetadata(world, x, y, z);
-		}
-		
-		public static boolean setBlock(World world, int x, int y, int z, Block block, EnumUpdateType updateType)
-		{
-			return setBlock(world, x, y, z, block, 0, updateType);
-		}
-		
-		public static boolean setBlock(World world, int x, int y, int z, Block block, int meta, EnumUpdateType updateType)
-		{
-			return world.setBlock(x, y, z, block, meta, updateType.ordinal());
-		}
-		
-		public static boolean setBlock(int dim, int x, int y, int z, Block block, int meta, EnumUpdateType updateType)
+				
+		public static boolean setBlock(int dim, int x, int y, int z, Block block, int meta, int updateType)
 		{
 			World world = world(dim);
 			if(world == null) return false;
-			return setBlock(world, x, y, z, block, updateType);
+			return world.setBlock(x, y, z, block, meta, updateType);
 		}
 		
 		public static TileEntity setTileEntity(World world, int x, int y, int z, TileEntity tile)
@@ -746,11 +688,14 @@ public class U
 			world.setBlockToAir(x, y, z);
 		}
 
-		public static int getAirDensity(World world, int y)
+		public static int getAirDensity(World world, float y)
 		{
+			float v;
 			if(world.provider.isHellWorld) return 30;
 			else if(world.provider.dimensionId == 1) return -800;
-			else return 0;
+			else return y < (v = (float) world.getWorldInfo().getTerrainType().getHorizon(world)) ||
+					world.provider.hasNoSky ? 0 :
+				(int) ((v - y) * 0.04F);
 		}
 
 		public static void spawnDropsInWorld(World world, int x, int y, int z, List<ItemStack> drop)
@@ -790,33 +735,33 @@ public class U
 				new ChunkCoordinates(tile.xCoord, tile.yCoord, tile.zCoord);
 		}
 		
-		/**
-		 * With custom temperature use ASM to override method in world.
-		 * @param world
-		 * @param x
-		 * @param y
-		 * @param z
-		 * @return
-		 */
-		public static float getBiomeBaseTemperature(World world, int x, int y, int z)
-		{
-			BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-			if(biome instanceof BiomeBase)
-			{
-				return ((BiomeBase) biome).getTemperature(world, x, y, z);
-			}
-			return biome.getFloatTemperature(x, y, z);
-		}
-		
-		public static float getEnviormentTemp(World world, int x, int y, int z)
-		{
-			return ThermalNet.getEnviormentTemp(world, x, y, z);
-		}
-		
-		public static float getTemp(World world, int x, int y, int z)
-		{
-			return ThermalNet.getTemp(world, x, y, z, true);
-		}
+//		/**
+//		 * With custom temperature use ASM to override method in world.
+//		 * @param world
+//		 * @param x
+//		 * @param y
+//		 * @param z
+//		 * @return
+//		 */
+//		public static float getBiomeBaseTemperature(World world, int x, int y, int z)
+//		{
+//			BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+//			if(biome instanceof BiomeBase)
+//			{
+//				return ((BiomeBase) biome).getTemperature(world, x, y, z);
+//			}
+//			return biome.getFloatTemperature(x, y, z);
+//		}
+//		
+//		public static float getEnviormentTemp(World world, int x, int y, int z)
+//		{
+//			return ThermalNet.getEnviormentTemp(world, x, y, z);
+//		}
+//		
+//		public static float getTemp(World world, int x, int y, int z)
+//		{
+//			return ThermalNet.getTemp(world, x, y, z, true);
+//		}
 	
 		public static boolean checkAndFallBlock(World world, int x, int y, int z, Block block)
 		{
@@ -924,459 +869,71 @@ public class U
 		}
 	}
 	
-	public static class Inventorys
+	public static class Players
 	{
-		public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
+		public static EntityPlayer player()
 		{
-			if(stacks == null || stacks.isEmpty()) return ImmutableList.of();
-			ImmutableList.Builder builder = ImmutableList.builder();
-			for(ItemStack stack : stacks)
-			{
-				if(stack != null)
-				{
-					ItemStack stack2 = stack.copy();
-					stack2.stackSize = size;
-					builder.add(valid(stack2.copy()));
-				}
-			}
-			return builder.build();
+			return handlerGatway.playerInstance();
 		}
-
-		public static ItemStack sizeOf(ItemStack stack, int size)
+	}
+	
+	public static class CommonHandler
+	{
+		public World worldInstance(int id) 
 		{
-			ItemStack ret;
-			(ret = stack.copy()).stackSize = size;
-			return ret;
-		}
-
-		public static AbstractStack sizeOf(AbstractStack stack, int size)
-		{
-			if(stack == null) return null;
-			if(stack instanceof OreStack)
-			{
-				return OreStack.sizeOf((OreStack) stack, size);
-			}
-			else if(stack instanceof BaseStack)
-			{
-				return BaseStack.sizeOf((BaseStack) stack, size);
-			}
-			else if(stack instanceof NBTPropertyStack)
-			{
-				return NBTPropertyStack.sizeOf((NBTPropertyStack) stack, size);
-			}
-			else if(stack instanceof ArrayStack)
-			{
-				return ArrayStack.sizeOf((ArrayStack) stack, size);
-			}
-			return null;
-		}
-
-		public static void damage(ItemStack target, EntityLivingBase entity, float damage, EnumDamageResource resource)
-		{
-			damage(target, entity, damage, resource, entity != null);
-		}
-		public static void damage(ItemStack target, EntityLivingBase entity, float damage, EnumDamageResource resource, boolean isEntityCurrent)
-		{
-			if((entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode))
-				return;
-			if(target != null)
-			{
-				if(target.getItem() instanceof ICustomDamageItem)
-				{
-					ICustomDamageItem item = (ICustomDamageItem) target.getItem();
-					item.damangeItem(target, damage, entity, resource);
-					if(isEntityCurrent && target.stackSize <= 0)
-					{
-						if(entity instanceof EntityPlayer)
-						{
-							((EntityPlayer) entity).destroyCurrentEquippedItem();
-						}
-						else
-						{
-							entity.setCurrentItemOrArmor(0, null);
-						}
-					}
-					return;
-				}
-				else if(target.isItemStackDamageable())
-				{
-					target.damageItem((int) damage, entity);
-					if(isEntityCurrent && target.stackSize <= 0)
-					{
-						if(entity instanceof EntityPlayer)
-						{
-							((EntityPlayer) entity).destroyCurrentEquippedItem();
-						}
-						else
-						{
-							entity.setCurrentItemOrArmor(0, null);
-						}
-					}
-					return;
-				}
-				else
-				{
-					target.stackSize--;
-				}
-			}
+			return DimensionManager.getWorld(id);
 		}
 		
-		public static int dosePlayerHas(EntityPlayer player, AbstractStack target)
+		public String getLocale()
 		{
-			if(target == null) return -1;
-			AbstractStack stack = target;
-			for(int i = 0; i < player.inventory.mainInventory.length; ++i)
-			{
-				if(target.contain(player.inventory.mainInventory[i]))
-				{
-					return i;
-				}
-			}
-			return -1;
+			return LanguageManager.ENGLISH;
 		}
 
-		public static void givePlayer(EntityPlayer player, ItemStack target)
+		public File fileDir()
 		{
-			if(!player.inventory.addItemStackToInventory(target))
-			{
-				player.dropPlayerItemWithRandomChoice(target, false);
-			}
-		}
-
-		public static void givePlayerToContainer(EntityPlayer player, ItemStack target)
-		{
-			if(player.inventory.getItemStack() == null)
-			{
-				player.inventory.setItemStack(target);
-			}
-			else if(!player.inventory.addItemStackToInventory(target))
-			{
-				player.dropPlayerItemWithRandomChoice(target, false);
-			}
-		}
-
-		public static NBTTagCompound setupNBT(ItemStack stack, boolean create)
-		{
-			if(!stack.hasTagCompound())
-			{
-				if(create)
-				{
-					return stack.stackTagCompound = new NBTTagCompound();
-				}
-				return NBTTagCompoundEmpty.instance;
-			}
-			return stack.getTagCompound();
-		}
-
-		public static ItemStack valid(ItemStack stack)
-		{
-			if(stack == null || stack.stackSize <= 0)
-			{
-				return null;
-			}
-			if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
-			{
-				stack = stack.copy();
-				stack.setItemDamage(0);
-			}
-			return stack;
-		}
-
-		public static boolean areTagSimilarWithoutIgnore(NBTTagCompound nbt1, NBTTagCompound nbt2, String...ignore)
-		{
-			if(nbt1 == nbt2) return true;
-			if(ignore.length == 0)
-			{
-				return nbt1 != null ? nbt1.equals(nbt2) : nbt2.equals(NBTTagCompoundEmpty.instance);
-			}
-			if(nbt1 == null) nbt1 = NBTTagCompoundEmpty.instance;
-			else nbt1 = (NBTTagCompound) nbt1.copy();
-			if(nbt2 == null) nbt2 = NBTTagCompoundEmpty.instance;
-			else nbt2 = (NBTTagCompound) nbt2.copy();
-			label:
-			for(Object tagRaw : nbt2.func_150296_c())
-			{
-				String tag = (String) tagRaw;
-				for(String i : ignore)
-				{
-					if(i.equals(i)) continue label;
-				}
-				NBTBase nbt3 = nbt1.getTag(tag);
-				NBTBase nbt4 = nbt2.getTag(tag);
-				if(nbt3 == null || nbt4 == null)
-					if(nbt3 != null ^ nbt4 != null) return false;
-				if(!nbt3.equals(nbt4)) return false;
-			}
-			return true;
+			return new File(".");
 		}
 		
-		public static boolean areStackSimilar(ItemStack stack1, ItemStack stack2)
+		public EntityPlayer playerInstance()
 		{
-			return stack1 == null || stack2 == null ? stack1 == stack2 :
-				stack1.getItem() == stack2.getItem() &&
-				stack1.getItemDamage() == stack2.getItemDamage() && ItemStack.areItemStackTagsEqual(stack1, stack2);
-		}
-		
-		public static boolean areStackSimilarWithIgnore(ItemStack stack1, ItemStack stack2, String...ignores)
-		{
-			return stack1 == null || stack2 == null ? stack1 == stack2 :
-				stack1.getItem() == stack2.getItem() &&
-				stack1.getItemDamage() == stack2.getItemDamage() && areTagSimilarWithoutIgnore(stack1.stackTagCompound, stack2.stackTagCompound, ignores);
-		}
-
-		public static AbstractStack asStack(Object arg, boolean throwInvalid)
-		{
-			if(arg == null)
-			{
-				return BaseStack.EMPTY;
-			}
-			else if(arg instanceof Item)
-			{
-				return new BaseStack((Item) arg);
-			}
-			else if(arg instanceof Block)
-			{
-				return new BaseStack((Block) arg);
-			}
-			else if(arg instanceof ItemStack)
-			{
-				return new BaseStack((ItemStack) arg);
-			}
-			else if(arg instanceof String)
-			{
-				return new OreStack((String) arg);
-			}
-			else if(arg instanceof AbstractStack)
-			{
-				return (AbstractStack) arg;
-			}
-			else if(throwInvalid)
-			{
-				throw new IllegalArgumentException("Invalid object " + arg + ", can not cast to stack.");
-			}
 			return null;
 		}
 	}
 	
-	public static class Fluids
+	@SideOnly(Side.CLIENT)
+	public static class ClientHandler extends CommonHandler
 	{
-		public static FluidStack copyOf(FluidStack stack)
+		@Override
+		public World worldInstance(int id)
 		{
-			return stack == null ? null : stack.copy();
-		}		
-	}
-	
-	public static class Plants
-	{
-		public static boolean canSustainPlant(IBlockAccess world, int x, int y, int z, ForgeDirection direction, ISmartPlantableBlock plantable)
-		{
-			Block block = world.getBlock(x, y, z);
-			if(block instanceof ISmartSoildBlock)
+			if (U.Sides.isSimulating())
 			{
-				if(((ISmartSoildBlock) block).canSustainPlant(world, x, y, z, Direction.of(direction), plantable))
-				{
-					return true;
-				}
-			}
-			if(plantable.useDefaultType())
+				return super.worldInstance(id);
+			} 
+			else
 			{
-				if(block.canSustainPlant(world, x, y, z, direction, plantable))
-				{
-					return true;
-				}
+				World world = Minecraft.getMinecraft().theWorld;
+				return world == null ? null : world.provider.dimensionId != id ? null : world;
 			}
-			return false;
-		}
-	}
-
-	public static class OreDict
-	{
-		public static void registerValid(String name, Block ore)
-		{
-			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
-		}
-		public static void registerValid(String name, Item ore)
-		{
-			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
-		}
-		public static void registerValid(String name, ItemStack ore)
-		{
-			if(U.Inventorys.valid(ore) == null) return;
-			ItemStack register = ore.copy();
-			register.stackSize = 1;
-			OreDictionary.registerOre(name, ore);
-		}
-		public static void registerValid(String name, ItemStack ore, boolean autoValid)
-		{
-			if(autoValid)
-			{
-				name = U.Lang.validateOre(false, name);
-			}
-			registerValid(name, ore);
-		}
-	}
-
-	public static class Player
-	{
-		public static void jump(EntityPlayer player)
-		{
-			FarCorePlayerHandler.jump(player);
-		}
-		
-		public static boolean isKeyDown(EntityPlayer player, String key)
-		{
-			return FarCoreKeyHandler.get(player, key);
-		}
-		
-		public static float getBaseDigspeed(EntityPlayer player, World world, int x, int y, int z, Block block, int meta)
-		{
-	        ItemStack stack = player.getCurrentEquippedItem();
-	        float f;
-	        if(stack == null)
-	        {
-	        	f = 1.0F;
-	        }
-	        else if(stack.getItem() instanceof IBreakSpeedItem)
-	        {
-	        	f = ((IBreakSpeedItem) stack.getItem()).getSpeed(stack, world, x, y, z, block, meta);
-	        }
-	        else
-	        {
-	        	f = stack.getItem().getDigSpeed(stack, block, meta);
-	        }
-
-	        if (f > 1.0F)
-	        {
-	            int i = EnchantmentHelper.getEfficiencyModifier(player);
-	            if (i > 0 && stack != null)
-	            {
-	                float f1 = (float)(i * i + 1);
-	                boolean canHarvest = U.Player.isToolEffective(player, world, x, y, z, block, meta, true);
-	                if (!canHarvest && f <= 1.0F)
-	                {
-	                    f += f1 * 0.08F;
-	                }
-	                else
-	                {
-	                    f += f1;
-	                }
-	            }
-	        }
-
-	        if (player.isPotionActive(Potion.digSpeed))
-	        {
-	            f *= Math.pow(1.2, player.getActivePotionEffect(Potion.digSpeed).getAmplifier() + 1);
-	        }
-
-	        if (player.isPotionActive(Potion.digSlowdown))
-	        {
-	            f *= Math.pow(0.8, player.getActivePotionEffect(Potion.digSlowdown).getAmplifier() + 1);
-	        }
-
-	        if (player.isInsideOfMaterial(Material.water) && !EnchantmentHelper.getAquaAffinityModifier(player))
-	        {
-	            f /= 5.0F;
-	        }
-
-	        if (!player.onGround)
-	        {
-	            f /= 5.0F;
-	        }
-			return f;
 		}
 
-		
-		public static boolean isToolEffective(EntityPlayer player, World world, int x, int y, int z, Block block, int meta, boolean checkHandler)
+		@Override
+		public String getLocale()
 		{
-			if(checkHandler && player.getCurrentEquippedItem() != null)
-			{
-				if(ToolDestoryDropRecipes.match(player.getCurrentEquippedItem(), world, x, y, z, block, meta) != null)
-				{
-					return true;
-				}
-				if(block instanceof ISmartHarvestBlock)
-				{
-					return ((ISmartHarvestBlock) block).canHarvestBlock(world, x, y, z, meta, player);
-				}
-			}
-			if(player.getCurrentEquippedItem() != null)
-			{
-				if(player.getCurrentEquippedItem().getItem().canHarvestBlock(block, player.getCurrentEquippedItem()))
-				{
-					return true;
-				}
-			}
-			return ForgeHooks.canHarvestBlock(block, player, meta);
-		}
-	}
-
-	public static class Time
-	{
-		public static long getTime(World world)
-		{
-			return world.getWorldInfo().getWorldTime();
+			return Minecraft.getMinecraft().getLanguageManager()
+					.getCurrentLanguage().getLanguageCode();
 		}
 		
-		public static long getTotalDay(World world, ICalendar calendar)
+		@Override
+		public EntityPlayer playerInstance()
 		{
-			return calendar.getTotalDayL(getTime(world));
+			return Minecraft.getMinecraft().thePlayer;
 		}
 		
-		public static long getTotalMonth(World world, ICalendar calendar)
+		@Override
+		public File fileDir()
 		{
-			return calendar.hasMonth() ?
-					calendar.getTotalMonthL(getTime(world)) :
-						getYear(world, calendar);
+			return Minecraft.getMinecraft().mcDataDir;
 		}
-		
-		public static long getYear(World world, ICalendar calendar)
-		{
-			return calendar.getYearL(getTime(world));
-		}
-		
-		public static long getMonth(World world, ICalendar calendar)
-		{
-			return calendar.hasMonth() ?
-					calendar.getMonthInYearL(getTime(world)) :
-						1;
-		}
-		
-		public static long getDayInMonth(World world, ICalendar calendar)
-		{
-			return calendar.hasMonth() ?
-					calendar.getDayInMonthL(getTime(world)) :
-						getDayInYear(world, calendar);
-		}
-		
-		public static long getDayInYear(World world, ICalendar calendar)
-		{
-			return calendar.getDayInYearL(getTime(world));
-		}
-
-		public static double getDayTimeD(World world, ICalendar calendar)
-		{
-			return calendar.getDayTimeD(getTime(world));
-		}
-		
-		public static String getDateDescription(World world, ICalendar calendar)
-		{
-			return calendar.hasMonth() ?
-					getYear(world, calendar) + "Y" + (getMonth(world, calendar) + 1) + "M" + (getDayInMonth(world, calendar) + 1) :
-						getYear(world, calendar) + "Y" + (getDayInMonth(world, calendar) + 1);
-		}
-	}
-	
-	public static class Weather
-	{
-		
-	}
-
-	public static class Client
-	{
-		public static boolean shouldRenderBetterLeaves()
-		{
-			return (boolean) Reflect.getValue(BlockLeavesBase.class, Arrays.asList("field_150121_P"), Blocks.leaves);
-		}
-		
 	}
 }

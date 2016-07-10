@@ -2,16 +2,12 @@ package farcore.lib.net.gui;
 
 import java.io.IOException;
 
-import cpw.mods.fml.relauncher.Side;
-import farcore.interfaces.gui.IGuiUpdatable;
+import farcore.lib.gui.IRecievableGui;
+import farcore.lib.io.DataStream;
 import farcore.network.IPacket;
-import farcore.network.NetworkBasic;
+import farcore.network.Network;
 import farcore.network.PacketAbstract;
-import farcore.util.io.DataStream;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.INetHandler;
 
 public class PacketGuiAction extends PacketAbstract
 {
@@ -29,12 +25,12 @@ public class PacketGuiAction extends PacketAbstract
 	}
 
 	@Override
-	public IPacket process(NetworkBasic network)
+	public IPacket process(Network network)
 	{
 		EntityPlayer player = getPlayer();
-		if(player.openContainer instanceof IGuiUpdatable)
+		if(player.openContainer instanceof IRecievableGui)
 		{
-			((IGuiUpdatable) player.openContainer).onActive(type, contain);
+			((IRecievableGui) player.openContainer).onActive(type, contain);
 		}
 		return null;
 	}

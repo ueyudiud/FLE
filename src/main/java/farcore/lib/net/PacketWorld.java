@@ -2,11 +2,9 @@ package farcore.lib.net;
 
 import java.io.IOException;
 
-import farcore.network.IPacket;
-import farcore.network.NetworkBasic;
+import farcore.lib.io.DataStream;
 import farcore.network.PacketAbstract;
 import farcore.util.U;
-import farcore.util.io.DataStream;
 import net.minecraft.world.World;
 
 public abstract class PacketWorld extends PacketAbstract

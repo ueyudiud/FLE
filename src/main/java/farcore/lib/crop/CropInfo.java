@@ -1,14 +1,10 @@
 package farcore.lib.crop;
 
-import java.util.HashMap;
-
 import farcore.lib.collection.IntegerMap;
 import farcore.lib.collection.IntegerMap.Prop;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
-import scala.inline;
-import scala.collection.immutable.IntMap;
 
 public class CropInfo
 {

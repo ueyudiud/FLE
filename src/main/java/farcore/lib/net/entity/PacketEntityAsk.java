@@ -2,17 +2,12 @@ package farcore.lib.net.entity;
 
 import java.io.IOException;
 
-import cpw.mods.fml.relauncher.Side;
-import farcore.interfaces.IDescribable;
+import farcore.lib.io.DataStream;
 import farcore.lib.net.PacketWorld;
+import farcore.network.IDescribable;
 import farcore.network.IPacket;
-import farcore.network.NetworkBasic;
-import farcore.util.io.DataStream;
-import io.netty.buffer.ByteBuf;
+import farcore.network.Network;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetHandler;
 
 public class PacketEntityAsk extends PacketWorld
 {
@@ -43,7 +38,7 @@ public class PacketEntityAsk extends PacketWorld
 	}
 	
 	@Override
-	public IPacket process(NetworkBasic network)
+	public IPacket process(Network network)
 	{
 		Entity entity = world().getEntityByID(entityID);
 		if(entity instanceof IDescribable)

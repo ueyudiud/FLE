@@ -3,10 +3,10 @@ package farcore.lib.net;
 import java.io.IOException;
 
 import farcore.handler.FarCoreKeyHandler;
+import farcore.lib.io.DataStream;
 import farcore.network.IPacket;
-import farcore.network.NetworkBasic;
+import farcore.network.Network;
 import farcore.network.PacketAbstract;
-import farcore.util.io.DataStream;
 
 public class PacketKey extends PacketAbstract
 {
@@ -30,7 +30,7 @@ public class PacketKey extends PacketAbstract
 	}
 
 	@Override
-	public IPacket process(NetworkBasic network)
+	public IPacket process(Network network)
 	{
 		FarCoreKeyHandler.onServerRecieve(getPlayer(), values);
 		return null;

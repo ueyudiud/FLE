@@ -2,7 +2,7 @@ package farcore.lib.net;
 
 import java.io.IOException;
 
-import farcore.util.io.DataStream;
+import farcore.lib.io.DataStream;
 import net.minecraft.world.World;
 
 public abstract class PacketChunkCoord extends PacketWorld

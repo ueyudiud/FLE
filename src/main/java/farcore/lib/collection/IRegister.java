@@ -17,11 +17,19 @@ public interface IRegister<T> extends Iterable<T>
 	
 	String name(int id);
 	
-	T get(String name, T def);
+	default T get(String name, T def)
+	{
+		T target;
+		return (target = get(name)) != null ? target : def;
+	}
 	
 	T get(String name);
 	
-	T get(int id, T def);
+	default T get(int id, T def)
+	{
+		T target;
+		return (target = get(id)) != null ? target : def;
+	}
 	
 	T get(int id);
 	
@@ -29,11 +37,20 @@ public interface IRegister<T> extends Iterable<T>
 	
 	Set<String> names();
 	
-	boolean contain(String name);
+	default boolean contain(String name)
+	{
+		return get(name) != null;
+	}
 	
-	boolean contain(int id);
+	default boolean contain(int id)
+	{
+		return get(id) != null;
+	}
 	
-	boolean contain(T arg);
+	default boolean contain(T arg)
+	{
+		return name(arg) != null;
+	}
 	
 	T remove(String name);
 	
