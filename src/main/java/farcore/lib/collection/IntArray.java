@@ -18,6 +18,11 @@ public class IntArray
 		this.array = array;
 	}
 	
+	public int length()
+	{
+		return array.length;
+	}
+	
 	public IntArray set(int id, int value)
 	{
 		array[id] = value;

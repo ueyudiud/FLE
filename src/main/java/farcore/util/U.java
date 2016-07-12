@@ -24,12 +24,16 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.lib.block.ISmartFallableBlock;
+import farcore.lib.collection.Stack;
 import farcore.lib.entity.EntityFallingBlockExtended;
+import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.LanguageManager;
+import farcore.lib.world.ICoord;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -37,7 +41,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S07PacketRespawn;
@@ -53,14 +59,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class U
 {
+	private static final Random RNG = new Random();
 	@SidedProxy(serverSide = "farcore.util.U$CommonHandler", clientSide = "farcore.util.U$ClientHandler")
 	static CommonHandler handlerGatway;
 	
 	public static class L
-	{		
+	{
 		public static int[] cast(Integer[] integers)
 		{
 			int[] ret = new int[integers.length];
@@ -127,6 +135,43 @@ public class U
 				}
 			}
 			return builder.build();
+		}
+		
+		public static <T> T randomInStack(Stack<T>[] stacks, Random random)
+		{
+			long weight = 0;
+			for(Stack<T> stack : stacks)
+				weight += stack.size;
+			return randomInStack(stacks, weight, random);
+		}
+		
+		public static <T> T randomInStack(Stack<T>[] stacks, long weight)
+		{
+			return randomInStack(stacks, weight, RNG);
+		}
+		
+		public static <T> T randomInStack(Stack<T>[] stacks, long weight, Random random)
+		{
+			long rng = Maths.mod(random.nextLong(), weight);
+			int i = 0;
+			T target;
+			do
+			{
+				target = stacks[i].element;
+				rng -= stacks[i].size;
+			}
+			while(rng >= 0);
+			return target;
+		}
+		
+		public static <T> T random(T...list)
+		{
+			return random(list, RNG);
+		}
+		
+		public static <T> T random(Random random, T...list)
+		{
+			return random(list, random);
 		}
 		
 		public static <T> T random(T[] list, Random random)
@@ -198,7 +243,6 @@ public class U
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
 	}
-
 	
 	public static class Strings
 	{
@@ -317,7 +361,6 @@ public class U
 			}
 		}
 	}
-	
 	
 	public static class R
 	{
@@ -509,7 +552,6 @@ public class U
 		}
 	}
 	
-	
 	public static class Sides
 	{
 		public static boolean isClient()
@@ -533,6 +575,18 @@ public class U
 		public static World world(int dim)
 		{
 			return handlerGatway.worldInstance(dim);
+		}
+		
+		public static Block getBlock(ICoord coord)
+		{
+			int[] is;
+			return coord.world().getBlock((is = coord.coordI())[0], is[1], is[2]);
+		}
+		
+		public static byte getMetadata(ICoord coord)
+		{
+			int[] is;
+			return (byte) coord.world().getBlockMetadata((is = coord.coordI())[0], is[1], is[2]);
 		}
 		
 		private static final int[][] rotateFix = {
@@ -698,6 +752,24 @@ public class U
 				(int) ((v - y) * 0.04F);
 		}
 
+		public static void spawnDropsInWorld(ICoord coord, List<ItemStack> drop)
+		{
+			if(coord.world().isRemote || drop == null) return;
+			World world = coord.world();
+			double[] ds = coord.coordD();
+			float f = 0.2F;
+			for(ItemStack stack : drop)
+			{
+				if(stack == null) continue;
+	            double d0 = world.rand.nextFloat() * f;
+	            double d1 = world.rand.nextFloat() * f;
+	            double d2 = world.rand.nextFloat() * f;
+	            EntityItem entityitem = new EntityItem(world, (double)ds[0] + d0, (double)ds[1] + d1, (double)ds[1] + d2, stack.copy());
+	            entityitem.delayBeforeCanPickup = 10;
+	            world.spawnEntityInWorld(entityitem);
+			}
+		}
+		
 		public static void spawnDropsInWorld(World world, int x, int y, int z, List<ItemStack> drop)
 		{
 			if(world.isRemote || drop == null) return;
@@ -875,6 +947,98 @@ public class U
 		{
 			return handlerGatway.playerInstance();
 		}
+	}
+	
+	public static class ItemStacks
+	{
+		public static ItemStack valid(ItemStack stack)
+		{
+			if(stack == null || stack.stackSize <= 0)
+			{
+				return null;
+			}
+			if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+			{
+				stack = stack.copy();
+				stack.setItemDamage(0);
+			}
+			return stack;
+		}
+		
+		public static NBTTagCompound setupNBT(ItemStack stack, boolean createTag)
+		{
+			if(!stack.hasTagCompound())
+			{
+				if(createTag)
+				{
+					return stack.stackTagCompound = new NBTTagCompound();
+				}
+				return NBTTagCompoundEmpty.instance;
+			}
+			return stack.getTagCompound();
+		}
+
+		public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
+		{
+			if(stacks == null || stacks.isEmpty()) return ImmutableList.of();
+			ImmutableList.Builder builder = ImmutableList.builder();
+			for(ItemStack stack : stacks)
+			{
+				if(stack != null)
+				{
+					ItemStack stack2 = stack.copy();
+					stack2.stackSize = size;
+					builder.add(valid(stack2.copy()));
+				}
+			}
+			return builder.build();
+		}
+
+		public static ItemStack sizeOf(ItemStack stack, int size)
+		{
+			ItemStack ret;
+			(ret = stack.copy()).stackSize = size;
+			return ret;
+		}
+	}
+	
+	public static class OreDict
+	{
+		public static void registerValid(String name, Block ore)
+		{
+			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
+		}
+		
+		public static void registerValid(String name, Item ore)
+		{
+			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
+		}
+		
+		public static void registerValid(String name, ItemStack ore)
+		{
+			if(U.ItemStacks.valid(ore) == null) return;
+			ItemStack register = ore.copy();
+			register.stackSize = 1;
+			OreDictionary.registerOre(name, ore);
+		}
+		
+		public static void registerValid(String name, ItemStack ore, boolean autoValid)
+		{
+			if(autoValid)
+			{
+				name = U.Strings.validateOre(false, name);
+			}
+			registerValid(name, ore);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static class Client
+	{
+		public static boolean shouldRenderBetterLeaves()
+		{
+			return (boolean) R.getValue(BlockLeavesBase.class, "field_150121_P", "field_150121_P", Blocks.leaves, false);
+		}		
 	}
 	
 	public static class CommonHandler

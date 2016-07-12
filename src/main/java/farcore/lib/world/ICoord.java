@@ -2,7 +2,7 @@ package farcore.lib.world;
 
 import net.minecraft.world.World;
 
-public interface ICrood
+public interface ICoord
 {
 	World world();
 	

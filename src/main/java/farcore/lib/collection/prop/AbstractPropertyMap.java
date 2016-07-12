@@ -1,13 +1,10 @@
-package farcore.lib.collection;
+package farcore.lib.collection.prop;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-
-import farcore.lib.collection.prop.IProperty;
-import farcore.lib.collection.prop.IPropertyMap;
 
 public class AbstractPropertyMap<P extends IProperty> implements IPropertyMap<P>
 {

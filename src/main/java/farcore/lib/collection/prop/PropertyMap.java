@@ -4,7 +4,6 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableSet;
 
-import farcore.lib.collection.AbstractPropertyMap;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PropertyMap extends AbstractPropertyMap<ISaveableProperty>

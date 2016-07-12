@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -20,6 +21,7 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import farcore.data.V;
@@ -27,6 +29,10 @@ import farcore.handler.FarCoreChunkHandler;
 import farcore.handler.FarCoreConfigHandler;
 import farcore.handler.FarCoreGuiHandler;
 import farcore.handler.FarCoreKeyHandler;
+import farcore.lib.block.instance.BlockCrop;
+import farcore.lib.block.instance.BlockSapling;
+import farcore.lib.item.instance.ItemDebugger;
+import farcore.lib.item.instance.ItemTreeLog;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
@@ -34,6 +40,10 @@ import farcore.lib.net.gui.PacketGuiAction;
 import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.net.tile.PacketTESAskRender;
 import farcore.lib.net.tile.PacketTESync;
+import farcore.lib.render.RenderHandler;
+import farcore.lib.tile.instance.TECoreLeaves;
+import farcore.lib.tile.instance.TECrop;
+import farcore.lib.tile.instance.TESapling;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
 import farcore.network.Network;
@@ -47,7 +57,7 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid = FarCore.ID, version = "0.91", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "0.92", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 1558;
@@ -166,6 +176,14 @@ public class FarCoreSetup
 			FMLCommonHandler.instance().bus().register(handler);
 			FMLCommonHandler.instance().bus().register(new FarCoreConfigHandler());
 			FMLCommonHandler.instance().bus().register(new FarCoreKeyHandler());
+			
+			new ItemDebugger();
+			new ItemTreeLog();
+			new BlockSapling();
+			new BlockCrop();
+			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
+			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
+			GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
 		}
 		
 		public void load(FMLInitializationEvent event)
@@ -206,6 +224,10 @@ public class FarCoreSetup
 		public void load(FMLPreInitializationEvent event)
 		{
 			super.load(event);
+			int id1 = RenderingRegistry.getNextAvailableRenderId();
+			RenderingRegistry.registerBlockHandler(id1, FarCore.handlerA = new RenderHandler(id1, false));
+			int id2 = RenderingRegistry.getNextAvailableRenderId();
+			RenderingRegistry.registerBlockHandler(id2, FarCore.handlerB = new RenderHandler(id2, true));
 			MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 		}
 		

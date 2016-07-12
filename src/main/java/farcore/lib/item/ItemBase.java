@@ -95,7 +95,7 @@ public class ItemBase extends Item implements IRegisteredNameable
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(INamedIconRegister register)
+	protected void registerIcons(INamedIconRegister register)
 	{
 		register.registerIcon(null, getIconString());
 	}

@@ -65,6 +65,6 @@ public class CalendarSurface implements ICalendar
 	@Override
 	public String dateInfo(long tick)
 	{
-		return monthName[(int) monthInYear(tick)] + " " + U.Strings.toOrdinalNumber(dayInMonth(tick)) + ", " + yearT;
+		return monthName[(int) monthInYear(tick)] + " " + U.Strings.toOrdinalNumber(dayInMonth(tick) + 1) + ", " + year(tick);
 	}
 }

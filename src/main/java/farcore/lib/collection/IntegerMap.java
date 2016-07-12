@@ -117,7 +117,7 @@ public class IntegerMap<T> implements Iterable<Prop<T>>
 		++size;
 		return 0;
 	}
-
+	
 	public int remove(Object key)
 	{
 		int v = indexOf(key);

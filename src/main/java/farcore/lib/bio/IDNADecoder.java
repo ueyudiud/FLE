@@ -1,5 +1,7 @@
 package farcore.lib.bio;
 
+import java.util.Random;
+
 public interface IDNADecoder<T extends IBiology>
 {
 	void decodeDNA(T biology, String dna);

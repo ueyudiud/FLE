@@ -113,7 +113,15 @@ implements IRegisteredNameable
 	public final IIcon getIcon(int side, int meta)
 	{
 		IconHook.instance.push(this);
-		IIcon ret = getIcon(side, meta, IconHook.instance);
+		IIcon ret;
+		try
+		{
+			ret = getIcon(side, meta, IconHook.instance);
+		}
+		catch(Exception exception)
+		{
+			return FarCore.voidBlockIcon;
+		}
 		IconHook.instance.pop();
 		return ret == null ? FarCore.voidBlockIcon : ret;
 	}
@@ -122,7 +130,15 @@ implements IRegisteredNameable
 	public final IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) 
 	{
 		IconHook.instance.push(this);
-		IIcon ret = getIcon(world, x, y, z, side, IconHook.instance);
+		IIcon ret;
+		try
+		{
+			ret = getIcon(world, x, y, z, side, IconHook.instance);
+		}
+		catch(Exception exception)
+		{
+			return FarCore.voidBlockIcon;
+		}
 		IconHook.instance.pop();
 		return ret == null ? FarCore.voidBlockIcon : ret;
 	}
