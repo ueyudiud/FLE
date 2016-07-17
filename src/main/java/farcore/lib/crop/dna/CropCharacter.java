@@ -1,11 +1,10 @@
 package farcore.lib.crop.dna;
 
+import farcore.lib.bio.DNACharacter;
 import farcore.lib.crop.CropInfo;
 
-public class DNACharacter
+public class CropCharacter extends DNACharacter<CropInfo>
 {
-	public char chr;
-
 	public int grain;
 	public int growth;
 	public int coldResistance;
@@ -14,6 +13,11 @@ public class DNACharacter
 	public int dryResistance;
 	public String prop;
 	public int level;
+	
+	public CropCharacter(char character)
+	{
+		super(character);
+	}
 	
 	public void affectOn(CropInfo info)
 	{

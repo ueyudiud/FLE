@@ -1,5 +1,7 @@
 package farcore.lib.tree;
 
+import java.util.Random;
+
 import farcore.data.M;
 import farcore.lib.material.Mat;
 import net.minecraft.world.World;
@@ -36,14 +38,8 @@ public class TreeVoid extends TreeBase
 	}
 
 	@Override
-	public boolean canGenerateTreeAt(World world, int x, int y, int z, TreeInfo info)
+	public boolean generateTreeAt(World world, int x, int y, int z, Random rand, TreeInfo info)
 	{
 		return false;
-	}
-
-	@Override
-	public void generateTreeAt(World world, int x, int y, int z, TreeInfo info)
-	{
-		
 	}
 }

@@ -48,6 +48,11 @@ public class IconHook implements INamedIconRegister
 			list.addLast(list.getLast() + "." + arg);
 		}
 	}
+
+	public void ret()
+	{
+		list.clear();
+	}
 	
 	public void pop()
 	{

@@ -5,10 +5,13 @@ import net.minecraft.item.Item;
 public enum EnumItem
 {
 	log,
-	debug;
-	
+	debug,
+	display_fluid,
+
+	stone_chip;
+
 	public Item item;
-	
+
 	public void set(Item item)
 	{
 		this.item = item;

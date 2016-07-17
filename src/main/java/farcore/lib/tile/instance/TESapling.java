@@ -8,7 +8,6 @@ import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -17,7 +16,7 @@ public class TESapling extends TEAged implements ISaplingAccess
 	private float age;
 	public TreeInfo info;
 	public Mat material;
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -25,19 +24,19 @@ public class TESapling extends TEAged implements ISaplingAccess
 		nbt.setString("tree", material.name);
 		nbt.setFloat("age", age);
 	}
-	
+
 	@Override
-	public void writeToDescription(NBTTagCompound nbt) 
+	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
 		nbt.setString("t", material.name);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		material = Mat.register.get("tree");
+		material = Mat.register.get(nbt.getString("tree"));
 		age = nbt.getFloat("age");
 	}
 
@@ -46,12 +45,12 @@ public class TESapling extends TEAged implements ISaplingAccess
 	{
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("t"))
-			material = Mat.register.get("t");
+			material = Mat.register.get(nbt.getString("t"));
 	}
-	
+
 	public void setTree(EntityLivingBase entity, Mat tree)
 	{
-		this.material = tree;
+		material = tree;
 		syncToNearby();
 	}
 
@@ -65,23 +64,30 @@ public class TESapling extends TEAged implements ISaplingAccess
 		}
 		age += material.tree.onSaplingUpdate(this);
 		if(!isInvalid() && age >= getMaxAge())
-		{
 			grow();
-		}
 	}
-	
+
 	@Override
 	protected float getSyncRange()
 	{
 		return 80F;
 	}
 
+	public float age()
+	{
+		return age;
+	}
+
+	public void setAge(float age)
+	{
+		this.age = age;
+	}
+
 	public boolean grow()
 	{
-		if(material.tree.canGenerateTreeAt(worldObj, xCoord, yCoord, zCoord, info))
+		if(material.tree.generateTreeAt(worldObj, xCoord, yCoord, zCoord, random, info))
 		{
 			removeBlock();
-			material.tree.generateTreeAt(worldObj, xCoord, yCoord, zCoord, info);
 			return true;
 		}
 		return false;
@@ -99,13 +105,13 @@ public class TESapling extends TEAged implements ISaplingAccess
 	}
 
 	@Override
-	public TreeInfo info() 
+	public TreeInfo info()
 	{
 		return info;
 	}
 
 	@Override
-	public BiomeGenBase biome() 
+	public BiomeGenBase biome()
 	{
 		return worldObj.getBiomeGenForCoords(xCoord, zCoord);
 	}

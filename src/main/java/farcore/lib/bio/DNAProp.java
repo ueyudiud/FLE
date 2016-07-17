@@ -1,21 +1,21 @@
-package farcore.lib.crop.dna;
+package farcore.lib.bio;
 
 import farcore.lib.collection.Stack;
 import farcore.util.U;
 
-public class DNAProp
+public abstract class DNAProp<T extends DNACharacter>
 {
 	public char startType;
 	public float borderChanceBase;
 	public char fixedType;
 	public long allWeight;
-	public DNACharacter[] allowedChars;
-	public Stack<DNACharacter>[] weight;
+	public T[] allowedChars;
+	public Stack<T>[] weight;
 	
-	public DNAProp(Stack<DNACharacter>...characters)
+	public DNAProp(Stack<T>...characters)
 	{
 		startType = characters[0].element.chr;
-		allowedChars = new DNACharacter[characters.length];
+		allowedChars = createCharacters(characters.length);
 		weight = characters;
 		for(int i = 0; i < characters.length; ++i)
 		{
@@ -23,6 +23,8 @@ public class DNAProp
 			allWeight += characters[i].size;
 		}
 	}
+	
+	protected abstract T[] createCharacters(int length);
 	
 	public DNAProp setBorderChance(float chance)
 	{

@@ -118,24 +118,21 @@ task deobfJar(type: Jar) {
     }
 }
 
-task apiJar(type: Jar, dependsOn: 'jar') {
-    classifier 'api'
+task coreJar(type: Jar, dependsOn: 'jar') {
     from (sourceSets.main.output) {
         include "**/farcore/**"
-        //include "**/flapi/**"
-        include "**/api/**"
     }
 }
 
 jar {
     exclude "**/ic2/**"
-   // manifest {
-   //     attributes 'FMLCorePlugin': 'fle.override.FarOverrideLoadingPlugin',
-   //     'FMLCorePluginContainsFMLMod': 'true'
-   // }
+    manifest {
+        attributes 'FMLCorePlugin': 'farcore.override.FarOverrideLoadingPlugin',
+        'FMLCorePluginContainsFMLMod': 'true'
+    }
 }
 
 artifacts {
 	archives deobfJar
-	archives apiJar
+	archives coreJar
 }

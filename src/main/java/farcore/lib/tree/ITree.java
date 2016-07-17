@@ -20,7 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public interface ITree extends IRegisteredNameable, IDNADecoder<TreeInfo>
+public interface ITree extends IRegisteredNameable, ITreeGenerator, IDNADecoder<TreeInfo>
 {
 	ITree VOID = new TreeVoid();
 	
@@ -71,10 +71,6 @@ public interface ITree extends IRegisteredNameable, IDNADecoder<TreeInfo>
 
 	ArrayList<ItemStack> getLeavesDrops(World world, int x, int y, int z, int metadata, int fortune,
 			boolean silkTouching, ArrayList arrayList);
-	
-	boolean canGenerateTreeAt(World world, int x, int y, int z, TreeInfo info);
-	
-	void generateTreeAt(World world, int x, int y, int z, TreeInfo info);
 
 	int onSaplingUpdate(ISaplingAccess access);
 

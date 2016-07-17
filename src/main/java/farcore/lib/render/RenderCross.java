@@ -1,6 +1,10 @@
 package farcore.lib.render;
 
-public class RenderTreeSapling extends RenderBase
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
+public class RenderCross extends RenderBase
 {
 	@Override
 	public void renderBlock()
@@ -13,9 +17,9 @@ public class RenderTreeSapling extends RenderBase
 		}
 		else
 		{
-			icon = block.getIcon(world, x, y, z, 0);
+			icon = isItem() ? block.getIcon(0, meta) : block.getIcon(world, x, y, z, 0);
 			renderFace(1D, 1D, 1D, 1D, 0D, 1D, 0D, 0D, 0D, 0D, 1D, 0D);
 			renderFace(1D, 1D, 0D, 1D, 0D, 0D, 0D, 0D, 1D, 0D, 1D, 1D);
 		}
-	}	
+	}
 }

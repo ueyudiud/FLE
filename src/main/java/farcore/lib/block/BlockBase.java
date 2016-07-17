@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.Icon;
+
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -120,6 +122,7 @@ implements IRegisteredNameable
 		}
 		catch(Exception exception)
 		{
+			IconHook.instance.ret();
 			return FarCore.voidBlockIcon;
 		}
 		IconHook.instance.pop();
@@ -137,6 +140,7 @@ implements IRegisteredNameable
 		}
 		catch(Exception exception)
 		{
+			IconHook.instance.ret();
 			return FarCore.voidBlockIcon;
 		}
 		IconHook.instance.pop();
@@ -266,5 +270,10 @@ implements IRegisteredNameable
     public void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean deepInfo)
     {
     	
+    }
+    
+    public boolean func_149730_j()
+    {
+    	return true;
     }
 }

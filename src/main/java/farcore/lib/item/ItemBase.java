@@ -19,6 +19,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+/**
+ * The base item.
+ * @author ueyudiud
+ *
+ */
 public class ItemBase extends Item implements IRegisteredNameable
 {
 	private boolean hasToolTip;
@@ -39,16 +44,14 @@ public class ItemBase extends Item implements IRegisteredNameable
 		this.unlocalized = unlocalized;
 		GameRegistry.registerItem(this, unlocalized, modid);
 		if(localName != null)
-		{
 			LanguageManager.registerLocal(getUnlocalizedName(0) + ".name", localName);
-		}
 		if(localToolTip != null)
 		{
 			hasToolTip = true;
 			LanguageManager.registerLocal(getUnlocalizedTooltip(0) + ".tooltip", localToolTip);
 		}
 	}
-	
+
 	@Override
 	public String getUnlocalizedName()
 	{
@@ -57,33 +60,34 @@ public class ItemBase extends Item implements IRegisteredNameable
 
 	public String getUnlocalizedName(int meta)
 	{
-		return hasSubtypes ? getUnlocalizedName() + "@" + meta : 
+		return hasSubtypes ? getUnlocalizedName() + "@" + meta :
 			getUnlocalizedName();
 	}
 
 	public String getUnlocalizedTooltip(int meta)
 	{
-		return hasSubtypes ? getUnlocalizedName() + "@" + meta : 
+		return hasSubtypes ? getUnlocalizedName() + "@" + meta :
 			getUnlocalizedName();
 	}
-	
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		return getUnlocalizedName(getDamage(stack));
 	}
-	
+
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
 	{
 		return FarCore.translateToLocal(getUnlocalizedName(stack) + ".name");
 	}
-	
+
 	public String getFirstDisplayTooltip(int meta)
 	{
 		return FarCore.translateToLocal(getUnlocalizedTooltip(meta) + ".tooltip");
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public final void registerIcons(IIconRegister register)
 	{
@@ -99,14 +103,24 @@ public class ItemBase extends Item implements IRegisteredNameable
 	{
 		register.registerIcon(null, getIconString());
 	}
-	
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int pass)
 	{
 		IconHook.instance.push(this);
-		IIcon icon = getIcon(IconHook.instance, stack, pass);
+		IIcon icon = null;
+		try
+		{
+			icon = getIcon(IconHook.instance, stack, pass);
+		}
+		catch(Exception exception)
+		{
+			IconHook.instance.ret();
+			return getSpriteNumber() == 0 ? FarCore.voidBlockIcon : FarCore.voidItemIcon;
+		}
 		IconHook.instance.pop();
-		return icon == null ? FarCore.voidItemIcon : icon;
+		return icon == null ? getSpriteNumber() == 0 ? FarCore.voidBlockIcon : FarCore.voidItemIcon : icon;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -115,27 +129,39 @@ public class ItemBase extends Item implements IRegisteredNameable
 		return getIconFromDamageForRenderPass(register, getDamage(stack), pass);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining)
 	{
 		IconHook.instance.push(this);
-		IIcon icon = getIcon(IconHook.instance, stack, renderPass, player, usingItem, useRemaining);
+		IIcon icon;
+		try
+		{
+			icon = getIcon(IconHook.instance, stack, renderPass, player, usingItem, useRemaining);
+		}
+		catch(Exception exception)
+		{
+			IconHook.instance.ret();
+			return getSpriteNumber() == 0 ? FarCore.voidBlockIcon : FarCore.voidItemIcon;
+		}
 		IconHook.instance.pop();
-		return icon == null ? FarCore.voidItemIcon : icon;
+		return icon == null ? getSpriteNumber() == 0 ? FarCore.voidBlockIcon : FarCore.voidItemIcon : icon;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	protected IIcon getIcon(INamedIconRegister register, ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining)
 	{
 		return getIcon(register, stack, renderPass);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta)
 	{
 		return getIconFromDamageForRenderPass(meta, 0);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamageForRenderPass(int meta, int pass)
 	{
@@ -144,52 +170,52 @@ public class ItemBase extends Item implements IRegisteredNameable
 		IconHook.instance.pop();
 		return icon == null ? FarCore.voidItemIcon : icon;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	protected IIcon getIconFromDamageForRenderPass(INamedIconRegister register, int meta, int pass)
 	{
 		return register.getIconFromName(null);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconIndex(ItemStack stack)
 	{
 		return getIcon(stack, 0);
 	}
-	
+
 	@Override
 	public String getRegisteredName()
 	{
 		return GameData.getItemRegistry().getNameForObject(this);
 	}
-	
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public final void addInformation(ItemStack stack, EntityPlayer player, List list, boolean F3H)
 	{
 		addUnlocalInfomation(stack, player, new UnlocalizedList(list), F3H);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void addUnlocalInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean F3H)
 	{
 		if(hasToolTip)
-		{
-			list.add(getUnlocalizedTooltip(getDamage(stack)) + ".tooltip");
-		}
+			list.addLocal(getFirstDisplayTooltip(getDamage(stack)));
 	}
-	
+
 	@Override
 	public ItemStack getContainerItem(ItemStack stack)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public boolean hasContainerItem(ItemStack stack)
 	{
 		return getContainerItem(stack) != null;
 	}
-	
+
 	@Override
 	public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack)
 	{

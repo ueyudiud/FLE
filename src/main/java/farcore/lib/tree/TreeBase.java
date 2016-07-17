@@ -13,6 +13,9 @@ import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.material.Mat;
+import farcore.lib.tile.instance.TECoreLeaves;
+import farcore.lib.tile.instance.TESapling;
+import farcore.lib.tree.dna.TreeDNAHelper;
 import farcore.lib.util.INamedIconRegister;
 import farcore.util.U;
 import net.minecraft.block.Block;
@@ -23,11 +26,12 @@ import net.minecraft.world.World;
 
 public abstract class TreeBase implements ITree
 {
-	protected Block logNat;
-	protected Block logArt;
-	protected Block leaves;
-	protected Block leavesCore;
+	public Block logNat;
+	public Block logArt;
+	public Block leaves;
+	public Block leavesCore;
 	protected Mat material;
+	protected TreeDNAHelper helper;
 	protected int leavesCheckRange = 4;
 	
 	public TreeBase(Mat material)
@@ -40,14 +44,33 @@ public abstract class TreeBase implements ITree
 	{
 		return material.name;
 	}
+	
+	public void decodeDNA(TreeInfo biology, String dna)
+	{
+		helper.decodeDNA(biology, dna);
+	}
+	
+	public String makeNativeDNA()
+	{
+		return helper.nativeDNA;
+	}
 
-	public abstract void decodeDNA(TreeInfo biology, String dna);
+	public String makeChildDNA(int generation, String par)
+	{
+		return helper.borderDNA(par, harmonic(generation, 2.5E-2, 1.0));
+	}
 
-	public abstract String makeNativeDNA();
+	protected float harmonic(int x, double chance, double mul)
+	{
+		if(x <= 0) return 0F;
+		x += 1;
+		return 1F / (float) (1D / (Math.log(x) * mul) + 1D / chance);
+	}
 
-	public abstract String makeChildDNA(int generation, String par);
-
-	public abstract String makeOffspringDNA(String par1, String par2);
+	public String makeOffspringDNA(String par1, String par2)
+	{
+		return helper.mixedDNA(par1, par2);
+	}
 
 	@Override
 	public Mat material()
@@ -170,6 +193,10 @@ public abstract class TreeBase implements ITree
 	
 	private void checkLeaves(int length, World world, int x, int y, int z, int ofX, int ofY, int ofZ, int[][][] flags)
 	{
+		if(flags[length + ofX][length + ofY][length + ofZ] != 0)
+		{
+			return;
+		}
 		int v = 0;
 		if(canLeaveGrowNearby(world, x + ofX, y + ofY, z + ofZ))
 		{
@@ -296,9 +323,8 @@ public abstract class TreeBase implements ITree
 		return list;
 	}
 
-	public abstract boolean canGenerateTreeAt(World world, int x, int y, int z, TreeInfo info);
-
-	public abstract void generateTreeAt(World world, int x, int y, int z, TreeInfo info);
+	@Override
+	public abstract boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info);
 
 	@Override
 	public int onSaplingUpdate(ISaplingAccess access)
@@ -310,5 +336,20 @@ public abstract class TreeBase implements ITree
 	public int getGrowAge()
 	{
 		return 80;
+	}
+	
+	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, float generateCoreLeavesChance, TreeInfo info)
+	{
+		meta &= 0x7;
+		int state = V.generateState ? 2 : 3;
+		if(world.rand.nextDouble() <= generateCoreLeavesChance)
+		{
+			world.setBlock(x, y, z, leavesCore, meta, state);
+			U.Worlds.setTileEntity(world, x, y, z, new TECoreLeaves(this, info), !V.generateState);
+		}
+		else
+		{
+			world.setBlock(x, y, z, leaves, meta, state);
+		}
 	}
 }
