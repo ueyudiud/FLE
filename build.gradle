@@ -90,3 +90,33 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+    manifest {
+        //attributes 'FMLCorePlugin': 'WhateverLoaderClass'
+        //attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
+task coreJar(type: Jar, dependsOn: 'jar') {
+    classifier = 'core'
+    from (sourceSets.main.output) {
+        include "**/farcore/**"
+    }
+}
+
+jar {
+    exclude "**/debug/**"
+    manifest {
+        //attributes 'FMLCorePlugin': 'farcore.override.FarOverrideLoadingPlugin',
+        //'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
+artifacts {
+	archives deobfJar
+	archives coreJar
+}
