@@ -22,11 +22,11 @@ public class Debug
 	public static final Mat peridotite = new Mat(7013, "farcore", "peridotite", "Peridotite", "Peridotite").setTag(ROCK);
 	public static final Mat rhyolite = new Mat(7014, "farcore", "rhyolite", "Rhyolite", "Rhyolite").setTag(ROCK);
 	public static final Mat graniteP = new Mat(7015, "farcore", "graniteP", "GranitePegmatite", "Granite Pegmatite").setTag(ROCK);
-
+	
 	public static void main(String[] args)
 	{
-		String srcDirName = "D:/Program Files/minecraft/f/forge-1.10.2-12.18.1.2011-mdk/src/main/resources/assets/farcore/textures/blocks/A";
-		String destDirName = "D:/Program Files/minecraft/f/forge-1.10.2-12.18.1.2011-mdk/src/main/resources/assets/farcore/textures/blocks/rock";
+		String srcDirName = "";
+		String destDirName = "";
 		String formatName = "chiseled.png";
 		TextureCopier.copyTarget(srcDirName, destDirName, formatName);
 		//		for (Mat material : Mat.register)
