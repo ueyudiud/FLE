@@ -1,103 +1,85 @@
 package farcore.lib.block.instance;
 
+import farcore.data.EnumSlabState;
+import farcore.lib.block.BlockBase;
 import farcore.lib.block.ItemBlockBase;
 import farcore.lib.util.Direction;
-import farcore.util.U;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemBlockSlab extends ItemBlockBase
 {
-	public ItemBlockSlab(Block block)
+	public ItemBlockSlab(BlockBase block)
 	{
 		super(block);
 	}
 
-	/**
-	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
-	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
-	 */
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
+			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		Block block = world.getBlock(x, y, z);
+		IBlockState iblockstate = worldIn.getBlockState(pos);
+		Block block = iblockstate.getBlock();
 
-		if(block == this.block)
+		if (block == this.block)
 		{
-			int meta = world.getBlockMetadata(x, y, z);
-			if(meta == Direction.oppsite[side])
+			EnumSlabState slabState = iblockstate.getValue(EnumSlabState.PROPERTY);
+			if(Direction.oppsite[facing.ordinal()] == slabState.ordinal())
 			{
-				if (stack.stackSize == 0 || !player.canPlayerEdit(x, y, z, side, stack) ||
-						y == 255)
-					return false;
-				if(meta == 0 || meta == 1)
+				if (stack.stackSize == 0 || !playerIn.canPlayerEdit(pos, facing, stack) ||
+						pos.getY() == 255)
+					return EnumActionResult.FAIL;
+				EnumSlabState state = EnumSlabState.double_ud;
+				switch (slabState)
 				{
-					if(world.setBlockMetadataWithNotify(x, y, z, 6, 3))
-					{
-						world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, field_150939_a.stepSound.func_150496_b(), (field_150939_a.stepSound.getVolume() + 1.0F) / 2.0F, field_150939_a.stepSound.getPitch() * 0.8F);
-						--stack.stackSize;
-					}
-					return true;
+				case north :
+				case south :
+					state = EnumSlabState.double_ns;
+					break;
+				case east :
+				case west :
+					state = EnumSlabState.double_we;
+					break;
+				default:
+					break;
 				}
-				else if(meta == 2 || meta == 3)
+				if(worldIn.setBlockState(pos, iblockstate.withProperty(EnumSlabState.PROPERTY, state), 3))
 				{
-					if(world.setBlockMetadataWithNotify(x, y, z, 7, 3))
-					{
-						world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, field_150939_a.stepSound.func_150496_b(), (field_150939_a.stepSound.getVolume() + 1.0F) / 2.0F, field_150939_a.stepSound.getPitch() * 0.8F);
-						--stack.stackSize;
-					}
-					return true;
+					SoundType soundtype = this.block.getSoundType();
+					worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+					--stack.stackSize;
+					return EnumActionResult.SUCCESS;
 				}
-				else if(meta == 4 || meta == 5)
-				{
-					if(world.setBlockMetadataWithNotify(x, y, z, 8, 3))
-					{
-						world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, field_150939_a.stepSound.func_150496_b(), (field_150939_a.stepSound.getVolume() + 1.0F) / 2.0F, field_150939_a.stepSound.getPitch() * 0.8F);
-						--stack.stackSize;
-					}
-					return true;
-				}
-				return true;
-			}
-			else
-			{
-				Direction direction = Direction.directions[side];
-				x += direction.x;
-				y += direction.y;
-				z += direction.z;
+				return EnumActionResult.FAIL;
 			}
 		}
-		else if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, z) & 7) < 1)
-			side = 1;
-		else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush
-				&& !block.isReplaceable(world, x, y, z))
-		{
-			Direction direction = Direction.directions[side];
-			x += direction.x;
-			y += direction.y;
-			z += direction.z;
-		}
+		if (!block.isReplaceable(worldIn, pos))
+			pos = pos.offset(facing);
 
-		if (stack.stackSize == 0 || !player.canPlayerEdit(x, y, z, side, stack) ||
-				(y == 255 && block.getMaterial().isSolid()))
-			return false;
-		else if (world.canPlaceEntityOnSide(block, x, y, z, false, side, player, stack))
+		if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, facing, stack) && worldIn.canBlockBePlaced(this.block, pos, false, facing, (Entity)null, stack))
 		{
-			int i1 = getMetadata(stack.getItemDamage());
-			int j1 = this.block.onBlockPlaced(world, x, y, z, U.Worlds.fixSide(side, hitX, hitY, hitZ), hitX, hitY, hitZ, i1);
+			int i = this.getMetadata(stack.getMetadata());
+			IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn);
 
-			if (placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, j1))
+			if (placeBlockAt(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1))
 			{
-				world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, field_150939_a.stepSound.func_150496_b(), (field_150939_a.stepSound.getVolume() + 1.0F) / 2.0F, field_150939_a.stepSound.getPitch() * 0.8F);
+				SoundType soundtype = this.block.getSoundType();
+				worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 				--stack.stackSize;
 			}
-
-			return true;
+			return EnumActionResult.SUCCESS;
 		}
 		else
-			return false;
+			return EnumActionResult.FAIL;
 	}
 }

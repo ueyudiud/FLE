@@ -1,93 +1,61 @@
 package farcore.lib.block.instance;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import farcore.lib.block.BlockBase;
-import farcore.lib.block.ItemBlockBase;
+import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
-import farcore.lib.util.INamedIconRegister;
-import net.minecraft.block.BlockFire;
+import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.IIcon;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockLog extends BlockBase
 {
-	protected ITree information;
-	
-	protected BlockLog(ITree information, String name)
+	public ITree tree;
+
+	protected BlockLog(String name, Mat material, ITree tree)
 	{
-		super(name, Material.wood);
-		this.information = information;
-	}
-	
-	@Override
-	public String getHarvestTool(int metadata)
-	{
-		return "axe";
-	}
-	
-	@Override
-	public int getHarvestLevel(int metadata)
-	{
-		return 0;
-	}
-	
-	@Override
-	public String getTranslateNameForItemStack(int metadata)
-	{
-		return getUnlocalizedName() + "@" + (metadata >> 2);
-	}
-	
-	@Override
-	public boolean isToolEffective(String type, int metadata)
-	{
-		return "axe".equals(type);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	protected void registerIcon(INamedIconRegister register)
-	{
-		information.registerLogIcon(register);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	protected IIcon getIcon(int side, int meta, INamedIconRegister register)
-	{
-		return information.getLogIcon(register, meta, side);
-	}
-	
-	@Override
-	public int damageDropped(int meta)
-	{
-		return meta & (~0x3);
+		super(material.modid, name, Material.WOOD);
+		this.tree = tree;
 	}
 
 	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side,
-			float hitX, float hitY, float hitZ, int meta)
+	public String getHarvestTool(IBlockState state)
 	{
-		meta &= (~0x3);
-//		if(side == 0 || side == 1)
-//		{
-//			meta |= 0x0;
-//		}
-//		else 
-			if(side == 2 || side == 3)
-		{
-			meta |= 0x1;
-		}
-		else if(side == 4 || side == 5)
-		{
-			meta |= 0x2;
-		}
-		return meta;
+		return "axe";
 	}
-	
+
 	@Override
-	public boolean isWood(IBlockAccess world, int x, int y, int z)
+	public boolean isToolEffective(String type, IBlockState state)
+	{
+		return getHarvestTool(state).equals(type);
+	}
+
+	@Override
+	public String getTranslateNameForItemStack(int metadata)
+	{
+		return super.getTranslateNameForItemStack(metadata >> 2);
+	}
+
+	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return 0;
+	}
+
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
+			int meta, EntityLivingBase placer)
+	{
+		EnumAxis axis = EnumAxis.fromFacingAxis(facing.getAxis());
+		return getDefaultState().withProperty(net.minecraft.block.BlockLog.LOG_AXIS, axis);
+	}
+
+	@Override
+	public boolean isWood(IBlockAccess world, BlockPos pos)
 	{
 		return true;
 	}

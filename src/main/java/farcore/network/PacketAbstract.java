@@ -2,13 +2,13 @@ package farcore.network;
 
 import java.io.IOException;
 
-import cpw.mods.fml.relauncher.Side;
-import farcore.lib.io.DataStream;
 import farcore.util.U;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class PacketAbstract implements IPacket
 {
@@ -36,29 +36,28 @@ public abstract class PacketAbstract implements IPacket
 	@Override
 	public EntityPlayer getPlayer()
 	{
-		return (EntityPlayer) 
-				((handler instanceof NetHandlerPlayServer) ? 
-						((NetHandlerPlayServer) handler).playerEntity : 
-							U.Players.player());
+		return (handler instanceof NetHandlerPlayServer) ?
+				((NetHandlerPlayServer) handler).playerEntity :
+					U.Players.player();
 	}
-	
+
 	@Override
 	public ByteBuf encode(ByteBuf buf) throws IOException
 	{
-		encode(new DataStream(buf));
+		encode(new PacketBuffer(buf));
 		return buf;
 	}
-	
-	protected abstract void encode(DataStream output) throws IOException;
+
+	protected abstract void encode(PacketBuffer output) throws IOException;
 
 	@Override
 	public void decode(ByteBuf buf) throws IOException
 	{
-		decode(new DataStream(buf));
+		decode(new PacketBuffer(buf));
 	}
 
-	protected abstract void decode(DataStream input) throws IOException;
-	
+	protected abstract void decode(PacketBuffer input) throws IOException;
+
 	@Override
 	public boolean needToSend()
 	{

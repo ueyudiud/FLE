@@ -12,8 +12,8 @@ public enum EnumBlock
 
 	static
 	{
-		water.block = Blocks.water;
-		fire.block = Blocks.fire;
+		water.block = Blocks.WATER;
+		fire.block = Blocks.FIRE;
 	}
 
 	public Block block;

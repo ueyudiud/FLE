@@ -3,6 +3,7 @@ package farcore.lib.block;
 import java.util.Random;
 
 import farcore.lib.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface IBurnCustomBehaviorBlock
@@ -17,7 +18,7 @@ public interface IBurnCustomBehaviorBlock
 	 * @param direction
 	 * @return True to prevent classic fire behavior.
 	 */
-	boolean onBurn(World world, int x, int y, int z, float burnHardness, Direction direction);
+	boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction);
 
 	/**
 	 * Called on burning tick.
@@ -28,7 +29,7 @@ public interface IBurnCustomBehaviorBlock
 	 * @return return true to prevent check whether the block will
 	 *  be removed.
 	 */
-	boolean onBurningTick(World world, int x, int y, int z, Random rand, Direction fireSourceDir);
+	boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir);
 
 	/**
 	 * Called when checking whether the block can be burned,
@@ -40,7 +41,7 @@ public interface IBurnCustomBehaviorBlock
 	 * @param z
 	 * @return
 	 */
-	default boolean canBeBurned(World world, int x, int y, int z)
+	default boolean canBeBurned(World world, BlockPos pos)
 	{
 		return true;
 	}
@@ -54,7 +55,7 @@ public interface IBurnCustomBehaviorBlock
 	 * @param z
 	 * @return
 	 */
-	float getThermalConduct(World world, int x, int y, int z);
+	float getThermalConduct(World world, BlockPos pos);
 
 	/**
 	 * Get encouragement of hardness of fire burning.<br>
@@ -67,5 +68,5 @@ public interface IBurnCustomBehaviorBlock
 	 * @param z
 	 * @return
 	 */
-	int getFireEncouragement(World world, int x, int y, int z);
+	int getFireEncouragement(World world, BlockPos pos);
 }

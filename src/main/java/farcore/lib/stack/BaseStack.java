@@ -4,21 +4,21 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class BaseStack implements AbstractStack
 {
 	public static final BaseStack EMPTY = new BaseStack((ItemStack) null);
-	
+
 	public static BaseStack sizeOf(BaseStack stack, int size)
 	{
 		return size <= 0 ? null : new BaseStack(stack.stack, size, stack.useContainer);
 	}
-	
+
 	private ImmutableList<ItemStack> list;
 	private ItemStack stack;
 	private boolean useContainer;
@@ -31,9 +31,7 @@ public class BaseStack implements AbstractStack
 	{
 		Item item = GameRegistry.findItem(modid, name);
 		if(item != null)
-		{
 			stack = new ItemStack(item, size, meta);
-		}
 		useContainer = false;
 	}
 	public BaseStack(Block block)
@@ -47,9 +45,7 @@ public class BaseStack implements AbstractStack
 	public BaseStack(Block block, int size, int meta)
 	{
 		if(block != null)
-		{
 			stack = new ItemStack(block, size, meta);
-		}
 		useContainer = false;
 	}
 	public BaseStack(Item item)
@@ -63,9 +59,7 @@ public class BaseStack implements AbstractStack
 	public BaseStack(Item item, int size, int meta)
 	{
 		if(item != null)
-		{
 			stack = new ItemStack(item, size, meta);
-		}
 		useContainer = false;
 	}
 	public BaseStack(ItemStack stack)
@@ -103,7 +97,7 @@ public class BaseStack implements AbstractStack
 		}
 		this.useContainer = useContainer;
 	}
-	
+
 	@Override
 	public boolean similar(ItemStack stack)
 	{
@@ -124,7 +118,7 @@ public class BaseStack implements AbstractStack
 		return this.stack == null ? 0 :
 			this.stack.stackSize;
 	}
-	
+
 	@Override
 	public AbstractStack split(ItemStack stack)
 	{
@@ -138,9 +132,7 @@ public class BaseStack implements AbstractStack
 		{
 			ItemStack ret = stack.copy();
 			if(ret.getItemDamage() == OreDictionary.WILDCARD_VALUE)
-			{
 				ret.setItemDamage(0);
-			}
 			return ret;
 		}
 		return null;
@@ -150,16 +142,10 @@ public class BaseStack implements AbstractStack
 	public List<ItemStack> display()
 	{
 		if(list == null)
-		{
 			if(stack != null)
-			{
 				list = ImmutableList.of(stack.copy());
-			}
 			else
-			{
 				list = ImmutableList.of();
-			}
-		}
 		return list;
 	}
 
@@ -180,26 +166,22 @@ public class BaseStack implements AbstractStack
 	{
 		return "[" + stack.getUnlocalizedName() + "]" + "x" + stack.stackSize;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		return stack == null ? 31 :
 			stack.getItem().hashCode() * 31 + stack.getItemDamage();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(stack == null) return obj == EMPTY;
 		if(obj == this)
-		{
 			return true;
-		}
 		else if(!(obj instanceof BaseStack))
-		{
 			return false;
-		}
 		BaseStack stack1 = (BaseStack) obj;
 		return ItemStack.areItemStacksEqual(stack, stack1.stack) && useContainer == stack1.useContainer;
 	}

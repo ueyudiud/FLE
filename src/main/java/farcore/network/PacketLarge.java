@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import cpw.mods.fml.relauncher.Side;
 import farcore.lib.util.Log;
 import farcore.util.U;
 import io.netty.buffer.ByteBuf;
@@ -12,21 +11,22 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketLarge implements IPacket
 {
 	protected Side side;
 	protected INetHandler handler;
-	
+
 	private byte[] bs;
 	private static volatile ByteBuf largePacketCache;
-	
+
 	private int id = 0;
 	private boolean flag = false;
 
 	public PacketLarge()
 	{
-		
+
 	}
 	public PacketLarge(byte[] arrays)
 	{
@@ -54,12 +54,11 @@ public class PacketLarge implements IPacket
 	@Override
 	public EntityPlayer getPlayer()
 	{
-		return (EntityPlayer) 
-				((handler instanceof NetHandlerPlayServer) ? 
-						((NetHandlerPlayServer) handler).playerEntity : 
-							U.Players.player());
+		return (handler instanceof NetHandlerPlayServer) ?
+				((NetHandlerPlayServer) handler).playerEntity :
+					U.Players.player();
 	}
-	
+
 	@Override
 	public ByteBuf encode(ByteBuf buf) throws IOException
 	{
@@ -77,21 +76,15 @@ public class PacketLarge implements IPacket
 		int type = stream.readInt();
 		id = type >> 2;
 		if((type & 0x1) != 0)
-		{
 			largePacketCache = Unpooled.buffer();
-		}
 		byte[] buffer = new byte[4096];
-        int len;
-        while ((len = stream.read(buffer)) != -1)
-        {
-        	largePacketCache.writeBytes(buffer, 0, len);
-        }
+		int len;
+		while ((len = stream.read(buffer)) != -1)
+			largePacketCache.writeBytes(buffer, 0, len);
 		if((type & 0x2) != 0)
-		{
 			flag = true;
-		}
 	}
-	
+
 	@Override
 	public IPacket process(Network network)
 	{
@@ -107,7 +100,7 @@ public class PacketLarge implements IPacket
 		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean needToSend()
 	{

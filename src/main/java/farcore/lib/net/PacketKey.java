@@ -3,28 +3,28 @@ package farcore.lib.net;
 import java.io.IOException;
 
 import farcore.handler.FarCoreKeyHandler;
-import farcore.lib.io.DataStream;
 import farcore.network.IPacket;
 import farcore.network.Network;
 import farcore.network.PacketAbstract;
+import net.minecraft.network.PacketBuffer;
 
 public class PacketKey extends PacketAbstract
 {
 	long values;
-	
+
 	public PacketKey(long value)
 	{
-		this.values = value;
+		values = value;
 	}
 
 	@Override
-	protected void encode(DataStream output) throws IOException
+	protected void encode(PacketBuffer output) throws IOException
 	{
 		output.writeLong(values);
 	}
 
 	@Override
-	protected void decode(DataStream input) throws IOException
+	protected void decode(PacketBuffer input) throws IOException
 	{
 		values = input.readLong();
 	}

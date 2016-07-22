@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import farcore.FarCore;
 import farcore.lib.collection.Register;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.ISubTagContainer;
@@ -142,12 +141,12 @@ public class MatCondition
 
 	public String translateToLocal()
 	{
-		return FarCore.translateToLocal(getTranslateName());
+		return LanguageManager.translateToLocal(getTranslateName());
 	}
 
 	public String translateToLocal(Mat material)
 	{
-		return FarCore.translateToLocal(getWithOreTranslateName(), material.getLocalName());
+		return LanguageManager.translateToLocal(getWithOreTranslateName(), material.getLocalName());
 	}
 
 	public String getLocal(Mat material)
@@ -157,6 +156,6 @@ public class MatCondition
 
 	public String translateToLocal(String ore)
 	{
-		return FarCore.translateToLocal(getWithOreTranslateName(), ore);
+		return LanguageManager.translateToLocal(getWithOreTranslateName(), ore);
 	}
 }

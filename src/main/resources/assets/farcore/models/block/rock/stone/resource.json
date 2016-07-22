@@ -1,0 +1,6 @@
+{
+	"parent":"base_simple",
+	"textures": {
+		"all": "farcore:blocks/rock/stone/resource"
+	}
+}

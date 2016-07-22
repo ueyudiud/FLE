@@ -5,17 +5,18 @@ import farcore.lib.tile.ISynchronizableTile;
 import farcore.network.IPacket;
 import farcore.network.Network;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PacketTESAskRender extends PacketBlockCoord
 {
 	public PacketTESAskRender()
 	{
-		
+
 	}
-	public PacketTESAskRender(World world, int x, int y, int z)
+	public PacketTESAskRender(World world, BlockPos pos)
 	{
-		super(world, x, y, z);
+		super(world, pos);
 	}
 
 	@Override
@@ -24,11 +25,9 @@ public class PacketTESAskRender extends PacketBlockCoord
 		World world = world();
 		if(world != null)
 		{
-			TileEntity tile = world.getTileEntity(x, y, z);
+			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof ISynchronizableTile)
-			{
 				((ISynchronizableTile) tile).markBlockRenderUpdate();
-			}
 		}
 		return null;
 	}

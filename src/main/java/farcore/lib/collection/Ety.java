@@ -8,7 +8,7 @@ public class Ety<K, V> implements Entry<K, V>
 {
 	K key;
 	V value;
-	
+
 	public Ety(K key, V value)
 	{
 		this.key = key;
@@ -34,13 +34,13 @@ public class Ety<K, V> implements Entry<K, V>
 		this.value = value;
 		return ret;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		return key.hashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -48,7 +48,7 @@ public class Ety<K, V> implements Entry<K, V>
 		else if(!(obj instanceof Entry)) return false;
 		else return U.L.equal(key, ((Entry) obj).getKey());
 	}
-	
+
 	@Override
 	public String toString()
 	{

@@ -3,16 +3,16 @@ package farcore.lib.tile;
 import java.util.Random;
 
 import farcore.FarCore;
-import farcore.data.V;
 import farcore.lib.util.Direction;
-import farcore.lib.util.Log;
 import farcore.lib.world.ICoord;
 import farcore.network.IPacket;
 import farcore.util.U;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TEBase extends TileEntity implements ICoord
@@ -51,45 +51,6 @@ public class TEBase extends TileEntity implements ICoord
 		return worldObj == null ? U.Sides.isSimulating() : !worldObj.isRemote;
 	}
 
-	@Override
-	public final void updateEntity()
-	{
-		try
-		{
-			isUpdating = false;
-			updateEntity1();
-			isUpdating = true;
-		}
-		catch(Exception exception)
-		{
-			if(worldObj != null)
-				if(!worldObj.isRemote)
-				{
-					Log.error("Tile entity throws an exception during ticking in the world, "
-						+ "if your enable the option of remove errored tile, this tile will "
-						+ "be removed soon. Please report this bug to modder.", exception);
-					if(V.removeErroredTile)
-						removeBlock();
-					else
-						throw exception;
-				}
-				else
-					Log.warn("The tile might disconnect from server caused an exception, "
-							+ "if not, please report this bug to modder. If you are playing "
-							+ "client world, this exception might cause this world can not "
-							+ "load next time, if you can not load the world second time, "
-							+ "you can try to remove errored block.", exception);
-			else
-				Log.warn("Tile entity throws an exception when not ticking in the world. "
-						+ "Something might update out of world!", exception);
-		}
-	}
-
-	protected void updateEntity1()
-	{
-
-	}
-
 	public void sendToAll(IPacket player)
 	{
 		if(worldObj != null)
@@ -117,13 +78,13 @@ public class TEBase extends TileEntity implements ICoord
 	public void sendToNearby(IPacket packet, float range)
 	{
 		if(worldObj != null)
-			FarCore.network.sendToNearBy(packet, worldObj.provider.dimensionId, xCoord, yCoord, zCoord, range);
+			FarCore.network.sendToNearBy(packet, this, range);
 	}
 
 	public void sendToDim(IPacket packet)
 	{
 		if(worldObj != null)
-			sendToDim(packet, worldObj.provider.dimensionId);
+			sendToDim(packet, worldObj.provider.getDimension());
 	}
 
 	public void sendToDim(IPacket packet, int dim)
@@ -132,10 +93,50 @@ public class TEBase extends TileEntity implements ICoord
 			FarCore.network.sendToDim(packet, dim);
 	}
 
+	public void syncToAll()
+	{
+
+	}
+
+	public void syncToDim()
+	{
+
+	}
+
+	public void syncToNearby()
+	{
+
+	}
+
+	public void syncToPlayer(EntityPlayer player)
+	{
+
+	}
+
+	public void markBlockUpdate()
+	{
+		worldObj.notifyBlockOfStateChange(pos, getBlockType());
+	}
+
+	public void markBlockRenderUpdate()
+	{
+		worldObj.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
+	}
+
 	@Override
+	public double getDistanceSq(double x, double y, double z)
+	{
+		return super.getDistanceSq(x, y, z);
+	}
+
 	public double getDistanceFrom(double x, double y, double z)
 	{
-		return super.getDistanceFrom(x, y, z);
+		return Math.sqrt(getDistanceSq(x, y, z));
+	}
+
+	public double getDistanceSq(Entity entity)
+	{
+		return getDistanceSq(entity.posX, entity.posY, entity.posZ);
 	}
 
 	public double getDistanceFrom(Entity entity)
@@ -168,22 +169,22 @@ public class TEBase extends TileEntity implements ICoord
 	public boolean matchBlock(int frontOffset, int lrOffset, int udOffset, Direction direction, Block block, int meta, boolean ignoreUnloadChunk)
 	{
 		if(worldObj == null) return false;
-		int x = xCoord + frontOffset * direction.x + lrOffset * direction.z;
-		int y = yCoord + udOffset;
-		int z = zCoord + frontOffset * direction.z + lrOffset * direction.x;
+		int x = frontOffset * direction.x + lrOffset * direction.z;
+		int y = udOffset;
+		int z = frontOffset * direction.z + lrOffset * direction.x;
 		return matchBlock(x, y, z, block, meta, ignoreUnloadChunk);
 	}
 
 	public boolean matchBlock(int offsetX, int offsetY, int offsetZ, Block block, int meta, boolean ignoreUnloadChunk)
 	{
 		return worldObj == null ? false :
-			U.Worlds.isBlock(worldObj, xCoord + offsetX, yCoord + offsetY, zCoord + offsetZ, block, meta, ignoreUnloadChunk);
+			U.Worlds.isBlock(worldObj, pos.add(offsetX, offsetY, offsetZ), block, meta, ignoreUnloadChunk);
 	}
 
 	public boolean matchBlockNearby(int offsetX, int offsetY, int offsetZ, Block block, int meta, boolean ignoreUnloadChunk)
 	{
 		return worldObj == null ? false :
-			U.Worlds.isBlockNearby(worldObj, xCoord + offsetX, yCoord + offsetY, zCoord + offsetZ, block, meta, ignoreUnloadChunk);
+			U.Worlds.isBlockNearby(worldObj, pos.add(offsetX, offsetY, offsetZ), block, meta, ignoreUnloadChunk);
 	}
 
 	public void removeBlock()
@@ -193,11 +194,11 @@ public class TEBase extends TileEntity implements ICoord
 
 	public void removeBlock(int xOffset, int yOffset, int zOffset)
 	{
-		worldObj.removeTileEntity(xCoord + xOffset, yCoord + yOffset, zCoord + zOffset);
-		worldObj.setBlockToAir(xCoord + xOffset, yCoord + yOffset, zCoord + zOffset);
+		worldObj.removeTileEntity(pos.add(xOffset, yOffset, zOffset));
+		worldObj.setBlockToAir(pos.add(xOffset, yOffset, zOffset));
 	}
 
-	public void onBlockBreak(Block block, int meta)
+	public void onBlockBreak(IBlockState state)
 	{
 
 	}
@@ -214,33 +215,29 @@ public class TEBase extends TileEntity implements ICoord
 
 	public boolean canBlockStay()
 	{
-		return worldObj == null ? true : getBlockType().canBlockStay(worldObj, xCoord, yCoord, zCoord);
+		return worldObj == null ? true :
+			getBlockType().canPlaceBlockAt(worldObj, pos);
 	}
 
-	public Block getBlock(int xOffset, int yOffset, int zOffset)
+	public IBlockState getBlock(int xOffset, int yOffset, int zOffset)
 	{
-		return worldObj.getBlock(xCoord + xOffset, yCoord + yOffset, zCoord + zOffset);
+		return worldObj.getBlockState(pos.add(xOffset, yOffset, zOffset));
 	}
 
 	public TileEntity getTile(int xOffset, int yOffset, int zOffset)
 	{
-		return worldObj.getTileEntity(xCoord + xOffset, yCoord + yOffset, zCoord + zOffset);
+		return worldObj.getTileEntity(pos.add(xOffset, yOffset, zOffset));
 	}
 
-	public boolean isCatchRain()
+	public boolean isAirNearby(boolean ignoreUnloadChunk)
 	{
-		return U.Worlds.isCatchingRain(worldObj, xCoord, yCoord, zCoord);
+		return U.Worlds.isAirNearby(worldObj, pos, ignoreUnloadChunk);
 	}
 
-//	public float getBaseTemperature()
-//	{
-//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
-//	}
-//
-//	public float getRainfall()
-//	{
-//		return worldObj.getBiomeGenForCoords(xCoord, zCoord).rainfall;
-//	}
+	public boolean isCatchRain(boolean checkNeayby)
+	{
+		return U.Worlds.isCatchingRain(worldObj, pos, checkNeayby);
+	}
 
 	@Override
 	public World world()
@@ -249,14 +246,8 @@ public class TEBase extends TileEntity implements ICoord
 	}
 
 	@Override
-	public double[] coordD()
+	public BlockPos pos()
 	{
-		return new double[]{xCoord + 0.5, yCoord + 0.5, zCoord + 0.5};
-	}
-
-	@Override
-	public int[] coordI()
-	{
-		return new int[]{xCoord, yCoord, zCoord};
+		return pos;
 	}
 }

@@ -1,19 +1,21 @@
 package farcore.lib.block;
 
 import farcore.lib.entity.EntityFallingBlockExtended;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface ISmartFallableBlock
 {
-	void onStartFalling(World world, int x, int y, int z);
-	
-	boolean canFallingBlockStay(World world, int x, int y, int z, int meta);
-	
-	boolean onFallOnGround(World world, int x, int y, int z, int meta, int height, NBTTagCompound tileNBT);
-	
-	boolean onDropFallenAsItem(World world, int x, int y, int z, int meta, NBTTagCompound tileNBT);
+	void onStartFalling(World world, BlockPos pos);
+
+	boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state);
+
+	boolean onFallOnGround(World world, BlockPos pos, IBlockState state, int height, NBTTagCompound tileNBT);
+
+	boolean onDropFallenAsItem(World world, BlockPos pos, IBlockState state, NBTTagCompound tileNBT);
 
 	/**
 	 * Called when block fall on an entity.

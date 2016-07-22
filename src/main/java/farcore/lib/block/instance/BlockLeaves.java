@@ -1,50 +1,77 @@
 package farcore.lib.block.instance;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCore;
 import farcore.data.EnumToolType;
 import farcore.lib.block.BlockBase;
-import farcore.lib.block.IBurnCustomBehaviorBlock;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
 import farcore.lib.util.Direction;
-import farcore.lib.util.INamedIconRegister;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockLeaves extends BlockBase
-implements IShearable, IToolableBlock, IBurnCustomBehaviorBlock
+public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 {
-	public ITree info;
+	public static BlockLeaves create(Mat material)
+	{
+		return new BlockLeaves(material, material.tree)
+		{
+			@Override
+			protected BlockStateContainer createBlockState()
+			{
+				return material.tree.createLeavesStateContainer(this);
+			}
 
-	public BlockLeaves(Mat material)
-	{
-		this("leaves." + material.name, material.tree, material.localName + " Leaves");
+			@Override
+			public int getMetaFromState(IBlockState state)
+			{
+				return material.tree.getLeavesMeta(state);
+			}
+
+			@Override
+			public IBlockState getStateFromMeta(int meta)
+			{
+				return material.tree.getLeavesState(this, meta);
+			}
+		};
 	}
-	public BlockLeaves(String name, ITree info, String localName)
+
+	public ITree tree;
+
+	BlockLeaves(Mat material, ITree tree)
 	{
-		super(name, Material.leaves);
-		this.info = info;
+		this("leaves." + material.name, tree, material.localName + " Leaves");
+	}
+	protected BlockLeaves(String name, ITree tree, String localName)
+	{
+		super(name, Material.LEAVES);
+		this.tree = tree;
 		setHardness(0.5F);
 		setResistance(0.02F);
 		setCreativeTab(FarCore.tabResourceBlock);
+		setLightOpacity(1);
+		setSoundType(SoundType.PLANT);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), localName);
 	}
 
@@ -56,205 +83,131 @@ implements IShearable, IToolableBlock, IBurnCustomBehaviorBlock
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected void registerIcon(INamedIconRegister register)
+	public boolean isOpaqueCube(IBlockState state)
 	{
-		info.registerLeavesIcon(register);
+		return !U.Client.shouldRenderBetterLeaves();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected IIcon getIcon(int side, int meta, INamedIconRegister register)
+	public BlockRenderLayer getBlockLayer()
 	{
-		return info.getLeavesIcon(register, meta, side);
+		return U.Client.shouldRenderBetterLeaves() ?
+				BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBlockColor()
-	{
-		double d0 = 0.5D;
-		double d1 = 1.0D;
-		return ColorizerFoliage.getFoliageColor(d0, d1);
-	}
-
-	/**
-	 * Returns the color this block should be rendered. Used by leaves.
-	 */
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderColor(int meta)
-	{
-		return ColorizerFoliage.getFoliageColorBasic();
-	}
-
-	/**
-	 * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
-	 * when first determining what to render.
-	 */
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
-	{
-		int l = 0;
-		int i1 = 0;
-		int j1 = 0;
-
-		for (int k1 = -1; k1 <= 1; ++k1)
-			for (int l1 = -1; l1 <= 1; ++l1)
-			{
-				int i2 = world.getBiomeGenForCoords(x + l1, z + k1).getBiomeFoliageColor(x + l1, y, z + k1);
-				l += (i2 & 0XFF0000) >> 16;
-			i1 += (i2 & 0XFF00) >> 8;
-			j1 += i2 & 0xFF;
-			}
-
-		return (l / 9 & 255) << 16 | (i1 / 9 & 255) << 8 | j1 / 9 & 255;
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		return null;
-	}
-
-	@Override
-	public boolean isOpaqueCube()
+	public boolean isVisuallyOpaque()
 	{
 		return false;
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z,
-			Block block)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+		return NULL_AABB;
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block,
-			int meta)
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
-		info.breakLeaves(world, x, y, z, meta);
+		if(world instanceof World && !((World) world).isRemote)
+			((World) world).scheduleUpdate(pos, this, tickRate((World) world));
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand)
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		info.updateLeaves(world, x, y, z, rand);
+		tree.breakLeaves(worldIn, pos, state);
 	}
 
 	@Override
-	public void beginLeavesDecay(World world, int x, int y, int z)
+	public void beginLeavesDecay(IBlockState state, World world, BlockPos pos)
 	{
-		info.beginLeavesDency(world, x, y, z);
-		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+		tree.beginLeavesDency(world, pos);
+		world.scheduleUpdate(pos, this, tickRate(world));
 	}
 
 	@Override
-	public int tickRate(World world)
+	public int tickRate(World worldIn)
 	{
-		return 12;
+		return 9;
 	}
 
-	/**
-	 * A randomly called display update to be able to add particles or other items for display
-	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World world, int x, int y, int z, Random random)
+	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
 	{
-		if (U.Worlds.isCatchingRain(world, x, y, z) && !World.doesBlockHaveSolidTopSurface(world, x, y - 1, z) && random.nextInt(15) == 1)
+		if (U.Worlds.isCatchingRain(worldIn, pos) && !worldIn.isSideSolid(pos.down(), EnumFacing.UP) && rand.nextInt(15) == 1)
 		{
-			double d0 = x + random.nextFloat();
-			double d1 = y - 0.05D;
-			double d2 = z + random.nextFloat();
-			world.spawnParticle("dripWater", d0, d1, d2, 0.0D, 0.0D, 0.0D);
+			double d0 = pos.getX() + rand.nextFloat();
+			double d1 = pos.getY() - 0.05D;
+			double d2 = pos.getZ() + rand.nextFloat();
+			worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune,
-			boolean silkTouching)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
+			boolean silkTouch)
 	{
-		return info.getLeavesDrops(world, x, y, z, metadata, fortune, silkTouching, new ArrayList());
+		return tree.getLeavesDrops(world, pos, state, fortune, silkTouch, new ArrayList());
 	}
 
 	@Override
-	public int damageDropped(int meta)
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean isShearable(ItemStack item, IBlockAccess world, int x, int y, int z)
-	{
-		return true;
-	}
-
-	@Override
-	public ArrayList<ItemStack> onSheared(ItemStack item, IBlockAccess world, int x, int y, int z, int fortune)
-	{
-		return new ArrayList(Arrays.asList(createStackedBlock(damageDropped(world.getBlockMetadata(x, y, z)))));
-	}
-
-	@Override
-	public float onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, int x, int y, int z,
-			int side, float hitX, float hitY, float hitZ)
-	{
-		return info.onToolClickLeaves(player, tool, stack, world, x, y, z, side, hitX, hitY, hitZ);
-	}
-
-	@Override
-	public float onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, int x,
-			int y, int z, int side, float hitX, float hitY, float hitZ)
-	{
-		return info.onToolUseLeaves(player, tool, stack, world, useTick, x, y, z, side, hitX, hitY, hitZ);
-	}
-
-	@Override
-	public boolean isLeaves(IBlockAccess world, int x, int y, int z)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean onBurn(World world, int x, int y, int z, float burnHardness, Direction direction)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean onBurningTick(World world, int x, int y, int z, Random rand, Direction fireSourceDir)
-	{
-		return false;
-	}
-
-	@Override
-	public float getThermalConduct(World world, int x, int y, int z)
-	{
-		return -1F;
-	}
-
-	@Override
-	public int getFireEncouragement(World world, int x, int y, int z)
+	public int damageDropped(IBlockState state)
 	{
 		return 0;
 	}
 
 	@Override
-	public boolean isFlammable(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
 	{
 		return true;
 	}
 
 	@Override
-	public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
+	{
+		List<ItemStack> stacks = new ArrayList();
+		stacks.add(createStackedBlock(world.getBlockState(pos)));
+		return stacks;
+	}
+
+	@Override
+	public float onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+			Direction side, float hitX, float hitY, float hitZ)
+	{
+		return tree.onToolClickLeaves(player, tool, stack, world, pos, side, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public float onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
+			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
+	{
+		return tree.onToolUseLeaves(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public boolean isLeaves(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
+	{
+		return true;
+	}
+
+	@Override
+	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return 50;
 	}
 
 	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return 80;
 	}

@@ -4,11 +4,12 @@ import java.util.Random;
 
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeGenAbstract;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TreeGenHuge extends TreeGenAbstract
 {
@@ -42,15 +43,17 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 
 	private boolean canHugeTreePlantAt(World world, Random rand, int x, int y, int z)
 	{
-		Block block = world.getBlock(x, y - 1, z);
+		BlockPos pos;
+		BlockPos pos1 = new BlockPos(x, y, z);
+		IBlockState state = world.getBlockState(pos = new BlockPos(x, y - 1, z));
 
-		boolean isSoil = block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, (BlockSapling) Blocks.sapling);
+		boolean isSoil = state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, (BlockSapling) Blocks.SAPLING);
 		if (isSoil && y >= 2)
 		{
-			block.onPlantGrow(world, x    , y - 1, z    , x, y, z);
-			world.getBlock(x + 1, y - 1, z    ).onPlantGrow(world, x + 1, y - 1, z    , x, y, z);
-			world.getBlock(x    , y - 1, z + 1).onPlantGrow(world, x    , y - 1, z + 1, x, y, z);
-			world.getBlock(x + 1, y - 1, z + 1).onPlantGrow(world, x + 1, y - 1, z + 1, x, y, z);
+			state.getBlock().onPlantGrow(state, world, pos, pos1);
+			(state = world.getBlockState((pos = pos.add(1, 0, 0)))).getBlock().onPlantGrow(state, world, pos, pos1);
+			(state = world.getBlockState((pos = pos.add(0, 0, 1)))).getBlock().onPlantGrow(state, world, pos, pos1);
+			(state = world.getBlockState((pos = pos.add(-1, 0, 0)))).getBlock().onPlantGrow(state, world, pos, pos1);
 			return true;
 		}
 		else

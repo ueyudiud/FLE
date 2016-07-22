@@ -5,16 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import farcore.FarCore;
-import farcore.FarCoreSetup;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.net.PacketKey;
@@ -24,9 +15,17 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FarCoreKeyHandler
-{	
+{
 	@SidedProxy(serverSide = "farcore.handler.FarCoreKeyHandler$KB", clientSide= "farcore.handler.FarCoreKeyHandler$KC")
 	private static KB keyRegister;
 
@@ -37,40 +36,36 @@ public class FarCoreKeyHandler
 	{
 		keyMap.remove(player);
 	}
-	
+
 	public static void reset(EntityPlayer player)
 	{
 		if(keyMap.containsKey(player))
-		{
 			keyMap.get(player).clear();
-		}
 	}
-	
+
 	public static void add(EntityPlayer player, String key)
 	{
 		if(!keyMap.containsKey(player))
-		{
 			keyMap.put(player, new ArrayList());
-		}
 		keyMap.get(player).add(key);
 	}
-	
+
 	public static boolean get(EntityPlayer player, String key)
 	{
 		return "sneak".equals(key) ? player.isSneaking() :
 			keyMap.containsKey(player) && keyMap.get(player).contains(key);
 	}
-	
+
 	public static void register(String name, int keycode)
 	{
 		register(name, keycode, U.Mod.getActiveModID());
 	}
-	
+
 	public static void register(String name, int keycode, String modid)
 	{
 		keyRegister.register(name, keycode, modid);
 	}
-	
+
 	public static class KB
 	{
 		public void register(String name, int keycode, String modid)
@@ -78,7 +73,7 @@ public class FarCoreKeyHandler
 			keys.register(name, null);
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class KC extends KB
 	{
@@ -90,29 +85,23 @@ public class FarCoreKeyHandler
 			keys.register(name, binding);
 		}
 	}
-	
+
 	@SideOnly(Side.SERVER)
 	public static void onServerRecieve(EntityPlayer player, long code)
 	{
 		reset(player);
 		for(int i = 0; i < keys.size(); ++i)
-		{
 			if((code & (1L << i)) != 0)
-			{
 				add(player, keys.name(i));
-			}
-		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerLogOut(PlayerLoggedOutEvent event)
 	{
 		if(!U.Sides.isClient())
-		{
 			remove(event.player);
-		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event)
@@ -126,30 +115,20 @@ public class FarCoreKeyHandler
 				{
 					long v = 0;
 					for(int i = 0; i < keys.size(); ++i)
-					{
 						if(GameSettings.isKeyDown(keys.get(i)))
-						{
 							v |= (1L << i);
-						}
-					}
 					FarCore.network.sendToServer(new PacketKey(v));
 				}
 				reset(U.Players.player());
 				for(int i = 0; i < keys.size(); ++i)
-				{
 					if(GameSettings.isKeyDown(keys.get(i)))
-					{
 						add(U.Players.player(), keys.name(i));
-					}
-				}
 			}
 		}
 		else
 		{
 			if(U.Sides.isSimulating())
-			{
 				FarCore.network.sendToServer(new PacketKey(0L));
-			}
 			reset(U.Players.player());
 		}
 	}

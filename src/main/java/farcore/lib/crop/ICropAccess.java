@@ -4,35 +4,34 @@ import java.util.Random;
 
 import farcore.lib.bio.IBiology;
 import farcore.lib.world.ICoord;
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.world.biome.Biome;
 
 public interface ICropAccess extends ICoord, IBiology
 {
 	ICrop crop();
-	
+
 	CropInfo info();
-	
-	BiomeGenBase biome();
-	
+
+	Biome biome();
+
 	boolean isWild();
-	
+
 	int stage();
-	
+
 	Random rng();
 
 	int getWaterLevel();
-	
+
 	void grow(int growth);
 
 	void setStage(int stage);
 
 	int useWater(int amount);
-	
-//	float temp();
+
+	//	float temp();
 
 	void killCrop();
 
-	Block getBlock(int offsetX, int offsetY, int offsetZ);
+	IBlockState getBlock(int offsetX, int offsetY, int offsetZ);
 }

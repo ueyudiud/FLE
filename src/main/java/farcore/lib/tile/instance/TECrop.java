@@ -10,10 +10,12 @@ import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.TEAged;
-import net.minecraft.block.Block;
+import farcore.lib.util.Direction;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 
 public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpdatableTile
 {
@@ -24,12 +26,12 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	private int stage;
 	private ICrop card = ICrop.VOID;
 	private CropInfo info;
-	
+
 	public TECrop()
 	{
-		
+
 	}
-	
+
 	public void initCrop(ICrop crop)
 	{
 		initCrop(0, crop.makeNativeDNA(), crop);
@@ -38,15 +40,15 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	}
 	public void initCrop(int generations, String dna, ICrop crop)
 	{
-		this.card = crop;
-		this.info = new CropInfo();
-		this.info.DNA = dna;
-		this.info.generations = generations;
+		card = crop;
+		info = new CropInfo();
+		info.DNA = dna;
+		info.generations = generations;
 		crop.decodeDNA(this, dna);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("water", waterLevel);
@@ -55,11 +57,10 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		nbt.setInteger("stage", stage);
 		nbt.setString("crop", card.getRegisteredName());
 		if(info != null)
-		{
 			info.writeToNBT(nbt);
-		}
+		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -72,7 +73,7 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		info = new CropInfo();
 		info.readFromNBT(nbt);
 	}
-	
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -86,7 +87,7 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
-	
+
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -107,13 +108,13 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 			info.readFromNBT(nbt.getCompoundTag("i"));
 		}
 	}
-	
+
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + card.tickUpdate(this);
 	}
-	
+
 	@Override
 	protected void updateServer1()
 	{
@@ -121,7 +122,7 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		card.onUpdate(this);
 		syncToNearby();
 	}
-	
+
 	@Override
 	public String getDNA()
 	{
@@ -139,11 +140,11 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	{
 		return info;
 	}
-	
+
 	@Override
-	public BiomeGenBase biome()
+	public Biome biome()
 	{
-		return worldObj.getBiomeGenForCoords(xCoord, zCoord);
+		return worldObj.getBiomeGenForCoords(pos);
 	}
 
 	@Override
@@ -151,13 +152,13 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	{
 		return isWild;
 	}
-	
+
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-	
+
 	@Override
 	public int stage()
 	{
@@ -170,7 +171,7 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		this.stage = stage;
 	}
 
-	
+
 	@Override
 	public void grow(int amt)
 	{
@@ -187,95 +188,95 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 			}
 		}
 	}
-	
+
 	@Override
 	protected int getRenderUpdateRange()
 	{
 		return 5;
 	}
-	
-//	@Override
-//	public int countWater(int rangeXZ, int rangeY, boolean checkSea)
-//	{
-//		int c = 0;
-//		int x = xCoord + rangeXZ, y = yCoord - rangeY, z = zCoord + rangeXZ;
-//		for(int i = xCoord - rangeXZ; i < x; ++i)
-//			for(int k = zCoord - rangeXZ; k < z; ++k)
-//			{
-//				if(!checkSea && worldObj.getBiomeGenForCoords(i, k).getTempCategory() == TempCategory.OCEAN)
-//					continue;
-//				for(int j = yCoord - 1; j >= y; --j)
-//				{
-//					Block block = worldObj.getBlock(i, j, k);
-//					if(block == EnumBlock.water.block())
-//					{
-//						c += ((BlockFluidBase) block).getQuantaValue(worldObj, i, j, k);
-//					}
-//				}
-//			}
-//		return c;
-//	}
-//	
-//	@Override
-//	public void absorbWater(int rangeXZ, int rangeY, int amount, boolean checkSea)
-//	{
-//		Block blockRaw = worldObj.getBlock(xCoord, yCoord - 1, zCoord);
-//		int c = 0;
-//		if(blockRaw instanceof IPlantedableBlock)
-//		{
-//			IPlantedableBlock block = (IPlantedableBlock) blockRaw;
-//			if(block.getWaterLevel(worldObj, xCoord, yCoord - 1, zCoord, checkSea) > 0)
-//			{
-//				c += block.absorbWater(worldObj, xCoord, yCoord - 1, zCoord, amount, checkSea);
-//			}
-//		}
-//		if(c != amount)
-//		{
-//			int x = xCoord + rangeXZ, y = yCoord - rangeY, z = zCoord + rangeXZ;
-//			label:
-//			for(int i = xCoord - rangeXZ; i < x; ++i)
-//				for(int k = zCoord - rangeXZ; k < z; ++k)
-//				{
-//					if(!checkSea && worldObj.getBiomeGenForCoords(i, k).getTempCategory() == TempCategory.OCEAN)
-//						continue;
-//					for(int j = yCoord - 1; j >= y; --j)
-//					{
-//						Block block = worldObj.getBlock(i, j, k);
-//						if(block == EnumBlock.water.block())
-//						{
-//							int value = ((BlockFluidBase) block).getQuantaValue(worldObj, i, j, k);
-//							((BlockStandardFluid) block).setQunataValue(worldObj, x, y, z, value - 1);
-//							c += Math.min(1000 * absorbEffiency, amount - c);
-//							if(c == amount) break label;
-//							break;
-//						}
-//					}
-//				}
-//		}
-//		waterLevel += c;
-//	}
-//		
-//	@Override
-//	public float getRainfall()
-//	{
-//		return U.Worlds.isCatchingRain(worldObj, xCoord, yCoord, zCoord) ?
-//				getBiome().getRainfall(worldObj, xCoord, yCoord, zCoord) *
-//				(1F + worldObj.rainingStrength * 4F) :
-//					getBiome().getRainfall(worldObj, xCoord, yCoord, zCoord);
-//	}
-//	
-//	@Override
-//	public float getTemp()
-//	{
-//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
-//	}
+
+	//	@Override
+	//	public int countWater(int rangeXZ, int rangeY, boolean checkSea)
+	//	{
+	//		int c = 0;
+	//		int x = xCoord + rangeXZ, y = yCoord - rangeY, z = zCoord + rangeXZ;
+	//		for(int i = xCoord - rangeXZ; i < x; ++i)
+	//			for(int k = zCoord - rangeXZ; k < z; ++k)
+	//			{
+	//				if(!checkSea && worldObj.getBiomeGenForCoords(i, k).getTempCategory() == TempCategory.OCEAN)
+	//					continue;
+	//				for(int j = yCoord - 1; j >= y; --j)
+	//				{
+	//					Block block = worldObj.getBlock(i, j, k);
+	//					if(block == EnumBlock.water.block())
+	//					{
+	//						c += ((BlockFluidBase) block).getQuantaValue(worldObj, i, j, k);
+	//					}
+	//				}
+	//			}
+	//		return c;
+	//	}
+	//
+	//	@Override
+	//	public void absorbWater(int rangeXZ, int rangeY, int amount, boolean checkSea)
+	//	{
+	//		Block blockRaw = worldObj.getBlock(xCoord, yCoord - 1, zCoord);
+	//		int c = 0;
+	//		if(blockRaw instanceof IPlantedableBlock)
+	//		{
+	//			IPlantedableBlock block = (IPlantedableBlock) blockRaw;
+	//			if(block.getWaterLevel(worldObj, xCoord, yCoord - 1, zCoord, checkSea) > 0)
+	//			{
+	//				c += block.absorbWater(worldObj, xCoord, yCoord - 1, zCoord, amount, checkSea);
+	//			}
+	//		}
+	//		if(c != amount)
+	//		{
+	//			int x = xCoord + rangeXZ, y = yCoord - rangeY, z = zCoord + rangeXZ;
+	//			label:
+	//			for(int i = xCoord - rangeXZ; i < x; ++i)
+	//				for(int k = zCoord - rangeXZ; k < z; ++k)
+	//				{
+	//					if(!checkSea && worldObj.getBiomeGenForCoords(i, k).getTempCategory() == TempCategory.OCEAN)
+	//						continue;
+	//					for(int j = yCoord - 1; j >= y; --j)
+	//					{
+	//						Block block = worldObj.getBlock(i, j, k);
+	//						if(block == EnumBlock.water.block())
+	//						{
+	//							int value = ((BlockFluidBase) block).getQuantaValue(worldObj, i, j, k);
+	//							((BlockStandardFluid) block).setQunataValue(worldObj, x, y, z, value - 1);
+	//							c += Math.min(1000 * absorbEffiency, amount - c);
+	//							if(c == amount) break label;
+	//							break;
+	//						}
+	//					}
+	//				}
+	//		}
+	//		waterLevel += c;
+	//	}
+	//
+	//	@Override
+	//	public float getRainfall()
+	//	{
+	//		return U.Worlds.isCatchingRain(worldObj, xCoord, yCoord, zCoord) ?
+	//				getBiome().getRainfall(worldObj, xCoord, yCoord, zCoord) *
+	//				(1F + worldObj.rainingStrength * 4F) :
+	//					getBiome().getRainfall(worldObj, xCoord, yCoord, zCoord);
+	//	}
+	//
+	//	@Override
+	//	public float getTemp()
+	//	{
+	//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
+	//	}
 
 	@Override
 	public int getWaterLevel()
 	{
 		return waterLevel;
 	}
-	
+
 	@Override
 	public int useWater(int amount)
 	{
@@ -289,9 +290,9 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	{
 		removeBlock();
 	}
-	
+
 	@Override
-	public void addDebugInformation(EntityPlayer player, int side, List<String> list)
+	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
 		list.add("Spcie Name : " + card.getRegisteredName());
 		list.add("Name : " + card.getLocalName(getDNA()));
@@ -307,11 +308,11 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	}
 
 	@Override
-	public void causeUpdate(int x, int y, int z, Block block, int meta, boolean tileUpdate)
+	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
 		if(!canBlockStay())
 		{
-			block.dropBlockAsItem(worldObj, x, y, z, meta, 0);
+			state.getBlock().dropBlockAsItem(worldObj, pos, state, 0);
 			killCrop();
 		}
 	}

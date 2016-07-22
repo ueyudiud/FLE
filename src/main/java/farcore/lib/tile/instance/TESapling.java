@@ -9,7 +9,7 @@ import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class TESapling extends TEAged implements ISaplingAccess
 {
@@ -18,11 +18,12 @@ public class TESapling extends TEAged implements ISaplingAccess
 	public Mat material;
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		nbt.setString("tree", material.name);
 		nbt.setFloat("age", age);
+		return nbt;
 	}
 
 	@Override
@@ -85,7 +86,7 @@ public class TESapling extends TEAged implements ISaplingAccess
 
 	public boolean grow()
 	{
-		if(material.tree.generateTreeAt(worldObj, xCoord, yCoord, zCoord, random, info))
+		if(material.tree.generateTreeAt(worldObj, pos, random, info))
 		{
 			removeBlock();
 			return true;
@@ -111,9 +112,9 @@ public class TESapling extends TEAged implements ISaplingAccess
 	}
 
 	@Override
-	public BiomeGenBase biome()
+	public Biome biome()
 	{
-		return worldObj.getBiomeGenForCoords(xCoord, zCoord);
+		return worldObj.getBiomeGenForCoords(pos);
 	}
 
 	@Override

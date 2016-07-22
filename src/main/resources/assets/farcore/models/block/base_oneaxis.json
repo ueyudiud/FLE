@@ -1,0 +1,12 @@
+{
+	"parent":"farcore:base",
+	"textures":{
+		"particle": "#side",
+		"front": "#side",
+		"back": "#side",
+		"right": "#side",
+		"left": "#side",
+		"top": "#top",
+		"bottom": "#top"
+	}
+}

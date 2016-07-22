@@ -2,42 +2,35 @@ package farcore.lib.net;
 
 import java.io.IOException;
 
-import farcore.lib.io.DataStream;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class PacketBlockCoord extends PacketWorld
 {
-	protected int x;
-	protected int y;
-	protected int z;
-	
+	protected BlockPos pos;
+
 	public PacketBlockCoord()
 	{
-		
+
 	}
-	public PacketBlockCoord(World world, int x, int y, int z)
+	public PacketBlockCoord(World world, BlockPos pos)
 	{
 		super(world);
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.pos = pos;
 	}
-	
+
 	@Override
-	protected void encode(DataStream output) throws IOException
+	protected void encode(PacketBuffer output) throws IOException
 	{
 		super.encode(output);
-		output.writeInt(x);
-		output.writeShort(y);
-		output.writeInt(z);
+		output.writeBlockPos(pos);
 	}
-	
+
 	@Override
-	protected void decode(DataStream input) throws IOException
+	protected void decode(PacketBuffer input) throws IOException
 	{
 		super.decode(input);
-		x = input.readInt();
-		y = input.readShort();
-		z = input.readInt();
+		pos = input.readBlockPos();
 	}
 }

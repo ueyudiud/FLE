@@ -1,90 +1,56 @@
 package farcore.lib.block.instance;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.lib.block.BlockBase;
-import farcore.lib.block.IBurnCustomBehaviorBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TESapling;
-import farcore.lib.util.Direction;
-import farcore.lib.util.INamedIconRegister;
-import farcore.lib.util.UnlocalizedList;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockSapling extends BlockBase
-implements IPlantable, ITileEntityProvider, IBurnCustomBehaviorBlock
+public class BlockSapling extends BlockBase implements IPlantable, ITileEntityProvider
 {
+	public static final AxisAlignedBB SAPLING_AABB = new AxisAlignedBB(.1F, .0F, .1F, .9F, .8F, .9F);
+
 	public BlockSapling()
 	{
-		super("sapling", ItemSapling.class, Material.plants);
-		setHardness(0.3F);
-        setBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 0.8F, 0.9F);
-        EnumBlock.sapling.set(this);
+		super("farcore", "sapling", Material.PLANTS);
+		setHardness(.4F);
+		EnumBlock.sapling.set(this);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	protected void registerIcon(INamedIconRegister register)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		for(Mat material : Mat.register)
-			if(material.hasTree)
-			{
-				register.push(material);
-				register.registerIcon(null, material.modid + ":" + getTextureName() + "/" + material.name);
-				register.pop();
-			}
+		return null;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	protected IIcon getIcon(int side, int meta, INamedIconRegister register)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
 	{
-		register.push(Mat.register.get(meta));
-		IIcon icon = register.getIconFromName(null);
-		register.pop();
-		return icon;
+		return SAPLING_AABB;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected IIcon getIcon(IBlockAccess world, int x, int y, int z, int side, INamedIconRegister register)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof TESapling)
-		{
-			register.push(((TESapling) tile).material);
-			IIcon icon = register.getIconFromName(null);
-			register.pop();
-			return icon;
-		} else
-			return null;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs tabs, List list)
+	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for(Mat material : Mat.register)
 			if(material.hasTree)
@@ -92,165 +58,62 @@ implements IPlantable, ITileEntityProvider, IBurnCustomBehaviorBlock
 	}
 
 	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side,
-			float hitX, float hitY, float hitZ, int meta)
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
+			ItemStack stack)
 	{
-		return 0;
-	}
-
-	@Override
-	public int damageDropped(int meta)
-	{
-		return 0;
-	}
-
-	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block,
-			int meta)
-	{
-		super.breakBlock(world, x, y, z, block, meta);
-	}
-
-	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune,
-			boolean silkTouching)
-	{
-		return new ArrayList();
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z,
-			EntityLivingBase entity, ItemStack stack)
-	{
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 		TileEntity tile;
-		if((tile = world.getTileEntity(x, y, z)) instanceof TESapling)
-			((TESapling) tile).setTree(entity, Mat.register.get(stack.getItemDamage(), M.VOID));
+		if((tile = worldIn.getTileEntity(pos)) instanceof TESapling)
+			((TESapling) tile).setTree(placer, Mat.register.get(stack.getItemDamage(), M.VOID));
 	}
 
-    /**
-     * Can this block stay at this position.
-     * Similar to canPlaceBlockAt except gets checked often with plants.
-     */
-    @Override
-	public boolean canBlockStay(World world, int x, int y, int z)
-    {
-        return world.getBlock(x, y - 1, z).canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, this);
-    }
-
-    /**
-     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
-     * cleared to be reused)
-     */
-    @Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-    {
-        return null;
-    }
-
-    /**
-     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
-     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
-     */
-    @Override
-	public boolean isOpaqueCube()
-    {
-        return false;
-    }
-
-    /**
-     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
-     */
-    @Override
-	public boolean renderAsNormalBlock()
-    {
-        return false;
-    }
-
-    /**
-     * The type of render function that is called for this block
-     */
-    @Override
-	public int getRenderType()
-    {
-        return FarCore.handlerA.getRenderId();
-    }
+	@Override
+	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
+	{
+		IBlockState state;
+		return (state = worldIn.getBlockState(pos.down())).getBlock()
+				.canSustainPlant(state, worldIn, pos, EnumFacing.UP, this);
+	}
 
 	@Override
-	public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z)
+	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
 		return EnumPlantType.Plains;
 	}
 
 	@Override
-	public Block getPlant(IBlockAccess world, int x, int y, int z)
+	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{
-		return this;
+		return getDefaultState();
 	}
 
 	@Override
-	public int getPlantMetadata(IBlockAccess world, int x, int y, int z)
+	public boolean isOpaqueCube(IBlockState state)
 	{
-		return 0;
+		return false;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TESapling();
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean deepInfo)
-	{
-
-	}
-
-	@Override
-	public boolean onBurn(World world, int x, int y, int z, float burnHardness, Direction direction)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean onBurningTick(World world, int x, int y, int z, Random rand, Direction fireSourceDir)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof TESapling)
-		{
-			float age = ((TESapling) tile).age();
-			age -= rand.nextFloat() / 5F;
-		}
-		return false;
-	}
-
-	@Override
-	public float getThermalConduct(World world, int x, int y, int z)
-	{
-		return -1F;
-	}
-
-	@Override
-	public int getFireEncouragement(World world, int x, int y, int z)
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean isFlammable(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return true;
 	}
 
 	@Override
-	public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return 60;
+		return 200;
 	}
 
 	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
+	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return 200;
+		return 50;
 	}
 }

@@ -5,12 +5,9 @@ import java.util.Random;
 import farcore.data.V;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.util.U;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSapling;
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TreeGenAbstract implements ITreeGenerator
 {
@@ -22,93 +19,83 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 		this.tree = tree;
 		this.generateCoreLeavesChance = generateCoreLeavesChance;
 	}
-	
+
 	protected boolean isReplaceable(World world, int x, int y, int z)
 	{
-		Block block = world.getBlock(x, y, z);
-		return block.isAir(world, x, y, z) || block.isLeaves(world, x, y, z);
+		BlockPos pos = new BlockPos(x, y, z);
+		IBlockState block;
+		return world.isAirBlock(pos) ||
+				(block = world.getBlockState(pos)).getBlock().isLeaves(block, world, pos);
 	}
-	
+
 	protected boolean checkEmpty(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
-		if(!V.generateState && !world.checkChunksExist(x - l, y, z - h, x + l, y + w, z + h))
-		{
+		BlockPos pos = new BlockPos(x, y, z);
+		if(!V.generateState && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
 			return false;
-		}
 		for(int i = x - l; i <= x + l; ++i)
 			for(int j = y; j <= y + w; ++j)
 				for(int k = z - h; k <= z + h; ++k)
 				{
 					if(!matchLocal && i == x && j == y && k == z) continue;
-					Block block = world.getBlock(i, j, k);
-					Material material;
 					if(isReplaceable(world, i, j, k))
-					{
 						continue;
-					}
 					return false;
 				}
 		return true;
 	}
-	
+
 	protected void generateLog(World world, int x, int y, int z, int meta)
 	{
-		world.setBlock(x, y, z, tree.logNat, meta, V.generateState ? 2 : 3);
+		U.Worlds.setBlock(world, new BlockPos(x, y, z), tree.logNat, meta, V.generateState ? 2 : 3);
 	}
 
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, Random rand, TreeInfo info)
 	{
 		generateTreeLeaves(world, x, y, z, meta, generateCoreLeavesChance, rand, info);
 	}
-	
+
 	protected void generateCloudlyLeaves(World world, int x, int y, int z, int size, int meta, Random rand, TreeInfo info, byte core)
 	{
 		switch (core)
 		{
 		case 1 :
 			int sq = size * size;
-	        for(int i = -size; i <= size; ++i)
-	        	for(int j = -size; j <= size; ++j)
-	        	{
-	        		if(i * i + j * j <= sq)
-	        		{
-	        			generateTreeLeaves(world, x + i, y, z + j, meta, rand, info);
-	        		}
-	        	}
+			for(int i = -size; i <= size; ++i)
+				for(int j = -size; j <= size; ++j)
+					if(i * i + j * j <= sq)
+						generateTreeLeaves(world, x + i, y, z + j, meta, rand, info);
 			break;
-		case 2 : 
+		case 2 :
 			sq = (int) ((size + .5F) * (size + .5F));
-	        for(int i = -size; i <= size + 1; ++i)
-	        	for(int j = -size; j <= size + 1; ++j)
-	        	{
-	        		if((i - .5F) * (i - .5F) + (j - .5F) * (j - .5F) <= sq)
-	        		{
-	        			generateTreeLeaves(world, x + i, y, z + j, meta, rand, info);
-	        		}
-	        	}
+			for(int i = -size; i <= size + 1; ++i)
+				for(int j = -size; j <= size + 1; ++j)
+					if((i - .5F) * (i - .5F) + (j - .5F) * (j - .5F) <= sq)
+						generateTreeLeaves(world, x + i, y, z + j, meta, rand, info);
 			break;
 		default:
 			break;
 		}
 	}
-	
+
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, float generateCoreLeavesChance, Random rand, TreeInfo info)
 	{
-		if(world.isAirBlock(x, y, z) || world.getBlock(x, y, z).canBeReplacedByLeaves(world, x, y, z))
+		BlockPos pos = new BlockPos(x, y, z);
+		IBlockState state;
+		if(world.isAirBlock(pos) || (state = world.getBlockState(pos)).getBlock().canBeReplacedByLeaves(state, world, pos))
 		{
 			meta &= 0x7;
-			int state = V.generateState ? 2 : 3;
+			int flag = V.generateState ? 2 : 3;
 			if(rand.nextDouble() <= generateCoreLeavesChance)
 			{
-				world.setBlock(x, y, z, tree.leavesCore, meta, state);
-				U.Worlds.setTileEntity(world, x, y, z, new TECoreLeaves(tree, info), !V.generateState);
+				U.Worlds.setBlock(world, pos, tree.leavesCore, meta, flag);
+				U.Worlds.setTileEntity(world, pos, new TECoreLeaves(tree, info), !V.generateState);
 			}
 			else
-			{
-				world.setBlock(x, y, z, tree.leaves, meta, state);
-			}
+				U.Worlds.setBlock(world, pos, tree.leaves, meta, flag);
 		}
 	}
-	
+
+	@Override
 	public abstract boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info);
 }

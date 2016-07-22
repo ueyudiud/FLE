@@ -1,0 +1,6 @@
+{
+	"parent": "farcore:block/base_simple",
+	"textures": {
+		"all": "farcore:blocks/rock/stone-compact/brick"
+	}
+}

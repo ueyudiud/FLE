@@ -1,9 +1,9 @@
 package farcore.lib.util;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class DamageSourceProjectile extends DamageSource
 {
@@ -15,8 +15,8 @@ public class DamageSourceProjectile extends DamageSource
 	}
 
 	@Override
-	public IChatComponent func_151519_b(EntityLivingBase entity)
+	public ITextComponent getDeathMessage(EntityLivingBase entity)
 	{
-		return new ChatComponentTranslation("damagesource.projectile", entity.func_145748_c_());
+		return new TextComponentTranslation("damagesource.projectile", entity.getDisplayName());
 	}
 }

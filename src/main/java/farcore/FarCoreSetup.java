@@ -5,65 +5,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
-import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import farcore.data.EnumBlock;
-import farcore.data.EnumItem;
 import farcore.data.M;
-import farcore.data.V;
-import farcore.handler.FarCoreChunkHandler;
-import farcore.handler.FarCoreConfigHandler;
-import farcore.handler.FarCoreGuiHandler;
-import farcore.handler.FarCoreKeyHandler;
-import farcore.lib.block.instance.BlockCrop;
-import farcore.lib.block.instance.BlockFire;
-import farcore.lib.block.instance.BlockRockSlab;
-import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.entity.EntityFallingBlockExtended;
-import farcore.lib.item.instance.ItemDebugger;
-import farcore.lib.item.instance.ItemFluidDisplay;
-import farcore.lib.item.instance.ItemStoneChip;
-import farcore.lib.item.instance.ItemTreeLog;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
-import farcore.lib.net.gui.PacketGuiAction;
 import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.net.tile.PacketTESAskRender;
 import farcore.lib.net.tile.PacketTESync;
-import farcore.lib.render.RenderCross;
-import farcore.lib.render.RenderFallingBlockExtended;
-import farcore.lib.render.RenderFire;
-import farcore.lib.render.RenderHandler;
-import farcore.lib.render.RenderSlab;
-import farcore.lib.tile.instance.TECoreLeaves;
-import farcore.lib.tile.instance.TECrop;
-import farcore.lib.tile.instance.TESapling;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
 import farcore.network.Network;
 import farcore.util.U;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
@@ -71,16 +26,30 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = FarCore.ID, version = "0.93", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "1.0", name = "Far Core")
 public class FarCoreSetup
 {
-	public static final int minForge = 1558;
+	public static final int minForge = 2011;
 
 	private LanguageManager lang;
 
@@ -112,7 +81,7 @@ public class FarCoreSetup
 		Log.info("Far Core checking mod version...");
 		try
 		{
-			new ChunkCoordinates(1, 2, 3);
+			new BlockPos(1, 2, 3);
 		}
 		catch(Exception exception)
 		{
@@ -132,14 +101,16 @@ public class FarCoreSetup
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
+		ModMetadata modMetadata = event.getModMetadata();
+		modMetadata.authorList.add("ueyudiud");
+		modMetadata.name = "Far Core";
+		modMetadata.credits = "ueyudiud";
 		for(ModContainer container : Loader.instance().getModList())
-		{
-			//			if(FarCore.OVERRIDE_ID.equals(container.getName()))
-			//			{
-			//				event.getModMetadata().childMods.add(container);
-			//				break;
-			//			}
-		}
+			if(FarCore.OVERRIDE_ID.equals(container.getName()))
+			{
+				modMetadata.childMods.add(container);
+				break;
+			}
 		try
 		{
 			lang = new LanguageManager(new File(U.Mod.getMCFile(), "lang"));
@@ -161,8 +132,7 @@ public class FarCoreSetup
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
-		FarCoreKeyHandler.register(V.keyPlace, Keyboard.KEY_P);
-		LanguageManager.registerLocal("info.debug.date", "Date : ");
+		//		FarCoreKeyHandler.register(V.keyPlace, Keyboard.KEY_P);
 		proxy.load(event);
 	}
 
@@ -189,11 +159,6 @@ public class FarCoreSetup
 	{
 		public void load(FMLPreInitializationEvent event)
 		{
-			Object handler = new FarCoreChunkHandler();
-			MinecraftForge.EVENT_BUS.register(handler);
-			FMLCommonHandler.instance().bus().register(handler);
-			FMLCommonHandler.instance().bus().register(new FarCoreConfigHandler());
-			FMLCommonHandler.instance().bus().register(new FarCoreKeyHandler());
 			FarCore.tabResourceBlock = new CreativeTabBase("farcore.resource.block", "Far Resource Block")
 			{
 				@Override
@@ -202,20 +167,20 @@ public class FarCoreSetup
 					return new ItemStack(M.peridotite.rock, 1, 2);
 				}
 			};
-			FarCore.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item")
-			{
-				@Override
-				public ItemStack getIconItemStack()
-				{
-					return new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id);
-				}
-			};
+			//			FarCore.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item")
+			//			{
+			//				@Override
+			//				public ItemStack getIconItemStack()
+			//				{
+			//					return new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id);
+			//				}
+			//			};
 			FarCore.tabMachine = new CreativeTabBase("farcore.machine", "Far Machine")
 			{
 				@Override
 				public ItemStack getIconItemStack()
 				{
-					return new ItemStack(Blocks.crafting_table);
+					return new ItemStack(Blocks.CRAFTING_TABLE);
 				}
 			};
 			FarCore.tabMaterial = new CreativeTabBase("farcore.material", "Far Material")
@@ -223,36 +188,39 @@ public class FarCoreSetup
 				@Override
 				public ItemStack getIconItemStack()
 				{
-					return new ItemStack(Items.emerald);
+					return new ItemStack(Items.EMERALD);
 				}
 			};
-			FarCore.tabTool = new CreativeTabBase("farcore.tool", "Far Tool")
-			{
-				@Override
-				public ItemStack getIconItemStack()
-				{
-					return new ItemStack(EnumItem.debug.item);
-				}
-			};
+			//			FarCore.tabTool = new CreativeTabBase("farcore.tool", "Far Tool")
+			//			{
+			//				@Override
+			//				public ItemStack getIconItemStack()
+			//				{
+			//					return new ItemStack(EnumItem.debug.item);
+			//				}
+			//			};
 			M.init();
-			new ItemDebugger().setCreativeTab(FarCore.tabTool);
-			new ItemTreeLog().setCreativeTab(FarCore.tabResourceItem);
-			new ItemFluidDisplay();
-			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
-			new BlockSapling().setBlockTextureName("sapling").setCreativeTab(FarCore.tabResourceBlock);
-			new BlockCrop();
-			new BlockFire();
-			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
-			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
-			GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
+			//			new ItemDebugger().setCreativeTab(FarCore.tabTool);
+			//			new ItemTreeLog().setTextureName("grouped/log").setCreativeTab(FarCore.tabResourceItem);
+			//			new ItemFluidDisplay();
+			//			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
+			//			new BlockSapling().setBlockTextureName("sapling").setCreativeTab(FarCore.tabResourceBlock);
+			//			new BlockCrop();
+			//			new BlockFire();
+			//			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
+			//			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
+			//			GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
 			int id = 0;
 			EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
+			//			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 		}
 
 		public void load(FMLInitializationEvent event)
 		{
+			LanguageManager.registerLocal("info.debug.date", "Date : ");
+			LanguageManager.registerLocal("info.log.length", "Legnth : %d");
 			FarCore.network = Network.network(FarCore.ID);
-			FarCore.network.registerPacket(PacketGuiAction.class, Side.SERVER);
+			//			FarCore.network.registerPacket(PacketGuiAction.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
@@ -288,12 +256,9 @@ public class FarCoreSetup
 		public void load(FMLPreInitializationEvent event)
 		{
 			super.load(event);
-			int id1 = RenderingRegistry.getNextAvailableRenderId();
-			RenderingRegistry.registerBlockHandler(id1, FarCore.handlerA = new RenderHandler(id1, false));
-			int id2 = RenderingRegistry.getNextAvailableRenderId();
-			RenderingRegistry.registerBlockHandler(id2, FarCore.handlerB = new RenderHandler(id2, true));
-			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, new RenderFallingBlockExtended());
-			MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
+			//			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, new RenderFallingBlockExtended());
+			//			RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, new RenderProjectileItem());
+			//			MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 		}
 
 		@Override
@@ -306,14 +271,6 @@ public class FarCoreSetup
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
-			FarCore.handlerA.register(EnumBlock.sapling.block, OreDictionary.WILDCARD_VALUE, RenderCross.class);
-			FarCore.handlerA.register(EnumBlock.fire.block, OreDictionary.WILDCARD_VALUE, RenderFire.class);
-			for(Object key : GameData.getBlockRegistry().getKeys())
-			{
-				Block block = (Block) GameData.getBlockRegistry().getObject(key);
-				if(block instanceof BlockRockSlab)
-					FarCore.handlerB.register(block, OreDictionary.WILDCARD_VALUE, RenderSlab.class);
-			}
 		}
 
 		@Override

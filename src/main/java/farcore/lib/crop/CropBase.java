@@ -1,21 +1,19 @@
 package farcore.lib.crop;
 
-import static net.minecraft.util.EnumChatFormatting.GOLD;
-import static net.minecraft.util.EnumChatFormatting.GREEN;
+import static com.mojang.realmsclient.gui.ChatFormatting.GOLD;
+import static com.mojang.realmsclient.gui.ChatFormatting.GREEN;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import farcore.data.EnumBlock;
 import farcore.lib.crop.dna.CropDNAHelper;
 import farcore.lib.material.Mat;
-import farcore.lib.util.INamedIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.scoreboard.IScoreCriteria.EnumRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class CropBase implements ICrop
 {
@@ -25,15 +23,15 @@ public abstract class CropBase implements ICrop
 	protected String textureName;
 	protected int maxStage;
 	protected int growReq = 1000;
-	
+
 	public CropBase(Mat material)
 	{
 		this.material = material;
 	}
-	
+
 	public CropBase setDNAHelper(CropDNAHelper helper)
 	{
-		this.dnaHelper = helper;
+		dnaHelper = helper;
 		return this;
 	}
 
@@ -68,18 +66,19 @@ public abstract class CropBase implements ICrop
 		x += 1;
 		return 1F / (float) (1D / (Math.log(x) * mul) + 1D / chance);
 	}
-	
+
 	@Override
 	public String makeOffspringDNA(String par1, String par2)
 	{
 		return dnaHelper.mixedDNA(par1, par2);
 	}
-	
+
+	@Override
 	public String getLocalName(String dna)
 	{
 		return material.localName;
 	}
-	
+
 	@Override
 	public int getMaxStage()
 	{
@@ -119,35 +118,14 @@ public abstract class CropBase implements ICrop
 	@Override
 	public boolean canPlantAt(ICropAccess access)
 	{
-		int[] coord;
-		return access.getBlock(0, -1, 0)
-				.canSustainPlant(access.world(), (coord = access.coordI())[0], coord[1], coord[2], ForgeDirection.UP, (IPlantable) EnumBlock.crop.block);
+		IBlockState state;
+		return (state = access.getBlock(0, -1, 0)).getBlock()
+				.canSustainPlant(state, access.world(), access.pos().down(), EnumFacing.UP, (IPlantable) EnumBlock.crop.block);
 	}
 
 	@Override
 	public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
 	{
-		
-	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerIcon(INamedIconRegister register)
-	{
-		for(int i = 0; i < getMaxStage(); ++i)
-		{
-			register.registerIcon(Integer.toHexString(i), textureName + "_stage_" + i);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(ICropAccess access, INamedIconRegister register)
-	{
-		return register.getIconFromName(Integer.toHexString(access.stage()));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public EnumRenderType getRenderType()
-	{
-		return renderType;
 	}
 }

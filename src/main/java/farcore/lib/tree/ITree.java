@@ -4,73 +4,106 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import farcore.data.EnumToolType;
 import farcore.lib.bio.IDNADecoder;
-import farcore.lib.block.instance.BlockCoreLeaves;
 import farcore.lib.block.instance.BlockLeaves;
+import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.material.Mat;
-import farcore.lib.util.INamedIconRegister;
+import farcore.lib.util.Direction;
 import farcore.lib.util.IRegisteredNameable;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockLog.EnumAxis;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public interface ITree extends IRegisteredNameable, ITreeGenerator, IDNADecoder<TreeInfo>
 {
 	ITree VOID = new TreeVoid();
-	
+
 	Mat material();
-	
-	void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockCoreLeaves leavesCore);
-	
+
+	void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore);
+
+	default IProperty[] getLogProp(boolean isArt)
+	{
+		return new IProperty[0];
+	}
+
+	default IProperty[] getLeavesProp()
+	{
+		return new IProperty[]{net.minecraft.block.BlockLeaves.CHECK_DECAY};
+	}
+
 	boolean tickLogUpdate();
-	
-	@SideOnly(Side.CLIENT)
-	void registerLogIcon(INamedIconRegister register);
 
-	@SideOnly(Side.CLIENT)
-	void registerLeavesIcon(INamedIconRegister register);
+	default int getLogMeta(IBlockState state, boolean isArt)
+	{
+		return state.getValue(BlockLog.LOG_AXIS).ordinal();
+	}
 
-	@SideOnly(Side.CLIENT)
-	IIcon getLogIcon(INamedIconRegister register, int meta, int side);
+	default IBlockState getLogState(Block block, int meta, boolean isArt)
+	{
+		return block.getDefaultState().withProperty(BlockLog.LOG_AXIS, EnumAxis.values()[meta]);
+	}
 
-	@SideOnly(Side.CLIENT)
-	IIcon getLeavesIcon(INamedIconRegister register, int meta, int side);
+	default BlockStateContainer createLogStateContainer(Block block, boolean isArt)
+	{
+		return new BlockStateContainer(block, BlockLog.LOG_AXIS);
+	}
 
-	void updateLog(World world, int x, int y, int z, Random rand, boolean isArt);
+	default int getLeavesMeta(IBlockState state)
+	{
+		return 0;
+	}
 
-	void updateLeaves(World world, int x, int y, int z, Random rand);
+	default IBlockState getLeavesState(Block block, int meta)
+	{
+		return block.getDefaultState();
+	}
 
-	void breakLog(World world, int x, int y, int z, int meta, boolean isArt);
+	default BlockStateContainer createLeavesStateContainer(Block block)
+	{
+		return new BlockStateContainer(block);
+	}
 
-	void breakLeaves(World world, int x, int y, int z, int meta);
+	void updateLog(World world, BlockPos pos, Random rand, boolean isArt);
 
-	void beginLeavesDency(World world, int x, int y, int z);
+	void updateLeaves(World world, BlockPos pos, Random rand);
 
-	boolean onLogRightClick(EntityPlayer player, World world, int x, int y, int z, int side, float xPos, float yPos,
+	void breakLog(World world, BlockPos pos, IBlockState state, boolean isArt);
+
+	void breakLeaves(World world, BlockPos pos, IBlockState state);
+
+	void beginLeavesDency(World world, BlockPos pos);
+
+	boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos, float yPos,
 			float zPos, boolean isArt);
 
-	float onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, int x, int y, int z,
-			int side, float hitX, float hitY, float hitZ, boolean isArt);
+	float onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+			Direction side, float hitX, float hitY, float hitZ, boolean isArt);
 
-	float onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, int x, int y, int z,
-			int side, float hitX, float hitY, float hitZ);
-	
-	float onToolUseLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, int x, int y,
-			int z, int side, float hitX, float hitY, float hitZ, boolean isArt);
+	float onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+			Direction side, float hitX, float hitY, float hitZ);
 
-	float onToolUseLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, int x,
-			int y, int z, int side, float hitX, float hitY, float hitZ);
-	
-	List<ItemStack> getLogOtherDrop(World world, int x, int y, int z, ArrayList list);
+	float onToolUseLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
+			Direction side, float hitX, float hitY, float hitZ, boolean isArt);
 
-	ArrayList<ItemStack> getLeavesDrops(World world, int x, int y, int z, int metadata, int fortune,
-			boolean silkTouching, ArrayList arrayList);
+	float onToolUseLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
+			Direction side, float hitX, float hitY, float hitZ);
+
+	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList list);
+
+	ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune,
+			boolean silkTouching, ArrayList list);
 
 	int onSaplingUpdate(ISaplingAccess access);
 

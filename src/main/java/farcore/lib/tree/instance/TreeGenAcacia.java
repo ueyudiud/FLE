@@ -5,13 +5,14 @@ import java.util.Random;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
+import farcore.lib.util.Direction;
 import farcore.util.U;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.Direction;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TreeGenAcacia extends TreeGenAbstract
 {
@@ -43,12 +44,13 @@ public class TreeGenAcacia extends TreeGenAbstract
 
 			if(!checkEmpty(world, x, y + 1, z, 2, l - 2, 2, true)) return false;
 			if(!checkEmpty(world, x, y + l - 1, z, 1, 2, 1, true)) return false;
-			Block block3 = world.getBlock(x, y - 1, z);
+			BlockPos pos = new BlockPos(x, y - 1, z);
+			IBlockState state = world.getBlockState(pos);
 
-			boolean isSoil = block3.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, (BlockSapling)Blocks.sapling);
+			boolean isSoil = state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, (BlockSapling) Blocks.SAPLING);
 			if (isSoil && y < 256 - l - 1)
 			{
-				block3.onPlantGrow(world, x, y - 1, z, x, y, z);
+				state.getBlock().onPlantGrow(state, world, pos, pos.up());
 				int j3 = random.nextInt(4);
 				j1 = l - random.nextInt(4) - 1;
 				k1 = 3 - random.nextInt(3);
@@ -64,8 +66,8 @@ public class TreeGenAcacia extends TreeGenAbstract
 
 					if (j2 >= j1 && k1 > 0)
 					{
-						k3 += Direction.offsetX[j3];
-						l1 += Direction.offsetZ[j3];
+						k3 += Direction.directions_2D[j3].x;
+						l1 += Direction.directions_2D[j3].z;
 						--k1;
 					}
 
@@ -107,8 +109,8 @@ public class TreeGenAcacia extends TreeGenAbstract
 						if (l2 >= 1)
 						{
 							i3 = y + l2;
-							k3 += Direction.offsetX[j2];
-							l1 += Direction.offsetZ[j2];
+							k3 += Direction.directions_2D[j2].x;
+							l1 += Direction.directions_2D[j2].z;
 							if (isReplaceable(world, k3, i3, l1))
 							{
 								generateLog(world, k3, i3, l1, 0);

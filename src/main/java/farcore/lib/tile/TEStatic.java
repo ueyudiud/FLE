@@ -1,66 +1,83 @@
 package farcore.lib.tile;
 
+import farcore.lib.net.tile.PacketTESync;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 
-public class TEStatic extends TESynchronization
+public class TEStatic extends TEBase implements ISynchronizableTile
 {
-	private boolean shouldUpdate = false;
-	
+	public boolean initialized = false;
+
 	public TEStatic()
 	{
-		
+
 	}
-	
+
+	@Override
+	public boolean isInitialized()
+	{
+		return initialized;
+	}
+
+	@Override
+	public final void readFromDescription(NBTTagCompound nbt)
+	{
+		readFromDescription1(nbt);
+		markBlockUpdate();
+		markBlockRenderUpdate();
+		initialized = true;
+	}
+
+	public void readFromDescription1(NBTTagCompound nbt)
+	{
+
+	}
+
+	public void writeToDescription(NBTTagCompound nbt)
+	{
+
+	}
+
 	@Override
 	public void syncToAll()
 	{
-		super.syncToAll();
-		shouldUpdate = true;
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToDescription(nbt);
+		sendToAll(new PacketTESync(worldObj, pos, nbt));
 	}
-	
+
 	@Override
 	public void syncToDim()
 	{
-		super.syncToDim();
-		shouldUpdate = true;
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToDescription(nbt);
+		sendToDim(new PacketTESync(worldObj, pos, nbt));
 	}
-	
+
 	@Override
 	public void syncToNearby()
 	{
-		super.syncToNearby();
-		shouldUpdate = true;
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToDescription(nbt);
+		sendToNearby(new PacketTESync(worldObj, pos, nbt), getSyncRange());
 	}
-	
+
+	protected float getSyncRange()
+	{
+		return 32F;
+	}
+
 	@Override
 	public void syncToPlayer(EntityPlayer player)
 	{
-		super.syncToPlayer(player);
-		shouldUpdate = true;
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToDescription(nbt);
+		sendToPlayer(new PacketTESync(worldObj, pos, nbt), player);
 	}
-	
-	@Override
-	protected void updateServer()
-	{
-		shouldUpdate = false;
-	}
-	
-	@Override
-	protected void updateClient()
-	{
-		shouldUpdate = false;
-	}
-	
+
 	@Override
 	public void markDirty()
 	{
-		shouldUpdate = true;
-		super.markDirty();
-	}
-	
-	@Override
-	public boolean canUpdate()
-	{
-		return !isInitialized() || shouldUpdate;
+		worldObj.notifyBlockOfStateChange(pos, getBlockType());
 	}
 }

@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import farcore.lib.block.instance.BlockCoreLeaves;
 import farcore.lib.block.instance.BlockLeaves;
+import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.block.instance.BlockRock;
@@ -23,7 +23,7 @@ import net.minecraft.block.Block;
 public class Mat implements ISubTagContainer, IRegisteredNameable
 {
 	public static final Register<Mat> register = new Register(32768);
-
+	
 	public final String modid;
 	public final String name;
 	public final String oreDictName;
@@ -71,10 +71,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 	public float minDetHeatForExplosion;
 	//Crop configuration.
 	public boolean isCrop = false;
-	public ICrop crop = ICrop.VOID;
-
+	public ICrop crop;
+	
 	private Set<SubTag> subTags = new HashSet();
-
+	
 	public Mat(int id, String name, String oreDict, String localized)
 	{
 		this(id, U.Mod.getActiveModID(), name, oreDict, localized);
@@ -92,20 +92,22 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		localName = localized;
 		LanguageManager.registerLocal("material." + name + ".name", localized);
 		if(register)
+		{
 			Mat.register.register(id, name, this);
+		}
 	}
-
+	
 	@Override
 	public final String getRegisteredName()
 	{
 		return name;
 	}
-
+	
 	public String getLocalName()
 	{
 		return LanguageManager.translateToLocal("material." + name + ".name");
 	}
-
+	
 	public Mat setRGBa(int colorIndex)
 	{
 		RGBa[0] = (short) ((colorIndex >> 24)       );
@@ -115,14 +117,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		RGB = colorIndex >> 8;
 		return this;
 	}
-
+	
 	public Mat setRGBa(short[] colorIndex)
 	{
 		RGBa = colorIndex;
 		RGB = colorIndex[0] << 16 | colorIndex[1] << 8 | colorIndex[2];
 		return this;
 	}
-
+	
 	public Mat setGeneralProp(float heatCap, float thermalConduct, float maxSpeed, float maxTorque, float dielectricConstant, float electrialResistance, float redstoneResistance)
 	{
 		this.heatCap = heatCap;
@@ -134,7 +136,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		this.redstoneResistance = redstoneResistance;
 		return this;
 	}
-
+	
 	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float dVE, int enchantability)
 	{
 		canMakeTool = true;
@@ -147,7 +149,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		add(SubTag.TOOL);
 		return this;
 	}
-
+	
 	public Mat setWood(float woodHardness, float ashcontent, float woodBurnHeat)
 	{
 		isWood = true;
@@ -161,15 +163,15 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		add(SubTag.WOOD);
 		return this;
 	}
-
+	
 	public Mat setTree(ITree tree)
 	{
 		hasTree = true;
 		this.tree = tree;
-		BlockLogNatural logNatural = new BlockLogNatural(this);
-		BlockLogArtificial logArtificial = new BlockLogArtificial(this);
-		BlockLeaves leaves = new BlockLeaves(this);
-		BlockCoreLeaves coreLeaves = new BlockCoreLeaves(this, leaves);
+		BlockLogNatural logNatural = BlockLogNatural.create(this);
+		BlockLogArtificial logArtificial = BlockLogArtificial.create(this);
+		BlockLeaves leaves = BlockLeaves.create(this);
+		BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, this);
 		this.leaves = leaves;
 		log = logNatural;
 		logArt = logArtificial;
@@ -178,7 +180,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		tree.initInfo(logNatural, logArtificial, leaves, coreLeaves);
 		return this;
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp)
 	{
 		isRock = true;
@@ -186,13 +188,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		blockHardness = hardness;
 		blockExplosionResistance = resistance;
 		minDetHeatForExplosion = minDetTemp;
-		BlockRock rock = new BlockRock("rock." + name, this, localName, minDetTemp);
-		rock.setBlockTextureName(modid + ":rock/" + name);
+		BlockRock rock = new BlockRock("rock." + name, this, localName);
 		this.rock = rock;
 		add(SubTag.ROCK);
 		return this;
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp, Block rock)
 	{
 		isRock = true;
@@ -204,7 +205,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		add(SubTag.ROCK);
 		return this;
 	}
-
+	
 	public Mat setCrop(ICrop crop)
 	{
 		isCrop = true;
@@ -212,19 +213,19 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		add(SubTag.CROP);
 		return this;
 	}
-
+	
 	public Mat setTag(SubTag...tags)
 	{
 		add(tags);
 		return this;
 	}
-
+	
 	@Override
 	public void add(SubTag... tags)
 	{
 		subTags.addAll(Arrays.asList(tags));
 	}
-
+	
 	@Override
 	public boolean contain(SubTag tag)
 	{
