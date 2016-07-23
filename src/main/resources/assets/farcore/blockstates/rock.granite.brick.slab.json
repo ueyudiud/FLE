@@ -1,0 +1,94 @@
+{
+	"multipart": [
+		{
+			"when": {
+				"facing": "down"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick",
+				"x": 0,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "up"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick",
+				"x": 180,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "south"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick",
+				"x": 90,
+				"y": 180
+			}
+		},
+		{
+			"when": {
+				"facing": "north"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick",
+				"x": 90,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "east"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick",
+				"x": 90,
+				"y": 270
+			}
+		},
+		{
+			"when": {
+				"facing": "west"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick",
+				"x": 90,
+				"y": 90
+			}
+		},
+		{
+			"when": {
+				"facing": "double_ud"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick_double",
+				"x": 0,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "double_ns"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick_double",
+				"x": 90,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "double_we"
+			},
+			"apply": {
+				"model": "farcore:rock/granite/slab/brick_double",
+				"x": 90,
+				"y": 90
+			}
+		}
+	]
+}

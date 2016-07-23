@@ -2,6 +2,7 @@ package farcore.lib.block.instance;
 
 import java.util.Random;
 
+import farcore.FarCore;
 import farcore.data.EnumSlabState;
 import farcore.lib.block.BlockSlab;
 import farcore.lib.block.IBurnCustomBehaviorBlock;
@@ -46,7 +47,12 @@ public class BlockRockSlab extends BlockSlab implements IBurnCustomBehaviorBlock
 		harvestLevel = parent.harvestLevel;
 		setHardness((hardnessMultiplier = parent.hardnessMultiplier) * 0.6F);
 		setResistance((resistanceMultiplier = parent.resistanceMultiplier) * 0.4F);
+		if(RockType.values()[id].displayInTab)
+		{
+			setCreativeTab(FarCore.tabResourceBlock);
+		}
 		setTickRandomly(true);
+		setDefaultState(getDefaultState().withProperty(BlockRock.HEATED, false));
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(1), localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(2), localName + " Slab");
@@ -56,6 +62,7 @@ public class BlockRockSlab extends BlockSlab implements IBurnCustomBehaviorBlock
 		LanguageManager.registerLocal(getTranslateNameForItemStack(6), "Double " + localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(7), "Double " + localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(8), "Double " + localName + " Slab");
+		U.Mod.registerItemBlockModel(this, 0, material.modid, "rock/" + material.name + "/" + RockType.values()[meta].name() + "_slab");
 	}
 
 	@Override

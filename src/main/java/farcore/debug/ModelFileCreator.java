@@ -14,6 +14,81 @@ import farcore.lib.material.Mat;
 
 public class ModelFileCreator
 {
+	static final Gson gson = new Gson();
+
+	static void provideRockSlabInfo(String sourceLocate, Mat material)
+	{
+		for(RockType type : RockType.values())
+		{
+			String locate = material.modid + ":rock/" + material.name + "/slab/" +
+					(type == RockType.cobble_art ? RockType.cobble.name() : type.name());
+			String locate1 = material.modid + "/models/block/rock/" + material.name + "/slab/" +
+					(type == RockType.cobble_art ? RockType.cobble.name() : type.name());
+			String locate2 = material.modid + ":block/rock/" + material.name + "/slab/" +
+					(type == RockType.cobble_art ? RockType.cobble.name() : type.name());
+			JsonObject object = new JsonObject();
+			JsonArray array = new JsonArray();
+			JsonObject object2 = new JsonObject();
+			addCondition(object2, "facing", "down");
+			addModel(object2, locate, 0, 0);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "up");
+			addModel(object2, locate, 2, 0);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "south");
+			addModel(object2, locate, 1, 2);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "north");
+			addModel(object2, locate, 1, 0);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "east");
+			addModel(object2, locate, 1, 3);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "west");
+			addModel(object2, locate, 1, 1);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "double_ud");
+			addModel(object2, locate + "_double", 0, 0);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "double_ns");
+			addModel(object2, locate + "_double", 1, 0);
+			array.add(object2);
+			object2 = new JsonObject();
+			addCondition(object2, "facing", "double_we");
+			addModel(object2, locate + "_double", 1, 1);
+			array.add(object2);
+			object.add("multipart", array);
+			makeJson(sourceLocate, material.modid + "/blockstates/rock." + material.name + "." + type.name() + ".slab.json", object);
+			if(type == RockType.cobble_art)
+			{
+				continue;
+			}
+			object = new JsonObject();
+			object.addProperty("parent", "farcore:block/slab");
+			object2 = new JsonObject();
+			object2.addProperty("all", material.modid + ":blocks/rock/" + material.name + "/" + type);
+			object.add("textures", object2);
+			makeJson(sourceLocate, locate1 + ".json", object);
+			object = new JsonObject();
+			object.addProperty("parent", "farcore:block/slab_double");
+			object2 = new JsonObject();
+			object2.addProperty("all", material.modid + ":blocks/rock/" + material.name + "/" + type);
+			object.add("textures", object2);
+			makeJson(sourceLocate, locate1 + "_double.json", object);
+			String locate3 = material.modid + "/models/item/rock/" + material.name + "/" + (type == RockType.cobble_art ? RockType.cobble : type) + "_slab";
+			object = new JsonObject();
+			object.addProperty("parent", locate2);
+			makeJson(sourceLocate, locate3, object);
+		}
+	}
+
 	static void provideRockInfo(String sourceLocate, Mat material)
 	{
 		JsonObject object = new JsonObject();
@@ -45,9 +120,36 @@ public class ModelFileCreator
 			makeJson(sourceLocate, material.modid + "/models/item/rock/" + material.name+ "/" + type.name() + ".json", object);
 		}
 	}
+
+	static void addCondition(JsonObject object, String prop, String value)
+	{
+		JsonObject object1 = new JsonObject();
+		object1.addProperty(prop, value);
+		object.add("when", object1);
+	}
+	
+	static void addModel(JsonObject object, String locate)
+	{
+		JsonObject object1 = new JsonObject();
+		object1.addProperty("model", locate);
+		object.add("apply", object1);
+	}
+	
+	static void addModel(JsonObject object, String locate, int x, int y)
+	{
+		JsonObject object1 = new JsonObject();
+		object1.addProperty("model", locate);
+		object1.addProperty("x", x * 90);
+		object1.addProperty("y", y * 90);
+		object.add("apply", object1);
+	}
 	
 	static void makeJson(String sourceLocate, String pathName, JsonObject object)
 	{
+		if(!pathName.endsWith(".json"))
+		{
+			pathName += ".json";
+		}
 		JsonWriter writer = null;
 		try
 		{
@@ -63,8 +165,8 @@ public class ModelFileCreator
 			}
 			writer = new JsonWriter(new BufferedWriter(new FileWriter(file)));
 			writer.setIndent("	");
-			Gson gson = new Gson();
 			gson.toJson(object, writer);
+			System.out.println("Generated json at ./" + pathName);
 		}
 		catch (Exception exception)
 		{

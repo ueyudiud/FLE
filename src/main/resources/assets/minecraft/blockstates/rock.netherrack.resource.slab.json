@@ -1,0 +1,94 @@
+{
+	"multipart": [
+		{
+			"when": {
+				"facing": "down"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource",
+				"x": 0,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "up"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource",
+				"x": 180,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "south"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource",
+				"x": 90,
+				"y": 180
+			}
+		},
+		{
+			"when": {
+				"facing": "north"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource",
+				"x": 90,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "east"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource",
+				"x": 90,
+				"y": 270
+			}
+		},
+		{
+			"when": {
+				"facing": "west"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource",
+				"x": 90,
+				"y": 90
+			}
+		},
+		{
+			"when": {
+				"facing": "double_ud"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource_double",
+				"x": 0,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "double_ns"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource_double",
+				"x": 90,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"facing": "double_we"
+			},
+			"apply": {
+				"model": "minecraft:rock/netherrack/slab/resource_double",
+				"x": 90,
+				"y": 90
+			}
+		}
+	]
+}

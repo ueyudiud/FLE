@@ -3,7 +3,6 @@ package farcore.lib.block;
 import java.util.Random;
 
 import farcore.data.EnumSlabState;
-import farcore.lib.block.instance.ItemBlockSlab;
 import farcore.util.U;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -17,9 +16,26 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockSlab extends BlockBase
 {
+	//The collide bounding box is non all same to selected box because this might is a bug of minecraft.
+	//Which the entity will be bound out of block when bounding box is too large.
+	private static final AxisAlignedBB AABB_DOWN = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.5D, 1D);
+	private static final AxisAlignedBB AABB_UP = new AxisAlignedBB(0D, 0.5D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB AABB_NORTH = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, 0.5D);
+	private static final AxisAlignedBB AABB_SOUTH = new AxisAlignedBB(0D, 0D, 0.5D, 1D, 1D, 1D);
+	private static final AxisAlignedBB AABB_WEST = new AxisAlignedBB(0D, 0D, 0D, 0.5D, 1D, 1D);
+	private static final AxisAlignedBB AABB_EAST = new AxisAlignedBB(0.6D, 0D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB AABB_DOWN_COL = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.4D, 1D);
+	private static final AxisAlignedBB AABB_UP_COL = new AxisAlignedBB(0D, 0.6D, 0D, 1D, 1D, 1D);
+	private static final AxisAlignedBB AABB_NORTH_COL = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, 0.4D);
+	private static final AxisAlignedBB AABB_SOUTH_COL = new AxisAlignedBB(0D, 0D, 0.6D, 1D, 1D, 1D);
+	private static final AxisAlignedBB AABB_WEST_COL = new AxisAlignedBB(0D, 0D, 0D, 0.4D, 1D, 1D);
+	private static final AxisAlignedBB AABB_EAST_COL = new AxisAlignedBB(0.6D, 0D, 0D, 1D, 1D, 1D);
+
 	public BlockSlab(String name, Material materialIn)
 	{
 		super(name, materialIn);
@@ -40,118 +56,140 @@ public class BlockSlab extends BlockBase
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 		lightOpacity = -1;
 	}
-
+	
 	@Override
 	protected Item createItemBlock()
 	{
 		return new ItemBlockSlab(this);
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, EnumSlabState.PROPERTY);
 	}
-
+	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return state.getValue(EnumSlabState.PROPERTY).ordinal();
 	}
-
+	
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState().withProperty(EnumSlabState.PROPERTY, EnumSlabState.values()[meta]);
 	}
-
+	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
 			int meta, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(EnumSlabState.PROPERTY, EnumSlabState.values()[U.Worlds.fixSide(facing, hitX, hitY, hitZ)]);
+		return getDefaultState().withProperty(EnumSlabState.PROPERTY,
+				placer.isSneaking() ? (hitY > .5F ? EnumSlabState.up : EnumSlabState.down) :
+					EnumSlabState.values()[facing.getOpposite().ordinal()]);
+	}
+	
+	@Override
+	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)
+	{
+		return state.isOpaqueCube() || state.getValue(EnumSlabState.PROPERTY).ordinal() == face.ordinal();
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		double maxX = 1.0F, maxY = 1.0F, maxZ = 1.0F, minX = 0.0F, minY = 0.0F, minZ = 0.0F;
-		switch (state.getValue(EnumSlabState.PROPERTY))
-		{
-		case down :
-			maxY = 0.5F;
-			break;
-		case up :
-			minY = 0.5F;
-			break;
-		case south :
-			maxZ = 0.5F;
-			break;
-		case north :
-			minZ = 0.5F;
-			break;
-		case west :
-			maxX = 0.5F;
-			break;
-		case east :
-			minX = 0.5F;
-			break;
-		default :
-			break;
-		}
-		return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+		return super.shouldSideBeRendered(blockState, blockAccess, pos, side) ||
+				blockState.getValue(EnumSlabState.PROPERTY).ordinal() == side.ordinal();
 	}
 
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World worldIn, BlockPos pos)
+	{
+		switch (state.getValue(EnumSlabState.PROPERTY))
+		{
+		case down : return AABB_DOWN_COL;
+		case up : return AABB_UP_COL;
+		case south : return AABB_NORTH_COL;
+		case north : return AABB_SOUTH_COL;
+		case west : return AABB_WEST_COL;
+		case east : return AABB_EAST_COL;
+		default : return FULL_BLOCK_AABB;
+		}
+	}
+	
+	@Override
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
+	{
+		return getBoundingBox(state, worldIn, pos);
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		switch (state.getValue(EnumSlabState.PROPERTY))
+		{
+		case down : return AABB_DOWN;
+		case up : return AABB_UP;
+		case south : return AABB_NORTH;
+		case north : return AABB_SOUTH;
+		case west : return AABB_WEST;
+		case east : return AABB_EAST;
+		default : return FULL_BLOCK_AABB;
+		}
+	}
+	
 	@Override
 	public boolean isFullyOpaque(IBlockState state)
 	{
 		return state.getValue(EnumSlabState.PROPERTY).fullCube;
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return state.getValue(EnumSlabState.PROPERTY).fullCube;
 	}
-
+	
 	@Override
 	public int getLightOpacity(IBlockState state)
 	{
-		return lightOpacity != -1 ? lightOpacity : 3;
+		return lightOpacity != -1 ? lightOpacity : 0;
 	}
-
+	
 	@Override
 	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return lightOpacity != -1 ? (isOpaqueCube(state) ? lightOpacity : Math.min(lightOpacity, 3)) :
 			(isOpaqueCube(state) ? 255 : 3);
 	}
-
+	
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		EnumSlabState state = base_state.getValue(EnumSlabState.PROPERTY);
 		return state.fullCube || state.ordinal() == side.ordinal();
 	}
-
+	
 	@Override
 	public int damageDropped(IBlockState state)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public int quantityDropped(IBlockState state, int fortune, Random random)
 	{
 		return state.getValue(EnumSlabState.PROPERTY).dropMul;
 	}
-
+	
 	@Override
 	protected ItemStack createStackedBlock(IBlockState state)
 	{
 		return new ItemStack(this, quantityDropped(state, 0, RANDOM), damageDropped(state));
 	}
-
+	
 	@Override
 	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 	{
@@ -163,7 +201,7 @@ public class BlockSlab extends BlockBase
 		}
 		return false;
 	}
-
+	
 	@Override
 	public EnumFacing[] getValidRotations(World world, BlockPos pos)
 	{
