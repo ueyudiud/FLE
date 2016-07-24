@@ -6,14 +6,20 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 
+import farcore.data.EnumBlock;
 import farcore.data.M;
+import farcore.lib.block.instance.BlockFire;
+import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.entity.EntityFallingBlockExtended;
+import farcore.lib.model.ModelSapling;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
 import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.net.tile.PacketTESAskRender;
 import farcore.lib.net.tile.PacketTESync;
+import farcore.lib.tile.instance.TECoreLeaves;
+import farcore.lib.tile.instance.TESapling;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
@@ -25,8 +31,11 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
@@ -43,6 +52,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,21 +60,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreSetup
 {
 	public static final int minForge = 2011;
-
+	
 	private LanguageManager lang;
-
+	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
-
+	
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static Proxy proxy;
-
+	
 	public FarCoreSetup()
 	{
 		setup = this;
 		Log.logger = LogManager.getLogger(FarCore.ID);
 	}
-
+	
 	@EventHandler
 	public void check(FMLFingerprintViolationEvent event)
 	{
@@ -97,7 +107,7 @@ public class FarCoreSetup
 					"(Technical information: " + forge + " < " + minForge + ")");
 		Log.info("Checking end.");
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -128,33 +138,33 @@ public class FarCoreSetup
 		lang.read();
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
 		//		FarCoreKeyHandler.register(V.keyPlace, Keyboard.KEY_P);
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
-		lang.write();
 		proxy.load(event);
+		lang.write();
 	}
-
+	
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
-
+		
 	}
-
+	
 	public static class Proxy
 	{
 		public void load(FMLPreInitializationEvent event)
@@ -204,17 +214,17 @@ public class FarCoreSetup
 			//			new ItemTreeLog().setTextureName("grouped/log").setCreativeTab(FarCore.tabResourceItem);
 			//			new ItemFluidDisplay();
 			//			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
-			//			new BlockSapling().setBlockTextureName("sapling").setCreativeTab(FarCore.tabResourceBlock);
+			new BlockSapling().setCreativeTab(FarCore.tabResourceBlock);
 			//			new BlockCrop();
-			//			new BlockFire();
-			//			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
-			//			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
+			new BlockFire();
+			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
+			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
 			//			GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
 			int id = 0;
 			EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
 			//			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 		}
-
+		
 		public void load(FMLInitializationEvent event)
 		{
 			LanguageManager.registerLocal("info.debug.date", "Date : ");
@@ -225,33 +235,33 @@ public class FarCoreSetup
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
 			//			FarCore.network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
-
+			
 			FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTESAskRender.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
 		}
-
+		
 		public void load(FMLPostInitializationEvent event)
 		{
-
+			
 		}
-
+		
 		public void load(FMLLoadCompleteEvent event)
 		{
-
+			
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
 		private boolean loadComplete = false;
-
+		
 		public ClientProxy()
 		{
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 		}
-
+		
 		@Override
 		public void load(FMLPreInitializationEvent event)
 		{
@@ -259,34 +269,34 @@ public class FarCoreSetup
 			//			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, new RenderFallingBlockExtended());
 			//			RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, new RenderProjectileItem());
 			//			MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
+			ModelLoaderRegistry.registerLoader(ModelSapling.Loader.instance);
+			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.BlockModelSelector.instance);
+			U.Mod.registerCustomItemModelSelector(Item.getItemFromBlock(EnumBlock.sapling.block), ModelSapling.ItemModelSelector.instance);
 		}
-
+		
 		@Override
 		public void load(FMLInitializationEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void load(FMLLoadCompleteEvent event)
 		{
 			super.load(event);
 			loadComplete = true;
 		}
-
+		
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
-			if(loadComplete)
-			{
 
-			}
 		}
 	}
 }

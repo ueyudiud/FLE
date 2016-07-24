@@ -35,7 +35,7 @@ public class BlockRockSlab extends BlockSlab implements IBurnCustomBehaviorBlock
 	public final float hardnessMultiplier;
 	public final float resistanceMultiplier;
 	public final int harvestLevel;
-
+	
 	public BlockRockSlab(int id, BlockRock parent, BlockRockSlab[] group, String name, Mat material,
 			String localName)
 	{
@@ -64,31 +64,31 @@ public class BlockRockSlab extends BlockSlab implements IBurnCustomBehaviorBlock
 		LanguageManager.registerLocal(getTranslateNameForItemStack(8), "Double " + localName + " Slab");
 		U.Mod.registerItemBlockModel(this, 0, material.modid, "rock/" + material.name + "/" + RockType.values()[meta].name() + "_slab");
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, EnumSlabState.PROPERTY, BlockRock.HEATED);
 	}
-
+	
 	@Override
 	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return "pickaxe";
 	}
-
+	
 	@Override
 	public boolean isToolEffective(String type, IBlockState state)
 	{
 		return getHarvestTool(state).equals(type);
 	}
-
+	
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
@@ -104,29 +104,23 @@ public class BlockRockSlab extends BlockSlab implements IBurnCustomBehaviorBlock
 			return harvestLevel;
 		}
 	}
-
+	
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return RockType.values()[meta].burnable;
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return isFlammable(world, pos, face) ? 40 : 0;
 	}
-
+	
 	@Override
 	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
 	{
-		return false;
-	}
-
-	@Override
-	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir)
-	{
-		if(isFlammable(world, pos, fireSourceDir.of()))
+		if(isFlammable(world, pos, direction.of()))
 		{
 			U.Worlds.setBlock(world, pos, group[RockType.values()[meta].noMossy],
 					U.Worlds.getBlockMeta(world, pos), 3);
@@ -134,13 +128,19 @@ public class BlockRockSlab extends BlockSlab implements IBurnCustomBehaviorBlock
 		}
 		return false;
 	}
-
+	
+	@Override
+	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
+	{
+		return false;
+	}
+	
 	@Override
 	public float getThermalConduct(World world, BlockPos pos)
 	{
 		return material.thermalConduct;
 	}
-
+	
 	@Override
 	public int getFireEncouragement(World world, BlockPos pos)
 	{

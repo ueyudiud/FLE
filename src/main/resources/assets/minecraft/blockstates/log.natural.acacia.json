@@ -1,0 +1,42 @@
+{
+	"multipart": [
+		{
+			"when": {
+				"axis": "none"
+			},
+			"apply": {
+				"model": "minecraft:log/acacia"
+			}
+		},
+		{
+			"when": {
+				"axis": "x"
+			},
+			"apply": {
+				"model": "minecraft:log/acacia",
+				"x": 90,
+				"y": 90
+			}
+		},
+		{
+			"when": {
+				"axis": "y"
+			},
+			"apply": {
+				"model": "minecraft:log/acacia",
+				"x": 0,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"axis": "z"
+			},
+			"apply": {
+				"model": "minecraft:log/acacia",
+				"x": 90,
+				"y": 0
+			}
+		}
+	]
+}

@@ -38,7 +38,7 @@ public class M
 	
 	static
 	{
-		VOID.setTree(new TreeVoid());
+		VOID.setTree(new TreeVoid(), false);
 		
 		oak.setTree(new TreeOak(oak));
 		spruce.setTree(new TreeBirch(spruce));

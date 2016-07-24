@@ -13,4 +13,5 @@ public class MC
 	public static final MatCondition brickCraving = new MatCondition("brickCraving", "Brick", "Craving %s Brick").setSize(5184L, 5184L, 1.2F).setFilter(SubTag.ROCK);
 	public static final MatCondition seed = new MatCondition("seed", "Seed", "%s Seed").setSize(72L, 24L).setFilter(SubTag.CROP);
 	public static final MatCondition chip = new MatCondition("chip", "Chip", "%s Chip").setSize(576L, 576L, 4.0F).setFilter(SubTag.ROCK);
+	public static final MatCondition sapling = new MatCondition("sapling", "Sapling", "%s Sapling").setSize(640L, 512L, 25.0F).setFilter(SubTag.WOOD);
 }

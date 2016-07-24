@@ -1,5 +1,5 @@
 {
-	"parent":"farcore:base",
+	"parent":"farcore:block/base",
 	"textures":{
 		"particle": "#side",
 		"front": "#side",

@@ -1,0 +1,6 @@
+{
+	"parent": "farcore:block/slab_double",
+	"textures": {
+		"all": "minecraft:blocks/rock/stone/brick_mossy"
+	}
+}

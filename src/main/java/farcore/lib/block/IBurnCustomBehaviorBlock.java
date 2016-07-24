@@ -3,6 +3,9 @@ package farcore.lib.block;
 import java.util.Random;
 
 import farcore.lib.util.Direction;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -23,13 +26,14 @@ public interface IBurnCustomBehaviorBlock
 	/**
 	 * Called on burning tick.
 	 * @param world
+	 * @param fireState The state of fire block.
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @return return true to prevent check whether the block will
 	 *  be removed.
 	 */
-	boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir);
+	boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState);
 
 	/**
 	 * Called when checking whether the block can be burned,
@@ -69,4 +73,10 @@ public interface IBurnCustomBehaviorBlock
 	 * @return
 	 */
 	int getFireEncouragement(World world, BlockPos pos);
+
+	default boolean canFireBurnOn(World world, BlockPos pos, EnumFacing side, boolean isCatchRain)
+	{
+		return ((Block) this).isFireSource(world, pos, side) ||
+				((Block) this).isFlammable(world, pos, side) && !isCatchRain;
+	}
 }

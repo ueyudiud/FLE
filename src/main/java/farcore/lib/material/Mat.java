@@ -2,7 +2,10 @@ package farcore.lib.material;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableList;
 
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
@@ -12,6 +15,7 @@ import farcore.lib.block.instance.BlockRock;
 import farcore.lib.collection.Register;
 import farcore.lib.crop.ICrop;
 import farcore.lib.tree.ITree;
+import farcore.lib.util.IDataChecker;
 import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.ISubTagContainer;
 import farcore.lib.util.LanguageManager;
@@ -20,10 +24,23 @@ import farcore.util.U;
 import farcore.util.U.OreDict;
 import net.minecraft.block.Block;
 
-public class Mat implements ISubTagContainer, IRegisteredNameable
+public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
 	public static final Register<Mat> register = new Register(32768);
 	
+	public static List<Mat> filt(IDataChecker<ISubTagContainer> filter)
+	{
+		ImmutableList.Builder<Mat> list = ImmutableList.builder();
+		for(Mat material : register)
+		{
+			if(filter.isTrue(material))
+			{
+				list.add(material);
+			}
+		}
+		return list.build();
+	}
+
 	public final String modid;
 	public final String name;
 	public final String oreDictName;
@@ -163,21 +180,37 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 		add(SubTag.WOOD);
 		return this;
 	}
-	
+
 	public Mat setTree(ITree tree)
+	{
+		return setTree(tree, true);
+	}
+	
+	/**
+	 * Set tree information of material.
+	 * @param tree The tree information.
+	 * @param createBlock False to prevent add log and leaves block, you
+	 * may have other block to added, this option is only input false
+	 * in VOID material in FarCore.
+	 * @return
+	 */
+	public Mat setTree(ITree tree, boolean createBlock)
 	{
 		hasTree = true;
 		this.tree = tree;
-		BlockLogNatural logNatural = BlockLogNatural.create(this);
-		BlockLogArtificial logArtificial = BlockLogArtificial.create(this);
-		BlockLeaves leaves = BlockLeaves.create(this);
-		BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, this);
-		this.leaves = leaves;
-		log = logNatural;
-		logArt = logArtificial;
-		OreDict.registerValid("logWood", logArtificial);
-		OreDict.registerValid("leaves", leaves);
-		tree.initInfo(logNatural, logArtificial, leaves, coreLeaves);
+		if(createBlock)
+		{
+			BlockLogNatural logNatural = BlockLogNatural.create(this);
+			BlockLogArtificial logArtificial = BlockLogArtificial.create(this);
+			BlockLeaves leaves = BlockLeaves.create(this);
+			BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, this);
+			this.leaves = leaves;
+			log = logNatural;
+			logArt = logArtificial;
+			OreDict.registerValid("logWood", logArtificial);
+			OreDict.registerValid("leaves", leaves);
+			tree.initInfo(logNatural, logArtificial, leaves, coreLeaves);
+		}
 		return this;
 	}
 	
@@ -230,5 +263,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable
 	public boolean contain(SubTag tag)
 	{
 		return subTags.contains(tag);
+	}
+	
+	@Override
+	public int compareTo(Mat o)
+	{
+		return name.compareTo(o.name);
 	}
 }

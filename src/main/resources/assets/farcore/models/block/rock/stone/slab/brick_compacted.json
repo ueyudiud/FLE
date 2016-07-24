@@ -1,0 +1,6 @@
+{
+	"parent": "farcore:block/slab",
+	"textures": {
+		"all": "minecraft:blocks/rock/stone/brick_compacted"
+	}
+}

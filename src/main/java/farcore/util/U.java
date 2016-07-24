@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet.Builder;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.collection.Stack;
 import farcore.lib.entity.EntityFallingBlockExtended;
+import farcore.lib.model.ICustomItemModelSelector;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
@@ -31,6 +32,7 @@ import net.minecraft.block.BlockFalling;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,6 +45,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -264,6 +267,24 @@ public class U
 		{
 			if(string == null) return "";
 			return string.trim();
+		}
+
+		public static String validateProperty(String string)
+		{
+			if(string == null) return "";
+			String newString = "";
+			for(char chr : string.toCharArray())
+			{
+				if(chr == '-' || chr == '\\' || chr == '/' || chr == '.' || chr == ' ')
+				{
+					newString += '_';
+				}
+				else
+				{
+					newString += chr;
+				}
+			}
+			return newString.trim();
 		}
 
 		public static String upcaseFirst(String name)
@@ -581,6 +602,12 @@ public class U
 		public static void registerItemModel(Item item, int meta, String modid, String locate)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid, locate));
+		}
+
+		public static void registerCustomItemModelSelector(Item item, ICustomItemModelSelector selector)
+		{
+			ModelLoader.setCustomMeshDefinition(item, selector);
+			ModelBakery.registerItemVariants(item, selector.getAllowedResourceLocations().toArray(new ResourceLocation[0]));
 		}
 	}
 

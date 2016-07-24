@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 public class TextureCopier
 {
 	private static String MESSAGE = "";
-
+	
 	public void renameFile(String path, String oldname, String newname)
 	{
 		if(!oldname.equals(newname))
@@ -36,13 +36,12 @@ public class TextureCopier
 			System.out.println("The new file name is same to old name...");
 		}
 	}
-
+	
 	public static boolean copyFile(String srcFileName, String destFileName,
 			boolean overlay)
 	{
 		File srcFile = new File(srcFileName);
-
-		// 判断源文件是否存在
+		
 		if (!srcFile.exists())
 		{
 			MESSAGE = "Source file:" + srcFileName + " does not exist！";
@@ -55,7 +54,7 @@ public class TextureCopier
 			JOptionPane.showMessageDialog(null, MESSAGE);
 			return false;
 		}
-
+		
 		File destFile = new File(destFileName);
 		if (destFile.exists())
 		{
@@ -68,17 +67,17 @@ public class TextureCopier
 			if (!destFile.getParentFile().exists())
 				if (!destFile.getParentFile().mkdirs())
 					return false;
-
+		
 		int byteread = 0;
 		InputStream in = null;
 		OutputStream out = null;
-
+		
 		try
 		{
 			in = new FileInputStream(srcFile);
 			out = new FileOutputStream(destFile);
 			byte[] buffer = new byte[1024];
-
+			
 			while ((byteread = in.read(buffer)) != -1)
 			{
 				out.write(buffer, 0, byteread);
@@ -112,7 +111,7 @@ public class TextureCopier
 			}
 		}
 	}
-
+	
 	public static boolean copyDirectory(String srcDirName, String destDirName,
 			boolean overlay)
 	{
@@ -129,7 +128,7 @@ public class TextureCopier
 			JOptionPane.showMessageDialog(null, MESSAGE);
 			return false;
 		}
-
+		
 		if (!destDirName.endsWith(File.separator))
 		{
 			destDirName = destDirName + File.separator;
@@ -157,7 +156,7 @@ public class TextureCopier
 				return false;
 			}
 		}
-
+		
 		boolean flag = true;
 		File[] files = srcDir.listFiles();
 		for (File file : files)
@@ -187,7 +186,7 @@ public class TextureCopier
 		} else
 			return true;
 	}
-
+	
 	public static boolean copyTarget(String srcDirName, String targetDirName, String formatName)
 	{
 		File srcDir = new File(srcDirName);
@@ -216,7 +215,7 @@ public class TextureCopier
 			}
 			copyFile(file.getAbsolutePath(), new File(subDir, formatName).getAbsolutePath(), true);
 		}
-
+		
 		return true;
 	}
 }

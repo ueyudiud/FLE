@@ -1,0 +1,84 @@
+{
+	"multipart": [
+		{
+			"when": {
+				"rock_type": "resource"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/resource"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "cobble"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/cobble"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "cobble_art"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/cobble"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "smoothed"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/smoothed"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "mossy"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/mossy"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "brick"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/brick"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "brick_crushed"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/brick_crushed"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "brick_mossy"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/brick_mossy"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "brick_compacted"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/brick_compacted"
+			}
+		},
+		{
+			"when": {
+				"rock_type": "chiseled"
+			},
+			"apply": {
+				"model": "minecraft:rock/stone/chiseled"
+			}
+		}
+	]
+}

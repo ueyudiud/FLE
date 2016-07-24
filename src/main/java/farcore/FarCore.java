@@ -9,6 +9,8 @@ public class FarCore
 
 	public static final String OVERRIDE_ID = "faroverride";
 
+	public static final String INNER_RENDER = "farinner";
+
 	public static Network network;
 
 	public static CreativeTabs tabResourceBlock;

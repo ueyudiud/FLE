@@ -1,0 +1,7 @@
+{
+	"parent": "farcore:block/base_oneaxis",
+	"textures": {
+		"side": "minecraft:blocks/logs/spruce_side",
+		"top": "minecraft:blocks/logs/spruce_top"
+	}
+}

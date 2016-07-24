@@ -3,6 +3,7 @@ package farcore.lib.block.instance;
 import farcore.lib.block.BlockBase;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
+import farcore.util.U;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -20,6 +21,7 @@ public class BlockLog extends BlockBase
 	{
 		super(material.modid, name, Material.WOOD);
 		this.tree = tree;
+		U.Mod.registerItemBlockModel(this, 0, tree.material().modid, "log/" + tree.material().name);
 	}
 
 	@Override
