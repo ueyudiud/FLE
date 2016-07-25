@@ -1,0 +1,42 @@
+{
+	"multipart": [
+		{
+			"when": {
+				"axis": "none"
+			},
+			"apply": {
+				"model": "farcore:log/aspen"
+			}
+		},
+		{
+			"when": {
+				"axis": "x"
+			},
+			"apply": {
+				"model": "farcore:log/aspen",
+				"x": 90,
+				"y": 90
+			}
+		},
+		{
+			"when": {
+				"axis": "y"
+			},
+			"apply": {
+				"model": "farcore:log/aspen",
+				"x": 0,
+				"y": 0
+			}
+		},
+		{
+			"when": {
+				"axis": "z"
+			},
+			"apply": {
+				"model": "farcore:log/aspen",
+				"x": 90,
+				"y": 0
+			}
+		}
+	]
+}

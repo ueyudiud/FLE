@@ -16,12 +16,15 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag TOOL = getNewSubTag("TOOL");
 	public static final SubTag HANDLE = getNewSubTag("HANDLE");
 	public static final SubTag CROP = getNewSubTag("SEED");
+	public static final SubTag PLANT = getNewSubTag("PLANT");
 	
 	public static void addTagsTo(SubTag[] tags, ISubTagContainer...containers)
 	{
 		for(ISubTagContainer container : containers)
 			if(container != null)
+			{
 				container.add(tags);
+			}
 	}
 	
 	public static SubTag getNewSubTag(String name)
@@ -33,9 +36,9 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	}
 	
 	private final String name;
-	public final Collection<ISubTagContainer> relevantTaggedItems = new HashSet(1);  
+	public final Collection<ISubTagContainer> relevantTaggedItems = new HashSet(1);
 	
-	private SubTag(String name) 
+	private SubTag(String name)
 	{
 		this.name = name;
 		subTags.register(name, this);
@@ -46,6 +49,7 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 		return name;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return name;
@@ -54,23 +58,31 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public SubTag addContainerToList(ISubTagContainer... containers)
 	{
 		if (containers != null)
+		{
 			for (ISubTagContainer container : containers)
 				if ((container != null) && (!relevantTaggedItems.contains(container)))
+				{
 					relevantTaggedItems.add(container);
+				}
+		}
 		return this;
 	}
-	  
+	
 	public SubTag addTo(ISubTagContainer... containers)
 	{
-	    if (containers != null)
-	    	for (ISubTagContainer container : containers)
-	    		if (container != null)
-	    			container.add(new SubTag[] { this });
-	    return this;
+		if (containers != null)
+		{
+			for (ISubTagContainer container : containers)
+				if (container != null)
+				{
+					container.add(new SubTag[] { this });
+				}
+		}
+		return this;
 	}
 
 	@Override
-	public boolean isTrue(ISubTagContainer container) 
+	public boolean isTrue(ISubTagContainer container)
 	{
 		return container.contain(this);
 	}

@@ -1,0 +1,7 @@
+{
+	"parent": "farcore:block/base_oneaxis",
+	"textures": {
+		"side": "farcore:blocks/logs/willow_side",
+		"top": "farcore:blocks/logs/willow_top"
+	}
+}

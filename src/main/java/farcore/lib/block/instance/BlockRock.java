@@ -15,6 +15,7 @@ import farcore.lib.util.LanguageManager;
 import farcore.util.U;
 import farcore.util.U.OreDict;
 import farcore.util.U.Worlds;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -23,6 +24,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -244,16 +246,14 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 	}
 
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
-		if(world instanceof World)
-		{
-			((World) world).scheduleUpdate(pos, this, tickRate((World) world));
-		}
+		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
 
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
+			ItemStack stack)
 	{
 		if(!canBlockStay(worldIn, pos, state))
 		{

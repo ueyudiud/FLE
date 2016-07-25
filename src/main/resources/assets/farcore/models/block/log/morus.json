@@ -1,0 +1,7 @@
+{
+	"parent": "farcore:block/base_oneaxis",
+	"textures": {
+		"side": "farcore:blocks/logs/morus_side",
+		"top": "farcore:blocks/logs/morus_top"
+	}
+}

@@ -1,6 +1,7 @@
 package farcore.lib.util;
 
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 public enum Direction
 {
@@ -22,7 +23,7 @@ public enum Direction
 	B( 0,  0,  0,  1),
 	/** Unknown direction. */
 	Q( 0,  0,  0,  0);
-	
+
 	public static final Direction[][] machineRotation = {
 			{D, U, N, S, W, E, A, B, Q},
 			{D, U, S, N, E, W, A, B, Q},
@@ -34,7 +35,7 @@ public enum Direction
 			{U, D, S, N, E, W, A, B, Q},
 			{D, U, N, S, W, E, A, B, Q}
 	};
-	
+
 	public static final int[] oppsite = {1, 0, 3, 2, 5, 4, 7, 6, 8};
 	public static final Direction[] directions_2D = {N, S, W, E};
 	public static final Direction[] directions = {D, U, N, S, W, E};
@@ -57,22 +58,22 @@ public enum Direction
 			{W, E, S, N, U, D},
 			{S, N, U, D, W, E},
 			{N, S, D, U, W, E}};
-	
+
 	private static final int[] cast =
 		{0, 1, 2, 3, 4, 5, 6, 6, 6};
-	
+
 	public static Direction of(EnumFacing direction)
 	{
 		return direction == null ? Q :
 			values()[direction.ordinal()];
 	}
-	
+
 	public static EnumFacing of(Direction direction)
 	{
 		return direction == null ? null :
 			EnumFacing.VALUES[cast[direction.ordinal()]];
 	}
-	
+
 	public final int x;
 	public final int y;
 	public final int z;
@@ -81,7 +82,7 @@ public enum Direction
 	public final int boundY;
 	public final int boundZ;
 	public final int flag;
-	
+
 	Direction(int x, int y, int z, int t)
 	{
 		this.x = x;
@@ -93,32 +94,37 @@ public enum Direction
 		boundZ = z != 0 ? -1 : 1;
 		flag = 1 << ordinal();
 	}
-	
+
 	public Direction getOpposite()
 	{
 		return this == Q ? Q : directions[ordinal() ^ 1];
 	}
-	
+
 	public Direction getRotation4D(Direction axis)
 	{
 		return rotate_4D[axis.ordinal()][ordinal()];
 	}
-	
+
 	public Direction getRotation3D(Direction axis)
 	{
 		return rotate_3D[axis.ordinal()][ordinal()];
 	}
-	
+
 	public Direction validDirection3D()
 	{
 		return this == A || this == B ? Q : this;
 	}
-	
+
 	public Direction validDirection2D()
 	{
 		return this == A || this == B || this == U || this == D ? Q : this;
 	}
-	
+
+	public BlockPos offset(BlockPos pos)
+	{
+		return pos.add(x, y, z);
+	}
+
 	public EnumFacing of()
 	{
 		return of(this);

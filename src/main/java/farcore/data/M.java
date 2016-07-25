@@ -1,13 +1,17 @@
 package farcore.data;
 
+import farcore.FarCore;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.TreeVoid;
 import farcore.lib.tree.instance.TreeAcacia;
+import farcore.lib.tree.instance.TreeAspen;
 import farcore.lib.tree.instance.TreeBirch;
 import farcore.lib.tree.instance.TreeCeiba;
+import farcore.lib.tree.instance.TreeMorus;
 import farcore.lib.tree.instance.TreeOak;
 import farcore.lib.tree.instance.TreeOakBlack;
+import farcore.lib.tree.instance.TreeWillow;
 
 public class M
 {
@@ -36,6 +40,10 @@ public class M
 	public static final Mat acacia = new Mat(8005, "minecraft", "acacia", "Acacia", "Acacia").setWood(3.0F, 1.0F, 20.0F);
 	public static final Mat oak_black = new Mat(8006, "minecraft", "oak-black", "DarkOak", "Dark Oak").setWood(5.4F, 1.0F, 20.0F);
 	
+	public static final Mat aspen = new Mat(8011, FarCore.ID, "aspen", "Aspen", "Aspen").setWood(1.6F, 1.0F, 20.0F);
+	public static final Mat morus = new Mat(8012, FarCore.ID, "morus", "Morus", "Morus").setWood(3.0F, 1.0F, 20.0F);
+	public static final Mat willow = new Mat(8013, FarCore.ID, "willow", "Willow", "Willow").setWood(3.0F, 1.0F, 20.0F);
+	
 	static
 	{
 		VOID.setTree(new TreeVoid(), false);
@@ -46,6 +54,9 @@ public class M
 		ceiba.setTree(new TreeCeiba(ceiba));
 		acacia.setTree(new TreeAcacia(acacia));
 		oak_black.setTree(new TreeOakBlack(oak_black));
+		aspen.setTree(new TreeAspen(aspen));
+		morus.setTree(new TreeMorus(morus));
+		willow.setTree(new TreeWillow(willow));
 	}
 	
 	public static void init(){}

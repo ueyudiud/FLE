@@ -40,9 +40,9 @@ public class TreeGenTaiga extends TreeGenAbstract
 
 		if (y >= 1 && y + l + 1 <= 256)
 		{
-			if (!checkEmpty(world, x, y, z, 0, i1, 0, false))
+			if (!checkLogGrow(world, x, y, z, 0, i1, 0, false))
 				return false;
-			if (!checkEmpty(world, x, y + i1 + 1, z, k1, j1 - 1, k1, true))
+			if (!checkLogGrow(world, x, y + i1 + 1, z, k1, j1 - 1, k1, true))
 				return false;
 			int i2;
 			int l3;
@@ -91,7 +91,7 @@ public class TreeGenTaiga extends TreeGenAbstract
 				i4 = random.nextInt(3);
 
 				for (k2 = 0; k2 < l - i4; ++k2)
-					if (isReplaceable(world, x, y + k2, z))
+					if (isLogReplaceable(world, x, y + k2, z))
 						generateLog(world, x, y, z, 0);
 
 				return true;

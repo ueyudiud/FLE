@@ -1,4 +1,4 @@
-package farcore.lib.model;
+package farcore.lib.model.block;
 
 import java.util.List;
 

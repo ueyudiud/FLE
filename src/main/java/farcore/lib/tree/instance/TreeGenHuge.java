@@ -33,8 +33,8 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 	{
 		if (y >= 1 && y + height + 1 <= 256)
 		{
-			if(!checkEmpty(world, x, y, z, 1, 0, 1, false)) return false;
-			if(!checkEmpty(world, x, y + 1, z, 2, height, 2, true)) return false;
+			if(!checkLogGrow(world, x, y, z, 1, 0, 1, false)) return false;
+			if(!checkLogGrow(world, x, y + 1, z, 2, height, 2, true)) return false;
 			return true;
 		}
 		else
