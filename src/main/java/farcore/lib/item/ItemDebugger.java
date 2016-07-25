@@ -2,6 +2,7 @@ package farcore.lib.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import farcore.FarCore;
 import farcore.data.EnumItem;
@@ -11,6 +12,7 @@ import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -50,8 +52,13 @@ public class ItemDebugger extends ItemBase
 				TileEntity tile = world.getTileEntity(pos);
 				List<String> list = new ArrayList();
 				//This information is added in F3 information, so remove these information display.
-				//				list.add("================World Info==================");
-				//				list.add("Block Type : " + block.getClass().getSimpleName() + "|| Metadata : " + world.getBlockMetadata(x, y, z));
+				list.add("================World Info==================");
+				list.add("Block Type : " + block.getClass().getSimpleName());
+				list.add("State : ");
+				for(Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet())
+				{
+					list.add(entry.getKey().getName() + " : " + ((IProperty) entry.getKey()).getName(entry.getValue()));
+				}
 				if(block instanceof IDebugableBlock)
 				{
 					list.add("==========BLOCK INFO==========");
@@ -82,7 +89,7 @@ public class ItemDebugger extends ItemBase
 				}
 			}
 		}
-		return EnumActionResult.SUCCESS;
+		return EnumActionResult.PASS;
 	}
 
 	@Override
