@@ -17,7 +17,7 @@ public class ItemBase extends Item implements IRegisteredNameable
 	protected String localized;
 	protected String unlocalized;
 	protected String unlocalizedTooltip;
-
+	
 	protected ItemBase(String name)
 	{
 		this(name, null);
@@ -36,19 +36,19 @@ public class ItemBase extends Item implements IRegisteredNameable
 		}
 		U.Mod.registerItem(this, modid, name);
 	}
-
+	
 	@Override
 	public final Item setUnlocalizedName(String unlocalizedName)
 	{
 		return this;
 	}
-	
+
 	@Override
 	public final String getUnlocalizedName()
 	{
 		return unlocalized;
 	}
-	
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
@@ -56,29 +56,29 @@ public class ItemBase extends Item implements IRegisteredNameable
 				getUnlocalizedName() + "@" + getDamage(stack) :
 					getUnlocalizedName();
 	}
-
+	
 	protected String getTranslateName(ItemStack stack)
 	{
 		return getUnlocalizedName(stack) + ".name";
 	}
-
+	
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
 	{
 		return LanguageManager.translateToLocal(getTranslateName(stack), getTranslateObject(stack));
 	}
-
+	
 	protected Object[] getTranslateObject(ItemStack stack)
 	{
 		return new Object[0];
 	}
-
+	
 	@Override
 	public String getRegisteredName()
 	{
 		return REGISTRY.getNameForObject(this).toString();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
@@ -86,7 +86,7 @@ public class ItemBase extends Item implements IRegisteredNameable
 		super.addInformation(stack, playerIn, tooltip, advanced);
 		addInformation(stack, playerIn, new UnlocalizedList(tooltip), advanced);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
@@ -95,5 +95,22 @@ public class ItemBase extends Item implements IRegisteredNameable
 		{
 			unlocalizedList.add(unlocalizedTooltip);
 		}
+	}
+
+	/**
+	 * The offset meta given by item nbt. Use to divide
+	 * the sub item of each material.
+	 * @param stack
+	 * @return
+	 */
+	public int getStackMetaOffset(ItemStack stack)
+	{
+		return 0;
+	}
+	
+	@Override
+	public int getDamage(ItemStack stack)
+	{
+		return (getStackMetaOffset(stack) << 15) | super.getDamage(stack);
 	}
 }

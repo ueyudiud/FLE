@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 
+import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.M;
@@ -14,9 +15,12 @@ import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.block.instance.BlockWater;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.fluid.FluidWater;
-import farcore.lib.item.ItemDebugger;
+import farcore.lib.item.instance.ItemDebugger;
+import farcore.lib.item.instance.ItemFluidDisplay;
+import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.model.entity.RenderFallingBlockExt;
+import farcore.lib.model.item.ModelDisplayFluid;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
@@ -43,7 +47,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -67,21 +73,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreSetup
 {
 	public static final int minForge = 2011;
-
+	
 	private LanguageManager lang;
-
+	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
-
+	
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static Proxy proxy;
-
+	
 	public FarCoreSetup()
 	{
 		setup = this;
 		Log.logger = LogManager.getLogger(FarCore.ID);
 	}
-
+	
 	@EventHandler
 	public void check(FMLFingerprintViolationEvent event)
 	{
@@ -114,7 +120,7 @@ public class FarCoreSetup
 					"(Technical information: " + forge + " < " + minForge + ")");
 		Log.info("Checking end.");
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -135,7 +141,7 @@ public class FarCoreSetup
 			File file = event.getSuggestedConfigurationFile();
 			Configuration configuration = new Configuration(file);
 			configuration.load();
-			//			V.init(configuration);
+			Config.load(configuration);
 			configuration.save();
 		}
 		catch(Exception exception)
@@ -145,37 +151,48 @@ public class FarCoreSetup
 		lang.read();
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
 		//		FarCoreKeyHandler.register(V.keyPlace, Keyboard.KEY_P);
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		proxy.load(event);
 		lang.write();
 	}
-
+	
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
-
+		
 	}
-
+	
 	public static class Proxy
 	{
 		public void load(FMLPreInitializationEvent event)
 		{
+			if(Config.displayFluidInTab)
+			{
+				FarCore.tabFluids = new CreativeTabBase("farcore.fluids", "Fluids[FarCore]")
+				{
+					@Override
+					public ItemStack getIconItemStack()
+					{
+						return new ItemStack(Items.WATER_BUCKET);
+					}
+				};
+			}
 			FarCore.tabResourceBlock = new CreativeTabBase("farcore.resource.block", "Far Resource Block")
 			{
 				@Override
@@ -217,10 +234,10 @@ public class FarCoreSetup
 				}
 			};
 			M.init();
-
+			
 			new ItemDebugger().setCreativeTab(FarCore.tabTool);
 			//			new ItemTreeLog().setTextureName("grouped/log").setCreativeTab(FarCore.tabResourceItem);
-			//			new ItemFluidDisplay();
+			new ItemFluidDisplay().setCreativeTab(FarCore.tabFluids);
 			//			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
 			new BlockSapling().setCreativeTab(FarCore.tabResourceBlock);
 			//			new BlockCrop();
@@ -233,7 +250,7 @@ public class FarCoreSetup
 			EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
 			//			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 		}
-
+		
 		public void load(FMLInitializationEvent event)
 		{
 			LanguageManager.registerLocal("info.debug.date", "Date : ");
@@ -244,33 +261,34 @@ public class FarCoreSetup
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
 			//			FarCore.network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
-
+			
 			FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTESAskRender.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
 		}
-
+		
 		public void load(FMLPostInitializationEvent event)
 		{
-
+			
 		}
-
+		
 		public void load(FMLLoadCompleteEvent event)
 		{
-
+			
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
 		private boolean loadComplete = false;
-
+		
 		public ClientProxy()
 		{
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
+			MinecraftForge.EVENT_BUS.register(ModelDisplayFluid.Selector.instance);
 		}
-
+		
 		@Override
 		public void load(FMLPreInitializationEvent event)
 		{
@@ -278,35 +296,38 @@ public class FarCoreSetup
 			U.Mod.registerItemModel(EnumItem.debug.item, 0, FarCore.ID, "debugger");
 			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);
 			//			RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, new RenderProjectileItem());
-			//			MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
+			ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
 			ModelLoaderRegistry.registerLoader(ModelSapling.Loader.instance);
+			ModelLoaderRegistry.registerLoader(ModelDisplayFluid.Loader.instance);
+			U.Mod.registerCustomItemModelSelector(EnumItem.display_fluid.item, ModelDisplayFluid.Selector.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.BlockModelSelector.instance);
 			U.Mod.registerCustomItemModelSelector(Item.getItemFromBlock(EnumBlock.sapling.block), ModelSapling.ItemModelSelector.instance);
+			U.Mod.registerFluid((BlockFluidBase) EnumBlock.water.block);
 		}
-
+		
 		@Override
 		public void load(FMLInitializationEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void load(FMLLoadCompleteEvent event)
 		{
 			super.load(event);
 			loadComplete = true;
 		}
-
+		
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
-			
+
 		}
 	}
 }

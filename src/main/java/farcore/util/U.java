@@ -22,6 +22,7 @@ import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.collection.Stack;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.model.block.ICustomItemModelSelector;
+import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
@@ -51,6 +52,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -64,14 +66,6 @@ public class U
 	private static final Random RNG = new Random();
 	@SidedProxy(serverSide = "farcore.util.U$CommonHandler", clientSide = "farcore.util.U$ClientHandler")
 	static CommonHandler handlerGatway;
-	
-	private static class DI extends Item
-	{
-		public static void registerItemBlock(Block block, Item item)
-		{
-			Item.registerItemBlock(block, item);
-		}
-	}
 	
 	public static class L
 	{
@@ -614,10 +608,23 @@ public class U
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + locate, null));
 		}
 		
+		public static void registerFluid(BlockFluidBase block)
+		{
+			//			ModelResourceLocation location = new ModelResourceLocation(FarCore.ID + ":fluids", block.getFluid().getName());
+			//			ModelLoader.setCustomStateMapper(block, (Block blockIn) ->
+			//			{
+			//				return Maps.asMap(
+			//						ImmutableSet.copyOf(blockIn.getBlockState().getValidStates()),
+			//						(IBlockState state) -> {return location;});
+			//			});
+			registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.instance);
+			ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.instance);
+		}
+		
 		public static void registerCustomItemModelSelector(Item item, ICustomItemModelSelector selector)
 		{
 			ModelLoader.setCustomMeshDefinition(item, selector);
-			ModelBakery.registerItemVariants(item, selector.getAllowedResourceLocations().toArray(new ResourceLocation[0]));
+			ModelBakery.registerItemVariants(item, selector.getAllowedResourceLocations(item).toArray(new ResourceLocation[0]));
 		}
 	}
 	

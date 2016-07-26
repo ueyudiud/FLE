@@ -1,4 +1,4 @@
-package farcore.lib.item;
+package farcore.lib.item.instance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import farcore.FarCore;
 import farcore.data.EnumItem;
 import farcore.lib.block.IDebugableBlock;
+import farcore.lib.item.ItemBase;
 import farcore.lib.tile.IDebugableTile;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
@@ -34,7 +35,7 @@ public class ItemDebugger extends ItemBase
 		setMaxStackSize(1);
 		EnumItem.debug.set(this);
 	}
-	
+
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -51,7 +52,7 @@ public class ItemDebugger extends ItemBase
 				Block block = state.getBlock();
 				TileEntity tile = world.getTileEntity(pos);
 				List<String> list = new ArrayList();
-				//This information is added in F3 information, so remove these information display.
+				//This information is added in F3 information, so should I remove these information display?
 				list.add("================World Info==================");
 				list.add("Block Type : " + block.getClass().getSimpleName());
 				list.add("State : ");
@@ -91,7 +92,7 @@ public class ItemDebugger extends ItemBase
 		}
 		return EnumActionResult.PASS;
 	}
-
+	
 	@Override
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{

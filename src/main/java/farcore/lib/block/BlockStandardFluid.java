@@ -2,6 +2,7 @@ package farcore.lib.block;
 
 import java.util.Random;
 
+import farcore.FarCore;
 import farcore.event.FluidBlockEvent.FluidTouchBlockEvent;
 import farcore.lib.fluid.FluidBase;
 import farcore.lib.util.Direction;
@@ -29,6 +30,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	public BlockStandardFluid(FluidBase fluid, Material material)
 	{
 		super(fluid, material);
+		setCreativeTab(FarCore.tabFluids);
 		U.Mod.registerBlock(this, "fluid." + fluid.getName());
 		blockValue = new FluidStack(fluid, 1000);
 		this.fluid = fluid;
@@ -66,7 +68,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		}
 		else
 		{
-			world.setBlockState(pos, getDefaultState().withProperty(LEVEL, level), update ? 3 : 2);
+			world.setBlockState(pos, getDefaultState().withProperty(LEVEL, level - 1), update ? 3 : 2);
 		}
 	}
 
@@ -94,19 +96,27 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			if (prelevel != 1)
 			{
 				worldIn.setBlockState(pos, state.withProperty(LEVEL, level - 1), 2);
-				return;
 			}
+			return;
 		}
 		boolean[] repleaced = new boolean[4];
 		for(EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
 			level = displaceIfPossible(worldIn, pos.offset(facing), pos, level);
 			if(level == 0) return;
-			repleaced[facing.ordinal()] = level >= 0;
+			repleaced[facing.ordinal() - 2] = level >= 0;
 			if(level < 0)
 			{
 				level = -level;
 			}
+		}
+		if(!(repleaced[0] || repleaced[1] || repleaced[2] || repleaced[3]))
+		{
+			if(level != prelevel)
+			{
+				setFluidLevel(worldIn, pos, level, true);
+			}
+			return;
 		}
 		int xNeg = getFluidLevel(worldIn, pos.add(-1, 0, 0));
 		int xPos = getFluidLevel(worldIn, pos.add(+1, 0, 0));
@@ -355,7 +365,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	{
 		if(!world.isAreaLoaded(pos, 1))
 			return -level;
-		if(world.isAirBlock(pos)) return 0;
+		if(world.isAirBlock(pos)) return level;
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() == this) return level;
 		FluidTouchBlockEvent event = new FluidTouchBlockEvent(world, source, pos, state, this, level);
@@ -423,7 +433,6 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	{
 		return 16;
 	}
-	
 	
 	@Override
 	public FluidStack drain(World world, BlockPos pos, int maxDrain, boolean doDrain)

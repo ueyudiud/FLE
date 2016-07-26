@@ -94,6 +94,8 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	//Crop configuration.
 	public boolean isCrop = false;
 	public ICrop crop;
+	//Multi item configuration.
+	public IItemMatProp itemProp;
 
 	private Set<SubTag> subTags = new HashSet();
 

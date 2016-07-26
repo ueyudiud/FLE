@@ -2,17 +2,21 @@ package farcore.lib.collection;
 
 import java.util.Arrays;
 
-import scala.collection.generic.BitOperations.Int;
-
+/**
+ * The integer array, used when needed add
+ * array to collection.
+ * @author ueyudiud
+ *
+ */
 public class IntArray
 {
 	public int[] array;
 	
 	public IntArray(int length)
 	{
-		this.array = new int[length];
+		array = new int[length];
 	}
-		
+	
 	public IntArray(int[] array)
 	{
 		this.array = array;
@@ -39,9 +43,9 @@ public class IntArray
 	public boolean equals(Object obj)
 	{
 		return obj == null ? false :
-				obj == this ? true :
-					!(obj instanceof IntArray) ? 
-							!(obj instanceof int[] ? false : Arrays.equals(array, (int[]) obj)) : Arrays.equals(array, ((IntArray) obj).array);
+			obj == this ? true :
+				!(obj instanceof IntArray) ?
+						!(obj instanceof int[] ? false : Arrays.equals(array, (int[]) obj)) : Arrays.equals(array, ((IntArray) obj).array);
 	}
 	
 	@Override

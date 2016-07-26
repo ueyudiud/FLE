@@ -12,6 +12,7 @@ import farcore.FarCore;
 import farcore.data.M;
 import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.material.Mat;
+import farcore.lib.model.ModelHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -27,12 +29,11 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelSapling implements IModel, IRetexturableModel
+public class ModelSapling extends ModelBase implements IRetexturableModel
 {
 	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
 	
@@ -43,12 +44,6 @@ public class ModelSapling implements IModel, IRetexturableModel
 	public ModelSapling(ResourceLocation location)
 	{
 		saplingLocation = location;
-	}
-	
-	@Override
-	public Collection<ResourceLocation> getDependencies()
-	{
-		return ImmutableList.of();
 	}
 
 	@Override
@@ -67,12 +62,6 @@ public class ModelSapling implements IModel, IRetexturableModel
 			model = ((IRetexturableModel) model).retexture(ImmutableMap.of("sapling", saplingLocation.toString()));
 		}
 		return model.bake(state, format, bakedTextureGetter);
-	}
-
-	@Override
-	public IModelState getDefaultState()
-	{
-		return TRSRTransformation.identity();
 	}
 	
 	@Override
@@ -113,38 +102,7 @@ public class ModelSapling implements IModel, IRetexturableModel
 				throw new RuntimeException("Invalid model location : " + path);
 			ResourceLocation location = new ResourceLocation(strings[1], "blocks/sapling/" + strings[2]);
 			return "saplingitem".equals(strings[0]) ?
-					new IModel()
-			{
-				@Override
-				public Collection<ResourceLocation> getTextures()
-				{
-					return ImmutableList.of(location);
-				}
-
-				@Override
-				public Collection<ResourceLocation> getDependencies()
-				{
-					return ImmutableList.of();
-				}
-
-				@Override
-				public IModelState getDefaultState()
-				{
-					return TRSRTransformation.identity();
-				}
-
-				@Override
-				public IBakedModel bake(IModelState state, VertexFormat format,
-						Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
-				{
-					IModel model = ModelLoaderRegistry.getModelOrMissing(new ResourceLocation("item/generated"));
-					if(model instanceof IRetexturableModel)
-					{
-						model = ((IRetexturableModel) model).retexture(ImmutableMap.of("layer0", location.toString()));
-					}
-					return model.bake(state, format, bakedTextureGetter);
-				}
-			} : new ModelSapling(location);
+					ModelHelper.makeItemModel(location) : new ModelSapling(location);
 		}
 	}
 	
@@ -179,7 +137,7 @@ public class ModelSapling implements IModel, IRetexturableModel
 		}
 
 		@Override
-		public List<ResourceLocation> getAllowedResourceLocations()
+		public List<ResourceLocation> getAllowedResourceLocations(Item item)
 		{
 			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
 			for(Mat material : BlockSapling.PROP_SAPLING.getAllowedValues())
