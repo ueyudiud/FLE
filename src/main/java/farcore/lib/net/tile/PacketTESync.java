@@ -17,28 +17,28 @@ public class PacketTESync extends PacketBlockCoord
 	private NBTTagCompound nbt;
 	public PacketTESync()
 	{
-
+		
 	}
 	public PacketTESync(World world, BlockPos pos, NBTTagCompound nbt)
 	{
 		super(world, pos);
 		this.nbt = nbt;
 	}
-
+	
 	@Override
 	protected void encode(PacketBuffer output) throws IOException
 	{
 		super.encode(output);
 		output.writeNBTTagCompoundToBuffer(nbt);
 	}
-
+	
 	@Override
 	protected void decode(PacketBuffer input) throws IOException
 	{
 		super.decode(input);
 		nbt = input.readNBTTagCompoundFromBuffer();
 	}
-
+	
 	@Override
 	public IPacket process(Network network)
 	{
@@ -47,7 +47,9 @@ public class PacketTESync extends PacketBlockCoord
 		{
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof ISynchronizableTile)
+			{
 				((ISynchronizableTile) tile).readFromDescription(nbt);
+			}
 		}
 		return null;
 	}

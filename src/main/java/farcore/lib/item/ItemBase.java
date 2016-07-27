@@ -1,9 +1,11 @@
 package farcore.lib.item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.LanguageManager;
+import farcore.lib.util.Log;
 import farcore.lib.util.UnlocalizedList;
 import farcore.util.U;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +16,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBase extends Item implements IRegisteredNameable
 {
+	private static List<ItemBase> list = new ArrayList();
+
+	/**
+	 * Called when all others object(fluids, blocks, configurations, materials, etc)
+	 * are already initialized.
+	 */
+	public static void post()
+	{
+		Log.info("Far core reloading items...");
+		for(ItemBase item : list)
+		{
+			item.postInitalizedItems();
+		}
+		list = null;
+	}
+
 	protected String localized;
 	protected String unlocalized;
 	protected String unlocalizedTooltip;
@@ -35,6 +53,15 @@ public class ItemBase extends Item implements IRegisteredNameable
 			LanguageManager.registerLocal(unlocalizedTooltip, localTooltip);
 		}
 		U.Mod.registerItem(this, modid, name);
+		/**
+		 * Added item into post-initialized list.
+		 */
+		list.add(this);
+	}
+
+	public void postInitalizedItems()
+	{
+
 	}
 	
 	@Override
@@ -108,6 +135,11 @@ public class ItemBase extends Item implements IRegisteredNameable
 		return 0;
 	}
 	
+	public int getBaseDamage(ItemStack stack)
+	{
+		return super.getDamage(stack);
+	}
+
 	@Override
 	public int getDamage(ItemStack stack)
 	{

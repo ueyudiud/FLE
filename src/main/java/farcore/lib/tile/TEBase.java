@@ -11,7 +11,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -54,43 +57,57 @@ public class TEBase extends TileEntity implements ICoord
 	public void sendToAll(IPacket player)
 	{
 		if(worldObj != null)
+		{
 			FarCore.network.sendToAll(player);
+		}
 	}
 
 	public void sendToServer(IPacket packet)
 	{
 		if(worldObj != null)
+		{
 			FarCore.network.sendToServer(packet);
+		}
 	}
 
 	public void sendToPlayer(IPacket packet, EntityPlayer player)
 	{
 		if(worldObj != null)
+		{
 			FarCore.network.sendToPlayer(packet, player);
+		}
 	}
 
 	public void sendLargeToPlayer(IPacket packet, EntityPlayer player)
 	{
 		if(worldObj != null)
+		{
 			FarCore.network.sendLargeToPlayer(packet, player);
+		}
 	}
 
 	public void sendToNearby(IPacket packet, float range)
 	{
 		if(worldObj != null)
+		{
 			FarCore.network.sendToNearBy(packet, this, range);
+		}
 	}
 
 	public void sendToDim(IPacket packet)
 	{
 		if(worldObj != null)
+		{
 			sendToDim(packet, worldObj.provider.getDimension());
+		}
 	}
 
 	public void sendToDim(IPacket packet, int dim)
 	{
 		if(worldObj != null)
+		{
 			FarCore.network.sendToDim(packet, dim);
+		}
 	}
 
 	public void syncToAll()
@@ -203,12 +220,12 @@ public class TEBase extends TileEntity implements ICoord
 
 	}
 
-	public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		return false;
+		return EnumActionResult.PASS;
 	}
 
-	public boolean onBlockClicked(EntityPlayer player, int side)
+	public boolean onBlockClicked(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return false;
 	}

@@ -14,16 +14,25 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
+import farcore.FarCoreSetup;
+import farcore.data.Capabilities;
+import farcore.data.EnumToolType;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.collection.Stack;
 import farcore.lib.entity.EntityFallingBlockExtended;
+import farcore.lib.item.ITool;
 import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
+import farcore.lib.tile.IItemHandlerIO;
+import farcore.lib.tile.IToolableTile;
+import farcore.lib.tile.TEBase;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.LanguageManager;
@@ -35,6 +44,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -44,21 +55,38 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.BlockFluidBase;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class U
@@ -114,6 +142,43 @@ public class U
 		{
 			if(list == null || list.length == 0) return new ArrayList();
 			return new ArrayList(Arrays.asList(list));
+		}
+		
+		public static <K, V> void put(Map<K, List<V>> map, K key, V value)
+		{
+			if(map.containsKey(key))
+			{
+				map.get(key).add(value);
+			}
+			else
+			{
+				map.put(key, new ArrayList(ImmutableList.of(value)));
+			}
+		}
+		
+		public static <K, V> void put(Map<K, List<V>> map, K key, V...values)
+		{
+			if(values.length == 0) return;
+			if(values.length == 1)
+			{
+				put(map, key, values[0]);
+			}
+			else
+			{
+				put(map, key, Arrays.asList(values));
+			}
+		}
+		
+		public static <K, V> void put(Map<K, List<V>> map, K key, Collection<V> values)
+		{
+			if(map.containsKey(key))
+			{
+				map.get(key).addAll(values);
+			}
+			else
+			{
+				map.put(key, new ArrayList(values));
+			}
 		}
 		
 		public static <T> boolean contain(Collection<? extends T> collection, IDataChecker<T> checker)
@@ -240,6 +305,11 @@ public class U
 			double v;
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
+		}
+		
+		public static int nextInt(int bound)
+		{
+			return nextInt(bound, RNG);
 		}
 		
 		public static int nextInt(int bound, Random rand)
@@ -592,35 +662,52 @@ public class U
 		{
 			GameRegistry.register(item.setRegistryName(modid, name));
 		}
-		
+
+		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Block block, int meta, String modid, String locate)
 		{
 			registerItemBlockModel(Item.getItemFromBlock(block), meta, modid, locate);
 		}
-		
+
+		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Item item, int meta, String modid, String locate)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + locate, "inventory"));
 		}
 		
+		/**
+		 * Because this method is often use in item initialization, to
+		 * check the side is client or server is too inconvenient, so
+		 * this method used handler gateway.
+		 * @param item
+		 * @param meta
+		 * @param modid
+		 * @param locate
+		 */
 		public static void registerItemModel(Item item, int meta, String modid, String locate)
 		{
-			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + locate, null));
+			handlerGatway.setModelLocate(item, meta, modid, locate);
 		}
 		
+		public static void registerBiomeColorMultiplier(Block...block)
+		{
+			handlerGatway.registerBiomeColorMultiplier(block);
+		}
+		
+		@SideOnly(Side.CLIENT)
+		public static void registerColorMultiplier(IBlockColor color, Block...block)
+		{
+			FarCoreSetup.proxy.registerColorMultiplier(color, block);
+		}
+
+		@SideOnly(Side.CLIENT)
 		public static void registerFluid(BlockFluidBase block)
 		{
-			//			ModelResourceLocation location = new ModelResourceLocation(FarCore.ID + ":fluids", block.getFluid().getName());
-			//			ModelLoader.setCustomStateMapper(block, (Block blockIn) ->
-			//			{
-			//				return Maps.asMap(
-			//						ImmutableSet.copyOf(blockIn.getBlockState().getValidStates()),
-			//						(IBlockState state) -> {return location;});
-			//			});
 			registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.instance);
 			ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.instance);
 		}
 		
+		@SideOnly(Side.CLIENT)
 		public static void registerCustomItemModelSelector(Item item, ICustomItemModelSelector selector)
 		{
 			ModelLoader.setCustomMeshDefinition(item, selector);
@@ -913,6 +1000,223 @@ public class U
 			}
 			return tile;
 		}
+
+		public static Direction getCollideSide(AxisAlignedBB aabb, double[] pre, double[] post)
+		{
+			if(aabb.maxX < post[0] || aabb.minX > post[0] ||
+					aabb.maxY < post[1] || aabb.minY > post[1] ||
+					aabb.maxZ < post[2] || aabb.minZ > post[2])
+				return null;
+			else
+				return aabb.maxY < pre[1] ? Direction.U :
+					aabb.minY > pre[1] ? Direction.D :
+						aabb.maxX < pre[0] ? Direction.E :
+							aabb.minX > pre[0] ? Direction.W :
+								aabb.maxZ < pre[2] ? Direction.S :
+									aabb.minZ > pre[2] ? Direction.N :
+										Direction.Q;
+		}
+		
+		public static RayTraceResult rayTrace(World worldIn, EntityPlayer playerIn, boolean useLiquids)
+		{
+			float f = playerIn.rotationPitch;
+			float f1 = playerIn.rotationYaw;
+			double d0 = playerIn.posX;
+			double d1 = playerIn.posY + playerIn.getEyeHeight();
+			double d2 = playerIn.posZ;
+			Vec3d vec3d = new Vec3d(d0, d1, d2);
+			float f2 = MathHelper.cos(-f1 * 0.017453292F - (float)Math.PI);
+			float f3 = MathHelper.sin(-f1 * 0.017453292F - (float)Math.PI);
+			float f4 = -MathHelper.cos(-f * 0.017453292F);
+			float f5 = MathHelper.sin(-f * 0.017453292F);
+			float f6 = f3 * f4;
+			float f7 = f2 * f4;
+			double d3 = 5.0D;
+			if (playerIn instanceof net.minecraft.entity.player.EntityPlayerMP)
+			{
+				d3 = ((net.minecraft.entity.player.EntityPlayerMP)playerIn).interactionManager.getBlockReachDistance();
+			}
+			Vec3d vec3d1 = vec3d.addVector(f6 * d3, f5 * d3, f7 * d3);
+			return worldIn.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
+		}
+	}
+
+	public static class TileEntities
+	{
+		public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
+				Direction facing, float hitX, float hitY, float hitZ, TileEntity tile)
+		{
+			if(tile == null) return false;
+			if(tile instanceof TEBase && !((TEBase) tile).isInitialized())
+				return false;
+			EnumFacing facing2 = facing.of();
+			if(tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2))
+			{
+				if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
+				{
+					IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2);
+					IFluidHandler handler2 = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+					FluidStack input;
+					FluidStack output;
+					int amt;
+					if((output = handler2.drain(Integer.MAX_VALUE, false)) != null)
+					{
+						if((amt = handler.fill(output, true)) != 0)
+						{
+							input = output.copy();
+							input.amount = amt;
+							handler2.drain(input, true);
+							return true;
+						}
+					}
+					else if((output = handler.drain(Integer.MAX_VALUE, false)) != null)
+					{
+						if((amt = handler2.fill(output, true)) != 0)
+						{
+							input = output.copy();
+							input.amount = amt;
+							handler.drain(input, true);
+							return true;
+						}
+					}
+				}
+			}
+			if(tile.hasCapability(Capabilities.ITEM_HANDLER_IO, facing2))
+			{
+				IItemHandlerIO handler = tile.getCapability(Capabilities.ITEM_HANDLER_IO, facing2);
+				if(heldItem != null && heldItem.hasCapability(Capabilities.ITEM_HANDLER_IO, null))
+				{
+					IItemHandlerIO handler2 = heldItem.getCapability(Capabilities.ITEM_HANDLER_IO, null);
+					if(handler2.canExtractItem() && handler.canInsertItem())
+					{
+						ItemStack stack = handler2.extractItem(Integer.MAX_VALUE, facing, true);
+						if(stack != null)
+						{
+							int amt = handler.tryInsertItem(stack, facing, false);
+							if(amt > 0)
+							{
+								handler2.extractItem(amt, facing, false);
+							}
+						}
+					}
+					if(handler2.canInsertItem() && handler.canExtractItem())
+					{
+						ItemStack stack = handler.extractItem(Integer.MAX_VALUE, facing, true);
+						if(stack != null)
+						{
+							int amt = handler2.tryInsertItem(stack, facing, false);
+							if(amt > 0)
+							{
+								handler.extractItem(amt, facing, false);
+							}
+						}
+					}
+				}
+				else if(heldItem == null)
+				{
+					if(handler.canExtractItem())
+					{
+						ItemStack stack = handler.extractItem(Integer.MAX_VALUE, facing, false);
+						if(stack != null)
+						{
+							playerIn.setHeldItem(hand, stack);
+							return true;
+						}
+					}
+				}
+				else
+				{
+					if(handler.canExtractItem())
+					{
+						if(heldItem.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+						{
+							IItemHandler handler2 = heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+							ItemStack stack = handler.extractItem(Integer.MAX_VALUE, facing, true);
+							if(stack != null)
+							{
+								ItemStack stack2 = stack;
+								int[] puted = new int[handler2.getSlots()];
+								int point = 0;
+								for(int i = 0; i < handler2.getSlots(); ++i)
+								{
+									if(handler2.getStackInSlot(i) == null)
+									{
+										if(handler2.insertItem(i, stack2, true) == null)
+										{
+											stack2 = handler.extractItem(stack.stackSize, facing, false);
+											handler2.insertItem(i, stack, false);
+											return true;
+										}
+										else
+										{
+											stack2 = stack;
+											puted[point ++] = i + 1;
+										}
+									}
+								}
+								for(int i = 0; i < handler2.getSlots(); ++i)
+								{
+									if(!stack.isItemEqual(handler2.getStackInSlot(i)))
+									{
+										continue;
+									}
+									if((stack2 = handler2.insertItem(i, stack2, true)) == null)
+									{
+										break;
+									}
+									puted[point ++] = i + 1;
+								}
+								if(stack2 != null)
+								{
+									stack = handler.extractItem(stack.stackSize - stack2.stackSize, facing, false);
+								}
+								stack2 = stack;
+								for(int i : puted)
+								{
+									if(i == 0)
+									{
+										break;
+									}
+									stack2 = handler2.insertItem(i, stack2, false);
+								}
+								return true;
+							}
+						}
+						ItemStack stack = handler.extractItem(heldItem.getMaxStackSize() - heldItem.stackSize, facing, true);
+						if(stack != null && stack.isItemEqual(heldItem))
+						{
+							heldItem.stackSize += stack.stackSize;
+							handler.extractItem(stack.stackSize, facing, false);
+							return true;
+						}
+					}
+					if(handler.canInsertItem())
+					{
+						int size = handler.tryInsertItem(heldItem.copy(), facing, false);
+						if(size > 0)
+						{
+							heldItem.stackSize -= size;
+							return true;
+						}
+					}
+				}
+			}
+			if(heldItem != null && heldItem.getItem() instanceof ITool &&
+					tile instanceof IToolableTile)
+			{
+				ITool tool = (ITool) heldItem.getItem();
+				ActionResult<Float> result;
+				for(EnumToolType toolType : tool.getToolTypes(heldItem))
+				{
+					if((result = ((IToolableTile) tile).onToolClick(playerIn, toolType, heldItem, facing, hitX, hitY, hitZ)).getType() != EnumActionResult.PASS)
+					{
+						tool.onToolUse(heldItem, toolType, result.getResult());
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 	}
 	
 	public static class ItemStacks
@@ -976,6 +1280,20 @@ public class U
 	@SideOnly(Side.CLIENT)
 	public static class Client
 	{
+		private static final IBlockColor BIOME_COLOR =
+				(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) ->
+		{
+			if(worldIn == null || pos == null) return -1;
+			Biome biome = worldIn.getBiomeGenForCoords(pos);
+			switch (tintIndex)
+			{
+			case 0 : return biome.getGrassColorAtPos(pos);
+			case 1 : return biome.getFoliageColorAtPos(pos);
+			case 2 : return biome.getWaterColor();
+			default: return -1;
+			}
+		};
+		
 		public static boolean shouldRenderBetterLeaves()
 		{
 			return Blocks.LEAVES.getBlockLayer() == BlockRenderLayer.CUTOUT_MIPPED;
@@ -1013,11 +1331,43 @@ public class U
 		{
 			return null;
 		}
+		
+		public void setModelLocate(Item item, int meta, String modid, String name)
+		{
+			
+		}
+
+		public void registerBiomeColorMultiplier(Block...block)
+		{
+
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public static class ClientHandler extends CommonHandler
 	{
+		static final IItemColor ITEMBLOCK_COLOR =
+				(ItemStack stack, int tintIndex) ->
+		{
+			Block block = Block.getBlockFromItem(stack.getItem());
+			return Minecraft.getMinecraft().getBlockColors().colorMultiplier(block.getStateFromMeta(stack.getMetadata()), null, null, tintIndex);
+		};
+		static final IBlockColor BIOME_COLOR =
+				(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) ->
+		{
+			boolean flag = worldIn == null || pos == null;
+			Biome biome = flag ? null : worldIn.getBiomeGenForCoords(pos);
+			switch(tintIndex)
+			{
+			case 0 : return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) :
+				BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
+			case 1 : return flag ? ColorizerFoliage.getFoliageColorBasic() :
+				BiomeColorHelper.getFoliageColorAtPos(worldIn, pos);
+			case 2 : return flag ? -1 : BiomeColorHelper.getWaterColorAtPos(worldIn, pos);
+			default: return -1;
+			}
+		};
+		
 		@Override
 		public World worldInstance(int id)
 		{
@@ -1047,6 +1397,19 @@ public class U
 		public File fileDir()
 		{
 			return Minecraft.getMinecraft().mcDataDir;
+		}
+
+		@Override
+		public void setModelLocate(Item item, int meta, String modid, String name)
+		{
+			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + name, null));
+		}
+
+		@Override
+		public void registerBiomeColorMultiplier(Block... block)
+		{
+			FarCoreSetup.proxy.registerColorMultiplier(BIOME_COLOR, block);
+			FarCoreSetup.proxy.registerColorMultiplier(ITEMBLOCK_COLOR, block);
 		}
 	}
 }

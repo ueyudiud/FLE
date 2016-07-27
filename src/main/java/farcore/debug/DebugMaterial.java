@@ -23,7 +23,7 @@ public class DebugMaterial
 	public static final Mat peridotite = new Mat(7013, "farcore", "peridotite", "Peridotite", "Peridotite").setTag(ROCK);
 	public static final Mat rhyolite = new Mat(7014, "farcore", "rhyolite", "Rhyolite", "Rhyolite").setTag(ROCK);
 	public static final Mat graniteP = new Mat(7015, "farcore", "graniteP", "GranitePegmatite", "Granite Pegmatite").setTag(ROCK);
-	
+
 	public static final Mat oak = new Mat(8001, "minecraft", "oak", "Oak", "Oak").setTag(WOOD);
 	public static final Mat spruce = new Mat(8002, "minecraft", "spruce", "Spruce", "Spruce").setTag(WOOD);
 	public static final Mat birch = new Mat(8003, "minecraft", "birch", "Birch", "Birch").setTag(WOOD);
@@ -33,6 +33,6 @@ public class DebugMaterial
 	public static final Mat aspen = new Mat(8011, FarCore.ID, "aspen", "Aspen", "Aspen").setTag(WOOD);
 	public static final Mat morus = new Mat(8012, FarCore.ID, "morus", "Morus", "Morus").setTag(WOOD);
 	public static final Mat willow = new Mat(8013, FarCore.ID, "willow", "Willow", "Willow").setTag(WOOD);
-
+	
 	public static void init(){	}
 }

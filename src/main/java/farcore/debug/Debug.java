@@ -1,27 +1,19 @@
 package farcore.debug;
 
-import farcore.lib.material.Mat;
-import farcore.lib.util.SubTag;
+import farcore.data.MC;
 
 @Deprecated
 public class Debug
 {
 	public static void main(String[] args)
 	{
+		MC.init();
 		DebugMaterial.init();
 		String sourceLocate = "";
 		//		String srcDirName = "";
 		//		String destDirName = "";
 		//		String formatName = "chiseled.png";
 		//		TextureCopier.copyTarget(srcDirName, destDirName, formatName);
-		for (Mat material : Mat.register)
-		{
-			if (material.contain(SubTag.WOOD))
-			{
-				ModelFileCreator.provideLogAndLeavesInfo(sourceLocate, material);
-				//				ModelFileCreator.provideRockInfo(sourceLocate, material);
-				//				ModelFileCreator.provideRockSlabInfo(sourceLocate, material);
-			}
-		}
+		ModelFileCreator.provideGroupItemInfo(sourceLocate, MC.chip);
 	}
 }

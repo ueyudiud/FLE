@@ -7,11 +7,11 @@ public enum EnumItem
 	log,
 	debug,
 	display_fluid,
-
-	stone_chip;
-
+	stone_chip,
+	seed;
+	
 	public Item item;
-
+	
 	public void set(Item item)
 	{
 		this.item = item;

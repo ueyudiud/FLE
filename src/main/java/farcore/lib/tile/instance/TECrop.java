@@ -1,5 +1,6 @@
 package farcore.lib.tile.instance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -7,17 +8,21 @@ import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
+import farcore.lib.tile.IBreakingDropableTile;
 import farcore.lib.tile.IDebugableTile;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.TEAged;
 import farcore.lib.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.EnumPlantType;
 
-public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpdatableTile
+public class TECrop extends TEAged
+implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 {
 	private static final float absorbEffiency = 0.2F;
 	private int waterLevel = 6400;
@@ -26,12 +31,12 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	private int stage;
 	private ICrop card = ICrop.VOID;
 	private CropInfo info;
-
+	
 	public TECrop()
 	{
-
+		
 	}
-
+	
 	public void initCrop(ICrop crop)
 	{
 		initCrop(0, crop.makeNativeDNA(), crop);
@@ -46,7 +51,7 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		info.generations = generations;
 		crop.decodeDNA(this, dna);
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -57,10 +62,12 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		nbt.setInteger("stage", stage);
 		nbt.setString("crop", card.getRegisteredName());
 		if(info != null)
+		{
 			info.writeToNBT(nbt);
+		}
 		return nbt;
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -73,7 +80,7 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		info = new CropInfo();
 		info.readFromNBT(nbt);
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -87,34 +94,44 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("w"))
+		{
 			waterLevel = nbt.getInteger("w");
+		}
 		if(nbt.hasKey("wi"))
+		{
 			isWild = nbt.getBoolean("wi");
+		}
 		if(nbt.hasKey("g"))
+		{
 			growBuffer = nbt.getInteger("g");
+		}
 		if(nbt.hasKey("s"))
+		{
 			stage = nbt.getInteger("s");
+		}
 		if(nbt.hasKey("c"))
+		{
 			card = Mat.register.get(nbt.getString("c")).crop;
+		}
 		if(nbt.hasKey("i"))
 		{
 			info = new CropInfo();
 			info.readFromNBT(nbt.getCompoundTag("i"));
 		}
 	}
-
+	
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + card.tickUpdate(this);
 	}
-
+	
 	@Override
 	protected void updateServer1()
 	{
@@ -122,56 +139,56 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		card.onUpdate(this);
 		syncToNearby();
 	}
-
+	
 	@Override
 	public String getDNA()
 	{
 		return info.DNA;
 	}
-
+	
 	@Override
 	public ICrop crop()
 	{
 		return card;
 	}
-
+	
 	@Override
 	public CropInfo info()
 	{
 		return info;
 	}
-
+	
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-
+	
 	@Override
 	public boolean isWild()
 	{
 		return isWild;
 	}
-
+	
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-
+	
 	@Override
 	public int stage()
 	{
 		return stage;
 	}
-
+	
 	@Override
 	public void setStage(int stage)
 	{
 		this.stage = stage;
 	}
-
-
+	
+	
 	@Override
 	public void grow(int amt)
 	{
@@ -188,13 +205,13 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 			}
 		}
 	}
-
+	
 	@Override
 	protected int getRenderUpdateRange()
 	{
 		return 5;
 	}
-
+	
 	//	@Override
 	//	public int countWater(int rangeXZ, int rangeY, boolean checkSea)
 	//	{
@@ -270,13 +287,13 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 	//	{
 	//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
 	//	}
-
+	
 	@Override
 	public int getWaterLevel()
 	{
 		return waterLevel;
 	}
-
+	
 	@Override
 	public int useWater(int amount)
 	{
@@ -284,13 +301,13 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		waterLevel -= c;
 		return c;
 	}
-
+	
 	@Override
 	public void killCrop()
 	{
 		removeBlock();
 	}
-
+	
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
@@ -301,12 +318,12 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 		list.add("Stage : " + (stage + 1) + "/" + card.getMaxStage());
 		card.addInformation(this, list);
 	}
-
+	
 	public boolean canPlantAt()
 	{
 		return card == null ? true : card.canPlantAt(this);
 	}
-
+	
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
@@ -315,5 +332,26 @@ public class TECrop extends TEAged implements ICropAccess, IDebugableTile, IUpda
 			state.getBlock().dropBlockAsItem(worldObj, pos, state, 0);
 			killCrop();
 		}
+	}
+	
+	public EnumPlantType getPlantType()
+	{
+		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
+	}
+
+	@Override
+	public List<ItemStack> getDropsOnTileRemoved(IBlockState state)
+	{
+		ArrayList<ItemStack> list = new ArrayList();
+		if(card != null)
+		{
+			card.getDrops(this, list);
+		}
+		return list;
+	}
+	
+	public String getStateName()
+	{
+		return card != null ? card.getIconKey(this) : "";
 	}
 }

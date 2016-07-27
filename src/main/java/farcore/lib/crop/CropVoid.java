@@ -11,6 +11,12 @@ public class CropVoid extends CropBase
 	}
 
 	@Override
+	public String getTranslatedName(String dna)
+	{
+		return "void";
+	}
+	
+	@Override
 	public String getLocalName(String dna)
 	{
 		return "VOID";
@@ -20,5 +26,11 @@ public class CropVoid extends CropBase
 	public long tickUpdate(ICropAccess access)
 	{
 		return Integer.MAX_VALUE;
+	}
+	
+	@Override
+	public String getIconKey(ICropAccess access)
+	{
+		return "void";
 	}
 }
