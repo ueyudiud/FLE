@@ -11,6 +11,13 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ObjectArrays;
 
+/**
+ * A register instanceof of register.
+ * This type is not thread safe.
+ * @author ueyudiud
+ *
+ * @param <T> The register object type.
+ */
 public class Register<T> implements IRegister<T>
 {
 	private static final Comparator<Object[]> COMPARATOR = (Object[] e1, Object[] e2) ->
@@ -53,7 +60,7 @@ public class Register<T> implements IRegister<T>
 	
 	private int freePoint()
 	{
-		do 
+		do
 		{
 			if(point >= names.length)
 			{
@@ -65,7 +72,7 @@ public class Register<T> implements IRegister<T>
 				break;
 			}
 			point++;
-		} 
+		}
 		while (true);
 		return point;
 	}
@@ -73,9 +80,7 @@ public class Register<T> implements IRegister<T>
 	private void freePoint(int id)
 	{
 		if(contain(id))
-		{
 			throw new IllegalArgumentException("The id " + id + " has already registed with " + targets[id] + "!");
-		}
 		if(id >= names.length)
 		{
 			extraList((int) (id * (1 + factor)));
@@ -86,7 +91,7 @@ public class Register<T> implements IRegister<T>
 	{
 		int l = 0;
 		int[] ids = new int[length];
-		do 
+		do
 		{
 			if(point >= names.length)
 			{
@@ -99,7 +104,7 @@ public class Register<T> implements IRegister<T>
 				l++;
 			}
 			point++;
-		} 
+		}
 		while (l < length);
 		return ids;
 	}
@@ -122,9 +127,7 @@ public class Register<T> implements IRegister<T>
 	private void reg(int id, String name, T arg)
 	{
 		if(contain(name))
-		{
 			throw new IllegalArgumentException("The name " + name + " has already registed!");
-		}
 		else
 		{
 			size++;
@@ -146,15 +149,16 @@ public class Register<T> implements IRegister<T>
 		int hash = arg.hashCode();
 		Object object = null;
 		for(int i = 0;
-				i < targets.length; 
+				i < targets.length;
 				object = targets[i++])
 		{
-			if(object == null) continue;
+			if(object == null)
+			{
+				continue;
+			}
 			if(hash == object.hashCode() &&
 					arg.equals(object))
-			{
 				return i - 1;
-			}
 		}
 		return -1;
 	}
@@ -165,14 +169,15 @@ public class Register<T> implements IRegister<T>
 		if(name == null) return -1;
 		String name1 = null;
 		for(int i = 0;
-				i < names.length; 
+				i < names.length;
 				name1 = names[i++])
 		{
-			if(name == null) continue;
-			if(name.equals(name1))
+			if(name == null)
 			{
-				return i - 1;
+				continue;
 			}
+			if(name.equals(name1))
+				return i - 1;
 		}
 		return -1;
 	}
@@ -215,7 +220,10 @@ public class Register<T> implements IRegister<T>
 		HashSet<String> set = new HashSet();
 		for(String string : names)
 		{
-			if(string != null) set.add(string);
+			if(string != null)
+			{
+				set.add(string);
+			}
 		}
 		return ImmutableSet.copyOf(set);
 	}
@@ -230,9 +238,7 @@ public class Register<T> implements IRegister<T>
 	public boolean contain(int id)
 	{
 		if(id < 0)
-		{
 			throw new IllegalArgumentException("The id " + id + " must be an non-negtive number!");
-		}
 		return id >= names.length ? false : names[id] != null;
 	}
 
@@ -291,9 +297,7 @@ public class Register<T> implements IRegister<T>
 			while(i < targets.length)
 			{
 				if(targets[i] != null)
-				{
 					return true;
-				}
 				++i;
 			}
 			return false;
@@ -305,9 +309,7 @@ public class Register<T> implements IRegister<T>
 			while(p < targets.length)
 			{
 				if(targets[p] != null)
-				{
 					return (T) targets[p++];
-				}
 				++p;
 			}
 			return null;
@@ -377,5 +379,19 @@ public class Register<T> implements IRegister<T>
 				targets[i] = objList[i][1];
 			}
 		}
+	}
+
+	@Override
+	public String toString()
+	{
+		String key = "reg{";
+		for(String string : names)
+		{
+			if(string != null)
+			{
+				key += string + ",";
+			}
+		}
+		return key + "}";
 	}
 }

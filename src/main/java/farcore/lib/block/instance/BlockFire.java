@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 import farcore.data.EnumBlock;
 import farcore.lib.block.BlockBase;
-import farcore.lib.block.IBurnCustomBehaviorBlock;
+import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import net.minecraft.block.Block;
@@ -173,8 +173,8 @@ public class BlockFire extends BlockBase
 	private boolean canBurnFire(World world, BlockPos pos, EnumFacing side, boolean isCatchRain)
 	{
 		IBlockState state;
-		return ((state = world.getBlockState(pos)).getBlock() instanceof IBurnCustomBehaviorBlock &&
-				((IBurnCustomBehaviorBlock) state.getBlock()).canFireBurnOn(world, pos, side, isCatchRain)) ||
+		return ((state = world.getBlockState(pos)).getBlock() instanceof IThermalCustomBehaviorBlock &&
+				((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(world, pos, side, isCatchRain)) ||
 				state.getBlock().isFireSource(world, pos, side) ||
 				state.getBlock().isFlammable(world, pos, side) && !isCatchRain;
 	}
@@ -312,7 +312,7 @@ public class BlockFire extends BlockBase
 									BlockPos pos2 = pos.add(i, j, k);
 									IBlockState state2;
 									if(info.isCustomed(i, j, k) &&
-											((IBurnCustomBehaviorBlock) (state = worldIn.getBlockState(pos2)).getBlock()).onBurn(worldIn, pos2, 1000F / chance, U))
+											((IThermalCustomBehaviorBlock) (state = worldIn.getBlockState(pos2)).getBlock()).onBurn(worldIn, pos2, 1000F / chance, U))
 									{
 										continue;
 									}
@@ -334,8 +334,8 @@ public class BlockFire extends BlockBase
 		int i = info.getFlammability(face.x, face.y, face.z);
 
 		IBlockState iblockstate = worldIn.getBlockState(pos);
-		if(iblockstate.getBlock() instanceof IBurnCustomBehaviorBlock &&
-				((IBurnCustomBehaviorBlock) iblockstate.getBlock()).onBurningTick(worldIn, pos, random, face, fireState))
+		if(iblockstate.getBlock() instanceof IThermalCustomBehaviorBlock &&
+				((IThermalCustomBehaviorBlock) iblockstate.getBlock()).onBurningTick(worldIn, pos, random, face, fireState))
 			return;
 		if (random.nextInt(chance) < i)
 		{
@@ -551,8 +551,8 @@ public class BlockFire extends BlockBase
 						for(EnumFacing facing : EnumFacing.VALUES)
 						{
 							boolean isCatchingRaining = farcore.util.U.Worlds.isCatchingRain(world, pos1, true);
-							if((state.getBlock() instanceof IBurnCustomBehaviorBlock &&
-									((IBurnCustomBehaviorBlock) state.getBlock()).canFireBurnOn(world, pos1, facing, isCatchingRaining)) ||
+							if((state.getBlock() instanceof IThermalCustomBehaviorBlock &&
+									((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(world, pos1, facing, isCatchingRaining)) ||
 									state.getBlock().isFlammable(world, pos1, facing))
 							{
 								list[0] |= 1 << (8 + facing.ordinal());
@@ -561,7 +561,7 @@ public class BlockFire extends BlockBase
 							{
 								list[0] |= 1 << (16 + facing.ordinal());
 							}
-							if(state.getBlock() instanceof IBurnCustomBehaviorBlock)
+							if(state.getBlock() instanceof IThermalCustomBehaviorBlock)
 							{
 								list[0] |= 0x4;
 							}

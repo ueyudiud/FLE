@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface IBurnCustomBehaviorBlock
+public interface IThermalCustomBehaviorBlock
 {
 	/**
 	 * Called when fire spread on this block.
@@ -22,7 +22,7 @@ public interface IBurnCustomBehaviorBlock
 	 * @return True to prevent classic fire behavior.
 	 */
 	boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction);
-
+	
 	/**
 	 * Called on burning tick.
 	 * @param world
@@ -34,7 +34,7 @@ public interface IBurnCustomBehaviorBlock
 	 *  be removed.
 	 */
 	boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState);
-
+	
 	/**
 	 * Called when checking whether the block can be burned,
 	 * if prevent check on burning tick, this method will not called
@@ -49,7 +49,7 @@ public interface IBurnCustomBehaviorBlock
 	{
 		return true;
 	}
-
+	
 	/**
 	 * Get conduct heat speed. Negative value means this
 	 * block is not a normal block (Such as ender door).
@@ -60,7 +60,7 @@ public interface IBurnCustomBehaviorBlock
 	 * @return
 	 */
 	float getThermalConduct(World world, BlockPos pos);
-
+	
 	/**
 	 * Get encouragement of hardness of fire burning.<br>
 	 * This method called each time update fire,
@@ -73,10 +73,15 @@ public interface IBurnCustomBehaviorBlock
 	 * @return
 	 */
 	int getFireEncouragement(World world, BlockPos pos);
-
+	
 	default boolean canFireBurnOn(World world, BlockPos pos, EnumFacing side, boolean isCatchRain)
 	{
 		return ((Block) this).isFireSource(world, pos, side) ||
 				((Block) this).isFlammable(world, pos, side) && !isCatchRain;
+	}
+	
+	default void onHeatChanged(World world, BlockPos pos, Direction direction, float amount)
+	{
+
 	}
 }

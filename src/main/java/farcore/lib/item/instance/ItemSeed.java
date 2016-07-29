@@ -82,7 +82,7 @@ public class ItemSeed extends ItemMulti
 			boolean advanced)
 	{
 		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).crop.getLocalName(getDNAFromStack(stack)));
-		unlocalizedList.add("info.crop.generation", getGenerationFromStack(stack));
+		unlocalizedList.add("info.crop.generation", getGenerationFromStack(stack) + 1);
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 	}
 	

@@ -8,8 +8,8 @@ import farcore.FarCore;
 import farcore.data.EnumItem;
 import farcore.data.MC;
 import farcore.lib.block.BlockBase;
-import farcore.lib.block.IBurnCustomBehaviorBlock;
 import farcore.lib.block.ISmartFallableBlock;
+import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.material.Mat;
 import farcore.lib.util.Direction;
@@ -40,11 +40,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCustomBehaviorBlock
+public class BlockRock extends BlockBase implements ISmartFallableBlock, IThermalCustomBehaviorBlock
 {
 	public static final PropertyBool HEATED = PropertyBool.create("heated");
 	public static final PropertyEnum<RockType> ROCK_TYPE = PropertyEnum.create("rock_type", RockType.class);
-	
+
 	public static enum RockType implements IStringSerializable
 	{
 		resource("%s"),
@@ -57,7 +57,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 		brick_mossy("Mossy %s Brick"),
 		brick_compacted("Compacted %s Brick"),
 		chiseled("Chiseled %s");
-		
+
 		static
 		{
 			resource.noSilkTouchDropMeta = cobble_art.ordinal();
@@ -66,37 +66,37 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 			mossy.burnable = true;
 			brick_mossy.burnable = true;
 		}
-		
+
 		int noMossy = ordinal();
 		int noSilkTouchDropMeta = ordinal();
 		boolean burnable;
 		boolean displayInTab = true;
 		String local;
-		
+
 		private RockType(String local)
 		{
 			this.local = local;
 		}
-		
+
 		@Override
 		public String getName()
 		{
 			return name();
 		}
-		
+
 		public RockType burned()
 		{
 			return values()[noMossy];
 		}
 	}
-	
+
 	public final Mat material;
 	public final float hardnessMultiplier;
 	public final float resistanceMultiplier;
 	public final int harvestLevel;
 	private final float detTempCap;
 	public final BlockRockSlab[] slabGroup;
-	
+
 	public BlockRock(String name, Mat material, String localName)
 	{
 		super(material.modid, name, Material.ROCK);
@@ -110,7 +110,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 		setCreativeTab(FarCore.tabResourceBlock);
 		setTickRandomly(true);
 		setDefaultState(getDefaultState().withProperty(HEATED, false));
-		
+
 		for(RockType type : RockType.values())
 		{
 			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), String.format(type.local, localName));
@@ -141,7 +141,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 					(type == RockType.cobble_art ? RockType.cobble.name() : type.name()));
 		}
 	}
-	
+
 	protected BlockRockSlab[] makeSlabs(String name, Mat material, String localName)
 	{
 		BlockRockSlab[] ret = new BlockRockSlab[RockType.values().length];
@@ -151,25 +151,25 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 		}
 		return ret;
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, ROCK_TYPE, HEATED);
 	}
-	
+
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return state.getValue(ROCK_TYPE).ordinal();
 	}
-	
+
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState().withProperty(ROCK_TYPE, RockType.values()[meta]);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
@@ -180,25 +180,25 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 				list.add(new ItemStack(itemIn, 1, type.ordinal()));
 			}
 	}
-	
+
 	@Override
 	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return "pickaxe";
 	}
-	
+
 	@Override
 	public boolean isToolEffective(String type, IBlockState state)
 	{
 		return getHarvestTool(state).equals(type);
 	}
-	
+
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
@@ -214,7 +214,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 			return harvestLevel;
 		}
 	}
-
+	
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
@@ -244,7 +244,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
@@ -256,7 +256,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 		}
 		updateTick(worldIn, pos, state, random);
 	}
-	
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
@@ -265,7 +265,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 			Worlds.fallBlock(worldIn, pos, state);
 		}
 	}
-	
+
 	public boolean canBlockStay(IBlockAccess world, BlockPos pos, IBlockState state)
 	{
 		RockType type = state.getValue(ROCK_TYPE);
@@ -278,13 +278,13 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 			return true;
 		}
 	}
-	
+
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
 		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			ItemStack stack)
@@ -294,7 +294,7 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 			Worlds.fallBlock(worldIn, pos, state);
 		}
 	}
-	
+
 	@Override
 	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
 	{
@@ -306,70 +306,80 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, IBurnCu
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public float getThermalConduct(World world, BlockPos pos)
 	{
 		return material.thermalConduct;
 	}
-	
+
 	@Override
 	public int getFireEncouragement(World world, BlockPos pos)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public void onStartFalling(World world, BlockPos pos)
 	{
-		
+
 	}
-	
+
 	@Override
 	public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
 	{
 		return canBlockStay(world, pos, state);
 	}
-	
+
 	@Override
 	public boolean onFallOnGround(World world, BlockPos pos, IBlockState state, int height, NBTTagCompound tileNBT)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean onDropFallenAsItem(World world, BlockPos pos, IBlockState state, NBTTagCompound tileNBT)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
 	{
 		return (float) ((1.0F + material.toolDamageToEntity) * block.motionY * block.motionY * 0.25F);
 	}
-	
+
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return world.getBlockState(pos).getValue(ROCK_TYPE).burnable;
 	}
-	
+
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return isFlammable(world, pos, face) ? 40 : 0;
 	}
-	
+
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return 0;
+	}
+
+	@Override
+	public void onHeatChanged(World world, BlockPos pos, Direction direction, float amount)
+	{
+		if(amount >= material.minDetHeatForExplosion * material.heatCap)
+		{
+			Worlds.switchProp(world, pos, HEATED, true, 2);
+			world.scheduleUpdate(pos, this, tickRate(world));
+		}
 	}
 }

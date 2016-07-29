@@ -5,7 +5,7 @@ import java.util.Random;
 import farcore.FarCore;
 import farcore.data.EnumSlabState;
 import farcore.lib.block.BlockSlab;
-import farcore.lib.block.IBurnCustomBehaviorBlock;
+import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
 import farcore.lib.util.Direction;
@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockRockSlab extends BlockSlab implements IBurnCustomBehaviorBlock
+public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBlock
 {
 	private final Mat material;
 	private final BlockRock parent;

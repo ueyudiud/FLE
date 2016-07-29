@@ -8,7 +8,7 @@ import farcore.lib.collection.Register;
 public class SubTag implements IDataChecker<ISubTagContainer>
 {
 	private static final Register<SubTag> subTags = new Register();
-
+	
 	public static final SubTag WOOD = getNewSubTag("WOOD");
 	public static final SubTag DIRT = getNewSubTag("DIRT");
 	public static final SubTag SAND = getNewSubTag("SAND");
@@ -17,7 +17,9 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag HANDLE = getNewSubTag("HANDLE");
 	public static final SubTag CROP = getNewSubTag("SEED");
 	public static final SubTag PLANT = getNewSubTag("PLANT");
-	
+
+	public static final SubTag FIRE_RESISTANCE = getNewSubTag("FIRE_RESISTANCE");
+
 	public static void addTagsTo(SubTag[] tags, ISubTagContainer...containers)
 	{
 		for(ISubTagContainer container : containers)
@@ -26,7 +28,7 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 				container.add(tags);
 			}
 	}
-	
+
 	public static SubTag getNewSubTag(String name)
 	{
 		for (SubTag tSubTag : subTags)
@@ -34,27 +36,27 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 				return tSubTag;
 		return new SubTag(name);
 	}
-	
+
 	private final String name;
 	public final Collection<ISubTagContainer> relevantTaggedItems = new HashSet(1);
-	
+
 	private SubTag(String name)
 	{
 		this.name = name;
 		subTags.register(name, this);
 	}
-	
+
 	public String name()
 	{
 		return name;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return name;
 	}
-
+	
 	public SubTag addContainerToList(ISubTagContainer... containers)
 	{
 		if (containers != null)
@@ -67,7 +69,7 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 		}
 		return this;
 	}
-	
+
 	public SubTag addTo(ISubTagContainer... containers)
 	{
 		if (containers != null)
@@ -80,7 +82,7 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 		}
 		return this;
 	}
-
+	
 	@Override
 	public boolean isTrue(ISubTagContainer container)
 	{
