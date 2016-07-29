@@ -14,6 +14,6 @@ public class Debug
 		//		String destDirName = "";
 		//		String formatName = "chiseled.png";
 		//		TextureCopier.copyTarget(srcDirName, destDirName, formatName);
-		ModelFileCreator.provideGroupItemInfo(sourceLocate, MC.chip);
+		ModelFileCreator.provideGroupItemInfo(sourceLocate, MC.seed);
 	}
 }

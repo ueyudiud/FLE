@@ -5,13 +5,13 @@ import java.util.Random;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.lib.block.BlockTileUpdatable;
-import farcore.lib.crop.ICrop;
+import farcore.lib.crop.ICropAccess;
 import farcore.lib.tile.instance.TECrop;
+import farcore.util.BlockStateWrapper;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -20,14 +20,28 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockCrop extends BlockTileUpdatable implements ITileEntityProvider, IPlantable
 {
+	public static class CropState extends BlockStateWrapper
+	{
+		public ICropAccess access;
+		
+		public CropState(ICropAccess access, IBlockState state)
+		{
+			super(state);
+			this.access = access;
+		}
+
+		@Override
+		protected BlockStateWrapper wrapState(IBlockState state)
+		{
+			return new CropState(access, state);
+		}
+	}
+	
 	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.03125F, .0F, .03125F, .96875F, .96875F, .96875F);
 	
 	public BlockCrop()
@@ -36,24 +50,20 @@ public class BlockCrop extends BlockTileUpdatable implements ITileEntityProvider
 		EnumBlock.crop.set(this);
 		setHardness(0.5F);
 	}
-
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[]{ICrop.CROP_NAME, ICrop.CROP_STATE});
-	}
 	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		IExtendedBlockState state2 = (IExtendedBlockState) state;
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TECrop)
-		{
-			state2.withProperty(ICrop.CROP_NAME, ((TECrop) tile).crop().getRegisteredName());
-			state2.withProperty(ICrop.CROP_STATE, ((TECrop) tile).getStateName());
-		}
-		return state2;
+		if(tile instanceof ICropAccess)
+			return new CropState((ICropAccess) tile, getDefaultState());
+		return state;
+	}
+	
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		return state;
 	}
 
 	@Override
@@ -115,5 +125,12 @@ public class BlockCrop extends BlockTileUpdatable implements ITileEntityProvider
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TECrop();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
+	{
+		return true;
 	}
 }

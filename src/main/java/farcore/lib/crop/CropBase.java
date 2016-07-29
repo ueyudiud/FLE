@@ -11,16 +11,13 @@ import farcore.lib.crop.dna.CropDNAHelper;
 import farcore.lib.material.Mat;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.scoreboard.IScoreCriteria.EnumRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.IPlantable;
 
 public abstract class CropBase implements ICrop
 {
-	protected EnumRenderType renderType;
 	protected CropDNAHelper dnaHelper;
 	protected Mat material;
-	protected String textureName;
 	protected int maxStage;
 	protected int growReq = 1000;
 	
@@ -127,11 +124,5 @@ public abstract class CropBase implements ICrop
 	public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
 	{
 		
-	}
-
-	@Override
-	public String getIconKey(ICropAccess access)
-	{
-		return "stage_" + access.stage();
 	}
 }

@@ -13,6 +13,7 @@ import farcore.lib.tile.IDebugableTile;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.TEAged;
 import farcore.lib.util.Direction;
+import farcore.util.U;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,16 +28,16 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 	private static final float absorbEffiency = 0.2F;
 	private int waterLevel = 6400;
 	private boolean isWild = false;
-	private int growBuffer;
+	private float growBuffer;
 	private int stage;
 	private ICrop card = ICrop.VOID;
 	private CropInfo info;
-	
+
 	public TECrop()
 	{
-		
+
 	}
-	
+
 	public void initCrop(ICrop crop)
 	{
 		initCrop(0, crop.makeNativeDNA(), crop);
@@ -51,14 +52,14 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		info.generations = generations;
 		crop.decodeDNA(this, dna);
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("water", waterLevel);
 		nbt.setBoolean("isWild", isWild);
-		nbt.setInteger("growBuf", growBuffer);
+		nbt.setFloat("growBuf", growBuffer);
 		nbt.setInteger("stage", stage);
 		nbt.setString("crop", card.getRegisteredName());
 		if(info != null)
@@ -67,34 +68,34 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		}
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 		waterLevel = nbt.getInteger("water");
 		isWild = nbt.getBoolean("isWild");
-		growBuffer = nbt.getInteger("growBuf");
+		growBuffer = nbt.getFloat("growBuf");
 		stage = nbt.getInteger("stage");
 		card = Mat.register.get(nbt.getString("crop")).crop;
 		info = new CropInfo();
 		info.readFromNBT(nbt);
 	}
-	
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
 		nbt.setInteger("w", waterLevel);
 		nbt.setBoolean("wi", isWild);
-		nbt.setInteger("g", growBuffer);
+		nbt.setFloat("g", growBuffer);
 		nbt.setInteger("s", stage);
 		nbt.setString("c", card.getRegisteredName());
 		NBTTagCompound nbt1;
 		info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
-	
+
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -109,7 +110,7 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		}
 		if(nbt.hasKey("g"))
 		{
-			growBuffer = nbt.getInteger("g");
+			growBuffer = nbt.getFloat("g");
 		}
 		if(nbt.hasKey("s"))
 		{
@@ -125,13 +126,13 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 			info.readFromNBT(nbt.getCompoundTag("i"));
 		}
 	}
-	
+
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + card.tickUpdate(this);
 	}
-	
+
 	@Override
 	protected void updateServer1()
 	{
@@ -139,56 +140,56 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		card.onUpdate(this);
 		syncToNearby();
 	}
-	
+
 	@Override
 	public String getDNA()
 	{
 		return info.DNA;
 	}
-	
+
 	@Override
 	public ICrop crop()
 	{
 		return card;
 	}
-	
+
 	@Override
 	public CropInfo info()
 	{
 		return info;
 	}
-	
+
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-	
+
 	@Override
 	public boolean isWild()
 	{
 		return isWild;
 	}
-	
+
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-	
+
 	@Override
 	public int stage()
 	{
 		return stage;
 	}
-	
+
 	@Override
 	public void setStage(int stage)
 	{
 		this.stage = stage;
 	}
-	
-	
+
+
 	@Override
 	public void grow(int amt)
 	{
@@ -205,13 +206,13 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 			}
 		}
 	}
-	
+
 	@Override
 	protected int getRenderUpdateRange()
 	{
 		return 5;
 	}
-	
+
 	//	@Override
 	//	public int countWater(int rangeXZ, int rangeY, boolean checkSea)
 	//	{
@@ -287,13 +288,13 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 	//	{
 	//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
 	//	}
-	
+
 	@Override
 	public int getWaterLevel()
 	{
 		return waterLevel;
 	}
-	
+
 	@Override
 	public int useWater(int amount)
 	{
@@ -301,44 +302,53 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		waterLevel -= c;
 		return c;
 	}
-	
+
 	@Override
 	public void killCrop()
 	{
 		removeBlock();
 	}
-	
+
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
-		list.add("Spcie Name : " + card.getRegisteredName());
+		list.add("Tag : " + getStateName());
 		list.add("Name : " + card.getLocalName(getDNA()));
 		list.add("DNA : " + info.DNA);
-		list.add("Buf : " + growBuffer);
-		list.add("Stage : " + (stage + 1) + "/" + card.getMaxStage());
+		int max = card.getMaxStage();
+		int req = card.getGrowReq(this);
+		list.add("Grow Progress : " + (int) (growBuffer + stage * req) + "/" + card.getMaxStage() * req);
 		card.addInformation(this, list);
 	}
-	
+
 	public boolean canPlantAt()
 	{
 		return card == null ? true : card.canPlantAt(this);
 	}
 	
 	@Override
+	public boolean canBlockStay()
+	{
+		return worldObj == null ? true :
+			card == ICrop.VOID ? false : card.canPlantAt(this);
+	}
+
+	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
-		if(!canBlockStay())
-		{
-			state.getBlock().dropBlockAsItem(worldObj, pos, state, 0);
-			killCrop();
-		}
+		if(!worldObj.isRemote)
+			if(!canBlockStay())
+			{
+				U.Worlds.spawnDropsInWorld(this, getDropsOnTileRemoved(state));
+				killCrop();
+			}
 	}
-	
+
 	public EnumPlantType getPlantType()
 	{
 		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
 	}
-
+	
 	@Override
 	public List<ItemStack> getDropsOnTileRemoved(IBlockState state)
 	{
@@ -349,9 +359,9 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		}
 		return list;
 	}
-	
+
 	public String getStateName()
 	{
-		return card != null ? card.getIconKey(this) : "";
+		return card != null ? card.getState(this) : "";
 	}
 }

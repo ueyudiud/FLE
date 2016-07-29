@@ -1,6 +1,9 @@
 package farcore.lib.crop;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumBlock;
 import farcore.lib.item.instance.ItemSeed;
@@ -57,11 +60,31 @@ public abstract class CropAbstract extends CropBase implements IPlantable
 	@Override
 	public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
 	{
-		list.add(applyChildSeed(1 + U.L.nextInt(20) / 17, access.info()));
+		if(access.stage() == maxStage)
+		{
+			list.add(applyChildSeed(1 + U.L.nextInt(20) / 17, access.info()));
+		}
 	}
 	
 	public ItemStack applyChildSeed(int size, CropInfo info)
 	{
 		return ItemSeed.applySeed(size, material, info.generations + 1, makeChildDNA(info.generations, info.DNA));
+	}
+
+	@Override
+	public String getState(ICropAccess access)
+	{
+		return "stage_" + access.stage();
+	}
+	
+	@Override
+	public List<String> getAllAllowedState()
+	{
+		ImmutableList.Builder<String> builder = ImmutableList.builder();
+		for(int i = 0; i < getMaxStage(); ++i)
+		{
+			builder.add("stage_" + i);
+		}
+		return builder.build();
 	}
 }

@@ -94,7 +94,7 @@ public class U
 	private static final Random RNG = new Random();
 	@SidedProxy(serverSide = "farcore.util.U$CommonHandler", clientSide = "farcore.util.U$ClientHandler")
 	static CommonHandler handlerGatway;
-	
+
 	public static class L
 	{
 		public static int[] cast(Integer[] integers)
@@ -106,44 +106,44 @@ public class U
 			}
 			return ret;
 		}
-		
+
 		public static int cast(Integer integer)
 		{
 			return integer == null ? 0 : integer.intValue();
 		}
-		
+
 		public static short cast(Short short1)
 		{
 			return short1 == null ? 0 : short1.shortValue();
 		}
-		
+
 		public static void exit()
 		{
 			exit(0, false);
 		}
-		
+
 		public static void exit(int code, boolean hardExit)
 		{
 			FMLCommonHandler.instance().exitJava(code, hardExit);
 		}
-		
+
 		public static <T> T[] cast(Collection<? extends T> collection, Class<T> clazz)
 		{
 			T[] ret = (T[]) Array.newInstance(clazz, collection.size());
 			return collection.toArray(ret);
 		}
-		
+
 		public static <T> ImmutableList<T> castImmutable(T...list)
 		{
 			return ImmutableList.copyOf(list);
 		}
-		
+
 		public static <T> ArrayList<T> castArray(T...list)
 		{
 			if(list == null || list.length == 0) return new ArrayList();
 			return new ArrayList(Arrays.asList(list));
 		}
-		
+
 		public static <K, V> void put(Map<K, List<V>> map, K key, V value)
 		{
 			if(map.containsKey(key))
@@ -155,7 +155,7 @@ public class U
 				map.put(key, new ArrayList(ImmutableList.of(value)));
 			}
 		}
-		
+
 		public static <K, V> void put(Map<K, List<V>> map, K key, V...values)
 		{
 			if(values.length == 0) return;
@@ -168,7 +168,7 @@ public class U
 				put(map, key, Arrays.asList(values));
 			}
 		}
-		
+
 		public static <K, V> void put(Map<K, List<V>> map, K key, Collection<V> values)
 		{
 			if(map.containsKey(key))
@@ -180,7 +180,7 @@ public class U
 				map.put(key, new ArrayList(values));
 			}
 		}
-		
+
 		public static <T> boolean contain(Collection<? extends T> collection, IDataChecker<T> checker)
 		{
 			if(collection == null || collection.isEmpty()) return false;
@@ -188,7 +188,7 @@ public class U
 				if(checker.isTrue(target)) return true;
 			return false;
 		}
-		
+
 		public static <T> Set<T> containSet(Collection<? extends T> collection, IDataChecker<T> checker)
 		{
 			if(collection == null || collection.isEmpty()) return ImmutableSet.of();
@@ -200,7 +200,7 @@ public class U
 				}
 			return builder.build();
 		}
-		
+
 		public static <T> T randomInStack(Stack<T>[] stacks, Random random)
 		{
 			long weight = 0;
@@ -210,12 +210,12 @@ public class U
 			}
 			return randomInStack(stacks, weight, random);
 		}
-		
+
 		public static <T> T randomInStack(Stack<T>[] stacks, long weight)
 		{
 			return randomInStack(stacks, weight, RNG);
 		}
-		
+
 		public static <T> T randomInStack(Stack<T>[] stacks, long weight, Random random)
 		{
 			long rng = Maths.mod(random.nextLong(), weight);
@@ -229,24 +229,24 @@ public class U
 			while(rng >= 0);
 			return target;
 		}
-		
+
 		public static <T> T random(T...list)
 		{
 			return random(list, RNG);
 		}
-		
+
 		public static <T> T random(Random random, T...list)
 		{
 			return random(list, random);
 		}
-		
+
 		public static <T> T random(T[] list, Random random)
 		{
 			return list == null || list.length == 0 ? null :
 				list.length == 1 ? list[0] :
 					list[random.nextInt(list.length)];
 		}
-		
+
 		public static <T> T random(Collection<T> collection, Random random)
 		{
 			if(collection instanceof List)
@@ -254,7 +254,7 @@ public class U
 			else
 				return (T) random(collection.toArray(), random);
 		}
-		
+
 		public static int[] fillIntArray(int length, int value)
 		{
 			if(length == 0) return new int[0];
@@ -263,14 +263,14 @@ public class U
 			Arrays.fill(ret, value);
 			return ret;
 		}
-		
+
 		public static boolean equal(Object arg1, Object arg2)
 		{
 			return arg1 == arg2 ? true :
 				(arg1 == null ^ arg2 == null) ? false :
 					arg1.equals(arg2);
 		}
-		
+
 		public static int min(int...values)
 		{
 			int ret = Integer.MAX_VALUE;
@@ -281,7 +281,7 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static int max(int...values)
 		{
 			int ret = Integer.MIN_VALUE;
@@ -292,47 +292,47 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static int range(int m1, int m2, int target)
 		{
 			int v;
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
-		
+
 		public static double range(double m1, double m2, double target)
 		{
 			double v;
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
-		
+
 		public static int nextInt(int bound)
 		{
 			return nextInt(bound, RNG);
 		}
-		
+
 		public static int nextInt(int bound, Random rand)
 		{
 			return bound <= 0 ? bound : rand.nextInt(bound);
 		}
 	}
-	
+
 	public static class Strings
 	{
 		static final DecimalFormat format1 = new DecimalFormat("##0.0%");
-		
+
 		public static String locale()
 		{
 			return handlerGatway.getLocale();
 		}
-		
+
 		public static String validate(String string)
 		{
 			if(string == null) return "";
 			return string.trim();
 		}
-		
+
 		public static String validateProperty(String string)
 		{
 			if(string == null) return "";
@@ -350,7 +350,7 @@ public class U
 			}
 			return newString.trim();
 		}
-		
+
 		public static String upcaseFirst(String name)
 		{
 			String s = validate(name);
@@ -359,7 +359,7 @@ public class U
 			String sub = name.substring(1);
 			return Character.toString(Character.toUpperCase(chr)) + sub;
 		}
-		
+
 		public static String validateOre(boolean upperFirst, String name)
 		{
 			String string = validate(name);
@@ -384,7 +384,7 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static String[] split(String str, char split)
 		{
 			if(str == null) return new String[0];
@@ -393,12 +393,12 @@ public class U
 			else
 				return new String[]{str};
 		}
-		
+
 		public static String progress(double value)
 		{
 			return format1.format(value);
 		}
-		
+
 		public static String toOrdinalNumber(int value)
 		{
 			if(value < 0)
@@ -415,7 +415,7 @@ public class U
 			default: return value + "th";
 			}
 		}
-		
+
 		public static String toOrdinalNumber(long value)
 		{
 			if(value < 0)
@@ -433,17 +433,17 @@ public class U
 			}
 		}
 	}
-	
+
 	public static class R
 	{
 		private static final Map<String, Field> fieldCache = new HashMap();
 		private static Field modifiersField;
-		
+
 		public static void resetFieldCache()
 		{
 			fieldCache.clear();
 		}
-		
+
 		private static void initModifierField()
 		{
 			try
@@ -459,7 +459,7 @@ public class U
 				e.printStackTrace();
 			}
 		}
-		
+
 		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
@@ -510,7 +510,7 @@ public class U
 				throw new RuntimeException();
 			}
 		}
-		
+
 		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideFinalField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
@@ -563,7 +563,7 @@ public class U
 				throw new RuntimeException("FLE: fail to find and override field " + mcpName);
 			}
 		}
-		
+
 		public static <T> Object getValue(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
 		{
 			for(String str : new String[]{mcpName, obfName})
@@ -584,7 +584,7 @@ public class U
 			}
 			return null;
 		}
-		
+
 		public static Method getMethod(Class clazz, String mcpName, String obfName, Class...classes)
 		{
 			for(String str : new String[]{mcpName, obfName})
@@ -602,7 +602,7 @@ public class U
 			return null;
 		}
 	}
-	
+
 	public static class Maths
 	{
 		public static int mod(int a, int b)
@@ -610,14 +610,14 @@ public class U
 			int v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
-		
+
 		public static long mod(long a, long b)
 		{
 			long v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
 	}
-	
+
 	public static class Mod
 	{
 		public static String getActiveModID()
@@ -626,55 +626,55 @@ public class U
 				return "minecraft";
 			return Loader.instance().activeModContainer().getModId();
 		}
-		
+
 		public static boolean isModLoaded(String name)
 		{
 			return Loader.isModLoaded(name);
 		}
-		
+
 		public static File getMCFile()
 		{
 			return handlerGatway.fileDir();
 		}
-		
+
 		public static void registerBlock(Block block, String name)
 		{
 			registerBlock(block, getActiveModID(), name);
 		}
-		
+
 		public static void registerBlock(Block block, String modid, String name)
 		{
 			registerBlock(block, modid, name, new ItemBlock(block));
 		}
-		
+
 		public static void registerBlock(Block block, String modid, String name, Item itemBlock)
 		{
 			GameRegistry.register(block.setRegistryName(modid, name));
 			GameRegistry.register(itemBlock.setRegistryName(modid, name));
 		}
-
+		
 		public static void registerItem(Item item, String name)
 		{
 			registerItem(item, getActiveModID(), name);
 		}
-
+		
 		public static void registerItem(Item item, String modid, String name)
 		{
 			GameRegistry.register(item.setRegistryName(modid, name));
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Block block, int meta, String modid, String locate)
 		{
 			registerItemBlockModel(Item.getItemFromBlock(block), meta, modid, locate);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Item item, int meta, String modid, String locate)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + locate, "inventory"));
 		}
-		
+
 		/**
 		 * Because this method is often use in item initialization, to
 		 * check the side is client or server is too inconvenient, so
@@ -688,25 +688,25 @@ public class U
 		{
 			handlerGatway.setModelLocate(item, meta, modid, locate);
 		}
-		
+
 		public static void registerBiomeColorMultiplier(Block...block)
 		{
 			handlerGatway.registerBiomeColorMultiplier(block);
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public static void registerColorMultiplier(IBlockColor color, Block...block)
 		{
 			FarCoreSetup.proxy.registerColorMultiplier(color, block);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerFluid(BlockFluidBase block)
 		{
 			registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.instance);
 			ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.instance);
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public static void registerCustomItemModelSelector(Item item, ICustomItemModelSelector selector)
 		{
@@ -714,37 +714,37 @@ public class U
 			ModelBakery.registerItemVariants(item, selector.getAllowedResourceLocations(item).toArray(new ResourceLocation[0]));
 		}
 	}
-	
+
 	public static class Sides
 	{
 		public static boolean isClient()
 		{
 			return FMLCommonHandler.instance().getSide().isClient();
 		}
-		
+
 		public static boolean isServer()
 		{
 			return FMLCommonHandler.instance().getSide().isServer();
 		}
-		
+
 		public static boolean isSimulating()
 		{
 			return FMLCommonHandler.instance().getEffectiveSide().isServer();
 		}
 	}
-	
+
 	public static class OreDict
 	{
 		public static void registerValid(String name, Block ore)
 		{
 			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
 		}
-		
+
 		public static void registerValid(String name, Item ore)
 		{
 			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
 		}
-		
+
 		public static void registerValid(String name, ItemStack ore)
 		{
 			if(U.ItemStacks.valid(ore) == null) return;
@@ -752,7 +752,7 @@ public class U
 			register.stackSize = 1;
 			OreDictionary.registerOre(name, ore);
 		}
-		
+
 		public static void registerValid(String name, ItemStack ore, boolean autoValid)
 		{
 			if(autoValid)
@@ -762,19 +762,19 @@ public class U
 			registerValid(name, ore);
 		}
 	}
-	
+
 	public static class Worlds
 	{
 		private static final int[][] rotateFix = {
 				{3, 2, 5, 4},
 				{1, 0, 5, 4},
 				{1, 0, 3, 2}};
-		
+
 		public static int fixSide(EnumFacing side, float hitX, float hitY, float hitZ)
 		{
 			return fixSide(side.ordinal(), hitX, hitY, hitZ);
 		}
-		
+
 		public static int fixSide(int side, float hitX, float hitY, float hitZ)
 		{
 			float u, v;
@@ -806,7 +806,7 @@ public class U
 								Direction.oppsite[side] :
 									rotateFix[side / 2][id];
 		}
-		
+
 		public static void spawnDropsInWorld(World world, BlockPos pos, List<ItemStack> drops)
 		{
 			if(world.isRemote || drops == null) return;
@@ -825,23 +825,23 @@ public class U
 				world.spawnEntityInWorld(entityitem);
 			}
 		}
-		
+
 		public static void spawnDropInWorld(ICoord coord, ItemStack drop)
 		{
 			spawnDropsInWorld(coord, Arrays.asList(drop));
 		}
-		
+
 		public static void spawnDropsInWorld(ICoord coord, List<ItemStack> drop)
 		{
 			spawnDropsInWorld(coord.world(), coord.pos(), drop);
 		}
-		
+
 		public static void spawnDropsInWorld(EntityPlayer player, ItemStack drop)
 		{
 			if(drop == null || drop.stackSize == 0 || player.worldObj.isRemote) return;
 			player.dropItem(drop, false);
 		}
-		
+
 		public static void spawnDropsInWorldByPlayerOpeningContainer(EntityPlayer player, IInventory inventory)
 		{
 			if(player.worldObj.isRemote) return;
@@ -850,7 +850,7 @@ public class U
 				spawnDropsInWorld(player, inventory.removeStackFromSlot(i));
 			}
 		}
-		
+
 		public static boolean checkAndFallBlock(World world, BlockPos pos)
 		{
 			if(world.isRemote) return false;
@@ -861,7 +861,7 @@ public class U
 				return fallBlock(world, pos, state);
 			return false;
 		}
-		
+
 		public static boolean fallBlock(World world, BlockPos pos, IBlockState state)
 		{
 			if(!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
@@ -893,7 +893,7 @@ public class U
 					tile.writeToNBT(nbt = new NBTTagCompound());
 					if(state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).onFallOnGround(world, pos, state, height, nbt))
 					{
-						
+
 					}
 					else
 					{
@@ -909,22 +909,22 @@ public class U
 				return true;
 			}
 		}
-		
+
 		public static World world(int dimID)
 		{
 			return handlerGatway.worldInstance(dimID);
 		}
-		
+
 		public static <T extends Comparable<T>> boolean switchProp(World world, BlockPos pos, IProperty<T> property, T value, int updateFlag)
 		{
 			return world.setBlockState(pos, world.getBlockState(pos).withProperty(property, value), updateFlag);
 		}
-		
+
 		public static boolean isBlockNearby(World world, BlockPos pos, Block block, boolean ignoreUnloadChunk)
 		{
 			return isBlockNearby(world, pos, block, -1, ignoreUnloadChunk);
 		}
-		
+
 		public static boolean isBlockNearby(World world, BlockPos pos, Block block, int meta, boolean ignoreUnloadChunk)
 		{
 			return isBlock(world, pos.up(), block, meta, ignoreUnloadChunk) ||
@@ -934,7 +934,7 @@ public class U
 					isBlock(world, pos.north(), block, meta, ignoreUnloadChunk) ||
 					isBlock(world, pos.south(), block, meta, ignoreUnloadChunk);
 		}
-		
+
 		public static boolean isBlock(World world, BlockPos pos, Block block, int meta, boolean ignoreUnloadChunk)
 		{
 			IBlockState state;
@@ -942,7 +942,7 @@ public class U
 					(state = world.getBlockState(pos)).getBlock() == block &&
 					(meta < 0 || state.getBlock().getMetaFromState(state) == meta);
 		}
-		
+
 		public static boolean isAirNearby(World world, BlockPos pos, boolean ignoreUnloadChunk)
 		{
 			return (!ignoreUnloadChunk || world.isAreaLoaded(pos, 1)) && (
@@ -953,23 +953,23 @@ public class U
 					world.isAirBlock(pos.north())||
 					world.isAirBlock(pos.south()));
 		}
-		
+
 		public static int getBlockMeta(World world, BlockPos pos)
 		{
 			IBlockState state;
 			return (state = world.getBlockState(pos)).getBlock().getMetaFromState(state);
 		}
-		
+
 		public static boolean setBlock(World world, BlockPos pos, Block block, int meta, int flag)
 		{
 			return world.setBlockState(pos, block.getStateFromMeta(meta), flag);
 		}
-		
+
 		public static boolean isCatchingRain(World world, BlockPos pos)
 		{
 			return isCatchingRain(world, pos, false);
 		}
-		
+
 		public static boolean isCatchingRain(World world, BlockPos pos, boolean checkNeayby)
 		{
 			if(world.isRaining())
@@ -981,7 +981,7 @@ public class U
 								world.canBlockSeeSky(pos.west())));
 			return false;
 		}
-		
+
 		public static TileEntity setTileEntity(World world, BlockPos pos, TileEntity tile, boolean update)
 		{
 			if(update)
@@ -1000,7 +1000,7 @@ public class U
 			}
 			return tile;
 		}
-
+		
 		public static Direction getCollideSide(AxisAlignedBB aabb, double[] pre, double[] post)
 		{
 			if(aabb.maxX < post[0] || aabb.minX > post[0] ||
@@ -1016,7 +1016,7 @@ public class U
 									aabb.minZ > pre[2] ? Direction.N :
 										Direction.Q;
 		}
-		
+
 		public static RayTraceResult rayTrace(World worldIn, EntityPlayer playerIn, boolean useLiquids)
 		{
 			float f = playerIn.rotationPitch;
@@ -1040,7 +1040,7 @@ public class U
 			return worldIn.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
 		}
 	}
-
+	
 	public static class TileEntities
 	{
 		public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
@@ -1218,7 +1218,7 @@ public class U
 			return false;
 		}
 	}
-	
+
 	public static class ItemStacks
 	{
 		public static ItemStack valid(ItemStack stack)
@@ -1232,7 +1232,7 @@ public class U
 			}
 			return stack;
 		}
-		
+
 		public static NBTTagCompound setupNBT(ItemStack stack, boolean createTag)
 		{
 			if(!stack.hasTagCompound())
@@ -1246,7 +1246,7 @@ public class U
 			}
 			return stack.getTagCompound();
 		}
-		
+
 		public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
 		{
 			if(stacks == null || stacks.isEmpty()) return ImmutableList.of();
@@ -1260,7 +1260,7 @@ public class U
 				}
 			return builder.build();
 		}
-		
+
 		public static ItemStack sizeOf(ItemStack stack, int size)
 		{
 			ItemStack ret;
@@ -1268,7 +1268,7 @@ public class U
 			return ret;
 		}
 	}
-	
+
 	public static class Players
 	{
 		public static EntityPlayer player()
@@ -1276,7 +1276,7 @@ public class U
 			return handlerGatway.playerInstance();
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class Client
 	{
@@ -1293,56 +1293,56 @@ public class U
 			default: return -1;
 			}
 		};
-		
+
 		public static boolean shouldRenderBetterLeaves()
 		{
 			return Blocks.LEAVES.getBlockLayer() == BlockRenderLayer.CUTOUT_MIPPED;
 		}
-		
+
 		public static void registerModel(Block block, int meta, String modid, String path)
 		{
 			registerModel(Item.getItemFromBlock(block), meta, modid, path);
 		}
-		
+
 		public static void registerModel(Item item, int meta, String modid, String path)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid, path));
 		}
 	}
-	
+
 	public static class CommonHandler
 	{
 		public World worldInstance(int id)
 		{
 			return DimensionManager.getWorld(id);
 		}
-		
+
 		public String getLocale()
 		{
 			return LanguageManager.ENGLISH;
 		}
-		
+
 		public File fileDir()
 		{
 			return new File(".");
 		}
-		
+
 		public EntityPlayer playerInstance()
 		{
 			return null;
 		}
-		
+
 		public void setModelLocate(Item item, int meta, String modid, String name)
+		{
+
+		}
+		
+		public void registerBiomeColorMultiplier(Block...block)
 		{
 			
 		}
-
-		public void registerBiomeColorMultiplier(Block...block)
-		{
-
-		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class ClientHandler extends CommonHandler
 	{
@@ -1367,7 +1367,7 @@ public class U
 			default: return -1;
 			}
 		};
-		
+
 		@Override
 		public World worldInstance(int id)
 		{
@@ -1379,32 +1379,32 @@ public class U
 				return world == null ? null : world.provider.getDimension() != id ? null : world;
 			}
 		}
-		
+
 		@Override
 		public String getLocale()
 		{
 			return Minecraft.getMinecraft().getLanguageManager()
 					.getCurrentLanguage().getLanguageCode();
 		}
-		
+
 		@Override
 		public EntityPlayer playerInstance()
 		{
 			return Minecraft.getMinecraft().thePlayer;
 		}
-		
+
 		@Override
 		public File fileDir()
 		{
 			return Minecraft.getMinecraft().mcDataDir;
 		}
-
+		
 		@Override
 		public void setModelLocate(Item item, int meta, String modid, String name)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + name, null));
 		}
-
+		
 		@Override
 		public void registerBiomeColorMultiplier(Block... block)
 		{

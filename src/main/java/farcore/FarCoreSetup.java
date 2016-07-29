@@ -22,7 +22,9 @@ import farcore.lib.fluid.FluidWater;
 import farcore.lib.item.ItemBase;
 import farcore.lib.item.instance.ItemDebugger;
 import farcore.lib.item.instance.ItemFluidDisplay;
+import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
+import farcore.lib.model.block.ModelCrop;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.model.entity.RenderFallingBlockExt;
@@ -87,21 +89,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreSetup
 {
 	public static final int minForge = 2011;
-
+	
 	private LanguageManager lang;
-
+	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
-
+	
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static Proxy proxy;
-
+	
 	public FarCoreSetup()
 	{
 		setup = this;
 		Log.logger = LogManager.getLogger(FarCore.ID);
 	}
-
+	
 	@EventHandler
 	public void check(FMLFingerprintViolationEvent event)
 	{
@@ -134,7 +136,7 @@ public class FarCoreSetup
 					"(Technical information: " + forge + " < " + minForge + ")");
 		Log.info("Checking end.");
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -165,33 +167,33 @@ public class FarCoreSetup
 		lang.read();
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
 		//		FarCoreKeyHandler.register(V.keyPlace, Keyboard.KEY_P);
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		proxy.load(event);
 		lang.write();
 	}
-
+	
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
-
+		
 	}
-
+	
 	public static class Proxy
 	{
 		public void load(FMLPreInitializationEvent event)
@@ -248,11 +250,12 @@ public class FarCoreSetup
 				}
 			};
 			M.init();
-			
+
 			new ItemDebugger().setCreativeTab(FarCore.tabTool);
 			//			new ItemTreeLog().setTextureName("grouped/log").setCreativeTab(FarCore.tabResourceItem);
 			new ItemFluidDisplay().setCreativeTab(FarCore.tabFluids);
 			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
+			new ItemSeed().setCreativeTab(FarCore.tabResourceItem);
 			new BlockSapling().setCreativeTab(FarCore.tabResourceBlock);
 			new BlockCrop();
 			new BlockFire();
@@ -265,7 +268,7 @@ public class FarCoreSetup
 			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 			ItemBase.post();
 		}
-
+		
 		public void load(FMLInitializationEvent event)
 		{
 			LanguageManager.registerLocal("info.debug.date", "Date : ");
@@ -279,41 +282,41 @@ public class FarCoreSetup
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
 			//			FarCore.network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
-
+			
 			FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTESAskRender.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
 		}
-
+		
 		public void load(FMLPostInitializationEvent event)
 		{
-
-		}
-
-		public void load(FMLLoadCompleteEvent event)
-		{
-
+			
 		}
 		
+		public void load(FMLLoadCompleteEvent event)
+		{
+			
+		}
+
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IBlockColor color, Block...block)
 		{
-
+			
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Block...block)
 		{
-
+			
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Item...block)
 		{
-
+			
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
@@ -321,13 +324,13 @@ public class FarCoreSetup
 		private Map<IItemColor, List<Block>> itemBlockColorMap = new HashMap();
 		private Map<IItemColor, List<Item>> itemColorMap = new HashMap();
 		private boolean loadComplete = false;
-
+		
 		public ClientProxy()
 		{
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 			MinecraftForge.EVENT_BUS.register(ModelDisplayFluid.Selector.instance);
 		}
-
+		
 		@Override
 		public void load(FMLPreInitializationEvent event)
 		{
@@ -338,31 +341,33 @@ public class FarCoreSetup
 			ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
 			ModelLoaderRegistry.registerLoader(ModelSapling.Loader.instance);
 			ModelLoaderRegistry.registerLoader(ModelDisplayFluid.Loader.instance);
+			ModelLoaderRegistry.registerLoader(ModelCrop.instance);
 			U.Mod.registerCustomItemModelSelector(EnumItem.display_fluid.item, ModelDisplayFluid.Selector.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.BlockModelSelector.instance);
+			ModelLoader.setCustomStateMapper(EnumBlock.crop.block, ModelCrop.instance);
 			U.Mod.registerCustomItemModelSelector(Item.getItemFromBlock(EnumBlock.sapling.block), ModelSapling.ItemModelSelector.instance);
 			U.Mod.registerFluid((BlockFluidBase) EnumBlock.water.block);
 		}
-
+		
 		@Override
 		public void load(FMLInitializationEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void load(FMLLoadCompleteEvent event)
 		{
 			super.load(event);
 			loadComplete = true;
 		}
-
+		
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
@@ -384,19 +389,19 @@ public class FarCoreSetup
 						entry.getKey(), L.cast(entry.getValue(), Item.class));
 			}
 		}
-		
+
 		@Override
 		public void registerColorMultiplier(IBlockColor color, Block...blocks)
 		{
 			U.L.put(blockColorMap, color, blocks);
 		}
-		
+
 		@Override
 		public void registerColorMultiplier(IItemColor color, Block...blocks)
 		{
 			U.L.put(itemBlockColorMap, color, blocks);
 		}
-		
+
 		@Override
 		public void registerColorMultiplier(IItemColor color, Item...items)
 		{

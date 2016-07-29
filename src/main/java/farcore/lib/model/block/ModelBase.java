@@ -16,7 +16,7 @@ public abstract class ModelBase implements IModel
 	{
 		return ImmutableList.of();
 	}
-	
+
 	@Override
 	public IModelState getDefaultState()
 	{

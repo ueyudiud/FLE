@@ -1,11 +1,34 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "farinner:crop"
+	"types": {
+		"wheat": "custom",
+		"millet": "custom",
+		"soybean": "custom",
+		"potato": "custom",
+		"sweetpotato": "custom",
+		"cabbage": "custom",
+		"reed": "custom",
+		"flax": "custom",
+		"cotton": "custom"
 	},
-	"variants":	{
-		"type": {
-			"wheat": { "custom": { "crop": "wheat" } }
-		}
+	"textures": {
+		"millet_stage_0": "farcore:blocks/crop/millet(setaria)_stage_0",
+		"millet_stage_1": "farcore:blocks/crop/millet(setaria)_stage_1",
+		"millet_stage_2": "farcore:blocks/crop/millet(setaria)_stage_2",
+		"millet_stage_3": "farcore:blocks/crop/millet(setaria)_stage_3",
+		"millet_stage_4": "farcore:blocks/crop/millet(setaria)_stage_4",
+		"millet_stage_5": "farcore:blocks/crop/millet(setaria)_stage_5",
+		"millet_stage_6": "farcore:blocks/crop/millet(setaria)_stage_6",
+		"millet_stage_7": "farcore:blocks/crop/millet(setaria)_stage_7"
+	},
+	"model": {
+		"wheat": "farcore:block/crop/lattice",
+		"millet": "farcore:block/crop/lattice",
+		"soybean": "farcore:block/crop/cross",
+		"potato": "farcore:block/crop/lattice",
+		"sweetpotato": "farcore:block/crop/lattice",
+		"cabbage": "farcore:block/crop/cross",
+		"reed": "farcore:block/crop/cross",
+		"flax": "farcore:block/crop/cross",
+		"cotton": "farcore:block/crop/cross"
 	}
 }
