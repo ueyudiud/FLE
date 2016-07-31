@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class FluidBase extends Fluid
 {
 	public float fireAttackDamage;
+	public float thermalConductivity = 2.4E-2F;
 
 	public FluidBase(String fluidName, String localName, ResourceLocation still, ResourceLocation flowing)
 	{
@@ -29,5 +30,17 @@ public class FluidBase extends Fluid
 	public String getLocalizedName(FluidStack stack)
 	{
 		return LanguageManager.translateToLocal(getTranslateName(stack));
+	}
+	
+	public FluidBase setThermalConductivity(float thermalConductivity)
+	{
+		this.thermalConductivity = thermalConductivity;
+		return this;
+	}
+
+	public FluidBase setFireAttackDamage(float fireAttackDamage)
+	{
+		this.fireAttackDamage = fireAttackDamage;
+		return this;
 	}
 }

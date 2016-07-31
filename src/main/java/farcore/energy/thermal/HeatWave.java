@@ -11,16 +11,16 @@ public class HeatWave implements ITickable, IThermalObjectInWorld
 {
 	private World world;
 	private float temperature;
-
+	
 	private double coreX;
 	private double coreY;
 	private double coreZ;
-	
+
 	private boolean isDead = false;
 	private double total;
 	private double spread;
 	private int tick;
-	
+
 	public HeatWave(World world)
 	{
 		this.world = world;
@@ -39,43 +39,43 @@ public class HeatWave implements ITickable, IThermalObjectInWorld
 		total = hardness;
 		this.spread = spread;
 	}
-	
+
 	@Override
-	public float getDetTemp(double distance, float tempBase)
+	public float getDetTemp(double distanceSq, float tempBase)
 	{
-		float sigma = (float) (spread * tick * tick);
+		float sigma = (float) (spread * tick + 1F);
 		return (float) ((temperature - tempBase) / (sigma * V.sqrt2π)) *
-				(float) Math.exp(- distance * distance / (2 * sigma * sigma));
+				(float) Math.exp(- distanceSq / (2 * sigma * sigma));
 	}
-	
+
 	@Override
 	public void update()
 	{
 		++tick;
-		if(spread * tick * tick > 100)
+		if(spread * tick > 100)
 		{
 			isDead = true;
 		}
 	}
-
+	
 	@Override
 	public boolean isDead()
 	{
 		return isDead;
 	}
-
+	
 	@Override
 	public World world()
 	{
 		return world;
 	}
-	
+
 	@Override
 	public double[] position()
 	{
 		return new double[]{coreX, coreY, coreZ};
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTBase nbt)
 	{
@@ -88,7 +88,7 @@ public class HeatWave implements ITickable, IThermalObjectInWorld
 		spread = compound.getDouble("s");
 		temperature = compound.getFloat("t");
 	}
-
+	
 	@Override
 	public NBTBase writeFromNBT()
 	{

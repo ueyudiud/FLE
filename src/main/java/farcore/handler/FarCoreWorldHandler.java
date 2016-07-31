@@ -127,8 +127,14 @@ public class FarCoreWorldHandler
 
 		if(objects.containsKey(event.world.provider.getDimension()))
 		{
-			for(IObjectInWorld obj : objects.get(event.world.provider.getDimension()))
+			List<IObjectInWorld> list = objects.get(event.world.provider.getDimension());
+			for(IObjectInWorld obj : ImmutableList.copyOf(list))
 			{
+				if(obj.isDead())
+				{
+					list.remove(obj);
+					continue;
+				}
 				if(obj instanceof ITickable)
 				{
 					((ITickable) obj).update();
@@ -206,6 +212,7 @@ public class FarCoreWorldHandler
 					}
 				}
 			}
+			unlistedObjects.clear();
 			if(!saves.isEmpty())
 			{
 				Map<String, List<NBTBase>> map = new HashMap();

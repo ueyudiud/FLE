@@ -4,5 +4,5 @@ import farcore.lib.world.IObjectInWorld;
 
 public interface IThermalObjectInWorld extends IObjectInWorld
 {
-	float getDetTemp(double distance, float tempBase);
+	float getDetTemp(double distanceSq, float tempBase);
 }

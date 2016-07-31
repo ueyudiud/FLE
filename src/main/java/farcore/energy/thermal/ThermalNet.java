@@ -26,7 +26,12 @@ import net.minecraft.world.biome.Biome;
 
 public class ThermalNet implements IEnergyNet
 {
-	private static final List<IWorldThermalConductivityHandler> worldCHandlers = new ArrayList();
+	private static final List<IWorldThermalHandler> worldCHandlers = new ArrayList();
+	
+	public static void registerWorldThermalHandler(IWorldThermalHandler handler)
+	{
+		worldCHandlers.add(handler);
+	}
 	
 	public static float getWorldTemperature(IBlockAccess world, BlockPos pos)
 	{
@@ -48,7 +53,7 @@ public class ThermalNet implements IEnergyNet
 		{
 			if(obj instanceof IThermalObjectInWorld)
 			{
-				affected += ((IThermalObjectInWorld) obj).getDetTemp(U.Worlds.distanceTo(obj, pos), base);
+				affected += ((IThermalObjectInWorld) obj).getDetTemp(U.Worlds.distanceSqTo(obj, pos), base);
 			}
 		}
 		return base + affected;
@@ -70,6 +75,14 @@ public class ThermalNet implements IEnergyNet
 		else
 		{
 			temp = getEnviormentTemperature(world, pos);
+			for(IWorldThermalHandler handler : worldCHandlers)
+			{
+				float v;
+				if((v = handler.getTemperature(world, pos, temp)) >= 0)
+				{
+					temp = v;
+				}
+			}
 		}
 		if(withNearby)
 		{
@@ -97,11 +110,10 @@ public class ThermalNet implements IEnergyNet
 	 * @param state
 	 * @return
 	 */
-
 	public static float getBaseThermalConductivity(World world, BlockPos pos, IBlockState state)
 	{
 		float a;
-		for(IWorldThermalConductivityHandler handler : worldCHandlers)
+		for(IWorldThermalHandler handler : worldCHandlers)
 		{
 			if((a = handler.getThermalConductivity(world, pos, state)) >= 0)
 				return a;

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import farcore.FarCore;
 import farcore.data.EnumItem;
+import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.item.ItemBase;
 import farcore.lib.tile.IDebugableTile;
@@ -35,7 +38,7 @@ public class ItemDebugger extends ItemBase
 		setMaxStackSize(1);
 		EnumItem.debug.set(this);
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -60,6 +63,7 @@ public class ItemDebugger extends ItemBase
 				{
 					list.add(entry.getKey().getName() + " : " + ((IProperty) entry.getKey()).getName(entry.getValue()));
 				}
+				list.add("Temperature : " + ChatFormatting.RED + ThermalNet.getTemperature(world, pos, false) + "K");
 				if(block instanceof IDebugableBlock)
 				{
 					list.add("==========BLOCK INFO==========");
@@ -92,7 +96,7 @@ public class ItemDebugger extends ItemBase
 		}
 		return EnumActionResult.PASS;
 	}
-	
+
 	@Override
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{

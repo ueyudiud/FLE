@@ -4,7 +4,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface IWorldThermalConductivityHandler
+public interface IWorldThermalHandler
 {
 	float getThermalConductivity(World world, BlockPos pos, IBlockState state);
+
+	float getTemperature(World world, BlockPos pos, float baseTemp);
 }

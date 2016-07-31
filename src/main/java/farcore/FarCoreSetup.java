@@ -12,11 +12,13 @@ import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.M;
+import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCoreWorldHandler;
+import farcore.instances.TemperatureHandler;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
 import farcore.lib.block.instance.BlockSapling;
@@ -258,7 +260,9 @@ public class FarCoreSetup
 			MinecraftForge.EVENT_BUS.register(FarCoreEnergyHandler.getHandler());
 			MinecraftForge.EVENT_BUS.register(new FarCoreWorldHandler());
 			FarCoreEnergyHandler.addNet(ThermalNet.instance);
+			FarCoreEnergyHandler.addNet(KineticNet.instance);
 			FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
+			ThermalNet.registerWorldThermalHandler(new TemperatureHandler());
 			M.init();
 			
 			new ItemDebugger().setCreativeTab(FarCore.tabTool);
