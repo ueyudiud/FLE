@@ -28,23 +28,28 @@ public class TreeCeiba extends TreeBase
 			new TreeDNAProp(new Stack(EMPTY, 49), new Stack(GROWTH_I, 18), new Stack(GROWTH_II, 2)),
 			new TreeDNAProp(new Stack(HOT_I, 18), new Stack(HOT_II, 4), new Stack(HOT_III)));
 	private final TreeGenJungle generator1 = new TreeGenJungle(this, 1.2E-2F);
-
+	
 	public TreeCeiba(Mat material)
 	{
 		super(material);
 		helper = HELPER;
+		leavesCheckRange = 6;
 	}
-
+	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
 		if(info != null)
+		{
 			generator1.setHeight(36 + info.height * 2, 4 + info.height);
+		}
 		else
+		{
 			generator1.setHeight(38, 4);
+		}
 		return generator1.generateTreeAt(world, x, y, z, random, info);
 	}
-
+	
 	@Override
 	public int getGrowAge()
 	{

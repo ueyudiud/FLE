@@ -16,7 +16,7 @@ public interface AbstractStack
 	/**
 	 * Check is this stack similar to
 	 * target stack.
-	 * This method needn't check size.
+	 * This method doesn't check size.
 	 * @param stack
 	 * @return
 	 */
@@ -51,9 +51,9 @@ public interface AbstractStack
 	boolean valid();
 	
 	/**
-	 * Some tools, container has container item.
-	 * This option is result whether use the 
-	 * container item. (Default command value 
+	 * Some tools or container has container item.
+	 * This option is result whether use the
+	 * container item. (Default command value
 	 * is false)
 	 * @return
 	 */

@@ -21,14 +21,15 @@ import net.minecraft.world.World;
 
 public class ElectricACNet implements IEnergyNet
 {
+	public static final ElectricACNet instance = new ElectricACNet();
 	private static Map<Integer, Local> netMap = new HashMap();
-
+	
 	@Override
 	public void update(World world)
 	{
 		getNet(world, false).updateNet();
 	}
-	
+
 	@Override
 	public void add(Object tile)
 	{
@@ -37,7 +38,7 @@ public class ElectricACNet implements IEnergyNet
 			getNet(((IACHandler) tile).world(), false).add((IACHandler) tile);
 		}
 	}
-	
+
 	@Override
 	public void remove(Object tile)
 	{
@@ -46,7 +47,7 @@ public class ElectricACNet implements IEnergyNet
 			getNet(((IACHandler) tile).world(), false).remove((IACHandler) tile);
 		}
 	}
-
+	
 	@Override
 	public void mark(Object tile)
 	{
@@ -55,7 +56,7 @@ public class ElectricACNet implements IEnergyNet
 			getNet(((IACHandler) tile).world(), false).mark((IACHandler) tile);
 		}
 	}
-	
+
 	@Override
 	public void reload(Object tile)
 	{
@@ -64,19 +65,19 @@ public class ElectricACNet implements IEnergyNet
 			getNet(((IACHandler) tile).world(), false).reload((IACHandler) tile);
 		}
 	}
-	
+
 	@Override
 	public void unload(World world)
 	{
 		netMap.remove(world.provider.getDimension());
 	}
-	
+
 	@Override
 	public void load(World world)
 	{
 		netMap.put(world.provider.getDimension(), new Local(world));
 	}
-
+	
 	private static Local getNet(World world, boolean create)
 	{
 		if(!create)
@@ -87,16 +88,16 @@ public class ElectricACNet implements IEnergyNet
 		}
 		return netMap.get(world.provider.getDimension());
 	}
-
+	
 	private static class Local implements IElectricalNet
 	{
 		private static final Local instance = new Local(null);
-
-		private volatile boolean isUpdating = false;
 		
+		private volatile boolean isUpdating = false;
+
 		private boolean coefficientChanged = false;
 		private boolean structureChanged = false;
-
+		
 		private final World world;
 		private final IntArray cache = new IntArray(5);
 		private final EquationResolver resolver = new EquationResolver();
@@ -105,12 +106,12 @@ public class ElectricACNet implements IEnergyNet
 		private final List<IACHandler> routeChangedList = new ArrayList();
 		private final Map<IACHandler, EnumModifyFlag> cacheChangedList = new HashMap();
 		private final List<Double> voltageCache = new ArrayList();
-
+		
 		public Local(World world)
 		{
 			this.world = world;
 		}
-		
+
 		public void add(IACHandler tile)
 		{
 			if(isUpdating)
@@ -122,14 +123,14 @@ public class ElectricACNet implements IEnergyNet
 				addUnsafe(tile);
 			}
 		}
-
+		
 		private void addUnsafe(IACHandler tile)
 		{
 			list.add(tile);
 			routes.addHandler(tile);
 			structureChanged = true;
 		}
-		
+
 		public void remove(IACHandler tile)
 		{
 			if(isUpdating)
@@ -141,14 +142,14 @@ public class ElectricACNet implements IEnergyNet
 				removeUnsafe(tile);
 			}
 		}
-
+		
 		private void removeUnsafe(IACHandler tile)
 		{
 			list.remove(tile);
 			routes.removeHandler(tile);
 			structureChanged = true;
 		}
-		
+
 		@Override
 		public void reload(IElectricalHandler tile)
 		{
@@ -157,7 +158,7 @@ public class ElectricACNet implements IEnergyNet
 				reload((IACHandler) tile);
 			}
 		}
-		
+
 		public void reload(IACHandler tile)
 		{
 			if(isUpdating)
@@ -170,7 +171,7 @@ public class ElectricACNet implements IEnergyNet
 				addUnsafe(tile);
 			}
 		}
-		
+
 		public void updateNet()
 		{
 			if(world == null) return;
@@ -215,7 +216,7 @@ public class ElectricACNet implements IEnergyNet
 			cacheChangedList.clear();
 			isUpdating = false;
 		}
-
+		
 		private void refind()
 		{
 			//Initialize routes.
@@ -226,7 +227,7 @@ public class ElectricACNet implements IEnergyNet
 			if(size <= 1) return;//If only has one electrical element, will not calculate.
 			resolver.rewind(size);
 			double[] I = new double[size];
-
+			
 			//Get all coefficients of matrix.
 			for(int y = 0; y < size; ++y)
 			{
@@ -250,7 +251,7 @@ public class ElectricACNet implements IEnergyNet
 			}
 			routes.resetChanging();
 		}
-
+		
 		private void recalculate()
 		{
 			List<NodeReal> changedNodes = routes.getChangedNodes();
@@ -258,7 +259,7 @@ public class ElectricACNet implements IEnergyNet
 			//Now just use refind instead.
 			refind();
 		}
-		
+
 		public void mark(IACHandler tile)
 		{
 			if(isUpdating)
@@ -270,12 +271,12 @@ public class ElectricACNet implements IEnergyNet
 				markUnsafe(tile);
 			}
 		}
-		
+
 		private void markUnsafe(IACHandler tile)
 		{
 			coefficientChanged = true;
 		}
-
+		
 		/**
 		 * Get basic current of each node, add in matrix.
 		 * @param links
@@ -305,7 +306,7 @@ public class ElectricACNet implements IEnergyNet
 			}
 			return ret;
 		}
-		
+
 		/**
 		 *  The equation used Kirchhoff laws, the independent variable is
 		 *  each node voltage.<br>
