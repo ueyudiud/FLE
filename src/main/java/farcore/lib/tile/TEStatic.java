@@ -1,6 +1,7 @@
 package farcore.lib.tile;
 
 import farcore.lib.net.tile.PacketTESync;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -78,6 +79,14 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	@Override
 	public void markDirty()
 	{
-		worldObj.notifyBlockOfStateChange(pos, getBlockType());
+		if (worldObj != null)
+		{
+			IBlockState state = worldObj.getBlockState(pos);
+			worldObj.markChunkDirty(pos, this);
+			if (!state.getBlock().isAir(state, worldObj, pos))
+			{
+				worldObj.updateComparatorOutputLevel(pos, getBlockType());
+			}
+		}
 	}
 }

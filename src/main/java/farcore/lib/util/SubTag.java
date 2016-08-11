@@ -16,6 +16,7 @@ public class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag TOOL = getNewSubTag("TOOL");
 	public static final SubTag HANDLE = getNewSubTag("HANDLE");
 	public static final SubTag CROP = getNewSubTag("SEED");
+	public static final SubTag ORE = getNewSubTag("ORE");
 	public static final SubTag PLANT = getNewSubTag("PLANT");
 
 	public static final SubTag FIRE_RESISTANCE = getNewSubTag("FIRE_RESISTANCE");

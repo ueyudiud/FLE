@@ -66,6 +66,8 @@ public class ThermalNet implements IEnergyNet
 
 	public static float getTemperature(World world, BlockPos pos, boolean withNearby)
 	{
+		if(pos.getY() < 0 || pos.getY() >= 256)
+			return getWorldTemperature(world, pos);
 		float temp;
 		TileEntity tile;
 		if((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
@@ -92,10 +94,6 @@ public class ThermalNet implements IEnergyNet
 			for(Direction direction : Direction.directions)
 			{
 				BlockPos pos2 = direction.offset(pos);
-				if(pos2.getY() < 0 || pos2.getY() >= 256)
-				{
-					continue;
-				}
 				tempD += getTemperature(world, pos2, false);
 				++c;
 			}
@@ -103,6 +101,20 @@ public class ThermalNet implements IEnergyNet
 			return (float) tempD;
 		}
 		return temp;
+	}
+	
+	public static float getTempDifference(World world, BlockPos pos)
+	{
+		double temp = getTemperature(world, pos, false);
+		double delta = 0;
+		int c = 0;
+		for(Direction direction : Direction.directions)
+		{
+			delta += Math.abs(temp - getTemperature(world, direction.offset(pos), false));
+			c++;
+		}
+		delta /= c;
+		return (float) delta;
 	}
 
 	/**

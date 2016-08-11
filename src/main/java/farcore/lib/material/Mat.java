@@ -14,6 +14,7 @@ import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.collection.Register;
 import farcore.lib.crop.ICrop;
+import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.plant.IPlant;
 import farcore.lib.tree.ITree;
 import farcore.lib.util.IDataChecker;
@@ -28,7 +29,7 @@ import net.minecraft.block.Block;
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
 	public static final Register<Mat> register = new Register(32768);
-
+	
 	public static List<Mat> filt(IDataChecker<ISubTagContainer> filter)
 	{
 		ImmutableList.Builder<Mat> list = ImmutableList.builder();
@@ -41,7 +42,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 		return list.build();
 	}
-	
+
 	public final String modid;
 	public final String name;
 	public final String oreDictName;
@@ -87,6 +88,8 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	//Rock extra configuration.
 	public Block rock;
 	public float minDetHeatForExplosion;
+	//Ore configuration.
+	public IOreProperty oreProperty;
 	//Plant configuration
 	/** The plant grown in wild. */
 	public IPlant plant;
@@ -96,9 +99,9 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public ICrop crop;
 	//Multi item configuration.
 	public IItemMatProp itemProp;
-
+	
 	private Set<SubTag> subTags = new HashSet();
-
+	
 	public Mat(int id, String name, String oreDict, String localized)
 	{
 		this(id, U.Mod.getActiveModID(), name, oreDict, localized);
@@ -120,18 +123,18 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			Mat.register.register(id, name, this);
 		}
 	}
-
+	
 	@Override
 	public final String getRegisteredName()
 	{
 		return name;
 	}
-
+	
 	public String getLocalName()
 	{
 		return LanguageManager.translateToLocal("material." + name + ".name");
 	}
-
+	
 	public Mat setRGBa(int colorIndex)
 	{
 		RGBa[0] = (short) ((colorIndex >> 24)       );
@@ -141,14 +144,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		RGB = colorIndex >> 8;
 		return this;
 	}
-
+	
 	public Mat setRGBa(short[] colorIndex)
 	{
 		RGBa = colorIndex;
 		RGB = colorIndex[0] << 16 | colorIndex[1] << 8 | colorIndex[2];
 		return this;
 	}
-
+	
 	public Mat setGeneralProp(float heatCap, float thermalConduct, float maxSpeed, float maxTorque, float dielectricConstant, float electrialResistance, float redstoneResistance)
 	{
 		this.heatCap = heatCap;
@@ -160,7 +163,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		this.redstoneResistance = redstoneResistance;
 		return this;
 	}
-
+	
 	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float dVE, int enchantability)
 	{
 		canMakeTool = true;
@@ -174,6 +177,21 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		return this;
 	}
 
+	public Mat setOreProperty(int harvestLevel, float hardness, float resistance)
+	{
+		return setOreProperty(harvestLevel, hardness, resistance, IOreProperty.property);
+	}
+	
+	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, IOreProperty oreProperty)
+	{
+		this.oreProperty = oreProperty;
+		blockHarvestLevel = harvestLevel;
+		blockHardness = hardness;
+		blockExplosionResistance = resistance;
+		add(SubTag.ORE);
+		return this;
+	}
+	
 	public Mat setWood(float woodHardness, float ashcontent, float woodBurnHeat)
 	{
 		isWood = true;
@@ -187,12 +205,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.WOOD);
 		return this;
 	}
-	
+
 	public Mat setTree(ITree tree)
 	{
 		return setTree(tree, true);
 	}
-
+	
 	/**
 	 * Set tree information of material.
 	 * @param tree The tree information.
@@ -220,7 +238,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 		return this;
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp)
 	{
 		isRock = true;
@@ -233,7 +251,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.ROCK);
 		return this;
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp, Block rock)
 	{
 		isRock = true;
@@ -245,7 +263,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.ROCK);
 		return this;
 	}
-
+	
 	public Mat setCrop(ICrop crop)
 	{
 		isCrop = true;
@@ -253,25 +271,25 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.CROP);
 		return this;
 	}
-
+	
 	public Mat setTag(SubTag...tags)
 	{
 		add(tags);
 		return this;
 	}
-
+	
 	@Override
 	public void add(SubTag... tags)
 	{
 		subTags.addAll(Arrays.asList(tags));
 	}
-
+	
 	@Override
 	public boolean contain(SubTag tag)
 	{
 		return subTags.contains(tag);
 	}
-
+	
 	@Override
 	public int compareTo(Mat o)
 	{

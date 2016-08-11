@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.FarCore;
+import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.MC;
+import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
@@ -28,12 +30,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -244,13 +250,36 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, ITherma
 		}
 		return ret;
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
 		RockType type = state.getValue(ROCK_TYPE);
 		switch (type)
 		{
+		case resource :
+			if(ThermalNet.getTemperature(worldIn, pos, false) > material.minDetHeatForExplosion)
+			{
+				if(!state.getValue(HEATED) && random.nextInt(3) == 0)
+				{
+					worldIn.setBlockState(pos, state.withProperty(HEATED, true), 6);
+				}
+				else if(Worlds.isBlockNearby(worldIn, pos, EnumBlock.water.block, true))
+				{
+					worldIn.setBlockState(pos, state.withProperty(ROCK_TYPE, RockType.cobble), 3);
+					worldIn.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS,
+							.5F, 2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F, true);
+					for (int k = 0; k < 8; ++k)
+					{
+						worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + Math.random(), pos.getY() + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D, new int[0]);
+					}
+					return;
+				}
+			}
+			else if(state.getValue(HEATED) && random.nextInt(4) == 0)
+			{
+				worldIn.setBlockState(pos, state.withProperty(HEATED, false), 6);
+			}
 		default:
 			break;
 		}
@@ -263,6 +292,46 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, ITherma
 		if(!canBlockStay(worldIn, pos, state))
 		{
 			Worlds.fallBlock(worldIn, pos, state);
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+	{
+		if(stateIn.getValue(HEATED))
+		{
+			int x = pos.getX();
+			int y = pos.getY();
+			int z = pos.getZ();
+			double u1, v1, t1;
+			for(int i = 0; i < 2; ++i)
+			{
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = -rand.nextDouble() * .05;
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x + u1, y + v1, z - 0.1, 0D, 0D, t1);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = -rand.nextDouble() * .1;
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x + u1, y, z + v1, 0D, t1, 0D);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = -rand.nextDouble() * .05;
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x - 0.1, y + u1, z + v1, t1, 0D, 0D);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = rand.nextDouble() * .05;
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x + u1, y + v1, z + 1.1, 0D, 0D, t1);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = rand.nextDouble() * .05;
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x + u1, y + 1D, z + v1, 0D, 0D, 0D);
+				u1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				v1 = (1D + rand.nextDouble() - rand.nextDouble()) * .5;
+				t1 = rand.nextDouble() * .05;
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x + 1.1, y + u1, z + v1, t1, 0D, 0D);
+			}
 		}
 	}
 
@@ -381,5 +450,12 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, ITherma
 			Worlds.switchProp(world, pos, HEATED, true, 2);
 			world.scheduleUpdate(pos, this, tickRate(world));
 		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 }
