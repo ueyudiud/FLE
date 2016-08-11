@@ -34,6 +34,10 @@ archivesBaseName = "${config.fle.name}"
 sourceCompatibility = 8
 targetCompatibility = 8
 
+tasks.withType(JavaCompile) {  
+    options.encoding = "UTF-8"  
+}
+
 minecraft {
     version = "1.10.2-12.18.1.2011"
     runDir = "run"
@@ -131,8 +135,8 @@ task coreJar(type: Jar, dependsOn: 'jar') {
 jar {
     exclude "**/debug/**"
     manifest {
-        //attributes 'FMLCorePlugin': 'farcore.override.FarOverrideLoadingPlugin',
-        //'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': 'farcore.asm.FarOverrideLoadingPlugin',
+        'FMLCorePluginContainsFMLMod': 'true'
     }
 }
 

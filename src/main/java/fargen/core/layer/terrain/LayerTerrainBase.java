@@ -3,29 +3,27 @@ package fargen.core.layer.terrain;
 import farcore.data.EnumTerrain;
 import fargen.core.layer.Layer;
 import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.IntCache;
 
 public class LayerTerrainBase extends Layer
 {
 	private GenLayer chunk;
-
+	
 	public LayerTerrainBase(long seed, GenLayer layer1, GenLayer layer2)
 	{
 		super(seed);
 		parent = layer1;
 		chunk = layer2;
 	}
-
+	
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
-		int[] par = parent.getInts(x, y, w, h);
+		int[] ret = parent.getInts(x, y, w, h);
 		int[] chu = chunk.getInts(x, y, w, h);
 		int l = w * h;
-		int[] ret = IntCache.getIntCache(l);
 		for(int i = 0; i < l; ++i)
 		{
-			int a = par[i];
+			int a = ret[i];
 			int b = chu[i];
 			if(a < 4)
 			{
@@ -124,7 +122,7 @@ public class LayerTerrainBase extends Layer
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public void markZoom(int zoom)
 	{
@@ -134,7 +132,7 @@ public class LayerTerrainBase extends Layer
 			((Layer) chunk).markZoom(zoom * zoomLevel);
 		}
 	}
-
+	
 	@Override
 	public void initWorldGenSeed(long seed)
 	{

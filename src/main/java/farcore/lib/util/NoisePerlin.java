@@ -6,9 +6,9 @@ public class NoisePerlin extends NoiseBase
 {
 	private double frequency;
 	private double persistence;
-	
-	private NoiseCoherent[] octaves;
 
+	private NoiseCoherent[] octaves;
+	
 	public NoisePerlin(Random random, int size, double start, double frequency, double persistence)
 	{
 		super(random.nextLong());
@@ -22,6 +22,14 @@ public class NoisePerlin extends NoiseBase
 			;
 		}
 	}
+	/**
+	 *
+	 * @param seed
+	 * @param size
+	 * @param start
+	 * @param frequency The noise changed speed increase.
+	 * @param persistence
+	 */
 	public NoisePerlin(long seed, int size, double start, double frequency, double persistence)
 	{
 		super(seed);
@@ -35,7 +43,7 @@ public class NoisePerlin extends NoiseBase
 			;
 		}
 	}
-	
+
 	@Override
 	public NoiseBase setSeed(long seed)
 	{
@@ -45,7 +53,7 @@ public class NoisePerlin extends NoiseBase
 		}
 		return super.setSeed(seed);
 	}
-
+	
 	@Override
 	public double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale,
 			double yScale, double zScale)
@@ -81,7 +89,7 @@ public class NoisePerlin extends NoiseBase
 		}
 		return array;
 	}
-
+	
 	@Override
 	public double noise(double x, double y, double z)
 	{

@@ -1,6 +1,7 @@
 package farcore.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -22,6 +23,7 @@ import com.google.common.collect.ImmutableSet.Builder;
 
 import farcore.FarCoreSetup;
 import farcore.data.Capabilities;
+import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.collection.Stack;
@@ -37,6 +39,8 @@ import farcore.lib.tile.TEBase;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.LanguageManager;
+import farcore.lib.util.ThreadLight;
+import farcore.lib.world.IBiomeExtended;
 import farcore.lib.world.IBiomeRegetter;
 import farcore.lib.world.ICoord;
 import farcore.lib.world.IObjectInWorld;
@@ -295,10 +299,32 @@ public class U
 			return ret;
 		}
 		
+		public static float min(float...values)
+		{
+			float ret = Float.MAX_VALUE;
+			for(float i : values)
+				if(i < ret)
+				{
+					ret = i;
+				}
+			return ret;
+		}
+		
 		public static int max(int...values)
 		{
 			int ret = Integer.MIN_VALUE;
 			for(int i : values)
+				if(i > ret)
+				{
+					ret = i;
+				}
+			return ret;
+		}
+		
+		public static float max(float...values)
+		{
+			float ret = Float.MIN_VALUE;
+			for(float i : values)
 				if(i > ret)
 				{
 					ret = i;
@@ -480,129 +506,114 @@ public class U
 			}
 		}
 		
+		private static Field getField(Class<?> clazz, String mcpName, String obfName, boolean isPrivate, boolean isFinal, boolean alwaysInit) throws Exception
+		{
+			if(isFinal)
+			{
+				initModifierField();
+			}
+			for(String str : new String[]{mcpName, obfName})
+			{
+				try
+				{
+					if(!alwaysInit && fieldCache.containsKey(clazz.getName() + "|" + str))
+						return fieldCache.get(clazz.getName() + "|" + str);
+					Field tField;
+					if(isPrivate)
+					{
+						tField = clazz.getDeclaredField(str);
+					}
+					else
+					{
+						tField = clazz.getField(str);
+					}
+					if(isFinal)
+					{
+						modifiersField.setInt(tField, tField.getModifiers() & 0xFFFFFFEF);
+					}
+					if(tField != null)
+					{
+						tField.setAccessible(true);
+						fieldCache.put(clazz.getName() + "|" + str, tField);
+						return tField;
+					}
+				}
+				catch(Exception exception)
+				{
+					throw exception;
+				}
+			}
+			throw new FileNotFoundException();
+		}
+		
 		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 		}
 		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, T target, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
-			boolean flag = false;
-			List<Throwable> list = new ArrayList();
-			for(String str : new String[]{mcpName, obfName})
+			try
 			{
-				try
-				{
-					if(!alwaysInit && fieldCache.containsKey(clazz.getName() + "|" + str))
-					{
-						fieldCache.get(clazz.getName() + "|" + str).set(target, override);
-						return;
-					}
-					Field tField;
-					if(isPrivate)
-					{
-						tField = clazz.getDeclaredField(str);
-					}
-					else
-					{
-						tField = clazz.getField(str);
-					}
-					if(tField != null)
-					{
-						tField.setAccessible(true);
-						fieldCache.put(clazz.getName() + "|" + str, tField);
-						tField.set(target, override);
-						flag = true;
-						return;
-					}
-				}
-				catch(Throwable e)
-				{
-					list.add(e);
-					continue;
-				}
+				getField(clazz, mcpName, obfName, isPrivate, false, alwaysInit).set(target, override);
 			}
-			if(!flag)
+			catch(Throwable e)
 			{
-				for(Throwable e : list)
-				{
-					e.printStackTrace();
-				}
+				e.printStackTrace();
 				throw new RuntimeException();
 			}
 		}
-		
+
 		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideFinalField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 		}
 		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, T target, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
-			boolean flag = false;
-			List<Throwable> list = new ArrayList();
-			for(String str : new String[]{mcpName, obfName})
+			try
 			{
-				try
-				{
-					initModifierField();
-					if(!alwaysInit && fieldCache.containsKey(clazz.getName() + "|" + str))
-					{
-						fieldCache.get(clazz.getName() + "|" + str).set(target, override);
-						return;
-					}
-					Field tField;
-					if(isPrivate)
-					{
-						tField = clazz.getDeclaredField(str);
-					}
-					else
-					{
-						tField = clazz.getField(str);
-					}
-					modifiersField.setInt(tField, tField.getModifiers() & 0xFFFFFFEF);
-					if(tField != null)
-					{
-						tField.setAccessible(true);
-						fieldCache.put(clazz.getName() + "|" + str, tField);
-						tField.set(target, override);
-						flag = true;
-						break;
-					}
-				}
-				catch(Throwable e)
-				{
-					list.add(e);
-					continue;
-				}
+				getField(clazz, mcpName, obfName, isPrivate, true, alwaysInit).set(target, override);
 			}
-			if(!flag)
+			catch(Throwable e)
 			{
-				for(Throwable e : list)
-				{
-					e.printStackTrace();
-				}
+				e.printStackTrace();
+				throw new RuntimeException("FLE: fail to find and override field " + mcpName);
+			}
+		}
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, T target, int override, boolean isPrivate, boolean alwaysInit) throws Exception
+		{
+			try
+			{
+				getField(clazz, mcpName, obfName, isPrivate, true, alwaysInit).setInt(target, override);
+			}
+			catch(Throwable e)
+			{
+				e.printStackTrace();
 				throw new RuntimeException("FLE: fail to find and override field " + mcpName);
 			}
 		}
 		
 		public static <T> Object getValue(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
 		{
-			for(String str : new String[]{mcpName, obfName})
+			try
 			{
-				try
-				{
-					if(!alwaysInit && fieldCache.containsKey(clazz.getName() + "|" + str))
-						return fieldCache.get(clazz.getName() + "|" + str).get(target);
-					Field tField = clazz.getDeclaredField(str);
-					tField.setAccessible(true);
-					fieldCache.put(clazz.getName() + "|" + str, tField);
-					return tField.get(target);
-				}
-				catch(Throwable e)
-				{
-					continue;
-				}
+				return getField(clazz, mcpName, obfName, true, false, alwaysInit).get(target);
 			}
-			return null;
+			catch(Exception exception)
+			{
+				return null;
+			}
+		}
+		
+		public static <T> int getInt(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
+		{
+			try
+			{
+				return getField(clazz, mcpName, obfName, true, false, alwaysInit).getInt(target);
+			}
+			catch(Exception exception)
+			{
+				return 0;
+			}
 		}
 		
 		public static Method getMethod(Class clazz, String mcpName, String obfName, Class...classes)
@@ -858,6 +869,20 @@ public class U
 								Direction.oppsite[side] :
 									rotateFix[side / 2][id];
 		}
+
+		public static void checkLight(World world, BlockPos pos)
+		{
+			if(Config.multiThreadLight)
+			{
+				new Thread(new ThreadLight(world, pos)).run();
+			}
+			else
+			{
+				world.theProfiler.startSection("checkLight");
+				world.checkLight(pos);
+				world.theProfiler.endSection();
+			}
+		}
 		
 		public static void spawnDropsInWorld(World world, BlockPos pos, List<ItemStack> drops)
 		{
@@ -1052,14 +1077,14 @@ public class U
 		
 		public static boolean isCatchingRain(World world, BlockPos pos, boolean checkNeayby)
 		{
-			if(world.isRaining())
-				return world.canBlockSeeSky(pos) ||
-						(checkNeayby && (
-								world.canBlockSeeSky(pos.north()) ||
-								world.canBlockSeeSky(pos.south()) ||
-								world.canBlockSeeSky(pos.east()) ||
-								world.canBlockSeeSky(pos.west())));
-			return false;
+			return world.isRaining() ?
+					(world.canBlockSeeSky(pos) && isRainingAtBiome(world.getBiomeGenForCoords(pos), world, pos)) ||
+					(checkNeayby && (
+							world.canBlockSeeSky(pos.north()) ||
+							world.canBlockSeeSky(pos.south()) ||
+							world.canBlockSeeSky(pos.east()) ||
+							world.canBlockSeeSky(pos.west()))) :
+								false;
 		}
 		
 		public static TileEntity setTileEntity(World world, BlockPos pos, TileEntity tile, boolean update)
@@ -1080,12 +1105,32 @@ public class U
 			}
 			return tile;
 		}
+		
+		/**
+		 * Used by ASM.
+		 * @param world
+		 * @param pos
+		 * @return
+		 */
+		public static boolean isRainingAtBiome(Biome biome, World world, BlockPos pos)
+		{
+			if(biome instanceof IBiomeExtended)
+				return ((IBiomeExtended) biome).canRainingAt(world, pos);
+			return biome.canRain();
+		}
 
-		public static Biome regetBiome(Biome oldBiome, BlockPos pos, BiomeProvider provider)
+		/**
+		 * Used by ASM.
+		 * @param oldBiome
+		 * @param pos
+		 * @param provider
+		 * @return
+		 */
+		public static Biome regetBiome(int saveID, BlockPos pos, BiomeProvider provider)
 		{
 			if(provider instanceof IBiomeRegetter)
-				return ((IBiomeRegetter) provider).getBiome(oldBiome, pos);
-			return oldBiome;
+				return ((IBiomeRegetter) provider).getBiome(saveID, pos);
+			return Biome.getBiome(saveID);
 		}
 
 		public static Direction getCollideSide(AxisAlignedBB aabb, double[] pre, double[] post)

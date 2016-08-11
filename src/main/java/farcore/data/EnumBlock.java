@@ -8,16 +8,17 @@ public enum EnumBlock
 	crop,
 	sapling,
 	water,
-	fire;
-
+	fire,
+	ice;
+	
 	static
 	{
 		water.block = Blocks.WATER;
 		fire.block = Blocks.FIRE;
 	}
-
+	
 	public Block block;
-
+	
 	public void set(Block block)
 	{
 		this.block = block;

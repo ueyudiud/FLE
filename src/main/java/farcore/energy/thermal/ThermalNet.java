@@ -15,14 +15,14 @@ import farcore.lib.util.Direction;
 import farcore.lib.util.EnumModifyFlag;
 import farcore.lib.util.Log;
 import farcore.lib.world.IObjectInWorld;
+import farcore.lib.world.IWorldPropProvider;
+import farcore.lib.world.WorldPropHandler;
 import farcore.util.U;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 
 public class ThermalNet implements IEnergyNet
 {
@@ -33,10 +33,10 @@ public class ThermalNet implements IEnergyNet
 		worldCHandlers.add(handler);
 	}
 	
-	public static float getWorldTemperature(IBlockAccess world, BlockPos pos)
+	public static float getWorldTemperature(World world, BlockPos pos)
 	{
-		Biome biome = world.getBiomeGenForCoords(pos);
-		return 280 + biome.getTemperature() * 5;
+		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(world);
+		return 270F + properties.getTemperature(world, pos) * 6.0F;
 	}
 
 	public static float getEnviormentTemperature(World world, BlockPos pos)
@@ -86,7 +86,8 @@ public class ThermalNet implements IEnergyNet
 		}
 		if(withNearby)
 		{
-			temp *= 6;
+			double tempD = temp;
+			tempD *= 6;
 			int c = 6;
 			for(Direction direction : Direction.directions)
 			{
@@ -95,10 +96,11 @@ public class ThermalNet implements IEnergyNet
 				{
 					continue;
 				}
+				tempD += getTemperature(world, pos2, false);
 				++c;
-				temp += getTemperature(world, pos2, false);
 			}
-			return temp / c;
+			tempD /= c;
+			return (float) tempD;
 		}
 		return temp;
 	}

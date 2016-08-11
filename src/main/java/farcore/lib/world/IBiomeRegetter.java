@@ -22,5 +22,5 @@ public interface IBiomeRegetter
 	 * @param pos
 	 * @return
 	 */
-	Biome getBiome(Biome oldBiome, BlockPos pos);
+	Biome getBiome(int saveID, BlockPos pos);
 }

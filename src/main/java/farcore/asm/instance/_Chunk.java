@@ -1,7 +1,6 @@
 package farcore.asm.instance;
 
 import static com.sun.org.apache.bcel.internal.Constants.ALOAD;
-import static com.sun.org.apache.bcel.internal.Constants.ASTORE;
 import static com.sun.org.apache.bcel.internal.Constants.INVOKESTATIC;
 
 import java.util.Arrays;
@@ -17,19 +16,13 @@ public class _Chunk extends ClassTransformer
 	public _Chunk()
 	{
 		super("net.minecraft.world.chunk.Chunk", "apx");
-
+		
 		List<OperationInfo> list =
 				Arrays.asList(
-						new OperationInfo(OperationType.InsertBefore, 2, 1279,
-								new VarInsnNode(ALOAD, 6),
+						new OperationInfo(OperationType.Replace, 3, 1278,
 								new VarInsnNode(ALOAD, 1),
 								new VarInsnNode(ALOAD, 2),
-								new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(Lnet/minecraft/world/biome/Biome;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;)V", false),
-								new VarInsnNode(ASTORE, 6)));
+								new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;)V", false)));
 		mcpMethods.put("getBiome|(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;", list);
-		//		list = Arrays.asList(
-		//				new OperationInfo(OperationType.Replace, 2, 105,
-		//						new TypeInsnNode(NEW, "farcore/util/FarFoodStats")));
-		//		obfMethods.put("<init>|(Lahb;Lcom/mojang/authlib/GameProfile;)V", list);
 	}
 }

@@ -7,14 +7,14 @@ import net.minecraft.world.gen.layer.GenLayer;
 public class LayerRiver extends Layer
 {
 	private GenLayer layer;
-	
+
 	public LayerRiver(long seed, GenLayer layer, GenLayer river)
 	{
 		super(seed);
 		parent = layer;
 		this.layer = river;
 	}
-
+	
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
@@ -36,24 +36,24 @@ public class LayerRiver extends Layer
 		}
 		return is;
 	}
-	
+
 	private boolean canRiverGen(int id)
 	{
 		return EnumTerrain.values()[id].canRiverGen;
 	}
-	
+
 	private boolean isOcean(int id)
 	{
 		return EnumTerrain.values()[id].isWater;
 	}
-	
+
 	@Override
 	public void initWorldGenSeed(long seed)
 	{
 		super.initWorldGenSeed(seed);
 		layer.initWorldGenSeed(seed);
 	}
-
+	
 	@Override
 	public void markZoom(int zoom)
 	{

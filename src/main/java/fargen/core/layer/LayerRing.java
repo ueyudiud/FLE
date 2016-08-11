@@ -10,7 +10,7 @@ public class LayerRing extends Layer
 		super(seed);
 		parent = layer;
 	}
-	
+
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
@@ -28,19 +28,10 @@ public class LayerRing extends Layer
 				int i1 = par[id];
 				label:
 				{
-					if(par[id - 1] != i1)
-					{
-						break label;
-					}
-					if(par[id + 1] != i1)
-					{
-						break label;
-					}
-					if(par[id - w1] != i1)
-					{
-						break label;
-					}
-					if(par[id + w1] != i1)
+					if(par[id - 1] != i1 || par[id + 1] != i1 ||
+							par[id - 1 - w1] != i1 || par[id + 1 - w1] != i1 ||
+							par[id - 1 + w1] != i1 || par[id + 1 + w1] != i1 ||
+							par[id - w1] != i1 || par[id + w1] != i1)
 					{
 						break label;
 					}

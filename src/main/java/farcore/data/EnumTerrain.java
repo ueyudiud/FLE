@@ -19,7 +19,7 @@ public enum EnumTerrain
 	plateau(1.2F, 0.3F),
 	ex_mountain(1.5F, 0.3F),
 	river(2.5F, 0.6F, -0.3F, 0.0625F, true);
-	
+
 	static
 	{
 		plateau.canRiverGen = true;
@@ -27,15 +27,17 @@ public enum EnumTerrain
 		hills.canRiverGen = true;
 		basin.canRiverGen = true;
 		plain.canRiverGen = true;
+		river.isOcean = false;
 	}
-
+	
 	public final float highWeight;
 	public final float lowWeight;
 	public final boolean isWater;
+	public boolean isOcean;
 	public final float root;
 	public final float rand;
 	public boolean canRiverGen = false;
-
+	
 	EnumTerrain(float root, float rand)
 	{
 		this(root, rand, false);
@@ -46,7 +48,7 @@ public enum EnumTerrain
 	}
 	EnumTerrain(float lWeight, float hWeight, float root, float rand, boolean isOcean)
 	{
-		isWater = isOcean;
+		this.isOcean = isWater = isOcean;
 		highWeight = hWeight;
 		lowWeight = lWeight;
 		this.root = root;

@@ -10,7 +10,7 @@ import farcore.data.EnumTerrain;
 import farcore.lib.util.NoiseBase;
 import farcore.lib.util.NoisePerlin;
 import farcore.util.U.L;
-import fargen.core.instance.Layers;
+import fargen.core.biome.BiomeBase;
 import fargen.core.util.LayerProp;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
@@ -19,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
@@ -61,7 +60,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	protected NoiseBase noise5;
 	/** Stone height noise. */
 	protected NoiseBase noise6;
-	private Biome[] biomes;
+	private int[] biomes;
 	
 	protected double[] cache1;
 	protected double[] cache2;
@@ -83,14 +82,14 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		noise3 = new NoisePerlin(random, 16, 1D, 2D, 2D);
 		noise4 = new NoisePerlin(random, 8, 1D, 2D, 2D);
 		noise5 = new NoisePerlin(random, 4, 1D, 2D, 2D);
-		noise6 = new NoisePerlin(random, 4, 1D, 2D, 2D);
+		noise6 = new NoisePerlin(random, 4, 12D, 2D, 2D);
 		heightMap = new double[825];
-		layers = Layers.wrapSurface(seed);
+		layers = ((FarSurfaceBiomeProvider) world.getBiomeProvider()).layers;
 	}
 
 	protected void generateTerrainHeight(int x, int z)
 	{
-		cache1 = noise1.noise(cache1, 5, 5, (double)x, (double)z, 400D, 400D);
+		cache1 = noise1.noise(cache1, 5, 5, (double)x, (double)z, 3000D, 3000D);
 		//		cache2 = noise2.noise(cache2, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
 		cache2 = layers.terrainHeight(cache2, x, z, 5, 5);
 		cache3 = noise3.noise(cache3, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
@@ -135,8 +134,8 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				double surfaceRand = cache5[count1] * 2D - 1D;
 				double fixed = (1D + base) * baseFix * 0.666;
 				fixed = L.range(0.6, 1.4, fixed);
-				surfaceRand /= 16D;
-				heightMap[count1] = fixed * baseHeight + randHeight * multiply + surfaceRand / (Math.abs(terrain.root - baseHeight) + 0.8D);
+				surfaceRand /= 32D;
+				heightMap[count1] = fixed * baseHeight + randHeight * multiply + surfaceRand;
 				count1++;
 			}
 		}
@@ -179,6 +178,20 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			}
 		}
 	}
+	
+	protected void replaceByBiomes(int x, int z, ChunkPrimer primer)
+	{
+		cache6 = noise6.noise(cache6, 16, 16, x, z);
+		for(int i = 0; i < 16; ++i)
+		{
+			for(int j = 0; j < 16; ++j)
+			{
+				int biomeID = biomes[j * 16 + i];
+				BiomeBase biome = BiomeBase.getBiomeFromID(biomeID);
+				biome.genTerrainBlocks(world, random, primer, x + i, z + j, cache6[j * 16 + i], biomeID >> 8);
+			}
+		}
+	}
 
 	@Override
 	public Chunk provideChunk(int x, int z)
@@ -187,13 +200,14 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		generateTerrainHeight(x << 2, z << 2);
 		ChunkPrimer primer = new ChunkPrimer();
 		setBlocksInChunk(x, z, primer);
-		biomes = world.getBiomeProvider().loadBlockGeneratorData(biomes, x * 16, z * 16, 16, 16);
+		biomes = ((FarSurfaceBiomeProvider) world.getBiomeProvider()).loadBlockGeneratorData(biomes, x * 16, z * 16, 16, 16);
+		replaceByBiomes(x << 4, z << 4, primer);
 		Chunk chunk = new Chunk(world, primer, x, z);
 		byte[] abyte = chunk.getBiomeArray();
 
 		for (int i = 0; i < abyte.length; ++i)
 		{
-			abyte[i] = (byte) 0;
+			abyte[i] = (byte) (biomes[i] & 0xFF);
 		}
 
 		chunk.generateSkylightMap();
