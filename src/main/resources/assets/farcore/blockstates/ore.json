@@ -1,0 +1,16 @@
+{
+	"types": {
+		"nativeCopper": "simple"
+	},
+	"textures": {
+		"nativeCopper@pure": "farcore:blocks/ore/pure/native_copper",
+		"nativeCopper@enrich": "farcore:blocks/ore/enrich/native_copper",
+		"nativeCopper@normal": "farcore:blocks/ore/normal/native_copper",
+		"nativeCopper@poor": "farcore:blocks/ore/poor/native_copper",
+		"nativeCopper@trace": "farcore:blocks/ore/trace/native_copper",
+		"nativeCopper@scattered": "farcore:blocks/ore/scattered/native_copper"
+	},
+	"model": {
+		"simple": "farcore:block/ore"
+	}
+}

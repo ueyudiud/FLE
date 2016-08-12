@@ -23,6 +23,7 @@ import farcore.instances.TemperatureHandler;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
 import farcore.lib.block.instance.BlockIce;
+import farcore.lib.block.instance.BlockOre;
 import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.block.instance.BlockWater;
 import farcore.lib.entity.EntityFallingBlockExtended;
@@ -35,6 +36,7 @@ import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.model.block.ModelCrop;
 import farcore.lib.model.block.ModelFluidBlock;
+import farcore.lib.model.block.ModelOre;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.model.entity.RenderFallingBlockExt;
 import farcore.lib.model.entity.RenderProjectileItem;
@@ -49,6 +51,7 @@ import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.instance.FontMap;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tile.instance.TECrop;
+import farcore.lib.tile.instance.TEOre;
 import farcore.lib.tile.instance.TESapling;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.LanguageManager;
@@ -202,7 +205,6 @@ public class FarCoreSetup
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
-
 	}
 
 	public static class Proxy
@@ -278,8 +280,10 @@ public class FarCoreSetup
 			new BlockSapling().setCreativeTab(FarCore.tabResourceBlock);
 			new BlockCrop();
 			new BlockFire();
+			new BlockOre().setCreativeTab(FarCore.tabResourceBlock);
 			new BlockWater(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
 			new BlockIce().setCreativeTab(FarCore.tabResourceBlock);
+			GameRegistry.registerTileEntity(TEOre.class, "farcore.ore");
 			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
 			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
 			GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
@@ -315,7 +319,6 @@ public class FarCoreSetup
 
 		public void load(FMLLoadCompleteEvent event)
 		{
-
 		}
 		
 		@SideOnly(Side.CLIENT)
@@ -363,10 +366,13 @@ public class FarCoreSetup
 			ModelLoaderRegistry.registerLoader(ModelSapling.Loader.instance);
 			ModelLoaderRegistry.registerLoader(ModelDisplayFluid.Loader.instance);
 			ModelLoaderRegistry.registerLoader(ModelCrop.instance);
+			ModelLoaderRegistry.registerLoader(ModelOre.instance);
 			U.Mod.registerCustomItemModelSelector(EnumItem.display_fluid.item, ModelDisplayFluid.Selector.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.BlockModelSelector.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.crop.block, ModelCrop.instance);
-			U.Mod.registerCustomItemModelSelector(Item.getItemFromBlock(EnumBlock.sapling.block), ModelSapling.ItemModelSelector.instance);
+			ModelLoader.setCustomStateMapper(EnumBlock.ore.block, ModelOre.instance);
+			U.Mod.registerCustomItemModelSelector(EnumBlock.sapling.block, ModelSapling.ItemModelSelector.instance);
+			U.Mod.registerCustomItemModelSelector(EnumBlock.ore.block, ModelOre.instance);
 			U.Mod.registerFluid((BlockFluidBase) EnumBlock.water.block);
 		}
 

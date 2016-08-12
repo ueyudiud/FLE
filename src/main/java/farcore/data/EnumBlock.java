@@ -9,16 +9,17 @@ public enum EnumBlock
 	sapling,
 	water,
 	fire,
-	ice;
-	
+	ice,
+	ore;
+
 	static
 	{
 		water.block = Blocks.WATER;
 		fire.block = Blocks.FIRE;
 	}
-	
+
 	public Block block;
-	
+
 	public void set(Block block)
 	{
 		this.block = block;

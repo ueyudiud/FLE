@@ -62,6 +62,8 @@ public class M
 	public static final Mat reed = new Mat(9007, FarCore.ID, "reed", "Reed", "Reed");
 	public static final Mat flax = new Mat(9008, FarCore.ID, "flax", "Flax", "Flax");
 	public static final Mat cotton = new Mat(9009, FarCore.ID, "cotton", "Cotton", "Cotton");
+
+	public static final Mat native_copper = new Mat(10001, "farcore", "nativeCopper", "NativeCopper", "Native Copper").setOreProperty(7, 8.0F, 9.0F);
 	
 	static
 	{

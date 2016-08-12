@@ -10,6 +10,7 @@ import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.material.MaterialIce;
+import farcore.lib.util.LanguageManager;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import farcore.util.U;
@@ -39,6 +40,7 @@ public class BlockIce extends BlockBase
 		setHardness(0.7F);
 		setTickRandomly(true);
 		EnumBlock.ice.set(this);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Ice");
 		U.Mod.registerItemBlockModel(this, 0, FarCore.ID, "ice");
 	}
 
@@ -47,6 +49,12 @@ public class BlockIce extends BlockBase
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
+	}
+	
+	@Override
+	public String getTranslateNameForItemStack(int metadata)
+	{
+		return getUnlocalizedName();
 	}
 
 	@Override

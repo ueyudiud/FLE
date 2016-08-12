@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import farcore.lib.model.item.ICustomItemRenderModel;
 import farcore.lib.render.IWorldRender;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -115,5 +120,12 @@ public class ClientOverride
 				}
 			}
 		}
+	}
+	
+	public static List<BakedQuad> renderItemModel(IBakedModel model, EnumFacing facing, long rand, ItemStack stack)
+	{
+		if(model instanceof ICustomItemRenderModel)
+			return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
+		return model.getQuads(null, facing, rand);
 	}
 }

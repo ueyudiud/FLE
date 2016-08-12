@@ -1,8 +1,10 @@
 package farcore.lib.material;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
@@ -30,17 +32,33 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 {
 	public static final Register<Mat> register = new Register(32768);
 	
+	private static final Map<IDataChecker<ISubTagContainer>, List<Mat>> materials = new HashMap();
+
 	public static List<Mat> filt(IDataChecker<ISubTagContainer> filter)
 	{
-		ImmutableList.Builder<Mat> list = ImmutableList.builder();
-		for(Mat material : register)
+		return filt(filter, false);
+	}
+	public static List<Mat> filt(IDataChecker<ISubTagContainer> filter, boolean alwaysInit)
+	{
+		if(!materials.containsKey(filter) || alwaysInit)
 		{
-			if(filter.isTrue(material))
+			ImmutableList.Builder<Mat> list = ImmutableList.builder();
+			for(Mat material : register)
 			{
-				list.add(material);
+				if(filter.isTrue(material))
+				{
+					list.add(material);
+				}
 			}
+			List<Mat> ret = list.build();
+			if(!alwaysInit)
+			{
+				materials.put(filter, ret);
+			}
+			return ret;
 		}
-		return list.build();
+		else
+			return materials.get(filter);
 	}
 
 	public final String modid;
@@ -89,7 +107,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Block rock;
 	public float minDetHeatForExplosion;
 	//Ore configuration.
-	public IOreProperty oreProperty;
+	public IOreProperty oreProperty = IOreProperty.property;
 	//Plant configuration
 	/** The plant grown in wild. */
 	public IPlant plant;

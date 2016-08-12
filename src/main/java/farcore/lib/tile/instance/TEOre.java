@@ -19,13 +19,13 @@ import net.minecraft.util.math.BlockPos;
 public class TEOre extends TEStatic implements IUpdatableTile
 {
 	private static final Mat STONE = Mat.register.get("stone");
-
+	
 	public Mat ore = M.VOID;
 	public EnumOreAmount amount = EnumOreAmount.normal;
 	public Mat rock = STONE;
 	public RockType rockType = RockType.resource;
 	public NBTTagCompound customDatas;
-	
+
 	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, RockType type)
 	{
 		this.ore = ore;
@@ -38,7 +38,7 @@ public class TEOre extends TEStatic implements IUpdatableTile
 	{
 		initialized = false;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
@@ -52,7 +52,7 @@ public class TEOre extends TEStatic implements IUpdatableTile
 			customDatas = compound.getCompoundTag("custom");
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
@@ -66,68 +66,67 @@ public class TEOre extends TEStatic implements IUpdatableTile
 		}
 		return super.writeToNBT(compound);
 	}
-	
+
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		nbt.setString("o", ore.name);
-		nbt.setByte("a", (byte) amount.ordinal());
-		nbt.setString("r", rock.name);
-		nbt.setByte("t", (byte) rockType.ordinal());
+		ore = Mat.register.get(nbt.getString("o"), M.VOID);
+		amount = EnumOreAmount.values()[nbt.getByte("a")];
+		rock = Mat.register.get(nbt.getString("r"), STONE);
+		rockType = RockType.values()[nbt.getByte("t")];
 		if(nbt.hasKey("c"))
 		{
 			customDatas = nbt.getCompoundTag("c");
 		}
 	}
-	
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		ore = Mat.register.get(nbt.getString("o"), M.VOID);
-		amount = EnumOreAmount.values()[nbt.getByte("a")];
-		rock = Mat.register.get("r", STONE);
-		rockType = RockType.values()[nbt.getByte("t")];
+		nbt.setString("o", ore.name);
+		nbt.setByte("a", (byte) amount.ordinal());
+		nbt.setString("r", rock.name);
+		nbt.setByte("t", (byte) rockType.ordinal());
 		if(customDatas != null)
 		{
 			nbt.setTag("c", customDatas);
 		}
 	}
-
+	
 	@Override
 	public boolean onBlockClicked(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return ore.oreProperty.onBlockClicked(this, player, side);
 	}
-	
+
 	@Override
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
 		return ore.oreProperty.onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
 	}
-
+	
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
 		if(Worlds.isNotOpaqueNearby(worldObj, pos))
 		{
-			markDirty();
 			syncToNearby();
 		}
 	}
-
+	
 	public NBTTagCompound getCustomData()
 	{
 		return customDatas;
 	}
-
+	
 	public float getThermalConduct()
 	{
 		return ore.thermalConduct * 0.2F + rock.thermalConduct * 0.8F;
 	}
-	
+
 	public int getHarvestLevel()
 	{
 		switch (rockType)
@@ -140,12 +139,12 @@ public class TEOre extends TEStatic implements IUpdatableTile
 			return Math.max(ore.blockHarvestLevel, rock.blockHarvestLevel);
 		}
 	}
-	
+
 	public float getHardness()
 	{
 		return ore.blockHardness * .8F + rock.blockHardness * .2F;
 	}
-	
+
 	public float getExplosionResistance()
 	{
 		return Math.max(ore.blockExplosionResistance, rock.blockExplosionResistance);

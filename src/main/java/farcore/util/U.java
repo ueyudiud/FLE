@@ -33,6 +33,7 @@ import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.render.FontRenderExtend;
+import farcore.lib.render.ParticleDiggingExt;
 import farcore.lib.tile.IItemHandlerIO;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.TEBase;
@@ -50,6 +51,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -67,6 +69,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -771,6 +774,12 @@ public class U
 		}
 
 		@SideOnly(Side.CLIENT)
+		public static void registerCustomItemModelSelector(Block item, ICustomItemModelSelector selector)
+		{
+			registerCustomItemModelSelector(Item.getItemFromBlock(item), selector);
+		}
+
+		@SideOnly(Side.CLIENT)
 		public static void registerCustomItemModelSelector(Item item, ICustomItemModelSelector selector)
 		{
 			ModelLoader.setCustomMeshDefinition(item, selector);
@@ -1437,6 +1446,64 @@ public class U
 			default: return -1;
 			}
 		};
+		
+		public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager)
+		{
+			if (state.getRenderType() != EnumBlockRenderType.INVISIBLE)
+			{
+				int i = pos.getX();
+				int j = pos.getY();
+				int k = pos.getZ();
+				float f = 0.1F;
+				AxisAlignedBB axisalignedbb = state.getBoundingBox(world, pos);
+				double d0 = i + rand.nextDouble() * (axisalignedbb.maxX - axisalignedbb.minX - 0.20000000298023224D) + 0.10000000149011612D + axisalignedbb.minX;
+				double d1 = j + rand.nextDouble() * (axisalignedbb.maxY - axisalignedbb.minY - 0.20000000298023224D) + 0.10000000149011612D + axisalignedbb.minY;
+				double d2 = k + rand.nextDouble() * (axisalignedbb.maxZ - axisalignedbb.minZ - 0.20000000298023224D) + 0.10000000149011612D + axisalignedbb.minZ;
+				if (side == EnumFacing.DOWN)
+				{
+					d1 = j + axisalignedbb.minY - 0.10000000149011612D;
+				}
+				if (side == EnumFacing.UP)
+				{
+					d1 = j + axisalignedbb.maxY + 0.10000000149011612D;
+				}
+				if (side == EnumFacing.NORTH)
+				{
+					d2 = k + axisalignedbb.minZ - 0.10000000149011612D;
+				}
+				if (side == EnumFacing.SOUTH)
+				{
+					d2 = k + axisalignedbb.maxZ + 0.10000000149011612D;
+				}
+				if (side == EnumFacing.WEST)
+				{
+					d0 = i + axisalignedbb.minX - 0.10000000149011612D;
+				}
+				if (side == EnumFacing.EAST)
+				{
+					d0 = i + axisalignedbb.maxX + 0.10000000149011612D;
+				}
+				manager.addEffect((new ParticleDiggingExt(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, state)).setBlockPos(pos).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
+			}
+		}
+		
+		public static void addBlockDestroyEffects(World world, BlockPos pos, IBlockState state, ParticleManager manager)
+		{
+			int i = 4;
+			for (int j = 0; j < 4; ++j)
+			{
+				for (int k = 0; k < 4; ++k)
+				{
+					for (int l = 0; l < 4; ++l)
+					{
+						double d0 = pos.getX() + (j + 0.5D) / 4.0D;
+						double d1 = pos.getY() + (k + 0.5D) / 4.0D;
+						double d2 = pos.getZ() + (l + 0.5D) / 4.0D;
+						manager.addEffect((new ParticleDiggingExt(world, d0, d1, d2, d0 - pos.getX() - 0.5D, d1 - pos.getY() - 0.5D, d2 - pos.getZ() - 0.5D, state)).setBlockPos(pos));
+					}
+				}
+			}
+		}
 
 		public static boolean shouldRenderBetterLeaves()
 		{
