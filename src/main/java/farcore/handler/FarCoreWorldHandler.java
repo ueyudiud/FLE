@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.asm.LightFix;
 import farcore.lib.util.Log;
 import farcore.lib.world.IObjectInWorld;
 import farcore.util.U;
@@ -29,17 +30,17 @@ public class FarCoreWorldHandler
 {
 	private static final Map<Class<? extends IObjectInWorld>, String> OBJECTS_TO_ID = new HashMap();
 	private static final Map<String, Class<? extends IObjectInWorld>> ID_TO_OBJECTS = new HashMap();
-
+	
 	private static final String key = "objsinw";
 	private static Map<Integer, List<IObjectInWorld>> objects = new HashMap();
 	private static Map<Integer, List<IObjectInWorld>> unlistedObjects = new HashMap();
-	
+
 	public static void registerObject(String id, Class<? extends IObjectInWorld> clazz)
 	{
 		OBJECTS_TO_ID.put(clazz, id);
 		ID_TO_OBJECTS.put(id, clazz);
 	}
-	
+
 	public static List<IObjectInWorld> getObjectInRange(World world, BlockPos pos, double range)
 	{
 		return getObjectInRange(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, range);
@@ -65,20 +66,22 @@ public class FarCoreWorldHandler
 		}
 		return ImmutableList.of();
 	}
-	
+
 	public static void putNewObjectInWorld(IObjectInWorld world)
 	{
 		U.L.put(objects, world.world().provider.getDimension(), world);
 	}
-
+	
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load event)
 	{
 	}
-
+	
 	@SubscribeEvent
 	public void onUnload(WorldEvent.Unload event)
 	{
+		//Remove all calculation of light.
+		LightFix.onWorldUnload(event.getWorld());
 		int dim;
 		List<IObjectInWorld> list = objects.remove(dim = event.getWorld().provider.getDimension());
 		if(list != null)
@@ -86,12 +89,12 @@ public class FarCoreWorldHandler
 			U.L.put(unlistedObjects, dim, list);
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onLoad(ChunkEvent.Load event)
 	{
 	}
-
+	
 	@SubscribeEvent
 	public void onUnload(ChunkEvent.Unload event)
 	{
@@ -118,13 +121,13 @@ public class FarCoreWorldHandler
 			U.L.put(unlistedObjects, dim, removed);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onUpdate(TickEvent.WorldTickEvent event)
 	{
 		if(event.side == Side.CLIENT) return;
 		if(event.phase == Phase.END) return;
-
+		
 		if(objects.containsKey(event.world.provider.getDimension()))
 		{
 			List<IObjectInWorld> list = objects.get(event.world.provider.getDimension());
@@ -142,7 +145,7 @@ public class FarCoreWorldHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onDataLoad(ChunkDataEvent.Load event)
 	{
@@ -178,7 +181,7 @@ public class FarCoreWorldHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onDataSave(ChunkDataEvent.Save event)
 	{

@@ -26,7 +26,14 @@ public class ItemOre extends ItemBlockBase
 	
 	public static EnumOreAmount getAmount(NBTTagCompound nbt)
 	{
-		return EnumOreAmount.values()[nbt.getByte("amount")];
+		try
+		{
+			return EnumOreAmount.values()[nbt.getByte("amount")];
+		}
+		catch(Exception exception)
+		{
+			return EnumOreAmount.normal;
+		}
 	}
 
 	public static NBTTagCompound setAmount(NBTTagCompound nbt, EnumOreAmount amount)
@@ -37,12 +44,19 @@ public class ItemOre extends ItemBlockBase
 	
 	public static Mat getRockMaterial(NBTTagCompound nbt)
 	{
-		return Mat.register.get(nbt.getString("rock"), M.VOID);
+		return Mat.register.get(nbt.getString("rock"), M.stone);
 	}
 
 	public static RockType getRockType(NBTTagCompound nbt)
 	{
-		return RockType.values()[nbt.getByte("type")];
+		try
+		{
+			return RockType.values()[nbt.getByte("type")];
+		}
+		catch(Exception exception)
+		{
+			return RockType.resource;
+		}
 	}
 
 	public static NBTTagCompound setRock(NBTTagCompound nbt, Mat material, RockType type)

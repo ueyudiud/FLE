@@ -31,8 +31,8 @@ import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
 
 public class Layers
 {
-	private static final boolean DRAW_IMG = true;
-
+	private static final boolean DRAW_IMG = false;
+	
 	public static LayerProp wrapSurface(long seed)
 	{
 		LayerProp prop = new LayerProp();
@@ -122,7 +122,7 @@ public class Layers
 		prop.markZoom();
 		return prop;
 	}
-
+	
 	public static void drawImage(int size, GenLayer genlayer, String name)
 	{
 		if (!DRAW_IMG)

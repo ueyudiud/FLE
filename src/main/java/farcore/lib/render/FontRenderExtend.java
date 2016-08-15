@@ -44,16 +44,12 @@ public class FontRenderExtend extends FontRenderer
 			boolean unicode)
 	{
 		super(gameSettingsIn, location, textureManagerIn, unicode);
-		char[] chrs = MC_CODE_LIST.toCharArray();
-		for(int i = 0; i < chrs.length; charWidth[i] = Minecraft.getMinecraft().fontRendererObj.getCharWidth(chrs[i]), ++i)
-		{
-			;
-		}
 	}
 	
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
+		super.onResourceManagerReload(resourceManager);
 		readFontTexture();
 	}
 

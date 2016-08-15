@@ -1,5 +1,6 @@
 package farcore.lib.tile;
 
+import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.net.tile.PacketTESync;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,18 +9,36 @@ import net.minecraft.nbt.NBTTagCompound;
 public class TEStatic extends TEBase implements ISynchronizableTile
 {
 	public boolean initialized = false;
-
+	
 	public TEStatic()
 	{
-
+		
 	}
 
+	@Override
+	public void onLoad()
+	{
+		if(isServer())
+		{
+			initServer();
+		}
+		else
+		{
+			sendToServer(new PacketTEAsk(worldObj, pos));
+		}
+	}
+	
+	protected void initServer()
+	{
+		initialized = true;
+	}
+	
 	@Override
 	public boolean isInitialized()
 	{
 		return initialized;
 	}
-
+	
 	@Override
 	public final void readFromDescription(NBTTagCompound nbt)
 	{
@@ -28,17 +47,17 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		markBlockRenderUpdate();
 		initialized = true;
 	}
-
+	
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
-
+		
 	}
-
+	
 	public void writeToDescription(NBTTagCompound nbt)
 	{
-
+		
 	}
-
+	
 	@Override
 	public void syncToAll()
 	{
@@ -46,7 +65,7 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		writeToDescription(nbt);
 		sendToAll(new PacketTESync(worldObj, pos, nbt));
 	}
-
+	
 	@Override
 	public void syncToDim()
 	{
@@ -54,20 +73,22 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		writeToDescription(nbt);
 		sendToDim(new PacketTESync(worldObj, pos, nbt));
 	}
-
+	
 	@Override
 	public void syncToNearby()
 	{
+		float range = getSyncRange();
+		if(!worldObj.isAreaLoaded(pos, (int) range)) return;
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToDescription(nbt);
-		sendToNearby(new PacketTESync(worldObj, pos, nbt), getSyncRange());
+		sendToNearby(new PacketTESync(worldObj, pos, nbt), range);
 	}
-
+	
 	protected float getSyncRange()
 	{
 		return 32F;
 	}
-
+	
 	@Override
 	public void syncToPlayer(EntityPlayer player)
 	{
@@ -75,7 +96,7 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		writeToDescription(nbt);
 		sendToPlayer(new PacketTESync(worldObj, pos, nbt), player);
 	}
-
+	
 	@Override
 	public void markDirty()
 	{

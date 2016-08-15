@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.FarCore;
+import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
@@ -24,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,22 +86,27 @@ public class BlockIce extends BlockBase
 		}
 		return super.onBlockHarvest(worldIn, pos, state, player, silkHarvest);
 	}
-
-	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
-	{
-		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
-	}
 	
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
-		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
-		if(ThermalNet.getTemperature(worldIn, pos, true) > V.waterFreezePoint)
+		if(Config.enableWaterFreezeAndIceMeltTempCheck)
 		{
-			turnIntoWater(worldIn, pos, worldIn.getBlockState(pos), true);
+			IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
+			if(!worldIn.isRemote && ThermalNet.getTemperature(worldIn, pos, true) > V.waterFreezePoint && random.nextInt(6) == 0)
+			{
+				turnIntoWater(worldIn, pos, state, true);
+			}
 		}
-		super.updateTick(worldIn, pos, state, rand);
+		else
+		{
+			int light = worldIn.getLightFor(EnumSkyBlock.BLOCK, pos);
+			if(light > 10 && random.nextInt(8) == 0)
+			{
+				turnIntoWater(worldIn, pos, state, true);
+			}
+		}
+		super.randomTick(worldIn, pos, state, random);
 	}
 	
 	@Override

@@ -5,10 +5,13 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumTerrain;
 import farcore.lib.util.NoiseBase;
 import farcore.lib.util.NoisePerlin;
+import farcore.lib.world.EnumWorldGeneratePhase;
+import farcore.lib.world.IWorldGenerateReplacer;
 import farcore.util.U.L;
 import fargen.core.biome.BiomeBase;
 import fargen.core.util.LayerProp;
@@ -27,12 +30,15 @@ import net.minecraftforge.fluids.BlockFluidBase;
 
 public class FarSurfaceChunkGenerator implements IChunkGenerator
 {
+	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
 	protected static final IBlockState OCEAN = EnumBlock.water.block.getDefaultState().withProperty(BlockFluidBase.LEVEL, 15);
 	private static final int smoothOffset = 4;
 	private static final int smoothSize = 9;
 	private static final int smoothListLength = 14;
 	private static final float[] parabolicField = new float[smoothSize * smoothSize];
+
+	private static final IWorldGenerateReplacer REPLACER = new FarSurfaceReplacer();
 
 	static
 	{
@@ -164,11 +170,17 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 						int k = 0;
 						for(; k <= height; ++k)
 						{
-							primer.setBlockState(j * 4 + j1, k, i * 4 + i1, STONE);
+							if(primer.getBlockState(j * 4 + j1, k, i * 4 + i1) == AIR)
+							{
+								primer.setBlockState(j * 4 + j1, k, i * 4 + i1, STONE);
+							}
 						}
 						for(; k < 128; ++k)
 						{
-							primer.setBlockState(j * 4 + j1, k, i * 4 + i1, OCEAN);
+							if(primer.getBlockState(j * 4 + j1, k, i * 4 + i1) == AIR)
+							{
+								primer.setBlockState(j * 4 + j1, k, i * 4 + i1, OCEAN);
+							}
 						}
 						d7 += d8;
 					}
@@ -193,18 +205,40 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		}
 	}
 
+	protected void replaceChunk(EnumWorldGeneratePhase phase, int x, int z, ChunkPrimer primer)
+	{
+		REPLACER.replaceWorld(phase, world, x, z, primer);
+		if(!FarCore.worldGenerateReplacers.isEmpty())
+		{
+			for(IWorldGenerateReplacer replacer : FarCore.worldGenerateReplacers)
+			{
+				replacer.replaceWorld(phase, world, x, z, primer);
+			}
+		}
+	}
+
 	@Override
 	public Chunk provideChunk(int x, int z)
 	{
 		random.setSeed(x * 341873128712L + z * 132897987541L);
 		generateTerrainHeight(x << 2, z << 2);
+		
 		ChunkPrimer primer = new ChunkPrimer();
+		replaceChunk(EnumWorldGeneratePhase.PRE_GENERATE, x, z, primer);
+		
 		setBlocksInChunk(x, z, primer);
+		replaceChunk(EnumWorldGeneratePhase.GEN_TERRAIN_HEIGHT, x, z, primer);
+		
 		biomes = ((FarSurfaceBiomeProvider) world.getBiomeProvider()).loadBlockGeneratorData(biomes, x * 16, z * 16, 16, 16);
 		replaceByBiomes(x << 4, z << 4, primer);
+		replaceChunk(EnumWorldGeneratePhase.REPLACED_BIOME, x, z, primer);
+		
+		replaceChunk(EnumWorldGeneratePhase.ORE_GENERATE, x, z, primer);
+		
+		replaceChunk(EnumWorldGeneratePhase.POST_GENERATE, x, z, primer);
+		
 		Chunk chunk = new Chunk(world, primer, x, z);
 		byte[] abyte = chunk.getBiomeArray();
-
 		for (int i = 0; i < abyte.length; ++i)
 		{
 			abyte[i] = (byte) (biomes[i] & 0xFF);

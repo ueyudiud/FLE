@@ -27,13 +27,13 @@ public class TemperatureHandler implements IWorldThermalHandler
 		if(material == Material.WOOD) return 2.2E-3F;
 		return -1;
 	}
-
+	
 	@Override
 	public float getTemperature(World world, BlockPos pos, float baseTemp)
 	{
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof BlockFluidBase)
-			return Math.max(((BlockFluidBase) state.getBlock()).getTemperature(world, pos), baseTemp);
+			return Math.max(((BlockFluidBase) state.getBlock()).getFluid().getTemperature(world, pos), baseTemp);
 		return -1;
 	}
 }

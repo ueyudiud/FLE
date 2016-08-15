@@ -1,7 +1,17 @@
 package farcore.asm;
 
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +29,9 @@ import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.MultiANewArrayInsnNode;
@@ -29,246 +41,375 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
-public class ClassTransformer
-implements IClassTransformer
+public class ClassTransformer implements IClassTransformer
 {
-	private static final boolean DEBUG = true;
+	private static final DecimalFormat FORMAT = new DecimalFormat("000");
+	private static final boolean codeOutput = true;
+	private static File file;
 	public static final Logger LOG = LogManager.getLogger("FarCore ASM");
-	private int numInsertions;
-	protected Map<String, List<OperationInfo>> mcpMethods = new HashMap();
-	protected Map<String, List<OperationInfo>> obfMethods = new HashMap();
-	protected String mcpClassName;
-	protected String obfClassName;
+	
+	private static final Map<String, OpInformation> informations = new HashMap();
 
-	public ClassTransformer(String mcpName, String obfName)
+	private static void outputInit()
 	{
-		mcpClassName = mcpName;
-		obfClassName = obfName;
+		if(file == null)
+		{
+			File file = FarOverrideLoadingPlugin.location;
+			if(file.isFile())
+			{
+				file = file.getParentFile();
+			}
+			ClassTransformer.file = new File(file, "far_asm");
+			if(!ClassTransformer.file.exists())
+			{
+				ClassTransformer.file.mkdirs();
+			}
+		}
+	}
+
+	private static void logOutput(String name, InsnList list)
+	{
+		if(codeOutput)
+		{
+			outputInit();
+			BufferedWriter writer = null;
+			try
+			{
+				File file1 = new File(file, name + ".txt");
+				if(!file1.exists())
+				{
+					file1.createNewFile();
+				}
+				writer = new BufferedWriter(new FileWriter(file1));
+				int off = 0;
+				Iterator<AbstractInsnNode> itr = list.iterator();
+				while(itr.hasNext())
+				{
+					AbstractInsnNode node = itr.next();
+					writer.write((off ++) + " " + getOutput(node));
+					writer.newLine();
+				}
+			}
+			catch(IOException exception)
+			{
+				LOG.error("Fail to output asm code of type {" + name + "}", exception);
+			}
+			finally
+			{
+				if(writer != null)
+				{
+					try
+					{
+						writer.close();
+					}
+					catch(Exception exception){}
+				}
+			}
+		}
+	}
+	
+	private static String getOutput(AbstractInsnNode node)
+	{
+		String opcode = FORMAT.format(node.getOpcode() == -1 ? 256 : node.getOpcode());
+		switch (node.getType())
+		{
+		case AbstractInsnNode.VAR_INSN :
+			return opcode + " var " + ((VarInsnNode) node).var;
+		case AbstractInsnNode.TYPE_INSN :
+			return opcode + " type " + ((TypeInsnNode) node).desc;
+		case AbstractInsnNode.TABLESWITCH_INSN :
+			return opcode + " typelabel " + ((TableSwitchInsnNode) node).min + "," + ((TableSwitchInsnNode) node).max;
+		case AbstractInsnNode.MULTIANEWARRAY_INSN :
+			return opcode + " array " + ((MultiANewArrayInsnNode) node).desc + "[x" + ((MultiANewArrayInsnNode) node).dims;
+		case AbstractInsnNode.METHOD_INSN :
+			return opcode + " method " + ((MethodInsnNode) node).owner + "." + ((MethodInsnNode) node).name + " " + ((MethodInsnNode) node).desc;
+		case AbstractInsnNode.LOOKUPSWITCH_INSN :
+			return opcode + " lookup " + ((LookupSwitchInsnNode) node).dflt.getLabel().toString();
+		case AbstractInsnNode.LINE :
+			return opcode + " line " + ((LineNumberNode) node).line;
+		case AbstractInsnNode.LDC_INSN :
+			return opcode + " ldc " + ((LdcInsnNode) node).cst.toString();
+		case AbstractInsnNode.LABEL :
+			return opcode + " label " + ((LabelNode) node).getLabel().toString();
+		case AbstractInsnNode.JUMP_INSN :
+			return opcode + " jumplabel " + ((JumpInsnNode) node).label.getLabel().toString();
+		case AbstractInsnNode.INVOKE_DYNAMIC_INSN :
+			return opcode + " invoke_dynamic " + ((InvokeDynamicInsnNode) node).name + " " + ((InvokeDynamicInsnNode) node).desc;
+		case AbstractInsnNode.INT_INSN :
+			return opcode + " " + ((IntInsnNode) node).operand;
+		case AbstractInsnNode.INSN :
+			return opcode;
+		case AbstractInsnNode.IINC_INSN :
+			return opcode + " iinc " + ((IincInsnNode) node).var + ":" + ((IincInsnNode) node).incr;
+		case AbstractInsnNode.FRAME :
+			return opcode + " frame " + ((FrameNode) node).type;
+		case AbstractInsnNode.FIELD_INSN :
+			return opcode + " " + ((FieldInsnNode) node).owner + "." + ((FieldInsnNode) node).name + "." + ((FieldInsnNode) node).desc;
+		default : return "";
+		}
+	}
+
+	private OpInformation create(String name)
+	{
+		return new OpInformation(name);
+	}
+	
+	private int numInsertions;
+	
+	public ClassTransformer()
+	{
+		create("net.minecraft.world.chunk.Chunk")
+		.lName("getBiome|(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;")
+		.lPosition(1278, 3)
+		.lNode(new VarInsnNode(ALOAD, 1))
+		.lNode(new VarInsnNode(ALOAD, 2))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(false)
+		.lName("a|(Lcm;Laiu;)Laiq;")
+		.lPosition(1202, 3)
+		.lNode(new VarInsnNode(ALOAD, 1))
+		.lNode(new VarInsnNode(ALOAD, 2))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILcm;Laiu;)Laiq;", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(true)
+		.put();
+		create("net.minecraft.client.renderer.EntityRenderer")
+		.lName("updateRenderer|()V")
+		.lPosition(325, 2)
+		.lNode(new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "random", "Ljava/util/Random;"))
+		.lNode(new VarInsnNode(ALOAD, 0))
+		.lNode(new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "rendererUpdateCount", "I"))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(false)
+		.lName("e|()V")
+		.lPosition(416, 2)
+		.lNode(new FieldInsnNode(GETFIELD, "bnz", "random", "Ljava/util/Random;"))
+		.lNode(new VarInsnNode(ALOAD, 0))
+		.lNode(new FieldInsnNode(GETFIELD, "bnz", "rendererUpdateCount", "I"))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(true)
+		.put();
+		create("net.minecraft.client.renderer.RenderItem")
+		.lName("renderModel|(Lnet/minecraft/client/renderer/block/model/IBakedModel;ILnet/minecraft/item/ItemStack;)V")
+		.lPosition(133, 4)
+		.lLength(2)
+		.lLabel(OpType.REMOVE)
+		.lPosition(133, 8)
+		.lNode(new VarInsnNode(ALOAD, 3))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
+		.lLabel(OpType.REPLACE)
+		.lPosition(136, 5)
+		.lLength(2)
+		.lLabel(OpType.REMOVE)
+		.lPosition(136, 10)
+		.lNode(new VarInsnNode(ALOAD, 3))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(false)
+		.put();
+		create("net.minecraft.world.World")
+		.lName("isRainingAt|(Lnet/minecraft/util/math/BlockPos;)Z")
+		.lPosition(3882, 17)
+		.lLabel(OpType.REMOVE)
+		.lPosition(3882, 18)
+		.lNode(new VarInsnNode(ALOAD, 2))
+		.lNode(new VarInsnNode(ALOAD, 0))
+		.lNode(new VarInsnNode(ALOAD, 1))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Lnet/minecraft/world/biome/Biome;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(false)
+		.lName("B|(Lcm;)Z")
+		.lPosition(3590, 17)
+		.lLabel(OpType.REMOVE)
+		.lPosition(3590, 18)
+		.lNode(new VarInsnNode(ALOAD, 2))
+		.lNode(new VarInsnNode(ALOAD, 0))
+		.lNode(new VarInsnNode(ALOAD, 1))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Laiq;Laid;Lcm;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(true)
+		.lName("checkLight|(Lnet/minecraft/util/math/BlockPos;)Z")
+		.lPosition(2984, 5)
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPosition(2987, 6)
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(false)
+		.lName("w|(Lcm;)Z")
+		.lPosition(2774, 5)
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPosition(2777, 6)
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(true)
+		.lName("markBlocksDirtyVertical|(IIII)V")
+		.lPosition(500, 9)
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(false)
+		.lName("a|(IIII)V")
+		.lPosition(438, 9)
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
+		.lLabel(OpType.REPLACE)
+		.lPut(true)
+		.lName("tick|()V")
+		.lPosition(2741, 2)
+		.lNode(new VarInsnNode(ALOAD, 0))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Lnet/minecraft/world/World;)V", false))
+		.lLabel(OpType.INSERT)
+		.lPut(false)
+		.lName("d|()V")
+		.lPosition(2543, 2)
+		.lNode(new VarInsnNode(ALOAD, 0))
+		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Laid;)V", false))
+		.lLabel(OpType.INSERT)
+		.put();
 	}
 
 	@Override
-	public byte[] transform(String name, String transformedName, byte[] bytes)
+	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
-		if (name.equals(obfClassName) || name.equals(mcpClassName))
-			return transform(bytes);
-		return bytes;
+		OpInformation information;
+		if((information = informations.get(transformedName)) != null)
+			return modifyClass(transformedName, information, basicClass);
+		return basicClass;
 	}
 
-	protected byte[] transform(byte[] bytes)
+	public byte[] modifyClass(String clazzName, OpInformation information, byte[] basicClass)
 	{
-		ClassNode classNode = new ClassNode();
-		ClassReader classReader = new ClassReader(bytes);
-		classReader.accept(classNode, 0);
-		LOG.info("Attempting to Transform: " + classNode.name + " searching for injection...");
-		Map<String, List<OperationInfo>> map = getInfos();
-		for(MethodNode m : classNode.methods)
+		try
 		{
-			List<OperationInfo> list = map.get(m.name + "|" + m.desc);
-			if(list != null)
+			LOG.info("Far Core start to modify class {" + clazzName + "}.");
+			ClassNode node = new ClassNode();
+			ClassReader reader = new ClassReader(basicClass);
+			reader.accept(node, 0);
+			for(MethodNode node2 : node.methods)
 			{
-				if(DEBUG)
+				String name = node2.name + "|" + node2.desc;
+				if(information.modifymap().containsKey(name))
 				{
-					LOG.info("===========Injecting==========");
-					info(m);
+					LOG.debug("Injecting method  {" + name + "}.");
+					logOutput(clazzName + "." + node2.name + "~source", node2.instructions);
+					boolean success = modifyMethodNode(node2.instructions, information.modifymap().get(name));
+					logOutput(clazzName + "." + node2.name + "~modified", node2.instructions);
+					if(!success)
+					{
+						LOG.info("Injected method {" + clazzName + "} failed.");
+					}
+					else
+					{
+						LOG.debug("Injected method {" + clazzName + "} success.");
+					}
 				}
-				list = new ArrayList(list);
-				OperationInfo info = null;
-				if(!list.isEmpty())
+			}
+			ClassWriter writer = new ClassWriter(1);
+			node.accept(writer);
+			LOG.info("End modify class {" + clazzName + "}.");
+			return writer.toByteArray();
+		}
+		catch(Exception exception)
+		{
+			LOG.error("Fail to modify class.", exception);
+			return basicClass;
+		}
+	}
+	
+	private boolean modifyMethodNode(InsnList instructions, List<OpLabel> list)
+	{
+		list = new ArrayList(list);
+		OpLabel info = null;
+		if(!list.isEmpty())
+		{
+			info = list.get(0);
+		}
+		else
+			return false;
+		for(int idx = 0; (idx < instructions.size() && !list.isEmpty()); ++idx)
+		{
+			numInsertions = 0;
+			while (info != null)
+			{
+				if (!isLine(instructions.get(idx), info.line))
+				{
+					break;
+				}
+				performAnchorOperation(instructions, idx, info);
+				list.remove(0);
+				if (!list.isEmpty())
 				{
 					info = list.get(0);
 				}
 				else
 				{
-					LOG.warn("No instructions in method named " + m.name + "()");
-				}
-				boolean success = false;
-				for(int idx = 0; (idx < m.instructions.size() && !list.isEmpty()); ++idx)
-				{
-					numInsertions = 0;
-					while (info != null)
-					{
-						if (info.count == -1)
-						{
-							performDirectOperation(m.instructions, info);
-							list.remove(0);
-						}
-						else
-						{
-							if (!isLineNumber(m.instructions.get(idx), info.count))
-							{
-								break;
-							}
-							performAnchorOperation(m.instructions, info, idx);
-							AbstractInsnNode node = m.instructions.get(idx + info.offset);
-							list.remove(0);
-						}
-						if (!list.isEmpty())
-						{
-							info = list.get(0);
-						}
-						else
-						{
-							info = null;
-						}
-					}
-				}
-				success = list.isEmpty();
-				if(DEBUG)
-				{
-					LOG.info("===========Injected==========");
-					info(m);
-				}
-				if(success)
-				{
-					LOG.info("Injected method {" + m.name + "|" + m.desc + "}.");
-				}
-				else
-				{
-					LOG.warn("The method {" + m.name + "|" + m.desc + "} might failed to inject, this might cuase game crash.");
+					info = null;
 				}
 			}
 		}
-		LOG.info("Attempting to Transform: " + classNode.name + " Complete");
-		ClassWriter writer = new ClassWriter(1);
-		classNode.accept(writer);
-		return writer.toByteArray();
+		return list.isEmpty();
 	}
 
-	private void info(MethodNode node)
+	private void performAnchorOperation(InsnList methodInsn, int anchor, OpLabel input)
 	{
-		LOG.debug(node.name + " | " + node.desc);
-		for(int i = 0; i < node.instructions.size(); ++i)
+		AbstractInsnNode current = methodInsn.get(anchor + input.off + numInsertions);
+		AbstractInsnNode current1;
+		if (input.nodes.size() > 0 && (input.nodes.get(0) instanceof JumpInsnNode))
 		{
-			AbstractInsnNode node3 = node.instructions.get(i);
-			int idx = i;
-			int type = node3.getOpcode();
-			switch (node3.getType())
-			{
-			case AbstractInsnNode.VAR_INSN :
-				LOG.debug(i + " " + type + " " + ((VarInsnNode) node3).var);
-				break;
-			case AbstractInsnNode.TYPE_INSN :
-				LOG.debug(i + " " + type + " " + ((TypeInsnNode) node3).desc);
-				break;
-			case AbstractInsnNode.TABLESWITCH_INSN :
-				LOG.debug(i + " " + type + " " + ((TableSwitchInsnNode) node3).min + "," + ((TableSwitchInsnNode) node3).max);
-				break;
-			case AbstractInsnNode.MULTIANEWARRAY_INSN :
-				LOG.debug(i + " " + type + " " + ((MultiANewArrayInsnNode) node3).desc + "[" + ((MultiANewArrayInsnNode) node3).dims + "]");
-				break;
-			case AbstractInsnNode.METHOD_INSN :
-				LOG.debug(i + " " + type + " " + ((MethodInsnNode) node3).owner + "." + ((MethodInsnNode) node3).name + " " + ((MethodInsnNode) node3).desc);
-				break;
-			case AbstractInsnNode.LOOKUPSWITCH_INSN :
-				LOG.debug(i + " " + type);
-				break;
-			case AbstractInsnNode.LINE :
-				LOG.debug(i + " " + type + " line:" + ((LineNumberNode) node3).line);
-				break;
-			case AbstractInsnNode.LDC_INSN :
-				LOG.debug(i + " " + type);
-				break;
-			case AbstractInsnNode.LABEL :
-				LOG.debug(i + " " + type + " label:" + ((LabelNode) node3).getLabel());
-				break;
-			case AbstractInsnNode.JUMP_INSN :
-				LOG.debug(i + " " + type + " jump: label:" + ((JumpInsnNode) node3).label.getLabel());
-				break;
-			case AbstractInsnNode.INVOKE_DYNAMIC_INSN :
-				LOG.debug(i + " " + type + " " + ((InvokeDynamicInsnNode) node3).name + " " + ((InvokeDynamicInsnNode) node3).desc);
-				break;
-			case AbstractInsnNode.INT_INSN :
-				LOG.debug(i + " " + type + " " + ((IntInsnNode) node3).operand);
-				break;
-			case AbstractInsnNode.INSN :
-				LOG.debug(i + " " + type);
-				break;
-			case AbstractInsnNode.IINC_INSN :
-				LOG.debug(i + " " + type + " " + ((IincInsnNode) node3).var + ":" + ((IincInsnNode) node3).incr);
-				break;
-			case AbstractInsnNode.FRAME :
-				LOG.debug(i + " " + type + " " + ((FrameNode) node3).type);
-				break;
-			case AbstractInsnNode.FIELD_INSN :
-				LOG.debug(i + " " + type + " " + ((FieldInsnNode) node3).owner + "." + ((FieldInsnNode) node3).name + "." + ((FieldInsnNode) node3).desc);
-				break;
-			}
+			input.nodes.set(input.nodes.get(0), new JumpInsnNode(input.nodes.get(0).getOpcode(), (LabelNode) current.getPrevious()));
 		}
-	}
-
-	private Map<String, List<OperationInfo>> getInfos()
-	{
-		return FarOverrideLoadingPlugin.runtimeDeobf ? obfMethods : mcpMethods;
+		switch (input.type)
+		{
+		case INSERT :
+			numInsertions += input.nodes.size();
+			methodInsn.insert(current, input.nodes);
+			break;
+		case INSERT_BEFORE :
+			numInsertions += input.nodes.size();
+			methodInsn.insertBefore(current, input.nodes);
+			break;
+		case REMOVE :
+			int i = input.len;
+			while(i > 0)
+			{
+				current = methodInsn.get(anchor + input.off + numInsertions);
+				methodInsn.remove(current);
+				--i;
+			}
+			numInsertions -= input.len;
+			break;
+		case REPLACE :
+			numInsertions += input.nodes.size() - 1;
+			if ((current instanceof JumpInsnNode) && (input.nodes.get(0) instanceof JumpInsnNode))
+			{
+				((JumpInsnNode)input.nodes.get(0)).label = ((JumpInsnNode)current).label;
+			}
+			methodInsn.insert(current, input.nodes);
+			methodInsn.remove(current);
+			break;
+		case SWITCH :
+			current1 = methodInsn.get(anchor + input.off + numInsertions + input.len);
+			methodInsn.insert(current, current1);
+			current1 = methodInsn.get(anchor + input.off + numInsertions + input.len);
+			methodInsn.insert(current1, current);
+			break;
+		}
 	}
 
 	private int findLine(InsnList methodList, int line)
 	{
 		for (int index = 0; index < methodList.size(); index++)
 		{
-			if (isLineNumber(methodList.get(index), line))
+			if (isLine(methodList.get(index), line))
 				return index;
 		}
 		return -1;
 	}
 
-	private void performDirectOperation(InsnList methodInsn, OperationInfo input)
-	{
-		AbstractInsnNode current = methodInsn.get(input.offset + numInsertions);
-		switch (input.type)
-		{
-		case InsertAfter:
-			numInsertions += input.list.size();
-			methodInsn.insert(current, input.list);
-			break;
-		case InsertBefore:
-			numInsertions += input.list.size();
-			methodInsn.insertBefore(current, input.list);
-			break;
-		case Remove:
-			numInsertions -= 1;
-			methodInsn.remove(current);
-			break;
-		case Replace:
-			numInsertions += input.list.size() - 1;
-			if (((current instanceof JumpInsnNode)) && ((input.list.get(0) instanceof JumpInsnNode)))
-			{
-				((JumpInsnNode)input.list.get(0)).label = ((JumpInsnNode)current).label;
-			}
-			methodInsn.insert(current, input.list);
-			methodInsn.remove(current);
-			break;
-		}
-	}
-
-	private void performAnchorOperation(InsnList methodInsn, OperationInfo input, int anchor)
-	{
-		AbstractInsnNode current = methodInsn.get(anchor + input.offset + numInsertions);
-		if (input.list.size() > 0 && (input.list.get(0) instanceof JumpInsnNode))
-		{
-			input.list.set(input.list.get(0), new JumpInsnNode(input.list.get(0).getOpcode(), (LabelNode) current.getPrevious()));
-		}
-		switch (input.type)
-		{
-		case InsertAfter:
-			numInsertions += input.list.size();
-			methodInsn.insert(current, input.list);
-			break;
-		case InsertBefore:
-			numInsertions += input.list.size();
-			methodInsn.insertBefore(current, input.list);
-			break;
-		case Remove:
-			numInsertions -= 1;
-			methodInsn.remove(current);
-			break;
-		case Replace:
-			methodInsn.insert(current, input.list);
-			methodInsn.remove(current);
-			break;
-		}
-	}
-
-	private boolean isLineNumber(AbstractInsnNode current, int line)
+	private boolean isLine(AbstractInsnNode current, int line)
 	{
 		if (current instanceof LineNumberNode)
 		{
@@ -279,60 +420,112 @@ implements IClassTransformer
 		return false;
 	}
 
-	public static class OperationInfo
+	public static enum OpType
 	{
-		int count;
-		int offset;
-		OperationType type;
-		InsnList list;
+		INSERT,
+		INSERT_BEFORE,
+		REPLACE,
+		REMOVE,
+		SWITCH;
+	}
+
+	protected class OpInformation
+	{
+		final String mcpname;
+		Map<String, List<OpLabel>> modifiesmcp = new HashMap();
+		Map<String, List<OpLabel>> modifiesobf = new HashMap();
+		String cacheName;
+		List<OpLabel> label;
+		int line = -1;
+		int off = -1;
+		int length = 1;
+		InsnList cacheList;
 		
-		public OperationInfo(OperationType type, int off, InsnList list)
+		OpInformation(String name)
 		{
-			this.type = type;
-			this.list = list;
-			offset = off;
-			count = 0;
+			mcpname = name;
+		}
+		
+		Map<String, List<OpLabel>> modifymap()
+		{
+			return FarOverrideLoadingPlugin.runtimeDeobf ? modifiesobf : modifiesmcp;
 		}
 
-		public OperationInfo(OperationType type, int off, int start, InsnList list)
+		public OpInformation lName(String name)
 		{
-			this.type = type;
-			this.list = list;
-			offset = off;
-			count = start;
+			cacheName = name;
+			return this;
+		}
+		
+		public OpInformation lPosition(int line, int off)
+		{
+			this.line = line;
+			this.off = off;
+			length = 1;
+			return this;
 		}
 
-		public OperationInfo(OperationType type, int off, AbstractInsnNode...nodes)
+		public OpInformation lLength(int len)
 		{
-			this.type = type;
-			list = new InsnList();
-			offset = off;
-			count = 0;
-			for(AbstractInsnNode node : nodes)
+			length = len;
+			return this;
+		}
+
+		public OpInformation lNode(AbstractInsnNode node)
+		{
+			if(cacheList == null)
 			{
-				list.add(node);
+				cacheList = new InsnList();
 			}
+			cacheList.add(node);
+			return this;
 		}
 
-		public OperationInfo(OperationType type, int off, int start, AbstractInsnNode...nodes)
+		public OpInformation lLabel(OpType type)
 		{
-			this.type = type;
-			list = new InsnList();
-			offset = off;
-			count = start;
-			for(AbstractInsnNode node : nodes)
+			if(label == null)
 			{
-				list.add(node);
+				label = new ArrayList();
 			}
+			label.add(new OpLabel(line, off, length, type, cacheList == null ? new InsnList() : cacheList));
+			line = -1;
+			off = -1;
+			cacheList = null;
+			return this;
+		}
+		
+		public OpInformation lPut(boolean isObf)
+		{
+			if(!(isObf ? modifiesobf : modifiesmcp).containsKey(cacheName))
+			{
+				(isObf ? modifiesobf : modifiesmcp).put(cacheName, label);
+			}
+			cacheName = null;
+			label = null;
+			return this;
+		}
+		
+		public void put()
+		{
+			informations.put(mcpname, this);
 		}
 	}
 
-	public static enum OperationType
+	protected class OpLabel
 	{
-		InsertAfter,
-		InsertBefore,
-		//Switch,
-		Replace,
-		Remove;
+		int line;
+		int off;
+		int len;
+		OpType type;
+		InsnList nodes;
+
+		OpLabel(int line, int off, int len, OpType type, InsnList nodes)
+		{
+			this.line = line;
+			this.off = off;
+			this.len = len;
+			this.type = type;
+			this.nodes = nodes;
+		}
 	}
 }

@@ -109,22 +109,24 @@ implements ISynchronizableTile
 	{
 
 	}
+	
+	@Override
+	public void onLoad()
+	{
+		if(isServer())
+		{
+			initServer();
+		}
+		else if((timer & 0xF) == 0)
+		{
+			sendToServer(new PacketTEAsk(worldObj, pos));
+		}
+	}
 
 	@Override
 	protected final void updateEntity2()
 	{
-		if(!isInitialized())
-		{
-			if(isServer())
-			{
-				initServer();
-			}
-			else if((timer & 0xF) == 0)
-			{
-				sendToServer(new PacketTEAsk(worldObj, pos));
-			}
-		}
-		else if(isServer())
+		if(isServer())
 		{
 			updateServer();
 			nbt.reset();
@@ -171,26 +173,36 @@ implements ISynchronizableTile
 		}
 		else
 		{
-			updateClient();
-			if((syncState & 0x8) != 0)
+			if(!isInitialized())
 			{
-				markBlockUpdate();
+				if((timer & 0xF) == 0)
+				{
+					sendToServer(new PacketTEAsk(worldObj, pos));
+				}
 			}
-			if((syncState & 0x10) != 0)
+			else
 			{
-				int range = getRenderUpdateRange();
-				worldObj.markBlockRangeForRenderUpdate(pos.add(-range, -range, -range), pos.add(range, range, range));
+				updateClient();
+				if((syncState & 0x8) != 0)
+				{
+					markBlockUpdate();
+				}
+				if((syncState & 0x10) != 0)
+				{
+					int range = getRenderUpdateRange();
+					worldObj.markBlockRangeForRenderUpdate(pos.add(-range, -range, -range), pos.add(range, range, range));
+				}
+				if((syncState & 0x20) != 0)
+				{
+					super.markLightForUpdate(EnumSkyBlock.SKY);
+				}
+				if((syncState & 0x40) != 0)
+				{
+					super.markLightForUpdate(EnumSkyBlock.BLOCK);
+				}
+				syncState = 0;
+				syncAskedPlayer.clear();
 			}
-			if((syncState & 0x20) != 0)
-			{
-				super.markLightForUpdate(EnumSkyBlock.SKY);
-			}
-			if((syncState & 0x40) != 0)
-			{
-				super.markLightForUpdate(EnumSkyBlock.BLOCK);
-			}
-			syncState = 0;
-			syncAskedPlayer.clear();
 		}
 	}
 

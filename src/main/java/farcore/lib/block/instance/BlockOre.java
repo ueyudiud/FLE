@@ -7,6 +7,7 @@ import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumToolType;
+import farcore.data.M;
 import farcore.lib.block.BlockTileUpdatable;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.block.IToolableBlock;
@@ -15,9 +16,11 @@ import farcore.lib.block.material.MaterialOre;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.util.Direction;
+import farcore.lib.util.LanguageManager;
 import farcore.lib.util.SubTag;
 import farcore.util.BlockStateWrapper;
 import farcore.util.U;
+import farcore.util.U.Strings;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -38,6 +41,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockOre extends BlockTileUpdatable
 implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
@@ -48,11 +52,11 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 		public final EnumOreAmount amount;
 		public final Mat rock;
 		public final RockType type;
-		
+
 		OreStateWrapper(IBlockState state, TEOre ore)
 		{
 			super(state);
-			this.ore = ore.ore;
+			this.ore = ore.getOre();
 			amount = ore.amount;
 			rock = ore.rock;
 			type = ore.rockType;
@@ -65,27 +69,69 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 			this.rock = rock;
 			type = rockType;
 		}
-		
+
 		@Override
 		protected BlockStateWrapper wrapState(IBlockState state)
 		{
 			return new OreStateWrapper(state, ore, amount, rock, type);
 		}
 	}
-
+	
 	private static final MaterialOre ORE = new MaterialOre();
-
+	
 	public BlockOre()
 	{
 		super(FarCore.ID, "ore", ORE);
 		setTickRandomly(true);
+		registerLocalized();
 		EnumBlock.ore.set(this);
+	}
+
+	private void registerLocalized()
+	{
+		LanguageManager.registerLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE), "Ore");
+		for(Mat ore : Mat.filt(SubTag.ORE))
+		{
+			for(Mat rock : Mat.filt(SubTag.ROCK))
+			{
+				for(EnumOreAmount amount : EnumOreAmount.values())
+				{
+					for(RockType type : RockType.values())
+					{
+						NBTTagCompound nbt = ItemOre.setRock(ItemOre.setAmount(new NBTTagCompound(), amount), rock, type);
+						ItemStack stack = new ItemStack(this, 1, ore.id);
+						stack.setTagCompound(nbt);
+						LanguageManager.registerLocal(getTranslateNameForItemStack(stack),
+								String.format("%s %s Ore", Strings.upcaseFirst(amount.name()), ore.localName));
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
 	protected Item createItemBlock()
 	{
 		return new ItemOre(this);
+	}
+	
+	@Override
+	public String getTranslateNameForItemStack(ItemStack stack)
+	{
+		if(stack.hasTagCompound())
+		{
+			NBTTagCompound nbt = stack.getTagCompound();
+			return String.format("%s@%s.%s.%s.%s",
+					getUnlocalizedName(), Mat.register.get(stack.getItemDamage(), M.VOID), ItemOre.getAmount(nbt).name(), ItemOre.getRockMaterial(nbt).name, ItemOre.getRockType(nbt).name());
+		}
+		else
+			return getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE);
+	}
+	
+	@Override
+	public String getLocalizedName()
+	{
+		return LanguageManager.translateToLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE));
 	}
 	
 	@Override
@@ -96,7 +142,7 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 			return new OreStateWrapper(state, (TEOre) tile);
 		return state;
 	}
-
+	
 	@Override
 	public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
 	{
@@ -104,7 +150,7 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 		if(!(tile instanceof TEOre)) return 1.0F;
 		return ((TEOre) tile).getHardness();
 	}
-
+	
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
@@ -112,15 +158,15 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 		if(!(tile instanceof TEOre)) return 1.0F;
 		return ((TEOre) tile).getExplosionResistance();
 	}
-
+	
 	@Override
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(!(tile instanceof TEOre)) return;
-		((TEOre) tile).ore.oreProperty.onEntityWalk((TEOre) tile, entityIn);
+		((TEOre) tile).getOre().oreProperty.onEntityWalk((TEOre) tile, entityIn);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
@@ -136,15 +182,14 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 			}
 		}
 	}
-
+	
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			ItemStack stack)
 	{
 		TileEntity tile;
-		if(!worldIn.isRemote && (tile = worldIn.getTileEntity(pos)) instanceof TEOre)
+		if((tile = worldIn.getTileEntity(pos)) instanceof TEOre)
 		{
-			((TEOre) tile).ore = Mat.register.get(stack.getItemDamage());
 			if(stack.hasTagCompound())
 			{
 				NBTTagCompound nbt = stack.getTagCompound();
@@ -152,11 +197,10 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 				((TEOre) tile).rock = ItemOre.getRockMaterial(nbt);
 				((TEOre) tile).rockType = ItemOre.getRockType(nbt);
 			}
-			((TEOre) tile).initialized = true;
-			((TEOre) tile).syncToNearby();
+			((TEOre) tile).setOre(Mat.register.get(stack.getItemDamage()));
 		}
 	}
-	
+
 	@Override
 	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
@@ -171,29 +215,29 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 			return player.canHarvestBlock(getDefaultState());
 		return toolLevel >= ((TEOre) tile).getHarvestLevel();
 	}
-	
+
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return EnumToolType.pickaxe.name();
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TEOre();
 	}
-	
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof TEOre)
 		{
-			((TEOre) tile).ore.oreProperty.updateTick((TEOre) tile, rand);
+			((TEOre) tile).getOre().oreProperty.updateTick((TEOre) tile, rand);
 		}
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
@@ -202,14 +246,14 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 			return ((TEOre) tile).rockType.burnable ? 80 : 0;
 		return 0;
 	}
-	
+
 	@Override
 	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TEOre)
 		{
-			if(((TEOre) tile).ore.oreProperty.onBurn((TEOre) tile, burnHardness, direction)) return true;
+			if(((TEOre) tile).getOre().oreProperty.onBurn((TEOre) tile, burnHardness, direction)) return true;
 			if(((TEOre) tile).rockType.burnable)
 			{
 				((TEOre) tile).rockType = ((TEOre) tile).rockType.burned();
@@ -218,18 +262,18 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TEOre)
 		{
-			if(((TEOre) tile).ore.oreProperty.onBurningTick((TEOre) tile, rand, fireSourceDir, fireState)) return true;
+			if(((TEOre) tile).getOre().oreProperty.onBurningTick((TEOre) tile, rand, fireSourceDir, fireState)) return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public float getThermalConduct(World world, BlockPos pos)
 	{
@@ -238,31 +282,31 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 			return ((TEOre) tile).getThermalConduct();
 		return -1F;
 	}
-	
+
 	@Override
 	public int getFireEncouragement(World world, BlockPos pos)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public float onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		if(!(tile instanceof TEOre)) return 0F;
-		return ((TEOre) tile).ore.oreProperty.onToolClick(player, tool, stack, (TEOre) tile, side, hitX, hitY, hitZ);
+		return ((TEOre) tile).getOre().oreProperty.onToolClick(player, tool, stack, (TEOre) tile, side, hitX, hitY, hitZ);
 	}
-
+	
 	@Override
 	public float onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		if(!(tile instanceof TEOre)) return 0F;
-		return ((TEOre) tile).ore.oreProperty.onToolUse(player, tool, stack, (TEOre) tile, side, hitX, hitY, hitZ, useTick);
+		return ((TEOre) tile).getOre().oreProperty.onToolUse(player, tool, stack, (TEOre) tile, side, hitX, hitY, hitZ, useTick);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager)
@@ -276,7 +320,7 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 		}
 		return false;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
@@ -290,7 +334,7 @@ implements ITileEntityProvider, IThermalCustomBehaviorBlock, IToolableBlock
 		}
 		return false;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
