@@ -8,10 +8,11 @@ public enum EnumItem
 	debug,
 	display_fluid,
 	stone_chip,
-	seed;
-	
+	seed,
+	stone_fragment;
+
 	public Item item;
-	
+
 	public void set(Item item)
 	{
 		this.item = item;

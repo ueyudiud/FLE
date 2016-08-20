@@ -13,6 +13,7 @@ import farcore.lib.util.NoisePerlin;
 import farcore.lib.world.EnumWorldGeneratePhase;
 import farcore.lib.world.IWorldGenerateReplacer;
 import farcore.util.U.L;
+import farcore.util.U.Maths;
 import fargen.core.biome.BiomeBase;
 import fargen.core.util.LayerProp;
 import net.minecraft.block.state.IBlockState;
@@ -37,9 +38,9 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private static final int smoothSize = 9;
 	private static final int smoothListLength = 14;
 	private static final float[] parabolicField = new float[smoothSize * smoothSize];
-
+	
 	private static final IWorldGenerateReplacer REPLACER = new FarSurfaceReplacer();
-
+	
 	static
 	{
 		for (int j = -smoothOffset; j <= smoothOffset; ++j)
@@ -54,11 +55,11 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	protected World world;
 	protected WorldType type;
 	protected Random random;
-	/** The base height noise. */
-	protected NoiseBase noise1;
-	/** The max random height noise. */
+	/** The base height noise for plains. */
+	protected NoiseBase noise1a;
+	/** The base height noise for mountain. */
+	protected NoiseBase noise1b;
 	protected NoiseBase noise2;
-	/** The minimum random height noise. */
 	protected NoiseBase noise3;
 	/** The random random height noise. */
 	protected NoiseBase noise4;
@@ -68,7 +69,8 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	protected NoiseBase noise6;
 	private int[] biomes;
 	
-	protected double[] cache1;
+	protected double[] cache1a;
+	protected double[] cache1b;
 	protected double[] cache2;
 	protected double[] cache3;
 	protected double[] cache4;
@@ -77,13 +79,14 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	protected double[] heightMap;
 	protected double[] cache6;
 	private LayerProp layers;
-	
+
 	public FarSurfaceChunkGenerator(World world, long seed, boolean enableFeatures)
 	{
 		this.world = world;
 		type = world.getWorldInfo().getTerrainType();
 		random = new Random(seed);
-		noise1 = new NoisePerlin(random, 16, 1D, 2D, 2D);
+		noise1a = new NoisePerlin(random, 16, 1D, 2D, 2D);
+		noise1b = new NoisePerlin(random, 12, 1D, 2.5D, 1.8D);
 		noise2 = new NoisePerlin(random, 16, 1D, 2D, 2D);
 		noise3 = new NoisePerlin(random, 16, 1D, 2D, 2D);
 		noise4 = new NoisePerlin(random, 8, 1D, 2D, 2D);
@@ -92,11 +95,11 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		heightMap = new double[825];
 		layers = ((FarSurfaceBiomeProvider) world.getBiomeProvider()).layers;
 	}
-
+	
 	protected void generateTerrainHeight(int x, int z)
 	{
-		cache1 = noise1.noise(cache1, 5, 5, (double)x, (double)z, 3000D, 3000D);
-		//		cache2 = noise2.noise(cache2, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
+		cache1a = noise1a.noise(cache1a, 5, 5, (double) x, (double) z, 3000D, 3000D);
+		cache1b = noise1b.noise(cache1b, 5, 5, (double) x, (double) z, 3000D, 3000D);
 		cache2 = layers.terrainHeight(cache2, x, z, 5, 5);
 		cache3 = noise3.noise(cache3, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
 		cache4 = noise4.noise(cache4, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
@@ -134,19 +137,19 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				}
 				baseHeight /= divide;
 				randHeight /= divide;
-				double multiply = cache1[count1] * 2D - 1D;
+				double multiply = Maths.lerp(cache1a[count1], cache1b[count1], randHeight / (randHeight + 1F)) * 2D - 1D;
 				double base = Math.abs(cache2[count1] * 2 - 1);
 				double baseFix = cache3[count1] * 0.2F + 0.9F;
 				double surfaceRand = cache5[count1] * 2D - 1D;
-				double fixed = (1D + base) * baseFix * 0.666;
-				fixed = L.range(0.6, 1.4, fixed);
+				baseFix = (1D + base) * baseFix * 0.666;
+				baseFix = L.range(0.6, 1.4, baseFix);
 				surfaceRand /= 32D;
-				heightMap[count1] = fixed * baseHeight + randHeight * multiply + surfaceRand;
+				heightMap[count1] = baseFix * baseHeight + randHeight * multiply + surfaceRand;
 				count1++;
 			}
 		}
 	}
-	
+
 	public void setBlocksInChunk(int x, int z, ChunkPrimer primer)
 	{
 		for(int i = 0; i < 4; ++i)
@@ -157,7 +160,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				double d2 = heightMap[(i + 1) * 5 + j];
 				double d3 = heightMap[i * 5 + j + 1];
 				double d4 = heightMap[(i + 1) * 5 + j + 1];
-
+				
 				double d5 = (d2 - d1) / 4D;
 				double d6 = (d4 - d3) / 4D;
 				for(int i1 = 0; i1 < 4; ++i1)
@@ -190,7 +193,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			}
 		}
 	}
-	
+
 	protected void replaceByBiomes(int x, int z, ChunkPrimer primer)
 	{
 		cache6 = noise6.noise(cache6, 16, 16, x, z);
@@ -204,7 +207,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			}
 		}
 	}
-
+	
 	protected void replaceChunk(EnumWorldGeneratePhase phase, int x, int z, ChunkPrimer primer)
 	{
 		REPLACER.replaceWorld(phase, world, x, z, primer);
@@ -216,61 +219,61 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			}
 		}
 	}
-
+	
 	@Override
 	public Chunk provideChunk(int x, int z)
 	{
 		random.setSeed(x * 341873128712L + z * 132897987541L);
 		generateTerrainHeight(x << 2, z << 2);
-		
+
 		ChunkPrimer primer = new ChunkPrimer();
 		replaceChunk(EnumWorldGeneratePhase.PRE_GENERATE, x, z, primer);
-		
+
 		setBlocksInChunk(x, z, primer);
 		replaceChunk(EnumWorldGeneratePhase.GEN_TERRAIN_HEIGHT, x, z, primer);
-		
+
 		biomes = ((FarSurfaceBiomeProvider) world.getBiomeProvider()).loadBlockGeneratorData(biomes, x * 16, z * 16, 16, 16);
 		replaceByBiomes(x << 4, z << 4, primer);
 		replaceChunk(EnumWorldGeneratePhase.REPLACED_BIOME, x, z, primer);
-		
+
 		replaceChunk(EnumWorldGeneratePhase.ORE_GENERATE, x, z, primer);
-		
+
 		replaceChunk(EnumWorldGeneratePhase.POST_GENERATE, x, z, primer);
-		
+
 		Chunk chunk = new Chunk(world, primer, x, z);
 		byte[] abyte = chunk.getBiomeArray();
 		for (int i = 0; i < abyte.length; ++i)
 		{
 			abyte[i] = (byte) (biomes[i] & 0xFF);
 		}
-
+		
 		chunk.generateSkylightMap();
 		return chunk;
 	}
-	
+
 	@Override
 	public void populate(int x, int z)
 	{
 	}
-	
+
 	@Override
 	public boolean generateStructures(Chunk chunkIn, int x, int z)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
 	{
 		return ImmutableList.of();
 	}
-	
+
 	@Override
 	public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos position)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public void recreateStructures(Chunk chunkIn, int x, int z)
 	{

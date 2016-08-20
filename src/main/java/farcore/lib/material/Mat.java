@@ -66,6 +66,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public final String oreDictName;
 	public final String localName;
 	public final int id;
+	public String chemicalFormula = "?";
 	public short[] RGBa = {255, 255, 255, 255};
 	public int RGB = 0xFFFFFF;
 	public float heatCap;
@@ -167,6 +168,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		RGBa = colorIndex;
 		RGB = colorIndex[0] << 16 | colorIndex[1] << 8 | colorIndex[2];
+		return this;
+	}
+
+	public Mat setChemicalFormula(String chemicalFormula)
+	{
+		this.chemicalFormula = chemicalFormula;
 		return this;
 	}
 	
@@ -312,5 +319,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public int compareTo(Mat o)
 	{
 		return name.compareTo(o.name);
+	}
+
+	@Override
+	public String toString()
+	{
+		return name;
 	}
 }

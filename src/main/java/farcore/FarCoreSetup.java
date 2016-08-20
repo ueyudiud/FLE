@@ -8,16 +8,20 @@ import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import farcore.asm.LightFix;
 import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.M;
+import farcore.data.Potions;
 import farcore.energy.electric.ElectricACNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
+import farcore.handler.FarCoreEntityHandler;
 import farcore.handler.FarCoreGuiHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCoreWorldHandler;
@@ -36,6 +40,7 @@ import farcore.lib.item.instance.ItemDebugger;
 import farcore.lib.item.instance.ItemFluidDisplay;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
+import farcore.lib.item.instance.ItemStoneFragment;
 import farcore.lib.model.block.ModelCrop;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.block.ModelOre;
@@ -101,28 +106,42 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = FarCore.ID, version = "1.0c", name = "Far Core")
+/**
+ * The mod of far core.<br>
+ * Some configuration should called when
+ * forge initialization step, so there should
+ * has a mod to call these configuration to
+ * initialize.<br>
+ * @author ueyudiud
+ * @see farcore.FarCore
+ */
+@Mod(modid = FarCore.ID, version = "1.0d", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 2011;
-	
+
 	private LanguageManager lang;
-	
+
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
-	
+
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static Proxy proxy;
-	
+
 	public FarCoreSetup()
 	{
 		setup = this;
 		Log.logger = LogManager.getLogger(FarCore.ID);
 	}
-	
+
 	@EventHandler
 	public void check(FMLFingerprintViolationEvent event)
 	{
+		/**
+		 * The Far Core mod used Java8. There are method
+		 * is added in Java8, so I use a method exist since
+		 * Java8.
+		 */
 		Log.info("Far Core start check java version...");
 		try
 		{
@@ -142,6 +161,9 @@ public class FarCoreSetup
 		{
 			throw new IllegalArgumentException("You may download dev version, please check your mod version and use default version.", exception);
 		}
+		/**
+		 * Checking forge version.
+		 */
 		Log.info("Far Core checking forge version...");
 		int forge = ForgeVersion.getBuildVersion();
 		if ((forge > 0) && (forge < minForge))
@@ -152,7 +174,7 @@ public class FarCoreSetup
 					"(Technical information: " + forge + " < " + minForge + ")");
 		Log.info("Checking end.");
 	}
-	
+
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -161,11 +183,13 @@ public class FarCoreSetup
 		modMetadata.name = "Far Core";
 		modMetadata.credits = "ueyudiud";
 		for(ModContainer container : Loader.instance().getModList())
+		{
 			if(FarCore.OVERRIDE_ID.equals(container.getName()))
 			{
 				modMetadata.childMods.add(container);
 				break;
 			}
+		}
 		try
 		{
 			lang = new LanguageManager(new File(U.Mod.getMCFile(), "lang"));
@@ -183,32 +207,32 @@ public class FarCoreSetup
 		lang.read();
 		proxy.load(event);
 	}
-	
+
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
 		//		FarCoreKeyHandler.register(V.keyPlace, Keyboard.KEY_P);
 		proxy.load(event);
 	}
-	
+
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		proxy.load(event);
 	}
-	
+
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		proxy.load(event);
 		lang.write();
 	}
-	
+
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
 	}
-	
+
 	public static class Proxy
 	{
 		public void load(FMLPreInitializationEvent event)
@@ -267,18 +291,20 @@ public class FarCoreSetup
 			MinecraftForge.EVENT_BUS.register(new FarCoreKeyHandler());
 			MinecraftForge.EVENT_BUS.register(FarCoreEnergyHandler.getHandler());
 			MinecraftForge.EVENT_BUS.register(new FarCoreWorldHandler());
+			MinecraftForge.EVENT_BUS.register(new FarCoreEntityHandler());
 			FarCoreEnergyHandler.addNet(ThermalNet.instance);
 			FarCoreEnergyHandler.addNet(KineticNet.instance);
 			FarCoreEnergyHandler.addNet(ElectricACNet.instance);
 			FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
 			ThermalNet.registerWorldThermalHandler(new TemperatureHandler());
 			M.init();
-
+			
 			new ItemDebugger().setCreativeTab(FarCore.tabTool);
 			//			new ItemTreeLog().setTextureName("grouped/log").setCreativeTab(FarCore.tabResourceItem);
 			new ItemFluidDisplay().setCreativeTab(FarCore.tabFluids);
 			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
 			new ItemSeed().setCreativeTab(FarCore.tabResourceItem);
+			new ItemStoneFragment().setCreativeTab(FarCore.tabResourceItem);
 			new BlockSapling().setCreativeTab(FarCore.tabResourceBlock);
 			new BlockCrop();
 			new BlockFire();
@@ -293,8 +319,9 @@ public class FarCoreSetup
 			EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
 			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 			ItemBase.post();
+			Potions.init();
 		}
-		
+
 		public void load(FMLInitializationEvent event)
 		{
 			LanguageManager.registerLocal("info.debug.date", "Date : ");
@@ -302,23 +329,24 @@ public class FarCoreSetup
 			LanguageManager.registerLocal("info.stone.chip.throwable", "You can throw it out to attack entities.");
 			LanguageManager.registerLocal("info.crop.type", "Crop Name : %s");
 			LanguageManager.registerLocal("info.crop.generation", "Generation : %d");
+			LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
 			FarCore.network = Network.network(FarCore.ID);
 			//			FarCore.network.registerPacket(PacketGuiAction.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
 			//			FarCore.network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
-			
+
 			FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTESAsk.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
 		}
-		
+
 		public void load(FMLPostInitializationEvent event)
 		{
-			
+
 		}
-		
+
 		public void load(FMLLoadCompleteEvent event)
 		{
 			if(Config.multiThreadLight)
@@ -326,26 +354,26 @@ public class FarCoreSetup
 				LightFix.startThread();
 			}
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IBlockColor color, Block...block)
 		{
-			
-		}
 
+		}
+		
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Block...block)
 		{
-			
-		}
 
+		}
+		
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Item...block)
 		{
-			
+
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
@@ -353,13 +381,13 @@ public class FarCoreSetup
 		private Map<IItemColor, List<Block>> itemBlockColorMap = new HashMap();
 		private Map<IItemColor, List<Item>> itemColorMap = new HashMap();
 		private boolean loadComplete = false;
-		
+
 		public ClientProxy()
 		{
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 			MinecraftForge.EVENT_BUS.register(ModelDisplayFluid.Selector.instance);
 		}
-		
+
 		@Override
 		public void load(FMLPreInitializationEvent event)
 		{
@@ -382,26 +410,26 @@ public class FarCoreSetup
 			U.Mod.registerCustomItemModelSelector(EnumBlock.ore.block, ModelOre.instance);
 			U.Mod.registerFluid((BlockFluidBase) EnumBlock.water.block);
 		}
-		
+
 		@Override
 		public void load(FMLInitializationEvent event)
 		{
 			super.load(event);
 		}
-		
+
 		@Override
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
 			loadComplete = true;
 		}
-		
+
 		@Override
 		public void load(FMLLoadCompleteEvent event)
 		{
 			super.load(event);
 		}
-		
+
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
@@ -427,19 +455,19 @@ public class FarCoreSetup
 				U.Client.getFontRender().onResourceManagerReload(manager);
 			}
 		}
-
+		
 		@Override
 		public void registerColorMultiplier(IBlockColor color, Block...blocks)
 		{
 			U.L.put(blockColorMap, color, blocks);
 		}
-
+		
 		@Override
 		public void registerColorMultiplier(IItemColor color, Block...blocks)
 		{
 			U.L.put(itemBlockColorMap, color, blocks);
 		}
-
+		
 		@Override
 		public void registerColorMultiplier(IItemColor color, Item...items)
 		{

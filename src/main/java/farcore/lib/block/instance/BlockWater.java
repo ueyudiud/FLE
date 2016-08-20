@@ -24,7 +24,7 @@ public class BlockWater extends BlockStandardFluid
 		super(fluid, Material.WATER);
 		EnumBlock.water.set(this);
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
@@ -38,16 +38,6 @@ public class BlockWater extends BlockStandardFluid
 						(det = V.waterFreezePoint - ThermalNet.getTemperature(worldIn, pos, true)) > 0)
 				{
 					int chance = 5 / (int) (det / 3F + 1F);
-					BlockPos pos2 = pos.up();
-					while(worldIn.getBlockState(pos2).getBlock() == EnumBlock.ice.block)
-					{
-						chance ++;
-						if(chance >= 10)
-						{
-							break;
-						}
-						pos2 = pos2.up();
-					}
 					if(chance < 10 && L.nextInt(chance, random) == 0)
 					{
 						worldIn.setBlockState(pos, EnumBlock.ice.block.getDefaultState(), 2);
@@ -66,7 +56,7 @@ public class BlockWater extends BlockStandardFluid
 		}
 		super.randomTick(worldIn, pos, state, random);
 	}
-	
+
 	@Override
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{
