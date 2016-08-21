@@ -7,14 +7,14 @@ import net.minecraft.world.gen.layer.GenLayer;
 public class LayerTerrainBase extends Layer
 {
 	private GenLayer chunk;
-	
+
 	public LayerTerrainBase(long seed, GenLayer layer1, GenLayer layer2)
 	{
 		super(seed);
 		parent = layer1;
 		chunk = layer2;
 	}
-	
+
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
@@ -82,7 +82,8 @@ public class LayerTerrainBase extends Layer
 				}
 				else if(b == 1)
 				{
-					ret[i] = EnumTerrain.basin.ordinal();
+					ret[i] = a == 7 ? EnumTerrain.basin.ordinal() :
+						EnumTerrain.plain.ordinal();
 				}
 				else
 				{
@@ -122,7 +123,7 @@ public class LayerTerrainBase extends Layer
 		}
 		return ret;
 	}
-
+	
 	@Override
 	public void markZoom(int zoom)
 	{
@@ -132,7 +133,7 @@ public class LayerTerrainBase extends Layer
 			((Layer) chunk).markZoom(zoom * zoomLevel);
 		}
 	}
-	
+
 	@Override
 	public void initWorldGenSeed(long seed)
 	{

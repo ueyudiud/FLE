@@ -11,6 +11,7 @@ import farcore.lib.fluid.FluidBase;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import farcore.util.U.L;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +25,7 @@ public class BlockWater extends BlockStandardFluid
 		super(fluid, Material.WATER);
 		EnumBlock.water.set(this);
 	}
-	
+
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
@@ -34,7 +35,8 @@ public class BlockWater extends BlockStandardFluid
 			if(Config.enableWaterFreezeAndIceMeltTempCheck)
 			{
 				float det;
-				if(worldIn.getBlockState(pos.up()).getBlock() != this &&
+				Block block = worldIn.getBlockState(pos.up()).getBlock();
+				if(block != this && block != EnumBlock.ice.block &&
 						(det = V.waterFreezePoint - ThermalNet.getTemperature(worldIn, pos, true)) > 0)
 				{
 					int chance = 5 / (int) (det / 3F + 1F);
@@ -56,7 +58,7 @@ public class BlockWater extends BlockStandardFluid
 		}
 		super.randomTick(worldIn, pos, state, random);
 	}
-
+	
 	@Override
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{

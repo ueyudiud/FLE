@@ -6,14 +6,14 @@ import net.minecraft.world.gen.layer.IntCache;
 public class LayerLink extends Layer
 {
 	private int chance;
-	
+
 	public LayerLink(int chance, long seed, GenLayer layer)
 	{
 		super(seed);
 		parent = layer;
 		this.chance = chance;
 	}
-
+	
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
@@ -37,11 +37,7 @@ public class LayerLink extends Layer
 				if((v2 | v3 | v4 | v5) != 0)
 				{
 					initChunkSeed(x + j, y + i);
-					if(chance == 1)
-					{
-						is[w * i + j] = selectModeOrRandom(v2, v3, v4, v5);
-					}
-					else if(nextInt(chance) == 0)
+					if(chance == 1 || nextInt(chance) == 0)
 					{
 						is[w * i + j] = selectModeOrRandom(v2, v3, v4, v5);
 					}
