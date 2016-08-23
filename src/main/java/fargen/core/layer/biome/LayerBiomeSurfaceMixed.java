@@ -1,23 +1,25 @@
 package fargen.core.layer.biome;
 
+import farcore.data.EnumTempCategory;
 import farcore.data.EnumTerrain;
 import fargen.core.FarGenBiomes;
 import fargen.core.biome.BiomeBase;
 import fargen.core.layer.Layer;
+import fargen.core.util.ClimaticZone;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 
 public class LayerBiomeSurfaceMixed extends Layer
 {
 	private GenLayer terrain;
-	
+
 	public LayerBiomeSurfaceMixed(long seed, GenLayer layer, GenLayer terrain)
 	{
 		super(seed);
 		parent = layer;
 		this.terrain = terrain;
 	}
-
+	
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
@@ -34,18 +36,16 @@ public class LayerBiomeSurfaceMixed extends Layer
 			{
 				int p = j * w + i;
 				int q = (j + 1) * w1 + i + 1;
-				int a = ter[q];
-				int b = par[p];
 				int a1 = ter[q - 1];
 				int a2 = ter[q + 1];
 				int a3 = ter[q - w1];
 				int a4 = ter[q + w1];
-				ret[j * w + i] = selectBiomeForBiome(a, b, a1, a2, a3, a4);
+				ret[j * w + i] = selectBiomeForBiome(ter[q], par[p], a1, a2, a3, a4);
 			}
 		}
 		return ret;
 	}
-	
+
 	private int selectBiomeForBiome(int a, int b, int a1, int a2, int a3, int a4)
 	{
 		int biome = selectBiomeForStandardBiome(a, b);
@@ -59,7 +59,7 @@ public class LayerBiomeSurfaceMixed extends Layer
 		}
 		return biome;
 	}
-	
+
 	private int selectBiomeForStandardBiome(int a, int b)
 	{
 		int b1 = b & 0xFF;
@@ -67,28 +67,54 @@ public class LayerBiomeSurfaceMixed extends Layer
 		{
 		case tectogene :
 		case deep_ocean :
-			return BiomeBase.getBiomeFromID(b1).zone.temperatureAverage > BiomeBase.minSnowTemperature ?
-					FarGenBiomes.ocean_deep.biomeID : FarGenBiomes.icy_ocean_deep.biomeID;
+			return selectOceanBiome(b1).biomeID;
 		case ocean :
 		case channel :
 		case ridge :
 		case basin :
 		case ocean_valley :
-			return BiomeBase.getBiomeFromID(b1).zone.temperatureAverage > BiomeBase.minSnowTemperature ?
-					FarGenBiomes.ocean.biomeID : FarGenBiomes.icy_ocean.biomeID;
+			return selectDeepOceanBiome(b1).biomeID;
 		case river :
-			return FarGenBiomes.river[BiomeBase.getBiomeFromID(b1).zone.ordinal()].biomeID;
+			ClimaticZone zone = BiomeBase.getBiomeFromID(b1).zone;
+			return zone.category1 == EnumTempCategory.OCEAN ?
+					selectOceanBiome(b1).biomeID : FarGenBiomes.river[zone.ordinal()].biomeID;
 		default: return b;
 		}
 	}
-
+	
+	private BiomeBase selectOceanBiome(int b)
+	{
+		switch(BiomeBase.getBiomeFromID(b).zone.category1)
+		{
+		case TROPICAL : return FarGenBiomes.ocean_t;
+		case SUBTROPICAL : return FarGenBiomes.ocean_st;
+		case TEMPERATE : return FarGenBiomes.ocean_te;
+		case SUBFRIGID : return FarGenBiomes.ocean_sf;
+		case FRIGID : return FarGenBiomes.ocean_f;
+		default : return BiomeBase.DEBUG;
+		}
+	}
+	
+	private BiomeBase selectDeepOceanBiome(int b)
+	{
+		switch(BiomeBase.getBiomeFromID(b).zone.category1)
+		{
+		case TROPICAL : return FarGenBiomes.ocean_t_deep;
+		case SUBTROPICAL : return FarGenBiomes.ocean_st_deep;
+		case TEMPERATE : return FarGenBiomes.ocean_te_deep;
+		case SUBFRIGID : return FarGenBiomes.ocean_sf_deep;
+		case FRIGID : return FarGenBiomes.ocean_f_deep;
+		default : return BiomeBase.DEBUG;
+		}
+	}
+	
 	@Override
 	public void initWorldGenSeed(long seed)
 	{
 		super.initWorldGenSeed(seed);
 		terrain.initWorldGenSeed(seed);
 	}
-
+	
 	@Override
 	public void markZoom(int zoom)
 	{

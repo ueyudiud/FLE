@@ -1,4 +1,4 @@
-package farcore.handler;
+package fle.core.handler;
 
 import farcore.data.Potions;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class FarCoreEntityHandler
+public class FleEntityHandler
 {
 	public static final byte i = 3;
 	

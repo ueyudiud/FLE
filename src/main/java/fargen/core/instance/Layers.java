@@ -28,7 +28,7 @@ import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
 public class Layers
 {
 	private static final boolean DRAW_IMG = true;
-
+	
 	public static LayerProp wrapSurface(long seed)
 	{
 		LayerProp prop = new LayerProp();
@@ -103,7 +103,7 @@ public class Layers
 		drawImage(256, layer6, "layer6.1");
 		layer6 = new LayerVoronoiZoom(42L, layer6);
 		drawImage(256, layer6, "layer6.2");
-		layer6 = new LayerBiomeSurfaceMixed(43L, layer5, layer3);
+		layer6 = new LayerBiomeSurfaceMixed(43L, layer6, layer3);
 		drawImage(256, layer6, "layer6.3");
 		//Mixed layers.
 		GenLayer layer9 = new GenLayerVoronoiZoom(1001L, layer6);
@@ -116,7 +116,7 @@ public class Layers
 		prop.markZoom();
 		return prop;
 	}
-
+	
 	public static void drawImage(int size, GenLayer genlayer, String name)
 	{
 		if (!DRAW_IMG)

@@ -26,7 +26,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 {
 	public final FluidBase fluid;
 	private final FluidStack blockValue;
-
+	
 	public BlockStandardFluid(FluidBase fluid, Material material)
 	{
 		super(fluid, material);
@@ -37,19 +37,19 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		this.fluid = fluid;
 		setQuantaPerBlock(16);
 	}
-
+	
 	@Override
 	public String getUnlocalizedName()
 	{
 		return fluid.getUnlocalizedName();
 	}
-
+	
 	@Override
 	public String getLocalizedName()
 	{
 		return fluid.getLocalizedName(blockValue);
 	}
-
+	
 	public int getFluidLevel(IBlockAccess world, BlockPos pos)
 	{
 		if(world.isAirBlock(pos))
@@ -60,7 +60,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		else
 			return state.getValue(LEVEL) + 1;
 	}
-
+	
 	public void setFluidLevel(World world, BlockPos pos, int level, boolean update)
 	{
 		if(level == 0)
@@ -72,13 +72,13 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			world.setBlockState(pos, getDefaultState().withProperty(LEVEL, level - 1), update ? 3 : 2);
 		}
 	}
-	
+
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock)
 	{
 		world.scheduleUpdate(pos, this, tickRate(world));
 	}
-
+	
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
@@ -139,10 +139,10 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		{
 			zPos = -1;
 		}
-		
+
 		int count = 1;
 		int total = level;
-		
+
 		if(xNeg >= 0)
 		{
 			++count;
@@ -171,7 +171,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			}
 			return;
 		}
-		
+
 		int each = total / count;
 		int rem = total % count;
 		if (zNeg >= 0)
@@ -188,7 +188,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			}
 			--count;
 		}
-		
+
 		if (zPos >= 0)
 		{
 			int newsouth = each;
@@ -203,7 +203,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			}
 			--count;
 		}
-		
+
 		if (xNeg >= 0)
 		{
 			int newwest = each;
@@ -218,7 +218,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			}
 			--count;
 		}
-		
+
 		if (xPos >= 0)
 		{
 			int neweast = each;
@@ -233,7 +233,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			}
 			--count;
 		}
-		
+
 		if (rem > 0)
 		{
 			++each;
@@ -243,7 +243,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			setFluidLevel(worldIn, pos, each, true);
 		}
 	}
-	
+
 	public int flowYPosNearByWhenMinimumLevel(World world, BlockPos pos)
 	{
 		Direction direction = U.L.random(Direction.directions_2D, world.rand);
@@ -272,7 +272,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		}
 		return level;
 	}
-
+	
 	public int tryToFlowVerticallyInto(World world, BlockPos pos, int amtToInput)
 	{
 		IBlockState myState = world.getBlockState(pos);
@@ -294,7 +294,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			return event.amount;
 		}
 		amtToInput = event.amount;
-		
+
 		int amt = getQuantaValueBelow(world, other, quantaPerBlock);
 		if (amt >= 0)
 		{
@@ -329,7 +329,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 				else
 					return amtToInput;
 			}
-			
+
 			if (densityDir < 0)
 			{
 				if (density_other < density) // then swap
@@ -355,7 +355,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			return amtToInput;
 		}
 	}
-
+	
 	/**
 	 * Try to displace block in world.
 	 * @param level The fluid level.
@@ -364,7 +364,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	 */
 	public int displaceIfPossible(World world, BlockPos pos, BlockPos source, int level)
 	{
-		if(!world.isAreaLoaded(pos, 1))
+		if(!world.isAreaLoaded(pos, 2))
 			return -level;
 		if(world.isAirBlock(pos)) return level;
 		IBlockState state = world.getBlockState(pos);
@@ -377,7 +377,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			return event.amount;
 		}
 		Block block = state.getBlock();
-
+		
 		if (displacements.containsKey(block))
 		{
 			if (displacements.get(block))
@@ -387,54 +387,54 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			}
 			return -level;
 		}
-
+		
 		Material material = state.getMaterial();
 		if (material.blocksMovement() || material == Material.PORTAL)
 			return -level;
-
+		
 		int density = getDensity(world, pos);
 		if (density == Integer.MAX_VALUE)
 		{
 			block.dropBlockAsItem(world, pos, state, 0);
 			return level;
 		}
-
+		
 		//		if (this.density > density)
 		//			return true;
 		//		else
 		return -level;
 	}
-	
+
 	@Override
 	public FluidStack drain(World world, BlockPos pos, boolean doDrain)
 	{
 		return drain(world, pos, Integer.MAX_VALUE, doDrain);
 	}
-
+	
 	@Override
 	public boolean canDrain(World world, BlockPos pos)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public int getQuantaValue(IBlockAccess world, BlockPos pos)
 	{
 		return getFluidLevel(world, pos);
 	}
-
+	
 	@Override
 	public boolean canCollideCheck(IBlockState state, boolean fullHit)
 	{
 		return fullHit;
 	}
-
+	
 	@Override
 	public int getMaxRenderHeightMeta()
 	{
 		return 16;
 	}
-
+	
 	@Override
 	public FluidStack drain(World world, BlockPos pos, int maxDrain, boolean doDrain)
 	{
@@ -449,8 +449,8 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		}
 		return new FluidStack(fluid, (int) (per * q));
 	}
-
-
+	
+	
 	@Override
 	public int fill(World world, BlockPos pos, FluidStack resource, boolean doFill)
 	{
@@ -464,10 +464,10 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		{
 			setFluidLevel(world, pos, level + level1, true);
 		}
-		
+
 		return (int) Math.ceil(level1 * 1000F / quantaPerBlockFloat);
 	}
-
+	
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{

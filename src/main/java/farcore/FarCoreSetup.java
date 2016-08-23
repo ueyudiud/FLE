@@ -21,7 +21,6 @@ import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
-import farcore.handler.FarCoreEntityHandler;
 import farcore.handler.FarCoreGuiHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCoreWorldHandler;
@@ -211,7 +210,6 @@ public class FarCoreSetup
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
-		//		FarCoreKeyHandler.register(V.keyPlace, Keyboard.KEY_P);
 		proxy.load(event);
 	}
 
@@ -291,7 +289,6 @@ public class FarCoreSetup
 			MinecraftForge.EVENT_BUS.register(new FarCoreKeyHandler());
 			MinecraftForge.EVENT_BUS.register(FarCoreEnergyHandler.getHandler());
 			MinecraftForge.EVENT_BUS.register(new FarCoreWorldHandler());
-			MinecraftForge.EVENT_BUS.register(new FarCoreEntityHandler());
 			FarCoreEnergyHandler.addNet(ThermalNet.instance);
 			FarCoreEnergyHandler.addNet(KineticNet.instance);
 			FarCoreEnergyHandler.addNet(ElectricACNet.instance);

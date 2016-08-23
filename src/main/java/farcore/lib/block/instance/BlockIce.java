@@ -93,7 +93,7 @@ public class BlockIce extends BlockBase
 		if(Config.enableWaterFreezeAndIceMeltTempCheck)
 		{
 			IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
-			if(!worldIn.isRemote && ThermalNet.getTemperature(worldIn, pos, true) > V.waterFreezePoint && random.nextInt(6) == 0)
+			if(!worldIn.isRemote && ThermalNet.getTemperature(worldIn, pos, true) > V.waterFreezePoint && random.nextInt(3) == 0)
 			{
 				turnIntoWater(worldIn, pos, state, true);
 			}
