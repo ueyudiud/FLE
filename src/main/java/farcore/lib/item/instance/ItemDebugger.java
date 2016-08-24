@@ -8,8 +8,10 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.FarCore;
 import farcore.data.EnumItem;
+import farcore.data.EnumToolType;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.IDebugableBlock;
+import farcore.lib.block.IToolableBlock;
 import farcore.lib.item.ItemBase;
 import farcore.lib.tile.IDebugableTile;
 import farcore.lib.util.Direction;
@@ -38,7 +40,7 @@ public class ItemDebugger extends ItemBase
 		setMaxStackSize(1);
 		EnumItem.debug.set(this);
 	}
-	
+
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -53,6 +55,10 @@ public class ItemDebugger extends ItemBase
 				}
 				IBlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();
+				if(block instanceof IToolableBlock)
+				{
+					((IToolableBlock) block).onToolClick(player, EnumToolType.chisel, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
+				}
 				TileEntity tile = world.getTileEntity(pos);
 				List<String> list = new ArrayList();
 				//This information is added in F3 information, so should I remove these information display?
@@ -96,7 +102,7 @@ public class ItemDebugger extends ItemBase
 		}
 		return EnumActionResult.PASS;
 	}
-
+	
 	@Override
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{

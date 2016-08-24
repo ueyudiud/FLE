@@ -3,27 +3,29 @@ package fargen.core.layer.terrain;
 import farcore.data.EnumTerrain;
 import fargen.core.layer.Layer;
 import net.minecraft.world.gen.layer.GenLayer;
+import net.minecraft.world.gen.layer.IntCache;
 
 public class LayerTerrainBase extends Layer
 {
 	private GenLayer chunk;
-
+	
 	public LayerTerrainBase(long seed, GenLayer layer1, GenLayer layer2)
 	{
 		super(seed);
 		parent = layer1;
 		chunk = layer2;
 	}
-
+	
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
-		int[] ret = parent.getInts(x, y, w, h);
+		int[] ret = IntCache.getIntCache(w * h);
+		int[] par = parent.getInts(x, y, w, h);
 		int[] chu = chunk.getInts(x, y, w, h);
 		int l = w * h;
 		for(int i = 0; i < l; ++i)
 		{
-			int a = ret[i];
+			int a = par[i];
 			int b = chu[i];
 			if(a < 4)
 			{
@@ -82,12 +84,13 @@ public class LayerTerrainBase extends Layer
 				}
 				else if(b == 1)
 				{
-					ret[i] = a == 7 ? EnumTerrain.basin.ordinal() :
+					ret[i] = a == 8 ? EnumTerrain.depression.ordinal() :
 						EnumTerrain.plain.ordinal();
 				}
 				else
 				{
-					ret[i] = a < 11 ? EnumTerrain.plain.ordinal() : EnumTerrain.hills.ordinal();;
+					ret[i] = a == 8 ? EnumTerrain.depression.ordinal() :
+						a < 11 ? EnumTerrain.plain.ordinal() : EnumTerrain.hills.ordinal();;
 				}
 			}
 			else if(a < 15)
@@ -123,7 +126,7 @@ public class LayerTerrainBase extends Layer
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public void markZoom(int zoom)
 	{
@@ -133,7 +136,7 @@ public class LayerTerrainBase extends Layer
 			((Layer) chunk).markZoom(zoom * zoomLevel);
 		}
 	}
-
+	
 	@Override
 	public void initWorldGenSeed(long seed)
 	{

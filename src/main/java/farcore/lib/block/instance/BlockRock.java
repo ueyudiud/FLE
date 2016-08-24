@@ -7,13 +7,16 @@ import java.util.Random;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
+import farcore.data.EnumToolType;
 import farcore.data.MC;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
+import farcore.lib.block.IToolableBlock;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.material.Mat;
+import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U;
@@ -46,7 +49,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockRock extends BlockBase implements ISmartFallableBlock, IThermalCustomBehaviorBlock
+public class BlockRock extends BlockBase
+implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 {
 	public static final PropertyBool HEATED = PropertyBool.create("heated");
 	public static final PropertyEnum<RockType> ROCK_TYPE = PropertyEnum.create("rock_type", RockType.class);
@@ -457,5 +461,31 @@ public class BlockRock extends BlockBase implements ISmartFallableBlock, ITherma
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
+	@Override
+	public float onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+			Direction side, float hitX, float hitY, float hitZ)
+	{
+		if(tool == EnumToolType.chisel)
+		{
+			if(player.canPlayerEdit(pos, side.of(), stack))
+			{
+				if(world.setBlockState(pos, EnumBlock.carved_rock.block.getDefaultState(), 2))
+				{
+					TileEntity tile = world.getTileEntity(pos);
+					if(tile instanceof TECustomCarvedStone)
+						return ((TECustomCarvedStone) tile).carveRock(player, hitX, hitY, hitZ);
+				}
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public float onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
+			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
+	{
+		return 0;
 	}
 }

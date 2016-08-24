@@ -60,6 +60,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	protected boolean canSnow;
 	protected BiomeDecorator decorator;
 	protected BiomeLayerGenerator layerGenerator;
+	public BiomeBase baseBiome;
 
 	public BiomeBase(int id, BiomePropertiesExtended properties)
 	{
@@ -80,6 +81,14 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 			this.register.register(id, getBiomeName(), this);
 		}
 		GameRegistry.register(this);
+		if(isMutation())
+		{
+			baseBiome = (BiomeBase) REGISTRY.getObjectById(MUTATION_TO_BASE_ID_MAP.get(this));
+		}
+		else
+		{
+			baseBiome = this;
+		}
 	}
 
 	@Override

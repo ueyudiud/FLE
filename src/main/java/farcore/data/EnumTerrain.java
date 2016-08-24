@@ -9,8 +9,7 @@ public enum EnumTerrain
 	ridge(-0.3F, 0.2F, true),
 	ridge_high(1.0F, 0.3F, 0.5F, 0.3F, true),
 	ocean_valley(1.0F, 0.8F, -0.5F, 0.2F, true),
-	@Deprecated
-	depression(-0.01F, 0.1F),
+	depression(0.04F, 0.1F),
 	plain(0.2F, 0.1F),
 	basin(0.4F, 0.2F),
 	hills(0.5F, 0.5F),
@@ -19,7 +18,7 @@ public enum EnumTerrain
 	plateau(1.2F, 0.3F),
 	ex_mountain(1.5F, 0.3F),
 	river(2.5F, 0.6F, -0.3F, 0.0625F, true);
-
+	
 	static
 	{
 		plateau.canRiverGen = true;
@@ -29,7 +28,7 @@ public enum EnumTerrain
 		plain.canRiverGen = true;
 		river.isOcean = false;
 	}
-	
+
 	public final float highWeight;
 	public final float lowWeight;
 	public final boolean isWater;
@@ -37,7 +36,7 @@ public enum EnumTerrain
 	public final float root;
 	public final float rand;
 	public boolean canRiverGen = false;
-	
+
 	EnumTerrain(float root, float rand)
 	{
 		this(root, rand, false);

@@ -19,26 +19,27 @@ public enum EnumToolType
 	whetstone("Whetstone"),
 	knife("Knife"),
 	decorticating_plate("DecorticatingPlate"),
-	decorticating_stick("DecorticatingStick");
-
+	decorticating_stick("DecorticatingStick"),
+	chisel("Chisel");
+	
 	String name;
 	OreStack stack;
-
+	
 	EnumToolType(String name)
 	{
 		stack = new OreStack(this.name = ("craftingTool" + name));
 	}
-
+	
 	public OreStack stack()
 	{
 		return stack;
 	}
-
+	
 	public String ore()
 	{
 		return name;
 	}
-
+	
 	public boolean match(ItemStack stack)
 	{
 		return stack != null && stack().similar(stack);

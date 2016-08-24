@@ -20,17 +20,12 @@ import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.gen.layer.IntCache;
 import net.minecraft.world.storage.WorldInfo;
 
-/**
- * Now just for debugging.
- * @author ueyudiud
- *
- */
 public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRegetter
 {
 	/** The biome list. */
 	protected final BiomeCache biomeCache;
 	public final LayerProp layers;
-
+	
 	public FarSurfaceBiomeProvider(WorldInfo info)
 	{
 		biomeCache = new BiomeCache(this);
@@ -43,13 +38,13 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		allowedBiomes.add(FarGenBiomes.temperate_broadleaf_forest);
 		layers = Layers.wrapSurface(info.getSeed());
 	}
-	
+
 	@Override
 	public Biome getBiomeGenerator(BlockPos pos, Biome biomeGenBaseIn)
 	{
 		return biomeCache.getBiome(pos.getX(), pos.getZ(), biomeGenBaseIn);
 	}
-	
+
 	/**
 	 * Gets biomes to use for the blocks and loads the other data like temperature and humidity onto the
 	 * WorldChunkManager.
@@ -57,17 +52,17 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	public int[] loadBlockGeneratorData(@Nullable int[] listToReuse, int x, int z, int width, int length)
 	{
 		IntCache.resetIntCache();
-		
+
 		if (listToReuse == null || listToReuse.length < width * length)
 		{
 			listToReuse = new int[width * length];
 		}
-		
+
 		int[] aint = layers.biomeLayer2.getInts(x, z, width, length);
 		System.arraycopy(aint, 0, listToReuse, 0, width * length);
 		return listToReuse;
 	}
-
+	
 	/**
 	 * Gets biomes to use for the blocks and loads the other data like temperature and humidity onto the
 	 * WorldChunkManager.
@@ -77,7 +72,7 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	{
 		return getBiomeGenAt(oldBiomeList, x, z, width, depth, true);
 	}
-
+	
 	/**
 	 * Returns an array of biomes for the location input.
 	 */
@@ -85,21 +80,21 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	public Biome[] getBiomesForGeneration(Biome[] biomes, int x, int z, int width, int height)
 	{
 		IntCache.resetIntCache();
-
+		
 		if (biomes == null || biomes.length < width * height)
 		{
 			biomes = new Biome[width * height];
 		}
-
+		
 		int[] aint = layers.biomeLayer1.getInts(x, z, width, height);
-
+		
 		try
 		{
 			for (int i = 0; i < width * height; ++i)
 			{
 				biomes[i] = BiomeBase.getBiomeFromID(aint[i] & 0xFF);
 			}
-
+			
 			return biomes;
 		}
 		catch (Throwable throwable)
@@ -114,7 +109,7 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 			throw new ReportedException(crashreport);
 		}
 	}
-
+	
 	/**
 	 * Gets a list of biomes for the specified blocks.
 	 */
@@ -122,12 +117,12 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	public Biome[] getBiomeGenAt(@Nullable Biome[] listToReuse, int x, int z, int width, int length, boolean cacheFlag)
 	{
 		IntCache.resetIntCache();
-		
+
 		if (listToReuse == null || listToReuse.length < width * length)
 		{
 			listToReuse = new Biome[width * length];
 		}
-		
+
 		if (cacheFlag && width == 16 && length == 16 && (x & 15) == 0 && (z & 15) == 0)
 		{
 			Biome[] abiome = biomeCache.getCachedBiomes(x, z);
@@ -137,16 +132,16 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		else
 		{
 			int[] aint = layers.biomeLayer2.getInts(x, z, width, length);
-			
+
 			for (int i = 0; i < width * length; ++i)
 			{
 				listToReuse[i] = BiomeBase.getBiomeFromID(aint[i] & 0xFF);
 			}
-			
+
 			return listToReuse;
 		}
 	}
-	
+
 	/**
 	 * checks given Chunk's Biomes against List of allowed ones
 	 */
@@ -181,7 +176,7 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 			throw new ReportedException(crashreport);
 		}
 	}
-
+	
 	@Override
 	@Nullable
 	public BlockPos findBiomePosition(int x, int z, int range, List<Biome> biomes, Random random)
@@ -195,29 +190,29 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		int[] aint = layers.biomeLayer1.getInts(i, j, i1, j1);
 		BlockPos blockpos = null;
 		int k1 = 0;
-
+		
 		for (int l1 = 0; l1 < i1 * j1; ++l1)
 		{
 			int i2 = i + l1 % i1 << 2;
 			int j2 = j + l1 / i1 << 2;
 			Biome biome = BiomeBase.getBiomeFromID(aint[l1] & 0xFF);
-
+			
 			if (biomes.contains(biome) && (blockpos == null || random.nextInt(k1 + 1) == 0))
 			{
 				blockpos = new BlockPos(i2, 0, j2);
 				++k1;
 			}
 		}
-
+		
 		return blockpos;
 	}
-
+	
 	@Override
 	public Biome getBiome(int saveID, BlockPos pos)
 	{
 		return BiomeBase.getBiomeFromID(saveID);
 	}
-
+	
 	@Override
 	public void cleanupCache()
 	{

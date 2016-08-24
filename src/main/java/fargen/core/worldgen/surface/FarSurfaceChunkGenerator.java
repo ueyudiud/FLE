@@ -9,6 +9,7 @@ import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumTerrain;
 import farcore.lib.util.NoiseBase;
+import farcore.lib.util.NoiseCell;
 import farcore.lib.util.NoisePerlin;
 import farcore.lib.world.EnumWorldGeneratePhase;
 import farcore.lib.world.IWorldGenerateReplacer;
@@ -67,6 +68,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	protected NoiseBase noise5;
 	/** Stone height noise. */
 	protected NoiseBase noise6;
+	private EnumTerrain[] terrains;
 	private int[] biomes;
 	
 	protected double[] cache1a;
@@ -85,11 +87,11 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		this.world = world;
 		type = world.getWorldInfo().getTerrainType();
 		random = new Random(seed);
-		noise1a = new NoisePerlin(random, 16, 1D, 2D, 2D);
-		noise1b = new NoisePerlin(random, 12, 1D, 2.5D, 1.8D);
-		noise2 = new NoisePerlin(random, 16, 1D, 2D, 2D);
-		noise3 = new NoisePerlin(random, 16, 1D, 2D, 2D);
-		noise4 = new NoisePerlin(random, 8, 1D, 2D, 2D);
+		noise1a = new NoisePerlin(random, 12, 16D, 2D, 2D);
+		noise1b = new NoisePerlin(random, 8, 16D, 2.5D, 1.8D);
+		noise2 = new NoisePerlin(random, 12, 16, 2D, 2D);
+		noise3 = new NoisePerlin(random, 12, 16, 2D, 2D);
+		noise4 = new NoiseCell(random, 1, 3, 75D, 4D);
 		noise5 = new NoisePerlin(random, 4, 1D, 2D, 2D);
 		noise6 = new NoisePerlin(random, 4, 12D, 2D, 2D);
 		heightMap = new double[825];
@@ -98,13 +100,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	
 	protected void generateTerrainHeight(int x, int z)
 	{
-		cache1a = noise1a.noise(cache1a, 5, 5, (double) x, (double) z, 3000D, 3000D);
+		cache1a = noise1a.noise(cache1a, 5, 5, (double) x, (double) z, 800D, 800D);
 		cache1b = noise1b.noise(cache1b, 5, 5, (double) x, (double) z, 3000D, 3000D);
 		cache2 = noise2.noise(cache2, 5, 5, (double) x, (double) z, 2000D, 2000D);
 		cache3 = noise3.noise(cache3, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
-		cache4 = noise4.noise(cache4, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
+		//		cache4 = noise4.noise(cache4, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
 		cache5 = noise5.noise(cache5, 5, 5, 33, x, z, 0, 1.7, 1.7, 1.0);
-		int[] terrains = layers.terrain(x - smoothOffset, z - smoothOffset, smoothListLength, smoothListLength);
+		terrains = layers.terrain(terrains, x - smoothOffset, z - smoothOffset, smoothListLength, smoothListLength);
 		int count1 = 0;
 		for(int i = 0; i < 5; ++i)
 		{
@@ -113,12 +115,12 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				float baseHeight = 0;
 				float randHeight = 0;
 				float divide = 0;
-				EnumTerrain terrain = EnumTerrain.values()[terrains[(i + smoothOffset) * smoothListLength + (j + smoothOffset)]];
+				EnumTerrain terrain = terrains[(i + smoothOffset) * smoothListLength + (j + smoothOffset)];
 				for(int i1 = -smoothOffset; i1 <= smoothOffset; ++i1)
 				{
 					for(int j1 = -smoothOffset; j1 <= smoothOffset; ++j1)
 					{
-						EnumTerrain terrain2 = EnumTerrain.values()[terrains[(i + i1 + smoothOffset) * smoothListLength + (j + j1 + smoothOffset)]];
+						EnumTerrain terrain2 = terrains[(i + i1 + smoothOffset) * smoothListLength + (j + j1 + smoothOffset)];
 						float baseHeight2 = terrain2.root;
 						float randHeight2 = terrain2.rand;
 						float effect = parabolicField[(i1 + smoothOffset) * smoothSize + (j1 + smoothOffset)];
@@ -137,13 +139,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				}
 				baseHeight /= divide;
 				randHeight /= divide;
-				double multiply = Maths.lerp(cache1a[count1], cache1b[count1], randHeight / (randHeight + 1F)) * 2D - 1D;
+				double multiply = Maths.lerp(cache1a[count1], cache1b[count1], randHeight / (randHeight + 1F)) * 2 - 1;
+				//				multiply *= cache4[count1] * 1.4;
 				double base = Math.abs(cache2[count1] * 2 - 1);
-				double baseFix = cache3[count1] * 0.2F + 0.9F;
-				double surfaceRand = cache5[count1] * 2D - 1D;
+				double baseFix = 1D;//cache3[count1] * 0.2F + 0.9F;
+				double surfaceRand = cache5[count1] * 0.015625 - 0.00783125;
 				baseFix = (1D + base) * baseFix * 0.666;
 				baseFix = L.range(0.6, 1.4, baseFix);
-				surfaceRand /= 32D;
 				heightMap[count1] = baseFix * baseHeight + randHeight * multiply + surfaceRand;
 				count1++;
 			}
@@ -169,7 +171,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 					double d8 = (d3 - d1) / 4D;
 					for(int j1 = 0; j1 < 4; ++j1)
 					{
-						int height = 128 + (int) (d7 * 32);
+						int height = 128 + (int) (d7 * 48);
 						int k = 0;
 						for(; k <= height; ++k)
 						{

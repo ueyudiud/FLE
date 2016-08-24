@@ -355,6 +355,11 @@ public class U
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
+
+		public static boolean inRange(double max, double min, double target)
+		{
+			return target <= max && target >= min;
+		}
 		
 		public static int nextInt(int bound)
 		{
@@ -689,6 +694,18 @@ public class U
 				}
 			}
 			return ret;
+		}
+
+		public static double mod(double a, double b)
+		{
+			double v;
+			return (v = a % b) > 0 ? v : v + b;
+		}
+
+		public static float mod(float a, float b)
+		{
+			float v;
+			return (v = a % b) > 0 ? v : v + b;
 		}
 
 		public static int mod(int a, int b)

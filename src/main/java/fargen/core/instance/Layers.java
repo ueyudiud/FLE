@@ -41,6 +41,8 @@ public class Layers
 		drawImage(256, layer1, "layer1.3");
 		layer1 = new LayerChunkEdge(8L, layer1);
 		drawImage(256, layer1, "layer1.4");
+		layer1 = new LayerVoronoiZoom(9L, layer1);
+		drawImage(256, layer1, "layer1.5");
 		//Terrain base layers.
 		Layer layer2 = new LayerStartRand(11L, 16);
 		drawImage(256, layer2, "layer2.1");
@@ -48,30 +50,37 @@ public class Layers
 		drawImage(256, layer2, "layer2.2");
 		layer2 = new LayerLerpZoom(14L, layer2);
 		drawImage(256, layer2, "layer2.3");
+		layer2 = new LayerSmooth(2024L, layer2);
 		layer2 = new LayerLerpZoom(15L, layer2);
 		drawImage(256, layer2, "layer2.4");
 		layer2 = new LayerSmooth(2001L, layer2);
 		layer2 = new LayerLerpZoom(16L, layer2);
 		drawImage(256, layer2, "layer2.5");
+		layer2 = new LayerSmooth(2022L, layer2);
 		layer2 = new LayerLerpZoom(17L, layer2);
 		drawImage(256, layer2, "layer2.6");
 		layer2 = new LayerSmooth(2002L, layer2);
 		layer2 = new LayerLerpZoom(17L, layer2);
 		drawImage(256, layer2, "layer2.7");
+		layer2 = new LayerSmooth(2025L, layer2);
 		layer2 = new LayerLerpZoom(18L, layer2);
 		drawImage(256, layer2, "layer2.8");
 		layer2 = new LayerSmooth(2003L, layer2);
+		drawImage(256, layer2, "layer2.9");
+		layer2 = new LayerLerpZoom(19L, layer2);
+		drawImage(256, layer2, "layer2.10");
+		layer2 = new LayerLerpZoom(20L, layer2);
+		drawImage(256, layer2, "layer2.11");
 		//River layers.
 		Layer layer7 = new LayerStartRand(51L, 5);
 		drawImage(256, layer7, "layer7.1");
 		layer7 = new LayerZoom(5, 52L, layer7);
 		drawImage(256, layer7, "layer7.2");
 		layer7 = new LayerRing(59L, layer7);
+		layer7 = new LayerSmooth(2019L, layer7);
 		drawImage(256, layer7, "layer7.3");
 		layer7 = new LayerVoronoiZoom(61L, layer7);
 		drawImage(256, layer7, "layer7.4");
-		layer7 = new LayerZoom(62L, layer7);
-		drawImage(256, layer7, "layer7.5");
 		//Terrain recalculated layers.
 		Layer layer3 = new LayerTerrainBase(21L, layer2, layer1);
 		drawImage(256, layer3, "layer3.1");
@@ -100,6 +109,7 @@ public class Layers
 		drawImage(256, layer5, "layer5.5");
 		//Biome layers.
 		Layer layer6 = new LayerBaseBiome(41L, layer4, layer5);
+		layer6 = new LayerZoom(3, 472L, layer6);
 		drawImage(256, layer6, "layer6.1");
 		layer6 = new LayerVoronoiZoom(42L, layer6);
 		drawImage(256, layer6, "layer6.2");
@@ -123,7 +133,7 @@ public class Layers
 			return;
 		try
 		{
-			genlayer.initWorldGenSeed(82L);
+			genlayer.initWorldGenSeed(83L);
 			File outFile = new File(name + ".png");
 			if (outFile.exists())
 				return;

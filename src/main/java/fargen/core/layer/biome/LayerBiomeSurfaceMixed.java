@@ -12,14 +12,14 @@ import net.minecraft.world.gen.layer.IntCache;
 public class LayerBiomeSurfaceMixed extends Layer
 {
 	private GenLayer terrain;
-
+	
 	public LayerBiomeSurfaceMixed(long seed, GenLayer layer, GenLayer terrain)
 	{
 		super(seed);
 		parent = layer;
 		this.terrain = terrain;
 	}
-	
+
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
@@ -45,21 +45,21 @@ public class LayerBiomeSurfaceMixed extends Layer
 		}
 		return ret;
 	}
-
+	
 	private int selectBiomeForBiome(int a, int b, int a1, int a2, int a3, int a4)
 	{
 		int biome = selectBiomeForStandardBiome(a, b);
-		if(EnumTerrain.values()[a].isOcean)
+		if(!EnumTerrain.values()[a].isWater)
 		{
-			if(!EnumTerrain.values()[a1].isWater ||
-					!EnumTerrain.values()[a2].isWater ||
-					!EnumTerrain.values()[a3].isWater ||
-					!EnumTerrain.values()[a4].isWater)
-				return FarGenBiomes.beach[a].biomeID;
+			if(EnumTerrain.values()[a1].isOcean ||
+					EnumTerrain.values()[a2].isOcean ||
+					EnumTerrain.values()[a3].isOcean ||
+					EnumTerrain.values()[a4].isOcean)
+				return FarGenBiomes.beach[BiomeBase.getBiomeFromID(biome).zone.ordinal()].biomeID;
 		}
 		return biome;
 	}
-
+	
 	private int selectBiomeForStandardBiome(int a, int b)
 	{
 		int b1 = b & 0xFF;
@@ -81,7 +81,7 @@ public class LayerBiomeSurfaceMixed extends Layer
 		default: return b;
 		}
 	}
-	
+
 	private BiomeBase selectOceanBiome(int b)
 	{
 		switch(BiomeBase.getBiomeFromID(b).zone.category1)
@@ -94,7 +94,7 @@ public class LayerBiomeSurfaceMixed extends Layer
 		default : return BiomeBase.DEBUG;
 		}
 	}
-	
+
 	private BiomeBase selectDeepOceanBiome(int b)
 	{
 		switch(BiomeBase.getBiomeFromID(b).zone.category1)
@@ -107,14 +107,14 @@ public class LayerBiomeSurfaceMixed extends Layer
 		default : return BiomeBase.DEBUG;
 		}
 	}
-	
+
 	@Override
 	public void initWorldGenSeed(long seed)
 	{
 		super.initWorldGenSeed(seed);
 		terrain.initWorldGenSeed(seed);
 	}
-	
+
 	@Override
 	public void markZoom(int zoom)
 	{

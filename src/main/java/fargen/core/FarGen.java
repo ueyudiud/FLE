@@ -35,7 +35,7 @@ public class FarGen
 	static
 	{
 		DimensionManager.unregisterDimension(0);
-		FAR_OVERWORLD = DimensionType.register("FAR_OVERWORLD", "far_overworld", 0, FarSurfaceProvider.class, false);
+		FAR_OVERWORLD = DimensionType.register("FAR_OVERWORLD", "far_overworld", 0, FarSurfaceProvider.class, true);
 		DimensionManager.registerDimension(0, FAR_OVERWORLD);
 		DimensionManager.unregisterDimension(-1);
 		FAR_NETHER = DimensionType.register("FAR_NETHER", "far_nether", -1, FarNetherProvider.class, false);
@@ -73,7 +73,6 @@ public class FarGen
 	{
 		void load()
 		{
-
 		}
 	}
 
