@@ -209,7 +209,7 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 	{
 		if(sourceMap.isEmpty())
 		{
-			for(Mat material : Mat.register)
+			for(Mat material : Mat.materials())
 			{
 				if(material.isCrop)
 				{
@@ -240,7 +240,7 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		ImmutableMap.Builder<String, RenderType> typeBuilder = ImmutableMap.builder();
-		for(Mat material : Mat.register)
+		for(Mat material : Mat.materials())
 		{
 			if(material.isCrop)
 			{
@@ -274,9 +274,9 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 		ImmutableMap.Builder<String, IBakedModel> modelBuilder = ImmutableMap.builder();
 		for(Entry<String, ResourceLocation> entry : models.entrySet())
 		{
-			if(Mat.register.contain(entry.getKey()))
+			if(Mat.contain(entry.getKey()))
 			{
-				Mat material = Mat.register.get(entry.getKey());
+				Mat material = Mat.material(entry.getKey());
 				IModel model = ModelLoaderRegistry.getModelOrMissing(entry.getValue());
 				for(String string : material.crop.getAllAllowedState())
 				{
@@ -321,7 +321,7 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 			this.models = models;
 			float p0 = 0.0625F, p1 = 0.0F, p2 = 1.0F, p3 = 0.375F, p4 = 0.625F;
 			ImmutableMap.Builder<String, List<BakedQuad>> builder = ImmutableMap.builder();
-			for(Mat material : Mat.register)
+			for(Mat material : Mat.materials())
 			{
 				if(material.isCrop)
 				{

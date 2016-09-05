@@ -10,6 +10,7 @@ public class ItemStoneFragment extends ItemMulti
 	public ItemStoneFragment()
 	{
 		super(FarCore.ID, MC.fragment);
+		enableChemicalFormula = false;
 		EnumItem.stone_fragment.set(this);
 	}
 }

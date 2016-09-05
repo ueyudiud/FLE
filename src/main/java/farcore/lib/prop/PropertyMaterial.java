@@ -13,10 +13,11 @@ import farcore.lib.util.ISubTagContainer;
 import farcore.util.U;
 import net.minecraft.block.properties.PropertyHelper;
 
+@Deprecated
 public class PropertyMaterial extends PropertyHelper<Mat>
 {
 	private List<Mat> allowedValues;
-
+	
 	public PropertyMaterial(String name, IDataChecker<ISubTagContainer> filter)
 	{
 		this(name, Mat.filt(filter));
@@ -36,19 +37,19 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 		}
 		allowedValues = builder.build();
 	}
-
+	
 	@Override
 	public Collection<Mat> getAllowedValues()
 	{
 		return allowedValues;
 	}
-
+	
 	@Override
 	public Optional<Mat> parseValue(String value)
 	{
-		return !Mat.register.contain(value) ? Optional.absent() : Optional.of(Mat.register.get(value));
+		return !Mat.contain(value) ? Optional.absent() : Optional.of(Mat.material(value));
 	}
-
+	
 	@Override
 	public String getName(Mat value)
 	{

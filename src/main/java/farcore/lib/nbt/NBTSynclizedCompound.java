@@ -24,42 +24,52 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	private Map<String, NBTBase> tagMap = new HashMap();
 	private boolean update;
 	private NBTTagCompound nbt;
-
+	
 	public NBTSynclizedCompound()
 	{
 		reset();
 	}
-
+	
+	@Override
+	public NBTSynclizedCompound copy()
+	{
+		NBTSynclizedCompound compound = new NBTSynclizedCompound();
+		compound.tagMap.putAll(tagMap);
+		return compound;
+	}
+	
 	private void mark()
 	{
 		update = true;
 	}
-
+	
 	public void reset()
 	{
 		update = false;
 		nbt = new NBTTagCompound();
 	}
-
+	
 	@Override
 	public void removeTag(String name)
 	{
 		if(hasKey(name))
+		{
 			tagMap.remove(name);
+		}
 	}
-
+	
 	@Override
 	public boolean hasNoTags()
 	{
 		return tagMap.isEmpty();
 	}
-
+	
 	@Override
 	public boolean hasKey(String name)
 	{
 		return tagMap.get(name) != null;
 	}
-
+	
 	@Override
 	public boolean hasKey(String name, int value)
 	{
@@ -75,13 +85,13 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return false;
 		}
 	}
-
+	
 	@Override
 	public NBTBase getTag(String name)
 	{
 		return tagMap.get(name);
 	}
-
+	
 	@Override
 	public NBTTagCompound getCompoundTag(String name)
 	{
@@ -95,7 +105,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return NBTTagCompoundEmpty.instance;
 		}
 	}
-
+	
 	@Override
 	public NBTTagList getTagList(String name, int id)
 	{
@@ -109,7 +119,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return new NBTTagList();
 		}
 	}
-
+	
 	@Override
 	public boolean getBoolean(String name)
 	{
@@ -123,7 +133,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return false;
 		}
 	}
-
+	
 	@Override
 	public byte getByte(String name)
 	{
@@ -137,7 +147,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public short getShort(String name)
 	{
@@ -151,7 +161,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public int getInteger(String name)
 	{
@@ -165,7 +175,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public long getLong(String name)
 	{
@@ -179,7 +189,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public float getFloat(String name)
 	{
@@ -193,7 +203,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public double getDouble(String name)
 	{
@@ -207,7 +217,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public String getString(String name)
 	{
@@ -221,7 +231,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return "";
 		}
 	}
-
+	
 	@Override
 	public byte[] getByteArray(String name)
 	{
@@ -235,7 +245,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return new byte[0];
 		}
 	}
-
+	
 	@Override
 	public int[] getIntArray(String name)
 	{
@@ -249,7 +259,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			return new int[0];
 		}
 	}
-
+	
 	@Override
 	public void setTag(String name, NBTBase tag)
 	{
@@ -276,97 +286,102 @@ public class NBTSynclizedCompound extends NBTTagCompound
 			Log.error("Fail to set tag.", exception);
 		}
 	}
-
+	
 	@Override
 	public void setBoolean(String name, boolean value)
 	{
 		setTag(name, new NBTTagByte((byte) (value ? 1 : 0)));
 	}
-
+	
 	@Override
 	public void setByte(String name, byte value)
 	{
 		setTag(name, new NBTTagByte(value));
 	}
-
+	
 	public void setByte(String name, int value)
 	{
 		setTag(name, new NBTTagByte((byte) value));
 	}
-
+	
 	@Override
 	public void setShort(String name, short value)
 	{
 		setTag(name, new NBTTagShort(value));
 	}
-
+	
 	public void setShort(String name, int value)
 	{
 		setTag(name, new NBTTagShort((short) value));
 	}
-
+	
 	@Override
 	public void setInteger(String name, int value)
 	{
 		setTag(name, new NBTTagInt(value));
 	}
-
+	
 	@Override
 	public void setLong(String name, long value)
 	{
 		setTag(name, new NBTTagLong(value));
 	}
-
+	
 	@Override
 	public void setFloat(String name, float value)
 	{
 		setTag(name, new NBTTagFloat(value));
 	}
-
+	
 	@Override
 	public void setDouble(String name, double value)
 	{
 		setTag(name, new NBTTagDouble(value));
 	}
-
+	
 	@Override
 	public void setString(String name, String value)
 	{
 		setTag(name, new NBTTagString(value));
 	}
-
+	
 	@Override
 	public void setByteArray(String name, byte[] value)
 	{
 		setTag(name, new NBTTagByteArray(value));
 	}
-
+	
 	@Override
 	public void setIntArray(String name, int[] value)
 	{
 		setTag(name, new NBTTagIntArray(value));
 	}
-
+	
 	public NBTTagCompound asCompound()
 	{
 		NBTTagCompound ret = new NBTTagCompound();
 		for(Entry<String, NBTBase> entry : tagMap.entrySet())
-			ret.setTag(entry.getKey(), entry.getValue());
+		{
+			ret.setTag(entry.getKey(), entry.getValue().copy());
+		}
 		return ret;
 	}
-
+	
 	public boolean isChanged()
 	{
 		return update;
 	}
-
+	
 	public NBTTagCompound getChanged(boolean reset)
 	{
 		NBTTagCompound ret = nbt;
-		if(reset) reset();
+		if(reset)
+		{
+			reset();
+		}
 		return ret;
 	}
-
+	
 	public void clear()
 	{
 		tagMap.clear();

@@ -4,12 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
 import farcore.lib.util.Log;
-import farcore.lib.util.NoiseCell;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 
@@ -33,11 +31,6 @@ public class Debug
 		//		//		String formatName = "chiseled.png";
 		//		//		TextureCopier.copyTarget(srcDirName, destDirName, formatName);
 		//		ModelFileCreator.provideGroupItemInfo(sourceLocate, MC.fragment);
-		NoiseCell noise = new NoiseCell(48291L, 1, 3, 4.0, 10.0);
-		double[] cells1 = noise.noise(null, 2, 2, 0, 0);
-		double[] cells2 = noise.noise(null, 2, 2, 1, 0);
-		System.out.println(Arrays.toString(cells1));
-		System.out.println(Arrays.toString(cells2));
 	}
 
 	public static void checkAccess(GenLayer layer)

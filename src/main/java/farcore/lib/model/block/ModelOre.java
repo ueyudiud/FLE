@@ -65,7 +65,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICustomItemModelSelector
 {
-	private static final String DEFAULT_MODEL_LOCATE = FarCore.ID + ":ore";
+	private static final String DEFAULT_MODEL_LOCATE = FarCore.ID + ":block/ore";
 	private static final List<ResourceLocation> LOAD_TARGETS = new ArrayList();
 	private static final ResourceLocation ITEM_PARENT_LOCATION = new ResourceLocation("minecraft", "block/block");
 	private static final ResourceLocation LOCATION = new ResourceLocation(FarCore.ID, "blockstates/ore");
@@ -83,6 +83,13 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			JsonObject object1 = object.getAsJsonObject("types");
 			for(Entry<String, JsonElement> entry : object1.entrySet())
 			{
+				/**
+				 * Far Core wrote annotation in json.
+				 */
+				if("annotation".equals(entry.getKey()))
+				{
+					continue;
+				}
 				config.renderTypes.put(entry.getKey(), entry.getValue().getAsString());
 			}
 		}
@@ -213,14 +220,19 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	@Override
 	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 	{
-		return ImmutableMap.of(blockIn.getDefaultState(), MODEL_RESOURCE_LOCATION);
+		ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
+		for(IBlockState state : blockIn.getBlockState().getValidStates())
+		{
+			builder.put(state, MODEL_RESOURCE_LOCATION);
+		}
+		return builder.build();
 	}
 
 	private Map<String, ResourceLocation> getSource()
 	{
 		if(sourceMap.isEmpty())
 		{
-			for(Mat material : Mat.register)
+			for(Mat material : Mat.materials())
 			{
 				if(material.contain(SubTag.ORE))
 				{
@@ -252,7 +264,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	{
 		Map<String, IModel> models = new HashMap();
 		ImmutableMap.Builder<String, IBakedModel> typeBuilder = ImmutableMap.builder();
-		for(Mat material : Mat.register)
+		for(Mat material : Mat.materials())
 		{
 			if(material.contain(SubTag.ORE))
 			{
@@ -322,7 +334,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			IModel parent = ModelLoaderRegistry.getModelOrMissing(ITEM_PARENT_LOCATION);
 			Map<String, IModel> models = new HashMap();
 			ImmutableMap.Builder<String, IBakedModel> typeBuilder = ImmutableMap.builder();
-			for(Mat material : Mat.register)
+			for(Mat material : Mat.materials())
 			{
 				if(material.contain(SubTag.ORE))
 				{
@@ -403,6 +415,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 
 	private static class BakedModelOre implements ICustomItemRenderModel
 	{
+		Map<String, TextureAtlasSprite> icons;
 		Map<String, IBakedModel> models;
 
 		BakedModelOre(Map<String, IBakedModel> models, VertexFormat format)
@@ -416,7 +429,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			if(stack == null || !stack.hasTagCompound()) return ImmutableList.of();
 			IBlockState state = EnumBlock.ore.block.getDefaultState();
 			NBTTagCompound nbt = stack.getTagCompound();
-			state = new OreStateWrapper(state, Mat.register.get(stack.getItemDamage()), ItemOre.getAmount(nbt), ItemOre.getRockMaterial(nbt), ItemOre.getRockType(nbt));
+			state = new OreStateWrapper(state, Mat.material(stack.getItemDamage()), ItemOre.getAmount(nbt), ItemOre.getRockMaterial(nbt), ItemOre.getRockType(nbt));
 			return getQuads(state, facing, rand);
 		}
 		

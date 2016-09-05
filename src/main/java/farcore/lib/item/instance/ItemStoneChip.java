@@ -33,10 +33,11 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 {
 	public ItemStoneChip()
 	{
-		super(MC.chip);
+		super(MC.chip_rock);
+		enableChemicalFormula = false;
 		EnumItem.stone_chip.set(this);
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -63,7 +64,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 		}
 	}
-
+	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
@@ -76,19 +77,19 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		}
 		return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
 	}
-	
+
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
 		return EnumAction.BOW;
 	}
-	
+
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
 		return 100;
 	}
-
+	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)
 	{
@@ -117,19 +118,19 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			worldIn.spawnEntityInWorld(entity);
 		}
 	}
-
+	
 	@Override
 	public void initEntity(EntityProjectileItem entity){ }
-
+	
 	@Override
 	public void onEntityTick(EntityProjectileItem entity){	}
-
+	
 	@Override
 	public boolean onHitGround(World world, BlockPos pos, EntityProjectileItem entity, Direction direction)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean onHitEntity(World world, Entity target, EntityProjectileItem entity)
 	{
@@ -166,7 +167,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		}
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,

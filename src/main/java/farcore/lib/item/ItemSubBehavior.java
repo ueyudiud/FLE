@@ -1,5 +1,6 @@
 package farcore.lib.item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,14 @@ import com.google.common.collect.ImmutableList;
 import farcore.lib.item.behavior.IBehavior;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.UnlocalizedList;
+import farcore.util.U;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -28,7 +32,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSubBehavior extends ItemBase
 {
-	private final Map<String, Integer> idMap = new HashMap();
+	@SideOnly(Side.CLIENT)
+	protected int[] displayList;
+	protected final Map<String, Integer> idMap = new HashMap();
 	private final Map<Integer, IItemCapabilityProvider> providers = new HashMap();
 	private final Map<Integer, List<IBehavior>> behaviors = new HashMap();
 
@@ -384,6 +390,28 @@ public class ItemSubBehavior extends ItemBase
 		for(IBehavior behavior : getBehavior(stack))
 		{
 			behavior.addInformation(stack, playerIn, unlocalizedList, advanced);
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+	{
+		if(displayList == null)
+		{
+			List<Integer> list = new ArrayList(32768);
+			for(int i = 0; i < 32768; ++i)
+			{
+				if(idMap.containsValue(i))
+				{
+					list.add(i);
+				}
+			}
+			displayList = U.L.cast(list.toArray(new Integer[list.size()]));
+		}
+		for(int id : displayList)
+		{
+			subItems.add(new ItemStack(this, 1, id));
 		}
 	}
 }

@@ -40,7 +40,7 @@ public class ItemDebugger extends ItemBase
 		setMaxStackSize(1);
 		EnumItem.debug.set(this);
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -102,7 +102,7 @@ public class ItemDebugger extends ItemBase
 		}
 		return EnumActionResult.PASS;
 	}
-	
+
 	@Override
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{

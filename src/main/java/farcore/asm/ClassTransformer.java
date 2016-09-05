@@ -6,10 +6,13 @@ import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -46,10 +50,11 @@ public class ClassTransformer implements IClassTransformer
 	private static final DecimalFormat FORMAT = new DecimalFormat("000");
 	private static final boolean codeOutput = true;
 	private static File file;
+	private static PrintStream keyOutputStream;
 	public static final Logger LOG = LogManager.getLogger("FarCore ASM");
-	
-	private static final Map<String, OpInformation> informations = new HashMap();
 
+	private static final Map<String, OpInformation> informations = new HashMap();
+	
 	private static void outputInit()
 	{
 		if(file == null)
@@ -65,13 +70,35 @@ public class ClassTransformer implements IClassTransformer
 				ClassTransformer.file.mkdirs();
 			}
 		}
+		if(keyOutputStream == null)
+		{
+			try
+			{
+				File file = new File(ClassTransformer.file, "keys.txt");
+				if(!file.exists())
+				{
+					file.createNewFile();
+				}
+				keyOutputStream = new PrintStream(new FileOutputStream(file))
+				{
+					@Override
+					protected void finalize() throws Throwable
+					{
+						close();
+					}
+				};
+			}
+			catch (Exception exception)
+			{
+				keyOutputStream = System.out;
+			}
+		}
 	}
-
+	
 	private static void logOutput(String name, InsnList list)
 	{
 		if(codeOutput)
 		{
-			outputInit();
 			BufferedWriter writer = null;
 			try
 			{
@@ -107,7 +134,7 @@ public class ClassTransformer implements IClassTransformer
 			}
 		}
 	}
-	
+
 	private static String getOutput(AbstractInsnNode node)
 	{
 		String opcode = FORMAT.format(node.getOpcode() == -1 ? 256 : node.getOpcode());
@@ -148,162 +175,223 @@ public class ClassTransformer implements IClassTransformer
 		default : return "";
 		}
 	}
-
+	
 	private OpInformation create(String name)
 	{
 		return new OpInformation(name);
 	}
-	
-	private int numInsertions;
-	
-	public ClassTransformer()
-	{
-		create("net.minecraft.world.chunk.Chunk")
-		.lName("getBiome|(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;")
-		.lPosition(1278, 3)
-		.lNode(new VarInsnNode(ALOAD, 1))
-		.lNode(new VarInsnNode(ALOAD, 2))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(false)
-		.lName("a|(Lcm;Laiu;)Laiq;")
-		.lPosition(1202, 3)
-		.lNode(new VarInsnNode(ALOAD, 1))
-		.lNode(new VarInsnNode(ALOAD, 2))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILcm;Laiu;)Laiq;", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(true)
-		.put();
-		create("net.minecraft.client.renderer.EntityRenderer")
-		.lName("updateRenderer|()V")
-		.lPosition(325, 2)
-		.lNode(new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "random", "Ljava/util/Random;"))
-		.lNode(new VarInsnNode(ALOAD, 0))
-		.lNode(new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "rendererUpdateCount", "I"))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(false)
-		.lName("e|()V")
-		.lPosition(416, 2)
-		.lNode(new FieldInsnNode(GETFIELD, "bnz", "random", "Ljava/util/Random;"))
-		.lNode(new VarInsnNode(ALOAD, 0))
-		.lNode(new FieldInsnNode(GETFIELD, "bnz", "rendererUpdateCount", "I"))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(true)
-		.put();
-		create("net.minecraft.client.renderer.RenderItem")
-		.lName("renderModel|(Lnet/minecraft/client/renderer/block/model/IBakedModel;ILnet/minecraft/item/ItemStack;)V")
-		.lPosition(133, 4)
-		.lLength(2)
-		.lLabel(OpType.REMOVE)
-		.lPosition(133, 8)
-		.lNode(new VarInsnNode(ALOAD, 3))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
-		.lLabel(OpType.REPLACE)
-		.lPosition(136, 5)
-		.lLength(2)
-		.lLabel(OpType.REMOVE)
-		.lPosition(136, 10)
-		.lNode(new VarInsnNode(ALOAD, 3))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(false)
-		.put();
-		create("net.minecraft.world.World")
-		.lName("isRainingAt|(Lnet/minecraft/util/math/BlockPos;)Z")
-		.lPosition(3882, 17)
-		.lLabel(OpType.REMOVE)
-		.lPosition(3882, 18)
-		.lNode(new VarInsnNode(ALOAD, 2))
-		.lNode(new VarInsnNode(ALOAD, 0))
-		.lNode(new VarInsnNode(ALOAD, 1))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Lnet/minecraft/world/biome/Biome;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(false)
-		.lName("B|(Lcm;)Z")
-		.lPosition(3590, 17)
-		.lLabel(OpType.REMOVE)
-		.lPosition(3590, 18)
-		.lNode(new VarInsnNode(ALOAD, 2))
-		.lNode(new VarInsnNode(ALOAD, 0))
-		.lNode(new VarInsnNode(ALOAD, 1))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Laiq;Laid;Lcm;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(true)
-		.lName("checkLight|(Lnet/minecraft/util/math/BlockPos;)Z")
-		.lPosition(2984, 5)
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPosition(2987, 6)
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(false)
-		.lName("w|(Lcm;)Z")
-		.lPosition(2774, 5)
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPosition(2777, 6)
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(true)
-		.lName("markBlocksDirtyVertical|(IIII)V")
-		.lPosition(500, 9)
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(false)
-		.lName("a|(IIII)V")
-		.lPosition(438, 9)
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
-		.lLabel(OpType.REPLACE)
-		.lPut(true)
-		.lName("tick|()V")
-		.lPosition(2741, 2)
-		.lNode(new VarInsnNode(ALOAD, 0))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Lnet/minecraft/world/World;)V", false))
-		.lLabel(OpType.INSERT)
-		.lPut(false)
-		.lName("d|()V")
-		.lPosition(2543, 2)
-		.lNode(new VarInsnNode(ALOAD, 0))
-		.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Laid;)V", false))
-		.lLabel(OpType.INSERT)
-		.put();
-	}
 
+	private boolean putedReplacements = false;
+	private int numInsertions = 0;
+
+	private void init()
+	{
+		if(!FarOverrideLoadingPlugin.loadedData) return;
+		if(!putedReplacements)
+		{
+			putedReplacements = true;
+			if(FarOverrideLoadingPlugin.runtimeDeobf)
+			{
+				create("net.minecraft.world.chunk.Chunk")
+				.lName("a|(Lcm;Laiu;)Laiq;")
+				.lPosition(1202, 3)
+				.lNode(new VarInsnNode(ALOAD, 1),
+						new VarInsnNode(ALOAD, 2),
+						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILcm;Laiu;)Laiq;", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.client.renderer.EntityRenderer")
+				.lName("e|()V")
+				.lPosition(416, 2)
+				.lNode(new FieldInsnNode(GETFIELD, "bnz", "j", "Ljava/util/Random;"),
+						new VarInsnNode(ALOAD, 0),
+						new FieldInsnNode(GETFIELD, "bnz", "N", "I"),
+						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.client.renderer.RenderItem")
+				.lName("a|(Lbyl;ILadz;)V")
+				.lPosition(160, 4)
+				.lLength(2)
+				.lLabel(OpType.REMOVE)
+				.lPosition(160, 8)
+				.lNode(new VarInsnNode(ALOAD, 3),
+						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lbyl;Lct;JLadz;)Ljava/util/List;", false))
+				.lLabel(OpType.REPLACE)
+				.lPosition(163, 5)
+				.lLength(2)
+				.lLabel(OpType.REMOVE)
+				.lPosition(163, 10)
+				.lNode(new VarInsnNode(ALOAD, 3),
+						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lbyl;Lct;JLadz;)Ljava/util/List;", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.client.gui.inventory.GuiContainer")
+				.lName("a|(Ladz;IILjava/lang/String;)V")
+				.lPosition(206, 19)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)V", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("a|(Lacc;)V")
+				.lPosition(299, 9)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)V", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.world.World")
+				.lName("B|(Lcm;)Z")
+				.lPosition(3590, 18)
+				.lNode(new VarInsnNode(ALOAD, 0),
+						new VarInsnNode(ALOAD, 1),
+						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Laiq;Laid;Lcm;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("w|(Lcm;)Z")
+				.lPosition(2774, 5)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPosition(2777, 6)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("a|(IIII)V")
+				.lPosition(438, 9)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("d|()V")
+				.lPosition(2543, 2)
+				.lNode(new VarInsnNode(ALOAD, 0))
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Laid;)V", false))
+				.lLabel(OpType.INSERT)
+				.put();
+			}
+			else
+			{
+				create("net.minecraft.world.chunk.Chunk")
+				.lName("getBiome|(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;")
+				.lPosition(1278, 3)
+				.lNode(new VarInsnNode(ALOAD, 1),
+						new VarInsnNode(ALOAD, 2),
+						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.client.renderer.EntityRenderer")
+				.lName("updateRenderer|()V")
+				.lPosition(325, 2)
+				.lNode(new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "random", "Ljava/util/Random;"),
+						new VarInsnNode(ALOAD, 0),
+						new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "rainSoundCounter", "I"),
+						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.client.renderer.RenderItem")
+				.lName("renderModel|(Lnet/minecraft/client/renderer/block/model/IBakedModel;ILnet/minecraft/item/ItemStack;)V")
+				.lPosition(133, 4)
+				.lLength(2)
+				.lLabel(OpType.REMOVE)
+				.lPosition(133, 8)
+				.lNode(new VarInsnNode(ALOAD, 3),
+						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
+				.lLabel(OpType.REPLACE)
+				.lPosition(136, 5)
+				.lLength(2)
+				.lLabel(OpType.REMOVE)
+				.lPosition(136, 10)
+				.lNode(new VarInsnNode(ALOAD, 3),
+						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.client.gui.inventory.GuiContainer")
+				.lName("drawItemStack|(Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
+				.lPosition(206, 19)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lnet/minecraft/client/renderer/RenderItem;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("drawSlot|(Lnet/minecraft/inventory/Slot;)V")
+				.lPosition(299, 9)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lnet/minecraft/client/renderer/RenderItem;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.put();
+				create("net.minecraft.world.World")
+				.lName("isRainingAt|(Lnet/minecraft/util/math/BlockPos;)Z")
+				.lPosition(3882, 18)
+				.lNode(new VarInsnNode(ALOAD, 0),
+						new VarInsnNode(ALOAD, 1),
+						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Lnet/minecraft/world/biome/Biome;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("checkLight|(Lnet/minecraft/util/math/BlockPos;)Z")
+				.lPosition(2984, 5)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPosition(2987, 6)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("markBlocksDirtyVertical|(IIII)V")
+				.lPosition(500, 9)
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
+				.lLabel(OpType.REPLACE)
+				.lPut()
+				.lName("tick|()V")
+				.lPosition(2741, 2)
+				.lNode(new VarInsnNode(ALOAD, 0))
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Lnet/minecraft/world/World;)V", false))
+				.lLabel(OpType.INSERT)
+				.lPut()
+				.put();
+			}
+		}
+		outputInit();
+	}
+	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
+		init();
+		if(transformedName.startsWith("net.minecraft."))
+		{
+			keyOutputStream.println(name + "=" + transformedName);
+		}
 		OpInformation information;
 		if((information = informations.get(transformedName)) != null)
 			return modifyClass(transformedName, information, basicClass);
 		return basicClass;
 	}
-
+	
 	public byte[] modifyClass(String clazzName, OpInformation information, byte[] basicClass)
 	{
 		try
 		{
 			LOG.info("Far Core start to modify class {" + clazzName + "}.");
+			LOG.debug("Checking targets are {" + information.modifies + "}");
 			ClassNode node = new ClassNode();
 			ClassReader reader = new ClassReader(basicClass);
 			reader.accept(node, 0);
 			for(MethodNode node2 : node.methods)
 			{
 				String name = node2.name + "|" + node2.desc;
-				if(information.modifymap().containsKey(name))
+				if(information.modifies.containsKey(name))
 				{
 					LOG.debug("Injecting method  {" + name + "}.");
 					logOutput(clazzName + "." + node2.name + "~source", node2.instructions);
-					boolean success = modifyMethodNode(node2.instructions, information.modifymap().get(name));
+					boolean success = modifyMethodNode(node2.instructions, information.modifies.get(name));
 					logOutput(clazzName + "." + node2.name + "~modified", node2.instructions);
 					if(!success)
 					{
-						LOG.info("Injected method {" + clazzName + "} failed.");
+						LOG.info("Injected method {" + name + "} failed.");
 					}
 					else
 					{
-						LOG.debug("Injected method {" + clazzName + "} success.");
+						LOG.debug("Injected method {" + name + "} success.");
 					}
 				}
 			}
@@ -318,7 +406,7 @@ public class ClassTransformer implements IClassTransformer
 			return basicClass;
 		}
 	}
-	
+
 	private boolean modifyMethodNode(InsnList instructions, List<OpLabel> list)
 	{
 		list = new ArrayList(list);
@@ -352,24 +440,67 @@ public class ClassTransformer implements IClassTransformer
 		}
 		return list.isEmpty();
 	}
-
+	
+	/**
+	 * I don't know what happen, this might is a bug, I can not replace some of nodes.
+	 * So I use array list instead insnlist to cached insn nodes.
+	 * @param methodInsn
+	 * @param anchor
+	 * @param input
+	 */
 	private void performAnchorOperation(InsnList methodInsn, int anchor, OpLabel input)
 	{
 		AbstractInsnNode current = methodInsn.get(anchor + input.off + numInsertions);
 		AbstractInsnNode current1;
-		if (input.nodes.size() > 0 && (input.nodes.get(0) instanceof JumpInsnNode))
+		AbstractInsnNode node;
+		if (input.nodes != null && input.nodes.size() > 0 && (input.nodes.get(0) instanceof JumpInsnNode))
 		{
-			input.nodes.set(input.nodes.get(0), new JumpInsnNode(input.nodes.get(0).getOpcode(), (LabelNode) current.getPrevious()));
+			input.nodes.set(0, new JumpInsnNode(input.nodes.get(0).getOpcode(), (LabelNode) current.getPrevious()));
 		}
 		switch (input.type)
 		{
 		case INSERT :
+			Iterator<AbstractInsnNode> itr = input.nodes.iterator();
 			numInsertions += input.nodes.size();
-			methodInsn.insert(current, input.nodes);
+			do
+			{
+				node = itr.next();
+				itr.remove();
+				methodInsn.insert(current, node);
+				current = node;
+			}
+			while(itr.hasNext());
 			break;
 		case INSERT_BEFORE :
+			itr = input.nodes.iterator();
 			numInsertions += input.nodes.size();
-			methodInsn.insertBefore(current, input.nodes);
+			node = itr.next();
+			methodInsn.insertBefore(current, node);
+			current = node;
+			while(itr.hasNext())
+			{
+				node = itr.next();
+				methodInsn.insert(current, node);
+				current = node;
+			}
+			break;
+		case REPLACE :
+			itr = input.nodes.iterator();
+			numInsertions += input.nodes.size() - 1;
+			if ((current instanceof JumpInsnNode) && (input.nodes.get(0) instanceof JumpInsnNode))
+			{
+				((JumpInsnNode) input.nodes.get(0)).label = ((JumpInsnNode) current).label;
+			}
+			current1 = current;
+			do
+			{
+				node = itr.next();
+				itr.remove();
+				methodInsn.insert(current1, node);
+				current1 = node;
+			}
+			while(itr.hasNext());
+			methodInsn.remove(current);
 			break;
 		case REMOVE :
 			int i = input.len;
@@ -381,15 +512,6 @@ public class ClassTransformer implements IClassTransformer
 			}
 			numInsertions -= input.len;
 			break;
-		case REPLACE :
-			numInsertions += input.nodes.size() - 1;
-			if ((current instanceof JumpInsnNode) && (input.nodes.get(0) instanceof JumpInsnNode))
-			{
-				((JumpInsnNode)input.nodes.get(0)).label = ((JumpInsnNode)current).label;
-			}
-			methodInsn.insert(current, input.nodes);
-			methodInsn.remove(current);
-			break;
 		case SWITCH :
 			current1 = methodInsn.get(anchor + input.off + numInsertions + input.len);
 			methodInsn.insert(current, current1);
@@ -398,7 +520,7 @@ public class ClassTransformer implements IClassTransformer
 			break;
 		}
 	}
-
+	
 	private int findLine(InsnList methodList, int line)
 	{
 		for (int index = 0; index < methodList.size(); index++)
@@ -408,7 +530,7 @@ public class ClassTransformer implements IClassTransformer
 		}
 		return -1;
 	}
-
+	
 	private boolean isLine(AbstractInsnNode current, int line)
 	{
 		if (current instanceof LineNumberNode)
@@ -419,7 +541,7 @@ public class ClassTransformer implements IClassTransformer
 		}
 		return false;
 	}
-
+	
 	public static enum OpType
 	{
 		INSERT,
@@ -428,27 +550,23 @@ public class ClassTransformer implements IClassTransformer
 		REMOVE,
 		SWITCH;
 	}
-
+	
 	protected class OpInformation
 	{
 		final String mcpname;
-		Map<String, List<OpLabel>> modifiesmcp = new HashMap();
-		Map<String, List<OpLabel>> modifiesobf = new HashMap();
+		Map<String, List<OpLabel>> modifies = new HashMap();
 		String cacheName;
 		List<OpLabel> label;
 		int line = -1;
 		int off = -1;
 		int length = 1;
-		InsnList cacheList;
-		
+		List<AbstractInsnNode> cacheList;
+		@Deprecated
+		Map<Label, int[]> labelLocate = new HashMap();
+
 		OpInformation(String name)
 		{
 			mcpname = name;
-		}
-		
-		Map<String, List<OpLabel>> modifymap()
-		{
-			return FarOverrideLoadingPlugin.runtimeDeobf ? modifiesobf : modifiesmcp;
 		}
 
 		public OpInformation lName(String name)
@@ -456,7 +574,7 @@ public class ClassTransformer implements IClassTransformer
 			cacheName = name;
 			return this;
 		}
-		
+
 		public OpInformation lPosition(int line, int off)
 		{
 			this.line = line;
@@ -464,68 +582,77 @@ public class ClassTransformer implements IClassTransformer
 			length = 1;
 			return this;
 		}
-
+		
 		public OpInformation lLength(int len)
 		{
 			length = len;
 			return this;
 		}
-
-		public OpInformation lNode(AbstractInsnNode node)
+		
+		public OpInformation lNode(AbstractInsnNode...nodes)
 		{
 			if(cacheList == null)
 			{
-				cacheList = new InsnList();
+				cacheList = new ArrayList();
 			}
-			cacheList.add(node);
+			for(AbstractInsnNode node : nodes)
+			{
+				cacheList.add(node);
+			}
 			return this;
 		}
-
+		
 		public OpInformation lLabel(OpType type)
 		{
 			if(label == null)
 			{
 				label = new ArrayList();
 			}
-			label.add(new OpLabel(line, off, length, type, cacheList == null ? new InsnList() : cacheList));
+			label.add(new OpLabel(line, off, length, type, cacheList));
 			line = -1;
 			off = -1;
 			cacheList = null;
 			return this;
 		}
-		
-		public OpInformation lPut(boolean isObf)
+
+		public OpInformation lPut()
 		{
-			if(!(isObf ? modifiesobf : modifiesmcp).containsKey(cacheName))
+			if(!modifies.containsKey(cacheName))
 			{
-				(isObf ? modifiesobf : modifiesmcp).put(cacheName, label);
+				modifies.put(cacheName, label);
 			}
 			cacheName = null;
 			label = null;
 			return this;
 		}
-		
+
 		public void put()
 		{
 			informations.put(mcpname, this);
 		}
 	}
-
+	
 	protected class OpLabel
 	{
 		int line;
 		int off;
 		int len;
 		OpType type;
-		InsnList nodes;
-
-		OpLabel(int line, int off, int len, OpType type, InsnList nodes)
+		List<AbstractInsnNode> nodes;
+		
+		OpLabel(int line, int off, int len, OpType type, List<AbstractInsnNode> nodes)
 		{
 			this.line = line;
 			this.off = off;
 			this.len = len;
 			this.type = type;
 			this.nodes = nodes;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "label:" + type.name() + ":" + (nodes != null ? Arrays.toString(nodes.toArray()) : "");
 		}
 	}
 }

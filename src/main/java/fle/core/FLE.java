@@ -14,17 +14,17 @@ public class FLE
 	public static final String MODID = "fle";
 	public static final String NAME = "Far Land Era";
 	public static final String VERSION = FLEVersion.MAJOR_VERSION + "." + FLEVersion.MINOR_VERSION + "." + FLEVersion.SUB_VERSION;
-
+	
 	@Instance(FLE.MODID)
 	public static FLE mod;
-	
+
 	@SidedProxy(serverSide = "fle.core.common.CommonProxy", clientSide = "fle.core.client.ClientProxy")
 	public static CommonProxy proxy;
-
+	
 	public FLE()
 	{
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{

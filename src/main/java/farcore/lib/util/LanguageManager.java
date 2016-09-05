@@ -64,6 +64,33 @@ public class LanguageManager
 		}
 	}
 	
+	public static String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
+	{
+		String locale = U.Strings.locale();
+		String translate;
+		if(map1.containsKey(locale) && map1.get(locale).containsKey(unlocalized))
+		{
+			translate = map1.get(locale).get(unlocalized);
+		}
+		else if(map2.containsKey(unlocalized))
+		{
+			translate = map2.get(unlocalized);
+		}
+		else
+		{
+			translate = I18n.format(unlocalized, objects);
+			return unlocalized.equals(translate) ? null : translate;
+		}
+		try
+		{
+			return translate == null ? null : String.format(translate, objects);
+		}
+		catch(Exception exception)
+		{
+			return null;
+		}
+	}
+	
 	private File file;
 	
 	public LanguageManager(File file)
@@ -103,10 +130,9 @@ public class LanguageManager
 						{
 							continue;
 						}
-						if(line.indexOf('=') == -1) throw new RuntimeException();
-						String[] strings = line.split("=");
-						if(strings.length != 2) throw new RuntimeException();
-						map.put(strings[0], strings[1]);
+						int idx = line.indexOf('=');
+						if(idx == -1) throw new RuntimeException();
+						map.put(line.substring(0, idx), line.substring(idx + 1));
 						++keyCount;
 					}
 					map1.put(name, map);

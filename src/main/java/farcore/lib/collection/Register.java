@@ -148,17 +148,10 @@ public class Register<T> implements IRegister<T>
 		if(arg == null) return -1;
 		int hash = arg.hashCode();
 		Object object = null;
-		for(int i = 0;
-				i < targets.length;
-				object = targets[i++])
+		for(int i = 0; i < targets.length; i++)
 		{
-			if(object == null)
-			{
-				continue;
-			}
-			if(hash == object.hashCode() &&
-					arg.equals(object))
-				return i - 1;
+			object = targets[i];
+			if(object != null && hash == object.hashCode() && arg.equals(object)) return i;
 		}
 		return -1;
 	}
@@ -168,16 +161,10 @@ public class Register<T> implements IRegister<T>
 	{
 		if(name == null) return -1;
 		String name1 = null;
-		for(int i = 0;
-				i < names.length;
-				name1 = names[i++])
+		for(int i = 0; i < names.length; i++)
 		{
-			if(name == null)
-			{
-				continue;
-			}
-			if(name.equals(name1))
-				return i - 1;
+			name1 = names[i];
+			if(name1 != null && name1.equals(name)) return i;
 		}
 		return -1;
 	}

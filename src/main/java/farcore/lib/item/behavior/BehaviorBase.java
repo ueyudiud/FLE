@@ -24,73 +24,73 @@ public class BehaviorBase implements IBehavior
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean onDroppedByPlayer(ItemStack stack, EntityPlayer player)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entity)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
 	{
-		return null;
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		return EnumActionResult.PASS;
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
 		return EnumActionResult.PASS;
 	}
-
+	
 	@Override
 	public boolean onRightClickEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
 	{
-		
-	}
 
+	}
+	
 	@Override
 	public ItemStack onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected)
 	{
 		return stack;
 	}
-
+	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
 	{
-		
-	}
 
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean advanced)
 	{
-		
+
 	}
 }

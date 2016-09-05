@@ -1,20 +1,24 @@
 package farcore.lib.model.block;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
-import farcore.data.M;
-import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.material.Mat;
 import farcore.lib.model.ModelHelper;
+import farcore.lib.tile.instance.TESapling;
+import farcore.lib.util.SubTag;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BakedQuadRetextured;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
@@ -26,125 +30,154 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelSapling extends ModelBase implements IRetexturableModel
+public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel
 {
-	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
-	
-	private static final ModelSapling MODEL = new ModelSapling(null);
-	
-	private final ResourceLocation saplingLocation;
+	INSTANCE;
 
-	public ModelSapling(ResourceLocation location)
+	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
+	private static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "normal");
+	private static final ResourceLocation MODEL_ITEM_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "inventory");
+
+	public static final Map<Mat, TextureAtlasSprite> ICON_MAP = new HashMap();
+
+	private List<ResourceLocation> textures;
+
+	ModelSapling()
 	{
-		saplingLocation = location;
+	}
+
+	@Override
+	public void onResourceManagerReload(IResourceManager resourceManager)
+	{
+
+	}
+
+	@Override
+	public boolean accepts(ResourceLocation modelLocation)
+	{
+		return modelLocation == MODEL_LOCATION ||
+				(modelLocation.getResourceDomain().equals(FarCore.INNER_RENDER) &&
+						modelLocation.getResourcePath().startsWith("sapling"));
+	}
+
+	@Override
+	public IModel loadModel(ResourceLocation modelLocation) throws Exception
+	{
+		if(modelLocation == MODEL_LOCATION) return this;
+		String path = modelLocation.getResourcePath();
+		String[] strings = path.split("/");
+		if(strings.length != 3)
+			throw new RuntimeException("Invalid model location : " + path);
+		ResourceLocation location = new ResourceLocation(strings[1], "blocks/sapling/" + strings[2]);
+		return ModelHelper.makeItemModel(location);
 	}
 
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		return ImmutableList.of(saplingLocation);
+		if(textures == null)
+		{
+			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
+			for(Mat material : Mat.filt(SubTag.TREE))
+			{
+				builder.add(new ResourceLocation(material.modid, "blocks/sapling/" + material.name));
+			}
+			textures = builder.build();
+		}
+		return textures;
 	}
 
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
+		ICON_MAP.clear();
 		IModel model = ModelLoaderRegistry.getModelOrMissing(PARENT_LOCATION);
-		if(model instanceof IRetexturableModel)
+		ImmutableMap.Builder<String, TextureAtlasSprite> builder = ImmutableMap.builder();
+		for(Mat material : Mat.filt(SubTag.TREE))
 		{
-			model = ((IRetexturableModel) model).retexture(ImmutableMap.of("sapling", saplingLocation.toString()));
+			TextureAtlasSprite icon = bakedTextureGetter.apply(new ResourceLocation(material.modid, "blocks/sapling/" + material.name));
+			builder.put(material.name, icon);
+			ICON_MAP.put(material, icon);
 		}
-		return model.bake(state, format, bakedTextureGetter);
+		return new BakedSaplingModel(builder.build(), model.bake(state, format, bakedTextureGetter));
+	}
+
+	@Override
+	public IModelState getDefaultState()
+	{
+		return TRSRTransformation.identity();
+	}
+
+	@Override
+	public Collection<ResourceLocation> getDependencies()
+	{
+		return ImmutableList.of();
 	}
 	
 	@Override
-	public IModel retexture(ImmutableMap<String, String> textures)
+	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 	{
-		ResourceLocation sapling = saplingLocation;
-		if(textures.containsKey("sapling"))
+		ImmutableMap.Builder<IBlockState, ModelResourceLocation> map = ImmutableMap.builder();
+		for(IBlockState state : blockIn.getBlockState().getValidStates())
 		{
-			sapling = new ResourceLocation(textures.get("sapling"));
+			map.put(state, MODEL_LOCATION);
 		}
-		return new ModelSapling(sapling);
+		return map.build();
+	}
+	
+	@Override
+	public ModelResourceLocation getModelLocation(ItemStack stack)
+	{
+		Mat material = Mat.material(stack.getItemDamage());
+		return new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory");
 	}
 
-	@SideOnly(Side.CLIENT)
-	public static enum Loader implements ICustomModelLoader
+	@Override
+	public List<ResourceLocation> getAllowedResourceLocations(Item item)
 	{
-		instance;
-
-		@Override
-		public void onResourceManagerReload(IResourceManager resourceManager)
+		ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
+		for(Mat material : Mat.filt(SubTag.TREE))
 		{
-
+			builder.add(new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory"));
 		}
-
-		@Override
-		public boolean accepts(ResourceLocation modelLocation)
-		{
-			return modelLocation.getResourceDomain().equals(FarCore.INNER_RENDER) &&
-					modelLocation.getResourcePath().startsWith("sapling");
-		}
-
-		@Override
-		public IModel loadModel(ResourceLocation modelLocation) throws Exception
-		{
-			String path = modelLocation.getResourcePath();
-			String[] strings = path.split("/");
-			if(strings.length != 3)
-				throw new RuntimeException("Invalid model location : " + path);
-			ResourceLocation location = new ResourceLocation(strings[1], "blocks/sapling/" + strings[2]);
-			return "saplingitem".equals(strings[0]) ?
-					ModelHelper.makeItemModel(location) : new ModelSapling(location);
-		}
+		return builder.build();
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static enum BlockModelSelector implements IStateMapper
+	class BakedSaplingModel extends BakedModelRetexture
 	{
-		instance;
+		private Map<String, TextureAtlasSprite> icons;
 
-		@Override
-		public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
+		public BakedSaplingModel(Map<String, TextureAtlasSprite> icons, IBakedModel basemodel)
 		{
-			ImmutableMap.Builder<IBlockState, ModelResourceLocation> map = ImmutableMap.builder();
-			for(IBlockState state : blockIn.getBlockState().getValidStates())
-			{
-				Mat material = state.getValue(BlockSapling.PROP_SAPLING);
-				map.put(state, new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling/" + material.modid + "/" + material.name));
-			}
-			return map.build();
+			super(basemodel);
+			this.icons = icons;
 		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static enum ItemModelSelector implements ICustomItemModelSelector
-	{
-		instance;
 		
 		@Override
-		public ModelResourceLocation getModelLocation(ItemStack stack)
+		protected void replaceQuads(IBlockState state, Builder<BakedQuad> newList, List<BakedQuad> oldList)
 		{
-			Mat material = Mat.register.get(stack.getItemDamage(), M.VOID);
-			return new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory");
-		}
-
-		@Override
-		public List<ResourceLocation> getAllowedResourceLocations(Item item)
-		{
-			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-			for(Mat material : BlockSapling.PROP_SAPLING.getAllowedValues())
+			if(state instanceof BlockStateTileEntityWapper && ((BlockStateTileEntityWapper) state).tile != null)
 			{
-				builder.add(new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory"));
+				TextureAtlasSprite icon = icons.get(((TESapling) ((BlockStateTileEntityWapper) state).tile).material.name);
+				if(icon != null)
+				{
+					for(BakedQuad quad : oldList)
+					{
+						newList.add(new BakedQuadRetextured(quad, icon));
+					}
+					return;
+				}
 			}
-			return builder.build();
+			newList.addAll(oldList);
 		}
 	}
 }

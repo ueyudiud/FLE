@@ -71,6 +71,8 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		static
 		{
 			resource.noSilkTouchDropMeta = cobble_art.ordinal();
+			resource.fallBreakMeta = cobble.ordinal();
+			brick.fallBreakMeta = brick_crushed.ordinal();
 			cobble.noSilkTouchDropMeta = cobble_art.ordinal();
 			cobble.displayInTab = false;
 			mossy.burnable = true;
@@ -79,6 +81,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 
 		int noMossy = ordinal();
 		int noSilkTouchDropMeta = ordinal();
+		int fallBreakMeta = ordinal();
 		boolean burnable;
 		boolean displayInTab = true;
 		String local;
@@ -92,6 +95,11 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		public String getName()
 		{
 			return name();
+		}
+
+		public boolean isBurnable()
+		{
+			return burnable;
 		}
 
 		public RockType burned()
@@ -112,7 +120,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		super(material.modid, name, Material.ROCK);
 		this.material = material;
 		harvestLevel = material.blockHarvestLevel;
-		detTempCap = material.minDetHeatForExplosion;
+		detTempCap = material.minTemperatureForExplosion;
 		slabGroup = makeSlabs(name, material, localName);
 		setSoundType(SoundType.STONE);
 		setHardness(hardnessMultiplier = material.blockHardness);
@@ -129,11 +137,11 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		MC.stone.registerOre(material, new ItemStack(this, 1, 1));
 		MC.cobble.registerOre(material, new ItemStack(this, 1, 2));
 		MC.cobble.registerOre(material, new ItemStack(this, 1, 4));
-		MC.brick.registerOre(material, new ItemStack(this, 1, 5));
-		MC.brick.registerOre(material, new ItemStack(this, 1, 6));
-		MC.brick.registerOre(material, new ItemStack(this, 1, 7));
-		MC.brick.registerOre(material, new ItemStack(this, 1, 8));
-		MC.brick.registerOre(material, new ItemStack(this, 1, 9));
+		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 5));
+		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 6));
+		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 7));
+		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 8));
+		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 9));
 		OreDict.registerValid("stoneSmoothed" + material.oreDictName, new ItemStack(this, 1, 3));
 		OreDict.registerValid("stoneSlab" + material.oreDictName, slabGroup[0]);
 		OreDict.registerValid("cobbleSlab" + material.oreDictName, slabGroup[2]);
@@ -262,7 +270,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		switch (type)
 		{
 		case resource :
-			if(ThermalNet.getTemperature(worldIn, pos, false) > material.minDetHeatForExplosion)
+			if(ThermalNet.getTemperature(worldIn, pos, false) > material.minTemperatureForExplosion)
 			{
 				if(!state.getValue(HEATED) && random.nextInt(3) == 0)
 				{
@@ -348,7 +356,11 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		case cobble_art :
 			return world.isSideSolid(pos.down(), EnumFacing.UP, false);
 		default:
-			return true;
+			return !world.isAirBlock(pos.down()) || U.Worlds.canBearBlock(world, pos) ? true :
+				world.isSideSolid(pos.north(), EnumFacing.SOUTH, false) ||
+				world.isSideSolid(pos.south(), EnumFacing.NORTH, false) ||
+				world.isSideSolid(pos.east() , EnumFacing.WEST , false) ||
+				world.isSideSolid(pos.west() , EnumFacing.EAST , false);
 		}
 	}
 
@@ -413,7 +425,15 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	@Override
 	public boolean onFallOnGround(World world, BlockPos pos, IBlockState state, int height, NBTTagCompound tileNBT)
 	{
-		return false;
+		EntityFallingBlockExtended.replaceFallingBlock(world, pos, state);
+		boolean broken = height < 2 ? false : height < 5 ? RANDOM.nextInt(5 - height) == 0 : true;
+		if(broken)
+		{
+			state = state.withProperty(ROCK_TYPE, RockType.values()[state.getValue(ROCK_TYPE).fallBreakMeta]);
+		}
+		state = state.withProperty(HEATED, false);
+		world.setBlockState(pos, state, 3);
+		return true;
 	}
 
 	@Override
@@ -449,7 +469,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	@Override
 	public void onHeatChanged(World world, BlockPos pos, Direction direction, float amount)
 	{
-		if(amount >= material.minDetHeatForExplosion * material.heatCap)
+		if(amount >= material.minTemperatureForExplosion * material.heatCap)
 		{
 			Worlds.switchProp(world, pos, HEATED, true, 2);
 			world.scheduleUpdate(pos, this, tickRate(world));
@@ -471,11 +491,15 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		{
 			if(player.canPlayerEdit(pos, side.of(), stack))
 			{
+				RockType type = world.getBlockState(pos).getValue(ROCK_TYPE);
 				if(world.setBlockState(pos, EnumBlock.carved_rock.block.getDefaultState(), 2))
 				{
 					TileEntity tile = world.getTileEntity(pos);
 					if(tile instanceof TECustomCarvedStone)
+					{
+						((TECustomCarvedStone) tile).setRock(material, type);
 						return ((TECustomCarvedStone) tile).carveRock(player, hitX, hitY, hitZ);
+					}
 				}
 			}
 		}

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -15,6 +17,7 @@ import com.google.common.collect.ImmutableMap;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
@@ -31,6 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelHelper
 {
 	private static final ResourceLocation LOCATION = new ResourceLocation("item/generated");
+	
+	public static final ImmutableMap<TransformType, TRSRTransformation> ITEM_STANDARD_TRANSFORMS;
 	
 	public static void addCuboid(
 			float x1, float y1, float z1,
@@ -289,5 +294,29 @@ public class ModelHelper
 			}
 			return model.bake(state, format, bakedTextureGetter);
 		}
+	}
+	
+	public static TRSRTransformation transformation(
+			float translationX, float translationY, float translationZ,
+			float leftRotX, float leftRotY, float leftRotZ, float leftRotW,
+			float scaleX, float scaleY, float scaleZ,
+			float rightRotX, float rightRotY, float rightRotZ, float rightRotW)
+	{
+		return new TRSRTransformation(new javax.vecmath.Vector3f(translationX, translationY, translationZ), new Quat4f(leftRotX, leftRotY, leftRotZ, leftRotW), new javax.vecmath.Vector3f(scaleX, scaleY, scaleZ), new Quat4f(rightRotX, rightRotY, rightRotZ, rightRotW));
+	}
+	
+	static
+	{
+		ImmutableMap.Builder<TransformType, TRSRTransformation> builder = ImmutableMap.builder();
+		builder.put(TransformType.NONE, TRSRTransformation.identity());
+		builder.put(TransformType.THIRD_PERSON_LEFT_HAND,  transformation(0.225F,    0.4125F,     0.2875F,     0.0F,         0.0F,        0.0F,        1.0F,       0.55F, 0.55F, 0.55F, 0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.THIRD_PERSON_RIGHT_HAND, transformation(0.225F,    0.4125F,     0.2875F,     0.0F,         0.0F,        0.0F,        1.0F,       0.55F, 0.55F, 0.55F, 0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.FIRST_PERSON_LEFT_HAND,  transformation(0.910625F, 0.24816513F, 0.40617055F, -0.15304594F, -0.6903456F, 0.15304594F, 0.6903456F, 0.68F, 0.68F, 0.68F, 0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.FIRST_PERSON_RIGHT_HAND, transformation(0.910625F, 0.24816513F, 0.40617055F, -0.15304594F, -0.6903456F, 0.15304594F, 0.6903456F, 0.68F, 0.68F, 0.68F, 0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.HEAD,                    transformation(1.0F,      0.8125F,     1.4375F,     0.0F,         1.0F,        0.0F,        4.4E-8F,    1.0F,  1.0F,  1.0F,  0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.GUI,                     transformation(0.0F,      0.0F,        0.0F,        0.0F,         0.0F,        0.0F,        1.0F,       1.0F,  1.0F,  1.0F,  0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.GROUND,                  transformation(0.25F,     0.375F,      0.25F,       0.0F,         0.0F,        0.0F,        1.0F,       0.5F,  0.5F,  0.5F,  0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.FIXED, TRSRTransformation.identity());
+		ITEM_STANDARD_TRANSFORMS = builder.build();
 	}
 }

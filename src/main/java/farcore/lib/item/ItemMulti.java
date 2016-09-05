@@ -22,7 +22,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemMulti extends ItemBase implements IUpdatableItem
 {
+	public static Mat getMaterial(ItemStack stack)
+	{
+		if(stack != null && stack.getItem() instanceof ItemMulti)
+			return ((ItemMulti) stack.getItem()).getMaterialFromItem(stack);
+		else
+			return M.VOID;
+	}
+	
 	public final MatCondition condition;
+	protected boolean enableChemicalFormula = true;
 
 	public ItemMulti(MatCondition mc)
 	{
@@ -31,42 +40,46 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	}
 	public ItemMulti(String modid, MatCondition mc)
 	{
-		super(modid, "multi." + mc.orePrefix.toLowerCase());
+		super(modid, "multi." + mc.name);
 		condition = mc;
 		hasSubtypes = true;
+		initalizeItems();
 	}
 	
+	public void initalizeItems()
+	{
+		for(Mat material : Mat.filt(condition))
+		{
+			ItemStack templete = new ItemStack(this, 1, material.id);
+			U.Mod.registerItemModel(this, material.id, material.modid, "group/" + condition.name + "/" + material.name);
+			LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
+			condition.registerOre(material, templete);
+		}
+	}
+	
+	protected String getTranslateInformation(ItemStack stack, String tag)
+	{
+		return getUnlocalizedName(stack) + "." + tag + ".info";
+	}
+
 	@Override
 	public void postInitalizedItems()
 	{
-		for(Mat material : Mat.register)
-		{
-			if(condition.isBelongTo(material))
-			{
-				ItemStack templete = new ItemStack(this, 1, material.id);
-				U.Mod.registerItemModel(this, material.id, material.modid, "group/" + condition.orePrefix.toLowerCase() + "/" + material.name);
-				condition.registerOre(material, templete);
-				LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
-			}
-		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.register)
+		for(Mat material : Mat.filt(condition))
 		{
-			if(condition.isBelongTo(material))
-			{
-				subItems.add(new ItemStack(itemIn, 1, material.id));
-			}
+			subItems.add(new ItemStack(itemIn, 1, material.id));
 		}
 	}
 
 	protected Mat getMaterialFromItem(ItemStack stack)
 	{
-		return Mat.register.get(getBaseDamage(stack), M.VOID);
+		return Mat.material(getBaseDamage(stack));
 	}
 	
 	@Override
@@ -131,7 +144,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	public int getStackMetaOffset(ItemStack stack)
 	{
 		Mat material = getMaterialFromItem(stack);
-		if(material.itemProp != null)
+		if(material != null && material.itemProp != null)
 			return material.itemProp.getMetaOffset(stack, material, condition);
 		return 0;
 	}
@@ -142,6 +155,11 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
+		if(enableChemicalFormula)
+		{
+			unlocalizedList.addNotNull("info.material.chemical.formula." + getMaterialFromItem(stack));
+		}
+		unlocalizedList.addNotNull("info.material.custom." + getMaterialFromItem(stack).name);
 		Mat material = getMaterialFromItem(stack);
 		if(material.itemProp != null)
 		{

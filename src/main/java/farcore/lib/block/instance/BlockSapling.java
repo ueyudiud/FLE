@@ -4,17 +4,16 @@ import java.util.List;
 
 import farcore.data.EnumBlock;
 import farcore.data.M;
-import farcore.data.MC;
 import farcore.lib.block.BlockBase;
 import farcore.lib.material.Mat;
-import farcore.lib.prop.PropertyMaterial;
+import farcore.lib.model.block.BlockStateTileEntityWapper;
+import farcore.lib.model.block.ModelSapling;
 import farcore.lib.tile.instance.TESapling;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.SubTag;
+import farcore.util.U.Client;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
@@ -24,6 +23,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -33,7 +33,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockSapling extends BlockBase implements IPlantable, ITileEntityProvider
 {
-	public static PropertyMaterial PROP_SAPLING;
 	public static final AxisAlignedBB SAPLING_AABB = new AxisAlignedBB(.1F, .0F, .1F, .9F, .8F, .9F);
 
 	public BlockSapling()
@@ -41,10 +40,6 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 		super("farcore", "sapling", Material.PLANTS);
 		setHardness(.4F);
 		EnumBlock.sapling.set(this);
-		for(Mat material : PROP_SAPLING.getAllowedValues())
-		{
-			LanguageManager.registerLocal(getTranslateNameForItemStack(material.id), MC.sapling.getLocal(material));
-		}
 	}
 	
 	@Override
@@ -54,22 +49,9 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 	}
 	
 	@Override
-	protected BlockStateContainer createBlockState()
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		if(PROP_SAPLING == null)
-		{
-			PROP_SAPLING = new PropertyMaterial("material", SubTag.WOOD);
-		}
-		return new BlockStateContainer(this, PROP_SAPLING);
-	}
-
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
-	{
-		TileEntity tile;
-		if((tile = worldIn.getTileEntity(pos)) instanceof TESapling)
-			return state.withProperty(PROP_SAPLING, ((TESapling) tile).material);
-		return state;
+		return BlockStateTileEntityWapper.wrap(world.getTileEntity(pos), state);
 	}
 
 	@Override
@@ -88,7 +70,7 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(Mat material : Mat.register)
+		for(Mat material : Mat.materials())
 			if(material.hasTree)
 			{
 				list.add(new ItemStack(item, 1, material.id));
@@ -103,7 +85,7 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 		TileEntity tile;
 		if((tile = worldIn.getTileEntity(pos)) instanceof TESapling)
 		{
-			((TESapling) tile).setTree(placer, Mat.register.get(stack.getItemDamage(), M.VOID));
+			((TESapling) tile).setTree(placer, Mat.material(stack.getItemDamage()));
 		}
 	}
 
@@ -138,6 +120,32 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager)
+	{
+		TileEntity tile = worldObj.getTileEntity(target.getBlockPos());
+		if(tile instanceof TESapling)
+		{
+			Client.addBlockHitEffect(worldObj, RANDOM, state, target.sideHit, target.getBlockPos(), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).material));
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TESapling && ((TESapling) tile).material != M.VOID)
+		{
+			Client.addBlockDestroyEffects(world, pos, world.getBlockState(pos), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).material));
+			return true;
+		}
+		return true;
 	}
 
 	@Override

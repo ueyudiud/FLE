@@ -10,21 +10,31 @@ import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IBreakingDropableTile;
 import farcore.lib.tile.IDebugableTile;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Update;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.TEAged;
 import farcore.lib.util.Direction;
 import farcore.util.U;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECrop extends TEAged
-implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
+implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile,
+ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 {
+	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.03125F, .0F, .03125F, .96875F, .96875F, .96875F);
+
 	private static final float absorbEffiency = 0.2F;
 	private int waterLevel = 6400;
 	private boolean isWild = false;
@@ -32,12 +42,12 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 	private int stage;
 	private ICrop card = ICrop.VOID;
 	private CropInfo info;
-
+	
 	public TECrop()
 	{
-
+		
 	}
-
+	
 	public void initCrop(ICrop crop)
 	{
 		initCrop(0, crop.makeNativeDNA(), crop);
@@ -52,7 +62,7 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		info.generations = generations;
 		crop.decodeDNA(this, dna);
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -68,7 +78,7 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		}
 		return nbt;
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -77,11 +87,11 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		isWild = nbt.getBoolean("isWild");
 		growBuffer = nbt.getFloat("growBuf");
 		stage = nbt.getInteger("stage");
-		card = Mat.register.get(nbt.getString("crop")).crop;
+		card = Mat.material(nbt.getString("crop")).crop;
 		info = new CropInfo();
 		info.readFromNBT(nbt);
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -95,7 +105,7 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -118,7 +128,7 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		}
 		if(nbt.hasKey("c"))
 		{
-			card = Mat.register.get(nbt.getString("c")).crop;
+			card = Mat.material(nbt.getString("c")).crop;
 		}
 		if(nbt.hasKey("i"))
 		{
@@ -126,13 +136,32 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 			info.readFromNBT(nbt.getCompoundTag("i"));
 		}
 	}
+	
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
+	{
+		return null;
+	}
 
+	@Override
+	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
+			Entity entity)
+	{
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
+	{
+		return CROP_AABB;
+	}
+	
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + card.tickUpdate(this);
 	}
-
+	
 	@Override
 	protected void updateServer1()
 	{
@@ -140,56 +169,56 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		card.onUpdate(this);
 		syncToNearby();
 	}
-
+	
 	@Override
 	public String getDNA()
 	{
 		return info.DNA;
 	}
-
+	
 	@Override
 	public ICrop crop()
 	{
 		return card;
 	}
-
+	
 	@Override
 	public CropInfo info()
 	{
 		return info;
 	}
-
+	
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-
+	
 	@Override
 	public boolean isWild()
 	{
 		return isWild;
 	}
-
+	
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-
+	
 	@Override
 	public int stage()
 	{
 		return stage;
 	}
-
+	
 	@Override
 	public void setStage(int stage)
 	{
 		this.stage = stage;
 	}
-
-
+	
+	
 	@Override
 	public void grow(int amt)
 	{
@@ -206,13 +235,13 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 			}
 		}
 	}
-
+	
 	@Override
 	protected int getRenderUpdateRange()
 	{
 		return 5;
 	}
-
+	
 	//	@Override
 	//	public int countWater(int rangeXZ, int rangeY, boolean checkSea)
 	//	{
@@ -288,13 +317,13 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 	//	{
 	//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
 	//	}
-
+	
 	@Override
 	public int getWaterLevel()
 	{
 		return waterLevel;
 	}
-
+	
 	@Override
 	public int useWater(int amount)
 	{
@@ -302,13 +331,13 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		waterLevel -= c;
 		return c;
 	}
-
+	
 	@Override
 	public void killCrop()
 	{
 		removeBlock();
 	}
-
+	
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
@@ -320,19 +349,19 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		list.add("Grow Progress : " + (int) (growBuffer + stage * req) + "/" + card.getMaxStage() * req);
 		card.addInformation(this, list);
 	}
-
+	
 	public boolean canPlantAt()
 	{
 		return card == null ? true : card.canPlantAt(this);
 	}
-	
+
 	@Override
 	public boolean canBlockStay()
 	{
 		return worldObj == null ? true :
 			card == ICrop.VOID ? false : card.canPlantAt(this);
 	}
-
+	
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
@@ -343,12 +372,12 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 				killCrop();
 			}
 	}
-
+	
 	public EnumPlantType getPlantType()
 	{
 		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDropsOnTileRemoved(IBlockState state)
 	{
@@ -359,7 +388,16 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile
 		}
 		return list;
 	}
-
+	
+	@Override
+	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
+	{
+		if(!canPlantAt())
+		{
+			removeBlock();
+		}
+	}
+	
 	public String getStateName()
 	{
 		return card != null ? card.getState(this) : "";

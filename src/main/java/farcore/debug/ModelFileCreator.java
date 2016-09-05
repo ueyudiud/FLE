@@ -18,10 +18,10 @@ import farcore.lib.material.MatCondition;
 public class ModelFileCreator
 {
 	static final Gson gson = new Gson();
-	
+
 	static void provideGroupItemInfo(String sourceLocate, MatCondition condition)
 	{
-		for(Mat material : Mat.register)
+		for(Mat material : Mat.materials())
 		{
 			if(condition.isBelongTo(material))
 			{
@@ -33,7 +33,7 @@ public class ModelFileCreator
 			}
 		}
 	}
-
+	
 	static void provideLogAndLeavesInfo(String sourceLocate, Mat material)
 	{
 		JsonObject object = new JsonObject(),
@@ -82,7 +82,7 @@ public class ModelFileCreator
 		object.addProperty("parent", material.modid + ":block/leaves/" + material.name);
 		makeJson(sourceLocate, material.modid + "/models/item/leaves/" + material.name, object);
 	}
-
+	
 	static void provideRockSlabInfo(String sourceLocate, Mat material)
 	{
 		for(RockType type : RockType.values())
@@ -155,7 +155,7 @@ public class ModelFileCreator
 			makeJson(sourceLocate, locate3, object);
 		}
 	}
-	
+
 	static void provideRockInfo(String sourceLocate, Mat material)
 	{
 		JsonObject object = new JsonObject();
@@ -187,21 +187,21 @@ public class ModelFileCreator
 			makeJson(sourceLocate, material.modid + "/models/item/rock/" + material.name+ "/" + type.name() + ".json", object);
 		}
 	}
-	
+
 	static void addCondition(JsonObject object, String prop, String value)
 	{
 		JsonObject object1 = new JsonObject();
 		object1.addProperty(prop, value);
 		object.add("when", object1);
 	}
-
+	
 	static void addModel(JsonObject object, String locate)
 	{
 		JsonObject object1 = new JsonObject();
 		object1.addProperty("model", locate);
 		object.add("apply", object1);
 	}
-
+	
 	static void addModel(JsonObject object, String locate, int x, int y)
 	{
 		JsonObject object1 = new JsonObject();
@@ -210,19 +210,19 @@ public class ModelFileCreator
 		object1.addProperty("y", y * 90);
 		object.add("apply", object1);
 	}
-
+	
 	static void addTextures(JsonObject object, String locate)
 	{
 		addTextures(object, "all", locate);
 	}
-	
+
 	static void addTextures(JsonObject object, String name, String locate)
 	{
 		JsonObject object1 = new JsonObject();
 		object1.addProperty(name, locate);
 		object.add("textures", object1);
 	}
-	
+
 	static void addTextures(JsonObject object, Entry<String, String>...locates)
 	{
 		JsonObject object1 = new JsonObject();
@@ -232,7 +232,7 @@ public class ModelFileCreator
 		}
 		object.add("textures", object1);
 	}
-
+	
 	static void makeJson(String sourceLocate, String pathName, JsonObject object)
 	{
 		pathName = pathName.replace(':', '/');

@@ -17,7 +17,9 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 public class TEBase extends TileEntity implements ICoord
 {
@@ -221,6 +223,36 @@ public class TEBase extends TileEntity implements ICoord
 		worldObj.removeTileEntity(pos.add(xOffset, yOffset, zOffset));
 		worldObj.setBlockToAir(pos.add(xOffset, yOffset, zOffset));
 	}
+	
+	public boolean canHarvestBlock(EntityPlayer player)
+	{
+		return ForgeHooks.canHarvestBlock(getBlockType(), player, worldObj, pos);
+	}
+	
+	public float getBlockHardness(IBlockState state)
+	{
+		return 1.0F;
+	}
+
+	public float getExplosionResistance(Entity exploder, Explosion explosion)
+	{
+		return 1.0F;
+	}
+
+	public int getLightOpacity(IBlockState state)
+	{
+		return 255;
+	}
+
+	public int getLightValue(IBlockState state)
+	{
+		return 255;
+	}
+	
+	public void onBlockAdded(IBlockState state)
+	{
+		
+	}
 
 	public void onBlockBreak(IBlockState state)
 	{
@@ -268,6 +300,11 @@ public class TEBase extends TileEntity implements ICoord
 	public TileEntity getTile(int xOffset, int yOffset, int zOffset)
 	{
 		return worldObj.getTileEntity(pos.add(xOffset, yOffset, zOffset));
+	}
+
+	public int getLight(int xOffset, int yOffset, int zOffset, EnumSkyBlock type)
+	{
+		return worldObj.getLightFor(type, pos.add(xOffset, yOffset, zOffset));
 	}
 
 	public boolean isAirNearby(boolean ignoreUnloadChunk)

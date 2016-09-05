@@ -13,10 +13,11 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class MatCondition
+public class MatCondition implements IDataChecker<ISubTagContainer>
 {
 	public static final Register<MatCondition> register = new Register();
 
+	public final String name;
 	public final String orePrefix;
 	public final String localName;
 	public final String withOreLocalName;
@@ -35,13 +36,18 @@ public class MatCondition
 
 	public IDataChecker<ISubTagContainer> filter = IDataChecker.FALSE;
 	public Set<Mat> blacklist = new HashSet();
-
+	
 	public MatCondition(String prefix, String localName, String withOreLocalName)
 	{
+		this(prefix, prefix, localName, withOreLocalName);
+	}
+	public MatCondition(String name, String prefix, String localName, String withOreLocalName)
+	{
+		this.name = name;
 		orePrefix = prefix;
 		this.localName = localName;
 		this.withOreLocalName = withOreLocalName;
-		register.register(prefix, this);
+		register.register(name, this);
 		LanguageManager.registerLocal(getTranslateName(), localName);
 		LanguageManager.registerLocal(getWithOreTranslateName(), withOreLocalName);
 	}
@@ -55,9 +61,13 @@ public class MatCondition
 	public MatCondition addToBlackList(Mat...mats)
 	{
 		if(mats.length == 1)
+		{
 			blacklist.add(mats[0]);
+		}
 		else
+		{
 			blacklist.addAll(Arrays.asList(mats));
+		}
 		return this;
 	}
 
@@ -157,5 +167,12 @@ public class MatCondition
 	public String translateToLocal(String ore)
 	{
 		return LanguageManager.translateToLocal(getWithOreTranslateName(), ore);
+	}
+
+	@Override
+	public boolean isTrue(ISubTagContainer target)
+	{
+		return filter.isTrue(target) &&
+				(!(target instanceof Mat) || isBelongTo((Mat) target));
 	}
 }

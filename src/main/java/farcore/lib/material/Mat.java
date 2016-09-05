@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.data.M;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
@@ -30,10 +31,30 @@ import net.minecraft.block.Block;
 
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
-	public static final Register<Mat> register = new Register(32768);
+	private static final Register<Mat> register = new Register(32768);
 	
 	private static final Map<IDataChecker<ISubTagContainer>, List<Mat>> materials = new HashMap();
 
+	public static Register<Mat> materials()
+	{
+		return register;
+	}
+	public static Mat material(int id)
+	{
+		return register.get(id);
+	}
+	public static Mat material(String name)
+	{
+		return register.get(name, M.VOID);
+	}
+	public static Mat material(String name, Mat def)
+	{
+		return register.get(name, def);
+	}
+	public static boolean contain(String name)
+	{
+		return register.contain(name);
+	}
 	public static List<Mat> filt(IDataChecker<ISubTagContainer> filter)
 	{
 		return filt(filter, false);
@@ -66,7 +87,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public final String oreDictName;
 	public final String localName;
 	public final int id;
-	public String chemicalFormula = "?";
+	/**
+	 * Some material is variant of other material,
+	 * this field is the source material target.
+	 */
+	public Mat unificationMaterial = this;
+	public String chemicalFormula;
+	public String customDisplayInformation;
 	public short[] RGBa = {255, 255, 255, 255};
 	public int RGB = 0xFFFFFF;
 	public float heatCap;
@@ -84,6 +111,8 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public float toolDamageToEntity;
 	public int toolEnchantability;
 	public float toolBrittleness;
+	public float toolAttackSpeed;
+	public float handleToughness = 1.0F;
 	//Block configuration.
 	public boolean isRock = false;
 	public boolean isSand = false;
@@ -106,7 +135,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Block leaves;
 	//Rock extra configuration.
 	public Block rock;
-	public float minDetHeatForExplosion;
+	public float minTemperatureForExplosion;
 	//Ore configuration.
 	public IOreProperty oreProperty = IOreProperty.property;
 	//Plant configuration
@@ -171,9 +200,21 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		return this;
 	}
 
-	public Mat setChemicalFormula(String chemicalFormula)
+	public Mat setUnificationMaterial(Mat material)
 	{
-		this.chemicalFormula = chemicalFormula;
+		unificationMaterial = material;
+		return this;
+	}
+
+	public Mat setChemicalFormula(String name)
+	{
+		chemicalFormula = name;
+		return this;
+	}
+	
+	public Mat setCustomInformation(String info)
+	{
+		customDisplayInformation = info;
 		return this;
 	}
 	
@@ -189,7 +230,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		return this;
 	}
 	
-	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float dVE, int enchantability)
+	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float attackSpeed, float dVE, int enchantability)
 	{
 		canMakeTool = true;
 		toolHarvestLevel = harvestLevel;
@@ -198,22 +239,35 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		toolBrittleness = brittleness;
 		toolDamageToEntity = dVE;
 		toolEnchantability = enchantability;
+		toolAttackSpeed = attackSpeed;
 		add(SubTag.TOOL);
+		return this;
+	}
+	
+	public Mat setHandable(float toughness)
+	{
+		handleToughness = toughness;
+		add(SubTag.HANDLE);
 		return this;
 	}
 
 	public Mat setOreProperty(int harvestLevel, float hardness, float resistance)
 	{
-		return setOreProperty(harvestLevel, hardness, resistance, IOreProperty.property);
+		return setOreProperty(harvestLevel, hardness, resistance, SubTag.ORE_SIMPLE);
+	}
+
+	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, SubTag type)
+	{
+		return setOreProperty(harvestLevel, hardness, resistance, IOreProperty.property, type);
 	}
 	
-	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, IOreProperty oreProperty)
+	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, IOreProperty oreProperty, SubTag type)
 	{
 		this.oreProperty = oreProperty;
 		blockHarvestLevel = harvestLevel;
 		blockHardness = hardness;
 		blockExplosionResistance = resistance;
-		add(SubTag.ORE);
+		add(SubTag.ORE, type);
 		return this;
 	}
 	
@@ -248,6 +302,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		hasTree = true;
 		this.tree = tree;
+		add(SubTag.TREE);
 		if(createBlock)
 		{
 			BlockLogNatural logNatural = BlockLogNatural.create(this);
@@ -270,7 +325,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		blockHarvestLevel = harvestLevel;
 		blockHardness = hardness;
 		blockExplosionResistance = resistance;
-		minDetHeatForExplosion = minDetTemp;
+		minTemperatureForExplosion = minDetTemp;
 		BlockRock rock = new BlockRock("rock." + name, this, localName);
 		this.rock = rock;
 		add(SubTag.ROCK);
@@ -283,7 +338,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		blockHarvestLevel = harvestLevel;
 		blockHardness = hardness;
 		blockExplosionResistance = resistance;
-		minDetHeatForExplosion = minDetTemp;
+		minTemperatureForExplosion = minDetTemp;
 		this.rock = rock;//Use custom rock block might have other use, will not auto-register into ore dictionary.
 		add(SubTag.ROCK);
 		return this;

@@ -6,6 +6,7 @@ import java.util.Random;
 
 import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.LanguageManager;
+import farcore.lib.util.Log;
 import farcore.lib.util.UnlocalizedList;
 import farcore.util.U;
 import net.minecraft.block.Block;
@@ -31,6 +32,22 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 public class BlockBase extends Block implements IRegisteredNameable
 {
+	private static List<BlockBase> list = new ArrayList();
+	
+	/**
+	 * Called when all others object(fluids, blocks, configurations, materials, etc)
+	 * are already initialized.
+	 */
+	public static void post()
+	{
+		Log.info("Far core reloading blocks...");
+		for(BlockBase block : list)
+		{
+			block.postInitalizedBlocks();
+		}
+		list = null;
+	}
+
 	private final ThreadLocal<TileEntity> thread1 = new ThreadLocal();
 
 	public final String blockName;
@@ -42,7 +59,10 @@ public class BlockBase extends Block implements IRegisteredNameable
 	public BlockBase(String modid, String name, Material materialIn)
 	{
 		super(materialIn);
+		if(list == null)
+			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
 		setUnlocalizedName(blockName = name);
+		setDefaultState(initDefaultState(getDefaultState()));
 		U.Mod.registerBlock(this, modid, name, createItemBlock());
 	}
 	public BlockBase(String name, Material blockMaterialIn, MapColor blockMapColorIn)
@@ -52,8 +72,21 @@ public class BlockBase extends Block implements IRegisteredNameable
 	public BlockBase(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(blockMaterialIn, blockMapColorIn);
+		if(list == null)
+			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
 		setUnlocalizedName(blockName = name);
+		setDefaultState(initDefaultState(getDefaultState()));
 		U.Mod.registerBlock(this, modid, name, createItemBlock());
+	}
+	
+	public void postInitalizedBlocks()
+	{
+		
+	}
+
+	protected IBlockState initDefaultState(IBlockState state)
+	{
+		return state;
 	}
 
 	protected Item createItemBlock()
@@ -136,6 +169,19 @@ public class BlockBase extends Block implements IRegisteredNameable
 	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, boolean silkHarvest)
 	{
 		return false;
+	}
+
+	@Override
+	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
+	{
+		float hardness = state.getBlockHardness(worldIn, pos);
+		if (hardness < 0.0F)
+			return 0.0F;
+		
+		if (!canHarvestBlock(worldIn, pos, player))
+			return 0.0F;
+		else
+			return player.getDigSpeed(state, pos) / hardness / 30F;
 	}
 
 	@Override

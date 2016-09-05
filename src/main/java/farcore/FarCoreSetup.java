@@ -11,10 +11,12 @@ import org.apache.logging.log4j.LogManager;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.asm.LightFix;
+import farcore.data.ColorMultiplier;
 import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.M;
+import farcore.data.MC;
 import farcore.data.Potions;
 import farcore.energy.electric.ElectricACNet;
 import farcore.energy.kinetic.KineticNet;
@@ -22,9 +24,11 @@ import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreGuiHandler;
+import farcore.handler.FarCoreItemHandler;
 import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCoreWorldHandler;
 import farcore.instances.TemperatureHandler;
+import farcore.lib.block.BlockBase;
 import farcore.lib.block.instance.BlockCarvedRock;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
@@ -36,11 +40,14 @@ import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.fluid.FluidWater;
 import farcore.lib.item.ItemBase;
+import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemDebugger;
 import farcore.lib.item.instance.ItemFluidDisplay;
+import farcore.lib.item.instance.ItemOreChip;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.item.instance.ItemStoneFragment;
+import farcore.lib.material.Mat;
 import farcore.lib.model.block.ModelCrop;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.block.ModelOre;
@@ -48,19 +55,22 @@ import farcore.lib.model.block.ModelSapling;
 import farcore.lib.model.entity.RenderFallingBlockExt;
 import farcore.lib.model.entity.RenderProjectileItem;
 import farcore.lib.model.item.ModelDisplayFluid;
+import farcore.lib.model.item.ModelOreChip;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
 import farcore.lib.net.tile.PacketTEAsk;
+import farcore.lib.net.tile.PacketTEAskType;
 import farcore.lib.net.tile.PacketTESAsk;
 import farcore.lib.net.tile.PacketTESync;
+import farcore.lib.net.tile.PacketTETypeResult;
+import farcore.lib.net.world.PacketBreakBlock;
 import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.instance.FontMap;
 import farcore.lib.tesr.TESRCarvedRock;
 import farcore.lib.tile.instance.TECoreLeaves;
-import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tile.instance.TECustomCarvedStone;
-import farcore.lib.tile.instance.TEOre;
+import farcore.lib.tile.instance.TELossTile;
 import farcore.lib.tile.instance.TESapling;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.LanguageManager;
@@ -118,7 +128,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  * @see farcore.FarCore
  */
-@Mod(modid = FarCore.ID, version = "1.0d", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "1.0g", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 2011;
@@ -293,6 +303,7 @@ public class FarCoreSetup
 			MinecraftForge.EVENT_BUS.register(new FarCoreKeyHandler());
 			MinecraftForge.EVENT_BUS.register(FarCoreEnergyHandler.getHandler());
 			MinecraftForge.EVENT_BUS.register(new FarCoreWorldHandler());
+			MinecraftForge.EVENT_BUS.register(new FarCoreItemHandler());
 			FarCoreEnergyHandler.addNet(ThermalNet.instance);
 			FarCoreEnergyHandler.addNet(KineticNet.instance);
 			FarCoreEnergyHandler.addNet(ElectricACNet.instance);
@@ -306,6 +317,8 @@ public class FarCoreSetup
 			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
 			new ItemSeed().setCreativeTab(FarCore.tabResourceItem);
 			new ItemStoneFragment().setCreativeTab(FarCore.tabResourceItem);
+			EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(FarCore.tabResourceItem));
+			new ItemOreChip().setCreativeTab(FarCore.tabResourceItem);
 			new BlockSapling().setCreativeTab(FarCore.tabResourceBlock);
 			new BlockCrop();
 			new BlockFire();
@@ -313,41 +326,58 @@ public class FarCoreSetup
 			new BlockWater(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
 			new BlockIce().setCreativeTab(FarCore.tabResourceBlock);
 			new BlockCarvedRock();
-			GameRegistry.registerTileEntity(TEOre.class, "farcore.ore");
+			GameRegistry.registerTileEntity(TELossTile.class, "farcore.loss.tile");
 			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
 			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
-			GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
-			GameRegistry.registerTileEntity(TECustomCarvedStone.class, "farcore.carved.stone");
 			int id = 0;
 			EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
 			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
-			ItemBase.post();
 			Potions.init();
 		}
 		
 		public void load(FMLInitializationEvent event)
 		{
+			ItemBase.post();
+			BlockBase.post();
 			LanguageManager.registerLocal("info.debug.date", "Date : ");
 			LanguageManager.registerLocal("info.log.length", "Legnth : %d");
 			LanguageManager.registerLocal("info.stone.chip.throwable", "You can throw it out to attack entities.");
 			LanguageManager.registerLocal("info.crop.type", "Crop Name : %s");
 			LanguageManager.registerLocal("info.crop.generation", "Generation : %d");
+			LanguageManager.registerLocal("info.tool.damage", "Durability : " + ChatFormatting.GREEN + " %d / %d");
+			LanguageManager.registerLocal("info.tool.harvest.level", "Harvest Level : " + ChatFormatting.YELLOW + " lv%d");
+			LanguageManager.registerLocal("info.tool.hardness", "Hardness : " + ChatFormatting.BLUE + "%s");
+			LanguageManager.registerLocal("info.tool.head.name", "Tool Head : " + ChatFormatting.LIGHT_PURPLE + "%s");
+			LanguageManager.registerLocal("info.tool.handle.name", "Tool Handle : " + ChatFormatting.LIGHT_PURPLE + "%s");
+			LanguageManager.registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");
 			LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
 			FarCore.network = Network.network(FarCore.ID);
-			//			FarCore.network.registerPacket(PacketGuiAction.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
-			//			FarCore.network.registerPacket(PacketPlayerStatUpdate.class, Side.CLIENT);
-			
+
 			FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
+			FarCore.network.registerPacket(PacketTETypeResult.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTESAsk.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
+			FarCore.network.registerPacket(PacketTEAskType.class, Side.SERVER);
+			
+			FarCore.network.registerPacket(PacketBreakBlock.class, Side.CLIENT);
 		}
 		
 		public void load(FMLPostInitializationEvent event)
 		{
-			
+			for(Mat material : Mat.materials())
+			{
+				if(material.customDisplayInformation != null)
+				{
+					LanguageManager.registerLocal("info.material.custom." + material.name, material.customDisplayInformation);
+				}
+				if(material.chemicalFormula != null)
+				{
+					LanguageManager.registerLocal("info.material.chemical.formula." + material.name, material.chemicalFormula);
+				}
+			}
 		}
 		
 		public void load(FMLLoadCompleteEvent event)
@@ -401,18 +431,21 @@ public class FarCoreSetup
 			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);
 			RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, RenderProjectileItem.Factory.instance);
 			ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
-			ModelLoaderRegistry.registerLoader(ModelSapling.Loader.instance);
+			ModelLoaderRegistry.registerLoader(ModelSapling.INSTANCE);
 			ModelLoaderRegistry.registerLoader(ModelDisplayFluid.Loader.instance);
 			ModelLoaderRegistry.registerLoader(ModelCrop.instance);
 			ModelLoaderRegistry.registerLoader(ModelOre.instance);
+			ModelLoaderRegistry.registerLoader(ModelOreChip.INSTANCE);
 			U.Mod.registerCustomItemModelSelector(EnumItem.display_fluid.item, ModelDisplayFluid.Selector.instance);
-			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.BlockModelSelector.instance);
+			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.INSTANCE);
 			ModelLoader.setCustomStateMapper(EnumBlock.crop.block, ModelCrop.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.ore.block, ModelOre.instance);
-			U.Mod.registerCustomItemModelSelector(EnumBlock.sapling.block, ModelSapling.ItemModelSelector.instance);
+			U.Mod.registerCustomItemModelSelector(EnumBlock.sapling.block, ModelSapling.INSTANCE);
 			U.Mod.registerCustomItemModelSelector(EnumBlock.ore.block, ModelOre.instance);
 			U.Mod.registerFluid((BlockFluidBase) EnumBlock.water.block);
 
+			registerColorMultiplier(ColorMultiplier.MULTI_ITEM_MATERIAL_COLOR, EnumItem.ore_chip.item);
+			
 			ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 		}
 		

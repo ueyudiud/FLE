@@ -2,6 +2,7 @@ package farcore.lib.tree;
 
 import java.util.Random;
 
+import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.util.U;
@@ -13,21 +14,22 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 {
 	protected float generateCoreLeavesChance;
 	protected TreeBase tree;
-	
+
 	public TreeGenAbstract(TreeBase tree, float generateCoreLeavesChance)
 	{
 		this.tree = tree;
 		this.generateCoreLeavesChance = generateCoreLeavesChance;
 	}
-	
+
 	protected boolean isLogReplaceable(World world, int x, int y, int z)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
 		IBlockState block;
 		return world.isAirBlock(pos) ||
-				(block = world.getBlockState(pos)).getBlock().isLeaves(block, world, pos);
+				(block = world.getBlockState(pos)).getBlock().isLeaves(block, world, pos) ||
+				block.getBlock() == EnumBlock.sapling.block;
 	}
-
+	
 	protected boolean isLeavesReplaceable(World world, int x, int y, int z)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
@@ -35,7 +37,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 		return world.isAirBlock(pos) ||
 				(block = world.getBlockState(pos)).getBlock().canBeReplacedByLeaves(block, world, pos);
 	}
-
+	
 	protected boolean checkLeavesGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
@@ -61,7 +63,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 		}
 		return true;
 	}
-	
+
 	protected boolean checkLogGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
@@ -87,17 +89,17 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 		}
 		return true;
 	}
-	
+
 	protected void generateLog(World world, int x, int y, int z, int meta)
 	{
 		U.Worlds.setBlock(world, new BlockPos(x, y, z), tree.logNat, meta, V.generateState ? 2 : 3);
 	}
-	
+
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, Random rand, TreeInfo info)
 	{
 		generateTreeLeaves(world, x, y, z, meta, generateCoreLeavesChance, rand, info);
 	}
-	
+
 	protected void generateCloudlyLeaves(World world, int x, int y, int z, int size, int meta, Random rand, TreeInfo info, byte core)
 	{
 		switch (core)
@@ -128,7 +130,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 			break;
 		}
 	}
-	
+
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, float generateCoreLeavesChance, Random rand, TreeInfo info)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
@@ -148,7 +150,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 			}
 		}
 	}
-	
+
 	@Override
 	public abstract boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info);
 }

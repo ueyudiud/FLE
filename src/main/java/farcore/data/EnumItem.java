@@ -8,8 +8,12 @@ public enum EnumItem
 	debug,
 	display_fluid,
 	stone_chip,
+	ore_chip,
 	seed,
-	stone_fragment;
+	stone_fragment,
+	nugget,
+	/** From fle. */
+	tool;
 
 	public Item item;
 

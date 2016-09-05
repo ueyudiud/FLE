@@ -30,6 +30,7 @@ public class ItemSeed extends ItemMulti
 	public ItemSeed()
 	{
 		super(FarCore.ID, MC.seed);
+		enableChemicalFormula = false;
 		EnumItem.seed.set(this);
 	}
 	
@@ -66,7 +67,7 @@ public class ItemSeed extends ItemMulti
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.register)
+		for(Mat material : Mat.materials())
 		{
 			if(condition.isBelongTo(material))
 			{
