@@ -33,4 +33,10 @@ public class ToolSickle extends Tool
 	{
 		return 3.0F;
 	}
+	
+	@Override
+	protected String getDeathMessage(Entity target, EntityLivingBase user)
+	{
+		return "(M) harvested by (S) as crop";
+	}
 }
