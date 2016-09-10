@@ -1,6 +1,7 @@
 package farcore.lib.item.instance;
 
 import farcore.data.EnumItem;
+import farcore.data.KS;
 import farcore.data.MC;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockRock.RockType;
@@ -31,6 +32,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemStoneChip extends ItemMulti implements IProjectileItem
 {
+	public static float shootStoneChipExp = 0.0F;
+	
 	public ItemStoneChip()
 	{
 		super(MC.chip_rock);
@@ -107,6 +110,10 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		{
 			stack1 = stack.copy();
 			stack1.stackSize = 1;
+			if(!worldIn.isRemote)
+			{
+				KS.HURLING.using((EntityPlayer) entityLiving, shootStoneChipExp);
+			}
 		}
 		else
 		{
@@ -114,7 +121,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		}
 		if(!worldIn.isRemote)
 		{
-			EntityProjectileItem entity = new EntityProjectileItem(worldIn, entityLiving, f * 3.0F, stack1);
+			EntityProjectileItem entity = new EntityProjectileItem(worldIn, entityLiving, f * 3.0F, stack1, true);
 			worldIn.spawnEntityInWorld(entity);
 		}
 	}
@@ -148,6 +155,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)
 				{
+					damage *= 1 + KS.HURLING.level((EntityPlayer) entity.shooter) * 0.05F;
 					entity1.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) entity.shooter), damage);
 				}
 				else

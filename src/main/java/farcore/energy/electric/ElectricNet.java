@@ -19,9 +19,9 @@ import farcore.lib.util.EnumModifyFlag;
 import farcore.lib.util.Log;
 import net.minecraft.world.World;
 
-public class ElectricACNet implements IEnergyNet
+public class ElectricNet implements IEnergyNet
 {
-	public static final ElectricACNet instance = new ElectricACNet();
+	public static final ElectricNet instance = new ElectricNet();
 	private static Map<Integer, Local> netMap = new HashMap();
 	
 	@Override

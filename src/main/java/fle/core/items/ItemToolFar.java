@@ -1,35 +1,85 @@
 package fle.core.items;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
 
 import farcore.data.EnumItem;
 import farcore.data.EnumToolType;
-import farcore.data.MC;
+import farcore.data.KS;
+import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
+import farcore.lib.item.IProjectileItem;
 import farcore.lib.item.ItemTool;
-import farcore.lib.util.SubTag;
+import farcore.lib.item.behavior.IBehavior;
+import farcore.lib.item.behavior.IToolStat;
+import farcore.lib.material.MatCondition;
+import farcore.lib.skill.SkillAbstract;
+import farcore.lib.util.Direction;
+import farcore.lib.util.IDataChecker;
+import farcore.lib.util.ISubTagContainer;
+import farcore.lib.util.LanguageManager;
 import farcore.util.U;
 import fle.core.FLE;
-import fle.core.items.behavior.BehaviorTool;
-import fle.core.items.tool.ToolAxe;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui
+public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IProjectileItem
 {
 	public ItemToolFar()
 	{
 		super(FLE.MODID, "tool");
 		EnumItem.tool.set(this);
-		initalizeItems();
 	}
 	
-	protected void initalizeItems()
+	@Override
+	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
+			IToolStat stat, boolean hasTie, boolean hasHandle, IDataChecker<? extends ISubTagContainer> filterHead,
+			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,
+			List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
-		addSubItem(1, "adz.rock", "Adz", null, MC.adz_rock, new ToolAxe(EnumToolType.adz, 1.2F), true, true, SubTag.TOOL, SubTag.ROPE, SubTag.HANDLE, ImmutableList.of(EnumToolType.adz), new BehaviorTool());
+		ToolProp prop = super.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie,
+				filterHandle, toolTypes, behaviors);
+		prop.skillEfficiency = new SkillAbstract(name){}.setExpInfo(30, 10F, 1.5F);
+		LanguageManager.registerLocal("skill." + prop.skillEfficiency.getRegisteredName() + ".name", localName + " Efficiency");
+		return prop;
+	}
+
+	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
+			IToolStat stat, boolean hasTie, boolean hasHandle,
+			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,
+			List<EnumToolType> toolTypes, IBehavior... behaviors)
+	{
+		return addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition.filter, filterTie, filterHandle, toolTypes, behaviors);
+	}
+	
+	@Override
+	public void onBlockHarvested(ItemStack stack, HarvestDropsEvent event)
+	{
+		if(event.getHarvester() != null)
+		{
+			getToolProp(stack).skillEfficiency.using(event.getHarvester(), 1.0F);
+		}
+		super.onBlockHarvested(stack, event);
+	}
+
+	@Override
+	public float replaceDigSpeed(ItemStack stack, BreakSpeed event)
+	{
+		float speed = super.replaceDigSpeed(stack, event);
+		if(event.getEntityPlayer() != null)
+		{
+			int level1 = KS.DIGGING.level(event.getEntityPlayer());
+			int level2 = getToolProp(stack).skillEfficiency.level(event.getEntityPlayer());
+			speed *= 1 + level1 * 1E-5F + level2 * 5E-3F;
+		}
+		return speed;
 	}
 
 	@Override
@@ -47,5 +97,57 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui
 		U.Client.renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z);
 		U.Client.renderItemCooldownInGUI(render, fontRenderer, stack, x, z);
 		return true;
+	}
+	
+
+	@Override
+	public void initEntity(EntityProjectileItem entity)
+	{
+		List<IBehavior> list = getBehavior(entity.currentItem);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IProjectileItem)
+			{
+				((IProjectileItem) behavior).initEntity(entity);
+			}
+	}
+
+	
+	@Override
+	public void onEntityTick(EntityProjectileItem entity)
+	{
+		List<IBehavior> list = getBehavior(entity.currentItem);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IProjectileItem)
+			{
+				((IProjectileItem) behavior).onEntityTick(entity);
+			}
+	}
+	
+	
+	@Override
+	public boolean onHitGround(World world, BlockPos pos, EntityProjectileItem entity, Direction direction)
+	{
+		List<IBehavior> list = getBehavior(entity.currentItem);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IProjectileItem)
+			{
+				if(((IProjectileItem) behavior).onHitGround(world, pos, entity, direction))
+					return true;
+			}
+		return false;
+	}
+	
+	
+	@Override
+	public boolean onHitEntity(World world, Entity target, EntityProjectileItem entity)
+	{
+		List<IBehavior> list = getBehavior(entity.currentItem);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IProjectileItem)
+			{
+				if(((IProjectileItem) behavior).onHitEntity(world, target, entity))
+					return true;
+			}
+		return false;
 	}
 }

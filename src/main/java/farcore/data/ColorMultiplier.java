@@ -25,7 +25,8 @@ public class ColorMultiplier
 		{
 		//0 for base.
 		case 1 : return ItemTool.getMaterial(stack, "head").RGB;
-		case 2 : return ItemTool.getMaterial(stack, "handle").RGB;
+		//2 for handle color, but it seems useless.
+		//case 2 : return ItemTool.getMaterial(stack, "handle").RGB;
 		//3 for base override.
 		case 4 : return ItemTool.getMaterial(stack, "tie").RGB;
 		case 5 : return ItemTool.getMaterial(stack, "rust").RGB;

@@ -1,0 +1,9 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "farcore:items/void",
+		"layer1": "fle:items/tool/hammer.hard.flint/head",
+		"layer2": "fle:items/tool/hammer.hard.flint/handle",
+		"layer3": "fle:items/tool/hammer.hard.flint/tie"
+	}
+}

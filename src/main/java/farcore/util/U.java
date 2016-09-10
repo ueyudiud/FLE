@@ -841,6 +841,11 @@ public class U
 		{
 			handlerGatway.setModelLocate(item, meta, modid, locate);
 		}
+		
+		public static void registerItemModel(Item item, int meta, String modid, String locate, String type)
+		{
+			handlerGatway.setModelLocate(item, meta, modid, locate, type);
+		}
 
 		public static void registerBiomeColorMultiplier(Block...block)
 		{
@@ -1324,13 +1329,13 @@ public class U
 										Direction.Q;
 		}
 
-		public static RayTraceResult rayTrace(World worldIn, EntityPlayer playerIn, boolean useLiquids)
+		public static RayTraceResult rayTrace(World world, EntityLivingBase entity, boolean useLiquids)
 		{
-			float f = playerIn.rotationPitch;
-			float f1 = playerIn.rotationYaw;
-			double d0 = playerIn.posX;
-			double d1 = playerIn.posY + playerIn.getEyeHeight();
-			double d2 = playerIn.posZ;
+			float f = entity.rotationPitch;
+			float f1 = entity.rotationYaw;
+			double d0 = entity.posX;
+			double d1 = entity.posY + entity.getEyeHeight();
+			double d2 = entity.posZ;
 			Vec3d vec3d = new Vec3d(d0, d1, d2);
 			float f2 = MathHelper.cos(-f1 * 0.017453292F - (float)Math.PI);
 			float f3 = MathHelper.sin(-f1 * 0.017453292F - (float)Math.PI);
@@ -1339,12 +1344,12 @@ public class U
 			float f6 = f3 * f4;
 			float f7 = f2 * f4;
 			double d3 = 5.0D;
-			if (playerIn instanceof net.minecraft.entity.player.EntityPlayerMP)
+			if (entity instanceof net.minecraft.entity.player.EntityPlayerMP)
 			{
-				d3 = ((net.minecraft.entity.player.EntityPlayerMP)playerIn).interactionManager.getBlockReachDistance();
+				d3 = ((net.minecraft.entity.player.EntityPlayerMP)entity).interactionManager.getBlockReachDistance();
 			}
 			Vec3d vec3d1 = vec3d.addVector(f6 * d3, f5 * d3, f7 * d3);
-			return worldIn.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
+			return world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
 		}
 		
 		/**
@@ -1944,6 +1949,11 @@ public class U
 			return null;
 		}
 
+		public void setModelLocate(Item item, int meta, String modid, String name, String type)
+		{
+
+		}
+
 		public void setModelLocate(Item item, int meta, String modid, String name)
 		{
 
@@ -2010,11 +2020,17 @@ public class U
 		{
 			return Minecraft.getMinecraft().mcDataDir;
 		}
-		
+
 		@Override
 		public void setModelLocate(Item item, int meta, String modid, String name)
 		{
-			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + name, null));
+			setModelLocate(item, meta, modid, name, null);
+		}
+		
+		@Override
+		public void setModelLocate(Item item, int meta, String modid, String name, String type)
+		{
+			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + name, type));
 		}
 		
 		@Override

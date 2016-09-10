@@ -19,6 +19,7 @@ import farcore.lib.item.behavior.IBehavior;
 import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.skill.ISkill;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.ISubTagContainer;
 import farcore.lib.util.LanguageManager;
@@ -91,11 +92,14 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		IDataChecker<? extends ISubTagContainer> filterHandle;
 		List<EnumToolType> toolTypes;
 		String customToolInformation;
+		public ISkill skillEfficiency;
 	}
 
 	private Map<Integer, ToolProp> toolPropMap = new HashMap();
 	protected String textureFileName = "tool/";
 	
+	protected boolean modelFlag = true;
+
 	protected ItemTool(String name)
 	{
 		super(name);
@@ -105,7 +109,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		super(modid, name);
 	}
 	
-	public void addSubItem(int id, String name, String localName, String customToolInformation,
+	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
 			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
 			IDataChecker<? extends ISubTagContainer> filterHead,
 			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,
@@ -113,7 +117,10 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			IBehavior... behaviors)
 	{
 		super.addSubItem(id, name, localName, stat, behaviors);
-		U.Mod.registerItemModel(this, id, modid, textureFileName + name);
+		if(modelFlag)
+		{
+			U.Mod.registerItemModel(this, id, modid, textureFileName + name);
+		}
 		ToolProp prop = new ToolProp();
 		prop.id = id;
 		prop.condition = condition;
@@ -130,6 +137,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		{
 			LanguageManager.registerLocal("info.tool." + getUnlocalizedName() + "@" + id, customToolInformation);
 		}
+		return prop;
 	}
 
 	protected Mat getMaterialFromItem(ItemStack stack, String part)
@@ -142,6 +150,11 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		stack.getSubCompound("tool", true).setString(part, material.name);
 		return stack;
+	}
+
+	protected ToolProp getToolProp(ItemStack stack)
+	{
+		return toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 	}
 	
 	@Override
@@ -161,7 +174,10 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		if(now + amount >= max)
 		{
 			stack.stackSize --;
-			user.renderBrokenItemStack(stack);
+			if(user != null)
+			{
+				user.renderBrokenItemStack(stack);
+			}
 			if(stack.stackSize != 0)
 			{
 				setToolDamage(stack, 0F);
@@ -199,13 +215,13 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		Mat material = getMaterial(stack, "head");
 		if(entity.canBeAttackedWithItem() && !entity.isInvisibleToPlayer(player))
 		{
-			float damage = prop.stat.getDamageVsEntity(stack) * material.toolDamageToEntity;
+			float damage = prop.stat.getDamageVsEntity(stack, material);
 			boolean flag = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) && player.getRidingEntity() == null && (entity instanceof EntityLivingBase);
 			if(flag)
 			{
 				damage *= 1.5F;
 			}
-			if(entity.attackEntityFrom(prop.stat.getDamageSource(player, entity), damage))
+			if(damage > 0 && entity.attackEntityFrom(prop.stat.getDamageSource(player, entity), damage))
 			{
 				int knockback = (player.isSprinting() ? 1 : 0) + EnchantmentHelper.getKnockbackModifier(player);
 				entity.addVelocity(-Math.sin(player.rotationYaw * Math.PI / 180D) * knockback * .5, 0.1F, Math.cos(player.rotationYaw * Math.PI / 180D) * knockback * .5);
@@ -289,12 +305,16 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
 	{
-		if(slot == EntityEquipmentSlot.MAINHAND || slot == EntityEquipmentSlot.OFFHAND)
+		if(slot == EntityEquipmentSlot.MAINHAND)
 		{
 			Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 			Mat material = getMaterial(stack, "head");
 			ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", material.toolAttackSpeed, 0));
+			float speed = prop.stat.getAttackSpeed(stack, material);
+			if(speed != 0)
+			{
+				multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", speed, 0));
+			}
 			return multimap;
 		}
 		return super.getAttributeModifiers(slot, stack);
@@ -304,7 +324,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
 		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-		return prop.stat.canBlock() ? EnumAction.BLOCK : EnumAction.NONE;
+		return prop.stat.canBlock() ? EnumAction.BLOCK :
+			prop.stat.isShootable() ? EnumAction.BOW : EnumAction.NONE;
 	}
 
 	@Override

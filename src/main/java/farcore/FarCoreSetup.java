@@ -18,7 +18,7 @@ import farcore.data.EnumItem;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.Potions;
-import farcore.energy.electric.ElectricACNet;
+import farcore.energy.electric.ElectricNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
@@ -128,7 +128,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  * @see farcore.FarCore
  */
-@Mod(modid = FarCore.ID, version = "1.0g", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "1.0h", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 2011;
@@ -306,13 +306,12 @@ public class FarCoreSetup
 			MinecraftForge.EVENT_BUS.register(new FarCoreItemHandler());
 			FarCoreEnergyHandler.addNet(ThermalNet.instance);
 			FarCoreEnergyHandler.addNet(KineticNet.instance);
-			FarCoreEnergyHandler.addNet(ElectricACNet.instance);
+			FarCoreEnergyHandler.addNet(ElectricNet.instance);
 			FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
 			ThermalNet.registerWorldThermalHandler(new TemperatureHandler());
 			M.init();
 
 			new ItemDebugger().setCreativeTab(FarCore.tabTool);
-			//			new ItemTreeLog().setTextureName("grouped/log").setCreativeTab(FarCore.tabResourceItem);
 			new ItemFluidDisplay().setCreativeTab(FarCore.tabFluids);
 			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
 			new ItemSeed().setCreativeTab(FarCore.tabResourceItem);

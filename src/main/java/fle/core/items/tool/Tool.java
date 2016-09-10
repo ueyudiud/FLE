@@ -64,6 +64,12 @@ public class Tool implements IToolStat
 	}
 
 	@Override
+	public float getAttackSpeed(ItemStack stack)
+	{
+		return 1.0F;
+	}
+
+	@Override
 	public float getSpeedMultiplier(ItemStack stack)
 	{
 		return 1.0F;
@@ -109,6 +115,12 @@ public class Tool implements IToolStat
 
 	@Override
 	public boolean canBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isShootable()
 	{
 		return false;
 	}

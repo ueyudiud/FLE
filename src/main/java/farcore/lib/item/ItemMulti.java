@@ -6,6 +6,7 @@ import farcore.FarCore;
 import farcore.data.M;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.util.EnviornmentEntity;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
@@ -88,7 +89,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		ItemStack stack2 = stack;
 		if(!entityIn.worldObj.isRemote)
 		{
-			stack = ((IUpdatableItem) this).updateItem(null, stack);
+			stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityIn), stack);
 			if(entityIn instanceof EntityPlayer)
 			{
 				if(stack == null)
@@ -107,7 +108,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		if(!entityItem.worldObj.isRemote)
 		{
-			ItemStack stack = ((IUpdatableItem) this).updateItem(null, entityItem.getEntityItem());
+			ItemStack stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityItem), entityItem.getEntityItem());
 			if(stack == null)
 			{
 				entityItem.setDead();

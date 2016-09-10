@@ -9,24 +9,24 @@ import net.minecraft.util.text.TextComponentString;
 public class SkillAbstract implements ISkill
 {
 	protected static final Register<SkillAbstract> REGISTER = new Register();
-	
+
 	public static SkillAbstract getSkill(String name)
 	{
 		return REGISTER.get(name);
 	}
-	
+
 	private final String name;
 	private final int id;
 	private float expIncrease;
 	private float expBase;
 	private float maxLevel;
-
+	
 	public SkillAbstract(String name)
 	{
 		this.name = name;
 		id = REGISTER.register(name, this);
 	}
-	
+
 	public SkillAbstract setExpInfo(int maxLv, float expBase, float expIncr)
 	{
 		maxLevel = maxLv;
@@ -34,18 +34,18 @@ public class SkillAbstract implements ISkill
 		expIncrease = expIncr;
 		return this;
 	}
-
+	
 	public String getLocalName()
 	{
 		return LanguageManager.translateToLocal("skill." + name + ".name");
 	}
-	
+
 	@Override
 	public String getRegisteredName()
 	{
 		return name;
 	}
-	
+
 	@Override
 	public int level(EntityPlayer player)
 	{
@@ -54,10 +54,11 @@ public class SkillAbstract implements ISkill
 			return tag.getCompoundTag("skill").getCompoundTag(name).getByte("lv");
 		return 0;
 	}
-	
+
 	@Override
 	public void using(EntityPlayer player, float exp)
 	{
+		if(exp == 0) return;
 		NBTTagCompound tag = player.getEntityData();
 		if(!tag.hasKey("skill"))
 		{
@@ -97,7 +98,7 @@ public class SkillAbstract implements ISkill
 			}
 		}
 	}
-
+	
 	@Override
 	public void set(EntityPlayer player, int level)
 	{

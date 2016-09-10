@@ -15,26 +15,40 @@ import net.minecraft.world.World;
 public interface IToolStat extends IItemCapabilityProvider
 {
 	EnumToolType getToolType();
-
-	void onToolCrafted(ItemStack stack, EntityPlayer player);
-
-	float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block);
 	
+	void onToolCrafted(ItemStack stack, EntityPlayer player);
+	
+	float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block);
+
 	float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target);
 	
+	default float getDamageVsEntity(ItemStack stack, Mat material)
+	{
+		return getDamageVsEntity(stack) * material.toolDamageToEntity;
+	}
+	
+	default float getAttackSpeed(ItemStack stack, Mat material)
+	{
+		return (1F + getAttackSpeed(stack)) * material.toolAttackSpeed - 1F;
+	}
+
 	float getDamageVsEntity(ItemStack stack);
 	
+	float getAttackSpeed(ItemStack stack);
+
 	float getSpeedMultiplier(ItemStack stack);
-
+	
 	float getMaxDurabilityMultiplier();
-
+	
 	int getToolHarvestLevel(ItemStack stack, String toolClass, Mat baseMaterial);
-	
+
 	boolean canHarvestDrop(ItemStack stack, IBlockState state);
-	
+
 	float getMiningSpeed(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block);
-
+	
 	DamageSource getDamageSource(EntityLivingBase user, Entity target);
-
+	
 	boolean canBlock();
+
+	boolean isShootable();
 }

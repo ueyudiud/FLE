@@ -23,7 +23,18 @@ public class MC
 	public static final MatCondition handle = new MatCondition("handle", "Handle", "%s Handle").setSize(72L, 72L, 1.5F).setFilter(SubTag.HANDLE);
 	
 	public static final MatCondition adz_metal = new MatCondition("adz.metal", "adz", "Adz", "%s Adz").setSize(288L, 288L, 1.2F).setFilter(new IDataChecker.And(SubTag.METAL, SubTag.TOOL));
-	public static final MatCondition adz_rock = new MatCondition("adz.rock", "adz", "Adz", "%s Adz").setSize(288L, 288L, 1.2F).setFilter(new IDataChecker.And(SubTag.ROCK, SubTag.TOOL));
+	public static final MatCondition adz_rock = new MatCondition("adz.rock", "adz", "Adz", "%s Adz").setSize(288L, 288L, 1.2F).setFilter(new IDataChecker.And(new IDataChecker.Or(SubTag.ROCK, SubTag.FLINT), SubTag.TOOL));
+	
+	public static final MatCondition hard_hammer_flint = new MatCondition("hard.hammer.flint", "hardHammer", "Hard Hammer", "%s Hammer").setSize(288L, 288L, 1.0F).setFilter(new IDataChecker.And(SubTag.FLINT, SubTag.TOOL));
+
+	public static final MatCondition shovel_rock = new MatCondition("shovel.rock", "shovel", "Shovel", "%s Shovel").setSize(288L, 288L, 1.2F).setFilter(new IDataChecker.And(new IDataChecker.Or(SubTag.ROCK, SubTag.FLINT), SubTag.TOOL));
+	public static final MatCondition shovel_metal = new MatCondition("shovel.metal", "shovel", "Shovel", "%s Shovel").setSize(144L, 144L, 1.2F).setFilter(new IDataChecker.And(SubTag.METAL, SubTag.TOOL));
+
+	public static final MatCondition spade_hoe_rock = new MatCondition("spade.hoe.rock", "spadeHoe", "Spade-Hoe", "%s Spade-Hoe").setSize(288L, 288L, 1.3F).setFilter(new IDataChecker.And(SubTag.ROCK, SubTag.TOOL));
+	
+	public static final MatCondition spear_rock = new MatCondition("spear.rock", "spear", "Spear", "%s Spear").setSize(288L, 288L, 1.2F).setFilter(new IDataChecker.And(SubTag.ROCK, SubTag.TOOL));
+	
+	public static final MatCondition sickle_rock = new MatCondition("sickle.rock", "sickle", "Sickle", "%s Sickle").setSize(288L, 288L, 1.0F).setFilter(new IDataChecker.And(SubTag.ROCK, SubTag.TOOL));
 
 	public static void init() {}
 }

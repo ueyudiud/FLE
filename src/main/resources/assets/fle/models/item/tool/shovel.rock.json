@@ -1,0 +1,9 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "farcore:items/void",
+		"layer1": "fle:items/tool/shovel.rock/head",
+		"layer2": "fle:items/tool/shovel.rock/handle",
+		"layer3": "fle:items/tool/shovel.rock/tie"
+	}
+}

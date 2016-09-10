@@ -121,12 +121,12 @@ public class MatCondition implements IDataChecker<ISubTagContainer>
 
 	String getWithOreTranslateName()
 	{
-		return "matcondition." + withOreLocalName + ".a.name";
+		return "matcondition." + name + ".a.name";
 	}
 
 	String getTranslateName()
 	{
-		return "matcondition." + localName + ".name";
+		return "matcondition." + name + ".name";
 	}
 
 	public void registerOre(Mat material, Item stack)

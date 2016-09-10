@@ -26,6 +26,7 @@ public enum EnumToolType
 	shovel("Shovel"),
 	spade_hoe("SpadeHoe"),
 	sickle("Sickle"),
+	hoe("Hoe"),
 	
 	firestarter("Firestarter"),
 	
