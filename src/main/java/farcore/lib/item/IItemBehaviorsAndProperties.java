@@ -16,12 +16,12 @@ public interface IItemBehaviorsAndProperties
 	{
 		float replaceDigSpeed(ItemStack stack, BreakSpeed event);
 	}
-
+	
 	public static interface IIB_BlockHarvested
 	{
 		void onBlockHarvested(ItemStack stack, HarvestDropsEvent event);
 	}
-	
+
 	public static interface IIP_CustomOverlayInGui
 	{
 		@SideOnly(Side.CLIENT)

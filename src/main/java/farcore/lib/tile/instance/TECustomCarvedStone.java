@@ -20,6 +20,7 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Light;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SideSolid;
+import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.TEStatic;
 import farcore.lib.util.Direction;
 import farcore.lib.world.IBlockCoordQuarterProperties;
@@ -33,6 +34,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
@@ -43,7 +46,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECustomCarvedStone extends TEStatic
 implements IBlockCoordQuarterProperties, ITP_BlockHardness, ITP_ExplosionResistance, ITP_Light, ITP_SideSolid, ITP_CollisionBoundingBox,
-ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, ITP_HarvestCheck
+ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, ITP_HarvestCheck, IToolableTile
 {
 	private static final long EMPTY = ~0L;
 	private static final float BLOCK_SCALE = 0.25F;
@@ -167,7 +170,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 		return (carvedState & (1L << index(x, y, z))) != 0;
 	}
 
-	public float carveRock(EntityPlayer player, float hitX, float hitY, float hitZ)
+	public ActionResult<Float> carveRock(EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
 		double vx = hitX - (player.posX - pos.getX());
 		double vy = hitY - (player.posY + player.eyeHeight - pos.getY());
@@ -196,13 +199,13 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 					markBlockUpdate();
 					syncToNearby();
 				}
-				return rock.blockHardness / 64F;
+				return new ActionResult<Float>(EnumActionResult.SUCCESS, rock.blockHardness / 64F);
 			}
 			vx1 += vx;
 			vy1 += vy;
 			vz1 += vz;
 		}
-		return 0F;
+		return new ActionResult<Float>(EnumActionResult.FAIL, null);
 	}
 
 	protected void carveRockUnmark(int x, int y, int z)
@@ -515,7 +518,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 	}
 
 	@Override
-	public float onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
 			float hitY, float hitZ)
 	{
 		if(tool == EnumToolType.chisel)
@@ -523,14 +526,14 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 			if(player.canPlayerEdit(pos, side.of(), stack))
 				return carveRock(player, hitX, hitY, hitZ);
 		}
-		return 0;
+		return IToolableTile.DEFAULT_RESULT;
 	}
 
 	@Override
-	public float onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration, Direction side,
+	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		return 0;
+		return IToolableTile.DEFAULT_RESULT;
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package farcore.lib.block.instance;
 import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.lib.block.BlockTE;
-import farcore.lib.block.IToolableBlock;
 import farcore.lib.collection.IRegister;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import net.minecraft.block.material.Material;
@@ -15,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockCarvedRock extends BlockTE implements IToolableBlock
+public class BlockCarvedRock extends BlockTE
 {
 	public BlockCarvedRock()
 	{
@@ -26,21 +25,21 @@ public class BlockCarvedRock extends BlockTE implements IToolableBlock
 			useNeighborBrightness = true;
 		}
 	}
-
+	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
 		register.register(1, "carved", TECustomCarvedStone.class);
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
-
+	
 	@Override
 	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -49,19 +48,19 @@ public class BlockCarvedRock extends BlockTE implements IToolableBlock
 			return ((TECustomCarvedStone) tile).isFullCube();
 		return true;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return "pickaxe";
 	}
-	
+
 	@Override
 	public boolean isToolEffective(String type, IBlockState state)
 	{

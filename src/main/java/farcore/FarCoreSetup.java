@@ -65,6 +65,7 @@ import farcore.lib.net.tile.PacketTESAsk;
 import farcore.lib.net.tile.PacketTESync;
 import farcore.lib.net.tile.PacketTETypeResult;
 import farcore.lib.net.world.PacketBreakBlock;
+import farcore.lib.oredict.OreDictExt;
 import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.instance.FontMap;
 import farcore.lib.tesr.TESRCarvedRock;
@@ -128,25 +129,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  * @see farcore.FarCore
  */
-@Mod(modid = FarCore.ID, version = "1.0h", name = "Far Core")
+@Mod(modid = FarCore.ID, version = "1.0i", name = "Far Core")
 public class FarCoreSetup
 {
 	public static final int minForge = 2011;
-	
+
 	private LanguageManager lang;
-	
+
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
-	
+
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static Proxy proxy;
-	
+
 	public FarCoreSetup()
 	{
 		setup = this;
 		Log.logger = LogManager.getLogger(FarCore.ID);
+		OreDictExt.init();
 	}
-	
+
 	@EventHandler
 	public void check(FMLFingerprintViolationEvent event)
 	{
@@ -187,7 +189,7 @@ public class FarCoreSetup
 					"(Technical information: " + forge + " < " + minForge + ")");
 		Log.info("Checking end.");
 	}
-	
+
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -220,31 +222,31 @@ public class FarCoreSetup
 		lang.read();
 		proxy.load(event);
 	}
-	
+
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
 		proxy.load(event);
 	}
-	
+
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		proxy.load(event);
 	}
-	
+
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		proxy.load(event);
 		lang.write();
 	}
-	
+
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
 	}
-	
+
 	public static class Proxy
 	{
 		public void load(FMLPreInitializationEvent event)
@@ -310,7 +312,7 @@ public class FarCoreSetup
 			FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
 			ThermalNet.registerWorldThermalHandler(new TemperatureHandler());
 			M.init();
-
+			
 			new ItemDebugger().setCreativeTab(FarCore.tabTool);
 			new ItemFluidDisplay().setCreativeTab(FarCore.tabFluids);
 			new ItemStoneChip().setCreativeTab(FarCore.tabResourceItem);
@@ -333,7 +335,7 @@ public class FarCoreSetup
 			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 			Potions.init();
 		}
-		
+
 		public void load(FMLInitializationEvent event)
 		{
 			ItemBase.post();
@@ -354,16 +356,16 @@ public class FarCoreSetup
 			FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
-
+			
 			FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTETypeResult.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTESAsk.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketTEAskType.class, Side.SERVER);
-			
+
 			FarCore.network.registerPacket(PacketBreakBlock.class, Side.CLIENT);
 		}
-		
+
 		public void load(FMLPostInitializationEvent event)
 		{
 			for(Mat material : Mat.materials())
@@ -378,7 +380,7 @@ public class FarCoreSetup
 				}
 			}
 		}
-		
+
 		public void load(FMLLoadCompleteEvent event)
 		{
 			if(Config.multiThreadLight)
@@ -386,26 +388,26 @@ public class FarCoreSetup
 				LightFix.startThread();
 			}
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IBlockColor color, Block...block)
 		{
-			
-		}
 
+		}
+		
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Block...block)
 		{
-			
-		}
 
+		}
+		
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Item...block)
 		{
-			
+
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
@@ -413,13 +415,13 @@ public class FarCoreSetup
 		private Map<IItemColor, List<Block>> itemBlockColorMap = new HashMap();
 		private Map<IItemColor, List<Item>> itemColorMap = new HashMap();
 		private boolean loadComplete = false;
-		
+
 		public ClientProxy()
 		{
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 			MinecraftForge.EVENT_BUS.register(ModelDisplayFluid.Selector.instance);
 		}
-		
+
 		@Override
 		public void load(FMLPreInitializationEvent event)
 		{
@@ -442,31 +444,31 @@ public class FarCoreSetup
 			U.Mod.registerCustomItemModelSelector(EnumBlock.sapling.block, ModelSapling.INSTANCE);
 			U.Mod.registerCustomItemModelSelector(EnumBlock.ore.block, ModelOre.instance);
 			U.Mod.registerFluid((BlockFluidBase) EnumBlock.water.block);
-
-			registerColorMultiplier(ColorMultiplier.MULTI_ITEM_MATERIAL_COLOR, EnumItem.ore_chip.item);
 			
+			registerColorMultiplier(ColorMultiplier.MULTI_ITEM_MATERIAL_COLOR, EnumItem.ore_chip.item);
+
 			ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 		}
-		
+
 		@Override
 		public void load(FMLInitializationEvent event)
 		{
 			super.load(event);
 		}
-		
+
 		@Override
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
 			loadComplete = true;
 		}
-		
+
 		@Override
 		public void load(FMLLoadCompleteEvent event)
 		{
 			super.load(event);
 		}
-		
+
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
@@ -492,19 +494,19 @@ public class FarCoreSetup
 				U.Client.getFontRender().onResourceManagerReload(manager);
 			}
 		}
-
+		
 		@Override
 		public void registerColorMultiplier(IBlockColor color, Block...blocks)
 		{
 			U.L.put(blockColorMap, color, blocks);
 		}
-
+		
 		@Override
 		public void registerColorMultiplier(IItemColor color, Block...blocks)
 		{
 			U.L.put(itemBlockColorMap, color, blocks);
 		}
-
+		
 		@Override
 		public void registerColorMultiplier(IItemColor color, Item...items)
 		{

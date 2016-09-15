@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.data.EnumToolType;
 import farcore.energy.thermal.IThermalHandler;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
@@ -29,7 +28,6 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_EntityLanded;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_EntityWalk;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_FillWithRain;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_PlantGrow;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Toolable;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Update;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BeaconBase;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
@@ -84,7 +82,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class BlockTE extends BlockBase
-implements IToolableBlock, IThermalCustomBehaviorBlock
+implements IThermalCustomBehaviorBlock
 /**
  * The far core tile entity block use custom provide tile policy.
  */
@@ -667,26 +665,6 @@ implements IToolableBlock, IThermalCustomBehaviorBlock
 		{
 			((ITB_Update) tile).onUpdateTick(state, rand, false);
 		}
-	}
-	
-	@Override
-	public float onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof ITB_Toolable)
-			return ((ITB_Toolable) tile).onToolClick(player, tool, stack, side, hitX, hitY, hitZ);
-		return 0;
-	}
-	
-	@Override
-	public float onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof ITB_Toolable)
-			return ((ITB_Toolable) tile).onToolUse(player, tool, stack, useTick, side, hitX, hitY, hitZ);
-		return 0;
 	}
 
 	@Override

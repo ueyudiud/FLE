@@ -22,6 +22,7 @@ public class BaseStack implements AbstractStack
 	private ImmutableList<ItemStack> list;
 	private ItemStack stack;
 	private boolean useContainer;
+	public final boolean isWildcardValue;
 
 	public BaseStack(String modid, String name, int size, int meta)
 	{
@@ -31,8 +32,11 @@ public class BaseStack implements AbstractStack
 	{
 		Item item = GameRegistry.findItem(modid, name);
 		if(item != null)
+		{
 			stack = new ItemStack(item, size, meta);
+		}
 		useContainer = false;
+		isWildcardValue = item != null && (item.getHasSubtypes() && meta == OreDictionary.WILDCARD_VALUE);
 	}
 	public BaseStack(Block block)
 	{
@@ -45,8 +49,11 @@ public class BaseStack implements AbstractStack
 	public BaseStack(Block block, int size, int meta)
 	{
 		if(block != null)
+		{
 			stack = new ItemStack(block, size, meta);
+		}
 		useContainer = false;
+		isWildcardValue = meta == OreDictionary.WILDCARD_VALUE;
 	}
 	public BaseStack(Item item)
 	{
@@ -59,8 +66,12 @@ public class BaseStack implements AbstractStack
 	public BaseStack(Item item, int size, int meta)
 	{
 		if(item != null)
+		{
 			stack = new ItemStack(item, size, meta);
+		}
 		useContainer = false;
+		isWildcardValue = item != null &&
+				(item.getHasSubtypes() && meta == OreDictionary.WILDCARD_VALUE);
 	}
 	public BaseStack(ItemStack stack)
 	{
@@ -73,6 +84,7 @@ public class BaseStack implements AbstractStack
 			this.stack = stack.copy();
 			this.stack.stackSize = size;
 		}
+		isWildcardValue = stack != null && stack.getHasSubtypes() && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE;
 	}
 	public BaseStack(ItemStack stack, int size, int meta)
 	{
@@ -82,11 +94,14 @@ public class BaseStack implements AbstractStack
 			this.stack.stackSize = size;
 			this.stack.setItemDamage(meta);
 		}
+		isWildcardValue = stack != null && stack.getHasSubtypes() && meta == OreDictionary.WILDCARD_VALUE;
 	}
 	public BaseStack(ItemStack stack, boolean useContainer)
 	{
 		this.stack = ItemStack.copyItemStack(stack);
 		this.useContainer = useContainer;
+		isWildcardValue = stack != null && stack.getHasSubtypes() && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE;
+
 	}
 	public BaseStack(ItemStack stack, int size, boolean useContainer)
 	{
@@ -96,6 +111,7 @@ public class BaseStack implements AbstractStack
 			this.stack.stackSize = size;
 		}
 		this.useContainer = useContainer;
+		isWildcardValue = stack != null && stack.getHasSubtypes() && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE;
 	}
 
 	@Override
@@ -132,7 +148,9 @@ public class BaseStack implements AbstractStack
 		{
 			ItemStack ret = stack.copy();
 			if(ret.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+			{
 				ret.setItemDamage(0);
+			}
 			return ret;
 		}
 		return null;
@@ -143,9 +161,13 @@ public class BaseStack implements AbstractStack
 	{
 		if(list == null)
 			if(stack != null)
+			{
 				list = ImmutableList.of(stack.copy());
+			}
 			else
+			{
 				list = ImmutableList.of();
+			}
 		return list;
 	}
 

@@ -15,14 +15,14 @@ public class KS
 	 * Just for debug.
 	 */
 	public static final SkillAbstract DEBUGGING = new SkillAbstract("debug"){}.setExpInfo(100, 1F, 1F);
-	
-	public static final SkillAbstract DIGGING = new SkillAbstract("digging"){}.setExpInfo(20, 20F, 0.7F);
-	public static final SkillAbstract FIGHTING = new SkillAbstract("fighting"){}.setExpInfo(20, 16F, 0.8F);
-	public static final SkillAbstract SHOOTING = new SkillAbstract("shooting"){}.setExpInfo(20, 16F, 0.8F);
-	public static final SkillAbstract FENCING = new SkillAbstract("fencing"){}.setExpInfo(20, 24F, 1.0F);
-	public static final SkillAbstract FISHING = new SkillAbstract("fishing"){}.setExpInfo(20, 24F, 1.0F);
-	public static final SkillAbstract HURLING = new SkillAbstract("hurling"){}.setExpInfo(25, 18F, 0.9F);
-	public static final SkillAbstract COOKING = new SkillAbstract("cooking"){}.setExpInfo(40, 30F, 0.8F);
-	public static final SkillAbstract CRAFTING = new SkillAbstract("crafting"){}.setExpInfo(40, 36F, 0.9F);
-	public static final SkillAbstract RESEARCHING = new SkillAbstract("researching"){}.setExpInfo(50, 60F, 0.8F);
+
+	public static final SkillAbstract DIGGING = new SkillAbstract("digging", "Digging"){}.setExpInfo(20, 20F, 0.7F);
+	public static final SkillAbstract FIGHTING = new SkillAbstract("fighting", "Fighting"){}.setExpInfo(20, 16F, 0.8F);
+	public static final SkillAbstract SHOOTING = new SkillAbstract("shooting", "Shooting"){}.setExpInfo(20, 16F, 0.8F);
+	public static final SkillAbstract FENCING = new SkillAbstract("fencing", "Fencing"){}.setExpInfo(20, 24F, 1.0F);
+	public static final SkillAbstract FISHING = new SkillAbstract("fishing", "Fishing"){}.setExpInfo(20, 24F, 1.0F);
+	public static final SkillAbstract HURLING = new SkillAbstract("hurling", "Hurling"){}.setExpInfo(25, 18F, 0.9F);
+	public static final SkillAbstract COOKING = new SkillAbstract("cooking", "Cooking"){}.setExpInfo(40, 30F, 0.8F);
+	public static final SkillAbstract CRAFTING = new SkillAbstract("crafting", "Crafting"){}.setExpInfo(40, 36F, 0.9F);
+	public static final SkillAbstract RESEARCHING = new SkillAbstract("researching", "Researching"){}.setExpInfo(50, 60F, 0.8F);
 }

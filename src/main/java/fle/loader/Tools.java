@@ -35,7 +35,7 @@ public class Tools
 		addTool(6, "spear.rock", "Spear", "Right click to throw spear out.", MC.spear_rock, new ToolSpear(), true, true, SubTag.ROPE, SubTag.HANDLE, ImmutableList.of(EnumToolType.spear), new BehaviorSpear());
 		addTool(7, "sickle.rock", "Sickle", null, MC.sickle_rock, new ToolSickle(), true, true, SubTag.ROPE, SubTag.HANDLE, ImmutableList.of(EnumToolType.sickle), new BehaviorTool());
 	}
-
+	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle, IDataChecker<? extends ISubTagContainer> filterHead,
 			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,
@@ -43,7 +43,7 @@ public class Tools
 	{
 		return BlocksItems.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, toolTypes, behaviors);
 	}
-	
+
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle,
 			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,

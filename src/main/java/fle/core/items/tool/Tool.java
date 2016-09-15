@@ -18,7 +18,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class Tool implements IToolStat
+public abstract class Tool implements IToolStat
 {
 	private EnumToolType type;
 
@@ -108,10 +108,7 @@ public class Tool implements IToolStat
 				user);
 	}
 
-	protected String getDeathMessage(Entity target, EntityLivingBase user)
-	{
-		return null;
-	}
+	protected abstract String getDeathMessage(Entity target, EntityLivingBase user);
 
 	@Override
 	public boolean canBlock()

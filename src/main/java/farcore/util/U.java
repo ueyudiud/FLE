@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +29,7 @@ import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.lib.block.IBearingBlock;
 import farcore.lib.block.ISmartFallableBlock;
+import farcore.lib.block.IToolableBlock;
 import farcore.lib.collection.Stack;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.item.ITool;
@@ -35,6 +37,7 @@ import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.net.world.PacketBreakBlock;
+import farcore.lib.oredict.OreDictExt;
 import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.IProgressBarStyle;
 import farcore.lib.render.ParticleDiggingExt;
@@ -133,6 +136,11 @@ public class U
 				ret[i] = cast(integers[i]);
 			}
 			return ret;
+		}
+
+		public static float cast(Float f)
+		{
+			return f == null ? 0 : f.floatValue();
 		}
 
 		public static int cast(Integer integer)
@@ -923,6 +931,11 @@ public class U
 			OreDictionary.registerOre(name, ore);
 		}
 
+		public static void registerValid(String name, Function<ItemStack, Boolean> function, ItemStack...instances)
+		{
+			OreDictExt.registerOreFunction(name, function, instances);
+		}
+
 		public static void registerValid(String name, ItemStack ore, boolean autoValid)
 		{
 			if(autoValid)
@@ -1391,6 +1404,20 @@ public class U
 			if(tile instanceof TEBase && !((TEBase) tile).isInitialized())
 				return false;
 			EnumFacing facing2 = facing.of();
+			if(heldItem != null && heldItem.getItem() instanceof ITool &&
+					tile instanceof IToolableTile)
+			{
+				ITool tool = (ITool) heldItem.getItem();
+				ActionResult<Float> result;
+				for(EnumToolType toolType : tool.getToolTypes(heldItem))
+				{
+					if((result = ((IToolableTile) tile).onToolClick(playerIn, toolType, heldItem, facing, hitX, hitY, hitZ)).getType() != EnumActionResult.PASS)
+					{
+						tool.onToolUse(playerIn, heldItem, toolType, result.getResult());
+						return true;
+					}
+				}
+			}
 			if(tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2))
 			{
 				if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
@@ -1542,26 +1569,27 @@ public class U
 					}
 				}
 			}
-			if(heldItem != null && heldItem.getItem() instanceof ITool &&
-					tile instanceof IToolableTile)
-			{
-				ITool tool = (ITool) heldItem.getItem();
-				ActionResult<Float> result;
-				for(EnumToolType toolType : tool.getToolTypes(heldItem))
-				{
-					if((result = ((IToolableTile) tile).onToolClick(playerIn, toolType, heldItem, facing, hitX, hitY, hitZ)).getType() != EnumActionResult.PASS)
-					{
-						tool.onToolUse(playerIn, heldItem, toolType, result.getResult());
-						return true;
-					}
-				}
-			}
 			return false;
 		}
 	}
 
 	public static class ItemStacks
 	{
+		/**
+		 * Some item may override item meta get method,
+		 * this method will give a stack with item select
+		 * meta.
+		 * @param item
+		 * @param meta
+		 * @return
+		 */
+		public static ItemStack stack(Item item, int meta)
+		{
+			ItemStack stack = new ItemStack(item, 1);
+			stack.setItemDamage(meta);
+			return stack;
+		}
+
 		public static ItemStack valid(ItemStack stack)
 		{
 			if(stack == null || stack.stackSize <= 0)
@@ -1607,6 +1635,60 @@ public class U
 			ItemStack ret;
 			(ret = stack.copy()).stackSize = size;
 			return ret;
+		}
+
+		public static boolean isStackEqual(ItemStack stack1, ItemStack stack2)
+		{
+			return stack1 == null || stack2 == null ?
+					stack1 == stack2 :
+						stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		}
+
+		public static boolean areTagEqual(NBTTagCompound nbt1, NBTTagCompound nbt2)
+		{
+			return nbt1 == null || nbt2 == null ? nbt1 == nbt2 : nbt1.equals(nbt2);
+		}
+		
+		/**
+		 * This method should called by item onItemUse.
+		 * @param stack
+		 * @param player
+		 * @param world
+		 * @param pos
+		 * @param side
+		 * @param hitX
+		 * @param hitY
+		 * @param hitZ
+		 * @return
+		 */
+		public static EnumActionResult onUseOnBlock(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+		{
+			List<EnumToolType> toolTypes;
+			if(stack == null)
+			{
+				toolTypes = EnumToolType.HAND_USABLE_TOOL;
+			}
+			else if(stack.getItem() instanceof ITool)
+			{
+				toolTypes = ((ITool) stack.getItem()).getToolTypes(stack);
+			}
+			else return EnumActionResult.PASS;
+			Direction direction = Direction.of(side);
+			IBlockState state = world.getBlockState(pos);
+			if(state.getBlock() instanceof IToolableBlock)
+			{
+				IToolableBlock block = (IToolableBlock) state.getBlock();
+				for(EnumToolType tool : toolTypes)
+				{
+					ActionResult<Float> result = block.onToolClick(player, tool, stack, world, pos, direction, hitX, hitY, hitZ);
+					if(result.getType() != EnumActionResult.PASS)
+					{
+						((ITool) stack.getItem()).onToolUse(player, stack, tool, L.cast(result.getResult()));
+						return result.getType();
+					}
+				}
+			}
+			return EnumActionResult.PASS;
 		}
 	}
 
