@@ -35,13 +35,13 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			{
 				return material.tree.createLogStateContainer(this, false);
 			}
-			
+
 			@Override
 			public int getMetaFromState(IBlockState state)
 			{
 				return material.tree.getLogMeta(state, false);
 			}
-			
+
 			@Override
 			public IBlockState getStateFromMeta(int meta)
 			{
@@ -49,7 +49,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			}
 		};
 	}
-	
+
 	protected BlockLogNatural(Mat material, ITree tree)
 	{
 		super("log.natural." + material.name, material, tree);
@@ -61,19 +61,19 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			setTickRandomly(true);
 		}
 	}
-	
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
 		tree.breakLog(worldIn, pos, state, false);
 	}
-	
+
 	@Override
 	public int tickRate(World worldIn)
 	{
 		return 20;
 	}
-	
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
@@ -101,7 +101,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			}
 		}
 	}
-	
+
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
@@ -111,14 +111,14 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			((World) world).scheduleUpdate(pos, this, tickRate((World) world));
 		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		return tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, false);
 	}
-	
+
 	@Override
 	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
@@ -126,19 +126,20 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	}
 	
 	@Override
+	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+	{
+		return true;
+	}
+
+	@Override
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
 	{
 		if(!worldIn.isRemote)
-			if(EnumToolType.axe.match(stack))
-			{
-				breakTree(worldIn, pos);
-			}
-			else
-			{
-				worldIn.setBlockState(pos, state, 3);
-			}
+		{
+			breakTree(worldIn, pos);
+		}
 	}
-	
+
 	@Override
 	public void onBlockExploded(World world, BlockPos pos, Explosion explosion)
 	{
@@ -151,44 +152,44 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			Log.warn("The out of memory prevent this tree destory.");
 		}
 	}
-	
+
 	public boolean isLog(World worldIn, BlockPos pos)
 	{
 		return U.Worlds.isBlock(worldIn, pos, this, -1, false);
 	}
-	
+
 	private void breakTree(World world, BlockPos pos)
 	{
 		BreakTree runnable = new BreakTree(this, world, pos);
 		new Thread(runnable).start();
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
 		return tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, false);
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return tree.onToolUseLog(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ, false);
 	}
-	
+
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return 25;
 	}
-	
+
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

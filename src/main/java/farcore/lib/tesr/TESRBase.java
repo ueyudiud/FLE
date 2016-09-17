@@ -7,6 +7,7 @@ import farcore.lib.util.Direction;
 import farcore.util.U.Maths;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -22,7 +23,7 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	private static final float DOWN_LIGHT_MULTIPLER = 0.5F;
 	private static final float X_LIGHT_MULTIPLER = 0.6F;
 	private static final float Z_LIGHT_MULTIPLER = 0.8F;
-
+	
 	protected boolean renderUp = true;
 	protected boolean renderDown = true;
 	protected boolean renderNorth = true;
@@ -37,22 +38,22 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	protected float blue = 1.0F;
 	protected float alpha = 1.0F;
 	protected float ao = 1.0F;
-
+	
 	protected TextureAtlasSprite getTexture(IBlockState state)
 	{
 		return Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager().getBlockModelShapes().getTexture(state);
 	}
-	
+
 	protected TextureAtlasSprite getTexture(ResourceLocation location)
 	{
 		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 	}
-	
+
 	protected void resetColor()
 	{
 		colorV(1.0F, 1.0F, 1.0F, 1.0F);
 	}
-
+	
 	protected void colorV(float r, float g, float b, float a)
 	{
 		this.red = r;
@@ -60,7 +61,7 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 		this.blue = b;
 		this.alpha = a;
 	}
-
+	
 	protected void renderCubeWithLight(
 			double x1, double y1, double z1,
 			double x2, double y2, double z2,
@@ -179,7 +180,7 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 					u2, v2, util);
 		}
 	}
-	
+
 	protected void renderCube(
 			double x1, double y1, double z1,
 			double x2, double y2, double z2,
@@ -235,7 +236,7 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 					x1, y2, z2, (float) z2, 1F - (float) y2);
 		}
 	}
-	
+
 	protected void faceWithLight(
 			double x1, double y1, double z1,
 			double x2, double y2, double z2,
@@ -252,9 +253,11 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 		helper.vertex(x1, y2, z2, u2, v2, util.brightness[1], red * util.color[1] * ao, green * util.color[1] * ao, blue * util.color[1] * ao, alpha);
 		helper.vertex(x3, y3, z3, u3, v3, util.brightness[2], red * util.color[2] * ao, green * util.color[2] * ao, blue * util.color[2] * ao, alpha);
 		helper.vertex(x4, y4, z4, u4, v4, util.brightness[3], red * util.color[3] * ao, green * util.color[3] * ao, blue * util.color[3] * ao, alpha);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		helper.draw();
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 	}
-
+	
 	protected void face6Dir(
 			double x, double y, double z,
 			double uOfX, double uOfY, double uOfZ,

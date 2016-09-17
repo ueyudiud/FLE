@@ -3,6 +3,7 @@ package fle.core.items.tool;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.EnumToolType;
+import farcore.lib.item.ItemTool;
 import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.util.DamageSourceEntityAttack;
@@ -17,9 +18,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class Tool implements IToolStat
 {
+	protected boolean hasHandleColor = false;
 	private EnumToolType type;
 
 	protected Tool(EnumToolType type)
@@ -94,9 +98,9 @@ public abstract class Tool implements IToolStat
 	}
 
 	@Override
-	public float getMiningSpeed(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block)
+	public float getMiningSpeed(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block, float speed)
 	{
-		return 1.0F;
+		return speed;
 	}
 
 	@Override
@@ -120,5 +124,23 @@ public abstract class Tool implements IToolStat
 	public boolean isShootable()
 	{
 		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getColor(ItemStack stack, int pass)
+	{
+		switch (pass)
+		{
+		//0 for base.
+		case 1 : return ItemTool.getMaterial(stack, "head").RGB;
+		//3 for base override.
+		case 4 : return ItemTool.getMaterial(stack, "tie").RGB;
+		case 5 : return ItemTool.getMaterial(stack, "rust").RGB;
+		case 6 : return ItemTool.getMaterial(stack, "inlay").RGB;
+		case 2 : if(hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
+		//7 for extended override.
+		default: return 0xFFFFFFFF;
+		}
 	}
 }

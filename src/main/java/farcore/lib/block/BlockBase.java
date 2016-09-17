@@ -7,6 +7,7 @@ import java.util.Random;
 import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
+import farcore.lib.util.ToolHook;
 import farcore.lib.util.UnlocalizedList;
 import farcore.util.U;
 import net.minecraft.block.Block;
@@ -178,10 +179,24 @@ public class BlockBase extends Block implements IRegisteredNameable
 		if (hardness < 0.0F)
 			return 0.0F;
 		
-		if (!canHarvestBlock(worldIn, pos, player))
-			return 0.0F;
+		if (!canBreakBlock(worldIn, pos, player))
+			return 0F;
+		else if(!canHarvestBlock(worldIn, pos, player))
+			return player.getDigSpeed(state, pos) / hardness / 100F;
 		else
 			return player.getDigSpeed(state, pos) / hardness / 30F;
+	}
+	
+	/**
+	 * Match the block can be break by player (Not similar with harvest).
+	 * @param world
+	 * @param pos
+	 * @param player
+	 * @return
+	 */
+	public boolean canBreakBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+	{
+		return ToolHook.isToolBreakable(world.getBlockState(pos), player);
 	}
 
 	@Override

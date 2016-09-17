@@ -1,5 +1,6 @@
 package farcore.lib.util;
 
+import farcore.energy.thermal.ThermalNet;
 import farcore.lib.world.ICoord;
 import farcore.lib.world.IEnvironment;
 import net.minecraft.util.math.BlockPos;
@@ -9,7 +10,7 @@ public class EnviornmentBlockPos implements IEnvironment
 {
 	World world;
 	BlockPos pos;
-
+	
 	public EnviornmentBlockPos(ICoord coord)
 	{
 		this(coord.world(), coord.pos());
@@ -19,10 +20,10 @@ public class EnviornmentBlockPos implements IEnvironment
 		this.world = world;
 		this.pos = pos;
 	}
-	
+
 	@Override
 	public float temperature()
 	{
-		return 0;
+		return ThermalNet.getTemperature(world, pos, true);
 	}
 }

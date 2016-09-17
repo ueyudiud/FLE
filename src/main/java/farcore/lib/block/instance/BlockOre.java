@@ -41,7 +41,7 @@ public class BlockOre extends BlockTE
 		public final EnumOreAmount amount;
 		public final Mat rock;
 		public final RockType type;
-		
+
 		OreStateWrapper(IBlockState state, TEOre ore)
 		{
 			super(state);
@@ -58,16 +58,16 @@ public class BlockOre extends BlockTE
 			this.rock = rock;
 			type = rockType;
 		}
-		
+
 		@Override
 		protected BlockStateWrapper wrapState(IBlockState state)
 		{
 			return new OreStateWrapper(state, ore, amount, rock, type);
 		}
 	}
-
-	private static final MaterialOre ORE = new MaterialOre();
-
+	
+	public static final MaterialOre ORE = new MaterialOre();
+	
 	public BlockOre()
 	{
 		super(FarCore.ID, "ore", ORE);
@@ -75,20 +75,20 @@ public class BlockOre extends BlockTE
 		registerLocalized();
 		EnumBlock.ore.set(this);
 	}
-	
+
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return property_TE.withProperty(state, 1);
 	}
-
+	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
 		register.register(1, "ore", TEOre.class);
 		return true;
 	}
-	
+
 	private void registerLocalized()
 	{
 		LanguageManager.registerLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE), "Ore");
@@ -104,20 +104,20 @@ public class BlockOre extends BlockTE
 			}
 		}
 	}
-
+	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
 			int meta, EntityLivingBase placer)
 	{
 		return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, 1, placer);
 	}
-	
+
 	@Override
 	protected Item createItemBlock()
 	{
 		return new ItemOre(this);
 	}
-
+	
 	@Override
 	public String getTranslateNameForItemStack(ItemStack stack)
 	{
@@ -130,13 +130,13 @@ public class BlockOre extends BlockTE
 		else
 			return getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE);
 	}
-
+	
 	@Override
 	public String getLocalizedName()
 	{
 		return LanguageManager.translateToLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE));
 	}
-
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -145,7 +145,7 @@ public class BlockOre extends BlockTE
 			return new OreStateWrapper(state, (TEOre) tile);
 		return state;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
@@ -161,13 +161,13 @@ public class BlockOre extends BlockTE
 			}
 		}
 	}
-	
+
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return EnumToolType.pickaxe.name();
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()

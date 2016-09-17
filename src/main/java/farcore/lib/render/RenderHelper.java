@@ -12,87 +12,87 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 public class RenderHelper
 {
 	public static final RenderHelper instance = new RenderHelper();
-	
+
 	private final Tessellator tessellator = Tessellator.getInstance();
 	private final VertexBuffer buffer = tessellator.getBuffer();
-	
-	private RenderHelper(){}
 
+	private RenderHelper(){}
+	
 	public RenderHelper draw()
 	{
 		tessellator.draw();
 		return this;
 	}
-	
+
 	public RenderHelper begin(int mode, VertexFormat format)
 	{
 		buffer.begin(mode, format);
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z)
 	{
 		buffer.pos(x, y, z);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, double u, double v)
 	{
 		buffer.pos(x, y, z).tex(u, v);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, float r, float g, float b, float a)
 	{
 		buffer.pos(x, y, z).color(r, g, b, a);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, int rgba)
 	{
 		buffer.pos(x, y, z).color((rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, double u, double v, float r, float g, float b, float a)
 	{
 		buffer.pos(x, y, z).tex(u, v).color(r, g, b, a);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, double u, double v, int rgba)
 	{
 		buffer.pos(x, y, z).tex(u, v).color((rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, double u, double v, int skylight, int blocklight, int rgba)
 	{
 		buffer.pos(x, y, z).tex(u, v).lightmap(skylight, blocklight).color((rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, double u, double v, int light, float r, float g, float b, float a)
 	{
 		buffer.pos(x, y, z).tex(u, v).lightmap(light >> 16 & 0xFF, light & 0xFF).color(r, g, b, a);
 		buffer.endVertex();
 		return this;
 	}
-
+	
 	public RenderHelper vertex(double x, double y, double z, double u, double v, int light, int rgba)
 	{
 		buffer.pos(x, y, z).tex(u, v).lightmap(light >> 16 & 0xFF, light & 0xFF).color((rgba >> 24) & 0xFF, (rgba >> 16) & 0xFF, (rgba >> 8) & 0xFF, rgba & 0xFF);
 		buffer.endVertex();
 		return this;
 	}
-	
+
 	public RenderHelper face(
 			double x1, double y1, double z1,
 			double x2, double y2, double z2,
@@ -107,7 +107,7 @@ public class RenderHelper
 		buffer.endVertex();
 		return this;
 	}
-	
+
 	public RenderHelper face(TextureAtlasSprite icon,
 			double x1, double y1, double z1, float u1, float v1,
 			double x2, double y2, double z2, float u2, float v2,
@@ -122,7 +122,7 @@ public class RenderHelper
 		buffer.endVertex();
 		return this;
 	}
-	
+
 	public RenderHelper face(
 			double x1, double y1, double z1, float u1, float v1,
 			double x2, double y2, double z2, float u2, float v2,
@@ -137,7 +137,7 @@ public class RenderHelper
 		buffer.endVertex();
 		return this;
 	}
-	
+
 	public RenderHelper face(short[] rgba,
 			double x1, double y1, double z1, float u1, float v1,
 			double x2, double y2, double z2, float u2, float v2,
@@ -152,7 +152,7 @@ public class RenderHelper
 		buffer.endVertex();
 		return this;
 	}
-	
+
 	public RenderHelper face(TextureAtlasSprite icon,
 			double x1, double y1, double z1, float u1, float v1, float rgb1,
 			double x2, double y2, double z2, float u2, float v2, float rgb2,
@@ -167,7 +167,7 @@ public class RenderHelper
 		buffer.endVertex();
 		return this;
 	}
-	
+
 	public RenderHelper face(TextureAtlasSprite icon,
 			double x1, double y1, double z1, float u1, float v1, float r1, float g1, float b1, float a1,
 			double x2, double y2, double z2, float u2, float v2, float r2, float g2, float b2, float a2,
@@ -182,7 +182,7 @@ public class RenderHelper
 		buffer.endVertex();
 		return this;
 	}
-	
+
 	public RenderHelper face(TextureAtlasSprite icon,
 			double x1, double y1, double z1, float u1, float v1, int light1, float r1, float g1, float b1, float a1,
 			double x2, double y2, double z2, float u2, float v2, int light2, float r2, float g2, float b2, float a2,

@@ -62,6 +62,18 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 	}
 
 	@Override
+	public boolean canBreakBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+	{
+		return true;
+	}
+	
+	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
 		tree.breakLog(worldIn, pos, state, true);

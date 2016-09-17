@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +29,73 @@ public class Debug
 
 	public static void main(String[] args)
 	{
+		//		MC.init();
+		//		DebugMaterial.init();
+		//		String sourceLocate = "D:/Program Files/minecraft/f/forge-1.10.2-12.18.1.2011-mdk/src/main/resources/assets";
+		//		//		String srcDirName = "";
+		//		//		String destDirName = "";
+		//		//		String formatName = "chiseled.png";
+		//		//		TextureCopier.copyTarget(srcDirName, destDirName, formatName);
+		//		ModelFileCreator.provideGroupItemInfo(sourceLocate, MC.fragment);
+		TextureFormater formater = TextureFormater.INSTANCE;
+		try
+		{
+			File fileA = new File("D:/Program Files/minecraft/f/textures/ores/instances/Ore_a3");
+			File file1 = new File("D:/Program Files/minecraft/f/textures/ores/Ore_a3.png");
+			Map<Integer, Integer> map = formater.loadPositionSource(file1);
+			File file2 = new File("D:/Program Files/minecraft/f/textures/ores/Ore_a1.png");
+			formater.loadPositionTarget(file2, map);
+			File fileB = new File("D:/Program Files/minecraft/f/textures/ores/instances/Ore_a1");
+			if(!fileB.exists())
+			{
+				fileB.mkdirs();
+			}
+			for(File file3 : fileA.listFiles(filter))
+			{
+				String name = file3.getName();
+				formater.copyColor(new File(fileB, name), file3);
+			}
+			file2 = new File("D:/Program Files/minecraft/f/textures/ores/Ore_a2.png");
+			fileB = new File("D:/Program Files/minecraft/f/textures/ores/instances/Ore_a2");
+			if(!fileB.exists())
+			{
+				fileB.mkdirs();
+			}
+			formater.loadPositionTarget(file2, map);
+			for(File file3 : fileA.listFiles(filter))
+			{
+				String name = file3.getName();
+				formater.copyColor(new File(fileB, name), file3);
+			}
+			file2 = new File("D:/Program Files/minecraft/f/textures/ores/Ore_a4.png");
+			fileB = new File("D:/Program Files/minecraft/f/textures/ores/instances/Ore_a4");
+			if(!fileB.exists())
+			{
+				fileB.mkdirs();
+			}
+			formater.loadPositionTarget(file2, map);
+			for(File file3 : fileA.listFiles(filter))
+			{
+				String name = file3.getName();
+				formater.copyColor(new File(fileB, name), file3);
+			}
+			file2 = new File("D:/Program Files/minecraft/f/textures/ores/Ore_a5.png");
+			fileB = new File("D:/Program Files/minecraft/f/textures/ores/instances/Ore_a5");
+			if(!fileB.exists())
+			{
+				fileB.mkdirs();
+			}
+			formater.loadPositionTarget(file2, map);
+			for(File file3 : fileA.listFiles(filter))
+			{
+				String name = file3.getName();
+				formater.copyColor(new File(fileB, name), file3);
+			}
+		}
+		catch(IOException exception)
+		{
+
+		}
 	}
 
 	public static void drawImage(int size, double[] values, String name)

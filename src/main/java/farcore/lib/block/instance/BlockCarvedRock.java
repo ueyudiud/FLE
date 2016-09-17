@@ -25,6 +25,12 @@ public class BlockCarvedRock extends BlockTE
 			useNeighborBrightness = true;
 		}
 	}
+
+	@Override
+	protected IBlockState initDefaultState(IBlockState state)
+	{
+		return state.withProperty(property_TE, property_TE.parseValue("carved").get());
+	}
 	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
