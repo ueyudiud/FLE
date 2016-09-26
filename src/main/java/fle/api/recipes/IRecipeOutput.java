@@ -1,13 +1,13 @@
 package fle.api.recipes;
 
-public interface IRecipeOutput<M extends ICraftingMatrix<T>, T>
+public interface IRecipeOutput<C, M, T>
 {
 	OutputType getInputType();
-
-	boolean matchOutput(M matrix);
-
-	void onOutput(M matrix);
 	
+	boolean matchOutput(C cache, M matrix);
+	
+	void onOutput(M matrix);
+
 	public static enum OutputType
 	{
 		SINGLE,

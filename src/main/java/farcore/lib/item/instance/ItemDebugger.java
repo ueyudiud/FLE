@@ -18,6 +18,7 @@ import farcore.lib.tile.IToolableTile;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
+import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -52,7 +53,9 @@ public class ItemDebugger extends ItemBase
 			{
 				if(player.isSneaking())
 				{
-					pos = pos.offset(side);
+					//					pos = pos.offset(side);
+					U.Players.moveEntityToAnotherDim(player, 10, 0, 128, 0);
+					return EnumActionResult.SUCCESS;
 				}
 				IBlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();

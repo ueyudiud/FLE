@@ -1,13 +1,13 @@
 package fle.api.recipes;
 
-public interface IRecipeInput<M extends ICraftingMatrix<T>, T>
+public interface IRecipeInput<C, M, T>
 {
 	InputType getInputType();
-	
-	boolean matchInput(M matrix);
-	
-	void onInput(M matrix);
 
+	C matchInput(M matrix);
+
+	void onInput(M matrix, C cache);
+	
 	public static enum InputType
 	{
 		SINGLE,

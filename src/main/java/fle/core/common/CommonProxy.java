@@ -14,5 +14,6 @@ public class CommonProxy
 		Tools.initalizeTools();
 		BlocksItems.setBlocksItemsProperties();
 		MinecraftForge.EVENT_BUS.register(new FleEntityHandler());
+		fargen.compact.fle.SubCompact.init();
 	}
 }

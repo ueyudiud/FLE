@@ -11,4 +11,8 @@ public interface IRecipe extends IRegisteredNameable
 	int getRecipeOutputSize();
 	
 	IRecipeOutput getOutput(int index);
+	
+	boolean isFakeRecipe();
+
+	boolean isValid();
 }

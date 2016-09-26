@@ -175,6 +175,16 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	}
 	
 	@Override
+	public int getToolLevel(ItemStack stack, EnumToolType type)
+	{
+		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		int level = prop.stat.getToolHarvestLevel(stack, type.name(), getMaterial(stack, "head"));
+		return level == -1 ?
+				prop.toolTypes.contains(type) ? getMaterial(stack, "head").toolHarvestLevel : -1 :
+					level;
+	}
+	
+	@Override
 	public void onToolUse(EntityLivingBase user, ItemStack stack, EnumToolType toolType, float amount)
 	{
 		if(!isItemUsable(stack)) return;

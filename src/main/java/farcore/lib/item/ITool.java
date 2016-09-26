@@ -10,5 +10,7 @@ public interface ITool
 {
 	List<EnumToolType> getToolTypes(ItemStack stack);
 
+	int getToolLevel(ItemStack stack, EnumToolType type);
+	
 	void onToolUse(EntityLivingBase user, ItemStack stack, EnumToolType toolType, float amount);
 }

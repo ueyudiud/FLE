@@ -27,11 +27,12 @@ public class FarGen
 	public static final String ID = "fg";
 	public static final String VERSION = "0.3";
 	public static final String NAME = "Far Generation";
-
+	
 	public static final DimensionType FAR_OVERWORLD;
 	public static final DimensionType FAR_NETHER;
 	public static final DimensionType FAR_END;
-
+	public static DimensionType FAR_VOID;
+	
 	static
 	{
 		DimensionManager.unregisterDimension(0);
@@ -44,10 +45,10 @@ public class FarGen
 		FAR_END = DimensionType.register("FAR_END", "far_end", 1, FarEndProvider.class, false);
 		DimensionManager.registerDimension(1, FAR_END);
 	}
-
+	
 	@SidedProxy(serverSide = "fargen.core.FarGen$Common", clientSide = "fargen.core.FarGen$Client")
 	public static Common proxy;
-	
+
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -57,7 +58,7 @@ public class FarGen
 		modMetadata.name = NAME;
 		modMetadata.credits = "ueyudiud";
 	}
-	
+
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
@@ -68,14 +69,14 @@ public class FarGen
 		WorldPropHandler.addWorldProperty(0, new WorldPropSurface());
 		proxy.load();
 	}
-
+	
 	public static class Common
 	{
 		void load()
 		{
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static class Client extends Common
 	{
