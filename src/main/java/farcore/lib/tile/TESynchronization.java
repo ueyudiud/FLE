@@ -14,6 +14,13 @@ import net.minecraft.world.EnumSkyBlock;
 public class TESynchronization extends TEBuffered
 implements ISynchronizableTile
 {
+	/**
+	 * This a state assistant.
+	 * Use to contain boolean state.
+	 */
+	protected long state;
+	private long lastState;
+
 	private boolean markChanged;
 	private boolean initialized = false;
 	public NBTSynclizedCompound nbt = new NBTSynclizedCompound();
@@ -34,6 +41,20 @@ implements ISynchronizableTile
 	public TESynchronization()
 	{
 
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	{
+		nbt.setLong("state", state);
+		return super.writeToNBT(nbt);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		state = nbt.getLong("state");
 	}
 
 	@Override
@@ -102,12 +123,15 @@ implements ISynchronizableTile
 
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
-
+		if(nbt.hasKey("s"))
+		{
+			state = nbt.getLong("s");
+		}
 	}
 
 	public void writeToDescription(NBTTagCompound nbt)
 	{
-
+		nbt.setLong("s", state);
 	}
 	
 	@Override
@@ -129,6 +153,11 @@ implements ISynchronizableTile
 		if(isServer())
 		{
 			updateServer();
+			if(lastState != state)
+			{
+				onStateChanged(true);
+				lastState = state;
+			}
 			nbt.reset();
 			writeToDescription(nbt);
 			if((syncState & 0x1) != 0)
@@ -183,6 +212,11 @@ implements ISynchronizableTile
 			else
 			{
 				updateClient();
+				if(lastState != state)
+				{
+					onStateChanged(true);
+					lastState = state;
+				}
 				if((syncState & 0x8) != 0)
 				{
 					markBlockUpdate();
@@ -206,6 +240,19 @@ implements ISynchronizableTile
 		}
 	}
 
+	protected void onStateChanged(boolean isServerSide)
+	{
+		if(isServerSide)
+		{
+			syncToNearby();
+		}
+		else
+		{
+			markBlockUpdate();
+			markBlockRenderUpdate();
+		}
+	}
+	
 	protected float getSyncRange()
 	{
 		return 16F;
@@ -253,5 +300,30 @@ implements ISynchronizableTile
 	public void onRemoveFromLoadedWorld()
 	{
 		nbt.clear();
+	}
+	
+	protected boolean is(int i)
+	{
+		return (state & (1 << i)) != 0;
+	}
+	
+	protected boolean islast(int i)
+	{
+		return (lastState & (1 << i)) != 0;
+	}
+
+	protected void change(int i)
+	{
+		state ^= 1 << i;
+	}
+	
+	protected void disable(int i)
+	{
+		state &= ~(1 << i);
+	}
+	
+	protected void enable(int i)
+	{
+		state |= (1 << i);
 	}
 }

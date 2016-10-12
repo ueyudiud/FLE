@@ -48,54 +48,54 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public enum ModelOreChip implements ICustomItemModelSelector, ICustomModelLoader, IModel
 {
-	INSTANCE;
-	
+	instance;
+
 	public static final ModelResourceLocation PARENT_MODEL_LOCATION = new ModelResourceLocation(FarCore.ID + ":models/item/chip", "inventory");
 	public static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":ore_chip", "inventory");
-	
-	private static final ResourceLocation OVERRIDE_LOCATION = new ResourceLocation(FarCore.ID, "items/group/ore_chip/override");
 
+	private static final ResourceLocation OVERRIDE_LOCATION = new ResourceLocation(FarCore.ID, "items/group/ore_chip/override");
+	
 	@Override
 	public ModelResourceLocation getModelLocation(ItemStack stack)
 	{
 		return MODEL_LOCATION;
 	}
-
+	
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
 	}
-
+	
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
 		return MODEL_LOCATION.equals(modelLocation);
 	}
-
+	
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
 		return this;
 	}
-
+	
 	@Override
 	public List<ResourceLocation> getAllowedResourceLocations(Item item)
 	{
 		return ImmutableList.of(MODEL_LOCATION);
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
 		return ImmutableList.of(PARENT_MODEL_LOCATION);
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
 		return ImmutableList.of(OVERRIDE_LOCATION);
 	}
-
+	
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -110,13 +110,13 @@ public enum ModelOreChip implements ICustomItemModelSelector, ICustomModelLoader
 		}
 		return new BakedOreChipModel(particle, builder.build(), ItemLayerModel.getQuadsForSprite(1, particle, format, optional));
 	}
-
+	
 	@Override
 	public IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class BakedOreChipModel implements ICustomItemRenderModel, IPerspectiveAwareModel
 	{
@@ -125,7 +125,7 @@ public enum ModelOreChip implements ICustomItemModelSelector, ICustomModelLoader
 		private List<BakedQuad> map2;
 		private boolean isCulled;
 		private final IBakedModel submodel;
-		
+
 		public BakedOreChipModel(TextureAtlasSprite icon, ImmutableMap<String, List<BakedQuad>> map, List<BakedQuad> map2)
 		{
 			this(null, icon, map, map2);
@@ -167,7 +167,7 @@ public enum ModelOreChip implements ICustomItemModelSelector, ICustomModelLoader
 			map1 = map;
 			this.map2 = map2;
 		}
-
+		
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
@@ -185,7 +185,7 @@ public enum ModelOreChip implements ICustomItemModelSelector, ICustomModelLoader
 			}
 			return list;
 		}
-		
+
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
@@ -198,12 +198,12 @@ public enum ModelOreChip implements ICustomItemModelSelector, ICustomModelLoader
 		@Override
 		public boolean isBuiltInRenderer() {return false;}
 		@Override
-		public TextureAtlasSprite getParticleTexture() {return null;}
+		public TextureAtlasSprite getParticleTexture() {return particleIcon;}
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms() {return ItemCameraTransforms.DEFAULT;}
 		@Override
 		public ItemOverrideList getOverrides() {return ItemOverrideList.NONE;}
-
+		
 		@Override
 		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType type)
 		{

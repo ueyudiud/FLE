@@ -73,4 +73,10 @@ public class SingleRecipeItemInput extends SingleRecipeInput<RecipeItemInputConf
 			break;
 		}
 	}
+	
+	@Override
+	public boolean isValid()
+	{
+		return source.input.valid() && (source.giveback == null || source.giveback.valid());
+	}
 }

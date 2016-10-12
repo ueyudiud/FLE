@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel
 {
-	INSTANCE;
+	instance;
 
 	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
 	private static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "normal");

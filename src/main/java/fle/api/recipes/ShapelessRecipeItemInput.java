@@ -91,4 +91,10 @@ public class ShapelessRecipeItemInput extends ShapelessRecipeInput<ItemStack, Re
 			break;
 		}
 	}
+	
+	@Override
+	protected boolean isValid(RecipeItemInputConfig source)
+	{
+		return source.input.valid() && (source.giveback == null || source.giveback.valid());
+	}
 }

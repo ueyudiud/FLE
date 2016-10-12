@@ -11,7 +11,7 @@ public class ShapedRecipeFluidInput extends ShapedRecipeInput<FluidStack, Recipe
 		FluidStack input;
 		boolean useFluid;
 		FluidStack output;
-
+		
 		public RecipeFluidInputConfig(FluidStack input)
 		{
 			this(input, true, null);
@@ -23,7 +23,7 @@ public class ShapedRecipeFluidInput extends ShapedRecipeInput<FluidStack, Recipe
 			this.output = output;
 		}
 	}
-
+	
 	static RecipeFluidInputConfig decode$(IteratorList<Object> itr)
 	{
 		Object object = itr.next();
@@ -33,19 +33,19 @@ public class ShapedRecipeFluidInput extends ShapedRecipeInput<FluidStack, Recipe
 			return (RecipeFluidInputConfig) object;
 		throw new RuntimeException();
 	}
-	
+
 	@Override
 	protected RecipeFluidInputConfig decode(IteratorList<Object> itr)
 	{
 		return decode$(itr);
 	}
-	
+
 	@Override
 	protected boolean matchInput(RecipeFluidInputConfig arg, FluidStack target)
 	{
 		return (target == null && arg.input == null) || target.containsFluid(arg.input);
 	}
-	
+
 	@Override
 	protected void onInput(int x, int y, RecipeFluidInputConfig arg, ICraftingMatrix<FluidStack> matrix)
 	{
@@ -65,5 +65,11 @@ public class ShapedRecipeFluidInput extends ShapedRecipeInput<FluidStack, Recipe
 		{
 			matrix.set(x, y, arg.output.copy());
 		}
+	}
+
+	@Override
+	protected boolean isValid(RecipeFluidInputConfig arg)
+	{
+		return true;
 	}
 }

@@ -12,13 +12,13 @@ public class ShapelessRecipeFluidInput extends ShapelessRecipeInput<FluidStack, 
 	{
 		return ShapedRecipeFluidInput.decode$(itr);
 	}
-	
+
 	@Override
 	protected EnumActionResult matchInput(RecipeFluidInputConfig arg, FluidStack target)
 	{
 		return arg.input.isFluidEqual(target) ? arg.input.amount >= target.amount ? EnumActionResult.SUCCESS : EnumActionResult.FAIL : EnumActionResult.PASS;
 	}
-	
+
 	@Override
 	protected void onInput(int id, RecipeFluidInputConfig arg, ICraftingMatrix<FluidStack> matrix)
 	{
@@ -38,5 +38,11 @@ public class ShapelessRecipeFluidInput extends ShapelessRecipeInput<FluidStack, 
 		{
 			matrix.set(id, arg.output.copy());
 		}
+	}
+
+	@Override
+	protected boolean isValid(RecipeFluidInputConfig source)
+	{
+		return true;
 	}
 }

@@ -1,0 +1,14 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:leaves"
+	},
+	"variants": {
+		"type": {
+			"aspen": { "textures": { "all": "minecraft:blocks/leaves/aspen" } },
+			"morus": { "textures": { "all": "minecraft:blocks/leaves/morus" } },
+			"willow": { "textures": { "all": "minecraft:blocks/leaves/willow" } }
+		}
+	}
+}

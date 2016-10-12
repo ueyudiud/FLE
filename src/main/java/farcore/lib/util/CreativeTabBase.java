@@ -28,5 +28,6 @@ public abstract class CreativeTabBase extends CreativeTabs
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public abstract ItemStack getIconItemStack();
 }

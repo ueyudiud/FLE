@@ -8,13 +8,14 @@ import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.model.item.ModelOreChip;
+import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,13 +30,21 @@ public class ItemOreChip extends ItemMulti
 	@Override
 	public void initalizeItems()
 	{
-		U.Mod.registerCustomItemModelSelector(this, ModelOreChip.INSTANCE);
 		for(Mat material : Mat.filt(condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
 			LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
 			condition.registerOre(material, templete);
 		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FarCore.ID, "ore_chip"));
+		FarCoreItemModelLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), (ItemStack stack) -> "material:" + U.ItemStacks.setupNBT(stack, false).getString("rock"));
 	}
 
 	public static ItemStack createOreChip(int size, Mat ore, Mat rock)

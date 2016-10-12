@@ -241,10 +241,25 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 	{
 		for(int i = 0; i < width; ++i)
 		{
-			for(int j = 0; j <height; ++j)
+			for(int j = 0; j < height; ++j)
 			{
 				onInput(cache.ofX + i, cache.ofY + j, getSource(i, j, cache.state), matrix);
 			}
 		}
 	}
+	
+	@Override
+	public boolean isValid()
+	{
+		for(int i = 0; i < width; ++i)
+		{
+			for(int j = 0; j < height; ++j)
+			{
+				if(map[i][j] != null && !isValid((S) map[j][i])) return false;
+			}
+		}
+		return true;
+	}
+
+	protected abstract boolean isValid(S arg);
 }

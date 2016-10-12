@@ -33,9 +33,9 @@ import net.minecraft.block.Block;
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
 	private static final Register<Mat> register = new Register(32768);
-
-	private static final Map<IDataChecker<ISubTagContainer>, List<Mat>> materials = new HashMap();
 	
+	private static final Map<IDataChecker<ISubTagContainer>, List<Mat>> materials = new HashMap();
+
 	public static Register<Mat> materials()
 	{
 		return register;
@@ -82,7 +82,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		else
 			return materials.get(filter);
 	}
-	
+
 	public final String modid;
 	public final String name;
 	public final String oreDictName;
@@ -148,10 +148,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public ICrop crop;
 	//Multi item configuration.
 	public IItemMatProp itemProp;
-
+	
 	private IntegerMap<String> properties = new IntegerMap();
 	private Set<SubTag> subTags = new HashSet();
-
+	
 	public Mat(int id, String name, String oreDict, String localized)
 	{
 		this(id, U.Mod.getActiveModID(), name, oreDict, localized);
@@ -173,18 +173,18 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			Mat.register.register(id, name, this);
 		}
 	}
-
+	
 	@Override
 	public final String getRegisteredName()
 	{
 		return name;
 	}
-
+	
 	public String getLocalName()
 	{
 		return LanguageManager.translateToLocal("material." + name + ".name");
 	}
-
+	
 	public Mat setRGBa(int colorIndex)
 	{
 		RGBa[0] = (short) ((colorIndex >> 24)       );
@@ -194,32 +194,32 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		RGB = colorIndex >> 8;
 		return this;
 	}
-
+	
 	public Mat setRGBa(short[] colorIndex)
 	{
 		RGBa = colorIndex;
 		RGB = colorIndex[0] << 16 | colorIndex[1] << 8 | colorIndex[2];
 		return this;
 	}
-	
+
 	public Mat setUnificationMaterial(Mat material)
 	{
 		unificationMaterial = material;
 		return this;
 	}
-	
+
 	public Mat setChemicalFormula(String name)
 	{
 		chemicalFormula = name;
 		return this;
 	}
-
+	
 	public Mat setCustomInformation(String info)
 	{
 		customDisplayInformation = info;
 		return this;
 	}
-
+	
 	public Mat setGeneralProp(float heatCap, float thermalConduct, float maxSpeed, float maxTorque, float dielectricConstant, float electrialResistance, float redstoneResistance)
 	{
 		this.heatCap = heatCap;
@@ -231,7 +231,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		this.redstoneResistance = redstoneResistance;
 		return this;
 	}
-
+	
 	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float attackSpeed, float dVE, int enchantability)
 	{
 		canMakeTool = true;
@@ -245,24 +245,24 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.TOOL);
 		return this;
 	}
-
+	
 	public Mat setHandable(float toughness)
 	{
 		handleToughness = toughness;
 		add(SubTag.HANDLE);
 		return this;
 	}
-	
+
 	public Mat setOreProperty(int harvestLevel, float hardness, float resistance)
 	{
 		return setOreProperty(harvestLevel, hardness, resistance, SubTag.ORE_SIMPLE);
 	}
-	
+
 	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, SubTag type)
 	{
 		return setOreProperty(harvestLevel, hardness, resistance, IOreProperty.property, type);
 	}
-
+	
 	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, IOreProperty oreProperty, SubTag type)
 	{
 		this.oreProperty = oreProperty;
@@ -272,7 +272,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.ORE, type);
 		return this;
 	}
-
+	
 	public Mat setWood(float woodHardness, float ashcontent, float woodBurnHeat)
 	{
 		isWood = true;
@@ -283,15 +283,18 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		this.woodHardness = woodHardness;
 		this.ashcontent = ashcontent;
 		this.woodBurnHeat = woodBurnHeat;
-		add(SubTag.WOOD);
+		addProperty(M.fallen_damage_deduction, (int) (1000 / (woodHardness + 1)));
+		addProperty(M.flammability, 18);
+		addProperty(M.fire_encouragement, 2);
+		addProperty(M.fire_spread_speed, 25);
 		return this;
 	}
-	
+
 	public Mat setTree(ITree tree)
 	{
 		return setTree(tree, true);
 	}
-
+	
 	/**
 	 * Set tree information of material.
 	 * @param tree The tree information.
@@ -320,7 +323,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 		return this;
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp)
 	{
 		isRock = true;
@@ -333,7 +336,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.ROCK);
 		return this;
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp, Block rock)
 	{
 		isRock = true;
@@ -345,7 +348,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.ROCK);
 		return this;
 	}
-
+	
 	public Mat setCrop(ICrop crop)
 	{
 		isCrop = true;
@@ -353,42 +356,42 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.CROP);
 		return this;
 	}
-
+	
 	public Mat setTag(SubTag...tags)
 	{
 		add(tags);
 		return this;
 	}
-	
+
 	public Mat addProperty(String tag, int value)
 	{
 		properties.put(tag, value);
 		return this;
 	}
-
+	
 	public int getProperty(String tag)
 	{
 		return properties.get(tag);
 	}
-
+	
 	@Override
 	public void add(SubTag... tags)
 	{
 		subTags.addAll(Arrays.asList(tags));
 	}
-
+	
 	@Override
 	public boolean contain(SubTag tag)
 	{
 		return subTags.contains(tag);
 	}
-
+	
 	@Override
 	public int compareTo(Mat o)
 	{
 		return name.compareTo(o.name);
 	}
-	
+
 	@Override
 	public String toString()
 	{

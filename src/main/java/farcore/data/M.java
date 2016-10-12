@@ -25,6 +25,16 @@ import farcore.lib.util.SubTag;
 
 public class M
 {
+	/*
+	 * Material properties.
+	 */
+	public static final String fire_encouragement = "fire_encouragement";
+	public static final String flammability = "flammability";
+	public static final String light_value = "light_value";
+	public static final String light_opacity = "light_opacity";
+	public static final String fire_spread_speed = "fire_spread_speed";
+	public static final String fallen_damage_deduction = "fallen_damage_deduction";
+	
 	public static final Mat VOID = new Mat(-1, false, "farcore", "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID);
 	
 	public static final Mat stone = new Mat(7001, "minecraft", "stone", "Stone", "Stone").setRock(4, 1.5F, 8F, 370).setToolable(5, 16, 1.2F, 0.8F, 0.8F, 1.0F, 8).setRGBa(0x626262FF);

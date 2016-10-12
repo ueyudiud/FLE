@@ -7,10 +7,10 @@ import net.minecraft.world.EnumSkyBlock;
 public interface ISynchronizableTile
 {
 	void readFromDescription(NBTTagCompound nbt);
-	
-	void markBlockRenderUpdate();
 
-	void markLightForUpdate(EnumSkyBlock type);
+	void markBlockRenderUpdate();
 	
+	void markLightForUpdate(EnumSkyBlock type);
+
 	void syncToPlayer(EntityPlayer player);
 }

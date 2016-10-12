@@ -90,6 +90,12 @@ public class TemplateSmeltingRecipeMap implements IRecipeMap<SmeltingEntry, Smel
 					{
 						matrix.decrStackSize(0, input.size(matrix.getStackInSlot(0)));
 					}
+					
+					@Override
+					public boolean isValid()
+					{
+						return true;
+					}
 				};
 			}
 			return ri;
@@ -124,6 +130,12 @@ public class TemplateSmeltingRecipeMap implements IRecipeMap<SmeltingEntry, Smel
 					public void onOutput(TileEntityFurnace matrix)
 					{
 						U.TileEntities.insertStack(output, matrix, 2);
+					}
+
+					@Override
+					public boolean isValid()
+					{
+						return true;
 					}
 				};
 			}

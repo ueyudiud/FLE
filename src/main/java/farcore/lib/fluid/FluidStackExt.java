@@ -28,6 +28,17 @@ public class FluidStackExt extends FluidStack
 		stack.readFromNBT(nbt);
 		return stack;
 	}
+	
+	public static boolean areFluidStackEqual(FluidStack stacka, FluidStack stackb)
+	{
+		return stacka == null || stackb == null ? stacka == stackb :
+			stacka.isFluidEqual(stackb) && stacka.amount == stackb.amount;
+	}
+
+	public static FluidStackExt copyOf(FluidStack stack)
+	{
+		return stack == null ? null : new FluidStackExt(stack);
+	}
 
 	public FluidStackExt(Fluid fluid, int amount)
 	{
@@ -37,14 +48,22 @@ public class FluidStackExt extends FluidStack
 	{
 		super(fluid, amount, nbt);
 	}
+	public FluidStackExt(Fluid fluid, int amount, int temperature, NBTTagCompound nbt)
+	{
+		super(fluid, amount, nbt);
+		this.temperature = temperature;
+	}
 	public FluidStackExt(FluidStack stack, int amount)
 	{
 		super(stack, amount);
 	}
-	FluidStackExt(FluidStackExt stack)
+	FluidStackExt(FluidStack stack)
 	{
 		super(stack.getFluid(), stack.amount, stack.tag);
-		temperature = stack.temperature;
+		if(stack instanceof FluidStackExt)
+		{
+			temperature = ((FluidStackExt) stack).temperature;
+		}
 	}
 	FluidStackExt(Fluid fluid)
 	{

@@ -32,6 +32,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemDebugger extends ItemBase
 {
@@ -44,6 +46,13 @@ public class ItemDebugger extends ItemBase
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		U.Mod.registerItemModel(EnumItem.debug.item, 0, FarCore.ID, "debugger");
+	}
+
+	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
@@ -53,9 +62,7 @@ public class ItemDebugger extends ItemBase
 			{
 				if(player.isSneaking())
 				{
-					//					pos = pos.offset(side);
-					U.Players.moveEntityToAnotherDim(player, 10, 0, 128, 0);
-					return EnumActionResult.SUCCESS;
+					pos = pos.offset(side);
 				}
 				IBlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();

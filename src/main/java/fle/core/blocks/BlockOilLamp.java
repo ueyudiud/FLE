@@ -1,7 +1,9 @@
 package fle.core.blocks;
 
 import java.util.List;
+import java.util.Random;
 
+import farcore.data.EnumItem;
 import farcore.lib.block.BlockTE;
 import farcore.lib.collection.IRegister;
 import fle.core.FLE;
@@ -28,6 +30,12 @@ public class BlockOilLamp extends BlockTE
 	{
 		super(FLE.MODID, "oil.lamp", Material.ROCK);
 		setLightOpacity(2);
+	}
+	
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	{
+		return EnumItem.tool.item;
 	}
 
 	@Override
@@ -64,7 +72,7 @@ public class BlockOilLamp extends BlockTE
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
-		return false;
+		return true;
 	}
 
 	@Override

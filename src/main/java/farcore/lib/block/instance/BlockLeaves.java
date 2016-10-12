@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.FarCore;
+import farcore.FarCoreSetup.ClientProxy;
+import farcore.data.CT;
 import farcore.data.EnumToolType;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.material.Mat;
+import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.tree.ITree;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
@@ -72,11 +74,20 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 		this.tree = tree;
 		setHardness(0.5F);
 		setResistance(0.02F);
-		setCreativeTab(FarCore.tabResourceBlock);
+		setCreativeTab(CT.tabTree);
 		setLightOpacity(1);
 		setSoundType(SoundType.PLANT);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), localName);
-		U.Mod.registerItemBlockModel(this, 0, tree.material().modid, "leaves/" + tree.material().name);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		Mat material = tree.material();
+		StateMapperExt mapper = new StateMapperExt(material.modid, "leaves", null, net.minecraft.block.BlockLeaves.CHECK_DECAY);
+		mapper.setVariants("type", material.name);
+		ClientProxy.registerCompactModel(mapper, this, null);
 		U.Mod.registerBiomeColorMultiplier(this);
 	}
 

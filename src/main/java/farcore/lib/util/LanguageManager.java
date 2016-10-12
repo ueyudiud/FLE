@@ -30,7 +30,7 @@ public class LanguageManager
 		return file.getName().endsWith(".lang");
 	};
 	private static boolean loadFile = false;
-	
+
 	public static void registerLocal(String unlocalized, String localized)
 	{
 		if(!map1.getOrDefault(ENGLISH, ImmutableMap.of()).containsKey(unlocalized))
@@ -39,7 +39,7 @@ public class LanguageManager
 		}
 		map2.put(unlocalized, localized);
 	}
-	
+
 	public static String translateToLocal(String unlocalized, Object...objects)
 	{
 		String locale = U.Strings.locale();
@@ -53,7 +53,7 @@ public class LanguageManager
 			translate = map2.get(unlocalized);
 		}
 		else
-			return I18n.format(unlocalized, objects);
+			return U.Strings.translateByI18n(unlocalized, objects);
 		try
 		{
 			return translate == null ? unlocalized : String.format(translate, objects);
@@ -63,7 +63,7 @@ public class LanguageManager
 			return "Error Translation";
 		}
 	}
-	
+
 	public static String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
 	{
 		String locale = U.Strings.locale();
@@ -90,20 +90,20 @@ public class LanguageManager
 			return null;
 		}
 	}
-	
+
 	private File file;
-	
+
 	public LanguageManager(File file)
 	{
 		this.file = file;
 	}
-	
+
 	public void reset()
 	{
 		Log.info("Far Core reset language manager.");
 		map1.clear();
 	}
-	
+
 	public void read()
 	{
 		if (!file.canRead())
@@ -168,7 +168,7 @@ public class LanguageManager
 			Log.warn("Fail to read language file.", exception);
 		}
 	}
-	
+
 	public void write()
 	{
 		if(loadFile)

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
@@ -96,9 +98,6 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setInteger("w", waterLevel);
-		nbt.setBoolean("wi", isWild);
-		nbt.setFloat("g", growBuffer);
 		nbt.setInteger("s", stage);
 		nbt.setString("c", card.getRegisteredName());
 		NBTTagCompound nbt1;
@@ -110,18 +109,6 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		if(nbt.hasKey("w"))
-		{
-			waterLevel = nbt.getInteger("w");
-		}
-		if(nbt.hasKey("wi"))
-		{
-			isWild = nbt.getBoolean("wi");
-		}
-		if(nbt.hasKey("g"))
-		{
-			growBuffer = nbt.getFloat("g");
-		}
 		if(nbt.hasKey("s"))
 		{
 			stage = nbt.getInteger("s");
@@ -217,7 +204,6 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 	{
 		this.stage = stage;
 	}
-	
 	
 	@Override
 	public void grow(int amt)
@@ -342,11 +328,11 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
 		list.add("Tag : " + getStateName());
-		list.add("Name : " + card.getLocalName(getDNA()));
+		list.add("Name : " + card.getTranslatedName(getDNA()));
 		list.add("DNA : " + info.DNA);
 		int max = card.getMaxStage();
 		int req = card.getGrowReq(this);
-		list.add("Grow Progress : " + (int) (growBuffer + stage * req) + "/" + card.getMaxStage() * req);
+		list.add("Grow Progress : " + ChatFormatting.GREEN + (int) (growBuffer + stage * req) + "/" + card.getMaxStage() * req);
 		card.addInformation(this, list);
 	}
 	

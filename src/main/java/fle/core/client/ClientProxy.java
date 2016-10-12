@@ -18,6 +18,8 @@ public class ClientProxy extends CommonProxy
 	{
 		super.init(event);
 		MinecraftForge.EVENT_BUS.register(new FleClientHandler());
+		
+		farcore.FarCoreSetup.ClientProxy.registerRenderObject();
 
 		U.Mod.registerColorMultiplier(ColorMultiplier.TOOL_ITEM_MATERIAL_COLOR, EnumItem.tool.item);
 	}

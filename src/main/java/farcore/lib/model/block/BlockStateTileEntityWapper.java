@@ -1,6 +1,6 @@
 package farcore.lib.model.block;
 
-import farcore.util.BlockStateWrapper;
+import farcore.lib.util.BlockStateWrapper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 

@@ -14,15 +14,15 @@ public abstract class ShapelessRecipeInput<T, S> implements IRecipeInput<Shapele
 	public static class ShapelessRecipeCache
 	{
 		byte[] locate;
-
+		
 		ShapelessRecipeCache(byte[] locate)
 		{
 			this.locate = locate;
 		}
 	}
-
-	protected List<S> inputs = new ArrayList();
 	
+	protected List<S> inputs = new ArrayList();
+
 	public ShapelessRecipeInput(Object...objects)
 	{
 		try
@@ -38,19 +38,19 @@ public abstract class ShapelessRecipeInput<T, S> implements IRecipeInput<Shapele
 			throw new RuntimeException("Fail to decode recipe, recipes : " + Arrays.deepToString(objects), exception);
 		}
 	}
-	
+
 	protected abstract S decode(IteratorList<Object> itr);
-	
+
 	protected abstract EnumActionResult matchInput(S arg, T target);
-	
+
 	protected abstract void onInput(int id, S arg, ICraftingMatrix<T> matrix);
-	
+
 	@Override
 	public InputType getInputType()
 	{
 		return inputs.size() == 1 ? InputType.SINGLE : InputType.SHAPELESS;
 	}
-	
+
 	@Override
 	public ShapelessRecipeCache matchInput(ICraftingMatrix<T> matrix)
 	{
@@ -79,7 +79,7 @@ public abstract class ShapelessRecipeInput<T, S> implements IRecipeInput<Shapele
 		}
 		return new ShapelessRecipeCache(locate);
 	}
-	
+
 	@Override
 	public void onInput(ICraftingMatrix<T> matrix, ShapelessRecipeCache cache)
 	{
@@ -91,4 +91,16 @@ public abstract class ShapelessRecipeInput<T, S> implements IRecipeInput<Shapele
 			}
 		}
 	}
+
+	@Override
+	public boolean isValid()
+	{
+		for(S source : inputs)
+		{
+			if(!isValid(source)) return false;
+		}
+		return true;
+	}
+	
+	protected abstract boolean isValid(S source);
 }

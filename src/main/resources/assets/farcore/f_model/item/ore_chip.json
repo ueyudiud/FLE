@@ -1,0 +1,16 @@
+{
+	"include": {
+		"rock": "[farcore:stone_chip"
+	},
+	"layers": {
+		"layer0": {
+			"texture": "[rock",
+			"submeta": "#farcore:group/ore_chip/rock"
+		},
+		"layer1": {
+			"renderFull3D": false,
+			"texture": "farcore:items/group/ore_chip/override",
+			"colorMultiplier": "farcore:material"
+		}
+	}
+}

@@ -7,25 +7,22 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumToolType;
 import farcore.data.M;
-import farcore.lib.block.BlockTE;
+import farcore.lib.block.BlockSingleTE;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.block.material.MaterialOre;
-import farcore.lib.collection.IRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TEOre;
+import farcore.lib.util.BlockStateWrapper;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.SubTag;
-import farcore.util.BlockStateWrapper;
 import farcore.util.U.Strings;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -33,7 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class BlockOre extends BlockTE
+public class BlockOre extends BlockSingleTE
 {
 	public static class OreStateWrapper extends BlockStateWrapper
 	{
@@ -41,7 +38,7 @@ public class BlockOre extends BlockTE
 		public final EnumOreAmount amount;
 		public final Mat rock;
 		public final RockType type;
-
+		
 		OreStateWrapper(IBlockState state, TEOre ore)
 		{
 			super(state);
@@ -58,16 +55,16 @@ public class BlockOre extends BlockTE
 			this.rock = rock;
 			type = rockType;
 		}
-
+		
 		@Override
 		protected BlockStateWrapper wrapState(IBlockState state)
 		{
 			return new OreStateWrapper(state, ore, amount, rock, type);
 		}
 	}
-	
+
 	public static final MaterialOre ORE = new MaterialOre();
-	
+
 	public BlockOre()
 	{
 		super(FarCore.ID, "ore", ORE);
@@ -77,18 +74,11 @@ public class BlockOre extends BlockTE
 	}
 
 	@Override
-	protected IBlockState initDefaultState(IBlockState state)
+	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return property_TE.withProperty(state, 1);
+		return new TEOre();
 	}
 	
-	@Override
-	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
-	{
-		register.register(1, "ore", TEOre.class);
-		return true;
-	}
-
 	private void registerLocalized()
 	{
 		LanguageManager.registerLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE), "Ore");
@@ -104,20 +94,13 @@ public class BlockOre extends BlockTE
 			}
 		}
 	}
-	
-	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
-			int meta, EntityLivingBase placer)
-	{
-		return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, 1, placer);
-	}
 
 	@Override
 	protected Item createItemBlock()
 	{
 		return new ItemOre(this);
 	}
-	
+
 	@Override
 	public String getTranslateNameForItemStack(ItemStack stack)
 	{
@@ -130,13 +113,13 @@ public class BlockOre extends BlockTE
 		else
 			return getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE);
 	}
-	
+
 	@Override
 	public String getLocalizedName()
 	{
 		return LanguageManager.translateToLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE));
 	}
-	
+
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -145,7 +128,7 @@ public class BlockOre extends BlockTE
 			return new OreStateWrapper(state, (TEOre) tile);
 		return state;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
@@ -161,13 +144,13 @@ public class BlockOre extends BlockTE
 			}
 		}
 	}
-
+	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return EnumToolType.pickaxe.name();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()

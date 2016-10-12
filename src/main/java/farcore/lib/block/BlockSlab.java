@@ -3,12 +3,14 @@ package farcore.lib.block;
 import java.util.Random;
 
 import farcore.data.EnumSlabState;
+import farcore.lib.util.UnlocalizedList;
 import farcore.util.U;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -189,5 +191,14 @@ public class BlockSlab extends BlockBase
 	public EnumFacing[] getValidRotations(World world, BlockPos pos)
 	{
 		return EnumFacing.VALUES;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
+			boolean advanced)
+	{
+		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
+		tooltip.add("info.slab.place");
 	}
 }

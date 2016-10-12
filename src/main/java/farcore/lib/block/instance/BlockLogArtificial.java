@@ -2,7 +2,7 @@ package farcore.lib.block.instance;
 
 import java.util.Random;
 
-import farcore.FarCore;
+import farcore.data.CT;
 import farcore.data.EnumToolType;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.material.Mat;
@@ -53,7 +53,7 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 		super("log.artifical." + material.name, material, tree);
 		setHardness(material.blockHardness / 2F);
 		setResistance(material.blockExplosionResistance);
-		setCreativeTab(FarCore.tabResourceBlock);
+		setCreativeTab(CT.tabTree);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), material.localName + " Log");
 		if(tree.tickLogUpdate())
 		{

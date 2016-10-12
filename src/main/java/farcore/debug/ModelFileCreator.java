@@ -18,7 +18,7 @@ import farcore.lib.material.MatCondition;
 public class ModelFileCreator
 {
 	static final Gson gson = new Gson();
-
+	
 	static void provideGroupItemInfo(String sourceLocate, MatCondition condition)
 	{
 		for(Mat material : Mat.materials())
@@ -33,56 +33,55 @@ public class ModelFileCreator
 			}
 		}
 	}
-	
+
 	static void provideLogAndLeavesInfo(String sourceLocate, Mat material)
 	{
 		JsonObject object = new JsonObject(),
-				object2 = new JsonObject();
-		JsonArray array = new JsonArray();
-		addCondition(object2, "axis", "none");
-		addModel(object2, material.modid + ":log/" + material.name);
-		array.add(object2);
+				object2 = new JsonObject(),
+				object3 = new JsonObject();
+		object.addProperty("forge_marker", 1);
+		object2.addProperty("transform", "forge:default-block");
+		object2.addProperty("model", "farcore:base_oneaxis");
+		addTextures(object3,
+				new Ety("side", material.modid + ":blocks/logs/" + material.name + "_side"),
+				new Ety("top", material.modid + ":blocks/logs/" + material.name + "_top"));
+		object2.add("textures", object3);
 		object2 = new JsonObject();
-		addCondition(object2, "axis", "x");
-		addModel(object2, material.modid + ":log/" + material.name, 1, 1);
-		array.add(object2);
-		object2 = new JsonObject();
-		addCondition(object2, "axis", "y");
-		addModel(object2, material.modid + ":log/" + material.name, 0, 0);
-		array.add(object2);
-		object2 = new JsonObject();
-		addCondition(object2, "axis", "z");
-		addModel(object2, material.modid + ":log/" + material.name, 1, 0);
-		array.add(object2);
-		object.add("multipart", array);
+		object3 = new JsonObject();
+		object3.add("none", new JsonObject());
+		JsonObject object4 = new JsonObject();
+		object4.addProperty("x", 90);
+		object4.addProperty("y", 90);
+		object3.add("x", object4);
+		object4 = new JsonObject();
+		object4.addProperty("x", 0);
+		object4.addProperty("y", 0);
+		object3.add("y", object4);
+		object4 = new JsonObject();
+		object4.addProperty("x", 90);
+		object4.addProperty("y", 0);
+		object3.add("z", object4);
+		object2.add("axis", object3);
+		object.add("variants", object2);
 		makeJson(sourceLocate, material.modid + "/blockstates/log.natural." + material.name, object);
 		makeJson(sourceLocate, material.modid + "/blockstates/log.artifical." + material.name, object);
 		object = new JsonObject();
-		object.addProperty("parent", "farcore:block/base_oneaxis");
-		addTextures(object,
-				new Ety("side", material.modid + ":blocks/logs/" + material.name + "_side"),
-				new Ety("top", material.modid + ":blocks/logs/" + material.name + "_top"));
-		makeJson(sourceLocate, material.modid + "/models/block/log/" + material.name, object);
-		object = new JsonObject();
-		array = new JsonArray();
 		object2 = new JsonObject();
-		addModel(object2, material.modid + ":leaves/" + material.name);
-		array.add(object2);
-		object.add("multipart", array);
+		object.addProperty("forge_marker", 1);
+		object2.addProperty("transform", "forge:default-block");
+		object2.addProperty("model", "farcore:leaves");
+		addTextures(object2, "all", material.modid + ":blocks/leaves/" + material.name);
+		object.add("defaults", object2);
 		makeJson(sourceLocate, material.modid + "/blockstates/leaves." + material.name, object);
 		makeJson(sourceLocate, material.modid + "/blockstates/leaves.core." + material.name, object);
-		object = new JsonObject();
-		object.addProperty("parent", "block/leaves");
-		addTextures(object, material.modid + ":blocks/leaves/" + material.name);
-		makeJson(sourceLocate, material.modid + "/models/block/leaves/" + material.name, object);
-		object = new JsonObject();
-		object.addProperty("parent", material.modid + ":block/log/" + material.name);
-		makeJson(sourceLocate, material.modid + "/models/item/log/" + material.name, object);
-		object = new JsonObject();
-		object.addProperty("parent", material.modid + ":block/leaves/" + material.name);
-		makeJson(sourceLocate, material.modid + "/models/item/leaves/" + material.name, object);
+		//		object = new JsonObject();
+		//		object.addProperty("parent", material.modid + ":block/log/" + material.name);
+		//		makeJson(sourceLocate, material.modid + "/models/item/log/" + material.name, object);
+		//		object = new JsonObject();
+		//		object.addProperty("parent", material.modid + ":block/leaves/" + material.name);
+		//		makeJson(sourceLocate, material.modid + "/models/item/leaves/" + material.name, object);
 	}
-	
+
 	static void provideRockSlabInfo(String sourceLocate, Mat material)
 	{
 		for(RockType type : RockType.values())
@@ -155,7 +154,7 @@ public class ModelFileCreator
 			makeJson(sourceLocate, locate3, object);
 		}
 	}
-
+	
 	static void provideRockInfo(String sourceLocate, Mat material)
 	{
 		JsonObject object = new JsonObject();
@@ -187,21 +186,21 @@ public class ModelFileCreator
 			makeJson(sourceLocate, material.modid + "/models/item/rock/" + material.name+ "/" + type.name() + ".json", object);
 		}
 	}
-
+	
 	static void addCondition(JsonObject object, String prop, String value)
 	{
 		JsonObject object1 = new JsonObject();
 		object1.addProperty(prop, value);
 		object.add("when", object1);
 	}
-	
+
 	static void addModel(JsonObject object, String locate)
 	{
 		JsonObject object1 = new JsonObject();
 		object1.addProperty("model", locate);
 		object.add("apply", object1);
 	}
-	
+
 	static void addModel(JsonObject object, String locate, int x, int y)
 	{
 		JsonObject object1 = new JsonObject();
@@ -210,19 +209,19 @@ public class ModelFileCreator
 		object1.addProperty("y", y * 90);
 		object.add("apply", object1);
 	}
-	
+
 	static void addTextures(JsonObject object, String locate)
 	{
 		addTextures(object, "all", locate);
 	}
-
+	
 	static void addTextures(JsonObject object, String name, String locate)
 	{
 		JsonObject object1 = new JsonObject();
 		object1.addProperty(name, locate);
 		object.add("textures", object1);
 	}
-
+	
 	static void addTextures(JsonObject object, Entry<String, String>...locates)
 	{
 		JsonObject object1 = new JsonObject();
@@ -232,7 +231,7 @@ public class ModelFileCreator
 		}
 		object.add("textures", object1);
 	}
-	
+
 	static void makeJson(String sourceLocate, String pathName, JsonObject object)
 	{
 		pathName = pathName.replace(':', '/');

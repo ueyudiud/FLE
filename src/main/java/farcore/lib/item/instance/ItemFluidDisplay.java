@@ -9,6 +9,7 @@ import farcore.FarCore;
 import farcore.data.Config;
 import farcore.data.EnumItem;
 import farcore.lib.item.ItemBase;
+import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.util.Log;
 import farcore.lib.util.UnlocalizedList;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -33,6 +35,19 @@ public class ItemFluidDisplay extends ItemBase
 		super(FarCore.ID, "display.fluid");
 		EnumItem.display_fluid.set(this);
 		hasSubtypes = true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FarCore.ID, "fluid"));
+	}
+	
+	public static Fluid getFluid(ItemStack stack)
+	{
+		return FluidRegistry.getFluid(stack.getItemDamage());
 	}
 
 	@Override

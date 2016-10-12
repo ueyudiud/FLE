@@ -21,7 +21,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 	public static class RecipeItemInputConfig
 	{
 		AbstractStack input;
-		
+
 		/**
 		 * 0 for use item.
 		 * 1 for damage tool.
@@ -29,14 +29,14 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 		 */
 		byte type;
 		boolean neededSizeSimilar;
-
+		
 		int givebackChance;
 		AbstractStack giveback;
-		
+
 		EnumToolType toolType;
 		int levelRequire;
 		float damageAmount;
-
+		
 		public RecipeItemInputConfig(EnumToolType type, int levelRequire, float damageAmt)
 		{
 			this(type.stack(), (byte) 2, true, 0, null, damageAmt);
@@ -70,7 +70,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			this.damageAmount = damageAmount;
 		}
 	}
-	
+
 	static RecipeItemInputConfig decode$(IteratorList<Object> itr)
 	{
 		Object object = itr.next();
@@ -94,13 +94,13 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			return new RecipeItemInputConfig(U.ItemStacks.sizeOf(decodeStack(object), size));
 		}
 	}
-	
+
 	@Override
 	protected RecipeItemInputConfig decode(IteratorList<Object> itr)
 	{
 		return decode$(itr);
 	}
-
+	
 	private static AbstractStack decodeStack(Object object)
 	{
 		if(object instanceof Item)
@@ -117,7 +117,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			return new OreStack((String) object);
 		return null;
 	}
-
+	
 	public static boolean matchInput$(RecipeItemInputConfig arg, ItemStack target)
 	{
 		if(target == null) return false;
@@ -135,13 +135,13 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			return false;
 		}
 	}
-	
+
 	@Override
 	protected boolean matchInput(RecipeItemInputConfig arg, ItemStack target)
 	{
 		return matchInput$(arg, target);
 	}
-	
+
 	@Override
 	protected void onInput(int x, int y, RecipeItemInputConfig arg,
 			ICraftingMatrix<ItemStack> matrix)
@@ -195,5 +195,11 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 		default:
 			break;
 		}
+	}
+
+	@Override
+	protected boolean isValid(RecipeItemInputConfig source)
+	{
+		return source.input.valid() && (source.giveback == null || source.giveback.valid());
 	}
 }

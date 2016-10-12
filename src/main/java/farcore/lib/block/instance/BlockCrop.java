@@ -2,11 +2,10 @@ package farcore.lib.block.instance;
 
 import farcore.FarCore;
 import farcore.data.EnumBlock;
-import farcore.lib.block.BlockTE;
-import farcore.lib.collection.IRegister;
+import farcore.lib.block.BlockSingleTE;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.tile.instance.TECrop;
-import farcore.util.BlockStateWrapper;
+import farcore.lib.util.BlockStateWrapper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -20,7 +19,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockCrop extends BlockTE implements IPlantable
+public class BlockCrop extends BlockSingleTE implements IPlantable
 {
 	public static class CropState extends BlockStateWrapper
 	{
@@ -47,12 +46,11 @@ public class BlockCrop extends BlockTE implements IPlantable
 	}
 	
 	@Override
-	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
+	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		register.register(1, "crop", TECrop.class);
-		return true;
+		return new TECrop();
 	}
-
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{

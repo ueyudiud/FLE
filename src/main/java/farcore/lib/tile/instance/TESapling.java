@@ -1,20 +1,27 @@
 package farcore.lib.tile.instance;
 
+import java.util.List;
 import java.util.Random;
 
 import farcore.data.M;
+import farcore.lib.block.IDebugableBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.TEAged;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
+import farcore.lib.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class TESapling extends TEAged implements ISaplingAccess
+public class TESapling extends TEAged
+implements ISaplingAccess, IDebugableBlock
 {
 	private float age;
 	public TreeInfo info;
@@ -134,5 +141,13 @@ public class TESapling extends TEAged implements ISaplingAccess
 	public void killTree()
 	{
 		removeBlock();
+	}
+
+	@Override
+	public void addInformation(EntityPlayer player, World world, BlockPos pos, Direction side, List<String> list)
+	{
+		list.add("Name : " + tree().getRegisteredName());
+		list.add("DNA : " + info.DNA);
+		list.add("Grow Progress : " + (int) age + "/" + getMaxAge());
 	}
 }

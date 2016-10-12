@@ -8,7 +8,7 @@ public class Config
 	public static boolean multiThreadLight;
 	public static boolean enableWaterFreezeAndIceMeltTempCheck;
 	public static boolean splitBrightnessOfSmallBlock;
-	
+
 	public static void load(Configuration config)
 	{
 		displayFluidInTab = config.getBoolean("displayFluidInTab", "general", false, "Enable this option to display all fluid in fluid tab");
