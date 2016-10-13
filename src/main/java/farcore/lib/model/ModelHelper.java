@@ -12,9 +12,13 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import farcore.lib.model.item.FarCoreItemModelLoader;
+import farcore.lib.model.item.ModelItemBase;
+import farcore.lib.model.item.ModelLayer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -23,8 +27,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IRetexturableModel;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.ItemLayerModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,10 +36,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelHelper
 {
-	private static final ResourceLocation LOCATION = new ResourceLocation("item/generated");
-	
 	public static final ImmutableMap<TransformType, TRSRTransformation> ITEM_STANDARD_TRANSFORMS;
-	
+
 	public static void addCuboid(
 			float x1, float y1, float z1,
 			float x2, float y2, float z2,
@@ -245,57 +246,36 @@ public class ModelHelper
 		buffer.put(Float.floatToIntBits(v));
 		buffer.put(color);
 	}
-	
+
 	public static IModel makeItemModel(String textureName)
 	{
 		return new ModelSurface(new ResourceLocation(textureName));
 	}
-
+	
 	public static IModel makeItemModel(ResourceLocation location)
 	{
 		return new ModelSurface(location);
 	}
-
+	
 	private static class ModelSurface implements IModel
 	{
 		private ResourceLocation location;
-		
-		public ModelSurface(ResourceLocation location)
-		{
-			this.location = location;
-		}
-
+		public ModelSurface(ResourceLocation location) { this.location = location; }
 		@Override
-		public Collection<ResourceLocation> getTextures()
-		{
-			return ImmutableList.of(location);
-		}
-		
+		public Collection<ResourceLocation> getTextures() { return ImmutableList.of(location); }
 		@Override
-		public Collection<ResourceLocation> getDependencies()
-		{
-			return ImmutableList.of();
-		}
-		
+		public Collection<ResourceLocation> getDependencies() { return ImmutableList.of(); }
 		@Override
-		public IModelState getDefaultState()
-		{
-			return TRSRTransformation.identity();
-		}
-		
+		public IModelState getDefaultState() { return TRSRTransformation.identity(); }
 		@Override
 		public IBakedModel bake(IModelState state, VertexFormat format,
 				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 		{
-			IModel model = ModelLoaderRegistry.getModelOrMissing(LOCATION);
-			if(model instanceof IRetexturableModel)
-			{
-				model = ((IRetexturableModel) model).retexture(ImmutableMap.of("layer0", location.toString()));
-			}
-			return model.bake(state, format, bakedTextureGetter);
+			TextureAtlasSprite icon = bakedTextureGetter.apply(location);
+			return new ModelItemBase.BakedModelItemBase(new ModelLayer[]{new ModelLayer(0, ImmutableMap.of(FarCoreItemModelLoader.NORMAL, ItemLayerModel.getQuadsForSprite(0, icon, format, Optional.of(TRSRTransformation.identity()))), FarCoreItemModelLoader.NORMAL_FUNCTION, FarCoreItemModelLoader.NORMAL_MULTIPLIER)}, icon);
 		}
 	}
-	
+
 	public static TRSRTransformation transformation(
 			float translationX, float translationY, float translationZ,
 			float leftRotX, float leftRotY, float leftRotZ, float leftRotW,
@@ -304,7 +284,7 @@ public class ModelHelper
 	{
 		return new TRSRTransformation(new javax.vecmath.Vector3f(translationX, translationY, translationZ), new Quat4f(leftRotX, leftRotY, leftRotZ, leftRotW), new javax.vecmath.Vector3f(scaleX, scaleY, scaleZ), new Quat4f(rightRotX, rightRotY, rightRotZ, rightRotW));
 	}
-	
+
 	static
 	{
 		ImmutableMap.Builder<TransformType, TRSRTransformation> builder = ImmutableMap.builder();

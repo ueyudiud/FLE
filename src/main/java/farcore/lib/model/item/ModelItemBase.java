@@ -36,12 +36,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * FarCoreItemModelLoader compacted model.
  * @author ueyudiud
  *
  */
+@SideOnly(Side.CLIENT)
 public class ModelItemBase extends ModelBase
 {
 	/** The collection contain all textures might using in model. */
@@ -99,6 +102,7 @@ public class ModelItemBase extends ModelBase
 		return new BakedModelItemBase(layers, bakedTextureGetter.apply(particle));
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static class BakedModelItemBase implements ICustomItemRenderModel, IPerspectiveAwareModel
 	{
 		private boolean isCulled;

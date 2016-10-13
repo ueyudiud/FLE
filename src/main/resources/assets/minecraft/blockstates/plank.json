@@ -1,0 +1,33 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"type": {
+			"oak": { "textures": { "all": "minecraft:blocks/planks/oak" } },
+			"spruce": { "textures": { "all": "minecraft:blocks/planks/spruce" } },
+			"birch": { "textures": { "all": "minecraft:blocks/planks/birch" } },
+			"ceiba": { "textures": { "all": "minecraft:blocks/planks/ceiba" } },
+			"acacia": { "textures": { "all": "minecraft:blocks/planks/acacia" } },
+			"oak-black": { "textures": { "all": "minecraft:blocks/planks/oak-black" } }
+		},
+		"broke": {
+			"true": {},
+			"false": {}
+		},
+		"wet": {
+			"true": {},
+			"false": {}
+		},
+		"anticorrosive": {
+			"true": {},
+			"false": {}
+		},
+		"fire_resistance": {
+			"true": {},
+			"false": {}
+		}
+	}
+}

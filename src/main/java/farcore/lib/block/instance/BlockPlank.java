@@ -1,53 +1,75 @@
 package farcore.lib.block.instance;
 
+import java.util.Random;
+
 import farcore.FarCore;
+import farcore.FarCoreSetup.ClientProxy;
+import farcore.data.CT;
 import farcore.lib.block.BlockMaterial;
 import farcore.lib.material.Mat;
+import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.util.Direction;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockPlank extends BlockMaterial
 {
 	public static final IProperty<Boolean> FIRE_RESISTANCE = PropertyBool.create("fire_resistance");
-	public static final IProperty<Boolean> ANTICORROSIVE= PropertyBool.create("anticorrosive");
+	public static final IProperty<Boolean> ANTICORROSIVE = PropertyBool.create("anticorrosive");
 	public static final IProperty<Boolean> WET = PropertyBool.create("wet");
 	/**
 	 * Default broken plank only can be get at such as sinking ship.
 	 */
 	public static final IProperty<Boolean> BROKE = PropertyBool.create("broke");
-	
+
 	public BlockPlank(Mat material)
 	{
 		super(FarCore.ID, "plank." + material.name, Material.WOOD, material);
+		setCreativeTab(CT.tabBuilding);
 	}
-
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		StateMapperExt mapper = new StateMapperExt(material.modid, "plank", null);
+		mapper.setVariants("type", material.name);
+		ClientProxy.registerCompactModel(mapper, this, 16);
+	}
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, FIRE_RESISTANCE, ANTICORROSIVE, WET, BROKE);
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return state.withProperty(WET, false).withProperty(FIRE_RESISTANCE, false).withProperty(ANTICORROSIVE, false).withProperty(BROKE, false);
 	}
-	
+
 	@Override
 	public int getLightOpacity(IBlockState state)
 	{
 		return state.getValue(BROKE) ? 100 : 255;
 	}
-
+	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
@@ -70,7 +92,7 @@ public class BlockPlank extends BlockMaterial
 		}
 		return v;
 	}
-
+	
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
@@ -93,13 +115,13 @@ public class BlockPlank extends BlockMaterial
 		}
 		return state;
 	}
-
+	
 	@Override
 	public float getBlockHardness(IBlockState state, World worldIn, BlockPos pos)
 	{
 		return (state.getValue(BROKE) ? 0.1F : state.getValue(WET) ? 0.8F : 1.0F) * super.getBlockHardness(state, worldIn, pos);
 	}
-	
+
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
@@ -107,14 +129,51 @@ public class BlockPlank extends BlockMaterial
 	}
 
 	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return world.getBlockState(pos).getValue(FIRE_RESISTANCE) ? 0 : super.getFireSpreadSpeed(world, pos, face);
+		return !state.getValue(BROKE);
+	}
+	
+	@Override
+	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return !state.getValue(BROKE);
 	}
 
 	@Override
+	public EnumPushReaction getMobilityFlag(IBlockState state)
+	{
+		return state.getValue(BROKE) ? EnumPushReaction.DESTROY : state.getMaterial().getMobilityFlag();
+	}
+
+	@Override
+	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
+	{
+		IBlockState state = world.getBlockState(pos);
+		return state.getValue(FIRE_RESISTANCE) ? 0 :
+			super.getFireSpreadSpeed(world, pos, face) / (state.getValue(WET) ? 3 : 1);
+	}
+	
+	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return world.getBlockState(pos).getValue(FIRE_RESISTANCE) ? 0 : super.getFlammability(world, pos, face);
+		return world.getBlockState(pos).getValue(FIRE_RESISTANCE) ? 0 :
+			super.getFlammability(world, pos, face);
+	}
+	
+	@Override
+	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
+	{
+		IBlockState state = world.getBlockState(pos);
+		if (state.getValue(WET))
+		{
+			if (!world.isRemote && rand.nextInt(5) == 0)
+			{
+				world.setBlockState(pos, state.withProperty(WET, false), 7);
+				world.playSound(null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, rand.nextFloat() * 0.7F + 2.0F);
+			}
+			return true;
+		}
+		return super.onBurningTick(world, pos, rand, fireSourceDir, fireState);
 	}
 }

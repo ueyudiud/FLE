@@ -10,10 +10,10 @@ public abstract class SolidAbstract extends IForgeRegistryEntry.Impl<SolidAbstra
 	public SolidAbstract()
 	{
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public abstract ResourceLocation getIcon();
-	
+
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getIcon(SolidStack stack)
 	{

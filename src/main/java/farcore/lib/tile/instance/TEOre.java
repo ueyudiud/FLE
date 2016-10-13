@@ -67,20 +67,15 @@ ITP_Drops, IToolableTile
 		cluster,
 		protore;
 	}
-
-	private static final Mat STONE = M.stone;
 	
+	private static final Mat STONE = M.stone;
+
 	private Mat ore = M.VOID;
 	public EnumOreAmount amount = EnumOreAmount.normal;
 	public Mat rock = STONE;
 	public RockType rockType = RockType.resource;
 	public float heat;
-	/**
-	 * Use forge custom data instead.
-	 */
-	@Deprecated
-	public NBTTagCompound customDatas;
-
+	
 	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, RockType type)
 	{
 		this.ore = ore;
@@ -93,7 +88,7 @@ ITP_Drops, IToolableTile
 	{
 		initialized = false;
 	}
-
+	
 	@Override
 	public void onLoad()
 	{
@@ -109,13 +104,13 @@ ITP_Drops, IToolableTile
 			}
 		}
 	}
-
+	
 	@Override
 	protected float getSyncRange()
 	{
 		return 256F;
 	}
-	
+
 	@Override
 	public void sendToNearby(IPacket packet, float range)
 	{
@@ -124,7 +119,7 @@ ITP_Drops, IToolableTile
 			super.sendToNearby(packet, range);
 		}
 	}
-
+	
 	public Mat getOre()
 	{
 		if(worldObj.isRemote && !initialized)
@@ -133,14 +128,14 @@ ITP_Drops, IToolableTile
 		}
 		return ore;
 	}
-	
+
 	public void setOre(Mat ore)
 	{
 		this.ore = ore;
 		initialized = true;
 		syncToNearby();
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
@@ -150,12 +145,8 @@ ITP_Drops, IToolableTile
 		rock = Mat.material(compound.getString("rock"), STONE);
 		rockType = RockType.values()[compound.getByte("type")];
 		heat = compound.getFloat("heat");
-		if(compound.hasKey("custom"))
-		{
-			customDatas = compound.getCompoundTag("custom");
-		}
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
@@ -164,13 +155,9 @@ ITP_Drops, IToolableTile
 		compound.setString("rock", rock.name);
 		compound.setByte("type", (byte) rockType.ordinal());
 		compound.setFloat("heat", heat);
-		if(customDatas != null)
-		{
-			compound.setTag("custom", customDatas);
-		}
 		return super.writeToNBT(compound);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -179,12 +166,8 @@ ITP_Drops, IToolableTile
 		amount = EnumOreAmount.values()[nbt.getByte("a")];
 		rock = Mat.material(nbt.getString("r"), STONE);
 		rockType = RockType.values()[nbt.getByte("t")];
-		if(nbt.hasKey("c"))
-		{
-			customDatas = nbt.getCompoundTag("c");
-		}
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -193,25 +176,21 @@ ITP_Drops, IToolableTile
 		nbt.setByte("a", (byte) amount.ordinal());
 		nbt.setString("r", rock.name);
 		nbt.setByte("t", (byte) rockType.ordinal());
-		if(customDatas != null)
-		{
-			nbt.setTag("c", customDatas);
-		}
 	}
-	
+
 	@Override
 	public boolean onBlockClicked(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return ore.oreProperty.onBlockClicked(this, player, side);
 	}
-
+	
 	@Override
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
 		return ore.oreProperty.onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
 	}
-	
+
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
@@ -221,11 +200,6 @@ ITP_Drops, IToolableTile
 		}
 	}
 	
-	public NBTTagCompound getCustomData()
-	{
-		return customDatas;
-	}
-
 	public int getHarvestLevel()
 	{
 		switch (rockType)
@@ -238,26 +212,26 @@ ITP_Drops, IToolableTile
 			return Math.max(ore.blockHarvestLevel, rock.blockHarvestLevel);
 		}
 	}
-
+	
 	@Override
 	public float getBlockHardness(IBlockState state)
 	{
 		float hardness = ore.blockHardness * .8F + rock.blockHardness * .2F;
 		return hardness;
 	}
-
+	
 	@Override
 	public float getExplosionResistance(Entity exploder, Explosion explosion)
 	{
 		return Math.max(ore.blockExplosionResistance, rock.blockExplosionResistance);
 	}
-
+	
 	@Override
 	public void onEntityWalk(Entity entity)
 	{
 		ore.oreProperty.onEntityWalk(this, entity);
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
@@ -270,26 +244,26 @@ ITP_Drops, IToolableTile
 		}
 		setOre(Mat.material(stack.getItemDamage()));
 	}
-
+	
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
 		ore.oreProperty.updateTick(this, random);
 	}
-
+	
 	@Override
 	public boolean onBlockHarvest(IBlockState state, EntityPlayer player, boolean silkHarvest)
 	{
 		Worlds.spawnDropsInWorld(this, getDrops(U.Players.getCurrentToolType(player)));
 		return true;
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
 		return getDrops(EnumToolType.HAND_USABLE_TOOL);
 	}
-	
+
 	private SubTag getOreType()
 	{
 		return ore.contain(SubTag.ORE_GEM) ? SubTag.ORE_GEM :
@@ -299,7 +273,7 @@ ITP_Drops, IToolableTile
 						ore.contain(SubTag.ORE_SIMPLE) ? SubTag.ORE_SIMPLE :
 							null;
 	}
-
+	
 	public List<ItemStack> getDrops(List<EnumToolType> types)
 	{
 		SubTag tag = getOreType();
@@ -344,12 +318,12 @@ ITP_Drops, IToolableTile
 		}
 		return list;
 	}
-
+	
 	private void addDrops(List<ItemStack> stacks, DropType type)
 	{
 		;
 	}
-	
+
 	@Override
 	public boolean canHarvestBlock(EntityPlayer player)
 	{
@@ -362,7 +336,7 @@ ITP_Drops, IToolableTile
 			return player.canHarvestBlock(getBlock(0, 0, 0));
 		return toolLevel >= getHarvestLevel();
 	}
-
+	
 	@Override
 	public boolean onBurn(float burnHardness, Direction direction)
 	{
@@ -374,94 +348,94 @@ ITP_Drops, IToolableTile
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean onBurningTick(Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		ore.oreProperty.onBurningTick(this, rand, fireSourceDir, fireState);
 		return false;
 	}
-	
+
 	@Override
 	public boolean isFireSource(Direction side)
 	{
 		return ore.contain(SubTag.FIRE_SOURCE);
 	}
-	
+
 	@Override
 	public int getFireSpreadSpeed(Direction side)
 	{
 		return rockType.isBurnable() ? 80 : 0;
 	}
-	
+
 	@Override
 	public int getFlammability(Direction side)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean isFlammable(Direction side)
 	{
 		return getFlammability(side) != 0;
 	}
-	
+
 	@Override
 	public boolean canBeBurned()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public int getFireEncouragement()
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canFireBurnOn(Direction side, boolean isCatchRain)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean canConnectTo(Direction direction)
 	{
 		return initialized;
 	}
-	
+
 	@Override
 	public float getTemperature(Direction direction)
 	{
 		return heat / ore.heatCap;
 	}
-	
+
 	@Override
 	public float getThermalConductivity(Direction direction)
 	{
 		return ore.thermalConduct * 0.6F + rock.thermalConduct * 0.4F;
 	}
-	
+
 	@Override
 	public void onHeatChange(Direction direction, float value)
 	{
 		heat += value;
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
 			float hitY, float hitZ)
 	{
 		return ore.oreProperty.onToolClick(player, tool, stack, this, side, hitX, hitY, hitZ);
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
 		return ore.oreProperty.onToolUse(player, tool, stack, this, side, hitX, hitY, hitZ, duration);
 	}
-
+	
 	@Override
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
@@ -469,7 +443,7 @@ ITP_Drops, IToolableTile
 		U.Server.addBlockLandingEffects(worldObj, pos, rock.rock.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), entity, numberOfParticles);
 		return true;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
@@ -477,7 +451,7 @@ ITP_Drops, IToolableTile
 		U.Client.addBlockHitEffect(worldObj, random, rock.rock.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), target.sideHit, pos, manager);
 		return true;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)

@@ -6,6 +6,7 @@ import farcore.data.CT;
 import farcore.event.FluidBlockEvent.FluidTouchBlockEvent;
 import farcore.lib.fluid.FluidBase;
 import farcore.lib.util.Direction;
+import farcore.lib.util.IRenderRegister;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -21,8 +22,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlock
+public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlock, IRenderRegister
 {
 	public final FluidBase fluid;
 	private final FluidStack blockValue;
@@ -36,6 +39,13 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 		blockValue = new FluidStack(fluid, 1000);
 		this.fluid = fluid;
 		setQuantaPerBlock(16);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		U.Mod.registerFluid(this);
 	}
 
 	@Override

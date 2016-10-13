@@ -40,15 +40,25 @@ public class ModelFluidBlock
 		@Override
 		public boolean accepts(ResourceLocation modelLocation)
 		{
-			return modelLocation instanceof FluidModelLocation;
+			return modelLocation.getResourceDomain().equals(FarCore.INNER_RENDER) &&
+					modelLocation.getResourcePath().startsWith("fluid.");
 		}
 
 		@Override
 		public IModel loadModel(ResourceLocation modelLocation) throws Exception
 		{
-			return "inventory".equals(((FluidModelLocation) modelLocation).getVariant()) ?
-					ModelHelper.makeItemModel(((FluidModelLocation) modelLocation).fluid.getStill()):
-						new ModelFluid(((FluidModelLocation) modelLocation).fluid);
+			if (!(modelLocation instanceof ModelResourceLocation))
+				return ModelFluid.WATER;
+			String key = modelLocation.getResourcePath().substring("fluid.".length());
+			Fluid fluid = FluidRegistry.getFluid(key);
+			if (fluid == null)
+				return ModelFluid.WATER;
+			String variant = ((ModelResourceLocation) modelLocation).getVariant();
+			switch (variant)
+			{
+			case "inventory" : return ModelHelper.makeItemModel(fluid.getStill());//Make still icon for item in inventory.
+			default : return new ModelFluid(fluid);
+			}
 		}
 	}
 
@@ -60,68 +70,50 @@ public class ModelFluidBlock
 		@Override
 		public ModelResourceLocation getModelLocation(ItemStack stack)
 		{
-			Fluid fluid = null;
 			try
 			{
-				fluid = ((BlockFluidBase) Block.getBlockFromItem(stack.getItem())).getFluid();
+				return getLocationFromFluid(((BlockFluidBase) Block.getBlockFromItem(stack.getItem())).getFluid(), "inventory");
 			}
 			catch(Exception exception)
 			{
 				Log.warn("Fail to find fluid by item " + stack.getItem().getRegistryName().toString());
 			}
-			if(fluid == null)
-			{
-				fluid = FluidRegistry.WATER;
-			}
-			return new FluidModelLocation(fluid, true);
+			return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
 		}
 		
 		@Override
 		public List<ResourceLocation> getAllowedResourceLocations(Item item)
 		{
-			Fluid fluid = null;
 			try
 			{
-				fluid = ((BlockFluidBase) Block.getBlockFromItem(item)).getFluid();
+				return ImmutableList.of(getLocationFromFluid(((BlockFluidBase) Block.getBlockFromItem(item)).getFluid(), "inventory"));
 			}
 			catch(Exception exception)
 			{
 				Log.warn("Fail to find fluid by item " + item.getRegistryName().toString());
 			}
+			return ImmutableList.of();
+		}
+		
+		private ModelResourceLocation getLocationFromFluid(Fluid fluid, String variants)
+		{
 			if(fluid == null)
 			{
 				fluid = FluidRegistry.WATER;
 			}
-			return ImmutableList.of(new FluidModelLocation(fluid, true));
+			return new ModelResourceLocation(FarCore.INNER_RENDER + ":fluid." + fluid.getName(), variants);
 		}
 
 		@Override
 		public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 		{
-			Fluid fluid = ((BlockFluidBase) blockIn).getFluid();
-			if(fluid == null)
-			{
-				fluid = FluidRegistry.WATER;
-			}
-			ModelResourceLocation location = new FluidModelLocation(fluid, false);
+			ModelResourceLocation location = getLocationFromFluid(((BlockFluidBase) blockIn).getFluid(), "normal");
 			ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
 			for(IBlockState state : blockIn.getBlockState().getValidStates())
 			{
 				builder.put(state, location);
 			}
 			return builder.build();
-		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private static class FluidModelLocation extends ModelResourceLocation
-	{
-		private Fluid fluid;
-
-		public FluidModelLocation(Fluid fluid, boolean isItem)
-		{
-			super(FarCore.INNER_RENDER + ":" + fluid.getName(), isItem ? "inventory" : "normal");
-			this.fluid = fluid;
 		}
 	}
 }

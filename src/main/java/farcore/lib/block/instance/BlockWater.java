@@ -25,7 +25,7 @@ public class BlockWater extends BlockStandardFluid
 		super(fluid, Material.WATER);
 		EnumBlock.water.set(this);
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
@@ -58,7 +58,7 @@ public class BlockWater extends BlockStandardFluid
 		}
 		super.randomTick(worldIn, pos, state, random);
 	}
-	
+
 	@Override
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{

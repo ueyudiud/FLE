@@ -14,6 +14,7 @@ import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
+import farcore.lib.block.instance.BlockPlank;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.collection.IntegerMap;
 import farcore.lib.collection.Register;
@@ -134,6 +135,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	/** The log which is already cut off from tree. */
 	public Block logArt;
 	public Block leaves;
+	public Block plank;
 	//Rock extra configuration.
 	public Block rock;
 	public float minTemperatureForExplosion;
@@ -314,11 +316,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			BlockLogArtificial logArtificial = BlockLogArtificial.create(this);
 			BlockLeaves leaves = BlockLeaves.create(this);
 			BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, this);
+			BlockPlank plank = new BlockPlank(this);
 			this.leaves = leaves;
+			this.plank = plank;
 			log = logNatural;
 			logArt = logArtificial;
 			OreDict.registerValid("logWood", logArtificial);
 			OreDict.registerValid("leaves", leaves);
+			OreDict.registerValid("plankWood", plank);
 			tree.initInfo(logNatural, logArtificial, leaves, coreLeaves);
 		}
 		return this;

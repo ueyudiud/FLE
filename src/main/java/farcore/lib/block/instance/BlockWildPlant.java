@@ -121,9 +121,9 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 	}
 
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
-		plant.tickUpdate(this, worldIn, pos, state, rand);
+		plant.tickUpdate(this, worldIn, pos, state, random);
 	}
 	
 	@Override

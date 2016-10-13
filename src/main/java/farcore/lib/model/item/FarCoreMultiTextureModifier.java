@@ -6,34 +6,37 @@ import java.util.Map.Entry;
 import com.google.common.collect.ImmutableMap;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class FarCoreMultiTextureModifier implements IMultiTextureCollection
 {
 	private final IMultiTextureCollection function;
 	private String domain;
 	private String prefix = "";
 	private String postfix = "";
-	
+
 	public FarCoreMultiTextureModifier(IMultiTextureCollection function)
 	{
 		this.function = function;
 	}
-
+	
 	public void setDomain(String domain)
 	{
 		this.domain = domain;
 	}
-
+	
 	public void setPostfix(String postfix)
 	{
 		this.postfix = postfix;
 	}
-
+	
 	public void setPrefix(String prefix)
 	{
 		this.prefix = prefix;
 	}
-	
+
 	@Override
 	public Map<String, ResourceLocation> apply()
 	{

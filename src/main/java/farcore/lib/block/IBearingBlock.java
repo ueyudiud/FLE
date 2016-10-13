@@ -5,6 +5,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+/*
+ * Not finished yet.
+ */
+@Deprecated
 public interface IBearingBlock
 {
 	boolean canBearingAt(IBlockAccess world, BlockPos pos, BlockPos target);

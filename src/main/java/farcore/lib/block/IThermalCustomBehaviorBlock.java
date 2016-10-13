@@ -17,7 +17,7 @@ public interface IThermalCustomBehaviorBlock
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param burnHardness
+	 * @param burnHardness A value from 0 to 1000.
 	 * @param direction
 	 * @return True to prevent classic fire behavior.
 	 */
