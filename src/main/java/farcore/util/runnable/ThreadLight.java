@@ -1,4 +1,4 @@
-package farcore.lib.util;
+package farcore.util.runnable;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

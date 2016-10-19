@@ -12,6 +12,7 @@ public class MC
 	public static final MatCondition cobble = new MatCondition("cobble", "Cobble", "%s Cobble").setSize(5184L, 576L).setFilter(SubTag.ROCK);
 	public static final MatCondition brickBlock = new MatCondition("brick.block", "brickBlock", "Brick", "%s Brick").setSize(5184L, 1296L, 1.5F).setFilter(SubTag.ROCK);
 	public static final MatCondition brickCraving = new MatCondition("brick.craving", "brickCraving", "Brick", "Craving %s Brick").setSize(5184L, 5184L, 1.2F).setFilter(SubTag.ROCK);
+	public static final MatCondition soil = new MatCondition("soil", "Soil", "%s").setSize(5184L).setFilter(SubTag.DIRT);
 	public static final MatCondition seed = new MatCondition("seed", "Seed", "%s Seed").setSize(72L, 24L).setFilter(SubTag.CROP);
 	public static final MatCondition chip_rock = new MatCondition("chip", "Chip", "%s Chip").setSize(576L, 576L, 4.0F).setFilter(SubTag.ROCK);
 	public static final MatCondition chip_ore = new MatCondition("chip.ore", "chip", "Ore Chip", "%s Chip").setSize(576L, 576L, 4.0F).setFilter(SubTag.ORE);
@@ -19,6 +20,9 @@ public class MC
 	public static final MatCondition sapling = new MatCondition("sapling", "Sapling", "%s Sapling").setSize(640L, 512L, 25.0F).setFilter(SubTag.WOOD);
 	public static final MatCondition ingot = new MatCondition("ingot", "Ingot", "%s Ingot").setSize(144L, 144L, 1.0F).setFilter(SubTag.METAL);
 	public static final MatCondition nugget = new MatCondition("nugget", "Nugget", "%s Nugget").setSize(16L, 16L, 9.0F).setFilter(new IDataChecker.Or(SubTag.METAL, SubTag.ORE_NOBLE));
+	
+	public static final MatCondition log = new MatCondition("log", "Log", "%s Log").setSize(5184L).setFilter(SubTag.WOOD);
+	public static final MatCondition plankBlock = new MatCondition("plank.block", "plank", "Plank", "%s Plank").setSize(1296L).setFilter(SubTag.WOOD);
 	
 	public static final MatCondition thread = new MatCondition("thread", "Thread", "%s").setSize(36L, 36L, 2.0F).setFilter(SubTag.ROPE);
 	public static final MatCondition bundle = new MatCondition("bundle", "Bundle", "%s Bundle").setSize(144L, 36L, 0.5F).setFilter(SubTag.ROPE);

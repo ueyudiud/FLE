@@ -1,0 +1,40 @@
+{  
+	"_annotate": "unused",
+    "parent": "block/block",
+    "elements": [
+        {
+            "from": [ 0, 0, 0 ],
+            "to": [ 16, 15.75, 16 ],
+            "faces": {
+                "up":    { "uv": [ 0, 0, 16, 16    ], "texture": "#all", "cullface": "up"    },
+                "down":  { "uv": [ 0, 0, 16, 16    ], "texture": "#all", "cullface": "down"  },
+                "north": { "uv": [ 0, 0, 16, 15.75 ], "texture": "#all", "cullface": "north" },
+                "south": { "uv": [ 0, 0, 16, 15.75 ], "texture": "#all", "cullface": "south" },
+                "west":  { "uv": [ 0, 0, 16, 15.75 ], "texture": "#all", "cullface": "west"  },
+                "east":  { "uv": [ 0, 0, 16, 15.75 ], "texture": "#all", "cullface": "east"  }
+            }
+        },
+        { 
+            "from": [ 0, 0, 0 ],
+            "to": [ 16, 15.75, 16 ],
+            "faces": {
+                "up":    { "uv": [ 0, 0, 16, 16    ], "texture": "#top2",   "tintindex": 0, "cullface": "up" },
+                "north": { "uv": [ 0, 0, 16, 15.75 ], "texture": "#north2", "tintindex": 0, "cullface": "north" },
+                "south": { "uv": [ 0, 0, 16, 15.75 ], "texture": "#south2", "tintindex": 0, "cullface": "south" },
+                "west":  { "uv": [ 0, 0, 16, 15.75 ], "texture": "#west2",  "tintindex": 0, "cullface": "west"  },
+                "east":  { "uv": [ 0, 0, 16, 15.75 ], "texture": "#east2",  "tintindex": 0, "cullface": "east"  }
+            }
+        },
+		{
+            "from": [ 0, 15.75, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "up":    { "uv": [ 0, 0, 16, 16   ], "texture": "#fluid", "cullface": "up"    },
+                "north": { "uv": [ 0, 0, 16, 0.25 ], "texture": "#fluid", "cullface": "north" },
+                "south": { "uv": [ 0, 0, 16, 0.25 ], "texture": "#fluid", "cullface": "south" },
+                "west":  { "uv": [ 0, 0, 16, 0.25 ], "texture": "#fluid", "cullface": "west"  },
+                "east":  { "uv": [ 0, 0, 16, 0.25 ], "texture": "#fluid", "cullface": "east"  }
+            }
+		}
+    ]
+}

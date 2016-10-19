@@ -15,7 +15,7 @@ public class FarOverrideLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[]{ClassTransformer.class.getName()};
+		return new String[]{ClassTransformerModifyMethod.class.getName()};
 	}
 	
 	@Override

@@ -24,7 +24,7 @@ public class FarCoreItemHandler
 			event.setNewSpeed(((IIP_DigSpeed) stack.getItem()).replaceDigSpeed(stack, event));
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onHarvestBlock(HarvestDropsEvent event)
 	{
@@ -34,7 +34,7 @@ public class FarCoreItemHandler
 		{
 			stack = event.getHarvester().getHeldItemOffhand();
 		}
-		if(stack.getItem() instanceof IIB_BlockHarvested)
+		if(stack != null && stack.getItem() instanceof IIB_BlockHarvested)
 		{
 			((IIB_BlockHarvested) stack.getItem()).onBlockHarvested(stack, event);
 			U.Players.destoryPlayerCurrentItem(event.getHarvester());

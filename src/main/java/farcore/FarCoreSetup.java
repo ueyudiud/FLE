@@ -1,6 +1,7 @@
 package farcore;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,7 @@ import farcore.lib.net.tile.PacketTESync;
 import farcore.lib.net.tile.PacketTETypeResult;
 import farcore.lib.net.world.PacketBreakBlock;
 import farcore.lib.oredict.OreDictExt;
+import farcore.lib.render.Colormap.ColormapFactory;
 import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.instance.FontMap;
 import farcore.lib.tesr.TESRCarvedRock;
@@ -91,6 +93,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -466,6 +469,7 @@ public class FarCoreSetup
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
 		private static Map<String, List<IRenderRegister>> registers = new HashMap();
+		private static List<Block> buildInRender = new ArrayList();
 		private Map<IBlockColor, List<Block>> blockColorMap = new HashMap();
 		private Map<IItemColor, List<Block>> itemBlockColorMap = new HashMap();
 		private Map<IItemColor, List<Item>> itemColorMap = new HashMap();
@@ -481,6 +485,8 @@ public class FarCoreSetup
 		{
 			super.load(event);
 			
+			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
+
 			MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 			FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
 
@@ -634,6 +640,27 @@ public class FarCoreSetup
 					register.registerRender();
 				}
 			}
+		}
+		
+		public static void registerBuildInModel(Block block)
+		{
+			if(Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
+			{
+				Log.warn("The block '" + block.getRegistryName() + "' register buildin model after initialzation, tried register it early.");
+			}
+			else
+			{
+				buildInRender.add(block);
+			}
+		}
+
+		/**
+		 * Internal, do not use. (Use ASM from forge)
+		 */
+		public static void onRegisterAllBlocks(BlockModelShapes shapes)
+		{
+			shapes.registerBuiltInBlocks(U.L.cast(buildInRender, Block.class));
+			buildInRender = null;
 		}
 	}
 }

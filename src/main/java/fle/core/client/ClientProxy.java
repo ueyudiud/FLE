@@ -1,5 +1,6 @@
 package fle.core.client;
 
+import farcore.FarCoreSetup;
 import farcore.data.ColorMultiplier;
 import farcore.data.EnumItem;
 import farcore.util.U;
@@ -19,7 +20,7 @@ public class ClientProxy extends CommonProxy
 		super.init(event);
 		MinecraftForge.EVENT_BUS.register(new FleClientHandler());
 		
-		farcore.FarCoreSetup.ClientProxy.registerRenderObject();
+		FarCoreSetup.ClientProxy.registerRenderObject();
 
 		U.Mod.registerColorMultiplier(ColorMultiplier.TOOL_ITEM_MATERIAL_COLOR, EnumItem.tool.item);
 	}

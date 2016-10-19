@@ -58,6 +58,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public final String blockName;
 	protected final Item item;
 
+	protected float harvestableSpeedMultiplier = 30F;
+	protected float unharvestableSpeedMultiplier = 100F;
+
 	public BlockBase(String name, Material materialIn)
 	{
 		this(U.Mod.getActiveModID(), name, materialIn);
@@ -70,6 +73,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		setUnlocalizedName(blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
 		U.Mod.registerBlock(this, modid, name, item = createItemBlock());
+		list.add(this);//Added for re-register.
 	}
 	public BlockBase(String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
@@ -83,6 +87,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		setUnlocalizedName(blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
 		U.Mod.registerBlock(this, modid, name, item = createItemBlock());
+		list.add(this);//Added for re-register.
 	}
 
 	@Override
@@ -171,6 +176,12 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		}
 	}
 
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	{
+		return item;
+	}
+
 	/**
 	 * Called when block harvest.
 	 * @param worldIn
@@ -193,10 +204,10 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		
 		if (!canBreakBlock(worldIn, pos, player))
 			return 0F;
-		else if(!canHarvestBlock(worldIn, pos, player))
-			return player.getDigSpeed(state, pos) / hardness / 100F;
+		else if(!canBreakEffective(state, player, worldIn, pos))
+			return player.getDigSpeed(state, pos) / hardness / unharvestableSpeedMultiplier;
 		else
-			return player.getDigSpeed(state, pos) / hardness / 30F;
+			return player.getDigSpeed(state, pos) / hardness / harvestableSpeedMultiplier;
 	}
 	
 	/**
@@ -209,6 +220,11 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public boolean canBreakBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return ToolHook.isToolBreakable(world.getBlockState(pos), player);
+	}
+	
+	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
+	{
+		return canHarvestBlock(worldIn, pos, player);
 	}
 
 	@Override

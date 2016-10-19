@@ -5,10 +5,13 @@ import java.util.Random;
 import farcore.FarCore;
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
+import farcore.data.MC;
 import farcore.lib.block.BlockMaterial;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.util.Direction;
+import farcore.lib.util.LanguageManager;
+import farcore.util.U.OreDict;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -35,13 +38,35 @@ public class BlockPlank extends BlockMaterial
 	 * Default broken plank only can be get at such as sinking ship.
 	 */
 	public static final IProperty<Boolean> BROKE = PropertyBool.create("broke");
-
+	
 	public BlockPlank(Mat material)
 	{
 		super(FarCore.ID, "plank." + material.name, Material.WOOD, material);
 		setCreativeTab(CT.tabBuilding);
 	}
-	
+
+	@Override
+	public void postInitalizedBlocks()
+	{
+		super.postInitalizedBlocks();
+		OreDict.registerValid("plankWood", this);
+		MC.plankBlock.registerOre(material, this);
+		for(int i = 0; i < 16; ++i)
+		{
+			IBlockState state = getStateFromMeta(i);
+			String name = material.localName + " Plank";
+			if(state.getValue(FIRE_RESISTANCE))
+			{
+				name = "Fire Resistanced " + name;
+			}
+			if(state.getValue(WET))
+			{
+				name = "Wet " + name;
+			}
+			LanguageManager.registerLocal(getTranslateNameForItemStack(i), name);
+		}
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -51,25 +76,25 @@ public class BlockPlank extends BlockMaterial
 		mapper.setVariants("type", material.name);
 		ClientProxy.registerCompactModel(mapper, this, 16);
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, FIRE_RESISTANCE, ANTICORROSIVE, WET, BROKE);
 	}
-	
+
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return state.withProperty(WET, false).withProperty(FIRE_RESISTANCE, false).withProperty(ANTICORROSIVE, false).withProperty(BROKE, false);
 	}
-
+	
 	@Override
 	public int getLightOpacity(IBlockState state)
 	{
 		return state.getValue(BROKE) ? 100 : 255;
 	}
-	
+
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
@@ -92,7 +117,7 @@ public class BlockPlank extends BlockMaterial
 		}
 		return v;
 	}
-	
+
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
@@ -115,37 +140,37 @@ public class BlockPlank extends BlockMaterial
 		}
 		return state;
 	}
-	
+
 	@Override
 	public float getBlockHardness(IBlockState state, World worldIn, BlockPos pos)
 	{
 		return (state.getValue(BROKE) ? 0.1F : state.getValue(WET) ? 0.8F : 1.0F) * super.getBlockHardness(state, worldIn, pos);
 	}
-
+	
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
 		return world.getBlockState(pos).getValue(BROKE) ? 0F : super.getExplosionResistance(world, pos, exploder, explosion);
 	}
-
+	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return !state.getValue(BROKE);
 	}
-	
+
 	@Override
 	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return !state.getValue(BROKE);
 	}
-
+	
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state)
 	{
 		return state.getValue(BROKE) ? EnumPushReaction.DESTROY : state.getMaterial().getMobilityFlag();
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
@@ -153,14 +178,14 @@ public class BlockPlank extends BlockMaterial
 		return state.getValue(FIRE_RESISTANCE) ? 0 :
 			super.getFireSpreadSpeed(world, pos, face) / (state.getValue(WET) ? 3 : 1);
 	}
-	
+
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return world.getBlockState(pos).getValue(FIRE_RESISTANCE) ? 0 :
 			super.getFlammability(world, pos, face);
 	}
-	
+
 	@Override
 	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{

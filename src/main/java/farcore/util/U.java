@@ -55,11 +55,11 @@ import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.IRenderRegister;
 import farcore.lib.util.LanguageManager;
-import farcore.lib.util.ThreadLight;
 import farcore.lib.world.IBiomeExtended;
 import farcore.lib.world.IBiomeRegetter;
 import farcore.lib.world.ICoord;
 import farcore.lib.world.IObjectInWorld;
+import farcore.util.runnable.ThreadLight;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.properties.IProperty;
@@ -1146,9 +1146,16 @@ public class U
 		
 		public static boolean fallBlock(World world, BlockPos pos, IBlockState state)
 		{
+			return fallBlock(world, pos, pos, state);
+		}
+
+		public static boolean fallBlock(World world, BlockPos pos, BlockPos dropPos, IBlockState state)
+		{
 			if(!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
-				return world.isRemote ||
-						world.spawnEntityInWorld(new EntityFallingBlockExtended(world, pos, state));
+			{
+				world.setBlockToAir(pos);
+				return world.isRemote || world.spawnEntityInWorld(new EntityFallingBlockExtended(world, pos, dropPos, state, world.getTileEntity(pos)));
+			}
 			else
 			{
 				TileEntity tile = world.getTileEntity(pos);
@@ -1227,7 +1234,9 @@ public class U
 		
 		public static <T extends Comparable<T>> boolean switchProp(World world, BlockPos pos, IProperty<T> property, T value, int updateFlag)
 		{
-			return world.setBlockState(pos, world.getBlockState(pos).withProperty(property, value), updateFlag);
+			IBlockState state = world.getBlockState(pos);
+			if(state.getValue(property) == value) return false;
+			return world.setBlockState(pos, state.withProperty(property, value), updateFlag);
 		}
 		
 		public static boolean isBlockNearby(World world, BlockPos pos, Block block, boolean ignoreUnloadChunk)

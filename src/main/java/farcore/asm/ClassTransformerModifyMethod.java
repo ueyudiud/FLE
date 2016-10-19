@@ -45,7 +45,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
-public class ClassTransformer implements IClassTransformer
+public class ClassTransformerModifyMethod implements IClassTransformer
 {
 	private static final DecimalFormat FORMAT = new DecimalFormat("000");
 	private static final boolean codeOutput = true;
@@ -64,17 +64,17 @@ public class ClassTransformer implements IClassTransformer
 			{
 				file = file.getParentFile();
 			}
-			ClassTransformer.file = new File(file, "far_asm");
-			if(!ClassTransformer.file.exists())
+			ClassTransformerModifyMethod.file = new File(file, "far_asm");
+			if(!ClassTransformerModifyMethod.file.exists())
 			{
-				ClassTransformer.file.mkdirs();
+				ClassTransformerModifyMethod.file.mkdirs();
 			}
 		}
 		if(keyOutputStream == null)
 		{
 			try
 			{
-				File file = new File(ClassTransformer.file, "keys.txt");
+				File file = new File(ClassTransformerModifyMethod.file, "keys.txt");
 				if(!file.exists())
 				{
 					file.createNewFile();
@@ -192,6 +192,14 @@ public class ClassTransformer implements IClassTransformer
 			putedReplacements = true;
 			if(FarOverrideLoadingPlugin.runtimeDeobf)
 			{
+				create("net.minecraftforge.client.model.ModelLoader")
+				.lName("onRegisterAllBlocks|(Lbou;)V")
+				.lPosition(1079, 0)
+				.lNode(new VarInsnNode(ALOAD, 0),
+						new MethodInsnNode(INVOKESTATIC, "farcore/FarCoreSetup$ClientProxy", "onRegisterAllBlocks", "(Lbou;)V", false))
+				.lLabel(OpType.INSERT)
+				.lPut()
+				.put();
 				create("net.minecraft.world.chunk.Chunk")
 				.lName("a|(Lcm;Laiu;)Laiq;")
 				.lPosition(1202, 3)
@@ -271,6 +279,14 @@ public class ClassTransformer implements IClassTransformer
 			}
 			else
 			{
+				create("net.minecraftforge.client.model.ModelLoader")
+				.lName("onRegisterAllBlocks|(Lnet/minecraft/client/renderer/BlockModelShapes;)V")
+				.lPosition(1079, 0)
+				.lNode(new VarInsnNode(ALOAD, 0),
+						new MethodInsnNode(INVOKESTATIC, "farcore/FarCoreSetup$ClientProxy", "onRegisterAllBlocks", "(Lnet/minecraft/client/renderer/BlockModelShapes;)V", false))
+				.lLabel(OpType.INSERT)
+				.lPut()
+				.put();
 				create("net.minecraft.world.chunk.Chunk")
 				.lName("getBiome|(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;")
 				.lPosition(1278, 3)
@@ -383,7 +399,7 @@ public class ClassTransformer implements IClassTransformer
 				{
 					LOG.debug("Injecting method  {" + name + "}.");
 					logOutput(clazzName + "." + node2.name + "~source", node2.instructions);
-					boolean success = modifyMethodNode(node2.instructions, information.modifies.get(name));
+					boolean success = modifyMethodNode(node2.instructions, information.modifies.remove(name));
 					logOutput(clazzName + "." + node2.name + "~modified", node2.instructions);
 					if(!success)
 					{
@@ -392,6 +408,10 @@ public class ClassTransformer implements IClassTransformer
 					else
 					{
 						LOG.debug("Injected method {" + name + "} success.");
+					}
+					if(information.modifies.isEmpty())
+					{
+						break;
 					}
 				}
 			}
