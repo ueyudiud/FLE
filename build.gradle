@@ -27,9 +27,9 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "${config.ttr.version}"
-group= "com.ueyudiud.ttr" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${config.ttr.name}"
+version = "${config.fle.version}"
+group= "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "${config.fle.name}"
 
 sourceCompatibility = 8
 targetCompatibility = 8

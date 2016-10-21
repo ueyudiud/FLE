@@ -108,13 +108,21 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player,
+			boolean willHarvest)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
-		if(tile instanceof ITB_BlockDestroyedByPlayer)
+		TileEntity tile = world.getTileEntity(pos);
+		boolean flag = super.removedByPlayer(state, world, pos, player, willHarvest);
+		if(flag && (tile instanceof ITB_BlockDestroyedByPlayer))
 		{
 			((ITB_BlockDestroyedByPlayer) tile).onBlockDestroyedByPlayer(state);
 		}
+		return flag;
+	}
+	
+	@Override
+	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
+	{
 	}
 	
 	@Override

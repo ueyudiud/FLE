@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import farcore.lib.collection.IteratorList;
+import farcore.lib.collection.ArrayIterator;
 import fle.api.recipes.ShapedRecipeInput.ShapedRecipeCache;
 
 public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedRecipeCache, ICraftingMatrix<T>, T>
@@ -16,7 +16,7 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 		byte state;
 		int ofX;
 		int ofY;
-
+		
 		public ShapedRecipeCache(byte state, int ofX, int ofY)
 		{
 			this.state = state;
@@ -24,7 +24,7 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 			this.ofY = ofY;
 		}
 	}
-	
+
 	//0 Standard State.
 	//1 Rotate 90 degree.
 	//2 Rotate 180 degree.
@@ -36,12 +36,12 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 	protected boolean udMirror = false;
 	protected boolean lrMirror = false;
 	protected Object[][] map;
-	
+
 	public ShapedRecipeInput(Object...objects)
 	{
 		try
 		{
-			IteratorList<Object> itr = new IteratorList(objects);
+			ArrayIterator<Object> itr = new ArrayIterator(objects);
 			if(!itr.hasNext())
 				throw new RuntimeException("The input is empty!");
 			Object arg;
@@ -93,7 +93,7 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 						arg = itr.next();
 					}
 					while(arg instanceof String);
-					itr.last();
+					itr.previous();
 				}
 				else//If no map detected, use as single input normally.
 				{
@@ -148,13 +148,13 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 			throw new RuntimeException("Fail to decode recipe, recipes : " + Arrays.deepToString(objects), exception);
 		}
 	}
-
-	protected abstract S decode(IteratorList<Object> itr);
-
+	
+	protected abstract S decode(ArrayIterator<Object> itr);
+	
 	protected abstract boolean matchInput(S arg, T target);
-	
+
 	protected abstract void onInput(int x, int y, S arg, ICraftingMatrix<T> matrix);
-	
+
 	protected S getSource(int x, int y, byte state)
 	{
 		if((state & 0x1) != 0)
@@ -165,13 +165,13 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 			return getSource(width - x - 1, y, (byte) (state ^ 0x4));
 		return (S) map[y][x];
 	}
-	
+
 	@Override
 	public InputType getInputType()
 	{
 		return height == 1 && width == 1 ? InputType.SINGLE : InputType.SHAPED;
 	}
-	
+
 	@Override
 	public ShapedRecipeCache matchInput(ICraftingMatrix<T> matrix)
 	{
@@ -202,7 +202,7 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 			return cache;
 		return null;
 	}
-	
+
 	protected ShapedRecipeCache matchInput(byte state, ICraftingMatrix<T> matrix)
 	{
 		if(matrix.getHeight() < height || matrix.getWidth() < width) return null;
@@ -216,7 +216,7 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 		}
 		return null;
 	}
-
+	
 	protected boolean matchInput(int ofX, int ofY, byte state, ICraftingMatrix<T> matrix)
 	{
 		for(int x = 0; x < width; ++x)
@@ -235,7 +235,7 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void onInput(ICraftingMatrix<T> matrix, ShapedRecipeCache cache)
 	{
@@ -247,7 +247,7 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isValid()
 	{
@@ -260,6 +260,6 @@ public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedReci
 		}
 		return true;
 	}
-
+	
 	protected abstract boolean isValid(S arg);
 }

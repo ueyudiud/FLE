@@ -1,11 +1,13 @@
 package farcore.lib.collection;
 
+import java.util.Iterator;
+
 import farcore.util.U;
 
 public interface INode<T>
 {
 	T value();
-
+	
 	default boolean hasNext()
 	{
 		return next() != null;
@@ -40,6 +42,36 @@ public interface INode<T>
 	}
 	
 	default void addLast(T target)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	default void addNext(Iterator<? extends T> iterator)
+	{
+		INode<T> node = this;
+		while (iterator.hasNext())
+		{
+			node.addNext(iterator.next());
+			node = node.next();
+		}
+	}
+
+	default void addLast(Iterator<? extends T> iterator)
+	{
+		INode<T> node = this;
+		while (iterator.hasNext())
+		{
+			node.addLast(iterator.next());
+			node = node.last();
+		}
+	}
+	
+	default void insertAfter(T target)
+	{
+		throw new UnsupportedOperationException();
+	}
+	
+	default void insertBefore(T target)
 	{
 		throw new UnsupportedOperationException();
 	}

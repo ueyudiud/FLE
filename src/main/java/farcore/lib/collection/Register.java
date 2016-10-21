@@ -1,14 +1,14 @@
 package farcore.lib.collection;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ObjectArrays;
 
 /**
@@ -31,6 +31,9 @@ public class Register<T> implements IRegister<T>
 	
 	private Object[] targets;
 	private String[] names;
+
+	private Collection<T> targetCol;
+	private Set<String> nameSet;
 
 	public Register()
 	{
@@ -196,23 +199,15 @@ public class Register<T> implements IRegister<T>
 	}
 	
 	@Override
-	public List<T> targets()
+	public Collection<T> targets()
 	{
-		return (List<T>) Arrays.asList(targets);
+		return targetCol == null ? (targetCol = new RegisterTargetCollection()) : targetCol;
 	}
 
 	@Override
 	public Set<String> names()
 	{
-		HashSet<String> set = new HashSet();
-		for(String string : names)
-		{
-			if(string != null)
-			{
-				set.add(string);
-			}
-		}
-		return ImmutableSet.copyOf(set);
+		return nameSet == null ? (nameSet = new RegisterNameSet()) : nameSet;
 	}
 
 	@Override
@@ -272,7 +267,7 @@ public class Register<T> implements IRegister<T>
 	{
 		return new RegisterItr();
 	}
-	
+
 	private class RegisterItr implements Iterator<T>
 	{
 		int p = 0;
@@ -303,7 +298,257 @@ public class Register<T> implements IRegister<T>
 		}
 	}
 	
+	private class RegisterNameItr implements Iterator<String>
+	{
+		int p = 0;
+		
+		@Override
+		public boolean hasNext()
+		{
+			int i = p;
+			while(i < names.length)
+			{
+				if(names[i] != null)
+					return true;
+				++i;
+			}
+			return false;
+		}
+
+		@Override
+		public String next()
+		{
+			while(p < names.length)
+			{
+				if(names[p] != null)
+					return names[p++];
+				++p;
+			}
+			return null;
+		}
+	}
+	
+	private class RegisterNameSet implements Set<String>
+	{
+		@Override
+		public int size()
+		{
+			return size;
+		}
+
+		@Override
+		public boolean isEmpty()
+		{
+			return size == 0;
+		}
+
+		@Override
+		public boolean contains(Object arg)
+		{
+			return arg instanceof String && Register.this.contain((String) arg);
+		}
+
+		@Override
+		public Iterator<String> iterator()
+		{
+			return new RegisterNameItr();
+		}
+
+		@Override
+		public Object[] toArray()
+		{
+			Object[] result = new Object[size];
+			int p = 0;
+			int id = 0;
+			while(p == size)
+			{
+				if(names[id] != null)
+				{
+					result[p++] = names[id];
+				}
+				++id;
+			}
+			return result;
+		}
+
+		@Override
+		public <E> E[] toArray(E[] array)
+		{
+			if(array.length < size)
+			{
+				array = (E[]) Array.newInstance(array.getClass().getComponentType(), size);
+			}
+			int p = 0;
+			int id = 0;
+			while(p == size)
+			{
+				if(names[id] != null)
+				{
+					array[p++] = (E) names[id];
+				}
+				++id;
+			}
+			return array;
+		}
+
+		@Override
+		public boolean add(String e)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean remove(Object object)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean containsAll(Collection<?> collection)
+		{
+			for(Object object : collection)
+			{
+				if(!(object instanceof String) || !contain((String) object)) return false;
+			}
+			return true;
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends String> c)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean retainAll(Collection<?> c)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean removeAll(Collection<?> collection)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void clear()
+		{
+			throw new UnsupportedOperationException();
+		}
+	}
+	
+	private class RegisterTargetCollection implements Collection<T>
+	{
+		@Override
+		public int size()
+		{
+			return size;
+		}
+		
+		@Override
+		public boolean isEmpty()
+		{
+			return size == 0;
+		}
+		
+		@Override
+		public boolean contains(Object o)
+		{
+			try
+			{
+				return contain((T) o);
+			}
+			catch (ClassCastException exception)
+			{
+				return false;
+			}
+		}
+		
+		@Override
+		public Iterator<T> iterator()
+		{
+			return new RegisterItr();
+		}
+		
+		@Override
+		public Object[] toArray()
+		{
+			List<T> list = new ArrayList(size);
+			for (Object target : targets)
+			{
+				if(target != null)
+				{
+					list.add((T) target);
+				}
+			}
+			return list.toArray();
+		}
+		
+		@Override
+		public <E> E[] toArray(E[] a)
+		{
+			List<E> list = new ArrayList(size);
+			for (Object target : targets)
+			{
+				if(target != null)
+				{
+					list.add((E) target);
+				}
+			}
+			return list.toArray(a);
+		}
+		
+		@Override
+		public boolean add(T e)
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public boolean remove(Object o)
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public boolean containsAll(Collection<?> collection)
+		{
+			for(Object object : collection)
+			{
+				if(!contains(object))
+					return false;
+			}
+			return true;
+		}
+		
+		@Override
+		public boolean addAll(Collection<? extends T> c)
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public boolean removeAll(Collection<?> c)
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public boolean retainAll(Collection<?> c)
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public void clear()
+		{
+			throw new UnsupportedOperationException();
+		}
+	}
+
 	@Override
+	@Deprecated
 	public void arrange()
 	{
 		if(size == 0) return;
@@ -329,6 +574,7 @@ public class Register<T> implements IRegister<T>
 	}
 	
 	@Override
+	@Deprecated
 	public void arrange(String... strings)
 	{
 		if(size == 0) return;
@@ -371,14 +617,18 @@ public class Register<T> implements IRegister<T>
 	@Override
 	public String toString()
 	{
-		String key = "reg{";
+		StringBuilder key = new StringBuilder();
 		for(String string : names)
 		{
 			if(string != null)
 			{
-				key += string + ",";
+				if(key.length() == 0)
+				{
+					key.append(",");
+				}
+				key.append(string);
 			}
 		}
-		return key + "}";
+		return "reg{" + key + "}";
 	}
 }

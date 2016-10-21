@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import farcore.FarCore;
+import farcore.lib.block.IHitByFallenBehaviorBlock;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.net.entity.PacketEntity;
 import farcore.lib.net.entity.PacketEntityAsk;
@@ -36,16 +37,21 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 		if(pos.getY() < 0) return true;
 		pos = pos.add(0, -1, 0);
 		IBlockState state = world.getBlockState(pos);
+		if(state.getBlock() instanceof IHitByFallenBehaviorBlock)
+			return !((IHitByFallenBehaviorBlock) state.getBlock()).isPermeatableBy(world, pos, state, target);
 		return (state.getBlock().isAir(state, world, pos) ||
 				state.getBlock() instanceof IFluidBlock ||
 				state.getBlock().isReplaceable(world, pos));
 	}
-
-	public static void replaceFallingBlock(World world, BlockPos pos, IBlockState state)
+	
+	public static void replaceFallingBlock(World world, BlockPos pos, IBlockState state, int height)
 	{
 		IBlockState hited = world.getBlockState(pos);
 		if(!hited.getBlock().isAir(hited, world, pos))
 		{
+			if(hited.getBlock() instanceof IHitByFallenBehaviorBlock &&
+					((IHitByFallenBehaviorBlock) hited.getBlock()).onFallingOn(world, pos, hited, state, height))
+				return;
 			hited.getBlock().breakBlock(world, pos, hited);
 			if(!hited.getBlock().isReplaceable(world, pos))
 			{
@@ -53,9 +59,9 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 			}
 		}
 	}
-	
-	public boolean shouldDropItem = true;
 
+	public boolean shouldDropItem = true;
+	
 	private IBlockState state;
 	private NBTTagCompound nbt;
 	private int startX;
@@ -65,9 +71,9 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 	@SideOnly(Side.CLIENT)
 	private BlockPos pos;
 	private boolean hitEntity;
-
+	
 	private List<EntityPlayer> list = new ArrayList(4);
-
+	
 	public EntityFallingBlockExtended(World world)
 	{
 		super(world);
@@ -101,13 +107,13 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 			setDead();
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public BlockPos getOrigin()
 	{
 		return pos;
 	}
-
+	
 	/**
 	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
 	 * prevent them from trampling crops
@@ -117,10 +123,10 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 	{
 		return false;
 	}
-
+	
 	@Override
 	protected void entityInit() {}
-
+	
 	/**
 	 * Returns true if other Entities should be prevented from moving through this Entity.
 	 */
@@ -129,7 +135,7 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 	{
 		return !isDead;
 	}
-
+	
 	/**
 	 * Called to update the entity's position/logic.
 	 */
@@ -171,15 +177,15 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 					//						setDead();
 					//						return;
 					//					}
-
+					
 					if(state.getBlock() instanceof ISmartFallableBlock)
 					{
 						((ISmartFallableBlock) state.getBlock()).onStartFalling(worldObj, pos);
 					}
-
+					
 					worldObj.setBlockToAir(pos);
 				}
-
+				
 				for(EntityPlayer player : list)
 				{
 					FarCore.network.sendToPlayer(new PacketEntity(this), player);
@@ -190,9 +196,9 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 					motionX *= 0.7D;
 					motionZ *= 0.7D;
 					motionY *= -0.5D;
-
+					
 					setDead();
-
+					
 					label:
 						if (worldObj.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, (Entity)null, (ItemStack)null) &&
 								((state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).canFallingBlockStay(worldObj, pos, state)) ||
@@ -203,12 +209,12 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 								{
 									break label;
 								}
-							replaceFallingBlock(worldObj, pos, state);
+							replaceFallingBlock(worldObj, pos, state, startY - pos.getY());
 							worldObj.setBlockState(pos, state, 3);
 							if (nbt != null)
 							{
 								TileEntity tile = worldObj.getTileEntity(pos);
-
+								
 								if (tile != null)
 								{
 									tile.readFromNBT(nbt);
@@ -220,7 +226,7 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 						else if (shouldDropItem)
 							if(state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).onDropFallenAsItem(worldObj, pos, state, nbt))
 							{
-
+								
 							}
 							else
 							{
@@ -232,30 +238,30 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 					if (shouldDropItem)
 						if(state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).onDropFallenAsItem(worldObj, pos, state, nbt))
 						{
-
+							
 						}
 						else
 						{
 							entityDropItem(new ItemStack(state.getBlock(), 1, state.getBlock().damageDropped(state)), 0.0F);
 						}
-
+					
 					setDead();
 				}
 			}
 		}
 	}
-
+	
 	/**
 	 * Called when the mob is falling. Calculates and applies fall damage.
 	 */
 	protected void fall(float height)
 	{
 		int i = MathHelper.ceiling_float_int(height - 1.0F);
-
+		
 		if (i > 0)
 		{
 			ArrayList<Entity> arraylist = new ArrayList(worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox()));
-
+			
 			float amount;
 			for(Entity entity : arraylist)
 			{
@@ -269,7 +275,7 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 			}
 		}
 	}
-
+	
 	/**
 	 * (abstract) Protected helper method to write subclass entity data to NBT.
 	 */
@@ -288,7 +294,7 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 			nbt.setTag("tile", this.nbt);
 		}
 	}
-
+	
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
@@ -309,29 +315,29 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 			setDead();
 			return;
 		}
-
+		
 		state = block.getStateFromMeta(nbt.getByte("data") & 255);
 		lifeTime = nbt.getByte("time") & 255;
-
+		
 		hitEntity = nbt.getBoolean("hit");
 		startY = nbt.getShort("startY");
-
+		
 		if (nbt.hasKey("drop", 99))
 		{
 			shouldDropItem = nbt.getBoolean("drop");
 		}
-
+		
 		if (nbt.hasKey("tile", 10))
 		{
 			this.nbt = nbt.getCompoundTag("tile");
 		}
 	}
-
+	
 	public void func_145806_a(boolean flag)
 	{
 		hitEntity = flag;
 	}
-
+	
 	@Override
 	public void addEntityCrashInfo(CrashReportCategory category)
 	{
@@ -339,13 +345,13 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 		category.addCrashSection("Immitating block name", state.getBlock().getUnlocalizedName());
 		category.addCrashSection("Immitating block data", state.getProperties().toString());
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public float getShadowSize()
 	{
 		return 0.0F;
 	}
-
+	
 	/**
 	 * Return whether this entity should be rendered as on fire.
 	 */
@@ -355,18 +361,18 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 	{
 		return false;
 	}
-
+	
 	public IBlockState getBlock()
 	{
 		return state;
 	}
-
+	
 	@Override
 	public boolean ignoreItemEntityData()
 	{
 		return true;
 	}
-
+	
 	@Override
 	public NBTTagCompound writeDescriptionsToNBT(NBTTagCompound nbt)
 	{
@@ -375,7 +381,7 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 		nbt.setLong("origin", new BlockPos(this).toLong());
 		return nbt;
 	}
-
+	
 	@Override
 	public void readDescriptionsFromNBT(NBTTagCompound nbt)
 	{
@@ -390,7 +396,7 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 		}
 		pos = BlockPos.fromLong(nbt.getLong("origin"));
 	}
-
+	
 	@Override
 	public void markNBTSync(EntityPlayer player)
 	{

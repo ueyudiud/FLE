@@ -221,7 +221,7 @@ public class ItemTextureHelper
 				x0, y0, z2, sprite.getInterpolatedU(u0), sprite.getInterpolatedV(v0));
 	}
 
-	private static final BakedQuad buildQuad(
+	public static final BakedQuad buildQuad(
 			VertexFormat format, Optional<TRSRTransformation> transform, EnumFacing side, TextureAtlasSprite sprite, int tint,
 			float x0, float y0, float z0, float u0, float v0,
 			float x1, float y1, float z1, float u1, float v1,

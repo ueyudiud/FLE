@@ -10,27 +10,27 @@ public class Log
 {
 	private static Logger logLogger = LogManager.getLogger("Far Log");
 
-	private static List<Throwable> cache = new ArrayList();
+	private static List<Object> cache = new ArrayList();
 	
-	public static void error(String message, Throwable throwable)
+	public static void error(String message, Throwable throwable, Object...formats)
 	{
-		logger().error(message, throwable);
+		logger().error(message, throwable, formats);
 	}
-	public static void warn(String message, Throwable throwable)
+	public static void warn(String message, Throwable throwable, Object...formats)
 	{
-		logger().warn(message, throwable);
+		logger().warn(message, throwable, formats);
 	}
-	public static void warn(String message)
+	public static void warn(String message, Object...formats)
 	{
-		logger().warn(message);
+		logger().warn(message, formats);
 	}
-	public static void info(String message)
+	public static void info(String message, Object...formats)
 	{
-		logger().info(message);
+		logger().info(message, formats);
 	}
-	public static void debug(String message)
+	public static void debug(String message, Object...formats)
 	{
-		logger().debug(message);
+		logger().debug(message, formats);
 	}
 	public static void reset()
 	{
@@ -39,20 +39,31 @@ public class Log
 			cache.clear();
 		}
 	}
-	public static void cache(Throwable throwable)
+	public static void cache(Object object)
 	{
 		synchronized (cache)
 		{
-			cache.add(throwable);
+			cache.add(object);
 		}
 	}
-	public static void logCachedExceptions()
+	public static void logCachedExceptions(String...informations)
 	{
+		for(String value : informations)
+		{
+			info("# " + value);
+		}
 		synchronized (cache)
 		{
-			for(Throwable throwable : cache)
+			for(Object object : cache)
 			{
-				logger().catching(throwable);
+				if(object instanceof Throwable)
+				{
+					logger().catching((Throwable) object);
+				}
+				else
+				{
+					info(object.toString());
+				}
 			}
 		}
 		reset();
@@ -62,7 +73,6 @@ public class Log
 	
 	public static Logger logger()
 	{
-		return logger != null ? logger :
-			logLogger;
+		return logger != null ? logger : logLogger;
 	}
 }

@@ -23,12 +23,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 
 import farcore.FarCore;
-import farcore.FarCoreSetup;
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.Capabilities;
 import farcore.data.Config;
 import farcore.data.EnumToolType;
-import farcore.lib.block.IBearingBlock;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.collection.Stack;
@@ -101,7 +99,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -137,7 +134,7 @@ public class U
 	private static final Random RNG = new Random();
 	@SidedProxy(serverSide = "farcore.util.U$CommonHandler", clientSide = "farcore.util.U$ClientHandler")
 	static CommonHandler handlerGatway;
-	
+
 	public static class L
 	{
 		public static int[] cast(Integer[] integers)
@@ -149,54 +146,67 @@ public class U
 			}
 			return ret;
 		}
-		
+
 		public static float cast(Float f)
 		{
 			return f == null ? 0 : f.floatValue();
 		}
-		
+
 		public static int cast(Integer integer)
 		{
 			return integer == null ? 0 : integer.intValue();
 		}
-		
+
 		public static short cast(Short short1)
 		{
 			return short1 == null ? 0 : short1.shortValue();
 		}
-		
+
 		public static int castPositive(byte val)
 		{
 			return (val & 0xFF);
 		}
-		
+
 		public static void exit()
 		{
 			exit(0, false);
 		}
-		
+
 		public static void exit(int code, boolean hardExit)
 		{
 			FMLCommonHandler.instance().exitJava(code, hardExit);
 		}
-		
+
 		public static <T> T[] cast(Collection<? extends T> collection, Class<T> clazz)
 		{
 			T[] ret = (T[]) Array.newInstance(clazz, collection.size());
 			return collection.toArray(ret);
 		}
-		
+
 		public static <T> ImmutableList<T> castImmutable(T...list)
 		{
 			return ImmutableList.copyOf(list);
 		}
-		
+
 		public static <T> ArrayList<T> castArray(T...list)
 		{
 			if(list == null || list.length == 0) return new ArrayList();
 			return new ArrayList(Arrays.asList(list));
 		}
-		
+
+		public static <K, V> void putAll(Map<? super K, ? super V> map, Collection<? extends K> collection, Function<? super K, ? extends V> function)
+		{
+			for(K key : collection)
+			{
+				map.put(key, function.apply(key));
+			}
+		}
+
+		public static <K, V> void putAll(Map<? super K, ? super V> map, Collection<? extends K> collection, V constant)
+		{
+			putAll(map, collection, (K key) -> constant);
+		}
+
 		public static <K, V> void put(Map<K, List<V>> map, K key, V value)
 		{
 			if(map.containsKey(key))
@@ -208,7 +218,7 @@ public class U
 				map.put(key, new ArrayList(ImmutableList.of(value)));
 			}
 		}
-		
+
 		public static <K, V> void put(Map<K, List<V>> map, K key, V...values)
 		{
 			if(values.length == 0) return;
@@ -218,11 +228,11 @@ public class U
 			}
 			else
 			{
-				put(map, key, Arrays.asList(values));
+				put(map, key, Arrays.<V>asList(values));
 			}
 		}
-		
-		public static <K, V> void put(Map<K, List<V>> map, K key, Collection<V> values)
+
+		public static <K, V> void put(Map<K, List<V>> map, K key, Collection<? extends V> values)
 		{
 			if(map.containsKey(key))
 			{
@@ -233,14 +243,13 @@ public class U
 				map.put(key, new ArrayList(values));
 			}
 		}
-
+		
 		public static <K, V> boolean remove(Map<K, List<V>> map, K key, V value)
 		{
-			if(map.containsKey(key))
-				return map.get(key).remove(value);
-			return false;
+			List<V> list = map.get(key);
+			return list != null ? list.remove(value) : false;
 		}
-		
+
 		public static <T> boolean contain(Collection<? extends T> collection, IDataChecker<T> checker)
 		{
 			if(collection == null || collection.isEmpty()) return false;
@@ -248,7 +257,7 @@ public class U
 				if(checker.isTrue(target)) return true;
 			return false;
 		}
-		
+
 		public static <T> Set<T> containSet(Collection<? extends T> collection, IDataChecker<T> checker)
 		{
 			if(collection == null || collection.isEmpty()) return ImmutableSet.of();
@@ -260,7 +269,7 @@ public class U
 				}
 			return builder.build();
 		}
-		
+
 		public static <T> T randomInStack(Stack<T>[] stacks, Random random)
 		{
 			long weight = 0;
@@ -270,12 +279,12 @@ public class U
 			}
 			return randomInStack(stacks, weight, random);
 		}
-		
+
 		public static <T> T randomInStack(Stack<T>[] stacks, long weight)
 		{
 			return randomInStack(stacks, weight, RNG);
 		}
-		
+
 		public static <T> T randomInStack(Stack<T>[] stacks, long weight, Random random)
 		{
 			long rng = Maths.mod(random.nextLong(), weight);
@@ -289,24 +298,24 @@ public class U
 			while(rng >= 0);
 			return target;
 		}
-		
+
 		public static <T> T random(T...list)
 		{
 			return random(list, RNG);
 		}
-		
+
 		public static <T> T random(Random random, T...list)
 		{
 			return random(list, random);
 		}
-		
+
 		public static <T> T random(T[] list, Random random)
 		{
 			return list == null || list.length == 0 ? null :
 				list.length == 1 ? list[0] :
 					list[random.nextInt(list.length)];
 		}
-		
+
 		public static <T> T random(Collection<T> collection, Random random)
 		{
 			if(collection instanceof List)
@@ -314,7 +323,7 @@ public class U
 			else
 				return (T) random(collection.toArray(), random);
 		}
-		
+
 		public static int[] fillIntArray(int length, int value)
 		{
 			if(length == 0) return new int[0];
@@ -323,14 +332,14 @@ public class U
 			Arrays.fill(ret, value);
 			return ret;
 		}
-		
+
 		public static boolean equal(Object arg1, Object arg2)
 		{
 			return arg1 == arg2 ? true :
 				(arg1 == null ^ arg2 == null) ? false :
 					arg1.equals(arg2);
 		}
-		
+
 		public static int min(int...values)
 		{
 			int ret = Integer.MAX_VALUE;
@@ -341,7 +350,7 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static float min(float...values)
 		{
 			float ret = Float.MAX_VALUE;
@@ -352,7 +361,7 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static int max(int...values)
 		{
 			int ret = Integer.MIN_VALUE;
@@ -363,7 +372,7 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static float max(float...values)
 		{
 			float ret = Float.MIN_VALUE;
@@ -374,64 +383,64 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static int range(int m1, int m2, int target)
 		{
 			int v;
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
-		
+
 		public static float range(float m1, float m2, float target)
 		{
 			float v;
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
-		
+
 		public static double range(double m1, double m2, double target)
 		{
 			double v;
 			return target > (v = Math.max(m1, m2)) ? v :
 				target < (v = Math.min(m1, m2)) ? v : target;
 		}
-
+		
 		public static boolean inRange(double max, double min, double target)
 		{
 			return target <= max && target >= min;
 		}
-		
+
 		public static int nextInt(int bound)
 		{
 			return nextInt(bound, RNG);
 		}
-		
+
 		public static int nextInt(int bound, Random rand)
 		{
 			return bound <= 0 ? bound : rand.nextInt(bound);
 		}
 	}
-	
+
 	public static class Strings
 	{
 		static final DecimalFormat format1 = new DecimalFormat("##0.0%");
-		
+
 		public static String locale()
 		{
 			return handlerGatway.getLocale();
 		}
-
+		
 		public static String translateByI18n(String unlocal, Object...parameters)
 		{
 			return handlerGatway.translateToLocalByI18n(unlocal, parameters);
 		}
-		
+
 		public static String validate(String string)
 		{
 			if(string == null) return "";
 			return string.trim();
 		}
-		
+
 		public static String validateProperty(String string)
 		{
 			if(string == null) return "";
@@ -449,7 +458,7 @@ public class U
 			}
 			return newString.trim();
 		}
-		
+
 		public static String upcaseFirst(String name)
 		{
 			String s = validate(name);
@@ -458,7 +467,7 @@ public class U
 			String sub = name.substring(1);
 			return Character.toString(Character.toUpperCase(chr)) + sub;
 		}
-		
+
 		public static String validateOre(boolean upperFirst, String name)
 		{
 			String string = validate(name);
@@ -483,7 +492,7 @@ public class U
 				}
 			return ret;
 		}
-		
+
 		public static String[] split(String str, char split)
 		{
 			if(str == null) return new String[0];
@@ -492,12 +501,12 @@ public class U
 			else
 				return new String[]{str};
 		}
-		
+
 		public static String progress(double value)
 		{
 			return format1.format(value);
 		}
-		
+
 		public static String toOrdinalNumber(int value)
 		{
 			if(value < 0)
@@ -514,7 +523,7 @@ public class U
 			default: return value + "th";
 			}
 		}
-		
+
 		public static String toOrdinalNumber(long value)
 		{
 			if(value < 0)
@@ -532,17 +541,17 @@ public class U
 			}
 		}
 	}
-	
+
 	public static class R
 	{
 		private static final Map<String, Field> fieldCache = new HashMap();
 		private static Field modifiersField;
-		
+
 		public static void resetFieldCache()
 		{
 			fieldCache.clear();
 		}
-		
+
 		private static void initModifierField()
 		{
 			try
@@ -558,7 +567,7 @@ public class U
 				e.printStackTrace();
 			}
 		}
-		
+
 		private static Field getField(Class<?> clazz, String mcpName, String obfName, boolean isPrivate, boolean isFinal, boolean alwaysInit) throws Exception
 		{
 			if(isFinal)
@@ -598,7 +607,7 @@ public class U
 			}
 			throw new FileNotFoundException();
 		}
-		
+
 		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
@@ -615,7 +624,7 @@ public class U
 				throw new RuntimeException();
 			}
 		}
-
+		
 		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideFinalField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
@@ -644,7 +653,7 @@ public class U
 				throw new RuntimeException("FLE: fail to find and override field " + mcpName);
 			}
 		}
-		
+
 		public static <T> Object getValue(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
 		{
 			try
@@ -656,7 +665,7 @@ public class U
 				return null;
 			}
 		}
-		
+
 		public static <T> int getInt(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
 		{
 			try
@@ -668,7 +677,7 @@ public class U
 				return 0;
 			}
 		}
-		
+
 		public static Method getMethod(Class clazz, String mcpName, String obfName, Class...classes)
 		{
 			for(String str : new String[]{mcpName, obfName})
@@ -686,11 +695,11 @@ public class U
 			return null;
 		}
 	}
-	
+
 	public static class Maths
 	{
 		public static final double sq2 = 1.4142135623730950488016887242097;
-		
+
 		public static double[][] gaussianL(int size, double sigma)
 		{
 			int size1 = size * 2 + 1;
@@ -715,7 +724,7 @@ public class U
 			}
 			return ret;
 		}
-		
+
 		public static float[][] gaussianLf(int size, float sigma)
 		{
 			int size1 = size * 2 + 1;
@@ -740,31 +749,31 @@ public class U
 			}
 			return ret;
 		}
-
+		
 		public static double mod(double a, double b)
 		{
 			double v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
-
+		
 		public static float mod(float a, float b)
 		{
 			float v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
-
+		
 		public static int mod(int a, int b)
 		{
 			int v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
-		
+
 		public static long mod(long a, long b)
 		{
 			long v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
-		
+
 		public static float average(float...floats)
 		{
 			float j = 0;
@@ -774,7 +783,7 @@ public class U
 			}
 			return j / floats.length;
 		}
-		
+
 		public static double average(double...doubles)
 		{
 			double j = 0;
@@ -784,18 +793,18 @@ public class U
 			}
 			return j / doubles.length;
 		}
-
+		
 		public static float lerp(float a, float b, float x)
 		{
 			return a + (b - a) * x;
 		}
-
+		
 		public static double lerp(double a, double b, double x)
 		{
 			return a + (b - a) * x;
 		}
 	}
-	
+
 	public static class Mod
 	{
 		public static String getActiveModID()
@@ -804,57 +813,57 @@ public class U
 				return "minecraft";
 			return Loader.instance().activeModContainer().getModId();
 		}
-		
+
 		public static boolean isModLoaded(String name)
 		{
 			return Loader.isModLoaded(name);
 		}
-		
+
 		public static File getMCFile()
 		{
 			return handlerGatway.fileDir();
 		}
-		
+
 		public static void registerBlock(Block block, String name)
 		{
 			registerBlock(block, getActiveModID(), name);
 		}
-		
+
 		public static void registerBlock(Block block, String modid, String name)
 		{
 			registerBlock(block, modid, name, new ItemBlock(block));
 		}
-		
+
 		public static void registerBlock(Block block, String modid, String name, Item itemBlock)
 		{
 			GameRegistry.register(block.setRegistryName(modid, name));
 			GameRegistry.register(itemBlock.setRegistryName(modid, name));
 			handlerGatway.registerRender(block);
 		}
-
+		
 		public static void registerItem(Item item, String name)
 		{
 			registerItem(item, getActiveModID(), name);
 		}
-
+		
 		public static void registerItem(Item item, String modid, String name)
 		{
 			GameRegistry.register(item.setRegistryName(modid, name));
 			handlerGatway.registerRender(item);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Block block, int meta, String modid, String locate)
 		{
 			registerItemBlockModel(Item.getItemFromBlock(block), meta, modid, locate);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Item item, int meta, String modid, String locate)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + locate, "inventory"));
 		}
-		
+
 		/**
 		 * Because this method is often use in item initialization, to
 		 * check the side is client or server is too inconvenient, so
@@ -868,47 +877,47 @@ public class U
 		{
 			handlerGatway.setModelLocate(item, meta, modid, locate);
 		}
-
+		
 		public static void registerItemModel(Item item, int meta, String modid, String locate, String type)
 		{
 			handlerGatway.setModelLocate(item, meta, modid, locate, type);
 		}
-		
+
 		public static void registerBiomeColorMultiplier(Block...block)
 		{
 			handlerGatway.registerBiomeColorMultiplier(block);
 		}
-		
+
 		public static void registerCompactModel(Block block, boolean splitFile, String modid, String path, IProperty property, IProperty...properties)
 		{
 			handlerGatway.registerCompactModel(splitFile, block, modid, path, property, properties);
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public static void registerColorMultiplier(IBlockColor color, Block...block)
 		{
-			FarCoreSetup.proxy.registerColorMultiplier(color, block);
+			FarCore.proxy.registerColorMultiplier(color, block);
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public static void registerColorMultiplier(IItemColor color, Item...item)
 		{
-			FarCoreSetup.proxy.registerColorMultiplier(color, item);
+			FarCore.proxy.registerColorMultiplier(color, item);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerFluid(BlockFluidBase block)
 		{
 			registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.instance);
 			ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.instance);
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public static void registerCustomItemModelSelector(Block item, ICustomItemModelSelector selector)
 		{
 			registerCustomItemModelSelector(Item.getItemFromBlock(item), selector);
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public static void registerCustomItemModelSelector(Item item, ICustomItemModelSelector selector)
 		{
@@ -916,37 +925,37 @@ public class U
 			ModelBakery.registerItemVariants(item, selector.getAllowedResourceLocations(item).toArray(new ResourceLocation[0]));
 		}
 	}
-	
+
 	public static class Sides
 	{
 		public static boolean isClient()
 		{
 			return FMLCommonHandler.instance().getSide().isClient();
 		}
-		
+
 		public static boolean isServer()
 		{
 			return FMLCommonHandler.instance().getSide().isServer();
 		}
-		
+
 		public static boolean isSimulating()
 		{
 			return FMLCommonHandler.instance().getEffectiveSide().isServer();
 		}
 	}
-	
+
 	public static class OreDict
 	{
 		public static void registerValid(String name, Block ore)
 		{
 			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
 		}
-		
+
 		public static void registerValid(String name, Item ore)
 		{
 			registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));
 		}
-		
+
 		public static void registerValid(String name, ItemStack ore)
 		{
 			if(U.ItemStacks.valid(ore) == null) return;
@@ -954,12 +963,12 @@ public class U
 			register.stackSize = 1;
 			OreDictionary.registerOre(name, ore);
 		}
-		
+
 		public static void registerValid(String name, Function<ItemStack, Boolean> function, ItemStack...instances)
 		{
 			OreDictExt.registerOreFunction(name, function, instances);
 		}
-		
+
 		public static void registerValid(String name, ItemStack ore, boolean autoValid)
 		{
 			if(autoValid)
@@ -969,53 +978,53 @@ public class U
 			registerValid(name, ore);
 		}
 	}
-
+	
 	public static class Lights
 	{
 		public static int get256Light(World world, BlockPos pos, EnumSkyBlock type)
 		{
 			return world.getLightFor(type, pos) << 4;
 		}
-
+		
 		public static int blend4Light(int light1, int light2, int light3, int light4)
 		{
 			return (light1 + light2 + light3 + light4) >> 2 & 0xFF;
 		}
-
+		
 		public static int blend2Light(int light1, int light2)
 		{
 			return (light1 + light2) >> 1 & 0xFF;
 		}
-		
+
 		public static int blend4MixLight(int light1, int light2, int light3, int light4)
 		{
 			return (light1 + light2 + light3 + light4) >> 2 & 0xFF00FF;
 		}
-
+		
 		public static int blend2MixLight(int light1, int light2)
 		{
 			return (light1 + light2) >> 1 & 0xFF00FF;
 		}
-		
+
 		public static int mixSkyBlockLight(int sky, int block)
 		{
 			return sky << 16 | block;
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public static VertexBuffer lightmap(VertexBuffer buffer, int light)
 		{
 			return buffer.lightmap(light >> 16 & 0xFF, light & 0xFF);
 		}
 	}
-	
+
 	public static class Worlds
 	{
 		private static final int[][] rotateFix = {
 				{3, 2, 5, 4},
 				{1, 0, 5, 4},
 				{1, 0, 3, 2}};
-		
+
 		public static void breakBlockWithoutSource(World world, BlockPos pos, boolean harvestBlock)
 		{
 			if(!world.isRemote) //This method have not effect in client world, it will send a packet to client.
@@ -1037,12 +1046,12 @@ public class U
 				}
 			}
 		}
-		
+
 		public static int fixSide(EnumFacing side, float hitX, float hitY, float hitZ)
 		{
 			return fixSide(side.ordinal(), hitX, hitY, hitZ);
 		}
-		
+
 		public static int fixSide(int side, float hitX, float hitY, float hitZ)
 		{
 			float u, v;
@@ -1074,7 +1083,7 @@ public class U
 								Direction.oppsite[side] :
 									rotateFix[side / 2][id];
 		}
-
+		
 		public static void checkLight(World world, BlockPos pos)
 		{
 			if(Config.multiThreadLight)
@@ -1088,7 +1097,7 @@ public class U
 				world.theProfiler.endSection();
 			}
 		}
-		
+
 		public static void spawnDropsInWorld(World world, BlockPos pos, List<ItemStack> drops)
 		{
 			if(world.isRemote || drops == null) return;
@@ -1107,23 +1116,23 @@ public class U
 				world.spawnEntityInWorld(entityitem);
 			}
 		}
-		
+
 		public static void spawnDropInWorld(ICoord coord, ItemStack drop)
 		{
 			spawnDropsInWorld(coord, Arrays.asList(drop));
 		}
-		
+
 		public static void spawnDropsInWorld(ICoord coord, List<ItemStack> drop)
 		{
 			spawnDropsInWorld(coord.world(), coord.pos(), drop);
 		}
-		
+
 		public static void spawnDropsInWorld(EntityPlayer player, ItemStack drop)
 		{
 			if(drop == null || drop.stackSize == 0 || player.worldObj.isRemote) return;
 			player.dropItem(drop, false);
 		}
-		
+
 		public static void spawnDropsInWorldByPlayerOpeningContainer(EntityPlayer player, IInventory inventory)
 		{
 			if(player.worldObj.isRemote) return;
@@ -1132,7 +1141,7 @@ public class U
 				spawnDropsInWorld(player, inventory.removeStackFromSlot(i));
 			}
 		}
-		
+
 		public static boolean checkAndFallBlock(World world, BlockPos pos)
 		{
 			if(world.isRemote) return false;
@@ -1143,12 +1152,12 @@ public class U
 				return fallBlock(world, pos, state);
 			return false;
 		}
-		
+
 		public static boolean fallBlock(World world, BlockPos pos, IBlockState state)
 		{
 			return fallBlock(world, pos, pos, state);
 		}
-
+		
 		public static boolean fallBlock(World world, BlockPos pos, BlockPos dropPos, IBlockState state)
 		{
 			if(!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
@@ -1177,12 +1186,12 @@ public class U
 				}
 				if(pos.getY() > 0)
 				{
-					EntityFallingBlockExtended.replaceFallingBlock(world, pos, state);
+					EntityFallingBlockExtended.replaceFallingBlock(world, pos, state, height);
 					NBTTagCompound nbt;
 					tile.writeToNBT(nbt = new NBTTagCompound());
 					if(state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).onFallOnGround(world, pos, state, height, nbt))
 					{
-						
+
 					}
 					else
 					{
@@ -1198,52 +1207,52 @@ public class U
 				return true;
 			}
 		}
-		
+
 		public static World world(int dimID)
 		{
 			return handlerGatway.worldInstance(dimID);
 		}
-		
+
 		public static double distanceSqTo(IObjectInWorld object, BlockPos pos)
 		{
 			double[] cache = object.position();
 			return distanceSqTo(cache[0] - pos.getX() + .5, cache[1] - pos.getY() + .5, cache[2] - pos.getZ() + .5);
 		}
-		
+
 		public static double distanceSqTo(IObjectInWorld object1, IObjectInWorld object2)
 		{
 			double[] cache1 = object1.position();
 			double[] cache2 = object2.position();
 			return distanceSqTo(cache1[0] - cache2[0], cache1[1] - cache2[1], cache1[2] - cache2[2]);
 		}
-		
+
 		public static double distanceSqTo(BlockPos pos1, BlockPos pos2)
 		{
 			return distanceSqTo(pos1.getX() - pos2.getX(), pos1.getY() - pos2.getY(), pos1.getZ() - pos2.getZ());
 		}
-		
+
 		public static double distanceSqTo(Entity entity, BlockPos pos)
 		{
 			return entity.getDistanceSq(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
 		}
-		
+
 		public static double distanceSqTo(double x, double y, double z)
 		{
 			return x * x + y * y + z * z;
 		}
-		
+
 		public static <T extends Comparable<T>> boolean switchProp(World world, BlockPos pos, IProperty<T> property, T value, int updateFlag)
 		{
 			IBlockState state = world.getBlockState(pos);
 			if(state.getValue(property) == value) return false;
 			return world.setBlockState(pos, state.withProperty(property, value), updateFlag);
 		}
-		
+
 		public static boolean isBlockNearby(World world, BlockPos pos, Block block, boolean ignoreUnloadChunk)
 		{
 			return isBlockNearby(world, pos, block, -1, ignoreUnloadChunk);
 		}
-		
+
 		public static boolean isBlockNearby(World world, BlockPos pos, Block block, int meta, boolean ignoreUnloadChunk)
 		{
 			return
@@ -1254,7 +1263,7 @@ public class U
 					isBlock(world, pos.north(), block, meta, ignoreUnloadChunk)||
 					isBlock(world, pos.south(), block, meta, ignoreUnloadChunk);
 		}
-		
+
 		public static boolean isBlock(World world, BlockPos pos, Block block, int meta, boolean ignoreUnloadChunk)
 		{
 			IBlockState state;
@@ -1262,7 +1271,7 @@ public class U
 					(state = world.getBlockState(pos)).getBlock() == block &&
 					(meta < 0 || state.getBlock().getMetaFromState(state) == meta);
 		}
-		
+
 		public static boolean isAirNearby(World world, BlockPos pos, boolean ignoreUnloadChunk)
 		{
 			return (!ignoreUnloadChunk || world.isAreaLoaded(pos, 1)) && (
@@ -1273,7 +1282,7 @@ public class U
 					world.isAirBlock(pos.north())||
 					world.isAirBlock(pos.south()));
 		}
-		
+
 		public static boolean isNotOpaqueNearby(World world, BlockPos pos)
 		{
 			return !world.isAreaLoaded(pos, 1) || !(
@@ -1284,23 +1293,23 @@ public class U
 					world.isSideSolid(pos.north(), EnumFacing.SOUTH)&&
 					world.isSideSolid(pos.south(), EnumFacing.NORTH));
 		}
-		
+
 		public static int getBlockMeta(World world, BlockPos pos)
 		{
 			IBlockState state;
 			return (state = world.getBlockState(pos)).getBlock().getMetaFromState(state);
 		}
-		
+
 		public static boolean setBlock(World world, BlockPos pos, Block block, int meta, int flag)
 		{
 			return world.setBlockState(pos, block.getStateFromMeta(meta), flag);
 		}
-		
+
 		public static boolean isCatchingRain(World world, BlockPos pos)
 		{
 			return isCatchingRain(world, pos, false);
 		}
-		
+
 		public static boolean isCatchingRain(World world, BlockPos pos, boolean checkNeayby)
 		{
 			return world.isRaining() ?
@@ -1312,7 +1321,7 @@ public class U
 							world.canBlockSeeSky(pos.west()))) :
 								false;
 		}
-		
+
 		public static TileEntity setTileEntity(World world, BlockPos pos, TileEntity tile, boolean update)
 		{
 			if(update)
@@ -1331,7 +1340,7 @@ public class U
 			}
 			return tile;
 		}
-		
+
 		/**
 		 * Used by ASM.
 		 * @param world
@@ -1344,7 +1353,7 @@ public class U
 				return ((IBiomeExtended) biome).canRainingAt(world, pos);
 			return biome.canRain();
 		}
-
+		
 		/**
 		 * Used by ASM.
 		 * @param oldBiome
@@ -1358,7 +1367,7 @@ public class U
 				return ((IBiomeRegetter) provider).getBiome(saveID, pos);
 			return Biome.getBiome(saveID);
 		}
-
+		
 		public static Direction getCollideSide(AxisAlignedBB aabb, double[] pre, double[] post)
 		{
 			if(aabb.maxX < post[0] || aabb.minX > post[0] ||
@@ -1374,7 +1383,7 @@ public class U
 									aabb.minZ > pre[2] ? Direction.N :
 										Direction.Q;
 		}
-		
+
 		public static RayTraceResult rayTrace(World world, EntityLivingBase entity, boolean useLiquids)
 		{
 			float f = entity.rotationPitch;
@@ -1397,37 +1406,8 @@ public class U
 			Vec3d vec3d1 = vec3d.addVector(f6 * d3, f5 * d3, f7 * d3);
 			return world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
 		}
-
-		/**
-		 * Fallable block checking function.
-		 * @param world
-		 * @param pos
-		 * @return
-		 */
-		public static boolean canBearBlock(IBlockAccess world, BlockPos pos)
-		{
-			if(pos.getY() <= 10) return true;
-			MutableBlockPos pos2 = new MutableBlockPos();
-			IBlockState state;
-			for(int i = -2; i <= 2; ++i)
-			{
-				for(int k = -2; k <= 2; ++k)
-				{
-					for(int j = -1; j <= 1; ++j)
-					{
-						pos2.setPos(pos.getX() + i, pos.getY() + j, pos.getZ() + k);
-						state = world.getBlockState(pos2);
-						if(state.getBlock() == Blocks.BEDROCK)
-							return true;
-						if(state.getBlock() instanceof IBearingBlock)
-							return ((IBearingBlock) state.getBlock()).canBearingAt(world, pos2, pos);
-					}
-				}
-			}
-			return false;
-		}
 	}
-
+	
 	public static class TileEntities
 	{
 		public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
@@ -1604,18 +1584,18 @@ public class U
 			}
 			return false;
 		}
-		
+
 		public static boolean matchOutput(AbstractStack output, ItemStack stackInSlot)
 		{
 			return matchOutput(output, stackInSlot, 64);
 		}
-		
+
 		public static boolean matchOutput(AbstractStack output, ItemStack stackInSlot, int stackLimit)
 		{
 			return output == null || stackInSlot == null ? true :
 				output.similar(stackInSlot) && stackInSlot.stackSize + output.size(stackInSlot) <= Math.min(stackLimit, stackInSlot.getMaxStackSize());
 		}
-
+		
 		public static void insertStack(AbstractStack stack, IBasicInventory inventory, int idx)
 		{
 			if(inventory.getStackInSlot(idx) == null)
@@ -1628,7 +1608,7 @@ public class U
 				stack2.stackSize += stack.size(stack2);
 			}
 		}
-
+		
 		public static void insertStack(AbstractStack stack, IInventory inventory, int idx)
 		{
 			if(inventory.getStackInSlot(idx) == null)
@@ -1642,7 +1622,7 @@ public class U
 			}
 		}
 	}
-	
+
 	public static class ItemStacks
 	{
 		/**
@@ -1659,7 +1639,7 @@ public class U
 			stack.setItemDamage(meta);
 			return stack;
 		}
-		
+
 		public static ItemStack valid(ItemStack stack)
 		{
 			if(stack == null || stack.stackSize <= 0)
@@ -1671,7 +1651,7 @@ public class U
 			}
 			return stack;
 		}
-		
+
 		public static NBTTagCompound setupNBT(ItemStack stack, boolean createTag)
 		{
 			if(!stack.hasTagCompound())
@@ -1685,7 +1665,7 @@ public class U
 			}
 			return stack.getTagCompound();
 		}
-		
+
 		public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
 		{
 			if(stacks == null || stacks.isEmpty()) return ImmutableList.of();
@@ -1699,14 +1679,14 @@ public class U
 				}
 			return builder.build();
 		}
-		
+
 		public static ItemStack sizeOf(ItemStack stack, int size)
 		{
 			ItemStack ret;
 			(ret = stack.copy()).stackSize = size;
 			return ret;
 		}
-		
+
 		public static AbstractStack sizeOf(AbstractStack stack, int size)
 		{
 			return size <= 0 ? null : stack instanceof BaseStack ?
@@ -1716,19 +1696,19 @@ public class U
 									stack instanceof OreStack ?
 											OreStack.sizeOf((OreStack) stack, size) : null;
 		}
-		
+
 		public static boolean isItemAndTagEqual(ItemStack stack1, ItemStack stack2)
 		{
 			return stack1 == null || stack2 == null ?
 					stack1 == stack2 :
 						stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
 		}
-		
+
 		public static boolean areTagEqual(NBTTagCompound nbt1, NBTTagCompound nbt2)
 		{
 			return nbt1 == null || nbt2 == null ? nbt1 == nbt2 : nbt1.equals(nbt2);
 		}
-
+		
 		/**
 		 * This method should called by item onItemUse.
 		 * @param stack
@@ -1770,7 +1750,7 @@ public class U
 			}
 			return EnumActionResult.PASS;
 		}
-
+		
 		public static List<EnumToolType> getCurrentToolType(ItemStack stack)
 		{
 			if(stack == null)
@@ -1787,7 +1767,7 @@ public class U
 			}
 			return list;
 		}
-
+		
 		public static int getToolLevel(ItemStack stack, EnumToolType toolType)
 		{
 			if(stack == null)
@@ -1797,14 +1777,14 @@ public class U
 			return toolType.match(stack) ? 1 : -1;
 		}
 	}
-	
+
 	public static class Players
 	{
 		public static EntityPlayer player()
 		{
 			return handlerGatway.playerInstance();
 		}
-
+		
 		public static List<EnumToolType> getCurrentToolType(EntityPlayer player)
 		{
 			ItemStack stack = player.getHeldItemMainhand();
@@ -1826,7 +1806,7 @@ public class U
 			}
 			return list;
 		}
-		
+
 		public static void destoryPlayerCurrentItem(EntityPlayer player)
 		{
 			if(player == null) return;
@@ -1841,7 +1821,7 @@ public class U
 				player.setHeldItem(EnumHand.OFF_HAND, null);
 			}
 		}
-
+		
 		public static Entity moveEntityToAnotherDim(Entity entity, int dim, double x, double y, double z)
 		{
 			WorldServer targetWorld = DimensionManager.getWorld(dim);
@@ -1849,7 +1829,7 @@ public class U
 				return moveEntityToAnotherDim(entity, dim, x, y, z, targetWorld.getDefaultTeleporter());
 			return null;
 		}
-
+		
 		public static Entity moveEntityToAnotherDim(Entity entity, int dim, double x, double y, double z, Teleporter teleporter)
 		{
 			WorldServer targetWorld = DimensionManager.getWorld(dim);
@@ -1885,7 +1865,7 @@ public class U
 			return null;
 		}
 	}
-
+	
 	public static class Server
 	{
 		/**
@@ -1902,7 +1882,7 @@ public class U
 			((WorldServer) world).spawnParticle(EnumParticleTypes.BLOCK_DUST, entity.posX, entity.posY, entity.posZ, numberOfParticles, 0.0, 0.0, 0.0, 0.15, new int[] {Block.getStateId(state)});
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class Client
 	{
@@ -1919,7 +1899,7 @@ public class U
 			default: return -1;
 			}
 		};
-
+		
 		public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager)
 		{
 			if (state.getRenderType() != EnumBlockRenderType.INVISIBLE)
@@ -1959,7 +1939,7 @@ public class U
 				manager.addEffect((new ParticleDiggingExt(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, state)).setBlockPos(pos).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
 			}
 		}
-
+		
 		public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager, Object icon)
 		{
 			if (state.getRenderType() != EnumBlockRenderType.INVISIBLE)
@@ -1999,7 +1979,7 @@ public class U
 				manager.addEffect((new ParticleDiggingExt(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, state, icon)).setBlockPos(pos).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
 			}
 		}
-
+		
 		public static void addBlockDestroyEffects(World world, BlockPos pos, IBlockState state, ParticleManager manager)
 		{
 			int i = 4;
@@ -2017,7 +1997,7 @@ public class U
 				}
 			}
 		}
-
+		
 		public static void addBlockDestroyEffects(World world, BlockPos pos, IBlockState state, ParticleManager manager, Object icon)
 		{
 			int i = 4;
@@ -2035,24 +2015,24 @@ public class U
 				}
 			}
 		}
-		
+
 		public static boolean shouldRenderBetterLeaves()
 		{
 			return Blocks.LEAVES.getBlockLayer() == BlockRenderLayer.CUTOUT_MIPPED;
 		}
-		
+
 		public static void registerModel(Block block, int meta, String modid, String path)
 		{
 			registerModel(Item.getItemFromBlock(block), meta, modid, path);
 		}
-		
+
 		public static void registerModel(Item item, int meta, String modid, String path)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid, path));
 		}
-
-		private static FontRenderExtend render;
 		
+		private static FontRenderExtend render;
+
 		public static FontRenderer getFontRender()
 		{
 			if(render == null)
@@ -2061,7 +2041,7 @@ public class U
 			}
 			return render;
 		}
-		
+
 		private static final IProgressBarStyle STANDARD_PROGRESSBAR_STYLE = new IProgressBarStyle()
 		{
 			@Override
@@ -2070,7 +2050,7 @@ public class U
 				double durability = stack.getItem().getDurabilityForDisplay(stack);
 				return durability == 0 ? -1 : 1.0 - durability;
 			}
-			
+
 			@Override
 			public int[] getProgressColor(ItemStack stack, double progress)
 			{
@@ -2078,7 +2058,7 @@ public class U
 				return new int[]{i, 255 - i, 0};
 			}
 		};
-
+		
 		public static void renderItemDurabilityBarInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z)
 		{
 			renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z, 1, STANDARD_PROGRESSBAR_STYLE);
@@ -2110,12 +2090,12 @@ public class U
 			GlStateManager.enableLighting();
 			GlStateManager.enableDepth();
 		}
-		
+
 		public static void renderItemCooldownInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z)
 		{
 			EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
 			float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
-			
+
 			if (f > 0.0F)
 			{
 				GlStateManager.disableLighting();
@@ -2129,7 +2109,7 @@ public class U
 				GlStateManager.enableDepth();
 			}
 		}
-
+		
 		public static void renderItemSubscirptInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z, String text)
 		{
 			if (text != null)
@@ -2143,7 +2123,7 @@ public class U
 				GlStateManager.enableBlend();
 			}
 		}
-		
+
 		/**
 		 * Draw with the WorldRenderer
 		 */
@@ -2157,61 +2137,61 @@ public class U
 			Tessellator.getInstance().draw();
 		}
 	}
-	
+
 	public static class CommonHandler
 	{
 		public World worldInstance(int id)
 		{
 			return DimensionManager.getWorld(id);
 		}
-
+		
 		public void registerRender(Object object)
 		{
-			
-		}
 
+		}
+		
 		public String getLocale()
 		{
 			return LanguageManager.ENGLISH;
 		}
-		
+
 		public File fileDir()
 		{
 			return new File(".");
 		}
-		
+
 		public EntityPlayer playerInstance()
 		{
 			return null;
 		}
-
+		
 		public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
 				IProperty...properties)
 		{
-			
+
 		}
-		
+
 		public void setModelLocate(Item item, int meta, String modid, String name, String type)
 		{
-			
+
 		}
-		
+
 		public void setModelLocate(Item item, int meta, String modid, String name)
 		{
-			
-		}
-
-		public void registerBiomeColorMultiplier(Block...block)
-		{
 
 		}
 		
+		public void registerBiomeColorMultiplier(Block...block)
+		{
+			
+		}
+
 		public String translateToLocalByI18n(String unlocal, Object...parameters)
 		{
 			return null;
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class ClientHandler extends CommonHandler
 	{
@@ -2236,7 +2216,7 @@ public class U
 			default: return -1;
 			}
 		};
-		
+
 		@Override
 		public World worldInstance(int id)
 		{
@@ -2248,62 +2228,62 @@ public class U
 				return world == null ? null : world.provider.getDimension() != id ? null : world;
 			}
 		}
-		
+
 		@Override
 		public String getLocale()
 		{
 			return Minecraft.getMinecraft().getLanguageManager()
 					.getCurrentLanguage().getLanguageCode();
 		}
-		
+
 		@Override
 		public EntityPlayer playerInstance()
 		{
 			return Minecraft.getMinecraft().thePlayer;
 		}
-		
+
 		@Override
 		public File fileDir()
 		{
 			return Minecraft.getMinecraft().mcDataDir;
 		}
-
+		
 		@Override
 		public void registerRender(Object object)
 		{
 			if(object instanceof IRenderRegister)
 			{
-				((ClientProxy) FarCoreSetup.proxy).addRenderRegisterListener((IRenderRegister) object);
+				((ClientProxy) FarCore.proxy).addRenderRegisterListener((IRenderRegister) object);
 			}
 		}
-		
+
 		@Override
 		public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
 				IProperty...properties)
 		{
 			StateMapperExt mapper = new StateMapperExt(modid, path, splitFile ? property : null, properties);
-			((ClientProxy) FarCoreSetup.proxy).registerCompactModel(mapper, block, property);
+			((ClientProxy) FarCore.proxy).registerCompactModel(mapper, block, property);
 		}
-		
+
 		@Override
 		public void setModelLocate(Item item, int meta, String modid, String name)
 		{
 			setModelLocate(item, meta, modid, name, null);
 		}
-
+		
 		@Override
 		public void setModelLocate(Item item, int meta, String modid, String name, String type)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + name, type));
 		}
-
+		
 		@Override
 		public void registerBiomeColorMultiplier(Block... block)
 		{
-			FarCoreSetup.proxy.registerColorMultiplier(BIOME_COLOR, block);
-			FarCoreSetup.proxy.registerColorMultiplier(ITEMBLOCK_COLOR, block);
+			FarCore.proxy.registerColorMultiplier(BIOME_COLOR, block);
+			FarCore.proxy.registerColorMultiplier(ITEMBLOCK_COLOR, block);
 		}
-		
+
 		@Override
 		public String translateToLocalByI18n(String unlocal, Object...parameters)
 		{

@@ -8,8 +8,8 @@ public class FLEVersion
 	/**
 	 * The snapshot version.
 	 */
-	public static final int SNAPSHOT_VERSION = 5;
-	
+	public static final int SNAPSHOT_VERSION = 6;
+
 	public static boolean isSnapshotVersion()
 	{
 		return SNAPSHOT_VERSION >= 0;

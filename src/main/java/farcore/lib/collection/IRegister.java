@@ -1,6 +1,6 @@
 package farcore.lib.collection;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 public interface IRegister<T> extends Iterable<T>
@@ -33,7 +33,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	T get(int id);
 	
-	List<T> targets();
+	Collection<T> targets();
 	
 	Set<String> names();
 	
@@ -71,6 +71,7 @@ public interface IRegister<T> extends Iterable<T>
 	 * Arrange and remove empty slot,
 	 * give all element new id by name.
 	 */
+	@Deprecated
 	void arrange();
 	
 	/**
@@ -80,5 +81,6 @@ public interface IRegister<T> extends Iterable<T>
 	 * element to other id.
 	 * @param list The name serialized list.
 	 */
+	@Deprecated
 	void arrange(String...list);
 }

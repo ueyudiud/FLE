@@ -1,9 +1,11 @@
 package farcore.lib.util;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 
-public enum Direction
+public enum Direction implements IStringSerializable
 {
 	/** --Y */
 	D( 0, -1,  0,  0),
@@ -74,6 +76,11 @@ public enum Direction
 			EnumFacing.VALUES[cast[direction.ordinal()]];
 	}
 
+	public static Direction heading(EntityLivingBase entity)
+	{
+		return entity == null ? Q : values()[entity.getHorizontalFacing().ordinal()];
+	}
+
 	public final int x;
 	public final int y;
 	public final int z;
@@ -82,6 +89,8 @@ public enum Direction
 	public final int boundY;
 	public final int boundZ;
 	public final int flag;
+	public final char chr;
+	public final boolean horizontal;
 
 	Direction(int x, int y, int z, int t)
 	{
@@ -93,6 +102,8 @@ public enum Direction
 		boundY = y != 0 ? -1 : 1;
 		boundZ = z != 0 ? -1 : 1;
 		flag = 1 << ordinal();
+		chr = name().toLowerCase().charAt(0);
+		horizontal = (x | z) != 0;
 	}
 
 	public Direction getOpposite()
@@ -128,5 +139,11 @@ public enum Direction
 	public EnumFacing of()
 	{
 		return of(this);
+	}
+	
+	@Override
+	public String getName()
+	{
+		return Character.toString(chr);
 	}
 }

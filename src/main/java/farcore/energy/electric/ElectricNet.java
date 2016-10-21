@@ -14,7 +14,7 @@ import farcore.energy.electric.util.RoutesAC.Link;
 import farcore.energy.electric.util.RoutesAC.Node;
 import farcore.energy.electric.util.RoutesAC.NodeReal;
 import farcore.energy.electric.util.RoutesAC.NodeRebuild;
-import farcore.lib.collection.IntArray;
+import farcore.lib.collection.IntegerArray;
 import farcore.lib.util.EnumModifyFlag;
 import farcore.lib.util.Log;
 import net.minecraft.world.World;
@@ -99,7 +99,7 @@ public class ElectricNet implements IEnergyNet
 		private boolean structureChanged = false;
 		
 		private final World world;
-		private final IntArray cache = new IntArray(5);
+		private final IntegerArray cache = new IntegerArray(5);
 		private final EquationResolver resolver = new EquationResolver();
 		private final RoutesAC routes = new RoutesAC();
 		private final List<IACHandler> list = new ArrayList();

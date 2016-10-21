@@ -5,7 +5,7 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.FarCore;
+import farcore.FarCoreRegistry;
 import farcore.data.EnumBlock;
 import farcore.data.EnumTerrain;
 import farcore.lib.util.NoiseBase;
@@ -213,9 +213,9 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	protected void replaceChunk(EnumWorldGeneratePhase phase, int x, int z, ChunkPrimer primer)
 	{
 		REPLACER.replaceWorld(phase, world, x, z, primer);
-		if(!FarCore.worldGenerateReplacers.isEmpty())
+		if(!FarCoreRegistry.worldGenerateReplacers.isEmpty())
 		{
-			for(IWorldGenerateReplacer replacer : FarCore.worldGenerateReplacers)
+			for(IWorldGenerateReplacer replacer : FarCoreRegistry.worldGenerateReplacers)
 			{
 				replacer.replaceWorld(phase, world, x, z, primer);
 			}

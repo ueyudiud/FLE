@@ -3,7 +3,7 @@ package fle.api.recipes;
 import java.util.List;
 
 import farcore.data.EnumToolType;
-import farcore.lib.collection.IteratorList;
+import farcore.lib.collection.ArrayIterator;
 import farcore.lib.item.ITool;
 import farcore.util.U;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
@@ -13,7 +13,7 @@ import net.minecraft.util.EnumActionResult;
 public class ShapelessRecipeItemInput extends ShapelessRecipeInput<ItemStack, RecipeItemInputConfig>
 {
 	@Override
-	protected RecipeItemInputConfig decode(IteratorList<Object> itr)
+	protected RecipeItemInputConfig decode(ArrayIterator<Object> itr)
 	{
 		return ShapedRecipeItemInput.decode$(itr);
 	}

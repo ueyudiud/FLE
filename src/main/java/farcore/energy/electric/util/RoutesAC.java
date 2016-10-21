@@ -14,7 +14,7 @@ import farcore.energy.electric.IACHandler;
 import farcore.energy.electric.IElectricalElement;
 import farcore.energy.electric.IElectricalNode;
 import farcore.energy.electric.ISidedElectricalElement;
-import farcore.lib.collection.IntArray;
+import farcore.lib.collection.IntegerArray;
 import farcore.lib.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
@@ -24,14 +24,14 @@ public class RoutesAC
 	
 	final List<NodeReal> changedNodes = new ArrayList();
 	final Map<BlockPos, IACHandler> handlers = new HashMap();
-	final IntArray cache = new IntArray(4);
-	final Map<IntArray, NodeReal> nodes = new HashMap();
+	final IntegerArray cache = new IntegerArray(4);
+	final Map<IntegerArray, NodeReal> nodes = new HashMap();
 	/**
 	 * To rebuild nodes map, remove dead link and compact
 	 * link only has two side link to one link.
 	 */
 	public final List<NodeRebuild> rebuildNodes = new ArrayList();
-	public final Map<IntArray, Link> rebuildLinks = new HashMap();
+	public final Map<IntegerArray, Link> rebuildLinks = new HashMap();
 	
 	public void addHandler(IACHandler handler)
 	{
@@ -147,7 +147,7 @@ public class RoutesAC
 		for(int i = 0; i < rebuildNodes.size(); ++i)
 		{
 			NodeRebuild node = rebuildNodes.get(i);
-			IntArray cache = new IntArray(2);
+			IntegerArray cache = new IntegerArray(2);
 			for(Link link : node.links.values())
 			{
 				int id1 = link.nodes()[0].id;

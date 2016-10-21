@@ -1,5 +1,8 @@
 package farcore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import farcore.energy.IEnergyNet;
 import farcore.energy.thermal.IWorldThermalHandler;
 import farcore.energy.thermal.ThermalNet;
@@ -10,6 +13,7 @@ import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.render.Colormap;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.world.IObjectInWorld;
+import farcore.lib.world.IWorldGenerateReplacer;
 import farcore.network.IPacket;
 import farcore.network.Network;
 import farcore.util.U;
@@ -31,6 +35,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class FarCoreRegistry
 {
+	/**
+	 * The world generate replacer during world generating.
+	 */
+	public static final List<IWorldGenerateReplacer> worldGenerateReplacers = new ArrayList();
+	
+	/**
+	 * Add world generate replacer to generator.
+	 * @param replacer
+	 */
+	public static void addWorldGenerateReplacer(IWorldGenerateReplacer replacer)
+	{
+		worldGenerateReplacers.add(replacer);
+	}
+	
 	/**
 	 * The tile entity need a register name for saving to NBT.
 	 * Register tile to map.

@@ -20,11 +20,11 @@ implements ISynchronizableTile
 	 */
 	protected long state;
 	private long lastState;
-
+	
 	private boolean markChanged;
 	private boolean initialized = false;
 	public NBTSynclizedCompound nbt = new NBTSynclizedCompound();
-
+	
 	/**
 	 * The sync state.
 	 * 1 for mark to all.
@@ -37,62 +37,62 @@ implements ISynchronizableTile
 	 */
 	public long syncState = 0L;
 	private List<EntityPlayer> syncAskedPlayer = new ArrayList();
-
+	
 	public TESynchronization()
 	{
-
+		
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setLong("state", state);
 		return super.writeToNBT(nbt);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 		state = nbt.getLong("state");
 	}
-
+	
 	@Override
 	public void syncToAll()
 	{
 		syncState |= 0x1;
 	}
-
+	
 	@Override
 	public void syncToDim()
 	{
 		syncState |= 0x2;
 	}
-
+	
 	@Override
 	public void syncToNearby()
 	{
 		syncState |= 0x4;
 	}
-
+	
 	@Override
 	public void syncToPlayer(EntityPlayer player)
 	{
 		syncAskedPlayer.add(player);
 	}
-
+	
 	@Override
 	public void markBlockUpdate()
 	{
 		syncState |= 0x8;
 	}
-
+	
 	@Override
 	public void markBlockRenderUpdate()
 	{
 		syncState |= 0x10;
 	}
-	
+
 	@Override
 	public void markLightForUpdate(EnumSkyBlock type)
 	{
@@ -105,13 +105,13 @@ implements ISynchronizableTile
 			syncState |= 0x40;
 		}
 	}
-
+	
 	@Override
 	public boolean isInitialized()
 	{
 		return initialized;
 	}
-
+	
 	@Override
 	public final void readFromDescription(NBTTagCompound nbt)
 	{
@@ -120,7 +120,7 @@ implements ISynchronizableTile
 		markBlockRenderUpdate();
 		initialized = true;
 	}
-
+	
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		if(nbt.hasKey("s"))
@@ -128,12 +128,12 @@ implements ISynchronizableTile
 			state = nbt.getLong("s");
 		}
 	}
-
+	
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		nbt.setLong("s", state);
 	}
-	
+
 	@Override
 	public void onLoad()
 	{
@@ -146,7 +146,7 @@ implements ISynchronizableTile
 			sendToServer(new PacketTEAsk(worldObj, pos));
 		}
 	}
-
+	
 	@Override
 	protected final void updateEntity2()
 	{
@@ -190,6 +190,7 @@ implements ISynchronizableTile
 			{
 				worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
 			}
+			onCheckingSyncState();
 			syncState = 0;
 			if(!syncAskedPlayer.isEmpty())
 			{
@@ -234,12 +235,21 @@ implements ISynchronizableTile
 				{
 					super.markLightForUpdate(EnumSkyBlock.BLOCK);
 				}
+				onCheckingSyncState();
 				syncState = 0;
 				syncAskedPlayer.clear();
 			}
 		}
 	}
 
+	/**
+	 * Called when checking state.
+	 */
+	protected void onCheckingSyncState()
+	{
+
+	}
+	
 	protected void onStateChanged(boolean isServerSide)
 	{
 		if(isServerSide)
@@ -252,76 +262,76 @@ implements ISynchronizableTile
 			markBlockRenderUpdate();
 		}
 	}
-	
+
 	protected float getSyncRange()
 	{
 		return 16F;
 	}
-
+	
 	protected int getRenderUpdateRange()
 	{
 		return 3;
 	}
-
+	
 	protected void initServer()
 	{
 		initialized = true;
 	}
-
+	
 	protected void initClient(NBTTagCompound nbt)
 	{
 		readFromDescription(nbt);
 	}
-
+	
 	protected void updateServer()
 	{
-
+		
 	}
-
+	
 	protected void updateClient()
 	{
-
+		
 	}
-
+	
 	@Override
 	public void onChunkUnload()
 	{
 		super.onChunkUnload();
 		onRemoveFromLoadedWorld();
 	}
-
+	
 	@Override
 	public void invalidate()
 	{
 		super.invalidate();
 		onRemoveFromLoadedWorld();
 	}
-
+	
 	public void onRemoveFromLoadedWorld()
 	{
 		nbt.clear();
 	}
-	
+
 	protected boolean is(int i)
 	{
 		return (state & (1 << i)) != 0;
 	}
-	
+
 	protected boolean islast(int i)
 	{
 		return (lastState & (1 << i)) != 0;
 	}
-
+	
 	protected void change(int i)
 	{
 		state ^= 1 << i;
 	}
-	
+
 	protected void disable(int i)
 	{
 		state &= ~(1 << i);
 	}
-	
+
 	protected void enable(int i)
 	{
 		state |= (1 << i);

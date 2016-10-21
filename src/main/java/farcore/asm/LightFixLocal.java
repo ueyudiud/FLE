@@ -9,7 +9,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import farcore.data.Config;
-import farcore.lib.collection.IntArray;
+import farcore.lib.collection.IntegerArray;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +44,7 @@ public class LightFixLocal implements Runnable
 		}
 	}
 	final LinkedList<$> list = new LinkedList();
-	final Map<IntArray, Byte> lightMap = new HashMap(65536, 1.0F);
+	final Map<IntegerArray, Byte> lightMap = new HashMap(65536, 1.0F);
 	private final int[] lightUpdateBlockList = new int[32768];
 
 	$ checking;
@@ -53,7 +53,7 @@ public class LightFixLocal implements Runnable
 	int x;
 	int y;
 	int z;
-	IntArray array = new IntArray(5);
+	IntegerArray array = new IntegerArray(5);
 	MutableBlockPos pos = new MutableBlockPos();
 
 	public void startThread()
@@ -117,8 +117,8 @@ public class LightFixLocal implements Runnable
 		}
 		synchronized (lightMap)
 		{
-			Set<IntArray> set = ImmutableSet.copyOf(lightMap.keySet());
-			for(IntArray array : set)
+			Set<IntegerArray> set = ImmutableSet.copyOf(lightMap.keySet());
+			for(IntegerArray array : set)
 			{
 				if(array.array[1] == i)
 				{
@@ -351,8 +351,8 @@ public class LightFixLocal implements Runnable
 		PooledMutableBlockPos pos = PooledMutableBlockPos.retain();
 		synchronized (lightMap)
 		{
-			Set<IntArray> set = ImmutableSet.copyOf(lightMap.keySet());
-			for(IntArray array : set)
+			Set<IntegerArray> set = ImmutableSet.copyOf(lightMap.keySet());
+			for(IntegerArray array : set)
 			{
 				if(array.array[1] == dim)
 				{

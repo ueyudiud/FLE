@@ -1,6 +1,6 @@
 package fle.api.recipes;
 
-import farcore.lib.collection.IteratorList;
+import farcore.lib.collection.ArrayIterator;
 import fle.api.recipes.ShapedRecipeFluidInput.RecipeFluidInputConfig;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class ShapelessRecipeFluidInput extends ShapelessRecipeInput<FluidStack, RecipeFluidInputConfig>
 {
 	@Override
-	protected RecipeFluidInputConfig decode(IteratorList<Object> itr)
+	protected RecipeFluidInputConfig decode(ArrayIterator<Object> itr)
 	{
 		return ShapedRecipeFluidInput.decode$(itr);
 	}

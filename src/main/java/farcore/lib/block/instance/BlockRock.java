@@ -371,7 +371,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		case cobble_art :
 			return world.isSideSolid(pos.down(), EnumFacing.UP, false);
 		default:
-			return !world.isAirBlock(pos.down()) || U.Worlds.canBearBlock(world, pos) ? true :
+			return !world.isAirBlock(pos.down()) ? true :
 				world.isSideSolid(pos.north(), EnumFacing.SOUTH, false) ||
 				world.isSideSolid(pos.south(), EnumFacing.NORTH, false) ||
 				world.isSideSolid(pos.east() , EnumFacing.WEST , false) ||
@@ -440,7 +440,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	@Override
 	public boolean onFallOnGround(World world, BlockPos pos, IBlockState state, int height, NBTTagCompound tileNBT)
 	{
-		EntityFallingBlockExtended.replaceFallingBlock(world, pos, state);
+		EntityFallingBlockExtended.replaceFallingBlock(world, pos, state, height);
 		boolean broken = height < 2 ? false : height < 5 ? RANDOM.nextInt(5 - height) == 0 : true;
 		if(broken)
 		{

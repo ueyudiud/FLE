@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 import farcore.FarCore;
 import farcore.energy.IEnergyNet;
-import farcore.lib.collection.IntArray;
+import farcore.lib.collection.IntegerArray;
 import farcore.lib.util.Direction;
 import farcore.lib.util.EnumModifyFlag;
 import farcore.lib.util.Log;
@@ -92,8 +92,8 @@ public class KineticNet implements IEnergyNet
 		private World world;
 
 		private final Map<BlockPos, IKineticHandler> map = new HashMap();
-		private final Map<IntArray, double[]> cachedSend = new HashMap();
-		private final List<IntArray> cachedSended = new ArrayList();
+		private final Map<IntegerArray, double[]> cachedSend = new HashMap();
+		private final List<IntegerArray> cachedSended = new ArrayList();
 		private IKineticHandler cachedTile;
 		private BlockPos cachedPos = BlockPos.ORIGIN;
 		private final Map<IKineticHandler, EnumModifyFlag> cachedChangedTile = new HashMap();
@@ -156,14 +156,14 @@ public class KineticNet implements IEnergyNet
 				}
 				cachedTile = null;
 				//Send kinetic energy to other tile.
-				Map<IntArray, double[]> sends = new HashMap();
+				Map<IntegerArray, double[]> sends = new HashMap();
 				Direction direction;
 				do
 				{
 					sends.clear();
 					sends.putAll(cachedSend);
 					cachedSend.clear();
-					for(Entry<IntArray, double[]> entry : sends.entrySet())
+					for(Entry<IntegerArray, double[]> entry : sends.entrySet())
 					{
 						int[] info = entry.getKey().array;
 						cachedPos = new BlockPos(info[0], info[1], info[2]);
@@ -258,7 +258,7 @@ public class KineticNet implements IEnergyNet
 		{
 			if(world == null || cachedTile == null || !isUpdating || torque <= 0) return;
 			BlockPos pos = cachedTile.pos();
-			IntArray array = new IntArray(new int[]{
+			IntegerArray array = new IntegerArray(new int[]{
 					pos.getX(),
 					pos.getY(),
 					pos.getZ(),

@@ -12,4 +12,5 @@ public class CT
 	public static CreativeTabs tabMachine;
 	public static CreativeTabs tabMaterial;
 	public static CreativeTabs tabTree;
+	public static CreativeTabs tabRedstone;
 }

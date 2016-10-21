@@ -17,7 +17,7 @@ public class PropertyTE extends PropertyHelper<TETag>
 {
 	public static PropertyTE create(String name, IRegister<Class<? extends TileEntity>> list)
 	{
-		IRegister<TETag> register = new Register(list.size(), 0.0F);
+		IRegister<TETag> register = new Register(list.size());
 		ImmutableMap.Builder<Class<? extends TileEntity>, String> builder = ImmutableMap.builder();
 		TETag def = null;
 		for(String tag : list.names())
@@ -26,11 +26,11 @@ public class PropertyTE extends PropertyHelper<TETag>
 			Class<? extends TileEntity> class1 = list.get(tag);
 			if(id == 0)
 			{
-				register.register(id, tag, def = new TETag(tag, class1));
+				register.register(id, tag, def = new TETag(id, tag, class1));
 			}
 			else
 			{
-				register.register(id, tag, new TETag(tag, class1));
+				register.register(id, tag, new TETag(id, tag, class1));
 			}
 			builder.put(class1, tag);
 		}
@@ -39,13 +39,20 @@ public class PropertyTE extends PropertyHelper<TETag>
 	
 	public static class TETag implements Comparable<TETag>
 	{
+		int id;
 		Class<? extends TileEntity> clazz;
 		String name;
 		
-		public TETag(String name, Class<? extends TileEntity> clazz)
+		public TETag(int id, String name, Class<? extends TileEntity> clazz)
 		{
+			this.id = id;
 			this.clazz = clazz;
 			this.name = name;
+		}
+
+		public Class<? extends TileEntity> getTEClass()
+		{
+			return clazz;
 		}
 		
 		public TileEntity newInstance()
@@ -61,9 +68,14 @@ public class PropertyTE extends PropertyHelper<TETag>
 		}
 
 		@Override
-		public int compareTo(TETag o)
+		public int compareTo(TETag other)
 		{
-			return 0;
+			return Integer.compare(id, other.id);
+		}
+		
+		public int id()
+		{
+			return id;
 		}
 	}
 
@@ -77,6 +89,11 @@ public class PropertyTE extends PropertyHelper<TETag>
 		this.list = list;
 		this.map = map;
 		this.def = def;
+	}
+	
+	public int size()
+	{
+		return list.size();
 	}
 	
 	public TileEntity getTileFromMeta(int meta)

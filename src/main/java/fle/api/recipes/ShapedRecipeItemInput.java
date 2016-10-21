@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import farcore.data.EnumToolType;
-import farcore.lib.collection.IteratorList;
+import farcore.lib.collection.ArrayIterator;
 import farcore.lib.item.ITool;
 import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.ArrayStack;
@@ -21,7 +21,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 	public static class RecipeItemInputConfig
 	{
 		AbstractStack input;
-
+		
 		/**
 		 * 0 for use item.
 		 * 1 for damage tool.
@@ -29,14 +29,14 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 		 */
 		byte type;
 		boolean neededSizeSimilar;
-		
+
 		int givebackChance;
 		AbstractStack giveback;
-
+		
 		EnumToolType toolType;
 		int levelRequire;
 		float damageAmount;
-		
+
 		public RecipeItemInputConfig(EnumToolType type, int levelRequire, float damageAmt)
 		{
 			this(type.stack(), (byte) 2, true, 0, null, damageAmt);
@@ -70,8 +70,8 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			this.damageAmount = damageAmount;
 		}
 	}
-
-	static RecipeItemInputConfig decode$(IteratorList<Object> itr)
+	
+	static RecipeItemInputConfig decode$(ArrayIterator<Object> itr)
 	{
 		Object object = itr.next();
 		if(object instanceof RecipeItemInputConfig)
@@ -88,19 +88,19 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 				}
 				else
 				{
-					itr.last();
+					itr.previous();
 				}
 			}
 			return new RecipeItemInputConfig(U.ItemStacks.sizeOf(decodeStack(object), size));
 		}
 	}
-
+	
 	@Override
-	protected RecipeItemInputConfig decode(IteratorList<Object> itr)
+	protected RecipeItemInputConfig decode(ArrayIterator<Object> itr)
 	{
 		return decode$(itr);
 	}
-	
+
 	private static AbstractStack decodeStack(Object object)
 	{
 		if(object instanceof Item)
@@ -117,7 +117,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			return new OreStack((String) object);
 		return null;
 	}
-	
+
 	public static boolean matchInput$(RecipeItemInputConfig arg, ItemStack target)
 	{
 		if(target == null) return false;
@@ -135,13 +135,13 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			return false;
 		}
 	}
-
+	
 	@Override
 	protected boolean matchInput(RecipeItemInputConfig arg, ItemStack target)
 	{
 		return matchInput$(arg, target);
 	}
-
+	
 	@Override
 	protected void onInput(int x, int y, RecipeItemInputConfig arg,
 			ICraftingMatrix<ItemStack> matrix)
@@ -196,7 +196,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			break;
 		}
 	}
-
+	
 	@Override
 	protected boolean isValid(RecipeItemInputConfig source)
 	{

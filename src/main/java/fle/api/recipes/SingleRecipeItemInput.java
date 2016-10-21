@@ -1,6 +1,6 @@
 package fle.api.recipes;
 
-import farcore.lib.collection.IteratorList;
+import farcore.lib.collection.ArrayIterator;
 import farcore.lib.item.ITool;
 import farcore.util.U;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
@@ -11,7 +11,7 @@ public class SingleRecipeItemInput extends SingleRecipeInput<RecipeItemInputConf
 	@Override
 	protected RecipeItemInputConfig decode(Object... objects)
 	{
-		return ShapedRecipeItemInput.decode$(new IteratorList(objects));
+		return ShapedRecipeItemInput.decode$(new ArrayIterator(objects));
 	}
 
 	@Override

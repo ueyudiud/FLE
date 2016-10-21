@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import farcore.lib.collection.IteratorList;
+import farcore.lib.collection.ArrayIterator;
 import fle.api.recipes.ShapelessRecipeInput.ShapelessRecipeCache;
 import net.minecraft.util.EnumActionResult;
 
@@ -27,7 +27,7 @@ public abstract class ShapelessRecipeInput<T, S> implements IRecipeInput<Shapele
 	{
 		try
 		{
-			IteratorList<Object> itr = new IteratorList(objects);
+			ArrayIterator<Object> itr = new ArrayIterator(objects);
 			while(itr.hasNext())
 			{
 				inputs.add(decode(itr));
@@ -39,7 +39,7 @@ public abstract class ShapelessRecipeInput<T, S> implements IRecipeInput<Shapele
 		}
 	}
 
-	protected abstract S decode(IteratorList<Object> itr);
+	protected abstract S decode(ArrayIterator<Object> itr);
 
 	protected abstract EnumActionResult matchInput(S arg, T target);
 

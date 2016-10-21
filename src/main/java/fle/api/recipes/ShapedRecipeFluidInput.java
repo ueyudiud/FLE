@@ -1,6 +1,6 @@
 package fle.api.recipes;
 
-import farcore.lib.collection.IteratorList;
+import farcore.lib.collection.ArrayIterator;
 import fle.api.recipes.ShapedRecipeFluidInput.RecipeFluidInputConfig;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -24,7 +24,7 @@ public class ShapedRecipeFluidInput extends ShapedRecipeInput<FluidStack, Recipe
 		}
 	}
 	
-	static RecipeFluidInputConfig decode$(IteratorList<Object> itr)
+	static RecipeFluidInputConfig decode$(ArrayIterator<Object> itr)
 	{
 		Object object = itr.next();
 		if(object instanceof FluidStack)
@@ -35,7 +35,7 @@ public class ShapedRecipeFluidInput extends ShapedRecipeInput<FluidStack, Recipe
 	}
 
 	@Override
-	protected RecipeFluidInputConfig decode(IteratorList<Object> itr)
+	protected RecipeFluidInputConfig decode(ArrayIterator<Object> itr)
 	{
 		return decode$(itr);
 	}
