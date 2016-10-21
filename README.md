@@ -3,4 +3,4 @@ Far Land Era, created by ueyudiud, is a modification of Minecraft, adding lots o
 ## Downloads
 You can download alpha/beta version from drone.io/github.com/ueyudiud/FLE.
 ## Issues
-You can report any issues here or call me by QQ (Which is suggested) in group (ID:2855592851).
+You can report any issues here(https://github.com/ueyudiud/FLE/issues) or call me by QQ (Which is suggested) in group (ID:2855592851).
