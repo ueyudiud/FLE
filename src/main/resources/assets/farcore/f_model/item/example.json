@@ -1,0 +1,32 @@
+{
+	"@1": "This is a far core item model loader template.",
+	"@2": "Here provide most usage of this loader.",
+	"@3": "To find an instance, you can see 'farcore:ore_chip'",
+	"@4": "Each item model file should save at locate [modid]/f_model/item/[path]",
+	"@parent": "The 'parent' value should be a string. If you added this object, loader will load model located at parent path instead of this model.",
+	"@textures": "The 'textures' value should be an object. The textures is used when you select other model, this provide retexture data.",
+	"parent": "parentmodeldormin:parentmodelpath",
+	"textures": {
+		"@guide": "Write like 'texturename': 'texturepath' for retexture entries.",
+		"replacementkey1": "replacementresourcelocation1",
+		"replacementkey2": "replacementresourcelocation2"
+	},
+	"@5": "If you want use this model template, do not write 'parent' and 'textures' key in model.",
+	"@include": "The 'include' value should be a string or an object. This key is import every textures this model needed, input texture or texture set are allowed. For uses as string, see key 'include_'.",
+	"@6": "The loader provide a texture map, it will get texture by texture key from map.",
+	"include": {
+		"@particle": "The particle icon is the texture rendering during breaking items.",
+		"particle": "particledormin:particlepath",
+		"@guideOfValue1": "'[' is the character marked when import a texture set, the loader will find texture set when insert this character in location.",
+		"@guideOfValue2": "The texture sets is an json file save at [modid]/f_tm/[path], or there are some build-in texture set for use.",
+		"atexturesetkey": "[atexturesetlocation",
+		"@textureSetFluid": "The value '[forge:fluid' will provide all fluids stay icons, the key of them is 'fluid:[name]'",
+		"fluid": "[forge:fluid",
+		"asimpletexturekey": "simpletexturelocation"
+	},
+	"@include_": "When 'include' value is a string value, the key of texture or texture set is normal(''), you need't write down other key in model layer.",
+	"include_": "textureOrTextureSet",
+	"layers": {
+		"TODO": ""
+	}
+}

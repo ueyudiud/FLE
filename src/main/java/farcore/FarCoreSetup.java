@@ -146,7 +146,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  * @see farcore.FarCore
  */
-@Mod(modid = FarCore.ID, version = "1.0l", name = "Far Core")
+@Mod(
+		modid = FarCore.ID,
+		/*
+		 * The version of Far Core not always refresh.
+		 * Now Far Core is main update continent. Please
+		 * use FLE version to compact your Far Core modification
+		 * is needed update.
+		 * The major version will not be 1.1 until Far Core is
+		 * enough to make FLE.
+		 */
+		version = "1.0m",
+		name = "Far Core")
 public class FarCoreSetup
 {
 	private LanguageManager lang;
@@ -179,6 +190,9 @@ public class FarCoreSetup
 		{
 			throw new IllegalArgumentException("Java version is out of date, this mod is suggested use java 8 to run.", exception);
 		}
+		/**
+		 * Coded checking.
+		 */
 		Log.info("Far Core checking mod version...");
 		try
 		{
@@ -209,6 +223,9 @@ public class FarCoreSetup
 		modMetadata.authorList.add("ueyudiud");
 		modMetadata.name = "Far Core";
 		modMetadata.credits = "ueyudiud";
+		/**
+		 * Put child mods into ModMetadata.
+		 */
 		for(ModContainer container : Loader.instance().getModList())
 		{
 			if(FarCore.OVERRIDE_ID.equals(container.getName()))
@@ -217,6 +234,9 @@ public class FarCoreSetup
 				break;
 			}
 		}
+		/**
+		 * Loading non-resource-file from Minecraft running path.
+		 */
 		try
 		{
 			lang = new LanguageManager(new File(U.Mod.getMCFile(), "lang"));
@@ -338,17 +358,24 @@ public class FarCoreSetup
 					return BlockRedstoneCircuit.createItemStack(1, M.stone);
 				}
 			};
+			//Register common handler.
 			MinecraftForge.EVENT_BUS.register(new FarCoreKeyHandler());
 			MinecraftForge.EVENT_BUS.register(FarCoreEnergyHandler.getHandler());
 			MinecraftForge.EVENT_BUS.register(new FarCoreWorldHandler());
 			MinecraftForge.EVENT_BUS.register(new FarCoreItemHandler());
+			//Register energy nets.
 			FarCoreEnergyHandler.addNet(ThermalNet.instance);
 			FarCoreEnergyHandler.addNet(KineticNet.instance);
 			FarCoreEnergyHandler.addNet(ElectricNet.instance);
+			//Register world objects.
 			FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
+			//Register local world handler.
 			ThermalNet.registerWorldThermalHandler(new TemperatureHandler());
+			//Initialize materials
+			//Some material will create blocks and items.
+			//DO NOT CALL CLASS farcore.data.M BEFORE FAR CORE PRE INITIALIZED.
 			M.init();
-			
+			//Initialize items.
 			new ItemDebugger().setCreativeTab(CT.tabTool);
 			new ItemFluidDisplay().setCreativeTab(CT.tabFluids);
 			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
@@ -356,6 +383,7 @@ public class FarCoreSetup
 			new ItemStoneFragment().setCreativeTab(CT.tabResourceItem);
 			EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabResourceItem));
 			new ItemOreChip().setCreativeTab(CT.tabResourceItem);
+			//Initialize blocks.
 			new BlockSapling().setCreativeTab(CT.tabTree);
 			new BlockCrop();
 			new BlockFire();
@@ -364,22 +392,28 @@ public class FarCoreSetup
 			new BlockIce().setCreativeTab(CT.tabTerria);
 			new BlockCarvedRock();
 			new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
+			//Register tile entities.
 			GameRegistry.registerTileEntity(TELossTile.class, "farcore.loss.tile");
 			GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
 			GameRegistry.registerTileEntity(TEOre.class, "farcore.ore");
 			GameRegistry.registerTileEntity(TECustomCarvedStone.class, "farcore.carved.stone");
 			GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
 			GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
+			//Register entities.
 			int id = 0;
 			EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
 			EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
+			//Initialize potions and mob effects.
 			Potions.init();
 		}
 
 		public void load(FMLInitializationEvent event)
 		{
+			//Post load item and block.
+			//For register to Ore Dictionary, Tool Uses, Compatibility, etc.
 			ItemBase.post();
 			BlockBase.post();
+			//Register languages.
 			LanguageManager.registerLocal("info.debug.date", "Date : ");
 			LanguageManager.registerLocal("info.log.length", "Legnth : %d");
 			LanguageManager.registerLocal("info.slab.place", "Place slab in sneaking can let slab only has up or down facing.");
@@ -393,19 +427,17 @@ public class FarCoreSetup
 			LanguageManager.registerLocal("info.tool.handle.name", "Tool Handle : " + ChatFormatting.LIGHT_PURPLE + "%s");
 			LanguageManager.registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");
 			LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
+			//Setup network.
 			FarCore.network = Network.network(FarCore.ID);
 			FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
-			
 			FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTETypeResult.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTESAsk.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketTEAskType.class, Side.SERVER);
-
 			FarCore.network.registerPacket(PacketBreakBlock.class, Side.CLIENT);
-			
 			FarCore.network.registerPacket(PacketFluidUpdateAll.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketFluidUpdateSingle.class, Side.CLIENT);
 			FarCore.network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
@@ -414,6 +446,7 @@ public class FarCoreSetup
 
 		public void load(FMLPostInitializationEvent event)
 		{
+			//Reload material tool tips.
 			for(Mat material : Mat.materials())
 			{
 				if(material.customDisplayInformation != null)
@@ -429,6 +462,7 @@ public class FarCoreSetup
 
 		public void load(FMLLoadCompleteEvent event)
 		{
+			//Start light thread.
 			if(Config.multiThreadLight)
 			{
 				LightFix.startThread();
@@ -481,6 +515,7 @@ public class FarCoreSetup
 
 		public ClientProxy()
 		{
+			//Take this proxy into resource manager reload listener.
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 		}
 
@@ -488,29 +523,33 @@ public class FarCoreSetup
 		public void load(FMLPreInitializationEvent event)
 		{
 			super.load(event);
-
+			//Register color map loader.
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
-			
+			//Register client side handler.
 			MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 			FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
-			
+			//Register all render object.
+			//PLACED CALL THIS METHOD ONCE IN CLIENT PROXY IF YOUR MOD CREATE NEW GAMING ELEMENTS(BLOCK, ITEM, ETC).
 			registerRenderObject();
-			
+			//Register entity rendering handlers.
 			RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);
 			RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, RenderProjectileItem.Factory.instance);
-			
+			//Register model loaders, state mappers and item model selectors.
+			//The base item model loader.
 			ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.instance);
-			
+			//The custom block model loaders.
 			ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
 			ModelLoaderRegistry.registerLoader(ModelSapling.instance);
 			ModelLoaderRegistry.registerLoader(ModelCrop.instance);
 			ModelLoaderRegistry.registerLoader(ModelOre.instance);
+
 			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.crop.block, ModelCrop.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.ore.block, ModelOre.instance);
+
 			U.Mod.registerCustomItemModelSelector(EnumBlock.sapling.block, ModelSapling.instance);
 			U.Mod.registerCustomItemModelSelector(EnumBlock.ore.block, ModelOre.instance);
-			
+			//Register TESR.
 			ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 		}
 
@@ -524,6 +563,7 @@ public class FarCoreSetup
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
+
 			loadComplete = true;
 		}
 
@@ -536,6 +576,7 @@ public class FarCoreSetup
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
+			//Checking is reached in preinitalization state.
 			if (Loader.instance().hasReachedState(LoaderState.PREINITIALIZATION))
 			{
 				BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
@@ -556,7 +597,7 @@ public class FarCoreSetup
 							entry.getKey(), L.cast(entry.getValue(), Item.class));
 				}
 			}
-			
+
 			if(loadComplete)
 			{
 				U.Client.getFontRender().onResourceManagerReload(manager);

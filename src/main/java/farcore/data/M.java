@@ -74,7 +74,7 @@ public class M
 	public static final Mat aspen = new Mat(8011, FarCore.ID, "aspen", "Aspen", "Aspen").setWood(1.6F, 1.0F, 20.0F);
 	public static final Mat morus = new Mat(8012, FarCore.ID, "morus", "Morus", "Morus").setWood(3.0F, 1.0F, 20.0F);
 	public static final Mat willow = new Mat(8013, FarCore.ID, "willow", "Willow", "Willow").setWood(3.0F, 1.0F, 20.0F);
-	
+	//Crops
 	public static final Mat wheat = new Mat(9001, FarCore.ID, "wheat", "Wheat", "Wheat");
 	public static final Mat millet = new Mat(9002, FarCore.ID, "millet", "Millet", "Millet");
 	public static final Mat soybean = new Mat(9003, FarCore.ID, "soybean", "Soybean", "Soybean");
@@ -85,13 +85,13 @@ public class M
 	public static final Mat flax = new Mat(9008, FarCore.ID, "flax", "Flax", "Flax");
 	public static final Mat cotton = new Mat(9009, FarCore.ID, "cotton", "Cotton", "Cotton");
 	public static final Mat ramie = new Mat(9010, FarCore.ID, "ramie", "Ramie", "Ramie");
-	
+	//Plants
 	public static final Mat vine = new Mat(9201, FarCore.ID, "vine", "Vine", "Vine").setRGBa(0x867C50FF).setTag(SubTag.ROPE);
 	public static final Mat ivy = new Mat(9202, FarCore.ID, "ivy", "Ivy", "Ivy").setRGBa(0x867C50FF).setTag(SubTag.ROPE);
 	public static final Mat rattan = new Mat(9203, FarCore.ID, "rattan", "Rattan", "Rattan").setRGBa(0x867C50FF).setTag(SubTag.ROPE);
 	public static final Mat spider_silk = new Mat(9204, FarCore.ID, "spider_silk", "SpiderSilk", "Spider's Silk").setRGBa(0xFAFAFAFF).setTag(SubTag.ROPE);
 	public static final Mat ramie_dry = new Mat(9205, FarCore.ID, "ramie_dry", "RamieDry", "Ramie").setRGBa(0xCFC898FF).setTag(SubTag.ROPE);
-	
+	//Ores
 	public static final Mat native_copper = new Mat(10001, FarCore.ID, "nativeCopper", "NativeCopper", "Native Copper").setChemicalFormula("Cu").setRGBa(0xFF834CFF).setOreProperty(7, 8.0F, 9.0F);
 	public static final Mat malachite = new Mat(10002, FarCore.ID, "malachite", "Malachite", "Malachite").setChemicalFormula("Cu(OH)2·CuCO3").setRGBa(0x30CE88FF).setOreProperty(8, 8.8F, 9.0F);
 	public static final Mat cuprite = new Mat(10003, FarCore.ID, "cuprite", "Cuprite", "Cuprite").setChemicalFormula("Cu2O").setRGBa(0xD83E26FF).setOreProperty(10, 9.6F, 9.6F);

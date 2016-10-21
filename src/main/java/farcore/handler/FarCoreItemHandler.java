@@ -8,6 +8,11 @@ import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Handler item properties and behaviours.
+ * @author ueyudiud
+ *
+ */
 public class FarCoreItemHandler
 {
 	@SubscribeEvent
@@ -24,7 +29,7 @@ public class FarCoreItemHandler
 			event.setNewSpeed(((IIP_DigSpeed) stack.getItem()).replaceDigSpeed(stack, event));
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onHarvestBlock(HarvestDropsEvent event)
 	{
