@@ -22,14 +22,14 @@ import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class RenderWeatherSurface extends IRenderHandler
 {
-	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation RAIN_TEXTURES = new ResourceLocation("textures/environment/rain.png");
-	@SideOnly(Side.CLIENT)
 	private static final ResourceLocation SNOW_TEXTURES = new ResourceLocation("textures/environment/snow.png");
 	private static final float[] rainXCoords = new float[1024];
 	private static final float[] rainYCoords = new float[1024];
+
 	static
 	{
 		for (int i = 0; i < 32; ++i)
@@ -44,9 +44,8 @@ public class RenderWeatherSurface extends IRenderHandler
 			}
 		}
 	}
-	
+
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void render(float partialTicks, WorldClient world, Minecraft mc)
 	{
 		float f = world.getRainStrength(partialTicks);
@@ -73,18 +72,18 @@ public class RenderWeatherSurface extends IRenderHandler
 			double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 			int l = MathHelper.floor_double(d1);
 			int i1 = 5;
-			
+
 			if (mc.gameSettings.fancyGraphics)
 			{
 				i1 = 10;
 			}
-			
+
 			int j1 = -1;
 			float f1 = rendererUpdateCount + partialTicks;
 			vertexbuffer.setTranslation(-d0, -d1, -d2);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-			
+
 			for (int k1 = k - i1; k1 <= k + i1; ++k1)
 			{
 				for (int l1 = i - i1; l1 <= i + i1; ++l1)
@@ -94,7 +93,7 @@ public class RenderWeatherSurface extends IRenderHandler
 					double d4 = rainYCoords[i2] * 0.5D;
 					pos.setPos(l1, 0, k1);
 					Biome biome = world.getBiomeGenForCoords(pos);
-					
+
 					if (properties.getRainstrength(world, pos) > 1E-3F)
 					{
 						int j2 = world.getPrecipitationHeight(pos).getY();

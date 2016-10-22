@@ -568,8 +568,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		Mat material = getMaterialFromItem(stack, "head");
 		unlocalizedList.add("info.tool.harvest.level", material.toolHarvestLevel);
 		unlocalizedList.add("info.tool.hardness", HARDNESS_FORMAT.format(material.toolHardness));
-		unlocalizedList.add("info.tool.head.name", material.name);
-		unlocalizedList.addNotNull("info.material.custom." + material.name);
+		unlocalizedList.add("info.tool.head.name", material.getLocalName());
+		unlocalizedList.addNotNull("info.material.custom." + material.getLocalName());
 		if(material.itemProp != null)
 		{
 			material.itemProp.addInformation(stack, material, prop.condition, unlocalizedList, "head");
@@ -577,8 +577,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		if(prop.hasHandle)
 		{
 			material = getMaterialFromItem(stack, "handle");
-			unlocalizedList.add("info.tool.handle.name", material.name);
-			unlocalizedList.addNotNull("info.material.custom." + material.name);
+			unlocalizedList.add("info.tool.handle.name", material.getLocalName());
+			unlocalizedList.addNotNull("info.material.custom." + material.getLocalName());
 			if(material.itemProp != null)
 			{
 				material.itemProp.addInformation(stack, material, MC.handle, unlocalizedList, "handle");
@@ -587,8 +587,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		if(prop.hasTie)
 		{
 			material = getMaterialFromItem(stack, "tie");
-			unlocalizedList.add("info.tool.tie.name", material.name);
-			unlocalizedList.addNotNull("info.material.custom." + material.name);
+			unlocalizedList.add("info.tool.tie.name", material.getLocalName());
+			unlocalizedList.addNotNull("info.material.custom." + material.getLocalName());
 			if(material.itemProp != null)
 			{
 				material.itemProp.addInformation(stack, material, MC.tie, unlocalizedList, "tie");

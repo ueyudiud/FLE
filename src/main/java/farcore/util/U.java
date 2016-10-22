@@ -823,6 +823,11 @@ public class U
 		{
 			return handlerGatway.fileDir();
 		}
+		
+		public static void registerClientRegister(Object object)
+		{
+			handlerGatway.registerRender(object);
+		}
 
 		public static void registerBlock(Block block, String name)
 		{
@@ -840,7 +845,7 @@ public class U
 			GameRegistry.register(itemBlock.setRegistryName(modid, name));
 			handlerGatway.registerRender(block);
 		}
-		
+
 		public static void registerItem(Item item, String name)
 		{
 			registerItem(item, getActiveModID(), name);
@@ -1805,6 +1810,39 @@ public class U
 				}
 			}
 			return list;
+		}
+		
+		public static boolean matchCurrentToolType(EntityPlayer player, EnumToolType...types)
+		{
+			ItemStack stack = player.getHeldItemMainhand();
+			if(stack == null)
+			{
+				stack = player.getHeldItemOffhand();
+			}
+			if(stack == null)
+			{
+				for(EnumToolType type : types)
+					if(type == EnumToolType.hand)
+						return true;
+				return false;
+			}
+			List<EnumToolType> list;
+			if(stack.getItem() instanceof ITool)
+			{
+				list = ((ITool) stack.getItem()).getToolTypes(stack);
+				for(EnumToolType type : types)
+				{
+					if(list.contains(type)) return true;
+				}
+				return false;
+			}
+			for(EnumToolType type : types)
+			{
+				if(type.match(stack))
+					return true;
+			}
+			return false;
+			
 		}
 
 		public static void destoryPlayerCurrentItem(EntityPlayer player)

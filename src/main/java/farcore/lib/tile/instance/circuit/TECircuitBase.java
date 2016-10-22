@@ -10,10 +10,14 @@ import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockDestroyedByPlayer;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ComparatorInputOverride;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ConnectRedstone;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_RedstonePower;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.TESynchronization;
@@ -22,23 +26,43 @@ import farcore.lib.util.Facing;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class TECircuitBase extends TESynchronization
 implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride,
 ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile,
-ITP_Drops
+ITP_Drops, ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITP_BlockHardness,
+ITP_ExplosionResistance
 {
+	protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
+
 	public Mat material = M.stone;
 	public Direction facing = Direction.N;
-
+	
+	@Override
+	public float getBlockHardness(IBlockState state)
+	{
+		return 0.5F;
+	}
+	
+	@Override
+	public float getExplosionResistance(Entity exploder, Explosion explosion)
+	{
+		return 0.2F;
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -46,7 +70,7 @@ ITP_Drops
 		material = Mat.material(nbt.getString("material"), M.stone);
 		facing = Direction.directions[nbt.getByte("facing")];
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -54,7 +78,7 @@ ITP_Drops
 		nbt.setByte("facing", (byte) facing.ordinal());
 		return super.writeToNBT(nbt);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -68,7 +92,7 @@ ITP_Drops
 			facing = Direction.directions[nbt.getByte("f")];
 		}
 	}
-	
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -76,49 +100,49 @@ ITP_Drops
 		nbt.setString("m", material.name);
 		nbt.setByte("f", (byte) facing.ordinal());
 	}
-	
+
 	@Override
 	protected void initServer()
 	{
 		super.initServer();
 	}
-	
+
 	protected void markNeighbourNotify()
 	{
-
+		
 	}
-	
+
 	@Override
 	public abstract int getStrongPower(IBlockState state, Direction side);
-	
+
 	@Override
 	public abstract int getWeakPower(IBlockState state, Direction side);
-
+	
 	@Override
 	public boolean listenWeakChanges()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public int getComparatorInputOverride(IBlockState state)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canConnectRedstone(IBlockState state, Direction side)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		material = Mat.material(U.ItemStacks.setupNBT(stack, false).getString("material"), M.stone);
 		facing = Direction.heading(placer);
 	}
-
+	
 	protected void notifyNeighbors()
 	{
 		IBlockState state = getBlockState();
@@ -138,27 +162,47 @@ ITP_Drops
 			worldObj.notifyNeighborsOfStateExcept(pos1, block, facing.getOpposite());
 		}
 	}
-
+	
 	@Override
 	public Direction getRotation()
 	{
 		return facing;
 	}
-	
-	protected abstract Facing[] getOutputFacings();
 
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
+	{
+		return REDSTONE_DIODE_AABB;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
+			Entity entity)
+	{
+		collidingBoxes.add(getCollisionBoundingBox(state));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
+	{
+		return REDSTONE_DIODE_AABB;
+	}
+
+	protected abstract Facing[] getOutputFacings();
+	
 	protected int getWeakPower(Facing offset)
 	{
 		Direction direction = offset.toDirection(facing);
 		return getWeakPower(direction.getOpposite().of(), direction);
 	}
-
+	
 	protected int getStrongPower(Facing offset)
 	{
 		Direction direction = offset.toDirection(facing);
 		return getStrongPower(direction.getOpposite().of(), direction);
 	}
-
+	
 	@Override
 	public void onBlockDestroyedByPlayer(IBlockState state)
 	{
@@ -168,14 +212,14 @@ ITP_Drops
 			worldObj.notifyNeighborsOfStateChange(pos.offset(facing), block);
 		}
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
@@ -185,7 +229,7 @@ ITP_Drops
 		setDropNBT(nbt);
 		return Arrays.asList(stack);
 	}
-	
+
 	private void setDropNBT(NBTTagCompound nbt)
 	{
 		nbt.setString("material", material.name);

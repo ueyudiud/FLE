@@ -26,7 +26,7 @@ implements ISaplingAccess, IDebugableBlock
 	private float age;
 	public TreeInfo info;
 	public Mat material = M.VOID;
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -35,14 +35,14 @@ implements ISaplingAccess, IDebugableBlock
 		nbt.setFloat("age", age);
 		return nbt;
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
 		nbt.setString("t", material.name);
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -50,7 +50,7 @@ implements ISaplingAccess, IDebugableBlock
 		material = Mat.material(nbt.getString("tree"));
 		age = nbt.getFloat("age");
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -58,15 +58,16 @@ implements ISaplingAccess, IDebugableBlock
 		if(nbt.hasKey("t"))
 		{
 			material = Mat.material(nbt.getString("t"));
+			markBlockRenderUpdate();
 		}
 	}
-
+	
 	public void setTree(EntityLivingBase entity, Mat tree)
 	{
 		material = tree;
 		syncToNearby();
 	}
-
+	
 	@Override
 	protected void updateServer1()
 	{
@@ -81,23 +82,23 @@ implements ISaplingAccess, IDebugableBlock
 			grow();
 		}
 	}
-
+	
 	@Override
 	protected float getSyncRange()
 	{
 		return 80F;
 	}
-
+	
 	public float age()
 	{
 		return age;
 	}
-
+	
 	public void setAge(float age)
 	{
 		this.age = age;
 	}
-
+	
 	public boolean grow()
 	{
 		IBlockState state = worldObj.getBlockState(pos);
@@ -107,42 +108,42 @@ implements ISaplingAccess, IDebugableBlock
 		worldObj.setBlockState(pos, state, 4);
 		return false;
 	}
-
+	
 	public int getMaxAge()
 	{
 		return material.tree.getGrowAge();
 	}
-
+	
 	@Override
 	public ITree tree()
 	{
 		return material.tree;
 	}
-
+	
 	@Override
 	public TreeInfo info()
 	{
 		return info;
 	}
-
+	
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-
+	
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-
+	
 	@Override
 	public void killTree()
 	{
 		removeBlock();
 	}
-
+	
 	@Override
 	public void addInformation(EntityPlayer player, World world, BlockPos pos, Direction side, List<String> list)
 	{

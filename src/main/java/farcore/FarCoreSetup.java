@@ -161,17 +161,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreSetup
 {
 	private LanguageManager lang;
-
+	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
-
+	
 	public FarCoreSetup()
 	{
 		setup = this;
 		Log.logger = LogManager.getLogger(FarCore.ID);
 		OreDictExt.init();
 	}
-
+	
 	@EventHandler
 	public void check(FMLFingerprintViolationEvent event)
 	{
@@ -215,7 +215,7 @@ public class FarCoreSetup
 					"(Technical information: " + forge + " < " + FarCore.minForge + ")");
 		Log.info("Checking end.");
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -254,31 +254,31 @@ public class FarCoreSetup
 		lang.read();
 		FarCore.proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
 		FarCore.proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		FarCore.proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		FarCore.proxy.load(event);
 		lang.write();
 	}
-
+	
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
 	}
-
+	
 	public static class Proxy implements IGuiHandler
 	{
 		public void load(FMLPreInitializationEvent event)
@@ -406,7 +406,7 @@ public class FarCoreSetup
 			//Initialize potions and mob effects.
 			Potions.init();
 		}
-
+		
 		public void load(FMLInitializationEvent event)
 		{
 			//Post load item and block.
@@ -426,6 +426,7 @@ public class FarCoreSetup
 			LanguageManager.registerLocal("info.tool.head.name", "Tool Head : " + ChatFormatting.LIGHT_PURPLE + "%s");
 			LanguageManager.registerLocal("info.tool.handle.name", "Tool Handle : " + ChatFormatting.LIGHT_PURPLE + "%s");
 			LanguageManager.registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");
+			LanguageManager.registerLocal("info.redstone.circuit.material", "Material : " + ChatFormatting.YELLOW + "%s");
 			LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
 			//Setup network.
 			FarCore.network = Network.network(FarCore.ID);
@@ -443,7 +444,7 @@ public class FarCoreSetup
 			FarCore.network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
 			FarCore.network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
 		}
-
+		
 		public void load(FMLPostInitializationEvent event)
 		{
 			//Reload material tool tips.
@@ -459,7 +460,7 @@ public class FarCoreSetup
 				}
 			}
 		}
-
+		
 		public void load(FMLLoadCompleteEvent event)
 		{
 			//Start light thread.
@@ -468,25 +469,25 @@ public class FarCoreSetup
 				LightFix.startThread();
 			}
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IBlockColor color, Block...block)
 		{
-
+			
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Block...block)
 		{
-
+			
 		}
-		
+
 		@SideOnly(Side.CLIENT)
 		public void registerColorMultiplier(IItemColor color, Item...block)
 		{
-
+			
 		}
-		
+
 		@Override
 		public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
@@ -495,14 +496,14 @@ public class FarCoreSetup
 				return ((ITB_Containerable) tile).openContainer(ID, player);
 			return null;
 		}
-		
+
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
 			return null;
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
@@ -512,13 +513,13 @@ public class FarCoreSetup
 		private Map<IItemColor, List<Block>> itemBlockColorMap = new HashMap();
 		private Map<IItemColor, List<Item>> itemColorMap = new HashMap();
 		private boolean loadComplete = false;
-
+		
 		public ClientProxy()
 		{
 			//Take this proxy into resource manager reload listener.
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 		}
-
+		
 		@Override
 		public void load(FMLPreInitializationEvent event)
 		{
@@ -542,37 +543,37 @@ public class FarCoreSetup
 			ModelLoaderRegistry.registerLoader(ModelSapling.instance);
 			ModelLoaderRegistry.registerLoader(ModelCrop.instance);
 			ModelLoaderRegistry.registerLoader(ModelOre.instance);
-
+			
 			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.crop.block, ModelCrop.instance);
 			ModelLoader.setCustomStateMapper(EnumBlock.ore.block, ModelOre.instance);
-
+			
 			U.Mod.registerCustomItemModelSelector(EnumBlock.sapling.block, ModelSapling.instance);
 			U.Mod.registerCustomItemModelSelector(EnumBlock.ore.block, ModelOre.instance);
 			//Register TESR.
 			ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 		}
-
+		
 		@Override
 		public void load(FMLInitializationEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void load(FMLPostInitializationEvent event)
 		{
 			super.load(event);
-
+			
 			loadComplete = true;
 		}
-
+		
 		@Override
 		public void load(FMLLoadCompleteEvent event)
 		{
 			super.load(event);
 		}
-
+		
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
@@ -597,31 +598,31 @@ public class FarCoreSetup
 							entry.getKey(), L.cast(entry.getValue(), Item.class));
 				}
 			}
-
+			
 			if(loadComplete)
 			{
 				U.Client.getFontRender().onResourceManagerReload(manager);
 			}
 		}
-		
+
 		@Override
 		public void registerColorMultiplier(IBlockColor color, Block...blocks)
 		{
 			U.L.put(blockColorMap, color, blocks);
 		}
-		
+
 		@Override
 		public void registerColorMultiplier(IItemColor color, Block...blocks)
 		{
 			U.L.put(itemBlockColorMap, color, blocks);
 		}
-		
+
 		@Override
 		public void registerColorMultiplier(IItemColor color, Item...items)
 		{
 			U.L.put(itemColorMap, color, items);
 		}
-		
+
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
@@ -630,7 +631,7 @@ public class FarCoreSetup
 				return ((ITB_Containerable) tile).openGUI(ID, player);
 			return null;
 		}
-		
+
 		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, int metaCount)
 		{
 			Item item = Item.getItemFromBlock(block);
@@ -640,7 +641,7 @@ public class FarCoreSetup
 			}
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
-		
+
 		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, IProperty<T> property)
 		{
 			Item item = Item.getItemFromBlock(block);
@@ -659,7 +660,7 @@ public class FarCoreSetup
 			}
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
-		
+
 		public void addRenderRegisterListener(IRenderRegister register)
 		{
 			if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
@@ -671,7 +672,7 @@ public class FarCoreSetup
 				U.L.put(registers, U.Mod.getActiveModID(), register);
 			}
 		}
-		
+
 		/**
 		 * Let client proxy called this method when FML pre-initialization.
 		 */
@@ -686,7 +687,7 @@ public class FarCoreSetup
 				}
 			}
 		}
-
+		
 		public static void registerBuildInModel(Block block)
 		{
 			if(Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
@@ -698,7 +699,7 @@ public class FarCoreSetup
 				buildInRender.add(block);
 			}
 		}
-		
+
 		/**
 		 * Internal, do not use. (Use ASM from forge)
 		 */

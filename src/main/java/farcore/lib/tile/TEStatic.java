@@ -1,8 +1,6 @@
 package farcore.lib.tile;
 
-import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.net.tile.PacketTESync;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -22,10 +20,22 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		{
 			initServer();
 		}
-		else
-		{
-			sendToServer(new PacketTEAsk(worldObj, pos));
-		}
+	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToDescription(nbt);
+		nbt.merge(super.getUpdateTag());
+		return nbt;
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag)
+	{
+		readFromDescription(tag);
+		initialized = true;
 	}
 	
 	protected void initServer()
@@ -43,9 +53,8 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	public final void readFromDescription(NBTTagCompound nbt)
 	{
 		readFromDescription1(nbt);
-		markBlockUpdate();
-		markBlockRenderUpdate();
-		initialized = true;
+		//		markBlockUpdate();
+		//		markBlockRenderUpdate();
 	}
 	
 	public void readFromDescription1(NBTTagCompound nbt)
@@ -95,19 +104,5 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToDescription(nbt);
 		sendToPlayer(new PacketTESync(worldObj, pos, nbt), player);
-	}
-	
-	@Override
-	public void markDirty()
-	{
-		if (worldObj != null)
-		{
-			IBlockState state = worldObj.getBlockState(pos);
-			worldObj.markChunkDirty(pos, this);
-			if (!state.getBlock().isAir(state, worldObj, pos))
-			{
-				worldObj.updateComparatorOutputLevel(pos, getBlockType());
-			}
-		}
 	}
 }

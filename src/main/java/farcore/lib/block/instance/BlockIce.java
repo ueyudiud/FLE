@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockIce extends BlockBase
 {
 	private static final Material ICE = new MaterialIce();;
-	
+
 	public BlockIce()
 	{
 		super(FarCore.ID, "ice", ICE);
@@ -43,34 +43,41 @@ public class BlockIce extends BlockBase
 		setTickRandomly(true);
 		EnumBlock.ice.set(this);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Ice");
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
 		U.Mod.registerItemBlockModel(this, 0, FarCore.ID, "ice");
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
 	}
-
+	
 	@Override
 	public String getTranslateNameForItemStack(int metadata)
 	{
 		return getUnlocalizedName();
 	}
-	
+
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return "pickaxe";
 	}
-
+	
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
 		return 1;
 	}
-	
+
 	@Override
 	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player,
 			boolean silkHarvest)
@@ -86,7 +93,7 @@ public class BlockIce extends BlockBase
 		}
 		return super.onBlockHarvest(worldIn, pos, state, player, silkHarvest);
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
@@ -108,20 +115,20 @@ public class BlockIce extends BlockBase
 		}
 		super.randomTick(worldIn, pos, state, random);
 	}
-
+	
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
 		return new ArrayList();
 	}
-
+	
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state)
 	{
 		return EnumPushReaction.NORMAL;
 	}
-
+	
 	/**
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
@@ -130,7 +137,7 @@ public class BlockIce extends BlockBase
 	{
 		return false;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
@@ -139,7 +146,7 @@ public class BlockIce extends BlockBase
 		Block block = iblockstate.getBlock();
 		return block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 	}
-
+	
 	protected void turnIntoWater(World worldIn, BlockPos pos, IBlockState state, boolean setToAir)
 	{
 		if (worldIn.provider.doesWaterVaporize())

@@ -5,20 +5,22 @@ import com.google.common.collect.ImmutableList;
 import farcore.data.EnumBlock;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.material.Mat;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import farcore.lib.tile.TEStatic;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import farcore.util.U.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
-public class TECoreLeaves extends TEStatic
+public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 {
 	public TreeInfo info;
 
 	public TECoreLeaves()
 	{
-
+		info = new TreeInfo();
 	}
 	public TECoreLeaves(ITree tree, TreeInfo info)
 	{
@@ -30,11 +32,27 @@ public class TECoreLeaves extends TEStatic
 		this.info = info;
 	}
 
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound)
+	{
+		info.writeToNBT(compound);
+		return super.writeToNBT(compound);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound)
+	{
+		info.readFromNBT(compound);
+		super.readFromNBT(compound);
+	}
+	
 	public void setTree(TreeInfo info, boolean causeUpdate)
 	{
 		this.info = info;
 		if(causeUpdate)
+		{
 			syncToNearby();
+		}
 	}
 
 	public ItemStack provideSapling(Mat material)

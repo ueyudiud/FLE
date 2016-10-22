@@ -4,20 +4,20 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TEAged extends TESynchronization
 {
-	protected long nextUpdateTick;
-
+	protected long nextUpdateTick = Long.MIN_VALUE;
+	
 	public TEAged()
 	{
-
+		
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 		nextUpdateTick = nbt.getLong("tickUpdate");
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -25,14 +25,17 @@ public class TEAged extends TESynchronization
 		nbt.setLong("tickUpdate", nextUpdateTick);
 		return nbt;
 	}
-
+	
 	@Override
 	protected void initServer()
 	{
-		nextUpdateTick = worldObj.getWorldTime();
+		if(nextUpdateTick == Long.MIN_VALUE)
+		{
+			nextUpdateTick = worldObj.getWorldTime();
+		}
 		super.initServer();
 	}
-
+	
 	@Override
 	protected void updateServer()
 	{
@@ -43,14 +46,14 @@ public class TEAged extends TESynchronization
 				updateServer1();
 			}
 	}
-
+	
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + 1000L;
 	}
-
+	
 	protected void updateServer1()
 	{
-
+		
 	}
 }

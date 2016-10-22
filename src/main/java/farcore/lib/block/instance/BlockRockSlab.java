@@ -19,11 +19,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBlock
 {
 	private final Mat material;
 	private final BlockRock parent;
+	private String localName;
 	/**
 	 * The meta of main block.
 	 */
@@ -44,6 +47,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 		this.group = group;
 		this.parent = parent;
 		this.material = parent.material;
+		this.localName = localName;
 		harvestLevel = parent.harvestLevel;
 		setHardness((hardnessMultiplier = parent.hardnessMultiplier) * 0.6F);
 		setResistance((resistanceMultiplier = parent.resistanceMultiplier) * 0.4F);
@@ -53,6 +57,12 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 		}
 		setTickRandomly(true);
 		setDefaultState(getDefaultState().withProperty(BlockRock.HEATED, false));
+	}
+	
+	@Override
+	public void postInitalizedBlocks()
+	{
+		super.postInitalizedBlocks();
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(1), localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(2), localName + " Slab");
@@ -62,6 +72,13 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 		LanguageManager.registerLocal(getTranslateNameForItemStack(6), "Double " + localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(7), "Double " + localName + " Slab");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(8), "Double " + localName + " Slab");
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
 		U.Mod.registerItemBlockModel(this, 0, material.modid, "rock/" + material.name + "/" + RockType.values()[meta].name() + "_slab");
 	}
 

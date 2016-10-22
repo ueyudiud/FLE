@@ -1,9 +1,7 @@
 package farcore.lib.tile.instance;
 
 import farcore.lib.nbt.NBTTagCompoundEmpty;
-import farcore.lib.net.tile.PacketTEAskType;
-import farcore.lib.tile.ISynchronizableTile;
-import farcore.lib.tile.TEUpdatable;
+import farcore.lib.tile.TEBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -14,11 +12,11 @@ import net.minecraft.tileentity.TileEntity;
  * @author ueyudiud
  *
  */
-public class TELossTile extends TEUpdatable implements ISynchronizableTile
+public class TELossTile extends TEBase
 {
 	private NBTTagCompound tileNBT = NBTTagCompoundEmpty.instance;
 	private NBTTagCompound serverPacketData = new NBTTagCompound();
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -32,7 +30,7 @@ public class TELossTile extends TEUpdatable implements ISynchronizableTile
 			tileNBT = nbt;
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -42,9 +40,9 @@ public class TELossTile extends TEUpdatable implements ISynchronizableTile
 		}
 		return super.writeToNBT(nbt);
 	}
-	
+
 	@Override
-	protected void updateEntity1()
+	public void onLoad()
 	{
 		if(isServer())
 		{
@@ -52,24 +50,27 @@ public class TELossTile extends TEUpdatable implements ISynchronizableTile
 			if(tile == null)
 				throw new RuntimeException("Error tile.");
 			worldObj.setTileEntity(pos, tile);
+			tile.onLoad();
 			invalidate();
-		}
-		else
-		{
-			sendToServer(new PacketTEAskType(this));
 		}
 	}
 
 	@Override
-	public void readFromDescription(NBTTagCompound nbt)
+	public NBTTagCompound getUpdateTag()
 	{
-		serverPacketData.merge(nbt);
+		return tileNBT == NBTTagCompoundEmpty.instance ? super.getUpdateTag() : tileNBT;
 	}
-	
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag)
+	{
+		refreshTile(tag);
+	}
+
 	public void refreshTile(NBTTagCompound nbt)
 	{
 		TileEntity tile = func_190200_a(worldObj, nbt);
-		if(tile == null) return;
+		if(tile instanceof TELossTile) return;
 		worldObj.setTileEntity(pos, tile);
 		invalidate();
 	}

@@ -12,6 +12,7 @@ import java.util.Random;
 
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
+import farcore.data.ColorMultiplier;
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolType;
 import farcore.data.M;
@@ -33,8 +34,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -47,7 +46,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -184,27 +182,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	}
 
 	public static final PropertyEnum<EnumCoverType> COVER_TYPE = PropertyEnum.create("cover", EnumCoverType.class);
-	public static final IBlockColor SOIL_COLOR = (IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) ->
-	{
-		if(tintIndex != 0) return 0xFFFFFFFF;
-		EnumCoverType type = state.getValue(COVER_TYPE);
-		switch (type)
-		{
-		case GRASS : return worldIn == null || pos == null ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : worldIn.getBiomeGenForCoords(pos).getGrassColorAtPos(pos);
-		default : return 0xFFFFFFFF;
-		}
-	};
-	public static final IItemColor ITEM_SOIL_COLOR = (ItemStack stack, int tintIndex) ->
-	{
-		if(tintIndex != 0) return 0xFFFFFFFF;
-		EnumCoverType type = EnumCoverType.VALUES[stack.getItemDamage()];
-		switch (type)
-		{
-		case GRASS : return ColorizerGrass.getGrassColor(0.7F, 0.7F);
-		default : return 0xFFFFFFFF;
-		}
-	};
-	
+
 	public BlockSoil(String modid, String name, Material materialIn, Mat mat)
 	{
 		super(modid, name, materialIn, mat);
@@ -241,8 +219,8 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		U.Mod.registerColorMultiplier(SOIL_COLOR, this);
-		U.Mod.registerColorMultiplier(ITEM_SOIL_COLOR, item);
+		U.Mod.registerColorMultiplier(ColorMultiplier.SOIL_COLOR, this);
+		U.Mod.registerColorMultiplier(ColorMultiplier.ITEM_SOIL_COLOR, item);
 		StateMapperExt mapper = new StateMapperExt(material.modid, "soil", null);
 		mapper.setVariants("type", material.name);
 		ClientProxy.registerCompactModel(mapper, this, 16);

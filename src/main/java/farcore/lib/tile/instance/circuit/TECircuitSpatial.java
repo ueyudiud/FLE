@@ -4,13 +4,28 @@ import farcore.lib.util.Direction;
 import farcore.lib.util.Facing;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class TECircuitSpatial extends TECircuitCompacted
 {
+	protected static final AxisAlignedBB REDSTONE_SPATIAL_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.625D, 1.0D);
+
 	private static final Facing[] OUT = {Facing.FRONT, Facing.BACK, Facing.LEFT, Facing.RIGHT};
 
 	protected byte powerFB;
 	protected byte powerLR;
+	
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
+	{
+		return REDSTONE_SPATIAL_DIODE_AABB;
+	}
+	
+	@Override
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
+	{
+		return REDSTONE_SPATIAL_DIODE_AABB;
+	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
@@ -63,5 +78,4 @@ public class TECircuitSpatial extends TECircuitCompacted
 	{
 		return OUT;
 	}
-
 }

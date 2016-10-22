@@ -15,9 +15,11 @@ import farcore.lib.tile.instance.TEOre;
 import farcore.lib.util.BlockStateWrapper;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.SubTag;
+import farcore.lib.util.UnlocalizedList;
 import farcore.util.U.Strings;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -133,8 +135,9 @@ public class BlockOre extends BlockSingleTE
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(EnumOreAmount amount : EnumOreAmount.values())
+		//		for(EnumOreAmount amount : EnumOreAmount.values())
 		{
+			EnumOreAmount amount = EnumOreAmount.normal;//Only provide normal amount ore in creative tab or it is too many ore to display.
 			for(Mat ore : Mat.filt(SubTag.ORE))
 			{
 				//				for(Mat rock : Mat.filt(SubTag.ROCK))
@@ -156,5 +159,13 @@ public class BlockOre extends BlockSingleTE
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
+	@Override
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
+			boolean advanced)
+	{
+		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
+		tooltip.addNotNull("info.material.chemical.formula." + Mat.material(stack.getItemDamage()).name);
 	}
 }

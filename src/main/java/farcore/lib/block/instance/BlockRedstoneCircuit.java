@@ -27,19 +27,21 @@ import farcore.lib.tile.instance.circuit.TECircuitTicking;
 import farcore.lib.tile.instance.circuit.TECircuitXor;
 import farcore.lib.tile.instance.circuit.TESensorLight;
 import farcore.lib.util.Direction;
+import farcore.lib.util.UnlocalizedList;
+import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -49,7 +51,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockRedstoneCircuit extends BlockTE
 {
 	private static final PropertyInteger CUSTOM_VALUE = PropertyInteger.create("custom", 0, 16);
-	protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
 	
 	public BlockRedstoneCircuit()
 	{
@@ -112,12 +113,6 @@ public class BlockRedstoneCircuit extends BlockTE
 		{
 			list.add(createItemStack(tag.id(), M.stone));
 		}
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-	{
-		return REDSTONE_DIODE_AABB;
 	}
 
 	@Override
@@ -206,5 +201,14 @@ public class BlockRedstoneCircuit extends BlockTE
 		register.register(33, "invert", TECircuitInvert.class);
 		register.register(64, "sensor_light", TESensorLight.class);
 		return true;
+	}
+
+	@Override
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
+			boolean advanced)
+	{
+		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
+		Mat material = Mat.material(U.ItemStacks.setupNBT(stack, false).getString("material"), M.stone);
+		tooltip.add("info.redstone.circuit.material", material.getLocalName());
 	}
 }

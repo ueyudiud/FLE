@@ -90,22 +90,6 @@ ITP_Drops, IToolableTile
 	}
 	
 	@Override
-	public void onLoad()
-	{
-		if(isServer())
-		{
-			initServer();
-		}
-		else
-		{
-			if(Worlds.isAirNearby(worldObj, pos, true))
-			{
-				sendToServer(new PacketTEAsk(worldObj, pos));
-			}
-		}
-	}
-	
-	@Override
 	protected float getSyncRange()
 	{
 		return 256F;
@@ -196,7 +180,7 @@ ITP_Drops, IToolableTile
 	{
 		if(Worlds.isNotOpaqueNearby(worldObj, pos))
 		{
-			syncToNearby();
+			markBlockRenderUpdate();
 		}
 	}
 	

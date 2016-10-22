@@ -15,9 +15,9 @@ public interface INBTReaderAndWritter<T>
 	{
 		return nbt.hasKey(key, NBT.TAG_COMPOUND) ? readFromNBT(nbt.getCompoundTag(key)) : null;
 	}
-
+	
 	T readFromNBT(NBTTagCompound nbt);
-
+	
 	/**
 	 * Write target to nbt with sub tag.
 	 * @param target
@@ -31,12 +31,12 @@ public interface INBTReaderAndWritter<T>
 		nbt.setTag(key, writeToNBT1(target, nbt));
 		return nbt;
 	}
-
+	
 	default NBTTagCompound writeToNBT1(T target, NBTTagCompound nbt)
 	{
 		writeToNBT(target, nbt);
 		return nbt;
 	}
-
+	
 	void writeToNBT(T target, NBTTagCompound nbt);
 }
