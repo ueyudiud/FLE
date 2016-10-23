@@ -77,6 +77,7 @@ implements ISaplingAccess, IDebugableBlock
 			return;
 		}
 		age += material.tree.onSaplingUpdate(this);
+		markDirty();
 		if(!isInvalid() && age >= getMaxAge())
 		{
 			grow();
@@ -97,6 +98,7 @@ implements ISaplingAccess, IDebugableBlock
 	public void setAge(float age)
 	{
 		this.age = age;
+		markDirty();
 	}
 	
 	public boolean grow()

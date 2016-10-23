@@ -14,7 +14,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import farcore.asm.LightFix;
 import farcore.data.CT;
 import farcore.data.Config;
-import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.M;
 import farcore.data.MC;
@@ -50,10 +49,7 @@ import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.item.instance.ItemStoneFragment;
 import farcore.lib.material.Mat;
-import farcore.lib.model.block.ModelCrop;
 import farcore.lib.model.block.ModelFluidBlock;
-import farcore.lib.model.block.ModelOre;
-import farcore.lib.model.block.ModelSapling;
 import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.model.entity.RenderFallingBlockExt;
 import farcore.lib.model.entity.RenderProjectileItem;
@@ -540,16 +536,6 @@ public class FarCoreSetup
 			ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.instance);
 			//The custom block model loaders.
 			ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
-			ModelLoaderRegistry.registerLoader(ModelSapling.instance);
-			ModelLoaderRegistry.registerLoader(ModelCrop.instance);
-			ModelLoaderRegistry.registerLoader(ModelOre.instance);
-			
-			ModelLoader.setCustomStateMapper(EnumBlock.sapling.block, ModelSapling.instance);
-			ModelLoader.setCustomStateMapper(EnumBlock.crop.block, ModelCrop.instance);
-			ModelLoader.setCustomStateMapper(EnumBlock.ore.block, ModelOre.instance);
-			
-			U.Mod.registerCustomItemModelSelector(EnumBlock.sapling.block, ModelSapling.instance);
-			U.Mod.registerCustomItemModelSelector(EnumBlock.ore.block, ModelOre.instance);
 			//Register TESR.
 			ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 		}

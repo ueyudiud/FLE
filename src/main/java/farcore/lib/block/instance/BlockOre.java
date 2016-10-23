@@ -11,11 +11,13 @@ import farcore.lib.block.BlockSingleTE;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.block.material.MaterialOre;
 import farcore.lib.material.Mat;
+import farcore.lib.model.block.ModelOre;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.util.BlockStateWrapper;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.SubTag;
 import farcore.lib.util.UnlocalizedList;
+import farcore.util.U;
 import farcore.util.U.Strings;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -28,6 +30,8 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -40,7 +44,7 @@ public class BlockOre extends BlockSingleTE
 		public final EnumOreAmount amount;
 		public final Mat rock;
 		public final RockType type;
-		
+
 		OreStateWrapper(IBlockState state, TEOre ore)
 		{
 			super(state);
@@ -57,30 +61,46 @@ public class BlockOre extends BlockSingleTE
 			this.rock = rock;
 			type = rockType;
 		}
-		
+
 		@Override
 		protected BlockStateWrapper wrapState(IBlockState state)
 		{
 			return new OreStateWrapper(state, ore, amount, rock, type);
 		}
 	}
-
+	
 	public static final MaterialOre ORE = new MaterialOre();
-
+	
 	public BlockOre()
 	{
 		super(FarCore.ID, "ore", ORE);
 		setTickRandomly(true);
-		registerLocalized();
 		EnumBlock.ore.set(this);
 	}
 
+	@Override
+	public void postInitalizedBlocks()
+	{
+		super.postInitalizedBlocks();
+		registerLocalized();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		ModelLoaderRegistry.registerLoader(ModelOre.instance);
+		ModelLoader.setCustomStateMapper(this, ModelOre.instance);
+		U.Mod.registerCustomItemModelSelector(this, ModelOre.instance);
+	}
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TEOre();
 	}
-	
+
 	private void registerLocalized()
 	{
 		LanguageManager.registerLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE), "Ore");
@@ -96,13 +116,13 @@ public class BlockOre extends BlockSingleTE
 			}
 		}
 	}
-
+	
 	@Override
 	protected Item createItemBlock()
 	{
 		return new ItemOre(this);
 	}
-
+	
 	@Override
 	public String getTranslateNameForItemStack(ItemStack stack)
 	{
@@ -115,13 +135,13 @@ public class BlockOre extends BlockSingleTE
 		else
 			return getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE);
 	}
-
+	
 	@Override
 	public String getLocalizedName()
 	{
 		return LanguageManager.translateToLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE));
 	}
-
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -130,7 +150,7 @@ public class BlockOre extends BlockSingleTE
 			return new OreStateWrapper(state, (TEOre) tile);
 		return state;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
@@ -147,20 +167,20 @@ public class BlockOre extends BlockSingleTE
 			}
 		}
 	}
-	
+
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return EnumToolType.pickaxe.name();
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
-
+	
 	@Override
 	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
 			boolean advanced)

@@ -1,0 +1,4 @@
+{
+    "include": "[farcore:group/nugget",
+    "layers": "~farcore:material"
+}

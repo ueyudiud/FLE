@@ -1,6 +1,0 @@
-{
-	"parent": "farcore:block/slab",
-	"textures": {
-		"all": "farcore:blocks/rock/basalt/cobble"
-	}
-}

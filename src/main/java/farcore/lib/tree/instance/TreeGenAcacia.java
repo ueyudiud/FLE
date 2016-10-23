@@ -66,8 +66,8 @@ public class TreeGenAcacia extends TreeGenAbstract
 
 					if (j2 >= j1 && k1 > 0)
 					{
-						k3 += Direction.directions_2D[j3].x;
-						l1 += Direction.directions_2D[j3].z;
+						k3 += Direction.DIRECTIONS_2D[j3].x;
+						l1 += Direction.DIRECTIONS_2D[j3].z;
 						--k1;
 					}
 
@@ -117,8 +117,8 @@ public class TreeGenAcacia extends TreeGenAbstract
 						if (l2 >= 1)
 						{
 							i3 = y + l2;
-							k3 += Direction.directions_2D[j2].x;
-							l1 += Direction.directions_2D[j2].z;
+							k3 += Direction.DIRECTIONS_2D[j2].x;
+							l1 += Direction.DIRECTIONS_2D[j2].z;
 							if (isLogReplaceable(world, k3, i3, l1))
 							{
 								generateLog(world, k3, i3, l1, 1);

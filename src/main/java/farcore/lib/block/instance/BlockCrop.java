@@ -4,6 +4,7 @@ import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.lib.block.BlockSingleTE;
 import farcore.lib.crop.ICropAccess;
+import farcore.lib.model.block.ModelCrop;
 import farcore.lib.tile.instance.TECrop;
 import farcore.lib.util.BlockStateWrapper;
 import net.minecraft.block.material.Material;
@@ -14,6 +15,8 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,33 +27,43 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	public static class CropState extends BlockStateWrapper
 	{
 		public ICropAccess access;
-
+		
 		public CropState(ICropAccess access, IBlockState state)
 		{
 			super(state);
 			this.access = access;
 		}
-		
+
 		@Override
 		protected BlockStateWrapper wrapState(IBlockState state)
 		{
 			return new CropState(access, state);
 		}
 	}
-
+	
 	public BlockCrop()
 	{
 		super(FarCore.ID, "crop", Material.PLANTS);
 		EnumBlock.crop.set(this);
 		setHardness(0.5F);
+		unharvestableSpeedMultiplier = 600F;
 	}
-	
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		ModelLoaderRegistry.registerLoader(ModelCrop.instance);
+		ModelLoader.setCustomStateMapper(this, ModelCrop.instance);
+	}
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TECrop();
 	}
-	
+
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -59,20 +72,20 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			return new CropState((ICropAccess) tile, getDefaultState());
 		return state;
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
-	
+
 	public boolean canBlockStay(World world, BlockPos pos)
 	{
 		TileEntity tile;
@@ -80,20 +93,20 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			return ((TECrop) tile).canPlantAt();
 		return true;
 	}
-	
+
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		return tile instanceof TECrop ? ((TECrop) tile).getPlantType() : EnumPlantType.Crop;
 	}
-	
+
 	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{
 		return getDefaultState();
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)

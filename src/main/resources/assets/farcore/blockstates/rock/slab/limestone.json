@@ -1,0 +1,107 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"type": {
+			"resource": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "farcore:blocks/rock/limestone/chiseled"
+				}
+			}
+		},
+		"facing": {
+			"down": {
+				"model": "farcore:slab",
+				"x": 0,
+				"y": 0
+			},
+			"up": {
+				"model": "farcore:slab",
+				"x": 180,
+				"y": 0
+			},
+			"north": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 0
+			},
+			"south": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 180
+			},
+			"west": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 90
+			},
+			"east": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 270
+			},
+			"double_ud": {
+				"model": "farcore:slab_double",
+				"x": 0,
+				"y": 0
+			},
+			"double_ns": {
+				"model": "farcore:slab_double",
+				"x": 90,
+				"y": 0
+			},
+			"double_we": {
+				"model": "farcore:slab_double",
+				"x": 90,
+				"y": 90
+			}
+		}
+	}
+}

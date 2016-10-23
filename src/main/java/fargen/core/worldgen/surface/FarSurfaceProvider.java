@@ -25,31 +25,31 @@ public class FarSurfaceProvider extends WorldProvider
 	public FarSurfaceProvider()
 	{
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getWeatherRenderer()
 	{
-		IRenderHandler handler = getWeatherRenderer();
+		IRenderHandler handler = super.getWeatherRenderer();
 		if(handler == null)
 		{
 			setWeatherRenderer(handler = new RenderWeatherSurface());
 		}
 		return handler;
 	}
-
+	
 	@Override
 	public DimensionType getDimensionType()
 	{
 		return FarGen.FAR_OVERWORLD;
 	}
-
+	
 	@Override
 	protected void createBiomeProvider()
 	{
 		biomeProvider = new FarSurfaceBiomeProvider(worldObj.getWorldInfo());
 	}
-	
+
 	/**
 	 * Called to determine if the chunk at the given chunk coordinates within the provider's world can be dropped. Used
 	 * in WorldProviderSurface to prevent spawn chunks from being unloaded.
@@ -59,7 +59,7 @@ public class FarSurfaceProvider extends WorldProvider
 	{
 		return !worldObj.isSpawnChunk(x, z) || !worldObj.provider.getDimensionType().shouldLoadSpawn();
 	}
-	
+
 	/**
 	 * The far core override classic ice, prevent vanilla water freeze now.
 	 */
@@ -90,7 +90,7 @@ public class FarSurfaceProvider extends WorldProvider
 		//		}
 		return false;
 	}
-
+	
 	/**
 	 *
 	 * @param pos
@@ -103,7 +103,7 @@ public class FarSurfaceProvider extends WorldProvider
 	{
 		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldObj);
 		float temp = properties.getTemperature(worldObj, pos);
-
+		
 		if (temp > BiomeBase.minSnowTemperature)
 			return false;
 		else if (!checkLightAndSnow)
@@ -120,7 +120,7 @@ public class FarSurfaceProvider extends WorldProvider
 			return false;
 		}
 	}
-
+	
 	@Override
 	public Biome getBiomeForCoords(BlockPos pos)
 	{

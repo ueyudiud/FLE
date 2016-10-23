@@ -68,7 +68,7 @@ ITP_ExplosionResistance
 	{
 		super.readFromNBT(nbt);
 		material = Mat.material(nbt.getString("material"), M.stone);
-		facing = Direction.directions[nbt.getByte("facing")];
+		facing = Direction.DIRECTIONS_3D[nbt.getByte("facing")];
 	}
 
 	@Override
@@ -89,7 +89,7 @@ ITP_ExplosionResistance
 		}
 		if(nbt.hasKey("f"))
 		{
-			facing = Direction.directions[nbt.getByte("f")];
+			facing = Direction.DIRECTIONS_3D[nbt.getByte("f")];
 		}
 	}
 

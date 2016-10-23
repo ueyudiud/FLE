@@ -1,6 +1,0 @@
-{
-	"parent": "farcore:block/slab_double",
-	"textures": {
-		"all": "farcore:blocks/rock/kimberlite/cobble"
-	}
-}

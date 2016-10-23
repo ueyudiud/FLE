@@ -91,7 +91,7 @@ public class ThermalNet implements IEnergyNet
 			double tempD = temp;
 			tempD *= 6;
 			int c = 6;
-			for(Direction direction : Direction.directions)
+			for(Direction direction : Direction.DIRECTIONS_3D)
 			{
 				BlockPos pos2 = direction.offset(pos);
 				tempD += getTemperature(world, pos2, false);
@@ -108,7 +108,7 @@ public class ThermalNet implements IEnergyNet
 		double temp = getTemperature(world, pos, false);
 		double delta = 0;
 		int c = 0;
-		for(Direction direction : Direction.directions)
+		for(Direction direction : Direction.DIRECTIONS_3D)
 		{
 			delta += Math.abs(temp - getTemperature(world, direction.offset(pos), false));
 			c++;
@@ -364,11 +364,11 @@ public class ThermalNet implements IEnergyNet
 				for(IThermalHandler tile : map.values())
 				{
 					//Cached current.
-					float[] current = new float[Direction.directions.length];
+					float[] current = new float[Direction.DIRECTIONS_3D.length];
 					//Get cache current from each direction.
-					for(int i = 0; i < Direction.directions.length; ++i)
+					for(int i = 0; i < Direction.DIRECTIONS_3D.length; ++i)
 					{
-						Direction direction = Direction.directions[i];
+						Direction direction = Direction.DIRECTIONS_3D[i];
 						if(tile.canConnectTo(direction))
 						{
 							cachedPos = direction.offset(tile.pos());
@@ -418,7 +418,7 @@ public class ThermalNet implements IEnergyNet
 					//Send cached energy.
 					for(int i = 0; i < current.length; ++i)
 					{
-						tile.onHeatChange(Direction.directions[i], -current[i]);
+						tile.onHeatChange(Direction.DIRECTIONS_3D[i], -current[i]);
 					}
 					cachedList.add(tile);
 				}

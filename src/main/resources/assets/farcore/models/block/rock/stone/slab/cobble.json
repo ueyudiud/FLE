@@ -1,6 +1,0 @@
-{
-	"parent": "farcore:block/slab",
-	"textures": {
-		"all": "minecraft:blocks/rock/stone/cobble"
-	}
-}

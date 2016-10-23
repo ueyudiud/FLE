@@ -2,12 +2,14 @@ package farcore.lib.block.instance;
 
 import java.util.Random;
 
+import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
 import farcore.data.EnumSlabState;
 import farcore.lib.block.BlockSlab;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
+import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U;
@@ -79,7 +81,9 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	public void registerRender()
 	{
 		super.registerRender();
-		U.Mod.registerItemBlockModel(this, 0, material.modid, "rock/" + material.name + "/" + RockType.values()[meta].name() + "_slab");
+		StateMapperExt mapper = new StateMapperExt(material.modid, "rock/slab/" + material.name, null, BlockRock.HEATED);
+		mapper.setVariants("type", RockType.values()[meta].getName());
+		ClientProxy.registerCompactModel(mapper, this, 1);
 	}
 
 	@Override

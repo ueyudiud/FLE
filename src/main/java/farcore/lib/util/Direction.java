@@ -26,7 +26,11 @@ public enum Direction implements IStringSerializable
 	/** Unknown direction. */
 	Q( 0,  0,  0,  0);
 
-	public static final Direction[][] machineRotation = {
+	/**
+	 * @see farcore.lib.util.Facing
+	 */
+	@Deprecated
+	public static final Direction[][] MACHINE_ROTATION = {
 			{D, U, N, S, W, E, A, B, Q},
 			{D, U, S, N, E, W, A, B, Q},
 			{D, U, S, N, E, W, A, B, Q},
@@ -38,12 +42,12 @@ public enum Direction implements IStringSerializable
 			{D, U, N, S, W, E, A, B, Q}
 	};
 
-	public static final int[] oppsite = {1, 0, 3, 2, 5, 4, 7, 6, 8};
-	public static final Direction[] directions_2D = {N, S, W, E};
-	public static final Direction[] directions = {D, U, N, S, W, E};
-	public static final Direction[] directions_adv = {D, U, N, S, W, E, A, B};
+	public static final int[] OPPISITE = {1, 0, 3, 2, 5, 4, 7, 6, 8};
+	public static final Direction[] DIRECTIONS_2D = {N, S, W, E};
+	public static final Direction[] DIRECTIONS_3D = {D, U, N, S, W, E};
+	public static final Direction[] DIRECTIONS_4D = {D, U, N, S, W, E, A, B};
 	//4D rotation next(B) and last(A) is real number
-	public static final Direction[][] rotate_4D = {
+	public static final Direction[][] ROTATION_4D = {
 			{D, U, W, E, S, N, A, B},
 			{D, U, E, W, N, S, A, B},
 			{E, W, N, S, D, U, A, B},
@@ -53,7 +57,7 @@ public enum Direction implements IStringSerializable
 			{D, U, S, N, W, E, A, B},
 			{U, D, N, S, E, W, A, B}};
 	//3D rotation use left hand rule.
-	public static final Direction[][] rotate_3D = {
+	public static final Direction[][] ROTATION_3D = {
 			{D, U, W, E, S, N},
 			{D, U, E, W, N, S},
 			{E, W, N, S, D, U},
@@ -61,8 +65,7 @@ public enum Direction implements IStringSerializable
 			{S, N, U, D, W, E},
 			{N, S, D, U, W, E}};
 
-	private static final int[] cast =
-		{0, 1, 2, 3, 4, 5, 6, 6, 6};
+	private static final int[] CAST = {0, 1, 2, 3, 4, 5, 6, 6, 6};
 
 	public static Direction of(EnumFacing direction)
 	{
@@ -73,7 +76,7 @@ public enum Direction implements IStringSerializable
 	public static EnumFacing of(Direction direction)
 	{
 		return direction == null ? null :
-			EnumFacing.VALUES[cast[direction.ordinal()]];
+			EnumFacing.VALUES[CAST[direction.ordinal()]];
 	}
 
 	public static Direction heading(EntityLivingBase entity)
@@ -108,17 +111,17 @@ public enum Direction implements IStringSerializable
 
 	public Direction getOpposite()
 	{
-		return this == Q ? Q : directions[ordinal() ^ 1];
+		return this == Q ? Q : DIRECTIONS_3D[ordinal() ^ 1];
 	}
 
 	public Direction getRotation4D(Direction axis)
 	{
-		return rotate_4D[axis.ordinal()][ordinal()];
+		return ROTATION_4D[axis.ordinal()][ordinal()];
 	}
 
 	public Direction getRotation3D(Direction axis)
 	{
-		return rotate_3D[axis.ordinal()][ordinal()];
+		return ROTATION_3D[axis.ordinal()][ordinal()];
 	}
 
 	public Direction validDirection3D()

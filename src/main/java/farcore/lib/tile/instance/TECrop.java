@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import farcore.data.EnumToolType;
 import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
@@ -14,6 +15,7 @@ import farcore.lib.tile.IBreakingDropableTile;
 import farcore.lib.tile.IDebugableTile;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Update;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.TEAged;
@@ -33,23 +35,31 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECrop extends TEAged
 implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile,
-ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
+ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck
 {
 	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.03125F, .0F, .03125F, .96875F, .96875F, .96875F);
-	
+
 	private static final float absorbEffiency = 0.2F;
+	
+	private static final CropInfo NO_DATA_INFO = new CropInfo();
+	
+	static
+	{
+		NO_DATA_INFO.DNA = "";
+	}
+
 	private int waterLevel = 6400;
 	private boolean isWild = false;
 	private float growBuffer;
 	private int stage;
 	private ICrop card = ICrop.VOID;
-	private CropInfo info;
-
+	private CropInfo info = NO_DATA_INFO;
+	
 	public TECrop()
 	{
-
+		
 	}
-
+	
 	public void initCrop(ICrop crop)
 	{
 		initCrop(0, crop.makeNativeDNA(), crop);
@@ -64,7 +74,7 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 		info.generations = generations;
 		crop.decodeDNA(this, dna);
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -80,7 +90,7 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 		}
 		return nbt;
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -93,7 +103,7 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 		info = new CropInfo();
 		info.readFromNBT(nbt);
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -104,7 +114,7 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 		info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -125,88 +135,94 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 			info.readFromNBT(nbt.getCompoundTag("i"));
 		}
 	}
-
+	
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
 			Entity entity)
 	{
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 	{
 		return CROP_AABB;
 	}
-
+	
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + card.tickUpdate(this);
 	}
-
+	
 	@Override
 	protected void updateServer1()
 	{
 		super.updateServer1();
 		card.onUpdate(this);
-		syncToNearby();
+		markDirty();
 	}
-
+	
+	@Override
+	public boolean canHarvestBlock(EntityPlayer player)
+	{
+		return U.Players.matchCurrentToolType(player, EnumToolType.sickle);
+	}
+	
 	@Override
 	public String getDNA()
 	{
 		return info.DNA;
 	}
-
+	
 	@Override
 	public ICrop crop()
 	{
 		return card;
 	}
-
+	
 	@Override
 	public CropInfo info()
 	{
 		return info;
 	}
-
+	
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-
+	
 	@Override
 	public boolean isWild()
 	{
 		return isWild;
 	}
-
+	
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-
+	
 	@Override
 	public int stage()
 	{
 		return stage;
 	}
-
+	
 	@Override
 	public void setStage(int stage)
 	{
 		this.stage = stage;
 	}
-
+	
 	@Override
 	public void grow(int amt)
 	{
@@ -218,18 +234,19 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 			{
 				growBuffer -= i;
 				stage++;
-				markBlockUpdate();
+				markBlockUpdate();//BUD?
 				markBlockRenderUpdate();
+				syncToNearby();
 			}
 		}
 	}
-
+	
 	@Override
 	protected int getRenderUpdateRange()
 	{
 		return 5;
 	}
-
+	
 	//	@Override
 	//	public int countWater(int rangeXZ, int rangeY, boolean checkSea)
 	//	{
@@ -305,13 +322,13 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 	//	{
 	//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
 	//	}
-
+	
 	@Override
 	public int getWaterLevel()
 	{
 		return waterLevel;
 	}
-
+	
 	@Override
 	public int useWater(int amount)
 	{
@@ -319,13 +336,13 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 		waterLevel -= c;
 		return c;
 	}
-
+	
 	@Override
 	public void killCrop()
 	{
 		removeBlock();
 	}
-
+	
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
@@ -337,19 +354,19 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 		list.add("Grow Progress : " + ChatFormatting.GREEN + (int) (growBuffer + stage * req) + "/" + card.getMaxStage() * req);
 		card.addInformation(this, list);
 	}
-
+	
 	public boolean canPlantAt()
 	{
 		return card == null ? true : card.canPlantAt(this);
 	}
-	
+
 	@Override
 	public boolean canBlockStay()
 	{
 		return worldObj == null ? true :
 			card == ICrop.VOID ? false : card.canPlantAt(this);
 	}
-
+	
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
@@ -360,12 +377,12 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 				killCrop();
 			}
 	}
-
+	
 	public EnumPlantType getPlantType()
 	{
 		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDropsOnTileRemoved(IBlockState state)
 	{
@@ -376,7 +393,7 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 		}
 		return list;
 	}
-
+	
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
@@ -385,7 +402,7 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update
 			removeBlock();
 		}
 	}
-
+	
 	public String getStateName()
 	{
 		return card != null ? card.getState(this) : "";

@@ -29,6 +29,7 @@ import farcore.FarCore;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemFluidDisplay;
 import farcore.lib.material.Mat;
+import farcore.lib.material.MatCondition;
 import farcore.lib.model.item.ModelLayer.UnbakedModelLayer;
 import farcore.lib.util.Log;
 import farcore.lib.util.SubTag;
@@ -62,16 +63,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public enum FarCoreItemModelLoader implements ICustomModelLoader
 {
 	instance;
-
+	
 	public static final String NORMAL = "";
 	public static final String PARTICLE = "particle";
 	public static final Function<ItemStack, String> NORMAL_FUNCTION = (ItemStack stack) -> NORMAL;
 	public static final Function<ItemStack, Integer> NORMAL_MULTIPLIER = (ItemStack stack) -> 0xFFFFFFFF;
-	
+
 	private static final Map<ResourceLocation, Function<ItemStack, Integer>> colorMultipliers = new HashMap();
 	private static final Map<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> multiIconLoaders = new HashMap();
 	private static final Map<ResourceLocation, Function<ItemStack, String>> submetaProviders = new HashMap();
-	
+
 	public static final JsonDeserializer<IMultiTextureCollection> TEXTURE_GETTER_DESERIALIZER =
 			(JsonElement json, Type typeOfT, JsonDeserializationContext context) ->
 	{
@@ -368,30 +369,30 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		}
 		return cache;
 	};
-
+	
 	static final Gson GSON = new GsonBuilder()
 			.registerTypeAdapter(IMultiTextureCollection.class, TEXTURE_GETTER_DESERIALIZER)
 			.registerTypeAdapter(UnbakedModelLayer.class, MODEL_LAYER_DESERIALIZER)
 			.registerTypeAdapter(ItemModelCache.class, ITEM_MODEL_CACHE_DESERIALIZER)
 			.create();
-
+	
 	static
 	{
 		init();
 	}
-
+	
 	public static class ItemModelCache
 	{
 		ResourceLocation model;
 		ImmutableMap<String, String> retextures;
-
+		
 		Map<String, ResourceLocation> textures;
 		Map<String, Function<IResourceManager, Map<String, ResourceLocation>>> multiTextures;
-
+		
 		String particle;
-		
+
 		UnbakedModelLayer[] layers;
-		
+
 		void registerItemColor(Item item, ItemColors colors)
 		{
 			for (UnbakedModelLayer layer : layers)
@@ -404,22 +405,22 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			}
 		}
 	}
-
+	
 	public static void registerMultiIconProvider(ResourceLocation location, Function<IResourceManager, Map<String, ResourceLocation>> function)
 	{
 		multiIconLoaders.put(location, function);
 	}
-	
+
 	public static void registerSubmetaProvider(ResourceLocation location, Function<ItemStack, String> function)
 	{
 		submetaProviders.put(location, function);
 	}
-	
+
 	public static void registerColorMultiplier(ResourceLocation location, Function<ItemStack, Integer> function)
 	{
 		colorMultipliers.put(location, function);
 	}
-
+	
 	public static void registerModel(Item item, ResourceLocation location)
 	{
 		ModelResourceLocation location1 = new ModelResourceLocation(item.getRegistryName(), "iventory");
@@ -429,19 +430,19 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		instance.acceptItem.put(item, location);
 		instance.itemModelMap.put(location1, item);
 	}
-
+	
 	private boolean isResourceLoading = false;
 	private IResourceManager resourceManager;
-	
+
 	private Map<ModelResourceLocation, Item> itemModelMap = new HashMap();
 	private Map<Item, ResourceLocation> acceptItem = new HashMap();
-	
-	private Map<Item, ItemModelCache> loadedModels = new HashMap();
 
+	private Map<Item, ItemModelCache> loadedModels = new HashMap();
+	
 	private Map<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> markMultiTextureLoaders;
 	private Map<ResourceLocation, IMultiTextureCollection> loadedMultiTexturesMap;
 	Map<Function<IResourceManager, Map<String, ResourceLocation>>, Map<String, ResourceLocation>> buildMultiTexturesMap;
-	
+
 	private Function<IResourceManager, Map<String, ResourceLocation>> loadTextureGetter(ResourceLocation location)
 	{
 		Function<IResourceManager, Map<String, ResourceLocation>> function = multiIconLoaders.get(location);
@@ -450,7 +451,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		markMultiTextureLoaders.put(location, function);
 		return function;
 	}
-
+	
 	private IMultiTextureCollection loadTextures(ResourceLocation location)
 	{
 		IMultiTextureCollection collection;
@@ -489,7 +490,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		loadedMultiTexturesMap.put(location, collection);
 		return collection;
 	}
-	
+
 	private Function<ItemStack, String> loadSubmetaGetter(JsonElement json)
 	{
 		if(json.isJsonObject())
@@ -537,19 +538,19 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			return value.charAt(0) == '#' ? loadSubmetaGetter(new ResourceLocation(value.substring(1))) : (ItemStack stack) -> value;
 		}
 	}
-	
+
 	private Function<ItemStack, String> loadSubmetaGetter(ResourceLocation location)
 	{
 		Function<ItemStack, String> function = submetaProviders.get(location);
 		if (function != null) return function;
 		return NORMAL_FUNCTION;//Raw method.
 	}
-	
+
 	private Function<ItemStack, Integer> loadColorMultiplier(ResourceLocation location)
 	{
 		return colorMultipliers.getOrDefault(location, NORMAL_MULTIPLIER);
 	}
-	
+
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
@@ -614,14 +615,14 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		Log.logCachedExceptions();
 		Log.info("Far Core Item Model Loader finished model loading.");
 	}
-
 	
+
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
 		return itemModelMap.containsKey(modelLocation);
 	}
-	
+
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
@@ -643,7 +644,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		}
 		return ModelLoaderRegistry.getMissingModel();
 	}
-	
+
 	private static void init()
 	{
 		registerSubmetaProvider(new ResourceLocation("minecraft", "damage"), (ItemStack stack) -> Integer.toString(stack.getItemDamage()));
@@ -665,16 +666,22 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			}
 			return builder.build();
 		});
-		registerMultiIconProvider(new ResourceLocation(FarCore.ID, "stone_chip"), (IResourceManager manager) ->
+		for(MatCondition condition : MatCondition.register)
 		{
-			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
-			for (Mat material : Mat.filt(SubTag.ROCK))
+			registerMultiIconProvider(new ResourceLocation(FarCore.ID, "group/" + condition.name), (IResourceManager manager) ->
 			{
-				builder.put("material:" + material.name, new ResourceLocation(material.modid, "items/group/chip/" + material.name));
-			}
-			return builder.build();
-		});
-		
+				ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
+				for (Mat material : Mat.filt(SubTag.ROCK))
+				{
+					if(condition.isBelongTo(material))
+					{
+						builder.put("material:" + material.name, new ResourceLocation(material.modid, "items/group/" + condition.name + "/" + material.name));
+					}
+				}
+				return builder.build();
+			});
+		}
+
 		registerColorMultiplier(new ResourceLocation("minecraft", "armor"), (ItemStack stack) -> ((ItemArmor) stack.getItem()).getColor(stack));
 		registerColorMultiplier(new ResourceLocation("minecraft", "banner"), (ItemStack stack) -> ItemBanner.getBaseColor(stack).getMapColor().colorValue);
 		registerColorMultiplier(new ResourceLocation("forge", "fluid"), (ItemStack stack) ->

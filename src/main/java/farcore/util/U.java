@@ -1085,7 +1085,7 @@ public class U
 			return b1 && b2 && b3 && b4 ?
 					side : (id = (b1 && b3 ? (!b4 ? 1 : 0) :
 						(b2 && b4) ? (!b3 ? 3 : 2) : -1)) == -1 ?
-								Direction.oppsite[side] :
+								Direction.OPPISITE[side] :
 									rotateFix[side / 2][id];
 		}
 		

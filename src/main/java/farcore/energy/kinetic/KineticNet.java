@@ -168,7 +168,7 @@ public class KineticNet implements IEnergyNet
 						int[] info = entry.getKey().array;
 						cachedPos = new BlockPos(info[0], info[1], info[2]);
 						IKineticHandler source = map.get(cachedPos);
-						direction = Direction.directions[info[3]];
+						direction = Direction.DIRECTIONS_3D[info[3]];
 						cachedPos = direction.offset(cachedPos);
 						double[] pkg = entry.getValue();
 						if(map.containsKey(cachedPos))

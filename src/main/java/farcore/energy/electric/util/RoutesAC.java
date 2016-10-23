@@ -243,7 +243,7 @@ public class RoutesAC
 					cache.array[0] = pos.getX();
 					cache.array[1] = pos.getY();
 					cache.array[2] = pos.getZ();
-					cache.array[3] = Direction.oppsite[direction.ordinal()];
+					cache.array[3] = Direction.OPPISITE[direction.ordinal()];
 					NodeReal node = RoutesAC.this.nodes.get(cache);
 					if(node != null)
 					{
@@ -279,7 +279,7 @@ public class RoutesAC
 					cache.array[0] = pos.getX();
 					cache.array[1] = pos.getY();
 					cache.array[2] = pos.getZ();
-					cache.array[3] = Direction.oppsite[direction.ordinal()];
+					cache.array[3] = Direction.OPPISITE[direction.ordinal()];
 					NodeReal node = nodes.get(cache);
 					if(node != null)
 					{

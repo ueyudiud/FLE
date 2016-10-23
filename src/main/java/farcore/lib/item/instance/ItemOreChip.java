@@ -26,9 +26,9 @@ public class ItemOreChip extends ItemMulti
 		super(FarCore.ID, MC.chip_ore);
 		EnumItem.ore_chip.set(this);
 	}
-
+	
 	@Override
-	public void initalizeItems()
+	public void postInitalizedItems()
 	{
 		for(Mat material : Mat.filt(condition))
 		{
@@ -43,7 +43,6 @@ public class ItemOreChip extends ItemMulti
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FarCore.ID, "ore_chip"));
 		FarCoreItemModelLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), (ItemStack stack) -> "material:" + U.ItemStacks.setupNBT(stack, false).getString("rock"));
 	}
 

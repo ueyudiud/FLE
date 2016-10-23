@@ -32,7 +32,7 @@ public class ItemBlockSlab extends ItemBlockBase
 		if (block == this.block)
 		{
 			EnumSlabState slabState = iblockstate.getValue(EnumSlabState.PROPERTY);
-			if(Direction.oppsite[facing.ordinal()] == slabState.ordinal())
+			if(Direction.OPPISITE[facing.ordinal()] == slabState.ordinal())
 			{
 				if (stack.stackSize == 0 || !playerIn.canPlayerEdit(pos, facing, stack) ||
 						pos.getY() == 255)

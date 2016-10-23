@@ -1,6 +1,0 @@
-{
-	"parent": "farcore:block/base_simple",
-	"textures": {
-		"all": "minecraft:blocks/rock/netherrack/brick_compacted"
-	}
-}

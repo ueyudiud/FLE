@@ -9,7 +9,6 @@ import farcore.data.M;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
-import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddLandingEffects;
@@ -88,10 +87,6 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 
 	public Mat rock()
 	{
-		if(!initialized && worldObj.isRemote)
-		{
-			sendToServer(new PacketTEAsk(worldObj, pos));
-		}
 		return rock;
 	}
 	
@@ -197,6 +192,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 				else
 				{
 					markBlockUpdate();
+					markDirty();
 					syncToNearby();
 				}
 				return new ActionResult<Float>(EnumActionResult.SUCCESS, rock.blockHardness / 64F);

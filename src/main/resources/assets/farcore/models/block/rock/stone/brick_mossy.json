@@ -1,6 +1,0 @@
-{
-	"parent": "farcore:block/base_simple",
-	"textures": {
-		"all": "minecraft:blocks/rock/stone/brick_mossy"
-	}
-}

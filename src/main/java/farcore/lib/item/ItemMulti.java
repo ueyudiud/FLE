@@ -6,17 +6,18 @@ import farcore.FarCore;
 import farcore.data.M;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.util.EnviornmentEntity;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
-import farcore.util.U;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,20 +45,8 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		super(modid, "multi." + mc.name);
 		condition = mc;
 		hasSubtypes = true;
-		initalizeItems();
 	}
-	
-	public void initalizeItems()
-	{
-		for(Mat material : Mat.filt(condition))
-		{
-			ItemStack templete = new ItemStack(this, 1, material.id);
-			U.Mod.registerItemModel(this, material.id, material.modid, "group/" + condition.name + "/" + material.name);
-			LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
-			condition.registerOre(material, templete);
-		}
-	}
-	
+
 	protected String getTranslateInformation(ItemStack stack, String tag)
 	{
 		return getUnlocalizedName(stack) + "." + tag + ".info";
@@ -66,6 +55,20 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public void postInitalizedItems()
 	{
+		for(Mat material : Mat.filt(condition))
+		{
+			ItemStack templete = new ItemStack(this, 1, material.id);
+			LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
+			condition.registerOre(material, templete);
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(modid, "group/" + condition.name));
 	}
 
 	@Override
