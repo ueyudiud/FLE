@@ -1,0 +1,17 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:crop/cross"
+	},
+	"variants": {
+		"state": {
+			"flax_stage_0": { "textures": { "crop": "farcore:blocks/crop/flax_stage_0" } },
+			"flax_stage_1": { "textures": { "crop": "farcore:blocks/crop/flax_stage_1" } },
+			"flax_stage_2": { "textures": { "crop": "farcore:blocks/crop/flax_stage_2" } },
+			"flax_stage_3": { "textures": { "crop": "farcore:blocks/crop/flax_stage_3" } },
+			"flax_stage_4": { "textures": { "crop": "farcore:blocks/crop/flax_stage_4" } },
+			"flax_stage_5": { "textures": { "crop": "farcore:blocks/crop/flax_stage_5" } }
+		}
+	}
+}

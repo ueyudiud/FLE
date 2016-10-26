@@ -6,10 +6,10 @@ import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.MC;
+import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropAccessSimulated;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.tile.instance.TECrop;
 import farcore.lib.util.UnlocalizedList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -52,11 +52,9 @@ public class ItemSeed extends ItemMulti
 			{
 				CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, material.crop, getDNAFromStack(stack));
 				if(!material.crop.canPlantAt(access)) return EnumActionResult.SUCCESS;
-				if(worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3))
-				{
-					TECrop crop = (TECrop) worldIn.getTileEntity(pos);
-					crop.initCrop(getGenerationFromStack(stack), getDNAFromStack(stack), material.crop);
-				}
+				BlockCrop.ITEM_THREAD.set(stack);
+				worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3);
+				BlockCrop.ITEM_THREAD.set(null);
 			}
 			return EnumActionResult.SUCCESS;
 		}

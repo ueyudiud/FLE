@@ -1,0 +1,19 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:crop/lattice"
+	},
+	"variants": {
+		"state": {
+			"millet_stage_0": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_0" } },
+			"millet_stage_1": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_1" } },
+			"millet_stage_2": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_2" } },
+			"millet_stage_3": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_3" } },
+			"millet_stage_4": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_4" } },
+			"millet_stage_5": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_5" } },
+			"millet_stage_6": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_6" } },
+			"millet_stage_7": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_7" } }
+		}
+	}
+}

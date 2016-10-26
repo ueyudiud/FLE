@@ -6,6 +6,17 @@ import farcore.util.U;
 
 public interface INode<T>
 {
+	/**
+	 * Make a new empty node, added before this node.
+	 * (Could not get this node from source node)
+	 * @param node The node need added.
+	 * @return The empty telomere node.
+	 */
+	public static <T> INode<T> telomereNode(INode<T> node)
+	{
+		return new TelomereNode(node);
+	}
+	
 	T value();
 	
 	default boolean hasNext()

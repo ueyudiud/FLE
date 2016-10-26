@@ -5,18 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import farcore.lib.collection.IntegerMap.Prop;
-
-public class IntegerMap<T> implements Iterable<Prop<T>>
+public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 {
-	public static class Prop<T>
-	{
-		public T tag;
-		public int value;
-		
-		private Prop(){}
-	}
-	
 	private final float extFactor;
 	private int point;
 	private int size;
@@ -139,12 +129,12 @@ public class IntegerMap<T> implements Iterable<Prop<T>>
 	}
 	
 	@Override
-	public Iterator<Prop<T>> iterator()
+	public Iterator<IntegerEntry<T>> iterator()
 	{
 		return new IntegerMapItr();
 	}
 	
-	private class IntegerMapItr implements Iterator<Prop<T>>
+	private class IntegerMapItr implements Iterator<IntegerEntry<T>>
 	{
 		int pointer = -1;
 		
@@ -152,21 +142,19 @@ public class IntegerMap<T> implements Iterable<Prop<T>>
 		{
 			if(flag)
 			{
-				while(pointer < keys.length)
+				while(pointer < keys.length - 1)
 				{
-					if(keys[pointer] != null)
-						return pointer++;
-					++pointer;
+					if(keys[++pointer] != null)
+						return pointer;
 				}
 			}
 			else
 			{
 				int pointer = this.pointer;
-				while(pointer < keys.length)
+				while(pointer < keys.length - 1)
 				{
-					if(keys[pointer] != null)
+					if(keys[++pointer] != null)
 						return pointer;
-					++pointer;
 				}
 			}
 			return -1;
@@ -179,22 +167,19 @@ public class IntegerMap<T> implements Iterable<Prop<T>>
 		}
 
 		@Override
-		public Prop<T> next()
+		public IntegerEntry<T> next()
 		{
 			int v = nextPoint(true);
-			Prop<T> prop = new Prop();
-			prop.tag = (T) keys[v];
-			prop.value = list[v];
-			return prop;
+			return new IntegerEntry(keys[v], list[v]);
 		}
 		
 		@Override
 		public void remove()
 		{
-			if(pointer == -1 || keys[pointer - 1] == null)
+			if(pointer == -1 || keys[pointer] == null)
 				throw new IllegalStateException();
-			keys[pointer - 1] = null;
-			list[pointer - 1] = 0;
+			keys[pointer] = null;
+			list[pointer] = 0;
 			if(pointer <= point)
 			{
 				point = pointer - 1;

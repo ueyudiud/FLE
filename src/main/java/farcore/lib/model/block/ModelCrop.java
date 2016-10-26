@@ -5,10 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ import farcore.lib.block.instance.BlockCrop.CropState;
 import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
-import farcore.lib.model.ModelHelper;
 import farcore.lib.util.Log;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -58,6 +56,12 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Waiting for new crop model loader.
+ * @author ueyudiud
+ *
+ */
+@Deprecated
 @SideOnly(Side.CLIENT)
 public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 {
@@ -107,17 +111,17 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 			.registerTypeAdapter(CropRenderConfig.class, DESERIALIZER)
 			.create();
 	public static final ModelCrop instance = new ModelCrop();
-
+	
 	static
 	{
 		LOAD_TARGETS.add(LOCATION);
 	}
-
+	
 	public static void addCropConfig(ResourceLocation location)
 	{
 		LOAD_TARGETS.add(location);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	static class CropRenderConfig
 	{
@@ -125,21 +129,28 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 		Map<String, ResourceLocation> sourceMap = new HashMap();
 		Map<String, ResourceLocation> modelMap = new HashMap();
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	static enum RenderType
 	{
-		cross,
-		lattice,
-		custom;
+		cross(new ResourceLocation(FarCore.ID, "block/crop/cross")),
+		lattice(new ResourceLocation(FarCore.ID, "block/crop/lattice")),
+		custom(null);
+		
+		ResourceLocation location;
+		
+		RenderType(ResourceLocation location)
+		{
+			this.location = location;
+		}
 	}
-
+	
 	private Map<String, RenderType> renderTypes = new HashMap();
 	private Map<String, ResourceLocation> sourceMap = new HashMap();
 	private Map<String, ResourceLocation> models = new HashMap();
-
-	private ModelCrop(){ }
 	
+	private ModelCrop(){ }
+
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
@@ -186,25 +197,25 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
 		return MODEL_RESOURCE_LOCATION.toString().equals(modelLocation.toString());
 	}
-	
+
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
 		return instance;
 	}
-
+	
 	@Override
 	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 	{
 		return ImmutableMap.of(blockIn.getDefaultState(), MODEL_RESOURCE_LOCATION);
 	}
-
+	
 	private Map<String, ResourceLocation> getSource()
 	{
 		if(sourceMap.isEmpty())
@@ -213,7 +224,7 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 			{
 				if(material.isCrop)
 				{
-					for(String string : material.crop.getAllAllowedState())
+					for(String string : material.crop.getAllowedState())
 					{
 						sourceMap.put(material.name + "_" + string, new ResourceLocation(material.modid, "blocks/crop/" + material.name + "_" + string));
 					}
@@ -222,35 +233,56 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 		}
 		return sourceMap;
 	}
-	
+
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
 		return ImmutableList.of();
 	}
-	
+
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
 		return getSource().values();
 	}
-	
+
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
+		EnumMap<RenderType, IModel> map = new EnumMap(RenderType.class);
+		for(RenderType type : RenderType.values())
+		{
+			if(type != RenderType.custom)
+			{
+				map.put(type, ModelLoaderRegistry.getModelOrMissing(type.location));
+			}
+		}
 		ImmutableMap.Builder<String, RenderType> typeBuilder = ImmutableMap.builder();
+		ImmutableMap.Builder<String, IBakedModel> modelBuilder = ImmutableMap.builder();
+		Map<String, RenderType> renderTypes = typeBuilder.build();
 		for(Mat material : Mat.materials())
 		{
 			if(material.isCrop)
 			{
 				String key = material.name;
+				if(renderTypes.getOrDefault(key, RenderType.cross) != RenderType.custom)
+				{
+					IModel model1 = map.get(renderTypes.get(key));
+					if(model1 instanceof IRetexturableModel)
+					{
+						String replaced = getSource().getOrDefault(material.name + "_" + key, TextureMap.LOCATION_MISSING_TEXTURE).toString();
+						model1 = ((IRetexturableModel) model1).retexture(ImmutableMap.of("all", replaced, "particle", replaced, "crop", replaced));
+					}
+					modelBuilder.put(material.name + "_" + key, model1.bake(state, format, bakedTextureGetter));
+					continue;
+				}
 				RenderType type = null;
 				if(renderTypes.containsKey(key))
 				{
 					type = renderTypes.get(key);
 				}
-				for(String t1 : material.crop.getAllAllowedState())
+				for(String t1 : material.crop.getAllowedState())
 				{
 					key = material.name + "_" + t1;
 					if(type != null)
@@ -264,21 +296,13 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 				}
 			}
 		}
-		Map<String, RenderType> renderTypes = typeBuilder.build();
-		ImmutableMap.Builder<String, TextureAtlasSprite> textBuilder = ImmutableMap.builder();
-		for(Entry<String, ResourceLocation> entry : getSource().entrySet())
-		{
-			textBuilder.put(entry.getKey(), bakedTextureGetter.apply(entry.getValue()));
-		}
-		Map<String, TextureAtlasSprite> icons = textBuilder.build();
-		ImmutableMap.Builder<String, IBakedModel> modelBuilder = ImmutableMap.builder();
 		for(Entry<String, ResourceLocation> entry : models.entrySet())
 		{
 			if(Mat.contain(entry.getKey()))
 			{
 				Mat material = Mat.material(entry.getKey());
 				IModel model = ModelLoaderRegistry.getModelOrMissing(entry.getValue());
-				for(String string : material.crop.getAllAllowedState())
+				for(String string : material.crop.getAllowedState())
 				{
 					IModel model1 = model;
 					if(model instanceof IRetexturableModel)
@@ -301,75 +325,24 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 			}
 		}
 		Map<String, IBakedModel> models = modelBuilder.build();
-		return new BakedModelCrop(renderTypes, icons, models, format);
+		return new BakedModelCrop(models);
 	}
-	
+
 	@Override
 	public IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
-
+	
 	private static class BakedModelCrop implements IBakedModel
 	{
 		Map<String, IBakedModel> models;
-		Map<String, List<BakedQuad>> quads;
 
-		BakedModelCrop(Map<String, RenderType> renderTypes, Map<String, TextureAtlasSprite> icons, Map<String, IBakedModel> models,
-				VertexFormat format)
+		BakedModelCrop(Map<String, IBakedModel> models)
 		{
 			this.models = models;
-			float p0 = 0.0625F, p1 = 0.0F, p2 = 1.0F, p3 = 0.375F, p4 = 0.625F;
-			ImmutableMap.Builder<String, List<BakedQuad>> builder = ImmutableMap.builder();
-			for(Mat material : Mat.materials())
-			{
-				if(material.isCrop)
-				{
-					for(String state : material.crop.getAllAllowedState())
-					{
-						String tag = material.name + "_" + state;
-						TextureAtlasSprite icon = icons.get(tag);
-						IntBuffer buffer = IntBuffer.allocate(28);
-						List<BakedQuad> quads = new ArrayList();
-						switch (renderTypes.getOrDefault(tag, RenderType.cross))
-						{
-						case cross :
-							ModelHelper.addFace(p2, p2 - p0, p2, p2, p1 - p0, p2, p1, p1 - p0, p1, p1, p2 - p0, p1,
-									0, 0, 16, 16, EnumFacing.NORTH, icon, 0xFFFFFFFF, buffer);
-							quads.add(new BakedQuad(Arrays.copyOf(buffer.array(), buffer.position()), -1, EnumFacing.NORTH, icon, true, format));
-							buffer.rewind();
-							ModelHelper.addFace(p1, p2 - p0, p2, p1, p1 - p0, p2, p2, p1 - p0, p1, p2, p2 - p0, p1,
-									0, 0, 16, 16, EnumFacing.SOUTH, icon, 0xFFFFFFFF, buffer);
-							quads.add(new BakedQuad(Arrays.copyOf(buffer.array(), buffer.position()), -1, EnumFacing.SOUTH, icon, true, format));
-							buffer.rewind();
-							break;
-						case lattice :
-							ModelHelper.addFace(p1, p2 - p0, p3, p1, p1 - p0, p3, p2, p1 - p0, p3, p2, p2 - p0, p3,
-									0, 0, 16, 16, EnumFacing.NORTH, icon, 0xFFFFFFFF, buffer);
-							quads.add(new BakedQuad(Arrays.copyOf(buffer.array(), buffer.position()), -1, EnumFacing.NORTH, icon, true, format));
-							buffer.rewind();
-							ModelHelper.addFace(p3, p2 - p0, p1, p3, p1 - p0, p1, p3, p1 - p0, p2, p3, p2 - p0, p2,
-									0, 0, 16, 16, EnumFacing.SOUTH, icon, 0xFFFFFFFF, buffer);
-							quads.add(new BakedQuad(Arrays.copyOf(buffer.array(), buffer.position()), -1, EnumFacing.SOUTH, icon, true, format));
-							buffer.rewind();
-							ModelHelper.addFace(p1, p2 - p0, p4, p1, p1 - p0, p4, p2, p1 - p0, p4, p2, p2 - p0, p4,
-									0, 0, 16, 16, EnumFacing.NORTH, icon, 0xFFFFFFFF, buffer);
-							quads.add(new BakedQuad(Arrays.copyOf(buffer.array(), buffer.position()), -1, EnumFacing.NORTH, icon, true, format));
-							buffer.rewind();
-							ModelHelper.addFace(p4, p2 - p0, p1, p4, p1 - p0, p1, p4, p1 - p0, p2, p4, p2 - p0, p2,
-									0, 0, 16, 16, EnumFacing.SOUTH, icon, 0xFFFFFFFF, buffer);
-							quads.add(new BakedQuad(Arrays.copyOf(buffer.array(), buffer.position()), -1, EnumFacing.SOUTH, icon, true, format));
-							break;
-						case custom :
-							break;
-						}
-						builder.put(tag, quads);
-					}
-				}
-			}
-			quads = builder.build();
 		}
-		
+
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
@@ -380,42 +353,40 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 				String tag = access.crop().getRegisteredName() + "_" + access.crop().getState(access);
 				if(models.containsKey(tag))
 					return models.get(tag).getQuads(state, side, rand);
-				else
-					return quads.getOrDefault(tag, ImmutableList.of());
 			}
 			return ImmutableList.of();
 		}
-		
+
 		@Override
 		public boolean isAmbientOcclusion()
 		{
 			return false;
 		}
-		
+
 		@Override
 		public boolean isGui3d()
 		{
 			return false;
 		}
-		
+
 		@Override
 		public boolean isBuiltInRenderer()
 		{
 			return false;
 		}
-		
+
 		@Override
 		public TextureAtlasSprite getParticleTexture()
 		{
 			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 		}
-		
+
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms()
 		{
 			return ItemCameraTransforms.DEFAULT;
 		}
-		
+
 		@Override
 		public ItemOverrideList getOverrides()
 		{

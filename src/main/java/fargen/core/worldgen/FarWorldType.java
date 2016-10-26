@@ -2,11 +2,14 @@ package fargen.core.worldgen;
 
 import farcore.lib.util.LanguageManager;
 import farcore.util.U.R;
+import fargen.core.worldgen.surface.FarSurfaceBiomeProvider;
 import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.ChunkProviderEnd;
+import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,25 +68,46 @@ public class FarWorldType extends WorldType
 	}
 	
 	@Override
-	public IChunkGenerator getChunkGenerator(World world, String generatorOptions)
-	{
-		switch (world.provider.getDimension())
-		{
-		case 0 : return new FarSurfaceChunkGenerator(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
-		default: break;
-		}
-		return super.getChunkGenerator(world, generatorOptions);
-	}
-	
-	@Override
 	public float getCloudHeight()
 	{
 		return 220F;
 	}
 	
 	@Override
+	public IChunkGenerator getChunkGenerator(World world, String generatorOptions)
+	{
+		switch (world.provider.getDimension())
+		{
+		case  0 : //The surface type.
+			if(this == DEFAULT)
+				return new FarSurfaceChunkGenerator(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
+			break;
+		case  1 : //The nether type.
+			if(this == DEFAULT)
+				return new ChunkProviderHell(world, world.getWorldInfo().isMapFeaturesEnabled(), world.getSeed());
+			break;
+		case -1 : //The end type.
+			if(this == DEFAULT)
+				return new ChunkProviderEnd(world, world.getWorldInfo().isMapFeaturesEnabled(), world.getSeed());
+			break;
+		default : //For others.
+			break;
+		}
+		return super.getChunkGenerator(world, generatorOptions);
+	}
+	
+	@Override
 	public BiomeProvider getBiomeProvider(World world)
 	{
+		switch (world.provider.getDimension())
+		{
+		case 0 :
+			if(this == DEFAULT)
+				return new FarSurfaceBiomeProvider(world.getWorldInfo());
+			break;
+		default :
+			break;
+		}
 		return super.getBiomeProvider(world);
 	}
 }

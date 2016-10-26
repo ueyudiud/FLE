@@ -42,4 +42,13 @@ public class FarCore
 	 */
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static FarCoreSetup.Proxy proxy;
+	
+	/**
+	 * The flag of world generation, if switch this option to true,
+	 * some block behavior will be changed.<p>
+	 * Example:
+	 * The ore will try to create tile with material selected.
+	 * The crop will try to create tile with native dna.
+	 */
+	public static boolean worldGenerationFlag = false;
 }

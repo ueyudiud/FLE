@@ -1,8 +1,8 @@
 package farcore.lib.tree;
 
 import farcore.lib.bio.IBiology;
+import farcore.lib.collection.IntegerEntry;
 import farcore.lib.collection.IntegerMap;
-import farcore.lib.collection.IntegerMap.Prop;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -10,16 +10,16 @@ import net.minecraftforge.common.util.Constants.NBT;
 public class TreeInfo implements IBiology
 {
 	public String DNA;
-	
+
 	public int generations;
 	public int height;
 	public int growth;
 	public int coldResistance;
 	public int hotResistance;
 	public int dryResistance;
-	
+
 	public IntegerMap<String> map = new IntegerMap();
-	
+
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		DNA = nbt.getString("dna");
@@ -35,7 +35,7 @@ public class TreeInfo implements IBiology
 			map.put(compound.getString("tag"), compound.getInteger("value"));
 		}
 	}
-	
+
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setString("DNA", DNA);
@@ -45,18 +45,18 @@ public class TreeInfo implements IBiology
 		nbt.setInteger("hRes", hotResistance);
 		nbt.setInteger("dRes", dryResistance);
 		NBTTagList list = new NBTTagList();
-		for(Prop<String> prop : map)
+		for(IntegerEntry<String> prop : map)
 		{
 			NBTTagCompound compound = new NBTTagCompound();
-			compound.setString("tag", prop.tag);
-			compound.setInteger("value", prop.value);
+			compound.setString("tag", prop.getKey());
+			compound.setInteger("value", prop.getValue());
 			list.appendTag(compound);
 		}
 		nbt.setTag("prop", list);
 	}
-
+	
 	@Override
-	public String getDNA() 
+	public String getDNA()
 	{
 		return DNA;
 	}

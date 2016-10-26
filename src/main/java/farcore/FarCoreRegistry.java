@@ -18,6 +18,7 @@ import farcore.lib.world.IWorldGenerateReplacer;
 import farcore.network.IPacket;
 import farcore.network.Network;
 import farcore.util.U;
+import farcore.util.U.Mod;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -217,7 +218,7 @@ public class FarCoreRegistry
 	@SideOnly(Side.CLIENT)
 	public static void setBuildinModel(Block block)
 	{
-		FarCoreSetup.ClientProxy.registerBuildInModel(block);
+		Mod.registerBuildInModel(block);
 	}
 
 	/**

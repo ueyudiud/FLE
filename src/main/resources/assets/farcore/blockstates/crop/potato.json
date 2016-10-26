@@ -1,0 +1,18 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:crop/cross"
+	},
+	"variants": {
+		"state": {
+			"potato_stage_0": { "textures": { "crop": "farcore:blocks/crop/potato_stage_0" } },
+			"potato_stage_1": { "textures": { "crop": "farcore:blocks/crop/potato_stage_1" } },
+			"potato_stage_2": { "textures": { "crop": "farcore:blocks/crop/potato_stage_2" } },
+			"potato_stage_3": { "textures": { "crop": "farcore:blocks/crop/potato_stage_3" } },
+			"potato_stage_4": { "textures": { "crop": "farcore:blocks/crop/potato_stage_4" } },
+			"potato_stage_5": { "textures": { "crop": "farcore:blocks/crop/potato_stage_5" } },
+			"potato_stage_6": { "textures": { "crop": "farcore:blocks/crop/potato_stage_6" } }
+		}
+	}
+}

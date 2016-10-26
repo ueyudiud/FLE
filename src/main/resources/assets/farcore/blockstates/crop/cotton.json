@@ -1,0 +1,17 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:crop/cross"
+	},
+	"variants": {
+		"state": {
+			"cotton_stage_0": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_0" } },
+			"cotton_stage_1": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_1" } },
+			"cotton_stage_2": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_2" } },
+			"cotton_stage_3": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_3" } },
+			"cotton_stage_4": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_4" } },
+			"cotton_stage_5": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_5" } }
+		}
+	}
+}

@@ -33,7 +33,7 @@ public class CropVoid extends CropBase
 	}
 	
 	@Override
-	public List<String> getAllAllowedState()
+	public List<String> getAllowedState()
 	{
 		return ImmutableList.of("void");
 	}

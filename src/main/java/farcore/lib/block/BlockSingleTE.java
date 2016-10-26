@@ -95,7 +95,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 	}
-
+	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -106,7 +106,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_BlockAdded) tile).onBlockAdded(state);
 		}
 	}
-
+	
 	@Override
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player,
 			boolean willHarvest)
@@ -119,12 +119,12 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 		}
 		return flag;
 	}
-	
+
 	@Override
 	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
 	{
 	}
-	
+
 	@Override
 	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
 	{
@@ -136,7 +136,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_BlockClicked) tile).onBlockClicked(playerIn, Direction.of(result.sideHit), (float) result.hitVec.xCoord, (float) result.hitVec.yCoord, (float) result.hitVec.zCoord);
 		}
 	}
-	
+
 	@Override
 	public void onBlockExploded(World world, BlockPos pos, Explosion explosion)
 	{
@@ -146,7 +146,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_BlockExploded) tile).onBlockExploded(explosion);
 		}
 	}
-	
+
 	@Override
 	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player,
 			boolean silkHarvest)
@@ -156,7 +156,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITB_BlockHarvest) tile).onBlockHarvest(state, player, silkHarvest);
 		return false;
 	}
-
+	
 	@Override
 	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
@@ -166,7 +166,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_BlockHarvested) tile).onBlockHarvested(state, player);
 		}
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			ItemStack stack)
@@ -177,7 +177,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_BlockPlacedBy) tile).onBlockPlacedBy(state, placer, stack);
 		}
 	}
-	
+
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
@@ -187,7 +187,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_EntityCollidedWithBlock) tile).onEntityCollidedWithBlock(state, entityIn);
 		}
 	}
-
+	
 	@Override
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
 	{
@@ -197,7 +197,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_EntityWalk) tile).onEntityWalk(entityIn);
 		}
 	}
-	
+
 	@Override
 	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
 	{
@@ -211,7 +211,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
 		}
 	}
-
+	
 	@Override
 	public void onLanded(World worldIn, Entity entityIn)
 	{
@@ -228,7 +228,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			super.onLanded(worldIn, entityIn);
 		}
 	}
-
+	
 	@Override
 	public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
 	{
@@ -238,7 +238,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_PlantGrow) tile).onPlantGrow(state, source);
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
@@ -248,7 +248,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITB_AddDestroyEffects) tile).addDestroyEffects(manager);
 		return super.addDestroyEffects(world, pos, manager);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager)
@@ -258,7 +258,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITB_AddHitEffects) tile).addHitEffects(target, manager);
 		return super.addHitEffects(state, worldObj, target, manager);
 	}
-	
+
 	@Override
 	public boolean addLandingEffects(IBlockState state, WorldServer worldObj, BlockPos blockPosition,
 			IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles)
@@ -268,7 +268,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITB_AddLandingEffects) tile).addLandingEffects(state, iblockstate, entity, numberOfParticles);
 		return super.addLandingEffects(state, worldObj, blockPosition, iblockstate, entity, numberOfParticles);
 	}
-
+	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
@@ -277,7 +277,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_ConnectRedstone) tile).canConnectRedstone(state, Direction.of(side));
 		return super.canConnectRedstone(state, world, pos, side);
 	}
-	
+
 	@Override
 	public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, SpawnPlacementType type)
 	{
@@ -286,7 +286,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_CreatureSpawn) tile).canCreatureSpawn(state, type);
 		return super.canCreatureSpawn(state, world, pos, type);
 	}
-
+	
 	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
 	{
@@ -295,7 +295,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_EntityDestroy) tile).canEntityDestroy(state, entity);
 		return super.canEntityDestroy(state, world, pos, entity);
 	}
-	
+
 	@Override
 	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
@@ -304,7 +304,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_HarvestCheck) tile).canHarvestBlock(player);
 		return super.canHarvestBlock(world, pos, player);
 	}
-
+	
 	@Override
 	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -313,7 +313,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_SideSolid) tile).canPlaceTorchOnTop();
 		return super.canPlaceTorchOnTop(state, world, pos);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
@@ -322,7 +322,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_CollisionBoundingBox) tile).getCollisionBoundingBox(blockState);
 		return super.getCollisionBoundingBox(blockState, worldIn, pos);
 	}
-	
+
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox,
 			List<AxisAlignedBB> collidingBoxes, Entity entityIn)
@@ -339,7 +339,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 		}
 		super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn);
 	}
-	
+
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
 	{
@@ -348,7 +348,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_ComparatorInputOverride) tile).getComparatorInputOverride(blockState);
 		return super.getComparatorInputOverride(blockState, worldIn, pos);
 	}
-	
+
 	@Override
 	public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
 	{
@@ -357,7 +357,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_BlockHardness) tile).getBlockHardness(blockState);
 		return blockHardness;
 	}
-
+	
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
@@ -366,7 +366,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_ExplosionResistance) tile).getExplosionResistance(exploder, explosion);
 		return blockResistance;
 	}
-	
+
 	@Override
 	public float getEnchantPowerBonus(World world, BlockPos pos)
 	{
@@ -375,7 +375,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_EnchantPowerBonus) tile).getEnchantPowerBonus();
 		return super.getEnchantPowerBonus(world, pos);
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
@@ -384,7 +384,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_FireSpreadSpeed) tile).getFireSpreadSpeed(Direction.of(face));
 		return super.getFireSpreadSpeed(world, pos, face);
 	}
-
+	
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
@@ -393,7 +393,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_Flammability) tile).getFlammability(Direction.of(face));
 		return super.getFlammability(world, pos, face);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
@@ -404,7 +404,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 		list.add(new ItemStack(this, 1, getMetaFromState(state)));
 		return list;
 	}
-
+	
 	@Override
 	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -413,7 +413,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_Light) tile).getLightOpacity(state);
 		return super.getLightOpacity(state, world, pos);
 	}
-	
+
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -422,7 +422,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_Light) tile).getLightValue(state);
 		return super.getLightValue(state, world, pos);
 	}
-	
+
 	@Override
 	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
@@ -431,17 +431,17 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_BlockHardness) tile).getPlayerRelativeBlockHardness(state, player);
 		return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof ITP_SelectedBoundingBox)
-			return ((ITP_SelectedBoundingBox) tile).getSelectedBoundingBox(state);
+			return ((ITP_SelectedBoundingBox) tile).getSelectedBoundingBox(state).offset(pos);
 		return super.getSelectedBoundingBox(state, worldIn, pos);
 	}
-
+	
 	@Override
 	public int getStrongPower(IBlockState blockState, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
@@ -450,7 +450,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_RedstonePower) tile).getStrongPower(blockState, Direction.of(side));
 		return super.getStrongPower(blockState, world, pos, side);
 	}
-
+	
 	@Override
 	public boolean getWeakChanges(IBlockAccess world, BlockPos pos)
 	{
@@ -459,7 +459,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_RedstonePower) tile).listenWeakChanges();
 		return super.getWeakChanges(world, pos);
 	}
-
+	
 	@Override
 	public int getWeakPower(IBlockState blockState, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
@@ -468,7 +468,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_RedstonePower) tile).getWeakPower(blockState, Direction.of(side));
 		return super.getWeakPower(blockState, world, pos, side);
 	}
-	
+
 	@Override
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{
@@ -478,7 +478,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_FillWithRain) tile).fillWithRain();
 		}
 	}
-
+	
 	@Override
 	public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon)
 	{
@@ -487,7 +487,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_BeaconBase) tile).isBeaconBase(beacon);
 		return super.isBeaconBase(worldObj, pos, beacon);
 	}
-
+	
 	@Override
 	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
 	{
@@ -496,7 +496,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_SideSolid) tile).isSideSolid(Direction.of(side));
 		return super.isBlockSolid(worldIn, pos, side);
 	}
-	
+
 	@Override
 	public boolean isFireSource(World world, BlockPos pos, EnumFacing side)
 	{
@@ -505,7 +505,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_FireSource) tile).isFireSource(Direction.of(side));
 		return super.isFireSource(world, pos, side);
 	}
-
+	
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
@@ -514,7 +514,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_Flammable) tile).isFlammable(Direction.of(face));
 		return super.isFlammable(world, pos, face);
 	}
-
+	
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
@@ -523,14 +523,14 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_SideSolid) tile).isSideSolid(Direction.of(side));
 		return super.isSideSolid(base_state, world, pos, side);
 	}
-	
+
 	@Override
 	public Boolean isEntityInsideMaterial(IBlockAccess world, BlockPos blockpos, IBlockState iblockstate, Entity entity,
 			double yToTest, Material materialIn, boolean testingHead)
 	{
 		return super.isEntityInsideMaterial(world, blockpos, iblockstate, entity, yToTest, materialIn, testingHead);
 	}
-
+	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
@@ -543,7 +543,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 		}
 		return TileEntities.onTileActivatedGeneral(playerIn, hand, heldItem, Direction.of(side), hitX, hitY, hitZ, tile);
 	}
-
+	
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -559,7 +559,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 		}
 		worldIn.removeTileEntity(pos);
 	}
-
+	
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
@@ -570,7 +570,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 		}
 		super.onNeighborChange(world, pos, neighbor);
 	}
-
+	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
@@ -580,7 +580,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((IUpdatableTile) tile).causeUpdate(pos, worldIn.getBlockState(pos), false);
 		}
 	}
-
+	
 	@Override
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
 	{
@@ -590,7 +590,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_Update) tile).onUpdateTick(stateIn, rand, true);
 		}
 	}
-
+	
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
@@ -600,7 +600,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			((ITB_Update) tile).onUpdateTick(state, rand, false);
 		}
 	}
-	
+
 	@Override
 	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
 	{
@@ -609,7 +609,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITB_Burn) tile).onBurn(burnHardness, direction);
 		return false;
 	}
-	
+
 	@Override
 	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
@@ -618,7 +618,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITB_Burn) tile).onBurningTick(rand, fireSourceDir, fireState);
 		return false;
 	}
-	
+
 	@Override
 	public float getThermalConduct(World world, BlockPos pos)
 	{
@@ -627,7 +627,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((IThermalHandler) tile).getThermalConductivity(Direction.Q);
 		return 0;
 	}
-	
+
 	@Override
 	public int getFireEncouragement(World world, BlockPos pos)
 	{
@@ -636,7 +636,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_Burn) tile).getFireEncouragement();
 		return 0;
 	}
-
+	
 	@Override
 	public boolean canBeBurned(World world, BlockPos pos)
 	{
@@ -645,7 +645,7 @@ implements IThermalCustomBehaviorBlock, ITileEntityProvider
 			return ((ITP_Burn) tile).canBeBurned();
 		return IThermalCustomBehaviorBlock.super.canBeBurned(world, pos);
 	}
-
+	
 	@Override
 	public boolean canFireBurnOn(World world, BlockPos pos, EnumFacing side, boolean isCatchRain)
 	{

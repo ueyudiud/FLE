@@ -1,0 +1,17 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:crop/cross"
+	},
+	"variants": {
+		"state": {
+			"cabbage_stage_0": { "textures": { "crop": "farcore:blocks/crop/cabbage_universal_stage_0" } },
+			"cabbage_stage_1": { "textures": { "crop": "farcore:blocks/crop/cabbage_universal_stage_1" } },
+			"cabbage_stage_2": { "textures": { "crop": "farcore:blocks/crop/cabbage_universal_stage_2" } },
+			"cabbage_stage_3": { "textures": { "crop": "farcore:blocks/crop/cabbage_universal_stage_3" } },
+			"cabbage_stage_4": { "textures": { "crop": "farcore:blocks/crop/cabbage_universal_stage_4" } },
+			"cabbage_stage_5": { "textures": { "crop": "farcore:blocks/crop/cabbage_universal_stage_5" } }
+		}
+	}
+}

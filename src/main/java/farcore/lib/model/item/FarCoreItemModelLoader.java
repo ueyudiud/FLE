@@ -32,7 +32,6 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.model.item.ModelLayer.UnbakedModelLayer;
 import farcore.lib.util.Log;
-import farcore.lib.util.SubTag;
 import farcore.util.U;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -670,12 +669,9 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			registerMultiIconProvider(new ResourceLocation(FarCore.ID, "group/" + condition.name), (IResourceManager manager) ->
 			{
 				ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
-				for (Mat material : Mat.filt(SubTag.ROCK))
+				for (Mat material : Mat.filt(condition))
 				{
-					if(condition.isBelongTo(material))
-					{
-						builder.put("material:" + material.name, new ResourceLocation(material.modid, "items/group/" + condition.name + "/" + material.name));
-					}
+					builder.put("material:" + material.name, new ResourceLocation(material.modid, "items/group/" + condition.name + "/" + material.name));
 				}
 				return builder.build();
 			});

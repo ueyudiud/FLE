@@ -11,10 +11,12 @@ import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
-import farcore.lib.tile.IBreakingDropableTile;
 import farcore.lib.tile.IDebugableTile;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Update;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IUpdatableTile;
@@ -22,25 +24,26 @@ import farcore.lib.tile.TEAged;
 import farcore.lib.util.Direction;
 import farcore.util.U;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECrop extends TEAged
-implements ICropAccess, IDebugableTile, IUpdatableTile, IBreakingDropableTile,
-ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck
+implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_CollisionBoundingBox,
+ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects,
+ITB_AddHitEffects
 {
-	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.03125F, .0F, .03125F, .96875F, .96875F, .96875F);
+	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, .9375F, .9375F);
 
-	private static final float absorbEffiency = 0.2F;
-	
 	private static final CropInfo NO_DATA_INFO = new CropInfo();
 	
 	static
@@ -59,19 +62,17 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck
 	{
 		
 	}
-	
-	public void initCrop(ICrop crop)
+	public TECrop(ICrop crop)
 	{
-		initCrop(0, crop.makeNativeDNA(), crop);
+		this(crop, crop.makeNativeDNA(), 0);
 		isWild = true;
-		syncToNearby();
 	}
-	public void initCrop(int generations, String dna, ICrop crop)
+	public TECrop(ICrop crop, String dna, int generation)
 	{
 		card = crop;
 		info = new CropInfo();
 		info.DNA = dna;
-		info.generations = generations;
+		info.generations = generation;
 		crop.decodeDNA(this, dna);
 	}
 	
@@ -122,18 +123,17 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck
 		if(nbt.hasKey("s"))
 		{
 			stage = nbt.getInteger("s");
-			markBlockRenderUpdate();
 		}
 		if(nbt.hasKey("c"))
 		{
 			card = Mat.material(nbt.getString("c")).crop;
-			markBlockRenderUpdate();
 		}
 		if(nbt.hasKey("i"))
 		{
 			info = new CropInfo();
 			info.readFromNBT(nbt.getCompoundTag("i"));
 		}
+		markBlockRenderUpdate();
 	}
 	
 	@Override
@@ -373,7 +373,7 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck
 		if(!worldObj.isRemote)
 			if(!canBlockStay())
 			{
-				U.Worlds.spawnDropsInWorld(this, getDropsOnTileRemoved(state));
+				U.Worlds.spawnDropsInWorld(this, getDrops(state, 0, false));
 				killCrop();
 			}
 	}
@@ -382,9 +382,9 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck
 	{
 		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
 	}
-
+	
 	@Override
-	public List<ItemStack> getDropsOnTileRemoved(IBlockState state)
+	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
 		ArrayList<ItemStack> list = new ArrayList();
 		if(card != null)
@@ -405,6 +405,24 @@ ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck
 	
 	public String getStateName()
 	{
-		return card != null ? card.getState(this) : "";
+		return card != null ? card.getState(this) : "void";
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
+	{
+		IBlockState state = getBlockState();
+		U.Client.addBlockHitEffect(worldObj, random, state.getActualState(worldObj, pos), target.sideHit, pos, manager);
+		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(ParticleManager manager)
+	{
+		IBlockState state = getBlockState();
+		U.Client.addBlockDestroyEffects(worldObj, pos, state.getActualState(worldObj, pos), manager);
+		return true;
 	}
 }

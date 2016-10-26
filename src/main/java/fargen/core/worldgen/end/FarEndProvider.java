@@ -12,16 +12,14 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeProviderSingle;
-import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.end.DragonFightManager;
-import net.minecraft.world.gen.ChunkProviderEnd;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FarEndProvider extends WorldProvider
 {
 	private DragonFightManager dragonFightManager;
-
+	
 	/**
 	 * creates a new world chunk manager for WorldProvider
 	 */
@@ -33,13 +31,7 @@ public class FarEndProvider extends WorldProvider
 		NBTTagCompound nbttagcompound = worldObj.getWorldInfo().getDimensionData(DimensionType.THE_END);
 		dragonFightManager = worldObj instanceof WorldServer ? new DragonFightManager((WorldServer)worldObj, nbttagcompound.getCompoundTag("DragonFight")) : null;
 	}
-
-	@Override
-	public IChunkGenerator createChunkGenerator()
-	{
-		return new ChunkProviderEnd(worldObj, worldObj.getWorldInfo().isMapFeaturesEnabled(), worldObj.getSeed());
-	}
-
+	
 	/**
 	 * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
 	 */
@@ -48,7 +40,7 @@ public class FarEndProvider extends WorldProvider
 	{
 		return 0.0F;
 	}
-
+	
 	/**
 	 * Returns array with sunrise/sunset colors
 	 */
@@ -58,7 +50,7 @@ public class FarEndProvider extends WorldProvider
 	{
 		return null;
 	}
-
+	
 	/**
 	 * Return Vec3D with biome specific fog color
 	 */
@@ -77,14 +69,14 @@ public class FarEndProvider extends WorldProvider
 		f3 = f3 * (f * 0.0F + 0.15F);
 		return new Vec3d(f1, f2, f3);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isSkyColored()
 	{
 		return false;
 	}
-
+	
 	/**
 	 * True if the player can respawn in this dimension (true = overworld, false = nether).
 	 */
@@ -93,7 +85,7 @@ public class FarEndProvider extends WorldProvider
 	{
 		return false;
 	}
-
+	
 	/**
 	 * Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
 	 */
@@ -102,7 +94,7 @@ public class FarEndProvider extends WorldProvider
 	{
 		return false;
 	}
-
+	
 	/**
 	 * the y level at which clouds are rendered.
 	 */
@@ -112,7 +104,7 @@ public class FarEndProvider extends WorldProvider
 	{
 		return 8.0F;
 	}
-
+	
 	/**
 	 * Will check if the x, z position specified is alright to be set as the map spawn point
 	 */
@@ -121,19 +113,19 @@ public class FarEndProvider extends WorldProvider
 	{
 		return worldObj.getGroundAboveSeaLevel(new BlockPos(x, 0, z)).getMaterial().blocksMovement();
 	}
-
+	
 	@Override
 	public BlockPos getSpawnCoordinate()
 	{
 		return new BlockPos(100, 50, 0);
 	}
-
+	
 	@Override
 	public int getAverageGroundLevel()
 	{
 		return 50;
 	}
-
+	
 	/**
 	 * Returns true if the given X,Z coordinate should show environmental fog.
 	 */
@@ -143,13 +135,13 @@ public class FarEndProvider extends WorldProvider
 	{
 		return false;
 	}
-
+	
 	@Override
 	public DimensionType getDimensionType()
 	{
 		return FarGen.FAR_END;
 	}
-
+	
 	/**
 	 * Called when the world is performing a save. Only used to save the state of the Dragon Boss fight in
 	 * WorldProviderEnd in Vanilla.
@@ -158,15 +150,15 @@ public class FarEndProvider extends WorldProvider
 	public void onWorldSave()
 	{
 		NBTTagCompound nbttagcompound = new NBTTagCompound();
-
+		
 		if (dragonFightManager != null)
 		{
 			nbttagcompound.setTag("DragonFight", dragonFightManager.getCompound());
 		}
-
+		
 		worldObj.getWorldInfo().setDimensionData(FarGen.FAR_END, nbttagcompound);
 	}
-
+	
 	/**
 	 * Called when the world is updating entities. Only used in WorldProviderEnd to update the DragonFightManager in
 	 * Vanilla.
@@ -179,7 +171,7 @@ public class FarEndProvider extends WorldProvider
 			dragonFightManager.tick();
 		}
 	}
-
+	
 	@Nullable
 	public DragonFightManager getDragonFightManager()
 	{

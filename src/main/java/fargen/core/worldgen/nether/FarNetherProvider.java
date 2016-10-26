@@ -7,8 +7,6 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.border.WorldBorder;
-import net.minecraft.world.chunk.IChunkGenerator;
-import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,7 +18,7 @@ public class FarNetherProvider extends WorldProvider
 		isHellWorld = true;
 		hasNoSky = true;
 	}
-
+	
 	/**
 	 * Return Vec3D with biome specific fog color
 	 */
@@ -30,7 +28,7 @@ public class FarNetherProvider extends WorldProvider
 	{
 		return new Vec3d(0.2, 0.03, 0.03);
 	}
-
+	
 	/**
 	 * Creates the light to brightness table
 	 */
@@ -38,20 +36,14 @@ public class FarNetherProvider extends WorldProvider
 	protected void generateLightBrightnessTable()
 	{
 		float f = 0.1F;
-
+		
 		for (int i = 0; i <= 15; ++i)
 		{
 			float f1 = 1.0F - i / 15.0F;
 			lightBrightnessTable[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * 0.9F + 0.1F;
 		}
 	}
-
-	@Override
-	public IChunkGenerator createChunkGenerator()
-	{
-		return new ChunkProviderHell(worldObj, worldObj.getWorldInfo().isMapFeaturesEnabled(), worldObj.getSeed());
-	}
-
+	
 	/**
 	 * Returns 'true' if in the "main surface world", but 'false' if in the Nether or End dimensions.
 	 */
@@ -60,7 +52,7 @@ public class FarNetherProvider extends WorldProvider
 	{
 		return false;
 	}
-
+	
 	/**
 	 * Will check if the x, z position specified is alright to be set as the map spawn point
 	 */
@@ -69,7 +61,7 @@ public class FarNetherProvider extends WorldProvider
 	{
 		return false;
 	}
-
+	
 	/**
 	 * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
 	 */
@@ -78,7 +70,7 @@ public class FarNetherProvider extends WorldProvider
 	{
 		return 0.5F;
 	}
-
+	
 	/**
 	 * True if the player can respawn in this dimension (true = overworld, false = nether).
 	 */
@@ -87,7 +79,7 @@ public class FarNetherProvider extends WorldProvider
 	{
 		return false;
 	}
-
+	
 	/**
 	 * Returns true if the given X,Z coordinate should show environmental fog.
 	 */
@@ -97,7 +89,7 @@ public class FarNetherProvider extends WorldProvider
 	{
 		return true;
 	}
-
+	
 	@Override
 	public WorldBorder createWorldBorder()
 	{
@@ -115,7 +107,7 @@ public class FarNetherProvider extends WorldProvider
 			}
 		};
 	}
-	
+
 	@Override
 	public DimensionType getDimensionType()
 	{

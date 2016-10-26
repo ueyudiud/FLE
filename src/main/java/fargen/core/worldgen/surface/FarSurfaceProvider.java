@@ -5,6 +5,7 @@ import farcore.lib.world.WorldPropHandler;
 import fargen.core.FarGen;
 import fargen.core.biome.BiomeBase;
 import fargen.core.render.RenderWeatherSurface;
+import fargen.core.worldgen.FarWorldType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -25,7 +26,7 @@ public class FarSurfaceProvider extends WorldProvider
 	public FarSurfaceProvider()
 	{
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getWeatherRenderer()
@@ -37,19 +38,13 @@ public class FarSurfaceProvider extends WorldProvider
 		}
 		return handler;
 	}
-	
+
 	@Override
 	public DimensionType getDimensionType()
 	{
 		return FarGen.FAR_OVERWORLD;
 	}
 	
-	@Override
-	protected void createBiomeProvider()
-	{
-		biomeProvider = new FarSurfaceBiomeProvider(worldObj.getWorldInfo());
-	}
-
 	/**
 	 * Called to determine if the chunk at the given chunk coordinates within the provider's world can be dropped. Used
 	 * in WorldProviderSurface to prevent spawn chunks from being unloaded.
@@ -59,13 +54,17 @@ public class FarSurfaceProvider extends WorldProvider
 	{
 		return !worldObj.isSpawnChunk(x, z) || !worldObj.provider.getDimensionType().shouldLoadSpawn();
 	}
-
+	
 	/**
 	 * The far core override classic ice, prevent vanilla water freeze now.
 	 */
 	@Override
 	public boolean canBlockFreeze(BlockPos pos, boolean byWater)
 	{
+		if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
+				worldObj.getWorldType() != FarWorldType.FLAT &&
+				worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+			return super.canBlockFreeze(pos, byWater);
 		//		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldObj);
 		//		float temp = properties.getTemperature(worldObj, pos);
 		//		if (temp > BiomeBase.minSnowTemperature)
@@ -90,7 +89,7 @@ public class FarSurfaceProvider extends WorldProvider
 		//		}
 		return false;
 	}
-	
+
 	/**
 	 *
 	 * @param pos
@@ -101,9 +100,13 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public boolean canSnowAt(BlockPos pos, boolean checkLightAndSnow)
 	{
+		if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
+				worldObj.getWorldType() != FarWorldType.FLAT &&
+				worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+			return super.canSnowAt(pos, checkLightAndSnow);
 		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldObj);
 		float temp = properties.getTemperature(worldObj, pos);
-		
+
 		if (temp > BiomeBase.minSnowTemperature)
 			return false;
 		else if (!checkLightAndSnow)
@@ -120,12 +123,16 @@ public class FarSurfaceProvider extends WorldProvider
 			return false;
 		}
 	}
-	
+
 	@Override
 	public Biome getBiomeForCoords(BlockPos pos)
 	{
 		if (worldObj.isBlockLoaded(pos))
 		{
+			if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
+					worldObj.getWorldType() != FarWorldType.FLAT &&
+					worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+				return super.getBiomeForCoords(pos);
 			Chunk chunk = worldObj.getChunkFromBlockCoords(pos);
 			try
 			{

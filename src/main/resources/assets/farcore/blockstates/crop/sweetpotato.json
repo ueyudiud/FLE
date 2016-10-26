@@ -1,0 +1,17 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:crop/cross"
+	},
+	"variants": {
+		"state": {
+			"sweetpotato_stage_0": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_0" } },
+			"sweetpotato_stage_1": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_1" } },
+			"sweetpotato_stage_2": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_2" } },
+			"sweetpotato_stage_3": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_3" } },
+			"sweetpotato_stage_4": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_4" } },
+			"sweetpotato_stage_5": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_5" } }
+		}
+	}
+}
