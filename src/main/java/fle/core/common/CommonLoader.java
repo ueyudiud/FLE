@@ -6,7 +6,7 @@ import fle.loader.Tools;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class CommonProxy
+public class CommonLoader
 {
 	public void init(FMLPreInitializationEvent event)
 	{
@@ -14,6 +14,5 @@ public class CommonProxy
 		Tools.initalizeTools();
 		BlocksItems.setBlocksItemsProperties();
 		MinecraftForge.EVENT_BUS.register(new FleEntityHandler());
-		fargen.compact.fle.SubCompact.init();
 	}
 }

@@ -4,7 +4,7 @@ import farcore.FarCoreSetup;
 import farcore.data.ColorMultiplier;
 import farcore.data.EnumItem;
 import farcore.util.U;
-import fle.core.common.CommonProxy;
+import fle.core.common.CommonLoader;
 import fle.core.handler.FleClientHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientProxy extends CommonProxy
+public class ClientLoader extends CommonLoader
 {
 	@Override
 	public void init(FMLPreInitializationEvent event)

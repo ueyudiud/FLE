@@ -59,8 +59,6 @@ configurations {
 
 dependencies {
 	provided "mezz.jei:jei_${minecraft.version}:3.7.3.221"
-    //runtime "mezz.jei:jei_${minecraft.version}:3.7.3.221"
-    //provided "net.industrial-craft:industrialcraft-2:2.6.23-ex110:dev"
 
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -142,5 +140,5 @@ jar {
 
 artifacts {
 	archives deobfJar
-	//archives coreJar
+	archives coreJar
 }

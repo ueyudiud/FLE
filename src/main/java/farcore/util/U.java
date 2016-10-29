@@ -16,8 +16,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -26,6 +24,7 @@ import com.google.common.collect.Lists;
 import farcore.FarCore;
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.Capabilities;
+import farcore.data.ColorMultiplier;
 import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.lib.block.ISmartFallableBlock;
@@ -104,16 +103,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ColorizerFoliage;
-import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
@@ -703,8 +698,6 @@ public class U
 	
 	public static class Maths
 	{
-		public static final double sq2 = 1.4142135623730950488016887242097;
-		
 		public static double[][] gaussianL(int size, double sigma)
 		{
 			int size1 = size * 2 + 1;
@@ -1946,20 +1939,6 @@ public class U
 	{
 		public static final ModelResourceLocation MODEL_MISSING = new ModelResourceLocation("builtin/missing", "missing");
 
-		private static final IBlockColor BIOME_COLOR =
-				(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) ->
-		{
-			if(worldIn == null || pos == null) return -1;
-			Biome biome = worldIn.getBiomeGenForCoords(pos);
-			switch (tintIndex)
-			{
-			case 0 : return biome.getGrassColorAtPos(pos);
-			case 1 : return biome.getFoliageColorAtPos(pos);
-			case 2 : return biome.getWaterColor();
-			default: return -1;
-			}
-		};
-
 		public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager)
 		{
 			if (state.getRenderType() != EnumBlockRenderType.INVISIBLE)
@@ -2255,28 +2234,6 @@ public class U
 	@SideOnly(Side.CLIENT)
 	public static class ClientHandler extends CommonHandler
 	{
-		static final IItemColor ITEMBLOCK_COLOR =
-				(ItemStack stack, int tintIndex) ->
-		{
-			Block block = Block.getBlockFromItem(stack.getItem());
-			return Minecraft.getMinecraft().getBlockColors().colorMultiplier(block.getStateFromMeta(stack.getMetadata()), null, null, tintIndex);
-		};
-		static final IBlockColor BIOME_COLOR =
-				(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) ->
-		{
-			boolean flag = worldIn == null || pos == null;
-			Biome biome = flag ? null : worldIn.getBiomeGenForCoords(pos);
-			switch(tintIndex)
-			{
-			case 0 : return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) :
-				BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
-			case 1 : return flag ? ColorizerFoliage.getFoliageColorBasic() :
-				BiomeColorHelper.getFoliageColorAtPos(worldIn, pos);
-			case 2 : return flag ? -1 : BiomeColorHelper.getWaterColorAtPos(worldIn, pos);
-			default: return -1;
-			}
-		};
-		
 		@Override
 		public World worldInstance(int id)
 		{
@@ -2340,8 +2297,8 @@ public class U
 		@Override
 		public void registerBiomeColorMultiplier(Block... block)
 		{
-			registerColorMultiplier(BIOME_COLOR, block);
-			registerColorMultiplier(ITEMBLOCK_COLOR, block);
+			registerColorMultiplier(ColorMultiplier.BIOME_COLOR, block);
+			registerColorMultiplier(ColorMultiplier.ITEMBLOCK_COLOR, block);
 		}
 
 		public void registerColorMultiplier(IBlockColor color, Block[] block)
