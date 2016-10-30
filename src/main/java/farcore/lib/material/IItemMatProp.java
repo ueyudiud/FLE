@@ -2,6 +2,7 @@ package farcore.lib.material;
 
 import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,4 +43,13 @@ public interface IItemMatProp
 
 	@SideOnly(Side.CLIENT)
 	void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list, String saveTag);
+
+	/**
+	 * Get entity attack damage multiple.
+	 * @param stack
+	 * @param material
+	 * @param target
+	 * @return
+	 */
+	float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target);
 }

@@ -29,7 +29,7 @@ public class FarCoreItemHandler
 			event.setNewSpeed(((IIP_DigSpeed) stack.getItem()).replaceDigSpeed(stack, event));
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onHarvestBlock(HarvestDropsEvent event)
 	{

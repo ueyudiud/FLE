@@ -16,12 +16,12 @@ import farcore.lib.skill.SkillAbstract;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.ISubTagContainer;
-import farcore.lib.util.LanguageManager;
 import farcore.util.U;
 import fle.core.FLE;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -46,8 +46,8 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	{
 		ToolProp prop = super.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie,
 				filterHandle, toolTypes, behaviors);
-		prop.skillEfficiency = new SkillAbstract(name){}.setExpInfo(30, 10F, 1.5F);
-		LanguageManager.registerLocal("skill." + prop.skillEfficiency.getRegisteredName() + ".name", localName + " Efficiency");
+		prop.skillEfficiency = new SkillAbstract(name + ".efficiency", localName + " Efficiency"){}.setExpInfo(30, 10F, 1.5F);
+		prop.skillAttack = new SkillAbstract(name + ".attack", localName + " Attack"){}.setExpInfo(30, 12F, 1.4F);
 		return prop;
 	}
 
@@ -81,6 +81,16 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		return speed;
 	}
+	
+	@Override
+	protected float getPlayerRelatedAttackDamage(ToolProp prop, ItemStack stack, EntityPlayer player, float baseAttack,
+			float attackSpeed, int cooldown, boolean isAttackerFalling)
+	{
+		int lv = prop.skillAttack.level(player);
+		cooldown += lv * 5;
+		baseAttack += Math.sqrt(player.getRNG().nextInt(lv)) * 0.2F;
+		return super.getPlayerRelatedAttackDamage(prop, stack, player, baseAttack, attackSpeed, cooldown, isAttackerFalling);
+	}
 
 	@Override
 	public void postInitalizedItems()
@@ -99,7 +109,6 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		return true;
 	}
 	
-
 	@Override
 	public void initEntity(EntityProjectileItem entity)
 	{
@@ -110,7 +119,6 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 				((IProjectileItem) behavior).initEntity(entity);
 			}
 	}
-
 	
 	@Override
 	public void onEntityTick(EntityProjectileItem entity)
@@ -122,7 +130,6 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 				((IProjectileItem) behavior).onEntityTick(entity);
 			}
 	}
-	
 	
 	@Override
 	public boolean onHitGround(World world, BlockPos pos, EntityProjectileItem entity, Direction direction)
@@ -136,7 +143,6 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 			}
 		return false;
 	}
-	
 	
 	@Override
 	public boolean onHitEntity(World world, Entity target, EntityProjectileItem entity)

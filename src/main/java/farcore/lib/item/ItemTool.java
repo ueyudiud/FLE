@@ -35,18 +35,22 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
@@ -71,6 +75,109 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			return ((ItemTool) stack.getItem()).getToolProp(stack).stat.getColor(stack, pass);
 		else
 			return -1;
+	}
+	
+	public static void onToolUsedToAttack(ItemTool tool, ItemStack stack, EntityPlayer player, Entity entity)
+	{
+		ToolProp prop = tool.toolPropMap.getOrDefault(tool.getBaseDamage(stack), EMPTY_PROP);
+		Mat material = getMaterial(stack, "head");
+		if(entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// && !entity.isInvisibleToPlayer(player))
+		{
+			float attack = prop.stat.getDamageVsEntity(stack, material, entity);
+			float attackSpeed = prop.stat.getAttackSpeed(stack, material);
+			boolean flag = player.fallDistance > 0.0F &&
+					!player.onGround && !player.isOnLadder() &&
+					!player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) &&
+					player.getRidingEntity() == null && (entity instanceof EntityLivingBase);
+			float speed = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).getAttributeValue() + prop.stat.getAttackSpeed(stack, material);
+			int cooldown = (int) U.R.getValue(EntityLivingBase.class, "ticksSinceLastSwing", "field_184617_aD", player, false);
+			
+			int fire = EnchantmentHelper.getFireAspectModifier(player);
+
+			if (entity instanceof EntityLivingBase && fire > 0 && !entity.isBurning())
+			{
+				entity.setFire(fire);
+			}
+
+			attack = tool.getPlayerRelatedAttackDamage(prop, stack, player, attack, attackSpeed, cooldown, flag);
+			
+			double d1 = entity.motionX;
+			double d2 = entity.motionY;
+			double d3 = entity.motionZ;
+			
+			player.resetCooldown();
+
+			if(attack > 0 && entity.attackEntityFrom(prop.stat.getDamageSource(player, entity), attack))
+			{
+				float knockback = prop.stat.getKnockback(stack, material, entity) + EnchantmentHelper.getKnockbackModifier(player);
+				if(player.isSprinting())
+				{
+					player.worldObj.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, player.getSoundCategory(), 1.0F, 1.0F);
+					knockback += 1F;
+				}
+				if(knockback > 0)
+				{
+					entity.addVelocity(-Math.sin(player.rotationYaw * Math.PI / 180D) * knockback * .5, 0.1F, Math.cos(player.rotationYaw * Math.PI / 180D) * knockback * .5);
+				}
+				player.motionX *= 0.6F;
+				player.motionZ *= 0.6F;
+				player.setSprinting(false);
+				
+				float[] box = prop.stat.getAttackExpandBoxing(stack, material);
+				if(box != null)
+				{
+					for (EntityLivingBase entitylivingbase : player.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, entity.getEntityBoundingBox().expand(box[0], box[1], box[0])))
+					{
+						if (entitylivingbase != player && entitylivingbase != entity && !player.isOnSameTeam(entitylivingbase) && player.getDistanceSqToEntity(entitylivingbase) < 9.0D)
+						{
+							entitylivingbase.knockBack(player, 0.4F, MathHelper.sin(player.rotationYaw * 0.017453292F), (-MathHelper.cos(player.rotationYaw * 0.017453292F)));
+							entitylivingbase.attackEntityFrom(prop.stat.getDamageSource(player, entitylivingbase), 1.0F);
+						}
+					}
+					
+					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0F, 1.0F);
+					player.spawnSweepParticles();
+				}
+				
+				if (entity instanceof EntityPlayerMP && entity.velocityChanged)
+				{
+					((EntityPlayerMP)entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+					entity.velocityChanged = false;
+					entity.motionX = d1;
+					entity.motionY = d2;
+					entity.motionZ = d3;
+				}
+				else if(!flag)
+				{
+					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, player.getSoundCategory(), 1.0F, 1.0F);
+				}
+				else
+				{
+					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
+					player.onCriticalHit(entity);
+				}
+				
+				if(attack >= 18.0F)
+				{
+					player.addStat(AchievementList.OVERKILL);
+				}
+				
+				entity.hurtResistantTime = Math.max(1, entity.hurtResistantTime + 1);
+				player.setLastAttacker(entity);
+				if (entity instanceof EntityLivingBase)
+				{
+					EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entity, player);
+				}
+				EnchantmentHelper.applyArthropodEnchantments(player, entity);
+				if(prop.stat.isWeapon() && prop.skillAttack != null)
+				{
+					prop.skillAttack.using(player, 1.0F);
+				}
+				tool.onToolUse(player, stack, prop.stat.getToolType(), prop.stat.getToolDamagePerAttack(stack, player, entity));
+				player.addExhaustion(0.3F);
+			}
+		}
+		U.Players.destoryPlayerCurrentItem(player);
 	}
 	
 	private static final DecimalFormat HARDNESS_FORMAT = new DecimalFormat("##.0");
@@ -104,8 +211,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		List<EnumToolType> toolTypes;
 		String customToolInformation;
 		public ISkill skillEfficiency;
+		public ISkill skillAttack;
 	}
-
+	
 	private Map<Integer, ToolProp> toolPropMap = new HashMap();
 	protected String textureFileName = "tool/";
 	
@@ -210,6 +318,17 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		}
 	}
 	
+	protected float getPlayerRelatedAttackDamage(ToolProp prop, ItemStack stack, EntityPlayer player, float baseAttack, float attackSpeed, int cooldown, boolean isAttackerFalling)
+	{
+		float multiple = .5F * U.L.range(0F, 1F , cooldown * attackSpeed / 100F) + .5F;
+		baseAttack *= multiple / 100F;
+		if(isAttackerFalling)
+		{
+			baseAttack *= 1.5F;
+		}
+		return baseAttack;
+	}
+	
 	@Override
 	public float replaceDigSpeed(ItemStack stack, BreakSpeed event)
 	{
@@ -242,42 +361,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		if(super.onLeftClickEntity(stack, player, entity))
 			return true;
-		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-		Mat material = getMaterial(stack, "head");
-		if(entity.canBeAttackedWithItem() && !entity.isInvisibleToPlayer(player))
-		{
-			float damage = prop.stat.getDamageVsEntity(stack, material);
-			boolean flag = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) && player.getRidingEntity() == null && (entity instanceof EntityLivingBase);
-			if(flag)
-			{
-				damage *= 1.5F;
-			}
-			if(damage > 0 && entity.attackEntityFrom(prop.stat.getDamageSource(player, entity), damage))
-			{
-				int knockback = (player.isSprinting() ? 1 : 0) + EnchantmentHelper.getKnockbackModifier(player);
-				entity.addVelocity(-Math.sin(player.rotationYaw * Math.PI / 180D) * knockback * .5, 0.1F, Math.cos(player.rotationYaw * Math.PI / 180D) * knockback * .5);
-				player.motionX *= 0.6F;
-				player.motionZ *= 0.6F;
-				player.setSprinting(false);
-				if(flag)
-				{
-					player.onCriticalHit(entity);
-				}
-				if(damage >= 18.0F)
-				{
-					player.addStat(AchievementList.OVERKILL);
-				}
-				entity.hurtResistantTime = Math.max(1, entity.hurtResistantTime + 1);
-				player.setLastAttacker(entity);
-				if (entity instanceof EntityLivingBase)
-				{
-					EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entity, player);
-				}
-				EnchantmentHelper.applyArthropodEnchantments(player, entity);
-				onToolUse(player, stack, prop.stat.getToolType(), prop.stat.getToolDamagePerAttack(stack, player, entity));
-			}
-		}
-		U.Players.destoryPlayerCurrentItem(player);
+		onToolUsedToAttack(this, stack, player, entity);
 		return true;
 	}
 	
@@ -336,18 +420,18 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
 	{
-		if(slot == EntityEquipmentSlot.MAINHAND)
-		{
-			Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-			Mat material = getMaterial(stack, "head");
-			ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-			float speed = prop.stat.getAttackSpeed(stack, material);
-			if(speed != 0)
-			{
-				multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", speed, 0));
-			}
-			return multimap;
-		}
+		//		if(slot == EntityEquipmentSlot.MAINHAND)
+		//		{
+		//			Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+		//			Mat material = getMaterial(stack, "head");
+		//			ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		//			float speed = prop.stat.getAttackSpeed(stack, material);
+		//			if(speed != 0)
+		//			{
+		//				multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", speed, 0));
+		//			}
+		//			return multimap;
+		//		}
 		return super.getAttributeModifiers(slot, stack);
 	}
 
