@@ -91,7 +91,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return new ItemStack(M.oak.log);
+				return Config.createLog ? new ItemStack(M.oak.log) : new ItemStack(Blocks.LOG);
 			}
 		};
 		CT.tabTerria = new CreativeTabBase("farcore.terria", "Far Terria")
@@ -99,7 +99,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return new ItemStack(M.peridotite.rock, 1, 2);
+				return Config.createRock ? new ItemStack(M.peridotite.rock, 1, 2) : new ItemStack(Blocks.STONE);
 			}
 		};
 		CT.tabBuilding = new CreativeTabBase("farcore.building", "Far Building Blocks")
@@ -107,7 +107,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return new ItemStack(M.marble.rock, 1, 5);
+				return Config.createRock ? new ItemStack(M.marble.rock, 1, 5) : new ItemStack(Blocks.STONEBRICK);
 			}
 		};
 		CT.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item")
@@ -115,7 +115,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id);
+				return Config.createRock ? new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id) : new ItemStack(Items.GOLD_INGOT);
 			}
 		};
 		CT.tabMachine = new CreativeTabBase("farcore.machine", "Far Machine")
@@ -147,7 +147,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return BlockRedstoneCircuit.createItemStack(1, M.stone);
+				return Config.createRock ? BlockRedstoneCircuit.createItemStack(1, M.stone) : new ItemStack(Items.COMPARATOR);
 			}
 		};
 		//Register common handler.
@@ -170,19 +170,28 @@ public class CommonLoader
 		//Initialize items.
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		new ItemFluidDisplay().setCreativeTab(CT.tabFluids);
-		new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
-		new ItemSeed().setCreativeTab(CT.tabResourceItem);
-		new ItemStoneFragment().setCreativeTab(CT.tabResourceItem);
+		if(Config.createRock)
+		{
+			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
+			new ItemStoneFragment().setCreativeTab(CT.tabResourceItem);
+			new ItemOreChip().setCreativeTab(CT.tabResourceItem);
+			new BlockOre().setCreativeTab(CT.tabTerria);
+			new BlockCarvedRock();
+		}
+		if(Config.createCrop)
+		{
+			new ItemSeed().setCreativeTab(CT.tabResourceItem);
+			new BlockCrop();
+		}
+		if(Config.createLog)
+		{
+			new BlockSapling().setCreativeTab(CT.tabTree);
+		}
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabResourceItem));
-		new ItemOreChip().setCreativeTab(CT.tabResourceItem);
 		//Initialize blocks.
-		new BlockSapling().setCreativeTab(CT.tabTree);
-		new BlockCrop();
 		new BlockFire();
-		new BlockOre().setCreativeTab(CT.tabTerria);
 		new BlockWater(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
 		new BlockIce().setCreativeTab(CT.tabTerria);
-		new BlockCarvedRock();
 		new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
 		//Register tile entities.
 		GameRegistry.registerTileEntity(TELossTile.class, "farcore.loss.tile");

@@ -5,6 +5,7 @@ import java.util.List;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
+import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropAccessSimulated;
@@ -33,7 +34,7 @@ public class ItemSeed extends ItemMulti
 		enableChemicalFormula = false;
 		EnumItem.seed.set(this);
 	}
-	
+
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -60,21 +61,18 @@ public class ItemSeed extends ItemMulti
 		}
 		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.materials())
+		for(Mat material : Mat.filt(condition))
 		{
-			if(condition.isBelongTo(material))
-			{
-				ItemStack stack = applySeed(1, material, 0, material.crop.makeNativeDNA());
-				subItems.add(stack);
-			}
+			ItemStack stack = applySeed(1, material, 0, material.getProperty(M.property_crop).makeNativeDNA());
+			subItems.add(stack);
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
@@ -84,7 +82,7 @@ public class ItemSeed extends ItemMulti
 		unlocalizedList.add("info.crop.generation", getGenerationFromStack(stack) + 1);
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 	}
-	
+
 	public static ItemStack applySeed(int size, Mat material, int generation, String dna)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -92,12 +90,12 @@ public class ItemSeed extends ItemMulti
 		nbt.setString("dna", dna);
 		return new ItemStack(EnumItem.seed.item, size, material.id, nbt);
 	}
-	
+
 	public static String getDNAFromStack(ItemStack stack)
 	{
 		return !stack.hasTagCompound() ? "" : stack.getTagCompound().getString("dna");
 	}
-	
+
 	public static int getGenerationFromStack(ItemStack stack)
 	{
 		return !stack.hasTagCompound() ? 0 : stack.getTagCompound().getShort("generation");

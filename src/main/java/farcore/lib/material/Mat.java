@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.data.Config;
 import farcore.data.M;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
@@ -405,7 +406,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.harvestLevel = property0.harvestLevel;
 		hasTree = true;
 		add(SubTag.TREE);
-		if(createBlock)
+		if(createBlock && Config.createLog)
 		{
 			BlockLogNatural logNatural = BlockLogNatural.create(this, property);
 			BlockLogArtificial logArtificial = BlockLogArtificial.create(this, property);
@@ -429,7 +430,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.harvestLevel = blockHarvestLevel = -1;//It seems no soil need use tool to harvest.
 		property.hardness = blockHardness = hardness;
 		property.explosionResistance = blockExplosionResistance = resistance;
-		soil = new BlockSoil(modid, "soil." + name, material, this, property);
+		if(Config.createSoil)
+		{
+			soil = new BlockSoil(modid, "soil." + name, material, this, property);
+		}
 		add(SubTag.DIRT);
 		return addProperty(M.property_soil, property);
 	}
@@ -442,8 +446,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.hardness = blockHardness = hardness;
 		property.explosionResistance = blockExplosionResistance = resistance;
 		minTemperatureForExplosion = property.minTemperatureForExplosion = minDetTemp;
-		BlockRock rock = new BlockRock("rock." + name, this, property);
-		this.rock = rock;
+		if(Config.createRock)
+		{
+			rock = new BlockRock("rock." + name, this, property);
+		}
 		add(SubTag.ROCK);
 		return addProperty(M.property_rock, property);
 	}

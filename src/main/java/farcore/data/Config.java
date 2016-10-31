@@ -8,6 +8,13 @@ public class Config
 	public static boolean multiThreadLight;
 	public static boolean enableWaterFreezeAndIceMeltTempCheck;
 	public static boolean splitBrightnessOfSmallBlock;
+	
+	//These general option is for modder.
+	//If want to use Far Core mod but do not want added in these type of block/item.
+	public static boolean createRock = true;
+	public static boolean createLog = true;
+	public static boolean createCrop = true;
+	public static boolean createSoil = true;
 
 	public static void load(Configuration config)
 	{

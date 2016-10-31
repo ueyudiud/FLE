@@ -6,6 +6,7 @@ import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolType;
 import farcore.lib.block.BlockSingleTE;
+import farcore.lib.tesr.TESRCarvedRock;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.util.U;
 import net.minecraft.block.material.Material;
@@ -15,6 +16,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,7 +31,7 @@ public class BlockCarvedRock extends BlockSingleTE
 			useNeighborBrightness = true;
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -37,21 +39,22 @@ public class BlockCarvedRock extends BlockSingleTE
 		super.registerRender();
 		FarCoreRegistry.setBuildinModel(this);
 		U.Mod.registerItemModel(item, 0, FarCore.ID, "rock.stone.resource");
+		ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TECustomCarvedStone();
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
-	
+
 	@Override
 	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -60,19 +63,19 @@ public class BlockCarvedRock extends BlockSingleTE
 			return ((TECustomCarvedStone) tile).isFullCube();
 		return true;
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return EnumToolType.pickaxe.name();
 	}
-
+	
 	@Override
 	public boolean isToolEffective(String type, IBlockState state)
 	{

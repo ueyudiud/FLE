@@ -11,14 +11,11 @@ import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.render.Colormap.ColormapFactory;
 import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.instance.FontMap;
-import farcore.lib.tesr.TESRCarvedRock;
-import farcore.lib.tile.instance.TECustomCarvedStone;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,7 +40,5 @@ public class ClientLoader extends CommonLoader
 		ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.instance);
 		//The custom block model loaders.
 		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
-		//Register TESR.
-		ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 	}
 }
