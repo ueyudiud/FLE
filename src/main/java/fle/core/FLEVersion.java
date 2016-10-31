@@ -34,8 +34,8 @@ public class FLEVersion
 	 * there is still lots of things need to do and bugs
 	 * to fix.
 	 */
-	public static final int SNAPSHOT_VERSION = 1;
-
+	public static final int SNAPSHOT_VERSION = 2;
+	
 	/**
 	 * Get if this version is SNAPSHOT VERSION.
 	 * @return

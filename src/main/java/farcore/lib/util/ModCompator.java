@@ -6,6 +6,11 @@ import java.util.Map.Entry;
 
 import farcore.util.U;
 
+/**
+ * To compact with other mods.
+ * @author ueyudiud
+ *
+ */
 public class ModCompator
 {
 	public static ModCompator newCompactor()
@@ -21,17 +26,17 @@ public class ModCompator
 		}
 		return compator;
 	}
-
+	
 	private static final Map<String, ModCompator> COMPATORS = new HashMap();
-
+	
 	private Map<String, ICompatible> compatibles = new HashMap();
 	private final String modid;
-	
+
 	ModCompator(String modid)
 	{
 		this.modid = modid;
 	}
-
+	
 	public void addCompatible(String modid, String location)
 	{
 		if(U.Mod.isModLoaded(modid))
@@ -47,7 +52,7 @@ public class ModCompator
 			}
 		}
 	}
-	
+
 	public void call(String phase)
 	{
 		for(Entry<String, ICompatible> entry : compatibles.entrySet())
@@ -63,13 +68,13 @@ public class ModCompator
 			}
 		}
 	}
-
+	
 	@Override
 	public String toString()
 	{
 		return getClass().toString() + "|" + modid;
 	}
-
+	
 	public static interface ICompatible
 	{
 		void call(String phase) throws Exception;
