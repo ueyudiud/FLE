@@ -9,6 +9,7 @@ import farcore.lib.block.BlockSlab;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
@@ -37,9 +38,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	 * The group of rock slab.
 	 */
 	private final BlockRockSlab[] group;
-	public final float hardnessMultiplier;
-	public final float resistanceMultiplier;
-	public final int harvestLevel;
+	public final PropertyRock property;
 
 	public BlockRockSlab(int id, BlockRock parent, BlockRockSlab[] group, String name, Mat material,
 			String localName)
@@ -50,9 +49,9 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 		this.parent = parent;
 		this.material = parent.material;
 		this.localName = localName;
-		harvestLevel = parent.harvestLevel;
-		setHardness((hardnessMultiplier = parent.hardnessMultiplier) * 0.6F);
-		setResistance((resistanceMultiplier = parent.resistanceMultiplier) * 0.4F);
+		property = parent.property;
+		setHardness(property.hardness * 0.6F);
+		setResistance(property.explosionResistance * 0.4F);
 		if(RockType.values()[id].displayInTab)
 		{
 			setCreativeTab(CT.tabBuilding);
@@ -120,9 +119,9 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 			return 1;
 		case cobble :
 		case mossy :
-			return harvestLevel / 2;
+			return property.harvestLevel / 2;
 		default:
-			return harvestLevel;
+			return property.harvestLevel;
 		}
 	}
 

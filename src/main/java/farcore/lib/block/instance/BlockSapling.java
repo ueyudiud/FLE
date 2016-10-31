@@ -3,9 +3,9 @@ package farcore.lib.block.instance;
 import java.util.List;
 
 import farcore.data.EnumBlock;
-import farcore.data.M;
 import farcore.lib.block.BlockBase;
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.model.block.BlockStateTileEntityWapper;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.tile.instance.TESapling;
@@ -157,7 +157,7 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 		TileEntity tile = worldObj.getTileEntity(target.getBlockPos());
 		if(tile instanceof TESapling)
 		{
-			Client.addBlockHitEffect(worldObj, RANDOM, state, target.sideHit, target.getBlockPos(), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).material));
+			Client.addBlockHitEffect(worldObj, RANDOM, state, target.sideHit, target.getBlockPos(), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).tree.getRegisteredName()));
 			return true;
 		}
 		return false;
@@ -168,9 +168,9 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TESapling && ((TESapling) tile).material != M.VOID)
+		if(tile instanceof TESapling && ((TESapling) tile).tree != PropertyTree.VOID)
 		{
-			Client.addBlockDestroyEffects(world, pos, world.getBlockState(pos), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).material));
+			Client.addBlockDestroyEffects(world, pos, world.getBlockState(pos), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).tree.getRegisteredName()));
 			return true;
 		}
 		return true;

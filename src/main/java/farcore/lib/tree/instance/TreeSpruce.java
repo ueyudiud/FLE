@@ -1,11 +1,18 @@
 package farcore.lib.tree.instance;
 
-import static farcore.data.TDNA.*;
+import static farcore.data.TDNA.COLD_I;
+import static farcore.data.TDNA.COLD_II;
+import static farcore.data.TDNA.COLD_III;
+import static farcore.data.TDNA.EMPTY;
+import static farcore.data.TDNA.GROWTH_I;
+import static farcore.data.TDNA.GROWTH_III;
+import static farcore.data.TDNA.HEIGHT_I;
+import static farcore.data.TDNA.HEIGHT_II;
+import static farcore.data.TDNA.HEIGHT_III;
 
 import java.util.Random;
 
 import farcore.lib.collection.Stack;
-import farcore.lib.material.Mat;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.tree.dna.TreeDNAHelper;
@@ -19,12 +26,11 @@ public class TreeSpruce extends TreeBase
 			new TreeDNAProp(new Stack(EMPTY, 21), new Stack(GROWTH_I, 12), new Stack(GROWTH_III)),
 			new TreeDNAProp(new Stack(COLD_I, 18), new Stack(COLD_II, 7), new Stack(COLD_III, 3)));
 	private final TreeGenClassic generator1 = new TreeGenClassic(this, 0.05F);
-	
-	public TreeSpruce(Mat material)
-	{
-		super(material);
-	}
 
+	public TreeSpruce()
+	{
+	}
+	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{

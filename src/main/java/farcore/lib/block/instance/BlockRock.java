@@ -17,6 +17,7 @@ import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.instance.TECustomCarvedStone;
@@ -112,24 +113,22 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	}
 
 	public final Mat material;
-	public final float hardnessMultiplier;
-	public final float resistanceMultiplier;
-	public final int harvestLevel;
+	public final PropertyRock property;
 	private final float detTempCap;
 	private String localName;
 	public final BlockRockSlab[] slabGroup;
 
-	public BlockRock(String name, Mat material, String localName)
+	public BlockRock(String name, Mat material, PropertyRock property)
 	{
 		super(material.modid, name, Material.ROCK);
-		this.localName = localName;
 		this.material = material;
-		harvestLevel = material.blockHarvestLevel;
-		detTempCap = material.minTemperatureForExplosion;
+		this.property = property;
+		localName = material.localName;
+		detTempCap = property.minTemperatureForExplosion;
 		slabGroup = makeSlabs(name, material, localName);
 		setSoundType(SoundType.STONE);
-		setHardness(hardnessMultiplier = material.blockHardness);
-		setResistance(resistanceMultiplier = material.blockExplosionResistance);
+		setHardness(property.hardness);
+		setResistance(property.explosionResistance);
 		setTickRandomly(true);
 		setCreativeTab(CT.tabTerria);
 		setDefaultState(getDefaultState().withProperty(HEATED, false));
@@ -254,9 +253,9 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 			return 1;
 		case cobble :
 		case mossy :
-			return harvestLevel / 2;
+			return property.harvestLevel / 2;
 		default:
-			return harvestLevel;
+			return property.harvestLevel;
 		}
 	}
 	

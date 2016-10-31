@@ -5,7 +5,9 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
+import farcore.data.M;
 import farcore.lib.block.instance.BlockCrop;
+import farcore.lib.crop.ICrop;
 import farcore.lib.material.Mat;
 import farcore.lib.util.SubTag;
 import net.minecraft.block.Block;
@@ -25,7 +27,7 @@ public class StateMapperCrop implements IStateMapper
 		ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
 		for(Mat material : Mat.filt(SubTag.CROP))
 		{
-			for(String tag : material.crop.getAllowedState())
+			for(String tag : material.getProperty(M.property_crop, ICrop.VOID).getAllowedState())
 			{
 				builder.put(state.withProperty(BlockCrop.PROP_CROP_TYPE, tag), new ModelResourceLocation(FarCore.ID + ":crop/" + material.name, "state=" + tag));
 			}

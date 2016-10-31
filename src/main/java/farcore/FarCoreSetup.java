@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 
+import farcore.asm.FarOverride;
 import farcore.data.Config;
 import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.oredict.OreDictExt;
@@ -55,6 +56,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -82,17 +84,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreSetup
 {
 	private LanguageManager lang;
-
+	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
-
+	
 	public FarCoreSetup()
 	{
 		setup = this;
 		Log.logger = LogManager.getLogger(FarCore.ID);
 		OreDictExt.init();
 	}
-
+	
 	@EventHandler
 	public void check(FMLFingerprintViolationEvent event)
 	{
@@ -136,7 +138,7 @@ public class FarCoreSetup
 					"(Technical information: " + forge + " < " + FarCore.minForge + ")");
 		Log.info("Checking end.");
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -175,65 +177,76 @@ public class FarCoreSetup
 		lang.read();
 		FarCore.proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
 		FarCore.proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
 		FarCore.proxy.load(event);
 	}
-
+	
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		FarCore.proxy.load(event);
 		lang.write();
 	}
-
+	
 	@EventHandler
 	public void load(FMLServerStartingEvent event)
 	{
 	}
 
+	@NetworkCheckHandler
+	public static boolean check(Map<String, String> versions, Side side)
+	{
+		if(!versions.containsKey(FarCore.OVERRIDE_ID) || !FarOverride.VERSION.equals(versions.get(FarCore.OVERRIDE_ID)))
+		{
+			Log.warn("Fail to check " + side + " the FarOverride mod is missing or outdate please check your modpack is available to use.");
+			return false;
+		}
+		return true;
+	}
+	
 	public static class Proxy implements IGuiHandler
 	{
 		CommonLoader loader;
-
+		
 		public Proxy()
 		{
 			loader = createLoader();
 		}
-
+		
 		protected CommonLoader createLoader()
 		{
 			return new CommonLoader();
 		}
-
+		
 		public void load(FMLPreInitializationEvent event)
 		{
 			loader.preload();
 		}
-
+		
 		public void load(FMLInitializationEvent event)
 		{
 			loader.load();
 		}
-
+		
 		public void load(FMLPostInitializationEvent event)
 		{
 			loader.postload();
 		}
-
+		
 		public void load(FMLLoadCompleteEvent event)
 		{
 			loader.complete();
 		}
-		
+
 		@Override
 		public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
@@ -242,32 +255,32 @@ public class FarCoreSetup
 				return ((ITB_Containerable) tile).openContainer(ID, player);
 			return null;
 		}
-		
+
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
 			return null;
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
 	{
 		private static Map<String, List<IRenderRegister>> registers = new HashMap();
 		public static List<Block> buildInRender = new ArrayList();
-
+		
 		public ClientProxy()
 		{
 			//Take this proxy into resource manager reload listener.
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 		}
-		
+
 		@Override
 		protected CommonLoader createLoader()
 		{
 			return new ClientLoader();
 		}
-
+		
 		@Override
 		public void load(FMLPreInitializationEvent event)
 		{
@@ -276,7 +289,7 @@ public class FarCoreSetup
 			//PLACED CALL THIS METHOD ONCE IN CLIENT PROXY IF YOUR MOD CREATE NEW GAMING ELEMENTS(BLOCK, ITEM, ETC).
 			registerRenderObject();
 		}
-
+		
 		@Override
 		public void onResourceManagerReload(IResourceManager manager)
 		{
@@ -296,13 +309,13 @@ public class FarCoreSetup
 							entry.getKey(), L.cast(entry.getValue(), Item.class));
 				}
 			}
-
+			
 			if (Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION))
 			{
 				U.Client.getFontRender().onResourceManagerReload(manager);
 			}
 		}
-		
+
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
@@ -311,7 +324,7 @@ public class FarCoreSetup
 				return ((ITB_Containerable) tile).openGUI(ID, player);
 			return null;
 		}
-		
+
 		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, int metaCount)
 		{
 			Item item = Item.getItemFromBlock(block);
@@ -321,7 +334,7 @@ public class FarCoreSetup
 			}
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
-		
+
 		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, IProperty<T> property)
 		{
 			Item item = Item.getItemFromBlock(block);
@@ -340,7 +353,7 @@ public class FarCoreSetup
 			}
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
-		
+
 		public void addRenderRegisterListener(IRenderRegister register)
 		{
 			if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
@@ -352,7 +365,7 @@ public class FarCoreSetup
 				U.L.put(registers, U.Mod.getActiveModID(), register);
 			}
 		}
-		
+
 		/**
 		 * Let client proxy called this method when FML pre-initialization.
 		 */
@@ -367,7 +380,7 @@ public class FarCoreSetup
 				}
 			}
 		}
-
+		
 		/**
 		 * Internal, do not use. (Use ASM from forge)
 		 */

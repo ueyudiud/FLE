@@ -1,9 +1,9 @@
 package farcore.lib.block.instance;
 
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import farcore.lib.tile.instance.TECoreLeaves;
-import farcore.lib.tree.ITree;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -19,33 +19,33 @@ import net.minecraft.world.World;
  */
 public class BlockLeavesCore extends BlockLeaves implements ITileEntityProvider
 {
-	public static BlockLeavesCore create(BlockLeaves leaves, Mat material)
+	public static BlockLeavesCore create(BlockLeaves leaves, Mat material, PropertyTree $tree)
 	{
-		return new BlockLeavesCore(material, material.tree, leaves)
+		return new BlockLeavesCore(material, $tree, leaves)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
 			{
-				return material.tree.createLeavesStateContainer(this);
+				return $tree.createLeavesStateContainer(this);
 			}
 			
 			@Override
 			public int getMetaFromState(IBlockState state)
 			{
-				return material.tree.getLeavesMeta(state);
+				return $tree.getLeavesMeta(state);
 			}
 			
 			@Override
 			public IBlockState getStateFromMeta(int meta)
 			{
-				return material.tree.getLeavesState(this, meta);
+				return $tree.getLeavesState(this, meta);
 			}
 		};
 	}
 	
 	private BlockLeaves leaves;
 	
-	protected BlockLeavesCore(Mat material, ITree tree, BlockLeaves leaves)
+	protected BlockLeavesCore(Mat material, PropertyTree tree, BlockLeaves leaves)
 	{
 		super("leaves.core." + material.name, tree, material.localName + " Leaves");
 		setCreativeTab(null);

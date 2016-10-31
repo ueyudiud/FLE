@@ -21,6 +21,8 @@ public class FarOverride extends DummyModContainer
 
 	@Instance(FarCore.OVERRIDE_ID)
 	public static FarOverride override;
+	
+	public static final String VERSION = "1.1";
 
 	public FarOverride()
 	{
@@ -29,7 +31,7 @@ public class FarOverride extends DummyModContainer
 		ModMetadata meta = getMetadata();
 		meta.modId = FarCore.OVERRIDE_ID;
 		meta.name = "Far Override";
-		meta.version = "1.0";
+		meta.version = VERSION;
 		meta.credits = "ueyudiud";
 		meta.authorList = Arrays.asList("ueyudiud");
 		meta.description = "Far land era child mod, use to override minecraft objects.";

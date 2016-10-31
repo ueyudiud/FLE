@@ -13,7 +13,6 @@ import static farcore.data.TDNA.HOT_II;
 import java.util.Random;
 
 import farcore.lib.collection.Stack;
-import farcore.lib.material.Mat;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.tree.dna.TreeDNAHelper;
@@ -28,14 +27,13 @@ public class TreeAspen extends TreeBase
 			new TreeDNAProp(new Stack(EMPTY, 37), new Stack(DRY_I, 3)),
 			new TreeDNAProp(new Stack(HOT_I, 12), new Stack(HOT_II, 2)));
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.09F, false);
-	
-	public TreeAspen(Mat material)
+
+	public TreeAspen()
 	{
-		super(material);
 		helper = HELPER;
 		generator1.setTreeLeavesShape(5, 8, 1, 1.8F);
 	}
-	
+
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{

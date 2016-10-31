@@ -11,7 +11,6 @@ import static farcore.data.TDNA.HOT_II;
 import java.util.Random;
 
 import farcore.lib.collection.Stack;
-import farcore.lib.material.Mat;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.tree.dna.TreeDNAHelper;
@@ -26,14 +25,13 @@ public class TreeMorus extends TreeBase
 			new TreeDNAProp(new Stack(EMPTY, 21), new Stack(DRY_I, 8)),
 			new TreeDNAProp(new Stack(HOT_I, 12), new Stack(HOT_II, 3)));
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.08F, false);
-
-	public TreeMorus(Mat material)
+	
+	public TreeMorus()
 	{
-		super(material);
 		helper = HELPER;
 		generator1.setTreeLeavesShape(2, 5, 1, 3.2F);
 	}
-
+	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{

@@ -13,7 +13,7 @@ import static farcore.data.TDNA.HEIGHT_II;
 import java.util.Random;
 
 import farcore.lib.collection.Stack;
-import farcore.lib.material.Mat;
+import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.tree.dna.TreeDNAHelper;
@@ -28,9 +28,8 @@ public class TreeOakBlack extends TreeBase
 			new TreeDNAProp(new Stack(COLD_I, 21), new Stack(COLD_II, 5), new Stack(COLD_III)));
 	private final TreeGenClassic generator1 = new TreeGenClassic(this, 0.02F);
 
-	public TreeOakBlack(Mat material)
+	public TreeOakBlack()
 	{
-		super(material);
 		helper = HELPER;
 	}
 
@@ -38,14 +37,18 @@ public class TreeOakBlack extends TreeBase
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
 		if(info != null)
+		{
 			generator1.setHeight(info.height / 2 + 4, info.height + 3);
+		}
 		else
+		{
 			generator1.setHeight(4, 3);
+		}
 		return generator1.generateTreeAt(world, x, y, z, random, info);
 	}
 
 	@Override
-	public int getGrowAge()
+	public int getGrowAge(ISaplingAccess access)
 	{
 		return 90;
 	}

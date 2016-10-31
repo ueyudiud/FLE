@@ -3,10 +3,16 @@ package farcore.lib.util;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * For item tool tip,
+ * auto transfer unlocalized string to localized string.
+ * @author ueyudiud
+ *
+ */
 public class UnlocalizedList
 {
 	List<String> list;
-	
+
 	public UnlocalizedList()
 	{
 		this(new ArrayList());
@@ -15,12 +21,12 @@ public class UnlocalizedList
 	{
 		this.list = list;
 	}
-	
+
 	public void add(String arg, Object...translation)
 	{
 		list.add(LanguageManager.translateToLocal(arg, translation));
 	}
-	
+
 	public void addNotNull(String arg, Object...translation)
 	{
 		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg, translation);
@@ -29,12 +35,12 @@ public class UnlocalizedList
 			list.add(val);
 		}
 	}
-	
+
 	public void addLocal(String arg)
 	{
 		list.add(arg);
 	}
-	
+
 	public List<String> list()
 	{
 		return list;

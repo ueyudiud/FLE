@@ -10,7 +10,6 @@ import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
-import farcore.lib.material.Mat;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tree.dna.TreeDNAHelper;
@@ -31,58 +30,40 @@ public abstract class TreeBase implements ITree
 	public Block logArt;
 	public Block leaves;
 	public Block leavesCore;
-	protected Mat material;
 	protected TreeDNAHelper helper;
 	protected int leavesCheckRange = 4;
-	
-	public TreeBase(Mat material)
-	{
-		this.material = material;
-	}
-	
-	@Override
-	public String getRegisteredName()
-	{
-		return material.name;
-	}
-	
+
 	@Override
 	public void decodeDNA(TreeInfo biology, String dna)
 	{
 		helper.decodeDNA(biology, dna);
 	}
-	
+
 	@Override
 	public String makeNativeDNA()
 	{
 		return helper.nativeDNA;
 	}
-	
+
 	@Override
 	public String makeChildDNA(int generation, String par)
 	{
 		return helper.borderDNA(par, harmonic(generation, 2.5E-2, 1.0));
 	}
-	
+
 	protected float harmonic(int x, double chance, double mul)
 	{
 		if(x <= 0) return 0F;
 		x += 1;
 		return 1F / (float) (1D / (Math.log(x) * mul) + 1D / chance);
 	}
-	
+
 	@Override
 	public String makeOffspringDNA(String par1, String par2)
 	{
 		return helper.mixedDNA(par1, par2);
 	}
-	
-	@Override
-	public Mat material()
-	{
-		return material;
-	}
-	
+
 	@Override
 	public void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves,
 			BlockLeavesCore leavesCore)
@@ -92,19 +73,19 @@ public abstract class TreeBase implements ITree
 		this.leaves = leaves;
 		this.leavesCore = leavesCore;
 	}
-	
+
 	@Override
 	public boolean tickLogUpdate()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void updateLog(World world, BlockPos pos, Random rand, boolean isArt)
 	{
-		
+
 	}
-	
+
 	@Override
 	public void updateLeaves(World world, BlockPos pos, Random rand)
 	{
@@ -117,28 +98,28 @@ public abstract class TreeBase implements ITree
 			checkDencyLeaves(world, pos, leavesCheckRange);
 		}
 	}
-	
+
 	protected boolean canLeaveGrowNearby(World world, BlockPos pos)
 	{
 		return U.Worlds.isBlockNearby(world, pos, logNat, false);
 	}
-	
+
 	protected boolean shouldLeavesDency(World world, BlockPos pos)
 	{
 		return world.getBlockState(pos).getValue(net.minecraft.block.BlockLeaves.CHECK_DECAY);
 	}
-	
+
 	@Override
 	public void beginLeavesDency(World world, BlockPos pos)
 	{
 		U.Worlds.switchProp(world, pos, net.minecraft.block.BlockLeaves.CHECK_DECAY, true, 2);
 	}
-	
+
 	public void stopLeavesDency(World world, BlockPos pos)
 	{
 		U.Worlds.switchProp(world, pos, net.minecraft.block.BlockLeaves.CHECK_DECAY, false, 2);
 	}
-	
+
 	protected void checkDencyLeaves(World world, BlockPos pos, int maxL)
 	{
 		int range = 2 * maxL + 1;
@@ -155,17 +136,17 @@ public abstract class TreeBase implements ITree
 		}
 		dencyLeaves(maxL, world, pos, checkBuffer);
 	}
-	
+
 	protected boolean isLeaves(World world, BlockPos pos)
 	{
 		return isLeaves(world.getBlockState(pos).getBlock());
 	}
-	
+
 	protected boolean isLeaves(Block block)
 	{
 		return block == leaves || block == leavesCore;
 	}
-	
+
 	private void checkLeaves(int length, World world, BlockPos pos, int ofX, int ofY, int ofZ, int[][][] flags)
 	{
 		if(flags[length + ofX][length + ofY][length + ofZ] != 0)
@@ -236,7 +217,7 @@ public abstract class TreeBase implements ITree
 			}
 		}
 	}
-	
+
 	protected void beginLeavesDency(int length, World world, BlockPos pos)
 	{
 		BlockPos pos2;
@@ -252,7 +233,7 @@ public abstract class TreeBase implements ITree
 			}
 		}
 	}
-	
+
 	private void dencyLeaves(int length, World world, BlockPos pos, int[][][] flags)
 	{
 		for(int i = -length; i <= length; ++i)
@@ -274,88 +255,88 @@ public abstract class TreeBase implements ITree
 			}
 		}
 	}
-	
+
 	protected void onLeavesDead(World world, BlockPos pos)
 	{
 		U.Worlds.spawnDropsInWorld(world, pos, getLeavesDrops(world, pos, world.getBlockState(pos), 0, false, new ArrayList()));
 		world.setBlockToAir(pos);
 	}
-	
+
 	@Override
 	public void breakLog(World world, BlockPos pos, IBlockState state, boolean isArt)
 	{
-		
+
 	}
-	
+
 	@Override
 	public void breakLeaves(World world, BlockPos pos, IBlockState state)
 	{
 		beginLeavesDency(leavesCheckRange, world, pos);
 	}
-	
+
 	@Override
 	public boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos,
 			float yPos, float zPos, boolean isArt)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ, boolean isArt)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction direction, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolUseLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
 			Direction direction, float hitX, float hitY, float hitZ, boolean isArt)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolUseLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
 			BlockPos pos, Direction direction, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
-	
+
 	@Override
 	public List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList list)
 	{
 		return list;
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune,
 			boolean silkTouching, ArrayList list)
 	{
 		return list;
 	}
-	
+
 	@Override
 	public abstract boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info);
-	
+
 	@Override
 	public int onSaplingUpdate(ISaplingAccess access)
 	{
 		return 1;
 	}
-	
+
 	@Override
-	public int getGrowAge()
+	public int getGrowAge(ISaplingAccess access)
 	{
 		return 80;
 	}
-	
+
 	protected void generateTreeLeaves(World world, BlockPos pos, int meta, float generateCoreLeavesChance, TreeInfo info)
 	{
 		meta &= 0x7;

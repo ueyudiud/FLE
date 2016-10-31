@@ -1,3 +1,4 @@
+//copyright© 2016 by ueyudiud
 package farcore;
 
 import farcore.network.Network;

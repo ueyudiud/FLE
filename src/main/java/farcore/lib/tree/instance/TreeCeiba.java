@@ -14,7 +14,7 @@ import static farcore.data.TDNA.HOT_III;
 import java.util.Random;
 
 import farcore.lib.collection.Stack;
-import farcore.lib.material.Mat;
+import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.tree.dna.TreeDNAHelper;
@@ -29,9 +29,8 @@ public class TreeCeiba extends TreeBase
 			new TreeDNAProp(new Stack(HOT_I, 18), new Stack(HOT_II, 4), new Stack(HOT_III)));
 	private final TreeGenJungle generator1 = new TreeGenJungle(this, 1.2E-2F);
 	
-	public TreeCeiba(Mat material)
+	public TreeCeiba()
 	{
-		super(material);
 		helper = HELPER;
 		leavesCheckRange = 6;
 	}
@@ -51,7 +50,7 @@ public class TreeCeiba extends TreeBase
 	}
 	
 	@Override
-	public int getGrowAge()
+	public int getGrowAge(ISaplingAccess access)
 	{
 		return 120;
 	}

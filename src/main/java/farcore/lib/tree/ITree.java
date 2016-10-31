@@ -10,9 +10,7 @@ import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
-import farcore.lib.material.Mat;
 import farcore.lib.util.Direction;
-import farcore.lib.util.IRegisteredNameable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -26,11 +24,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public interface ITree extends IRegisteredNameable, ITreeGenerator, IDNADecoder<TreeInfo>
+public interface ITree extends ITreeGenerator, IDNADecoder<TreeInfo>
 {
 	ITree VOID = new TreeVoid();
 
-	Mat material();
+	//	Mat material();
 
 	void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore);
 
@@ -108,5 +106,5 @@ public interface ITree extends IRegisteredNameable, ITreeGenerator, IDNADecoder<
 
 	int onSaplingUpdate(ISaplingAccess access);
 
-	int getGrowAge();
+	int getGrowAge(ISaplingAccess access);
 }

@@ -5,10 +5,11 @@ import farcore.data.EnumToolType;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.material.MaterialLog;
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.model.block.StateMapperExt;
-import farcore.lib.tree.ITree;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -21,9 +22,9 @@ public class BlockLog extends BlockBase
 {
 	public static final MaterialLog LOG = new MaterialLog();
 	
-	public ITree tree;
+	public PropertyTree tree;
 
-	protected BlockLog(String name, Mat material, ITree tree)
+	protected BlockLog(String name, Mat material, PropertyTree tree)
 	{
 		super(material.modid, name, LOG);
 		this.tree = tree;
@@ -68,6 +69,18 @@ public class BlockLog extends BlockBase
 	public int damageDropped(IBlockState state)
 	{
 		return 0;
+	}
+
+	@Override
+	public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
+	{
+		return tree.hardness;
+	}
+
+	@Override
+	public float getExplosionResistance(Entity exploder)
+	{
+		return tree.explosionResistance;
 	}
 
 	@Override

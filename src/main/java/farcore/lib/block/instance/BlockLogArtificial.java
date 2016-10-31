@@ -7,7 +7,7 @@ import farcore.data.EnumToolType;
 import farcore.data.MC;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.material.Mat;
-import farcore.lib.tree.ITree;
+import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U.OreDict;
@@ -26,35 +26,33 @@ import net.minecraft.world.World;
 
 public class BlockLogArtificial extends BlockLog implements IToolableBlock
 {
-	public static BlockLogArtificial create(Mat material)
+	public static BlockLogArtificial create(Mat material, PropertyTree $tree)
 	{
-		return new BlockLogArtificial(material, material.tree)
+		return new BlockLogArtificial(material, $tree)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
 			{
-				return material.tree.createLogStateContainer(this, true);
+				return $tree.createLogStateContainer(this, true);
 			}
-			
+
 			@Override
 			public int getMetaFromState(IBlockState state)
 			{
-				return material.tree.getLogMeta(state, true);
+				return $tree.getLogMeta(state, true);
 			}
-			
+
 			@Override
 			public IBlockState getStateFromMeta(int meta)
 			{
-				return material.tree.getLogState(this, meta, true);
+				return $tree.getLogState(this, meta, true);
 			}
 		};
 	}
-	
-	protected BlockLogArtificial(Mat material, ITree tree)
+
+	protected BlockLogArtificial(Mat material, PropertyTree tree)
 	{
 		super("log.artifical." + material.name, material, tree);
-		setHardness(material.blockHardness / 2F);
-		setResistance(material.blockExplosionResistance);
 		setCreativeTab(CT.tabTree);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), material.localName + " Log");
 		if(tree.tickLogUpdate())
@@ -62,7 +60,7 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 			setTickRandomly(true);
 		}
 	}
-	
+
 	@Override
 	public void postInitalizedBlocks()
 	{
@@ -70,37 +68,37 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 		OreDict.registerValid("logWood", this);
 		MC.log.registerOre(tree.material(), this);
 	}
-	
+
 	@Override
 	public boolean canBreakBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
 		tree.breakLog(worldIn, pos, state, true);
 	}
-	
+
 	@Override
 	public int tickRate(World worldIn)
 	{
 		return 20;
 	}
-	
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
 		tree.updateLog(worldIn, pos, rand, true);
 	}
-	
+
 	@Override
 	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
 	{
@@ -110,28 +108,28 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 			((World) world).scheduleUpdate(pos, this, tickRate((World) world));
 		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		return tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, true);
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
 		return tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, true);
 	}
-	
+
 	@Override
 	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return tree.onToolUseLog(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ, true);
 	}
-	
+
 	@Override
 	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 	{
@@ -171,25 +169,25 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 		}
 		return axis2 != axis4;
 	}
-	
+
 	@Override
 	public EnumFacing[] getValidRotations(World world, BlockPos pos)
 	{
 		return EnumFacing.VALUES;
 	}
-	
+
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return 25;
 	}
-	
+
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

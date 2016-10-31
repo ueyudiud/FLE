@@ -10,8 +10,8 @@ import farcore.data.EnumToolType;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.model.block.StateMapperExt;
-import farcore.lib.tree.ITree;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U;
@@ -39,37 +39,37 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 {
-	public static BlockLeaves create(Mat material)
+	public static BlockLeaves create(Mat material, PropertyTree $tree)
 	{
-		return new BlockLeaves(material, material.tree)
+		return new BlockLeaves(material, $tree)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
 			{
-				return material.tree.createLeavesStateContainer(this);
+				return $tree.createLeavesStateContainer(this);
 			}
 			
 			@Override
 			public int getMetaFromState(IBlockState state)
 			{
-				return material.tree.getLeavesMeta(state);
+				return $tree.getLeavesMeta(state);
 			}
 			
 			@Override
 			public IBlockState getStateFromMeta(int meta)
 			{
-				return material.tree.getLeavesState(this, meta);
+				return $tree.getLeavesState(this, meta);
 			}
 		};
 	}
 	
-	public ITree tree;
+	public PropertyTree tree;
 	
-	BlockLeaves(Mat material, ITree tree)
+	BlockLeaves(Mat material, PropertyTree tree)
 	{
 		this("leaves." + material.name, tree, material.localName + " Leaves");
 	}
-	protected BlockLeaves(String name, ITree tree, String localName)
+	protected BlockLeaves(String name, PropertyTree tree, String localName)
 	{
 		super(name, Material.LEAVES);
 		this.tree = tree;
