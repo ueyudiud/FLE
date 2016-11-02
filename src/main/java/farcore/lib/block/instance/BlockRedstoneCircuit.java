@@ -1,7 +1,13 @@
 package farcore.lib.block.instance;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
 import farcore.data.EnumBlock;
@@ -10,6 +16,10 @@ import farcore.data.Others;
 import farcore.lib.block.BlockTE;
 import farcore.lib.collection.IRegister;
 import farcore.lib.material.Mat;
+import farcore.lib.model.block.BlockStateTileEntityWapper;
+import farcore.lib.model.block.ModelRedstoneCircuit;
+import farcore.lib.model.block.StateMapperCircuit;
+import farcore.lib.prop.PropertyString;
 import farcore.lib.prop.PropertyTE.TETag;
 import farcore.lib.tile.instance.circuit.TECircuitAnd;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
@@ -31,9 +41,9 @@ import farcore.lib.util.UnlocalizedList;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -45,12 +55,42 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRedstoneCircuit extends BlockTE
 {
-	private static final PropertyInteger CUSTOM_VALUE = PropertyInteger.create("custom", 0, 16);
+	public static final Map<String, List<String>> ALLOWED_STATES;
+	
+	public static final PropertyString CUSTOM_VALUE;
+	
+	static
+	{
+		ImmutableMap.Builder<String, List<String>> builder1 = ImmutableMap.builder();
+		builder1.put("repeater", Arrays.asList("t0_on", "t0_off", "t1_on", "t1_off", "t2_on", "t2_off", "t3_on", "t3_off", "t4_on", "t4_off"));
+		builder1.put("ticking", Arrays.asList("_"));
+		builder1.put("rslatch", Arrays.asList("_"));
+		builder1.put("synchronizer", Arrays.asList("_"));
+		builder1.put("not", Arrays.asList("_"));
+		builder1.put("or", Arrays.asList("_"));
+		builder1.put("and", Arrays.asList("_"));
+		builder1.put("xor", Arrays.asList("_"));
+		builder1.put("nand", Arrays.asList("_"));
+		builder1.put("nor", Arrays.asList("_"));
+		builder1.put("belong", Arrays.asList("_"));
+		builder1.put("cross", Arrays.asList("_"));
+		builder1.put("invert", Arrays.asList("_"));
+		builder1.put("sensor_light", Arrays.asList("_"));
+		ALLOWED_STATES = builder1.build();
+		HashSet<String> set = new HashSet();
+		for(List<String> list : ALLOWED_STATES.values())
+		{
+			set.addAll(list);
+		}
+		CUSTOM_VALUE = new PropertyString("value", ImmutableList.copyOf(set));
+	}
 	
 	public BlockRedstoneCircuit()
 	{
@@ -59,9 +99,16 @@ public class BlockRedstoneCircuit extends BlockTE
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state)
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
 	{
-		return property_TE.getMetaFromState(state);
+		super.registerRender();
+		ModelLoaderRegistry.registerLoader(ModelRedstoneCircuit.RedstoneCircuitModelLoader.INSTANCE);
+		ModelLoader.setCustomStateMapper(this, new StateMapperCircuit());
+		for(TETag tag : property_TE.getAllowedValues())
+		{
+			ModelLoader.setCustomModelResourceLocation(item, tag.id(), new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), "inventory"));
+		}
 	}
 
 	public static ItemStack createItemStack(int meta, Mat material)
@@ -82,14 +129,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, createTEProperty(), Others.PROP_DIRECTION_HORIZONTALS);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerRender()
-	{
-		super.registerRender();
+		return new BlockStateContainer(this, createTEProperty(), Others.PROP_DIRECTION_HORIZONTALS, CUSTOM_VALUE);
 	}
 	
 	@Override
@@ -99,11 +139,21 @@ public class BlockRedstoneCircuit extends BlockTE
 		state = property_TE.withProperty(state, tile);
 		if(tile instanceof TECircuitBase)
 		{
-			state = state.withProperty(Others.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation());
+			state = state
+					.withProperty(Others.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation())
+					.withProperty(CUSTOM_VALUE, ((TECircuitBase) tile).getState());
 		}
 		return state;
 	}
 
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TECircuitBase)
+			return BlockStateTileEntityWapper.wrap(tile, state);
+		return super.getExtendedState(state, world, pos);
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

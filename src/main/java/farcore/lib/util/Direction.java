@@ -1,6 +1,7 @@
 package farcore.lib.util;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
@@ -43,6 +44,12 @@ public enum Direction implements IStringSerializable
 	};
 
 	public static final int[] OPPISITE = {1, 0, 3, 2, 5, 4, 7, 6, 8};
+	public static final byte T_2D = 0x0;
+	public static final byte T_3D = 0x1;
+	public static final byte T_4D = 0x2;
+	public static final byte T_2D_NONNULL = 0x4;
+	public static final byte T_3D_NONNULL = 0x5;
+	public static final byte T_4D_NONNULL = 0x6;
 	public static final Direction[] DIRECTIONS_2D = {N, S, W, E};
 	public static final Direction[] DIRECTIONS_3D = {D, U, N, S, W, E};
 	public static final Direction[] DIRECTIONS_4D = {D, U, N, S, W, E, A, B};
@@ -148,5 +155,68 @@ public enum Direction implements IStringSerializable
 	public String getName()
 	{
 		return Character.toString(chr);
+	}
+	
+	public static Direction readFromNBT(NBTTagCompound nbt, String key, byte type)
+	{
+		boolean flag = (type & 0x4) != 0;
+		if(!nbt.hasKey(key)) return flag ? N : Q;
+		try
+		{
+			Direction dir = values()[nbt.getByte(key)];
+			switch (type & 0x3)
+			{
+			case 0 :
+				if(dir.y != 0)
+				{
+					Log.warn("The side %s is not valid for this object, the nbt might broken.", dir);
+					return N;
+				}
+			case 1 :
+				if(dir.t != 0)
+				{
+					Log.warn("The side %s is not valid for this object, the nbt might broken.", dir);
+					return N;
+				}
+			case 2 :
+			default:
+				return dir;
+			}
+		}
+		catch(Exception exception)
+		{
+			return flag ? N : Q;
+		}
+	}
+	
+	public void writeToNBT(NBTTagCompound nbt, String key, byte type)
+	{
+		boolean flag = (type & 0x4) != 0;
+		Direction dir = this;
+		if(flag)
+		{
+			if(dir == Q)
+			{
+				dir = N;
+			}
+		}
+		else if(dir == Q) return;
+		switch (type & 0x3)
+		{
+		case 0 :
+			if(y != 0)
+			{
+				dir = N;
+			}
+		case 1 :
+			if(t != 0)
+			{
+				dir = N;
+			}
+		case 2 :
+		default:
+			break;
+		}
+		nbt.setByte(key, (byte) ordinal());
 	}
 }

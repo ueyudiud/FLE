@@ -13,11 +13,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelFluid;
 import net.minecraftforge.fluids.BlockFluidBase;
@@ -30,18 +28,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelFluidBlock
 {
 	@SideOnly(Side.CLIENT)
-	public static enum Loader implements ICustomModelLoader
+	public static enum Loader implements IFarCustomModelLoader
 	{
 		instance;
-
+		
 		@Override
-		public void onResourceManagerReload(IResourceManager resourceManager){	}
-
-		@Override
-		public boolean accepts(ResourceLocation modelLocation)
+		public String getLoaderPrefix()
 		{
-			return modelLocation.getResourceDomain().equals(FarCore.INNER_RENDER) &&
-					modelLocation.getResourcePath().startsWith("fluid.");
+			return "fluid.";
 		}
 
 		@Override
@@ -61,12 +55,12 @@ public class ModelFluidBlock
 			}
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static enum Selector implements ICustomItemModelSelector, IStateMapper
 	{
 		instance;
-		
+
 		@Override
 		public ModelResourceLocation getModelLocation(ItemStack stack)
 		{
@@ -80,7 +74,7 @@ public class ModelFluidBlock
 			}
 			return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
 		}
-		
+
 		@Override
 		public List<ResourceLocation> getAllowedResourceLocations(Item item)
 		{
@@ -94,7 +88,7 @@ public class ModelFluidBlock
 			}
 			return ImmutableList.of();
 		}
-		
+
 		private ModelResourceLocation getLocationFromFluid(Fluid fluid, String variants)
 		{
 			if(fluid == null)
@@ -103,7 +97,7 @@ public class ModelFluidBlock
 			}
 			return new ModelResourceLocation(FarCore.INNER_RENDER + ":fluid." + fluid.getName(), variants);
 		}
-
+		
 		@Override
 		public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 		{

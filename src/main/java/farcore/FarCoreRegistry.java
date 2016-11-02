@@ -8,10 +8,12 @@ import farcore.energy.thermal.IWorldThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreKeyHandler;
+import farcore.handler.FarCoreTextureHandler;
 import farcore.handler.FarCoreWorldHandler;
 import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.render.Colormap;
+import farcore.lib.render.IIconLoader;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.world.IObjectInWorld;
 import farcore.lib.world.IWorldGenerateReplacer;
@@ -42,7 +44,7 @@ public class FarCoreRegistry
 	 * The world generate replacer during world generating.
 	 */
 	public static final List<IWorldGenerateReplacer> worldGenerateReplacers = new ArrayList();
-
+	
 	/**
 	 * Add world generate replacer to generator.
 	 * @param replacer
@@ -51,7 +53,7 @@ public class FarCoreRegistry
 	{
 		worldGenerateReplacers.add(replacer);
 	}
-
+	
 	/**
 	 * The tile entity need a register name for saving to NBT.
 	 * Register tile to map.
@@ -62,7 +64,7 @@ public class FarCoreRegistry
 	{
 		TileEntity.addMapping(tileEntityClass, id);
 	}
-	
+
 	/**
 	 * Register event listener to minecraft forge event bus.
 	 * @param object
@@ -71,7 +73,7 @@ public class FarCoreRegistry
 	{
 		MinecraftForge.EVENT_BUS.register(listener);
 	}
-
+	
 	/**
 	 * Added new energy net(Which handle in whole world).
 	 * @param net
@@ -80,7 +82,7 @@ public class FarCoreRegistry
 	{
 		FarCoreEnergyHandler.addNet(net);
 	}
-	
+
 	/**
 	 * Register a object current in world, which is contain
 	 * in a world but is not a block or entity.
@@ -94,7 +96,7 @@ public class FarCoreRegistry
 	{
 		FarCoreWorldHandler.registerObject(id, objInWorldClass);
 	}
-
+	
 	/**
 	 * Register a thermal handler of world.
 	 * @param handler
@@ -103,7 +105,7 @@ public class FarCoreRegistry
 	{
 		ThermalNet.registerWorldThermalHandler(handler);
 	}
-	
+
 	/**
 	 * Register entity type to FML.
 	 * @param name
@@ -118,7 +120,7 @@ public class FarCoreRegistry
 	{
 		EntityRegistry.registerModEntity(entityClass, name, id, mod, trackingRange, updateFrequency, sendsVelocityUpdates);
 	}
-	
+
 	/**
 	 * Add localized name to mapping.
 	 * @param unlocalized The key name need translate.
@@ -128,7 +130,7 @@ public class FarCoreRegistry
 	{
 		LanguageManager.registerLocal(unlocalized, localized);
 	}
-
+	
 	/**
 	 * Get network if it already exist, or create a new network.
 	 * @param name
@@ -138,7 +140,7 @@ public class FarCoreRegistry
 	{
 		return Network.network(name);
 	}
-	
+
 	/**
 	 * Register a packet type to mapping.<br>
 	 * @param id The name of packet, the number id will generates automatically.
@@ -149,7 +151,7 @@ public class FarCoreRegistry
 	{
 		Network.network(id).registerPacket(packetClass, sendTo);
 	}
-	
+
 	/**
 	 * Register a key for client side.<br>
 	 * @param modid The mod register this key.
@@ -161,12 +163,12 @@ public class FarCoreRegistry
 	{
 		FarCoreKeyHandler.register(id, keycode, modid);
 	}
-	
+
 	public static void registerKey(String id, int keycode)
 	{
 		FarCoreKeyHandler.register(id, keycode);
 	}
-
+	
 	/**
 	 * Register item model location to FarCoreItemModelLoader,
 	 * which can make more flexible item models.
@@ -181,13 +183,13 @@ public class FarCoreRegistry
 	{
 		FarCoreItemModelLoader.registerModel(item, location);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void registerModelSelector(Block block, ICustomItemModelSelector selector)
 	{
 		U.Mod.registerCustomItemModelSelector(block, selector);
 	}
-
+	
 	/**
 	 * Register item model selector, which can switch model in code.
 	 * @param item The item need model selector.
@@ -198,19 +200,19 @@ public class FarCoreRegistry
 	{
 		U.Mod.registerCustomItemModelSelector(item, selector);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void registerColorMultiplier(Block block, IBlockColor colors)
 	{
 		U.Mod.registerColorMultiplier(colors, block);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void registerColorMultiplier(Item item, IItemColor colors)
 	{
 		U.Mod.registerColorMultiplier(colors, item);
 	}
-	
+
 	/**
 	 * Register an model need't use model by resource pack.
 	 * @param block
@@ -220,7 +222,7 @@ public class FarCoreRegistry
 	{
 		Mod.registerBuildInModel(block);
 	}
-
+	
 	/**
 	 * Get a color map (2D coordinated RGB value), loaded from selected path.
 	 * @param location The location of color map.
@@ -231,5 +233,11 @@ public class FarCoreRegistry
 	public static Colormap getColormap(String location)
 	{
 		return Colormap.getColormap(location);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void addIconLoader(IIconLoader loader)
+	{
+		FarCoreTextureHandler.addIconLoader(loader);
 	}
 }

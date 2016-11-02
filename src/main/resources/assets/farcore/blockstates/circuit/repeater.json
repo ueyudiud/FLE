@@ -1,0 +1,28 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/repeater" 
+		}
+	},
+	"variants": {
+		"value": {
+			"t0_on": { "custom": { "mixed": "farcore:circuit/repeater/t0_on" }},
+			"t1_on": { "custom": { "mixed": "farcore:circuit/repeater/t1_on" }},
+			"t2_on": { "custom": { "mixed": "farcore:circuit/repeater/t2_on" }},
+			"t3_on": { "custom": { "mixed": "farcore:circuit/repeater/t3_on" }},
+			"t0_off": { "custom": { "mixed": "farcore:circuit/repeater/t0_off" }},
+			"t1_off": { "custom": { "mixed": "farcore:circuit/repeater/t1_off" }},
+			"t2_off": { "custom": { "mixed": "farcore:circuit/repeater/t2_off" }},
+			"t3_off": { "custom": { "mixed": "farcore:circuit/repeater/t3_off" }}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

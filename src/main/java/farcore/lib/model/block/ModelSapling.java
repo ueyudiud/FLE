@@ -24,11 +24,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
@@ -37,36 +35,28 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel
+public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel
 {
 	instance;
-	
+
 	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
 	private static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "normal");
 	private static final ResourceLocation MODEL_ITEM_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "inventory");
-	
+
 	public static final Map<String, TextureAtlasSprite> ICON_MAP = new HashMap();
-	
+
 	private List<ResourceLocation> textures;
-	
+
 	ModelSapling()
 	{
 	}
-	
+
 	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager)
+	public String getLoaderPrefix()
 	{
-		
+		return "sapling";
 	}
-	
-	@Override
-	public boolean accepts(ResourceLocation modelLocation)
-	{
-		return modelLocation == MODEL_LOCATION ||
-				(modelLocation.getResourceDomain().equals(FarCore.INNER_RENDER) &&
-						modelLocation.getResourcePath().startsWith("sapling"));
-	}
-	
+
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
@@ -78,7 +68,7 @@ public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector
 		ResourceLocation location = new ResourceLocation(strings[1], "blocks/sapling/" + strings[2]);
 		return ModelHelper.makeItemModel(location);
 	}
-	
+
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
@@ -93,7 +83,7 @@ public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector
 		}
 		return textures;
 	}
-	
+
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -109,19 +99,19 @@ public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector
 		}
 		return new BakedSaplingModel(builder.build(), model.bake(state, format, bakedTextureGetter));
 	}
-	
+
 	@Override
 	public IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
-	
+
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
 		return ImmutableList.of();
 	}
-
+	
 	@Override
 	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 	{
@@ -132,14 +122,14 @@ public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector
 		}
 		return map.build();
 	}
-
+	
 	@Override
 	public ModelResourceLocation getModelLocation(ItemStack stack)
 	{
 		Mat material = Mat.material(stack.getItemDamage());
 		return new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory");
 	}
-	
+
 	@Override
 	public List<ResourceLocation> getAllowedResourceLocations(Item item)
 	{
@@ -150,18 +140,18 @@ public enum ModelSapling implements ICustomModelLoader, ICustomItemModelSelector
 		}
 		return builder.build();
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	class BakedSaplingModel extends BakedModelRetexture
 	{
 		private Map<String, TextureAtlasSprite> icons;
-		
+
 		public BakedSaplingModel(Map<String, TextureAtlasSprite> icons, IBakedModel basemodel)
 		{
 			super(basemodel);
 			this.icons = icons;
 		}
-
+		
 		@Override
 		protected void replaceQuads(IBlockState state, Builder<BakedQuad> newList, List<BakedQuad> oldList)
 		{

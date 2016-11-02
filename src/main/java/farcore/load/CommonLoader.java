@@ -229,6 +229,8 @@ public class CommonLoader
 		LanguageManager.registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");
 		LanguageManager.registerLocal("info.redstone.circuit.material", "Material : " + ChatFormatting.YELLOW + "%s");
 		LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
+		LanguageManager.registerLocal("commands.date.usage", "/date");
+		LanguageManager.registerLocal("commands.date.arg.err", "Invalid command argument");
 		//Setup network.
 		FarCore.network = Network.network(FarCore.ID);
 		FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);

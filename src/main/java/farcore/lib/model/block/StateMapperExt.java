@@ -29,15 +29,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class StateMapperExt extends StateMapperBase
 {
 	private static final Comparator<IProperty<?>> PROPERTY_COMPARATOR = (IProperty<?> property1, IProperty<?> property2) -> property1.getName().compareTo(property2.getName());
-
+	
 	private String path;
 	private IProperty<?> fileProperty;
 	private List<IProperty> ignore;
 	private String variantsKey;
 	private String variantsValue;
-
+	
 	private IProperty<String> fakeProperty;
-
+	
 	public StateMapperExt(String modid, String path, IProperty property1, IProperty...properties)
 	{
 		this(modid + ":" + path, property1, properties);
@@ -48,31 +48,23 @@ public class StateMapperExt extends StateMapperBase
 		fileProperty = property1;
 		ignore = ImmutableList.copyOf(properties);
 	}
-	
+
 	public void markVariantProperty()
 	{
-		markVariantProperty(new PropertyHelper<String>(variantsKey, String.class)
-		{
-			@Override
-			public Collection<String> getAllowedValues() { return ImmutableList.of(variantsValue); }
-			@Override
-			public Optional<String> parseValue(String value) { return Optional.of(variantsValue); }
-			@Override
-			public String getName(String value) { return value; }
-		});
+		markVariantProperty(createFakeProperty(variantsKey, variantsValue));
 	}
-
+	
 	public void markVariantProperty(IProperty<String> property)
 	{
 		fakeProperty = property;
 	}
-	
+
 	public void setVariants(String key, String value)
 	{
 		variantsKey = key;
 		variantsValue = value;
 	}
-	
+
 	@Override
 	public ModelResourceLocation getModelResourceLocation(IBlockState state)
 	{
@@ -85,7 +77,7 @@ public class StateMapperExt extends StateMapperBase
 			}
 			map.put(fakeProperty, variantsValue);
 		}
-
+		
 		String key = path;
 		if(fileProperty != null)
 		{
@@ -99,18 +91,34 @@ public class StateMapperExt extends StateMapperBase
 		{
 			map.remove(property);
 		}
-		
+
 		map = ImmutableSortedMap.copyOf(map, PROPERTY_COMPARATOR);
-		
-		ModelResourceLocation location = new ModelResourceLocation(path, getPropertyString(map));
+
+		ModelResourceLocation location = new ModelResourceLocation(path, getPropertyKey(map));
 		return location;
 	}
-
-	@Override
-	public String getPropertyString(Map<IProperty<?>, Comparable<?>> values)
+	
+	public static IProperty<String> createFakeProperty(String key, String value)
 	{
+		return new PropertyHelper<String>(key, String.class)
+		{
+			@Override
+			public Collection<String> getAllowedValues() { return ImmutableList.of(value); }
+			@Override
+			public Optional<String> parseValue(String value) { return Optional.of(value); }
+			@Override
+			public String getName(String value) { return value; }
+		};
+	}
+	
+	public static String getPropertyKey(Map<IProperty<?>, Comparable<?>> values)
+	{
+		if(!(values instanceof ImmutableSortedMap))
+		{
+			values = ImmutableSortedMap.copyOf(values, PROPERTY_COMPARATOR);
+		}
 		StringBuilder builder = new StringBuilder();
-
+		
 		for (Entry<IProperty<?>, Comparable<?>> entry : values.entrySet())
 		{
 			if (builder.length() != 0)
@@ -126,8 +134,8 @@ public class StateMapperExt extends StateMapperBase
 		}
 		return builder.toString();
 	}
-
-	protected static <T extends Comparable<T>> String removeAndGet(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
+	
+	public static <T extends Comparable<T>> String removeAndGet(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
 	{
 		return property.getName((T) map.remove(property));
 	}

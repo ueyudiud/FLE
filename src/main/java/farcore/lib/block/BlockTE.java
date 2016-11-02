@@ -6,6 +6,7 @@ import java.util.List;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.prop.PropertyTE;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockAdded;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import farcore.lib.tile.instance.TELossTile;
 import net.minecraft.block.material.MapColor;
@@ -79,6 +80,17 @@ public abstract class BlockTE extends BlockSingleTE
 	}
 
 	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+	{
+		TileEntity tile = state.getValue(property_TE).newInstance();
+		worldIn.setTileEntity(pos, tile);
+		if(tile instanceof ITB_BlockAdded)
+		{
+			((ITB_BlockAdded) tile).onBlockAdded(state);
+		}
+	}
+
+	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
 			int meta, EntityLivingBase placer)
 	{
@@ -100,7 +112,7 @@ public abstract class BlockTE extends BlockSingleTE
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return state.getValue(property_TE).newInstance();
+		return new TELossTile();//Only for client, the server not need use this method to create tile entity.
 	}
 	
 	@Override

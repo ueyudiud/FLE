@@ -1,7 +1,9 @@
 package farcore.load;
 
 import farcore.FarCore;
+import farcore.data.IC;
 import farcore.handler.FarCoreGuiHandler;
+import farcore.handler.FarCoreTextureHandler;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.model.block.ModelFluidBlock;
@@ -31,6 +33,10 @@ public class ClientLoader extends CommonLoader
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
 		//Register client side handler.
 		MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
+		MinecraftForge.EVENT_BUS.register(new FarCoreTextureHandler());
+
+		FarCoreTextureHandler.addIconLoader(IC.INSTANCE);
+
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
 		//Register entity rendering handlers.
 		RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);

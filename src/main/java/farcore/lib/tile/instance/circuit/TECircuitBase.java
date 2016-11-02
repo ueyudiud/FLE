@@ -3,11 +3,16 @@ package farcore.lib.tile.instance.circuit;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import farcore.data.EnumToolType;
+import farcore.data.IC;
 import farcore.data.M;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
+import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockDestroyedByPlayer;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
@@ -26,6 +31,8 @@ import farcore.lib.util.Facing;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +42,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
@@ -44,7 +52,7 @@ public abstract class TECircuitBase extends TESynchronization
 implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride,
 ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile,
 ITP_Drops, ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITP_BlockHardness,
-ITP_ExplosionResistance
+ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
 	protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
 
@@ -68,14 +76,14 @@ ITP_ExplosionResistance
 	{
 		super.readFromNBT(nbt);
 		material = Mat.material(nbt.getString("material"), M.stone);
-		facing = Direction.DIRECTIONS_3D[nbt.getByte("facing")];
+		facing = Direction.readFromNBT(nbt, "facing", Direction.T_2D_NONNULL);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setString("material", material.name);
-		nbt.setByte("facing", (byte) facing.ordinal());
+		facing.writeToNBT(nbt, "facing", Direction.T_2D_NONNULL);
 		return super.writeToNBT(nbt);
 	}
 	
@@ -230,8 +238,41 @@ ITP_ExplosionResistance
 		return Arrays.asList(stack);
 	}
 
-	private void setDropNBT(NBTTagCompound nbt)
+	protected void setDropNBT(NBTTagCompound nbt)
 	{
 		nbt.setString("material", material.name);
+	}
+	
+	/**
+	 * Used for render type.
+	 * @return
+	 */
+	public String getState()
+	{
+		return "_";
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(ParticleManager manager)
+	{
+		Map<RockType, TextureAtlasSprite> icons = IC.ROCK_ICONS.get(material);
+		if(icons != null)
+		{
+			U.Client.addBlockDestroyEffects(worldObj, pos, getBlockState(), manager, icons.get(RockType.resource));
+		}
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
+	{
+		Map<RockType, TextureAtlasSprite> icons = IC.ROCK_ICONS.get(material);
+		if(icons != null)
+		{
+			U.Client.addBlockHitEffect(worldObj, random, getBlockState(), target.sideHit, pos, manager, icons.get(RockType.resource));
+		}
+		return false;
 	}
 }

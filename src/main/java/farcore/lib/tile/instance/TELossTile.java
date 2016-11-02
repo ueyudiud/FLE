@@ -16,7 +16,7 @@ public class TELossTile extends TEBase
 {
 	private NBTTagCompound tileNBT = NBTTagCompoundEmpty.instance;
 	private NBTTagCompound serverPacketData = new NBTTagCompound();
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -30,7 +30,7 @@ public class TELossTile extends TEBase
 			tileNBT = nbt;
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -40,7 +40,7 @@ public class TELossTile extends TEBase
 		}
 		return super.writeToNBT(nbt);
 	}
-	
+
 	@Override
 	public void onLoad()
 	{
@@ -48,26 +48,24 @@ public class TELossTile extends TEBase
 		{
 			if(isDebugWorld()) return;
 			TileEntity tile = func_190200_a(worldObj, tileNBT);
-			if(tile == null)
-				throw new RuntimeException("Error tile.");
+			if(tile == null) throw new RuntimeException("Errored tile entity.");
 			worldObj.setTileEntity(pos, tile);
 			tile.onLoad();
-			invalidate();
 		}
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag()
 	{
 		return tileNBT == NBTTagCompoundEmpty.instance ? super.getUpdateTag() : tileNBT;
 	}
-	
+
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag)
 	{
 		refreshTile(tag);
 	}
-	
+
 	public void refreshTile(NBTTagCompound nbt)
 	{
 		TileEntity tile = func_190200_a(worldObj, nbt);

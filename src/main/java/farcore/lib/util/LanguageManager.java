@@ -63,6 +63,27 @@ public class LanguageManager
 			return "Error Translation";
 		}
 	}
+	
+	/**
+	 * For text component translation.
+	 * @param unlocalized
+	 * @return
+	 */
+	public static String translateToLocalOfText(String unlocalized)
+	{
+		String locale = U.Strings.locale();
+		String translate;
+		if(map1.containsKey(locale) && map1.get(locale).containsKey(unlocalized))
+		{
+			translate = map1.get(locale).get(unlocalized);
+		}
+		else if(map2.containsKey(unlocalized))
+		{
+			translate = map2.get(unlocalized);
+		}
+		else return net.minecraft.util.text.translation.I18n.translateToLocal(unlocalized);
+		return translate == null ? unlocalized : translate;
+	}
 
 	public static String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
 	{

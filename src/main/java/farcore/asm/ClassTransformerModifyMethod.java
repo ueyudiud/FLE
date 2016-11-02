@@ -1,9 +1,7 @@
 package farcore.asm;
 
 import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ANEWARRAY;
 import static org.objectweb.asm.Opcodes.GETFIELD;
-import static org.objectweb.asm.Opcodes.ICONST_0;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
 import java.io.BufferedWriter;
@@ -31,7 +29,6 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -55,9 +52,9 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 	private static File file;
 	private static PrintStream keyOutputStream;
 	public static final Logger LOG = LogManager.getLogger("FarCore ASM");
-
-	private static final Map<String, OpInformation> informations = new HashMap();
 	
+	private static final Map<String, OpInformation> informations = new HashMap();
+
 	private static void outputInit()
 	{
 		if(file == null)
@@ -97,7 +94,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			}
 		}
 	}
-	
+
 	private static void logOutput(String name, InsnList list)
 	{
 		if(codeOutput)
@@ -137,7 +134,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			}
 		}
 	}
-
+	
 	private static String getOutput(AbstractInsnNode node)
 	{
 		String opcode = FORMAT.format(node.getOpcode() == -1 ? 256 : node.getOpcode());
@@ -178,15 +175,15 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		default : return "";
 		}
 	}
-	
+
 	private OpInformation create(String name)
 	{
 		return new OpInformation(name);
 	}
-
+	
 	private boolean putedReplacements = false;
 	private int numInsertions = 0;
-
+	
 	private void init()
 	{
 		if(!FarOverrideLoadingPlugin.loadedData) return;
@@ -198,9 +195,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 				create("net.minecraft.util.text.TextComponentTranslation")
 				.lName("g|()V")
 				.lPosition(51, 5)
-				.lNode(new InsnNode(ICONST_0),
-						new TypeInsnNode(ANEWARRAY, "java/lang/Object"),
-						new MethodInsnNode(INVOKESTATIC, "farcore/lib/util/LanguageManager", "translateToLocal", "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;", false))
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/lib/util/LanguageManager", "translateToLocalOfText", "(Ljava/lang/String;)Ljava/lang/String;", false))
 				.lLabel(OpType.REPLACE)
 				.lPut()
 				.put();
@@ -294,9 +289,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 				create("net.minecraft.util.text.TextComponentTranslation")
 				.lName("ensureInitialized|()V")
 				.lPosition(60, 5)
-				.lNode(new InsnNode(ICONST_0),
-						new TypeInsnNode(ANEWARRAY, "java/lang/Object"),
-						new MethodInsnNode(INVOKESTATIC, "farcore/lib/util/LanguageManager", "translateToLocal", "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;", false))
+				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/lib/util/LanguageManager", "translateToLocalOfText", "(Ljava/lang/String;)Ljava/lang/String;", false))
 				.lLabel(OpType.REPLACE)
 				.lPut()
 				.put();
@@ -389,7 +382,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		outputInit();
 	}
-	
+
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
@@ -403,7 +396,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			return modifyClass(transformedName, information, basicClass);
 		return basicClass;
 	}
-	
+
 	public byte[] modifyClass(String clazzName, OpInformation information, byte[] basicClass)
 	{
 		try
@@ -447,7 +440,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			return basicClass;
 		}
 	}
-
+	
 	private boolean modifyMethodNode(InsnList instructions, List<OpLabel> list)
 	{
 		list = new ArrayList(list);
@@ -481,7 +474,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		return list.isEmpty();
 	}
-	
+
 	/**
 	 * I don't know what happen, this might is a bug, I can not replace some of nodes.
 	 * So I use array list instead insnlist to cached insn nodes.
@@ -561,7 +554,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			break;
 		}
 	}
-	
+
 	private int findLine(InsnList methodList, int line)
 	{
 		for (int index = 0; index < methodList.size(); index++)
@@ -571,7 +564,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		return -1;
 	}
-	
+
 	private boolean isLine(AbstractInsnNode current, int line)
 	{
 		if (current instanceof LineNumberNode)
@@ -582,7 +575,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		return false;
 	}
-	
+
 	public static enum OpType
 	{
 		INSERT,
@@ -591,7 +584,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		REMOVE,
 		SWITCH;
 	}
-	
+
 	protected class OpInformation
 	{
 		final String mcpname;
@@ -604,18 +597,18 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		List<AbstractInsnNode> cacheList;
 		@Deprecated
 		Map<Label, int[]> labelLocate = new HashMap();
-
+		
 		OpInformation(String name)
 		{
 			mcpname = name;
 		}
-
+		
 		public OpInformation lName(String name)
 		{
 			cacheName = name;
 			return this;
 		}
-
+		
 		public OpInformation lPosition(int line, int off)
 		{
 			this.line = line;
@@ -623,13 +616,13 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			length = 1;
 			return this;
 		}
-		
+
 		public OpInformation lLength(int len)
 		{
 			length = len;
 			return this;
 		}
-		
+
 		public OpInformation lNode(AbstractInsnNode...nodes)
 		{
 			if(cacheList == null)
@@ -642,7 +635,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			}
 			return this;
 		}
-		
+
 		public OpInformation lLabel(OpType type)
 		{
 			if(label == null)
@@ -655,7 +648,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			cacheList = null;
 			return this;
 		}
-
+		
 		public OpInformation lPut()
 		{
 			if(!modifies.containsKey(cacheName))
@@ -666,13 +659,13 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			label = null;
 			return this;
 		}
-
+		
 		public void put()
 		{
 			informations.put(mcpname, this);
 		}
 	}
-	
+
 	protected class OpLabel
 	{
 		int line;
@@ -680,7 +673,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		int len;
 		OpType type;
 		List<AbstractInsnNode> nodes;
-		
+
 		OpLabel(int line, int off, int len, OpType type, List<AbstractInsnNode> nodes)
 		{
 			this.line = line;
@@ -689,7 +682,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			this.type = type;
 			this.nodes = nodes;
 		}
-
+		
 		@Override
 		public String toString()
 		{

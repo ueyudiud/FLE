@@ -136,6 +136,16 @@ public class U
 	
 	public static class L
 	{
+		public static int unsignedToInt(byte value)
+		{
+			return (value & 0xFF);
+		}
+
+		public static boolean moreThanSigned(byte v1, byte v2)
+		{
+			return unsignedToInt(v1) > unsignedToInt(v2);
+		}
+		
 		public static int[] cast(Integer[] integers)
 		{
 			int[] ret = new int[integers.length];

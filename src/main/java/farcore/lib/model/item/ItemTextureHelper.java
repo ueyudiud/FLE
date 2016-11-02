@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
 import com.google.common.base.Optional;
@@ -236,6 +237,24 @@ public class ItemTextureHelper
 		putVertex(builder, format, transform, side, x1, y1, z1, u1, v1);
 		putVertex(builder, format, transform, side, x2, y2, z2, u2, v2);
 		putVertex(builder, format, transform, side, x3, y3, z3, u3, v3);
+		return builder.build();
+	}
+
+	public static final BakedQuad buildBlockQuad(
+			VertexFormat format, Optional<TRSRTransformation> transform, @Nullable EnumFacing side, EnumFacing normal, TextureAtlasSprite sprite, int tint,
+			float x0, float y0, float z0, float u0, float v0,
+			float x1, float y1, float z1, float u1, float v1,
+			float x2, float y2, float z2, float u2, float v2,
+			float x3, float y3, float z3, float u3, float v3)
+	{
+		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
+		builder.setQuadTint(tint);
+		builder.setQuadOrientation(side);
+		builder.setTexture(sprite);
+		putVertex(builder, format, transform, normal, x0, y0, z0, u0, v0);
+		putVertex(builder, format, transform, normal, x1, y1, z1, u1, v1);
+		putVertex(builder, format, transform, normal, x2, y2, z2, u2, v2);
+		putVertex(builder, format, transform, normal, x3, y3, z3, u3, v3);
 		return builder.build();
 	}
 
