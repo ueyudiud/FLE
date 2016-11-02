@@ -112,6 +112,7 @@ public abstract class BlockTE extends BlockSingleTE
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
+		if(ItemBlockBase.placeflag) return state.getValue(property_TE).newInstance();
 		return new TELossTile();//Only for client, the server not need use this method to create tile entity.
 	}
 	

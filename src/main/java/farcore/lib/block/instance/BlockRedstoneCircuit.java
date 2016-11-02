@@ -21,6 +21,7 @@ import farcore.lib.model.block.ModelRedstoneCircuit;
 import farcore.lib.model.block.StateMapperCircuit;
 import farcore.lib.prop.PropertyString;
 import farcore.lib.prop.PropertyTE.TETag;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
 import farcore.lib.tile.instance.circuit.TECircuitAnd;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
 import farcore.lib.tile.instance.circuit.TECircuitBelong;
@@ -52,6 +53,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -63,9 +65,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockRedstoneCircuit extends BlockTE
 {
 	public static final Map<String, List<String>> ALLOWED_STATES;
-	
+
 	public static final PropertyString CUSTOM_VALUE;
-	
+
 	static
 	{
 		ImmutableMap.Builder<String, List<String>> builder1 = ImmutableMap.builder();
@@ -91,13 +93,13 @@ public class BlockRedstoneCircuit extends BlockTE
 		}
 		CUSTOM_VALUE = new PropertyString("value", ImmutableList.copyOf(set));
 	}
-	
+
 	public BlockRedstoneCircuit()
 	{
 		super(FarCore.ID, "red.circuit", Material.CIRCUITS);
 		EnumBlock.circuit.set(this);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -110,7 +112,7 @@ public class BlockRedstoneCircuit extends BlockTE
 			ModelLoader.setCustomModelResourceLocation(item, tag.id(), new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), "inventory"));
 		}
 	}
-
+	
 	public static ItemStack createItemStack(int meta, Mat material)
 	{
 		ItemStack stack = new ItemStack(EnumBlock.circuit.block, 1, meta);
@@ -119,19 +121,19 @@ public class BlockRedstoneCircuit extends BlockTE
 		nbt.setString("material", material.name);
 		return stack;
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return super.initDefaultState(state).withProperty(Others.PROP_DIRECTION_HORIZONTALS, Direction.N);
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, createTEProperty(), Others.PROP_DIRECTION_HORIZONTALS, CUSTOM_VALUE);
 	}
-	
+
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
@@ -145,7 +147,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		}
 		return state;
 	}
-
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -153,6 +155,15 @@ public class BlockRedstoneCircuit extends BlockTE
 		if(tile instanceof TECircuitBase)
 			return BlockStateTileEntityWapper.wrap(tile, state);
 		return super.getExtendedState(state, world, pos);
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		TileEntity tile = source.getTileEntity(pos);
+		if(tile instanceof ITP_CollisionBoundingBox)
+			return ((ITP_CollisionBoundingBox) tile).getCollisionBoundingBox(state);
+		return super.getBoundingBox(state, source, pos);
 	}
 
 	@Override
@@ -164,35 +175,41 @@ public class BlockRedstoneCircuit extends BlockTE
 			list.add(createItemStack(tag.id(), M.stone));
 		}
 	}
+	
+	@Override
+	public boolean isNormalCube(IBlockState state)
+	{
+		return false;
+	}
 
 	@Override
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
 	{
 		return canBlockStay(worldIn, pos);
 	}
-
+	
 	public boolean canBlockStay(World worldIn, BlockPos pos)
 	{
 		return worldIn.isSideSolid(pos.down(), EnumFacing.UP);
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
 	}
-	
+
 	@Override
 	public boolean canProvidePower(IBlockState state)
 	{
 		return true;
 	}
-
+	
 	/**
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
@@ -201,7 +218,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
@@ -213,7 +230,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		}
 		super.neighborChanged(state, worldIn, pos, blockIn);
 	}
-	
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
@@ -225,14 +242,14 @@ public class BlockRedstoneCircuit extends BlockTE
 		}
 		super.updateTick(worldIn, pos, state, rand);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}
-
+	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
@@ -252,7 +269,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		register.register(64, "sensor_light", TESensorLight.class);
 		return true;
 	}
-
+	
 	@Override
 	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
 			boolean advanced)

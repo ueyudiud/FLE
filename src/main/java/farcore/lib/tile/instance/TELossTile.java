@@ -1,7 +1,11 @@
 package farcore.lib.tile.instance;
 
+import java.util.Map;
+
 import farcore.lib.nbt.NBTTagCompoundEmpty;
+import farcore.lib.tile.ISynchronizableTile;
 import farcore.lib.tile.TEBase;
+import farcore.util.U;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -16,7 +20,7 @@ public class TELossTile extends TEBase
 {
 	private NBTTagCompound tileNBT = NBTTagCompoundEmpty.instance;
 	private NBTTagCompound serverPacketData = new NBTTagCompound();
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -30,7 +34,7 @@ public class TELossTile extends TEBase
 			tileNBT = nbt;
 		}
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -40,7 +44,7 @@ public class TELossTile extends TEBase
 		}
 		return super.writeToNBT(nbt);
 	}
-
+	
 	@Override
 	public void onLoad()
 	{
@@ -53,23 +57,36 @@ public class TELossTile extends TEBase
 			tile.onLoad();
 		}
 	}
-
+	
 	@Override
 	public NBTTagCompound getUpdateTag()
 	{
 		return tileNBT == NBTTagCompoundEmpty.instance ? super.getUpdateTag() : tileNBT;
 	}
-
+	
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag)
 	{
 		refreshTile(tag);
 	}
-
+	
 	public void refreshTile(NBTTagCompound nbt)
 	{
-		TileEntity tile = func_190200_a(worldObj, nbt);
+		Map<String, Class<? extends TileEntity>> map = (Map<String, Class<? extends TileEntity>>) U.R.getValue(TileEntity.class, "nameToClassMap", "", null, false);
+		TileEntity tile;
+		try
+		{
+			tile = map.get(nbt.getString("id")).newInstance();
+		}
+		catch(Exception exception)
+		{
+			return;
+		}
 		if(tile instanceof TELossTile) return;
+		if(tile instanceof ISynchronizableTile)
+		{
+			((ISynchronizableTile) tile).readFromDescription(nbt);
+		}
 		worldObj.setTileEntity(pos, tile);
 		invalidate();
 	}

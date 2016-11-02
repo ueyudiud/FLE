@@ -2,10 +2,10 @@ package farcore.lib.tesr;
 
 import org.lwjgl.opengl.GL11;
 
-import farcore.lib.block.instance.BlockRock;
-import farcore.lib.net.tile.PacketTEAsk;
+import farcore.data.IC;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.util.Direction;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -22,14 +22,17 @@ public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 	public void renderTileEntityAt(TECustomCarvedStone tile, double x, double y, double z, float partialTicks,
 			int destroyStage)
 	{
-		if(!tile.initialized)
-		{
-			tile.sendToServer(new PacketTEAsk(tile));
-			return;
-		}
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
-		TextureAtlasSprite icon = getTexture(tile.rock().rock.getDefaultState().withProperty(BlockRock.ROCK_TYPE, tile.type));
+		TextureAtlasSprite icon;
+		try
+		{
+			icon = IC.ROCK_ICONS.get(tile.rock()).get(tile.type);
+		}
+		catch(Exception exception)
+		{
+			icon = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+		}
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.disableLighting();
 		int count = 0;

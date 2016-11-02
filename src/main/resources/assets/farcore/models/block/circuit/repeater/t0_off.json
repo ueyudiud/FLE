@@ -3,27 +3,27 @@
 	"textures": { "torch": "blocks/redstone_torch_off" },
 	"elements": [
 		{   
-			"from": [ 7, 2, 6 ],
+			"from": [ 7, 1, 6 ],
 			"to": [ 9, 7, 8 ],
 			"faces": {
-				"down":  { "uv": [ 7, 13, 9, 15 ], "texture": "#torch" },
-				"up":    { "uv": [ 7,  6, 9,  8 ], "texture": "#torch" },
-				"north": { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" },
-				"south": { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" },
-				"west":  { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" },
-				"east":  { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" }
+				"down":  { "uv": [ 7, 13,  9, 15 ], "texture": "#torch" },
+				"up":    { "uv": [ 7,  6,  9,  8 ], "texture": "#torch" },
+				"north": { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" },
+				"south": { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" },
+				"west":  { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" },
+				"east":  { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" }
 			}
 		},
 		{   
-			"from": [ 7, 2, 2 ],
+			"from": [ 7, 1, 2 ],
 			"to": [ 9, 7, 4 ],
 			"faces": {
-				"down":  { "uv": [ 7, 13, 9, 15 ], "texture": "#torch" },
-				"up":    { "uv": [ 7,  6, 9,  8 ], "texture": "#torch" },
-				"north": { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" },
-				"south": { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" },
-				"west":  { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" },
-				"east":  { "uv": [ 7,  6, 9, 11 ], "texture": "#torch" }
+				"down":  { "uv": [ 7, 13,  9, 15 ], "texture": "#torch" },
+				"up":    { "uv": [ 7,  6,  9,  8 ], "texture": "#torch" },
+				"north": { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" },
+				"south": { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" },
+				"west":  { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" },
+				"east":  { "uv": [ 7,  6, 10, 11 ], "texture": "#torch" }
 			}
 		}
 	]
