@@ -22,6 +22,7 @@ import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -122,5 +123,26 @@ public class ItemDebugger extends ItemBase
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
+	}
+	
+	@Override
+	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
+	{
+		if(player.isSneaking())
+		{
+			try
+			{
+				entity.worldObj.removeEntity(entity);
+			}
+			catch(Exception exception)
+			{
+				if(FarCore.debug)
+				{
+					Log.warn("Fail to remove %s from world.", exception, entity);
+				}
+			}
+			return true;
+		}
+		return super.onLeftClickEntity(stack, player, entity);
 	}
 }

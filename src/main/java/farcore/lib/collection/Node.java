@@ -2,38 +2,43 @@ package farcore.lib.collection;
 
 public class Node<T> implements INode<T>
 {
+	/**
+	 * Build the first node of nodes.
+	 * @param target
+	 * @return
+	 */
 	public static <T> Node<T> first(T target)
 	{
 		return new Node<T>(target);
 	}
-	
+
 	private T target;
 	private Node<T> next;
 	private Node<T> last;
-	
+
 	Node(T target)
 	{
 		this.target = target;
 	}
-	
+
 	@Override
 	public T value()
 	{
 		return target;
 	}
-
+	
 	@Override
 	public Node<T> next()
 	{
 		return next;
 	}
-
+	
 	@Override
 	public Node<T> last()
 	{
 		return last;
 	}
-	
+
 	@Override
 	public void addLast(T target)
 	{
@@ -47,7 +52,7 @@ public class Node<T> implements INode<T>
 			last.next = this;
 		}
 	}
-	
+
 	@Override
 	public void addNext(T target)
 	{
@@ -61,7 +66,7 @@ public class Node<T> implements INode<T>
 			next.last = this;
 		}
 	}
-
+	
 	@Override
 	public void insertAfter(T target)
 	{
@@ -74,7 +79,7 @@ public class Node<T> implements INode<T>
 			next.next = node;
 		}
 	}
-	
+
 	@Override
 	public void insertBefore(T target)
 	{
@@ -86,5 +91,19 @@ public class Node<T> implements INode<T>
 			node.next = last;
 			last.last = node;
 		};
+	}
+
+	@Override
+	public void remove()
+	{
+		if(last != null)
+		{
+			last.next = next;
+		}
+		if(next != null)
+		{
+			next.last = last;
+		}
+		next = last = null;
 	}
 }
