@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 public interface IThermalHandlerBox extends IWorldSubContainer
 {
 	float getTemperature(BlockPos pos);
-	
+
 	/**
 	 * Called when heat change.
 	 * @param source
@@ -16,5 +16,5 @@ public interface IThermalHandlerBox extends IWorldSubContainer
 	 * @param value
 	 * @return Return true to prevent vanilla heat check.
 	 */
-	boolean onHeatChange(BlockPos source, BlockPos target, Direction sourceDir, float value);
+	boolean onHeatChange(BlockPos source, BlockPos target, Direction sourceDir, double value);
 }

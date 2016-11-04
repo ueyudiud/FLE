@@ -6,6 +6,7 @@ import java.util.List;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.prop.PropertyTE;
+import farcore.lib.prop.PropertyTE.TETag;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockAdded;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import farcore.lib.tile.instance.TELossTile;
@@ -20,7 +21,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public abstract class BlockTE extends BlockSingleTE
 /**
@@ -28,6 +28,8 @@ public abstract class BlockTE extends BlockSingleTE
  */
 //, ITileEntityProvider
 {
+	private boolean registerTE;
+
 	public BlockTE(String name, Material materialIn)
 	{
 		super(name, materialIn);
@@ -44,41 +46,45 @@ public abstract class BlockTE extends BlockSingleTE
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 	}
-
-	public PropertyTE property_TE;
 	
-	protected abstract boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register);
+	@Override
+	public void postInitalizedBlocks()
+	{
+		super.postInitalizedBlocks();
+		if(registerTE)
+		{
+			String path = getRegistryName().getResourceDomain() + "." + getRegistryName().getResourcePath();
+			for(TETag tag : property_TE.getAllowedValues())
+			{
+				tag.registerTileEntity(path);
+			}
+		}
+	}
+	
+	public PropertyTE property_TE;
 
+	protected abstract boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register);
+	
 	protected final PropertyTE createTEProperty()
 	{
 		IRegister<Class<? extends TileEntity>> map = new Register();
 		map.register(0, "void", TELossTile.class);
-		if(registerTileEntities(map))
-		{
-			for(String tag : map.names())
-			{
-				if("void".equals(tag))
-				{
-					continue;
-				}
-				GameRegistry.registerTileEntity(map.get(tag), blockName + "." + tag);
-			}
-		}
+		registerTE = registerTileEntities(map);
 		return property_TE = PropertyTE.create("tile", map);
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, createTEProperty());
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return state.withProperty(property_TE, property_TE.parseValue("void").get());
 	}
-
+	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -89,39 +95,39 @@ public abstract class BlockTE extends BlockSingleTE
 			((ITB_BlockAdded) tile).onBlockAdded(state);
 		}
 	}
-
+	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
 			int meta, EntityLivingBase placer)
 	{
 		return property_TE.withProperty(getDefaultState(), meta);
 	}
-	
+
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
 		return property_TE.withProperty(state, worldIn.getTileEntity(pos));
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
 		if(ItemBlockBase.placeflag) return state.getValue(property_TE).newInstance();
 		return new TELossTile();//Only for client, the server not need use this method to create tile entity.
 	}
-	
+
 	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
@@ -132,7 +138,7 @@ public abstract class BlockTE extends BlockSingleTE
 		list.add(new ItemStack(this, 1, property_TE.getMetaFromState(state)));
 		return list;
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{

@@ -12,6 +12,7 @@ import farcore.data.MC;
 import farcore.data.Potions;
 import farcore.energy.electric.ElectricNet;
 import farcore.energy.kinetic.KineticNet;
+import farcore.energy.thermal.BlockThermalDebug;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
@@ -170,6 +171,7 @@ public class CommonLoader
 		//Initialize items.
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		new ItemFluidDisplay().setCreativeTab(CT.tabFluids);
+		new BlockThermalDebug();
 		if(Config.createRock)
 		{
 			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
@@ -207,7 +209,7 @@ public class CommonLoader
 		//Initialize potions and mob effects.
 		Potions.init();
 	}
-
+	
 	public void load()
 	{
 		//Post load item and block.
@@ -247,7 +249,7 @@ public class CommonLoader
 		FarCore.network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
 		FarCore.network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
 	}
-	
+
 	public void postload()
 	{
 		//Reload material tool tips.
@@ -263,7 +265,7 @@ public class CommonLoader
 			}
 		}
 	}
-
+	
 	public void complete()
 	{
 		//Start light thread.

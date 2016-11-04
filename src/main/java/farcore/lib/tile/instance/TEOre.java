@@ -74,7 +74,7 @@ ITP_Drops, IToolableTile
 	public EnumOreAmount amount = EnumOreAmount.normal;
 	public Mat rock = STONE;
 	public RockType rockType = RockType.resource;
-	public float heat;
+	public double heat;
 	
 	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, RockType type)
 	{
@@ -128,7 +128,7 @@ ITP_Drops, IToolableTile
 		amount = EnumOreAmount.values()[compound.getByte("amount")];
 		rock = Mat.material(compound.getString("rock"), STONE);
 		rockType = RockType.values()[compound.getByte("type")];
-		heat = compound.getFloat("heat");
+		heat = compound.getDouble("heat");
 	}
 	
 	@Override
@@ -138,7 +138,7 @@ ITP_Drops, IToolableTile
 		compound.setByte("amount", (byte) amount.ordinal());
 		compound.setString("rock", rock.name);
 		compound.setByte("type", (byte) rockType.ordinal());
-		compound.setFloat("heat", heat);
+		compound.setDouble("heat", heat);
 		return super.writeToNBT(compound);
 	}
 	
@@ -165,14 +165,14 @@ ITP_Drops, IToolableTile
 	@Override
 	public boolean onBlockClicked(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
-		return ore.oreProperty.onBlockClicked(this, player, side);
+		return ore.getProperty(M.property_ore).onBlockClicked(this, player, side);
 	}
 	
 	@Override
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		return ore.oreProperty.onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
+		return ore.getProperty(M.property_ore).onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
 	}
 
 	@Override
@@ -191,29 +191,29 @@ ITP_Drops, IToolableTile
 		case cobble_art :
 			return 1;
 		case cobble :
-			return Math.max(ore.blockHarvestLevel, rock.blockHarvestLevel) / 2;
+			return Math.max(ore.getProperty(M.property_ore).harvestLevel, rock.getProperty(M.property_rock).harvestLevel) / 2;
 		default:
-			return Math.max(ore.blockHarvestLevel, rock.blockHarvestLevel);
+			return Math.max(ore.getProperty(M.property_ore).harvestLevel, rock.getProperty(M.property_rock).harvestLevel);
 		}
 	}
 	
 	@Override
 	public float getBlockHardness(IBlockState state)
 	{
-		float hardness = ore.blockHardness * .8F + rock.blockHardness * .2F;
+		float hardness = ore.getProperty(M.property_ore).hardness * .8F + rock.getProperty(M.property_ore).hardness * .2F;
 		return hardness;
 	}
 	
 	@Override
 	public float getExplosionResistance(Entity exploder, Explosion explosion)
 	{
-		return Math.max(ore.blockExplosionResistance, rock.blockExplosionResistance);
+		return Math.max(ore.getProperty(M.property_ore).explosionResistance, rock.getProperty(M.property_rock).explosionResistance);
 	}
 	
 	@Override
 	public void onEntityWalk(Entity entity)
 	{
-		ore.oreProperty.onEntityWalk(this, entity);
+		ore.getProperty(M.property_ore).onEntityWalk(this, entity);
 	}
 
 	@Override
@@ -232,7 +232,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
-		ore.oreProperty.updateTick(this, random);
+		ore.getProperty(M.property_ore).updateTick(this, random);
 	}
 	
 	@Override
@@ -324,7 +324,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public boolean onBurn(float burnHardness, Direction direction)
 	{
-		ore.oreProperty.onBurn(this, burnHardness, direction);
+		ore.getProperty(M.property_ore).onBurn(this, burnHardness, direction);
 		if(rockType.isBurnable())
 		{
 			rockType = rockType.burned();
@@ -336,7 +336,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public boolean onBurningTick(Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
-		ore.oreProperty.onBurningTick(this, rand, fireSourceDir, fireState);
+		ore.getProperty(M.property_ore).onBurningTick(this, rand, fireSourceDir, fireState);
 		return false;
 	}
 
@@ -389,19 +389,19 @@ ITP_Drops, IToolableTile
 	}
 
 	@Override
-	public float getTemperature(Direction direction)
+	public float getTemperatureDifference(Direction direction)
 	{
-		return heat / ore.heatCap;
+		return (float) (heat / ore.getProperty(M.property_basic).thermalConduct);
 	}
 
 	@Override
-	public float getThermalConductivity(Direction direction)
+	public double getThermalConductivity(Direction direction)
 	{
-		return ore.thermalConduct * 0.6F + rock.thermalConduct * 0.4F;
+		return ore.getProperty(M.property_basic).thermalConduct * 0.3F + rock.getProperty(M.property_basic).thermalConduct * 0.7F;
 	}
 
 	@Override
-	public void onHeatChange(Direction direction, float value)
+	public void onHeatChange(Direction direction, double value)
 	{
 		heat += value;
 	}
@@ -410,14 +410,14 @@ ITP_Drops, IToolableTile
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
 			float hitY, float hitZ)
 	{
-		return ore.oreProperty.onToolClick(player, tool, stack, this, side, hitX, hitY, hitZ);
+		return ore.getProperty(M.property_ore).onToolClick(player, tool, stack, this, side, hitX, hitY, hitZ);
 	}
 
 	@Override
 	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		return ore.oreProperty.onToolUse(player, tool, stack, this, side, hitX, hitY, hitZ, duration);
+		return ore.getProperty(M.property_ore).onToolUse(player, tool, stack, this, side, hitX, hitY, hitZ, duration);
 	}
 	
 	@Override

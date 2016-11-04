@@ -21,7 +21,7 @@ public final class SubTag implements IDataChecker<ISubTagContainer>
 	public static final SubTag PLANT = getNewSubTag("PLANT");
 	public static final SubTag TREE = getNewSubTag("TREE");
 	public static final SubTag ROPE = getNewSubTag("ROPE");
-	
+
 	public static final SubTag ORE = getNewSubTag("ORE");
 
 	public static final SubTag ORE_SIMPLE = getNewSubTag("ORE_SIMPLE");

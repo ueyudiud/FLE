@@ -28,94 +28,94 @@ implements IElectricalHandlerHelper, IThermalHandler, IACHandler
 	ElementBlockFace face1 = new ElementBlockFace();
 	ElementBlockFace face2 = new ElementBlockFace();
 	double heat;
-
+	
 	public TEResistance()
 	{
 		resistance.setHelper(this);
 		face1.setHelper(node1, Direction.N);
 		face2.setHelper(node2, Direction.S);
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setDouble("heat", heat);
 		return super.writeToNBT(nbt);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		heat = nbt.getDouble("heat");
 		super.readFromNBT(nbt);
 	}
-	
+
 	@Override
 	protected void initServer()
 	{
 		super.initServer();
 		FarCoreEnergyHandler.BUS.post(new EnergyEvent.Add(this));
 	}
-
+	
 	@Override
 	public void onRemoveFromLoadedWorld()
 	{
 		FarCoreEnergyHandler.BUS.post(new EnergyEvent.Remove(this));
 	}
-
+	
 	@Override
 	public void providePowerByVoltage(double power)
 	{
 	}
-
+	
 	@Override
 	public void heatByCurrent(double power)
 	{
 		heat += power;
 	}
-	
+
 	@Override
 	public boolean canConnectTo(Direction direction)
 	{
 		return direction == Direction.N || direction == Direction.S;
 	}
-	
+
 	@Override
-	public float getTemperature(Direction direction)
+	public float getTemperatureDifference(Direction direction)
 	{
 		return (float) (heat / heatCapacity);
 	}
-	
+
 	@Override
-	public float getThermalConductivity(Direction direction)
+	public double getThermalConductivity(Direction direction)
 	{
 		return thermalConductivity;
 	}
-	
+
 	@Override
-	public void onHeatChange(Direction direction, float value)
+	public void onHeatChange(Direction direction, double value)
 	{
 		heat += value;
 	}
-
+	
 	@Override
 	public int getNodeSize()
 	{
 		return 1;
 	}
-
+	
 	@Override
 	public IElectricalNode getNode(int id)
 	{
 		return id == 0 ? node1 : node2;
 	}
-
+	
 	@Override
 	public IElectricalElement getElement(int id1, int id2)
 	{
 		return resistance;
 	}
-
+	
 	@Override
 	public ISidedElectricalElement getEnelementFromFace(Direction direction)
 	{

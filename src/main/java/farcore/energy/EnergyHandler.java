@@ -18,18 +18,18 @@ public class EnergyHandler
 		FLOAT,
 		DOUBLE;
 	}
-	
-	private static final Register<Energy> REGISTER = new Register();
 
+	private static final Register<Energy> REGISTER = new Register();
+	
 	public static final Energy STANDARD_DOUBLE;
 	public static final Energy STANDARD_LONG;
-	
+
 	static
 	{
 		STANDARD_DOUBLE = registerEnergy("standard_double", 1.0, EnergyScaleType.DOUBLE);
 		STANDARD_LONG = registerEnergy("standard_long", 1.0, EnergyScaleType.LONG);
 	}
-	
+
 	public static Energy registerEnergy(String name, double energyScale, EnergyScaleType type)
 	{
 		if(REGISTER.contain(name))
@@ -46,23 +46,23 @@ public class EnergyHandler
 			return energy;
 		}
 	}
-	
+
 	public static Energy getEnergy(String name)
 	{
 		return REGISTER.get(name);
 	}
-	
+
 	public static class Energy
 	{
 		private final double energyScale;
 		private final EnergyScaleType type;
-
+		
 		Energy(double energyScale, EnergyScaleType type)
 		{
 			this.energyScale = energyScale;
 			this.type = type;
 		}
-
+		
 		public Number formatCodedEnergy(long amount)
 		{
 			switch (type)
@@ -79,7 +79,7 @@ public class EnergyHandler
 				return 0;
 			}
 		}
-
+		
 		public Number formatEnergy(double amount)
 		{
 			switch (type)
@@ -96,21 +96,20 @@ public class EnergyHandler
 				return 0;
 			}
 		}
-
+		
 		public Number transferToAnotherEnergy(long amount, Energy energy)
 		{
-			Number amt = formatEnergy(amount);
 			double mul = energy.energyScale / energyScale;
 			switch (energy.type)
 			{
-			case INTEGER : return (int) (amt.intValue() * mul);
-			case LONG : return (long) (amt.longValue() * mul);
-			case FLOAT : return (float) (amt.floatValue() * mul);
-			case DOUBLE : return (double) (amt.doubleValue() * mul);
+			case INTEGER : return (int) (amount * mul);
+			case LONG : return (long) (amount * mul);
+			case FLOAT : return (float) (amount * mul);
+			case DOUBLE : return (double) (amount * mul);
 			default : return 0;
 			}
 		}
-
+		
 		public Number transferToAnotherEnergy(double amount, Energy energy)
 		{
 			double mul = energy.energyScale / energyScale;

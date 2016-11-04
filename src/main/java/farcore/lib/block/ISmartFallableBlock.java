@@ -7,16 +7,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface ISmartFallableBlock
+public interface ISmartFallableBlock extends IUpdateDelayBlock
 {
 	void onStartFalling(World world, BlockPos pos);
-
+	
 	boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state);
-
+	
 	boolean onFallOnGround(World world, BlockPos pos, IBlockState state, int height, NBTTagCompound tileNBT);
-
+	
 	boolean onDropFallenAsItem(World world, BlockPos pos, IBlockState state, NBTTagCompound tileNBT);
-
+	
 	/**
 	 * Called when block fall on an entity.
 	 * @param world

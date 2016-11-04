@@ -12,15 +12,15 @@ public interface IThermalHandler extends ICoord
 	 * @return
 	 */
 	boolean canConnectTo(Direction direction);
-	
+
 	/**
 	 * This method is only get machine delta temperature.
 	 * DO NOT GET WORLD TEMPERATURE IN THIS METHOD!
 	 * @param direction
 	 * @return
 	 */
-	float getTemperature(Direction direction);
-	
+	float getTemperatureDifference(Direction direction);
+
 	/**
 	 * An basic constant of heat conduct. Called by thermal net.<br>
 	 * Use P = dT * k.<br>
@@ -28,12 +28,12 @@ public interface IThermalHandler extends ICoord
 	 * @param direction
 	 * @return
 	 */
-	float getThermalConductivity(Direction direction);
-
+	double getThermalConductivity(Direction direction);
+	
 	/**
 	 * Called when heat changed at this tile.
 	 * @param direction
 	 * @param value
 	 */
-	void onHeatChange(Direction direction, float value);
+	void onHeatChange(Direction direction, double value);
 }

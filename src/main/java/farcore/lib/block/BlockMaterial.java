@@ -106,7 +106,7 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	}
 	
 	@Override
-	public float getThermalConduct(World world, BlockPos pos)
+	public double getThermalConduct(World world, BlockPos pos)
 	{
 		return basic.thermalConduct;
 	}

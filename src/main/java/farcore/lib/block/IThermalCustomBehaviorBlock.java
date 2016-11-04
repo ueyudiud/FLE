@@ -59,7 +59,7 @@ public interface IThermalCustomBehaviorBlock
 	 * @param z
 	 * @return
 	 */
-	float getThermalConduct(World world, BlockPos pos);
+	double getThermalConduct(World world, BlockPos pos);
 	
 	/**
 	 * Get encouragement of hardness of fire burning.<br>
@@ -80,7 +80,7 @@ public interface IThermalCustomBehaviorBlock
 				((Block) this).isFlammable(world, pos, side) && !isCatchRain;
 	}
 	
-	default void onHeatChanged(World world, BlockPos pos, Direction direction, float amount)
+	default void onHeatChanged(World world, BlockPos pos, Direction direction, double amount)
 	{
 
 	}

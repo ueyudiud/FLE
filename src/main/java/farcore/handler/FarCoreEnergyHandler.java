@@ -7,6 +7,7 @@ import farcore.FarCore;
 import farcore.energy.IEnergyNet;
 import farcore.event.EnergyEvent;
 import farcore.lib.util.Log;
+import farcore.lib.world.ICoord;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
@@ -27,19 +28,44 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 	public static final EventBus BUS = new EventBus(HANDLER);
 	private static final List<IEnergyNet> energyNets = new ArrayList();
 
+	static
+	{
+		BUS.register(HANDLER);
+	}
+	
 	public static FarCoreEnergyHandler getHandler()
 	{
 		return HANDLER;
 	}
-	
+
 	public static void addNet(IEnergyNet net)
 	{
 		energyNets.add(net);
 		Log.info("The energy net which type is " + net.getClass().toString() + " is registered to energy handler.");
 	}
-
-	private FarCoreEnergyHandler() {}
 	
+	public static void onAddFromWorld(ICoord coord)
+	{
+		BUS.post(new EnergyEvent.Add(coord.getTE()));
+	}
+	
+	public static void onRemoveFromWorld(ICoord coord)
+	{
+		BUS.post(new EnergyEvent.Remove(coord.getTE()));
+	}
+	
+	public static void onMarkFromWorld(ICoord coord)
+	{
+		BUS.post(new EnergyEvent.Mark(coord.getTE()));
+	}
+	
+	public static void onReloadFromWorld(ICoord coord)
+	{
+		BUS.post(new EnergyEvent.Reload(coord.getTE()));
+	}
+	
+	private FarCoreEnergyHandler() {}
+
 	@SubscribeEvent
 	public void add(EnergyEvent.Add event)
 	{
@@ -61,7 +87,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void mark(EnergyEvent.Mark event)
 	{
@@ -83,7 +109,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void reload(EnergyEvent.Reload event)
 	{
@@ -105,7 +131,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void remove(EnergyEvent.Remove event)
 	{
@@ -127,7 +153,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void load(WorldEvent.Load event)
 	{
@@ -149,7 +175,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void update(TickEvent.WorldTickEvent event)
 	{
@@ -171,7 +197,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void unload(WorldEvent.Unload event)
 	{
@@ -193,7 +219,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-	
+
 	@Override
 	public void handleException(EventBus bus, Event event, IEventListener[] listeners, int index, Throwable throwable)
 	{

@@ -1,23 +1,36 @@
 package farcore.handler;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
 import farcore.asm.LightFix;
+import farcore.lib.block.IUpdateDelayBlock;
 import farcore.lib.util.Log;
 import farcore.lib.world.IObjectInWorld;
 import farcore.util.U;
+import farcore.util.U.Worlds;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -28,55 +41,102 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class FarCoreWorldHandler
 {
+	private static class NotifyEntry
+	{
+		int x;
+		int y;
+		int z;
+		BlockPos source;
+		IBlockState changedBlock;
+		
+		NotifyEntry(IBlockState changed, BlockPos pos)
+		{
+			this(changed, pos, 0, 0, 0);
+		}
+		NotifyEntry(IBlockState changed, BlockPos pos, int x, int y, int z)
+		{
+			changedBlock = changed;
+			source = pos;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return x << 16 ^ y << 8 ^ z;
+		}
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			NotifyEntry entry;
+			return obj == this ? true :
+				!(obj instanceof NotifyEntry) ? false :
+					(entry = (NotifyEntry) obj).x == x &&
+					entry.y == y &&
+					entry.z == z;
+		}
+	}
+	
 	private static final Map<Class<? extends IObjectInWorld>, String> OBJECTS_TO_ID = new HashMap();
 	private static final Map<String, Class<? extends IObjectInWorld>> ID_TO_OBJECTS = new HashMap();
-
+	
 	private static final String key = "objsinw";
 	private static Map<Integer, List<IObjectInWorld>> objects = new HashMap();
+	private static Map<Integer, List<NotifyEntry>> updatePos = new HashMap();
+
 	private static Map<Integer, List<IObjectInWorld>> unlistedObjects = new HashMap();
-	
+
 	public static void registerObject(String id, Class<? extends IObjectInWorld> clazz)
 	{
 		OBJECTS_TO_ID.put(clazz, id);
 		ID_TO_OBJECTS.put(id, clazz);
 	}
-	
+
 	public static List<IObjectInWorld> getObjectInRange(World world, BlockPos pos, double range)
 	{
 		return getObjectInRange(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, range);
 	}
 	public static List<IObjectInWorld> getObjectInRange(World world, double x, double y, double z, double range)
 	{
-		int id = world.provider.getDimension();
 		double sq = range * range;
-		if(objects.containsKey(id))
+		List<IObjectInWorld> list = new ArrayList();
+		for(IObjectInWorld obj : Worlds.getListFromWorldDimention(objects, world, false))
 		{
-			List<IObjectInWorld> list = new ArrayList();
-			for(IObjectInWorld obj : objects.get(id))
+			double[] p = obj.position();
+			double a;
+			double disSQ = (a = p[0] - x) * a + (a = p[1] - y) * a + (a = p[2] - z) * a;
+			if(disSQ < sq)
 			{
-				double[] p = obj.position();
-				double a;
-				double disSQ = (a = p[0] - x) * a + (a = p[1] - y) * a + (a = p[2] - z) * a;
-				if(disSQ < sq)
-				{
-					list.add(obj);
-				}
+				list.add(obj);
 			}
-			return list;
 		}
-		return ImmutableList.of();
+		return list;
 	}
-	
+
 	public static void putNewObjectInWorld(IObjectInWorld world)
 	{
 		U.L.put(objects, world.world().provider.getDimension(), world);
 	}
 
+	public static void markBlockForUpdate(World world, Collection<NotifyEntry> pos)
+	{
+		U.Worlds.getListFromWorldDimention(updatePos, world, true).addAll(pos);
+	}
+	public static void markBlockForUpdate(World world, BlockPos pos)
+	{
+		U.Worlds.getListFromWorldDimention(updatePos, world, true).add(new NotifyEntry(world.getBlockState(pos), pos));
+	}
+	
+	private boolean notifyFlag = false;
+	
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load event)
 	{
 	}
-
+	
 	@SubscribeEvent
 	public void onUnload(WorldEvent.Unload event)
 	{
@@ -88,13 +148,14 @@ public class FarCoreWorldHandler
 		{
 			U.L.put(unlistedObjects, dim, list);
 		}
+		updatePos.remove(dim);
 	}
-
+	
 	@SubscribeEvent
 	public void onLoad(ChunkEvent.Load event)
 	{
 	}
-
+	
 	@SubscribeEvent
 	public void onUnload(ChunkEvent.Unload event)
 	{
@@ -121,31 +182,19 @@ public class FarCoreWorldHandler
 			U.L.put(unlistedObjects, dim, removed);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onUpdate(TickEvent.WorldTickEvent event)
 	{
 		if(event.side == Side.CLIENT) return;
 		if(event.phase == Phase.END) return;
-
-		if(objects.containsKey(event.world.provider.getDimension()))
-		{
-			List<IObjectInWorld> list = objects.get(event.world.provider.getDimension());
-			for(IObjectInWorld obj : ImmutableList.copyOf(list))
-			{
-				if(obj.isDead())
-				{
-					list.remove(obj);
-					continue;
-				}
-				if(obj instanceof ITickable)
-				{
-					((ITickable) obj).update();
-				}
-			}
-		}
+		event.world.theProfiler.startSection("update.oiw");
+		updateAllObjectInWorld(event.world);
+		event.world.theProfiler.endStartSection("update.notified");
+		updateNotifiedNeighbours(event.world);
+		event.world.theProfiler.endSection();
 	}
-
+	
 	@SubscribeEvent
 	public void onDataLoad(ChunkDataEvent.Load event)
 	{
@@ -181,7 +230,7 @@ public class FarCoreWorldHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onDataSave(ChunkDataEvent.Save event)
 	{
@@ -241,6 +290,105 @@ public class FarCoreWorldHandler
 				}
 				event.getData().setTag(key, nbt);
 			}
+		}
+	}
+
+	private void updateAllObjectInWorld(World world)
+	{
+		List<IObjectInWorld> list = Worlds.getListFromWorldDimention(objects, world, false);
+		for(IObjectInWorld obj : ImmutableList.copyOf(list))
+		{
+			if(obj.isDead())
+			{
+				list.remove(obj);
+				continue;
+			}
+			if(obj instanceof ITickable)
+			{
+				((ITickable) obj).update();
+			}
+		}
+	}
+	
+	private void updateNotifiedNeighbours(World world)
+	{
+		List<NotifyEntry> list = updatePos.remove(world.provider.getDimension());
+		if(list != null)
+		{
+			MutableBlockPos pos = new MutableBlockPos();
+			for(NotifyEntry entry : list)
+			{
+				IBlockState state = world.getBlockState(pos.setPos(entry.x, entry.y, entry.z));
+				try
+				{
+					if(state.getBlock() instanceof IUpdateDelayBlock)
+					{
+						((IUpdateDelayBlock) state.getBlock()).notifyAfterTicking(state, world, pos, entry.changedBlock);
+					}
+					else
+					{
+						state.neighborChanged(world, pos, entry.changedBlock.getBlock());
+					}
+				}
+				catch (Throwable throwable)
+				{
+					Block block = state.getBlock();
+					CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Exception while updating neighbours");
+					CrashReportCategory crashreportcategory = crashreport.makeCategory("Block being updated");
+					crashreportcategory.setDetail("Source block type", () ->
+					{
+						try
+						{
+							return String.format("ID #%d (%s // %s)", Block.getIdFromBlock(block), block.getUnlocalizedName(), block.getClass().getCanonicalName());
+						}
+						catch (Throwable var2)
+						{
+							return "ID #" + Block.getIdFromBlock(block);
+						}
+					});
+					CrashReportCategory.addBlockInfo(crashreportcategory, pos, state);
+					throw new ReportedException(crashreport);
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onNotifyNeighbours(NeighborNotifyEvent event)
+	{
+		if(event.getState().getBlock() instanceof IUpdateDelayBlock)
+		{
+			event.setCanceled(true);
+			if(notifyFlag)
+			{
+				Set<NotifyEntry> set = new HashSet(event.getNotifiedSides().size());
+				for(EnumFacing facing : event.getNotifiedSides())
+				{
+					set.add(new NotifyEntry(event.getState(), event.getPos(), facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ()));
+				}
+				markBlockForUpdate(event.getWorld(), set);
+				return;
+			}
+			notifyFlag = true;
+			IUpdateDelayBlock block = (IUpdateDelayBlock) event.getState().getBlock();
+			int range = block.getCheckRange(event.getState());
+			int r1 = 2 * range + 1;
+			Set<NotifyEntry> set = new HashSet(r1*r1*r1);
+			BlockPos pos = event.getPos();
+			if(!event.getWorld().isAreaLoaded(pos, range))
+				return;
+			for(int i = -range; i <= range; ++i)
+			{
+				for(int j = -range; j <= range; ++j)
+				{
+					for(int k = -range; k <= range; ++k)
+					{
+						set.add(new NotifyEntry(event.getState(), pos, pos.getX() + i, pos.getY() + j, pos.getZ() + k));
+					}
+				}
+			}
+			markBlockForUpdate(event.getWorld(), set);
+			notifyFlag = false;
 		}
 	}
 }

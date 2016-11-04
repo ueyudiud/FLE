@@ -1,6 +1,7 @@
 package farcore.energy.thermal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
 
 public class ThermalNet implements IEnergyNet
 {
@@ -61,7 +63,13 @@ public class ThermalNet implements IEnergyNet
 
 	public static float getRealHandlerTemperature(IThermalHandler handler, Direction direction)
 	{
-		return getEnviormentTemperature(handler.world(), handler.pos()) + handler.getTemperature(direction);
+		float temp1 = getEnviormentTemperature(handler.world(), handler.pos());
+		float temp2 = handler.getTemperatureDifference(direction);
+		if(temp2 == Float.POSITIVE_INFINITY)
+			return Float.MAX_VALUE;
+		else if(temp2 == Float.NEGATIVE_INFINITY)
+			return 0;
+		return Float.isNaN(temp2) ? temp1 : temp1 + temp2;
 	}
 
 	public static float getTemperature(World world, BlockPos pos, boolean withNearby)
@@ -135,7 +143,7 @@ public class ThermalNet implements IEnergyNet
 		return V.k0;
 	}
 
-	public static float getThermalConductivity(World world, BlockPos pos, Direction direction)
+	public static double getThermalConductivity(World world, BlockPos pos, Direction direction)
 	{
 		IBlockState state;
 		TileEntity tile;
@@ -147,7 +155,7 @@ public class ThermalNet implements IEnergyNet
 		return getBaseThermalConductivity(world, pos, state);
 	}
 	
-	public static void sendHeatToBlock(World world, BlockPos pos, Direction direction, float amount)
+	public static void sendHeatToBlock(World world, BlockPos pos, Direction direction, double amount)
 	{
 		IBlockState state;
 		if((state = world.getBlockState(pos)).getBlock() instanceof IThermalCustomBehaviorBlock)
@@ -352,7 +360,7 @@ public class ThermalNet implements IEnergyNet
 
 		public void updateNet()
 		{
-			if(world == null) return;
+			if(world == null || world.isRemote || world.getWorldType() == WorldType.DEBUG_WORLD) return;
 			//Initialize cache.
 			cachedList.clear();
 			//Switch update flag to true, to prevent remove element in map when iterating.
@@ -360,11 +368,12 @@ public class ThermalNet implements IEnergyNet
 			boolean updated = true;
 			try
 			{
+				//Cached current.
+				double[] current = new double[Direction.DIRECTIONS_3D.length];
 				//Update tile.
 				for(IThermalHandler tile : map.values())
 				{
-					//Cached current.
-					float[] current = new float[Direction.DIRECTIONS_3D.length];
+					Arrays.fill(current, 0);
 					//Get cache current from each direction.
 					for(int i = 0; i < Direction.DIRECTIONS_3D.length; ++i)
 					{
@@ -372,37 +381,40 @@ public class ThermalNet implements IEnergyNet
 						if(tile.canConnectTo(direction))
 						{
 							cachedPos = direction.offset(tile.pos());
-							float tc1 = tile.getThermalConductivity(direction);
-							float temp = getEnviormentTemperature(world, tile.pos()) + tile.getTemperature(direction);
-							float tc2;
+							double tc1 = tile.getThermalConductivity(direction);
+							float temp = getEnviormentTemperature(world, tile.pos()) + tile.getTemperatureDifference(direction);
+							double tc2;
 							float temp2;
 							try
 							{
 								if(map.containsKey(cachedPos))
 								{
 									IThermalHandler tile1 = map.get(cachedPos);
-									if(cachedList.contains(tile1))
+									if(!tile1.canConnectTo(direction.getOpposite()) || cachedList.contains(tile1))
 									{
 										continue;
 									}
 									tc2 = tile1.getThermalConductivity(direction.getOpposite());
-									temp2 = getEnviormentTemperature(world, tile1.pos()) + tile1.getTemperature(direction.getOpposite());
-									tile1.onHeatChange(direction.getOpposite(), current[i] = (temp - temp2) * (tc1 + tc2) * 0.5F);
+									temp2 = getEnviormentTemperature(world, tile1.pos()) + tile1.getTemperatureDifference(direction.getOpposite());
+									tile1.onHeatChange(direction.getOpposite(), current[i] = (temp - temp2) * Math.sqrt(tc1 * tc2));
 								}
 								else
 								{
 									tc2 = getThermalConductivity(world, cachedPos, direction.getOpposite());
 									temp2 = getTemperature(world, cachedPos, false);
-									float v = (temp - temp2) * (tc1 + tc2) / 2F;
+									double v = (temp - temp2) * Math.sqrt(tc1 * tc2);
 									current[i] = v;
-									IThermalHandlerBox box = getBoxAtPos(cachedPos);
-									if(box != null)
+									if(v != 0)
 									{
-										box.onHeatChange(tile.pos(), cachedPos, direction.getOpposite(), v);
-									}
-									else
-									{
-										sendHeatToBlock(world, cachedPos, direction.getOpposite(), v);
+										IThermalHandlerBox box = getBoxAtPos(cachedPos);
+										if(box != null && box.onHeatChange(tile.pos(), cachedPos, direction.getOpposite(), v))
+										{
+											;
+										}
+										else
+										{
+											sendHeatToBlock(world, cachedPos, direction.getOpposite(), v);
+										}
 									}
 								}
 							}
@@ -428,7 +440,7 @@ public class ThermalNet implements IEnergyNet
 				if(FarCore.debug)
 				{
 					Log.warn("The net update is out of memory, "
-							+ "this error prevent update.", error);
+							+ "this error will prevent update.", error);
 				}
 				updated = false;
 			}
