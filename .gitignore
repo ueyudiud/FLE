@@ -24,3 +24,10 @@ src-ttr
 src-fle
 src-dh
 logs
+
+# version handler
+VersionPushing.class
+pushMajorVersionAndBuild.bat
+pushMinorVersionAndBuild.bat
+pushSubVersionAndBuild.bat
+pushSnapshotVersion.bat

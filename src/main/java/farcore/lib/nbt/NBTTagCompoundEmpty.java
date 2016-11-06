@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagList;
 public class NBTTagCompoundEmpty extends NBTTagCompound
 {
 	public static final NBTTagCompoundEmpty instance = new NBTTagCompoundEmpty();
-
+	
 	@Override
 	public boolean getBoolean(String tag){return false;}
 	@Override
@@ -62,20 +62,20 @@ public class NBTTagCompoundEmpty extends NBTTagCompound
 	public boolean hasKey(String tag) {return false;}
 	@Override
 	public boolean hasNoTags() {return true;}
-
+	
 	@Override
 	public int hashCode()
 	{
-		return 274817393;
+		return 10;//The empty tag compound hash is 10.
 	}
-
+	
 	@Override
 	public boolean equals(Object object)
 	{
 		return object instanceof NBTTagCompound ?
 				((NBTTagCompound) object).hasNoTags() : false;
 	}
-
+	
 	@Override
 	public String toString()
 	{

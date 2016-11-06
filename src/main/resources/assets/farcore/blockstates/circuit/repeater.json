@@ -8,6 +8,16 @@
 		}
 	},
 	"variants": {
+		"inventory":{
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/repeater" 
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/repeater/t3_off"
+			}
+		},
 		"value": {
 			"t0_on": { "custom": { "mixed": "farcore:circuit/repeater/t0_on" }},
 			"t1_on": { "custom": { "mixed": "farcore:circuit/repeater/t1_on" }},

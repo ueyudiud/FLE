@@ -62,16 +62,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public enum FarCoreItemModelLoader implements ICustomModelLoader
 {
 	instance;
-
+	
 	public static final String NORMAL = "";
 	public static final String PARTICLE = "particle";
 	public static final Function<ItemStack, String> NORMAL_FUNCTION = (ItemStack stack) -> NORMAL;
 	public static final Function<ItemStack, Integer> NORMAL_MULTIPLIER = (ItemStack stack) -> 0xFFFFFFFF;
-	
+
 	private static final Map<ResourceLocation, Function<ItemStack, Integer>> colorMultipliers = new HashMap();
 	private static final Map<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> multiIconLoaders = new HashMap();
 	private static final Map<ResourceLocation, Function<ItemStack, String>> submetaProviders = new HashMap();
-	
+
 	public static final JsonDeserializer<IMultiTextureCollection> TEXTURE_GETTER_DESERIALIZER =
 			(JsonElement json, Type typeOfT, JsonDeserializationContext context) ->
 	{
@@ -368,30 +368,25 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		}
 		return cache;
 	};
-
+	
 	static final Gson GSON = new GsonBuilder()
 			.registerTypeAdapter(IMultiTextureCollection.class, TEXTURE_GETTER_DESERIALIZER)
 			.registerTypeAdapter(UnbakedModelLayer.class, MODEL_LAYER_DESERIALIZER)
 			.registerTypeAdapter(ItemModelCache.class, ITEM_MODEL_CACHE_DESERIALIZER)
 			.create();
-
-	static
-	{
-		init();
-	}
-
+	
 	public static class ItemModelCache
 	{
 		ResourceLocation model;
 		ImmutableMap<String, String> retextures;
-
+		
 		Map<String, ResourceLocation> textures;
 		Map<String, Function<IResourceManager, Map<String, ResourceLocation>>> multiTextures;
-
+		
 		String particle;
-		
+
 		UnbakedModelLayer[] layers;
-		
+
 		void registerItemColor(Item item, ItemColors colors)
 		{
 			for (UnbakedModelLayer layer : layers)
@@ -404,22 +399,22 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			}
 		}
 	}
-
+	
 	public static void registerMultiIconProvider(ResourceLocation location, Function<IResourceManager, Map<String, ResourceLocation>> function)
 	{
 		multiIconLoaders.put(location, function);
 	}
-	
+
 	public static void registerSubmetaProvider(ResourceLocation location, Function<ItemStack, String> function)
 	{
 		submetaProviders.put(location, function);
 	}
-	
+
 	public static void registerColorMultiplier(ResourceLocation location, Function<ItemStack, Integer> function)
 	{
 		colorMultipliers.put(location, function);
 	}
-
+	
 	public static void registerModel(Item item, ResourceLocation location)
 	{
 		ModelResourceLocation location1 = new ModelResourceLocation(item.getRegistryName(), "iventory");
@@ -429,19 +424,19 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		instance.acceptItem.put(item, location);
 		instance.itemModelMap.put(location1, item);
 	}
-
+	
 	private boolean isResourceLoading = false;
 	private IResourceManager resourceManager;
-	
+
 	private Map<ModelResourceLocation, Item> itemModelMap = new HashMap();
 	private Map<Item, ResourceLocation> acceptItem = new HashMap();
-	
-	private Map<Item, ItemModelCache> loadedModels = new HashMap();
 
+	private Map<Item, ItemModelCache> loadedModels = new HashMap();
+	
 	private Map<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> markMultiTextureLoaders;
 	private Map<ResourceLocation, IMultiTextureCollection> loadedMultiTexturesMap;
 	Map<Function<IResourceManager, Map<String, ResourceLocation>>, Map<String, ResourceLocation>> buildMultiTexturesMap;
-	
+
 	private Function<IResourceManager, Map<String, ResourceLocation>> loadTextureGetter(ResourceLocation location)
 	{
 		Function<IResourceManager, Map<String, ResourceLocation>> function = multiIconLoaders.get(location);
@@ -450,7 +445,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		markMultiTextureLoaders.put(location, function);
 		return function;
 	}
-
+	
 	private IMultiTextureCollection loadTextures(ResourceLocation location)
 	{
 		IMultiTextureCollection collection;
@@ -489,67 +484,76 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		loadedMultiTexturesMap.put(location, collection);
 		return collection;
 	}
-	
+
 	private Function<ItemStack, String> loadSubmetaGetter(JsonElement json)
 	{
-		if(json.isJsonObject())
+		try
 		{
-			JsonObject object = json.getAsJsonObject();
-			if (object.has("key")) return (ItemStack stack) -> object.get("key").getAsString();
-			else if (object.has("parent"))//Raw type.
+			if(json.isJsonObject())
 			{
-				FarCoreVariantSubmetaProvider function = new FarCoreVariantSubmetaProvider(loadSubmetaGetter(object.get("parent")));
-				if (object.has("variant"))
+				JsonObject object = json.getAsJsonObject();
+				if (object.has("key")) return (ItemStack stack) -> object.get("key").getAsString();
+				else if (object.has("parent"))//Raw type.
 				{
-					ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-					JsonObject object1 = object.getAsJsonObject("variant");
-					for (Entry<String, JsonElement> entry : object1.entrySet())
+					FarCoreVariantSubmetaProvider function = new FarCoreVariantSubmetaProvider(loadSubmetaGetter(object.get("parent")));
+					if (object.has("variant"))
 					{
-						builder.put(entry.getKey(), entry.getValue().getAsString());
+						ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+						JsonObject object1 = object.getAsJsonObject("variant");
+						for (Entry<String, JsonElement> entry : object1.entrySet())
+						{
+							builder.put(entry.getKey(), entry.getValue().getAsString());
+						}
+						function.setVariant(builder.build());
 					}
-					function.setVariant(builder.build());
-				}
-				if (object.has("replacement"))
-				{
-					ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-					JsonObject object1 = object.getAsJsonObject("replacement");
-					for (Entry<String, JsonElement> entry : object1.entrySet())
+					if (object.has("replacement"))
 					{
-						builder.put(entry.getKey(), entry.getValue().getAsString());
+						ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+						JsonObject object1 = object.getAsJsonObject("replacement");
+						for (Entry<String, JsonElement> entry : object1.entrySet())
+						{
+							builder.put(entry.getKey(), entry.getValue().getAsString());
+						}
+						function.setReplacement(builder.build());
 					}
-					function.setReplacement(builder.build());
+					if (object.has("postfix"))
+					{
+						function.setPostfix(object.get("prefix").getAsString());
+					}
+					if (object.has("postfix"))
+					{
+						function.setPostfix(object.get("postfix").getAsString());
+					}
+					return function;
 				}
-				if (object.has("postfix"))
-				{
-					function.setPostfix(object.get("prefix").getAsString());
-				}
-				if (object.has("postfix"))
-				{
-					function.setPostfix(object.get("postfix").getAsString());
-				}
-				return function;
+				return NORMAL_FUNCTION;
 			}
-			return NORMAL_FUNCTION;
+			else
+			{
+				String value = json.getAsString();
+				return value.charAt(0) == '#' ? loadSubmetaGetter(new ResourceLocation(value.substring(1))) : (ItemStack stack) -> value;
+			}
 		}
-		else
+		catch (Exception exception)
 		{
-			String value = json.getAsString();
-			return value.charAt(0) == '#' ? loadSubmetaGetter(new ResourceLocation(value.substring(1))) : (ItemStack stack) -> value;
+			if(exception instanceof JsonParseException)
+				throw exception;
+			throw new JsonParseException(exception);
 		}
 	}
-	
+
 	private Function<ItemStack, String> loadSubmetaGetter(ResourceLocation location)
 	{
 		Function<ItemStack, String> function = submetaProviders.get(location);
 		if (function != null) return function;
 		return NORMAL_FUNCTION;//Raw method.
 	}
-	
+
 	private Function<ItemStack, Integer> loadColorMultiplier(ResourceLocation location)
 	{
 		return colorMultipliers.getOrDefault(location, NORMAL_MULTIPLIER);
 	}
-	
+
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
@@ -569,15 +573,16 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			{
 				bar.step(entry.getValue().toString());
 				ResourceLocation location = entry.getValue();
-				resource = manager.getResource(location);
-				byte[] codes = IOUtils.toByteArray(resource.getInputStream());
+				byte[] codes;
 				try
 				{
+					resource = manager.getResource(location);
+					codes = IOUtils.toByteArray(resource.getInputStream());
 					resource.close();
 				}
 				catch (IOException exception)
 				{
-					exception.printStackTrace();
+					throw new RuntimeException("Fail to load resource from {" + location.toString() + "}.", exception);
 				}
 				ItemModelCache cache = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(codes), Charsets.UTF_8), ItemModelCache.class);
 				if (colors != null)
@@ -592,35 +597,51 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			}
 		}
 		ProgressManager.pop(bar);
+		Log.logCachedInformations(null, "Catching exceptions during loading models.");
 		buildMultiTexturesMap = new HashMap();
 		bar = ProgressManager.push("Collect FarCore Textures", multiIconLoaders.size() + (loadedMultiTexturesMap != null ? loadedMultiTexturesMap.size() : 0));
 		for (Entry<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> entry : markMultiTextureLoaders.entrySet())
 		{
 			bar.step(entry.getKey().toString());
-			buildMultiTexturesMap.put(entry.getValue(), entry.getValue().apply(manager));
+			try
+			{
+				buildMultiTexturesMap.put(entry.getValue(), entry.getValue().apply(manager));
+			}
+			catch (Exception exception)
+			{
+				Log.cache(entry.getKey());
+			}
 		}
+		Log.logCachedInformations((Object object) -> ((ResourceLocation) object).toString(), "Failed to load texture collection from these path.");
 		if (loadedMultiTexturesMap != null)
 		{
 			for (Entry<ResourceLocation, IMultiTextureCollection> entry : loadedMultiTexturesMap.entrySet())
 			{
-				bar.step(entry.getKey().toString());
-				buildMultiTexturesMap.put(entry.getValue(), entry.getValue().apply());
+				try
+				{
+					bar.step(entry.getKey().toString());
+					buildMultiTexturesMap.put(entry.getValue(), entry.getValue().apply());
+				}
+				catch (Exception exception)
+				{
+					Log.cache(new RuntimeException(String.format("Fail to apply {%s} textures.", entry.getKey())));
+				}
 			}
 		}
 		ProgressManager.pop(bar);
+		Log.logCachedInformations(null, "Fail to get texture collection from inner textures collection getter.");
 		isResourceLoading = false;
 		markMultiTextureLoaders = null;
 		loadedMultiTexturesMap = null;
-		Log.logCachedExceptions();
 		Log.info("Far Core Item Model Loader finished model loading.");
 	}
-
+	
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
 		return itemModelMap.containsKey(modelLocation);
 	}
-	
+
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
@@ -640,10 +661,10 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			}
 			return new ModelItemBase(this, modelCache);
 		}
-		return ModelLoaderRegistry.getMissingModel();
+		throw new RuntimeException(String.format("The model location {%s} is not belong to FarCoreItemModelLoader. There must be some wrong of other model loader.", modelLocation));
 	}
-	
-	private static void init()
+
+	static
 	{
 		registerSubmetaProvider(new ResourceLocation("minecraft", "damage"), (ItemStack stack) -> Integer.toString(stack.getItemDamage()));
 		registerSubmetaProvider(new ResourceLocation("forge", "registry_name"), (ItemStack stack) -> stack.getItem().getRegistryName().toString());
@@ -676,7 +697,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 				return builder.build();
 			});
 		}
-		
+
 		registerColorMultiplier(new ResourceLocation("minecraft", "armor"), (ItemStack stack) -> ((ItemArmor) stack.getItem()).getColor(stack));
 		registerColorMultiplier(new ResourceLocation("minecraft", "banner"), (ItemStack stack) -> ItemBanner.getBaseColor(stack).getMapColor().colorValue);
 		registerColorMultiplier(new ResourceLocation("forge", "fluid"), (ItemStack stack) ->

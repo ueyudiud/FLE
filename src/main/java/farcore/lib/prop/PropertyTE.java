@@ -38,25 +38,25 @@ public class PropertyTE extends PropertyHelper<TETag>
 		}
 		return new PropertyTE(name, def, register, builder.build());
 	}
-	
+
 	public static class TETag implements Comparable<TETag>
 	{
 		int id;
 		Class<? extends TileEntity> clazz;
 		String name;
-		
+
 		public TETag(int id, String name, Class<? extends TileEntity> clazz)
 		{
 			this.id = id;
 			this.clazz = clazz;
 			this.name = name;
 		}
-
+		
 		public Class<? extends TileEntity> getTEClass()
 		{
 			return clazz;
 		}
-		
+
 		public TileEntity newInstance()
 		{
 			try
@@ -68,34 +68,34 @@ public class PropertyTE extends PropertyHelper<TETag>
 				throw new RuntimeException("The class " + clazz.getName() + " is missing a valid constructor.", exception);
 			}
 		}
-
+		
 		public void registerTileEntity(String prefix)
 		{
 			if(clazz == TELossTile.class) return;//Do not register default tile entity.
 			FarCoreRegistry.registerTileEntity(prefix + "." + name, clazz);
 		}
-
+		
 		@Override
 		public int compareTo(TETag other)
 		{
 			return Integer.compare(id, other.id);
 		}
-		
+
 		public int id()
 		{
 			return id;
 		}
-		
+
 		public String name()
 		{
 			return name;
 		}
 	}
-
+	
 	protected Map<Class<? extends TileEntity>, String> map;
 	protected IRegister<TETag> list;
 	protected final TETag def;
-	
+
 	public PropertyTE(String name, TETag def, IRegister<TETag> list, Map<Class<? extends TileEntity>, String> map)
 	{
 		super(name, TETag.class);
@@ -103,49 +103,54 @@ public class PropertyTE extends PropertyHelper<TETag>
 		this.map = map;
 		this.def = def;
 	}
-	
+
 	public int size()
 	{
 		return list.size();
 	}
-	
+
 	public TileEntity getTileFromMeta(int meta)
 	{
 		return list.get(meta).newInstance();
+	}
+	
+	public int getTileMeta(TileEntity tile)
+	{
+		return list.id(map.get(tile.getClass()));
 	}
 
 	public IBlockState withProperty(IBlockState state, TileEntity tile)
 	{
 		return state.withProperty(this, list.get(map.get(tile.getClass()), def));
 	}
-
+	
 	public IBlockState withProperty(IBlockState state, String tag)
 	{
 		return state.withProperty(this, list.get(tag, def));
 	}
-
+	
 	public IBlockState withProperty(IBlockState state, int meta)
 	{
 		return state.withProperty(this, list.get(meta, def));
 	}
-	
+
 	public int getMetaFromState(IBlockState state)
 	{
 		return list.id(state.getValue(this));
 	}
-	
+
 	@Override
 	public Collection<TETag> getAllowedValues()
 	{
 		return list.targets();
 	}
-	
+
 	@Override
 	public Optional<TETag> parseValue(String value)
 	{
 		return list.contain(value) ? Optional.of(list.get(value)) : Optional.absent();
 	}
-	
+
 	@Override
 	public String getName(TETag value)
 	{

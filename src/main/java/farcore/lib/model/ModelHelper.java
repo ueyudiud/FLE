@@ -37,6 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelHelper
 {
 	public static final ImmutableMap<TransformType, TRSRTransformation> ITEM_STANDARD_TRANSFORMS;
+	public static final ImmutableMap<TransformType, TRSRTransformation> BLOCK_STANDARD_TRANSFORMS;
 
 	public static void addCuboid(
 			float x1, float y1, float z1,
@@ -298,5 +299,16 @@ public class ModelHelper
 		builder.put(TransformType.GROUND,                  transformation(0.25F,     0.375F,      0.25F,       0.0F,         0.0F,        0.0F,        1.0F,       0.5F,  0.5F,  0.5F,  0.0F, 0.0F, 0.0F, 1.0F));
 		builder.put(TransformType.FIXED, TRSRTransformation.identity());
 		ITEM_STANDARD_TRANSFORMS = builder.build();
+		builder = ImmutableMap.builder();
+		builder.put(TransformType.NONE, TRSRTransformation.identity());
+		builder.put(TransformType.THIRD_PERSON_LEFT_HAND,  transformation(0.23483497F, 0.60772145F, 0.31888893F, 0.5624222F, 0.3036032F, 0.23296294F, 0.7329629F, 0.375F, 0.375F, 0.375F, 0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.THIRD_PERSON_RIGHT_HAND, transformation(0.23483497F, 0.60772145F, 0.31888893F, 0.5624222F, 0.3036032F, 0.23296294F, 0.7329629F, 0.375F, 0.375F, 0.375F, 0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.FIRST_PERSON_LEFT_HAND,  transformation(0.78284276F, 0.3F,        0.5F,        0.0F,       0.9238796F, 0.0F,       -0.3826834F, 0.4F,   0.4F,   0.4F,   0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.FIRST_PERSON_RIGHT_HAND, transformation(0.78284276F, 0.3F,        0.5F,        0.0F,       0.9238796F, 0.0F,       -0.3826834F, 0.4F,   0.4F,   0.4F,   0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.HEAD,                    transformation(1.0F,        1.0F,        1.0F,        0.0F,       1.0F,       0.0F,        0.0F,       0.25F,  0.25F,  0.25F,  0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.GUI,                     transformation(0.94194174F, 0.22936705F, 0.34375006F,-0.1F,       0.9F,       0.23911762F,-0.37F,      0.625F, 0.625F, 0.625F, 0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.GROUND,                  transformation(0.375F,      0.5625F,     0.375F,      0.0F,       0.0F,       0.0F,        1.0F,       0.25F,  0.25F,  0.25F,  0.0F, 0.0F, 0.0F, 1.0F));
+		builder.put(TransformType.FIXED,                   transformation(0.25F,       0.25F,       0.25F,       0.0F,       0.0F,       0.0F,        1.0F,       0.5F,   0.5F,   0.5F,   0.0F, 0.0F, 0.0F, 1.0F));
+		BLOCK_STANDARD_TRANSFORMS = builder.build();
 	}
 }

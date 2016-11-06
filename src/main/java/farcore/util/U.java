@@ -16,6 +16,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -357,7 +359,7 @@ public class U
 			return ret;
 		}
 
-		public static boolean equal(Object arg1, Object arg2)
+		public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
 		{
 			return arg1 == arg2 ? true :
 				(arg1 == null ^ arg2 == null) ? false :
@@ -459,13 +461,13 @@ public class U
 			return handlerGatway.translateToLocalByI18n(unlocal, parameters);
 		}
 
-		public static String validate(String string)
+		public static String validate(@Nullable String string)
 		{
 			if(string == null) return "";
 			return string.trim();
 		}
 
-		public static String validateProperty(String string)
+		public static String validateProperty(@Nullable String string)
 		{
 			if(string == null) return "";
 			String newString = "";
@@ -483,7 +485,7 @@ public class U
 			return newString.trim();
 		}
 
-		public static String upcaseFirst(String name)
+		public static String upcaseFirst(@Nullable String name)
 		{
 			String s = validate(name);
 			if(s.length() == 0) return s;
@@ -517,7 +519,7 @@ public class U
 			return ret;
 		}
 
-		public static String[] split(String str, char split)
+		public static String[] split(@Nullable String str, char split)
 		{
 			if(str == null) return new String[0];
 			else if(str.indexOf(split) != -1)
@@ -632,11 +634,11 @@ public class U
 			throw new FileNotFoundException();
 		}
 
-		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
+		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 		}
-		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, T target, F override, boolean isPrivate, boolean alwaysInit) throws Exception
+		public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			try
 			{
@@ -649,11 +651,11 @@ public class U
 			}
 		}
 		
-		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, F override, boolean isPrivate, boolean alwaysInit) throws Exception
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			overrideFinalField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 		}
-		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, T target, F override, boolean isPrivate, boolean alwaysInit) throws Exception
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			try
 			{
@@ -665,7 +667,7 @@ public class U
 				throw new RuntimeException("FLE: fail to find and override field " + mcpName);
 			}
 		}
-		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, T target, int override, boolean isPrivate, boolean alwaysInit) throws Exception
+		public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, int override, boolean isPrivate, boolean alwaysInit) throws Exception
 		{
 			try
 			{
@@ -678,7 +680,7 @@ public class U
 			}
 		}
 
-		public static <T> Object getValue(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
+		public static <T> Object getValue(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, boolean alwaysInit)
 		{
 			try
 			{
@@ -690,7 +692,7 @@ public class U
 			}
 		}
 
-		public static <T> int getInt(Class<? extends T> clazz, String mcpName, String obfName, T target, boolean alwaysInit)
+		public static <T> int getInt(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, boolean alwaysInit)
 		{
 			try
 			{
