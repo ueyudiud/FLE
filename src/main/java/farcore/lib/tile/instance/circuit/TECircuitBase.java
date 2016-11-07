@@ -39,6 +39,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -54,23 +55,24 @@ ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile,
 ITP_Drops, ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITP_BlockHardness,
 ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
+	protected static final ActionResult<Float> SCREW_DRIVER_DAMAGE = new ActionResult<Float>(EnumActionResult.SUCCESS, 0.2F);
 	protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
-	
+
 	public Mat material = M.stone;
 	public Direction facing = Direction.N;
-
+	
 	@Override
 	public float getBlockHardness(IBlockState state)
 	{
 		return 0.5F;
 	}
-
+	
 	@Override
 	public float getExplosionResistance(Entity exploder, Explosion explosion)
 	{
 		return 0.2F;
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -78,7 +80,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		material = Mat.material(nbt.getString("material"), M.stone);
 		facing = Direction.readFromNBT(nbt, "facing", Direction.T_2D_NONNULL);
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -86,7 +88,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		facing.writeToNBT(nbt, "facing", Direction.T_2D_NONNULL);
 		return super.writeToNBT(nbt);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -100,7 +102,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 			facing = Direction.DIRECTIONS_3D[nbt.getByte("f")];
 		}
 	}
-	
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -108,54 +110,54 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		nbt.setString("m", material.name);
 		nbt.setByte("f", (byte) facing.ordinal());
 	}
-	
+
 	@Override
 	protected void initServer()
 	{
 		super.initServer();
 	}
-	
+
 	protected void markNeighbourNotify()
 	{
-
+		
 	}
-	
+
 	@Override
 	public abstract int getStrongPower(IBlockState state, Direction side);
-	
+
 	@Override
 	public abstract int getWeakPower(IBlockState state, Direction side);
-
+	
 	@Override
 	public boolean listenWeakChanges()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public int getComparatorInputOverride(IBlockState state)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canConnectRedstone(IBlockState state, Direction side)
 	{
 		return false;
 	}
-
+	
 	public static Mat getRockType(ItemStack stack)
 	{
 		return Mat.material(U.ItemStacks.setupNBT(stack, false).getString("material"), M.stone);
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		material = getRockType(stack);
 		facing = Direction.heading(placer);
 	}
-
+	
 	protected void notifyNeighbors()
 	{
 		IBlockState state = getBlockState();
@@ -175,47 +177,47 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 			worldObj.notifyNeighborsOfStateExcept(pos1, block, facing.getOpposite());
 		}
 	}
-
+	
 	@Override
 	public Direction getRotation()
 	{
 		return facing;
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
 	{
 		return REDSTONE_DIODE_AABB;
 	}
-	
+
 	@Override
 	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
 			Entity entity)
 	{
 		collidingBoxes.add(getCollisionBoundingBox(state));
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 	{
 		return REDSTONE_DIODE_AABB;
 	}
-	
-	protected abstract Facing[] getOutputFacings();
 
+	protected abstract Facing[] getOutputFacings();
+	
 	protected int getWeakPower(Facing offset)
 	{
 		Direction direction = offset.toDirection(facing);
-		return getWeakPower(direction.getOpposite().of(), direction);
+		return getWeakPower(direction.of(), direction);
 	}
-
+	
 	protected int getStrongPower(Facing offset)
 	{
 		Direction direction = offset.toDirection(facing);
-		return getStrongPower(direction.getOpposite().of(), direction);
+		return getStrongPower(direction.of(), direction);
 	}
-
+	
 	@Override
 	public void onBlockDestroyedByPlayer(IBlockState state)
 	{
@@ -230,9 +232,19 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		return IToolableTile.DEFAULT_RESULT;
+		if(tool == EnumToolType.screw_driver)
+		{
+			onScrewDriverUsed(player, side, hitX, hitY, hitZ);
+			return SCREW_DRIVER_DAMAGE;
+		}
+		return DEFAULT_RESULT;
 	}
-	
+
+	protected void onScrewDriverUsed(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
+	{
+		
+	}
+
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
@@ -242,12 +254,12 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		setDropNBT(nbt);
 		return Arrays.asList(stack);
 	}
-	
+
 	protected void setDropNBT(NBTTagCompound nbt)
 	{
 		nbt.setString("material", material.name);
 	}
-
+	
 	/**
 	 * Used for render type.
 	 * @return
@@ -256,7 +268,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	{
 		return "_";
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)
@@ -268,7 +280,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		}
 		return true;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)

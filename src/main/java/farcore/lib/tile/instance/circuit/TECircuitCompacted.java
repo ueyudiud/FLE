@@ -9,23 +9,23 @@ import net.minecraft.util.math.BlockPos;
 public abstract class TECircuitCompacted extends TECircuitBase
 {
 	protected static final int notifyNeighbour = 0x1000;
-	
+
 	protected byte lastStrongPower;
 	protected byte lastWeakPower;
 	protected byte strongPower;
 	protected byte weakPower;
-	
-	protected int updateDelay;
 
-	protected byte mode = 0x0;
+	protected int updateDelay;
 	
+	protected byte mode = 0x0;
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
 		nbt.setByte("mo", mode);
 	}
-	
+
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -33,9 +33,10 @@ public abstract class TECircuitCompacted extends TECircuitBase
 		if(nbt.hasKey("mo"))
 		{
 			mode = nbt.getByte("mo");
+			markBlockRenderUpdate();
 		}
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -45,7 +46,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 		nbt.setByte("mode", mode);
 		return super.writeToNBT(nbt);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -55,7 +56,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 		weakPower = nbt.getByte("weak");
 		mode = nbt.getByte("mode");
 	}
-
+	
 	@Override
 	protected void updateServer()
 	{
@@ -76,12 +77,12 @@ public abstract class TECircuitCompacted extends TECircuitBase
 		lastStrongPower = strongPower;
 		lastWeakPower = weakPower;
 	}
-	
+
 	protected void updateBody()
 	{
-		
-	}
 
+	}
+	
 	protected void markForDelayUpdate(int delay)
 	{
 		if(updateDelay == 0)
@@ -93,22 +94,22 @@ public abstract class TECircuitCompacted extends TECircuitBase
 			updateDelay = Math.min(delay, updateDelay);
 		}
 	}
-	
+
 	protected void updateCircuit()
 	{
-
+		
 	}
-	
+
 	public void setStrongPower(int strongPower)
 	{
 		this.strongPower = (byte) strongPower;
 	}
-	
+
 	public void setWeakPower(int weakPower)
 	{
 		this.weakPower = (byte) weakPower;
 	}
-
+	
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
@@ -124,7 +125,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 			lastWeakPower = weakPower;
 		}
 	}
-	
+
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
@@ -134,13 +135,13 @@ public abstract class TECircuitCompacted extends TECircuitBase
 			super.notifyNeighbors();
 		}
 	}
-	
+
 	@Override
 	protected void notifyNeighbors()
 	{
 		syncState |= notifyNeighbour;
 	}
-	
+
 	@Override
 	protected void onCheckingSyncState()
 	{

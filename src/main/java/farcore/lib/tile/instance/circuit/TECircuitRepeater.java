@@ -1,6 +1,8 @@
 package farcore.lib.tile.instance.circuit;
 
+import farcore.lib.util.Direction;
 import farcore.lib.util.Facing;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class TECircuitRepeater extends TECircuitFrontBack
 {
@@ -28,6 +30,17 @@ public class TECircuitRepeater extends TECircuitFrontBack
 			}
 		}
 	}
+
+	@Override
+	protected void onScrewDriverUsed(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
+	{
+		mode++;
+		if(mode == 4)
+		{
+			mode = 0;
+		}
+		syncToNearby();
+	}
 	
 	@Override
 	protected void updateCircuit()
@@ -40,7 +53,7 @@ public class TECircuitRepeater extends TECircuitFrontBack
 			markForDelayUpdate((mode + 1) * 2);
 		}
 	}
-
+	
 	@Override
 	public String getState()
 	{

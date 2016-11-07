@@ -45,14 +45,14 @@ public class ItemDebugger extends ItemBase
 		setMaxStackSize(1);
 		EnumItem.debug.set(this);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
 		U.Mod.registerItemModel(EnumItem.debug.item, 0, FarCore.ID, "debugger");
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -69,12 +69,12 @@ public class ItemDebugger extends ItemBase
 				Block block = state.getBlock();
 				if(block instanceof IToolableBlock)
 				{
-					((IToolableBlock) block).onToolClick(player, EnumToolType.chisel, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
+					((IToolableBlock) block).onToolClick(player, EnumToolType.screw_driver, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
 				}
 				TileEntity tile = world.getTileEntity(pos);
 				if(tile instanceof IToolableTile)
 				{
-					((IToolableTile) tile).onToolClick(player, EnumToolType.chisel, stack, Direction.of(side), hitX, hitY, hitZ);
+					((IToolableTile) tile).onToolClick(player, EnumToolType.screw_driver, stack, Direction.of(side), hitX, hitY, hitZ);
 				}
 				List<String> list = new ArrayList();
 				//This information is added in F3 information, so should I remove these information display?
@@ -118,13 +118,13 @@ public class ItemDebugger extends ItemBase
 		}
 		return EnumActionResult.PASS;
 	}
-	
+
 	@Override
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{

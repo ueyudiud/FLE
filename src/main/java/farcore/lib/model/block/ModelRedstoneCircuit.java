@@ -54,7 +54,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 public class ModelRedstoneCircuit extends ModelBase implements IRetexturableModel, IModelCustomData
 {
 	private static final float PLATE_HEIGHT = .125F;
-	private static final ModelRedstoneCircuit MODEL = new ModelRedstoneCircuit();
+	private static final IModel MODEL = new ModelRedstoneCircuit();
 
 	public static enum RedstoneCircuitModelLoader implements IFarCustomModelLoader
 	{
@@ -89,7 +89,13 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		return ImmutableList.of(layer);
+		List<ResourceLocation> locations = new ArrayList();
+		locations.add(layer);
+		if(parent != null)
+		{
+			locations.addAll(parent.getTextures());
+		}
+		return locations;
 	}
 
 	@Override

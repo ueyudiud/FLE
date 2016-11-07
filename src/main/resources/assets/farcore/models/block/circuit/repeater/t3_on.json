@@ -3,6 +3,13 @@
 	"textures": { "torch": "blocks/redstone_torch_on" },
 	"elements": [
 		{
+			"from": [ 0, 1.001, 0 ],
+			"to": [ 16, 1.001, 16 ],
+			"faces": { 
+				"up": { "uv": [ 0, 0, 16, 16 ], "texture": "#wire" }
+			}
+		},
+		{
 			"from": [ 7, 7, 12 ],
 			"to": [ 9, 7, 14 ],
 			"faces": { 

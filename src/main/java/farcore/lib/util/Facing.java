@@ -34,6 +34,7 @@ public enum Facing
 			{DOWN, UP, BACK, FRONT, RIGHT, LEFT},
 			{DOWN, UP, LEFT, RIGHT, FRONT, BACK},
 			{DOWN, UP, RIGHT, LEFT, BACK, FRONT}};
+	public static final Facing[] OPPISITE = {UP, DOWN, BACK, Facing.FRONT, RIGHT, LEFT, UNKNOWN};
 
 	public static Facing toFacing(EnumFacing front, EnumFacing facing)
 	{
@@ -44,5 +45,10 @@ public enum Facing
 	public Direction toDirection(EnumFacing front)
 	{
 		return front == null ? U : FACING_AXIS[front.ordinal()][ordinal()];
+	}
+
+	public Facing getOppisite()
+	{
+		return OPPISITE[ordinal()];
 	}
 }

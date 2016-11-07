@@ -14,13 +14,17 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class BlockTE extends BlockSingleTE
 /**
@@ -120,6 +124,19 @@ public abstract class BlockTE extends BlockSingleTE
 	{
 		if(ItemBlockBase.placeflag) return state.getValue(property_TE).newInstance();
 		return new TELossTile();//Only for client, the server not need use this method to create tile entity.
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	{
+		for(TETag tag : property_TE.getAllowedValues())
+		{
+			if(tag.isValidTag())
+			{
+				list.add(new ItemStack(itemIn, 1, tag.id()));
+			}
+		}
 	}
 
 	@Override

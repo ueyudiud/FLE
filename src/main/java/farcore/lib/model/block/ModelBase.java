@@ -28,18 +28,18 @@ public abstract class ModelBase implements IModel
 	{
 		return ImmutableList.of();
 	}
-	
+
 	@Override
 	public IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
-
+	
 	protected ResourceLocation getRealLocationFromPath(String key, ImmutableMap<String, String> map)
 	{
 		return getRealLocationFromPathOrDefault(key, map, TextureMap.LOCATION_MISSING_TEXTURE);
 	}
-
+	
 	protected ResourceLocation getRealLocationFromPathOrDefault(String key, ImmutableMap<String, String> map, ResourceLocation def)
 	{
 		String key1 = key;
@@ -58,17 +58,17 @@ public abstract class ModelBase implements IModel
 		while (key1.charAt(0) == '#');
 		return new ResourceLocation(key1);
 	}
-	
+
 	public static IModel makeWrapperModel(IModel model)
 	{
 		return new RetextureWrapperModel(model);
 	}
-	
+
 	private static class RetextureWrapperModel implements IRetexturableModel
 	{
 		private IModel parent;
 		private ImmutableMap<String, String> textures;
-		
+
 		private RetextureWrapperModel(IModel model)
 		{
 			this(model, ImmutableMap.of());
@@ -78,45 +78,46 @@ public abstract class ModelBase implements IModel
 			parent = model;
 			this.textures = textures;
 		}
-		
+
 		@Override
 		public Collection<ResourceLocation> getDependencies()
 		{
 			return parent.getDependencies();
 		}
-
+		
 		@Override
 		public Collection<ResourceLocation> getTextures()
 		{
 			return parent.getTextures();
 		}
-
+		
 		@Override
 		public IBakedModel bake(IModelState state, VertexFormat format,
 				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 		{
 			return parent.bake(state, format, bakedTextureGetter);
 		}
-
+		
 		@Override
 		public IModelState getDefaultState()
 		{
 			return parent.getDefaultState();
 		}
-
+		
 		@Override
 		public IModel retexture(ImmutableMap<String, String> textures)
 		{
 			Map<String, String> map = new HashMap(this.textures);
 			map.putAll(textures);
 			if(!(parent instanceof IRetexturableModel))
-				return new RetextureWrapperModel(parent, textures);
-			IModel model = ((IRetexturableModel) parent).retexture(textures);
+				return new RetextureWrapperModel(parent, ImmutableMap.copyOf(map));
+			ImmutableMap<String, String> map1 = ImmutableMap.copyOf(map);
+			IModel model = ((IRetexturableModel) parent).retexture(map1);
 			if(model instanceof RetextureWrapperModel)
 			{
 				model = ((RetextureWrapperModel) model).parent;
 			}
-			return new RetextureWrapperModel(model, textures);
+			return new RetextureWrapperModel(model, map1);
 		}
 	}
 }

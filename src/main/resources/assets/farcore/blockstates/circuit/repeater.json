@@ -8,25 +8,50 @@
 		}
 	},
 	"variants": {
-		"inventory":{
+		"inventory": {
 			"transform": "forge:default-block",
 			"model": "farinner:redstone_circuit",
 			"textures": { 
-				"layer": "farcore:blocks/circuits/repeater" 
+				"layer": "farcore:blocks/circuits/repeater",
+				"wire": "farcore:blocks/circuits/repeater_wire_i"
 			},
 			"custom": { 
 				"mixed": "farcore:circuit/repeater/t3_off"
 			}
 		},
 		"value": {
-			"t0_on": { "custom": { "mixed": "farcore:circuit/repeater/t0_on" }},
-			"t1_on": { "custom": { "mixed": "farcore:circuit/repeater/t1_on" }},
-			"t2_on": { "custom": { "mixed": "farcore:circuit/repeater/t2_on" }},
-			"t3_on": { "custom": { "mixed": "farcore:circuit/repeater/t3_on" }},
-			"t0_off": { "custom": { "mixed": "farcore:circuit/repeater/t0_off" }},
-			"t1_off": { "custom": { "mixed": "farcore:circuit/repeater/t1_off" }},
-			"t2_off": { "custom": { "mixed": "farcore:circuit/repeater/t2_off" }},
-			"t3_off": { "custom": { "mixed": "farcore:circuit/repeater/t3_off" }}
+			"t0_on": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t0_on" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_ii" }
+			},
+			"t1_on": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t1_on" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_ii" }
+			},
+			"t2_on": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t2_on" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_ii" }
+			},
+			"t3_on": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t3_on" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_ii" }
+			},
+			"t0_off": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t0_off" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_i" }
+			},
+			"t1_off": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t1_off" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_i" }
+			},
+			"t2_off": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t2_off" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_i" }
+			},
+			"t3_off": { 
+				"custom": { "mixed": "farcore:circuit/repeater/t3_off" },
+				"textures": { "wire": "farcore:blocks/circuits/repeater_wire_i" }
+			}
 		},
 		"direction": {
 			"n": { "y":   0 },

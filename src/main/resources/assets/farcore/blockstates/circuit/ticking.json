@@ -1,0 +1,43 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/ticking" 
+		}
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/ticking",
+				"wire": "farcore:blocks/circuits/ticking_wire_i"
+			},
+            "custom": { 
+				"mixed": "farcore:circuit/ticking/off"
+			}
+		},
+		"value": {
+			"on_a": { 
+				"custom": { "mixed": "farcore:circuit/ticking/on_a" },
+				"textures": { "wire": "farcore:blocks/circuits/ticking_wire_iii" }
+			},
+			"on_b": { 
+				"custom": { "mixed": "farcore:circuit/ticking/on_b" },
+				"textures": { "wire": "farcore:blocks/circuits/ticking_wire_ii" }
+			},
+			"off": { 
+				"custom": { "mixed": "farcore:circuit/ticking/off" },
+				"textures": { "wire": "farcore:blocks/circuits/ticking_wire_i" }
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

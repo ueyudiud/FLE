@@ -1,0 +1,39 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-block",
+        "model": "farinner:redstone_circuit",
+        "textures": { 
+            "layer": "farcore:blocks/circuits/rslatch" 
+        }
+    },
+    "variants": {
+        "inventory": {
+            "transform": "forge:default-block",
+            "model": "farinner:redstone_circuit",
+            "textures": { 
+                "layer": "farcore:blocks/circuits/rslatch",
+				"wire": "farcore:blocks/circuits/rslatch_wire_i"
+            },
+            "custom": { 
+                "mixed": "farcore:circuit/rslatch/off"
+            }
+        },
+        "value": {
+            "on": { 
+				"custom": { "mixed": "farcore:circuit/rslatch/on" },
+				"textures": { "wire": "farcore:blocks/circuits/rslatch_wire_ii" }
+			},
+            "off": { 
+				"custom": { "mixed": "farcore:circuit/rslatch/off" },
+				"textures": { "wire": "farcore:blocks/circuits/rslatch_wire_i" }
+			}
+		},
+        "direction": {
+            "n": { "y":   0 },
+            "e": { "y":  90 },
+            "s": { "y": 180 },
+            "w": { "y": 270 }
+        }
+    }
+}
