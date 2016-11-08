@@ -1,0 +1,63 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/nand" 
+		}
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/nand",
+				"wire": "farcore:blocks/circuits/nand_wire_i"
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/nand/ddd"
+			}
+		},
+		"value": {
+			"ddd": { 
+				"custom": { "mixed": "farcore:circuit/nand/ddd" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_i" }
+			},
+			"edd": { 
+				"custom": { "mixed": "farcore:circuit/nand/edd" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_ii" }
+			},
+			"ded": { 
+				"custom": { "mixed": "farcore:circuit/nand/ded" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_iii" }
+			},
+			"eed": { 
+				"custom": { "mixed": "farcore:circuit/nand/eed" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_iv" }
+			},
+			"dde": { 
+				"custom": { "mixed": "farcore:circuit/nand/dde" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_v" }
+			},
+			"ede": { 
+				"custom": { "mixed": "farcore:circuit/nand/ede" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_vi" }
+			},
+			"dee": { 
+				"custom": { "mixed": "farcore:circuit/nand/dee" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_vii" }
+			},
+			"eee": { 
+				"custom": { "mixed": "farcore:circuit/nand/eee" },
+				"textures": { "wire": "farcore:blocks/circuits/nand_wire_viii" }
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

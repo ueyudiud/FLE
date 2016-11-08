@@ -24,8 +24,8 @@ import farcore.lib.prop.PropertyTE.TETag;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
 import farcore.lib.tile.instance.circuit.TECircuitAnd;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
-import farcore.lib.tile.instance.circuit.TECircuitBelong;
 import farcore.lib.tile.instance.circuit.TECircuitCross;
+import farcore.lib.tile.instance.circuit.TECircuitImples;
 import farcore.lib.tile.instance.circuit.TECircuitInvert;
 import farcore.lib.tile.instance.circuit.TECircuitNand;
 import farcore.lib.tile.instance.circuit.TECircuitNor;
@@ -66,9 +66,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockRedstoneCircuit extends BlockTE
 {
 	public static final Map<String, List<String>> ALLOWED_STATES;
-	
+
 	public static final PropertyString CUSTOM_VALUE;
-	
+
 	static
 	{
 		ImmutableMap.Builder<String, List<String>> builder1 = ImmutableMap.builder();
@@ -76,13 +76,13 @@ public class BlockRedstoneCircuit extends BlockTE
 		builder1.put("ticking", Arrays.asList("on_a", "on_b", "off"));
 		builder1.put("rslatch", Arrays.asList("on", "off"));
 		builder1.put("synchronizer", Arrays.asList("_"));
-		builder1.put("not", Arrays.asList("_"));
-		builder1.put("or", Arrays.asList("_"));
-		builder1.put("and", Arrays.asList("_"));
-		builder1.put("xor", Arrays.asList("_"));
-		builder1.put("nand", Arrays.asList("_"));
-		builder1.put("nor", Arrays.asList("_"));
-		builder1.put("belong", Arrays.asList("_"));
+		builder1.put("not", Arrays.asList("on", "off"));
+		builder1.put("or", Arrays.asList("ddd", "dde", "ded", "edd", "dee", "ede", "eed", "eee"));
+		builder1.put("and", Arrays.asList("ddd", "dde", "ded", "edd", "dee", "ede", "eed", "eee"));
+		builder1.put("xor", Arrays.asList("dd", "ed", "de", "ee"));
+		builder1.put("nand", Arrays.asList("ddd", "dde", "ded", "edd", "dee", "ede", "eed", "eee"));
+		builder1.put("nor", Arrays.asList("ddd", "dde", "ded", "edd", "dee", "ede", "eed", "eee"));
+		builder1.put("imples", Arrays.asList("ldd", "lde", "led", "lee", "rdd", "rde", "red", "ree"));
 		builder1.put("cross", Arrays.asList("_"));
 		builder1.put("invert", Arrays.asList("_"));
 		builder1.put("sensor_light", Arrays.asList("_"));
@@ -94,13 +94,13 @@ public class BlockRedstoneCircuit extends BlockTE
 		}
 		CUSTOM_VALUE = new PropertyString("value", ImmutableList.copyOf(set));
 	}
-	
+
 	public BlockRedstoneCircuit()
 	{
 		super(FarCore.ID, "red.circuit", Material.CIRCUITS);
 		EnumBlock.circuit.set(this);
 	}
-
+	
 	@Override
 	public void postInitalizedBlocks()
 	{
@@ -115,12 +115,12 @@ public class BlockRedstoneCircuit extends BlockTE
 		LanguageManager.registerLocal(getTranslateNameForItemStack(19), "Redstone Xor Door");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(20), "Redstone Nand Door");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(21), "Redstone Nor Door");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(22), "Redstone Belong Door");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(22), "Redstone Imples Door");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(32), "Redstone Crosser");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(33), "Redstone Invert");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(64), "Redstone Light Sensor");
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -133,7 +133,7 @@ public class BlockRedstoneCircuit extends BlockTE
 			ModelLoader.setCustomModelResourceLocation(item, tag.id(), new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), "inventory"));
 		}
 	}
-
+	
 	public static ItemStack createItemStack(int meta, Mat material)
 	{
 		ItemStack stack = new ItemStack(EnumBlock.circuit.block, 1, meta);
@@ -142,19 +142,19 @@ public class BlockRedstoneCircuit extends BlockTE
 		nbt.setString("material", material.name);
 		return stack;
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return super.initDefaultState(state).withProperty(Others.PROP_DIRECTION_HORIZONTALS, Direction.N);
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, createTEProperty(), Others.PROP_DIRECTION_HORIZONTALS, CUSTOM_VALUE);
 	}
-	
+
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
@@ -162,13 +162,22 @@ public class BlockRedstoneCircuit extends BlockTE
 		state = property_TE.withProperty(state, tile);
 		if(tile instanceof TECircuitBase)
 		{
-			state = state
-					.withProperty(Others.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation())
-					.withProperty(CUSTOM_VALUE, ((TECircuitBase) tile).getState());
+			try
+			{
+				state = state
+						.withProperty(Others.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation())
+						.withProperty(CUSTOM_VALUE, ((TECircuitBase) tile).getState());
+			}
+			catch(Exception exception)
+			{
+				if(FarCore.debug)
+					throw exception;
+				return state;
+			}
 		}
 		return state;
 	}
-
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -177,7 +186,7 @@ public class BlockRedstoneCircuit extends BlockTE
 			return BlockStateTileEntityWapper.wrap(tile, state);
 		return super.getExtendedState(state, world, pos);
 	}
-
+	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
@@ -186,7 +195,7 @@ public class BlockRedstoneCircuit extends BlockTE
 			return ((ITP_CollisionBoundingBox) tile).getCollisionBoundingBox(state);
 		return super.getBoundingBox(state, source, pos);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
@@ -199,41 +208,41 @@ public class BlockRedstoneCircuit extends BlockTE
 			}
 		}
 	}
-
+	
 	@Override
 	public boolean isNormalCube(IBlockState state)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
 	{
 		return canBlockStay(worldIn, pos);
 	}
-
+	
 	public boolean canBlockStay(World worldIn, BlockPos pos)
 	{
 		return worldIn.isSideSolid(pos.down(), EnumFacing.UP);
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
 	}
-	
+
 	@Override
 	public boolean canProvidePower(IBlockState state)
 	{
 		return true;
 	}
-
+	
 	/**
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
@@ -242,7 +251,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
@@ -254,7 +263,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		}
 		super.neighborChanged(state, worldIn, pos, blockIn);
 	}
-	
+
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
@@ -266,14 +275,14 @@ public class BlockRedstoneCircuit extends BlockTE
 		}
 		super.updateTick(worldIn, pos, state, rand);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}
-
+	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
@@ -287,13 +296,13 @@ public class BlockRedstoneCircuit extends BlockTE
 		register.register(19, "xor", TECircuitXor.class);
 		register.register(20, "nand", TECircuitNand.class);
 		register.register(21, "nor", TECircuitNor.class);
-		register.register(22, "belong", TECircuitBelong.class);
+		register.register(22, "imples", TECircuitImples.class);
 		register.register(32, "cross", TECircuitCross.class);
 		register.register(33, "invert", TECircuitInvert.class);
 		register.register(64, "sensor_light", TESensorLight.class);
 		return true;
 	}
-
+	
 	@Override
 	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
 			boolean advanced)

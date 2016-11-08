@@ -1,0 +1,63 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/nor" 
+		}
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/nor",
+				"wire": "farcore:blocks/circuits/nor_wire_i"
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/nor/off"
+			}
+		},
+		"value": {
+			"ddd": { 
+				"custom": { "mixed": "farcore:circuit/nor/off" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_i" }
+			},
+			"edd": { 
+				"custom": { "mixed": "farcore:circuit/nor/on" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_ii" }
+			},
+			"ded": { 
+				"custom": { "mixed": "farcore:circuit/nor/on" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_iii" }
+			},
+			"eed": { 
+				"custom": { "mixed": "farcore:circuit/nor/on" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_iv" }
+			},
+			"dde": { 
+				"custom": { "mixed": "farcore:circuit/nor/on" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_v" }
+			},
+			"ede": { 
+				"custom": { "mixed": "farcore:circuit/nor/on" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_vi" }
+			},
+			"dee": { 
+				"custom": { "mixed": "farcore:circuit/nor/on" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_vii" }
+			},
+			"eee": { 
+				"custom": { "mixed": "farcore:circuit/nor/on" },
+				"textures": { "wire": "farcore:blocks/circuits/nor_wire_viii" }
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

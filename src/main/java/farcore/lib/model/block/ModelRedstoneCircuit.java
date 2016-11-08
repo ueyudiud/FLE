@@ -5,6 +5,7 @@ import static farcore.util.U.L.unsignedToInt;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,6 +41,7 @@ import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -55,27 +57,40 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 {
 	private static final float PLATE_HEIGHT = .125F;
 	private static final IModel MODEL = new ModelRedstoneCircuit();
-
+	
 	public static enum RedstoneCircuitModelLoader implements IFarCustomModelLoader
 	{
 		INSTANCE;
-
+		
+		@Override
+		public void onResourceManagerReload(IResourceManager resourceManager)
+		{
+			bakedQuads.clear();
+		}
+		
 		@Override
 		public String getLoaderPrefix()
 		{
 			return "redstone_circuit";
 		}
-
+		
 		@Override
 		public IModel loadModel(ResourceLocation modelLocation) throws Exception
 		{
 			return MODEL;
 		}
 	}
-	
+
+	/**
+	 * For game was always crashing when I debugging.<br>
+	 * It might takes too much memory to build quad, so I tried cached those quads.
+	 * @author ueyudiud
+	 */
+	private static final Map<ResourceLocation, Map<Mat, Map<EnumFacing, List<BakedQuad>>>> bakedQuads = new HashMap();
+
 	private IModel parent;
 	private ResourceLocation layer;
-
+	
 	private ModelRedstoneCircuit()
 	{
 		layer = new ResourceLocation(FarCore.ID, "blocks/void");
@@ -85,7 +100,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		this.parent = parent;
 		this.layer = layer;
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
@@ -97,52 +112,57 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		}
 		return locations;
 	}
-
+	
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		TextureAtlasSprite missing = bakedTextureGetter.apply(TextureMap.LOCATION_MISSING_TEXTURE);
-		TextureAtlasSprite layer = bakedTextureGetter.apply(this.layer);
-		ImmutableMap.Builder<EnumFacing, List<BakedQuad>> builder = ImmutableMap.builder();
-		for(EnumFacing facing : EnumFacing.HORIZONTALS)
+		Map<Mat, Map<EnumFacing, List<BakedQuad>>> map = bakedQuads.get(layer);
+		if(map == null)
 		{
-			Optional<TRSRTransformation> transformation = Optional.of(new TRSRTransformation(facing));
-			builder.put(facing, buildQuads(missing, layer, format, transformation));
-		}
-		Map<EnumFacing, List<BakedQuad>> map = builder.build();
-		ImmutableMap.Builder<Mat, Map<EnumFacing, List<BakedQuad>>> builder2 = ImmutableMap.builder();
-		for(Mat material : Mat.filt(SubTag.ROCK))
-		{
-			TextureAtlasSprite sprite;
-			try
+			TextureAtlasSprite layer = bakedTextureGetter.apply(this.layer);
+			ImmutableMap.Builder<EnumFacing, List<BakedQuad>> builder = ImmutableMap.builder();
+			for(EnumFacing facing : EnumFacing.HORIZONTALS)
 			{
-				sprite = IC.ROCK_ICONS.get(material).get(RockType.resource);
+				Optional<TRSRTransformation> transformation = Optional.of(new TRSRTransformation(facing));
+				builder.put(facing, buildQuads(missing, layer, format, transformation));
 			}
-			catch(NullPointerException exception)
+			Map<EnumFacing, List<BakedQuad>> map1 = builder.build();
+			ImmutableMap.Builder<Mat, Map<EnumFacing, List<BakedQuad>>> builder2 = ImmutableMap.builder();
+			for(Mat material : Mat.filt(SubTag.ROCK))
 			{
-				sprite = bakedTextureGetter.apply(TextureMap.LOCATION_MISSING_TEXTURE);
-			}
-			ImmutableMap.Builder<EnumFacing, List<BakedQuad>> builder1 = ImmutableMap.builder();
-			for(Entry<EnumFacing, List<BakedQuad>> entry : map.entrySet())
-			{
-				ImmutableList.Builder<BakedQuad> builder3 = ImmutableList.builder();
-				for(BakedQuad quad : entry.getValue())
+				TextureAtlasSprite sprite;
+				try
 				{
-					builder3.add(new BakedQuadRetextured(quad, sprite));
+					sprite = IC.ROCK_ICONS.get(material).get(RockType.resource);
 				}
-				builder1.put(entry.getKey(), builder3.build());
+				catch(NullPointerException exception)
+				{
+					sprite = bakedTextureGetter.apply(TextureMap.LOCATION_MISSING_TEXTURE);
+				}
+				ImmutableMap.Builder<EnumFacing, List<BakedQuad>> builder1 = ImmutableMap.builder();
+				for(Entry<EnumFacing, List<BakedQuad>> entry : map1.entrySet())
+				{
+					ImmutableList.Builder<BakedQuad> builder3 = ImmutableList.builder();
+					for(BakedQuad quad : entry.getValue())
+					{
+						builder3.add(new BakedQuadRetextured(quad, sprite));
+					}
+					builder1.put(entry.getKey(), builder3.build());
+				}
+				builder2.put(material, builder1.build());
 			}
-			builder2.put(material, builder1.build());
+			bakedQuads.put(this.layer, map = builder2.build());
 		}
 		IBakedModel model = null;
 		if(parent != null)
 		{
 			model = parent.bake(state, format, bakedTextureGetter);
 		}
-		return new BakedRedstoneCiruitModel(builder2.build(), model);
+		return new BakedRedstoneCiruitModel(map, model);
 	}
-	
+
 	@Override
 	public IModel retexture(ImmutableMap<String, String> textures)
 	{
@@ -154,7 +174,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		return new ModelRedstoneCircuit(
 				getRealLocationFromPathOrDefault("layer", textures, layer), parent0);
 	}
-	
+
 	@Override
 	public IModel process(ImmutableMap<String, String> customData)
 	{
@@ -175,20 +195,20 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		}
 		return new ModelRedstoneCircuit(layer, parent0);
 	}
-	
+
 	public static class BakedRedstoneCiruitModel implements IBakedModel, ICustomItemRenderModel, IPerspectiveAwareModel
 	{
 		private static final ImmutableMap<TransformType, TRSRTransformation> BLOCK_TRANSFORMTION;
-
+		
 		private Map<Mat, Map<EnumFacing, List<BakedQuad>>> quads;
 		private IBakedModel model;
-		
+
 		BakedRedstoneCiruitModel(Map<Mat, Map<EnumFacing, List<BakedQuad>>> quads, IBakedModel model)
 		{
 			this.quads = quads;
 			this.model = model;
 		}
-
+		
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
@@ -210,7 +230,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			}
 			return list;
 		}
-
+		
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
@@ -236,31 +256,31 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			}
 			return ImmutableList.of();
 		}
-
+		
 		@Override
 		public boolean isAmbientOcclusion() { return false; }
-
+		
 		@Override
 		public boolean isGui3d() { return true; }
-
+		
 		@Override
 		public boolean isBuiltInRenderer() { return false; }
-
+		
 		@Override
 		public TextureAtlasSprite getParticleTexture() { return model != null ? model.getParticleTexture() : Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite(); }
-
+		
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms() { return model != null ? model.getItemCameraTransforms() : ItemCameraTransforms.DEFAULT; }
-
+		
 		@Override
 		public ItemOverrideList getOverrides() { return model != null ? model.getOverrides() : ItemOverrideList.NONE; }
-
+		
 		@Override
 		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType)
 		{
 			return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, BLOCK_TRANSFORMTION, cameraTransformType);
 		}
-
+		
 		static
 		{
 			ImmutableMap.Builder<TransformType, TRSRTransformation> builder = ImmutableMap.builder();
@@ -276,7 +296,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			BLOCK_TRANSFORMTION = builder.build();
 		}
 	}
-	
+
 	public static List<BakedQuad> buildQuads(TextureAtlasSprite texture, TextureAtlasSprite layer, VertexFormat format, Optional<TRSRTransformation> transformation)
 	{
 		if(texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
@@ -386,7 +406,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		}
 		return builder.build();
 	}
-
+	
 	private static int value(byte value)
 	{
 		return value == 0 ? 0 : unsignedToInt(value) + 1;

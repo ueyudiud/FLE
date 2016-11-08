@@ -8,7 +8,7 @@ public class TECircuitTicking extends TECircuitFrontBack
 {
 	private static final int Enabled = 0x5;
 	private static final int Actived = 0x6;
-
+	
 	@Override
 	protected void updateBody()
 	{
@@ -38,7 +38,7 @@ public class TECircuitTicking extends TECircuitFrontBack
 			setWeakPower(0);
 		}
 	}
-
+	
 	@Override
 	protected void updateCircuit()
 	{
@@ -55,7 +55,7 @@ public class TECircuitTicking extends TECircuitFrontBack
 			disable(Actived);
 		}
 	}
-
+	
 	@Override
 	protected void onScrewDriverUsed(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
@@ -66,13 +66,7 @@ public class TECircuitTicking extends TECircuitFrontBack
 		}
 		syncToNearby();
 	}
-	
-	@Override
-	protected int getRenderUpdateRange()
-	{
-		return is(Actived) ? 2 : 3;//Will be re-render frequently.
-	}
-	
+
 	@Override
 	public String getState()
 	{

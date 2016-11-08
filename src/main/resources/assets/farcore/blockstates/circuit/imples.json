@@ -1,0 +1,84 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit"
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/imples_l",
+				"wire": "farcore:blocks/circuits/imples_l_wire_i"
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/imples/l_off"
+			}
+		},
+		"value": {
+			"ldd": { 
+				"custom": { "mixed": "farcore:circuit/imples/l_on" },
+				"textures": { 
+					"wire": "farcore:blocks/circuits/imples_l_wire_i",
+					"layer": "farcore:blocks/circuits/imples_l" 
+				}
+			},
+			"led": { 
+				"custom": { "mixed": "farcore:circuit/imples/l_on" },
+				"textures": { 
+					"wire": "farcore:blocks/circuits/imples_l_wire_i",
+					"layer": "farcore:blocks/circuits/imples_l" 
+				}
+			},
+			"lde": { 
+				"custom": { "mixed": "farcore:circuit/imples/l_off" },
+				"textures": { 
+					"wire": "farcore:blocks/circuits/imples_l_wire_ii",
+					"layer": "farcore:blocks/circuits/imples_l" 
+				}
+			},
+			"lee": { 
+				"custom": { "mixed": "farcore:circuit/imples/l_off" },
+				"textures": { 
+					"wire": "farcore:blocks/circuits/imples_l_wire_iii",
+					"layer": "farcore:blocks/circuits/imples_l" 
+				}
+			},
+			"rdd": { 
+				"custom": { "mixed": "farcore:circuit/imples/r_on" },
+				"textures": { 
+					"wire": "farcore:blocks/circuits/imples_r_wire_i",
+					"layer": "farcore:blocks/circuits/imples_r" 
+				}
+			},
+			"red": { 
+				"custom": { "mixed": "farcore:circuit/imples/r_on" },
+				"textures": {
+					"wire": "farcore:blocks/circuits/imples_r_wire_i",
+					"layer": "farcore:blocks/circuits/imples_r" 
+				}
+			},
+			"rde": { 
+				"custom": { "mixed": "farcore:circuit/imples/r_off" },
+				"textures": { 
+					"wire": "farcore:blocks/circuits/imples_r_wire_ii",
+					"layer": "farcore:blocks/circuits/imples_r" 
+				}
+			},
+			"ree": { 
+				"custom": { "mixed": "farcore:circuit/imples/r_off" },
+				"textures": { 
+					"wire": "farcore:blocks/circuits/imples_r_wire_iii",
+					"layer": "farcore:blocks/circuits/imples_r" 
+				}
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

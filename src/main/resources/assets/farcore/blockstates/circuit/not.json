@@ -1,0 +1,39 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/not" 
+		}
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/not",
+				"wire": "farcore:blocks/circuits/not_wire_i"
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/not/off"
+			}
+		},
+		"value": {
+			"on": { 
+				"custom": { "mixed": "farcore:circuit/not/on" },
+				"textures": { "wire": "farcore:blocks/circuits/not_wire_ii" }
+			},
+			"off": { 
+				"custom": { "mixed": "farcore:circuit/not/off" },
+				"textures": { "wire": "farcore:blocks/circuits/not_wire_i" }
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

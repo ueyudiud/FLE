@@ -1,0 +1,47 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/xor" 
+		}
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/xor",
+				"wire": "farcore:blocks/circuits/xor_wire_i"
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/xor/dd"
+			}
+		},
+		"value": {
+			"dd": { 
+				"custom": { "mixed": "farcore:circuit/xor/dd" },
+				"textures": { "wire": "farcore:blocks/circuits/xor_wire_i" }
+			},
+			"ed": { 
+				"custom": { "mixed": "farcore:circuit/xor/ed" },
+				"textures": { "wire": "farcore:blocks/circuits/xor_wire_ii" }
+			},
+			"de": { 
+				"custom": { "mixed": "farcore:circuit/xor/de" },
+				"textures": { "wire": "farcore:blocks/circuits/xor_wire_iii" }
+			},
+			"ee": { 
+				"custom": { "mixed": "farcore:circuit/xor/ee" },
+				"textures": { "wire": "farcore:blocks/circuits/xor_wire_iv" }
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}
