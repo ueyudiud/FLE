@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedMap;
 
 import farcore.util.U;
 import net.minecraft.client.resources.I18n;
@@ -218,7 +219,8 @@ public class LanguageManager
 				}
 				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true)));
 				Map<String, String> map = map1.getOrDefault(ENGLISH, ImmutableMap.of());
-				for(Entry<String, String> entry : map2.entrySet())
+				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(map2);//Use sorted map for easier to search translated word.
+				for(Entry<String, String> entry : sortedMap.entrySet())
 					if(!map.containsKey(entry.getKey()))
 					{
 						writer.write(entry.getKey() + "=" + entry.getValue() + "\r");
@@ -227,7 +229,7 @@ public class LanguageManager
 			}
 			catch(IOException exception)
 			{
-				Log.warn("Fail to write language.", exception);
+				Log.warn("Fail to save language file.", exception);
 			}
 			finally
 			{

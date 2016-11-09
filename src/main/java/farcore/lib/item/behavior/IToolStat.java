@@ -2,6 +2,7 @@ package farcore.lib.item.behavior;
 
 import javax.annotation.Nullable;
 
+import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumToolType;
 import farcore.lib.item.IItemCapabilityProvider;
 import farcore.lib.material.Mat;
@@ -19,6 +20,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IToolStat extends IItemCapabilityProvider
 {
 	EnumToolType getToolType();
+
+	default EnumPhysicalDamageType getPhysicalDamageType()
+	{
+		return EnumPhysicalDamageType.SMASH;
+	}
 	
 	void onToolCrafted(ItemStack stack, EntityPlayer player);
 	
@@ -26,14 +32,15 @@ public interface IToolStat extends IItemCapabilityProvider
 
 	float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target);
 	
-	default float getDamageVsEntity(ItemStack stack, Mat material, Entity entity)
+	/**
+	 * For some special entity attack affect.
+	 * @param stack
+	 * @param entity
+	 * @return
+	 */
+	default float getDamageVsEntity(ItemStack stack, Entity entity)
 	{
-		return getDamageVsEntity(stack) * material.toolDamageToEntity * (material.itemProp != null ? material.itemProp.entityAttackDamageMultiple(stack, material, entity) : 1F);
-	}
-	
-	default float getAttackSpeed(ItemStack stack, Mat material)
-	{
-		return (1F + getAttackSpeed(stack)) * material.toolAttackSpeed - 1F;
+		return getDamageVsEntity(stack);
 	}
 
 	float getDamageVsEntity(ItemStack stack);

@@ -16,6 +16,12 @@ public class ToolSickle extends Tool
 	}
 	
 	@Override
+	public float getAttackSpeed(ItemStack stack)
+	{
+		return -1.0F;
+	}
+	
+	@Override
 	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos,
 			IBlockState block)
 	{

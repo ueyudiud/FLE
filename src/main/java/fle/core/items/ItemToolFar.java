@@ -88,7 +88,10 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	{
 		int lv = prop.skillAttack.level(player);
 		cooldown += lv * 5;
-		baseAttack += Math.sqrt(player.getRNG().nextInt(lv)) * 0.2F;
+		if(lv > 1)
+		{
+			baseAttack += Math.sqrt(player.getRNG().nextInt(lv)) * 0.2F;
+		}
 		return super.getPlayerRelatedAttackDamage(prop, stack, player, baseAttack, attackSpeed, cooldown, isAttackerFalling);
 	}
 

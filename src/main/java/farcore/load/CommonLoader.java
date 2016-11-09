@@ -7,6 +7,7 @@ import farcore.asm.LightFix;
 import farcore.data.CT;
 import farcore.data.Config;
 import farcore.data.EnumItem;
+import farcore.data.EnumPhysicalDamageType;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.Potions;
@@ -233,6 +234,9 @@ public class CommonLoader
 		LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
 		LanguageManager.registerLocal("commands.date.usage", "/date");
 		LanguageManager.registerLocal("commands.date.arg.err", "Invalid command argument");
+		LanguageManager.registerLocal(EnumPhysicalDamageType.PUNCTURE.getTranslation(), ChatFormatting.GOLD + "Puncture");
+		LanguageManager.registerLocal(EnumPhysicalDamageType.SMASH.getTranslation(), ChatFormatting.GOLD + "Smash");
+		LanguageManager.registerLocal(EnumPhysicalDamageType.CUT.getTranslation(), ChatFormatting.GOLD + "Cut");
 		//Setup network.
 		FarCore.network = Network.network(FarCore.ID);
 		FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);
