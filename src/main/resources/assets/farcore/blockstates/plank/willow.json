@@ -1,0 +1,31 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"state": {
+			"default": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow"
+				}
+			},
+			"fire_resistance": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow"
+				}
+			},
+			"anticorrosive": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow"
+				}
+			},
+			"broke": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow_broke"
+				}
+			}
+		}
+	}
+}

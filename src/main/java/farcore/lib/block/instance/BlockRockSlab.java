@@ -13,7 +13,6 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.util.Direction;
-import farcore.lib.util.LanguageManager;
 import farcore.util.U;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -40,7 +39,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	 */
 	private final BlockRockSlab[] group;
 	public final PropertyRock property;
-
+	
 	public BlockRockSlab(int id, BlockRock parent, BlockRockSlab[] group, String name, Mat material,
 			String localName)
 	{
@@ -60,22 +59,13 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 		setTickRandomly(true);
 		setDefaultState(getDefaultState().withProperty(BlockRock.HEATED, false));
 	}
-	
+
 	@Override
-	public void postInitalizedBlocks()
+	protected String getLocalName()
 	{
-		super.postInitalizedBlocks();
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(1), localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(2), localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(3), localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(4), localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(5), localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(6), "Double " + localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(7), "Double " + localName + " Slab");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(8), "Double " + localName + " Slab");
+		return localName;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -85,31 +75,31 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 		mapper.setVariants("type", RockType.values()[meta].getName());
 		ClientProxy.registerCompactModel(mapper, this, 1);
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, EnumSlabState.PROPERTY, BlockRock.HEATED);
 	}
-
+	
 	@Override
 	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
 		return "pickaxe";
 	}
-
+	
 	@Override
 	public boolean isToolEffective(String type, IBlockState state)
 	{
 		return getHarvestTool(state).equals(type);
 	}
-
+	
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
@@ -125,19 +115,19 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 			return property.harvestLevel;
 		}
 	}
-
+	
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return RockType.values()[meta].burnable;
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return isFlammable(world, pos, face) ? 40 : 0;
 	}
-
+	
 	@Override
 	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
 	{
@@ -149,19 +139,19 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public double getThermalConduct(World world, BlockPos pos)
 	{
 		return material.getProperty(M.property_basic).thermalConduct;
 	}
-
+	
 	@Override
 	public int getFireEncouragement(World world, BlockPos pos)
 	{

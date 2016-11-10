@@ -20,9 +20,9 @@ import net.minecraft.world.World;
 
 public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implements IThermalCustomBehaviorBlock
 {
-	protected final Mat material;
+	public final Mat material;
 	protected final PropertyBasic basic;
-	protected final P property;
+	public final P property;
 	
 	public BlockMaterial(String modid, String name, Material materialIn, Mat mat, P property)
 	{

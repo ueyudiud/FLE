@@ -1,0 +1,77 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"facing": {
+			"down": {
+				"model": "farcore:slab",
+				"x": 0,
+				"y": 0
+			},
+			"up": {
+				"model": "farcore:slab",
+				"x": 180,
+				"y": 0
+			},
+			"north": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 0
+			},
+			"south": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 180
+			},
+			"west": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 90
+			},
+			"east": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 270
+			},
+			"double_ud": {
+				"model": "farcore:slab_double",
+				"x": 0,
+				"y": 0
+			},
+			"double_ns": {
+				"model": "farcore:slab_double",
+				"x": 90,
+				"y": 0
+			},
+			"double_we": {
+				"model": "farcore:slab_double",
+				"x": 90,
+				"y": 90
+			}
+		},
+		"state": {
+			"default": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow"
+				}
+			},
+			"fire_resistance": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow"
+				}
+			},
+			"anticorrosive": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow"
+				}
+			},
+			"broke": {
+				"textures": {
+					"all": "farcore:blocks/planks/willow_broke"
+				}
+			}
+		}
+	}
+}

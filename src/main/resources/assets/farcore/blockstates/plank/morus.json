@@ -1,0 +1,31 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"state": {
+			"default": {
+				"textures": {
+					"all": "farcore:blocks/planks/morus"
+				}
+			},
+			"fire_resistance": {
+				"textures": {
+					"all": "farcore:blocks/planks/morus"
+				}
+			},
+			"anticorrosive": {
+				"textures": {
+					"all": "farcore:blocks/planks/morus"
+				}
+			},
+			"broke": {
+				"textures": {
+					"all": "farcore:blocks/planks/morus_broke"
+				}
+			}
+		}
+	}
+}

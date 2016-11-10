@@ -27,7 +27,7 @@ public class Debug
 	{
 		return file.getName().endsWith(".png");
 	};
-
+	
 	public static void main(String[] args)
 	{
 		MC.init();
@@ -37,10 +37,9 @@ public class Debug
 		//		String destDirName = "";
 		//		String formatName = "chiseled.png";
 		//		TextureCopier.copyTarget(srcDirName, destDirName, formatName);
-		for(Mat material : Mat.filt(SubTag.ROCK))
+		for(Mat material : Mat.filt(SubTag.WOOD))
 		{
-			ModelFileCreator.provideRockInfo(sourceLocate, material);
-			ModelFileCreator.provideRockSlabInfo(sourceLocate, material);
+			ModelFileCreator.providePlankAndSlabInfo(sourceLocate, material);
 		}
 		//				ModelFileCreator.provideGroupItemInfo(sourceLocate, MC.lo);
 		//		TextureFormater formater = TextureFormater.INSTANCE;
@@ -103,7 +102,7 @@ public class Debug
 		//
 		//		}
 	}
-
+	
 	public static void drawImage(int size, double[] values, String name)
 	{
 		try

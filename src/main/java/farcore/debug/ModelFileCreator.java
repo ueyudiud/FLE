@@ -16,7 +16,7 @@ import farcore.lib.material.MatCondition;
 
 public class ModelFileCreator
 {
-	static final Gson gson = new Gson();
+	static final Gson GSON = new Gson();
 
 	static void provideGroupItemInfo(String sourceLocate, MatCondition condition)
 	{
@@ -33,14 +33,57 @@ public class ModelFileCreator
 		}
 	}
 	
+	static void providePlankAndSlabInfo(String sourceLocate, Mat material)
+	{
+		JsonObject object = forgeState(),
+				object2 = new JsonObject(),
+				object3;
+		object2.addProperty("transform", "forge:default-block");
+		object2.addProperty("model", "farcore:base_simple");
+		object.add("defaults", object2);
+		object2 = new JsonObject();
+		object3 = new JsonObject();
+		addVariant(object3, "default", "all", material.modid + ":blocks/planks/" + material.name);
+		addVariant(object3, "fire_resistance", "all", material.modid + ":blocks/planks/" + material.name);
+		addVariant(object3, "anticorrosive", "all", material.modid + ":blocks/planks/" + material.name);
+		addVariant(object3, "broke", "all", material.modid + ":blocks/planks/" + material.name + "_broke");
+		object2.add("state", object3);
+		object.add("variants", object2);
+		makeJson(sourceLocate, material.modid + "/blockstates/plank/" + material.name, object);
+		object = forgeState();
+		JsonObject object1 = new JsonObject();
+		object1.addProperty("transform", "forge:default-block");
+		object.add("defaults", object1);
+		object1 = new JsonObject();
+		object2 = new JsonObject();
+		addVarant(object2, "down", "farcore:slab", 0, 0);
+		addVarant(object2, "up", "farcore:slab", 180, 0);
+		addVarant(object2, "north", "farcore:slab", 90, 0);
+		addVarant(object2, "south", "farcore:slab", 90, 180);
+		addVarant(object2, "west", "farcore:slab", 90, 90);
+		addVarant(object2, "east", "farcore:slab", 90, 270);
+		addVarant(object2, "double_ud", "farcore:slab_double", 0, 0);
+		addVarant(object2, "double_ns", "farcore:slab_double", 90, 0);
+		addVarant(object2, "double_we", "farcore:slab_double", 90, 90);
+		object1.add("facing", object2);
+		object2 = new JsonObject();
+		addVariant(object2, "default", "all", material.modid + ":blocks/planks/" + material.name);
+		addVariant(object2, "fire_resistance", "all", material.modid + ":blocks/planks/" + material.name);
+		addVariant(object2, "anticorrosive", "all", material.modid + ":blocks/planks/" + material.name);
+		addVariant(object2, "broke", "all", material.modid + ":blocks/planks/" + material.name + "_broke");
+		object1.add("state", object2);
+		object.add("variants", object1);
+		makeJson(sourceLocate, material.modid + ":blockstates/plank/slab/" + material.name, object);
+	}
+	
 	static void provideLogAndLeavesInfo(String sourceLocate, Mat material)
 	{
-		JsonObject object = new JsonObject(),
+		JsonObject object = forgeState(),
 				object2 = new JsonObject(),
 				object3 = new JsonObject();
-		object.addProperty("forge_marker", 1);
 		object2.addProperty("transform", "forge:default-block");
 		object2.addProperty("model", "farcore:base_oneaxis");
+		object.add("defaults", object2);
 		addTextures(object3,
 				new Ety("side", material.modid + ":blocks/logs/" + material.name + "_side"),
 				new Ety("top", material.modid + ":blocks/logs/" + material.name + "_top"));
@@ -48,43 +91,26 @@ public class ModelFileCreator
 		object2 = new JsonObject();
 		object3 = new JsonObject();
 		object3.add("none", new JsonObject());
-		JsonObject object4 = new JsonObject();
-		object4.addProperty("x", 90);
-		object4.addProperty("y", 90);
-		object3.add("x", object4);
-		object4 = new JsonObject();
-		object4.addProperty("x", 0);
-		object4.addProperty("y", 0);
-		object3.add("y", object4);
-		object4 = new JsonObject();
-		object4.addProperty("x", 90);
-		object4.addProperty("y", 0);
-		object3.add("z", object4);
+		addVarant(object3, "x", 90, 90);
+		addVarant(object3, "y", 0, 0);
+		addVarant(object3, "z", 90, 0);
 		object2.add("axis", object3);
 		object.add("variants", object2);
 		makeJson(sourceLocate, material.modid + "/blockstates/log.natural." + material.name, object);
 		makeJson(sourceLocate, material.modid + "/blockstates/log.artifical." + material.name, object);
-		object = new JsonObject();
+		object = forgeState();
 		object2 = new JsonObject();
-		object.addProperty("forge_marker", 1);
 		object2.addProperty("transform", "forge:default-block");
 		object2.addProperty("model", "farcore:leaves");
 		addTextures(object2, "all", material.modid + ":blocks/leaves/" + material.name);
 		object.add("defaults", object2);
 		makeJson(sourceLocate, material.modid + "/blockstates/leaves." + material.name, object);
 		makeJson(sourceLocate, material.modid + "/blockstates/leaves.core." + material.name, object);
-		//		object = new JsonObject();
-		//		object.addProperty("parent", material.modid + ":block/log/" + material.name);
-		//		makeJson(sourceLocate, material.modid + "/models/item/log/" + material.name, object);
-		//		object = new JsonObject();
-		//		object.addProperty("parent", material.modid + ":block/leaves/" + material.name);
-		//		makeJson(sourceLocate, material.modid + "/models/item/leaves/" + material.name, object);
 	}
 	
 	static void provideRockSlabInfo(String sourceLocate, Mat material)
 	{
-		JsonObject object = new JsonObject();
-		object.addProperty("forge_marker", 1);
+		JsonObject object = forgeState();
 		JsonObject object1 = new JsonObject();
 		object1.addProperty("transform", "forge:default-block");
 		object.add("defaults", object1);
@@ -93,59 +119,21 @@ public class ModelFileCreator
 		for(RockType type : RockType.values())
 		{
 			JsonObject object3 = new JsonObject();
-			object3.addProperty("all", material.modid + ":blocks/rock/" + material.name + "/" +
+			addTextures(object3, material.modid + ":blocks/rock/" + material.name + "/" +
 					(type == RockType.cobble_art ? RockType.cobble.name() : type.name()));
-			JsonObject object4 = new JsonObject();
-			object4.add("textures", object3);
-			object2.add(type.getName(), object4);
+			object2.add(type.getName(), object3);
 		}
 		object1.add("type", object2);
 		object2 = new JsonObject();
-		JsonObject object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab");
-		object3.addProperty("x", 0);
-		object3.addProperty("y", 0);
-		object2.add("down", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab");
-		object3.addProperty("x", 180);
-		object3.addProperty("y", 0);
-		object2.add("up", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab");
-		object3.addProperty("x", 90);
-		object3.addProperty("y", 0);
-		object2.add("north", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab");
-		object3.addProperty("x", 90);
-		object3.addProperty("y", 180);
-		object2.add("south", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab");
-		object3.addProperty("x", 90);
-		object3.addProperty("y", 90);
-		object2.add("west", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab");
-		object3.addProperty("x", 90);
-		object3.addProperty("y", 270);
-		object2.add("east", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab_double");
-		object3.addProperty("x", 0);
-		object3.addProperty("y", 0);
-		object2.add("double_ud", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab_double");
-		object3.addProperty("x", 90);
-		object3.addProperty("y", 0);
-		object2.add("double_ns", object3);
-		object3 = new JsonObject();
-		object3.addProperty("model", "farcore:slab_double");
-		object3.addProperty("x", 90);
-		object3.addProperty("y", 90);
-		object2.add("double_we", object3);
+		addVarant(object2, "down", "farcore:slab", 0, 0);
+		addVarant(object2, "up", "farcore:slab", 180, 0);
+		addVarant(object2, "north", "farcore:slab", 90, 0);
+		addVarant(object2, "south", "farcore:slab", 90, 180);
+		addVarant(object2, "west", "farcore:slab", 90, 90);
+		addVarant(object2, "east", "farcore:slab", 90, 270);
+		addVarant(object2, "double_ud", "farcore:slab_double", 0, 0);
+		addVarant(object2, "double_ns", "farcore:slab_double", 90, 0);
+		addVarant(object2, "double_we", "farcore:slab_double", 90, 90);
 		object1.add("facing", object2);
 		object.add("variants", object1);
 		makeJson(sourceLocate, material.modid + "/blockstates/rock/slab/" + material.name + ".json", object);
@@ -220,6 +208,37 @@ public class ModelFileCreator
 		object.add("textures", object1);
 	}
 	
+	static JsonObject forgeState()
+	{
+		JsonObject object = new JsonObject();
+		object.addProperty("forge_marker", 1);
+		return object;
+	}
+	
+	static void addVariant(JsonObject apply, String key, String replacement, String texture)
+	{
+		JsonObject object = new JsonObject();
+		addTextures(object, replacement, texture);
+		apply.add(key, object);
+	}
+	
+	static void addVarant(JsonObject apply, String key, int x, int y)
+	{
+		JsonObject object = new JsonObject();
+		object.addProperty("x", x);
+		object.addProperty("y", y);
+		apply.add(key, object);
+	}
+	
+	static void addVarant(JsonObject apply, String key, String model, int x, int y)
+	{
+		JsonObject object = new JsonObject();
+		object.addProperty("model", model);
+		object.addProperty("x", x);
+		object.addProperty("y", y);
+		apply.add(key, object);
+	}
+	
 	static void makeJson(String sourceLocate, String pathName, JsonObject object)
 	{
 		pathName = pathName.replace(':', '/');
@@ -242,7 +261,7 @@ public class ModelFileCreator
 			}
 			writer = new JsonWriter(new BufferedWriter(new FileWriter(file)));
 			writer.setIndent("	");
-			gson.toJson(object, writer);
+			GSON.toJson(object, writer);
 			System.out.println("Generated json at ./" + pathName);
 		}
 		catch (Exception exception)
