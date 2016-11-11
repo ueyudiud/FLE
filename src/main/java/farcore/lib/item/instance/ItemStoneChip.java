@@ -2,6 +2,7 @@ package farcore.lib.item.instance;
 
 import farcore.data.EnumItem;
 import farcore.data.KS;
+import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockRock.RockType;
@@ -9,8 +10,10 @@ import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.item.IProjectileItem;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.util.DamageSourceProjectile;
 import farcore.lib.util.Direction;
+import farcore.lib.util.SubTag;
 import farcore.lib.util.UnlocalizedList;
 import farcore.util.U;
 import net.minecraft.entity.Entity;
@@ -56,9 +59,10 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		else
 		{
 			Mat material = getMaterialFromItem(stack);
-			if(material.isRock && material.rock instanceof BlockRock)
+			if(material.contain(SubTag.ROCK))
 			{
-				if(worldIn.setBlockState(pos, material.rock.getDefaultState().withProperty(BlockRock.ROCK_TYPE, RockType.cobble_art), 3))
+				PropertyRock property = material.getProperty(M.property_rock);
+				if(worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, RockType.cobble_art), 3))
 				{
 					stack.stackSize -= 9;
 					return EnumActionResult.SUCCESS;
@@ -150,7 +154,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			Mat material = getMaterialFromItem(entity.currentItem);
 			if(material != null)
 			{
-				damage *= (1F + material.toolDamageToEntity);
+				damage *= (1F + material.getProperty(M.property_tool).damageToEntity);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)

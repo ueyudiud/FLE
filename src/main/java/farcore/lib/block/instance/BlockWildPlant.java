@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import farcore.data.M;
 import farcore.lib.block.BlockBase;
 import farcore.lib.material.Mat;
 import farcore.lib.plant.IPlant;
@@ -31,30 +32,31 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 {
 	public static BlockWildPlant create(Mat material)
 	{
+		IPlant plant = material.getProperty(M.property_plant);
 		return new BlockWildPlant(material.name)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
 			{
-				return material.plant.createBlockState(this);
-			}
-
-			@Override
-			public int getMetaFromState(IBlockState state)
-			{
-				return material.plant.getMeta(this, state);
+				return plant.createBlockState(this);
 			}
 			
 			@Override
+			public int getMetaFromState(IBlockState state)
+			{
+				return plant.getMeta(this, state);
+			}
+
+			@Override
 			public IBlockState getStateFromMeta(int meta)
 			{
-				return material.plant.getState(this, meta);
+				return plant.getState(this, meta);
 			}
 		};
 	}
-	
+
 	private IPlant plant;
-	
+
 	protected BlockWildPlant(String name)
 	{
 		super("wild.plant" + name, Material.PLANTS);
@@ -62,46 +64,46 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 		setTickRandomly(true);
 		setLightOpacity(1);
 	}
-
+	
 	private Set<String> toolSet = ImmutableSet.of("knife");
-
+	
 	@Override
 	public boolean isNormalCube(IBlockState state)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		return plant.onBlockActive(this, worldIn, pos, state, Direction.of(side), playerIn, heldItem, hand, hitX, hitY, hitZ);
 	}
-	
+
 	@Override
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
 	{
 		plant.onEntityWalk(this, worldIn, pos, entityIn);
 	}
-
+	
 	@Override
 	public boolean isToolEffective(String type, IBlockState state)
 	{
 		return toolSet.contains(type);
 	}
-	
+
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
 	{
@@ -109,7 +111,7 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 		return (state = worldIn.getBlockState(pos.down())).getBlock()
 				.canSustainPlant(state, worldIn, pos.down(), EnumFacing.UP, this);
 	}
-
+	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
@@ -119,26 +121,26 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 			worldIn.setBlockToAir(pos);
 		}
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
 		plant.tickUpdate(this, worldIn, pos, state, random);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
 		return new ArrayList(plant.getDrops(this, world, pos, state, world instanceof World ? ((World) world).rand : RANDOM));
 	}
-
+	
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
 		return plant.type();
 	}
-
+	
 	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{

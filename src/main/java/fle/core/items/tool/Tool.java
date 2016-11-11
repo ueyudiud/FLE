@@ -3,6 +3,7 @@ package fle.core.items.tool;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.EnumToolType;
+import farcore.data.M;
 import farcore.lib.item.ItemTool;
 import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
@@ -25,96 +26,96 @@ public abstract class Tool implements IToolStat
 {
 	protected boolean hasHandleColor = false;
 	private EnumToolType type;
-
+	
 	protected Tool(EnumToolType type)
 	{
 		this.type = type;
 	}
-
+	
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
 	{
 		return null;
 	}
-
+	
 	@Override
 	public EnumToolType getToolType()
 	{
 		return type;
 	}
-
+	
 	@Override
 	public void onToolCrafted(ItemStack stack, EntityPlayer player)
 	{
 	}
-
+	
 	@Override
 	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos,
 			IBlockState block)
 	{
 		return 1.0F;
 	}
-
+	
 	@Override
 	public float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target)
 	{
 		return 1.0F;
 	}
-
+	
 	@Override
 	public float getDamageVsEntity(ItemStack stack)
 	{
 		return 1.0F;
 	}
-
+	
 	@Override
 	public float getAttackSpeed(ItemStack stack)
 	{
 		return 0.0F;
 	}
-
+	
 	@Override
 	public float getSpeedMultiplier(ItemStack stack)
 	{
 		return 1.0F;
 	}
-
+	
 	@Override
 	public float getMaxDurabilityMultiplier()
 	{
 		return 1.0F;
 	}
-
+	
 	@Override
 	public int getToolHarvestLevel(ItemStack stack, String toolClass, Mat baseMaterial)
 	{
-		return type.isToolClass(toolClass) ? baseMaterial.toolHarvestLevel : -1;
+		return type.isToolClass(toolClass) ? baseMaterial.getProperty(M.property_tool).harvestLevel : -1;
 	}
-
+	
 	@Override
 	public boolean canHarvestDrop(ItemStack stack, IBlockState state)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public float getMiningSpeed(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block, float speed)
 	{
 		return speed;
 	}
-	
+
 	@Override
 	public float getKnockback(ItemStack stack, Mat material, Entity entity)
 	{
 		return 0F;
 	}
-	
+
 	@Override
 	public float[] getAttackExpandBoxing(ItemStack stack, Mat material)
 	{
 		return null;
 	}
-
+	
 	@Override
 	public DamageSource getDamageSource(EntityLivingBase user, Entity target)
 	{
@@ -123,27 +124,27 @@ public abstract class Tool implements IToolStat
 				new TextComponentString(string.replace("(S)", "" + ChatFormatting.GREEN + user.getName() + ChatFormatting.RESET).replace("(M)", "" + ChatFormatting.RED + target.getName() + ChatFormatting.RESET)),
 				user);
 	}
-
+	
 	protected abstract String getDeathMessage(Entity target, EntityLivingBase user);
-
+	
 	@Override
 	public boolean canBlock()
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean isShootable()
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean isWeapon()
 	{
 		return false;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColor(ItemStack stack, int pass)

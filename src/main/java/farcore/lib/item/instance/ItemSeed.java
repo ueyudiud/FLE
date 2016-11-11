@@ -9,8 +9,10 @@ import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropAccessSimulated;
+import farcore.lib.crop.ICrop;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
+import farcore.lib.util.SubTag;
 import farcore.lib.util.UnlocalizedList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -40,7 +42,7 @@ public class ItemSeed extends ItemMulti
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		Mat material = getMaterialFromItem(stack);
-		if(material.isCrop)
+		if(material.contain(SubTag.CROP))
 		{
 			IBlockState state = worldIn.getBlockState(pos);
 			if(!state.getBlock().isReplaceable(worldIn, pos))
@@ -51,8 +53,9 @@ public class ItemSeed extends ItemMulti
 				return EnumActionResult.FAIL;
 			if(!worldIn.isRemote)
 			{
-				CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, material.crop, getDNAFromStack(stack));
-				if(!material.crop.canPlantAt(access)) return EnumActionResult.SUCCESS;
+				ICrop crop = material.getProperty(M.property_crop);
+				CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, crop, getDNAFromStack(stack));
+				if(!crop.canPlantAt(access)) return EnumActionResult.SUCCESS;
 				BlockCrop.ITEM_THREAD.set(stack);
 				worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3);
 				BlockCrop.ITEM_THREAD.set(null);
@@ -78,7 +81,7 @@ public class ItemSeed extends ItemMulti
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
-		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).crop.getLocalName(getDNAFromStack(stack)));
+		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(M.property_crop).getLocalName(getDNAFromStack(stack)));
 		unlocalizedList.add("info.crop.generation", getGenerationFromStack(stack) + 1);
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 	}

@@ -39,7 +39,7 @@ public class BlockPlankSlab extends BlockSlab
 	 */
 	private final BlockPlankSlab[] group;
 	private final PropertyWood property;
-
+	
 	public BlockPlankSlab(int id, BlockPlank parent, BlockPlankSlab[] group, String localName)
 	{
 		super(parent.material.modid, "plank." + parent.material.name + ".slab." + id, Material.WOOD);
@@ -58,7 +58,7 @@ public class BlockPlankSlab extends BlockSlab
 		setSoundType(SoundType.WOOD);
 		setCreativeTab(CT.tabBuilding);
 	}
-	
+
 	@Override
 	public void postInitalizedBlocks()
 	{
@@ -66,7 +66,7 @@ public class BlockPlankSlab extends BlockSlab
 		OreDict.registerValid("slabWood", this);
 		OreDict.registerValid("slab" + material.oreDictName, this);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -76,32 +76,32 @@ public class BlockPlankSlab extends BlockSlab
 		mapper.setVariants("state", EnumPlankState.values()[meta].getName());
 		ClientProxy.registerCompactModel(mapper, this, EnumPlankState.values().length);
 	}
-
+	
 	@Override
 	protected String getLocalName()
 	{
 		return localName;
 	}
-
+	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return meta != EnumPlankState.BROKE.ordinal();
 	}
-	
+
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state)
 	{
 		return meta == EnumPlankState.BROKE.ordinal() ? EnumPushReaction.DESTROY : blockMaterial.getMobilityFlag();
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 :
 			super.getFireSpreadSpeed(world, pos, face);
 	}
-	
+
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

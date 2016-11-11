@@ -115,17 +115,17 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			.registerTypeAdapter(OreRenderConfig.class, DESERIALIZER)
 			.create();
 	public static final ModelOre instance = new ModelOre();
-
+	
 	static
 	{
 		LOAD_TARGETS.add(LOCATION);
 	}
-
+	
 	public static void addOreConfig(ResourceLocation location)
 	{
 		LOAD_TARGETS.add(location);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	static class OreRenderConfig
 	{
@@ -133,13 +133,13 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		Map<String, ResourceLocation> sourceMap = new HashMap();
 		Map<String, ResourceLocation> modelMap = new HashMap();
 	}
-	
+
 	private Map<String, String> renderTypes = new HashMap();
 	private Map<String, ResourceLocation> sourceMap = new HashMap();
 	private Map<String, ResourceLocation> models = new HashMap();
-
-	private ModelOre(){ }
 	
+	private ModelOre(){ }
+
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
@@ -190,33 +190,33 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
 		return MODEL_RESOURCE_LOCATION.toString().equals(modelLocation.toString()) ||
 				MODEL_ITEM_RESOURCE_LOCATION.toString().equals(modelLocation.toString());
 	}
-	
+
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
 		return MODEL_ITEM_RESOURCE_LOCATION.equals(modelLocation) ?
 				new ModelOreItem() : instance;
 	}
-
+	
 	@Override
 	public List<ResourceLocation> getAllowedResourceLocations(Item item)
 	{
 		return ImmutableList.of(MODEL_ITEM_RESOURCE_LOCATION);
 	}
-
+	
 	@Override
 	public ModelResourceLocation getModelLocation(ItemStack stack)
 	{
 		return MODEL_ITEM_RESOURCE_LOCATION;
 	}
-
+	
 	@Override
 	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 	{
@@ -227,7 +227,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		}
 		return builder.build();
 	}
-
+	
 	private Map<String, ResourceLocation> getSource()
 	{
 		if(sourceMap.isEmpty())
@@ -245,19 +245,19 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		}
 		return sourceMap;
 	}
-	
+
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
 		return ImmutableList.of();
 	}
-	
+
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
 		return getSource().values();
 	}
-	
+
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -306,13 +306,13 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		Map<String, IBakedModel> bakedmodels = typeBuilder.build();
 		return new BakedModelOre(bakedmodels, format);
 	}
-	
+
 	@Override
 	public IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
-	
+
 	private class ModelOreItem implements IModel
 	{
 		@Override
@@ -320,13 +320,13 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		{
 			return ImmutableList.of(ITEM_PARENT_LOCATION);
 		}
-
+		
 		@Override
 		public Collection<ResourceLocation> getTextures()
 		{
 			return sourceMap.values();
 		}
-
+		
 		@Override
 		public IBakedModel bake(IModelState state, VertexFormat format,
 				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -376,53 +376,53 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			Map<String, IBakedModel> bakedmodels = typeBuilder.build();
 			return new BakedModelOreItem(bakedmodels, format, parent.bake(state, format, bakedTextureGetter));
 		}
-
+		
 		@Override
 		public IModelState getDefaultState()
 		{
 			return TRSRTransformation.identity();
 		}
 	}
-	
+
 	private static class BakedModelOreItem extends BakedModelOre
 	{
 		private IBakedModel parent;
-
+		
 		BakedModelOreItem(Map<String, IBakedModel> models, VertexFormat format, IBakedModel parent)
 		{
 			super(models, format);
 			this.parent = parent;
 		}
-		
+
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms()
 		{
 			return parent.getItemCameraTransforms();
 		}
-		
+
 		@Override
 		public ItemOverrideList getOverrides()
 		{
 			return parent.getOverrides();
 		}
-
+		
 		@Override
 		public boolean isGui3d()
 		{
 			return parent.isGui3d();
 		}
 	}
-
+	
 	private static class BakedModelOre implements ICustomItemRenderModel
 	{
 		Map<String, TextureAtlasSprite> icons;
 		Map<String, IBakedModel> models;
-
+		
 		BakedModelOre(Map<String, IBakedModel> models, VertexFormat format)
 		{
 			this.models = models;
 		}
-		
+
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
@@ -432,7 +432,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			state = new OreStateWrapper(state, Mat.material(stack.getItemDamage()), ItemOre.getAmount(nbt), ItemOre.getRockMaterial(nbt), ItemOre.getRockType(nbt));
 			return getQuads(state, facing, rand);
 		}
-		
+
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
@@ -441,7 +441,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 				OreStateWrapper wrapper = (OreStateWrapper) state;
 				Mat ore = wrapper.ore;
 				if(ore == M.VOID) return ImmutableList.of();
-				Block block = wrapper.rock.rock;
+				Block block = wrapper.rock.getProperty(M.property_rock).block;
 				IBlockState state2 = block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, wrapper.type);
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 						.getModelManager().getBlockModelShapes()
@@ -456,37 +456,37 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			}
 			return ImmutableList.of();
 		}
-		
+
 		@Override
 		public boolean isAmbientOcclusion()
 		{
 			return false;
 		}
-		
+
 		@Override
 		public boolean isGui3d()
 		{
 			return true;
 		}
-		
+
 		@Override
 		public boolean isBuiltInRenderer()
 		{
 			return false;
 		}
-		
+
 		@Override
 		public TextureAtlasSprite getParticleTexture()
 		{
 			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 		}
-		
+
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms()
 		{
 			return ItemCameraTransforms.DEFAULT;
 		}
-		
+
 		@Override
 		public ItemOverrideList getOverrides()
 		{

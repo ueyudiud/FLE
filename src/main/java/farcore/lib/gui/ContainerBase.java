@@ -25,7 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class ContainerBase extends Container implements IListenerContainer
+public abstract class ContainerBase extends Container implements IGUIActionListener
 {
 	public static boolean canAddItemToSlot(Slot slotIn, ItemStack stack, boolean stackSizeMatters)
 	{

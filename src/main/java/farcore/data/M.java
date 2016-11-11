@@ -20,6 +20,7 @@ import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
+import farcore.lib.plant.IPlant;
 import farcore.lib.tree.instance.TreeAcacia;
 import farcore.lib.tree.instance.TreeAspen;
 import farcore.lib.tree.instance.TreeBirch;
@@ -42,7 +43,7 @@ public class M
 	public static final String light_opacity = "light_opacity";
 	public static final String fire_spread_speed = "fire_spread_speed";
 	public static final String fallen_damage_deduction = "fallen_damage_deduction";
-
+	
 	public static final IProperty<PropertyBasic> property_basic = new IProperty<PropertyBasic>() { @Override public PropertyBasic defValue() { return PropertyBasic.INSTANCE; } };
 	public static final IProperty<PropertyTool> property_tool = new IProperty<PropertyTool>(){};
 	public static final IProperty<PropertyOre> property_ore = new IProperty<PropertyOre>(){@Override public PropertyOre defValue() { return PropertyOre.INSTANCE; } };
@@ -50,7 +51,8 @@ public class M
 	public static final IProperty<PropertyBlockable> property_soil = new IProperty<PropertyBlockable>(){};
 	public static final IProperty<PropertyRock> property_rock = new IProperty<PropertyRock>(){};
 	public static final IProperty<ICrop> property_crop = new IProperty<ICrop>(){@Override public ICrop defValue() { return ICrop.VOID; } };
-	
+	public static final IProperty<IPlant> property_plant = new IProperty<IPlant>(){};
+
 	public static final Mat VOID = new Mat(-1, false, FarCore.ID, "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID);
 	//Rocks
 	public static final Mat stone = new Mat(7001, "minecraft", "stone", "Stone", "Stone").setRock(4, 1.5F, 8F, 370).setToolable(5, 16, 1.2F, 0.8F, 0.8F, 1.0F, 8).setRGBa(0x626262FF);
@@ -140,11 +142,11 @@ public class M
 	public static final Mat native_silver = new Mat(10031, FarCore.ID, "nativeSilver", "NativeSilver", "Native Silver").setChemicalFormula("Ag").setRGBa(0xEBE9E8FF).setOreProperty(13, 11.2F, 12.9F, SubTag.ORE_NOBLE);
 	public static final Mat native_gold = new Mat(10032, FarCore.ID, "nativeGold", "NativeGold", "Native Gold").setChemicalFormula("Au").setRGBa(0xF7B32AFF).setOreProperty(5, 6.8F, 8.3F, SubTag.ORE_NOBLE);
 	public static final Mat electrum = new Mat(10033, FarCore.ID, "electrum", "Electrum", "Electrum").setChemicalFormula("?").setRGBa(0xE4B258FF).setOreProperty(11, 8.2F, 9.2F, SubTag.ORE_NOBLE);
-	
+
 	static
 	{
 		VOID.addProperty(property_wood, PropertyTree.VOID);
-
+		
 		oak.setTree(new TreeOak());
 		spruce.setTree(new TreeBirch());
 		birch.setTree(new TreeBirch());
@@ -154,7 +156,7 @@ public class M
 		aspen.setTree(new TreeAspen());
 		morus.setTree(new TreeMorus());
 		willow.setTree(new TreeWillow());
-
+		
 		wheat.setCrop(new CropWheat(wheat));
 		millet.setCrop(new CropMillet(millet));
 		soybean.setCrop(new CropSoybean(soybean));
@@ -164,9 +166,9 @@ public class M
 		reed.setCrop(new CropReed(reed));
 		flax.setCrop(new CropFlax(flax));
 		cotton.setCrop(new CropCotton(cotton));
-		
+
 		ramie_dry.setUnificationMaterial(ramie);
 	}
-
+	
 	public static void init(){}
 }

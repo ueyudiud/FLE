@@ -26,11 +26,13 @@ import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 
 import farcore.FarCore;
+import farcore.data.M;
 import farcore.lib.block.instance.BlockCrop.CropState;
 import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
 import farcore.lib.util.Log;
+import farcore.lib.util.SubTag;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -220,14 +222,11 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 	{
 		if(sourceMap.isEmpty())
 		{
-			for(Mat material : Mat.materials())
+			for(Mat material : Mat.filt(SubTag.CROP))
 			{
-				if(material.isCrop)
+				for(String string : material.getProperty(M.property_crop).getAllowedState())
 				{
-					for(String string : material.crop.getAllowedState())
-					{
-						sourceMap.put(material.name + "_" + string, new ResourceLocation(material.modid, "blocks/crop/" + material.name + "_" + string));
-					}
+					sourceMap.put(material.name + "_" + string, new ResourceLocation(material.modid, "blocks/crop/" + material.name + "_" + string));
 				}
 			}
 		}
@@ -261,38 +260,35 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 		ImmutableMap.Builder<String, RenderType> typeBuilder = ImmutableMap.builder();
 		ImmutableMap.Builder<String, IBakedModel> modelBuilder = ImmutableMap.builder();
 		Map<String, RenderType> renderTypes = typeBuilder.build();
-		for(Mat material : Mat.materials())
+		for(Mat material : Mat.filt(SubTag.CROP))
 		{
-			if(material.isCrop)
+			String key = material.name;
+			if(renderTypes.getOrDefault(key, RenderType.cross) != RenderType.custom)
 			{
-				String key = material.name;
-				if(renderTypes.getOrDefault(key, RenderType.cross) != RenderType.custom)
+				IModel model1 = map.get(renderTypes.get(key));
+				if(model1 instanceof IRetexturableModel)
 				{
-					IModel model1 = map.get(renderTypes.get(key));
-					if(model1 instanceof IRetexturableModel)
-					{
-						String replaced = getSource().getOrDefault(material.name + "_" + key, TextureMap.LOCATION_MISSING_TEXTURE).toString();
-						model1 = ((IRetexturableModel) model1).retexture(ImmutableMap.of("all", replaced, "particle", replaced, "crop", replaced));
-					}
-					modelBuilder.put(material.name + "_" + key, model1.bake(state, format, bakedTextureGetter));
-					continue;
+					String replaced = getSource().getOrDefault(material.name + "_" + key, TextureMap.LOCATION_MISSING_TEXTURE).toString();
+					model1 = ((IRetexturableModel) model1).retexture(ImmutableMap.of("all", replaced, "particle", replaced, "crop", replaced));
 				}
-				RenderType type = null;
-				if(renderTypes.containsKey(key))
+				modelBuilder.put(material.name + "_" + key, model1.bake(state, format, bakedTextureGetter));
+				continue;
+			}
+			RenderType type = null;
+			if(renderTypes.containsKey(key))
+			{
+				type = renderTypes.get(key);
+			}
+			for(String t1 : material.getProperty(M.property_crop).getAllowedState())
+			{
+				key = material.name + "_" + t1;
+				if(type != null)
 				{
-					type = renderTypes.get(key);
+					typeBuilder.put(key, type);
 				}
-				for(String t1 : material.crop.getAllowedState())
+				else
 				{
-					key = material.name + "_" + t1;
-					if(type != null)
-					{
-						typeBuilder.put(key, type);
-					}
-					else
-					{
-						typeBuilder.put(key, renderTypes.getOrDefault(key, RenderType.cross));
-					}
+					typeBuilder.put(key, renderTypes.getOrDefault(key, RenderType.cross));
 				}
 			}
 		}
@@ -302,7 +298,7 @@ public class ModelCrop implements IModel, ICustomModelLoader, IStateMapper
 			{
 				Mat material = Mat.material(entry.getKey());
 				IModel model = ModelLoaderRegistry.getModelOrMissing(entry.getValue());
-				for(String string : material.crop.getAllowedState())
+				for(String string : material.getProperty(M.property_crop).getAllowedState())
 				{
 					IModel model1 = model;
 					if(model instanceof IRetexturableModel)

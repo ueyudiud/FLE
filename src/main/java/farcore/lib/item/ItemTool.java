@@ -19,6 +19,7 @@ import farcore.lib.item.behavior.IBehavior;
 import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.skill.ISkill;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.ISubTagContainer;
@@ -178,7 +179,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		int level = prop.stat.getToolHarvestLevel(stack, type.name(), getMaterial(stack, "head"));
 		return level == -1 ?
-				prop.toolTypes.contains(type) ? getMaterial(stack, "head").toolHarvestLevel : -1 :
+				prop.toolTypes.contains(type) ? getMaterial(stack, "head").getProperty(M.property_tool).harvestLevel : -1 :
 					level;
 	}
 	
@@ -390,14 +391,14 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 
 	public static int getDefaultMaxDurability(ToolProp prop, ItemStack stack)
 	{
-		if(prop.hasHandle)
-		{
-			Mat head = getMaterial(stack, "head");
-			Mat handle = getMaterial(stack, "handle");
-			return (int) (head.toolMaxUse * handle.handleToughness);
-		}
-		else
-			return getMaterial(stack, "head").toolMaxUse;
+		//		if(prop.hasHandle)
+		//		{
+		//			Mat head = getMaterial(stack, "head");
+		//			Mat handle = getMaterial(stack, "handle");
+		//			return (int) (head.toolMaxUse * handle.handleToughness);
+		//		}
+		//		else
+		return getMaterial(stack, "head").getProperty(M.property_tool).maxUse;
 	}
 	
 	public static int getMaxDurability(ItemStack stack)
@@ -561,8 +562,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		unlocalizedList.addNotNull("info.tool." + getUnlocalizedName() + "@" + getBaseDamage(stack));
 		unlocalizedList.add("info.tool.damage", (int) (now * 100), max * 100);
 		Mat material = getMaterialFromItem(stack, "head");
-		unlocalizedList.add("info.tool.harvest.level", material.toolHarvestLevel);
-		unlocalizedList.add("info.tool.hardness", HARDNESS_FORMAT.format(material.toolHardness));
+		PropertyTool property = material.getProperty(M.property_tool);
+		unlocalizedList.add("info.tool.harvest.level", property.harvestLevel);
+		unlocalizedList.add("info.tool.hardness", HARDNESS_FORMAT.format(property.hardness));
 		unlocalizedList.add("info.tool.head.name", material.getLocalName());
 		unlocalizedList.addNotNull("info.material.custom." + material.getLocalName());
 		if(material.itemProp != null)

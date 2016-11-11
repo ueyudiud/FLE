@@ -32,7 +32,6 @@ import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.plant.IPlant;
 import farcore.lib.tree.ITree;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.IRegisteredNameable;
@@ -110,93 +109,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public String customDisplayInformation;
 	public short[] RGBa = {255, 255, 255, 255};
 	public int RGB = 0xFFFFFF;
-	//For general property.
+	//For general property, because it often be used, extract from property map.
 	public PropertyBasic basic;
-	//All these property will be remove, use property map instead.
-	//Tool configuration.
-	@Deprecated
-	public boolean canMakeTool = false;
-	@Deprecated
-	public int toolMaxUse = 1;
-	@Deprecated
-	public int toolHarvestLevel;
-	@Deprecated
-	public float toolHardness = 1.0F;
-	@Deprecated
-	public float toolDamageToEntity;
-	@Deprecated
-	public int toolEnchantability;
-	@Deprecated
-	public float toolBrittleness;
-	@Deprecated
-	public float toolAttackSpeed;
-	@Deprecated
-	public float handleToughness = 1.0F;
-	//Block configuration.
-	@Deprecated
-	public boolean isRock = false;
-	@Deprecated
-	public boolean isSand = false;
-	@Deprecated
-	public boolean isDirt = false;
-	@Deprecated
-	public String blockHarvestTool;
-	@Deprecated
-	public int blockHarvestLevel;
-	@Deprecated
-	public float blockExplosionResistance;
-	@Deprecated
-	public float blockHardness;
-	//Wood matter configuration.
-	@Deprecated
-	public boolean isWood = false;
-	@Deprecated
-	public float woodHardness;//Useless prop
-	@Deprecated
-	public float ashcontent;
-	@Deprecated
-	public float woodBurnHeat;
-	@Deprecated
-	public boolean hasTree = false;
-	@Deprecated
-	public ITree tree;
-	/** This two block is for tree generation. */
-	@Deprecated
-	public Block log;
-	/** The log which is already cut off from tree. */
-	@Deprecated
-	public Block logArt;
-	@Deprecated
-	public Block leaves;
-	@Deprecated
-	public Block plank;
-	//Rock extra configuration.
-	@Deprecated
-	public Block rock;
-	@Deprecated
-	public float minTemperatureForExplosion;
-	//Soil extra configuration
-	@Deprecated
-	public Block soil;
-	//Ore configuration.
-	@Deprecated
-	public IOreProperty oreProperty = IOreProperty.property;
-	//Plant configuration
-	/** The plant grown in wild. */
-	@Deprecated
-	public IPlant plant;
-	@Deprecated
-	public Block wildPlantBlock;
-	//Crop configuration.
-	@Deprecated
-	public boolean isCrop = false;
-	@Deprecated
-	public ICrop crop;
 	//Multi item configuration.
 	public IItemMatProp itemProp;
 
 	private IPropertyMap propertyMap = new HashPropertyMap();
-	@Deprecated
+	//Reused now.
 	private IntegerMap<String> properties = new IntegerMap();
 	private Set<SubTag> subTags = new HashSet();
 
@@ -308,21 +227,21 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float attackSpeed, float dVE, int enchantability)
 	{
 		PropertyTool property = new PropertyTool();
-		canMakeTool = true;
-		property.harvestLevel = toolHarvestLevel = harvestLevel;
-		property.maxUse = toolMaxUse = maxUse;
-		property.hardness = toolHardness = hardness;
-		property.brittleness = toolBrittleness = brittleness;
-		property.damageToEntity = toolDamageToEntity = dVE;
-		property.enchantability = toolEnchantability = enchantability;
-		property.attackSpeed = toolAttackSpeed = attackSpeed;
+		property.harvestLevel = harvestLevel;
+		property.maxUse = maxUse;
+		property.hardness = hardness;
+		property.brittleness = brittleness;
+		property.damageToEntity = dVE;
+		property.enchantability = enchantability;
+		property.attackSpeed = attackSpeed;
 		add(SubTag.TOOL);
 		return addProperty(M.property_tool, property);
 	}
 
+	@Deprecated
 	public Mat setHandable(float toughness)
 	{
-		handleToughness = toughness;
+		//		handleToughness = toughness;
 		add(SubTag.HANDLE);
 		return this;
 	}
@@ -350,11 +269,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 		else
 		{
-			property = new PropertyOre.PropertyOreWrapper(this.oreProperty = oreProperty);
+			property = new PropertyOre.PropertyOreWrapper(oreProperty);
 		}
-		property.harvestLevel = blockHarvestLevel = harvestLevel;
-		property.hardness = blockHardness = hardness;
-		property.explosionResistance = blockExplosionResistance = resistance;
+		property.harvestLevel = harvestLevel;
+		property.hardness = hardness;
+		property.explosionResistance = resistance;
 		add(SubTag.ORE, type);
 		return addProperty(M.property_ore, property);
 	}
@@ -362,14 +281,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setWood(float woodHardness, float ashcontent, float woodBurnHeat)
 	{
 		PropertyWood property = new PropertyWood();
-		isWood = true;
-		property.hardness = blockHardness = 1.5F + woodHardness / 4F;
-		property.explosionResistance = blockExplosionResistance = 0.4F + woodHardness / 8F;
-		property.harvestLevel = blockHarvestLevel = 1;
-		blockHarvestTool = "axe";
-		this.woodHardness = woodHardness;
-		property.ashcontent = this.ashcontent = ashcontent;
-		property.burnHeat = this.woodBurnHeat = woodBurnHeat;
+		property.hardness = 1.5F + woodHardness / 4F;
+		property.explosionResistance = 0.4F + woodHardness / 8F;
+		property.harvestLevel = 1;
+		property.ashcontent = ashcontent;
+		property.burnHeat = woodBurnHeat;
 		addProperty(M.fallen_damage_deduction, (int) (1000 / (woodHardness + 1)));
 		addProperty(M.flammability, 50);
 		addProperty(M.fire_encouragement, 4);
@@ -393,13 +309,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setTree(ITree tree, boolean createBlock)
 	{
 		PropertyWood property0 = propertyMap.get(M.property_wood);
-		PropertyTree property = new PropertyTree.PropertyTreeWrapper(this.tree = tree);
+		PropertyTree property = new PropertyTree.PropertyTreeWrapper(tree);
 		property.ashcontent = property0.ashcontent;
 		property.burnHeat = property0.burnHeat;
 		property.explosionResistance = property0.explosionResistance;
 		property.hardness = property0.hardness;
 		property.harvestLevel = property0.harvestLevel;
-		hasTree = true;
 		add(SubTag.TREE);
 		if(createBlock && Config.createLog)
 		{
@@ -408,10 +323,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			BlockLeaves leaves = BlockLeaves.create(this, property);
 			BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, this, property);
 			BlockPlank plank = new BlockPlank(this, property);
-			this.leaves = leaves;
-			this.plank = plank;
-			log = logNatural;
-			logArt = logArtificial;
+			property.block = logArtificial;
 			property.initInfo(logNatural, logArtificial, leaves, coreLeaves);
 		}
 		property.setMaterial(this);
@@ -421,13 +333,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setSoil(float hardness, float resistance, Material material)
 	{
 		PropertyBlockable property = new PropertyBlockable();
-		isDirt = true;
-		property.harvestLevel = blockHarvestLevel = -1;//It seems no soil need use tool to harvest.
-		property.hardness = blockHardness = hardness;
-		property.explosionResistance = blockExplosionResistance = resistance;
+		property.harvestLevel = -1;//It seems no soil need use tool to harvest.
+		property.hardness = hardness;
+		property.explosionResistance = resistance;
 		if(Config.createSoil)
 		{
-			soil = new BlockSoil(modid, "soil." + name, material, this, property);
+			new BlockSoil(modid, "soil." + name, material, this, property);
 		}
 		add(SubTag.DIRT);
 		return addProperty(M.property_soil, property);
@@ -436,14 +347,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp)
 	{
 		PropertyRock property = new PropertyRock();
-		isRock = true;
-		property.harvestLevel = blockHarvestLevel = harvestLevel;
-		property.hardness = blockHardness = hardness;
-		property.explosionResistance = blockExplosionResistance = resistance;
-		minTemperatureForExplosion = property.minTemperatureForExplosion = minDetTemp;
+		property.harvestLevel = harvestLevel;
+		property.hardness = hardness;
+		property.explosionResistance = resistance;
+		property.minTemperatureForExplosion = minDetTemp;
 		if(Config.createRock)
 		{
-			rock = new BlockRock("rock." + name, this, property);
+			property.block = new BlockRock("rock." + name, this, property);
 		}
 		add(SubTag.ROCK);
 		return addProperty(M.property_rock, property);
@@ -452,21 +362,19 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp, Block rock)
 	{
 		PropertyRock property = new PropertyRock();
-		isRock = true;
-		property.harvestLevel = blockHarvestLevel = harvestLevel;
-		property.hardness = blockHardness = hardness;
-		property.explosionResistance = blockExplosionResistance = resistance;
-		minTemperatureForExplosion = property.minTemperatureForExplosion = minDetTemp;
-		this.rock = rock;//Use custom rock block might have other use, will not auto-register into ore dictionary.
+		property.harvestLevel = harvestLevel;
+		property.hardness = hardness;
+		property.explosionResistance = resistance;
+		property.minTemperatureForExplosion = minDetTemp;
+		property.block = rock;//Use custom rock block might have other use, will not auto-register into ore dictionary.
 		add(SubTag.ROCK);
 		return addProperty(M.property_rock, property);
 	}
 
 	public Mat setCrop(ICrop crop)
 	{
-		isCrop = true;
 		add(SubTag.CROP);
-		return addProperty(M.property_crop, this.crop = crop);
+		return addProperty(M.property_crop, crop);
 	}
 
 	public Mat setTag(SubTag...tags)

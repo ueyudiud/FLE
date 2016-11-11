@@ -424,7 +424,7 @@ ITP_Drops, IToolableTile
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
 	{
-		U.Server.addBlockLandingEffects(worldObj, pos, rock.rock.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), entity, numberOfParticles);
+		U.Server.addBlockLandingEffects(worldObj, pos, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), entity, numberOfParticles);
 		return true;
 	}
 
@@ -432,7 +432,7 @@ ITP_Drops, IToolableTile
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
-		U.Client.addBlockHitEffect(worldObj, random, rock.rock.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), target.sideHit, pos, manager);
+		U.Client.addBlockHitEffect(worldObj, random, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), target.sideHit, pos, manager);
 		return true;
 	}
 
@@ -440,7 +440,7 @@ ITP_Drops, IToolableTile
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
-		U.Client.addBlockDestroyEffects(worldObj, pos, rock.rock.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), manager);
+		U.Client.addBlockDestroyEffects(worldObj, pos, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), manager);
 		return true;
 	}
 }

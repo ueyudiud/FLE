@@ -2,6 +2,7 @@ package fle.core.items.behavior;
 
 import farcore.data.EnumToolType;
 import farcore.data.KS;
+import farcore.data.M;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.item.IProjectileItem;
 import farcore.lib.item.ITool;
@@ -27,11 +28,11 @@ import net.minecraft.world.World;
 public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 {
 	float baseDamage;
-	
+
 	public BehaviorSpear()
 	{
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
@@ -44,7 +45,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 		}
 		return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
 	}
-
+	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
 	{
@@ -77,12 +78,12 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			world.spawnEntityInWorld(entity1);
 		}
 	}
-
+	
 	@Override
 	public void initEntity(EntityProjectileItem entity)
 	{
 	}
-
+	
 	@Override
 	public void onEntityTick(EntityProjectileItem entity)
 	{
@@ -95,13 +96,13 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			}
 		}
 	}
-
+	
 	@Override
 	public boolean onHitGround(World world, BlockPos pos, EntityProjectileItem entity, Direction direction)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean onHitEntity(World world, Entity target, EntityProjectileItem entity)
 	{
@@ -113,7 +114,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			Mat material = ItemTool.getMaterial(entity.currentItem, "head");
 			if(material != null)
 			{
-				damage *= (1F + material.toolDamageToEntity);
+				damage *= (1F + material.getProperty(M.property_tool).damageToEntity);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)

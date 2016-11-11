@@ -39,24 +39,24 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	public static class CropState extends BlockStateWrapper
 	{
 		public ICropAccess access;
-
+		
 		public CropState(ICropAccess access, IBlockState state)
 		{
 			super(state);
 			this.access = access;
 		}
-		
+
 		@Override
 		protected BlockStateWrapper wrapState(IBlockState state)
 		{
 			return new CropState(access, state);
 		}
 	}
-
+	
 	public static final ThreadLocal<ICrop> CROP_THREAD = new ThreadLocal();
 	public static final ThreadLocal<ItemStack> ITEM_THREAD = new ThreadLocal();
 	public static final PropertyString PROP_CROP_TYPE;
-
+	
 	static
 	{
 		List<String> list = new ArrayList();
@@ -67,7 +67,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		list.add("void");//Empty crop mark.
 		PROP_CROP_TYPE = new PropertyString("crop", list);
 	}
-
+	
 	public BlockCrop()
 	{
 		super(FarCore.ID, "crop", Material.PLANTS);
@@ -75,25 +75,25 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		setHardness(0.5F);
 		unharvestableSpeedMultiplier = 600F;
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, PROP_CROP_TYPE);
 	}
-	
+
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return super.initDefaultState(state).withProperty(PROP_CROP_TYPE, "void");
 	}
-
+	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -103,7 +103,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		ModelLoader.registerItemVariants(item, new ResourceLocation[0]);
 		ModelLoader.setCustomMeshDefinition(item, (ItemStack stack) -> Client.MODEL_MISSING);
 	}
-	
+
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -121,19 +121,19 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			if(stack.getItem() instanceof ItemSeed)
 			{
 				worldIn.setTileEntity(pos, new TECrop(
-						ItemSeed.getMaterial(stack).crop,
+						ItemSeed.getMaterial(stack).getProperty(M.property_crop),
 						ItemSeed.getDNAFromStack(stack),
 						ItemSeed.getGenerationFromStack(stack)));
 			}
 		}
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TECrop();
 	}
-	
+
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
@@ -144,26 +144,26 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		}
 		return super.getActualState(state, worldIn, pos);
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}
-	
+
 	public boolean canBlockStay(World world, BlockPos pos)
 	{
 		TileEntity tile;
@@ -171,14 +171,14 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			return ((TECrop) tile).canPlantAt();
 		return true;
 	}
-	
+
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		return tile instanceof TECrop ? ((TECrop) tile).getPlantType() : EnumPlantType.Crop;
 	}
-	
+
 	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{

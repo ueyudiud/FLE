@@ -38,7 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockBase extends Block implements IRegisteredNameable, IRenderRegister
 {
 	private static List<BlockBase> list = new ArrayList();
-	
+
 	/**
 	 * Called when all others object(fluids, blocks, configurations, materials, etc)
 	 * are already initialized.
@@ -52,15 +52,15 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		}
 		list = null;
 	}
-
+	
 	private final ThreadLocal<TileEntity> thread1 = new ThreadLocal();
-
+	
 	public final String blockName;
 	protected final Item item;
-
+	
 	protected float harvestableSpeedMultiplier = 30F;
 	protected float unharvestableSpeedMultiplier = 100F;
-
+	
 	public BlockBase(String name, Material materialIn)
 	{
 		this(U.Mod.getActiveModID(), name, materialIn);
@@ -89,75 +89,75 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		U.Mod.registerBlock(this, modid, name, item = createItemBlock());
 		list.add(this);//Added for re-register.
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-
-	}
-	
-	public void postInitalizedBlocks()
-	{
 		
 	}
 
+	public void postInitalizedBlocks()
+	{
+
+	}
+	
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return state;
 	}
-
+	
 	protected Item createItemBlock()
 	{
 		return new ItemBlockBase(this);
 	}
-
+	
 	@Override
 	public String getUnlocalizedName()
 	{
 		return "block." + blockName;
 	}
-
+	
 	@Override
 	public String getLocalizedName()
 	{
 		return LanguageManager.translateToLocal(getUnlocalizedName() + ".name");
 	}
-
+	
 	public String getTranslateNameForItemStack(ItemStack stack)
 	{
-		return getTranslateNameForItemStack(stack.getItemDamage());
+		return getTranslateNameForItemStack(item.getDamage(stack));
 	}
-
+	
 	public String getTranslateNameForItemStack(int metadata)
 	{
 		return getUnlocalizedName() + "@" + metadata;
 	}
-
+	
 	@Override
 	public final String getRegisteredName()
 	{
 		return REGISTRY.getNameForObject(this).toString();
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this);
 	}
-
+	
 	@Override
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
 	{
 		player.addStat(StatList.getBlockStats(this));
 		player.addExhaustion(0.025F);
-
+		
 		if (this.canSilkHarvest(worldIn, pos, state, player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0)
 		{
 			if(!onBlockHarvest(worldIn, pos, state, player, true))
 			{
 				List<ItemStack> items = getDrops(worldIn, pos, state, te, 0, true);
-
+				
 				ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, 0, 1.0f, true, player);
 				for (ItemStack item : items)
 				{
@@ -175,13 +175,13 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 			thread1.remove();
 		}
 	}
-
+	
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return item;
 	}
-
+	
 	/**
 	 * Called when block harvest.
 	 * @param worldIn
@@ -194,14 +194,14 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		return false;
 	}
-
+	
 	@Override
 	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
 		float hardness = state.getBlockHardness(worldIn, pos);
 		if (hardness < 0.0F)
 			return 0.0F;
-		
+
 		if (!canBreakBlock(worldIn, pos, player))
 			return 0F;
 		else if(!canBreakEffective(state, player, worldIn, pos))
@@ -209,7 +209,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		else
 			return player.getDigSpeed(state, pos) / hardness / harvestableSpeedMultiplier;
 	}
-	
+
 	/**
 	 * Match the block can be break by player (Not similar with harvest).
 	 * @param world
@@ -221,12 +221,12 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		return ToolHook.isToolBreakable(world.getBlockState(pos), player);
 	}
-	
+
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
 		return canHarvestBlock(worldIn, pos, player);
 	}
-
+	
 	@Override
 	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
 	{
@@ -234,7 +234,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		{
 			List<ItemStack> items = getDrops(worldIn, pos, state, thread1.get(), fortune, false);
 			chance = ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, fortune, chance, false, harvesters.get());
-
+			
 			for (ItemStack item : items)
 				if (worldIn.rand.nextFloat() <= chance)
 				{
@@ -242,17 +242,17 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 				}
 		}
 	}
-
+	
 	@Override
 	public final List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
 		return getDrops(world, pos, state, world.getTileEntity(pos), fortune, false);
 	}
-
+	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
 		List<ItemStack> ret = new ArrayList<ItemStack>();
-
+		
 		if(silkTouch)
 		{
 			ItemStack stack = createStackedBlock(state);
@@ -276,73 +276,73 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		}
 		return ret;
 	}
-
+	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
 	{
 		addUnlocalizedInfomation(stack, player, new UnlocalizedList(tooltip), advanced);
 	}
-
+	
 	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip, boolean advanced)
 	{
-
+		
 	}
-
+	
 	@Override
 	public boolean isFertile(World world, BlockPos pos)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public float getEnchantPowerBonus(World world, BlockPos pos)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction,
 			IPlantable plantable)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
 	{
-
+		
 	}
-
+	
 	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public EnumFacing[] getValidRotations(World world, BlockPos pos)
 	{
 		return null;
 	}
-
+	
 	@Override
 	public boolean recolorBlock(World world, BlockPos pos, EnumFacing side, EnumDyeColor color)
 	{
 		return false;
 	}
-	
+
 	public CreativeTabs[] getCreativeTabs()
 	{
 		return new CreativeTabs[]{getCreativeTabToDisplayOn()};

@@ -93,7 +93,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return Config.createLog ? new ItemStack(M.oak.log) : new ItemStack(Blocks.LOG);
+				return Config.createLog ? new ItemStack(M.oak.getProperty(M.property_wood).block) : new ItemStack(Blocks.LOG);
 			}
 		};
 		CT.tabTerria = new CreativeTabBase("farcore.terria", "Far Terria")
@@ -101,7 +101,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return Config.createRock ? new ItemStack(M.peridotite.rock, 1, 2) : new ItemStack(Blocks.STONE);
+				return Config.createRock ? new ItemStack(M.peridotite.getProperty(M.property_rock).block, 1, 2) : new ItemStack(Blocks.STONE);
 			}
 		};
 		CT.tabBuilding = new CreativeTabBase("farcore.building", "Far Building Blocks")
@@ -109,7 +109,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return Config.createRock ? new ItemStack(M.marble.rock, 1, 5) : new ItemStack(Blocks.STONEBRICK);
+				return Config.createRock ? new ItemStack(M.marble.getProperty(M.property_rock).block, 1, 5) : new ItemStack(Blocks.STONEBRICK);
 			}
 		};
 		CT.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item")
@@ -210,7 +210,7 @@ public class CommonLoader
 		//Initialize potions and mob effects.
 		Potions.init();
 	}
-	
+
 	public void load()
 	{
 		//Post load item and block.
@@ -253,7 +253,7 @@ public class CommonLoader
 		FarCore.network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
 		FarCore.network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
 	}
-
+	
 	public void postload()
 	{
 		//Reload material tool tips.
@@ -269,7 +269,7 @@ public class CommonLoader
 			}
 		}
 	}
-	
+
 	public void complete()
 	{
 		//Start light thread.
