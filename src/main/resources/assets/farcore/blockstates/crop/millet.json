@@ -15,5 +15,15 @@
 			"millet_stage_6": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_6" } },
 			"millet_stage_7": { "textures": { "crop": "farcore:blocks/crop/millet(setaria)_stage_7" } }
 		}
+	},
+	"height": {
+		"millet_stage_0": 3,
+		"millet_stage_1": 5,
+		"millet_stage_2": 7,
+		"millet_stage_3": 9,
+		"millet_stage_4": 11,
+		"millet_stage_5": 13,
+		"millet_stage_6": 15,
+		"millet_stage_7": 16
 	}
 }

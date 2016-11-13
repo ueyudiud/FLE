@@ -13,5 +13,13 @@
 			"reed_stage_4": { "textures": { "crop": "farcore:blocks/crop/reed_stage_4" } },
 			"reed_stage_5": { "textures": { "crop": "farcore:blocks/crop/reed_stage_5" } }
 		}
+	},
+	"height": {
+		"reed_stage_0" : 4,
+		"reed_stage_1" : 7,
+		"reed_stage_2" : 9,
+		"reed_stage_3" : 12,
+		"reed_stage_4" : 15,
+		"reed_stage_5" : 16
 	}
 }

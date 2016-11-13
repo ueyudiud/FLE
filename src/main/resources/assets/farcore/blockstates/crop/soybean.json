@@ -14,5 +14,14 @@
 			"soybean_stage_5": { "textures": { "crop": "farcore:blocks/crop/soybean_stage_5" } },
 			"soybean_stage_6": { "textures": { "crop": "farcore:blocks/crop/soybean_stage_6" } }
 		}
+	},
+	"height": {
+		"soybean_stage_0" : 5,
+		"soybean_stage_1" : 7,
+		"soybean_stage_2" : 9,
+		"soybean_stage_3" : 10,
+		"soybean_stage_4" : 12,
+		"soybean_stage_5" : 14,
+		"soybean_stage_6" : 14
 	}
 }

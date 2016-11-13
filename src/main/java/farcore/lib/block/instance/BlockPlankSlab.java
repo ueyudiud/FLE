@@ -98,14 +98,12 @@ public class BlockPlankSlab extends BlockSlab
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 :
-			super.getFireSpreadSpeed(world, pos, face);
+		return meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 : 5;
 	}
 
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 :
-			super.getFlammability(world, pos, face);
+		return meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 : 20;
 	}
 }

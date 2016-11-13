@@ -1,6 +1,7 @@
 package farcore.handler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,16 +12,21 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.FarCore;
 import farcore.asm.LightFix;
+import farcore.lib.block.IExtendedDataBlock;
 import farcore.lib.block.IUpdateDelayBlock;
+import farcore.lib.net.world.PacketCustomChunkData;
 import farcore.lib.util.Log;
 import farcore.lib.world.IObjectInWorld;
 import farcore.util.U;
+import farcore.util.U.L;
 import farcore.util.U.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -30,9 +36,13 @@ import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -41,6 +51,9 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class FarCoreWorldHandler
 {
+	private static final int CHUNK_LENGTH = 16 * 256 * 16;
+	private static final int[] CACHE = new int[CHUNK_LENGTH];
+
 	private static class NotifyEntry
 	{
 		int x;
@@ -48,7 +61,7 @@ public class FarCoreWorldHandler
 		int z;
 		BlockPos source;
 		IBlockState changedBlock;
-		
+
 		NotifyEntry(IBlockState changed, BlockPos pos)
 		{
 			this(changed, pos, 0, 0, 0);
@@ -61,13 +74,13 @@ public class FarCoreWorldHandler
 			this.y = y;
 			this.z = z;
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return x << 16 ^ y << 8 ^ z;
 		}
-		
+
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -79,22 +92,22 @@ public class FarCoreWorldHandler
 					entry.z == z;
 		}
 	}
-	
+
 	private static final Map<Class<? extends IObjectInWorld>, String> OBJECTS_TO_ID = new HashMap();
 	private static final Map<String, Class<? extends IObjectInWorld>> ID_TO_OBJECTS = new HashMap();
-	
+
 	private static final String key = "objsinw";
 	private static Map<Integer, List<IObjectInWorld>> objects = new HashMap();
 	private static Map<Integer, List<NotifyEntry>> updatePos = new HashMap();
-
+	
 	private static Map<Integer, List<IObjectInWorld>> unlistedObjects = new HashMap();
-
+	
 	public static void registerObject(String id, Class<? extends IObjectInWorld> clazz)
 	{
 		OBJECTS_TO_ID.put(clazz, id);
 		ID_TO_OBJECTS.put(id, clazz);
 	}
-
+	
 	public static List<IObjectInWorld> getObjectInRange(World world, BlockPos pos, double range)
 	{
 		return getObjectInRange(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, range);
@@ -115,12 +128,12 @@ public class FarCoreWorldHandler
 		}
 		return list;
 	}
-
+	
 	public static void putNewObjectInWorld(IObjectInWorld world)
 	{
 		U.L.put(objects, world.world().provider.getDimension(), world);
 	}
-
+	
 	public static void markBlockForUpdate(World world, Collection<NotifyEntry> pos)
 	{
 		U.Worlds.getListFromWorldDimention(updatePos, world, true).addAll(pos);
@@ -129,14 +142,14 @@ public class FarCoreWorldHandler
 	{
 		U.Worlds.getListFromWorldDimention(updatePos, world, true).add(new NotifyEntry(world.getBlockState(pos), pos));
 	}
-	
+
 	private boolean notifyFlag = false;
-	
+
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load event)
 	{
 	}
-	
+
 	@SubscribeEvent
 	public void onUnload(WorldEvent.Unload event)
 	{
@@ -150,12 +163,12 @@ public class FarCoreWorldHandler
 		}
 		updatePos.remove(dim);
 	}
-	
+
 	@SubscribeEvent
 	public void onLoad(ChunkEvent.Load event)
 	{
 	}
-	
+
 	@SubscribeEvent
 	public void onUnload(ChunkEvent.Unload event)
 	{
@@ -182,7 +195,7 @@ public class FarCoreWorldHandler
 			U.L.put(unlistedObjects, dim, removed);
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onUpdate(TickEvent.WorldTickEvent event)
 	{
@@ -194,52 +207,76 @@ public class FarCoreWorldHandler
 		updateNotifiedNeighbours(event.world);
 		event.world.theProfiler.endSection();
 	}
-	
+
 	@SubscribeEvent
 	public void onDataLoad(ChunkDataEvent.Load event)
 	{
 		if(event.getData().hasKey(key))
 		{
 			NBTTagCompound nbt = event.getData().getCompoundTag(key);
-			if(!nbt.hasNoTags())
+			loadOIW(event.getWorld(), event.getChunk(), nbt);
+			loadBlockState(event.getWorld(), event.getChunk(), nbt);
+		}
+	}
+
+	@SubscribeEvent
+	public void onDataSave(ChunkDataEvent.Save event)
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		saveOIW(event.getWorld(), event.getChunk(), nbt);
+		saveBlockState(event.getWorld(), event.getChunk(), nbt);
+		event.getData().setTag(key, nbt);
+	}
+
+	@SubscribeEvent
+	public void onPlayerWatch(ChunkWatchEvent.Watch event)
+	{
+		EntityPlayerMP player = event.getPlayer();
+		FarCore.network.sendLargeToPlayer(new PacketCustomChunkData(player.worldObj, event.getChunk(), CACHE), player);
+	}
+	
+	public void loadOIW(World world, Chunk chunk, NBTTagCompound nbt)
+	{
+		if(world.getWorldType() == WorldType.DEBUG_WORLD) return;
+		if(nbt.hasKey("oiw"))
+		{
+			nbt = nbt.getCompoundTag("oiw");
+			for(String tag : nbt.getKeySet())
 			{
-				for(String tag : nbt.getKeySet())
+				if(!ID_TO_OBJECTS.containsKey(tag))
 				{
-					if(!ID_TO_OBJECTS.containsKey(tag))
+					Log.warn("The tag '" + tag + "' is not register in map.");
+					continue;
+				}
+				Class<? extends IObjectInWorld> clazz = ID_TO_OBJECTS.get(tag);
+				NBTTagList list = (NBTTagList) nbt.getTag(tag);
+				for(int i = 0; i < list.tagCount(); ++i)
+				{
+					NBTBase nbt1 = list.get(i);
+					try
 					{
-						Log.warn("The tag '" + tag + "' is not register in map.");
-						continue;
+						IObjectInWorld obj = clazz.getConstructor(World.class).newInstance(world);
+						obj.readFromNBT(nbt1);
+						L.put(objects, world.provider.getDimension(), obj);
 					}
-					Class<? extends IObjectInWorld> clazz = ID_TO_OBJECTS.get(tag);
-					NBTTagList list = (NBTTagList) nbt.getTag(tag);
-					for(int i = 0; i < list.tagCount(); ++i)
+					catch(Exception exception)
 					{
-						NBTBase nbt1 = list.get(i);
-						try
-						{
-							IObjectInWorld obj = clazz.getConstructor(World.class).newInstance(event.getWorld());
-							obj.readFromNBT(nbt1);
-							U.L.put(objects, event.getWorld().provider.getDimension(), obj);
-						}
-						catch(Exception exception)
-						{
-							throw new RuntimeException("Fail to create object in world.", exception);
-						}
+						throw new RuntimeException("Fail to create object in world.", exception);
 					}
 				}
 			}
 		}
 	}
-	
-	@SubscribeEvent
-	public void onDataSave(ChunkDataEvent.Save event)
+
+	public void saveOIW(World world, Chunk chunk, NBTTagCompound nbt)
 	{
-		int dim = event.getWorld().provider.getDimension();
+		if(world.getWorldType() == WorldType.DEBUG_WORLD) return;
+		int dim = world.provider.getDimension();
 		if(objects.containsKey(dim) || unlistedObjects.containsKey(dim))
 		{
 			List<IObjectInWorld> saves = new ArrayList();
-			int x1 = event.getChunk().xPosition << 4;
-			int z1 = event.getChunk().zPosition << 4;
+			int x1 = chunk.xPosition << 4;
+			int z1 = chunk.zPosition << 4;
 			int x2 = x1 + 16;
 			int z2 = z1 + 16;
 			if(objects.containsKey(dim))
@@ -276,9 +313,9 @@ public class FarCoreWorldHandler
 						continue;
 					}
 					String tag = OBJECTS_TO_ID.get(obj.getClass());
-					U.L.put(map, tag, obj.writeFromNBT());
+					L.put(map, tag, obj.writeFromNBT());
 				}
-				NBTTagCompound nbt = new NBTTagCompound();
+				NBTTagCompound nbt1 = new NBTTagCompound();
 				for(Entry<String, List<NBTBase>> entry : map.entrySet())
 				{
 					NBTTagList list = new NBTTagList();
@@ -286,13 +323,92 @@ public class FarCoreWorldHandler
 					{
 						list.appendTag(nbt2);
 					}
-					nbt.setTag(entry.getKey(), list);
+					nbt1.setTag(entry.getKey(), list);
 				}
-				event.getData().setTag(key, nbt);
+				nbt.setTag("oiw", nbt1);
 			}
 		}
 	}
 
+	public void loadBlockState(World world, Chunk chunk, NBTTagCompound nbt)
+	{
+		if(world.getWorldType() == WorldType.DEBUG_WORLD) return;
+		if(nbt.hasKey("edb"))
+		{
+			int[] array = nbt.getIntArray("edb");
+			if(array.length != CHUNK_LENGTH)
+				throw new RuntimeException("The block state array length is not valid length, the nbt might broken!");
+			int index = 0;
+			for(int i = 0; i < 16; ++i)
+			{
+				ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[i];
+				if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
+				{
+					for(int i1 = 0; i1 < 16; ++i1)
+					{
+						for(int j = 0; j < 16; ++j)
+						{
+							for(int k = 0; k < 16; ++k)
+							{
+								IBlockState state = extendedblockstorage.get(j, i1, k);
+								if(state.getBlock() instanceof IExtendedDataBlock)
+								{
+									state = ((IExtendedDataBlock) state.getBlock()).getStateFromData(array[index]);
+									extendedblockstorage.set(j, i1, k, state);
+								}
+								++index;
+							}
+						}
+					}
+				}
+				else
+				{
+					index += 0x1000;
+				}
+			}
+		}
+	}
+	
+	public void saveBlockState(World world, Chunk chunk, NBTTagCompound nbt)
+	{
+		if(world.getWorldType() == WorldType.DEBUG_WORLD) return;
+		int[] data = CACHE;
+		boolean save = false;
+		Arrays.fill(data, 0);
+		int index = 0;
+		for(int i = 0; i < 16; ++i)
+		{
+			ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[i];
+			if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
+			{
+				for(int i1 = 0; i1 < 16; ++i1)
+				{
+					for(int j = 0; j < 16; ++j)
+					{
+						for(int k = 0; k < 16; ++k)
+						{
+							IBlockState state = extendedblockstorage.get(j, i1, k);
+							if(state.getBlock() instanceof IExtendedDataBlock)
+							{
+								save = true;
+								data[index] = ((IExtendedDataBlock) state.getBlock()).getDataFromState(state);
+							}
+							++index;
+						}
+					}
+				}
+			}
+			else
+			{
+				index += 0x1000;
+			}
+		}
+		if(save)
+		{
+			nbt.setIntArray("edb", data.clone());
+		}
+	}
+	
 	private void updateAllObjectInWorld(World world)
 	{
 		List<IObjectInWorld> list = Worlds.getListFromWorldDimention(objects, world, false);
@@ -352,7 +468,7 @@ public class FarCoreWorldHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onNotifyNeighbours(NeighborNotifyEvent event)
 	{

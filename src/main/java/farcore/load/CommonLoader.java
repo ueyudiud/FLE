@@ -55,6 +55,7 @@ import farcore.lib.net.tile.PacketTESAsk;
 import farcore.lib.net.tile.PacketTESync;
 import farcore.lib.net.tile.PacketTETypeResult;
 import farcore.lib.net.world.PacketBreakBlock;
+import farcore.lib.net.world.PacketCustomChunkData;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tile.instance.TECustomCarvedStone;
@@ -210,7 +211,7 @@ public class CommonLoader
 		//Initialize potions and mob effects.
 		Potions.init();
 	}
-
+	
 	public void load()
 	{
 		//Post load item and block.
@@ -252,8 +253,9 @@ public class CommonLoader
 		FarCore.network.registerPacket(PacketFluidUpdateSingle.class, Side.CLIENT);
 		FarCore.network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
 		FarCore.network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
+		FarCore.network.registerPacket(PacketCustomChunkData.class, Side.CLIENT);
 	}
-	
+
 	public void postload()
 	{
 		//Reload material tool tips.
@@ -269,7 +271,7 @@ public class CommonLoader
 			}
 		}
 	}
-
+	
 	public void complete()
 	{
 		//Start light thread.

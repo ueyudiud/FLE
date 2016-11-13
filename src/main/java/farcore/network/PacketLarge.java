@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import farcore.FarCore;
 import farcore.lib.util.Log;
 import farcore.util.U;
 import io.netty.buffer.ByteBuf;
@@ -17,40 +18,40 @@ public class PacketLarge implements IPacket
 {
 	protected Side side;
 	protected INetHandler handler;
-
+	
 	private byte[] bs;
 	private static volatile ByteBuf largePacketCache;
-
+	
 	private int id = 0;
 	private boolean flag = false;
-
+	
 	public PacketLarge()
 	{
-
+		
 	}
 	public PacketLarge(byte[] arrays)
 	{
 		bs = arrays;
 	}
-
+	
 	@Override
 	public Side getSide()
 	{
 		return side;
 	}
-
+	
 	@Override
 	public void side(Side side)
 	{
 		this.side = side;
 	}
-
+	
 	@Override
 	public void handler(INetHandler handler)
 	{
 		this.handler = handler;
 	}
-
+	
 	@Override
 	public EntityPlayer getPlayer()
 	{
@@ -58,7 +59,7 @@ public class PacketLarge implements IPacket
 				((NetHandlerPlayServer) handler).playerEntity :
 					U.Players.player();
 	}
-
+	
 	@Override
 	public ByteBuf encode(ByteBuf buf) throws IOException
 	{
@@ -66,7 +67,7 @@ public class PacketLarge implements IPacket
 		buf.writeBytes(bs);
 		return buf;
 	}
-
+	
 	@Override
 	public void decode(ByteBuf buf) throws IOException
 	{
@@ -76,15 +77,21 @@ public class PacketLarge implements IPacket
 		int type = stream.readInt();
 		id = type >> 2;
 		if((type & 0x1) != 0)
+		{
 			largePacketCache = Unpooled.buffer();
+		}
 		byte[] buffer = new byte[4096];
 		int len;
 		while ((len = stream.read(buffer)) != -1)
+		{
 			largePacketCache.writeBytes(buffer, 0, len);
+		}
 		if((type & 0x2) != 0)
+		{
 			flag = true;
+		}
 	}
-
+	
 	@Override
 	public IPacket process(Network network)
 	{
@@ -94,13 +101,15 @@ public class PacketLarge implements IPacket
 			network.processPacket(id, largePacketCache, side, handler);
 			largePacketCache = null;
 		}
-		catch(Throwable e)
+		catch(Throwable exception)
 		{
-			Log.warn("Fail to process packet.", e);
+			if(FarCore.debug)
+				throw new RuntimeException(exception);
+			Log.warn("Fail to process packet.", exception);
 		}
 		return null;
 	}
-
+	
 	@Override
 	public boolean needToSend()
 	{

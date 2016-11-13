@@ -13,5 +13,13 @@
 			"sweetpotato_stage_4": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_4" } },
 			"sweetpotato_stage_5": { "textures": { "crop": "farcore:blocks/crop/sweetpotato_stage_5" } }
 		}
+	},
+	"height": {
+		"sweetpotato_stage_0" : 4,
+		"sweetpotato_stage_1" : 6,
+		"sweetpotato_stage_2" : 8,
+		"sweetpotato_stage_3" : 9,
+		"sweetpotato_stage_4" : 11,
+		"sweetpotato_stage_5" : 12
 	}
 }

@@ -14,5 +14,14 @@
 			"potato_stage_5": { "textures": { "crop": "farcore:blocks/crop/potato_stage_5" } },
 			"potato_stage_6": { "textures": { "crop": "farcore:blocks/crop/potato_stage_6" } }
 		}
+	},
+	"height": {
+		"potato_stage_0": 3,
+		"potato_stage_1": 5,
+		"potato_stage_2": 7,
+		"potato_stage_3": 7,
+		"potato_stage_4": 8,
+		"potato_stage_5": 9,
+		"potato_stage_6": 10
 	}
 }

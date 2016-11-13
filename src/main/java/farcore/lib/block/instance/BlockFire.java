@@ -316,12 +316,12 @@ public class BlockFire extends BlockBase
 			
 			if(!flag2)
 			{
-				tryCatchFire(info, state, worldIn, pos.east() , chance, rand, l, W);
-				tryCatchFire(info, state, worldIn, pos.west() , chance, rand, l, E);
-				tryCatchFire(info, state, worldIn, pos.down() , chance, rand, l, U);
-				tryCatchFire(info, state, worldIn, pos.up()   , chance, rand, l, D);
-				tryCatchFire(info, state, worldIn, pos.north(), chance, rand, l, S);
-				tryCatchFire(info, state, worldIn, pos.south(), chance, rand, l, N);
+				tryCatchFire(info, state, worldIn, pos, chance, rand, l, W);
+				tryCatchFire(info, state, worldIn, pos, chance, rand, l, E);
+				tryCatchFire(info, state, worldIn, pos, chance, rand, l, U);
+				tryCatchFire(info, state, worldIn, pos, chance, rand, l, D);
+				tryCatchFire(info, state, worldIn, pos, chance, rand, l, S);
+				tryCatchFire(info, state, worldIn, pos, chance, rand, l, N);
 			}
 			if(range > 0)
 			{
@@ -368,12 +368,12 @@ public class BlockFire extends BlockBase
 
 	private void tryCatchFire(FireLocateInfo info, IBlockState fireState, World worldIn, BlockPos pos, int chance, Random random, int age, Direction face)
 	{
-		int i = info.getFlammability(face.x, face.y, face.z);
-		
+		pos = face.offset(pos);
 		IBlockState state = worldIn.getBlockState(pos);
 		if(state.getBlock() instanceof IThermalCustomBehaviorBlock &&
-				((IThermalCustomBehaviorBlock) state.getBlock()).onBurningTick(worldIn, pos, random, face, fireState))
+				((IThermalCustomBehaviorBlock) state.getBlock()).onBurningTick(worldIn, pos, random, face.getOpposite(), fireState))
 			return;
+		int i = info.getFlammability(face.x, face.y, face.z, face.getOpposite());
 		if (random.nextInt(chance) < i)
 		{
 			if (random.nextInt(age + 10) < 5 && !worldIn.isRainingAt(pos))
@@ -593,13 +593,17 @@ public class BlockFire extends BlockBase
 		public int getFlammability(int ofX, int ofY, int ofZ)
 		{
 			int value = 0;
-			value = Math.max(value, value((byte) ofX, (byte) (ofY + 1), (byte) ofZ, (byte) 0x7));
-			value = Math.max(value, value((byte) ofX, (byte) (ofY - 1), (byte) ofZ, (byte) 0x8));
-			value = Math.max(value, value((byte) ofX, (byte) ofY, (byte) (ofZ + 1), (byte) 0x9));
-			value = Math.max(value, value((byte) ofX, (byte) ofY, (byte) (ofZ - 1), (byte) 0xA));
-			value = Math.max(value, value((byte) (ofX + 1), (byte) ofY, (byte) ofZ, (byte) 0xB));
-			value = Math.max(value, value((byte) (ofX - 1), (byte) ofY, (byte) ofZ, (byte) 0xC));
+			value = Math.max(value, getFlammability(ofX, ofY + 1, ofZ, D));
+			value = Math.max(value, getFlammability(ofX, ofY - 1, ofZ, U));
+			value = Math.max(value, getFlammability(ofX, ofY, ofZ + 1, N));
+			value = Math.max(value, getFlammability(ofX, ofY, ofZ - 1, S));
+			value = Math.max(value, getFlammability(ofX + 1, ofY, ofZ, W));
+			value = Math.max(value, getFlammability(ofX - 1, ofY, ofZ, E));
 			return value;
+		}
+		public int getFlammability(int ofX, int ofY, int ofZ, Direction facing)
+		{
+			return value((byte) ofX, (byte) ofY, (byte) ofZ, (byte) (0x7 + facing.ordinal()));
 		}
 		
 		public boolean isAir(BlockPos pos)
@@ -695,8 +699,8 @@ public class BlockFire extends BlockBase
 				{
 					list[0] |= 0x4;
 				}
-				list[1 + facing.ordinal()] = state.getBlock().getFlammability(world, pos1, facing);
-				list[7 + facing.ordinal()] = state.getBlock().getFireSpreadSpeed(world, pos1, facing);
+				list[7 + facing.ordinal()] = state.getBlock().getFlammability(world, pos1, facing);
+				list[1 + facing.ordinal()] = state.getBlock().getFireSpreadSpeed(world, pos1, facing);
 			}
 			return list[type];
 		}

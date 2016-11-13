@@ -36,7 +36,7 @@ public class ItemSeed extends ItemMulti
 		enableChemicalFormula = false;
 		EnumItem.seed.set(this);
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -51,20 +51,18 @@ public class ItemSeed extends ItemMulti
 			}
 			if(!playerIn.canPlayerEdit(pos, facing, stack))
 				return EnumActionResult.FAIL;
-			if(!worldIn.isRemote)
-			{
-				ICrop crop = material.getProperty(M.property_crop);
-				CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, crop, getDNAFromStack(stack));
-				if(!crop.canPlantAt(access)) return EnumActionResult.SUCCESS;
-				BlockCrop.ITEM_THREAD.set(stack);
-				worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3);
-				BlockCrop.ITEM_THREAD.set(null);
-			}
+			ICrop crop = material.getProperty(M.property_crop);
+			CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, crop, getDNAFromStack(stack));
+			if(!crop.canPlantAt(access)) return EnumActionResult.SUCCESS;
+			BlockCrop.ITEM_THREAD.set(stack);
+			worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3);
+			BlockCrop.ITEM_THREAD.set(null);
+			--stack.stackSize;
 			return EnumActionResult.SUCCESS;
 		}
 		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
@@ -75,7 +73,7 @@ public class ItemSeed extends ItemMulti
 			subItems.add(stack);
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
@@ -85,20 +83,22 @@ public class ItemSeed extends ItemMulti
 		unlocalizedList.add("info.crop.generation", getGenerationFromStack(stack) + 1);
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 	}
-
+	
 	public static ItemStack applySeed(int size, Mat material, int generation, String dna)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setShort("generation", (short) generation);
 		nbt.setString("dna", dna);
-		return new ItemStack(EnumItem.seed.item, size, material.id, nbt);
+		ItemStack stack = new ItemStack(EnumItem.seed.item, size, material.id);
+		stack.setTagCompound(nbt);
+		return stack;
 	}
-
+	
 	public static String getDNAFromStack(ItemStack stack)
 	{
 		return !stack.hasTagCompound() ? "" : stack.getTagCompound().getString("dna");
 	}
-
+	
 	public static int getGenerationFromStack(ItemStack stack)
 	{
 		return !stack.hasTagCompound() ? 0 : stack.getTagCompound().getShort("generation");

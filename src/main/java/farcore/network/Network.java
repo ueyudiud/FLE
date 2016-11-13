@@ -277,15 +277,15 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		{
 			ByteBuf buffer = Unpooled.buffer();
 			byte[] data = packet.encode(buffer).array();
-			ByteArrayInputStream input = new ByteArrayInputStream(data);
-			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
-			int len;
-			byte[] cache = new byte[4096];
-			while ((len = input.read(cache)) != -1)
-			{
-				buf.write(cache, 0, len);
-			}
-			data = buf.toByteArray();
+			//			ByteArrayInputStream input = new ByteArrayInputStream(data);
+			//			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
+			//			int len;
+			//			byte[] cache = new byte[4096];
+			//			while ((len = input.read(cache)) != -1)
+			//			{
+			//				buf.write(cache, 0, len);
+			//			}
+			//			data = buf.toByteArray();
 			
 			int maxSize = Short.MAX_VALUE - 5;
 			for (int offset = 0; offset < data.length; offset += maxSize)
@@ -362,18 +362,10 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public IPacket processPacket(int id, ByteBuf buf, Side side, INetHandler handler) throws Exception
 	{
-		IPacket packet;
-		try
-		{
-			packet = packetTypes.get(id).newInstance();
-			packet.decode(buf);
-			packet.side(side);
-			packet.handler(handler);
-			return packet.process(this);
-		}
-		catch(Exception e)
-		{
-			throw e;
-		}
+		IPacket packet = packetTypes.get(id).newInstance();
+		packet.decode(buf);
+		packet.side(side);
+		packet.handler(handler);
+		return packet.process(this);
 	}
 }

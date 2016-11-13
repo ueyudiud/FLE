@@ -17,7 +17,7 @@ public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 {
 	private static final float off = 0.25F;
 	private BrightnessUtil util = BrightnessUtil.instance();
-	
+
 	@Override
 	public void renderTileEntityAt(TECustomCarvedStone tile, double x, double y, double z, float partialTicks,
 			int destroyStage)
@@ -50,10 +50,10 @@ public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 					float z2 = 0.25F * (k + 1);
 					renderNorth = tile.shouldSideRender(i, j, k, Direction.N);
 					renderSouth = tile.shouldSideRender(i, j, k, Direction.S);
-					renderWest = tile.shouldSideRender(i, j, k, Direction.W);
-					renderEast = tile.shouldSideRender(i, j, k, Direction.E);
-					renderDown = tile.shouldSideRender(i, j, k, Direction.D);
-					renderUp = tile.shouldSideRender(i, j, k, Direction.U);
+					renderWest  = tile.shouldSideRender(i, j, k, Direction.W);
+					renderEast  = tile.shouldSideRender(i, j, k, Direction.E);
+					renderDown  = tile.shouldSideRender(i, j, k, Direction.D);
+					renderUp    = tile.shouldSideRender(i, j, k, Direction.U);
 					renderCubeWithLight(x1, y1, z1, x2, y2, z2, util, tile, i, j, k, icon);
 				}
 			}

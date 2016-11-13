@@ -13,5 +13,13 @@
 			"cotton_stage_4": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_4" } },
 			"cotton_stage_5": { "textures": { "crop": "farcore:blocks/crop/cotton_stage_5" } }
 		}
+	},
+	"height": {
+		"cotton_stage_0": 5,
+		"cotton_stage_1": 8,
+		"cotton_stage_2": 10,
+		"cotton_stage_3": 14,
+		"cotton_stage_4": 16,
+		"cotton_stage_5": 16
 	}
 }

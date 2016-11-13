@@ -14,5 +14,14 @@
 			"ramie_stage_5": { "textures": { "crop": "farcore:blocks/crop/ramie_stage_5" } },
 			"ramie_stage_6": { "textures": { "crop": "farcore:blocks/crop/ramie_stage_6" } }
 		}
+	},
+	"height": {
+		"ramie_stage_0": 3,
+		"ramie_stage_1": 5,
+		"ramie_stage_2": 6,
+		"ramie_stage_3": 10,
+		"ramie_stage_4": 12,
+		"ramie_stage_5": 14,
+		"ramie_stage_6": 15
 	}
 }
