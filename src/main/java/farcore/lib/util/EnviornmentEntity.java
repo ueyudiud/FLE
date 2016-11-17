@@ -15,6 +15,12 @@ public class EnviornmentEntity implements IEnvironment
 	}
 	
 	@Override
+	public long worldTime()
+	{
+		return entity.worldObj.getWorldTime();
+	}
+	
+	@Override
 	public float temperature()
 	{
 		return ThermalNet.getTemperature(entity.worldObj, new BlockPos(entity), false);

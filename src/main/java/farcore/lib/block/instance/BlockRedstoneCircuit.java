@@ -311,7 +311,7 @@ public class BlockRedstoneCircuit extends BlockTE
 			boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
-		Mat material = Mat.material(U.ItemStacks.setupNBT(stack, false).getString("material"), M.stone);
+		Mat material = Mat.material(U.ItemStacks.getOrSetupNBT(stack, false).getString("material"), M.stone);
 		tooltip.add("info.redstone.circuit.material", material.getLocalName());
 	}
 }

@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class WorldPropHandler
 {
-	private static final Map<Integer, IWorldPropProvider> worldProperties = new HashMap();
+	private static final Map<Integer, IWorldPropProvider> WORLD_PROPERTIES = new HashMap();
 	private static final IWorldPropProvider DEFAULT = new IWorldPropProvider()
 	{
 		@Override
@@ -68,7 +68,7 @@ public class WorldPropHandler
 	
 	public static void addWorldProperty(int dimID, IWorldPropProvider provider)
 	{
-		worldProperties.put(dimID, provider);
+		WORLD_PROPERTIES.put(dimID, provider);
 	}
 	
 	public static IWorldPropProvider getWorldProperty(World world)
@@ -78,6 +78,6 @@ public class WorldPropHandler
 	
 	public static IWorldPropProvider getWorldProperty(int dimID)
 	{
-		return worldProperties.getOrDefault(dimID, DEFAULT);
+		return WORLD_PROPERTIES.getOrDefault(dimID, DEFAULT);
 	}
 }

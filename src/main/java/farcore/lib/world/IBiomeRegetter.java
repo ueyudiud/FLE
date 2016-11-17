@@ -16,7 +16,7 @@ public interface IBiomeRegetter
 {
 	/**
 	 * Get new biome from block pos.<br>
-	 * DO NOT USE {@code World#getBiomeGenForCoords} TO GET
+	 * DO NOT USE {@link net.minecraft.world.World#getBiomeGenForCoords} TO GET
 	 * BIOME BECAUSE THIS METHOD IS OVERRIDE FROM THERE.
 	 * @param oldBiome
 	 * @param pos

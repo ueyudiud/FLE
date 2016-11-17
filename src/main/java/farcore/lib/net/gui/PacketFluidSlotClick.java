@@ -5,7 +5,7 @@ import java.io.IOException;
 import farcore.lib.gui.ContainerBase;
 import farcore.network.IPacket;
 import farcore.network.Network;
-import net.minecraft.network.PacketBuffer;
+import farcore.network.PacketBufferExt;
 
 public class PacketFluidSlotClick extends PacketGui
 {
@@ -21,14 +21,14 @@ public class PacketFluidSlotClick extends PacketGui
 	}
 	
 	@Override
-	protected void encode(PacketBuffer output) throws IOException
+	protected void encode(PacketBufferExt output) throws IOException
 	{
 		super.encode(output);
 		output.writeByte(clickID);
 	}
 	
 	@Override
-	protected void decode(PacketBuffer input) throws IOException
+	protected void decode(PacketBufferExt input) throws IOException
 	{
 		super.decode(input);
 		clickID = input.readByte();

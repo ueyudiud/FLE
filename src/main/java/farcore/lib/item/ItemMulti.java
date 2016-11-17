@@ -24,6 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemMulti extends ItemBase implements IUpdatableItem
 {
+	/**
+	 * General method for multiple item, use to get material from stack.
+	 * Return VOID material if stack is invalid.
+	 * @param stack
+	 * @return
+	 */
 	public static Mat getMaterial(ItemStack stack)
 	{
 		if(stack != null && stack.getItem() instanceof ItemMulti)
@@ -31,10 +37,10 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		else
 			return M.VOID;
 	}
-	
+
 	public final MatCondition condition;
 	protected boolean enableChemicalFormula = true;
-
+	
 	public ItemMulti(MatCondition mc)
 	{
 		this(FarCore.ID, mc);
@@ -46,12 +52,18 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		condition = mc;
 		hasSubtypes = true;
 	}
-
+	
+	/**
+	 * Get translation of displaying tool tip.
+	 * @param stack
+	 * @param tag
+	 * @return
+	 */
 	protected String getTranslateInformation(ItemStack stack, String tag)
 	{
 		return getUnlocalizedName(stack) + "." + tag + ".info";
 	}
-
+	
 	@Override
 	public void postInitalizedItems()
 	{
@@ -62,7 +74,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			condition.registerOre(material, templete);
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -70,7 +82,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		super.registerRender();
 		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(modid, "group/" + condition.name));
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
@@ -80,12 +92,12 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			subItems.add(new ItemStack(itemIn, 1, material.id));
 		}
 	}
-
+	
 	protected Mat getMaterialFromItem(ItemStack stack)
 	{
 		return Mat.material(getBaseDamage(stack));
 	}
-	
+
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
@@ -105,7 +117,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 				return;
 		}
 	}
-	
+
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
@@ -126,7 +138,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		}
 		return false;
 	}
-	
+
 	@Override
 	public ItemStack updateItem(IEnvironment environment, ItemStack stack)
 	{
@@ -137,13 +149,13 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		}
 		return stack;
 	}
-
+	
 	@Override
 	public int getItemStackLimit(ItemStack stack)
 	{
 		return condition.stackLimit;
 	}
-	
+
 	@Override
 	public int getStackMetaOffset(ItemStack stack)
 	{
@@ -152,7 +164,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			return material.itemProp.getMetaOffset(stack, material, condition);
 		return 0;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
@@ -163,14 +175,14 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		{
 			unlocalizedList.addNotNull("info.material.chemical.formula." + getMaterialFromItem(stack));
 		}
-		unlocalizedList.addNotNull("info.material.custom." + getMaterialFromItem(stack).name);
+		unlocalizedList.addToolTip("info.material.custom." + getMaterialFromItem(stack).name);
 		Mat material = getMaterialFromItem(stack);
 		if(material.itemProp != null)
 		{
 			material.itemProp.addInformation(stack, material, condition, unlocalizedList);
 		}
 	}
-
+	
 	@Override
 	public void setDamage(ItemStack stack, int damage)
 	{

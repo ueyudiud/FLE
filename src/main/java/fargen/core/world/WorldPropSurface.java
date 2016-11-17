@@ -19,7 +19,7 @@ import net.minecraft.world.biome.Biome;
 
 public class WorldPropSurface implements IWorldPropProvider
 {
-	public static final ICalendarWithMonth calendar = CalendarHandler.overworld;
+	public static final ICalendarWithMonth calendar = CalendarHandler.OVERWORLD;
 	private final NoiseBase offsetNoise = new NoisePerlin(0L, 8, 76, 1.2, 3.0);
 	private final NoiseBase temperatureUndulateNoise = new NoisePerlin(0L, 3, 31.0, 1.6, 2.2);
 	private final NoiseBase rainfallUndulateNoise = new NoisePerlin(0L, 3, 31.0, 1.4, 2.2);

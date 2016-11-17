@@ -2,17 +2,17 @@ package farcore.lib.net;
 
 import java.io.IOException;
 
-import net.minecraft.network.PacketBuffer;
+import farcore.network.PacketBufferExt;
 import net.minecraft.world.World;
 
 public abstract class PacketChunkCoord extends PacketWorld
 {
 	protected int x;
 	protected int z;
-
+	
 	public PacketChunkCoord()
 	{
-
+		
 	}
 	public PacketChunkCoord(World world, int x, int z)
 	{
@@ -20,17 +20,17 @@ public abstract class PacketChunkCoord extends PacketWorld
 		this.x = x;
 		this.z = z;
 	}
-
+	
 	@Override
-	protected void encode(PacketBuffer output) throws IOException
+	protected void encode(PacketBufferExt output) throws IOException
 	{
 		super.encode(output);
 		output.writeInt(x);
 		output.writeInt(z);
 	}
-
+	
 	@Override
-	protected void decode(PacketBuffer input) throws IOException
+	protected void decode(PacketBufferExt input) throws IOException
 	{
 		super.decode(input);
 		x = input.readInt();

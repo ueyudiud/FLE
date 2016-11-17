@@ -39,11 +39,11 @@ public class ItemTreeLog extends ItemMulti
 
 	public static void setLogSize(ItemStack stack, int size)
 	{
-		U.ItemStacks.setupNBT(stack, true).setShort("length", (short) size);
+		U.ItemStacks.getOrSetupNBT(stack, true).setShort("length", (short) size);
 	}
 
 	public static int getLogSize(ItemStack stack)
 	{
-		return U.ItemStacks.setupNBT(stack, false).getShort("length");
+		return U.ItemStacks.getOrSetupNBT(stack, false).getShort("length");
 	}
 }

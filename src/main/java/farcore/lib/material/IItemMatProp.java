@@ -9,18 +9,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IItemMatProp
 {
-	void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition);
+	String DEFAULT_SAVE_TAG = "matprop";
+	
+	default void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition)
+	{
+		setInstanceFromMeta(stack, metaOffset, material, condition, DEFAULT_SAVE_TAG);
+	}
+	
+	void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition, String saveTag);
 	
 	default int getMetaOffset(ItemStack stack, Mat material, MatCondition condition)
 	{
-		return getMetaOffset(stack, material, condition, "matprop");
+		return getMetaOffset(stack, material, condition, DEFAULT_SAVE_TAG);
 	}
 	
 	int getMetaOffset(ItemStack stack, Mat material, MatCondition condition, String saveTag);
 	
 	default ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment)
 	{
-		return updateItem(stack, material, condition, environment, "matprop");
+		return updateItem(stack, material, condition, environment, DEFAULT_SAVE_TAG);
 	}
 	
 	/**
@@ -38,7 +45,7 @@ public interface IItemMatProp
 	@SideOnly(Side.CLIENT)
 	default void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list)
 	{
-		addInformation(stack, material, condition, list, "matprop");
+		addInformation(stack, material, condition, list, DEFAULT_SAVE_TAG);
 	}
 
 	@SideOnly(Side.CLIENT)

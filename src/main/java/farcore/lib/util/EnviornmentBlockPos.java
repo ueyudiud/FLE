@@ -22,6 +22,12 @@ public class EnviornmentBlockPos implements IEnvironment
 	}
 
 	@Override
+	public long worldTime()
+	{
+		return world.getWorldTime();
+	}
+	
+	@Override
 	public float temperature()
 	{
 		return ThermalNet.getTemperature(world, pos, true);

@@ -43,7 +43,7 @@ public class ItemOreChip extends ItemMulti
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), (ItemStack stack) -> "material:" + U.ItemStacks.setupNBT(stack, false).getString("rock"));
+		FarCoreItemModelLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), (ItemStack stack) -> "material:" + U.ItemStacks.getOrSetupNBT(stack, false).getString("rock"));
 	}
 
 	public static ItemStack createOreChip(int size, Mat ore, Mat rock)

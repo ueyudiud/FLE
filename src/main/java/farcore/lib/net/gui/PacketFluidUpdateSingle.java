@@ -5,37 +5,37 @@ import java.io.IOException;
 import farcore.lib.gui.ContainerBase;
 import farcore.network.IPacket;
 import farcore.network.Network;
-import net.minecraft.network.PacketBuffer;
+import farcore.network.PacketBufferExt;
 import net.minecraftforge.fluids.FluidStack;
 
 public class PacketFluidUpdateSingle extends PacketGui
 {
 	private int id;
 	private FluidStack stack;
-	
+
 	public PacketFluidUpdateSingle(ContainerBase container, int id, FluidStack stack)
 	{
 		super(container);
 		this.id = id;
 		this.stack = stack;
 	}
-	
+
 	@Override
-	protected void encode(PacketBuffer output) throws IOException
+	protected void encode(PacketBufferExt output) throws IOException
 	{
 		super.encode(output);
 		output.writeByte(id);
-		writeFluidStack(output, stack);
+		output.writeFluidStack(stack);
 	}
-	
+
 	@Override
-	protected void decode(PacketBuffer input) throws IOException
+	protected void decode(PacketBufferExt input) throws IOException
 	{
 		super.decode(input);
 		id = input.readByte();
-		stack = readFluidStack(input);
+		stack = input.readFluidStack();
 	}
-
+	
 	@Override
 	public IPacket process(Network network)
 	{

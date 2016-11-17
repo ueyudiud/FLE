@@ -148,7 +148,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 
 	public static Mat getRockType(ItemStack stack)
 	{
-		return Mat.material(U.ItemStacks.setupNBT(stack, false).getString("material"), M.stone);
+		return Mat.material(U.ItemStacks.getOrSetupNBT(stack, false).getString("material"), M.stone);
 	}
 	
 	@Override

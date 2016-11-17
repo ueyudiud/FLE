@@ -9,23 +9,23 @@ import net.minecraft.world.World;
 
 public class CalendarHandler
 {
-	private static final Map<Integer, ICalendar> calendars = new HashMap();
-	private static final ICalendar empty = new CalendarEmpty();
-	public static final ICalendarWithMonth overworld;
+	private static final Map<Integer, ICalendar> CALENDARS = new HashMap();
+	private static final ICalendar EMPTY = new CalendarEmpty();
+	public static final ICalendarWithMonth OVERWORLD;
 	
 	static
 	{
-		registerCalendar(0, overworld = new CalendarSurface());
+		registerCalendar(0, OVERWORLD = new CalendarSurface());
 	}
 	
 	public static void registerCalendar(int dim, ICalendar calendar)
 	{
-		calendars.put(dim, calendar);
+		CALENDARS.put(dim, calendar);
 	}
 	
 	public static ICalendar getCalendar(World world)
 	{
-		return calendars.getOrDefault(world.provider.getDimension(), empty);
+		return CALENDARS.getOrDefault(world.provider.getDimension(), EMPTY);
 	}
 	
 	public static String getDateInfo(World world)

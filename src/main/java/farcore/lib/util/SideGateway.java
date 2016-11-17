@@ -1,41 +1,30 @@
 package farcore.lib.util;
 
-import farcore.util.U;
+import farcore.util.U.Sides;
 
 public final class SideGateway<T>
 {
 	private final T clientInstance;
 	private final T serverInstance;
-
+	
 	public SideGateway(String serverClass, String clientClass)
 	{
 		try
 		{
-			serverInstance = ((Class<? extends T>) Class.forName(serverClass)).newInstance();
-			if (U.Sides.isSimulating())
-			{
-				clientInstance = ((Class<? extends T>) Class.forName(clientClass)).newInstance();
-			}
-			else
-			{
-				clientInstance = serverInstance;
-			}
+			serverInstance = (T) Class.forName(serverClass).newInstance();
+			clientInstance = Sides.isSimulating() ? (T) Class.forName(clientClass).newInstance() : serverInstance;
 		}
-		catch (Exception e)
+		catch (Exception exception)
 		{
-			throw new RuntimeException(e);
+			throw new RuntimeException(exception);
 		}
 	}
-
+	
 	public T get()
 	{
-		if (U.Sides.isSimulating())
-		{
+		if (Sides.isSimulating())
 			return clientInstance;
-		}
 		else
-		{
 			return serverInstance;
-		}
 	}
 }

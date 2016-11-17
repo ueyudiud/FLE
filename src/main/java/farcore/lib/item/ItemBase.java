@@ -55,8 +55,8 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		unlocalized = modid + "." + name;
 		if(unlocalizedTooltip != null)
 		{
-			this.unlocalizedTooltip = "fle." + unlocalizedTooltip;
-			LanguageManager.registerLocal("fle." + unlocalizedTooltip, localTooltip);
+			this.unlocalizedTooltip = modid + "." + unlocalizedTooltip;
+			LanguageManager.registerLocal(modid + "." + unlocalizedTooltip, localTooltip);
 		}
 		U.Mod.registerItem(this, modid, name);
 		/**
@@ -133,7 +133,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	{
 		if(unlocalizedTooltip != null)
 		{
-			unlocalizedList.add(unlocalizedTooltip);
+			unlocalizedList.addToolTip(unlocalizedTooltip);
 		}
 	}
 

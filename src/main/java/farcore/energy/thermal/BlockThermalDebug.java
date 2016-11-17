@@ -100,7 +100,7 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 			boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
-		NBTTagCompound nbt = U.ItemStacks.setupNBT(stack, false);
+		NBTTagCompound nbt = U.ItemStacks.getOrSetupNBT(stack, false);
 		float tc = nbt.getFloat("conductivity");
 		tooltip.addLocal("Thermal Conductivity: " + tc + "W/K");
 		switch (nbt.getByte("mode"))

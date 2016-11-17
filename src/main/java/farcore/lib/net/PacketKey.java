@@ -6,29 +6,29 @@ import farcore.handler.FarCoreKeyHandler;
 import farcore.network.IPacket;
 import farcore.network.Network;
 import farcore.network.PacketAbstract;
-import net.minecraft.network.PacketBuffer;
+import farcore.network.PacketBufferExt;
 
 public class PacketKey extends PacketAbstract
 {
 	long values;
-
+	
 	public PacketKey(long value)
 	{
 		values = value;
 	}
-
+	
 	@Override
-	protected void encode(PacketBuffer output) throws IOException
+	protected void encode(PacketBufferExt output) throws IOException
 	{
 		output.writeLong(values);
 	}
-
+	
 	@Override
-	protected void decode(PacketBuffer input) throws IOException
+	protected void decode(PacketBufferExt input) throws IOException
 	{
 		values = input.readLong();
 	}
-
+	
 	@Override
 	public IPacket process(Network network)
 	{

@@ -21,37 +21,35 @@ import net.minecraft.client.resources.I18n;
 
 public class LanguageManager
 {
+	/** The default locale of manager. */
 	public static final String ENGLISH = "en_US";
 	/** Load from language file. */
-	private static final Map<String, Map<String, String>> map1 = new HashMap();
+	private static final Map<String, Map<String, String>> MAP1 = new HashMap();
 	/** Load from code. */
-	private static final Map<String, String> map2 = new HashMap();
-	private static final FileFilter filter = (File file) ->
-	{
-		return file.getName().endsWith(".lang");
-	};
+	private static final Map<String, String> MAP2 = new HashMap();
+	private static final FileFilter FILTER = file -> file.getName().endsWith(".lang");
 	private static boolean loadFile = false;
 
 	public static void registerLocal(String unlocalized, String localized)
 	{
-		if(!map1.getOrDefault(ENGLISH, ImmutableMap.of()).containsKey(unlocalized))
+		if(!MAP1.getOrDefault(ENGLISH, ImmutableMap.of()).containsKey(unlocalized))
 		{
 			loadFile = false;
 		}
-		map2.put(unlocalized, localized);
+		MAP2.put(unlocalized, localized);
 	}
 
 	public static String translateToLocal(String unlocalized, Object...objects)
 	{
 		String locale = U.Strings.locale();
 		String translate;
-		if(map1.containsKey(locale) && map1.get(locale).containsKey(unlocalized))
+		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
 		{
-			translate = map1.get(locale).get(unlocalized);
+			translate = MAP1.get(locale).get(unlocalized);
 		}
-		else if(map2.containsKey(unlocalized))
+		else if(MAP2.containsKey(unlocalized))
 		{
-			translate = map2.get(unlocalized);
+			translate = MAP2.get(unlocalized);
 		}
 		else
 			return U.Strings.translateByI18n(unlocalized, objects);
@@ -74,13 +72,13 @@ public class LanguageManager
 	{
 		String locale = U.Strings.locale();
 		String translate;
-		if(map1.containsKey(locale) && map1.get(locale).containsKey(unlocalized))
+		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
 		{
-			translate = map1.get(locale).get(unlocalized);
+			translate = MAP1.get(locale).get(unlocalized);
 		}
-		else if(map2.containsKey(unlocalized))
+		else if(MAP2.containsKey(unlocalized))
 		{
-			translate = map2.get(unlocalized);
+			translate = MAP2.get(unlocalized);
 		}
 		else return net.minecraft.util.text.translation.I18n.translateToLocal(unlocalized);
 		return translate == null ? unlocalized : translate;
@@ -90,13 +88,13 @@ public class LanguageManager
 	{
 		String locale = U.Strings.locale();
 		String translate;
-		if(map1.containsKey(locale) && map1.get(locale).containsKey(unlocalized))
+		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
 		{
-			translate = map1.get(locale).get(unlocalized);
+			translate = MAP1.get(locale).get(unlocalized);
 		}
-		else if(map2.containsKey(unlocalized))
+		else if(MAP2.containsKey(unlocalized))
 		{
-			translate = map2.get(unlocalized);
+			translate = MAP2.get(unlocalized);
 		}
 		else
 		{
@@ -123,19 +121,19 @@ public class LanguageManager
 	public void reset()
 	{
 		Log.info("Far Core reset language manager.");
-		map1.clear();
+		MAP1.clear();
 	}
 
 	public void read()
 	{
 		if (!file.canRead())
 			return;
-		map1.clear();
+		MAP1.clear();
 		BufferedReader reader = null;
 		Log.info("Start read localized file.");
 		try
 		{
-			for(File file : file.listFiles(filter))
+			for(File file : file.listFiles(FILTER))
 			{
 				String name = file.getName();
 				Log.info("Loading " + name + " language file.");
@@ -154,10 +152,10 @@ public class LanguageManager
 						}
 						int idx = line.indexOf('=');
 						if(idx == -1) throw new RuntimeException();
-						map.put(line.substring(0, idx), line.substring(idx + 1));
+						map.put(line.substring(0, idx).trim(), line.substring(idx + 1));
 						++keyCount;
 					}
-					map1.put(name, map);
+					MAP1.put(name, map);
 					Log.info("Wrote " + keyCount + " keys to language manager.");
 				}
 				catch(RuntimeException exception)
@@ -218,8 +216,8 @@ public class LanguageManager
 					file.createNewFile();
 				}
 				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true)));
-				Map<String, String> map = map1.getOrDefault(ENGLISH, ImmutableMap.of());
-				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(map2);//Use sorted map for easier to search translated word.
+				Map<String, String> map = MAP1.getOrDefault(ENGLISH, ImmutableMap.of());
+				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);//Use sorted map for easier to search translated word.
 				for(Entry<String, String> entry : sortedMap.entrySet())
 					if(!map.containsKey(entry.getKey()))
 					{

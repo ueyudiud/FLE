@@ -2,6 +2,8 @@ package farcore.lib.item.behavior;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.util.UnlocalizedList;
@@ -23,32 +25,33 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IBehavior
 {
 	List<IBehavior> NONE = ImmutableList.of();
-	
+
 	boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity);
-
+	
 	boolean onDroppedByPlayer(ItemStack stack, EntityPlayer player);
-	
-	boolean onEntityItemUpdate(EntityItem entity);
 
-	ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand);
+	boolean onEntityItemUpdate(EntityItem entity);
 	
+	ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand);
+
 	EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ);
-
+	
 	EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand);
-
+	
 	boolean onRightClickEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target,
 			EnumHand hand);
-
+	
 	boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity);
-
+	
 	void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft);
-	
+
+	@Nullable
 	ItemStack onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected);
-	
+
 	void onUsingTick(ItemStack stack, EntityLivingBase player, int count);
-	
+
 	@SideOnly(Side.CLIENT)
 	void addInformation(ItemStack stack, EntityPlayer player, UnlocalizedList list,
 			boolean advanced);

@@ -106,7 +106,7 @@ implements IThermalHandler, IDebugableTile, ITB_BlockPlacedBy
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		NBTTagCompound nbt = U.ItemStacks.setupNBT(stack, false);
+		NBTTagCompound nbt = U.ItemStacks.getOrSetupNBT(stack, false);
 		tc = nbt.getFloat("conductivity");
 		switch (mode = nbt.getByte("mode"))
 		{

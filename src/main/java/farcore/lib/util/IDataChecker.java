@@ -6,10 +6,10 @@ import farcore.util.U;
 
 public interface IDataChecker<T>
 {
-	static IDataChecker TRUE = (Object object) -> true;
-	static IDataChecker FALSE = (Object object) -> false;
-	static IDataChecker NOT_NULL = (Object object) -> object != null;
-	static IDataChecker NULL = (Object object) -> object == null;
+	IDataChecker TRUE     = arg -> true;
+	IDataChecker FALSE    = arg -> false;
+	IDataChecker NOT_NULL = arg -> arg != null;
+	IDataChecker NULL     = arg -> arg == null;
 
 	boolean isTrue(T target);
 	
@@ -18,7 +18,7 @@ public interface IDataChecker<T>
 		return new Not(this);
 	}
 
-	public static class Not<O> implements IDataChecker<O>
+	class Not<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O> check;
 
@@ -55,7 +55,7 @@ public interface IDataChecker<T>
 		}
 	}
 
-	public static class Or<O> implements IDataChecker<O>
+	class Or<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
 
@@ -95,7 +95,7 @@ public interface IDataChecker<T>
 		}
 	}
 
-	public static class Nor<O> implements IDataChecker<O>
+	class Nor<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
 
@@ -135,7 +135,7 @@ public interface IDataChecker<T>
 		}
 	}
 
-	public static class And<O> implements IDataChecker<O>
+	class And<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
 
@@ -175,7 +175,7 @@ public interface IDataChecker<T>
 		}
 	}
 
-	public static class Nand<O> implements IDataChecker<O>
+	class Nand<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
 
@@ -215,7 +215,7 @@ public interface IDataChecker<T>
 		}
 	}
 
-	public static class Xor<O> implements IDataChecker<O>
+	class Xor<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O> check1;
 		private final IDataChecker<O> check2;
@@ -255,7 +255,7 @@ public interface IDataChecker<T>
 		}
 	}
 
-	public static class Equal<O> implements IDataChecker<O>
+	class Equal<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O> check1;
 		private final IDataChecker<O> check2;
