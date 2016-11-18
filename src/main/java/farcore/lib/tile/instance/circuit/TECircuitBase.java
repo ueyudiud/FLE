@@ -25,10 +25,11 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_RedstonePower;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.IUpdatableTile;
-import farcore.lib.tile.TESynchronization;
+import farcore.lib.tile.abstracts.TESynchronization;
 import farcore.lib.util.Direction;
 import farcore.lib.util.Facing;
 import farcore.util.U;
+import farcore.util.U.NBTs;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -77,7 +78,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		material = Mat.material(nbt.getString("material"), M.stone);
+		material = NBTs.getMaterialByNameOrDefault(nbt, "material", M.stone);
 		facing = Direction.readFromNBT(nbt, "facing", Direction.T_2D_NONNULL);
 	}
 	
@@ -93,14 +94,8 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		if(nbt.hasKey("m"))
-		{
-			material = Mat.material(nbt.getString("m"), M.stone);
-		}
-		if(nbt.hasKey("f"))
-		{
-			facing = Direction.DIRECTIONS_3D[nbt.getByte("f")];
-		}
+		material = NBTs.getValueByIDOrDefault(nbt, "m", Mat.materials(), material);
+		facing = NBTs.getValueByByteOrDefault(nbt, "f", Direction.DIRECTIONS_2D, facing);
 	}
 	
 	@Override
@@ -108,7 +103,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	{
 		super.writeToDescription(nbt);
 		nbt.setString("m", material.name);
-		nbt.setByte("f", (byte) facing.ordinal());
+		facing.writeToNBT(nbt, "f", Direction.T_2D_NONNULL);
 	}
 	
 	@Override

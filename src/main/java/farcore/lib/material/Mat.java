@@ -44,29 +44,33 @@ import net.minecraft.block.material.Material;
 
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
-	private static final Register<Mat> register = new Register(32768);
+	private static final Register<Mat> REGISTER = new Register(32768);
 
 	private static final Map<IDataChecker<ISubTagContainer>, List<Mat>> materials = new HashMap();
 	
 	public static Register<Mat> materials()
 	{
-		return register;
+		return REGISTER;
 	}
 	public static Mat material(int id)
 	{
-		return register.get(id);
+		return REGISTER.get(id);
+	}
+	public static Mat material(int id, Mat def)
+	{
+		return REGISTER.get(id, def);
 	}
 	public static Mat material(String name)
 	{
-		return register.get(name, M.VOID);
+		return REGISTER.get(name, M.VOID);
 	}
 	public static Mat material(String name, Mat def)
 	{
-		return register.get(name, def);
+		return REGISTER.get(name, def);
 	}
 	public static boolean contain(String name)
 	{
-		return register.contain(name);
+		return REGISTER.contain(name);
 	}
 	public static List<Mat> filt(IDataChecker<ISubTagContainer> filter)
 	{
@@ -77,7 +81,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		if(!materials.containsKey(filter) || alwaysInit)
 		{
 			ImmutableList.Builder<Mat> list = ImmutableList.builder();
-			for(Mat material : register)
+			for(Mat material : REGISTER)
 			{
 				if(filter.isTrue(material))
 				{
@@ -99,7 +103,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public final String name;
 	public final String oreDictName;
 	public final String localName;
-	public final int id;
+	public final short id;
 	/**
 	 * Some material is variant of other material,
 	 * this field is the source material target.
@@ -129,7 +133,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	}
 	public Mat(int id, boolean register, String modid, String name, String oreDict, String localized)
 	{
-		this.id = id;
+		this.id = (short) id;
 		this.modid = modid;
 		this.name = name;
 		oreDictName = oreDict;
@@ -137,7 +141,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		LanguageManager.registerLocal("material." + name + ".name", localized);
 		if(register)
 		{
-			Mat.register.register(id, name, this);
+			Mat.REGISTER.register(id, name, this);
 		}
 	}
 

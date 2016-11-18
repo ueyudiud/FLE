@@ -7,7 +7,7 @@ import farcore.energy.electric.ISidedElectricalElement;
 import farcore.energy.thermal.IThermalHandler;
 import farcore.event.EnergyEvent;
 import farcore.handler.FarCoreEnergyHandler;
-import farcore.lib.tile.TESynchronization;
+import farcore.lib.tile.abstracts.TESynchronization;
 import farcore.lib.util.Direction;
 import net.minecraft.nbt.NBTTagCompound;
 

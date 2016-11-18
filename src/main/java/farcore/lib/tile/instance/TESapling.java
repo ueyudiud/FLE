@@ -4,17 +4,18 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.data.M;
+import farcore.data.Others;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.tile.TEAged;
+import farcore.lib.tile.abstracts.TEAged;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.util.Direction;
+import farcore.util.U.NBTs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,23 +27,23 @@ implements ISaplingAccess, IDebugableBlock
 	private float age;
 	public TreeInfo info;
 	public PropertyTree tree = PropertyTree.VOID;
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setString("tree", tree.getRegisteredName());
+		NBTs.setString(nbt, "tree", tree);
 		nbt.setFloat("age", age);
 		return nbt;
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setString("t", tree.getRegisteredName());
+		nbt.setShort("t", tree.material().id);
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -50,24 +51,24 @@ implements ISaplingAccess, IDebugableBlock
 		tree = (PropertyTree) Mat.material(nbt.getString("tree")).getProperty(M.property_wood, PropertyTree.VOID);
 		age = nbt.getFloat("age");
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("t"))
 		{
-			tree = (PropertyTree) Mat.material(nbt.getString("tree")).getProperty(M.property_wood, PropertyTree.VOID);
+			tree = (PropertyTree) NBTs.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(M.property_wood, PropertyTree.VOID);
 			markBlockRenderUpdate();
 		}
 	}
-
+	
 	public void setTree(EntityLivingBase entity, Mat material)
 	{
 		tree = (PropertyTree) material.getProperty(M.property_wood, PropertyTree.VOID);
 		syncToNearby();
 	}
-
+	
 	@Override
 	protected void updateServer1()
 	{
@@ -83,69 +84,69 @@ implements ISaplingAccess, IDebugableBlock
 			grow();
 		}
 	}
-
+	
 	@Override
 	protected float getSyncRange()
 	{
 		return 80F;
 	}
-
+	
 	public float age()
 	{
 		return age;
 	}
-
+	
 	public void setAge(float age)
 	{
 		this.age = age;
 		markDirty();
 	}
-
+	
 	public boolean grow()
 	{
 		IBlockState state = worldObj.getBlockState(pos);
-		worldObj.setBlockState(pos, Blocks.AIR.getDefaultState(), 4);
+		worldObj.setBlockState(pos, Others.AIR, 4);
 		if(tree.generateTreeAt(worldObj, pos, random, info))
 			return true;
 		worldObj.setBlockState(pos, state, 4);
 		return false;
 	}
-
+	
 	public int getMaxAge()
 	{
 		return tree.getGrowAge(this);
 	}
-
+	
 	@Override
 	public PropertyTree tree()
 	{
 		return tree;
 	}
-
+	
 	@Override
 	public TreeInfo info()
 	{
 		return info;
 	}
-
+	
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-
+	
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-
+	
 	@Override
 	public void killTree()
 	{
 		removeBlock();
 	}
-
+	
 	@Override
 	public void addInformation(EntityPlayer player, World world, BlockPos pos, Direction side, List<String> list)
 	{

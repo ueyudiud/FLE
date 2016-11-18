@@ -4,7 +4,6 @@ import java.util.Random;
 
 import farcore.lib.bio.IBiology;
 import farcore.lib.world.ICoord;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 
 public interface ICropAccess extends ICoord, IBiology
@@ -29,9 +28,7 @@ public interface ICropAccess extends ICoord, IBiology
 
 	int useWater(int amount);
 
-	//	float temp();
+	float temp();
 
 	void killCrop();
-
-	IBlockState getBlock(int offsetX, int offsetY, int offsetZ);
 }

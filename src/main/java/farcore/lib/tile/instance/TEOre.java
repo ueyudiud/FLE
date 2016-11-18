@@ -29,11 +29,12 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.IUpdatableTile;
-import farcore.lib.tile.TEStatic;
+import farcore.lib.tile.abstracts.TEStatic;
 import farcore.lib.util.Direction;
 import farcore.lib.util.SubTag;
 import farcore.network.IPacket;
 import farcore.util.U;
+import farcore.util.U.NBTs;
 import farcore.util.U.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -67,15 +68,15 @@ ITP_Drops, IToolableTile
 		cluster,
 		protore;
 	}
-	
-	private static final Mat STONE = M.stone;
 
+	private static final Mat STONE = M.stone;
+	
 	private Mat ore = M.VOID;
 	public EnumOreAmount amount = EnumOreAmount.normal;
 	public Mat rock = STONE;
 	public RockType rockType = RockType.resource;
 	public double heat;
-	
+
 	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, RockType type)
 	{
 		this.ore = ore;
@@ -88,13 +89,13 @@ ITP_Drops, IToolableTile
 	{
 		initialized = false;
 	}
-	
+
 	@Override
 	protected float getSyncRange()
 	{
 		return 256F;
 	}
-
+	
 	@Override
 	public void sendToNearby(IPacket packet, float range)
 	{
@@ -103,7 +104,7 @@ ITP_Drops, IToolableTile
 			super.sendToNearby(packet, range);
 		}
 	}
-	
+
 	public Mat getOre()
 	{
 		if(worldObj.isRemote && !initialized)
@@ -112,14 +113,14 @@ ITP_Drops, IToolableTile
 		}
 		return ore;
 	}
-
+	
 	public void setOre(Mat ore)
 	{
 		this.ore = ore;
 		initialized = true;
 		syncToNearby();
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
@@ -130,7 +131,7 @@ ITP_Drops, IToolableTile
 		rockType = RockType.values()[compound.getByte("type")];
 		heat = compound.getDouble("heat");
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
@@ -141,40 +142,40 @@ ITP_Drops, IToolableTile
 		compound.setDouble("heat", heat);
 		return super.writeToNBT(compound);
 	}
-	
+
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		ore = Mat.material(nbt.getString("o"));
-		amount = EnumOreAmount.values()[nbt.getByte("a")];
-		rock = Mat.material(nbt.getString("r"), STONE);
-		rockType = RockType.values()[nbt.getByte("t")];
+		ore = NBTs.getMaterialByIDOrDefault(nbt, "o", M.VOID);
+		amount = NBTs.getEnumOrDefault(nbt, "a", EnumOreAmount.normal);
+		rock = NBTs.getMaterialByIDOrDefault(nbt, "r", STONE);
+		rockType = NBTs.getEnumOrDefault(nbt, "t", RockType.resource);
 	}
-	
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setString("o", ore.name);
+		nbt.setShort("o", ore.id);
 		nbt.setByte("a", (byte) amount.ordinal());
-		nbt.setString("r", rock.name);
+		nbt.setShort("r", rock.id);
 		nbt.setByte("t", (byte) rockType.ordinal());
 	}
-
+	
 	@Override
 	public boolean onBlockClicked(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return ore.getProperty(M.property_ore).onBlockClicked(this, player, side);
 	}
-	
+
 	@Override
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
 		return ore.getProperty(M.property_ore).onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
 	}
-
+	
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
@@ -183,7 +184,7 @@ ITP_Drops, IToolableTile
 			markBlockRenderUpdate();
 		}
 	}
-	
+
 	public int getHarvestLevel()
 	{
 		switch (rockType)
@@ -196,26 +197,26 @@ ITP_Drops, IToolableTile
 			return Math.max(ore.getProperty(M.property_ore).harvestLevel, rock.getProperty(M.property_rock).harvestLevel);
 		}
 	}
-	
+
 	@Override
 	public float getBlockHardness(IBlockState state)
 	{
 		float hardness = ore.getProperty(M.property_ore).hardness * .8F + rock.getProperty(M.property_ore).hardness * .2F;
 		return hardness;
 	}
-	
+
 	@Override
 	public float getExplosionResistance(Entity exploder, Explosion explosion)
 	{
 		return Math.max(ore.getProperty(M.property_ore).explosionResistance, rock.getProperty(M.property_rock).explosionResistance);
 	}
-	
+
 	@Override
 	public void onEntityWalk(Entity entity)
 	{
 		ore.getProperty(M.property_ore).onEntityWalk(this, entity);
 	}
-
+	
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
@@ -228,26 +229,26 @@ ITP_Drops, IToolableTile
 		}
 		setOre(Mat.material(stack.getItemDamage()));
 	}
-	
+
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
 		ore.getProperty(M.property_ore).updateTick(this, random);
 	}
-	
+
 	@Override
 	public boolean onBlockHarvest(IBlockState state, EntityPlayer player, boolean silkHarvest)
 	{
 		Worlds.spawnDropsInWorld(this, getDrops(U.Players.getCurrentToolType(player)));
 		return true;
 	}
-
+	
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
 		return getDrops(EnumToolType.HAND_USABLE_TOOL);
 	}
-
+	
 	private SubTag getOreType()
 	{
 		return ore.contain(SubTag.ORE_GEM) ? SubTag.ORE_GEM :
@@ -257,7 +258,7 @@ ITP_Drops, IToolableTile
 						ore.contain(SubTag.ORE_SIMPLE) ? SubTag.ORE_SIMPLE :
 							null;
 	}
-	
+
 	public List<ItemStack> getDrops(List<EnumToolType> types)
 	{
 		SubTag tag = getOreType();
@@ -302,25 +303,25 @@ ITP_Drops, IToolableTile
 		}
 		return list;
 	}
-	
+
 	private void addDrops(List<ItemStack> stacks, DropType type)
 	{
 		;
 	}
-
+	
 	@Override
 	public boolean canHarvestBlock(EntityPlayer player)
 	{
 		ItemStack stack = player.inventory.getCurrentItem();
 		String tool = EnumToolType.pickaxe.name();
 		if (stack == null)
-			return player.canHarvestBlock(getBlock(0, 0, 0));
+			return player.canHarvestBlock(getBlockState(0, 0, 0));
 		int toolLevel = stack.getItem().getHarvestLevel(stack, tool);
 		if (toolLevel < 0)
-			return player.canHarvestBlock(getBlock(0, 0, 0));
+			return player.canHarvestBlock(getBlockState(0, 0, 0));
 		return toolLevel >= getHarvestLevel();
 	}
-	
+
 	@Override
 	public boolean onBurn(float burnHardness, Direction direction)
 	{
@@ -332,94 +333,94 @@ ITP_Drops, IToolableTile
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onBurningTick(Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		ore.getProperty(M.property_ore).onBurningTick(this, rand, fireSourceDir, fireState);
 		return false;
 	}
-
+	
 	@Override
 	public boolean isFireSource(Direction side)
 	{
 		return ore.contain(SubTag.FIRE_SOURCE);
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(Direction side)
 	{
 		return rockType.isBurnable() ? 80 : 0;
 	}
-
+	
 	@Override
 	public int getFlammability(Direction side)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public boolean isFlammable(Direction side)
 	{
 		return getFlammability(side) != 0;
 	}
-
+	
 	@Override
 	public boolean canBeBurned()
 	{
 		return false;
 	}
-
+	
 	@Override
 	public int getFireEncouragement()
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public boolean canFireBurnOn(Direction side, boolean isCatchRain)
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean canConnectTo(Direction direction)
 	{
 		return initialized;
 	}
-
+	
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
 		return (float) (heat / ore.getProperty(M.property_basic).thermalConduct);
 	}
-
+	
 	@Override
 	public double getThermalConductivity(Direction direction)
 	{
 		return ore.getProperty(M.property_basic).thermalConduct * 0.3F + rock.getProperty(M.property_basic).thermalConduct * 0.7F;
 	}
-
+	
 	@Override
 	public void onHeatChange(Direction direction, double value)
 	{
 		heat += value;
 	}
-
+	
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
 			float hitY, float hitZ)
 	{
 		return ore.getProperty(M.property_ore).onToolClick(player, tool, stack, this, side, hitX, hitY, hitZ);
 	}
-
+	
 	@Override
 	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
 		return ore.getProperty(M.property_ore).onToolUse(player, tool, stack, this, side, hitX, hitY, hitZ, duration);
 	}
-	
+
 	@Override
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
@@ -427,7 +428,7 @@ ITP_Drops, IToolableTile
 		U.Server.addBlockLandingEffects(worldObj, pos, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), entity, numberOfParticles);
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
@@ -435,7 +436,7 @@ ITP_Drops, IToolableTile
 		U.Client.addBlockHitEffect(worldObj, random, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), target.sideHit, pos, manager);
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)

@@ -25,16 +25,17 @@ import com.google.common.collect.Lists;
 
 import farcore.FarCore;
 import farcore.FarCoreSetup.ClientProxy;
-import farcore.data.Capabilities;
 import farcore.data.ColorMultiplier;
 import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.block.IToolableBlock;
+import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Stack;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.inv.IBasicInventory;
 import farcore.lib.item.ITool;
+import farcore.lib.material.Mat;
 import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.block.StateMapperExt;
@@ -50,9 +51,10 @@ import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.OreStack;
 import farcore.lib.tile.IItemHandlerIO;
 import farcore.lib.tile.IToolableTile;
-import farcore.lib.tile.TEBase;
+import farcore.lib.tile.abstracts.TEBase;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
+import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.IRenderRegister;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
@@ -126,8 +128,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class U
@@ -1533,123 +1533,34 @@ public class U
 					}
 				}
 			}
-			if(tile.hasCapability(Capabilities.ITEM_HANDLER_IO, facing2))
+			if(tile instanceof IItemHandlerIO)
 			{
-				IItemHandlerIO handler = tile.getCapability(Capabilities.ITEM_HANDLER_IO, facing2);
-				if(heldItem != null && heldItem.hasCapability(Capabilities.ITEM_HANDLER_IO, null))
+				IItemHandlerIO handler = (IItemHandlerIO) tile;
+				ActionResult<ItemStack> result = handler.onPlayerTryUseIO(heldItem, playerIn, facing, hitX, hitY, hitZ, true);
+				if(result.getType() == EnumActionResult.SUCCESS)
 				{
-					IItemHandlerIO handler2 = heldItem.getCapability(Capabilities.ITEM_HANDLER_IO, null);
-					if(handler2.canExtractItem() && handler.canInsertItem())
+					if(heldItem != result.getResult())
 					{
-						ItemStack stack = handler2.extractItem(Integer.MAX_VALUE, facing, true);
-						if(stack != null)
+						playerIn.setHeldItem(hand, heldItem = ItemStack.copyItemStack(result.getResult()));
+						for(int i = 0; i < playerIn.inventory.getSizeInventory(); ++i)
 						{
-							int amt = handler.tryInsertItem(stack, facing, false);
-							if(amt > 0)
+							ItemStack stack = playerIn.inventory.getStackInSlot(i);
+							if(stack != null && stack != heldItem)
 							{
-								handler2.extractItem(amt, facing, false);
+								result = handler.onPlayerTryUseIO(stack, playerIn, facing, hitX, hitY, hitZ, false);
+								switch(result.getType())
+								{
+								case FAIL : return true;
+								case SUCCESS :
+									if(result.getResult() != stack)
+									{
+										playerIn.inventory.setInventorySlotContents(i, stack);
+									}
+								case PASS : break;
+								}
 							}
 						}
-					}
-					if(handler2.canInsertItem() && handler.canExtractItem())
-					{
-						ItemStack stack = handler.extractItem(Integer.MAX_VALUE, facing, true);
-						if(stack != null)
-						{
-							int amt = handler2.tryInsertItem(stack, facing, false);
-							if(amt > 0)
-							{
-								handler.extractItem(amt, facing, false);
-							}
-						}
-					}
-				}
-				else if(heldItem == null)
-				{
-					if(handler.canExtractItem())
-					{
-						ItemStack stack = handler.extractItem(Integer.MAX_VALUE, facing, false);
-						if(stack != null)
-						{
-							playerIn.setHeldItem(hand, stack);
-							return true;
-						}
-					}
-				}
-				else
-				{
-					if(handler.canExtractItem())
-					{
-						if(heldItem.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
-						{
-							IItemHandler handler2 = heldItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-							ItemStack stack = handler.extractItem(Integer.MAX_VALUE, facing, true);
-							if(stack != null)
-							{
-								ItemStack stack2 = stack;
-								int[] puted = new int[handler2.getSlots()];
-								int point = 0;
-								for(int i = 0; i < handler2.getSlots(); ++i)
-								{
-									if(handler2.getStackInSlot(i) == null)
-									{
-										if(handler2.insertItem(i, stack2, true) == null)
-										{
-											stack2 = handler.extractItem(stack.stackSize, facing, false);
-											handler2.insertItem(i, stack, false);
-											return true;
-										}
-										else
-										{
-											stack2 = stack;
-											puted[point ++] = i + 1;
-										}
-									}
-								}
-								for(int i = 0; i < handler2.getSlots(); ++i)
-								{
-									if(!stack.isItemEqual(handler2.getStackInSlot(i)))
-									{
-										continue;
-									}
-									if((stack2 = handler2.insertItem(i, stack2, true)) == null)
-									{
-										break;
-									}
-									puted[point ++] = i + 1;
-								}
-								if(stack2 != null)
-								{
-									stack = handler.extractItem(stack.stackSize - stack2.stackSize, facing, false);
-								}
-								stack2 = stack;
-								for(int i : puted)
-								{
-									if(i == 0)
-									{
-										break;
-									}
-									stack2 = handler2.insertItem(i, stack2, false);
-								}
-								return true;
-							}
-						}
-						ItemStack stack = handler.extractItem(heldItem.getMaxStackSize() - heldItem.stackSize, facing, true);
-						if(stack != null && stack.isItemEqual(heldItem))
-						{
-							heldItem.stackSize += stack.stackSize;
-							handler.extractItem(stack.stackSize, facing, false);
-							return true;
-						}
-					}
-					if(handler.canInsertItem())
-					{
-						int size = handler.tryInsertItem(heldItem.copy(), facing, false);
-						if(size > 0)
-						{
-							heldItem.stackSize -= size;
-							return true;
-						}
+						return true;
 					}
 				}
 			}
@@ -1863,6 +1774,14 @@ public class U
 	
 	public static class NBTs
 	{
+		public static void setString(NBTTagCompound nbt, String key, IRegisteredNameable nameable)
+		{
+			if(nameable != null)
+			{
+				nbt.setString(key, nameable.getRegisteredName());
+			}
+		}
+
 		public static NBTTagCompound getOrCreate(NBTTagCompound nbt, String tag)
 		{
 			return getCompound(nbt, tag, true);
@@ -1942,7 +1861,51 @@ public class U
 
 		public static <E extends Enum<? extends E>> E getEnumOrDefault(NBTTagCompound nbt, String key, E def)
 		{
-			return nbt.hasKey(key) ? (E) def.getClass().getEnumConstants()[nbt.getByte(key)] : def;
+			try
+			{
+				return nbt.hasKey(key) ? (E) def.getClass().getEnumConstants()[nbt.getByte(key)] : def;
+			}
+			catch (ArrayIndexOutOfBoundsException exception)
+			{
+				return def;
+			}
+		}
+
+		public static <V> V getValueByByteOrDefault(NBTTagCompound nbt, String key, V[] values, V def)
+		{
+			try
+			{
+				return nbt.hasKey(key) ? (V) values[nbt.getByte(key)] : def;
+			}
+			catch (ArrayIndexOutOfBoundsException exception)
+			{
+				return def;
+			}
+		}
+		
+		public static Direction getDirectionOrDefault(NBTTagCompound nbt, String key, byte type, Direction def)
+		{
+			return Direction.readFromNBT(nbt, key, type, def);
+		}
+		
+		public static <T> T getValueByIDOrDefault(NBTTagCompound nbt, String key, IRegister<T> register, T def)
+		{
+			return nbt.hasKey(key) ? register.get(nbt.getInteger(key), def) : def;
+		}
+		
+		public static <T> T getValueByNameOrDefault(NBTTagCompound nbt, String key, IRegister<T> register, T def)
+		{
+			return nbt.hasKey(key) ? register.get(nbt.getString(key), def) : def;
+		}
+		
+		public static Mat getMaterialByIDOrDefault(NBTTagCompound nbt, String key, Mat def)
+		{
+			return nbt.hasKey(key) ? Mat.material(nbt.getInteger(key), def) : def;
+		}
+		
+		public static Mat getMaterialByNameOrDefault(NBTTagCompound nbt, String key, Mat def)
+		{
+			return nbt.hasKey(key) ? Mat.material(nbt.getString(key), def) : def;
 		}
 	}
 

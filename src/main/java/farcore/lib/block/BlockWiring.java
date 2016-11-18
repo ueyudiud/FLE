@@ -1,7 +1,7 @@
 package farcore.lib.block;
 
 import farcore.data.Others;
-import farcore.lib.tile.TEWiring;
+import farcore.lib.tile.abstracts.TEWiring;
 import farcore.lib.util.Direction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;

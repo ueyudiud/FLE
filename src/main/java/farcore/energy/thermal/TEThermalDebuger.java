@@ -7,7 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.tile.IDebugableTile;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
-import farcore.lib.tile.TESynchronization;
+import farcore.lib.tile.abstracts.TESynchronization;
 import farcore.lib.util.Direction;
 import farcore.util.U;
 import net.minecraft.block.state.IBlockState;

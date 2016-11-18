@@ -6,7 +6,7 @@ import farcore.data.EnumBlock;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
-import farcore.lib.tile.TEStatic;
+import farcore.lib.tile.abstracts.TEStatic;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import farcore.util.U.Worlds;

@@ -17,7 +17,7 @@ public class CropWheat extends CropAbstract
 		super(material);
 		dnaHelper = new CropDNAHelper();
 		maxStage = 8;
-		growReq = 80;
+		growReq = 800;
 	}
 	
 	@Override

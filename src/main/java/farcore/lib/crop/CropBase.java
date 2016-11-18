@@ -9,9 +9,13 @@ import java.util.List;
 import farcore.data.EnumBlock;
 import farcore.lib.crop.dna.CropDNAHelper;
 import farcore.lib.material.Mat;
+import farcore.lib.util.Direction;
+import farcore.lib.world.IWorldPropProvider;
+import farcore.lib.world.WorldPropHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.IPlantable;
 
 public abstract class CropBase implements ICrop
@@ -85,13 +89,57 @@ public abstract class CropBase implements ICrop
 	@Override
 	public long tickUpdate(ICropAccess access)
 	{
-		return 800L;
+		return 100L;
 	}
 	
 	@Override
 	public void onUpdate(ICropAccess access)
 	{
-		access.grow(1);
+		CropInfo info = access.info();
+		IWorldPropProvider property = WorldPropHandler.getWorldProperty(access.world());
+		int dence = 0;
+		int stage = access.stage();
+		int base = 6 + access.rng().nextInt(9 + info.growth);
+		for(Direction facing : Direction.DIRECTIONS_2D)
+		{
+			if(access.getTE(facing) instanceof ICropAccess)
+			{
+				++dence;
+			}
+		}
+		if(dence - info.weedResistance > 1)
+		{
+			base -= dence - info.weedResistance - 1;
+		}
+		if(stage != 0)
+		{
+			float britness = access.world().getLightFor(EnumSkyBlock.SKY, access.pos().up()) * property.getSunshine(access);
+			if(britness < 4F)
+			{
+				base -= (int) (4 - britness);
+			}
+			else if(britness > 12F)
+			{
+				base += (int) ((britness - 12F) * 0.4F);
+			}
+		}
+		float rainfall = property.getHumidity(access);
+		if(info.dryResistance < 3 && rainfall < 0.1F)
+		{
+			base --;
+		}
+		if(info.dryResistance < 1 && rainfall < 0.3F)
+		{
+			base --;
+		}
+		if(rainfall > 1.2F)
+		{
+			base ++;
+		}
+		if(base > 0)
+		{
+			access.grow(base);
+		}
 	}
 	
 	@Override
@@ -116,7 +164,7 @@ public abstract class CropBase implements ICrop
 	public boolean canPlantAt(ICropAccess access)
 	{
 		IBlockState state;
-		return (state = access.getBlock(0, -1, 0)).getBlock()
+		return (state = access.getBlockState(0, -1, 0)).getBlock()
 				.canSustainPlant(state, access.world(), access.pos().down(), EnumFacing.UP, (IPlantable) EnumBlock.crop.block);
 	}
 	

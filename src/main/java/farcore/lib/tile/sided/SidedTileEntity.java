@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import farcore.lib.nbt.INBTReaderAndWritter;
-import farcore.lib.tile.TESidedTile;
+import farcore.lib.tile.abstracts.TESidedTile;
 import farcore.lib.util.Facing;
 import farcore.lib.util.Log;
 import net.minecraft.nbt.NBTTagCompound;

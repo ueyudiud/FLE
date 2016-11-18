@@ -59,15 +59,15 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	public static enum CropSelectBoxHeightHandler implements IResourceManagerReloadListener
 	{
 		INSTANCE;
-
+		
 		private static final Gson GSON = new GsonBuilder()
 				.registerTypeAdapter(CropSelectBoxHeightHandler.class, (JsonDeserializer<CropSelectBoxHeightHandler>)
 						(JsonElement json, Type typeOfT, JsonDeserializationContext context) -> INSTANCE.decode(json, context)).create();
 		private static final AxisAlignedBB selectBoundBoxCache = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, 1F, .9375F);
-		
+
 		private Mat loadingMaterial;
 		private Map<String, Float> bounds;
-		
+
 		private CropSelectBoxHeightHandler decode(JsonElement json, JsonDeserializationContext context)
 		{
 			if(loadingMaterial == null) throw new RuntimeException("No material is loading!");
@@ -85,7 +85,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			}
 			return this;
 		}
-
+		
 		@Override
 		public void onResourceManagerReload(IResourceManager resourceManager)
 		{
@@ -115,7 +115,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			Log.logCachedInformations((Object object) -> ((ResourceLocation) object).toString(), "The crop path is mssing a height mapping.");
 			bounds = ImmutableMap.copyOf(bounds);
 		}
-		
+
 		public AxisAlignedBB getSelectBoundBox(String state, AxisAlignedBB def)
 		{
 			Float val = bounds.get(state);
@@ -123,11 +123,11 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			return selectBoundBoxCache.setMaxY(val);
 		}
 	}
-
+	
 	public static final ThreadLocal<ICrop> CROP_THREAD = new ThreadLocal();
 	public static final ThreadLocal<ItemStack> ITEM_THREAD = new ThreadLocal();
 	public static final PropertyString PROP_CROP_TYPE;
-
+	
 	static
 	{
 		List<String> list = new ArrayList();
@@ -138,7 +138,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		list.add("void");//Empty crop mark.
 		PROP_CROP_TYPE = new PropertyString("crop", list);
 	}
-
+	
 	public BlockCrop()
 	{
 		super(FarCore.ID, "crop", Material.PLANTS);
@@ -146,25 +146,25 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		setHardness(0.5F);
 		unharvestableSpeedMultiplier = 600F;
 	}
-	
+
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, PROP_CROP_TYPE);
 	}
-	
+
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return super.initDefaultState(state).withProperty(PROP_CROP_TYPE, "void");
 	}
-
+	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return 0;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -175,7 +175,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		ModelLoader.registerItemVariants(item, new ResourceLocation[0]);
 		ModelLoader.setCustomMeshDefinition(item, (ItemStack stack) -> Client.MODEL_MISSING);
 	}
-	
+
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -201,7 +201,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			}
 		}
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
@@ -216,7 +216,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		}
 		return new TECrop();
 	}
-	
+
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
@@ -227,26 +227,34 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		}
 		return super.getActualState(state, worldIn, pos);
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
+		/**
+		 * How buggy Minecraft is!
+		 * The every kinds of render layer will cut out fluid rendering
+		 * behind face rendering destroy effect.
+		 *
+		 * This bug can not be fixed by mod, maybe we should wait for
+		 * new version to fix it.
+		 */
 		return BlockRenderLayer.CUTOUT;
 	}
-	
+
 	public boolean canBlockStay(World world, BlockPos pos)
 	{
 		TileEntity tile;
@@ -254,14 +262,14 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			return ((TECrop) tile).canPlantAt();
 		return true;
 	}
-	
+
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		return tile instanceof TECrop ? ((TECrop) tile).getPlantType() : EnumPlantType.Crop;
 	}
-	
+
 	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{

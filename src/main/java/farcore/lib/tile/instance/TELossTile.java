@@ -4,7 +4,7 @@ import java.util.Map;
 
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.tile.ISynchronizableTile;
-import farcore.lib.tile.TEBase;
+import farcore.lib.tile.abstracts.TEBase;
 import farcore.util.U;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

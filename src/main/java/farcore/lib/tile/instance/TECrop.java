@@ -8,6 +8,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.EnumToolType;
 import farcore.data.M;
+import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICrop;
@@ -22,9 +23,12 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IUpdatableTile;
-import farcore.lib.tile.TEAged;
+import farcore.lib.tile.abstracts.TEAged;
 import farcore.lib.util.Direction;
-import farcore.util.U;
+import farcore.util.U.Client;
+import farcore.util.U.NBTs;
+import farcore.util.U.Players;
+import farcore.util.U.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -45,24 +49,24 @@ ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroy
 ITB_AddHitEffects
 {
 	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, .9375F, .9375F);
-
-	private static final CropInfo NO_DATA_INFO = new CropInfo();
 	
+	private static final CropInfo NO_DATA_INFO = new CropInfo();
+
 	static
 	{
 		NO_DATA_INFO.DNA = "";
 	}
-
+	
 	private int waterLevel = 6400;
 	private boolean isWild = false;
 	private float growBuffer;
 	private int stage;
 	private ICrop card = ICrop.VOID;
 	private CropInfo info = NO_DATA_INFO;
-	
+
 	public TECrop()
 	{
-		
+
 	}
 	public TECrop(ICrop crop)
 	{
@@ -77,7 +81,7 @@ ITB_AddHitEffects
 		info.generations = generation;
 		crop.decodeDNA(this, dna);
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -93,7 +97,7 @@ ITB_AddHitEffects
 		}
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -106,29 +110,27 @@ ITB_AddHitEffects
 		info = new CropInfo();
 		info.readFromNBT(nbt);
 	}
-	
+
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
 		nbt.setInteger("s", stage);
-		nbt.setString("c", card.getRegisteredName());
+		NBTs.setString(nbt, "c", card);
 		NBTTagCompound nbt1;
 		info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
-	
+
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		if(nbt.hasKey("s"))
+		stage = NBTs.getIntOrDefault(nbt, "s", stage);
+		Mat material = NBTs.getMaterialByNameOrDefault(nbt, "c", null);
+		if(material != null)
 		{
-			stage = nbt.getInteger("s");
-		}
-		if(nbt.hasKey("c"))
-		{
-			card = Mat.material(nbt.getString("c")).getProperty(M.property_crop, ICrop.VOID);
+			card = material.getProperty(M.property_crop, ICrop.VOID);
 		}
 		if(nbt.hasKey("i"))
 		{
@@ -137,32 +139,32 @@ ITB_AddHitEffects
 		}
 		markBlockRenderUpdate();
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
 	{
 		return null;
 	}
-
+	
 	@Override
 	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
 			Entity entity)
 	{
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 	{
 		return BlockCrop.CropSelectBoxHeightHandler.INSTANCE.getSelectBoundBox(getStateName(), CROP_AABB);
 	}
-	
+
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + card.tickUpdate(this);
 	}
-	
+
 	@Override
 	protected void updateServer1()
 	{
@@ -170,55 +172,55 @@ ITB_AddHitEffects
 		card.onUpdate(this);
 		markDirty();
 	}
-	
+
 	@Override
 	public boolean canHarvestBlock(EntityPlayer player)
 	{
-		return U.Players.matchCurrentToolType(player, EnumToolType.sickle);
+		return Players.matchCurrentToolType(player, EnumToolType.sickle);
 	}
-	
+
 	@Override
 	public String getDNA()
 	{
 		return info.DNA;
 	}
-	
+
 	@Override
 	public ICrop crop()
 	{
 		return card;
 	}
-	
+
 	@Override
 	public CropInfo info()
 	{
 		return info;
 	}
-	
+
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-	
+
 	@Override
 	public boolean isWild()
 	{
 		return isWild;
 	}
-	
+
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-	
+
 	@Override
 	public int stage()
 	{
 		return stage;
 	}
-	
+
 	@Override
 	public void setStage(int stage)
 	{
@@ -242,89 +244,13 @@ ITB_AddHitEffects
 			}
 		}
 	}
-	
+
 	@Override
 	protected int getRenderUpdateRange()
 	{
 		return 5;
 	}
-	
-	//	@Override
-	//	public int countWater(int rangeXZ, int rangeY, boolean checkSea)
-	//	{
-	//		int c = 0;
-	//		int x = xCoord + rangeXZ, y = yCoord - rangeY, z = zCoord + rangeXZ;
-	//		for(int i = xCoord - rangeXZ; i < x; ++i)
-	//			for(int k = zCoord - rangeXZ; k < z; ++k)
-	//			{
-	//				if(!checkSea && worldObj.getBiomeGenForCoords(i, k).getTempCategory() == TempCategory.OCEAN)
-	//					continue;
-	//				for(int j = yCoord - 1; j >= y; --j)
-	//				{
-	//					Block block = worldObj.getBlock(i, j, k);
-	//					if(block == EnumBlock.water.block())
-	//					{
-	//						c += ((BlockFluidBase) block).getQuantaValue(worldObj, i, j, k);
-	//					}
-	//				}
-	//			}
-	//		return c;
-	//	}
-	//
-	//	@Override
-	//	public void absorbWater(int rangeXZ, int rangeY, int amount, boolean checkSea)
-	//	{
-	//		Block blockRaw = worldObj.getBlock(xCoord, yCoord - 1, zCoord);
-	//		int c = 0;
-	//		if(blockRaw instanceof IPlantedableBlock)
-	//		{
-	//			IPlantedableBlock block = (IPlantedableBlock) blockRaw;
-	//			if(block.getWaterLevel(worldObj, xCoord, yCoord - 1, zCoord, checkSea) > 0)
-	//			{
-	//				c += block.absorbWater(worldObj, xCoord, yCoord - 1, zCoord, amount, checkSea);
-	//			}
-	//		}
-	//		if(c != amount)
-	//		{
-	//			int x = xCoord + rangeXZ, y = yCoord - rangeY, z = zCoord + rangeXZ;
-	//			label:
-	//			for(int i = xCoord - rangeXZ; i < x; ++i)
-	//				for(int k = zCoord - rangeXZ; k < z; ++k)
-	//				{
-	//					if(!checkSea && worldObj.getBiomeGenForCoords(i, k).getTempCategory() == TempCategory.OCEAN)
-	//						continue;
-	//					for(int j = yCoord - 1; j >= y; --j)
-	//					{
-	//						Block block = worldObj.getBlock(i, j, k);
-	//						if(block == EnumBlock.water.block())
-	//						{
-	//							int value = ((BlockFluidBase) block).getQuantaValue(worldObj, i, j, k);
-	//							((BlockStandardFluid) block).setQunataValue(worldObj, x, y, z, value - 1);
-	//							c += Math.min(1000 * absorbEffiency, amount - c);
-	//							if(c == amount) break label;
-	//							break;
-	//						}
-	//					}
-	//				}
-	//		}
-	//		waterLevel += c;
-	//	}
-	//
-	//	@Override
-	//	public float getRainfall()
-	//	{
-	//		return U.Worlds.isCatchingRain(worldObj, xCoord, yCoord, zCoord) ?
-	//				getBiome().getRainfall(worldObj, xCoord, yCoord, zCoord) *
-	//				(1F + worldObj.rainingStrength * 4F) :
-	//					getBiome().getRainfall(worldObj, xCoord, yCoord, zCoord);
-	//	}
-	//
-	//	@Override
-	//	public float getTemp()
-	//	{
-	//		return U.Worlds.getTemp(worldObj, xCoord, yCoord, zCoord);
-	//	}
-	
+
 	@Override
 	public int getWaterLevel()
 	{
@@ -332,19 +258,25 @@ ITB_AddHitEffects
 	}
 	
 	@Override
+	public float temp()
+	{
+		return ThermalNet.getTemperature(worldObj, pos, true);
+	}
+
+	@Override
 	public int useWater(int amount)
 	{
 		int c = Math.min(amount, waterLevel);
 		waterLevel -= c;
 		return c;
 	}
-	
+
 	@Override
 	public void killCrop()
 	{
 		removeBlock();
 	}
-	
+
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
@@ -356,35 +288,34 @@ ITB_AddHitEffects
 		list.add("Grow Progress : " + ChatFormatting.GREEN + (int) (growBuffer + stage * req) + "/" + card.getMaxStage() * req);
 		card.addInformation(this, list);
 	}
-	
+
 	public boolean canPlantAt()
 	{
 		return card == null ? true : card.canPlantAt(this);
 	}
-
+	
 	@Override
 	public boolean canBlockStay()
 	{
 		return worldObj == null ? true :
 			card == ICrop.VOID ? false : card.canPlantAt(this);
 	}
-	
+
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
-		if(!worldObj.isRemote)
-			if(!canBlockStay())
-			{
-				U.Worlds.spawnDropsInWorld(this, getDrops(state, 0, false));
-				killCrop();
-			}
+		if(!canBlockStay())
+		{
+			Worlds.spawnDropsInWorld(this, getDrops(state, 0, false));
+			killCrop();
+		}
 	}
-	
+
 	public EnumPlantType getPlantType()
 	{
 		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
@@ -395,7 +326,7 @@ ITB_AddHitEffects
 		}
 		return list;
 	}
-	
+
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
@@ -404,27 +335,27 @@ ITB_AddHitEffects
 			removeBlock();
 		}
 	}
-	
+
 	public String getStateName()
 	{
 		return card != null ? card.getState(this) : "void";
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
 		IBlockState state = getBlockState();
-		U.Client.addBlockHitEffect(worldObj, random, state.getActualState(worldObj, pos), target.sideHit, pos, manager);
+		Client.addBlockHitEffect(worldObj, random, state.getActualState(worldObj, pos), target.sideHit, pos, manager);
 		return true;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
 		IBlockState state = getBlockState();
-		U.Client.addBlockDestroyEffects(worldObj, pos, state.getActualState(worldObj, pos), manager);
+		Client.addBlockDestroyEffects(worldObj, pos, state.getActualState(worldObj, pos), manager);
 		return true;
 	}
 }

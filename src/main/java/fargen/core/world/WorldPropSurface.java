@@ -23,7 +23,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	private final NoiseBase offsetNoise = new NoisePerlin(0L, 8, 76, 1.2, 3.0);
 	private final NoiseBase temperatureUndulateNoise = new NoisePerlin(0L, 3, 31.0, 1.6, 2.2);
 	private final NoiseBase rainfallUndulateNoise = new NoisePerlin(0L, 3, 31.0, 1.4, 2.2);
-
+	
 	private void setData(World world)
 	{
 		long seed = world.getSeed();
@@ -31,7 +31,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		temperatureUndulateNoise.setSeed(seed);
 		rainfallUndulateNoise.setSeed(seed);
 	}
-	
+
 	private float getTemperatureLocal(World world, BlockPos pos, int a, int b, float d)
 	{
 		Biome biome = world.getBiomeGenForCoords(pos);
@@ -43,7 +43,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		else
 			return biome.getFloatTemperature(pos);
 	}
-
+	
 	@Override
 	public float getTemperature(World world, BlockPos pos)
 	{
@@ -75,7 +75,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		float undulate = (float) temperatureUndulateNoise.noise(x, y, z) * 0.06F - 0.03F;
 		return c == 0 ? 0 : tempTotal / c + undulate;
 	}
-	
+
 	@Override
 	public float getAverageTemperature(World world, BlockPos pos)
 	{
@@ -90,7 +90,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		else
 			return biome.getTemperature();
 	}
-	
+
 	@Override
 	public float getSunshine(World world, BlockPos pos)
 	{
@@ -110,21 +110,21 @@ public class WorldPropSurface implements IWorldPropProvider
 		{
 			zone = ClimaticZone.temperate_plain;
 		}
-		return Maths.lerp(zone.sunshine[a], zone.sunshine[b], d) * V.sq2f * world.getSunBrightnessFactor(0F);
+		return Maths.lerp(zone.sunshine[a], zone.sunshine[b], d) * V.sq2f;// * world.getSunBrightnessFactor(0F);
 	}
-	
+
 	@Override
 	public float getRainstrength(World world, BlockPos pos)
 	{
 		return getHumidity(world, pos) * V.sq2f * world.rainingStrength;
 	}
-
+	
 	@Override
 	public float getSkylight(World world)
 	{
 		return world.getSunBrightnessFactor(0F);
 	}
-	
+
 	private float getHumidityLocal(World world, BlockPos pos, int a, int b, float d)
 	{
 		if(!world.isBlockLoaded(pos))
@@ -138,7 +138,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		else
 			return biome.getRainfall();
 	}
-
+	
 	@Override
 	public float getHumidity(World world, BlockPos pos)
 	{
@@ -170,7 +170,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		float undulate = (float) rainfallUndulateNoise.noise(pos.getX(), pos.getY(), pos.getZ()) * 0.06F - 0.03F;
 		return c == 0 ? 0 : humTotal / c + undulate;
 	}
-	
+
 	@Override
 	public float getAverageHumidity(World world, BlockPos pos)
 	{
@@ -184,19 +184,19 @@ public class WorldPropSurface implements IWorldPropProvider
 		else
 			return biome.getRainfall();
 	}
-	
+
 	@Override
 	public Block getMainFluidBlock()
 	{
 		return EnumBlock.water.block;
 	}
-	
+
 	@Override
 	public boolean canMainFluidBlockFreeze(World world, BlockPos pos)
 	{
 		return getTemperature(world, pos) < BiomeBase.minSnowTemperature;
 	}
-	
+
 	@Override
 	public void freezeMainFluidAt(World world, BlockPos pos)
 	{

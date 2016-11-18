@@ -1,4 +1,4 @@
-package farcore.lib.tile;
+package farcore.lib.tile.abstracts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import farcore.lib.nbt.NBTSynclizedCompound;
 import farcore.lib.net.tile.PacketTESAsk;
 import farcore.lib.net.tile.PacketTESync;
+import farcore.lib.tile.ISynchronizableTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
