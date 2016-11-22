@@ -10,12 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -26,6 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import farcore.FarCore;
+import farcore.lib.item.ItemBase;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemFluidDisplay;
 import farcore.lib.material.Mat;
@@ -58,6 +61,13 @@ import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Far Core Item Model Loader, provide more flexible
+ * model loader for creator, make more convenient model
+ * file writing rules for resource pack maker.
+ * @author ueyudiud
+ * @version 1.3
+ */
 @SideOnly(Side.CLIENT)
 public enum FarCoreItemModelLoader implements ICustomModelLoader
 {
@@ -399,9 +409,25 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		}
 	}
 
+	/**
+	 * A usable functional applier builder.
+	 * @param location
+	 * @param iterable
+	 * @param function
+	 */
+	public static void registerMultiIconProvider(ResourceLocation location, Set<String> set, com.google.common.base.Function<String, ResourceLocation> function)
+	{
+		registerMultiIconProvider(location, manager -> Maps.<String, ResourceLocation>asMap(set, function));
+	}
+
 	public static void registerMultiIconProvider(ResourceLocation location, Function<IResourceManager, Map<String, ResourceLocation>> function)
 	{
 		multiIconLoaders.put(location, function);
+	}
+	
+	public static void registerSubmetaProvider(ResourceLocation location, Map<Integer, String> map, ItemBase item)
+	{
+		registerSubmetaProvider(location, stack -> map.getOrDefault(item.getBaseDamage(stack), "missing"));
 	}
 	
 	public static void registerSubmetaProvider(ResourceLocation location, Function<ItemStack, String> function)

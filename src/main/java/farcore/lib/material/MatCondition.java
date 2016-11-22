@@ -92,6 +92,14 @@ public class MatCondition implements IDataChecker<ISubTagContainer>
 		this.specificArea = specificArea;
 		return this;
 	}
+	
+	public MatCondition setUnsizable()
+	{
+		size = -1L;
+		latticeSize = -1L;
+		specificArea = -1F;
+		return this;
+	}
 
 	public MatCondition setFluid()
 	{

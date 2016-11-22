@@ -6,6 +6,7 @@ import farcore.FarCore;
 import farcore.asm.LightFix;
 import farcore.data.CT;
 import farcore.data.Config;
+import farcore.data.EnumFluid;
 import farcore.data.EnumItem;
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.M;
@@ -32,6 +33,7 @@ import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.block.instance.BlockWater;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.entity.EntityProjectileItem;
+import farcore.lib.fluid.FluidBase;
 import farcore.lib.fluid.FluidWater;
 import farcore.lib.item.ItemBase;
 import farcore.lib.item.ItemMulti;
@@ -41,6 +43,7 @@ import farcore.lib.item.instance.ItemOreChip;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.item.instance.ItemStoneFragment;
+import farcore.lib.item.instance.ItemSubCropRelated;
 import farcore.lib.material.Mat;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.entity.PacketEntity;
@@ -89,6 +92,14 @@ public class CommonLoader
 				}
 			};
 		}
+		CT.tabCropAndWildPlants = new CreativeTabBase("farcore.crop.plants", "Far Crop And Wild Plant")
+		{
+			@Override
+			public ItemStack getIconItemStack()
+			{
+				return new ItemStack(Items.WHEAT);
+			}
+		};
 		CT.tabTree = new CreativeTabBase("farcore.tree", "Far Tree")
 		{
 			@Override
@@ -184,19 +195,32 @@ public class CommonLoader
 		}
 		if(Config.createCrop)
 		{
-			new ItemSeed().setCreativeTab(CT.tabResourceItem);
+			new ItemSeed().setCreativeTab(CT.tabCropAndWildPlants);
 			new BlockCrop();
+			new ItemSubCropRelated().setCreativeTab(CT.tabCropAndWildPlants);
 		}
 		if(Config.createLog)
 		{
 			new BlockSapling().setCreativeTab(CT.tabTree);
+			EnumItem.branch.set(new ItemMulti(MC.branch).setCreativeTab(CT.tabTree));
 		}
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabResourceItem));
+		//Initialize fluids.
+		if(Config.replaceWater)
+		{
+			EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
+		}
 		//Initialize blocks.
 		new BlockFire();
-		new BlockWater(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
-		new BlockIce().setCreativeTab(CT.tabTerria);
-		new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
+		if(Config.replaceWater)
+		{
+			new BlockWater((FluidBase) EnumFluid.water.fluid);
+			new BlockIce().setCreativeTab(CT.tabTerria);
+		}
+		if(Config.createRock)
+		{
+			new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
+		}
 		//Register tile entities.
 		GameRegistry.registerTileEntity(TELossTile.class, "farcore.loss.tile");
 		GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
@@ -211,7 +235,7 @@ public class CommonLoader
 		//Initialize potions and mob effects.
 		Potions.init();
 	}
-	
+
 	public void load()
 	{
 		//Post load item and block.
@@ -232,6 +256,9 @@ public class CommonLoader
 		LanguageManager.registerLocal("info.tool.handle.name", "Tool Handle : " + ChatFormatting.LIGHT_PURPLE + "%s");
 		LanguageManager.registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");
 		LanguageManager.registerLocal("info.redstone.circuit.material", "Material : " + ChatFormatting.YELLOW + "%s");
+		LanguageManager.registerLocal("info.shift.click", ChatFormatting.WHITE + "Press " + ChatFormatting.ITALIC + "<%s>" + ChatFormatting.RESET + " to get more information.");
+		LanguageManager.registerLocal("info.food.label", ChatFormatting.RED + "Food Stat:");
+		LanguageManager.registerLocal("info.food.display", ChatFormatting.RED + "F-%s S-%s W-%s");
 		LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
 		LanguageManager.registerLocal("commands.date.usage", "/date");
 		LanguageManager.registerLocal("commands.date.arg.err", "Invalid command argument");
@@ -255,7 +282,7 @@ public class CommonLoader
 		FarCore.network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
 		FarCore.network.registerPacket(PacketCustomChunkData.class, Side.CLIENT);
 	}
-
+	
 	public void postload()
 	{
 		//Reload material tool tips.
@@ -271,7 +298,7 @@ public class CommonLoader
 			}
 		}
 	}
-	
+
 	public void complete()
 	{
 		//Start light thread.

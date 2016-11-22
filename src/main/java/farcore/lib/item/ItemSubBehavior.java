@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.item.behavior.IBehavior;
@@ -31,27 +33,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSubBehavior extends ItemBase
 {
+	protected final Map<Integer, String> nameMap = new HashMap();
 	protected final Map<String, Integer> idMap = new HashMap();
 	private final Map<Integer, IItemCapabilityProvider> providers = new HashMap();
 	private final Map<Integer, List<IBehavior>> behaviors = new HashMap();
-
+	
 	protected ItemSubBehavior(String name)
 	{
 		super(name);
 		hasSubtypes = true;
 	}
-	
+
 	protected ItemSubBehavior(String modid, String name)
 	{
 		super(modid, name);
 		hasSubtypes = true;
 	}
-	
-	public void addSubItem(int id, String name, String localName, IItemCapabilityProvider provider, IBehavior...behaviors)
+
+	public void addSubItem(int id, String name, String localName, @Nullable IItemCapabilityProvider provider, IBehavior...behaviors)
 	{
 		if(idMap.containsKey(id) || idMap.containsValue(name))
 			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
 		idMap.put(name, id);
+		nameMap.put(id, name);
 		if(behaviors.length > 0)
 		{
 			this.behaviors.put(id, ImmutableList.copyOf(behaviors));
@@ -65,17 +69,17 @@ public class ItemSubBehavior extends ItemBase
 			LanguageManager.registerLocal(getTranslateName(new ItemStack(this, 1, id)), localName);
 		}
 	}
-
+	
 	protected List<IBehavior> getBehavior(ItemStack stack)
 	{
 		return behaviors.getOrDefault(getDamage(stack), IBehavior.NONE);
 	}
-
+	
 	protected boolean isItemUsable(ItemStack stack)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos,
 			EntityLivingBase entityLiving)
@@ -97,7 +101,7 @@ public class ItemSubBehavior extends ItemBase
 			return false;
 		}
 	}
-
+	
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)
 	{
@@ -118,7 +122,7 @@ public class ItemSubBehavior extends ItemBase
 			return true;
 		}
 	}
-
+	
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
@@ -157,7 +161,7 @@ public class ItemSubBehavior extends ItemBase
 			return false;
 		}
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
@@ -192,7 +196,7 @@ public class ItemSubBehavior extends ItemBase
 			return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStackIn);
 		}
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -221,7 +225,7 @@ public class ItemSubBehavior extends ItemBase
 			return EnumActionResult.FAIL;
 		}
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
 			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
@@ -250,7 +254,7 @@ public class ItemSubBehavior extends ItemBase
 			return EnumActionResult.FAIL;
 		}
 	}
-	
+
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
@@ -273,7 +277,7 @@ public class ItemSubBehavior extends ItemBase
 			return false;
 		}
 	}
-
+	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)
 	{
@@ -284,7 +288,7 @@ public class ItemSubBehavior extends ItemBase
 			behavior.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
 		}
 	}
-	
+
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
@@ -325,7 +329,7 @@ public class ItemSubBehavior extends ItemBase
 			}
 		}
 	}
-	
+
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
 	{
@@ -343,7 +347,7 @@ public class ItemSubBehavior extends ItemBase
 			;
 		}
 	}
-
+	
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target,
 			EnumHand hand)
@@ -367,13 +371,16 @@ public class ItemSubBehavior extends ItemBase
 			return false;
 		}
 	}
-
+	
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
 	{
 		return providers.getOrDefault(getDamage(stack), IItemCapabilityProvider.NONE).initCapabilities(stack, nbt);
 	}
 
+	/**
+	 * @param advanced Is information being display in more information mode. (F3+H to switch mode).
+	 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
@@ -389,7 +396,7 @@ public class ItemSubBehavior extends ItemBase
 			behavior.addInformation(stack, playerIn, unlocalizedList, advanced);
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
@@ -399,7 +406,7 @@ public class ItemSubBehavior extends ItemBase
 			createSubItem(id, subItems);
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{

@@ -3,6 +3,12 @@ package farcore.lib.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 /**
  * For item tool tip,
  * auto transfer unlocalized string to localized string.
@@ -12,7 +18,7 @@ import java.util.List;
 public class UnlocalizedList
 {
 	List<String> list;
-	
+
 	public UnlocalizedList()
 	{
 		this(new ArrayList());
@@ -21,12 +27,12 @@ public class UnlocalizedList
 	{
 		this.list = list;
 	}
-	
+
 	public void add(String arg, Object...translation)
 	{
 		list.add(LanguageManager.translateToLocal(arg, translation));
 	}
-	
+
 	public void addNotNull(String arg, Object...translation)
 	{
 		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg, translation);
@@ -35,7 +41,7 @@ public class UnlocalizedList
 			list.add(val);
 		}
 	}
-
+	
 	/**
 	 * For add tooltip for displaying. It can put
 	 * more than one line for localized translation.<p>
@@ -65,12 +71,24 @@ public class UnlocalizedList
 			}
 		}
 	}
-	
+
+	@SideOnly(Side.CLIENT)
+	public boolean isSneakDown()
+	{
+		return Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode());
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void addShiftClickInfo()
+	{
+		add("info.shift.click", Minecraft.getMinecraft().gameSettings.keyBindSneak.getDisplayName());
+	}
+
 	public void addLocal(String arg)
 	{
 		list.add(arg);
 	}
-	
+
 	public List<String> list()
 	{
 		return list;

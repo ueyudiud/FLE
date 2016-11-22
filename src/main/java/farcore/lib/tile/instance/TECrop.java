@@ -170,7 +170,6 @@ ITB_AddHitEffects
 	{
 		super.updateServer1();
 		card.onUpdate(this);
-		markDirty();
 	}
 
 	@Override
@@ -225,6 +224,7 @@ ITB_AddHitEffects
 	public void setStage(int stage)
 	{
 		this.stage = stage;
+		markDirty();
 	}
 	
 	@Override
@@ -242,6 +242,7 @@ ITB_AddHitEffects
 				markBlockRenderUpdate();
 				syncToNearby();
 			}
+			markDirty();
 		}
 	}
 
@@ -285,7 +286,11 @@ ITB_AddHitEffects
 		list.add("DNA : " + info.DNA);
 		int max = card.getMaxStage();
 		int req = card.getGrowReq(this);
-		list.add("Grow Progress : " + ChatFormatting.GREEN + (int) (growBuffer + stage * req) + "/" + card.getMaxStage() * req);
+
+		list.add("Grow Progress : " + ChatFormatting.GREEN +
+				(stage + 1 < card.getMaxStage() ?
+						(int) (growBuffer + stage * req) + "/" + (card.getMaxStage() - 1) * req :
+						"Mature"));
 		card.addInformation(this, list);
 	}
 
@@ -297,8 +302,7 @@ ITB_AddHitEffects
 	@Override
 	public boolean canBlockStay()
 	{
-		return worldObj == null ? true :
-			card == ICrop.VOID ? false : card.canPlantAt(this);
+		return worldObj == null || card == ICrop.VOID ? true : card.canPlantAt(this);
 	}
 
 	@Override

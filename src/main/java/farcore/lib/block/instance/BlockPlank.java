@@ -38,33 +38,33 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 		FIRE_RESISTANCE("fire_resistance"),
 		ANTICORROSIVE("anticorrosive"),
 		BROKE("broke");
-
+		
 		final String name;
-
+		
 		EnumPlankState(String name)
 		{
 			this.name = name;
 		}
-
+		
 		@Override
 		public String getName()
 		{
 			return name;
 		}
 	}
-
-	public static final PropertyEnum<EnumPlankState> STATE = PropertyEnum.create("state", EnumPlankState.class);
-
-	public final BlockPlankSlab[] slabGroup;
 	
+	public static final PropertyEnum<EnumPlankState> STATE = PropertyEnum.create("state", EnumPlankState.class);
+	
+	public final BlockPlankSlab[] slabGroup;
+
 	public BlockPlank(Mat material, PropertyWood property)
 	{
 		super(material.modid, "plank." + material.name, Material.WOOD, material, property);
 		slabGroup = makeSlabs(blockName, material.localName + " Plank");
 		setSoundType(SoundType.WOOD);
-		setCreativeTab(CT.tabBuilding);
+		setCreativeTab(CT.tabTree);
 	}
-
+	
 	@Override
 	public void postInitalizedBlocks()
 	{
@@ -76,7 +76,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Anticorrosive " + material.localName + " Plank");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(3), "Broke " + material.localName + " Plank");
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -85,20 +85,20 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 		StateMapperExt mapper = new StateMapperExt(material.modid, "plank/" + material.name, null);
 		ClientProxy.registerCompactModel(mapper, this, EnumPlankState.values().length);
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, STATE);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
-	
+
 	protected BlockPlankSlab[] makeSlabs(String name, String localName)
 	{
 		BlockPlankSlab[] ret = new BlockPlankSlab[4];
@@ -108,55 +108,55 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 		ret[3] = new BlockPlankSlab(3, this, ret, "Broke " + localName);
 		return ret;
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
 		return state.withProperty(STATE, EnumPlankState.DEFAULT);
 	}
-	
+
 	@Override
 	public int getLightOpacity(IBlockState state)
 	{
 		return state.getValue(STATE) == EnumPlankState.BROKE ? 100 : 255;
 	}
-
+	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return state.getValue(STATE).ordinal();
 	}
-
+	
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState().withProperty(STATE, EnumPlankState.values()[meta]);
 	}
-
+	
 	@Override
 	public float getBlockHardness(IBlockState state, World worldIn, BlockPos pos)
 	{
 		return (state.getValue(STATE) == EnumPlankState.BROKE ? 0.1F : 1.0F) * super.getBlockHardness(state, worldIn, pos);
 	}
-	
+
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
 		return world.getBlockState(pos).getValue(STATE) == EnumPlankState.BROKE ? 0F : super.getExplosionResistance(world, pos, exploder, explosion);
 	}
-	
+
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return state.getValue(STATE) != EnumPlankState.BROKE;
 	}
-
+	
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state)
 	{
 		return state.getValue(STATE) == EnumPlankState.BROKE ? EnumPushReaction.DESTROY : state.getMaterial().getMobilityFlag();
 	}
-	
+
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
@@ -164,7 +164,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 		return state.getValue(STATE) == EnumPlankState.FIRE_RESISTANCE ? 0 :
 			super.getFireSpreadSpeed(world, pos, face);
 	}
-
+	
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

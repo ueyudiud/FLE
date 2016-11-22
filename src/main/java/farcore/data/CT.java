@@ -8,6 +8,7 @@ public class CT
 	public static CreativeTabs tabTerria;
 	public static CreativeTabs tabBuilding;
 	public static CreativeTabs tabResourceItem;
+	public static CreativeTabs tabCropAndWildPlants;
 	public static CreativeTabs tabTool;
 	public static CreativeTabs tabMachine;
 	public static CreativeTabs tabMaterial;

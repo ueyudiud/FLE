@@ -288,6 +288,16 @@ public class U
 			return list != null ? list.remove(value) : false;
 		}
 		
+		public static <K, V> Function<K, V> toFunction(Map<K, V> map)
+		{
+			return key -> map.get(key);
+		}
+		
+		public static <K, V> Function<K, V> toFunction(Map<K, V> map, V defaultValue)
+		{
+			return key -> map.getOrDefault(key, defaultValue);
+		}
+		
 		public static <T> boolean contain(Collection<? extends T> collection, IDataChecker<T> checker)
 		{
 			if(collection == null || collection.isEmpty()) return false;
@@ -577,6 +587,21 @@ public class U
 			case 3 : return value + "rd";
 			default: return value + "th";
 			}
+		}
+		
+		public static String getScaledNumber(long value)
+		{
+			if (value >= 1000000000000000L)
+				return value / 1000000000000000L + "." + value % 1000000000000000L / 10000000000000L + "P";
+			if (value >= 1000000000000L)
+				return value / 1000000000000L + "." + value % 1000000000000L / 10000000000L + "T";
+			if (value >= 1000000000L)
+				return value / 1000000000L + "." + value % 1000000000L / 10000000L + "G";
+			if (value >= 1000000L)
+				return value / 1000000L + "." + value % 1000000L / 10000L + "M";
+			if (value >= 1000L)
+				return value / 1000L + "." + value % 1000L / 10L + "k";
+			return String.valueOf(value);
 		}
 	}
 	

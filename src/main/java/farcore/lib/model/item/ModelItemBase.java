@@ -16,6 +16,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import farcore.FarCore;
 import farcore.lib.model.ModelHelper;
 import farcore.lib.model.block.ModelBase;
 import farcore.lib.model.item.FarCoreItemModelLoader.ItemModelCache;
@@ -55,7 +56,7 @@ public class ModelItemBase extends ModelBase
 	private UnbakedModelLayer[] layerProviders;
 	/** Particle icon. */
 	private ResourceLocation particle;
-
+	
 	public ModelItemBase(FarCoreItemModelLoader loader, ItemModelCache cache)
 	{
 		layerProviders = cache.layers;
@@ -81,13 +82,13 @@ public class ModelItemBase extends ModelBase
 			particle = TextureMap.LOCATION_MISSING_TEXTURE;//Use missing texture if no possible texture detected.
 		}
 	}
-	
+
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
 		return textureCol.values();
 	}
-	
+
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -101,7 +102,7 @@ public class ModelItemBase extends ModelBase
 		}
 		return new BakedModelItemBase(layers, bakedTextureGetter.apply(particle));
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static class BakedModelItemBase implements ICustomItemRenderModel, IPerspectiveAwareModel
 	{
@@ -109,7 +110,7 @@ public class ModelItemBase extends ModelBase
 		private IBakedModel submodel;
 		private ModelLayer[] layers;
 		private TextureAtlasSprite particleIcon;
-		
+
 		public BakedModelItemBase(ModelLayer[] layers, TextureAtlasSprite particle)
 		{
 			this(null, layers, particle);
@@ -129,7 +130,7 @@ public class ModelItemBase extends ModelBase
 			particleIcon = particle;
 			this.layers = layers;
 		}
-		
+
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
@@ -149,35 +150,36 @@ public class ModelItemBase extends ModelBase
 			}
 			catch (Exception exception)
 			{
+				if(FarCore.debug) throw exception;
 				return ImmutableList.of();
 			}
 		}
-
+		
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) { return ImmutableList.of(); }
-
+		
 		@Override
 		public boolean isAmbientOcclusion() { return true; }
-
+		
 		@Override
 		public boolean isGui3d() { return false; }
-
+		
 		@Override
 		public boolean isBuiltInRenderer() { return false; }
-
+		
 		/**
 		 * This method is not suggested to use to get particle texture, use other
 		 * texture instead.
 		 */
 		@Override
 		public TextureAtlasSprite getParticleTexture() { return particleIcon; }
-
+		
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms() { return ItemCameraTransforms.DEFAULT; }
-
+		
 		@Override
 		public ItemOverrideList getOverrides() { return ItemOverrideList.NONE; }
-		
+
 		@Override
 		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType type)
 		{

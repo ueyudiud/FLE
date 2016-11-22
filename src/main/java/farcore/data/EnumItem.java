@@ -12,11 +12,13 @@ public enum EnumItem
 	seed,
 	stone_fragment,
 	nugget,
+	crop_related,
+	branch,
 	/** From fle. */
 	tool;
-
+	
 	public Item item;
-
+	
 	public void set(Item item)
 	{
 		this.item = item;
