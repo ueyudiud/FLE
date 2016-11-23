@@ -21,7 +21,7 @@ import farcore.lib.model.block.ModelRedstoneCircuit;
 import farcore.lib.model.block.StateMapperCircuit;
 import farcore.lib.prop.PropertyString;
 import farcore.lib.prop.PropertyTE.TETag;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import farcore.lib.tile.instance.circuit.TECircuitAnd;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
 import farcore.lib.tile.instance.circuit.TECircuitCross;
@@ -193,8 +193,8 @@ public class BlockRedstoneCircuit extends BlockTE
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		TileEntity tile = source.getTileEntity(pos);
-		if(tile instanceof ITP_CollisionBoundingBox)
-			return ((ITP_CollisionBoundingBox) tile).getCollisionBoundingBox(state);
+		if(tile instanceof ITP_BoundingBox)
+			return ((ITP_BoundingBox) tile).getCollisionBoundingBox(state);
 		return super.getBoundingBox(state, source, pos);
 	}
 	

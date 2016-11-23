@@ -5,14 +5,14 @@
 package farcore.lib.item;
 
 import farcore.data.EnumPhysicalDamageType;
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.event.AttackEvent;
 import farcore.lib.item.behavior.IToolStat;
-import farcore.lib.material.IItemMatProp;
 import farcore.lib.material.Mat;
+import farcore.lib.material.behavior.IItemMatProp;
 import farcore.lib.material.prop.PropertyTool;
+import farcore.util.R;
 import farcore.util.U;
-import farcore.util.U.L;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,7 +41,7 @@ public class WeaponHelper
 			return;
 		stack = event.newWeapon;
 		Mat material = ItemTool.getMaterial(stack, "head");
-		PropertyTool toolProperty = material.getProperty(M.property_tool);
+		PropertyTool toolProperty = material.getProperty(MP.property_tool);
 		IItemMatProp materialProperty = material.itemProp;
 		if(entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// && !entity.isInvisibleToPlayer(player))
 		{
@@ -61,7 +61,7 @@ public class WeaponHelper
 			case CUT :
 				break;
 			case PUNCTURE :
-				baseMultiple = 0.8F + L.range(0F, 0.4F, (float) (player.motionX * player.motionX + player.motionY * player.motionY + player.motionZ * player.motionZ) / 20F);
+				baseMultiple = 0.8F + farcore.util.L.range(0F, 0.4F, (float) (player.motionX * player.motionX + player.motionY * player.motionY + player.motionZ * player.motionZ) / 20F);
 				break;
 			default:
 				break;
@@ -73,24 +73,24 @@ public class WeaponHelper
 			float attack = prop.stat.getDamageVsEntity(stack, entity) * toolProperty.damageToEntity * baseMultiple;
 			boolean flagCritical = matchCritical(player) && (entity instanceof EntityLivingBase);
 			float speed = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).getAttributeValue() + prop.stat.getAttackSpeed(stack) + toolProperty.attackSpeed;
-			speed = L.range(0.1F, 20.0F, speed);
-			int cooldown = (int) U.R.getValue(EntityLivingBase.class, "ticksSinceLastSwing", "field_184617_aD", player, false);
-
+			speed = farcore.util.L.range(0.1F, 20.0F, speed);
+			int cooldown = (int) R.getValue(EntityLivingBase.class, "ticksSinceLastSwing", "field_184617_aD", player, false);
+			
 			int fire = EnchantmentHelper.getFireAspectModifier(player);
-
+			
 			if (entity instanceof EntityLivingBase && fire > 0 && !entity.isBurning())
 			{
 				entity.setFire(fire);
 			}
-
+			
 			attack = tool.getPlayerRelatedAttackDamage(prop, stack, player, attack, speed, cooldown, flagCritical);
-
+			
 			double d1 = entity.motionX;
 			double d2 = entity.motionY;
 			double d3 = entity.motionZ;
-
+			
 			player.resetCooldown();
-
+			
 			if(attack > 0 && entity.attackEntityFrom(prop.stat.getDamageSource(player, entity), attack))
 			{
 				float knockback = prop.stat.getKnockback(stack, material, entity) + EnchantmentHelper.getKnockbackModifier(player);
@@ -106,7 +106,7 @@ public class WeaponHelper
 				player.motionX *= 0.6F;
 				player.motionZ *= 0.6F;
 				player.setSprinting(false);
-
+				
 				float[] box = prop.stat.getAttackExpandBoxing(stack, material);
 				if(box != null)
 				{
@@ -114,7 +114,7 @@ public class WeaponHelper
 					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0F, 1.0F);
 					player.spawnSweepParticles();
 				}
-
+				
 				if (entity instanceof EntityPlayerMP && entity.velocityChanged)
 				{
 					((EntityPlayerMP)entity).connection.sendPacket(new SPacketEntityVelocity(entity));
@@ -132,12 +132,12 @@ public class WeaponHelper
 					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
 					player.onCriticalHit(entity);
 				}
-
+				
 				if(attack >= 18.0F)
 				{
 					player.addStat(AchievementList.OVERKILL);
 				}
-
+				
 				entity.hurtResistantTime = Math.max(1, entity.hurtResistantTime + 1);
 				player.setLastAttacker(entity);
 				if (entity instanceof EntityLivingBase)
@@ -155,7 +155,7 @@ public class WeaponHelper
 		}
 		U.Players.destoryPlayerCurrentItem(player);
 	}
-	
+
 	public static boolean matchCritical(EntityPlayer player)
 	{
 		return player.fallDistance > 0.0F &&
@@ -163,7 +163,7 @@ public class WeaponHelper
 				!player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) &&
 				player.getRidingEntity() == null;
 	}
-	
+
 	public static void causeAOEAttack(IToolStat stat, EntityLivingBase attacker, Entity target, float[] boundBox)
 	{
 		for (EntityLivingBase entitylivingbase : attacker.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().expand(boundBox[0], boundBox[1], boundBox[0])))

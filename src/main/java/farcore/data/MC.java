@@ -21,7 +21,8 @@ public class MC
 	public static final MatCondition ingot = new MatCondition("ingot", "Ingot", "%s Ingot").setSize(144L, 144L, 1.0F).setFilter(SubTag.METAL);
 	public static final MatCondition nugget = new MatCondition("nugget", "Nugget", "%s Nugget").setSize(16L, 16L, 9.0F).setFilter(new IDataChecker.Or(SubTag.METAL, SubTag.ORE_NOBLE));
 
-	public static final MatCondition log = new MatCondition("log", "Log", "%s Log").setSize(5184L).setFilter(SubTag.WOOD);
+	public static final MatCondition log = new MatCondition("log", "Log", "%s Wood").setSize(5184L).setFilter(SubTag.WOOD);
+	public static final MatCondition log_cutted = new MatCondition("log_cutted", "logCutted", "Cutted Log", "%s Log").setUnsizable().setStackLimit(1).setFilter(SubTag.WOOD);
 	public static final MatCondition plankBlock = new MatCondition("plank.block", "plank", "Plank", "%s Plank").setSize(1296L).setFilter(SubTag.WOOD);
 	public static final MatCondition branch = new MatCondition("branch", "Branch", "%s Branch").setSize(864L).setFilter(SubTag.WOOD);
 

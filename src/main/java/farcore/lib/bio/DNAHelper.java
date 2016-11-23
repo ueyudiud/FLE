@@ -1,6 +1,6 @@
 package farcore.lib.bio;
 
-import farcore.util.U;
+import farcore.util.L;
 
 public abstract class DNAHelper<T, E extends DNAProp>
 {
@@ -36,7 +36,7 @@ public abstract class DNAHelper<T, E extends DNAProp>
 		String ret = "";
 		for(int i = 0; i < dna1.length(); ++i)
 		{
-			ret += U.L.random(dna1.charAt(i), dna2.charAt(i));
+			ret += L.random(dna1.charAt(i), dna2.charAt(i));
 		}
 		return ret;
 	}

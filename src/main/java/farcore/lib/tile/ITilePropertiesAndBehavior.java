@@ -3,7 +3,6 @@ package farcore.lib.tile;
 import java.util.List;
 import java.util.Random;
 
-import farcore.data.EnumToolType;
 import farcore.lib.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -15,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -50,16 +48,15 @@ public interface ITilePropertiesAndBehavior
 		float getExplosionResistance(Entity exploder, Explosion explosion);
 	}
 	
-	public static interface ITP_CollisionBoundingBox
+	public static interface ITP_BoundingBox
 	{
+		AxisAlignedBB getBoundBox(IBlockState state);
+
 		AxisAlignedBB getCollisionBoundingBox(IBlockState state);
 		
 		void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox,
 				List<AxisAlignedBB> collidingBoxes, Entity entity);
-	}
-	
-	public static interface ITP_SelectedBoundingBox
-	{
+
 		@SideOnly(Side.CLIENT)
 		AxisAlignedBB getSelectedBoundingBox(IBlockState state);
 	}
@@ -242,19 +239,10 @@ public interface ITilePropertiesAndBehavior
 		void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly);
 	}
 
-	/**
-	 * Removed now, use IToolableTile instead.
-	 * @author ueyudiud
-	 *
-	 */
-	@Deprecated
-	public static interface ITB_Toolable
+	public static interface ITB_DisplayUpdate
 	{
-		ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack,
-				Direction side, float hitX, float hitY, float hitZ);
-
-		ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration,
-				Direction side, float hitX, float hitY, float hitZ);
+		@SideOnly(Side.CLIENT)
+		void randomDisplayTick(IBlockState stateIn, Random rand);
 	}
 
 	public static interface ITB_Burn

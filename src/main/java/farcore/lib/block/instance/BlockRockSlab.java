@@ -5,7 +5,7 @@ import java.util.Random;
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
 import farcore.data.EnumSlabState;
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.block.BlockSlab;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.block.instance.BlockRock.RockType;
@@ -149,7 +149,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	@Override
 	public double getThermalConduct(World world, BlockPos pos)
 	{
-		return material.getProperty(M.property_basic).thermalConduct;
+		return material.getProperty(MP.property_basic).thermalConduct;
 	}
 	
 	@Override

@@ -1,8 +1,7 @@
 package farcore.data;
 
 import farcore.FarCore;
-import farcore.lib.collection.IPropertyMap.IProperty;
-import farcore.lib.crop.ICrop;
+import farcore.FarCoreRegistry;
 import farcore.lib.crop.instance.CropCabbage;
 import farcore.lib.crop.instance.CropCotton;
 import farcore.lib.crop.instance.CropFlax;
@@ -12,15 +11,9 @@ import farcore.lib.crop.instance.CropReed;
 import farcore.lib.crop.instance.CropSoybean;
 import farcore.lib.crop.instance.CropSweetPotato;
 import farcore.lib.crop.instance.CropWheat;
+import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyBasic;
-import farcore.lib.material.prop.PropertyBlockable;
-import farcore.lib.material.prop.PropertyOre;
-import farcore.lib.material.prop.PropertyRock;
-import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.plant.IPlant;
 import farcore.lib.tree.instance.TreeAcacia;
 import farcore.lib.tree.instance.TreeAspen;
 import farcore.lib.tree.instance.TreeBirch;
@@ -29,31 +22,12 @@ import farcore.lib.tree.instance.TreeMorus;
 import farcore.lib.tree.instance.TreeOak;
 import farcore.lib.tree.instance.TreeOakBlack;
 import farcore.lib.tree.instance.TreeWillow;
+import farcore.lib.util.Log;
 import farcore.lib.util.SubTag;
 import net.minecraft.block.material.Material;
 
 public class M
 {
-	/*
-	 * Material properties.
-	 */
-	public static final String fire_encouragement = "fire_encouragement";
-	public static final String flammability = "flammability";
-	public static final String light_value = "light_value";
-	public static final String light_opacity = "light_opacity";
-	public static final String fire_spread_speed = "fire_spread_speed";
-	public static final String fallen_damage_deduction = "fallen_damage_deduction";
-	
-	public static final IProperty<PropertyBasic> property_basic = new IProperty<PropertyBasic>() { @Override public PropertyBasic defValue() { return PropertyBasic.INSTANCE; } };
-	public static final IProperty<PropertyTool> property_tool = new IProperty<PropertyTool>(){};
-	public static final IProperty<PropertyOre> property_ore = new IProperty<PropertyOre>(){@Override public PropertyOre defValue() { return PropertyOre.INSTANCE; } };
-	public static final IProperty<PropertyWood> property_wood = new IProperty<PropertyWood>(){};
-	public static final IProperty<PropertyBlockable> property_soil = new IProperty<PropertyBlockable>(){};
-	public static final IProperty<PropertyRock> property_rock = new IProperty<PropertyRock>(){};
-	public static final IProperty<ICrop> property_crop = new IProperty<ICrop>(){@Override public ICrop defValue() { return ICrop.VOID; } };
-	public static final IProperty<IPlant> property_plant = new IProperty<IPlant>(){};
-
-	public static final Mat VOID = new Mat(-1, false, FarCore.ID, "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID);
 	//Rocks
 	public static final Mat stone = new Mat(7001, "minecraft", "stone", "Stone", "Stone").setRock(4, 1.5F, 8F, 370).setToolable(5, 16, 1.2F, 0.8F, 0.8F, 1.0F, 8).setRGBa(0x626262FF);
 	public static final Mat compact_stone = new Mat(7002, FarCore.ID, "stone-compact", "CompactStone", "Compact Stone").setRock(5, 2.0F, 12F, 370).setToolable(6, 22, 1.8F, 0.7F, 0.8F, 1.0F, 6).setRGBa(0x686868FF);
@@ -142,11 +116,11 @@ public class M
 	public static final Mat native_silver = new Mat(10031, FarCore.ID, "nativeSilver", "NativeSilver", "Native Silver").setChemicalFormula("Ag").setRGBa(0xEBE9E8FF).setOreProperty(13, 11.2F, 12.9F, SubTag.ORE_NOBLE);
 	public static final Mat native_gold = new Mat(10032, FarCore.ID, "nativeGold", "NativeGold", "Native Gold").setChemicalFormula("Au").setRGBa(0xF7B32AFF).setOreProperty(5, 6.8F, 8.3F, SubTag.ORE_NOBLE);
 	public static final Mat electrum = new Mat(10033, FarCore.ID, "electrum", "Electrum", "Electrum").setChemicalFormula("?").setRGBa(0xE4B258FF).setOreProperty(11, 8.2F, 9.2F, SubTag.ORE_NOBLE);
-
+	
 	static
 	{
-		VOID.addProperty(property_wood, PropertyTree.VOID);
-		
+		Mat.VOID.addProperty(MP.property_wood, PropertyTree.VOID);
+
 		oak.setTree(new TreeOak());
 		spruce.setTree(new TreeBirch());
 		birch.setTree(new TreeBirch());
@@ -156,7 +130,7 @@ public class M
 		aspen.setTree(new TreeAspen());
 		morus.setTree(new TreeMorus());
 		willow.setTree(new TreeWillow());
-		
+
 		wheat.setCrop(new CropWheat(wheat));
 		millet.setCrop(new CropMillet(millet));
 		soybean.setCrop(new CropSoybean(soybean));
@@ -166,9 +140,22 @@ public class M
 		reed.setCrop(new CropReed(reed));
 		flax.setCrop(new CropFlax(flax));
 		cotton.setCrop(new CropCotton(cotton));
-
+		
 		ramie_dry.setUnificationMaterial(ramie);
 	}
-	
-	public static void init(){}
+
+	public static void init()
+	{
+		for(IMaterialRegister register : FarCoreRegistry.MATERIAL_REGISTERS)
+		{
+			try
+			{
+				register.registerMaterials();
+			}
+			catch (Exception exception)
+			{
+				Log.warn("Fail to register materials.", exception);
+			}
+		}
+	}
 }

@@ -26,7 +26,6 @@ import static fargen.core.FarGenBiomes.tropical_rainforest;
 import static fargen.core.FarGenBiomes.tropical_thorny_forest;
 import static fargen.core.FarGenBiomes.tundra;
 
-import farcore.util.U.L;
 import fargen.core.biome.BiomeBase;
 import fargen.core.layer.Layer;
 import net.minecraft.world.gen.layer.GenLayer;
@@ -44,17 +43,17 @@ public class LayerBaseBiome extends Layer
 			{tropical_desert,  tropical_desert,  savanna,   savanna,   subtropical_coniferous_forest, subtropical_coniferous_forest, subtropical_broadleaf_forest, subtropical_broadleaf_forest, mangrove,                tropical_rainforest,  tropical_rainforest},
 			{tropical_desert,  tropical_desert,  savanna,   savanna,   tropical_thorny_forest,        tropical_thorny_forest,        tropical_thorny_forest,       tropical_monsoon_forest,      tropical_monsoon_forest, tropical_rainforest,  tropical_rainforest},
 			{tropical_desert,  savanna,          savanna,   savanna,   tropical_thorny_forest,        tropical_thorny_forest,        tropical_thorny_forest,       tropical_monsoon_forest,      tropical_monsoon_forest, tropical_rainforest,  tropical_rainforest}};
-
+	
 	private GenLayer temperature;
 	private GenLayer humidity;
-
+	
 	public LayerBaseBiome(long seed, GenLayer temperature, GenLayer humidity)
 	{
 		super(seed);
 		this.temperature = temperature;
 		this.humidity = humidity;
 	}
-	
+
 	@Override
 	public int[] getInts(int x, int y, int w, int h)
 	{
@@ -67,14 +66,14 @@ public class LayerBaseBiome extends Layer
 		}
 		return ret;
 	}
-
+	
 	protected int selectBaseBiome(int temperature, int humidity)
 	{
-		temperature = L.range(0, 8, temperature);
-		humidity = L.range(0, 10, humidity);
+		temperature = farcore.util.L.range(0, 8, temperature);
+		humidity = farcore.util.L.range(0, 10, humidity);
 		return biomes[temperature][humidity].biomeID;
 	}
-
+	
 	@Override
 	public void initWorldGenSeed(long seed)
 	{
@@ -82,7 +81,7 @@ public class LayerBaseBiome extends Layer
 		temperature.initWorldGenSeed(seed);
 		humidity.initWorldGenSeed(seed);
 	}
-
+	
 	@Override
 	public void markZoom(int zoom)
 	{

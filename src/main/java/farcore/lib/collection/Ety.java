@@ -2,7 +2,7 @@ package farcore.lib.collection;
 
 import java.util.Map.Entry;
 
-import farcore.util.U;
+import farcore.util.L;
 
 public class Ety<K, V> implements Entry<K, V>
 {
@@ -46,7 +46,7 @@ public class Ety<K, V> implements Entry<K, V>
 	{
 		if(obj == this) return true;
 		else if(!(obj instanceof Entry)) return false;
-		else return U.L.equal(key, ((Entry) obj).getKey());
+		else return L.equal(key, ((Entry) obj).getKey());
 	}
 
 	@Override

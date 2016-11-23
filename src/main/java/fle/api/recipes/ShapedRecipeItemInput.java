@@ -10,6 +10,7 @@ import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.ArrayStack;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.OreStack;
+import farcore.util.L;
 import farcore.util.U;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
 import net.minecraft.block.Block;
@@ -154,7 +155,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 			size = arg.input.size(stack = matrix.get(x, y));
 			if(arg.giveback != null && (arg.neededSizeSimilar || size >= stack.stackSize))
 			{
-				if(arg.givebackChance == 10000 || U.L.nextInt(10000) < arg.givebackChance)
+				if(arg.givebackChance == 10000 || L.nextInt(10000) < arg.givebackChance)
 				{
 					matrix.set(x, y, arg.giveback.instance());
 				}

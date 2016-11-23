@@ -3,7 +3,6 @@ package farcore.lib.item;
 import java.util.List;
 
 import farcore.FarCore;
-import farcore.data.M;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.model.item.FarCoreItemModelLoader;
@@ -35,7 +34,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		if(stack != null && stack.getItem() instanceof ItemMulti)
 			return ((ItemMulti) stack.getItem()).getMaterialFromItem(stack);
 		else
-			return M.VOID;
+			return Mat.VOID;
 	}
 
 	public final MatCondition condition;

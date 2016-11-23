@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.block.BlockBase;
 import farcore.lib.material.Mat;
 import farcore.lib.plant.IPlant;
@@ -32,7 +32,7 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 {
 	public static BlockWildPlant create(Mat material)
 	{
-		IPlant plant = material.getProperty(M.property_plant);
+		IPlant plant = material.getProperty(MP.property_plant);
 		return new BlockWildPlant(material.name)
 		{
 			@Override
@@ -51,6 +51,12 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 			public IBlockState getStateFromMeta(int meta)
 			{
 				return plant.getState(this, meta);
+			}
+
+			@Override
+			protected IBlockState initDefaultState(IBlockState state)
+			{
+				return plant.initDefaultState(super.initDefaultState(state));
 			}
 		};
 	}

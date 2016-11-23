@@ -5,7 +5,7 @@ import java.util.Random;
 import farcore.FarCore;
 import farcore.lib.block.BlockTE;
 import farcore.lib.util.Direction;
-import farcore.lib.world.ICoord;
+import farcore.lib.world.IModifiableCoord;
 import farcore.network.IPacket;
 import farcore.util.U;
 import farcore.util.U.Worlds;
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.ForgeHooks;
 
-public class TEBase extends TileEntity implements ICoord
+public class TEBase extends TileEntity implements IModifiableCoord
 {
 	protected IBlockState state;
 	public Random random = new Random();
@@ -149,16 +149,19 @@ public class TEBase extends TileEntity implements ICoord
 
 	}
 
+	@Override
 	public void markBlockUpdate()
 	{
 		worldObj.notifyBlockOfStateChange(pos, getBlockType());
 	}
 
+	@Override
 	public void markBlockRenderUpdate()
 	{
 		worldObj.markBlockRangeForRenderUpdate(pos.add(-1, -1, -1), pos.add(1, 1, 1));
 	}
 
+	@Override
 	public double getDistanceSq(BlockPos pos)
 	{
 		return this.pos.distanceSq(pos);
@@ -234,6 +237,7 @@ public class TEBase extends TileEntity implements ICoord
 			U.Worlds.isBlockNearby(worldObj, pos.add(offsetX, offsetY, offsetZ), block, meta, ignoreUnloadChunk);
 	}
 
+	@Override
 	public void explode(boolean removeTile, float strength, boolean isFlaming, boolean isSmoking)
 	{
 		IBlockState state = null;
@@ -251,9 +255,9 @@ public class TEBase extends TileEntity implements ICoord
 	}
 
 	@Override
-	public void removeBlock()
+	public boolean removeBlock()
 	{
-		worldObj.setBlockToAir(pos);
+		return worldObj.setBlockToAir(pos);
 	}
 	
 	public boolean canHarvestBlock(EntityPlayer player)
@@ -301,13 +305,7 @@ public class TEBase extends TileEntity implements ICoord
 		return false;
 	}
 
-	/**
-	 * Mark light for update.
-	 * Usually used when machine state changed,
-	 * example : furnace start burning fuel.
-	 * Marked to recalculate light.
-	 * @param type
-	 */
+	@Override
 	public void markLightForUpdate(EnumSkyBlock type)
 	{
 		int level = worldObj.getLightFor(type, pos);
@@ -353,7 +351,7 @@ public class TEBase extends TileEntity implements ICoord
 	@Deprecated
 	public TileEntity getTile(int xOffset, int yOffset, int zOffset)
 	{
-		return worldObj.getTileEntity(pos.add(xOffset, yOffset, zOffset));
+		return getTE(xOffset, yOffset, zOffset);
 	}
 
 	public int getLight(int xOffset, int yOffset, int zOffset, EnumSkyBlock type)

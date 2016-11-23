@@ -5,7 +5,7 @@ import java.util.Random;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
-import farcore.util.U;
+import farcore.util.L;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -33,7 +33,7 @@ public class TreeGenTaiga extends TreeGenAbstract
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		int l = U.L.nextInt(randHeight, random) + minHeight;
+		int l = L.nextInt(randHeight, random) + minHeight;
 		int i1 = 1 + random.nextInt(2);
 		int j1 = l - i1;
 		int k1 = 2 + random.nextInt(2);

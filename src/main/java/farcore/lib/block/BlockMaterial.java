@@ -2,7 +2,7 @@ package farcore.lib.block;
 
 import java.util.Random;
 
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
@@ -28,14 +28,14 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	{
 		super(modid, name, materialIn);
 		material = mat;
-		basic = material.getProperty(M.property_basic);
+		basic = material.getProperty(MP.property_basic);
 		this.property = property;
 	}
 	public BlockMaterial(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn, Mat mat, P property)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 		material = mat;
-		basic = material.getProperty(M.property_basic);
+		basic = material.getProperty(MP.property_basic);
 		this.property = property;
 	}
 	
@@ -60,13 +60,13 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return material.getProperty(M.fire_spread_speed);
+		return material.getProperty(MP.fire_spread_speed);
 	}
 	
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return material.getProperty(M.flammability);
+		return material.getProperty(MP.flammability);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	@Override
 	public int getLightValue(IBlockState state)
 	{
-		return material.getProperty(M.light_value);
+		return material.getProperty(MP.light_value);
 	}
 
 	@Override
@@ -114,13 +114,13 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	@Override
 	public int getFireEncouragement(World world, BlockPos pos)
 	{
-		return material.getProperty(M.fire_encouragement);
+		return material.getProperty(MP.fire_encouragement);
 	}
 
 	@Override
 	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
 	{
-		entityIn.fall(fallDistance, 1F - material.getProperty(M.fallen_damage_deduction) / 10000F);
+		entityIn.fall(fallDistance, 1F - material.getProperty(MP.fallen_damage_deduction) / 10000F);
 	}
 	
 	@Override

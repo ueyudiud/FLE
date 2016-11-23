@@ -1,7 +1,6 @@
 package fargen.core.worldgen;
 
 import farcore.lib.util.LanguageManager;
-import farcore.util.U.R;
 import fargen.core.worldgen.surface.FarSurfaceBiomeProvider;
 import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
 import net.minecraft.world.World;
@@ -18,7 +17,7 @@ public class FarWorldType extends WorldType
 	public static FarWorldType DEFAULT;
 	public static FarWorldType FLAT;
 	public static FarWorldType LARGE_BIOMES;
-	
+
 	public FarWorldType(int index, String name, String localName)
 	{
 		super(name);
@@ -27,7 +26,7 @@ public class FarWorldType extends WorldType
 		WORLD_TYPES[oldIndex] = null;
 		try
 		{
-			R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
+			farcore.util.R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
 		}
 		catch (Exception exception)
 		{
@@ -40,39 +39,39 @@ public class FarWorldType extends WorldType
 		super(name);
 		LanguageManager.registerLocal("generator." + name, localName);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getTranslateName()
 	{
 		return LanguageManager.translateToLocal(super.getTranslateName());
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getTranslatedInfo()
 	{
 		return LanguageManager.translateToLocal(super.getTranslateName() + ".info");
 	}
-	
+
 	@Override
 	public double getHorizon(World world)
 	{
 		return 127.0D;
 	}
-
+	
 	@Override
 	public int getMinimumSpawnHeight(World world)
 	{
 		return world.provider.isSurfaceWorld() ? 128 : 64;
 	}
-	
+
 	@Override
 	public float getCloudHeight()
 	{
 		return 220F;
 	}
-	
+
 	@Override
 	public IChunkGenerator getChunkGenerator(World world, String generatorOptions)
 	{
@@ -95,7 +94,7 @@ public class FarWorldType extends WorldType
 		}
 		return super.getChunkGenerator(world, generatorOptions);
 	}
-	
+
 	@Override
 	public BiomeProvider getBiomeProvider(World world)
 	{

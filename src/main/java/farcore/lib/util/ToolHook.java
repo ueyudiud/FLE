@@ -7,6 +7,7 @@ import java.util.Map;
 import farcore.data.EnumToolType;
 import farcore.lib.block.instance.BlockLog;
 import farcore.lib.block.instance.BlockOre;
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -30,13 +31,13 @@ public class ToolHook
 	
 	public static void addBreakableTool(Material material, EnumToolType...toolTypes)
 	{
-		U.L.put(efficiencyToolMap, material, toolTypes);
+		L.put(efficiencyToolMap, material, toolTypes);
 	}
 	
 	public static void addEfficiencyTool(Material material, EnumToolType...toolTypes)
 	{
-		U.L.put(breakableToolMap, material, toolTypes);
-		U.L.put(efficiencyToolMap, material, toolTypes);
+		L.put(breakableToolMap, material, toolTypes);
+		L.put(efficiencyToolMap, material, toolTypes);
 	}
 
 	public static boolean isToolBreakable(IBlockState state, EntityPlayer player)

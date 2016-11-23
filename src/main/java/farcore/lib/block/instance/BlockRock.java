@@ -9,8 +9,8 @@ import farcore.data.CT;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.EnumToolType;
-import farcore.data.M;
 import farcore.data.MC;
+import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.ISmartFallableBlock;
@@ -479,7 +479,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public double getThermalConduct(World world, BlockPos pos)
 	{
-		return material.getProperty(M.property_basic).thermalConduct;
+		return material.getProperty(MP.property_basic).thermalConduct;
 	}
 	
 	@Override
@@ -523,7 +523,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
 	{
-		return (float) ((1.0F + material.getProperty(M.property_tool).damageToEntity) * block.motionY * block.motionY * 0.25F);
+		return (float) ((1.0F + material.getProperty(MP.property_tool).damageToEntity) * block.motionY * block.motionY * 0.25F);
 	}
 	
 	@Override
@@ -547,7 +547,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public void onHeatChanged(World world, BlockPos pos, Direction direction, double amount)
 	{
-		if(amount >= property.minTemperatureForExplosion * material.getProperty(M.property_basic).heatCap)
+		if(amount >= property.minTemperatureForExplosion * material.getProperty(MP.property_basic).heatCap)
 		{
 			Worlds.switchProp(world, pos, HEATED, true, 2);
 			world.scheduleUpdate(pos, this, tickRate(world));

@@ -7,14 +7,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class Solid extends SolidAbstract
 {
 	protected ResourceLocation location;
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getIcon()
 	{
-		return location;
+		return location == null ? super.getIcon() : location;
 	}
-
+	
 	public void setIcon(ResourceLocation location)
 	{
 		this.location = location;

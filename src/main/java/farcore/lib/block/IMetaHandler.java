@@ -11,4 +11,6 @@ public interface IMetaHandler
 	int getMeta(Block block, IBlockState state);
 
 	IBlockState getState(Block block, int meta);
+	
+	IBlockState initDefaultState(IBlockState state);
 }

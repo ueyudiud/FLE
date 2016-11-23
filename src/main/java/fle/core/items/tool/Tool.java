@@ -3,7 +3,7 @@ package fle.core.items.tool;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.EnumToolType;
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.item.ItemTool;
 import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
@@ -89,7 +89,7 @@ public abstract class Tool implements IToolStat
 	@Override
 	public int getToolHarvestLevel(ItemStack stack, String toolClass, Mat baseMaterial)
 	{
-		return type.isToolClass(toolClass) ? baseMaterial.getProperty(M.property_tool).harvestLevel : -1;
+		return type.isToolClass(toolClass) ? baseMaterial.getProperty(MP.property_tool).harvestLevel : -1;
 	}
 	
 	@Override

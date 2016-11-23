@@ -5,7 +5,7 @@ import java.util.Random;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
-import farcore.util.U;
+import farcore.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
@@ -105,7 +105,7 @@ public class TreeGenSimple extends TreeGenAbstract
 									if(!cache[i1 + b0][j1 + b0] &&
 											((leavesConnect && k - minLeavesHeight >= 2) ||
 													dis < leavesWidth / 1.3F ||
-													U.L.nextInt((int) ((3 + minLeavesHeight - k) * dis / 4F), random) == 0))
+													L.nextInt((int) ((3 + minLeavesHeight - k) * dis / 4F), random) == 0))
 									{
 										if(leavesConnect)
 										{

@@ -10,10 +10,13 @@ public abstract class SolidAbstract extends IForgeRegistryEntry.Impl<SolidAbstra
 	public SolidAbstract()
 	{
 	}
-
+	
 	@SideOnly(Side.CLIENT)
-	public abstract ResourceLocation getIcon();
-
+	public ResourceLocation getIcon()
+	{
+		return new ResourceLocation(getRegistryName().getResourceDomain(), "solids/" + getRegistryName().getResourcePath());
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getIcon(SolidStack stack)
 	{

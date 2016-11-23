@@ -2,7 +2,7 @@ package farcore.lib.collection;
 
 import java.util.Iterator;
 
-import farcore.util.U;
+import farcore.util.L;
 
 /**
  * The node chain.
@@ -47,21 +47,21 @@ public interface INode<T> extends Iterable<T>
 
 	default boolean contain(Object arg)
 	{
-		return U.L.equal(arg, value()) || (containBefore(arg) || containAfter(arg));
+		return L.equal(arg, value()) || (containBefore(arg) || containAfter(arg));
 	}
 
 	default boolean containBefore(Object arg)
 	{
 		if(!hasLast()) return false;
 		INode<T> node = last();
-		return U.L.equal(arg, node.value()) || node.containBefore(arg);
+		return L.equal(arg, node.value()) || node.containBefore(arg);
 	}
 	
 	default boolean containAfter(Object arg)
 	{
 		if(!hasNext()) return false;
 		INode<T> node = next();
-		return U.L.equal(arg, node.value()) || node.containAfter(arg);
+		return L.equal(arg, node.value()) || node.containAfter(arg);
 	}
 
 	default void addLast(T target)

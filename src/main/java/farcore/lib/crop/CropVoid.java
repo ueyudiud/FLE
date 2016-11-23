@@ -4,13 +4,13 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.data.M;
+import farcore.lib.material.Mat;
 
 public class CropVoid extends CropBase
 {
 	public CropVoid()
 	{
-		super(M.VOID);
+		super(Mat.VOID);
 		maxStage = 1;
 	}
 

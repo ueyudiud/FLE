@@ -18,6 +18,7 @@ import farcore.lib.util.Log;
 import farcore.lib.world.IObjectInWorld;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -291,7 +292,7 @@ public class ThermalNet implements IEnergyNet
 				if(chunks.isEmpty()) return;
 				for(ChunkPos chunk : chunks)
 				{
-					U.L.put(map2, chunk, box);
+					L.put(map2, chunk, box);
 				}
 			}
 		}
@@ -309,7 +310,7 @@ public class ThermalNet implements IEnergyNet
 				if(chunks.isEmpty()) return;
 				for(ChunkPos chunk : chunks)
 				{
-					U.L.remove(map2, chunk, box);
+					L.remove(map2, chunk, box);
 				}
 			}
 		}
@@ -478,23 +479,23 @@ public class ThermalNet implements IEnergyNet
 					case add :
 						for(ChunkPos pos : entry.getKey().chunks())
 						{
-							U.L.put(map2, pos, entry.getKey());
+							L.put(map2, pos, entry.getKey());
 						}
 						break;
 					case remove :
 						for(ChunkPos pos : entry.getKey().chunks())
 						{
-							U.L.remove(map2, pos, entry.getKey());
+							L.remove(map2, pos, entry.getKey());
 						}
 						break;
 					case reload :
 						for(ChunkPos pos : entry.getKey().chunks())
 						{
-							U.L.put(map2, pos, entry.getKey());
+							L.put(map2, pos, entry.getKey());
 						}
 						for(ChunkPos pos : entry.getKey().chunks())
 						{
-							U.L.remove(map2, pos, entry.getKey());
+							L.remove(map2, pos, entry.getKey());
 						}
 						break;
 					case mark :

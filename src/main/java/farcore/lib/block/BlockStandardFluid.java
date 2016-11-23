@@ -7,6 +7,7 @@ import farcore.event.FluidBlockEvent.FluidTouchBlockEvent;
 import farcore.lib.fluid.FluidBase;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IRenderRegister;
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -271,7 +272,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 
 	public int flowYPosNearByWhenMinimumLevel(World world, BlockPos pos)
 	{
-		Direction direction = U.L.random(Direction.DIRECTIONS_2D, world.rand);
+		Direction direction = L.random(Direction.DIRECTIONS_2D, world.rand);
 		BlockPos pos1 = pos.add(direction.x, 0, direction.z);
 		BlockPos pos2 = pos1.add(0, densityDir, 0);
 		int level = displaceIfPossible(world, pos1, pos, 1);

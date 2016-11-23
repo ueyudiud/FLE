@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
 
-import farcore.util.U;
+import farcore.util.Strings;
 import net.minecraft.client.resources.I18n;
 
 public class LanguageManager
@@ -41,7 +41,7 @@ public class LanguageManager
 
 	public static String translateToLocal(String unlocalized, Object...objects)
 	{
-		String locale = U.Strings.locale();
+		String locale = Strings.locale();
 		String translate;
 		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
 		{
@@ -52,7 +52,7 @@ public class LanguageManager
 			translate = MAP2.get(unlocalized);
 		}
 		else
-			return U.Strings.translateByI18n(unlocalized, objects);
+			return Strings.translateByI18n(unlocalized, objects);
 		try
 		{
 			return translate == null ? unlocalized : String.format(translate, objects);
@@ -70,7 +70,7 @@ public class LanguageManager
 	 */
 	public static String translateToLocalOfText(String unlocalized)
 	{
-		String locale = U.Strings.locale();
+		String locale = Strings.locale();
 		String translate;
 		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
 		{
@@ -86,7 +86,7 @@ public class LanguageManager
 
 	public static String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
 	{
-		String locale = U.Strings.locale();
+		String locale = Strings.locale();
 		String translate;
 		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
 		{

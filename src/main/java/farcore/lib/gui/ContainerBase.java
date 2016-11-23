@@ -12,6 +12,7 @@ import farcore.lib.collection.Node;
 import farcore.lib.fluid.FluidStackExt;
 import farcore.lib.net.gui.PacketFluidUpdateAll;
 import farcore.lib.net.gui.PacketFluidUpdateSingle;
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -511,7 +512,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 						{
 							if (U.ItemStacks.isItemAndTagEqual(itemstack1, itemstack2))
 							{
-								int j2 = U.L.min(dragType == TOTAL_PICK ? itemstack2.stackSize : 1, slot.getItemStackLimit(itemstack2) - itemstack1.stackSize, itemstack2.getMaxStackSize() - itemstack1.stackSize);
+								int j2 = L.min(dragType == TOTAL_PICK ? itemstack2.stackSize : 1, slot.getItemStackLimit(itemstack2) - itemstack1.stackSize, itemstack2.getMaxStackSize() - itemstack1.stackSize);
 								
 								itemstack2.splitStack(j2);
 								if (itemstack2.stackSize == 0)

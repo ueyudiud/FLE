@@ -6,7 +6,7 @@ import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.util.Direction;
-import farcore.util.U;
+import farcore.util.L;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -35,7 +35,7 @@ public class TreeGenAcacia extends TreeGenAbstract
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		int l = U.L.nextInt(randHeightHlf1, random) + U.L.nextInt(randHeightHlf2, random) + baseHeight;
+		int l = L.nextInt(randHeightHlf1, random) + L.nextInt(randHeightHlf2, random) + baseHeight;
 
 		if (y >= 1 && y + l + 1 <= 256)
 		{

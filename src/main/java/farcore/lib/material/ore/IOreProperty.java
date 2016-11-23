@@ -5,6 +5,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import farcore.data.EnumToolType;
+import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.util.Direction;
 import net.minecraft.block.state.IBlockState;
@@ -19,9 +20,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Deprecated
 public interface IOreProperty
 {
-	static IOreProperty property = new OrePropStandard();
+	IOreProperty PROPERTY = new OrePropStandard();
 	
 	void updateTick(TEOre ore, Random rand);
 
@@ -38,8 +40,12 @@ public interface IOreProperty
 	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
 			Direction side, float hitX, float hitY, float hitZ);
 
-	ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
-			Direction side, float hitX, float hitY, float hitZ, long tick);
+	@Deprecated
+	default ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
+			Direction side, float hitX, float hitY, float hitZ, long tick)
+	{
+		return IToolableTile.DEFAULT_RESULT;
+	}
 
 	@SideOnly(Side.CLIENT)
 	void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, TEOre ore, Random rand);

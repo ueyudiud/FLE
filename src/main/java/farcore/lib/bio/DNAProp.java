@@ -1,7 +1,7 @@
 package farcore.lib.bio;
 
 import farcore.lib.collection.Stack;
-import farcore.util.U;
+import farcore.util.L;
 
 public abstract class DNAProp<T extends DNACharacter>
 {
@@ -46,7 +46,7 @@ public abstract class DNAProp<T extends DNACharacter>
 		}
 		if(Math.random() < chance * borderChanceBase)
 		{
-			return U.L.randomInStack(weight, allWeight).chr;
+			return L.randomInStack(weight, allWeight).chr;
 		}
 		return dna0;
 	}

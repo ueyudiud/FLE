@@ -21,8 +21,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PropertyOre extends PropertyBlockable implements IOreProperty
 {
-	public static final PropertyOre INSTANCE = new PropertyOre();
-
 	@Override
 	public void updateTick(TEOre ore, Random rand)
 	{
@@ -63,13 +61,6 @@ public class PropertyOre extends PropertyBlockable implements IOreProperty
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
 			Direction side, float hitX, float hitY, float hitZ)
-	{
-		return IToolableTile.DEFAULT_RESULT;
-	}
-
-	@Override
-	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
-			Direction side, float hitX, float hitY, float hitZ, long tick)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}

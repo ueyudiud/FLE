@@ -35,7 +35,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.model.item.ModelLayer.UnbakedModelLayer;
 import farcore.lib.util.Log;
-import farcore.util.U;
+import farcore.util.L;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -354,7 +354,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 				}
 				else
 				{
-					cache.layers = U.L.cast(list, UnbakedModelLayer.class);
+					cache.layers = L.cast(list, UnbakedModelLayer.class);
 				}
 			}
 			else
@@ -402,7 +402,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			{
 				if (layer.colorMultiplier != FarCoreItemModelLoader.NORMAL_MULTIPLIER)
 				{
-					colors.registerItemColorHandler((ItemStack stack, int tintIndex) -> U.L.cast(layers[tintIndex].colorMultiplier.apply(stack)), item);
+					colors.registerItemColorHandler((ItemStack stack, int tintIndex) -> L.cast(layers[tintIndex].colorMultiplier.apply(stack)), item);
 					return;
 				}
 			}

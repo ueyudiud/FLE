@@ -20,7 +20,7 @@ import com.google.gson.JsonParseException;
 
 import farcore.FarCore;
 import farcore.data.EnumBlock;
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.block.BlockSingleTE;
 import farcore.lib.crop.ICrop;
 import farcore.lib.item.instance.ItemSeed;
@@ -133,7 +133,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		List<String> list = new ArrayList();
 		for(Mat material : Mat.filt(SubTag.CROP))
 		{
-			list.addAll(material.getProperty(M.property_crop).getAllowedState());
+			list.addAll(material.getProperty(MP.property_crop).getAllowedState());
 		}
 		list.add("void");//Empty crop mark.
 		PROP_CROP_TYPE = new PropertyString("crop", list);
@@ -194,7 +194,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			{
 				TECrop crop;
 				worldIn.setTileEntity(pos, crop = new TECrop(
-						ItemSeed.getMaterial(stack).getProperty(M.property_crop),
+						ItemSeed.getMaterial(stack).getProperty(MP.property_crop),
 						ItemSeed.getDNAFromStack(stack),
 						ItemSeed.getGenerationFromStack(stack)));
 				crop.syncToNearby();
@@ -210,7 +210,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			ItemStack stack = ITEM_THREAD.get();
 			if(stack.getItem() instanceof ItemSeed)
 				return new TECrop(
-						ItemSeed.getMaterial(stack).getProperty(M.property_crop),
+						ItemSeed.getMaterial(stack).getProperty(MP.property_crop),
 						ItemSeed.getDNAFromStack(stack),
 						ItemSeed.getGenerationFromStack(stack));
 		}

@@ -9,6 +9,7 @@ import farcore.FarCore;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.net.PacketKey;
+import farcore.util.Strings;
 import farcore.util.U;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -80,7 +81,7 @@ public class FarCoreKeyHandler
 		@Override
 		public void register(String name, int keycode, String modid)
 		{
-			KeyBinding binding = new KeyBinding(U.Strings.validate(name), keycode, modid);
+			KeyBinding binding = new KeyBinding(Strings.validate(name), keycode, modid);
 			ClientRegistry.registerKeyBinding(binding);
 			keys.register(name, binding);
 		}

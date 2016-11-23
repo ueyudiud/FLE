@@ -27,7 +27,7 @@ import com.google.gson.stream.JsonReader;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.block.instance.BlockOre.OreStateWrapper;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.ItemOre;
@@ -440,8 +440,8 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			{
 				OreStateWrapper wrapper = (OreStateWrapper) state;
 				Mat ore = wrapper.ore;
-				if(ore == M.VOID) return ImmutableList.of();
-				Block block = wrapper.rock.getProperty(M.property_rock).block;
+				if(ore == Mat.VOID) return ImmutableList.of();
+				Block block = wrapper.rock.getProperty(MP.property_rock).block;
 				IBlockState state2 = block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, wrapper.type);
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 						.getModelManager().getBlockModelShapes()

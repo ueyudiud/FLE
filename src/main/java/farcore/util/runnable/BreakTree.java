@@ -1,13 +1,13 @@
 package farcore.util.runnable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import farcore.data.EnumItem;
 import farcore.data.V;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.item.instance.ItemTreeLog;
 import farcore.util.U;
+import farcore.util.U.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -20,14 +20,14 @@ public class BreakTree implements Runnable
 	private World world;
 	private BlockPos pos;
 	private int cacheDrop = 0;
-
+	
 	public BreakTree(BlockLogNatural block, World world, BlockPos pos)
 	{
 		this.block = block;
 		this.world = world;
 		this.pos = pos;
 	}
-
+	
 	@Override
 	public void run()
 	{
@@ -37,10 +37,10 @@ public class BreakTree implements Runnable
 		{
 			ItemStack stack = new ItemStack(EnumItem.log.item, 1, block.tree.material().id);
 			ItemTreeLog.setLogSize(stack, cacheDrop);
-			U.Worlds.spawnDropsInWorld(world, pos, Arrays.asList(stack));
+			Worlds.spawnDropInWorld(world, pos, stack);
 		}
 	}
-
+	
 	public void scanLog(World world, boolean[][][] array, byte x, byte y, byte z)
 	{
 		if(y >= 0 && pos.getY() + y < 256)
@@ -50,7 +50,9 @@ public class BreakTree implements Runnable
 					offsetZ = 0;
 			array[x + V.treeScanRange][y][z + V.treeScanRange] = true;
 			for (offsetX = -1; offsetX <= 1; offsetX++)
+			{
 				for (offsetZ = -1; offsetZ <= 1; offsetZ++)
+				{
 					for (offsetY = 0; offsetY <= 2; offsetY++)
 						if((offsetX != 0 || offsetY != 0 || offsetZ != 0) &&
 								Math.abs(x + offsetX) <= V.treeScanRange &&
@@ -58,11 +60,15 @@ public class BreakTree implements Runnable
 								pos.getY() + y + offsetY < 256)
 							if(!array[x + offsetX + V.treeScanRange][y + offsetY][z + offsetZ + V.treeScanRange] &&
 									block.isLog(world, pos.add(x + offsetX, y + offsetY, z + offsetZ)))
+							{
 								scanLog(world, array, (byte) (x + offsetX), (byte) (y + offsetY), (byte) (z + offsetZ));
+							}
+				}
+			}
 			++cacheDrop;
 			BlockPos pos1 = pos.add(x, y, z);
 			world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 2);
-
+			
 			beginLeavesDecay(world, pos1.up());
 			beginLeavesDecay(world, pos1.down());
 			beginLeavesDecay(world, pos1.south());
@@ -72,7 +78,7 @@ public class BreakTree implements Runnable
 			U.Worlds.spawnDropsInWorld(world, pos1, block.tree.getLogOtherDrop(world, pos1, new ArrayList()));
 		}
 	}
-
+	
 	protected void beginLeavesDecay(World world, BlockPos pos)
 	{
 		IBlockState state;

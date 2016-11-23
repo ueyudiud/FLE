@@ -2,7 +2,7 @@ package fle.api.recipes;
 
 import farcore.lib.collection.ArrayIterator;
 import farcore.lib.item.ITool;
-import farcore.util.U;
+import farcore.util.L;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
 import net.minecraft.item.ItemStack;
 
@@ -31,7 +31,7 @@ public class SingleRecipeItemInput extends SingleRecipeInput<RecipeItemInputConf
 			size = source.input.size(stack = matrix.get(id));
 			if(source.giveback != null && (source.neededSizeSimilar || size >= stack.stackSize))
 			{
-				if(source.givebackChance == 10000 || U.L.nextInt(10000) < source.givebackChance)
+				if(source.givebackChance == 10000 || L.nextInt(10000) < source.givebackChance)
 				{
 					matrix.set(id, source.giveback.instance());
 				}

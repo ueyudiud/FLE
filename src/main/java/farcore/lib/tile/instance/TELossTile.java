@@ -5,7 +5,7 @@ import java.util.Map;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.tile.ISynchronizableTile;
 import farcore.lib.tile.abstracts.TEBase;
-import farcore.util.U;
+import farcore.util.R;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -18,7 +18,7 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class TELossTile extends TEBase
 {
-	private NBTTagCompound tileNBT = NBTTagCompoundEmpty.instance;
+	private NBTTagCompound tileNBT = NBTTagCompoundEmpty.INSTANCE;
 	private NBTTagCompound serverPacketData = new NBTTagCompound();
 	
 	@Override
@@ -61,7 +61,7 @@ public class TELossTile extends TEBase
 	@Override
 	public NBTTagCompound getUpdateTag()
 	{
-		return tileNBT == NBTTagCompoundEmpty.instance ? super.getUpdateTag() : tileNBT;
+		return tileNBT == NBTTagCompoundEmpty.INSTANCE ? super.getUpdateTag() : tileNBT;
 	}
 	
 	@Override
@@ -72,7 +72,7 @@ public class TELossTile extends TEBase
 	
 	public void refreshTile(NBTTagCompound nbt)
 	{
-		Map<String, Class<? extends TileEntity>> map = (Map<String, Class<? extends TileEntity>>) U.R.getValue(TileEntity.class, "nameToClassMap", "", null, false);
+		Map<String, Class<? extends TileEntity>> map = (Map<String, Class<? extends TileEntity>>) R.getValue(TileEntity.class, "nameToClassMap", "", null, false);
 		TileEntity tile;
 		try
 		{

@@ -1,5 +1,7 @@
-package farcore.lib.material;
+package farcore.lib.material.behavior;
 
+import farcore.lib.material.Mat;
+import farcore.lib.material.MatCondition;
 import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
 import net.minecraft.entity.Entity;

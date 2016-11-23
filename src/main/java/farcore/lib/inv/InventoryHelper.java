@@ -2,6 +2,7 @@ package farcore.lib.inv;
 
 import javax.annotation.Nullable;
 
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.item.ItemStack;
 
@@ -68,7 +69,7 @@ public class InventoryHelper
 			}
 			else
 			{
-				result = U.L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)));
+				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)));
 				stack.stackSize -= result;
 				inventory.getStackInSlot(index).stackSize += result;
 				return stack.stackSize <= 0 ? null : stack;
@@ -108,7 +109,7 @@ public class InventoryHelper
 			}
 			else if(U.ItemStacks.isItemAndTagEqual(inventory.getStackInSlot(index), stack))
 			{
-				result = U.L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)));
+				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)));
 				if(affectOnSourceStack)
 				{
 					stack.stackSize -= result;

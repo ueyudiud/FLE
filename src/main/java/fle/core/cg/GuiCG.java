@@ -16,6 +16,7 @@ import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.ArrayStack;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.OreStack;
+import farcore.util.L;
 import farcore.util.U;
 import fle.api.cg.CraftGuideRegister;
 import fle.api.cg.IDisplayable;
@@ -126,7 +127,7 @@ public class GuiCG extends GuiScreen implements IGuiRecipeHanler, IRecipeDisplay
 	{
 		long i = (tick / 20) * 375917294782L + printID * 475917393219L;
 		random.setSeed(i);
-		return U.L.random(collection, random);
+		return L.random(collection, random);
 	}
 
 	@Override

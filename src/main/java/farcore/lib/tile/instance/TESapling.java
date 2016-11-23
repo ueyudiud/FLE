@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.data.M;
+import farcore.data.MP;
 import farcore.data.Others;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.material.Mat;
@@ -48,7 +49,7 @@ implements ISaplingAccess, IDebugableBlock
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		tree = (PropertyTree) Mat.material(nbt.getString("tree")).getProperty(M.property_wood, PropertyTree.VOID);
+		tree = (PropertyTree) Mat.material(nbt.getString("tree")).getProperty(MP.property_wood, PropertyTree.VOID);
 		age = nbt.getFloat("age");
 	}
 	
@@ -58,14 +59,14 @@ implements ISaplingAccess, IDebugableBlock
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("t"))
 		{
-			tree = (PropertyTree) NBTs.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(M.property_wood, PropertyTree.VOID);
+			tree = (PropertyTree) NBTs.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_wood, PropertyTree.VOID);
 			markBlockRenderUpdate();
 		}
 	}
 	
 	public void setTree(EntityLivingBase entity, Mat material)
 	{
-		tree = (PropertyTree) material.getProperty(M.property_wood, PropertyTree.VOID);
+		tree = (PropertyTree) material.getProperty(MP.property_wood, PropertyTree.VOID);
 		syncToNearby();
 	}
 	

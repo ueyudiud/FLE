@@ -9,7 +9,7 @@ import farcore.data.EnumBlock;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
 import farcore.lib.util.Direction;
-import farcore.util.U;
+import farcore.util.L;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -63,7 +63,7 @@ public abstract class CropAbstract extends CropBase implements IPlantable
 	{
 		if(access.stage() == maxStage - 1)
 		{
-			list.add(applyChildSeed(1 + U.L.nextInt(20) / 17, access.info()));
+			list.add(applyChildSeed(1 + L.nextInt(20) / 17, access.info()));
 		}
 	}
 	

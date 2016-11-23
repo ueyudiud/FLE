@@ -97,12 +97,12 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? NBTTagCompoundEmpty.instance :
+			return !tagMap.containsKey(name) ? NBTTagCompoundEmpty.INSTANCE :
 				(NBTTagCompound) tagMap.get(name);
 		}
 		catch(Exception exception)
 		{
-			return NBTTagCompoundEmpty.instance;
+			return NBTTagCompoundEmpty.INSTANCE;
 		}
 	}
 	

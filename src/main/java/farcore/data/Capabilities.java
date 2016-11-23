@@ -1,6 +1,5 @@
 package farcore.data;
 
-@Deprecated
 public class Capabilities
 {
 	//	//Pre-pre initialization

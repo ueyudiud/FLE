@@ -7,6 +7,7 @@ import java.util.Random;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumToolType;
 import farcore.data.M;
+import farcore.data.MP;
 import farcore.energy.thermal.IThermalHandler;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockRock.RockType;
@@ -20,7 +21,6 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockHarvest;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Burn;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_EntityWalk;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Toolable;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Update;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Burn;
@@ -54,7 +54,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TEOre extends TEStatic implements IUpdatableTile,
 ITP_BlockHardness, ITP_ExplosionResistance, ITB_EntityWalk, ITB_BlockPlacedBy,
-ITP_HarvestCheck, ITB_Update, ITB_Burn, ITP_Burn, IThermalHandler, ITB_Toolable,
+ITP_HarvestCheck, ITB_Update, ITB_Burn, ITP_Burn, IThermalHandler,
 ITB_AddDestroyEffects, ITB_AddHitEffects, ITB_AddLandingEffects, ITB_BlockHarvest,
 ITP_Drops, IToolableTile
 {
@@ -71,7 +71,7 @@ ITP_Drops, IToolableTile
 
 	private static final Mat STONE = M.stone;
 	
-	private Mat ore = M.VOID;
+	private Mat ore = Mat.VOID;
 	public EnumOreAmount amount = EnumOreAmount.normal;
 	public Mat rock = STONE;
 	public RockType rockType = RockType.resource;
@@ -147,7 +147,7 @@ ITP_Drops, IToolableTile
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		ore = NBTs.getMaterialByIDOrDefault(nbt, "o", M.VOID);
+		ore = NBTs.getMaterialByIDOrDefault(nbt, "o", Mat.VOID);
 		amount = NBTs.getEnumOrDefault(nbt, "a", EnumOreAmount.normal);
 		rock = NBTs.getMaterialByIDOrDefault(nbt, "r", STONE);
 		rockType = NBTs.getEnumOrDefault(nbt, "t", RockType.resource);
@@ -166,14 +166,14 @@ ITP_Drops, IToolableTile
 	@Override
 	public boolean onBlockClicked(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
-		return ore.getProperty(M.property_ore).onBlockClicked(this, player, side);
+		return ore.getProperty(MP.property_ore).onBlockClicked(this, player, side);
 	}
 
 	@Override
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		return ore.getProperty(M.property_ore).onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
+		return ore.getProperty(MP.property_ore).onBlockActivated(this, player, hand, stack, side, hitX, hitY, hitZ);
 	}
 	
 	@Override
@@ -192,29 +192,29 @@ ITP_Drops, IToolableTile
 		case cobble_art :
 			return 1;
 		case cobble :
-			return Math.max(ore.getProperty(M.property_ore).harvestLevel, rock.getProperty(M.property_rock).harvestLevel) / 2;
+			return Math.max(ore.getProperty(MP.property_ore).harvestLevel, rock.getProperty(MP.property_rock).harvestLevel) / 2;
 		default:
-			return Math.max(ore.getProperty(M.property_ore).harvestLevel, rock.getProperty(M.property_rock).harvestLevel);
+			return Math.max(ore.getProperty(MP.property_ore).harvestLevel, rock.getProperty(MP.property_rock).harvestLevel);
 		}
 	}
 
 	@Override
 	public float getBlockHardness(IBlockState state)
 	{
-		float hardness = ore.getProperty(M.property_ore).hardness * .8F + rock.getProperty(M.property_ore).hardness * .2F;
+		float hardness = ore.getProperty(MP.property_ore).hardness * .8F + rock.getProperty(MP.property_ore).hardness * .2F;
 		return hardness;
 	}
 
 	@Override
 	public float getExplosionResistance(Entity exploder, Explosion explosion)
 	{
-		return Math.max(ore.getProperty(M.property_ore).explosionResistance, rock.getProperty(M.property_rock).explosionResistance);
+		return Math.max(ore.getProperty(MP.property_ore).explosionResistance, rock.getProperty(MP.property_rock).explosionResistance);
 	}
 
 	@Override
 	public void onEntityWalk(Entity entity)
 	{
-		ore.getProperty(M.property_ore).onEntityWalk(this, entity);
+		ore.getProperty(MP.property_ore).onEntityWalk(this, entity);
 	}
 	
 	@Override
@@ -233,7 +233,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
-		ore.getProperty(M.property_ore).updateTick(this, random);
+		ore.getProperty(MP.property_ore).updateTick(this, random);
 	}
 
 	@Override
@@ -325,7 +325,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public boolean onBurn(float burnHardness, Direction direction)
 	{
-		ore.getProperty(M.property_ore).onBurn(this, burnHardness, direction);
+		ore.getProperty(MP.property_ore).onBurn(this, burnHardness, direction);
 		if(rockType.isBurnable())
 		{
 			rockType = rockType.burned();
@@ -337,7 +337,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public boolean onBurningTick(Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
-		ore.getProperty(M.property_ore).onBurningTick(this, rand, fireSourceDir, fireState);
+		ore.getProperty(MP.property_ore).onBurningTick(this, rand, fireSourceDir, fireState);
 		return false;
 	}
 	
@@ -392,13 +392,13 @@ ITP_Drops, IToolableTile
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return (float) (heat / ore.getProperty(M.property_basic).thermalConduct);
+		return (float) (heat / ore.getProperty(MP.property_basic).thermalConduct);
 	}
 	
 	@Override
 	public double getThermalConductivity(Direction direction)
 	{
-		return ore.getProperty(M.property_basic).thermalConduct * 0.3F + rock.getProperty(M.property_basic).thermalConduct * 0.7F;
+		return ore.getProperty(MP.property_basic).thermalConduct * 0.3F + rock.getProperty(MP.property_basic).thermalConduct * 0.7F;
 	}
 	
 	@Override
@@ -411,21 +411,14 @@ ITP_Drops, IToolableTile
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
 			float hitY, float hitZ)
 	{
-		return ore.getProperty(M.property_ore).onToolClick(player, tool, stack, this, side, hitX, hitY, hitZ);
-	}
-	
-	@Override
-	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration, Direction side,
-			float hitX, float hitY, float hitZ)
-	{
-		return ore.getProperty(M.property_ore).onToolUse(player, tool, stack, this, side, hitX, hitY, hitZ, duration);
+		return ore.getProperty(MP.property_ore).onToolClick(player, tool, stack, this, side, hitX, hitY, hitZ);
 	}
 
 	@Override
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
 	{
-		U.Server.addBlockLandingEffects(worldObj, pos, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), entity, numberOfParticles);
+		U.Server.addBlockLandingEffects(worldObj, pos, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), entity, numberOfParticles);
 		return true;
 	}
 	
@@ -433,7 +426,7 @@ ITP_Drops, IToolableTile
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
-		U.Client.addBlockHitEffect(worldObj, random, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), target.sideHit, pos, manager);
+		U.Client.addBlockHitEffect(worldObj, random, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), target.sideHit, pos, manager);
 		return true;
 	}
 	
@@ -441,7 +434,7 @@ ITP_Drops, IToolableTile
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
-		U.Client.addBlockDestroyEffects(worldObj, pos, rock.getProperty(M.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), manager);
+		U.Client.addBlockDestroyEffects(worldObj, pos, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), manager);
 		return true;
 	}
 }

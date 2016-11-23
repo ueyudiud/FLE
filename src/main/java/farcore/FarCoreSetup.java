@@ -26,7 +26,6 @@ import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
 import farcore.util.U;
 import farcore.util.U.ClientHandler;
-import farcore.util.U.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -84,7 +83,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 		 * The major version will not be 1.1 until Far Core is
 		 * enough to make FLE.
 		 */
-		version = "1.0m",
+		version = "1.0n",
 		name = "Far Core")
 public class FarCoreSetup
 {
@@ -307,12 +306,12 @@ public class FarCoreSetup
 				for(Entry<IBlockColor, List<Block>> entry : ClientHandler.blockColorMap.entrySet())
 				{
 					blockColors.registerBlockColorHandler(
-							entry.getKey(), L.cast(entry.getValue(), Block.class));
+							entry.getKey(), farcore.util.L.cast(entry.getValue(), Block.class));
 				}
 				for(Entry<IItemColor, List<Item>> entry : ClientHandler.itemColorMap.entrySet())
 				{
 					itemColors.registerItemColorHandler(
-							entry.getKey(), L.cast(entry.getValue(), Item.class));
+							entry.getKey(), farcore.util.L.cast(entry.getValue(), Item.class));
 				}
 			}
 			
@@ -368,7 +367,7 @@ public class FarCoreSetup
 			}
 			else if(register != null)
 			{
-				U.L.put(registers, U.Mod.getActiveModID(), register);
+				farcore.util.L.put(registers, U.Mod.getActiveModID(), register);
 			}
 		}
 
@@ -392,7 +391,7 @@ public class FarCoreSetup
 		 */
 		public static void onRegisterAllBlocks(BlockModelShapes shapes)
 		{
-			shapes.registerBuiltInBlocks(U.L.cast(buildInRender, Block.class));
+			shapes.registerBuiltInBlocks(farcore.util.L.cast(buildInRender, Block.class));
 			buildInRender = null;
 		}
 	}

@@ -5,8 +5,8 @@ import java.util.List;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
-import farcore.data.M;
 import farcore.data.MC;
+import farcore.data.MP;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropAccessSimulated;
 import farcore.lib.crop.ICrop;
@@ -51,7 +51,7 @@ public class ItemSeed extends ItemMulti
 			}
 			if(!playerIn.canPlayerEdit(pos, facing, stack))
 				return EnumActionResult.FAIL;
-			ICrop crop = material.getProperty(M.property_crop);
+			ICrop crop = material.getProperty(MP.property_crop);
 			CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, crop, getDNAFromStack(stack));
 			if(!crop.canPlantAt(access)) return EnumActionResult.SUCCESS;
 			BlockCrop.ITEM_THREAD.set(stack);
@@ -69,7 +69,7 @@ public class ItemSeed extends ItemMulti
 	{
 		for(Mat material : Mat.filt(condition))
 		{
-			ItemStack stack = applySeed(1, material, 0, material.getProperty(M.property_crop).makeNativeDNA());
+			ItemStack stack = applySeed(1, material, 0, material.getProperty(MP.property_crop).makeNativeDNA());
 			subItems.add(stack);
 		}
 	}
@@ -79,7 +79,7 @@ public class ItemSeed extends ItemMulti
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
-		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(M.property_crop).getLocalName(getDNAFromStack(stack)));
+		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(MP.property_crop).getLocalName(getDNAFromStack(stack)));
 		unlocalizedList.add("info.crop.generation", getGenerationFromStack(stack) + 1);
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 	}

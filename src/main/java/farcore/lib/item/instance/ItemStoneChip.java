@@ -2,8 +2,8 @@ package farcore.lib.item.instance;
 
 import farcore.data.EnumItem;
 import farcore.data.KS;
-import farcore.data.M;
 import farcore.data.MC;
+import farcore.data.MP;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.entity.EntityProjectileItem;
@@ -61,7 +61,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			Mat material = getMaterialFromItem(stack);
 			if(material.contain(SubTag.ROCK))
 			{
-				PropertyRock property = material.getProperty(M.property_rock);
+				PropertyRock property = material.getProperty(MP.property_rock);
 				if(worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, RockType.cobble_art), 3))
 				{
 					stack.stackSize -= 9;
@@ -154,7 +154,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			Mat material = getMaterialFromItem(entity.currentItem);
 			if(material != null)
 			{
-				damage *= (1F + material.getProperty(M.property_tool).damageToEntity);
+				damage *= (1F + material.getProperty(MP.property_tool).damageToEntity);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)

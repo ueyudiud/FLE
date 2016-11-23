@@ -11,6 +11,7 @@ import farcore.data.EnumItem;
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.M;
 import farcore.data.MC;
+import farcore.data.MP;
 import farcore.data.Potions;
 import farcore.energy.electric.ElectricNet;
 import farcore.energy.kinetic.KineticNet;
@@ -44,6 +45,7 @@ import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.item.instance.ItemStoneFragment;
 import farcore.lib.item.instance.ItemSubCropRelated;
+import farcore.lib.item.instance.ItemTreeLog;
 import farcore.lib.material.Mat;
 import farcore.lib.net.PacketKey;
 import farcore.lib.net.entity.PacketEntity;
@@ -105,7 +107,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return Config.createLog ? new ItemStack(M.oak.getProperty(M.property_wood).block) : new ItemStack(Blocks.LOG);
+				return Config.createLog ? new ItemStack(M.oak.getProperty(MP.property_wood).block) : new ItemStack(Blocks.LOG);
 			}
 		};
 		CT.tabTerria = new CreativeTabBase("farcore.terria", "Far Terria")
@@ -113,7 +115,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return Config.createRock ? new ItemStack(M.peridotite.getProperty(M.property_rock).block, 1, 2) : new ItemStack(Blocks.STONE);
+				return Config.createRock ? new ItemStack(M.peridotite.getProperty(MP.property_rock).block, 1, 2) : new ItemStack(Blocks.STONE);
 			}
 		};
 		CT.tabBuilding = new CreativeTabBase("farcore.building", "Far Building Blocks")
@@ -121,7 +123,7 @@ public class CommonLoader
 			@Override
 			public ItemStack getIconItemStack()
 			{
-				return Config.createRock ? new ItemStack(M.marble.getProperty(M.property_rock).block, 1, 5) : new ItemStack(Blocks.STONEBRICK);
+				return Config.createRock ? new ItemStack(M.marble.getProperty(MP.property_rock).block, 1, 5) : new ItemStack(Blocks.STONEBRICK);
 			}
 		};
 		CT.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item")
@@ -181,7 +183,7 @@ public class CommonLoader
 		//Some material will create blocks and items.
 		//DO NOT CALL CLASS farcore.data.M BEFORE FAR CORE PRE INITIALIZED.
 		M.init();
-		//Initialize items.
+		//Initialize blocks & items & fluids.
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		new ItemFluidDisplay().setCreativeTab(CT.tabFluids);
 		new BlockThermalDebug();
@@ -192,6 +194,7 @@ public class CommonLoader
 			new ItemOreChip().setCreativeTab(CT.tabResourceItem);
 			new BlockOre().setCreativeTab(CT.tabTerria);
 			new BlockCarvedRock();
+			new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
 		}
 		if(Config.createCrop)
 		{
@@ -203,24 +206,16 @@ public class CommonLoader
 		{
 			new BlockSapling().setCreativeTab(CT.tabTree);
 			EnumItem.branch.set(new ItemMulti(MC.branch).setCreativeTab(CT.tabTree));
+			new ItemTreeLog().setCreativeTab(CT.tabTree);
 		}
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabResourceItem));
-		//Initialize fluids.
 		if(Config.replaceWater)
 		{
 			EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
-		}
-		//Initialize blocks.
-		new BlockFire();
-		if(Config.replaceWater)
-		{
 			new BlockWater((FluidBase) EnumFluid.water.fluid);
 			new BlockIce().setCreativeTab(CT.tabTerria);
 		}
-		if(Config.createRock)
-		{
-			new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
-		}
+		new BlockFire();
 		//Register tile entities.
 		GameRegistry.registerTileEntity(TELossTile.class, "farcore.loss.tile");
 		GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
@@ -259,6 +254,7 @@ public class CommonLoader
 		LanguageManager.registerLocal("info.shift.click", ChatFormatting.WHITE + "Press " + ChatFormatting.ITALIC + "<%s>" + ChatFormatting.RESET + " to get more information.");
 		LanguageManager.registerLocal("info.food.label", ChatFormatting.RED + "Food Stat:");
 		LanguageManager.registerLocal("info.food.display", ChatFormatting.RED + "F-%s S-%s W-%s");
+		LanguageManager.registerLocal("info.tree.log.length", "Length : " + ChatFormatting.GREEN + "%d");
 		LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
 		LanguageManager.registerLocal("commands.date.usage", "/date");
 		LanguageManager.registerLocal("commands.date.arg.err", "Invalid command argument");

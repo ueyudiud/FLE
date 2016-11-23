@@ -2,7 +2,7 @@ package farcore.lib.util;
 
 import java.util.Arrays;
 
-import farcore.util.U;
+import farcore.util.L;
 
 public interface IDataChecker<T>
 {
@@ -51,7 +51,7 @@ public interface IDataChecker<T>
 			return obj == this ? true :
 				(obj == null || this == null) ? false :
 					(!(obj instanceof Not)) ? false :
-						U.L.equal(((Not) obj).check, check);
+						L.equal(((Not) obj).check, check);
 		}
 	}
 
@@ -250,8 +250,8 @@ public interface IDataChecker<T>
 			return obj == this ? true :
 				(obj == null || this == null) ? false :
 					(!(obj instanceof Xor)) ? false :
-						(U.L.equal(((Xor) obj).check1, check1) && U.L.equal(((Xor) obj).check2, check2)) ||
-						(U.L.equal(((Xor) obj).check1, check2) && U.L.equal(((Xor) obj).check2, check1));
+						(L.equal(((Xor) obj).check1, check1) && L.equal(((Xor) obj).check2, check2)) ||
+						(L.equal(((Xor) obj).check1, check2) && L.equal(((Xor) obj).check2, check1));
 		}
 	}
 
@@ -290,8 +290,8 @@ public interface IDataChecker<T>
 			return obj == this ? true :
 				(obj == null || this == null) ? false :
 					(!(obj instanceof Equal)) ? false :
-						(U.L.equal(((Equal) obj).check1, check1) && U.L.equal(((Equal) obj).check2, check2)) ||
-						(U.L.equal(((Equal) obj).check1, check2) && U.L.equal(((Equal) obj).check2, check1));
+						(L.equal(((Equal) obj).check1, check1) && L.equal(((Equal) obj).check2, check2)) ||
+						(L.equal(((Equal) obj).check1, check2) && L.equal(((Equal) obj).check2, check1));
 		}
 	}
 }

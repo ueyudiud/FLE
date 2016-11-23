@@ -15,8 +15,8 @@ import farcore.data.CT;
 import farcore.data.ColorMultiplier;
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolType;
-import farcore.data.M;
 import farcore.data.MC;
+import farcore.data.MP;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockMaterial;
@@ -28,6 +28,7 @@ import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.model.block.StateMapperExt;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.world.WorldPropHandler;
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -375,18 +376,18 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			{
 			case NONE :
 				if(sides.size() >= 2)
-					return U.Worlds.fallBlock(world, pos, pos.down().offset(U.L.random(sides, rand)), state);
+					return U.Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
 			case FROZEN :
 				if(!sides.isEmpty())
-					return U.Worlds.fallBlock(world, pos, pos.down().offset(U.L.random(sides, rand)), state);
+					return U.Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
 			case GRASS :
 			case MYCELIUM :
 			case TUNDRA :
 			case TUNDRA_FROZEN :
 				if(sides.size() >= 3 || (sides.size() == 2 && rand.nextInt(5) == 0))
-					return U.Worlds.fallBlock(world, pos, pos.down().offset(U.L.random(sides, rand)), state);
+					return U.Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
 			default:
 				break;
@@ -568,7 +569,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
 	{
 		EnumCoverType type = block.getBlock().getValue(COVER_TYPE);
-		float amt = material.getProperty(M.property_tool).damageToEntity;
+		float amt = material.getProperty(MP.property_tool).damageToEntity;
 		amt *= block.motionY * block.motionY;
 		amt /= 25F;
 		return type.isFrozen ? amt * 1.2F : amt;
@@ -577,7 +578,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	@Override
 	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
 	{
-		float amt = 1F - material.getProperty(M.fallen_damage_deduction) / 10000F;
+		float amt = 1F - material.getProperty(MP.fallen_damage_deduction) / 10000F;
 		EnumCoverType type = worldIn.getBlockState(pos).getValue(COVER_TYPE);
 		if(type.isWet)
 		{

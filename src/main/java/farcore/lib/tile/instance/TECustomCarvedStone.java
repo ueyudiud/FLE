@@ -7,6 +7,7 @@ import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.data.IC;
 import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
@@ -14,9 +15,8 @@ import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddLandingEffects;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Toolable;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Light;
@@ -26,7 +26,6 @@ import farcore.lib.tile.abstracts.TEStatic;
 import farcore.lib.util.Direction;
 import farcore.lib.world.IBlockCoordQuarterProperties;
 import farcore.util.U;
-import farcore.util.U.L;
 import farcore.util.U.Lights;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -46,8 +45,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECustomCarvedStone extends TEStatic
-implements IBlockCoordQuarterProperties, ITP_BlockHardness, ITP_ExplosionResistance, ITP_Light, ITP_SideSolid, ITP_CollisionBoundingBox,
-ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, ITP_HarvestCheck, IToolableTile
+implements IBlockCoordQuarterProperties, ITP_BlockHardness, ITP_ExplosionResistance, ITP_Light, ITP_SideSolid, ITP_BoundingBox,
+ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestCheck, IToolableTile
 {
 	private static final long EMPTY = ~0L;
 	private static final float BLOCK_SCALE = 0.25F;
@@ -85,7 +84,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 	{
 		if(property == null)
 		{
-			property = rock.getProperty(M.property_rock);
+			property = rock.getProperty(MP.property_rock);
 		}
 		return property;
 	}
@@ -192,7 +191,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 		double vx1 = hitX == 1.0 ? 0.9999 : hitX;
 		double vy1 = hitY == 1.0 ? 0.9999 : hitY;
 		double vz1 = hitZ == 1.0 ? 0.9999 : hitZ;
-		while(L.inRange(1.0, 0.0, vx1) && L.inRange(1.0, 0.0, vy1) && L.inRange(1.0, 0.0, vz1))
+		while(farcore.util.L.inRange(1.0, 0.0, vx1) && farcore.util.L.inRange(1.0, 0.0, vy1) && farcore.util.L.inRange(1.0, 0.0, vz1))
 		{
 			int x = (int) (vx1 * 4);
 			int y = (int) (vy1 * 4);
@@ -470,7 +469,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 		int idx = index(x, y, z);
 		if(light < 0)
 		{
-			light = L.castPositive(lightmap[idx]);
+			light = farcore.util.L.castPositive(lightmap[idx]);
 		}
 		else
 		{
@@ -480,27 +479,27 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 		if(light >= 4)
 		{
 			light -= 4;
-			if((side & 0x1) != 0 && x > 0 && L.castPositive(lightmap[idx - 0x1]) < light)
+			if((side & 0x1) != 0 && x > 0 && farcore.util.L.castPositive(lightmap[idx - 0x1]) < light)
 			{
 				scanLight(x - 1, y, z, (byte) (side & ~0x2), light, lightmap);
 			}
-			if((side & 0x2) != 0 && x < 3 && L.castPositive(lightmap[idx + 0x1]) < light)
+			if((side & 0x2) != 0 && x < 3 && farcore.util.L.castPositive(lightmap[idx + 0x1]) < light)
 			{
 				scanLight(x + 1, y, z, (byte) (side & ~0x1), light, lightmap);
 			}
-			if((side & 0x4) != 0 && y > 0 && L.castPositive(lightmap[idx - 0x4]) < light)
+			if((side & 0x4) != 0 && y > 0 && farcore.util.L.castPositive(lightmap[idx - 0x4]) < light)
 			{
 				scanLight(x, y - 1, z, (byte) (side & ~0x8), light, lightmap);
 			}
-			if((side & 0x8) != 0 && y < 3 && L.castPositive(lightmap[idx + 0x4]) < light)
+			if((side & 0x8) != 0 && y < 3 && farcore.util.L.castPositive(lightmap[idx + 0x4]) < light)
 			{
 				scanLight(x, y + 1, z, (byte) (side & ~0x4), light, lightmap);
 			}
-			if((side & 0x10) != 0 && z > 0 && L.castPositive(lightmap[idx - 0x10]) < light)
+			if((side & 0x10) != 0 && z > 0 && farcore.util.L.castPositive(lightmap[idx - 0x10]) < light)
 			{
 				scanLight(x, y, z - 1, (byte) (side & ~0x20), light, lightmap);
 			}
-			if((side & 0x20) != 0 && z < 3 && L.castPositive(lightmap[idx + 0x10]) < light)
+			if((side & 0x20) != 0 && z < 3 && farcore.util.L.castPositive(lightmap[idx + 0x10]) < light)
 			{
 				scanLight(x, y, z + 1, (byte) (side & ~0x10), light, lightmap);
 			}
@@ -512,6 +511,20 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 	{
 		checkModified();
 		return box;
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundBox(IBlockState state)
+	{
+		checkModified();
+		return box;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
+	{
+		return getBoundBox(state);
 	}
 	
 	@Override
@@ -539,13 +552,6 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITB_Toolable, I
 		return IToolableTile.DEFAULT_RESULT;
 	}
 	
-	@Override
-	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, long duration, Direction side,
-			float hitX, float hitY, float hitZ)
-	{
-		return IToolableTile.DEFAULT_RESULT;
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)

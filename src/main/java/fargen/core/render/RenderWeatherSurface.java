@@ -4,7 +4,6 @@ import java.util.Random;
 
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
-import farcore.util.U.R;
 import fargen.core.biome.BiomeBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -29,7 +28,7 @@ public class RenderWeatherSurface extends IRenderHandler
 	private static final ResourceLocation SNOW_TEXTURES = new ResourceLocation("textures/environment/snow.png");
 	private static final float[] rainXCoords = new float[1024];
 	private static final float[] rainYCoords = new float[1024];
-
+	
 	static
 	{
 		for (int i = 0; i < 32; ++i)
@@ -44,15 +43,15 @@ public class RenderWeatherSurface extends IRenderHandler
 			}
 		}
 	}
-
+	
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc)
 	{
 		float f = world.getRainStrength(partialTicks);
 		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(world);
 		EntityRenderer renderer = mc.entityRenderer;
-		int rendererUpdateCount = R.getInt(EntityRenderer.class, "rendererUpdateCount", "field_78529_t", renderer, false);
-		Random random = (Random) R.getValue(EntityRenderer.class, "random", "field_78537_ab", renderer, false);
+		int rendererUpdateCount = farcore.util.R.getInt(EntityRenderer.class, "rendererUpdateCount", "field_78529_t", renderer, false);
+		Random random = (Random) farcore.util.R.getValue(EntityRenderer.class, "random", "field_78537_ab", renderer, false);
 		if (f > 0.0F)
 		{
 			renderer.enableLightmap();
@@ -72,18 +71,18 @@ public class RenderWeatherSurface extends IRenderHandler
 			double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 			int l = MathHelper.floor_double(d1);
 			int i1 = 5;
-
+			
 			if (mc.gameSettings.fancyGraphics)
 			{
 				i1 = 10;
 			}
-
+			
 			int j1 = -1;
 			float f1 = rendererUpdateCount + partialTicks;
 			vertexbuffer.setTranslation(-d0, -d1, -d2);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-
+			
 			for (int k1 = k - i1; k1 <= k + i1; ++k1)
 			{
 				for (int l1 = i - i1; l1 <= i + i1; ++l1)
@@ -93,7 +92,7 @@ public class RenderWeatherSurface extends IRenderHandler
 					double d4 = rainYCoords[i2] * 0.5D;
 					pos.setPos(l1, 0, k1);
 					Biome biome = world.getBiomeGenForCoords(pos);
-
+					
 					if (properties.getRainstrength(world, pos) > 1E-3F)
 					{
 						int j2 = world.getPrecipitationHeight(pos).getY();

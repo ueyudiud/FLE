@@ -2,7 +2,7 @@ package fle.core.items.behavior;
 
 import farcore.data.EnumToolType;
 import farcore.data.KS;
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.item.IProjectileItem;
 import farcore.lib.item.ITool;
@@ -114,7 +114,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			Mat material = ItemTool.getMaterial(entity.currentItem, "head");
 			if(material != null)
 			{
-				damage *= (1F + material.getProperty(M.property_tool).damageToEntity);
+				damage *= (1F + material.getProperty(MP.property_tool).damageToEntity);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)

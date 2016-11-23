@@ -16,13 +16,12 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockDestroyedByPlayer;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ComparatorInputOverride;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ConnectRedstone;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_RedstonePower;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.abstracts.TESynchronization;
@@ -53,7 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class TECircuitBase extends TESynchronization
 implements ITP_RedstonePower, ITP_ConnectRedstone, ITP_ComparatorInputOverride,
 ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile,
-ITP_Drops, ITP_CollisionBoundingBox, ITP_SelectedBoundingBox, ITP_BlockHardness,
+ITP_Drops, ITP_BoundingBox, ITP_BlockHardness,
 ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
 	protected static final ActionResult<Float> SCREW_DRIVER_DAMAGE = new ActionResult<Float>(EnumActionResult.SUCCESS, 0.2F);
@@ -181,6 +180,12 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
+	{
+		return REDSTONE_DIODE_AABB;
+	}
+
+	@Override
+	public AxisAlignedBB getBoundBox(IBlockState state)
 	{
 		return REDSTONE_DIODE_AABB;
 	}

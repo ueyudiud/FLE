@@ -7,7 +7,7 @@ import java.util.Random;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.EnumToolType;
-import farcore.data.M;
+import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropInfo;
@@ -18,10 +18,9 @@ import farcore.lib.tile.IDebugableTile;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Update;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_CollisionBoundingBox;
+import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SelectedBoundingBox;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.abstracts.TEAged;
 import farcore.lib.util.Direction;
@@ -44,29 +43,28 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECrop extends TEAged
-implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_CollisionBoundingBox,
-ITP_SelectedBoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects,
+implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects,
 ITB_AddHitEffects
 {
 	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, .9375F, .9375F);
-	
-	private static final CropInfo NO_DATA_INFO = new CropInfo();
 
+	private static final CropInfo NO_DATA_INFO = new CropInfo();
+	
 	static
 	{
 		NO_DATA_INFO.DNA = "";
 	}
-	
+
 	private int waterLevel = 6400;
 	private boolean isWild = false;
 	private float growBuffer;
 	private int stage;
 	private ICrop card = ICrop.VOID;
 	private CropInfo info = NO_DATA_INFO;
-
+	
 	public TECrop()
 	{
-
+		
 	}
 	public TECrop(ICrop crop)
 	{
@@ -81,7 +79,7 @@ ITB_AddHitEffects
 		info.generations = generation;
 		crop.decodeDNA(this, dna);
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
@@ -97,7 +95,7 @@ ITB_AddHitEffects
 		}
 		return nbt;
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -106,11 +104,11 @@ ITB_AddHitEffects
 		isWild = nbt.getBoolean("isWild");
 		growBuffer = nbt.getFloat("growBuf");
 		stage = nbt.getInteger("stage");
-		card = Mat.material(nbt.getString("crop")).getProperty(M.property_crop, ICrop.VOID);
+		card = Mat.material(nbt.getString("crop")).getProperty(MP.property_crop, ICrop.VOID);
 		info = new CropInfo();
 		info.readFromNBT(nbt);
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
@@ -121,7 +119,7 @@ ITB_AddHitEffects
 		info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
@@ -130,7 +128,7 @@ ITB_AddHitEffects
 		Mat material = NBTs.getMaterialByNameOrDefault(nbt, "c", null);
 		if(material != null)
 		{
-			card = material.getProperty(M.property_crop, ICrop.VOID);
+			card = material.getProperty(MP.property_crop, ICrop.VOID);
 		}
 		if(nbt.hasKey("i"))
 		{
@@ -139,94 +137,100 @@ ITB_AddHitEffects
 		}
 		markBlockRenderUpdate();
 	}
+	
+	@Override
+	public AxisAlignedBB getBoundBox(IBlockState state)
+	{
+		return CROP_AABB;
+	}
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
 	{
 		return null;
 	}
-	
+
 	@Override
 	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
 			Entity entity)
 	{
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 	{
 		return BlockCrop.CropSelectBoxHeightHandler.INSTANCE.getSelectBoundBox(getStateName(), CROP_AABB);
 	}
-
+	
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
 		return thisTick + card.tickUpdate(this);
 	}
-
+	
 	@Override
 	protected void updateServer1()
 	{
 		super.updateServer1();
 		card.onUpdate(this);
 	}
-
+	
 	@Override
 	public boolean canHarvestBlock(EntityPlayer player)
 	{
 		return Players.matchCurrentToolType(player, EnumToolType.sickle);
 	}
-
+	
 	@Override
 	public String getDNA()
 	{
 		return info.DNA;
 	}
-
+	
 	@Override
 	public ICrop crop()
 	{
 		return card;
 	}
-
+	
 	@Override
 	public CropInfo info()
 	{
 		return info;
 	}
-
+	
 	@Override
 	public Biome biome()
 	{
 		return worldObj.getBiomeGenForCoords(pos);
 	}
-
+	
 	@Override
 	public boolean isWild()
 	{
 		return isWild;
 	}
-
+	
 	@Override
 	public Random rng()
 	{
 		return random;
 	}
-
+	
 	@Override
 	public int stage()
 	{
 		return stage;
 	}
-
+	
 	@Override
 	public void setStage(int stage)
 	{
 		this.stage = stage;
 		markDirty();
 	}
-	
+
 	@Override
 	public void grow(int amt)
 	{
@@ -245,25 +249,25 @@ ITB_AddHitEffects
 			markDirty();
 		}
 	}
-
+	
 	@Override
 	protected int getRenderUpdateRange()
 	{
 		return 5;
 	}
-
+	
 	@Override
 	public int getWaterLevel()
 	{
 		return waterLevel;
 	}
-	
+
 	@Override
 	public float temp()
 	{
 		return ThermalNet.getTemperature(worldObj, pos, true);
 	}
-
+	
 	@Override
 	public int useWater(int amount)
 	{
@@ -271,13 +275,13 @@ ITB_AddHitEffects
 		waterLevel -= c;
 		return c;
 	}
-
+	
 	@Override
 	public void killCrop()
 	{
 		removeBlock();
 	}
-
+	
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
@@ -286,25 +290,25 @@ ITB_AddHitEffects
 		list.add("DNA : " + info.DNA);
 		int max = card.getMaxStage();
 		int req = card.getGrowReq(this);
-
+		
 		list.add("Grow Progress : " + ChatFormatting.GREEN +
 				(stage + 1 < card.getMaxStage() ?
 						(int) (growBuffer + stage * req) + "/" + (card.getMaxStage() - 1) * req :
 						"Mature"));
 		card.addInformation(this, list);
 	}
-
+	
 	public boolean canPlantAt()
 	{
 		return card == null ? true : card.canPlantAt(this);
 	}
-	
+
 	@Override
 	public boolean canBlockStay()
 	{
 		return worldObj == null || card == ICrop.VOID ? true : card.canPlantAt(this);
 	}
-
+	
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
@@ -314,12 +318,12 @@ ITB_AddHitEffects
 			killCrop();
 		}
 	}
-
+	
 	public EnumPlantType getPlantType()
 	{
 		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
 	}
-
+	
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
@@ -330,7 +334,7 @@ ITB_AddHitEffects
 		}
 		return list;
 	}
-
+	
 	@Override
 	public void onUpdateTick(IBlockState state, Random random, boolean isTickRandomly)
 	{
@@ -339,12 +343,12 @@ ITB_AddHitEffects
 			removeBlock();
 		}
 	}
-
+	
 	public String getStateName()
 	{
 		return card != null ? card.getState(this) : "void";
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
@@ -353,7 +357,7 @@ ITB_AddHitEffects
 		Client.addBlockHitEffect(worldObj, random, state.getActualState(worldObj, pos), target.sideHit, pos, manager);
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)

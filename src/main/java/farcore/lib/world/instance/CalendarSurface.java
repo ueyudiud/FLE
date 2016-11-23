@@ -1,7 +1,7 @@
 package farcore.lib.world.instance;
 
 import farcore.lib.world.ICalendarWithMonth;
-import farcore.util.U;
+import farcore.util.Strings;
 import farcore.util.U.Maths;
 
 public class CalendarSurface implements ICalendarWithMonth
@@ -72,6 +72,6 @@ public class CalendarSurface implements ICalendarWithMonth
 	@Override
 	public String dateInfo(long tick)
 	{
-		return monthName[(int) monthInYear(tick)] + " " + U.Strings.toOrdinalNumber(dayInMonth(tick) + 1) + ", " + year(tick);
+		return monthName[(int) monthInYear(tick)] + " " + Strings.toOrdinalNumber(dayInMonth(tick) + 1) + ", " + year(tick);
 	}
 }

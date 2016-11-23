@@ -47,6 +47,12 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			{
 				return $tree.getLogState(this, meta, false);
 			}
+
+			@Override
+			protected IBlockState initDefaultState(IBlockState state)
+			{
+				return $tree.initLogState(false, super.initDefaultState(state));
+			}
 		};
 	}
 	

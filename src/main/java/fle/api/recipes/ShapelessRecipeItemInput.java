@@ -5,6 +5,7 @@ import java.util.List;
 import farcore.data.EnumToolType;
 import farcore.lib.collection.ArrayIterator;
 import farcore.lib.item.ITool;
+import farcore.util.L;
 import farcore.util.U;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
 import net.minecraft.item.ItemStack;
@@ -49,7 +50,7 @@ public class ShapelessRecipeItemInput extends ShapelessRecipeInput<ItemStack, Re
 			size = arg.input.size(stack = matrix.get(id));
 			if(arg.giveback != null && (arg.neededSizeSimilar || size >= stack.stackSize))
 			{
-				if(arg.givebackChance == 10000 || U.L.nextInt(10000) < arg.givebackChance)
+				if(arg.givebackChance == 10000 || L.nextInt(10000) < arg.givebackChance)
 				{
 					matrix.set(id, arg.giveback.instance());
 				}

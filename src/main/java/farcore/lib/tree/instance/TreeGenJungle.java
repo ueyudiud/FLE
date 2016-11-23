@@ -4,7 +4,7 @@ import java.util.Random;
 
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeInfo;
-import farcore.util.U;
+import farcore.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -19,7 +19,7 @@ public class TreeGenJungle extends TreeGenHuge
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		int l = baseHeight + U.L.nextInt(randHeight, random);
+		int l = baseHeight + L.nextInt(randHeight, random);
 		
 		if (!matchHugeTreeGrow(world, random, x, y, z, l))
 			return false;
