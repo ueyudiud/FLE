@@ -194,6 +194,16 @@ public interface ICoord
 		return pos().distanceSq(pos);
 	}
 	
+	default boolean isAirBlock(Direction offset)
+	{
+		return world().isAirBlock(offset.offset(pos()));
+	}
+	
+	default boolean isAirBlock(int x, int y, int z)
+	{
+		return world().isAirBlock(pos().add(x, y, z));
+	}
+	
 	default boolean isCatchRain(boolean checkNeayby)
 	{
 		return U.Worlds.isCatchingRain(world(), pos(), checkNeayby);

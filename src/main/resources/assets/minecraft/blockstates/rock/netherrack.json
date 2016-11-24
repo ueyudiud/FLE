@@ -13,7 +13,7 @@
 			},
 			"cobble": {
 				"textures": {
-					"all": "minecraft:blocks/rock/netherrack/cobble"
+					"all": "minecraft:blocks/netherrack"
 				}
 			},
 			"cobble_art": {

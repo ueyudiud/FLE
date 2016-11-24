@@ -429,12 +429,12 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		switch (type)
 		{
 		case GRASS :
-			if(temperature > V.waterFreezePoint + 50) return;
-			else if(temperature > V.waterFreezePoint + 38) { active = 3; }
-			else if (temperature > V.waterFreezePoint + 30) { active = 4; }
-			else if (temperature > V.waterFreezePoint + 17) { active = 3; }
-			else if(temperature > V.waterFreezePoint - 3) { active = 2; }
-			else if(temperature > V.waterFreezePoint - 18) { active = 1; }
+			if(temperature > V.WATER_FREEZE_POINT_F + 50) return;
+			else if(temperature > V.WATER_FREEZE_POINT_F + 38) { active = 3; }
+			else if (temperature > V.WATER_FREEZE_POINT_F + 30) { active = 4; }
+			else if (temperature > V.WATER_FREEZE_POINT_F + 17) { active = 3; }
+			else if(temperature > V.WATER_FREEZE_POINT_F - 3) { active = 2; }
+			else if(temperature > V.WATER_FREEZE_POINT_F - 18) { active = 1; }
 			else return;
 			if(humidity < 0.1F) return;
 			else if(humidity < 0.2F) { --active; }
@@ -442,12 +442,12 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			if(brightness > 12 && rand.nextInt(4) == 0) { ++active; }
 			break;
 		case MYCELIUM :
-			if(temperature > V.waterFreezePoint + 47) return;
-			else if(temperature > V.waterFreezePoint + 34) { active = 3; }
-			else if (temperature > V.waterFreezePoint + 27) { active = 4; }
-			else if (temperature > V.waterFreezePoint + 19) { active = 3; }
-			else if(temperature > V.waterFreezePoint + 4) { active = 2; }
-			else if(temperature > V.waterFreezePoint - 7) { active = 1; }
+			if(temperature > V.WATER_FREEZE_POINT_F + 47) return;
+			else if(temperature > V.WATER_FREEZE_POINT_F + 34) { active = 3; }
+			else if (temperature > V.WATER_FREEZE_POINT_F + 27) { active = 4; }
+			else if (temperature > V.WATER_FREEZE_POINT_F + 19) { active = 3; }
+			else if(temperature > V.WATER_FREEZE_POINT_F + 4) { active = 2; }
+			else if(temperature > V.WATER_FREEZE_POINT_F - 7) { active = 1; }
 			else return;
 			if(humidity < 0.3F) return;
 			else if(humidity > 0.5F) { ++active; }
@@ -455,10 +455,10 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			break;
 		case TUNDRA :
 		case TUNDRA_FROZEN :
-			if(temperature > V.waterFreezePoint + 38) return;
-			else if(temperature > V.waterFreezePoint + 17) { active = 3; }
-			else if(temperature > V.waterFreezePoint + 4) { active = 2; }
-			else if(temperature > V.waterFreezePoint - 7) { active = 1; }
+			if(temperature > V.WATER_FREEZE_POINT_F + 38) return;
+			else if(temperature > V.WATER_FREEZE_POINT_F + 17) { active = 3; }
+			else if(temperature > V.WATER_FREEZE_POINT_F + 4) { active = 2; }
+			else if(temperature > V.WATER_FREEZE_POINT_F - 7) { active = 1; }
 			else return;
 			if(humidity < 0.025F) return;
 			else if(humidity > 0.28F) { active ++; }
@@ -501,14 +501,14 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		if(type.isFrozen)
 		{
-			if(ThermalNet.getTemperature(worldIn, pos, true) >= V.waterFreezePoint + 25 && rand.nextInt(4) == 0)
+			if(ThermalNet.getTemperature(worldIn, pos, true) >= V.WATER_FREEZE_POINT_F + 25 && rand.nextInt(4) == 0)
 			{
 				state = state.withProperty(COVER_TYPE, type.noFrozen);
 			}
 		}
 		else if(type.isSnow)
 		{
-			if(ThermalNet.getTemperature(worldIn, pos, true) >= V.waterFreezePoint && rand.nextInt(4) == 0)
+			if(ThermalNet.getTemperature(worldIn, pos, true) >= V.WATER_FREEZE_POINT_F && rand.nextInt(4) == 0)
 			{
 				state = state.withProperty(COVER_TYPE, type.waterCover);
 			}

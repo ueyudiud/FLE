@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreTextureHandler implements IIconRegister
 {
 	private static final List<IIconLoader> LIST = new ArrayList();
-	
+
 	public static void addIconLoader(IIconLoader loader)
 	{
 		LIST.add(loader);
@@ -39,12 +39,18 @@ public class FarCoreTextureHandler implements IIconRegister
 	@Override
 	public TextureAtlasSprite registerIcon(String domain, String path)
 	{
-		return map.registerSprite(new ResourceLocation(domain, path));
+		return registerIcon(new ResourceLocation(domain, path));
 	}
 	
 	@Override
 	public TextureAtlasSprite registerIcon(String key)
 	{
-		return map.registerSprite(new ResourceLocation(key));
+		return registerIcon(new ResourceLocation(key));
+	}
+
+	@Override
+	public TextureAtlasSprite registerIcon(ResourceLocation location)
+	{
+		return map.registerSprite(location);
 	}
 }

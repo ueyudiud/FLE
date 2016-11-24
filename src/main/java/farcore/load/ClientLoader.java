@@ -1,18 +1,18 @@
 package farcore.load;
 
 import farcore.FarCore;
-import farcore.data.IC;
 import farcore.handler.FarCoreGuiHandler;
 import farcore.handler.FarCoreTextureHandler;
+import farcore.instances.MaterialTextureLoader;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.render.Colormap.ColormapFactory;
-import farcore.lib.render.entity.RenderFallingBlockExt;
-import farcore.lib.render.entity.RenderProjectileItem;
 import farcore.lib.render.FontMap;
 import farcore.lib.render.FontRenderExtend;
+import farcore.lib.render.entity.RenderFallingBlockExt;
+import farcore.lib.render.entity.RenderProjectileItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -35,7 +35,7 @@ public class ClientLoader extends CommonLoader
 		MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 		MinecraftForge.EVENT_BUS.register(new FarCoreTextureHandler());
 
-		FarCoreTextureHandler.addIconLoader(IC.INSTANCE);
+		FarCoreTextureHandler.addIconLoader(new MaterialTextureLoader());
 
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
 		//Register entity rendering handlers.

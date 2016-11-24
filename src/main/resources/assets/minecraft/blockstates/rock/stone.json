@@ -8,17 +8,17 @@
 		"type": {
 			"resource": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/resource"
+					"all": "minecraft:blocks/stone"
 				}
 			},
 			"cobble": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/cobble"
+					"all": "minecraft:blocks/cobblestone"
 				}
 			},
 			"cobble_art": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/cobble"
+					"all": "minecraft:blocks/cobblestone"
 				}
 			},
 			"smoothed": {
@@ -28,22 +28,22 @@
 			},
 			"mossy": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/mossy"
+					"all": "minecraft:blocks/cobblestone_mossy"
 				}
 			},
 			"brick": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/brick"
+					"all": "minecraft:blocks/stonebrick"
 				}
 			},
 			"brick_crushed": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/brick_crushed"
+					"all": "minecraft:blocks/stonebrick_cracked"
 				}
 			},
 			"brick_mossy": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/brick_mossy"
+					"all": "minecraft:blocks/stonebrick_mossy"
 				}
 			},
 			"brick_compacted": {
@@ -53,7 +53,7 @@
 			},
 			"chiseled": {
 				"textures": {
-					"all": "minecraft:blocks/rock/stone/chiseled"
+					"all": "minecraft:blocks/stonebrick_carved"
 				}
 			}
 		}

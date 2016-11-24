@@ -9,4 +9,7 @@ public class PropertyBasic
 	public double dielectricConstant;
 	public double electrialResistance;
 	public float redstoneResistance;
+	
+	public long meltingPoint = Long.MAX_VALUE;
+	public long boilingPoint = Long.MAX_VALUE;
 }

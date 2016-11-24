@@ -36,7 +36,7 @@ public class BlockWater extends BlockStandardFluid
 				float det;
 				Block block = worldIn.getBlockState(pos.up()).getBlock();
 				if(block != this && block != EnumBlock.ice.block &&
-						(det = V.waterFreezePoint - ThermalNet.getTemperature(worldIn, pos, true)) > 0)
+						(det = V.WATER_FREEZE_POINT_F - ThermalNet.getTemperature(worldIn, pos, true)) > 0)
 				{
 					int chance = 5 / (int) (det / 3F + 1F);
 					if(chance < 10 && farcore.util.L.nextInt(chance, random) == 0)

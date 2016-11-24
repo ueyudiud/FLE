@@ -9,24 +9,24 @@ import net.minecraft.util.math.BlockPos;
 public enum Direction implements IStringSerializable
 {
 	/** --Y */
-	D( 0, -1,  0,  0),
+	D( 0, -1,  0,  0,     -1),
 	/** --Y */
-	U( 0,  1,  0,  0),
+	U( 0,  1,  0,  0,     -1),
 	/** --Z */
-	N( 0,  0, -1,  0),
+	N( 0,  0, -1,  0,      2),
 	/** ++Z */
-	S( 0,  0,  1,  0),
+	S( 0,  0,  1,  0,      0),
 	/** --X */
-	W(-1,  0,  0,  0),
+	W(-1,  0,  0,  0,      1),
 	/** ++X */
-	E( 1,  0,  0,  0),
+	E( 1,  0,  0,  0,      3),
 	/** --T */
-	A( 0,  0,  0, -1),
+	A( 0,  0,  0, -1,     -1),
 	/** ++T */
-	B( 0,  0,  0,  1),
+	B( 0,  0,  0,  1,     -1),
 	/** Unknown direction. */
-	Q( 0,  0,  0,  0);
-	
+	Q( 0,  0,  0,  0,     -1);
+
 	/**
 	 * @see farcore.lib.util.Facing
 	 */
@@ -42,7 +42,7 @@ public enum Direction implements IStringSerializable
 			{U, D, S, N, E, W, A, B, Q},
 			{D, U, N, S, W, E, A, B, Q}
 	};
-	
+
 	public static final int[] OPPISITE = {1, 0, 3, 2, 5, 4, 7, 6, 8};
 	public static final byte T_2D = 0x0;
 	public static final byte T_3D = 0x1;
@@ -50,7 +50,7 @@ public enum Direction implements IStringSerializable
 	public static final byte T_2D_NONNULL = 0x4;
 	public static final byte T_3D_NONNULL = 0x5;
 	public static final byte T_4D_NONNULL = 0x6;
-	public static final Direction[] DIRECTIONS_2D = {N, S, W, E};
+	public static final Direction[] DIRECTIONS_2D = {S, W, N, E};
 	public static final Direction[] DIRECTIONS_3D = {D, U, N, S, W, E};
 	public static final Direction[] DIRECTIONS_4D = {D, U, N, S, W, E, A, B};
 	//4D rotation next(B) and last(A) is real number
@@ -71,26 +71,26 @@ public enum Direction implements IStringSerializable
 			{W, E, S, N, U, D},
 			{S, N, U, D, W, E},
 			{N, S, D, U, W, E}};
-	
+
 	private static final int[] CAST = {0, 1, 2, 3, 4, 5, 6, 6, 6};
-	
+
 	public static Direction of(EnumFacing direction)
 	{
 		return direction == null ? Q :
 			values()[direction.ordinal()];
 	}
-	
+
 	public static EnumFacing of(Direction direction)
 	{
 		return direction == null ? null :
 			EnumFacing.VALUES[CAST[direction.ordinal()]];
 	}
-	
+
 	public static Direction heading(EntityLivingBase entity)
 	{
 		return entity == null ? Q : values()[entity.getHorizontalFacing().ordinal()];
 	}
-	
+
 	public final int x;
 	public final int y;
 	public final int z;
@@ -101,8 +101,9 @@ public enum Direction implements IStringSerializable
 	public final int flag;
 	public final char chr;
 	public final boolean horizontal;
-	
-	Direction(int x, int y, int z, int t)
+	public final int horizontalOrdinal;
+
+	Direction(int x, int y, int z, int t, int h)
 	{
 		this.x = x;
 		this.y = y;
@@ -114,54 +115,55 @@ public enum Direction implements IStringSerializable
 		flag = 1 << ordinal();
 		chr = name().toLowerCase().charAt(0);
 		horizontal = (x | z) != 0;
+		horizontalOrdinal = h;
 	}
-	
+
 	public Direction getOpposite()
 	{
 		return this == Q ? Q : DIRECTIONS_3D[ordinal() ^ 1];
 	}
-	
+
 	public Direction getRotation4D(Direction axis)
 	{
 		return ROTATION_4D[axis.ordinal()][ordinal()];
 	}
-	
+
 	public Direction getRotation3D(Direction axis)
 	{
 		return ROTATION_3D[axis.ordinal()][ordinal()];
 	}
-	
+
 	public Direction validDirection3D()
 	{
 		return this == A || this == B ? Q : this;
 	}
-	
+
 	public Direction validDirection2D()
 	{
 		return this == A || this == B || this == U || this == D ? Q : this;
 	}
-	
+
 	public BlockPos offset(BlockPos pos)
 	{
 		return pos.add(x, y, z);
 	}
-	
+
 	public EnumFacing of()
 	{
 		return of(this);
 	}
-
+	
 	@Override
 	public String getName()
 	{
 		return Character.toString(chr);
 	}
-
+	
 	public static Direction readFromNBT(NBTTagCompound nbt, String key, byte type)
 	{
 		return readFromNBT(nbt, key, type, (type & 0x4) != 0 ? N : Q);
 	}
-
+	
 	public static Direction readFromNBT(NBTTagCompound nbt, String key, byte type, Direction def)
 	{
 		if(!nbt.hasKey(key)) return def;
@@ -192,7 +194,7 @@ public enum Direction implements IStringSerializable
 			return def;
 		}
 	}
-
+	
 	public void writeToNBT(NBTTagCompound nbt, String key, byte type)
 	{
 		boolean flag = (type & 0x4) != 0;

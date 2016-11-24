@@ -182,7 +182,7 @@ public class FoodStatExt extends FoodStats
 		if(Config.enableWaterStat)
 		{
 			float amt = 0.01F;
-			if (ThermalNet.getTemperature(player.worldObj, player.getPosition(), true) > V.waterFreezePoint + 32)
+			if (ThermalNet.getTemperature(player.worldObj, player.getPosition(), true) > V.WATER_FREEZE_POINT_F + 32)
 			{
 				amt += 0.02F;
 			}
