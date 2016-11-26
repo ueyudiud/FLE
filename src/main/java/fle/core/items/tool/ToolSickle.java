@@ -16,9 +16,9 @@ public class ToolSickle extends Tool
 	}
 	
 	@Override
-	public float getAttackSpeed(ItemStack stack)
+	public float getAttackSpeed(ItemStack stack, float mutiplier)
 	{
-		return -1.0F;
+		return -1.0F + mutiplier * 0.4F;
 	}
 	
 	@Override
@@ -27,13 +27,13 @@ public class ToolSickle extends Tool
 	{
 		return 1.0F;
 	}
-
+	
 	@Override
 	public float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target)
 	{
 		return 1.5F;
 	}
-
+	
 	@Override
 	public float getSpeedMultiplier(ItemStack stack)
 	{

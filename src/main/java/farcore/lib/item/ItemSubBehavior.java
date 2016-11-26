@@ -403,7 +403,14 @@ public class ItemSubBehavior extends ItemBase
 	{
 		for(int id : idMap.values())
 		{
-			createSubItem(id, subItems);
+			try
+			{
+				createSubItem(id, subItems);
+			}
+			catch(Exception exception)
+			{
+				;
+			}
 		}
 	}
 

@@ -2,7 +2,6 @@ package fle.core.items.behavior;
 
 import farcore.data.EnumToolType;
 import farcore.data.KS;
-import farcore.data.MP;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.item.IProjectileItem;
 import farcore.lib.item.ITool;
@@ -28,11 +27,11 @@ import net.minecraft.world.World;
 public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 {
 	float baseDamage;
-
+	
 	public BehaviorSpear()
 	{
 	}
-
+	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
@@ -114,7 +113,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			Mat material = ItemTool.getMaterial(entity.currentItem, "head");
 			if(material != null)
 			{
-				damage *= (1F + material.getProperty(MP.property_tool).damageToEntity);
+				damage *= (1F + material.toolDamageToEntity);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)

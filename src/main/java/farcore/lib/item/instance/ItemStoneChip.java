@@ -4,8 +4,8 @@ import farcore.data.EnumItem;
 import farcore.data.KS;
 import farcore.data.MC;
 import farcore.data.MP;
+import farcore.data.RockType;
 import farcore.lib.block.instance.BlockRock;
-import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.item.IProjectileItem;
 import farcore.lib.item.ItemMulti;
@@ -40,7 +40,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	public ItemStoneChip()
 	{
 		super(MC.chip_rock);
-		enableChemicalFormula = false;
+		this.enableChemicalFormula = false;
 		EnumItem.stone_chip.set(this);
 	}
 	
@@ -84,13 +84,13 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		}
 		return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
 	}
-
+	
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
 		return EnumAction.BOW;
 	}
-
+	
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
@@ -154,7 +154,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			Mat material = getMaterialFromItem(entity.currentItem);
 			if(material != null)
 			{
-				damage *= (1F + material.getProperty(MP.property_tool).damageToEntity);
+				damage *= (1F + material.toolDamageToEntity);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)
@@ -179,7 +179,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		}
 		return false;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,

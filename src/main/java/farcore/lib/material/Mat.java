@@ -46,13 +46,18 @@ import net.minecraft.block.material.Material;
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
 	private static final Register<Mat> REGISTER = new Register(32768);
-
+	
 	private static final Map<IDataChecker<? super Mat>, List<Mat>> MATERIALS_CACHE = new HashMap();
-
+	
 	/**
 	 * Default material, will not register in to list.
 	 */
 	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID);
+	
+	static
+	{
+		VOID.addProperty(MP.property_wood, PropertyTree.VOID);
+	}
 	
 	public static Register<Mat> materials()
 	{
@@ -118,16 +123,28 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public String customDisplayInformation;
 	public short[] RGBa = {255, 255, 255, 255};
 	public int RGB = 0xFFFFFF;
-	//For general property, because it often be used, extract from property map.
-	public PropertyBasic basic;
 	//Multi item configuration.
 	public IItemMatProp itemProp;
-
+	
+	public double heatCapacity;
+	public double thermalConductivity;
+	public double maxSpeed;
+	public double maxTorque;
+	public double dielectricConstant;
+	public double electrialResistance;
+	public float redstoneResistance;
+	
+	public int toolMaxUse = 1;
+	public int toolHarvestLevel;
+	public float toolHardness = 1.0F;
+	public float toolBrittleness;
+	public float toolDamageToEntity;
+	
 	private IPropertyMap propertyMap = new HashPropertyMap();
 	//Reused now.
 	private IntegerMap<String> properties = new IntegerMap();
 	private Set<SubTag> subTags = new HashSet();
-
+	
 	public Mat(int id, String name, String oreDict, String localized)
 	{
 		this(id, Mod.getActiveModID(), name, oreDict, localized);
@@ -141,112 +158,105 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		this.id = (short) id;
 		this.modid = modid;
 		this.name = name;
-		oreDictName = oreDict;
-		localName = localized;
+		this.oreDictName = oreDict;
+		this.localName = localized;
 		LanguageManager.registerLocal("material." + name + ".name", localized);
 		if(register)
 		{
 			Mat.REGISTER.register(id, name, this);
 		}
 	}
-
+	
 	@Override
 	public final String getRegisteredName()
 	{
-		return name;
+		return this.name;
 	}
-
+	
 	public String getLocalName()
 	{
-		return LanguageManager.translateToLocal("material." + name + ".name");
+		return LanguageManager.translateToLocal("material." + this.name + ".name");
 	}
-
+	
 	public Mat setRGBa(int colorIndex)
 	{
-		RGBa[0] = (short) ((colorIndex >> 24)       );
-		RGBa[1] = (short) ((colorIndex >> 16) & 0xFF);
-		RGBa[2] = (short) ((colorIndex >> 8 ) & 0xFF);
-		RGBa[3] = (short) ((colorIndex      ) & 0xFF);
-		RGB = colorIndex >> 8;
+		this.RGBa[0] = (short) ((colorIndex >> 24)       );
+		this.RGBa[1] = (short) ((colorIndex >> 16) & 0xFF);
+		this.RGBa[2] = (short) ((colorIndex >> 8 ) & 0xFF);
+		this.RGBa[3] = (short) ((colorIndex      ) & 0xFF);
+		this.RGB = colorIndex >> 8;
 		return this;
 	}
-
+	
 	public Mat setRGBa(short[] colorIndex)
 	{
-		RGBa = colorIndex;
-		RGB = colorIndex[0] << 16 | colorIndex[1] << 8 | colorIndex[2];
+		this.RGBa = colorIndex;
+		this.RGB = colorIndex[0] << 16 | colorIndex[1] << 8 | colorIndex[2];
 		return this;
 	}
 	
 	public Mat setUnificationMaterial(Mat material)
 	{
-		unificationMaterial = material;
+		this.unificationMaterial = material;
 		return this;
 	}
 	
 	public Mat setChemicalFormula(String name)
 	{
-		chemicalFormula = name;
+		this.chemicalFormula = name;
 		return this;
 	}
-
+	
 	public Mat setCustomInformation(String info)
 	{
-		customDisplayInformation = info;
+		this.customDisplayInformation = info;
 		return this;
 	}
-
+	
 	public <V> Mat addProperty(IProperty<V> property, V value)
 	{
-		if(property == MP.property_basic)
-		{
-			basic = (PropertyBasic) value;
-		}
-		else
-		{
-			propertyMap.put(property, value);
-		}
+		this.propertyMap.put(property, value);
 		return this;
 	}
 	
 	public <V> V getProperty(IProperty<V> property)
 	{
-		return property == MP.property_basic ? (basic != null ? (V) basic : property.defValue()) : getProperty(property, property.defValue());
+		return getProperty(property, property.defValue());
 	}
 	
 	public <V> V getProperty(IProperty<V> property, V def)
 	{
-		V value = propertyMap.get(property);
+		V value = this.propertyMap.get(property);
 		return value == null ? def : value;
 	}
-
+	
 	public Mat setGeneralProp(float heatCap, float thermalConduct, float maxSpeed, float maxTorque, float dielectricConstant, float electrialResistance, float redstoneResistance)
 	{
-		PropertyBasic property = basic = new PropertyBasic();
-		property.heatCap = heatCap;
-		property.thermalConduct = thermalConduct;
-		property.dielectricConstant = dielectricConstant;
-		property.maxSpeed = maxSpeed;
-		property.maxTorque = maxTorque;
-		property.electrialResistance = electrialResistance;
-		property.redstoneResistance = redstoneResistance;
+		PropertyBasic property = new PropertyBasic();
+		this.heatCapacity = property.heatCap = heatCap;
+		this.thermalConductivity = property.thermalConduct = thermalConduct;
+		this.dielectricConstant = property.dielectricConstant = dielectricConstant;
+		this.maxSpeed = property.maxSpeed = maxSpeed;
+		this.maxTorque = property.maxTorque = maxTorque;
+		this.electrialResistance = property.electrialResistance = electrialResistance;
+		this.redstoneResistance = property.redstoneResistance = redstoneResistance;
 		return addProperty(MP.property_basic, property);
 	}
-
+	
 	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float attackSpeed, float dVE, int enchantability)
 	{
 		PropertyTool property = new PropertyTool();
-		property.harvestLevel = harvestLevel;
-		property.maxUse = maxUse;
-		property.hardness = hardness;
-		property.brittleness = brittleness;
-		property.damageToEntity = dVE;
+		this.toolHarvestLevel = property.harvestLevel = harvestLevel;
+		this.toolMaxUse = property.maxUse = maxUse;
+		this.toolHardness = property.hardness = hardness;
+		this.toolBrittleness = property.brittleness = brittleness;
+		this.toolDamageToEntity = property.damageToEntity = dVE;
 		property.enchantability = enchantability;
 		property.attackSpeed = attackSpeed;
 		add(SubTag.TOOL);
 		return addProperty(MP.property_tool, property);
 	}
-
+	
 	@Deprecated
 	public Mat setHandable(float toughness)
 	{
@@ -264,7 +274,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		return setOreProperty(harvestLevel, hardness, resistance, IOreProperty.PROPERTY, type);
 	}
-
+	
 	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, IOreProperty oreProperty, SubTag type)
 	{
 		PropertyOre property;
@@ -287,7 +297,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.ORE, type);
 		return addProperty(MP.property_ore, property);
 	}
-
+	
 	public Mat setWood(float woodHardness, float ashcontent, float woodBurnHeat)
 	{
 		PropertyWood property = new PropertyWood();
@@ -308,7 +318,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		return setTree(tree, true);
 	}
-
+	
 	/**
 	 * Set tree information of material.
 	 * @param tree The tree information.
@@ -319,7 +329,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 */
 	public Mat setTree(ITree tree, boolean createBlock)
 	{
-		PropertyWood property0 = propertyMap.get(MP.property_wood);
+		PropertyWood property0 = this.propertyMap.get(MP.property_wood);
 		PropertyTree property = new PropertyTree.PropertyTreeWrapper(tree);
 		property.ashcontent = property0.ashcontent;
 		property.burnHeat = property0.burnHeat;
@@ -340,7 +350,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.setMaterial(this);
 		return addProperty(MP.property_wood, property);//Override old property.
 	}
-
+	
 	public Mat setSoil(float hardness, float resistance, Material material)
 	{
 		PropertyBlockable property = new PropertyBlockable();
@@ -350,12 +360,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.explosionResistance = resistance;
 		if(Config.createSoil)
 		{
-			new BlockSoil(modid, "soil." + name, material, this, property);
+			new BlockSoil(this.modid, "soil." + this.name, material, this, property);
 		}
 		add(SubTag.DIRT);
 		return addProperty(MP.property_soil, property);
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp)
 	{
 		PropertyRock property = new PropertyRock();
@@ -366,12 +376,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.minTemperatureForExplosion = minDetTemp;
 		if(Config.createRock)
 		{
-			property.block = new BlockRock("rock." + name, this, property);
+			property.block = new BlockRock("rock." + this.name, this, property);
 		}
 		add(SubTag.ROCK);
 		return addProperty(MP.property_rock, property);
 	}
-
+	
 	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp, Block rock)
 	{
 		PropertyRock property = new PropertyRock();
@@ -384,13 +394,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		add(SubTag.ROCK);
 		return addProperty(MP.property_rock, property);
 	}
-
+	
 	public Mat setCrop(ICrop crop)
 	{
 		add(SubTag.CROP);
 		return addProperty(MP.property_crop, crop);
 	}
-
+	
 	public Mat setTag(SubTag...tags)
 	{
 		add(tags);
@@ -399,36 +409,46 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public Mat addProperty(String tag, int value)
 	{
-		properties.put(tag, value);
+		this.properties.put(tag, value);
 		return this;
 	}
-
+	
+	public Mat addProperty(String tag, float value)
+	{
+		return addProperty(tag, Float.floatToIntBits(value));
+	}
+	
 	public int getProperty(String tag)
 	{
-		return properties.get(tag);
+		return this.properties.get(tag);
 	}
-
+	
+	public float getPropertyF(String tag)
+	{
+		return Float.intBitsToFloat(getProperty(tag));
+	}
+	
 	@Override
 	public void add(SubTag... tags)
 	{
-		subTags.addAll(Arrays.asList(tags));
+		this.subTags.addAll(Arrays.asList(tags));
 	}
-
+	
 	@Override
 	public boolean contain(SubTag tag)
 	{
-		return subTags.contains(tag);
+		return this.subTags.contains(tag);
 	}
-
+	
 	@Override
 	public int compareTo(Mat o)
 	{
-		return name.compareTo(o.name);
+		return this.name.compareTo(o.name);
 	}
 	
 	@Override
 	public String toString()
 	{
-		return name;
+		return this.name;
 	}
 }

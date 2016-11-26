@@ -1,5 +1,6 @@
 package farcore.lib.material.prop;
 
+@Deprecated
 public class PropertyBasic
 {
 	public double heatCap;

@@ -2,9 +2,9 @@ package farcore.lib.block.instance;
 
 import farcore.data.EnumOreAmount;
 import farcore.data.M;
+import farcore.data.RockType;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.ItemBlockBase;
-import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

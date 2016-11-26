@@ -1,6 +1,5 @@
 package farcore.lib.item;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +17,13 @@ import farcore.lib.item.behavior.IBehavior;
 import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
-import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.skill.ISkill;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.ISubTagContainer;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
+import farcore.util.Localization;
 import farcore.util.U;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -71,7 +70,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		return U.ItemStacks.getOrSetupNBT(stack, false).getCompoundTag("durability").getFloat("damage");
 	}
-
+	
 	public static int getDefaultMaxDurability(ToolProp prop, ItemStack stack)
 	{
 		//		if(prop.hasHandle)
@@ -104,13 +103,11 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		return getMaxDurability(stack) - getToolDamage(stack);
 	}
-
+	
 	public static void setToolDamage(ItemStack stack, float damage)
 	{
 		stack.getSubCompound("durability", true).setFloat("damage", damage);
 	}
-	
-	private static final DecimalFormat HARDNESS_FORMAT = new DecimalFormat("##.0");
 	
 	public static final ToolProp EMPTY_PROP;
 	
@@ -148,7 +145,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	protected String textureFileName = "tool/";
 	
 	protected boolean modelFlag = true;
-
+	
 	protected ItemTool(String name)
 	{
 		super(name);
@@ -166,9 +163,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			IBehavior... behaviors)
 	{
 		super.addSubItem(id, name, localName, stat, behaviors);
-		if(modelFlag)
+		if(this.modelFlag)
 		{
-			U.Mod.registerItemModel(this, id, modid, textureFileName + name);
+			U.Mod.registerItemModel(this, id, this.modid, this.textureFileName + name);
 		}
 		ToolProp prop = new ToolProp();
 		prop.id = id;
@@ -181,41 +178,41 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		prop.filterTie = filterTie;
 		prop.customToolInformation = customToolInformation;
 		prop.toolTypes = toolTypes;
-		toolPropMap.put(id, prop);
+		this.toolPropMap.put(id, prop);
 		if(customToolInformation != null)
 		{
 			LanguageManager.registerLocal("info.tool." + getUnlocalizedName() + "@" + id, customToolInformation);
 		}
 		return prop;
 	}
-
+	
 	protected Mat getMaterialFromItem(ItemStack stack, String part)
 	{
 		NBTTagCompound nbt = U.ItemStacks.getOrSetupNBT(stack, false).getCompoundTag("tool");
 		return Mat.material(nbt.getString(part));
 	}
-
+	
 	public ItemStack setMaterialToItem(ItemStack stack, String part, Mat material)
 	{
 		stack.getSubCompound("tool", true).setString(part, material.name);
 		return stack;
 	}
-
+	
 	protected ToolProp getToolProp(ItemStack stack)
 	{
-		return toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 	}
 	
 	@Override
 	public List<EnumToolType> getToolTypes(ItemStack stack)
 	{
-		return toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).toolTypes;
+		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).toolTypes;
 	}
 	
 	@Override
 	public int getToolLevel(ItemStack stack, EnumToolType type)
 	{
-		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		int level = prop.stat.getToolHarvestLevel(stack, type.name(), getMaterial(stack, "head"));
 		return level == -1 ?
 				prop.toolTypes.contains(type) ? getMaterial(stack, "head").getProperty(MP.property_tool).harvestLevel : -1 :
@@ -283,14 +280,14 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public float replaceDigSpeed(ItemStack stack, BreakSpeed event)
 	{
-		return !isItemUsable(stack) ? 0.0F : toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getMiningSpeed(stack, event.getEntityPlayer(), event.getEntityPlayer().worldObj, event.getPos(), event.getState(), event.getOriginalSpeed());
+		return !isItemUsable(stack) ? 0.0F : this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getMiningSpeed(stack, event.getEntityPlayer(), event.getEntityPlayer().worldObj, event.getPos(), event.getState(), event.getOriginalSpeed());
 	}
-
+	
 	@Override
 	public void onBlockHarvested(ItemStack stack, HarvestDropsEvent event)
 	{
 		if(!isItemUsable(stack)) return;
-		IToolStat stat = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat;
+		IToolStat stat = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat;
 		if(stat.canHarvestDrop(stack, event.getState()))
 		{
 			onToolUse(event.getHarvester(), stack, stat.getToolType(), stat.getToolDamagePerBreak(stack, event.getHarvester(), event.getWorld(), event.getPos(), event.getState()));
@@ -323,7 +320,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		ActionResult<ItemStack> result;
 		if((result = super.onItemRightClick(itemStackIn, worldIn, playerIn, hand)).getType() != EnumActionResult.PASS)
 			return result;
-		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(itemStackIn), EMPTY_PROP);
+		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(itemStackIn), EMPTY_PROP);
 		if(prop.stat.canBlock())
 		{
 			playerIn.setActiveHand(hand);
@@ -331,13 +328,13 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStackIn);
 	}
-
+	
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
 		return 72000;
 	}
-
+	
 	@Override
 	public boolean canHarvestBlock(IBlockState state, ItemStack stack)
 	{
@@ -347,19 +344,19 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public Set<String> getToolClasses(ItemStack stack)
 	{
-		return toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getToolType().getToolClasses();
+		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getToolType().getToolClasses();
 	}
 	
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass)
 	{
-		return toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getToolHarvestLevel(stack, toolClass, getMaterial(stack, "head"));
+		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getToolHarvestLevel(stack, toolClass, getMaterial(stack, "head"));
 	}
-
+	
 	@Override
 	public float getStrVsBlock(ItemStack stack, IBlockState state)
 	{
-		return toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getSpeedMultiplier(stack);
+		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getSpeedMultiplier(stack);
 	}
 	
 	@Override
@@ -385,22 +382,22 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		//		}
 		return super.getAttributeModifiers(slot, stack);
 	}
-
+	
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
-		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		return prop.stat.canBlock() ? EnumAction.BLOCK :
 			prop.stat.isShootable() ? EnumAction.BOW : EnumAction.NONE;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isFull3D()
 	{
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
@@ -452,7 +449,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		}
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
-
+	
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
@@ -478,7 +475,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public ItemStack updateItem(IEnvironment environment, ItemStack stack)
 	{
-		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		Mat material = getMaterialFromItem(stack, "head");
 		if(material.itemProp != null)
 		{
@@ -502,7 +499,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		}
 		return stack;
 	}
-
+	
 	@Override
 	public int getItemStackLimit(ItemStack stack)
 	{
@@ -512,7 +509,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public int getStackMetaOffset(ItemStack stack)
 	{
-		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		Mat material = getMaterialFromItem(stack, "head");
 		if(material != null && material.itemProp != null)
 			return material.itemProp.getMetaOffset(stack, material, prop.condition, "head");
@@ -527,15 +524,15 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		Mat material = getMaterial(stack, "head");
 		if(material.itemProp != null)
 		{
-			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, toolPropMap.getOrDefault(base, EMPTY_PROP).condition);
+			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, this.toolPropMap.getOrDefault(base, EMPTY_PROP).condition);
 		}
 	}
-
+	
 	protected String getBaseTranslateInformation(ItemStack stack)
 	{
 		return "tool." + getUnlocalizedName() + "@" + getBaseDamage(stack) + ".info";
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
@@ -544,15 +541,11 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		int max = getMaxDurability(stack);
 		float now = getDurability(stack);
-		ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
+		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		unlocalizedList.addToolTip(getBaseTranslateInformation(stack));
-		unlocalizedList.add("info.tool.damage", (int) (now * 100), max * 100);
+		Localization.addDamageInformation((int) (now * 100), max * 100, unlocalizedList);
 		Mat material = getMaterialFromItem(stack, "head");
-		PropertyTool property = material.getProperty(MP.property_tool);
-		unlocalizedList.add("info.tool.harvest.level", property.harvestLevel);
-		unlocalizedList.add("info.tool.hardness", HARDNESS_FORMAT.format(property.hardness));
-		unlocalizedList.add("info.tool.head.name", material.getLocalName());
-		unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
+		Localization.addToolMaterialInformation(material, prop.stat, unlocalizedList);
 		if(material.itemProp != null)
 		{
 			material.itemProp.addInformation(stack, material, prop.condition, unlocalizedList, "head");

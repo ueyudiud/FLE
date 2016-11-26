@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IToolStat extends IItemCapabilityProvider
 {
 	EnumToolType getToolType();
-
+	
 	default EnumPhysicalDamageType getPhysicalDamageType()
 	{
 		return EnumPhysicalDamageType.SMASH;
@@ -29,7 +29,7 @@ public interface IToolStat extends IItemCapabilityProvider
 	void onToolCrafted(ItemStack stack, EntityPlayer player);
 	
 	float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block);
-
+	
 	float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target);
 	
 	/**
@@ -42,11 +42,11 @@ public interface IToolStat extends IItemCapabilityProvider
 	{
 		return getDamageVsEntity(stack);
 	}
-
+	
 	float getDamageVsEntity(ItemStack stack);
 	
-	float getAttackSpeed(ItemStack stack);
-
+	float getAttackSpeed(ItemStack stack, float mutiplier);
+	
 	float getSpeedMultiplier(ItemStack stack);
 	
 	float getMaxDurabilityMultiplier();
@@ -54,17 +54,17 @@ public interface IToolStat extends IItemCapabilityProvider
 	float getKnockback(ItemStack stack, Mat material, Entity entity);
 	
 	int getToolHarvestLevel(ItemStack stack, String toolClass, Mat baseMaterial);
-
+	
 	boolean canHarvestDrop(ItemStack stack, IBlockState state);
-
+	
 	float getMiningSpeed(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block, float speedBase);
 	
 	DamageSource getDamageSource(EntityLivingBase user, Entity target);
 	
 	boolean canBlock();
-
+	
 	boolean isShootable();
-
+	
 	/**
 	 * Return a float array with length of two if this weapon has
 	 * AOE.
@@ -74,7 +74,7 @@ public interface IToolStat extends IItemCapabilityProvider
 	 */
 	@Nullable
 	float[] getAttackExpandBoxing(ItemStack stack, Mat material);
-
+	
 	@SideOnly(Side.CLIENT)
 	int getColor(ItemStack stack, int pass);
 	

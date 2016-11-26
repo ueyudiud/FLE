@@ -10,7 +10,7 @@ import farcore.event.AttackEvent;
 import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.behavior.IItemMatProp;
-import farcore.lib.material.prop.PropertyTool;
+import farcore.util.L;
 import farcore.util.R;
 import farcore.util.U;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -41,7 +41,6 @@ public class WeaponHelper
 			return;
 		stack = event.newWeapon;
 		Mat material = ItemTool.getMaterial(stack, "head");
-		PropertyTool toolProperty = material.getProperty(MP.property_tool);
 		IItemMatProp materialProperty = material.itemProp;
 		if(entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// && !entity.isInvisibleToPlayer(player))
 		{
@@ -70,10 +69,10 @@ public class WeaponHelper
 			{
 				baseMultiple += materialProperty.entityAttackDamageMultiple(stack, material, entity);
 			}
-			float attack = prop.stat.getDamageVsEntity(stack, entity) * toolProperty.damageToEntity * baseMultiple;
+			float attack = prop.stat.getDamageVsEntity(stack, entity) * material.toolDamageToEntity * baseMultiple;
 			boolean flagCritical = matchCritical(player) && (entity instanceof EntityLivingBase);
-			float speed = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).getAttributeValue() + prop.stat.getAttackSpeed(stack) + toolProperty.attackSpeed;
-			speed = farcore.util.L.range(0.1F, 20.0F, speed);
+			float speed = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).getAttributeValue() + prop.stat.getAttackSpeed(stack, material.getPropertyF(MP.tool_attackspeed));
+			speed = L.range(0.1F, 20.0F, speed);
 			int cooldown = (int) R.getValue(EntityLivingBase.class, "ticksSinceLastSwing", "field_184617_aD", player, false);
 			
 			int fire = EnchantmentHelper.getFireAspectModifier(player);
@@ -155,7 +154,7 @@ public class WeaponHelper
 		}
 		U.Players.destoryPlayerCurrentItem(player);
 	}
-
+	
 	public static boolean matchCritical(EntityPlayer player)
 	{
 		return player.fallDistance > 0.0F &&
@@ -163,7 +162,7 @@ public class WeaponHelper
 				!player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) &&
 				player.getRidingEntity() == null;
 	}
-
+	
 	public static void causeAOEAttack(IToolStat stat, EntityLivingBase attacker, Entity target, float[] boundBox)
 	{
 		for (EntityLivingBase entitylivingbase : attacker.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().expand(boundBox[0], boundBox[1], boundBox[0])))

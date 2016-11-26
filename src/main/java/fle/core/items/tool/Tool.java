@@ -41,7 +41,7 @@ public abstract class Tool implements IToolStat
 	@Override
 	public EnumToolType getToolType()
 	{
-		return type;
+		return this.type;
 	}
 	
 	@Override
@@ -69,9 +69,9 @@ public abstract class Tool implements IToolStat
 	}
 	
 	@Override
-	public float getAttackSpeed(ItemStack stack)
+	public float getAttackSpeed(ItemStack stack, float mutiplier)
 	{
-		return 0.0F;
+		return mutiplier;
 	}
 	
 	@Override
@@ -89,7 +89,7 @@ public abstract class Tool implements IToolStat
 	@Override
 	public int getToolHarvestLevel(ItemStack stack, String toolClass, Mat baseMaterial)
 	{
-		return type.isToolClass(toolClass) ? baseMaterial.getProperty(MP.property_tool).harvestLevel : -1;
+		return this.type.isToolClass(toolClass) ? baseMaterial.getProperty(MP.property_tool).harvestLevel : -1;
 	}
 	
 	@Override
@@ -103,13 +103,13 @@ public abstract class Tool implements IToolStat
 	{
 		return speed;
 	}
-
+	
 	@Override
 	public float getKnockback(ItemStack stack, Mat material, Entity entity)
 	{
 		return 0F;
 	}
-
+	
 	@Override
 	public float[] getAttackExpandBoxing(ItemStack stack, Mat material)
 	{
@@ -120,7 +120,7 @@ public abstract class Tool implements IToolStat
 	public DamageSource getDamageSource(EntityLivingBase user, Entity target)
 	{
 		String string = getDeathMessage(target, user);
-		return new DamageSourceEntityAttack(type.name(),
+		return new DamageSourceEntityAttack(this.type.name(),
 				new TextComponentString(string.replace("(S)", "" + ChatFormatting.GREEN + user.getName() + ChatFormatting.RESET).replace("(M)", "" + ChatFormatting.RED + target.getName() + ChatFormatting.RESET)),
 				user);
 	}
@@ -157,7 +157,7 @@ public abstract class Tool implements IToolStat
 		case 4 : return ItemTool.getMaterial(stack, "tie").RGB;
 		case 5 : return ItemTool.getMaterial(stack, "rust").RGB;
 		case 6 : return ItemTool.getMaterial(stack, "inlay").RGB;
-		case 2 : if(hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
+		case 2 : if(this.hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
 		//7 for extended override.
 		default: return 0xFFFFFFFF;
 		}

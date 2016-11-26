@@ -2,8 +2,8 @@ package farcore.lib.world.gen;
 
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
+import farcore.data.RockType;
 import farcore.lib.block.instance.BlockOre;
-import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
 import net.minecraft.block.state.IBlockState;
 

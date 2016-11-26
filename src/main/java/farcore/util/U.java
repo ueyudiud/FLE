@@ -182,19 +182,19 @@ public class U
 			}
 			return ret;
 		}
-
+		
 		public static double mod(double a, double b)
 		{
 			double v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
-
+		
 		public static float mod(float a, float b)
 		{
 			float v;
 			return (v = a % b) > 0 ? v : v + b;
 		}
-
+		
 		public static int mod(int a, int b)
 		{
 			int v;
@@ -226,12 +226,12 @@ public class U
 			}
 			return j / doubles.length;
 		}
-
+		
 		public static float lerp(float a, float b, float x)
 		{
 			return a + (b - a) * x;
 		}
-
+		
 		public static double lerp(double a, double b, double x)
 		{
 			return a + (b - a) * x;
@@ -263,7 +263,7 @@ public class U
 		{
 			return handlerGatway.fileDir();
 		}
-
+		
 		public static void registerClientRegister(Object object)
 		{
 			handlerGatway.registerRender(object);
@@ -290,19 +290,19 @@ public class U
 		{
 			registerItem(item, getActiveModID(), name);
 		}
-
+		
 		public static void registerItem(Item item, String modid, String name)
 		{
 			GameRegistry.register(item.setRegistryName(modid, name));
 			handlerGatway.registerRender(item);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Block block, int meta, String modid, String locate)
 		{
 			registerItemBlockModel(Item.getItemFromBlock(block), meta, modid, locate);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerItemBlockModel(Item item, int meta, String modid, String locate)
 		{
@@ -322,7 +322,7 @@ public class U
 		{
 			handlerGatway.setModelLocate(item, meta, modid, locate);
 		}
-
+		
 		public static void registerItemModel(Item item, int meta, String modid, String locate, String type)
 		{
 			handlerGatway.setModelLocate(item, meta, modid, locate, type);
@@ -349,7 +349,7 @@ public class U
 		{
 			((ClientHandler) handlerGatway).registerColorMultiplier(color, item);
 		}
-
+		
 		@SideOnly(Side.CLIENT)
 		public static void registerFluid(BlockFluidBase block)
 		{
@@ -369,7 +369,7 @@ public class U
 			ModelLoader.setCustomMeshDefinition(item, selector);
 			ModelBakery.registerItemVariants(item, selector.getAllowedResourceLocations(item).toArray(new ResourceLocation[0]));
 		}
-
+		
 		public static void registerBuildInModel(Block block)
 		{
 			if(Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
@@ -435,19 +435,19 @@ public class U
 			registerValid(name, ore);
 		}
 	}
-
+	
 	public static class Lights
 	{
 		public static int get256Light(World world, BlockPos pos, EnumSkyBlock type)
 		{
 			return world.getLightFor(type, pos) << 4;
 		}
-
+		
 		public static int blend4Light(int light1, int light2, int light3, int light4)
 		{
 			return (light1 + light2 + light3 + light4) >> 2 & 0xFF;
 		}
-
+		
 		public static int blend2Light(int light1, int light2)
 		{
 			return (light1 + light2) >> 1 & 0xFF;
@@ -457,7 +457,7 @@ public class U
 		{
 			return (light1 + light2 + light3 + light4) >> 2 & 0xFF00FF;
 		}
-
+		
 		public static int blend2MixLight(int light1, int light2)
 		{
 			return (light1 + light2) >> 1 & 0xFF00FF;
@@ -503,7 +503,7 @@ public class U
 				}
 			}
 		}
-
+		
 		public static <E> List<E> getListFromWorldDimention(Map<Integer, List<E>> map, World world, boolean createEntry)
 		{
 			Integer dim = world.provider.getDimension();
@@ -519,7 +519,7 @@ public class U
 			}
 			return list;
 		}
-
+		
 		public static int fixSide(EnumFacing side, float hitX, float hitY, float hitZ)
 		{
 			return fixSide(side.ordinal(), hitX, hitY, hitZ);
@@ -556,7 +556,7 @@ public class U
 								Direction.OPPISITE[side] :
 									rotateFix[side / 2][id];
 		}
-
+		
 		public static void checkLight(World world, BlockPos pos)
 		{
 			if(Config.multiThreadLight)
@@ -570,7 +570,7 @@ public class U
 				world.theProfiler.endSection();
 			}
 		}
-
+		
 		public static void spawnDropInWorld(World world, BlockPos pos, ItemStack drop)
 		{
 			if(world.isRemote ||
@@ -649,7 +649,7 @@ public class U
 		{
 			return fallBlock(world, pos, pos, state);
 		}
-
+		
 		public static boolean fallBlock(World world, BlockPos pos, BlockPos dropPos, IBlockState state)
 		{
 			if(!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
@@ -844,7 +844,7 @@ public class U
 				return ((IBiomeExtended) biome).canRainingAt(world, pos);
 			return biome.canRain();
 		}
-
+		
 		/**
 		 * Used by ASM.
 		 * @param oldBiome
@@ -858,7 +858,7 @@ public class U
 				return ((IBiomeRegetter) provider).getBiome(saveID, pos);
 			return Biome.getBiome(saveID);
 		}
-
+		
 		public static Direction getCollideSide(AxisAlignedBB aabb, double[] pre, double[] post)
 		{
 			if(aabb.maxX < post[0] || aabb.minX > post[0] ||
@@ -898,7 +898,7 @@ public class U
 			return world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
 		}
 	}
-
+	
 	public static class TileEntities
 	{
 		public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
@@ -997,7 +997,7 @@ public class U
 			return output == null || stackInSlot == null ? true :
 				output.similar(stackInSlot) && stackInSlot.stackSize + output.size(stackInSlot) <= Math.min(stackLimit, stackInSlot.getMaxStackSize());
 		}
-
+		
 		public static void insertStack(AbstractStack stack, IBasicInventory inventory, int idx)
 		{
 			if(inventory.getStackInSlot(idx) == null)
@@ -1010,7 +1010,7 @@ public class U
 				stack2.stackSize += stack.size(stack2);
 			}
 		}
-
+		
 		public static void insertStack(AbstractStack stack, IInventory inventory, int idx)
 		{
 			if(inventory.getStackInSlot(idx) == null)
@@ -1102,7 +1102,7 @@ public class U
 			}
 			return stack.getTagCompound();
 		}
-
+		
 		public static NBTTagCompound getSubOrSetupNBT(ItemStack stack, String tag, boolean createTag)
 		{
 			NBTTagCompound nbt = stack.getTagCompound();
@@ -1157,7 +1157,7 @@ public class U
 		{
 			return nbt1 == null || nbt2 == null ? nbt1 == nbt2 : nbt1.equals(nbt2);
 		}
-
+		
 		/**
 		 * This method should called by item onItemUse.
 		 * @param stack
@@ -1199,7 +1199,7 @@ public class U
 			}
 			return EnumActionResult.PASS;
 		}
-
+		
 		public static List<EnumToolType> getCurrentToolType(ItemStack stack)
 		{
 			if(stack == null)
@@ -1216,7 +1216,7 @@ public class U
 			}
 			return list;
 		}
-
+		
 		public static int getToolLevel(ItemStack stack, EnumToolType toolType)
 		{
 			if(stack == null)
@@ -1236,7 +1236,7 @@ public class U
 						stack != null ? stack.getFluid().getTemperature(stack) : def;
 		}
 	}
-
+	
 	public static class NBTs
 	{
 		public static void setString(NBTTagCompound nbt, String key, IRegisteredNameable nameable)
@@ -1246,7 +1246,7 @@ public class U
 				nbt.setString(key, nameable.getRegisteredName());
 			}
 		}
-
+		
 		public static NBTTagCompound getOrCreate(NBTTagCompound nbt, String tag)
 		{
 			return getCompound(nbt, tag, true);
@@ -1293,7 +1293,7 @@ public class U
 				nbt.setLong(key, number);
 			}
 		}
-
+		
 		public static void setStringArray(NBTTagCompound nbt, String key, String[] array)
 		{
 			NBTTagList list = new NBTTagList();
@@ -1303,7 +1303,7 @@ public class U
 			}
 			nbt.setTag(key, list);
 		}
-
+		
 		public static void setLongArray(NBTTagCompound nbt, String key, long[] array)
 		{
 			NBTTagList list = new NBTTagList();
@@ -1325,37 +1325,37 @@ public class U
 				nbt.setTag(key, new NBTTagCompound());//Mark for empty stack.
 			}
 		}
-
+		
 		public static byte getByteOrDefault(NBTTagCompound nbt, String key, int def)
 		{
 			return nbt.hasKey(key) ? nbt.getByte(key) : (byte) def;
 		}
-
+		
 		public static short getShortOrDefault(NBTTagCompound nbt, String key, int def)
 		{
 			return nbt.hasKey(key) ? nbt.getShort(key) : (short) def;
 		}
-
+		
 		public static int getIntOrDefault(NBTTagCompound nbt, String key, int def)
 		{
 			return nbt.hasKey(key) ? nbt.getInteger(key) : def;
 		}
-
+		
 		public static long getLongOrDefault(NBTTagCompound nbt, String key, long def)
 		{
 			return nbt.hasKey(key) ? nbt.getLong(key) : def;
 		}
-
+		
 		public static float getFloatOrDefault(NBTTagCompound nbt, String key, float def)
 		{
 			return nbt.hasKey(key) ? nbt.getLong(key) : def;
 		}
-
+		
 		public static double getDoubleOrDefault(NBTTagCompound nbt, String key, double def)
 		{
 			return nbt.hasKey(key) ? nbt.getLong(key) : def;
 		}
-
+		
 		public static long[] getLongArrayOrDefault(NBTTagCompound nbt, String key, long[] def)
 		{
 			if(nbt.hasKey(key, NBT.TAG_LIST))
@@ -1372,7 +1372,7 @@ public class U
 			}
 			return def;
 		}
-
+		
 		public static String[] getStringArrayOrDefault(NBTTagCompound nbt, String key, String[] def)
 		{
 			if(nbt.hasKey(key, NBT.TAG_LIST))
@@ -1389,12 +1389,12 @@ public class U
 			}
 			return def;
 		}
-
+		
 		public static FluidStack getFluidStackOrDefault(NBTTagCompound nbt, String key, FluidStack def)
 		{
 			return nbt.hasKey(key, NBT.TAG_COMPOUND) ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag(key)) : def;
 		}
-
+		
 		public static <E extends Enum<? extends E>> E getEnumOrDefault(NBTTagCompound nbt, String key, E def)
 		{
 			try
@@ -1406,7 +1406,7 @@ public class U
 				return def;
 			}
 		}
-
+		
 		public static <E> E getValueByByteOrDefault(NBTTagCompound nbt, String key, E[] values, E def)
 		{
 			try
@@ -1444,14 +1444,27 @@ public class U
 			return nbt.hasKey(key) ? Mat.material(nbt.getString(key), def) : def;
 		}
 	}
-
+	
+	public static class Entities
+	{
+		public static double movementSpeedSq(Entity entity)
+		{
+			return entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ;
+		}
+		
+		public static double movementSpeed(Entity entity)
+		{
+			return Math.sqrt(movementSpeedSq(entity));
+		}
+	}
+	
 	public static class Players
 	{
 		public static EntityPlayer player()
 		{
 			return handlerGatway.playerInstance();
 		}
-
+		
 		public static List<EnumToolType> getCurrentToolType(EntityPlayer player)
 		{
 			ItemStack stack = player.getHeldItemMainhand();
@@ -1473,7 +1486,7 @@ public class U
 			}
 			return list;
 		}
-
+		
 		public static boolean matchCurrentToolType(EntityPlayer player, EnumToolType...types)
 		{
 			ItemStack stack = player.getHeldItemMainhand();
@@ -1504,7 +1517,7 @@ public class U
 					return true;
 			}
 			return false;
-
+			
 		}
 		
 		public static void destoryPlayerCurrentItem(EntityPlayer player)
@@ -1521,7 +1534,7 @@ public class U
 				player.setHeldItem(EnumHand.OFF_HAND, null);
 			}
 		}
-
+		
 		public static Entity moveEntityToAnotherDim(Entity entity, int dim, double x, double y, double z)
 		{
 			WorldServer targetWorld = DimensionManager.getWorld(dim);
@@ -1529,7 +1542,7 @@ public class U
 				return moveEntityToAnotherDim(entity, dim, x, y, z, targetWorld.getDefaultTeleporter());
 			return null;
 		}
-
+		
 		public static Entity moveEntityToAnotherDim(Entity entity, int dim, double x, double y, double z, Teleporter teleporter)
 		{
 			WorldServer targetWorld = DimensionManager.getWorld(dim);
@@ -1565,7 +1578,7 @@ public class U
 			return null;
 		}
 	}
-
+	
 	public static class Server
 	{
 		/**
@@ -1587,7 +1600,7 @@ public class U
 	public static class Client
 	{
 		public static final ModelResourceLocation MODEL_MISSING = new ModelResourceLocation("builtin/missing", "missing");
-
+		
 		public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager)
 		{
 			if (state.getRenderType() != EnumBlockRenderType.INVISIBLE)
@@ -1627,7 +1640,7 @@ public class U
 				manager.addEffect((new ParticleDiggingExt(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, state)).setBlockPos(pos).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
 			}
 		}
-
+		
 		public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager, Object icon)
 		{
 			if (state.getRenderType() != EnumBlockRenderType.INVISIBLE)
@@ -1667,7 +1680,7 @@ public class U
 				manager.addEffect((new ParticleDiggingExt(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, state, icon)).setBlockPos(pos).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
 			}
 		}
-
+		
 		public static void addBlockDestroyEffects(World world, BlockPos pos, IBlockState state, ParticleManager manager)
 		{
 			int i = 4;
@@ -1685,7 +1698,7 @@ public class U
 				}
 			}
 		}
-
+		
 		public static void addBlockDestroyEffects(World world, BlockPos pos, IBlockState state, ParticleManager manager, Object icon)
 		{
 			int i = 4;
@@ -1718,7 +1731,7 @@ public class U
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid, path));
 		}
-
+		
 		private static FontRenderExtend render;
 		
 		public static FontRenderer getFontRender()
@@ -1746,7 +1759,7 @@ public class U
 				return new int[]{i, 255 - i, 0};
 			}
 		};
-
+		
 		public static void renderItemDurabilityBarInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z)
 		{
 			renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z, 1, STANDARD_PROGRESSBAR_STYLE);
@@ -1797,7 +1810,7 @@ public class U
 				GlStateManager.enableDepth();
 			}
 		}
-
+		
 		public static void renderItemSubscirptInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z, String text)
 		{
 			if (text != null)
@@ -1832,12 +1845,12 @@ public class U
 		{
 			return DimensionManager.getWorld(id);
 		}
-
+		
 		public void registerRender(Object object)
 		{
 			
 		}
-
+		
 		public String getLocale()
 		{
 			return LanguageManager.ENGLISH;
@@ -1852,7 +1865,7 @@ public class U
 		{
 			return null;
 		}
-
+		
 		public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
 				IProperty...properties)
 		{
@@ -1868,10 +1881,10 @@ public class U
 		{
 			
 		}
-
+		
 		public void registerBiomeColorMultiplier(Block...block)
 		{
-
+			
 		}
 		
 		public String translateToLocalByI18n(String unlocal, Object...parameters)
@@ -1894,7 +1907,7 @@ public class U
 				return world == null ? null : world.provider.getDimension() != id ? null : world;
 			}
 		}
-
+		
 		@Override
 		public String getLocale()
 		{
@@ -1913,7 +1926,7 @@ public class U
 		{
 			return Minecraft.getMinecraft().mcDataDir;
 		}
-
+		
 		@Override
 		public void registerRender(Object object)
 		{
@@ -1936,20 +1949,20 @@ public class U
 		{
 			setModelLocate(item, meta, modid, name, null);
 		}
-
+		
 		@Override
 		public void setModelLocate(Item item, int meta, String modid, String name, String type)
 		{
 			ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid + ":" + name, type));
 		}
-
+		
 		@Override
 		public void registerBiomeColorMultiplier(Block... block)
 		{
 			registerColorMultiplier(ColorMultiplier.BIOME_COLOR, block);
 			registerColorMultiplier(ColorMultiplier.ITEMBLOCK_COLOR, block);
 		}
-
+		
 		public void registerColorMultiplier(IBlockColor color, Block[] block)
 		{
 			farcore.util.L.put(blockColorMap, color, block);

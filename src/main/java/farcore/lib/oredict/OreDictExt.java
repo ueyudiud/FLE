@@ -395,13 +395,11 @@ public class OreDictExt
 		{
 			for(Function<ItemStack, Boolean> function : FUNCTION_MAP.get(NAME_TO_ID.get(oreName)))
 			{
-				if(function.apply(stack))
-					return true;
+				if(function.apply(stack)) return true;
 			}
 			return false;
 		}
-		else
-			return false;
+		else return false;
 	}
 	
 	private OreDictExt(){ }

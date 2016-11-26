@@ -11,6 +11,7 @@ import farcore.data.EnumItem;
 import farcore.data.EnumToolType;
 import farcore.data.MC;
 import farcore.data.MP;
+import farcore.data.RockType;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.ISmartFallableBlock;
@@ -47,7 +48,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -60,59 +60,6 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 {
 	public static final PropertyBool HEATED = PropertyBool.create("heated");
 	public static final PropertyEnum<RockType> ROCK_TYPE = PropertyEnum.create("type", RockType.class);
-	
-	public static enum RockType implements IStringSerializable
-	{
-		resource("%s"),
-		cobble("Craked %s"),
-		cobble_art("%s Cobble"),
-		smoothed("Smoothed %s"),
-		mossy("Mossy %s"),
-		brick("%s Brick"),
-		brick_crushed("Cracked %s Brick"),
-		brick_mossy("Mossy %s Brick"),
-		brick_compacted("Compacted %s Brick"),
-		chiseled("Chiseled %s");
-		
-		static
-		{
-			resource.noSilkTouchDropMeta = cobble_art.ordinal();
-			resource.fallBreakMeta = cobble.ordinal();
-			brick.fallBreakMeta = brick_crushed.ordinal();
-			cobble.noSilkTouchDropMeta = cobble_art.ordinal();
-			cobble.displayInTab = false;
-			mossy.burnable = true;
-			brick_mossy.burnable = true;
-		}
-		
-		int noMossy = ordinal();
-		int noSilkTouchDropMeta = ordinal();
-		int fallBreakMeta = ordinal();
-		boolean burnable;
-		boolean displayInTab = true;
-		String local;
-		
-		private RockType(String local)
-		{
-			this.local = local;
-		}
-		
-		@Override
-		public String getName()
-		{
-			return name();
-		}
-		
-		public boolean isBurnable()
-		{
-			return burnable;
-		}
-		
-		public RockType burned()
-		{
-			return values()[noMossy];
-		}
-	}
 	
 	public final Mat material;
 	public final PropertyRock property;

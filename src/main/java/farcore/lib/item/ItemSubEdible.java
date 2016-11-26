@@ -4,7 +4,6 @@
 
 package farcore.lib.item;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +12,7 @@ import javax.annotation.Nullable;
 import farcore.lib.item.behavior.IBehavior;
 import farcore.lib.item.behavior.IFoodStat;
 import farcore.lib.util.UnlocalizedList;
+import farcore.util.Localization;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 {
 	protected final Map<Integer, IFoodStat> foodstats = new HashMap();
-	
+
 	protected ItemSubEdible(String name)
 	{
 		super(name);
@@ -41,7 +41,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 	{
 		super(modid, name);
 	}
-
+	
 	public void addSubItem(int id, String name, String localName, @Nullable IItemCapabilityProvider provider, @Nullable IFoodStat stat,
 			IBehavior... behaviors)
 	{
@@ -52,7 +52,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 		}
 		foodstats.put(id, stat);
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
@@ -67,7 +67,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 		}
 		return new ActionResult(EnumActionResult.FAIL, itemStackIn);
 	}
-
+	
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
 	{
@@ -91,19 +91,19 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return stack;
 		}
 	}
-	
+
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
 		return isDrink(stack) ? EnumAction.DRINK : EnumAction.EAT;
 	}
-
+	
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
 		return getEatDuration(stack);
 	}
-	
+
 	@Override
 	public float[] getNutritionAmount(ItemStack stack)
 	{
@@ -116,7 +116,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return new float[]{0, 0, 0, 0, 0, 0};
 		}
 	}
-
+	
 	@Override
 	public float getDrinkAmount(ItemStack stack)
 	{
@@ -129,7 +129,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public float getFoodAmount(ItemStack stack)
 	{
@@ -142,7 +142,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public float getSaturation(ItemStack stack)
 	{
@@ -155,7 +155,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return 0;
 		}
 	}
-
+	
 	@Override
 	public boolean isEdible(ItemStack stack, EntityPlayer player)
 	{
@@ -168,7 +168,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return false;
 		}
 	}
-	
+
 	@Override
 	public boolean isWolfEdible(ItemStack stack)
 	{
@@ -181,7 +181,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return false;
 		}
 	}
-	
+
 	@Override
 	public boolean isDrink(ItemStack stack)
 	{
@@ -194,7 +194,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return false;
 		}
 	}
-	
+
 	@Override
 	public int getEatDuration(ItemStack stack)
 	{
@@ -207,7 +207,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return 72000;
 		}
 	}
-
+	
 	@Override
 	public ItemStack onEat(ItemStack stack, EntityPlayer player)
 	{
@@ -220,42 +220,16 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 			return stack;
 		}
 	}
-	
-	@SideOnly(Side.CLIENT)
-	private static DecimalFormat format;
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
-		if(format == null)
-		{
-			format = new DecimalFormat("0.0");
-		}
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		if(playerIn.capabilities.isCreativeMode)
 		{
-			IFoodStat stat = foodstats.getOrDefault(getBaseDamage(stack), IFoodStat.NO_EATABLE);
-			if(stat != IFoodStat.NO_EATABLE)
-			{
-				if(unlocalizedList.isSneakDown())
-				{
-					unlocalizedList.add("info.food.label");
-					try
-					{
-						unlocalizedList.add("info.food.display", format.format(stat.getFoodAmount(stack)), format.format(stat.getSaturation(stack)), format.format(stat.getDrinkAmount(stack)));
-					}
-					catch(Exception exception)
-					{
-						;
-					}
-				}
-				else
-				{
-					unlocalizedList.addShiftClickInfo();
-				}
-			}
+			Localization.addFoodStatInformation(foodstats.getOrDefault(getBaseDamage(stack), IFoodStat.NO_EATABLE), stack, unlocalizedList);
 		}
 	}
 }

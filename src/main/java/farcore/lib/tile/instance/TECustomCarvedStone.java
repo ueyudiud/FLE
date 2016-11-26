@@ -6,13 +6,11 @@ import java.util.List;
 import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.data.M;
-import farcore.data.MC;
 import farcore.data.MP;
+import farcore.data.RockType;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.block.instance.BlockRock;
-import farcore.lib.block.instance.BlockRock.RockType;
 import farcore.lib.material.Mat;
-import farcore.lib.material.MatCondition;
 import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
@@ -558,50 +556,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	@SideOnly(Side.CLIENT)
 	public TextureAtlasSprite getIcon()
 	{
-		MatCondition condition;
-		String variant;
-		switch (type)
-		{
-		case brick :
-			variant = "standard";
-			condition = MC.brickBlock;
-			break;
-		case brick_compacted :
-			variant = "compacted";
-			condition = MC.brickBlock;
-			break;
-		case brick_crushed :
-			variant = "crushed";
-			condition = MC.brickBlock;
-			break;
-		case brick_mossy :
-			variant = "mossy";
-			condition = MC.brickBlock;
-			break;
-		case cobble :
-		case cobble_art :
-			variant = "standard";
-			condition = MC.cobble;
-			break;
-		case mossy :
-			variant = "standard";
-			condition = MC.cobble;
-			break;
-		case resource :
-		default :
-			variant = "";
-			condition = MC.stone;
-			break;
-		case smoothed :
-			variant = "smoothed";
-			condition = MC.brickBlock;
-			break;
-		case chiseled :
-			variant = "chiseled";
-			condition = MC.brickBlock;
-			break;
-		}
-		return MaterialTextureLoader.getIcon(rock, condition, variant);
+		return MaterialTextureLoader.getIcon(rock, type.condition, type.variant);
 	}
 
 	@Override
