@@ -75,6 +75,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.ProgressManager;
+import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -83,6 +85,8 @@ public class CommonLoader
 {
 	public void preload()
 	{
+		ProgressBar bar = ProgressManager.push("Far Core Preload", 10);
+		bar.step("Add Creative Tabs");
 		if(Config.displayFluidInTab)
 		{
 			CT.tabFluids = new CreativeTabBase("farcore.fluids", "Fluids[FarCore]")
@@ -167,23 +171,29 @@ public class CommonLoader
 			}
 		};
 		//Register common handler.
+		bar.step("Register Game Handlers");
 		MinecraftForge.EVENT_BUS.register(new FarCoreKeyHandler());
 		MinecraftForge.EVENT_BUS.register(FarCoreEnergyHandler.getHandler());
 		MinecraftForge.EVENT_BUS.register(new FarCoreWorldHandler());
 		MinecraftForge.EVENT_BUS.register(new FarCoreItemHandler());
 		//Register energy nets.
+		bar.step("Add Energy Nets");
 		FarCoreEnergyHandler.addNet(ThermalNet.instance);
 		FarCoreEnergyHandler.addNet(KineticNet.instance);
 		FarCoreEnergyHandler.addNet(ElectricNet.instance);
 		//Register world objects.
+		bar.step("Register World Objects");
 		FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
 		//Register local world handler.
+		bar.step("Register Local World Handlers");
 		ThermalNet.registerWorldThermalHandler(new TemperatureHandler());
 		//Initialize materials
 		//Some material will create blocks and items.
 		//DO NOT CALL CLASS farcore.data.M BEFORE FAR CORE PRE INITIALIZED.
+		bar.step("Initalize Materials");
 		M.init();
 		//Initialize blocks & items & fluids.
+		bar.step("Add Items");
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		new ItemFluidDisplay().setCreativeTab(CT.tabFluids);
 		new BlockThermalDebug();
@@ -217,6 +227,7 @@ public class CommonLoader
 		}
 		new BlockFire();
 		//Register tile entities.
+		bar.step("Register Tile Entities");
 		GameRegistry.registerTileEntity(TELossTile.class, "farcore.loss.tile");
 		GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
 		GameRegistry.registerTileEntity(TEOre.class, "farcore.ore");
@@ -224,13 +235,16 @@ public class CommonLoader
 		GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
 		GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
 		//Register entities.
+		bar.step("Register Entities");
 		int id = 0;
 		EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
 		EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 		//Initialize potions and mob effects.
+		bar.step("Add Potion Effects");
 		Potions.init();
+		ProgressManager.pop(bar);
 	}
-
+	
 	public void load()
 	{
 		//Post load item and block.
@@ -294,7 +308,7 @@ public class CommonLoader
 			}
 		}
 	}
-
+	
 	public void complete()
 	{
 		//Start light thread.

@@ -78,20 +78,20 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			return MODEL;
 		}
 	}
-
+	
 	/**
 	 * For game was always crashing when I debugging.<br>
 	 * It might takes too much memory to build quad, so I tried cached those quads.
 	 * @author ueyudiud
 	 */
 	private static final Map<ResourceLocation, Map<Mat, Map<EnumFacing, List<BakedQuad>>>> bakedQuads = new HashMap();
-
+	
 	private IModel parent;
 	private ResourceLocation layer;
 	
 	private ModelRedstoneCircuit()
 	{
-		layer = new ResourceLocation(FarCore.ID, "blocks/void");
+		this.layer = new ResourceLocation(FarCore.ID, "blocks/void");
 	}
 	private ModelRedstoneCircuit(ResourceLocation layer, IModel parent)
 	{
@@ -103,10 +103,10 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 	public Collection<ResourceLocation> getTextures()
 	{
 		List<ResourceLocation> locations = new ArrayList();
-		locations.add(layer);
-		if(parent != null)
+		locations.add(this.layer);
+		if(this.parent != null)
 		{
-			locations.addAll(parent.getTextures());
+			locations.addAll(this.parent.getTextures());
 		}
 		return locations;
 	}
@@ -116,7 +116,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		TextureAtlasSprite missing = bakedTextureGetter.apply(TextureMap.LOCATION_MISSING_TEXTURE);
-		Map<Mat, Map<EnumFacing, List<BakedQuad>>> map = bakedQuads.get(layer);
+		Map<Mat, Map<EnumFacing, List<BakedQuad>>> map = bakedQuads.get(this.layer);
 		if(map == null)
 		{
 			TextureAtlasSprite layer = bakedTextureGetter.apply(this.layer);
@@ -154,30 +154,30 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			bakedQuads.put(this.layer, map = builder2.build());
 		}
 		IBakedModel model = null;
-		if(parent != null)
+		if(this.parent != null)
 		{
-			model = parent.bake(state, format, bakedTextureGetter);
+			model = this.parent.bake(state, format, bakedTextureGetter);
 		}
 		return new BakedRedstoneCiruitModel(map, model);
 	}
-
+	
 	@Override
 	public IModel retexture(ImmutableMap<String, String> textures)
 	{
-		IModel parent0 = parent;
-		if(parent instanceof IRetexturableModel)
+		IModel parent0 = this.parent;
+		if(this.parent instanceof IRetexturableModel)
 		{
-			parent0 = ((IRetexturableModel) parent).retexture(textures);
+			parent0 = ((IRetexturableModel) this.parent).retexture(textures);
 		}
 		return new ModelRedstoneCircuit(
-				getRealLocationFromPathOrDefault("layer", textures, layer), parent0);
+				getRealLocationFromPathOrDefault("layer", textures, this.layer), parent0);
 	}
-
+	
 	@Override
 	public IModel process(ImmutableMap<String, String> customData)
 	{
 		IModel parent0;
-		if(parent == null && customData.containsKey("mixed"))
+		if(this.parent == null && customData.containsKey("mixed"))
 		{
 			String mixed = customData.get("mixed");
 			ResourceLocation location = new ResourceLocation(mixed.substring(1, mixed.length() - 1));
@@ -185,22 +185,22 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		}
 		else
 		{
-			parent0 = parent;
+			parent0 = this.parent;
 		}
 		if(parent0 instanceof IModelCustomData)
 		{
 			parent0 = ((IModelCustomData) parent0).process(customData);
 		}
-		return new ModelRedstoneCircuit(layer, parent0);
+		return new ModelRedstoneCircuit(this.layer, parent0);
 	}
-
+	
 	public static class BakedRedstoneCiruitModel implements IBakedModel, ICustomItemRenderModel, IPerspectiveAwareModel
 	{
 		private static final ImmutableMap<TransformType, TRSRTransformation> BLOCK_TRANSFORMTION;
 		
 		private Map<Mat, Map<EnumFacing, List<BakedQuad>>> quads;
 		private IBakedModel model;
-
+		
 		BakedRedstoneCiruitModel(Map<Mat, Map<EnumFacing, List<BakedQuad>>> quads, IBakedModel model)
 		{
 			this.quads = quads;
@@ -212,7 +212,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		{
 			if(facing != null) return ImmutableList.of();
 			Mat rock = TECircuitBase.getRockType(stack);
-			Map<EnumFacing, List<BakedQuad>> map = quads.get(rock);
+			Map<EnumFacing, List<BakedQuad>> map = this.quads.get(rock);
 			List<BakedQuad> list;
 			if(map != null)
 			{
@@ -222,9 +222,9 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			{
 				list = new ArrayList();
 			}
-			if(model != null)
+			if(this.model != null)
 			{
-				list.addAll(model.getQuads(null, facing, rand));
+				list.addAll(this.model.getQuads(null, facing, rand));
 			}
 			return list;
 		}
@@ -236,7 +236,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			if(state instanceof BlockStateTileEntityWapper)
 			{
 				BlockStateTileEntityWapper<TECircuitBase> wapper = (BlockStateTileEntityWapper) state;
-				Map<EnumFacing, List<BakedQuad>> map = quads.get(wapper.tile.material);
+				Map<EnumFacing, List<BakedQuad>> map = this.quads.get(wapper.tile.material);
 				List<BakedQuad> list;
 				if(map != null)
 				{
@@ -246,9 +246,9 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 				{
 					list = new ArrayList();
 				}
-				if(model != null)
+				if(this.model != null)
 				{
-					list.addAll(model.getQuads(state, side, rand));
+					list.addAll(this.model.getQuads(state, side, rand));
 				}
 				return list;
 			}
@@ -265,13 +265,13 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 		public boolean isBuiltInRenderer() { return false; }
 		
 		@Override
-		public TextureAtlasSprite getParticleTexture() { return model != null ? model.getParticleTexture() : Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite(); }
+		public TextureAtlasSprite getParticleTexture() { return this.model != null ? this.model.getParticleTexture() : Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite(); }
 		
 		@Override
-		public ItemCameraTransforms getItemCameraTransforms() { return model != null ? model.getItemCameraTransforms() : ItemCameraTransforms.DEFAULT; }
+		public ItemCameraTransforms getItemCameraTransforms() { return this.model != null ? this.model.getItemCameraTransforms() : ItemCameraTransforms.DEFAULT; }
 		
 		@Override
-		public ItemOverrideList getOverrides() { return model != null ? model.getOverrides() : ItemOverrideList.NONE; }
+		public ItemOverrideList getOverrides() { return this.model != null ? this.model.getOverrides() : ItemOverrideList.NONE; }
 		
 		@Override
 		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType)
@@ -294,7 +294,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 			BLOCK_TRANSFORMTION = builder.build();
 		}
 	}
-
+	
 	public static List<BakedQuad> buildQuads(TextureAtlasSprite texture, TextureAtlasSprite layer, VertexFormat format, Optional<TRSRTransformation> transformation)
 	{
 		if(texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
@@ -333,7 +333,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 					float minY;
 					float maxY = (L.unsignedToInt(height[idx]) + 1) * PLATE_HEIGHT / 256F;
 					float minU, maxU, minV, maxV;
-					if(u1 == 0 || L.moreThanSigned(height[idx - 1], height[idx]))
+					if(u1 == 0 || L.compareUnsigned(height[idx - 1], height[idx]) > 0)
 					{
 						minY = u1 == 0 ? 0 : value(height[idx - 1]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minZ);
@@ -346,7 +346,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 								minX, maxY, maxZ, maxU, maxV,
 								minX, maxY, minZ, minU, maxV));
 					}
-					if(u1 == u - 1 || L.moreThanSigned(height[idx + 1], height[idx]))
+					if(u1 == u - 1 || L.compareUnsigned(height[idx + 1], height[idx]) > 0)
 					{
 						minY = u1 == u - 1 ? 0 : value(height[idx + 1]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minZ);
@@ -359,7 +359,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 								maxX, maxY, minZ, maxU, maxV,
 								maxX, maxY, maxZ, minU, maxV));
 					}
-					if(v1 == 0 || L.moreThanSigned(height[idx - u], height[idx]))
+					if(v1 == 0 || L.compareUnsigned(height[idx - u], height[idx]) > 0)
 					{
 						minY = v1 == 0 ? 0 : value(height[idx - u]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minX);
@@ -372,7 +372,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 								maxX, maxY, minZ, maxU, maxV,
 								maxX, minY, minZ, maxU, minV));
 					}
-					if(v1 == v - 1 || L.moreThanSigned(height[idx + u], height[idx]))
+					if(v1 == v - 1 || L.compareUnsigned(height[idx + u], height[idx]) > 0)
 					{
 						minY = v1 == v - 1 ? 0 : value(height[idx + u]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minX);

@@ -43,7 +43,7 @@ public class ClientLoader extends CommonLoader
 		RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, RenderProjectileItem.Factory.instance);
 		//Register model loaders, state mappers and item model selectors.
 		//The base item model loader.
-		ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.instance);
+		ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.INSTANCE);
 		//The custom block model loaders.
 		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
 	}

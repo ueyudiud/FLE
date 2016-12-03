@@ -45,6 +45,7 @@ public class M
 	public static final Mat peridotite		= new MaterialBuilder(7013, FarCore.ID , "peridotite"		, "Peridotite"		, "Peridotite"			).setRGBa(0x717A5CFF).setToolProp( 45, 11, 3.0F, 0.8F, 2.0F,-0.6F).build().setRock(10, 7.7F, 30.5F, 370);
 	public static final Mat rhyolite		= new MaterialBuilder(7014, FarCore.ID , "rhyolite"			, "Rhyolite"		, "Rhyolite"			).setRGBa(0x4F535AFF).setToolProp( 39, 10, 2.6F, 0.8F, 2.0F,-0.5F).build().setRock( 9, 6.0F, 21.7F, 370);
 	public static final Mat graniteP		= new MaterialBuilder(7015, FarCore.ID , "graniteP"			, "GranitePegmatite", "Granite Pegmatite"	).setRGBa(0x4F535AFF).setToolProp( 45, 11, 2.8F, 0.8F, 1.8F,-0.6F).build().setRock(10, 7.6F, 30.1F, 370);
+	public static final Mat whitestone		= new MaterialBuilder(7016, "minecraft", "whitestone"		, "Whitestone"		, "End Stone"			).setRGBa(0xE2E2B5FF)                                             .build().setRock( 8, 6.0F, 14.7F, 720);
 	//Soils
 	public static final Mat latosol			= new MaterialBuilder(7101, FarCore.ID , "latosol"			, "Latosol"			, "Latosol"				).setRGBa(0x652A1FFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	public static final Mat latoaluminosol	= new MaterialBuilder(7102, FarCore.ID , "latoaluminosol"	, "Latoaluminosol"	, "Latoaluminosol"		).setRGBa(0x77412FFF).build().setSoil(0.6F, 3.0F, Material.GROUND);

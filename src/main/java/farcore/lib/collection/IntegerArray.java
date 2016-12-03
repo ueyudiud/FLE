@@ -5,7 +5,8 @@ import java.util.Objects;
 
 /**
  * The integer array, used when needed add
- * array to collection.
+ * array to collection.<p>
+ * 
  * @author ueyudiud
  *
  */
@@ -15,7 +16,7 @@ public class IntegerArray
 	
 	public IntegerArray(int length)
 	{
-		array = new int[length];
+		this.array = new int[length];
 	}
 	
 	public IntegerArray(int[] array)
@@ -25,19 +26,19 @@ public class IntegerArray
 	
 	public int length()
 	{
-		return array.length;
+		return this.array.length;
 	}
 	
 	public IntegerArray set(int id, int value)
 	{
-		array[id] = value;
+		this.array[id] = value;
 		return this;
 	}
-
+	
 	@Override
 	public int hashCode()
 	{
-		return Arrays.hashCode(array);
+		return Arrays.hashCode(this.array);
 	}
 	
 	@Override
@@ -46,17 +47,17 @@ public class IntegerArray
 		return obj == null ? false :
 			obj == this ? true :
 				!(obj instanceof IntegerArray) ?
-						!(obj instanceof int[] ? false : Arrays.equals(array, (int[]) obj)) : Arrays.equals(array, ((IntegerArray) obj).array);
+						!(obj instanceof int[] ? false : Arrays.equals(this.array, (int[]) obj)) : Arrays.equals(this.array, ((IntegerArray) obj).array);
 	}
 	
 	@Override
 	public String toString()
 	{
-		return Arrays.toString(array);
+		return Arrays.toString(this.array);
 	}
 	
 	public IntegerArray copy()
 	{
-		return new IntegerArray(array.clone());
+		return new IntegerArray(this.array.clone());
 	}
 }

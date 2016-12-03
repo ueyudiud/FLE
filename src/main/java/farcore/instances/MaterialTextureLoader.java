@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import farcore.data.M;
-import farcore.data.MC;
+import farcore.data.RockType;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.render.IIconLoader;
@@ -53,7 +53,7 @@ public class MaterialTextureLoader implements IIconLoader
 		}
 		builder.map.put(material, location);
 	}
-
+	
 	public static void addIconLocationApplier(MatCondition condition, String variant, Function<Mat, ResourceLocation> function)
 	{
 		String key = condition.name + ":" + variant;
@@ -73,7 +73,7 @@ public class MaterialTextureLoader implements IIconLoader
 		}
 		builder.parent = function;
 	}
-
+	
 	public static TextureAtlasSprite getIcon(Mat material, MatCondition condition)
 	{
 		return getIcon(material, condition, "");
@@ -87,7 +87,7 @@ public class MaterialTextureLoader implements IIconLoader
 	{
 		return ICONS.getOrDefault(name, Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
 	}
-
+	
 	@Override
 	public void registerIcon(IIconRegister register)
 	{
@@ -112,20 +112,20 @@ public class MaterialTextureLoader implements IIconLoader
 			}
 		}
 	}
-
+	
 	public static Function<Mat, ResourceLocation> getDefaultFunction(MatCondition condition, String variant)
 	{
 		String prefix = "iconsets/" + condition.name + (Strings.validate(variant).length() == 0 ? "" : "/" + variant) + "/";
 		return material -> new ResourceLocation(material.modid, prefix + material.name);
 	}
-
+	
 	public static class MTFBuilder implements Function<Mat, ResourceLocation>
 	{
 		private MatCondition condition;
 		private String variant;
 		private Function<Mat, ResourceLocation> parent;
 		private Map<Mat, ResourceLocation> map = new HashMap();
-
+		
 		MTFBuilder(MatCondition condition, String variant)
 		{
 			this.condition = condition;
@@ -134,68 +134,76 @@ public class MaterialTextureLoader implements IIconLoader
 		
 		public void build()
 		{
-			addIconset(condition, variant);
-			addIconLocationApplier(condition, variant, this);
+			addIconset(this.condition, this.variant);
+			addIconLocationApplier(this.condition, this.variant, this);
 		}
-
+		
+		public void put(String prefix, String postfix)
+		{
+			put(material -> new ResourceLocation(material.modid, prefix + material.name + postfix));
+		}
+		
 		public void put(Function<Mat, ResourceLocation> function)
 		{
-			parent = function;
+			this.parent = function;
 		}
 		
 		public void put(Mat material, ResourceLocation location)
 		{
-			map.put(material, location);
+			this.map.put(material, location);
 		}
-
+		
 		@Override
 		public ResourceLocation apply(Mat material)
 		{
-			if(parent == null)
+			if(this.parent == null)
 			{
-				parent = getDefaultFunction(condition, variant);
+				this.parent = getDefaultFunction(this.condition, this.variant);
 			}
-			return map.containsKey(material) ? map.get(material) : parent.apply(material);
+			return this.map.containsKey(material) ? this.map.get(material) : this.parent.apply(material);
 		}
 	}
 	
 	static
 	{
-		MTFBuilder builder = new MTFBuilder(MC.stone, "");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/resource"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stone"));
-		builder.build();
-		builder = new MTFBuilder(MC.cobble, "standard");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/cobble"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/cobblestone"));
-		builder.build();
-		builder = new MTFBuilder(MC.cobble, "mossy");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/mossy"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/cobblestone_mossy"));
-		builder.put(M.netherrack, new ResourceLocation("minecraft", "blocks/netherrack"));
-		builder.build();
-		builder = new MTFBuilder(MC.brickBlock, "standard");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/brick"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick"));
-		builder.build();
-		builder = new MTFBuilder(MC.brickBlock, "compacted");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/compacted"));
-		builder.build();
-		builder = new MTFBuilder(MC.brickBlock, "crushed");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/brick_crushed"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_cracked"));
-		builder.build();
-		builder = new MTFBuilder(MC.brickBlock, "mossy");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/brick_mossy"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_mossy"));
-		builder.build();
-		builder = new MTFBuilder(MC.brickBlock, "smoothed");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/smoothed"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_mossy"));
-		builder.build();
-		builder = new MTFBuilder(MC.brickBlock, "chiseled");
-		builder.put(material -> new ResourceLocation(material.modid, "blocks/rock/" + material.name + "/chiseled"));
-		builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_carved"));
-		builder.build();
+		for(RockType type : RockType.values())
+		{
+			if(type == RockType.cobble_art) continue;
+			MTFBuilder builder = new MTFBuilder(type.condition, type.variant);
+			builder.put("blocks/rock/", "/" + type.name());
+			switch (type)
+			{
+			case resource :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stone"));
+				break;
+			case cobble :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/cobblestone"));
+				builder.put(M.whitestone, new ResourceLocation("minecraft", "blocks/end_stone"));
+				break;
+			case mossy :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/cobblestone_mossy"));
+				builder.put(M.netherrack, new ResourceLocation("minecraft", "blocks/netherrack"));
+				break;
+			case brick :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick"));
+				break;
+			case brick_crushed :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_cracked"));
+				break;
+			case brick_mossy :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_mossy"));
+				break;
+			case smoothed :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_mossy"));
+				break;
+			case chiseled :
+				builder.put(M.stone, new ResourceLocation("minecraft", "blocks/stonebrick_carved"));
+				break;
+			case brick_compacted :
+			default:
+				break;
+			}
+			builder.build();
+		}
 	}
 }

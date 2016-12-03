@@ -11,7 +11,7 @@ public class FarCore
 {
 	/** The minimum forge version far core required. */
 	public static final int minForge = 2011;
-
+	
 	/** The core modid. */
 	public static final String ID = "farcore";
 	
@@ -20,19 +20,19 @@ public class FarCore
 	
 	/** The main modid. */
 	public static final String MAIN_MOD_ID = "fle";
-
+	
 	/**
 	 * Use in resource location, this locate will get
 	 * resource from code instead of get resource from
 	 * real path.
 	 */
 	public static final String INNER_RENDER = "farinner";
-
+	
 	/**
 	 * The network instance of far core mod.
 	 */
 	public static Network network;
-
+	
 	/**
 	 * The debug mode flag, enable to switch to
 	 * debug mode.<br>
@@ -40,7 +40,7 @@ public class FarCore
 	 * of game.<br>
 	 */
 	public static boolean debug = false;
-
+	
 	/**
 	 * The sided proxy of far core.
 	 */
@@ -55,4 +55,14 @@ public class FarCore
 	 * The crop will try to create tile with native DNA.
 	 */
 	public static boolean worldGenerationFlag = false;
+	
+	public static void catching(Exception exception) throws RuntimeException
+	{
+		if(debug)
+		{
+			RuntimeException exception1 = new RuntimeException(exception);
+			exception.setStackTrace(new StackTraceElement[0]);
+			throw new RuntimeException(exception);
+		}
+	}
 }

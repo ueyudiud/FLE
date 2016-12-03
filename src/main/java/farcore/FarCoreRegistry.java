@@ -1,5 +1,6 @@
 package farcore;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.render.Colormap;
 import farcore.lib.render.IIconLoader;
 import farcore.lib.util.LanguageManager;
+import farcore.lib.util.Log;
 import farcore.lib.world.IObjectInWorld;
 import farcore.lib.world.IWorldGenerateReplacer;
 import farcore.network.IPacket;
@@ -25,11 +27,13 @@ import farcore.util.U.Mod;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,12 +53,12 @@ public class FarCoreRegistry
 	 * The world generate replacer during world generating.
 	 */
 	public static final List<IWorldGenerateReplacer> WORLD_GENERATE_REPLACERS = new ArrayList();
-
+	
 	public static void addMaterialRegister(IMaterialRegister register)
 	{
 		MATERIAL_REGISTERS.add(register);
 	}
-
+	
 	/**
 	 * Add world generate replacer to generator.
 	 * @param replacer
@@ -63,7 +67,7 @@ public class FarCoreRegistry
 	{
 		WORLD_GENERATE_REPLACERS.add(replacer);
 	}
-
+	
 	/**
 	 * The tile entity need a register name for saving to NBT.
 	 * Register tile to map.
@@ -76,6 +80,23 @@ public class FarCoreRegistry
 	}
 	
 	/**
+	 * Register tile entity special render.
+	 * @param tesrClass
+	 */
+	public static <T extends TileEntity> void registerTESR(Class<? extends TileEntitySpecialRenderer<T>> tesrClass)
+	{
+		try
+		{
+			ParameterizedType type = (ParameterizedType) tesrClass.getGenericSuperclass();
+			ClientRegistry.bindTileEntitySpecialRenderer((Class<T>) type.getActualTypeArguments()[0], tesrClass.newInstance());
+		}
+		catch(Exception exception)
+		{
+			Log.catching(exception);
+		}
+	}
+	
+	/**
 	 * Register event listener to minecraft forge event bus.
 	 * @param object
 	 */
@@ -83,7 +104,7 @@ public class FarCoreRegistry
 	{
 		MinecraftForge.EVENT_BUS.register(listener);
 	}
-
+	
 	/**
 	 * Added new energy net(Which handle in whole world).
 	 * @param net
@@ -106,7 +127,7 @@ public class FarCoreRegistry
 	{
 		FarCoreWorldHandler.registerObject(id, objInWorldClass);
 	}
-
+	
 	/**
 	 * Register a thermal handler of world.
 	 * @param handler
@@ -140,7 +161,7 @@ public class FarCoreRegistry
 	{
 		LanguageManager.registerLocal(unlocalized, localized);
 	}
-
+	
 	/**
 	 * Get network if it already exist, or create a new network.
 	 * @param name
@@ -178,7 +199,7 @@ public class FarCoreRegistry
 	{
 		FarCoreKeyHandler.register(id, keycode);
 	}
-
+	
 	/**
 	 * Register item model location to FarCoreItemModelLoader,
 	 * which can make more flexible item models.
@@ -193,13 +214,13 @@ public class FarCoreRegistry
 	{
 		FarCoreItemModelLoader.registerModel(item, location);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void registerModelSelector(Block block, ICustomItemModelSelector selector)
 	{
 		U.Mod.registerCustomItemModelSelector(block, selector);
 	}
-
+	
 	/**
 	 * Register item model selector, which can switch model in code.
 	 * @param item The item need model selector.
@@ -210,13 +231,13 @@ public class FarCoreRegistry
 	{
 		U.Mod.registerCustomItemModelSelector(item, selector);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void registerColorMultiplier(Block block, IBlockColor colors)
 	{
 		U.Mod.registerColorMultiplier(colors, block);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static void registerColorMultiplier(Item item, IItemColor colors)
 	{
@@ -232,7 +253,7 @@ public class FarCoreRegistry
 	{
 		Mod.registerBuildInModel(block);
 	}
-
+	
 	/**
 	 * Get a color map (2D coordinated RGB value), loaded from selected path.
 	 * @param location The location of color map.

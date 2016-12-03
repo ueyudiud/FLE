@@ -10,28 +10,39 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	int allWeight;
 	INode<IntegerEntry<T>> first;
 	INode<IntegerEntry<T>> last;
-
+	
+	public WeightedRandomSelector()
+	{
+	}
+	public WeightedRandomSelector(Stack<T>[] stacks)
+	{
+		for(Stack<T> stack : stacks)
+		{
+			add(stack.element, (int) stack.size);
+		}
+	}
+	
 	public void add(T value, int weight)
 	{
-		if(first == null)
+		if(this.first == null)
 		{
-			first = last = Node.first(new IntegerEntry(value, weight));
-			allWeight = weight;
+			this.first = this.last = Node.first(new IntegerEntry(value, weight));
+			this.allWeight = weight;
 		}
 		else
 		{
-			last.addNext(new IntegerEntry(value, weight));
-			allWeight += weight;
-			last = last.next();
+			this.last.addNext(new IntegerEntry(value, weight));
+			this.allWeight += weight;
+			this.last = this.last.next();
 		}
 	}
-
+	
 	@Override
 	public T next(Random random)
 	{
-		if(first == null || allWeight == 0) return null;
-		int i = random.nextInt(allWeight);
-		INode<IntegerEntry<T>> node = first;
+		if(this.first == null || this.allWeight == 0) return null;
+		int i = random.nextInt(this.allWeight);
+		INode<IntegerEntry<T>> node = this.first;
 		while(i > 0 && //The weight is still more than random number
 				node.hasNext())//Or it has no node any more.
 		{
@@ -40,33 +51,33 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		}
 		return node.value().key;
 	}
-
+	
 	@Override
 	public Iterator<IntegerEntry<T>> iterator()
 	{
-		return first == null ? Iterators.emptyIterator() : new WRSIterator();
+		return this.first == null ? Iterators.emptyIterator() : new WRSIterator();
 	}
-
+	
 	private class WRSIterator implements Iterator<IntegerEntry<T>>
 	{
 		INode<IntegerEntry<T>> now;
-
+		
 		WRSIterator()
 		{
-			now = INode.telomereNode(first);
+			this.now = INode.telomereNode(WeightedRandomSelector.this.first);
 		}
-
+		
 		@Override
 		public boolean hasNext()
 		{
-			return now.hasNext();
+			return this.now.hasNext();
 		}
 		
 		@Override
 		public IntegerEntry<T> next()
 		{
-			now = now.next();
-			return now.value();
+			this.now = this.now.next();
+			return this.now.value();
 		}
 	}
 }

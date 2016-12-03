@@ -1,5 +1,7 @@
 package farcore.lib.tile.instance;
 
+import static farcore.util.L.index8i;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,8 +27,10 @@ import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.abstracts.TEStatic;
 import farcore.lib.util.Direction;
 import farcore.lib.world.IBlockCoordQuarterProperties;
+import farcore.util.L;
 import farcore.util.U;
 import farcore.util.U.Lights;
+import farcore.util.U.NBTs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -55,7 +59,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	private static final long[] Y_LAYER = {0x000F000F000F000FL, 0x00F000F000F000F0L, 0x0F000F000F000F00L, 0xF000F000F000F000L};
 	private static final long[] Z_LAYER = {0x000000000000FFFFL, 0x00000000FFFF0000L, 0x00FFFF0000000000L, 0xFFFF000000000000L};
 	private static final AxisAlignedBB[] AXISALIGNEDBBS = new AxisAlignedBB[64];
-
+	
 	static
 	{
 		for(int i = 0; i < 4; ++i)
@@ -64,12 +68,12 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			{
 				for(int k = 0; k < 4; ++k)
 				{
-					AXISALIGNEDBBS[index(i, j, k)] = new AxisAlignedBB(.25F * i, .25F * j, .25F * k, .25F * (i + 1), .25F * (j + 1), .25F * (k + 1));
+					AXISALIGNEDBBS[index8i(i, j, k)] = new AxisAlignedBB(.25F * i, .25F * j, .25F * k, .25F * (i + 1), .25F * (j + 1), .25F * (k + 1));
 				}
 			}
 		}
 	}
-
+	
 	private Mat rock = M.stone;
 	private PropertyRock property = null;
 	public RockType type = RockType.resource;
@@ -83,23 +87,23 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	
 	private PropertyRock property()
 	{
-		if(property == null)
+		if(this.property == null)
 		{
-			property = rock.getProperty(MP.property_rock);
+			this.property = this.rock.getProperty(MP.property_rock);
 		}
-		return property;
+		return this.property;
 	}
-
+	
 	public void setRock(Mat rock, RockType type)
 	{
 		this.rock = rock;
 		this.type = type;
 		syncToNearby();
 	}
-
+	
 	public Mat rock()
 	{
-		return rock;
+		return this.rock;
 	}
 	
 	@Override
@@ -113,25 +117,25 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	{
 		return property().hardness;
 	}
-
+	
 	@Override
 	public float getExplosionResistance(Entity exploder, Explosion explosion)
 	{
 		return property().explosionResistance;
 	}
-
+	
 	@Override
 	public int getLightOpacity(IBlockState state)
 	{
-		return carvedState != 0L ? 3 : 255;
+		return this.carvedState != 0L ? 3 : 255;
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-		compound.setString("rock", rock.name);
-		compound.setString("type", type.name());
-		compound.setLong("carve", carvedState);
+		compound.setString("rock", this.rock.name);
+		compound.setString("type", this.type.name());
+		compound.setLong("carve", this.carvedState);
 		return super.writeToNBT(compound);
 	}
 	
@@ -139,52 +143,47 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		rock = Mat.material(compound.getString("rock"), M.stone);
-		type = RockType.valueOf(compound.getString("type"));
-		carvedState = compound.getLong("carve");
-		property = null;
+		this.rock = NBTs.getMaterialByNameOrDefault(compound, "rock", M.stone);
+		this.type = NBTs.getEnumOrDefault(compound, "type", RockType.resource);
+		this.carvedState = compound.getLong("carve");
+		this.property = null;
 	}
 	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setString("r", rock.name);
-		nbt.setString("t", type.name());
-		nbt.setLong("c", carvedState);
+		nbt.setString("r", this.rock.name);
+		nbt.setString("t", this.type.name());
+		nbt.setLong("c", this.carvedState);
 	}
 	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		rock = Mat.material(nbt.getString("r"), M.stone);
-		type = RockType.valueOf(nbt.getString("t"));
-		property = null;
-		long state = nbt.getLong("c");
-		if(state != carvedState)
+		this.rock = NBTs.getMaterialByIDOrDefault(nbt, "r", this.rock);
+		this.type = NBTs.getEnumOrDefault(nbt, "t", this.type);
+		this.property = null;
+		long state = NBTs.getLongOrDefault(nbt, "c", this.carvedState);
+		if(state != this.carvedState)
 		{
-			carvedState = state;
-			modified = true;
+			this.carvedState = state;
+			this.modified = true;
 			markBlockRenderUpdate();
 		}
 	}
 	
-	private static int index(int x, int y, int z)
-	{
-		return z << 4 | y << 2 | x;
-	}
-
 	public boolean isCarved(int x, int y, int z)
 	{
-		return (carvedState & (1L << index(x, y, z))) != 0;
+		return (this.carvedState & (1L << index8i(x, y, z))) != 0;
 	}
-
+	
 	public ActionResult<Float> carveRock(EntityPlayer player, float hitX, float hitY, float hitZ)
 	{
-		double vx = hitX - (player.posX - pos.getX());
-		double vy = hitY - (player.posY + player.eyeHeight - pos.getY());
-		double vz = hitZ - (player.posZ - pos.getZ());
+		double vx = hitX - (player.posX - this.pos.getX());
+		double vy = hitY - (player.posY + player.eyeHeight - this.pos.getY());
+		double vz = hitZ - (player.posZ - this.pos.getZ());
 		double l = Math.sqrt(vx * vx + vy * vy + vz * vz) * 64;
 		vx /= l;
 		vy /= l;
@@ -217,12 +216,12 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		}
 		return new ActionResult<Float>(EnumActionResult.FAIL, null);
 	}
-
+	
 	protected void carveRockUnmark(int x, int y, int z)
 	{
-		carvedState |= (1L << index(x, y, z));
-		box = null;
-		modified = true;
+		this.carvedState |= (1L << index8i(x, y, z));
+		this.box = null;
+		this.modified = true;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -231,28 +230,28 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		if(isCarved(x, y, z))
 			return false;
 		if(x == 3 && facing == Direction.E)
-			return !worldObj.isSideSolid(pos.east(), EnumFacing.WEST);
+			return !this.worldObj.isSideSolid(this.pos.east(), EnumFacing.WEST);
 		if(y == 3 && facing == Direction.U)
-			return !worldObj.isSideSolid(pos.up(), EnumFacing.DOWN);
+			return !this.worldObj.isSideSolid(this.pos.up(), EnumFacing.DOWN);
 		if(z == 3 && facing == Direction.S)
-			return !worldObj.isSideSolid(pos.south(), EnumFacing.NORTH);
+			return !this.worldObj.isSideSolid(this.pos.south(), EnumFacing.NORTH);
 		if(x == 0 && facing == Direction.W)
-			return !worldObj.isSideSolid(pos.west(), EnumFacing.EAST);
+			return !this.worldObj.isSideSolid(this.pos.west(), EnumFacing.EAST);
 		if(y == 0 && facing == Direction.D)
-			return !worldObj.isSideSolid(pos.down(), EnumFacing.UP);
+			return !this.worldObj.isSideSolid(this.pos.down(), EnumFacing.UP);
 		if(z == 0 && facing == Direction.N)
-			return !worldObj.isSideSolid(pos.north(), EnumFacing.SOUTH);
+			return !this.worldObj.isSideSolid(this.pos.north(), EnumFacing.SOUTH);
 		return isCarved(x + facing.x, y + facing.y, z + facing.z);
 	}
-
+	
 	public boolean isFullCube()
 	{
-		return carvedState == 0;
+		return this.carvedState == 0;
 	}
-
+	
 	public boolean isEmpty()
 	{
-		return carvedState == EMPTY;
+		return this.carvedState == EMPTY;
 	}
 	
 	@Override
@@ -261,27 +260,27 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		int i, j, k;
 		switch (side)
 		{
-		case U : return (~carvedState & Y_LAYER[3]) == 0;
-		case D : return (~carvedState & Y_LAYER[0]) == 0;
-		case S : return (~carvedState & Z_LAYER[3]) == 0;
-		case N : return (~carvedState & Z_LAYER[0]) == 0;
-		case E : return (~carvedState & X_LAYER[3]) == 0;
-		case W : return (~carvedState & X_LAYER[0]) == 0;
+		case U : return (~this.carvedState & Y_LAYER[3]) == 0;
+		case D : return (~this.carvedState & Y_LAYER[0]) == 0;
+		case S : return (~this.carvedState & Z_LAYER[3]) == 0;
+		case N : return (~this.carvedState & Z_LAYER[0]) == 0;
+		case E : return (~this.carvedState & X_LAYER[3]) == 0;
+		case W : return (~this.carvedState & X_LAYER[0]) == 0;
 		default: return true;
 		}
 	}
-
+	
 	@Override
 	public boolean canPlaceTorchOnTop()
 	{
 		return !(isCarved(1, 3, 1) || isCarved(2, 3, 1) || isCarved(1, 3, 2) || isCarved(2, 3, 2));
 	}
-
+	
 	private void checkModified()
 	{
-		if(modified)
+		if(this.modified)
 		{
-			long negS = ~carvedState;
+			long negS = ~this.carvedState;
 			int minX = 0;
 			int minY = 0;
 			int minZ = 0;
@@ -336,25 +335,25 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 					break;
 				}
 			}
-			box = new AxisAlignedBB(minX * BLOCK_SCALE, minY * BLOCK_SCALE, minZ * BLOCK_SCALE, maxX * BLOCK_SCALE, maxY * BLOCK_SCALE, maxZ * BLOCK_SCALE);
+			this.box = new AxisAlignedBB(minX * BLOCK_SCALE, minY * BLOCK_SCALE, minZ * BLOCK_SCALE, maxX * BLOCK_SCALE, maxY * BLOCK_SCALE, maxZ * BLOCK_SCALE);
 			generateLightmap();
-			modified = false;
-			neighbourChanged = false;
+			this.modified = false;
+			this.neighbourChanged = false;
 		}
-		if(neighbourChanged)
+		if(this.neighbourChanged)
 		{
 			generateLightmap();
-			neighbourChanged = false;
+			this.neighbourChanged = false;
 		}
 	}
 	
 	private void generateLightmap()
 	{
 		if(!Config.splitBrightnessOfSmallBlock) return;
-		Arrays.fill(lightmapBlock, (byte) 0);
-		Arrays.fill(lightmapSky, (byte) 0);
-		generateLightmap(EnumSkyBlock.SKY, lightmapSky);
-		generateLightmap(EnumSkyBlock.BLOCK, lightmapBlock);
+		Arrays.fill(this.lightmapBlock, (byte) 0);
+		Arrays.fill(this.lightmapSky, (byte) 0);
+		generateLightmap(EnumSkyBlock.SKY, this.lightmapSky);
+		generateLightmap(EnumSkyBlock.BLOCK, this.lightmapBlock);
 	}
 	
 	private void generateLightmap(EnumSkyBlock type, byte[] lightmap)
@@ -372,10 +371,10 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 						int k = 4;
 						while(k > 0 && isCarved(i, --k, j))
 						{
-							lightmap[index(i, k, j)] = l1;
+							lightmap[index8i(i, k, j)] = l1;
 						}
 					}
-					else if(lightmap[idx = index(i, 3, j)] < l1)
+					else if(lightmap[idx = index8i(i, 3, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -389,7 +388,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			{
 				for(int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index(i, 0, j)] < l1)
+					if(lightmap[idx = index8i(i, 0, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -403,7 +402,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			{
 				for(int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index(3, i, j)] < l1)
+					if(lightmap[idx = index8i(3, i, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -417,7 +416,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			{
 				for(int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index(0, i, j)] < l1)
+					if(lightmap[idx = index8i(0, i, j)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -431,7 +430,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			{
 				for(int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index(i, j, 0)] < l1)
+					if(lightmap[idx = index8i(i, j, 0)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -445,7 +444,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 			{
 				for(int j = 0; j < 4; ++j)
 				{
-					if(lightmap[idx = index(i, j, 3)] < l1)
+					if(lightmap[idx = index8i(i, j, 3)] < l1)
 					{
 						lightmap[idx] = l1;
 					}
@@ -467,10 +466,10 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	private void scanLight(int x, int y, int z, byte side, int light, byte[] lightmap)
 	{
 		if(!isCarved(x, y, z)) return;
-		int idx = index(x, y, z);
+		int idx = index8i(x, y, z);
 		if(light < 0)
 		{
-			light = farcore.util.L.castPositive(lightmap[idx]);
+			light = L.castPositive(lightmap[idx]);
 		}
 		else
 		{
@@ -480,27 +479,27 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		if(light >= 4)
 		{
 			light -= 4;
-			if((side & 0x1) != 0 && x > 0 && farcore.util.L.castPositive(lightmap[idx - 0x1]) < light)
+			if((side & 0x1) != 0 && x > 0 && L.castPositive(lightmap[idx - 0x1]) < light)
 			{
 				scanLight(x - 1, y, z, (byte) (side & ~0x2), light, lightmap);
 			}
-			if((side & 0x2) != 0 && x < 3 && farcore.util.L.castPositive(lightmap[idx + 0x1]) < light)
+			if((side & 0x2) != 0 && x < 3 && L.castPositive(lightmap[idx + 0x1]) < light)
 			{
 				scanLight(x + 1, y, z, (byte) (side & ~0x1), light, lightmap);
 			}
-			if((side & 0x4) != 0 && y > 0 && farcore.util.L.castPositive(lightmap[idx - 0x4]) < light)
+			if((side & 0x4) != 0 && y > 0 && L.castPositive(lightmap[idx - 0x4]) < light)
 			{
 				scanLight(x, y - 1, z, (byte) (side & ~0x8), light, lightmap);
 			}
-			if((side & 0x8) != 0 && y < 3 && farcore.util.L.castPositive(lightmap[idx + 0x4]) < light)
+			if((side & 0x8) != 0 && y < 3 && L.castPositive(lightmap[idx + 0x4]) < light)
 			{
 				scanLight(x, y + 1, z, (byte) (side & ~0x4), light, lightmap);
 			}
-			if((side & 0x10) != 0 && z > 0 && farcore.util.L.castPositive(lightmap[idx - 0x10]) < light)
+			if((side & 0x10) != 0 && z > 0 && L.castPositive(lightmap[idx - 0x10]) < light)
 			{
 				scanLight(x, y, z - 1, (byte) (side & ~0x20), light, lightmap);
 			}
-			if((side & 0x20) != 0 && z < 3 && farcore.util.L.castPositive(lightmap[idx + 0x10]) < light)
+			if((side & 0x20) != 0 && z < 3 && L.castPositive(lightmap[idx + 0x10]) < light)
 			{
 				scanLight(x, y, z + 1, (byte) (side & ~0x10), light, lightmap);
 			}
@@ -511,14 +510,14 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
 	{
 		checkModified();
-		return box;
+		return this.box;
 	}
-
+	
 	@Override
 	public AxisAlignedBB getBoundBox(IBlockState state)
 	{
 		checkModified();
-		return box;
+		return this.box;
 	}
 	
 	@Override
@@ -527,43 +526,43 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	{
 		return getBoundBox(state);
 	}
-
+	
 	@Override
 	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
 			Entity entity)
 	{
 		for(int i = 0; i < 64; ++i)
 		{
-			if((carvedState & (1 << i)) == 0L)
+			if((this.carvedState & (1 << i)) == 0L)
 			{
 				collidingBoxes.add(AXISALIGNEDBBS[i]);
 			}
 		}
 	}
-
+	
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
 			float hitY, float hitZ)
 	{
 		if(tool == EnumToolType.chisel)
 		{
-			if(player.canPlayerEdit(pos, side.of(), stack))
+			if(player.canPlayerEdit(this.pos, side.of(), stack))
 				return carveRock(player, hitX, hitY, hitZ);
 		}
 		return IToolableTile.DEFAULT_RESULT;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public TextureAtlasSprite getIcon()
 	{
-		return MaterialTextureLoader.getIcon(rock, type.condition, type.variant);
+		return MaterialTextureLoader.getIcon(this.rock, this.type.condition, this.type.variant);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
-		U.Client.addBlockHitEffect(worldObj, random, getBlockState(), target.sideHit, target.getBlockPos(), manager, getIcon());
+		U.Client.addBlockHitEffect(this.worldObj, this.random, getBlockState(), target.sideHit, target.getBlockPos(), manager, getIcon());
 		return true;
 	}
 	
@@ -571,7 +570,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
-		U.Client.addBlockDestroyEffects(worldObj, pos, getBlockState(), manager, getIcon());
+		U.Client.addBlockDestroyEffects(this.worldObj, this.pos, getBlockState(), manager, getIcon());
 		return true;
 	}
 	
@@ -579,28 +578,28 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
 	{
-		IBlockState state2 = property().block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, type);
-		U.Server.addBlockLandingEffects(worldObj, pos, state2, entity, numberOfParticles);
+		IBlockState state2 = property().block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, this.type);
+		U.Server.addBlockLandingEffects(this.worldObj, this.pos, state2, entity, numberOfParticles);
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessLocal(int x, int y, int z)
 	{
-		int idx = index(x, y, z);
+		int idx = index8i(x, y, z);
 		return Config.splitBrightnessOfSmallBlock ?
-				Lights.mixSkyBlockLight(lightmapSky[idx], lightmapBlock[idx]) :
-					worldObj.getCombinedLight(pos, 0);
+				Lights.mixSkyBlockLight(this.lightmapSky[idx], this.lightmapBlock[idx]) :
+					this.worldObj.getCombinedLight(this.pos, 0);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getAmbientOcclusionLightValueLocal(int x, int y, int z)
 	{
 		return isCarved(x, y, z) ? 1.0F : 0.3F;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public float getOpaquenessLocal(int x, int y, int z)

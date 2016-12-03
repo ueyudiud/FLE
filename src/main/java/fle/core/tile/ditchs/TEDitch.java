@@ -39,7 +39,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	private static final AxisAlignedBB AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F);
 	
 	private static final int[] Connect = {0x0, 0x1, 0x2, 0x3};
-
+	
 	private class DitchSidedHandler implements IFluidHandler
 	{
 		final EnumFacing facing;
@@ -52,43 +52,43 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		@Override
 		public IFluidTankProperties[] getTankProperties()
 		{
-			return tank.getTankProperties();
+			return TEDitch.this.tank.getTankProperties();
 		}
-
+		
 		@Override
 		public int fill(FluidStack resource, boolean doFill)
 		{
-			return tank.fill(resource, doFill);
+			return TEDitch.this.tank.fill(resource, doFill);
 		}
-
+		
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain)
 		{
-			return tank.drain(resource, doDrain);
+			return TEDitch.this.tank.drain(resource, doDrain);
 		}
-
+		
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain)
 		{
-			return tank.drain(maxDrain, doDrain);
+			return TEDitch.this.tank.drain(maxDrain, doDrain);
 		}
 	}
-
+	
 	private long[] flowBuffer = new long[4];
 	private int[] lastFlow = {0, 0, 0, 0};
-
+	
 	private Mat material = Mat.VOID;
 	private DitchFactory factory = DitchBlockHandler.getFactory(null);
 	private FluidTank tank;
 	private DitchSidedHandler[] handlers;
-
+	
 	public TEDitch()
 	{
-		tank = new FluidTank(0);
-		handlers = new DitchSidedHandler[4];
+		this.tank = new FluidTank(0);
+		this.handlers = new DitchSidedHandler[4];
 		for(EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
-			handlers[facing.getHorizontalIndex()] = new DitchSidedHandler(facing);
+			this.handlers[facing.getHorizontalIndex()] = new DitchSidedHandler(facing);
 		}
 	}
 	public TEDitch(Mat material)
@@ -96,72 +96,72 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		this();
 		setMaterial(material);
 	}
-
+	
 	public void setMaterial(Mat material)
 	{
 		this.material = material;
-		factory = IDitchTile.DitchBlockHandler.getFactory(material);
-		tank = factory.apply(this);
+		this.factory = IDitchTile.DitchBlockHandler.getFactory(material);
+		this.tank = this.factory.apply(this);
 	}
-
+	
 	@Override
 	public Mat getMaterial()
 	{
-		return material;
+		return this.material;
 	}
-
+	
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		setMaterial(Mat.material(stack.getItemDamage()));
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		material = NBTs.getMaterialByNameOrDefault(nbt, "material", Mat.VOID);
-		factory = DitchBlockHandler.getFactory(material);
-		tank = factory.apply(this);
-		tank.readFromNBT(NBTs.getCompound(nbt, "tank", false));
-		NBTs.getLongArrayOrDefault(nbt, "flowBuf", flowBuffer);
+		this.material = NBTs.getMaterialByNameOrDefault(nbt, "material", Mat.VOID);
+		this.factory = DitchBlockHandler.getFactory(this.material);
+		this.tank = this.factory.apply(this);
+		this.tank.readFromNBT(NBTs.getCompound(nbt, "tank", false));
+		NBTs.getLongArrayOrDefault(nbt, "flowBuf", this.flowBuffer);
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setString("material", material.name);
-		nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
-		NBTs.setLongArray(nbt, "flowBuf", flowBuffer);
+		nbt.setString("material", this.material.name);
+		nbt.setTag("tank", this.tank.writeToNBT(new NBTTagCompound()));
+		NBTs.setLongArray(nbt, "flowBuf", this.flowBuffer);
 		return nbt;
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		Mat material1 = NBTs.getMaterialByIDOrDefault(nbt, "m", material);
-		if(material != material1)
+		Mat material1 = NBTs.getMaterialByIDOrDefault(nbt, "m", this.material);
+		if(this.material != material1)
 		{
-			material = material1;
-			factory = DitchBlockHandler.getFactory(material1);
-			tank = factory.apply(this);
-			tank.setFluid(NBTs.getFluidStackOrDefault(nbt, "s", null));
+			this.material = material1;
+			this.factory = DitchBlockHandler.getFactory(material1);
+			this.tank = this.factory.apply(this);
+			this.tank.setFluid(NBTs.getFluidStackOrDefault(nbt, "s", null));
 			markBlockRenderUpdate();
 		}
 		else
 		{
-			tank.setFluid(NBTs.getFluidStackOrDefault(nbt, "s", tank.getFluid()));
+			this.tank.setFluid(NBTs.getFluidStackOrDefault(nbt, "s", this.tank.getFluid()));
 		}
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setShort("m", material.id);
-		NBTs.setFluidStack(nbt, "s", tank.getFluid(), true);
+		nbt.setShort("m", this.material.id);
+		NBTs.setFluidStack(nbt, "s", this.tank.getFluid(), true);
 	}
 	
 	@Override
@@ -183,22 +183,22 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 			}
 		}
 	}
-
+	
 	@Override
 	protected void updateServer()
 	{
 		super.updateServer();
-		if(tank.getFluid() != null && tank.getFluid().getFluid().isGaseous(tank.getFluid()))
+		if(this.tank.getFluid() != null && this.tank.getFluid().getFluid().isGaseous(this.tank.getFluid()))
 		{
-			tank.setFluid(null);
+			this.tank.setFluid(null);
 			syncToNearby();
 		}
-		factory.onUpdate(this);
+		this.factory.onUpdate(this);
 		if(!isInvalid())
 		{
 			int val;
-			final int speedMutiple = factory.getSpeedMultiple(this);
-			final int limit = factory.getMaxTransferLimit(this);
+			final int speedMutiple = this.factory.getSpeedMultiple(this);
+			final int limit = this.factory.getMaxTransferLimit(this);
 			for(int i = 0; i < Direction.DIRECTIONS_2D.length; ++i)
 			{
 				Direction direction = Direction.DIRECTIONS_2D[i];
@@ -208,11 +208,11 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 					if(val > 0)
 					{
 						syncToNearby();
-						lastFlow[direction.horizontalOrdinal] = Math.max(0, val - limit);
+						this.lastFlow[direction.horizontalOrdinal] = Math.max(0, val - limit);
 					}
 					else if(val == 0)
 					{
-						flowBuffer[direction.horizontalOrdinal] += speedMutiple;
+						this.flowBuffer[direction.horizontalOrdinal] += speedMutiple;
 					}
 					else
 					{
@@ -221,15 +221,15 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 				}
 				else
 				{
-					flowBuffer[direction.horizontalOrdinal] = 0;
+					this.flowBuffer[direction.horizontalOrdinal] = 0;
 				}
 			}
 		}
 	}
-
+	
 	protected int tryFillFluidInto(int limit, Direction direction)
 	{
-		int value = lastFlow[direction.horizontalOrdinal];
+		int value = this.lastFlow[direction.horizontalOrdinal];
 		int viscosity;
 		TileEntity tile = getTE(direction);
 		if(tile instanceof IDitchTile)
@@ -253,12 +253,12 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 			if(L.similar(h1, h2)) return -1;
 			if(h1 > h2)
 			{
-				viscosity = fluid.getViscosity(tank.getFluid());
+				viscosity = fluid.getViscosity(this.tank.getFluid());
 				int speed = getFlowSpeed(direction, limit, viscosity);
 				if(speed < 1) return 0;
-				flowBuffer[direction.horizontalOrdinal] -= speed * viscosity;
-				int amount = ditch.getTank().fill(tank.drain(speed, false), true);
-				tank.drain(amount, true);
+				this.flowBuffer[direction.horizontalOrdinal] -= speed * viscosity;
+				int amount = ditch.getTank().fill(this.tank.drain(speed, false), true);
+				this.tank.drain(amount, true);
 				syncToNearby();
 				markDirty();
 				return amount;
@@ -268,33 +268,33 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		}
 		else
 		{
-			viscosity = tank.getFluid().getFluid().getViscosity(tank.getFluid());
+			viscosity = this.tank.getFluid().getFluid().getViscosity(this.tank.getFluid());
 			int speed = getFlowSpeed(direction, limit, viscosity);
 			int result;
-			if((result = U.TileEntities.tryFlowFluidInto(tank, tile, direction.getOpposite(), speed, true)) != -1)
+			if((result = U.TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true)) != -1)
 			{
 				if(result > 0)
 				{
-					flowBuffer[direction.horizontalOrdinal] -= result * viscosity;
+					this.flowBuffer[direction.horizontalOrdinal] -= result * viscosity;
 				}
 				return result;
 			}
-			else if(isAirBlock(direction) && pos.getY() > 1)
+			else if(isAirBlock(direction) && this.pos.getY() > 1)
 			{
 				tile = getTE(direction.x, -1, direction.z);
 				speed = getFlowSpeed(direction, Integer.MAX_VALUE, viscosity / 2);
 				if(tile instanceof IDitchTile)
 				{
-					FluidStack stack = tank.drain(speed, true);//Force to drain fluid.
-					flowBuffer[direction.horizontalOrdinal] = 0;
+					FluidStack stack = this.tank.drain(speed, true);//Force to drain fluid.
+					this.flowBuffer[direction.horizontalOrdinal] = 0;
 					return ((IDitchTile) tile).getTank().fill(stack, true);
 				}
 				else
 				{
-					result = U.TileEntities.tryFlowFluidInto(tank, tile, direction.getOpposite(), speed, true);
+					result = U.TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true);
 					if(result != -1)
 					{
-						flowBuffer[direction.horizontalOrdinal] -= result * viscosity;
+						this.flowBuffer[direction.horizontalOrdinal] -= result * viscosity;
 						return result;
 					}
 				}
@@ -305,16 +305,16 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	
 	protected int getFlowSpeed(Direction direction, int limit, int viscosity)
 	{
-		int speed = (int) ((float) (flowBuffer[direction.horizontalOrdinal] + 1) / (float) viscosity);
+		int speed = (int) ((float) (this.flowBuffer[direction.horizontalOrdinal] + 1) / (float) viscosity);
 		return speed > limit ? limit : speed;
 	}
-
+	
 	@Override
 	public float getFlowHeight()
 	{
-		return (float) tank.getFluidAmount() / (float) tank.getCapacity();
+		return (float) this.tank.getFluidAmount() / (float) this.tank.getCapacity();
 	}
-
+	
 	protected boolean canLink(Direction face, TileEntity tile)
 	{
 		EnumFacing facing = face.getOpposite().of();
@@ -328,38 +328,38 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	{
 		return is(Connect[direction.horizontalOrdinal]);
 	}
-
+	
 	@Override
 	public void setLink(Direction direction, boolean state)
 	{
 		set(Connect[direction.horizontalOrdinal], state);
 		syncToNearby();
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return AABB_DITCH_RENDER_RANGE;
+		return AABB_DITCH_RENDER_RANGE.offset(this.pos);
 	}
-
+	
 	@Override
 	public FluidTank getTank()
 	{
-		return tank;
+		return this.tank;
 	}
-
+	
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
 		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
-
+	
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getHorizontalIndex() != -1)
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(handlers[facing.getHorizontalIndex()]);
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.handlers[facing.getHorizontalIndex()]);
 		return super.getCapability(capability, facing);
 	}
 }

@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.FarCore;
 import farcore.lib.item.behavior.IBehavior;
 import farcore.lib.util.EnviornmentEntity;
 import farcore.lib.util.LanguageManager;
@@ -41,28 +42,28 @@ public class ItemSubBehavior extends ItemBase
 	protected ItemSubBehavior(String name)
 	{
 		super(name);
-		hasSubtypes = true;
+		this.hasSubtypes = true;
 	}
-
+	
 	protected ItemSubBehavior(String modid, String name)
 	{
 		super(modid, name);
-		hasSubtypes = true;
+		this.hasSubtypes = true;
 	}
-
+	
 	public void addSubItem(int id, String name, String localName, @Nullable IItemCapabilityProvider provider, IBehavior...behaviors)
 	{
-		if(idMap.containsKey(id) || idMap.containsValue(name))
+		if(this.idMap.containsKey(id) || this.idMap.containsValue(name))
 			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
-		idMap.put(name, id);
-		nameMap.put(id, name);
+		this.idMap.put(name, id);
+		this.nameMap.put(id, name);
 		if(behaviors.length > 0)
 		{
 			this.behaviors.put(id, ImmutableList.copyOf(behaviors));
 		}
 		if(provider != null)
 		{
-			providers.put(id, provider);
+			this.providers.put(id, provider);
 		}
 		if(localName != null)
 		{
@@ -72,7 +73,7 @@ public class ItemSubBehavior extends ItemBase
 	
 	protected List<IBehavior> getBehavior(ItemStack stack)
 	{
-		return behaviors.getOrDefault(getDamage(stack), IBehavior.NONE);
+		return this.behaviors.getOrDefault(getDamage(stack), IBehavior.NONE);
 	}
 	
 	protected boolean isItemUsable(ItemStack stack)
@@ -158,10 +159,11 @@ public class ItemSubBehavior extends ItemBase
 		}
 		catch(Exception exception)
 		{
+			FarCore.catching(exception);
 			return false;
 		}
 	}
-
+	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
@@ -193,6 +195,7 @@ public class ItemSubBehavior extends ItemBase
 		}
 		catch(Exception exception)
 		{
+			FarCore.catching(exception);
 			return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStackIn);
 		}
 	}
@@ -222,6 +225,7 @@ public class ItemSubBehavior extends ItemBase
 		}
 		catch(Exception exception)
 		{
+			FarCore.catching(exception);
 			return EnumActionResult.FAIL;
 		}
 	}
@@ -251,10 +255,11 @@ public class ItemSubBehavior extends ItemBase
 		}
 		catch(Exception exception)
 		{
+			FarCore.catching(exception);
 			return EnumActionResult.FAIL;
 		}
 	}
-
+	
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
@@ -274,6 +279,7 @@ public class ItemSubBehavior extends ItemBase
 		}
 		catch(Exception exception)
 		{
+			FarCore.catching(exception);
 			return false;
 		}
 	}
@@ -285,10 +291,17 @@ public class ItemSubBehavior extends ItemBase
 			return;
 		for(IBehavior behavior : getBehavior(stack))
 		{
-			behavior.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
+			try
+			{
+				behavior.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
+			}
+			catch(Exception exception)
+			{
+				FarCore.catching(exception);
+			}
 		}
 	}
-
+	
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
@@ -298,7 +311,14 @@ public class ItemSubBehavior extends ItemBase
 		if(this instanceof IUpdatableItem &&
 				!entityIn.worldObj.isRemote)
 		{
-			stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityIn), stack);
+			try
+			{
+				stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityIn), stack);
+			}
+			catch(Exception exception)
+			{
+				FarCore.catching(exception);
+			}
 			if(entityIn instanceof EntityPlayer)
 			{
 				if(stack == null)
@@ -312,7 +332,14 @@ public class ItemSubBehavior extends ItemBase
 		}
 		for(IBehavior behavior : getBehavior(stack))
 		{
-			stack = behavior.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+			try
+			{
+				stack = behavior.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+			}
+			catch(Exception exception)
+			{
+				FarCore.catching(exception);
+			}
 			if(entityIn instanceof EntityPlayer)
 			{
 				if(stack == null)
@@ -329,22 +356,22 @@ public class ItemSubBehavior extends ItemBase
 			}
 		}
 	}
-
+	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
 	{
 		if(!isItemUsable(stack))
 			return;
-		try
+		for(IBehavior behavior : getBehavior(stack))
 		{
-			for(IBehavior behavior : getBehavior(stack))
+			try
 			{
 				behavior.onUsingTick(stack, player, count);
 			}
-		}
-		catch(Exception exception)
-		{
-			;
+			catch(Exception exception)
+			{
+				FarCore.catching(exception);
+			}
 		}
 	}
 	
@@ -354,30 +381,31 @@ public class ItemSubBehavior extends ItemBase
 	{
 		if(!isItemUsable(stack))
 			return false;
-		try
+		boolean flag = false;
+		for(IBehavior behavior : getBehavior(stack))
 		{
-			boolean flag = false;
-			for(IBehavior behavior : getBehavior(stack))
+			try
 			{
 				if(behavior.onRightClickEntity(stack, playerIn, target, hand))
 				{
 					flag = true;
 				}
 			}
-			return flag;
+			catch(Exception exception)
+			{
+				FarCore.catching(exception);
+				return false;
+			}
 		}
-		catch(Exception exception)
-		{
-			return false;
-		}
+		return flag;
 	}
 	
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
 	{
-		return providers.getOrDefault(getDamage(stack), IItemCapabilityProvider.NONE).initCapabilities(stack, nbt);
+		return this.providers.getOrDefault(getDamage(stack), IItemCapabilityProvider.NONE).initCapabilities(stack, nbt);
 	}
-
+	
 	/**
 	 * @param advanced Is information being display in more information mode. (F3+H to switch mode).
 	 */
@@ -393,15 +421,22 @@ public class ItemSubBehavior extends ItemBase
 		}
 		for(IBehavior behavior : getBehavior(stack))
 		{
-			behavior.addInformation(stack, playerIn, unlocalizedList, advanced);
+			try
+			{
+				behavior.addInformation(stack, playerIn, unlocalizedList, advanced);
+			}
+			catch(Exception exception)
+			{
+				FarCore.catching(exception);
+			}
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(int id : idMap.values())
+		for(int id : this.idMap.values())
 		{
 			try
 			{
@@ -409,11 +444,11 @@ public class ItemSubBehavior extends ItemBase
 			}
 			catch(Exception exception)
 			{
-				;
+				FarCore.catching(exception);
 			}
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{

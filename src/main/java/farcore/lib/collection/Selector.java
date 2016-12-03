@@ -1,10 +1,11 @@
 package farcore.lib.collection;
 
 import java.util.Random;
+import java.util.function.Function;
 
 import farcore.util.L;
 
-public interface Selector<E>
+public interface Selector<E> extends Function<Random, E>
 {
 	static <E> Selector<E> single(E element)
 	{
@@ -15,6 +16,8 @@ public interface Selector<E>
 	{
 		return next(L.random());
 	}
+	
+	default E apply(Random random) { return next(random); }
 	
 	/**
 	 * Get next element from selector,

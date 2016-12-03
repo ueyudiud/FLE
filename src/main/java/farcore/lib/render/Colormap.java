@@ -23,7 +23,7 @@ public class Colormap
 	
 	public static Colormap getColormap(String location)
 	{
-		Colormap colormap = ColormapFactory.colormaps.get(location);
+		Colormap colormap = ColormapFactory.COLORMAPS.get(location);
 		return colormap != null ? colormap : new Colormap(location);
 	}
 
@@ -35,7 +35,7 @@ public class Colormap
 	private Colormap(String location)
 	{
 		this.location = location;
-		ColormapFactory.colormaps.put(location, this);
+		ColormapFactory.COLORMAPS.put(location, this);
 	}
 	
 	public int getWidth()
@@ -59,15 +59,15 @@ public class Colormap
 	{
 		INSTANCE;
 
-		private static final Map<String, Colormap> colormaps = new HashMap();
+		private static final Map<String, Colormap> COLORMAPS = new HashMap();
 
 		@Override
 		public void onResourceManagerReload(IResourceManager resourceManager)
 		{
 			Log.reset();
-			ProgressBar bar = ProgressManager.push("Far Color Map Reloading", colormaps.size());
+			ProgressBar bar = ProgressManager.push("Far Color Map Reloading", COLORMAPS.size());
 			ResourceLocation location;
-			for(Colormap colormap : colormaps.values())
+			for(Colormap colormap : COLORMAPS.values())
 			{
 				location = new ResourceLocation(colormap.location);
 				bar.step(location.toString());

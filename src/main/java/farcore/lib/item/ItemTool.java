@@ -8,6 +8,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 
+import farcore.FarCore;
 import farcore.data.EnumToolType;
 import farcore.data.MC;
 import farcore.data.MP;
@@ -25,6 +26,7 @@ import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
 import farcore.util.Localization;
 import farcore.util.U;
+import farcore.util.U.ItemStacks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -188,7 +190,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	
 	protected Mat getMaterialFromItem(ItemStack stack, String part)
 	{
-		NBTTagCompound nbt = U.ItemStacks.getOrSetupNBT(stack, false).getCompoundTag("tool");
+		NBTTagCompound nbt = ItemStacks.getOrSetupNBT(stack, false).getCompoundTag("tool");
 		return Mat.material(nbt.getString(part));
 	}
 	
@@ -300,7 +302,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	{
 		EnumActionResult result = super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 		if(result == EnumActionResult.PASS)
-			return U.ItemStacks.onUseOnBlock(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ);
+			return ItemStacks.onUseOnBlock(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ);
 		return result;
 	}
 	
@@ -435,7 +437,14 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		ItemStack stack2 = stack;
 		if(!entityIn.worldObj.isRemote)
 		{
-			stack = ((IUpdatableItem) this).updateItem(null, stack);
+			try
+			{
+				stack = ((IUpdatableItem) this).updateItem(null, stack);
+			}
+			catch(Exception exception)
+			{
+				FarCore.catching(exception);
+			}
 			if(entityIn instanceof EntityPlayer)
 			{
 				if(stack == null)
@@ -456,18 +465,25 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		boolean flag = super.onEntityItemUpdate(entityItem);
 		if(!entityItem.worldObj.isRemote)
 		{
-			ItemStack stack = ((IUpdatableItem) this).updateItem(null, entityItem.getEntityItem());
-			if(stack == null)
+			try
 			{
-				entityItem.setDead();
-				return false;
+				ItemStack stack = ((IUpdatableItem) this).updateItem(null, entityItem.getEntityItem());
+				if(stack == null)
+				{
+					entityItem.setDead();
+					return false;
+				}
+				else if(stack != entityItem.getEntityItem())
+				{
+					entityItem.setEntityItemStack(stack);
+				}
+				if(stack.getItem() != this)
+					return true;
 			}
-			else if(stack != entityItem.getEntityItem())
+			catch(Exception exception)
 			{
-				entityItem.setEntityItemStack(stack);
+				FarCore.catching(exception);
 			}
-			if(stack.getItem() != this)
-				return true;
 		}
 		return flag;
 	}
@@ -486,7 +502,14 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			material = getMaterialFromItem(stack, "tie");
 			if(material.itemProp != null)
 			{
-				stack = material.itemProp.updateItem(stack, material, MC.tie, environment);
+				try
+				{
+					stack = material.itemProp.updateItem(stack, material, MC.tie, environment);
+				}
+				catch (Exception exception)
+				{
+					FarCore.catching(exception);
+				}
 			}
 		}
 		if(stack != null && prop.hasHandle)
@@ -494,7 +517,14 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			material = getMaterialFromItem(stack, "handle");
 			if(material.itemProp != null)
 			{
-				stack = material.itemProp.updateItem(stack, material, MC.handle, environment);
+				try
+				{
+					stack = material.itemProp.updateItem(stack, material, MC.handle, environment);
+				}
+				catch(Exception exception)
+				{
+					FarCore.catching(exception);
+				}
 			}
 		}
 		return stack;
@@ -543,31 +573,34 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		float now = getDurability(stack);
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		unlocalizedList.addToolTip(getBaseTranslateInformation(stack));
-		Localization.addDamageInformation((int) (now * 100), max * 100, unlocalizedList);
-		Mat material = getMaterialFromItem(stack, "head");
-		Localization.addToolMaterialInformation(material, prop.stat, unlocalizedList);
-		if(material.itemProp != null)
+		if(stack.hasTagCompound())
 		{
-			material.itemProp.addInformation(stack, material, prop.condition, unlocalizedList, "head");
-		}
-		if(prop.hasHandle)
-		{
-			material = getMaterialFromItem(stack, "handle");
-			unlocalizedList.add("info.tool.handle.name", material.getLocalName());
-			unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
+			Localization.addDamageInformation((int) (now * 100), max * 100, unlocalizedList);
+			Mat material = getMaterialFromItem(stack, "head");
+			Localization.addToolMaterialInformation(material, prop.stat, unlocalizedList);
 			if(material.itemProp != null)
 			{
-				material.itemProp.addInformation(stack, material, MC.handle, unlocalizedList, "handle");
+				material.itemProp.addInformation(stack, material, prop.condition, unlocalizedList, "head");
 			}
-		}
-		if(prop.hasTie)
-		{
-			material = getMaterialFromItem(stack, "tie");
-			unlocalizedList.add("info.tool.tie.name", material.getLocalName());
-			unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
-			if(material.itemProp != null)
+			if(prop.hasHandle)
 			{
-				material.itemProp.addInformation(stack, material, MC.tie, unlocalizedList, "tie");
+				material = getMaterialFromItem(stack, "handle");
+				unlocalizedList.add("info.tool.handle.name", material.getLocalName());
+				unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
+				if(material.itemProp != null)
+				{
+					material.itemProp.addInformation(stack, material, MC.handle, unlocalizedList, "handle");
+				}
+			}
+			if(prop.hasTie)
+			{
+				material = getMaterialFromItem(stack, "tie");
+				unlocalizedList.add("info.tool.tie.name", material.getLocalName());
+				unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
+				if(material.itemProp != null)
+				{
+					material.itemProp.addInformation(stack, material, MC.tie, unlocalizedList, "tie");
+				}
 			}
 		}
 		unlocalizedList.add(prop.stat.getPhysicalDamageType().getTranslation());

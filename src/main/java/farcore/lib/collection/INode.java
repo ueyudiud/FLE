@@ -22,7 +22,7 @@ public interface INode<T> extends Iterable<T>
 	{
 		return new TelomereNode(node);
 	}
-
+	
 	@Override
 	default Iterator<T> iterator()
 	{
@@ -30,7 +30,7 @@ public interface INode<T> extends Iterable<T>
 	}
 	
 	T value();
-
+	
 	default boolean hasNext()
 	{
 		return next() != null;
@@ -44,12 +44,12 @@ public interface INode<T> extends Iterable<T>
 	}
 	
 	INode<T> last();
-
+	
 	default boolean contain(Object arg)
 	{
 		return L.equal(arg, value()) || (containBefore(arg) || containAfter(arg));
 	}
-
+	
 	default boolean containBefore(Object arg)
 	{
 		if(!hasLast()) return false;
@@ -63,7 +63,7 @@ public interface INode<T> extends Iterable<T>
 		INode<T> node = next();
 		return L.equal(arg, node.value()) || node.containAfter(arg);
 	}
-
+	
 	default void addLast(T target)
 	{
 		throw new UnsupportedOperationException();
@@ -88,12 +88,12 @@ public interface INode<T> extends Iterable<T>
 			node = node.last();
 		}
 	}
-
+	
 	default void insertAfter(T target)
 	{
 		throw new UnsupportedOperationException();
 	}
-
+	
 	default void insertBefore(T target)
 	{
 		throw new UnsupportedOperationException();
@@ -120,13 +120,13 @@ public interface INode<T> extends Iterable<T>
 	static final class NodeIterator<E> implements Iterator<E>
 	{
 		INode<E> currentNode;
-
+		
 		@Override
 		public boolean hasNext()
 		{
 			return currentNode != null;
 		}
-
+		
 		@Override
 		public E next()
 		{

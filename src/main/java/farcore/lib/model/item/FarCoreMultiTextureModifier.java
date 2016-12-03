@@ -9,6 +9,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The multi texture modifier, get base key from parent and add
+ * a prefix and postfix for it.
+ * @since 1.3
+ * @author ueyudiud
+ * 
+ */
 @SideOnly(Side.CLIENT)
 public class FarCoreMultiTextureModifier implements IMultiTextureCollection
 {
@@ -16,7 +23,7 @@ public class FarCoreMultiTextureModifier implements IMultiTextureCollection
 	private String domain;
 	private String prefix = "";
 	private String postfix = "";
-
+	
 	public FarCoreMultiTextureModifier(IMultiTextureCollection function)
 	{
 		this.function = function;
@@ -36,11 +43,11 @@ public class FarCoreMultiTextureModifier implements IMultiTextureCollection
 	{
 		this.prefix = prefix;
 	}
-
+	
 	@Override
 	public Map<String, ResourceLocation> apply()
 	{
-		Map<String, ResourceLocation> map = function.apply();
+		Map<String, ResourceLocation> map = this.function.apply();
 		ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 		for (Entry<String, ResourceLocation> entry : map.entrySet())
 		{
@@ -50,11 +57,11 @@ public class FarCoreMultiTextureModifier implements IMultiTextureCollection
 			{
 				String domain = key.substring(0, idx);
 				String path = key.substring(idx);
-				key = (this.domain == null ? domain : this.domain) + ":" + prefix + key + postfix;
+				key = (this.domain == null ? domain : this.domain) + ":" + this.prefix + key + this.postfix;
 			}
 			else
 			{
-				key = (domain == null ? "" : domain + ":") + prefix + key + postfix;
+				key = (this.domain == null ? "" : this.domain + ":") + this.prefix + key + this.postfix;
 			}
 			ResourceLocation location = entry.getValue();
 			builder.put(key, location);

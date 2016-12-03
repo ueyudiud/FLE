@@ -11,99 +11,99 @@ public class Node<T> implements INode<T>
 	{
 		return new Node<T>(target);
 	}
-
+	
 	private T target;
 	private Node<T> next;
 	private Node<T> last;
-
+	
 	Node(T target)
 	{
 		this.target = target;
 	}
-
+	
 	@Override
 	public T value()
 	{
-		return target;
+		return this.target;
 	}
 	
 	@Override
 	public Node<T> next()
 	{
-		return next;
+		return this.next;
 	}
 	
 	@Override
 	public Node<T> last()
 	{
-		return last;
+		return this.last;
 	}
-
+	
 	@Override
 	public void addLast(T target)
 	{
-		if(last != null)
+		if(this.last != null)
 		{
-			last.addLast(target);
+			this.last.addLast(target);
 		}
 		else
 		{
-			last = new Node<T>(target);
-			last.next = this;
+			this.last = new Node<T>(target);
+			this.last.next = this;
 		}
 	}
-
+	
 	@Override
 	public void addNext(T target)
 	{
-		if(next != null)
+		if(this.next != null)
 		{
-			next.addNext(target);
+			this.next.addNext(target);
 		}
 		else
 		{
-			next = new Node<T>(target);
-			next.last = this;
+			this.next = new Node<T>(target);
+			this.next.last = this;
 		}
 	}
 	
 	@Override
 	public void insertAfter(T target)
 	{
-		Node<T> node = next;
-		next = new Node<T>(target);
-		next.last = this;
+		Node<T> node = this.next;
+		this.next = new Node<T>(target);
+		this.next.last = this;
 		if(node != null)
 		{
-			node.last = next;
-			next.next = node;
+			node.last = this.next;
+			this.next.next = node;
 		}
 	}
-
+	
 	@Override
 	public void insertBefore(T target)
 	{
-		Node<T> node = last;
-		last = new Node<T>(target);
-		last.next = this;
+		Node<T> node = this.last;
+		this.last = new Node<T>(target);
+		this.last.next = this;
 		if(node != null)
 		{
-			node.next = last;
-			last.last = node;
+			node.next = this.last;
+			this.last.last = node;
 		};
 	}
-
+	
 	@Override
 	public void remove()
 	{
-		if(last != null)
+		if(this.last != null)
 		{
-			last.next = next;
+			this.last.next = this.next;
 		}
-		if(next != null)
+		if(this.next != null)
 		{
-			next.last = last;
+			this.next.last = this.last;
 		}
-		next = last = null;
+		this.next = this.last = null;
 	}
 }

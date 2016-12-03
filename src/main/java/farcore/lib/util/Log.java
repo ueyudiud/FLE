@@ -7,12 +7,25 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import farcore.FarCore;
+
 public class Log
 {
 	private static Logger logLogger = LogManager.getLogger("Far Log");
-
+	
 	private static List<Object> cache = new ArrayList();
-
+	
+	public static void catching(Throwable throwable)
+	{
+		if(FarCore.debug)
+		{
+			throw new RuntimeException(throwable);
+		}
+		else
+		{
+			logger().catching(throwable);
+		}
+	}
 	public static void error(String message, Throwable throwable, Object...formats)
 	{
 		logger().error(message, throwable, formats);

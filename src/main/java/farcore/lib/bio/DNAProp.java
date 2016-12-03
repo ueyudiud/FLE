@@ -1,26 +1,25 @@
 package farcore.lib.bio;
 
+import farcore.lib.collection.Selector;
 import farcore.lib.collection.Stack;
-import farcore.util.L;
+import farcore.lib.collection.WeightedRandomSelector;
 
 public abstract class DNAProp<T extends DNACharacter>
 {
 	public char startType;
 	public float borderChanceBase;
 	public char fixedType;
-	public long allWeight;
 	public T[] allowedChars;
-	public Stack<T>[] weight;
+	public Selector<T> weight;
 	
 	public DNAProp(Stack<T>...characters)
 	{
-		startType = characters[0].element.chr;
-		allowedChars = createCharacters(characters.length);
-		weight = characters;
+		this.startType = characters[0].element.chr;
+		this.allowedChars = createCharacters(characters.length);
+		this.weight = new WeightedRandomSelector(characters);
 		for(int i = 0; i < characters.length; ++i)
 		{
-			allowedChars[i] = characters[i].element;
-			allWeight += characters[i].size;
+			this.allowedChars[i] = characters[i].element;
 		}
 	}
 	
@@ -37,16 +36,16 @@ public abstract class DNAProp<T extends DNACharacter>
 		this.fixedType = fixedType;
 		return this;
 	}
-
+	
 	public char borderDNA(char dna0, float chance)
 	{
-		if(dna0 == fixedType)
+		if(dna0 == this.fixedType)
 		{
 			return dna0;
 		}
-		if(Math.random() < chance * borderChanceBase)
+		if(Math.random() < chance * this.borderChanceBase)
 		{
-			return L.randomInStack(weight, allWeight).chr;
+			return this.weight.next().chr;
 		}
 		return dna0;
 	}
