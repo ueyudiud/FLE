@@ -25,7 +25,7 @@ import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.world.WorldPropHandler;
 import farcore.util.L;

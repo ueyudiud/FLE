@@ -1,16 +1,16 @@
 package farcore.lib.crop.instance;
 
-import farcore.lib.crop.CropAbstract;
-import farcore.lib.crop.dna.CropDNAHelper;
+import farcore.lib.bio.DNAHandler;
+import farcore.lib.crop.CropTemplate;
 import farcore.lib.material.Mat;
 
-public class CropRamie extends CropAbstract
+public class CropRamie extends CropTemplate
 {
 	public CropRamie(Mat material)
 	{
 		super(material);
-		dnaHelper = new CropDNAHelper();
-		maxStage = 7;
-		growReq = 1250;
+		this.helper = new DNAHandler[0];
+		this.maxStage = 7;
+		this.growReq = 1250;
 	}
 }

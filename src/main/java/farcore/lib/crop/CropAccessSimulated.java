@@ -3,6 +3,7 @@ package farcore.lib.crop;
 import java.util.Random;
 
 import farcore.energy.thermal.ThermalNet;
+import farcore.lib.bio.GeneticMaterial;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -12,9 +13,9 @@ public class CropAccessSimulated implements ICropAccess
 	World world;
 	BlockPos pos;
 	ICrop crop;
-	String dna;
+	GeneticMaterial dna;
 	
-	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, String dna)
+	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, GeneticMaterial dna)
 	{
 		this.world = world;
 		this.pos = pos;
@@ -25,57 +26,65 @@ public class CropAccessSimulated implements ICropAccess
 	@Override
 	public World world()
 	{
-		return world;
+		return this.world;
 	}
-
+	
 	@Override
 	public BlockPos pos()
 	{
-		return pos;
+		return this.pos;
 	}
-
-	@Override
-	public String getDNA()
-	{
-		return dna;
-	}
-
+	
 	@Override
 	public ICrop crop()
 	{
-		return crop;
+		return this.crop;
 	}
-
+	
 	@Override
 	public CropInfo info()
 	{
-		return new CropInfo();
+		CropInfo info = new CropInfo();
+		info.geneticMaterial = this.dna;
+		return info;
 	}
-
+	
+	@Override
+	public GeneticMaterial getGeneticMaterial()
+	{
+		return this.dna;
+	}
+	
 	@Override
 	public Biome biome()
 	{
-		return world.getBiomeGenForCoords(pos);
+		return this.world.getBiomeGenForCoords(this.pos);
 	}
-
+	
 	@Override
 	public boolean isWild()
 	{
 		return false;
 	}
-
+	
 	@Override
 	public int stage()
 	{
 		return 0;
 	}
-
+	
+	@Override
+	public float stageBuffer()
+	{
+		return 0;
+	}
+	
 	@Override
 	public Random rng()
 	{
 		return new Random();
 	}
-
+	
 	@Override
 	public int getWaterLevel()
 	{
@@ -85,29 +94,35 @@ public class CropAccessSimulated implements ICropAccess
 	@Override
 	public float temp()
 	{
-		return ThermalNet.getEnviormentTemperature(world, pos);//No use near-by temperature for it change so quickly.
+		return ThermalNet.getEnviormentTemperature(this.world, this.pos);//No use near-by temperature for it change so quickly.
 	}
-
+	
 	@Override
 	public void grow(int growth)
 	{
 		
 	}
-
+	
 	@Override
 	public void setStage(int stage)
 	{
-
+		
 	}
-
+	
 	@Override
 	public int useWater(int amount)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public void killCrop()
 	{
+	}
+	
+	@Override
+	public void pollinate(GeneticMaterial gm)
+	{
+		
 	}
 }

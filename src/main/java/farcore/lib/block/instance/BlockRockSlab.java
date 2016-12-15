@@ -11,7 +11,7 @@ import farcore.lib.block.BlockSlab;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyRock;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.util.Direction;
 import farcore.util.U;
 import net.minecraft.block.material.Material;

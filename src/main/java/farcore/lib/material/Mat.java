@@ -24,6 +24,7 @@ import farcore.lib.collection.IPropertyMap.IProperty;
 import farcore.lib.collection.IntegerMap;
 import farcore.lib.collection.Register;
 import farcore.lib.crop.ICrop;
+import farcore.lib.io.javascript.ScriptLoad;
 import farcore.lib.material.behavior.IItemMatProp;
 import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.material.prop.PropertyBasic;
@@ -109,10 +110,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		else return MATERIALS_CACHE.get(filter);
 	}
 	
+	@ScriptLoad
 	public final String modid;
+	@ScriptLoad
 	public final String name;
 	public final String oreDictName;
 	public final String localName;
+	@ScriptLoad
 	public final short id;
 	/**
 	 * Some material is variant of other material,
@@ -122,6 +126,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public String chemicalFormula;
 	public String customDisplayInformation;
 	public short[] RGBa = {255, 255, 255, 255};
+	@ScriptLoad
 	public int RGB = 0xFFFFFF;
 	//Multi item configuration.
 	public IItemMatProp itemProp;

@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import farcore.FarCore;
 import farcore.lib.material.Mat;
 import farcore.lib.model.ModelHelper;
+import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.tile.instance.TESapling;
 import farcore.lib.util.SubTag;
 import net.minecraft.block.Block;
@@ -38,25 +39,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel
 {
 	instance;
-
+	
 	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
 	private static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "normal");
 	private static final ResourceLocation MODEL_ITEM_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "inventory");
-
+	
 	public static final Map<String, TextureAtlasSprite> ICON_MAP = new HashMap();
-
+	
 	private List<ResourceLocation> textures;
-
+	
 	ModelSapling()
 	{
 	}
-
+	
 	@Override
 	public String getLoaderPrefix()
 	{
 		return "sapling";
 	}
-
+	
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
@@ -68,22 +69,22 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 		ResourceLocation location = new ResourceLocation(strings[1], "blocks/sapling/" + strings[2]);
 		return ModelHelper.makeItemModel(location);
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		if(textures == null)
+		if(this.textures == null)
 		{
 			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
 			for(Mat material : Mat.filt(SubTag.TREE))
 			{
 				builder.add(new ResourceLocation(material.modid, "blocks/sapling/" + material.name));
 			}
-			textures = builder.build();
+			this.textures = builder.build();
 		}
-		return textures;
+		return this.textures;
 	}
-
+	
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -99,13 +100,13 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 		}
 		return new BakedSaplingModel(builder.build(), model.bake(state, format, bakedTextureGetter));
 	}
-
+	
 	@Override
 	public IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
@@ -129,7 +130,7 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 		Mat material = Mat.material(stack.getItemDamage());
 		return new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory");
 	}
-
+	
 	@Override
 	public List<ResourceLocation> getAllowedResourceLocations(Item item)
 	{
@@ -142,10 +143,10 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 	}
 	
 	@SideOnly(Side.CLIENT)
-	class BakedSaplingModel extends BakedModelRetexture
+	static class BakedSaplingModel extends BakedModelRetexture
 	{
 		private Map<String, TextureAtlasSprite> icons;
-
+		
 		public BakedSaplingModel(Map<String, TextureAtlasSprite> icons, IBakedModel basemodel)
 		{
 			super(basemodel);
@@ -157,17 +158,16 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 		{
 			if(state instanceof BlockStateTileEntityWapper && ((BlockStateTileEntityWapper) state).tile != null)
 			{
-				TextureAtlasSprite icon = icons.get(((TESapling) ((BlockStateTileEntityWapper) state).tile).tree.getRegisteredName());
+				TextureAtlasSprite icon = this.icons.get(((TESapling) ((BlockStateTileEntityWapper) state).tile).tree.getRegisteredName());
 				if(icon != null)
 				{
-					for(BakedQuad quad : oldList)
-					{
-						newList.add(new BakedQuadRetextured(quad, icon));
-					}
-					return;
+					apply(oldList, newList, quad -> new BakedQuadRetextured(quad, icon));
 				}
 			}
-			newList.addAll(oldList);
+			else
+			{
+				newList.addAll(oldList);
+			}
 		}
 	}
 }

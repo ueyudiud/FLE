@@ -1,4 +1,4 @@
-package farcore.lib.model.block;
+package farcore.lib.model.block.statemap;
 
 import java.util.Map;
 

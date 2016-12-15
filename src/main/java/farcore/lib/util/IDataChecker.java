@@ -4,47 +4,48 @@ import java.util.Arrays;
 
 import farcore.util.L;
 
+@FunctionalInterface
 public interface IDataChecker<T>
 {
 	IDataChecker TRUE     = arg -> true;
 	IDataChecker FALSE    = arg -> false;
 	IDataChecker NOT_NULL = arg -> arg != null;
 	IDataChecker NULL     = arg -> arg == null;
-
+	
 	boolean isTrue(T target);
 	
 	default IDataChecker<T> not()
 	{
 		return new Not(this);
 	}
-
+	
 	class Not<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O> check;
-
+		
 		public Not(IDataChecker<O> check)
 		{
 			this.check = check;
 		}
-
+		
 		@Override
 		public boolean isTrue(O target)
 		{
 			return !this.check.isTrue(target);
 		}
-
+		
 		@Override
 		public String toString()
 		{
 			return "!" + check.toString();
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return check.hashCode() ^ 0xFFFFFFFF;
 		}
-
+		
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -54,16 +55,16 @@ public interface IDataChecker<T>
 						L.equal(((Not) obj).check, check);
 		}
 	}
-
+	
 	class Or<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
-
+		
 		public Or(IDataChecker<O>... checks)
 		{
 			this.checks = checks;
 		}
-
+		
 		@Override
 		public boolean isTrue(O target)
 		{
@@ -72,19 +73,19 @@ public interface IDataChecker<T>
 					return true;
 			return false;
 		}
-
+		
 		@Override
 		public String toString()
 		{
 			return "|" + Arrays.toString(checks);
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return Arrays.hashCode(checks) + 31;
 		}
-
+		
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -94,16 +95,16 @@ public interface IDataChecker<T>
 						Arrays.equals(checks, ((Or) obj).checks);
 		}
 	}
-
+	
 	class Nor<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
-
+		
 		public Nor(IDataChecker<O>... checks)
 		{
 			this.checks = checks;
 		}
-
+		
 		@Override
 		public boolean isTrue(O target)
 		{
@@ -112,19 +113,19 @@ public interface IDataChecker<T>
 					return false;
 			return true;
 		}
-
+		
 		@Override
 		public String toString()
 		{
 			return "!|" + Arrays.toString(checks);
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return Arrays.hashCode(checks) + 63;
 		}
-
+		
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -134,16 +135,16 @@ public interface IDataChecker<T>
 						Arrays.equals(checks, ((Nor) obj).checks);
 		}
 	}
-
+	
 	class And<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
-
+		
 		public And(IDataChecker<O>... checks)
 		{
 			this.checks = checks;
 		}
-
+		
 		@Override
 		public boolean isTrue(O target)
 		{
@@ -152,19 +153,19 @@ public interface IDataChecker<T>
 					return false;
 			return true;
 		}
-
+		
 		@Override
 		public String toString()
 		{
 			return "&" + Arrays.toString(checks);
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return Arrays.hashCode(checks) + 127;
 		}
-
+		
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -174,16 +175,16 @@ public interface IDataChecker<T>
 						Arrays.equals(checks, ((And) obj).checks);
 		}
 	}
-
+	
 	class Nand<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O>[] checks;
-
+		
 		public Nand(IDataChecker<O>... checks)
 		{
 			this.checks = checks;
 		}
-
+		
 		@Override
 		public boolean isTrue(O target)
 		{
@@ -192,19 +193,19 @@ public interface IDataChecker<T>
 					return true;
 			return false;
 		}
-
+		
 		@Override
 		public String toString()
 		{
 			return "!&" + Arrays.toString(checks);
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return Arrays.hashCode(checks) + 255;
 		}
-
+		
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -214,36 +215,36 @@ public interface IDataChecker<T>
 						Arrays.equals(checks, ((Nand) obj).checks);
 		}
 	}
-
+	
 	class Xor<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O> check1;
 		private final IDataChecker<O> check2;
-
+		
 		public Xor(IDataChecker<O> check1, IDataChecker<O> check2)
 		{
 			this.check1 = check1;
 			this.check2 = check2;
 		}
-
+		
 		@Override
 		public boolean isTrue(O target)
 		{
 			return this.check1.isTrue(target) != this.check2.isTrue(target);
 		}
-
+		
 		@Override
 		public String toString()
 		{
 			return "^" + check1.toString() + "~" + check2.toString();
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return check1.hashCode() + check2.hashCode();
 		}
-
+		
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -254,36 +255,36 @@ public interface IDataChecker<T>
 						(L.equal(((Xor) obj).check1, check2) && L.equal(((Xor) obj).check2, check1));
 		}
 	}
-
+	
 	class Equal<O> implements IDataChecker<O>
 	{
 		private final IDataChecker<O> check1;
 		private final IDataChecker<O> check2;
-
+		
 		public Equal(IDataChecker<O> check1, IDataChecker<O> check2)
 		{
 			this.check1 = check1;
 			this.check2 = check2;
 		}
-
+		
 		@Override
 		public boolean isTrue(O target)
 		{
 			return this.check1.isTrue(target) == this.check2.isTrue(target);
 		}
-
+		
 		@Override
 		public String toString()
 		{
 			return "=" + check1.toString() + "~" + check2.toString();
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
 			return check1.hashCode() + check2.hashCode();
 		}
-
+		
 		@Override
 		public boolean equals(Object obj)
 		{

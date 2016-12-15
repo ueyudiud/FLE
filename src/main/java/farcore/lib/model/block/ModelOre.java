@@ -114,7 +114,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	private static final Gson GSON = new GsonBuilder()
 			.registerTypeAdapter(OreRenderConfig.class, DESERIALIZER)
 			.create();
-	public static final ModelOre instance = new ModelOre();
+	public static final ModelOre INSTANCE = new ModelOre();
 	
 	static
 	{
@@ -202,7 +202,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
 		return MODEL_ITEM_RESOURCE_LOCATION.equals(modelLocation) ?
-				new ModelOreItem() : instance;
+				new ModelOreItem() : INSTANCE;
 	}
 	
 	@Override

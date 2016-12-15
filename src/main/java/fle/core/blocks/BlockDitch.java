@@ -10,6 +10,7 @@ import farcore.FarCoreRegistry;
 import farcore.data.M;
 import farcore.lib.block.BlockSingleTE;
 import farcore.lib.material.Mat;
+import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.LanguageManager;
 import fle.api.tile.IDitchTile.DitchBlockHandler;
@@ -22,6 +23,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -60,6 +63,17 @@ public class BlockDitch extends BlockSingleTE
 	public void registerRender()
 	{
 		super.registerRender();
+	}
+	
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TEDitch)
+		{
+			return BlockStateTileEntityWapper.wrap(tile, state);
+		}
+		return super.getExtendedState(state, world, pos);
 	}
 	
 	@Override

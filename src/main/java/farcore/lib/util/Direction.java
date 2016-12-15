@@ -26,7 +26,7 @@ public enum Direction implements IStringSerializable
 	B( 0,  0,  0,  1,     -1),
 	/** Unknown direction. */
 	Q( 0,  0,  0,  0,     -1);
-
+	
 	/**
 	 * @see farcore.lib.util.Facing
 	 */
@@ -42,7 +42,7 @@ public enum Direction implements IStringSerializable
 			{U, D, S, N, E, W, A, B, Q},
 			{D, U, N, S, W, E, A, B, Q}
 	};
-
+	
 	public static final int[] OPPISITE = {1, 0, 3, 2, 5, 4, 7, 6, 8};
 	public static final byte T_2D = 0x0;
 	public static final byte T_3D = 0x1;
@@ -71,26 +71,26 @@ public enum Direction implements IStringSerializable
 			{W, E, S, N, U, D},
 			{S, N, U, D, W, E},
 			{N, S, D, U, W, E}};
-
+	
 	private static final int[] CAST = {0, 1, 2, 3, 4, 5, 6, 6, 6};
-
+	
 	public static Direction of(EnumFacing direction)
 	{
 		return direction == null ? Q :
 			values()[direction.ordinal()];
 	}
-
+	
 	public static EnumFacing of(Direction direction)
 	{
 		return direction == null ? null :
 			EnumFacing.VALUES[CAST[direction.ordinal()]];
 	}
-
+	
 	public static Direction heading(EntityLivingBase entity)
 	{
 		return entity == null ? Q : values()[entity.getHorizontalFacing().ordinal()];
 	}
-
+	
 	public final int x;
 	public final int y;
 	public final int z;
@@ -99,55 +99,57 @@ public enum Direction implements IStringSerializable
 	public final int boundY;
 	public final int boundZ;
 	public final int flag;
+	public final int flag1;
 	public final char chr;
 	public final boolean horizontal;
 	public final int horizontalOrdinal;
-
+	
 	Direction(int x, int y, int z, int t, int h)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.t = t;
-		boundX = x != 0 ? -1 : 1;
-		boundY = y != 0 ? -1 : 1;
-		boundZ = z != 0 ? -1 : 1;
-		flag = 1 << ordinal();
-		chr = name().toLowerCase().charAt(0);
-		horizontal = (x | z) != 0;
-		horizontalOrdinal = h;
+		this.boundX = x != 0 ? -1 : 1;
+		this.boundY = y != 0 ? -1 : 1;
+		this.boundZ = z != 0 ? -1 : 1;
+		this.flag = 1 << ordinal();
+		this.flag1 = h == -1 ? -1 : 1 << h;
+		this.chr = name().toLowerCase().charAt(0);
+		this.horizontal = (x | z) != 0;
+		this.horizontalOrdinal = h;
 	}
-
+	
 	public Direction getOpposite()
 	{
 		return this == Q ? Q : DIRECTIONS_3D[ordinal() ^ 1];
 	}
-
+	
 	public Direction getRotation4D(Direction axis)
 	{
 		return ROTATION_4D[axis.ordinal()][ordinal()];
 	}
-
+	
 	public Direction getRotation3D(Direction axis)
 	{
 		return ROTATION_3D[axis.ordinal()][ordinal()];
 	}
-
+	
 	public Direction validDirection3D()
 	{
 		return this == A || this == B ? Q : this;
 	}
-
+	
 	public Direction validDirection2D()
 	{
 		return this == A || this == B || this == U || this == D ? Q : this;
 	}
-
+	
 	public BlockPos offset(BlockPos pos)
 	{
-		return pos.add(x, y, z);
+		return pos.add(this.x, this.y, this.z);
 	}
-
+	
 	public EnumFacing of()
 	{
 		return of(this);
@@ -156,7 +158,7 @@ public enum Direction implements IStringSerializable
 	@Override
 	public String getName()
 	{
-		return Character.toString(chr);
+		return Character.toString(this.chr);
 	}
 	
 	public static Direction readFromNBT(NBTTagCompound nbt, String key, byte type)
@@ -210,12 +212,12 @@ public enum Direction implements IStringSerializable
 		switch (type & 0x3)
 		{
 		case 0 :
-			if(y != 0)
+			if(this.y != 0)
 			{
 				dir = N;
 			}
 		case 1 :
-			if(t != 0)
+			if(this.t != 0)
 			{
 				dir = N;
 			}

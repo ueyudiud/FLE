@@ -20,7 +20,6 @@ import farcore.FarCore;
 import farcore.lib.model.ModelHelper;
 import farcore.lib.model.block.ModelBase;
 import farcore.lib.model.item.FarCoreItemModelLoader.ItemModelCache;
-import farcore.lib.model.item.ModelLayer.UnbakedModelLayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -59,50 +58,50 @@ public class ModelItemBase extends ModelBase
 	
 	public ModelItemBase(FarCoreItemModelLoader loader, ItemModelCache cache)
 	{
-		layerProviders = cache.layers;
-		textureCol.putAll(cache.textures);
-		textureSet1 = cache.textures;
+		this.layerProviders = cache.layers;
+		this.textureCol.putAll(cache.textures);
+		this.textureSet1 = cache.textures;
 		for (Entry<String, java.util.function.Function<IResourceManager, Map<String, ResourceLocation>>> entry : cache.multiTextures.entrySet())
 		{
 			Map<String, ResourceLocation> map = loader.buildMultiTexturesMap.getOrDefault(entry.getValue(), ImmutableMap.of());
-			textureCol.putAll(map);
-			textureSetOthers.put(entry.getKey(), map);
+			this.textureCol.putAll(map);
+			this.textureSetOthers.put(entry.getKey(), map);
 		}
 		for (UnbakedModelLayer layer : cache.layers)
 		{
-			textureCol.putAll(layer.locations);
+			this.textureCol.putAll(layer.locations);
 		}
-		particle = textureCol.get(FarCoreItemModelLoader.PARTICLE);
-		if (particle == null)
+		this.particle = this.textureCol.get(FarCoreItemModelLoader.PARTICLE);
+		if (this.particle == null)
 		{
-			particle = textureCol.get(FarCoreItemModelLoader.NORMAL);
+			this.particle = this.textureCol.get(FarCoreItemModelLoader.NORMAL);
 		}
-		if (particle == null)
+		if (this.particle == null)
 		{
-			particle = TextureMap.LOCATION_MISSING_TEXTURE;//Use missing texture if no possible texture detected.
+			this.particle = TextureMap.LOCATION_MISSING_TEXTURE;//Use missing texture if no possible texture detected.
 		}
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		return textureCol.values();
+		return this.textureCol.values();
 	}
-
+	
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		Optional<TRSRTransformation> optional = state.apply(Optional.absent());
-		ModelLayer[] layers = new ModelLayer[layerProviders.length];
+		ModelLayer[] layers = new ModelLayer[this.layerProviders.length];
 		for(int i = 0; i < layers.length; ++i)
 		{
-			layerProviders[i].loadTexturesAndSubmetaGetter(textureSet1, textureSetOthers);
-			layers[i] = layerProviders[i].bake(format, bakedTextureGetter, optional);
+			this.layerProviders[i].loadTexturesAndSubmetaGetter(this.textureSet1, this.textureSetOthers);
+			layers[i] = this.layerProviders[i].bake(format, bakedTextureGetter, optional);
 		}
-		return new BakedModelItemBase(layers, bakedTextureGetter.apply(particle));
+		return new BakedModelItemBase(layers, bakedTextureGetter.apply(this.particle));
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static class BakedModelItemBase implements ICustomItemRenderModel, IPerspectiveAwareModel
 	{
@@ -110,7 +109,7 @@ public class ModelItemBase extends ModelBase
 		private IBakedModel submodel;
 		private ModelLayer[] layers;
 		private TextureAtlasSprite particleIcon;
-
+		
 		public BakedModelItemBase(ModelLayer[] layers, TextureAtlasSprite particle)
 		{
 			this(null, layers, particle);
@@ -119,18 +118,18 @@ public class ModelItemBase extends ModelBase
 		{
 			if(model == null)
 			{
-				isCulled = false;
-				submodel = new BakedModelItemBase(this, layers, particle);
+				this.isCulled = false;
+				this.submodel = new BakedModelItemBase(this, layers, particle);
 			}
 			else
 			{
-				isCulled = true;
-				submodel = model;
+				this.isCulled = true;
+				this.submodel = model;
 			}
-			particleIcon = particle;
+			this.particleIcon = particle;
 			this.layers = layers;
 		}
-
+		
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
@@ -138,7 +137,7 @@ public class ModelItemBase extends ModelBase
 			try
 			{
 				ArrayList<BakedQuad> list = new ArrayList();
-				for (ModelLayer layer : layers)
+				for (ModelLayer layer : this.layers)
 				{
 					List<BakedQuad> list1 = layer.getQuads(stack);
 					if(list1 != null)
@@ -172,22 +171,22 @@ public class ModelItemBase extends ModelBase
 		 * texture instead.
 		 */
 		@Override
-		public TextureAtlasSprite getParticleTexture() { return particleIcon; }
+		public TextureAtlasSprite getParticleTexture() { return this.particleIcon; }
 		
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms() { return ItemCameraTransforms.DEFAULT; }
 		
 		@Override
 		public ItemOverrideList getOverrides() { return ItemOverrideList.NONE; }
-
+		
 		@Override
 		public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType type)
 		{
 			Pair<? extends IBakedModel, Matrix4f> pair = IPerspectiveAwareModel.MapWrapper.handlePerspective(this, ModelHelper.ITEM_STANDARD_TRANSFORMS, type);
-			if(type == TransformType.GUI && !isCulled && pair.getRight() == null)
-				return Pair.of(submodel, null);
-			else if(type != TransformType.GUI && isCulled)
-				return Pair.of(submodel, pair.getRight());
+			if(type == TransformType.GUI && !this.isCulled && pair.getRight() == null)
+				return Pair.of(this.submodel, null);
+			else if(type != TransformType.GUI && this.isCulled)
+				return Pair.of(this.submodel, pair.getRight());
 			return pair;
 		}
 	}

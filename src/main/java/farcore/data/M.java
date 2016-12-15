@@ -2,15 +2,9 @@ package farcore.data;
 
 import farcore.FarCore;
 import farcore.FarCoreRegistry;
+import farcore.lib.crop.CropTemplate;
 import farcore.lib.crop.instance.CropCabbage;
-import farcore.lib.crop.instance.CropCotton;
-import farcore.lib.crop.instance.CropFlax;
 import farcore.lib.crop.instance.CropMillet;
-import farcore.lib.crop.instance.CropPotato;
-import farcore.lib.crop.instance.CropReed;
-import farcore.lib.crop.instance.CropSoybean;
-import farcore.lib.crop.instance.CropSweetPotato;
-import farcore.lib.crop.instance.CropWheat;
 import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MaterialBuilder;
@@ -131,15 +125,15 @@ public class M
 		morus		.setTree(new TreeMorus());
 		willow		.setTree(new TreeWillow());
 		
-		wheat		.setCrop(new CropWheat(wheat));
+		wheat		.setCrop(new CropTemplate(wheat, 8, 800).setMultiplicationProp(6, 5, 2).setDNAHelper(DNAs.get('w'), DNAs.GRAIN_III, DNAs.GROWTH_II, DNAs.GRAIN_II, DNAs.get('w'), DNAs.GROWTH_IV));
 		millet		.setCrop(new CropMillet(millet));
-		soybean		.setCrop(new CropSoybean(soybean));
-		potato		.setCrop(new CropPotato(potato));
-		sweet_potato.setCrop(new CropSweetPotato(sweet_potato));
+		soybean		.setCrop(new CropTemplate(soybean, 7, 1600).setMultiplicationProp(5, 5, 2).setDNAHelper());
+		potato		.setCrop(new CropTemplate(potato, 7, 1300).setDNAHelper());
+		sweet_potato.setCrop(new CropTemplate(sweet_potato, 6, 1500).setDNAHelper());
 		cabbage		.setCrop(new CropCabbage(cabbage));
-		reed		.setCrop(new CropReed(reed));
-		flax		.setCrop(new CropFlax(flax));
-		cotton		.setCrop(new CropCotton(cotton));
+		reed		.setCrop(new CropTemplate(reed, 6, 1400));
+		flax		.setCrop(new CropTemplate(flax, 6, 1500));
+		cotton		.setCrop(new CropTemplate(cotton, 6, 1400));
 		
 		ramie_dry	.setUnificationMaterial(ramie);
 		

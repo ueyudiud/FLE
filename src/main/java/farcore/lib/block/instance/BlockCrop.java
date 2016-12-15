@@ -25,7 +25,7 @@ import farcore.lib.block.BlockSingleTE;
 import farcore.lib.crop.ICrop;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
-import farcore.lib.model.block.StateMapperCrop;
+import farcore.lib.model.block.statemap.StateMapperCrop;
 import farcore.lib.prop.PropertyString;
 import farcore.lib.tile.instance.TECrop;
 import farcore.lib.util.Log;

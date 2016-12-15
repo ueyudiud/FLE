@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.material.Mat;
 
 public class CropVoid extends CropBase
@@ -11,21 +12,21 @@ public class CropVoid extends CropBase
 	public CropVoid()
 	{
 		super(Mat.VOID);
-		maxStage = 1;
+		this.maxStage = 1;
 	}
-
+	
 	@Override
-	public String getTranslatedName(String dna)
+	public String getTranslatedName(GeneticMaterial dna)
 	{
 		return "void";
 	}
 	
 	@Override
-	public String getLocalName(String dna)
+	public String getLocalName(GeneticMaterial dna)
 	{
 		return "VOID";
 	}
-
+	
 	@Override
 	public long tickUpdate(ICropAccess access)
 	{
@@ -37,13 +38,13 @@ public class CropVoid extends CropBase
 	{
 		return ImmutableList.of("void");
 	}
-
+	
 	@Override
 	public String getState(ICropAccess access)
 	{
 		return "void";
 	}
-
+	
 	@Override
 	public String getRegisteredName()
 	{

@@ -7,7 +7,7 @@
  * See {@link net.minecraftforge.common.capabilities}.
  * </li>
  * <li>
- * {@link farcore.data.CDNA} <br>
+ * {@link farcore.data.DNAs} <br>
  * The crop DNA character library. For some general DNA
  * for crop used.
  * </li>

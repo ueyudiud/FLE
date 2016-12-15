@@ -6,28 +6,9 @@ import net.minecraft.world.World;
 
 public class TreeVoid extends TreeBase
 {
-	@Override
-	public void decodeDNA(TreeInfo biology, String dna)
+	public TreeVoid()
 	{
-		
-	}
-	
-	@Override
-	public String makeNativeDNA()
-	{
-		return "";
-	}
-	
-	@Override
-	public String makeChildDNA(int generation, String par)
-	{
-		return "";
-	}
-	
-	@Override
-	public String makeOffspringDNA(String par1, String par2)
-	{
-		return "";
+		super("void");
 	}
 	
 	@Override

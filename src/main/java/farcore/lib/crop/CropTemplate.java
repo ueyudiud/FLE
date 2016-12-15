@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumBlock;
+import farcore.lib.bio.DNAHandler;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
 import farcore.lib.util.Direction;
@@ -18,60 +19,78 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 
-public abstract class CropAbstract extends CropBase implements IPlantable
+public class CropTemplate extends CropBase implements IPlantable
 {
 	public EnumPlantType type = EnumPlantType.Crop;
-
-	public CropAbstract(Mat material)
+	
+	public CropTemplate(Mat material)
 	{
 		super(material);
 	}
-	
-	@Override
-	public String getTranslatedName(String dna)
+	public CropTemplate(Mat material, int maxStage, int growReq)
 	{
-		return material.name;
+		super(material);
+		this.maxStage = maxStage;
+		this.growReq = growReq;
 	}
-
+	
+	public CropTemplate setDNAHelper(DNAHandler...handlers)
+	{
+		this.helper = handlers;
+		return this;
+	}
+	
+	public CropTemplate setMultiplicationProp(int stage, int range, int type)
+	{
+		this.floweringStage = stage;
+		this.floweringRange = range;
+		this.spreadType = (byte) type;
+		return this;
+	}
+	
 	@Override
 	public boolean canPlantAt(ICropAccess access)
 	{
 		IBlockState state;
 		return (state = access.getBlockState(Direction.D)).getBlock().canSustainPlant(state, access.world(), access.pos().down(), EnumFacing.UP, this);
 	}
-
+	
 	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{
 		return EnumBlock.crop.block.getDefaultState();
 	}
-
+	
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
-		return type;
+		return this.type;
 	}
-
+	
 	@Override
 	public EnumPlantType getPlantType(ICropAccess access)
 	{
-		return type;
+		return this.type;
 	}
 	
 	@Override
 	public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
 	{
-		if(access.stage() == maxStage - 1)
+		if(access.stage() == this.maxStage - 1)
 		{
-			list.add(applyChildSeed(1 + L.nextInt(20) / 17, access.info()));
+			ItemStack stack = applyChildSeed(1 + L.nextInt(5) / 3, access.info());
+			if(stack != null)
+			{
+				list.add(stack);
+			}
 		}
 	}
 	
 	public ItemStack applyChildSeed(int size, CropInfo info)
 	{
-		return ItemSeed.applySeed(size, material, info.generations + 1, makeChildDNA(info.generations, info.DNA));
+		return ItemSeed.applySeed(size, this.material, info.gamete == null ? info.geneticMaterial : info.gamete);
 	}
-
+	
 	@Override
 	public String getState(ICropAccess access)
 	{

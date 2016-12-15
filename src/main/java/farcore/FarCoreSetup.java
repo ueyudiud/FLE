@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import farcore.asm.FarOverride;
 import farcore.data.Config;
 import farcore.lib.command.CommandDate;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.oredict.OreDictExt;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Containerable;
 import farcore.lib.util.IRenderRegister;
@@ -53,6 +53,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
@@ -88,6 +89,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreSetup
 {
 	private LanguageManager lang;
+
+	/**
+	 * The sided proxy of far core.
+	 */
+	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
+	public static Proxy proxy;
 	
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
@@ -179,25 +186,25 @@ public class FarCoreSetup
 			Log.warn("Fail to load configuration.", exception);
 		}
 		lang.read();
-		FarCore.proxy.load(event);
+		FarCoreSetup.proxy.load(event);
 	}
 	
 	@EventHandler
 	public void Load(FMLInitializationEvent event)
 	{
-		FarCore.proxy.load(event);
+		FarCoreSetup.proxy.load(event);
 	}
 	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{
-		FarCore.proxy.load(event);
+		FarCoreSetup.proxy.load(event);
 	}
 	
 	@EventHandler
 	public void complete(FMLLoadCompleteEvent event)
 	{
-		FarCore.proxy.load(event);
+		FarCoreSetup.proxy.load(event);
 		lang.write();
 	}
 	

@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.data.EnumToolType;
-import farcore.lib.bio.IDNADecoder;
+import farcore.lib.bio.ISpecie;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.util.Direction;
+import farcore.lib.util.IRegisteredNameable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -24,7 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public interface ITree extends ITreeGenerator, IDNADecoder<TreeInfo>
+public interface ITree extends ITreeGenerator, ISpecie<TreeInfo>, IRegisteredNameable
 {
 	ITree VOID = new TreeVoid();
 	
@@ -58,7 +59,7 @@ public interface ITree extends ITreeGenerator, IDNADecoder<TreeInfo>
 	{
 		return state;
 	}
-
+	
 	default IBlockState initLeavesState(IBlockState state)
 	{
 		return state;

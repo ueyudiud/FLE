@@ -4,9 +4,11 @@
 
 package farcore.lib.io.javascript;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.Map;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -14,6 +16,7 @@ import javax.script.ScriptException;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * @author ueyudiud
@@ -23,46 +26,81 @@ public class ScriptBuilder
 	private ScriptEngine engine;
 	private ImmutableList.Builder<IScriptObjectDecoder> decoders = ImmutableList.builder();
 	private ImmutableList.Builder<IScriptObjectEncoder> encoders = ImmutableList.builder();
+	private ImmutableMap.Builder<String, Object> globleValues = ImmutableMap.builder();
+	private ByteArrayOutputStream functions = new ByteArrayOutputStream();
 	
 	public ScriptBuilder(InputStream stream, ScriptEngine engine) throws IOException, ScriptException
 	{
 		this(IOUtils.toByteArray(stream), engine);
 	}
+	public ScriptBuilder(String string, ScriptEngine engine) throws IOException, ScriptException
+	{
+		this(string.getBytes(), engine);
+	}
 	public ScriptBuilder(Reader reader, ScriptEngine engine) throws IOException, ScriptException
 	{
-		this(engine);
-		engine.eval(reader);
+		this(IOUtils.toByteArray(reader), engine);
 	}
 	public ScriptBuilder(byte[] values, ScriptEngine engine) throws ScriptException
 	{
 		this(engine);
-		engine.eval(new String(values));
-	}
-	public ScriptBuilder(String string, ScriptEngine engine) throws IOException, ScriptException
-	{
-		this(engine);
-		engine.eval(string);
+		try
+		{
+			this.functions.write(values);
+		}
+		catch (IOException exception)
+		{
+			exception.printStackTrace();
+		}
 	}
 	public ScriptBuilder(ScriptEngine engine)
 	{
 		this.engine = engine;
 	}
 	
-	public ScriptBuilder registerCoder(Object object)
+	public ScriptBuilder registerCoder(Object...objects)
 	{
-		if(object instanceof IScriptObjectDecoder)
+		for(Object object : objects)
 		{
-			this.decoders.add((IScriptObjectDecoder) object);
+			if(object instanceof IScriptObjectDecoder)
+			{
+				this.decoders.add((IScriptObjectDecoder) object);
+			}
+			if(object instanceof IScriptObjectEncoder)
+			{
+				this.encoders.add((IScriptObjectEncoder) object);
+			}
 		}
-		if(object instanceof IScriptObjectEncoder)
+		return this;
+	}
+	
+	public ScriptBuilder putGlobleValues(Map<String, Object> valueMap)
+	{
+		this.globleValues.putAll(valueMap);
+		return this;
+	}
+	
+	public ScriptBuilder putGlobleValue(String key, Object value)
+	{
+		this.globleValues.put(key, value);
+		return this;
+	}
+	
+	public ScriptBuilder addFunction(String function)
+	{
+		try
 		{
-			this.encoders.add((IScriptObjectEncoder) object);
+			this.functions.write(function.getBytes());
+		}
+		catch (IOException exception)
+		{
+			;
 		}
 		return this;
 	}
 	
 	public ScriptHandler build()
 	{
-		return new ScriptHandler(this.engine, this.encoders.build(), this.decoders.build());
+		return new ScriptHandler(this.engine, this.encoders.build(), this.decoders.build(), this.globleValues.build(), this.functions.toByteArray());
 	}
 }

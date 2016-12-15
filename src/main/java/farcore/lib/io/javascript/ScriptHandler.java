@@ -6,10 +6,15 @@ package farcore.lib.io.javascript;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import javax.script.SimpleBindings;
+
+import farcore.lib.util.Log;
 
 /**
  * @author ueyudiud
@@ -20,11 +25,37 @@ public class ScriptHandler implements IScriptHandler
 	private final Collection<IScriptObjectDecoder> decoders;
 	private final Collection<IScriptObjectEncoder> encoders;
 	
-	ScriptHandler(ScriptEngine engine, Collection<IScriptObjectEncoder> encoders, Collection<IScriptObjectDecoder> decoders)
+	ScriptHandler(ScriptEngine engine, Collection<IScriptObjectEncoder> encoders, Collection<IScriptObjectDecoder> decoders, Map<String, Object> globleValues, byte[] values)
 	{
 		this.engine = engine;
 		this.encoders = encoders;
 		this.decoders = decoders;
+		this.engine.setBindings(new SimpleBindings(globleValues), ScriptContext.GLOBAL_SCOPE);
+		try
+		{
+			this.engine.eval(new String(values));
+		}
+		catch (ScriptException exception)
+		{
+			Log.error("Invalid javascript codes.", exception);
+		}
+	}
+	
+	public void test(String key, int length) throws ScriptException
+	{
+		try
+		{
+			Invocable invocable = (Invocable) this.engine;
+			invocable.invokeFunction(key, new Object[length]);
+		}
+		catch (NoSuchMethodException exception)
+		{
+			throw new ScriptException(exception);
+		}
+		catch (ScriptException exception)
+		{
+			;
+		}
 	}
 	
 	public <T> T invoke(Class<T> clazz, String key, Object...objects) throws ScriptException, NoSuchMethodException
@@ -37,7 +68,7 @@ public class ScriptHandler implements IScriptHandler
 			{
 				input[i] = encode(objects[i]);
 			}
-			Object result = invocable.invokeFunction(key, objects);
+			Object result = invocable.invokeFunction(key, input);
 			return (T) decode(result, clazz);
 		}
 		catch (ClassCastException exception)
@@ -46,9 +77,14 @@ public class ScriptHandler implements IScriptHandler
 		}
 	}
 	
-	public <T> T getField(Class<T> clazz, String key) throws ScriptException, NoSuchFieldException
+	public Object getFieldRaw(String key)
 	{
-		return (T) decode(this.engine.get(key), clazz);
+		return this.engine.get(key);
+	}
+	
+	public <T> T getField(Class<T> clazz, String key) throws ScriptException
+	{
+		return (T) decode(getFieldRaw(key), clazz);
 	}
 	
 	@Override

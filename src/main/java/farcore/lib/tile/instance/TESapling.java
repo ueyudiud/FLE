@@ -13,7 +13,7 @@ import farcore.lib.tile.abstracts.TEAged;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.TreeInfo;
 import farcore.lib.util.Direction;
-import farcore.util.U.NBTs;
+import farcore.util.NBTs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableMap;
 import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.model.item.ModelItemBase;
 import farcore.lib.model.item.ModelLayer;
+import farcore.lib.model.item.ModelLayerV1;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -38,7 +40,14 @@ public class ModelHelper
 {
 	public static final ImmutableMap<TransformType, TRSRTransformation> ITEM_STANDARD_TRANSFORMS;
 	public static final ImmutableMap<TransformType, TRSRTransformation> BLOCK_STANDARD_TRANSFORMS;
-
+	
+	public static TextureAtlasSprite getIcon(ResourceLocation location)
+	{
+		return location == null ?
+				Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite() :
+					Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+	}
+	
 	public static void addCuboid(
 			float x1, float y1, float z1,
 			float x2, float y2, float z2,
@@ -247,7 +256,7 @@ public class ModelHelper
 		buffer.put(Float.floatToIntBits(v));
 		buffer.put(color);
 	}
-
+	
 	public static IModel makeItemModel(String textureName)
 	{
 		return new ModelSurface(new ResourceLocation(textureName));
@@ -263,7 +272,7 @@ public class ModelHelper
 		private ResourceLocation location;
 		public ModelSurface(ResourceLocation location) { this.location = location; }
 		@Override
-		public Collection<ResourceLocation> getTextures() { return ImmutableList.of(location); }
+		public Collection<ResourceLocation> getTextures() { return ImmutableList.of(this.location); }
 		@Override
 		public Collection<ResourceLocation> getDependencies() { return ImmutableList.of(); }
 		@Override
@@ -272,11 +281,11 @@ public class ModelHelper
 		public IBakedModel bake(IModelState state, VertexFormat format,
 				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 		{
-			TextureAtlasSprite icon = bakedTextureGetter.apply(location);
-			return new ModelItemBase.BakedModelItemBase(new ModelLayer[]{new ModelLayer(0, ImmutableMap.of(FarCoreItemModelLoader.NORMAL, ItemLayerModel.getQuadsForSprite(0, icon, format, Optional.of(TRSRTransformation.identity()))), FarCoreItemModelLoader.NORMAL_FUNCTION, FarCoreItemModelLoader.NORMAL_MULTIPLIER)}, icon);
+			TextureAtlasSprite icon = bakedTextureGetter.apply(this.location);
+			return new ModelItemBase.BakedModelItemBase(new ModelLayer[]{new ModelLayerV1(0, ImmutableMap.of(FarCoreItemModelLoader.NORMAL, ItemLayerModel.getQuadsForSprite(0, icon, format, Optional.of(TRSRTransformation.identity()))), FarCoreItemModelLoader.NORMAL_FUNCTION, FarCoreItemModelLoader.NORMAL_MULTIPLIER)}, icon);
 		}
 	}
-
+	
 	public static TRSRTransformation transformation(
 			float translationX, float translationY, float translationZ,
 			float leftRotX, float leftRotY, float leftRotZ, float leftRotW,
@@ -285,7 +294,7 @@ public class ModelHelper
 	{
 		return new TRSRTransformation(new javax.vecmath.Vector3f(translationX, translationY, translationZ), new Quat4f(leftRotX, leftRotY, leftRotZ, leftRotW), new javax.vecmath.Vector3f(scaleX, scaleY, scaleZ), new Quat4f(rightRotX, rightRotY, rightRotZ, rightRotW));
 	}
-
+	
 	static
 	{
 		ImmutableMap.Builder<TransformType, TRSRTransformation> builder = ImmutableMap.builder();

@@ -4,8 +4,9 @@
 
 package farcore;
 
+import javax.script.ScriptEngineManager;
+
 import farcore.network.Network;
-import net.minecraftforge.fml.common.SidedProxy;
 
 public class FarCore
 {
@@ -42,12 +43,6 @@ public class FarCore
 	public static boolean debug = false;
 	
 	/**
-	 * The sided proxy of far core.
-	 */
-	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
-	public static FarCoreSetup.Proxy proxy;
-	
-	/**
 	 * The flag of world generation, if switch this option to true,
 	 * some block behavior will be changed.<p>
 	 * Example:
@@ -55,6 +50,11 @@ public class FarCore
 	 * The crop will try to create tile with native DNA.
 	 */
 	public static boolean worldGenerationFlag = false;
+	
+	/**
+	 * The script engine.
+	 */
+	public static final ScriptEngineManager MANAGER = new ScriptEngineManager();
 	
 	public static void catching(Exception exception) throws RuntimeException
 	{

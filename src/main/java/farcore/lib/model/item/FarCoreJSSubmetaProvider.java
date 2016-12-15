@@ -4,14 +4,13 @@
 
 package farcore.lib.model.item;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
 import javax.script.Bindings;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
@@ -20,6 +19,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import farcore.lib.collection.Ety;
+import farcore.lib.io.javascript.IScriptHandler;
+import farcore.lib.io.javascript.IScriptObjectEncoder;
+import farcore.lib.io.javascript.ScriptBuilder;
+import farcore.lib.io.javascript.ScriptHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
@@ -34,34 +37,38 @@ import net.minecraftforge.common.util.Constants.NBT;
  * @since 1.4
  * @author ueyudiud
  */
-public class FarCoreJSSubmetaProvider<T extends ScriptEngine & Invocable> implements Function<ItemStack, String>
+public class FarCoreJSSubmetaProvider implements Function<ItemStack, String>
 {
 	private static final ScriptEngineManager MANAGER;
+	private static final IScriptObjectEncoder<ItemStack> STACK_ENCODER =
+			new IScriptObjectEncoder<ItemStack>()
+	{
+		@Override
+		public boolean access(Type type)
+		{
+			return type == ItemStack.class;
+		}
+		
+		@Override
+		public Object apply(ItemStack target, IScriptHandler handler) throws ScriptException
+		{
+			return new StackBinding(target);
+		}
+	};
 	
 	static
 	{
 		MANAGER = new ScriptEngineManager();
 	}
 	
-	private final T engine;
+	private final ScriptHandler handler;
 	
 	public FarCoreJSSubmetaProvider(byte[] values) throws ScriptException
 	{
-		this.engine = (T) MANAGER.getEngineByName("javascript");
-		this.engine.eval(new String(values));
-		try
-		{
-			this.engine.invokeFunction("apply", new Object[1]);
-		}
-		catch (NoSuchMethodException exception)
-		{
-			//Throw exception when method not detect.
-			throw new ScriptException(exception);
-		}
-		catch (ScriptException exception)
-		{
-			//Ignore exception of error occurs of method in engine.
-		}
+		this.handler = new ScriptBuilder(values, MANAGER.getEngineByName("javascript"))
+				.registerCoder(STACK_ENCODER)
+				.build();
+		this.handler.test("apply", 1);
 	}
 	
 	@Override
@@ -69,21 +76,12 @@ public class FarCoreJSSubmetaProvider<T extends ScriptEngine & Invocable> implem
 	{
 		try
 		{
-			return (String) this.engine.invokeFunction("apply", withBinding(target));
+			return this.handler.invoke(String.class, "apply", target);
 		}
-		catch (ScriptException exception)
+		catch (ScriptException | NoSuchMethodException exception)
 		{
 			return FarCoreItemModelLoader.NORMAL;
 		}
-		catch (NoSuchMethodException exception)
-		{
-			return FarCoreItemModelLoader.NORMAL;
-		}
-	}
-	
-	private Bindings withBinding(ItemStack stack)
-	{
-		return new StackBinding(stack);
 	}
 	
 	private static class StackBinding implements Bindings
@@ -291,10 +289,11 @@ public class FarCoreJSSubmetaProvider<T extends ScriptEngine & Invocable> implem
 		}
 		
 		@Override
-		public Set<java.util.Map.Entry<String, Object>> entrySet()
+		public Set<Entry<String, Object>> entrySet()
 		{
-			return this.entrySet != null ? this.entrySet :
-				(this.entrySet = ImmutableSet.copyOf(Collections2.transform(this.nbt.getKeySet(), key -> new Ety(key, decode(this.nbt.getTag(key))))));
+			if(this.entrySet != null) return this.entrySet;
+			Collection<Entry<String, Object>> collection = Collections2.transform(this.nbt.getKeySet(), key -> new Ety(key, decode(this.nbt.getTag(key))));
+			return this.entrySet = ImmutableSet.copyOf(collection);
 		}
 		
 		@Override

@@ -56,7 +56,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 	public static final Logger LOG = LogManager.getLogger("FarCore ASM");
 	
 	private static final Map<String, OpInformation> informations = new HashMap();
-
+	
 	private static void outputInit()
 	{
 		if(file == null)
@@ -96,7 +96,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			}
 		}
 	}
-
+	
 	private static void logOutput(String name, InsnList list)
 	{
 		if(codeOutput)
@@ -182,7 +182,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		default : return "";
 		}
 	}
-
+	
 	private OpInformation create(String name)
 	{
 		return new OpInformation(name);
@@ -194,9 +194,9 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 	private void init()
 	{
 		if(!FarOverrideLoadingPlugin.loadedData) return;
-		if(!putedReplacements)
+		if(!this.putedReplacements)
 		{
-			putedReplacements = true;
+			this.putedReplacements = true;
 			if(FarOverrideLoadingPlugin.runtimeDeobf)
 			{
 				create("net.minecraft.util.text.TextComponentTranslation")
@@ -208,7 +208,10 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 				.put();
 				create("net.minecraft.entity.player.EntityPlayer")
 				.lName("<init>|(Laid;Lcom/mojang/authlib/GameProfile;)V")
-				.lPosition(119, 4)
+				.lPosition(115, 2)
+				.lNode(new TypeInsnNode(NEW, "farcore/lib/util/FoodStatExt"))
+				.lLabel(OpType.REPLACE)
+				.lPosition(115, 4)
 				.lNode(new MethodInsnNode(INVOKESPECIAL, "farcore/lib/util/FoodStatExt", "<init>", "()V", false))
 				.lLabel(OpType.REPLACE)
 				.lPut()
@@ -406,7 +409,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		outputInit();
 	}
-
+	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
@@ -420,7 +423,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			return modifyClass(transformedName, information, basicClass);
 		return basicClass;
 	}
-
+	
 	public byte[] modifyClass(String clazzName, OpInformation information, byte[] basicClass)
 	{
 		try
@@ -477,7 +480,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			return false;
 		for(int idx = 0; (idx < instructions.size() && !list.isEmpty()); ++idx)
 		{
-			numInsertions = 0;
+			this.numInsertions = 0;
 			while (info != null)
 			{
 				if (!isLine(instructions.get(idx), info.line))
@@ -498,7 +501,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		return list.isEmpty();
 	}
-
+	
 	/**
 	 * I don't know what happen, this might is a bug, I can not replace some of nodes.
 	 * So I use array list instead insnlist to cached insn nodes.
@@ -508,7 +511,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 	 */
 	private void performAnchorOperation(InsnList methodInsn, int anchor, OpLabel input)
 	{
-		AbstractInsnNode current = methodInsn.get(anchor + input.off + numInsertions);
+		AbstractInsnNode current = methodInsn.get(anchor + input.off + this.numInsertions);
 		AbstractInsnNode current1;
 		AbstractInsnNode node;
 		if (input.nodes != null && input.nodes.size() > 0 && (input.nodes.get(0) instanceof JumpInsnNode))
@@ -519,7 +522,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		{
 		case INSERT :
 			Iterator<AbstractInsnNode> itr = input.nodes.iterator();
-			numInsertions += input.nodes.size();
+			this.numInsertions += input.nodes.size();
 			do
 			{
 				node = itr.next();
@@ -531,7 +534,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			break;
 		case INSERT_BEFORE :
 			itr = input.nodes.iterator();
-			numInsertions += input.nodes.size();
+			this.numInsertions += input.nodes.size();
 			node = itr.next();
 			methodInsn.insertBefore(current, node);
 			current = node;
@@ -544,7 +547,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			break;
 		case REPLACE :
 			itr = input.nodes.iterator();
-			numInsertions += input.nodes.size() - 1;
+			this.numInsertions += input.nodes.size() - 1;
 			if ((current instanceof JumpInsnNode) && (input.nodes.get(0) instanceof JumpInsnNode))
 			{
 				((JumpInsnNode) input.nodes.get(0)).label = ((JumpInsnNode) current).label;
@@ -564,21 +567,21 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			int i = input.len;
 			while(i > 0)
 			{
-				current = methodInsn.get(anchor + input.off + numInsertions);
+				current = methodInsn.get(anchor + input.off + this.numInsertions);
 				methodInsn.remove(current);
 				--i;
 			}
-			numInsertions -= input.len;
+			this.numInsertions -= input.len;
 			break;
 		case SWITCH :
-			current1 = methodInsn.get(anchor + input.off + numInsertions + input.len);
+			current1 = methodInsn.get(anchor + input.off + this.numInsertions + input.len);
 			methodInsn.insert(current, current1);
-			current1 = methodInsn.get(anchor + input.off + numInsertions + input.len);
+			current1 = methodInsn.get(anchor + input.off + this.numInsertions + input.len);
 			methodInsn.insert(current1, current);
 			break;
 		}
 	}
-
+	
 	private int findLine(InsnList methodList, int line)
 	{
 		for (int index = 0; index < methodList.size(); index++)
@@ -588,7 +591,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		return -1;
 	}
-
+	
 	private boolean isLine(AbstractInsnNode current, int line)
 	{
 		if (current instanceof LineNumberNode)
@@ -599,7 +602,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 		return false;
 	}
-
+	
 	public static enum OpType
 	{
 		INSERT,
@@ -608,7 +611,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		REMOVE,
 		SWITCH;
 	}
-
+	
 	protected class OpInformation
 	{
 		final String mcpname;
@@ -624,12 +627,12 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		
 		OpInformation(String name)
 		{
-			mcpname = name;
+			this.mcpname = name;
 		}
 		
 		public OpInformation lName(String name)
 		{
-			cacheName = name;
+			this.cacheName = name;
 			return this;
 		}
 		
@@ -637,59 +640,59 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		{
 			this.line = line;
 			this.off = off;
-			length = 1;
+			this.length = 1;
 			return this;
 		}
-
+		
 		public OpInformation lLength(int len)
 		{
-			length = len;
+			this.length = len;
 			return this;
 		}
-
+		
 		public OpInformation lNode(AbstractInsnNode...nodes)
 		{
-			if(cacheList == null)
+			if(this.cacheList == null)
 			{
-				cacheList = new ArrayList();
+				this.cacheList = new ArrayList();
 			}
 			for(AbstractInsnNode node : nodes)
 			{
-				cacheList.add(node);
+				this.cacheList.add(node);
 			}
 			return this;
 		}
-
+		
 		public OpInformation lLabel(OpType type)
 		{
-			if(label == null)
+			if(this.label == null)
 			{
-				label = new ArrayList();
+				this.label = new ArrayList();
 			}
-			label.add(new OpLabel(line, off, length, type, cacheList));
-			line = -1;
-			off = -1;
-			cacheList = null;
+			this.label.add(new OpLabel(this.line, this.off, this.length, type, this.cacheList));
+			this.line = -1;
+			this.off = -1;
+			this.cacheList = null;
 			return this;
 		}
 		
 		public OpInformation lPut()
 		{
-			if(!modifies.containsKey(cacheName))
+			if(!this.modifies.containsKey(this.cacheName))
 			{
-				modifies.put(cacheName, label);
+				this.modifies.put(this.cacheName, this.label);
 			}
-			cacheName = null;
-			label = null;
+			this.cacheName = null;
+			this.label = null;
 			return this;
 		}
 		
 		public void put()
 		{
-			informations.put(mcpname, this);
+			informations.put(this.mcpname, this);
 		}
 	}
-
+	
 	protected class OpLabel
 	{
 		int line;
@@ -697,7 +700,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		int len;
 		OpType type;
 		List<AbstractInsnNode> nodes;
-
+		
 		OpLabel(int line, int off, int len, OpType type, List<AbstractInsnNode> nodes)
 		{
 			this.line = line;
@@ -710,7 +713,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		@Override
 		public String toString()
 		{
-			return "label:" + type.name() + ":" + (nodes != null ? Arrays.toString(nodes.toArray()) : "");
+			return "label:" + this.type.name() + ":" + (this.nodes != null ? Arrays.toString(this.nodes.toArray()) : "");
 		}
 	}
 }

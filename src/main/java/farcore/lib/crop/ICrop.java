@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import farcore.lib.bio.IDNADecoder;
+import farcore.lib.bio.GeneticMaterial;
+import farcore.lib.bio.ISpecie;
 import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.LanguageManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
 
-public interface ICrop extends IRegisteredNameable, IDNADecoder<ICropAccess>
+public interface ICrop extends IRegisteredNameable, ISpecie<ICropAccess>
 {
 	ICrop VOID = new CropVoid();
 	
-	default String getLocalName(String dna)
+	default String getLocalName(GeneticMaterial dna)
 	{
 		return LanguageManager.translateToLocal("crop." + getTranslatedName(dna) + ".name");
 	}
 	
-	String getTranslatedName(String dna);
+	String getTranslatedName(GeneticMaterial dna);
 	
 	int getMaxStage();
 	
@@ -34,13 +35,14 @@ public interface ICrop extends IRegisteredNameable, IDNADecoder<ICropAccess>
 	boolean canPlantAt(ICropAccess access);
 	
 	void getDrops(ICropAccess access, ArrayList<ItemStack> list);
-
+	
 	default EnumPlantType getPlantType(ICropAccess access)
 	{
 		return EnumPlantType.Crop;
 	}
-
+	
 	Collection<String> getAllowedState();
 	
 	String getState(ICropAccess access);
+	
 }

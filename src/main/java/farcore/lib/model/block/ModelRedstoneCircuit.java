@@ -21,6 +21,7 @@ import farcore.data.MC;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import farcore.lib.model.ModelHelper;
+import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.model.item.ICustomItemRenderModel;
 import farcore.lib.model.item.ItemTextureHelper;
 import farcore.lib.tile.instance.circuit.TECircuitBase;

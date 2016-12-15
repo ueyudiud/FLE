@@ -11,7 +11,7 @@ import farcore.lib.block.BlockBase;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U;

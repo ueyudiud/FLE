@@ -21,7 +21,7 @@ import farcore.lib.block.IUpdateDelayBlock;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyRock;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.util.Direction;

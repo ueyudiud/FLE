@@ -19,7 +19,7 @@ import farcore.data.EnumBlock;
 import farcore.data.Others;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import net.minecraft.block.Block;

@@ -9,7 +9,8 @@ public class Config
 	public static boolean enableWaterFreezeAndIceMeltTempCheck;
 	public static boolean splitBrightnessOfSmallBlock;
 	public static boolean enableWaterStat;
-
+	public static boolean useJavascriptInResource;
+	
 	//These general option is for modder.
 	//If want to use Far Core mod but do not want added in these type of block/item.
 	public static boolean createRock = true;
@@ -25,5 +26,6 @@ public class Config
 		enableWaterFreezeAndIceMeltTempCheck = config.getBoolean("enableWaterFreezeAndIceMeltTempCheck", "block", true, "The far core world has season changing, enable this option to freeze water or melt ice by actively temperature.");
 		splitBrightnessOfSmallBlock = config.getBoolean("splitBrightnessOfSmallBlock", "render", false, "(WIP config) Split brightness when caculating brightness.");
 		enableWaterStat = config.getBoolean("waterStat", "gamerule", true, "Enable this option will needed driking water to be alive.");
+		useJavascriptInResource = config.getBoolean("useJavascriptInResource", "general", false, "Enable this option to enable use javascript file in resource loading, but make sure lib 'nashorn' is included.");
 	}
 }

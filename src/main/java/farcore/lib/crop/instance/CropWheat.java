@@ -2,22 +2,25 @@ package farcore.lib.crop.instance;
 
 import java.util.ArrayList;
 
-import farcore.lib.crop.CropAbstract;
+import farcore.data.DNAs;
+import farcore.lib.bio.DNAHandler;
+import farcore.lib.crop.CropTemplate;
 import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICropAccess;
-import farcore.lib.crop.dna.CropDNAHelper;
 import farcore.lib.material.Mat;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-public class CropWheat extends CropAbstract
+public class CropWheat extends CropTemplate
 {
 	public CropWheat(Mat material)
 	{
 		super(material);
-		dnaHelper = new CropDNAHelper();
-		maxStage = 8;
-		growReq = 800;
+		this.helper = new DNAHandler[] {
+				
+		};
+		this.maxStage = 8;
+		this.growReq = 800;
 	}
 	
 	@Override

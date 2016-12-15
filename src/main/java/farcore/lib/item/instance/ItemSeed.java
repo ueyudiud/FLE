@@ -7,6 +7,8 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.MC;
 import farcore.data.MP;
+import farcore.lib.bio.GeneticMaterial;
+import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropAccessSimulated;
 import farcore.lib.crop.ICrop;
@@ -40,10 +42,10 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	public ItemSeed()
 	{
 		super(FarCore.ID, MC.seed);
-		enableChemicalFormula = false;
+		this.enableChemicalFormula = false;
 		EnumItem.seed.set(this);
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -69,14 +71,16 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		}
 		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(condition))
+		for(Mat material : Mat.filt(this.condition))
 		{
-			ItemStack stack = applySeed(1, material, 0, material.getProperty(MP.property_crop).makeNativeDNA());
+			ICrop crop = material.getProperty(MP.property_crop);
+			assert(crop != null);
+			ItemStack stack = applySeed(1, material, crop.applyNativeDNA());
 			subItems.add(stack);
 		}
 	}
@@ -86,30 +90,40 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
-		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(MP.property_crop).getLocalName(getDNAFromStack(stack)));
-		unlocalizedList.add("info.crop.generation", getGenerationFromStack(stack) + 1);
+		GeneticMaterial geneticMaterial = getDNAFromStack(stack);
+		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(MP.property_crop).getLocalName(geneticMaterial));
+		unlocalizedList.add("info.crop.generation", geneticMaterial.generation + 1);
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		if(playerIn.capabilities.isCreativeMode)
 		{
 			Localization.addFoodStatInformation(getMaterialFromItem(stack).getProperty(MP.property_edible), stack, unlocalizedList);
+			if(unlocalizedList.isSneakDown())
+			{
+				unlocalizedList.addLocal("DNA:" + geneticMaterial.getDNAString());
+			}
+			else
+			{
+				unlocalizedList.addShiftClickInfo();
+			}
 		}
 	}
-
-	public static ItemStack applySeed(int size, Mat material, int generation, String dna)
+	
+	public static ItemStack applySeed(int size, Mat material, GeneticMaterial dna)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setShort("generation", (short) generation);
-		nbt.setString("dna", dna);
+		GenticMaterialFactory.INSTANCE.writeToNBT(dna, nbt, "genetic");
 		ItemStack stack = new ItemStack(EnumItem.seed.item, size, material.id);
 		stack.setTagCompound(nbt);
 		return stack;
 	}
-
-	public static String getDNAFromStack(ItemStack stack)
+	
+	public static GeneticMaterial getDNAFromStack(ItemStack stack)
 	{
-		return !stack.hasTagCompound() ? "" : stack.getTagCompound().getString("dna");
+		return !stack.hasTagCompound() ? null :
+			GenticMaterialFactory.INSTANCE.readFromNBT(stack.getTagCompound(), "genetic");
 	}
-
+	
+	@Deprecated
 	public static int getGenerationFromStack(ItemStack stack)
 	{
 		return !stack.hasTagCompound() ? 0 : stack.getTagCompound().getShort("generation");
@@ -166,7 +180,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	{
 		return 32;
 	}
-
+	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
@@ -178,7 +192,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		}
 		return new ActionResult(EnumActionResult.FAIL, itemStackIn);
 	}
-
+	
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
 	{

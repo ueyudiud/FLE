@@ -91,9 +91,9 @@ public class BlockOre extends BlockSingleTE
 	public void registerRender()
 	{
 		super.registerRender();
-		ModelLoaderRegistry.registerLoader(ModelOre.instance);
-		ModelLoader.setCustomStateMapper(this, ModelOre.instance);
-		U.Mod.registerCustomItemModelSelector(this, ModelOre.instance);
+		ModelLoaderRegistry.registerLoader(ModelOre.INSTANCE);
+		ModelLoader.setCustomStateMapper(this, ModelOre.INSTANCE);
+		U.Mod.registerCustomItemModelSelector(this, ModelOre.INSTANCE);
 	}
 	
 	@Override

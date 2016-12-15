@@ -15,21 +15,20 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import farcore.FarCore;
+import farcore.FarCoreSetup;
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.ColorMultiplier;
 import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.block.IToolableBlock;
-import farcore.lib.collection.IRegister;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.fluid.FluidStackExt;
 import farcore.lib.inv.IBasicInventory;
 import farcore.lib.item.ITool;
-import farcore.lib.material.Mat;
 import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.block.ModelFluidBlock;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.net.world.PacketBreakBlock;
 import farcore.lib.oredict.OreDictExt;
@@ -44,7 +43,6 @@ import farcore.lib.tile.IItemHandlerIO;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.abstracts.TEBase;
 import farcore.lib.util.Direction;
-import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.IRenderRegister;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
@@ -82,9 +80,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLong;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.SPacketEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
@@ -110,7 +105,6 @@ import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -1237,214 +1231,6 @@ public class U
 		}
 	}
 	
-	public static class NBTs
-	{
-		public static void setString(NBTTagCompound nbt, String key, IRegisteredNameable nameable)
-		{
-			if(nameable != null)
-			{
-				nbt.setString(key, nameable.getRegisteredName());
-			}
-		}
-		
-		public static NBTTagCompound getOrCreate(NBTTagCompound nbt, String tag)
-		{
-			return getCompound(nbt, tag, true);
-		}
-		public static NBTTagCompound getCompound(NBTTagCompound nbt, String tag, boolean create)
-		{
-			NBTTagCompound compound = nbt.getCompoundTag(tag);
-			if(compound == null)
-			{
-				if(!create) return NBTTagCompoundEmpty.INSTANCE;
-				nbt.setTag(tag, compound = new NBTTagCompound());
-			}
-			return compound;
-		}
-		
-		public static void setNumber(NBTTagCompound nbt, String key, double number)
-		{
-			if((float) number == number)
-			{
-				nbt.setFloat(key, (float) number);
-			}
-			else
-			{
-				nbt.setDouble(key, number);
-			}
-		}
-		
-		public static void setNumber(NBTTagCompound nbt, String key, long number)
-		{
-			if((byte) number == number)
-			{
-				nbt.setByte(key, (byte) number);
-			}
-			else if((short) number == number)
-			{
-				nbt.setShort(key, (short) number);
-			}
-			else if((int) number == number)
-			{
-				nbt.setInteger(key, (int) number);
-			}
-			else
-			{
-				nbt.setLong(key, number);
-			}
-		}
-		
-		public static void setStringArray(NBTTagCompound nbt, String key, String[] array)
-		{
-			NBTTagList list = new NBTTagList();
-			for(int i = 0; i < array.length; ++i)
-			{
-				list.set(i, new NBTTagString(array[i]));
-			}
-			nbt.setTag(key, list);
-		}
-		
-		public static void setLongArray(NBTTagCompound nbt, String key, long[] array)
-		{
-			NBTTagList list = new NBTTagList();
-			for(int i = 0; i < array.length; ++i)
-			{
-				list.set(i, new NBTTagLong(array[i]));
-			}
-			nbt.setTag(key, list);
-		}
-		
-		public static void setFluidStack(NBTTagCompound nbt, String key, FluidStack stack, boolean markEmpty)
-		{
-			if(stack != null)
-			{
-				nbt.setTag(key, stack.writeToNBT(new NBTTagCompound()));
-			}
-			else if(markEmpty)
-			{
-				nbt.setTag(key, new NBTTagCompound());//Mark for empty stack.
-			}
-		}
-		
-		public static byte getByteOrDefault(NBTTagCompound nbt, String key, int def)
-		{
-			return nbt.hasKey(key) ? nbt.getByte(key) : (byte) def;
-		}
-		
-		public static short getShortOrDefault(NBTTagCompound nbt, String key, int def)
-		{
-			return nbt.hasKey(key) ? nbt.getShort(key) : (short) def;
-		}
-		
-		public static int getIntOrDefault(NBTTagCompound nbt, String key, int def)
-		{
-			return nbt.hasKey(key) ? nbt.getInteger(key) : def;
-		}
-		
-		public static long getLongOrDefault(NBTTagCompound nbt, String key, long def)
-		{
-			return nbt.hasKey(key) ? nbt.getLong(key) : def;
-		}
-		
-		public static float getFloatOrDefault(NBTTagCompound nbt, String key, float def)
-		{
-			return nbt.hasKey(key) ? nbt.getLong(key) : def;
-		}
-		
-		public static double getDoubleOrDefault(NBTTagCompound nbt, String key, double def)
-		{
-			return nbt.hasKey(key) ? nbt.getLong(key) : def;
-		}
-		
-		public static long[] getLongArrayOrDefault(NBTTagCompound nbt, String key, long[] def)
-		{
-			if(nbt.hasKey(key, NBT.TAG_LIST))
-			{
-				NBTTagList list = nbt.getTagList(key, NBT.TAG_LONG);
-				if(def.length != list.tagCount())
-					return def;
-				long[] result = new long[list.tagCount()];
-				for(int i = 0; i < result.length; ++i)
-				{
-					result[i] = ((NBTTagLong) list.get(i)).getLong();
-				}
-				return result;
-			}
-			return def;
-		}
-		
-		public static String[] getStringArrayOrDefault(NBTTagCompound nbt, String key, String[] def)
-		{
-			if(nbt.hasKey(key, NBT.TAG_LIST))
-			{
-				NBTTagList list = nbt.getTagList(key, NBT.TAG_STRING);
-				if(def.length != list.tagCount())
-					return def;
-				String[] result = new String[list.tagCount()];
-				for(int i = 0; i < result.length; ++i)
-				{
-					result[i] = list.getStringTagAt(i);
-				}
-				return result;
-			}
-			return def;
-		}
-		
-		public static FluidStack getFluidStackOrDefault(NBTTagCompound nbt, String key, FluidStack def)
-		{
-			return nbt.hasKey(key, NBT.TAG_COMPOUND) ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag(key)) : def;
-		}
-		
-		public static <E extends Enum<? extends E>> E getEnumOrDefault(NBTTagCompound nbt, String key, E def)
-		{
-			try
-			{
-				return nbt.hasKey(key) ? (E) def.getClass().getEnumConstants()[nbt.getByte(key)] : def;
-			}
-			catch (ArrayIndexOutOfBoundsException exception)
-			{
-				return def;
-			}
-		}
-		
-		public static <E> E getValueByByteOrDefault(NBTTagCompound nbt, String key, E[] values, E def)
-		{
-			try
-			{
-				return nbt.hasKey(key) ? (E) values[nbt.getByte(key)] : def;
-			}
-			catch (ArrayIndexOutOfBoundsException exception)
-			{
-				return def;
-			}
-		}
-		
-		public static Direction getDirectionOrDefault(NBTTagCompound nbt, String key, byte type, Direction def)
-		{
-			return Direction.readFromNBT(nbt, key, type, def);
-		}
-		
-		public static <T> T getValueByIDOrDefault(NBTTagCompound nbt, String key, IRegister<T> register, T def)
-		{
-			return nbt.hasKey(key) ? register.get(nbt.getInteger(key), def) : def;
-		}
-		
-		public static <T> T getValueByNameOrDefault(NBTTagCompound nbt, String key, IRegister<T> register, T def)
-		{
-			return nbt.hasKey(key) ? register.get(nbt.getString(key), def) : def;
-		}
-		
-		public static Mat getMaterialByIDOrDefault(NBTTagCompound nbt, String key, Mat def)
-		{
-			return nbt.hasKey(key) ? Mat.material(nbt.getShort(key), def) : def;
-		}
-		
-		public static Mat getMaterialByNameOrDefault(NBTTagCompound nbt, String key, Mat def)
-		{
-			return nbt.hasKey(key) ? Mat.material(nbt.getString(key), def) : def;
-		}
-	}
-	
 	public static class Entities
 	{
 		public static double movementSpeedSq(Entity entity)
@@ -1932,7 +1718,7 @@ public class U
 		{
 			if(object instanceof IRenderRegister)
 			{
-				((ClientProxy) FarCore.proxy).addRenderRegisterListener((IRenderRegister) object);
+				((ClientProxy) FarCoreSetup.proxy).addRenderRegisterListener((IRenderRegister) object);
 			}
 		}
 		
@@ -1941,7 +1727,7 @@ public class U
 				IProperty...properties)
 		{
 			StateMapperExt mapper = new StateMapperExt(modid, path, splitFile ? property : null, properties);
-			((ClientProxy) FarCore.proxy).registerCompactModel(mapper, block, property);
+			((ClientProxy) FarCoreSetup.proxy).registerCompactModel(mapper, block, property);
 		}
 		
 		@Override

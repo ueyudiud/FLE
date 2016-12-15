@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import farcore.data.EnumToolType;
 import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
+import farcore.lib.bio.DNAPair;
+import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICrop;
@@ -24,8 +24,8 @@ import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.abstracts.TEAged;
 import farcore.lib.util.Direction;
+import farcore.util.NBTs;
 import farcore.util.U.Client;
-import farcore.util.U.NBTs;
 import farcore.util.U.Players;
 import farcore.util.U.Worlds;
 import net.minecraft.block.state.IBlockState;
@@ -47,14 +47,14 @@ implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Upd
 ITB_AddHitEffects
 {
 	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, .9375F, .9375F);
-
+	
 	private static final CropInfo NO_DATA_INFO = new CropInfo();
 	
 	static
 	{
-		NO_DATA_INFO.DNA = "";
+		NO_DATA_INFO.geneticMaterial = GeneticMaterial.newGeneticMaterial("", -1, new DNAPair[0]);
 	}
-
+	
 	private int waterLevel = 6400;
 	private boolean isWild = false;
 	private float growBuffer;
@@ -68,30 +68,30 @@ ITB_AddHitEffects
 	}
 	public TECrop(ICrop crop)
 	{
-		this(crop, crop.makeNativeDNA(), 0);
-		isWild = true;
+		this(crop, crop.applyNativeDNA(), 0);
+		this.isWild = true;
 	}
-	public TECrop(ICrop crop, String dna, int generation)
+	public TECrop(ICrop crop, GeneticMaterial geneticMaterial, int generation)
 	{
-		card = crop;
-		info = new CropInfo();
-		info.DNA = dna;
-		info.generations = generation;
-		crop.decodeDNA(this, dna);
+		this.card = crop;
+		this.info = new CropInfo();
+		this.info.geneticMaterial = geneticMaterial;
+		this.info.generations = generation;
+		this.info.geneticMaterial.expressTrait(this);
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setInteger("water", waterLevel);
-		nbt.setBoolean("isWild", isWild);
-		nbt.setFloat("growBuf", growBuffer);
-		nbt.setInteger("stage", stage);
-		nbt.setString("crop", card.getRegisteredName());
-		if(info != null)
+		nbt.setInteger("water", this.waterLevel);
+		nbt.setBoolean("isWild", this.isWild);
+		nbt.setFloat("growBuf", this.growBuffer);
+		nbt.setInteger("stage", this.stage);
+		nbt.setString("crop", this.card.getRegisteredName());
+		if(this.info != null)
 		{
-			info.writeToNBT(nbt);
+			this.info.writeToNBT(nbt);
 		}
 		return nbt;
 	}
@@ -100,23 +100,23 @@ ITB_AddHitEffects
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		waterLevel = nbt.getInteger("water");
-		isWild = nbt.getBoolean("isWild");
-		growBuffer = nbt.getFloat("growBuf");
-		stage = nbt.getInteger("stage");
-		card = Mat.material(nbt.getString("crop")).getProperty(MP.property_crop, ICrop.VOID);
-		info = new CropInfo();
-		info.readFromNBT(nbt);
+		this.waterLevel = nbt.getInteger("water");
+		this.isWild = nbt.getBoolean("isWild");
+		this.growBuffer = nbt.getFloat("growBuf");
+		this.stage = nbt.getInteger("stage");
+		this.card = Mat.material(nbt.getString("crop")).getProperty(MP.property_crop, ICrop.VOID);
+		this.info = new CropInfo();
+		this.info.readFromNBT(nbt);
 	}
 	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setInteger("s", stage);
-		NBTs.setString(nbt, "c", card);
+		nbt.setInteger("s", this.stage);
+		NBTs.setString(nbt, "c", this.card);
 		NBTTagCompound nbt1;
-		info.writeToNBT(nbt1 = new NBTTagCompound());
+		this.info.writeToNBT(nbt1 = new NBTTagCompound());
 		nbt.setTag("i", nbt1);
 	}
 	
@@ -124,16 +124,16 @@ ITB_AddHitEffects
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		stage = NBTs.getIntOrDefault(nbt, "s", stage);
+		this.stage = NBTs.getIntOrDefault(nbt, "s", this.stage);
 		Mat material = NBTs.getMaterialByNameOrDefault(nbt, "c", null);
 		if(material != null)
 		{
-			card = material.getProperty(MP.property_crop, ICrop.VOID);
+			this.card = material.getProperty(MP.property_crop, ICrop.VOID);
 		}
 		if(nbt.hasKey("i"))
 		{
-			info = new CropInfo();
-			info.readFromNBT(nbt.getCompoundTag("i"));
+			this.info = new CropInfo();
+			this.info.readFromNBT(nbt.getCompoundTag("i"));
 		}
 		markBlockRenderUpdate();
 	}
@@ -143,13 +143,13 @@ ITB_AddHitEffects
 	{
 		return CROP_AABB;
 	}
-
+	
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
 	{
 		return null;
 	}
-
+	
 	@Override
 	public void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
 			Entity entity)
@@ -166,14 +166,14 @@ ITB_AddHitEffects
 	@Override
 	protected long getNextUpdateTick(long thisTick)
 	{
-		return thisTick + card.tickUpdate(this);
+		return thisTick + this.card.tickUpdate(this);
 	}
 	
 	@Override
 	protected void updateServer1()
 	{
 		super.updateServer1();
-		card.onUpdate(this);
+		this.card.onUpdate(this);
 	}
 	
 	@Override
@@ -183,45 +183,51 @@ ITB_AddHitEffects
 	}
 	
 	@Override
-	public String getDNA()
-	{
-		return info.DNA;
-	}
-	
-	@Override
 	public ICrop crop()
 	{
-		return card;
+		return this.card;
 	}
 	
 	@Override
 	public CropInfo info()
 	{
-		return info;
+		return this.info;
+	}
+	
+	@Override
+	public GeneticMaterial getGeneticMaterial()
+	{
+		return this.info.geneticMaterial;
 	}
 	
 	@Override
 	public Biome biome()
 	{
-		return worldObj.getBiomeGenForCoords(pos);
+		return this.worldObj.getBiomeGenForCoords(this.pos);
 	}
 	
 	@Override
 	public boolean isWild()
 	{
-		return isWild;
+		return this.isWild;
 	}
 	
 	@Override
 	public Random rng()
 	{
-		return random;
+		return this.random;
 	}
 	
 	@Override
 	public int stage()
 	{
-		return stage;
+		return this.stage;
+	}
+	
+	@Override
+	public float stageBuffer()
+	{
+		return this.growBuffer;
 	}
 	
 	@Override
@@ -230,18 +236,18 @@ ITB_AddHitEffects
 		this.stage = stage;
 		markDirty();
 	}
-
+	
 	@Override
 	public void grow(int amt)
 	{
-		if(stage + 1 < card.getMaxStage())
+		if(this.stage + 1 < this.card.getMaxStage())
 		{
-			int i = card.getGrowReq(this);
-			growBuffer += amt;
-			if(growBuffer > i)
+			int i = this.card.getGrowReq(this);
+			this.growBuffer += amt;
+			if(this.growBuffer > i)
 			{
-				growBuffer -= i;
-				stage++;
+				this.growBuffer -= i;
+				this.stage++;
 				markBlockUpdate();//BUD?
 				markBlockRenderUpdate();
 				syncToNearby();
@@ -259,20 +265,20 @@ ITB_AddHitEffects
 	@Override
 	public int getWaterLevel()
 	{
-		return waterLevel;
+		return this.waterLevel;
 	}
-
+	
 	@Override
 	public float temp()
 	{
-		return ThermalNet.getTemperature(worldObj, pos, true);
+		return ThermalNet.getTemperature(this.worldObj, this.pos, true);
 	}
 	
 	@Override
 	public int useWater(int amount)
 	{
-		int c = Math.min(amount, waterLevel);
-		waterLevel -= c;
+		int c = Math.min(amount, this.waterLevel);
+		this.waterLevel -= c;
 		return c;
 	}
 	
@@ -286,27 +292,23 @@ ITB_AddHitEffects
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
 		list.add("Tag : " + getStateName());
-		list.add("Name : " + card.getTranslatedName(getDNA()));
-		list.add("DNA : " + info.DNA);
-		int max = card.getMaxStage();
-		int req = card.getGrowReq(this);
+		list.add("Name : " + this.card.getTranslatedName(this.info.geneticMaterial));
+		list.add("DNA : " + this.info.geneticMaterial.getDNAString());
+		int max = this.card.getMaxStage();
+		int req = this.card.getGrowReq(this);
 		
-		list.add("Grow Progress : " + ChatFormatting.GREEN +
-				(stage + 1 < card.getMaxStage() ?
-						(int) (growBuffer + stage * req) + "/" + (card.getMaxStage() - 1) * req :
-						"Mature"));
-		card.addInformation(this, list);
+		this.card.addInformation(this, list);
 	}
 	
 	public boolean canPlantAt()
 	{
-		return card == null ? true : card.canPlantAt(this);
+		return this.card == null ? true : this.card.canPlantAt(this);
 	}
-
+	
 	@Override
 	public boolean canBlockStay()
 	{
-		return worldObj == null || card == ICrop.VOID ? true : card.canPlantAt(this);
+		return this.worldObj == null || this.card == ICrop.VOID ? true : this.card.canPlantAt(this);
 	}
 	
 	@Override
@@ -321,16 +323,16 @@ ITB_AddHitEffects
 	
 	public EnumPlantType getPlantType()
 	{
-		return card == null ? EnumPlantType.Crop : card.getPlantType(this);
+		return this.card == null ? EnumPlantType.Crop : this.card.getPlantType(this);
 	}
 	
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
 		ArrayList<ItemStack> list = new ArrayList();
-		if(card != null)
+		if(this.card != null)
 		{
-			card.getDrops(this, list);
+			this.card.getDrops(this, list);
 		}
 		return list;
 	}
@@ -346,7 +348,16 @@ ITB_AddHitEffects
 	
 	public String getStateName()
 	{
-		return card != null ? card.getState(this) : "void";
+		return this.card != null ? this.card.getState(this) : "void";
+	}
+	
+	@Override
+	public void pollinate(GeneticMaterial gm)
+	{
+		if(this.info.gamete == null && this.card.getRegisteredName().equals(gm.specie))
+		{
+			this.info.gamete = GeneticMaterial.newGeneticMaterial(this, this.random, this.info.geneticMaterial.generateGameteDNA(this, this.random, true), gm);
+		}
 	}
 	
 	@Override
@@ -354,7 +365,7 @@ ITB_AddHitEffects
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
 		IBlockState state = getBlockState();
-		Client.addBlockHitEffect(worldObj, random, state.getActualState(worldObj, pos), target.sideHit, pos, manager);
+		Client.addBlockHitEffect(this.worldObj, this.random, state.getActualState(this.worldObj, this.pos), target.sideHit, this.pos, manager);
 		return true;
 	}
 	
@@ -363,7 +374,7 @@ ITB_AddHitEffects
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
 		IBlockState state = getBlockState();
-		Client.addBlockDestroyEffects(worldObj, pos, state.getActualState(worldObj, pos), manager);
+		Client.addBlockDestroyEffects(this.worldObj, this.pos, state.getActualState(this.worldObj, this.pos), manager);
 		return true;
 	}
 }

@@ -6,94 +6,75 @@ import static com.mojang.realmsclient.gui.ChatFormatting.GREEN;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import farcore.data.EnumBlock;
-import farcore.lib.crop.dna.CropDNAHelper;
+import farcore.lib.bio.DNAHandler;
+import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.material.Mat;
 import farcore.lib.util.Direction;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.IPlantable;
 
 public abstract class CropBase implements ICrop
 {
-	protected CropDNAHelper dnaHelper;
 	protected Mat material;
 	protected int maxStage;
+	protected int floweringStage = -1;
+	protected int floweringRange = 0;
 	protected int growReq = 1000;
-
+	protected byte spreadType = 0;
+	protected DNAHandler[] helper;
+	
 	public CropBase(Mat material)
 	{
 		this.material = material;
 	}
-
-	public CropBase setDNAHelper(CropDNAHelper helper)
-	{
-		dnaHelper = helper;
-		return this;
-	}
-
+	
 	@Override
 	public String getRegisteredName()
 	{
-		return material.name;
+		return this.material.name;
 	}
-
+	
 	@Override
-	public void decodeDNA(ICropAccess biology, String dna)
+	public String getTranslatedName(GeneticMaterial dna)
 	{
-		CropInfo info = biology.info();
-		dnaHelper.decodeDNA(info, dna);
+		return this.material.name;
 	}
-
-	@Override
-	public String makeNativeDNA()
-	{
-		return dnaHelper.nativeDNA;
-	}
-
-	@Override
-	public String makeChildDNA(int generation, String par)
-	{
-		return dnaHelper.borderDNA(par, harmonic(generation, 2.5E-2, 1.0));
-	}
-
-	protected float harmonic(int x, double chance, double mul)
-	{
-		if(x <= 0) return 0F;
-		x += 1;
-		return 1F / (float) (1D / (Math.log(x) * mul) + 1D / chance);
-	}
-
-	@Override
-	public String makeOffspringDNA(String par1, String par2)
-	{
-		return dnaHelper.mixedDNA(par1, par2);
-	}
-
-	@Override
-	public String getLocalName(String dna)
-	{
-		return material.localName;
-	}
-
+	
 	@Override
 	public int getMaxStage()
 	{
-		return maxStage;
+		return this.maxStage;
 	}
-
+	
+	@Override
+	public GeneticMaterial applyNativeDNA()
+	{
+		return GeneticMaterial.newGeneticMaterial(getRegisteredName(), 0, DNAHandler.createNativeDNAs(this.helper));
+	}
+	
 	@Override
 	public long tickUpdate(ICropAccess access)
 	{
 		return 100L;
 	}
-
+	
 	@Override
 	public void onUpdate(ICropAccess access)
+	{
+		onUpdate01GrowPlant(access);
+		onUpdate02Flowering(access);
+	}
+	
+	protected void onUpdate01GrowPlant(ICropAccess access)
 	{
 		CropInfo info = access.info();
 		IWorldPropProvider property = WorldPropHandler.getWorldProperty(access.world());
@@ -141,16 +122,66 @@ public abstract class CropBase implements ICrop
 			access.grow(base);
 		}
 	}
-
+	
+	protected void onUpdate02Flowering(ICropAccess access)
+	{
+		int stage = access.stage();
+		if(stage == this.floweringStage)
+		{
+			int count;
+			switch (this.spreadType)
+			{
+			case 2 :
+				if(access.info().gamete == null && access.rng().nextInt(5) == 0)
+				{
+					access.pollinate(access.info().geneticMaterial.generateGameteDNA(access, access.rng(), true));
+				}
+			case 1 :
+				if((count = access.info().map.get("flowered")) < 5)
+				{
+					GeneticMaterial material = access.info().geneticMaterial.generateGameteDNA(access, access.rng(), true);
+					for(int i = 0; i < 8; i++)
+					{
+						int x = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
+						int y = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
+						int z = access.rng().nextInt(this.floweringRange) - access.rng().nextInt(this.floweringRange);
+						if((x | y | z) != 0)
+						{
+							TileEntity tile = access.getTE(x, y, z);
+							if(tile instanceof ICropAccess)
+							{
+								((ICropAccess) tile).pollinate(material);
+							}
+						}
+					}
+					access.info().map.put("flowered", ++count);
+				}
+				break;
+			case 3 :
+				if(access.info().gamete == null)
+				{
+					access.pollinate(access.info().geneticMaterial.generateGameteDNA(access, access.rng(), true));
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
 	@Override
 	public int getGrowReq(ICropAccess access)
 	{
-		return growReq;
+		return this.growReq;
 	}
-
+	
 	@Override
 	public void addInformation(ICropAccess access, List<String> infos)
 	{
+		infos.add("Growing Progress : " + (access.stage() == this.floweringStage ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.GREEN) +
+				(access.stage() + 1 < this.maxStage ?
+						(int) (access.stageBuffer() + access.stage() * this.growReq) + "/" + (this.maxStage - 1) * this.growReq :
+						"Mature"));
 		CropInfo info = access.info();
 		infos.add(GOLD + "GA" + GREEN + " " + info.grain);
 		infos.add(GOLD + "GO" + GREEN + " " + info.growth);
@@ -159,7 +190,7 @@ public abstract class CropBase implements ICrop
 		infos.add(GOLD + "WR" + GREEN + " " + info.weedResistance);
 		infos.add(GOLD + "DR" + GREEN + " " + info.dryResistance);
 	}
-
+	
 	@Override
 	public boolean canPlantAt(ICropAccess access)
 	{
@@ -167,10 +198,10 @@ public abstract class CropBase implements ICrop
 		return (state = access.getBlockState(Direction.D)).getBlock()
 				.canSustainPlant(state, access.world(), access.pos().down(), EnumFacing.UP, (IPlantable) EnumBlock.crop.block);
 	}
-
+	
 	@Override
 	public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
 	{
-
+		
 	}
 }

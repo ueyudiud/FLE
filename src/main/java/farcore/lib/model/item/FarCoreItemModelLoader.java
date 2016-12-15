@@ -30,12 +30,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import farcore.FarCore;
+import farcore.data.Config;
 import farcore.lib.item.ItemBase;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemFluidDisplay;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
-import farcore.lib.model.item.ModelLayer.UnbakedModelLayer;
 import farcore.lib.util.Log;
 import farcore.util.L;
 import net.minecraft.client.Minecraft;
@@ -465,7 +465,6 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 	private Map<ResourceLocation, Function<ItemStack, String>> loadedSubmetaProvider;
 	Map<Function<IResourceManager, Map<String, ResourceLocation>>, Map<String, ResourceLocation>> buildMultiTexturesMap;
 	
-	
 	/**
 	 * 
 	 * @since 1.1
@@ -599,45 +598,48 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 	{
 		Function<ItemStack, String> function = submetaProviders.get(location);
 		if (function != null) return function;
-		if (this.loadedSubmetaProvider.containsKey(location))
-			return this.loadedSubmetaProvider.get(location);
-		IResource resource = null;
-		byte[] values;
-		try
+		if (Config.useJavascriptInResource)
 		{
-			ResourceLocation location1 = new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".js");
-			resource = this.resourceManager.getResource(location1);
-			values = IOUtils.toByteArray(resource.getInputStream());
-		}
-		catch(IOException exception)
-		{
-			values = null;
-		}
-		finally
-		{
-			if(resource != null)
+			if (this.loadedSubmetaProvider.containsKey(location))
+				return this.loadedSubmetaProvider.get(location);
+			IResource resource = null;
+			byte[] values;
+			try
+			{
+				ResourceLocation location1 = new ResourceLocation(location.getResourceDomain(), "f_model/mg/" + location.getResourcePath() + ".js");
+				resource = this.resourceManager.getResource(location1);
+				values = IOUtils.toByteArray(resource.getInputStream());
+			}
+			catch(IOException exception)
+			{
+				values = null;
+			}
+			finally
+			{
+				if(resource != null)
+				{
+					try
+					{
+						resource.close();
+					}
+					catch(IOException exception2)
+					{
+						;
+					}
+				}
+			}
+			if(values != null)
 			{
 				try
 				{
-					resource.close();
+					FarCoreJSSubmetaProvider provider = new FarCoreJSSubmetaProvider(values);
+					this.loadedSubmetaProvider.put(location, provider);
+					return provider;
 				}
-				catch(IOException exception2)
+				catch(ScriptException exception)
 				{
-					;
+					Log.cache(exception);
 				}
-			}
-		}
-		if(values != null)
-		{
-			try
-			{
-				FarCoreJSSubmetaProvider provider = new FarCoreJSSubmetaProvider(values);
-				this.loadedSubmetaProvider.put(location, provider);
-				return provider;
-			}
-			catch(ScriptException exception)
-			{
-				Log.cache(exception);
 			}
 		}
 		return NORMAL_FUNCTION;

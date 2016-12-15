@@ -10,7 +10,7 @@ import farcore.data.MC;
 import farcore.lib.block.BlockMaterial;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U.OreDict;
 import net.minecraft.block.SoundType;

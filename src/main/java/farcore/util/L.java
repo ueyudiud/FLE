@@ -19,10 +19,9 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ObjectArrays;
 
-import farcore.lib.collection.Stack;
 import farcore.lib.util.IDataChecker;
-import farcore.util.U.Maths;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
@@ -135,6 +134,13 @@ public class L
 		return new ArrayList(Arrays.asList(list));
 	}
 	
+	public static <K, T> T[] transform(K[] array, Class<T> elementClass, Function<K, T> function)
+	{
+		T[] result = ObjectArrays.newArray(elementClass, array.length);
+		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
+		return result;
+	}
+	
 	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, Function<? super K, ? extends V> function)
 	{
 		for(K key : collection) { map.put(key, function.apply(key)); }
@@ -158,14 +164,8 @@ public class L
 	public static <K, V> void put(Map<K, List<V>> map, K key, V...values)
 	{
 		if(values.length == 0) return;
-		if(values.length == 1)
-		{
-			put(map, key, values[0]);
-		}
-		else
-		{
-			put(map, key, Arrays.<V>asList(values));
-		}
+		if(values.length == 1) put(map, key, values[0]);
+		else put(map, key, Arrays.<V>asList(values));
 	}
 	
 	public static <K, V> void put(Map<K, List<V>> map, K key, Collection<? extends V> values)
@@ -227,6 +227,13 @@ public class L
 		return random(list, random);
 	}
 	
+	public static char random(Random random, char...list)
+	{
+		return list == null || list.length == 0 ? null :
+			list.length == 1 ? list[0] :
+				list[random.nextInt(list.length)];
+	}
+	
 	public static <T> T random(T[] list, Random random)
 	{
 		return list == null || list.length == 0 ? null :
@@ -244,11 +251,15 @@ public class L
 	
 	public static int[] fillIntArray(int length, int value)
 	{
-		if(length == 0) return new int[0];
-		if(length == 1) return new int[]{value};
-		int[] ret = new int[length];
-		Arrays.fill(ret, value);
-		return ret;
+		switch(length)
+		{
+		case 0 : return new int[0];
+		case 1 : return new int[]{value};
+		default:
+			int[] ret = new int[length];
+			Arrays.fill(ret, value);
+			return ret;
+		}
 	}
 	
 	public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
@@ -261,44 +272,28 @@ public class L
 	public static int min(int...values)
 	{
 		int ret = Integer.MAX_VALUE;
-		for(int i : values)
-			if(i < ret)
-			{
-				ret = i;
-			}
+		for(int i : values) if(i < ret) ret = i;
 		return ret;
 	}
 	
 	public static float min(float...values)
 	{
 		float ret = Float.MAX_VALUE;
-		for(float i : values)
-			if(i < ret)
-			{
-				ret = i;
-			}
+		for(float i : values) if(i < ret) ret = i;
 		return ret;
 	}
 	
 	public static int max(int...values)
 	{
 		int ret = Integer.MIN_VALUE;
-		for(int i : values)
-			if(i > ret)
-			{
-				ret = i;
-			}
+		for(int i : values) if(i > ret) ret = i;
 		return ret;
 	}
 	
 	public static float max(float...values)
 	{
 		float ret = Float.MIN_VALUE;
-		for(float i : values)
-			if(i > ret)
-			{
-				ret = i;
-			}
+		for(float i : values) if(i > ret) ret = i;
 		return ret;
 	}
 	

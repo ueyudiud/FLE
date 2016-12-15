@@ -10,7 +10,7 @@ import farcore.lib.block.BlockSlab;
 import farcore.lib.block.instance.BlockPlank.EnumPlankState;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.util.U.OreDict;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;

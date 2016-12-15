@@ -14,7 +14,7 @@ import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
 import farcore.event.FoodEatenEvent;
 import farcore.lib.item.behavior.IFoodStat;
-import farcore.util.U.NBTs;
+import farcore.util.NBTs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;

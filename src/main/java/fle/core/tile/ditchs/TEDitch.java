@@ -10,8 +10,8 @@ import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.abstracts.TESynchronization;
 import farcore.lib.util.Direction;
 import farcore.util.L;
+import farcore.util.NBTs;
 import farcore.util.U;
-import farcore.util.U.NBTs;
 import fle.api.tile.IDitchTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -315,7 +315,13 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		return (float) this.tank.getFluidAmount() / (float) this.tank.getCapacity();
 	}
 	
-	protected boolean canLink(Direction face, TileEntity tile)
+	public int getLinkState(Direction direction)
+	{
+		return isLinked(direction) ? canLink(direction, getTE(direction)) ? 1 :
+			canLink(Direction.U, getTE(direction.x, direction.y, direction.z)) ? 2 : 0 : 0;
+	}
+	
+	public boolean canLink(Direction face, TileEntity tile)
 	{
 		EnumFacing facing = face.getOpposite().of();
 		return tile == null ? false : tile instanceof IDitchTile ||

@@ -6,7 +6,7 @@ import farcore.lib.block.BlockBase;
 import farcore.lib.block.material.MaterialLog;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.model.block.StateMapperExt;
+import farcore.lib.model.block.statemap.StateMapperExt;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;

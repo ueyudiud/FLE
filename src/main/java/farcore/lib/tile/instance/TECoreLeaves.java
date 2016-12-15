@@ -17,32 +17,33 @@ import net.minecraft.nbt.NBTTagCompound;
 public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 {
 	public TreeInfo info;
-
+	
 	public TECoreLeaves()
 	{
-		info = new TreeInfo();
+		this.info = new TreeInfo();
 	}
 	public TECoreLeaves(ITree tree, TreeInfo info)
 	{
 		if(info == null)
 		{
 			info = new TreeInfo();
-			tree.decodeDNA(info, tree.makeNativeDNA());
+			info.DNA = tree.applyNativeDNA();
 		}
 		this.info = info;
+		info.DNA.expressTrait(info);
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-		info.writeToNBT(compound);
+		this.info.writeToNBT(compound);
 		return super.writeToNBT(compound);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
-		info.readFromNBT(compound);
+		this.info.readFromNBT(compound);
 		super.readFromNBT(compound);
 	}
 	
@@ -54,12 +55,12 @@ public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 			syncToNearby();
 		}
 	}
-
+	
 	public ItemStack provideSapling(Mat material)
 	{
 		return new ItemStack(EnumBlock.sapling.block, 1, material.id);
 	}
-
+	
 	@Override
 	public void onBlockBreak(IBlockState state)
 	{
