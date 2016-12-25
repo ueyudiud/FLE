@@ -3,6 +3,12 @@ package farcore.energy.thermal;
 import farcore.lib.util.Direction;
 import farcore.lib.world.ICoord;
 
+/**
+ * The thermal handler.
+ * Implements by tile entity.
+ * @author ueyudiud
+ *
+ */
 public interface IThermalHandler extends ICoord
 {
 	/**
@@ -12,7 +18,7 @@ public interface IThermalHandler extends ICoord
 	 * @return
 	 */
 	boolean canConnectTo(Direction direction);
-
+	
 	/**
 	 * This method is only get machine delta temperature.
 	 * DO NOT GET WORLD TEMPERATURE IN THIS METHOD!
@@ -20,7 +26,7 @@ public interface IThermalHandler extends ICoord
 	 * @return
 	 */
 	float getTemperatureDifference(Direction direction);
-
+	
 	/**
 	 * An basic constant of heat conduct. Called by thermal net.<br>
 	 * Use P = dT * k.<br>

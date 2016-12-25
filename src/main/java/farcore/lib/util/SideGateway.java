@@ -11,8 +11,8 @@ public final class SideGateway<T>
 	{
 		try
 		{
-			serverInstance = (T) Class.forName(serverClass).newInstance();
-			clientInstance = Sides.isSimulating() ? (T) Class.forName(clientClass).newInstance() : serverInstance;
+			this.serverInstance = (T) Class.forName(serverClass).newInstance();
+			this.clientInstance = Sides.isSimulating() ? (T) Class.forName(clientClass).newInstance() : this.serverInstance;
 		}
 		catch (Exception exception)
 		{
@@ -22,9 +22,6 @@ public final class SideGateway<T>
 	
 	public T get()
 	{
-		if (Sides.isSimulating())
-			return clientInstance;
-		else
-			return serverInstance;
+		return Sides.isSimulating() ? this.clientInstance : this.serverInstance;
 	}
 }

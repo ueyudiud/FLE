@@ -12,7 +12,7 @@ import farcore.data.MC;
 import farcore.lib.item.ItemSubEdible;
 import farcore.lib.item.behavior.FoodStatBase;
 import farcore.lib.item.behavior.IFoodStat;
-import farcore.lib.model.item.FarCoreItemModelLoader;
+import farcore.lib.model.item.unused.FarCoreItemModelLoader;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -27,7 +27,7 @@ public class ItemSubCropRelated extends ItemSubEdible
 {
 	public ItemSubCropRelated()
 	{
-		super(FarCore.ID, "crop.related");
+		super(FarCore.ID, "crop_related");
 		initalize();
 		EnumItem.crop_related.set(this);
 	}
@@ -75,7 +75,7 @@ public class ItemSubCropRelated extends ItemSubEdible
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FarCore.ID, "group/crop.related"));
+		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FarCore.ID, "group/crop_related"));
 		FarCoreItemModelLoader.registerMultiIconProvider(getRegistryName(), this.idMap.keySet(), key -> new ResourceLocation(FarCore.ID, "items/group/crop_related/" + key));
 		FarCoreItemModelLoader.registerSubmetaProvider(getRegistryName(), this.nameMap, this);
 	}

@@ -47,6 +47,11 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
+/**
+ * The class transformer.
+ * @author ueyudiud
+ *
+ */
 public class ClassTransformerModifyMethod implements IClassTransformer
 {
 	private static final DecimalFormat FORMAT = new DecimalFormat("000");

@@ -1,4 +1,0 @@
-{
-	"include": "[farcore:group/chip",
-	"layers": "~farcore:material"
-}

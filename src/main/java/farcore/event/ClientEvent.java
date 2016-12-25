@@ -7,10 +7,16 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * For some custom render.<br>
+ * Posted in {@link MinecraftForge#EVENT_BUS}
+ * @author ueyudiud
+ */
 @SideOnly(Side.CLIENT)
 public class ClientEvent extends Event
 {
@@ -24,17 +30,17 @@ public class ClientEvent extends Event
 		
 		public void bindTexture(ResourceLocation location)
 		{
-			manager.renderEngine.bindTexture(location);
+			this.manager.renderEngine.bindTexture(location);
 		}
 		
 		public VertexBuffer vertexBuffer()
 		{
-			return tessellator.getBuffer();
+			return this.tessellator.getBuffer();
 		}
-
+		
 		public void draw()
 		{
-			tessellator.draw();
+			this.tessellator.draw();
 		}
 	}
 	
@@ -44,32 +50,32 @@ public class ClientEvent extends Event
 	{
 		private float partialTicks;
 		private EntityProjectileItem projectileItem;
-
+		
 		public EntityProjectileItemRenderEvent(EntityProjectileItem item, RenderManager manager, float partialTicks)
 		{
 			this.partialTicks = partialTicks;
-			projectileItem = item;
+			this.projectileItem = item;
 			this.manager = manager;
 		}
 		
 		public EntityProjectileItem getProjectileItem()
 		{
-			return projectileItem;
+			return this.projectileItem;
 		}
 		
 		public ItemStack getStack()
 		{
-			return projectileItem.currentItem;
+			return this.projectileItem.currentItem;
 		}
 		
 		public float yaw()
 		{
-			return projectileItem.prevRotationYaw + (projectileItem.rotationYaw - projectileItem.prevRotationYaw) * partialTicks;
+			return this.projectileItem.prevRotationYaw + (this.projectileItem.rotationYaw - this.projectileItem.prevRotationYaw) * this.partialTicks;
 		}
 		
 		public float pitch()
 		{
-			return projectileItem.prevRotationPitch + (projectileItem.rotationPitch - projectileItem.prevRotationPitch) * partialTicks;
+			return this.projectileItem.prevRotationPitch + (this.projectileItem.rotationPitch - this.projectileItem.prevRotationPitch) * this.partialTicks;
 		}
 	}
 }

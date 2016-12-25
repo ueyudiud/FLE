@@ -21,6 +21,11 @@ import farcore.lib.util.Log;
 import farcore.lib.util.SubTag;
 import net.minecraft.block.material.Material;
 
+/**
+ * Material set.
+ * @author ueyudiud
+ *
+ */
 public class M
 {
 	//Rocks
@@ -127,7 +132,7 @@ public class M
 		
 		wheat		.setCrop(new CropTemplate(wheat, 8, 800).setMultiplicationProp(6, 5, 2).setDNAHelper(DNAs.get('w'), DNAs.GRAIN_III, DNAs.GROWTH_II, DNAs.GRAIN_II, DNAs.get('w'), DNAs.GROWTH_IV));
 		millet		.setCrop(new CropMillet(millet));
-		soybean		.setCrop(new CropTemplate(soybean, 7, 1600).setMultiplicationProp(5, 5, 2).setDNAHelper());
+		soybean		.setCrop(new CropTemplate(soybean, 7, 1600).setMultiplicationProp(5, 5, 2).setDNAHelper(DNAs.get('p')));
 		potato		.setCrop(new CropTemplate(potato, 7, 1300).setDNAHelper());
 		sweet_potato.setCrop(new CropTemplate(sweet_potato, 6, 1500).setDNAHelper());
 		cabbage		.setCrop(new CropCabbage(cabbage));

@@ -1,22 +1,10 @@
 package fargen.core.worldgen.surface;
 
-import farcore.lib.world.IWorldPropProvider;
-import farcore.lib.world.WorldPropHandler;
 import fargen.core.FarGen;
-import fargen.core.biome.BiomeBase;
-import fargen.core.render.RenderWeatherSurface;
-import fargen.core.worldgen.FarWorldType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,19 +14,19 @@ public class FarSurfaceProvider extends WorldProvider
 	public FarSurfaceProvider()
 	{
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getWeatherRenderer()
 	{
 		IRenderHandler handler = super.getWeatherRenderer();
-		if(handler == null)
-		{
-			setWeatherRenderer(handler = new RenderWeatherSurface());
-		}
+		//		if(handler == null)
+		//		{
+		//			setWeatherRenderer(handler = new RenderWeatherSurface());
+		//		}
 		return handler;
 	}
-
+	
 	@Override
 	public DimensionType getDimensionType()
 	{
@@ -52,7 +40,7 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public boolean canDropChunk(int x, int z)
 	{
-		return !worldObj.isSpawnChunk(x, z) || !worldObj.provider.getDimensionType().shouldLoadSpawn();
+		return !this.worldObj.isSpawnChunk(x, z) || !this.worldObj.provider.getDimensionType().shouldLoadSpawn();
 	}
 	
 	/**
@@ -61,10 +49,10 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public boolean canBlockFreeze(BlockPos pos, boolean byWater)
 	{
-		if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
-				worldObj.getWorldType() != FarWorldType.FLAT &&
-				worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
-			return super.canBlockFreeze(pos, byWater);
+		//		if(this.worldObj.getWorldType() != FarWorldType.DEFAULT &&
+		//				this.worldObj.getWorldType() != FarWorldType.FLAT &&
+		//				this.worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+		return super.canBlockFreeze(pos, byWater);
 		//		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldObj);
 		//		float temp = properties.getTemperature(worldObj, pos);
 		//		if (temp > BiomeBase.minSnowTemperature)
@@ -87,9 +75,9 @@ public class FarSurfaceProvider extends WorldProvider
 		//			}
 		//			return false;
 		//		}
-		return false;
+		//		return false;
 	}
-
+	
 	/**
 	 *
 	 * @param pos
@@ -100,60 +88,61 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public boolean canSnowAt(BlockPos pos, boolean checkLightAndSnow)
 	{
-		if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
-				worldObj.getWorldType() != FarWorldType.FLAT &&
-				worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
-			return super.canSnowAt(pos, checkLightAndSnow);
-		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldObj);
-		float temp = properties.getTemperature(worldObj, pos);
-
-		if (temp > BiomeBase.minSnowTemperature)
-			return false;
-		else if (!checkLightAndSnow)
-			return true;
-		else
-		{
-			if (pos.getY() >= 0 && pos.getY() < 256 && worldObj.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
-			{
-				IBlockState state = worldObj.getBlockState(pos);
-				if (state.getBlock().isAir(state, worldObj, pos) &&
-						Blocks.SNOW_LAYER.canPlaceBlockAt(worldObj, pos))
-					return true;
-			}
-			return false;
-		}
+		//		if(this.worldObj.getWorldType() != FarWorldType.DEFAULT &&
+		//				this.worldObj.getWorldType() != FarWorldType.FLAT &&
+		//				this.worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+		return super.canSnowAt(pos, checkLightAndSnow);
+		//		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(this.worldObj);
+		//		float temp = properties.getTemperature(this.worldObj, pos);
+		//
+		//		if (temp > BiomeBase.minSnowTemperature)
+		//			return false;
+		//		else if (!checkLightAndSnow)
+		//			return true;
+		//		else
+		//		{
+		//			if (pos.getY() >= 0 && pos.getY() < 256 && this.worldObj.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
+		//			{
+		//				IBlockState state = this.worldObj.getBlockState(pos);
+		//				if (state.getBlock().isAir(state, this.worldObj, pos) &&
+		//						Blocks.SNOW_LAYER.canPlaceBlockAt(this.worldObj, pos))
+		//					return true;
+		//			}
+		//			return false;
+		//		}
 	}
-
+	
 	@Override
 	public Biome getBiomeForCoords(BlockPos pos)
 	{
-		if (worldObj.isBlockLoaded(pos))
-		{
-			if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
-					worldObj.getWorldType() != FarWorldType.FLAT &&
-					worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
-				return super.getBiomeForCoords(pos);
-			Chunk chunk = worldObj.getChunkFromBlockCoords(pos);
-			try
-			{
-				int i = pos.getX() & 15;
-				int j = pos.getZ() & 15;
-				int id = chunk.getBiomeArray()[j << 4 | i] & 0xFF;
-				if(id == 255)
-				{
-					id = chunk.getBiomeArray()[j << 4 | i] = (byte) ((BiomeBase) getBiomeProvider().getBiomeGenerator(pos, BiomeBase.DEBUG)).biomeID;
-				}
-				return BiomeBase.getBiomeFromID(id);
-			}
-			catch (Throwable throwable)
-			{
-				CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting biome");
-				CrashReportCategory crashreportcategory = crashreport.makeCategory("Coordinates of biome request");
-				crashreportcategory.setDetail("Location", () -> CrashReportCategory.getCoordinateInfo(pos));
-				throw new ReportedException(crashreport);
-			}
-		}
-		else
-			return getBiomeProvider().getBiomeGenerator(pos, BiomeBase.DEBUG);
+		//		if (worldObj.isBlockLoaded(pos))
+		//		{
+		//			if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
+		//					worldObj.getWorldType() != FarWorldType.FLAT &&
+		//					worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+		//				return super.getBiomeForCoords(pos);
+		//			Chunk chunk = worldObj.getChunkFromBlockCoords(pos);
+		//			try
+		//			{
+		//				int i = pos.getX() & 15;
+		//				int j = pos.getZ() & 15;
+		//				int id = chunk.getBiomeArray()[j << 4 | i] & 0xFF;
+		//				if(id == 255)
+		//				{
+		//					id = chunk.getBiomeArray()[j << 4 | i] = (byte) ((BiomeBase) getBiomeProvider().getBiomeGenerator(pos, BiomeBase.DEBUG)).biomeID;
+		//				}
+		//				return BiomeBase.getBiomeFromID(id);
+		//			}
+		//			catch (Throwable throwable)
+		//			{
+		//				CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting biome");
+		//				CrashReportCategory crashreportcategory = crashreport.makeCategory("Coordinates of biome request");
+		//				crashreportcategory.setDetail("Location", () -> CrashReportCategory.getCoordinateInfo(pos));
+		//				throw new ReportedException(crashreport);
+		//			}
+		//		}
+		//		else
+		//		return getBiomeProvider().getBiomeGenerator(pos, BiomeBase.DEBUG);
+		return super.getBiomeForCoords(pos);
 	}
 }

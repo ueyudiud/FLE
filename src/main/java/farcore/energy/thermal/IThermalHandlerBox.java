@@ -4,10 +4,17 @@ import farcore.lib.util.Direction;
 import farcore.lib.world.IWorldSubContainer;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * The thermal handler box.
+ * For a structure in local world, used by greenhouse, blast furnace nearby, etc.
+ * For an area temperature control.
+ * @author ueyudiud
+ *
+ */
 public interface IThermalHandlerBox extends IWorldSubContainer
 {
 	float getTemperature(BlockPos pos);
-
+	
 	/**
 	 * Called when heat change.
 	 * @param source

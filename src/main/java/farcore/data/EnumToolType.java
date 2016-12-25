@@ -9,6 +9,12 @@ import com.google.common.collect.ImmutableSet;
 import farcore.lib.stack.OreStack;
 import net.minecraft.item.ItemStack;
 
+/**
+ * The tool type.<br>
+ * For most type of tool.
+ * @author ueyudiud
+ *
+ */
 public enum EnumToolType
 {
 	hand("Hand"),//The player hand current, do not register tool with this.
@@ -45,7 +51,7 @@ public enum EnumToolType
 	dagger("Dagger"),
 	dart("Dart"),
 	sword("Sword"),
-
+	
 	whip("Whip"),
 	
 	needle("Needle"),
@@ -69,7 +75,7 @@ public enum EnumToolType
 	
 	stock_pot("StockPot"),
 	frying_pan("FryingPan"),
-
+	
 	screw_driver("ScrewDriver");
 	
 	public static final List<EnumToolType> HAND_USABLE_TOOL = ImmutableList.of(hand);
@@ -80,19 +86,32 @@ public enum EnumToolType
 	
 	EnumToolType(String name)
 	{
-		stack = new OreStack(this.name = ("craftingTool" + name));
+		this.stack = new OreStack(this.name = ("craftingTool" + name));
 	}
 	
+	/**
+	 * Create standard tool stack for uses.
+	 * @return
+	 */
 	public OreStack stack()
 	{
-		return stack;
+		return this.stack;
 	}
 	
+	/**
+	 * Get ore name.
+	 * @return
+	 */
 	public String ore()
 	{
-		return name;
+		return this.name;
 	}
 	
+	/**
+	 * Match the stack is tool.
+	 * @param stack The matched stack.
+	 * @return
+	 */
 	public boolean match(ItemStack stack)
 	{
 		return stack != null && stack().similar(stack);
@@ -100,11 +119,16 @@ public enum EnumToolType
 	
 	public Set<String> getToolClasses()
 	{
-		return toolClass;
+		return this.toolClass;
 	}
 	
+	/**
+	 * Match is tool class.
+	 * @param tool The matched tool type.
+	 * @return
+	 */
 	public boolean isToolClass(String tool)
 	{
-		return toolClass.contains(tool);
+		return this.toolClass.contains(tool);
 	}
 }

@@ -19,6 +19,11 @@ import farcore.lib.util.EnumModifyFlag;
 import farcore.lib.util.Log;
 import net.minecraft.world.World;
 
+/**
+ * The electrical net.
+ * @author ueyudiud
+ *
+ */
 public class ElectricNet implements IEnergyNet
 {
 	public static final ElectricNet instance = new ElectricNet();
@@ -29,7 +34,7 @@ public class ElectricNet implements IEnergyNet
 	{
 		getNet(world, false).updateNet();
 	}
-
+	
 	@Override
 	public void add(Object tile)
 	{
@@ -38,7 +43,7 @@ public class ElectricNet implements IEnergyNet
 			getNet(((IACHandler) tile).world(), false).add((IACHandler) tile);
 		}
 	}
-
+	
 	@Override
 	public void remove(Object tile)
 	{
@@ -56,7 +61,7 @@ public class ElectricNet implements IEnergyNet
 			getNet(((IACHandler) tile).world(), false).mark((IACHandler) tile);
 		}
 	}
-
+	
 	@Override
 	public void reload(Object tile)
 	{
@@ -65,13 +70,13 @@ public class ElectricNet implements IEnergyNet
 			getNet(((IACHandler) tile).world(), false).reload((IACHandler) tile);
 		}
 	}
-
+	
 	@Override
 	public void unload(World world)
 	{
 		netMap.remove(world.provider.getDimension());
 	}
-
+	
 	@Override
 	public void load(World world)
 	{
@@ -94,7 +99,7 @@ public class ElectricNet implements IEnergyNet
 		private static final Local instance = new Local(null);
 		
 		private volatile boolean isUpdating = false;
-
+		
 		private boolean coefficientChanged = false;
 		private boolean structureChanged = false;
 		
@@ -111,12 +116,12 @@ public class ElectricNet implements IEnergyNet
 		{
 			this.world = world;
 		}
-
+		
 		public void add(IACHandler tile)
 		{
-			if(isUpdating)
+			if(this.isUpdating)
 			{
-				cacheChangedList.put(tile, EnumModifyFlag.add);
+				this.cacheChangedList.put(tile, EnumModifyFlag.add);
 			}
 			else
 			{
@@ -126,16 +131,16 @@ public class ElectricNet implements IEnergyNet
 		
 		private void addUnsafe(IACHandler tile)
 		{
-			list.add(tile);
-			routes.addHandler(tile);
-			structureChanged = true;
+			this.list.add(tile);
+			this.routes.addHandler(tile);
+			this.structureChanged = true;
 		}
-
+		
 		public void remove(IACHandler tile)
 		{
-			if(isUpdating)
+			if(this.isUpdating)
 			{
-				cacheChangedList.put(tile, EnumModifyFlag.remove);
+				this.cacheChangedList.put(tile, EnumModifyFlag.remove);
 			}
 			else
 			{
@@ -145,11 +150,11 @@ public class ElectricNet implements IEnergyNet
 		
 		private void removeUnsafe(IACHandler tile)
 		{
-			list.remove(tile);
-			routes.removeHandler(tile);
-			structureChanged = true;
+			this.list.remove(tile);
+			this.routes.removeHandler(tile);
+			this.structureChanged = true;
 		}
-
+		
 		@Override
 		public void reload(IElectricalHandler tile)
 		{
@@ -158,12 +163,12 @@ public class ElectricNet implements IEnergyNet
 				reload((IACHandler) tile);
 			}
 		}
-
+		
 		public void reload(IACHandler tile)
 		{
-			if(isUpdating)
+			if(this.isUpdating)
 			{
-				cacheChangedList.put(tile, EnumModifyFlag.reload);
+				this.cacheChangedList.put(tile, EnumModifyFlag.reload);
 			}
 			else
 			{
@@ -171,23 +176,23 @@ public class ElectricNet implements IEnergyNet
 				addUnsafe(tile);
 			}
 		}
-
+		
 		public void updateNet()
 		{
-			if(world == null) return;
-			if(structureChanged)
+			if(this.world == null) return;
+			if(this.structureChanged)
 			{
 				refind();
 			}
-			else if(coefficientChanged)
+			else if(this.coefficientChanged)
 			{
 				recalculate();
 			}
-			structureChanged = coefficientChanged = false;
-			isUpdating = true;
+			this.structureChanged = this.coefficientChanged = false;
+			this.isUpdating = true;
 			try
 			{
-				routes.onUpdate(voltageCache);
+				this.routes.onUpdate(this.voltageCache);
 			}
 			catch(Exception exception)
 			{
@@ -196,7 +201,7 @@ public class ElectricNet implements IEnergyNet
 					Log.error("Fail to update energy net.", exception);
 				}
 			}
-			for(Entry<IACHandler, EnumModifyFlag> entry : cacheChangedList.entrySet())
+			for(Entry<IACHandler, EnumModifyFlag> entry : this.cacheChangedList.entrySet())
 			{
 				switch(entry.getValue())
 				{
@@ -209,23 +214,23 @@ public class ElectricNet implements IEnergyNet
 					addUnsafe(entry.getKey());
 					break;
 				case mark :
-					coefficientChanged = true;
+					this.coefficientChanged = true;
 					break;
 				}
 			}
-			cacheChangedList.clear();
-			isUpdating = false;
+			this.cacheChangedList.clear();
+			this.isUpdating = false;
 		}
 		
 		private void refind()
 		{
 			//Initialize routes.
-			routes.rebuildNodes();
+			this.routes.rebuildNodes();
 			//Initialize resolver and size.
-			List<NodeRebuild> list = routes.rebuildNodes;
+			List<NodeRebuild> list = this.routes.rebuildNodes;
 			int size = list.size();
 			if(size <= 1) return;//If only has one electrical element, will not calculate.
-			resolver.rewind(size);
+			this.resolver.rewind(size);
 			double[] I = new double[size];
 			
 			//Get all coefficients of matrix.
@@ -236,45 +241,45 @@ public class ElectricNet implements IEnergyNet
 				I[y] = getBasicCurrent(links, node);
 				for(int x = 0; x < size; ++x)
 				{
-					resolver.push(getCoefficient(list, links, x, y));
+					this.resolver.push(getCoefficient(list, links, x, y));
 				}
-				resolver.enter();
+				this.resolver.enter();
 			}
-			resolver.finalized();
+			this.resolver.finalized();
 			//Solve equations.
-			if(!resolver.solve(I)) throw new RuntimeException("Invalid solving!");
+			if(!this.resolver.solve(I)) throw new RuntimeException("Invalid solving!");
 			//Set voltage cache to each node.
-			voltageCache.clear();
+			this.voltageCache.clear();
 			for(int i = 0; i < size; ++i)
 			{
-				voltageCache.add(i, I[i]);
+				this.voltageCache.add(i, I[i]);
 			}
-			routes.resetChanging();
+			this.routes.resetChanging();
 		}
 		
 		private void recalculate()
 		{
-			List<NodeReal> changedNodes = routes.getChangedNodes();
+			List<NodeReal> changedNodes = this.routes.getChangedNodes();
 			//As I am thinking how to recalculate with changed coefficient.
 			//Now just use refind instead.
 			refind();
 		}
-
+		
 		public void mark(IACHandler tile)
 		{
-			if(isUpdating)
+			if(this.isUpdating)
 			{
-				cacheChangedList.put(tile, EnumModifyFlag.mark);
+				this.cacheChangedList.put(tile, EnumModifyFlag.mark);
 			}
 			else
 			{
 				markUnsafe(tile);
 			}
 		}
-
+		
 		private void markUnsafe(IACHandler tile)
 		{
-			coefficientChanged = true;
+			this.coefficientChanged = true;
 		}
 		
 		/**
@@ -306,7 +311,7 @@ public class ElectricNet implements IEnergyNet
 			}
 			return ret;
 		}
-
+		
 		/**
 		 *  The equation used Kirchhoff laws, the independent variable is
 		 *  each node voltage.<br>

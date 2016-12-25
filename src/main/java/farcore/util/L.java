@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ObjectArrays;
+import com.google.common.collect.Table;
 
 import farcore.lib.util.IDataChecker;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -139,6 +140,11 @@ public class L
 		T[] result = ObjectArrays.newArray(elementClass, array.length);
 		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
 		return result;
+	}
+	
+	public static <E> void executeAll(Iterable<E> iterable, Executable<E> executable)
+	{
+		for(E element : iterable) executable.execute(element);
 	}
 	
 	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, Function<? super K, ? extends V> function)
@@ -331,5 +337,12 @@ public class L
 	public static int nextInt(int bound, Random rand)
 	{
 		return bound <= 0 ? bound : rand.nextInt(bound);
+	}
+	
+	@SuppressWarnings("hiding")
+	public static <R, C, V> V getOrDefault(Table<R, C, V> table, R rowKey,
+			C columnKey, V defaultValue)
+	{
+		return table.contains(rowKey, columnKey) ? table.get(rowKey, columnKey) : defaultValue;
 	}
 }

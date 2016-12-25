@@ -36,20 +36,20 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		else
 			return Mat.VOID;
 	}
-
+	
 	public final MatCondition condition;
 	protected boolean enableChemicalFormula = true;
 	
 	public ItemMulti(MatCondition mc)
 	{
 		this(FarCore.ID, mc);
-		hasSubtypes = true;
+		this.hasSubtypes = true;
 	}
 	public ItemMulti(String modid, MatCondition mc)
 	{
 		super(modid, "multi." + mc.name);
-		condition = mc;
-		hasSubtypes = true;
+		this.condition = mc;
+		this.hasSubtypes = true;
 	}
 	
 	/**
@@ -66,27 +66,27 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public void postInitalizedItems()
 	{
-		for(Mat material : Mat.filt(condition))
+		for(Mat material : Mat.filt(this.condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
-			LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
-			condition.registerOre(material, templete);
+			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
+			this.condition.registerOre(material, templete);
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(modid, "group/" + condition.name));
+		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(this.modid, "group/" + this.condition.name));
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(condition))
+		for(Mat material : Mat.filt(this.condition))
 		{
 			subItems.add(new ItemStack(itemIn, 1, material.id));
 		}
@@ -96,7 +96,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		return Mat.material(getBaseDamage(stack));
 	}
-
+	
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
@@ -116,7 +116,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 				return;
 		}
 	}
-
+	
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
@@ -137,14 +137,14 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		}
 		return false;
 	}
-
+	
 	@Override
 	public ItemStack updateItem(IEnvironment environment, ItemStack stack)
 	{
 		Mat material = getMaterialFromItem(stack);
 		if(material.itemProp != null)
 		{
-			stack = material.itemProp.updateItem(stack, material, condition, environment);
+			stack = material.itemProp.updateItem(stack, material, this.condition, environment);
 		}
 		return stack;
 	}
@@ -152,25 +152,25 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public int getItemStackLimit(ItemStack stack)
 	{
-		return condition.stackLimit;
+		return this.condition.stackLimit;
 	}
-
+	
 	@Override
 	public int getStackMetaOffset(ItemStack stack)
 	{
 		Mat material = getMaterialFromItem(stack);
 		if(material != null && material.itemProp != null)
-			return material.itemProp.getMetaOffset(stack, material, condition);
+			return material.itemProp.getMetaOffset(stack, material, this.condition);
 		return 0;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
-		if(enableChemicalFormula)
+		if(this.enableChemicalFormula)
 		{
 			unlocalizedList.addNotNull("info.material.chemical.formula." + getMaterialFromItem(stack));
 		}
@@ -178,7 +178,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		Mat material = getMaterialFromItem(stack);
 		if(material.itemProp != null)
 		{
-			material.itemProp.addInformation(stack, material, condition, unlocalizedList);
+			material.itemProp.addInformation(stack, material, this.condition, unlocalizedList);
 		}
 	}
 	
@@ -189,7 +189,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		Mat material = getMaterialFromItem(stack);
 		if(material.itemProp != null)
 		{
-			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, condition);
+			material.itemProp.setInstanceFromMeta(stack, damage >> 15, material, this.condition);
 		}
 	}
 }

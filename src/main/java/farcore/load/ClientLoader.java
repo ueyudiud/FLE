@@ -34,9 +34,9 @@ public class ClientLoader extends CommonLoader
 		//Register client side handler.
 		MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 		MinecraftForge.EVENT_BUS.register(new FarCoreTextureHandler());
-
+		
 		FarCoreTextureHandler.addIconLoader(new MaterialTextureLoader());
-
+		
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
 		//Register entity rendering handlers.
 		RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);
@@ -45,6 +45,6 @@ public class ClientLoader extends CommonLoader
 		//The base item model loader.
 		ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.INSTANCE);
 		//The custom block model loaders.
-		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.instance);
+		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.INSTANCE);
 	}
 }

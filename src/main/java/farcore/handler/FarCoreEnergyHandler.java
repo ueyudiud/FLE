@@ -25,9 +25,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class FarCoreEnergyHandler implements IEventExceptionHandler
 {
 	private static final FarCoreEnergyHandler HANDLER = new FarCoreEnergyHandler();
+	/**
+	 * The bus handle energy net updating and handler in net refreshing.
+	 */
 	public static final EventBus BUS = new EventBus(HANDLER);
 	private static final List<IEnergyNet> energyNets = new ArrayList();
-
+	
 	static
 	{
 		BUS.register(HANDLER);
@@ -37,7 +40,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 	{
 		return HANDLER;
 	}
-
+	
 	public static void addNet(IEnergyNet net)
 	{
 		energyNets.add(net);
@@ -65,7 +68,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 	}
 	
 	private FarCoreEnergyHandler() {}
-
+	
 	@SubscribeEvent
 	public void add(EnergyEvent.Add event)
 	{
@@ -219,7 +222,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 			}
 		}
 	}
-
+	
 	@Override
 	public void handleException(EventBus bus, Event event, IEventListener[] listeners, int index, Throwable throwable)
 	{

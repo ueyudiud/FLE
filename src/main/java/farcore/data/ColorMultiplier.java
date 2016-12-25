@@ -18,6 +18,11 @@ import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The color applying function.
+ * @author ueyudiud
+ *
+ */
 @SideOnly(Side.CLIENT)
 public class ColorMultiplier
 {
@@ -45,7 +50,7 @@ public class ColorMultiplier
 		Block block = Block.getBlockFromItem(stack.getItem());
 		return Minecraft.getMinecraft().getBlockColors().colorMultiplier(block.getStateFromMeta(stack.getMetadata()), null, null, tintIndex);
 	};
-
+	
 	public static final IBlockColor SOIL_COLOR = (IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) ->
 	{
 		if(tintIndex != 0) return 0xFFFFFFFF;
@@ -67,7 +72,7 @@ public class ColorMultiplier
 		default : return 0xFFFFFFFF;
 		}
 	};
-
+	
 	public static final IBlockColor BIOME_COLOR =
 			(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) ->
 	{

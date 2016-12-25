@@ -1,11 +1,16 @@
 package farcore.energy.electric;
 
+/**
+ * The electrical node.
+ * @author ueyudiud
+ *
+ */
 public interface IElectricalNode
 {
 	void onUpdate(double voltage, double current);
 	
 	int getIndex();
-
+	
 	/**
 	 * Get handler inner link.
 	 * Use in each electrical handler to get
@@ -13,7 +18,7 @@ public interface IElectricalNode
 	 * @return
 	 */
 	int[] link();
-
+	
 	/**
 	 * The element which has voltage is usually
 	 * as battery (And also suggested with inner

@@ -1,48 +1,34 @@
+/*
+ * copyright© 2016 ueyudiud
+ */
+
 package farcore.lib.model.item;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Function;
-
-import javax.script.ScriptException;
-
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
+import java.util.function.ToIntFunction;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 import farcore.FarCore;
-import farcore.data.Config;
-import farcore.lib.item.ItemBase;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemFluidDisplay;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.model.item.FarCoreItemSubmetaGetterLoader.SubmetaGetter;
+import farcore.lib.model.item.unused.FarCoreSubMetaGetterLoader;
 import farcore.lib.util.Log;
-import farcore.util.L;
+import farcore.util.IO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -51,7 +37,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fluids.Fluid;
@@ -66,633 +51,138 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Far Core Item Model Loader, provide more flexible
  * model loader for creator, make more convenient model
- * file writing rules for resource pack maker.
+ * file writing rules for resource pack maker.<p>
+ * 
+ * The Far Core model use layer for cover, every layer is
+ * independent from other layers. You can set different
+ * texture selector, color multiplier, etc for each layer.
+ * This is like icon get in the item class before 1.7.10.<p>
+ * 
+ * The texture selector can use JavaScript to write down,
+ * but player need add <code>nashorn</code> by manual for it
+ * might not included in runtime environment. (I don't exactly
+ * know about this.)
+ * The model loader also support to register a hard-coded
+ * selector, here are some instance register in loader.<p>
+ * 
+ * The color multiplier is use to get different color by data
+ * current in item stacks. It will take effects by <code>IItemColor</code>.<p>
+ * 
+ * This loader also access to load model layer with covert icon.
+ * (Like layer of dyn-bucket model added by Forge)<p>
+ * 
  * @author ueyudiud
- * @version 1.4
+ * @version 1.5
  */
 @SideOnly(Side.CLIENT)
 public enum FarCoreItemModelLoader implements ICustomModelLoader
 {
+	/**
+	 * The loader instance.
+	 */
 	INSTANCE;
 	
+	/**
+	 * The default variant or key for model,
+	 * use to load model with only single meta or model is missing
+	 * a texture set.<br>
+	 */
 	public static final String NORMAL = "";
+	/**
+	 * The particle key for model, use to get particle location.<br>
+	 */
 	public static final String PARTICLE = "particle";
-	public static final Function<ItemStack, String> NORMAL_FUNCTION = stack -> NORMAL;
-	public static final Function<ItemStack, Integer> NORMAL_MULTIPLIER = stack -> 0xFFFFFFFF;
+	/**
+	 * The default color (RGBa) in model quad.<br>
+	 */
+	public static final int NORMAL_COLOR = 0xFFFFFFFF;
+	/**
+	 * The normal texture key get function, return default key as result.<br>
+	 * The target model layer is suggested only contain single texture.
+	 */
+	public static final SubmetaGetter NORMAL_FUNCTION = stack -> NORMAL;
+	/**
+	 * The normal color get function used to get color multiple, it will return default color.
+	 */
+	public static final ToIntFunction<ItemStack> NORMAL_MULTIPLIER = stack -> NORMAL_COLOR;
+	/**
+	 * The cached access loaded item map (Item load by FarCoreItemModelLoader -> ResourceLocation of model)).
+	 */
+	private static final Map<Item, ResourceLocation> ACCEPT_ITEMS = new HashMap();
+	private static final Map<ResourceLocation, Item> MODELLOCATION_TO_ITEM = new HashMap();
+	private static Map<Item, FarCoreItemModelCache> cache;
 	
-	private static final Map<ResourceLocation, Function<ItemStack, Integer>> colorMultipliers = new HashMap();
-	private static final Map<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> multiIconLoaders = new HashMap();
-	private static final Map<ResourceLocation, Function<ItemStack, String>> submetaProviders = new HashMap();
-	
-	public static final JsonDeserializer<IMultiTextureCollection> TEXTURE_GETTER_DESERIALIZER =
-			(JsonElement json, Type typeOfT, JsonDeserializationContext context) ->
-	{
-		if (!json.isJsonObject())
-			throw new JsonParseException("The json should be an object!");
-		JsonObject object = json.getAsJsonObject();
-		if (object.has("parent"))
-		{
-			FarCoreMultiTextureModifier function = new FarCoreMultiTextureModifier(INSTANCE.loadTextures(new ResourceLocation(object.get("parent").getAsString())));
-			if (object.has("domain"))
-			{
-				function.setDomain(object.get("domain").getAsString());
-			}
-			if (object.has("prefix"))
-			{
-				function.setPrefix(object.get("prefix").getAsString());
-			}
-			if (object.has("postfix"))
-			{
-				function.setPostfix(object.get("postfix").getAsString());
-			}
-			return function;
-		}
-		else
-		{
-			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
-			for (Entry<String, JsonElement> entry : object.entrySet())
-			{
-				builder.put(entry.getKey(), new ResourceLocation(entry.getValue().getAsString()));
-			}
-			return new FarCoreMultiTextureGetter(builder.build());
-		}
-	};
-	public static final JsonDeserializer<UnbakedModelLayer> MODEL_LAYER_DESERIALIZER =
-			(JsonElement json, Type typeOfT, JsonDeserializationContext context) ->
-	{
-		UnbakedModelLayer layer = new UnbakedModelLayer();
-		if (json.isJsonObject())
-		{
-			JsonObject object = json.getAsJsonObject();
-			if (object.has("converts"))
-			{
-				String value = object.get("converts").getAsString();
-				switch (value.charAt(0))
-				{
-				case '#':
-					layer.converts = value.substring(1);
-					break;
-				default:
-					layer.convertLocation = new ResourceLocation(value);
-					break;
-				}
-				layer.renderFull3D = false;//Use covert will force to disable render full 3D option.
-			}
-			else if (object.has("renderFull3D"))
-			{
-				layer.renderFull3D = object.get("renderFull3D").getAsBoolean();
-			}
-			if (object.has("zLevel"))
-			{
-				layer.zOffset = object.get("zLevel").getAsFloat();
-			}
-			if (object.has("color"))
-			{
-				layer.baseColor = object.get("color").getAsInt();
-			}
-			if (object.has("textures"))
-			{
-				JsonElement json1 = object.get("textures");
-				if (json1.isJsonArray())
-				{
-					JsonArray array = json1.getAsJsonArray();
-					for (JsonElement json2 : array)
-					{
-						layer.allowedTextures.add(json2.getAsString());
-					}
-				}
-				else if (json1.isJsonObject())
-				{
-					JsonObject object1 = json1.getAsJsonObject();
-					for (Entry<String, JsonElement> entry : object1.entrySet())
-					{
-						String key = entry.getKey();
-						switch (key.charAt(0))
-						{
-						case '#' :
-							layer.allowedTextures.add(key.substring(1));
-							break;
-						case '[' :
-							layer.allowedTextures.add(key);
-							break;
-						default:
-							layer.locations.put(key, new ResourceLocation(entry.getValue().getAsString()));
-							break;
-						}
-					}
-				}
-				else throw new JsonParseException("The 'textures' must be an array or object, use single texture please use 'texture' for key.");
-			}
-			else if (object.has("texture"))
-			{
-				String key = object.get("texture").getAsString();
-				switch (key.charAt(0))
-				{
-				case '#' :
-					layer.allowedTextures.add(key.substring(1));
-					break;
-				case '[' :
-					layer.allowedTextures.add(key);
-					break;
-				default:
-					layer.locations.put(NORMAL, new ResourceLocation(key));
-					break;
-				}
-			}
-			else
-			{
-				layer.allowedTextures = null;//Get all textures if no selected.
-			}
-			if (object.has("submeta"))
-			{
-				layer.function = INSTANCE.loadSubmetaGetter(object.get("submeta"));
-			}
-			if (object.has("colorMultiplier"))
-			{
-				layer.colorMultiplier = INSTANCE.loadColorMultiplier(new ResourceLocation(object.get("colorMultiplier").getAsString()));
-			}
-		}
-		else if (json.isJsonArray())
-			throw new JsonParseException("The json can not be an array.");
-		else
-		{
-			String locate = json.getAsString();
-			char chr = locate.charAt(0);
-			switch (chr)
-			{
-			case '#' :
-				layer.allowedTextures.add(locate.substring(1));
-				break;
-			case '[' :
-				layer.allowedTextures.add(locate);
-				break;
-			case '~' ://Multi texture selector, only use in single locate.
-				layer.allowedTextures = null;//Mark for include all textures.
-				layer.function = INSTANCE.loadSubmetaGetter(new ResourceLocation(locate.substring(1)));
-				break;
-			default:
-				layer.locations.put(NORMAL, new ResourceLocation(locate));
-				break;
-			}
-		}
-		return layer;
-	};
-	public static final JsonDeserializer<ItemModelCache> ITEM_MODEL_CACHE_DESERIALIZER =
-			(JsonElement json, Type typeOfT, JsonDeserializationContext context) ->
-	{
-		if(!json.isJsonObject())
-			throw new JsonParseException("The json should be an object!");
-		ItemModelCache cache = new ItemModelCache();
-		JsonObject object = json.getAsJsonObject();
-		if (object.has("parent"))
-		{
-			cache.model = new ResourceLocation(object.get("parent").getAsString());
-			ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-			if (object.has("textures"))
-			{
-				for(Entry<String, JsonElement> entry : object.getAsJsonObject("textures").entrySet())
-				{
-					String value = entry.getValue().getAsString();
-					builder.put(entry.getKey(), value);
-				}
-			}
-			cache.retextures = builder.build();
-			return cache;
-		}
-		ImmutableMap.Builder<String, ResourceLocation> textures = ImmutableMap.builder();
-		ImmutableMap.Builder<String, Function<IResourceManager, Map<String, ResourceLocation>>> multiTextures = ImmutableMap.builder();
-		String particleLocate = null;
-		if (object.has("include"))//Include textures.
-		{
-			JsonElement json1 = object.get("include");
-			if (json1.isJsonObject())//Put more than one texture in to map.
-			{
-				JsonObject object1 = json1.getAsJsonObject();
-				for (Entry<String, JsonElement> entry : object1.entrySet())
-				{
-					String value = entry.getValue().getAsString();
-					if (PARTICLE.equals(entry.getKey()))
-					{
-						particleLocate = value;
-						continue;
-					}
-					switch (value.charAt(0))
-					{
-					case '[' :
-						ResourceLocation location1 = new ResourceLocation(value.substring(1));
-						Function<IResourceManager, Map<String, ResourceLocation>> function = multiIconLoaders.get(location1);
-						if (function != null)
-						{
-							multiTextures.put(entry.getKey(), function);
-						}
-						else
-						{
-							multiTextures.put(entry.getKey(), INSTANCE.loadTextureGetter(location1));
-						}
-						break;
-					default :
-						textures.put(entry.getKey(), new ResourceLocation(value));
-						break;
-					}
-				}
-			}
-			else//Put single texture or only one texture set into map.
-			{
-				String value = json1.getAsString();
-				if(value.charAt(0) == '[')
-				{
-					ResourceLocation location1 = new ResourceLocation(value.substring(1));
-					Function<IResourceManager, Map<String, ResourceLocation>> function = multiIconLoaders.get(location1);
-					if(function != null)
-					{
-						multiTextures.put(NORMAL, function);
-					}
-					else
-					{
-						multiTextures.put(NORMAL, INSTANCE.loadTextureGetter(location1));
-					}
-				}
-				else
-				{
-					textures.put(NORMAL, new ResourceLocation(particleLocate = value));
-				}
-			}
-		}
-		cache.particle = particleLocate;
-		cache.textures = textures.build();
-		cache.multiTextures = multiTextures.build();
-		if (object.has("layers"))
-		{
-			JsonElement json1 = object.get("layers");
-			if (json1.isJsonArray())
-			{
-				JsonArray array = json1.getAsJsonArray();
-				cache.layers = new UnbakedModelLayer[array.size()];
-				for (int i = 0; i < array.size(); ++i)
-				{
-					UnbakedModelLayer layer = context.deserialize(array.get(i), UnbakedModelLayer.class);
-					layer.layer = i;
-					cache.layers[i] = layer;
-				}
-			}
-			else if (json1.isJsonObject())
-			{
-				JsonObject object1 = json1.getAsJsonObject();
-				int length = 0;
-				List<UnbakedModelLayer> list = new ArrayList();
-				while (object1.has("layer" + length))
-				{
-					JsonElement json2 = object1.get("layer" + length);
-					UnbakedModelLayer layer = context.deserialize(json2, UnbakedModelLayer.class);
-					layer.layer = length;
-					list.add(length, layer);
-					++length;
-				}
-				if (length == 0)
-				{
-					UnbakedModelLayer layer = context.deserialize(object1, UnbakedModelLayer.class);
-					layer.layer = 0;
-					cache.layers = new UnbakedModelLayer[]{ layer };
-				}
-				else
-				{
-					cache.layers = L.cast(list, UnbakedModelLayer.class);
-				}
-			}
-			else
-			{
-				UnbakedModelLayer layer = context.deserialize(json1, UnbakedModelLayer.class);
-				layer.layer = 0;
-				cache.layers = new UnbakedModelLayer[]{ layer };
-			}
-		}
-		else
-		{
-			UnbakedModelLayer layer = new UnbakedModelLayer();
-			layer.layer = 0;
-			layer.allowedTextures.add(NORMAL);
-			cache.layers = new UnbakedModelLayer[]{ layer };
-			if(!cache.textures.containsKey(NORMAL) && cache.multiTextures.isEmpty())
-			{
-				cache.textures.put(NORMAL, TextureMap.LOCATION_MISSING_TEXTURE);//If model doesn't contain any texture.
-			}
-		}
-		return cache;
-	};
+	private static IResourceManager manager;
 	
 	static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(IMultiTextureCollection.class, TEXTURE_GETTER_DESERIALIZER)
-			.registerTypeAdapter(UnbakedModelLayer.class, MODEL_LAYER_DESERIALIZER)
-			.registerTypeAdapter(ItemModelCache.class, ITEM_MODEL_CACHE_DESERIALIZER)
+			.registerTypeAdapter(FarCoreItemModelCache.class, FarCoreItemModelCache.DESERIALIZER_1)
+			.registerTypeAdapter(FarCoreItemModelCache.FarCoreItemModelLayerCache.class, FarCoreItemModelCache.DESERIALIZER_2)
+			.registerTypeAdapter(FarCoreTextureSet.class, FarCoreTextureSet.DESERIALIZER)
+			.registerTypeAdapter(SubmetaGetter.class, FarCoreItemSubmetaGetterLoader.DESERIALIZER)
 			.create();
 	
-	public static class ItemModelCache
+	static IResourceManager getResourceManaer()
 	{
-		ResourceLocation model;
-		ImmutableMap<String, String> retextures;
-		
-		Map<String, ResourceLocation> textures;
-		Map<String, Function<IResourceManager, Map<String, ResourceLocation>>> multiTextures;
-		
-		String particle;
-		
-		UnbakedModelLayer[] layers;
-		
-		void registerItemColor(Item item, ItemColors colors)
-		{
-			for (UnbakedModelLayer layer : this.layers)
-			{
-				if (layer.colorMultiplier != FarCoreItemModelLoader.NORMAL_MULTIPLIER)
-				{
-					colors.registerItemColorHandler((ItemStack stack, int tintIndex) -> L.cast(this.layers[tintIndex].colorMultiplier.apply(stack)), item);
-					return;
-				}
-			}
-		}
+		return manager;
 	}
 	
 	/**
-	 * A usable functional applier builder.
-	 * @param location
-	 * @param iterable
-	 * @param function
+	 * Marked this item model should loaded by FarCoreItemModelLoaer.<br>
+	 * This method should called before <code>FMLInitializationEvent</code>
+	 * @param item The marked item.
+	 * @param location The loading location.
 	 */
-	public static void registerMultiIconProvider(ResourceLocation location, Set<String> set, com.google.common.base.Function<String, ResourceLocation> function)
-	{
-		registerMultiIconProvider(location, manager -> Maps.<String, ResourceLocation>asMap(set, function));
-	}
-	
-	public static void registerMultiIconProvider(ResourceLocation location, Function<IResourceManager, Map<String, ResourceLocation>> function)
-	{
-		multiIconLoaders.put(location, function);
-	}
-	
-	public static void registerSubmetaProvider(ResourceLocation location, Map<Integer, String> map, ItemBase item)
-	{
-		registerSubmetaProvider(location, stack -> map.getOrDefault(item.getBaseDamage(stack), "missing"));
-	}
-	
-	public static void registerSubmetaProvider(ResourceLocation location, Function<ItemStack, String> function)
-	{
-		submetaProviders.put(location, function);
-	}
-	
-	public static void registerColorMultiplier(ResourceLocation location, Function<ItemStack, Integer> function)
-	{
-		colorMultipliers.put(location, function);
-	}
-	
 	public static void registerModel(Item item, ResourceLocation location)
 	{
+		//The default model location of item.
 		ModelResourceLocation location1 = new ModelResourceLocation(item.getRegistryName(), "iventory");
-		ModelLoader.setCustomMeshDefinition(item, (ItemStack stack) -> location1);
+		//For stack to location logic, it will only return single model location, the variant will be match in model.
+		ModelLoader.setCustomMeshDefinition(item, stack -> location1);
+		//Register allowed build item variant.
 		ModelLoader.registerItemVariants(item, location1);
-		location = new ResourceLocation(location.getResourceDomain(), "f_model/item/" + location.getResourcePath() + ".json");
-		INSTANCE.acceptItem.put(item, location);
-		INSTANCE.itemModelMap.put(location1, item);
-	}
-	
-	private boolean isResourceLoading = false;
-	private IResourceManager resourceManager;
-	
-	private Map<ModelResourceLocation, Item> itemModelMap = new HashMap();
-	private Map<Item, ResourceLocation> acceptItem = new HashMap();
-	
-	private Map<Item, ItemModelCache> loadedModels = new HashMap();
-	
-	private Map<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> markMultiTextureLoaders;
-	private Map<ResourceLocation, IMultiTextureCollection> loadedMultiTexturesMap;
-	private Map<ResourceLocation, Function<ItemStack, String>> loadedSubmetaProvider;
-	Map<Function<IResourceManager, Map<String, ResourceLocation>>, Map<String, ResourceLocation>> buildMultiTexturesMap;
-	
-	/**
-	 * 
-	 * @since 1.1
-	 * @param location
-	 * @return
-	 */
-	private Function<IResourceManager, Map<String, ResourceLocation>> loadTextureGetter(ResourceLocation location)
-	{
-		Function<IResourceManager, Map<String, ResourceLocation>> function = multiIconLoaders.get(location);
-		if (function != null) return function;
-		function = manager -> loadTextures(location).apply();
-		this.markMultiTextureLoaders.put(location, function);
-		return function;
+		//The real location of model.
+		location = new ResourceLocation(location.getResourceDomain(), "models/item/" + location.getResourcePath() + ".json");
+		
+		ACCEPT_ITEMS.put(item, location);
+		MODELLOCATION_TO_ITEM.put(location1, item);
 	}
 	
 	/**
-	 * 
-	 * @since 1.1
-	 * @param location
-	 * @return
+	 * Called when resource manager reload.<br>
+	 * To re-register models and reload texture set in this phase.
 	 */
-	private IMultiTextureCollection loadTextures(ResourceLocation location)
-	{
-		IMultiTextureCollection collection;
-		if (this.loadedMultiTexturesMap == null)
-		{
-			this.loadedMultiTexturesMap = new HashMap();
-		}
-		else if ((collection = this.loadedMultiTexturesMap.get(location)) != null)
-			return collection;
-		//Create file in far texture map file.
-		//Location is f_tm/[your path].json
-		String l = "f_tm/" + location.getResourcePath();
-		if(!l.endsWith(".json"))
-		{
-			l += ".json";
-		}
-		location = new ResourceLocation(location.getResourceDomain(), l);
-		try
-		{
-			IResource resource = this.resourceManager.getResource(location);
-			byte[] code = IOUtils.toByteArray(resource.getInputStream());
-			resource.close();
-			Reader reader = new InputStreamReader(new ByteArrayInputStream(code));
-			collection = FarCoreItemModelLoader.GSON.fromJson(reader, IMultiTextureCollection.class);
-		}
-		catch (JsonParseException exception)
-		{
-			Log.cache(exception);
-			return null;
-		}
-		catch (IOException exception)
-		{
-			Log.cache(exception);
-			return null;
-		}
-		this.loadedMultiTexturesMap.put(location, collection);
-		return collection;
-	}
-	
-	/**
-	 * 
-	 * @since 1.1
-	 * @param json
-	 * @return
-	 */
-	private Function<ItemStack, String> loadSubmetaGetter(JsonElement json)
-	{
-		try
-		{
-			if(json.isJsonObject())
-			{
-				JsonObject object = json.getAsJsonObject();
-				if (object.has("key")) return (ItemStack stack) -> object.get("key").getAsString();
-				else if (object.has("parent"))//Raw type.
-				{
-					FarCoreVariantSubmetaProvider function = new FarCoreVariantSubmetaProvider(loadSubmetaGetter(object.get("parent")));
-					if (object.has("variant"))
-					{
-						ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-						JsonObject object1 = object.getAsJsonObject("variant");
-						for (Entry<String, JsonElement> entry : object1.entrySet())
-						{
-							builder.put(entry.getKey(), entry.getValue().getAsString());
-						}
-						function.setVariant(builder.build());
-					}
-					if (object.has("replacement"))
-					{
-						ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-						JsonObject object1 = object.getAsJsonObject("replacement");
-						for (Entry<String, JsonElement> entry : object1.entrySet())
-						{
-							builder.put(entry.getKey(), entry.getValue().getAsString());
-						}
-						function.setReplacement(builder.build());
-					}
-					if (object.has("postfix"))
-					{
-						function.setPostfix(object.get("prefix").getAsString());
-					}
-					if (object.has("postfix"))
-					{
-						function.setPostfix(object.get("postfix").getAsString());
-					}
-					return function;
-				}
-				return NORMAL_FUNCTION;
-			}
-			else
-			{
-				String value = json.getAsString();
-				return value.charAt(0) == '#' ? loadSubmetaGetter(new ResourceLocation(value.substring(1))) : (ItemStack stack) -> value;
-			}
-		}
-		catch (Exception exception)
-		{
-			if(exception instanceof JsonParseException)
-				throw exception;
-			throw new JsonParseException(exception);
-		}
-	}
-	
-	/**
-	 * 
-	 * @since 1.4
-	 * @param location
-	 * @return
-	 */
-	private Function<ItemStack, String> loadSubmetaGetter(ResourceLocation location)
-	{
-		Function<ItemStack, String> function = submetaProviders.get(location);
-		if (function != null) return function;
-		if (Config.useJavascriptInResource)
-		{
-			if (this.loadedSubmetaProvider.containsKey(location))
-				return this.loadedSubmetaProvider.get(location);
-			IResource resource = null;
-			byte[] values;
-			try
-			{
-				ResourceLocation location1 = new ResourceLocation(location.getResourceDomain(), "f_model/mg/" + location.getResourcePath() + ".js");
-				resource = this.resourceManager.getResource(location1);
-				values = IOUtils.toByteArray(resource.getInputStream());
-			}
-			catch(IOException exception)
-			{
-				values = null;
-			}
-			finally
-			{
-				if(resource != null)
-				{
-					try
-					{
-						resource.close();
-					}
-					catch(IOException exception2)
-					{
-						;
-					}
-				}
-			}
-			if(values != null)
-			{
-				try
-				{
-					FarCoreJSSubmetaProvider provider = new FarCoreJSSubmetaProvider(values);
-					this.loadedSubmetaProvider.put(location, provider);
-					return provider;
-				}
-				catch(ScriptException exception)
-				{
-					Log.cache(exception);
-				}
-			}
-		}
-		return NORMAL_FUNCTION;
-	}
-	
-	/**
-	 * 
-	 * @since 1.2
-	 * @param location
-	 * @return
-	 */
-	private Function<ItemStack, Integer> loadColorMultiplier(ResourceLocation location)
-	{
-		return colorMultipliers.getOrDefault(location, NORMAL_MULTIPLIER);
-	}
-	
 	@Override
-	public void onResourceManagerReload(IResourceManager manager)
+	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
-		Log.reset();
+		this.manager = resourceManager;
+		this.cache = new HashMap();
 		Log.info("Far Core Item Model Loader start model loading.");
-		this.loadedMultiTexturesMap = null;
-		this.markMultiTextureLoaders = new HashMap(multiIconLoaders);
-		this.loadedSubmetaProvider = new HashMap();
-		this.resourceManager = manager;
-		this.isResourceLoading = true;
-		this.loadedModels.clear();
-		ProgressBar bar = ProgressManager.push("Loading FarCore Item Model", this.acceptItem.size());
-		IResource resource = null;
+		Log.info("Clean caches.");
+		FarCoreItemSubmetaGetterLoader.cleanCache();
+		FarCoreColorMultiplier.cleanCache();
+		FarCoreTextureSet.cleanCache();
+		ProgressBar bar = ProgressManager.push("Loading FarCore Item Model", this.ACCEPT_ITEMS.size());
 		ItemColors colors = Minecraft.getMinecraft().getItemColors();
-		for(Entry<Item, ResourceLocation> entry : this.acceptItem.entrySet())
+		for(Entry<Item, ResourceLocation> entry : this.ACCEPT_ITEMS.entrySet())
 		{
 			try
 			{
 				bar.step(entry.getValue().toString());
-				ResourceLocation location = entry.getValue();
-				byte[] codes;
-				try
+				byte[] code = IO.copyResource(resourceManager, entry.getValue());
+				FarCoreItemModelCache cache = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(code)), FarCoreItemModelCache.class);
+				this.cache.put(entry.getKey(), cache);
+				if(colors != null)
 				{
-					resource = manager.getResource(location);
-					codes = IOUtils.toByteArray(resource.getInputStream());
-					resource.close();
+					IItemColor color = FarCoreColorMultiplier.createColorMultiplier(cache);
+					if(color != null)
+					{
+						colors.registerItemColorHandler(color, entry.getKey());
+					}
 				}
-				catch (IOException exception)
-				{
-					throw new RuntimeException("Fail to load resource from {" + location.toString() + "}.", exception);
-				}
-				ItemModelCache cache = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(codes), Charsets.UTF_8), ItemModelCache.class);
-				if (colors != null)
-				{
-					cache.registerItemColor(entry.getKey(), colors);
-				}
-				this.loadedModels.put(entry.getKey(), cache);
+			}
+			catch (FileNotFoundException exception)
+			{
+				Log.cache(new ResourceLocation(exception.getMessage()));
 			}
 			catch (Exception exception)
 			{
@@ -700,86 +190,49 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			}
 		}
 		ProgressManager.pop(bar);
-		Log.logCachedInformations(null, "Catching exceptions during loading models.");
-		this.buildMultiTexturesMap = new HashMap();
-		bar = ProgressManager.push("Collect FarCore Textures", multiIconLoaders.size() + (this.loadedMultiTexturesMap != null ? this.loadedMultiTexturesMap.size() : 0));
-		for (Entry<ResourceLocation, Function<IResourceManager, Map<String, ResourceLocation>>> entry : this.markMultiTextureLoaders.entrySet())
-		{
-			bar.step(entry.getKey().toString());
-			try
-			{
-				this.buildMultiTexturesMap.put(entry.getValue(), entry.getValue().apply(manager));
-			}
-			catch (Exception exception)
-			{
-				Log.cache(entry.getKey());
-			}
-		}
-		Log.logCachedInformations((Object object) -> ((ResourceLocation) object).toString(), "Failed to load texture collection from these path.");
-		if (this.loadedMultiTexturesMap != null)
-		{
-			for (Entry<ResourceLocation, IMultiTextureCollection> entry : this.loadedMultiTexturesMap.entrySet())
-			{
-				try
-				{
-					bar.step(entry.getKey().toString());
-					this.buildMultiTexturesMap.put(entry.getValue(), entry.getValue().apply());
-				}
-				catch (Exception exception)
-				{
-					Log.cache(new RuntimeException(String.format("Fail to apply {%s} textures.", entry.getKey())));
-				}
-			}
-		}
-		ProgressManager.pop(bar);
-		Log.logCachedInformations(null, "Fail to get texture collection from inner textures collection getter.");
-		this.isResourceLoading = false;
-		this.markMultiTextureLoaders = null;
-		this.loadedMultiTexturesMap = null;
-		this.loadedSubmetaProvider = null;
+		Log.logCachedInformations(object -> object instanceof ResourceLocation ? String.format("Not found : %s/%s", ((ResourceLocation) object).getResourceDomain(), ((ResourceLocation) object).getResourcePath()) : "", "Catching exceptions during loading models.");
 		Log.info("Far Core Item Model Loader finished model loading.");
 	}
 	
+	/**
+	 * Match location is marked in loader.
+	 * @param modelLocation
+	 * @return True for loader can load this location.
+	 */
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		return this.itemModelMap.containsKey(modelLocation);
+		return MODELLOCATION_TO_ITEM.containsKey(modelLocation);
 	}
 	
+	/**
+	 * Find model in map by target location (Already build when reloading
+	 * resource manager).
+	 * @param modelLocation
+	 * @return The built model.
+	 */
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
-		Item item = this.itemModelMap.get(modelLocation);
-		if (this.loadedModels.containsKey(item))
-		{
-			ItemModelCache modelCache = this.loadedModels.get(item);
-			if (modelCache.model != null)
-			{
-				IModel model = ModelLoaderRegistry.getModelOrMissing(modelCache.model);
-				if (model instanceof IRetexturableModel)
-				{
-					IRetexturableModel retexturableModel = (IRetexturableModel) model;
-					return retexturableModel.retexture(modelCache.retextures);
-				}
-				return model;
-			}
-			return new ModelItemBase(this, modelCache);
-		}
-		throw new RuntimeException(String.format("The model location {%s} is not belong to FarCoreItemModelLoader. There must be some wrong of other model loader.", modelLocation));
+		Item item = MODELLOCATION_TO_ITEM.get(modelLocation);
+		if(item == null)//If item is null, it means the loader of location shoudn't be this loader.
+			throw new RuntimeException(String.format("The model location {%s} is not belong to FarCoreItemModelLoader. There must be some wrong of other model loader.", modelLocation));
+		if(!cache.containsKey(item)) return ModelLoaderRegistry.getMissingModel();
+		return new FarCoreItemModelUnbaked(cache.get(item));
 	}
 	
 	static
 	{
-		registerSubmetaProvider(new ResourceLocation("minecraft", "damage"), stack -> Integer.toString(stack.getItemDamage()));
-		registerSubmetaProvider(new ResourceLocation("forge", "registry_name"), stack -> stack.getItem().getRegistryName().toString());
-		registerSubmetaProvider(new ResourceLocation("forge", "contain_fluid"), stack ->
+		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation("minecraft", "damage"), stack -> Integer.toString(stack.getItemDamage()));
+		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation("forge", "registry_name"), stack -> stack.getItem().getRegistryName().toString());
+		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation("forge", "contain_fluid"), stack ->
 		{
 			FluidStack stack1 = FluidUtil.getFluidContained(stack);
 			return stack1 == null ? "fluid:empty" : "fluid:" + stack1.getFluid().getName();
 		});
-		registerSubmetaProvider(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
-		registerSubmetaProvider(new ResourceLocation(FarCore.ID, "display_fluid"), stack -> "fluid:" + ItemFluidDisplay.getFluid(stack).getName());
-		registerMultiIconProvider(new ResourceLocation("forge", "fluid"), manager ->
+		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
+		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "display_fluid"), stack -> "fluid:" + ItemFluidDisplay.getFluid(stack).getName());
+		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation("forge", "fluid"), () ->
 		{
 			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 			for (Entry<String, Fluid> fluid : FluidRegistry.getRegisteredFluids().entrySet())
@@ -790,7 +243,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		});
 		for(MatCondition condition : MatCondition.register)
 		{
-			registerMultiIconProvider(new ResourceLocation(FarCore.ID, "group/" + condition.name), manager ->
+			FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FarCore.ID, "group/" + condition.name), () ->
 			{
 				ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 				for (Mat material : Mat.filt(condition))
@@ -801,14 +254,14 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			});
 		}
 		
-		registerColorMultiplier(new ResourceLocation("minecraft", "armor"), stack -> ((ItemArmor) stack.getItem()).getColor(stack));
-		registerColorMultiplier(new ResourceLocation("minecraft", "banner"), stack -> ItemBanner.getBaseColor(stack).getMapColor().colorValue);
-		registerColorMultiplier(new ResourceLocation("forge", "fluid"), stack ->
+		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation("minecraft", "armor"), stack -> ((ItemArmor) stack.getItem()).getColor(stack));
+		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation("minecraft", "banner"), stack -> ItemBanner.getBaseColor(stack).getMapColor().colorValue);
+		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation("forge", "fluid"), stack ->
 		{
 			FluidStack stack1 = FluidUtil.getFluidContained(stack);
 			return stack1 == null ? 0xFFFFFFFF : stack1.getFluid().getColor(stack1);
 		});
-		registerColorMultiplier(new ResourceLocation(FarCore.ID, "material"), stack -> ItemMulti.getMaterial(stack).RGB);
-		registerColorMultiplier(new ResourceLocation(FarCore.ID, "display_fluid"), stack -> ItemFluidDisplay.getFluid(stack).getColor());
+		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation(FarCore.ID, "material"), stack -> ItemMulti.getMaterial(stack).RGB);
+		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation(FarCore.ID, "display_fluid"), stack -> ItemFluidDisplay.getFluid(stack).getColor());
 	}
 }

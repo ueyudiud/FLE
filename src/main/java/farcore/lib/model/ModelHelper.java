@@ -16,10 +16,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import farcore.lib.model.item.FarCoreItemModelLoader;
-import farcore.lib.model.item.ModelItemBase;
-import farcore.lib.model.item.ModelLayer;
-import farcore.lib.model.item.ModelLayerV1;
+import farcore.lib.model.item.unused.FarCoreItemModelLoader;
+import farcore.lib.model.item.unused.ModelItemBase;
+import farcore.lib.model.item.unused.ModelLayer;
+import farcore.lib.model.item.unused.ModelLayerV1;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;

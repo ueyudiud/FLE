@@ -2,6 +2,11 @@ package farcore.data;
 
 import net.minecraft.creativetab.CreativeTabs;
 
+/**
+ * Creative tabs.
+ * @author ueyudiud
+ *
+ */
 public class CT
 {
 	public static CreativeTabs tabFluids;

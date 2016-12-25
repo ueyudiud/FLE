@@ -1,0 +1,21 @@
+{
+    "include": {
+		"bottom": "[fle:fluidcontainer/bottom",
+        "fluid": "[forge:fluid"
+    },
+    "layers": {
+        "layer0": {
+            "texture": "[bottom",
+            "submeta": "#fle:"
+        },
+        "layer1": {
+            "renderFull3D": false,
+			"converts": 
+            "texture": "farcore:items/group/ore_chip/override",
+            "colorMultiplier": "farcore:material"
+        },
+		"layer2": {
+			
+		}
+    }
+}

@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /**
  * Far land era energy event.
  * Used in each energy net tile entities.<br>
- * This event is handled in {@link farcore.handler.FarCoreEnergyHandler.BUS}.<br>
+ * This event is handled in {@link farcore.handler.FarCoreEnergyHandler#BUS}.<br>
  * It is suggested add tile to energy net when tile is initialized,
  * and remove when chunk remove or tile is invalidated.<br>
  * @author ueyudiud
@@ -17,7 +17,7 @@ public abstract class EnergyEvent extends Event
 {
 	private World world;
 	public Object tile;
-
+	
 	public EnergyEvent(TileEntity tile)
 	{
 		this(tile.getWorld(), tile);
@@ -27,12 +27,12 @@ public abstract class EnergyEvent extends Event
 		this.world = world;
 		this.tile = tile;
 	}
-
+	
 	public World world()
 	{
-		return world;
+		return this.world;
 	}
-
+	
 	/**
 	 * Add tile into energy net, you need do it
 	 * when tile is loaded (first tick of update).
@@ -50,7 +50,7 @@ public abstract class EnergyEvent extends Event
 			super(world, tile);
 		}
 	}
-
+	
 	/**
 	 * Remove tile in energy net, you need do it
 	 * when tile is unloaded or removed (invalidated).
@@ -68,7 +68,7 @@ public abstract class EnergyEvent extends Event
 			super(world, tile);
 		}
 	}
-
+	
 	/**
 	 * Rejoin tile into energy net.
 	 * @author ueyudiud

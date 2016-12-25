@@ -1,4 +1,0 @@
-{
-    "include": "[farcore:group/fragment",
-    "layers": "~farcore:material"
-}

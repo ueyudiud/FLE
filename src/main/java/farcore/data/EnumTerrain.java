@@ -1,5 +1,11 @@
 package farcore.data;
 
+/**
+ * The terrain of world generation,
+ * may be remove in the future.
+ * @author ueyudiud
+ *
+ */
 public enum EnumTerrain
 {
 	tectogene(0.8F, 3.0F, -2.4F, 0.7F, true),
@@ -28,15 +34,37 @@ public enum EnumTerrain
 		plain.canRiverGen = true;
 		river.isOcean = false;
 	}
-
+	
+	/**
+	 * The maximum height weight.
+	 */
 	public final float highWeight;
+	/**
+	 * The minimum height weight.
+	 */
 	public final float lowWeight;
+	/**
+	 * Is the terrain covered local world fluid
+	 * (Water in surface default).
+	 */
 	public final boolean isWater;
+	/**
+	 * Is it ocean.
+	 */
 	public boolean isOcean;
+	/**
+	 * The root height.
+	 */
 	public final float root;
+	/**
+	 * The random height.
+	 */
 	public final float rand;
+	/**
+	 * Can river generate in this terrain.
+	 */
 	public boolean canRiverGen = false;
-
+	
 	EnumTerrain(float root, float rand)
 	{
 		this(root, rand, false);
@@ -47,9 +75,9 @@ public enum EnumTerrain
 	}
 	EnumTerrain(float lWeight, float hWeight, float root, float rand, boolean isOcean)
 	{
-		this.isOcean = isWater = isOcean;
-		highWeight = hWeight;
-		lowWeight = lWeight;
+		this.isOcean = this.isWater = isOcean;
+		this.highWeight = hWeight;
+		this.lowWeight = lWeight;
 		this.root = root;
 		this.rand = rand;
 	}

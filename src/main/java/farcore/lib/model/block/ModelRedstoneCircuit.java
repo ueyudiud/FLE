@@ -22,8 +22,8 @@ import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import farcore.lib.model.ModelHelper;
 import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
-import farcore.lib.model.item.ICustomItemRenderModel;
 import farcore.lib.model.item.ItemTextureHelper;
+import farcore.lib.model.item.unused.ICustomItemRenderModel;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
 import farcore.lib.util.Log;
 import farcore.lib.util.SubTag;
@@ -397,7 +397,7 @@ public class ModelRedstoneCircuit extends ModelBase implements IRetexturableMode
 							minX, maxY, minZ, minU, minV));
 				}
 			}
-			builder.add(ItemTextureHelper.buildQuad(format, transformation, EnumFacing.DOWN, texture, -1,
+			builder.add(ItemTextureHelper.buildQuad(format, ItemTextureHelper.get(transformation), EnumFacing.DOWN, texture, -1,
 					0, 0, 0, texture.getMinU(), texture.getMaxV(),
 					1, 0, 0, texture.getMaxU(), texture.getMaxV(),
 					1, 0, 1, texture.getMaxU(), texture.getMinV(),

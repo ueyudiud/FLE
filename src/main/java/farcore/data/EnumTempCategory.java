@@ -2,6 +2,11 @@ package farcore.data;
 
 import net.minecraft.world.biome.Biome.TempCategory;
 
+/**
+ * Temperature category, better than Minecraft one.
+ * @author ueyudiud
+ *
+ */
 public enum EnumTempCategory
 {
 	TROPICAL(TempCategory.WARM),
@@ -10,11 +15,11 @@ public enum EnumTempCategory
 	SUBFRIGID(TempCategory.COLD),
 	FRIGID(TempCategory.COLD),
 	OCEAN(TempCategory.OCEAN);
-
+	
 	EnumTempCategory(TempCategory category)
 	{
 		this.category = category;
 	}
-
+	
 	public final TempCategory category;
 }

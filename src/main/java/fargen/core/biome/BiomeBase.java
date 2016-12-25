@@ -28,11 +28,11 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	private static final net.minecraft.world.biome.BiomeDecorator EMPTY = new net.minecraft.world.biome.BiomeDecorator();
 	public static final float minRainHumidity = 0.3F;
 	public static final float minSnowTemperature = 0.5F;
-
+	
 	public static final BiomeBase DEBUG = new BiomeBase(-1, false, BiomePropertiesExtended.newProperties("debug"));
 	
 	private static final Register<BiomeBase> register = new Register(256);
-
+	
 	static
 	{
 		EMPTY.treesPerChunk = -999;
@@ -60,7 +60,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	protected BiomeDecorator decorator;
 	protected BiomeLayerGenerator layerGenerator;
 	public BiomeBase baseBiome;
-
+	
 	public BiomeBase(int id, BiomePropertiesExtended properties)
 	{
 		this(id, true, properties);
@@ -68,12 +68,12 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	public BiomeBase(int id, boolean register, BiomePropertiesExtended properties)
 	{
 		super(properties);
-		biomeID = id;
-		zone = properties.zone;
-		canRain = properties.canRain;
-		canSnow = properties.canSnow;
-		decorator = properties.decorator;
-		layerGenerator = properties.layerGenerator;
+		this.biomeID = id;
+		this.zone = properties.zone;
+		this.canRain = properties.canRain;
+		this.canSnow = properties.canSnow;
+		this.decorator = properties.decorator;
+		this.layerGenerator = properties.layerGenerator;
 		setRegistryName(FarGen.ID, getBiomeName());
 		if(register)
 		{
@@ -82,14 +82,14 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		GameRegistry.register(this);
 		if(isMutation())
 		{
-			baseBiome = (BiomeBase) REGISTRY.getObjectById(MUTATION_TO_BASE_ID_MAP.get(this));
+			this.baseBiome = (BiomeBase) REGISTRY.getObjectById(MUTATION_TO_BASE_ID_MAP.get(this));
 		}
 		else
 		{
-			baseBiome = this;
+			this.baseBiome = this;
 		}
 	}
-
+	
 	@Override
 	public final String getRegisteredName()
 	{
@@ -106,7 +106,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		float humidity = farcore.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
 		return ColorizerGrass.getGrassColor(temperature, humidity);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getFoliageColorAtPos(BlockPos pos)
@@ -117,38 +117,38 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		float humidity = farcore.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
 		return ColorizerFoliage.getFoliageColor(temperature, humidity);
 	}
-
+	
 	@Override
 	public boolean getEnableSnow()
 	{
-		return super.getEnableSnow();
+		return true;
 	}
 	
 	@Override
 	public boolean canRainingAt(World world, BlockPos pos)
 	{
-		if(!canRain) return false;
+		if(!this.canRain) return false;
 		IWorldPropProvider prop = WorldPropHandler.getWorldProperty(world);
 		return prop.getHumidity(world, pos) >= minRainHumidity;
 	}
-
+	
 	@Override
 	public TempCategory getTempCategory()
 	{
-		return zone.category;
+		return this.zone.category;
 	}
 	
 	@Override
 	public boolean isHighHumidity()
 	{
-		return zone.rainAverage >= 1.6F;
+		return this.zone.rainAverage >= 1.6F;
 	}
-
+	
 	public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal, int submeta)
 	{
-		layerGenerator.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal, this, submeta);
+		this.layerGenerator.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal, this, submeta);
 	}
-
+	
 	@Override
 	public net.minecraft.world.biome.BiomeDecorator createBiomeDecorator()
 	{
@@ -158,9 +158,9 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	@Override
 	public void decorate(World worldIn, Random rand, BlockPos pos)
 	{
-		if(decorator != null)
+		if(this.decorator != null)
 		{
-			decorator.decorate(worldIn, rand, pos);
+			this.decorator.decorate(worldIn, rand, pos);
 		}
 	}
 	
@@ -170,14 +170,14 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		{
 			return new BiomePropertiesExtended(name);
 		}
-
+		
 		private float temperature = 2.0F;
 		private ClimaticZone zone = ClimaticZone.temperate_plain;
 		private BiomeLayerGenerator layerGenerator = new BLGSStandard();
 		private BiomeDecorator decorator;
 		private boolean canRain = true;
 		private boolean canSnow = false;
-
+		
 		protected BiomePropertiesExtended(String nameIn)
 		{
 			super(nameIn);
@@ -194,19 +194,19 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 			this.layerGenerator = layerGenerator;
 			return this;
 		}
-
+		
 		public BiomePropertiesExtended setClimaticZone(ClimaticZone zone)
 		{
 			this.zone = zone;
 			if(farcore.util.L.max(zone.rain) < minRainHumidity)
 			{
 				setRainDisabled();
-				canRain = false;
+				this.canRain = false;
 			}
 			if(farcore.util.L.min(zone.temperature) < minSnowTemperature)
 			{
 				setSnowEnabled();
-				canSnow = true;
+				this.canSnow = true;
 			}
 			return this;
 		}
@@ -214,7 +214,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		@Override
 		public BiomePropertiesExtended setTemperature(float temperatureIn)
 		{
-			temperature = temperatureIn;
+			this.temperature = temperatureIn;
 			return this;
 		}
 		

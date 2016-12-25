@@ -24,7 +24,7 @@ import farcore.lib.model.ModelHelper;
 import farcore.lib.model.block.IFarCustomModelLoader;
 import farcore.lib.model.block.ModelBase;
 import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
-import farcore.lib.model.item.ICustomItemRenderModel;
+import farcore.lib.model.item.unused.ICustomItemRenderModel;
 import farcore.lib.util.SubTag;
 import fle.core.FLE;
 import fle.core.tile.ditchs.TEDitch;

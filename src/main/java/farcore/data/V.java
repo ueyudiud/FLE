@@ -1,12 +1,17 @@
 package farcore.data;
 
+/**
+ * Some constant value in mod.
+ * @author ueyudiud
+ *
+ */
 public class V
 {
 	//Non-constant values.
 	public static boolean generateState = false;
 	public static boolean removeErroredTile = false;
 	public static int treeScanRange = 6;
-
+	
 	//Constant values.
 	
 	public static final int WATER_FREEZE_POINT_I = 273;
@@ -14,7 +19,7 @@ public class V
 	
 	/** Vacuum Heat Conduct Constant */
 	public static final float k0 = 1.37498248E-1F;
-
+	
 	/** sqrt(2) float value */
 	public static final float sq2f = 1.4142135F;
 	/** sqrt(2) double value */

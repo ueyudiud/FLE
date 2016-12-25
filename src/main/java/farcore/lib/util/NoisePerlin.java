@@ -6,68 +6,69 @@ public class NoisePerlin extends NoiseBase
 {
 	private double frequency;
 	private double persistence;
-
+	
 	private NoiseBase[] octaves;
 	
 	public NoisePerlin(Random random, double persistence, NoiseBase...octaves)
 	{
 		super(random.nextLong());
-		frequency = 1.0F;
+		this.frequency = 1.0F;
 		this.persistence = persistence;
 		this.octaves = octaves;
 	}
 	
+	/**
+	 *
+	 * @param random
+	 * @param size
+	 * @param start
+	 * @param frequency The noise changed speed increase, the value is from 0.0 to infinity (more than 1.0 default).
+	 * @param persistence The noise effect for each layer, the value is from 0.0 to 1.0.
+	 */
 	public NoisePerlin(Random random, int size, double start, double frequency, double persistence)
 	{
 		super(random.nextLong());
 		this.frequency = frequency;
 		this.persistence = persistence;
-		octaves = new NoiseCoherent[size];
+		this.octaves = new NoiseCoherent[size];
 		double t = start;
-		for(int i = 0; i < size; octaves[i++] = new NoiseCoherent(seed + i, t),
-				t *= frequency)
-		{
-			;
-		}
+		for(int i = 0; i < size; this.octaves[i++] = new NoiseCoherent(this.seed + i, t),
+				t *= frequency);
 	}
 	
 	public NoisePerlin(long seed, double persistence, NoiseBase...octaves)
 	{
 		super(seed);
-		frequency = 1.0F;
+		this.frequency = 1.0F;
 		this.persistence = persistence;
 		this.octaves = octaves;
 	}
-
+	
 	/**
 	 *
 	 * @param seed
 	 * @param size
 	 * @param start
-	 * @param frequency The noise changed speed increase.
-	 * @param persistence
+	 * @param frequency The noise changed speed increase, the value is from 0.0 to infinity (more than 1.0 default).
+	 * @param persistence The noise effect for each layer, the value is from 0.0 to 1.0.
 	 */
 	public NoisePerlin(long seed, int size, double start, double frequency, double persistence)
 	{
 		super(seed);
 		this.frequency = frequency;
 		this.persistence = persistence;
-		octaves = new NoiseCoherent[size];
+		this.octaves = new NoiseCoherent[size];
 		double t = start;
-		for(int i = 0; i < size; octaves[i++] = new NoiseCoherent(seed + i, t),
-				t *= frequency)
-		{
-			;
-		}
+		for(int i = 0;
+				i < size;
+				this.octaves[i++] = new NoiseCoherent(seed + i, t),
+						t *= frequency);
 	}
-
+	
 	@Override
 	public NoiseBase setSeed(long seed)
 	{
-		for(int i = 0; i < octaves.length; octaves[i++].setSeed(seed + i))
-		{
-			;
-		}
+		for(int i = 0; i < this.octaves.length; this.octaves[i++].setSeed(seed + i));
 		return super.setSeed(seed);
 	}
 	
@@ -80,10 +81,10 @@ public class NoisePerlin extends NoiseBase
 			array = new double[u * v * w];
 		}
 		double[] array1 = null;
-		double a = persistence + 1D;
-		for(int i = 0; i < octaves.length; ++i)
+		double a = this.persistence + 1D;
+		for(int i = 0; i < this.octaves.length; ++i)
 		{
-			array1 = octaves[i].noise(array1, u, v, w, x, y, z, xScale, yScale, zScale);
+			array1 = this.octaves[i].noise(array1, u, v, w, x, y, z, xScale, yScale, zScale);
 			for(int p = 0; p < w; ++p)
 			{
 				for(int q = 0; q < v; ++q)
@@ -97,7 +98,7 @@ public class NoisePerlin extends NoiseBase
 						}
 						else
 						{
-							array[id] += array1[id] * persistence;
+							array[id] += array1[id] * this.persistence;
 							array[id] /= a;
 						}
 					}
@@ -110,20 +111,12 @@ public class NoisePerlin extends NoiseBase
 	@Override
 	public double noise(double x, double y, double z)
 	{
-		double ret = 0;
-		double f = 1D;
-		double a = persistence + 1D;
-		for(int i = 0; i < octaves.length; ++i)
+		final double a = this.persistence + 1D;
+		double ret = this.octaves[0].noise(x, y, z);
+		for(int i = 1; i < this.octaves.length; ++i)
 		{
-			if(i == 0)
-			{
-				ret += octaves[i].noise(x, y, z);
-			}
-			else
-			{
-				ret += octaves[i].noise(x, y, z) * persistence;
-				ret /= a;
-			}
+			ret += this.octaves[i].noise(x, y, z) * this.persistence;
+			ret /= a;
 		}
 		return ret;
 	}

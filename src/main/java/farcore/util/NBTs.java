@@ -78,6 +78,23 @@ public class NBTs
 		return compound;
 	}
 	
+	public static void plusRemovableNumber(NBTTagCompound nbt, String key, int add)
+	{
+		setRemovableNumber(nbt, key, nbt.getInteger(key) + add);
+	}
+	
+	public static void setRemovableNumber(NBTTagCompound nbt, String key, long number)
+	{
+		if(number == 0)
+		{
+			nbt.removeTag(key);
+		}
+		else
+		{
+			setNumber(nbt, key, number);
+		}
+	}
+	
 	public static void setNumber(NBTTagCompound nbt, String key, double number)
 	{
 		if((float) number == number)

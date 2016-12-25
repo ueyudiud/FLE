@@ -8,7 +8,7 @@ import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.model.item.FarCoreItemModelLoader;
+import farcore.lib.model.item.unused.FarCoreSubMetaGetterLoader;
 import farcore.lib.util.LanguageManager;
 import farcore.util.U;
 import net.minecraft.creativetab.CreativeTabs;
@@ -30,11 +30,11 @@ public class ItemOreChip extends ItemMulti
 	@Override
 	public void postInitalizedItems()
 	{
-		for(Mat material : Mat.filt(condition))
+		for(Mat material : Mat.filt(this.condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
-			LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
-			condition.registerOre(material, templete);
+			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
+			this.condition.registerOre(material, templete);
 		}
 	}
 	
@@ -43,9 +43,9 @@ public class ItemOreChip extends ItemMulti
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), (ItemStack stack) -> "material:" + U.ItemStacks.getOrSetupNBT(stack, false).getString("rock"));
+		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), stack -> "material:" + U.ItemStacks.getOrSetupNBT(stack, false).getString("rock"));
 	}
-
+	
 	public static ItemStack createOreChip(int size, Mat ore, Mat rock)
 	{
 		ItemStack stack = new ItemStack(EnumItem.ore_chip.item, size, ore.id);
@@ -64,12 +64,12 @@ public class ItemOreChip extends ItemMulti
 	{
 		return stack.hasTagCompound() ? Mat.material(stack.getTagCompound().getString("rock"), M.stone) : M.stone;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(condition))
+		for(Mat material : Mat.filt(this.condition))
 		{
 			subItems.add(createOreChip(1, material, M.stone));
 		}

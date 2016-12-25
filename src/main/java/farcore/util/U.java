@@ -1229,6 +1229,11 @@ public class U
 					((FluidStackExt) stack).getTemperature() :
 						stack != null ? stack.getFluid().getTemperature(stack) : def;
 		}
+		
+		public static int getColor(FluidStack stack)
+		{
+			return stack.getFluid().getColor(stack);
+		}
 	}
 	
 	public static class Entities

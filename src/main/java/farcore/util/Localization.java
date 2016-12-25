@@ -12,6 +12,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.util.SubTag;
 import farcore.lib.util.UnlocalizedList;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -60,5 +61,11 @@ public class Localization
 		unlocalizedList.add("info.tool.harvest.level", material.toolHarvestLevel);
 		unlocalizedList.add("info.tool.hardness", FORMAT_1.format(material.toolHardness));
 		unlocalizedList.addToolTip("info.material.custom." + material.name);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void addFluidInformation(FluidStack stack, UnlocalizedList unlocalizedList)
+	{
+		unlocalizedList.add("info.fluidcontainer.contain", stack == null ? "Empty" : (stack.getLocalizedName() + "x" + stack.amount + "L"));
 	}
 }

@@ -56,10 +56,10 @@ public class FarGenBiomes
 	//Technical biomes
 	public static BiomeBase[] beach;
 	public static BiomeBase[] river;
-
+	
 	//Void world biomes
 	public static BiomeBase v_void;
-
+	
 	public static void init()
 	{
 		IBlockState PODZEL = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.PODZOL);
@@ -100,7 +100,7 @@ public class FarGenBiomes
 		gigafungal_forest = new BiomeBase(54, BiomePropertiesExtended.newProperties("gigafungal_forest").setClimaticZone(ClimaticZone.subfrigid_forest).setLayerGenerator(baseGenerator));
 		sequoia_forest = new BiomeBase(55, BiomePropertiesExtended.newProperties("sequoia_forest").setClimaticZone(ClimaticZone.frigid_plain).setLayerGenerator(baseGenerator));
 		glacispical_land = new BiomeBase(56, BiomePropertiesExtended.newProperties("glacispical_land").setClimaticZone(ClimaticZone.iceland).setLayerGenerator(baseGenerator));
-
+		
 		mushroom_island = new BiomeBase(101, BiomePropertiesExtended.newProperties("mushroom_island").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(new BLGSSimple(Blocks.MYCELIUM.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false)));
 		river = new BiomeBase[ClimaticZone.values().length];
 		beach = new BiomeBase[ClimaticZone.values().length];
@@ -123,7 +123,7 @@ public class FarGenBiomes
 		beach[ClimaticZone.ocean_temperate.ordinal()] = ocean_te;
 		beach[ClimaticZone.ocean_subtropical.ordinal()] = ocean_st;
 		beach[ClimaticZone.ocean_tropical.ordinal()] = ocean_t;
-
+		
 		v_void = new BiomeVoid();
 	}
 }

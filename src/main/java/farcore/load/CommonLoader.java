@@ -269,6 +269,7 @@ public class CommonLoader
 		LanguageManager.registerLocal("info.food.label", ChatFormatting.RED + "Food Stat:");
 		LanguageManager.registerLocal("info.food.display", ChatFormatting.RED + "F-%s S-%s W-%s");
 		LanguageManager.registerLocal("info.tree.log.length", "Length : " + ChatFormatting.GREEN + "%d");
+		LanguageManager.registerLocal("info.fluidcontainer.contain", "Contain : " + ChatFormatting.AQUA + "%s");
 		LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
 		LanguageManager.registerLocal("commands.date.usage", "/date");
 		LanguageManager.registerLocal("commands.date.arg.err", "Invalid command argument");

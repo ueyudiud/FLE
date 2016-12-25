@@ -11,11 +11,11 @@ public class FarOverrideLoadingPlugin implements IFMLLoadingPlugin
 	public static boolean loadedData;
 	public static boolean runtimeDeobf;
 	public static File location;
-
+	
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[]{ClassTransformerModifyMethod.class.getName()};
+		return new String[] {"farcore.asm.ClassTransformerModifyMethod"};
 	}
 	
 	@Override

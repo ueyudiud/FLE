@@ -2,6 +2,11 @@ package farcore.data;
 
 import net.minecraft.item.Item;
 
+/**
+ * To get item which is added by non-multi-generated.
+ * @author ueyudiud
+ *
+ */
 public enum EnumItem
 {
 	log,

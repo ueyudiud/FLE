@@ -4,6 +4,7 @@
 
 package farcore.lib.bio;
 
+import java.util.Comparator;
 import java.util.Random;
 
 import farcore.lib.nbt.INBTWriter;
@@ -14,6 +15,16 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class DNAPair<T extends IBiology> implements INBTWriter<DNAPair>
 {
+	static final String SORT = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	
+	static final Comparator<Character> COMPARATOR = (Character chr1, Character chr2) ->
+	{
+		int i1 = SORT.indexOf(chr1);
+		int i2 = SORT.indexOf(chr2);
+		return i1 == -1 ? i2 == -1 ? Character.compare(chr1, chr2) : 1 :
+			i2 == -1 ? -1 : i1 - i2;
+	};
+	
 	public static DNAPair loadFromNBT(NBTTagCompound nbt)
 	{
 		if(nbt.hasKey("handler"))
@@ -46,14 +57,16 @@ public class DNAPair<T extends IBiology> implements INBTWriter<DNAPair>
 	public DNAPair(DNAHandler handler, char DNA1, char DNA2)
 	{
 		this.handler = handler;
-		if(Character.compare(DNA1, DNA2) < 0)
+		if(COMPARATOR.compare(DNA1, DNA2) > 0)
 		{
-			char chr1 = DNA2;
-			DNA2 = DNA1;
-			DNA1 = chr1;
+			this.DNA1 = DNA2;
+			this.DNA2 = DNA1;
 		}
-		this.DNA1 = DNA1;
-		this.DNA2 = DNA2;
+		else
+		{
+			this.DNA1 = DNA1;
+			this.DNA2 = DNA2;
+		}
 	}
 	
 	public char randSelect(Random random)

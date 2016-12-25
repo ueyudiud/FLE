@@ -141,12 +141,12 @@ public class FarCoreSetup
 		 */
 		Log.info("Far Core checking forge version...");
 		int forge = ForgeVersion.getBuildVersion();
-		if ((forge > 0) && (forge < FarCore.minForge))
+		if ((forge > 0) && (forge < FarCore.MIN_FORGE))
 			throw new RuntimeException("The currently installed version of "
 					+ "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." +
 					ForgeVersion.getRevisionVersion() + "." + forge + ") is too old.\n" +
 					"Please update the Minecraft Forge.\n" + "\n" +
-					"(Technical information: " + forge + " < " + FarCore.minForge + ")");
+					"(Technical information: " + forge + " < " + FarCore.MIN_FORGE + ")");
 		Log.info("Checking end.");
 	}
 	

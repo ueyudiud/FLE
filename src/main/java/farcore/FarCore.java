@@ -8,10 +8,14 @@ import javax.script.ScriptEngineManager;
 
 import farcore.network.Network;
 
+/**
+ * The FarCore mod.
+ * @author ueyudiud
+ */
 public class FarCore
 {
 	/** The minimum forge version far core required. */
-	public static final int minForge = 2011;
+	public static final int MIN_FORGE = 2011;
 	
 	/** The core modid. */
 	public static final String ID = "farcore";
@@ -52,10 +56,22 @@ public class FarCore
 	public static boolean worldGenerationFlag = false;
 	
 	/**
-	 * The script engine.
+	 * The script engine. Use to load script from resource pack,
+	 * it used by TextureLoader now, but I think it can also make
+	 * other uses.<p>
+	 * The default runtime environment do not contain some library which is
+	 * requirement (Such as nashorn), players need change startup parameters
+	 * by themselves, so I don't suggested use script in too many ways...
 	 */
 	public static final ScriptEngineManager MANAGER = new ScriptEngineManager();
 	
+	/**
+	 * Catching an exception which might cause such serious bug,
+	 * the method will throw a new RuntimeException if game is in debuging
+	 * mode.
+	 * @param exception
+	 * @throws RuntimeException
+	 */
 	public static void catching(Exception exception) throws RuntimeException
 	{
 		if(debug)

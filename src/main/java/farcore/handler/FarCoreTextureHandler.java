@@ -17,23 +17,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FarCoreTextureHandler implements IIconRegister
 {
 	private static final List<IIconLoader> LIST = new ArrayList();
-
+	
 	public static void addIconLoader(IIconLoader loader)
 	{
 		LIST.add(loader);
 	}
-
+	
 	private TextureMap map;
 	
 	@SubscribeEvent
 	public void onTexturesReoload(TextureStitchEvent.Pre event)
 	{
-		map = event.getMap();
+		this.map = event.getMap();
 		for(IIconLoader loader : LIST)
 		{
 			loader.registerIcon(this);
 		}
-		map = null;
+		this.map = null;
 	}
 	
 	@Override
@@ -47,10 +47,10 @@ public class FarCoreTextureHandler implements IIconRegister
 	{
 		return registerIcon(new ResourceLocation(key));
 	}
-
+	
 	@Override
 	public TextureAtlasSprite registerIcon(ResourceLocation location)
 	{
-		return map.registerSprite(location);
+		return this.map.registerSprite(location);
 	}
 }

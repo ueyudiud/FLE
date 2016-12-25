@@ -8,6 +8,7 @@ import farcore.lib.material.MatCondition;
 import net.minecraft.util.IStringSerializable;
 
 /**
+ * The rock types.
  * @author ueyudiud
  */
 public enum RockType implements IStringSerializable
@@ -34,15 +35,36 @@ public enum RockType implements IStringSerializable
 		brick_mossy.burnable = true;
 	}
 	
+	/**
+	 * The state when removed mossy.
+	 */
 	public int noMossy = ordinal();
+	/**
+	 * The changed meta when block drop without silk touching.
+	 */
 	public int noSilkTouchDropMeta = ordinal();
+	/**
+	 * The changed meta when rock fall down.
+	 */
 	public int fallBreakMeta = ordinal();
+	/**
+	 * Is block state burnable.
+	 */
 	public boolean burnable;
+	/**
+	 * Should this state rock display in creative tab.
+	 */
 	public boolean displayInTab = true;
+	/**
+	 * The local name format of rock.
+	 */
 	public String local;
 	
 	/** For texture using. */
 	public MatCondition condition;
+	/**
+	 * The variant mark of rock, for texture using.
+	 */
 	public String variant;
 	
 	private RockType(MatCondition condition, String variant, String local)
@@ -60,11 +82,11 @@ public enum RockType implements IStringSerializable
 	
 	public boolean isBurnable()
 	{
-		return burnable;
+		return this.burnable;
 	}
 	
 	public RockType burned()
 	{
-		return values()[noMossy];
+		return values()[this.noMossy];
 	}
 }

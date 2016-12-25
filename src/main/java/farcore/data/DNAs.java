@@ -6,6 +6,11 @@ import farcore.lib.bio.IBiology;
 import farcore.lib.crop.dna.DNAHCrop;
 import farcore.lib.crop.dna.DNAHCropSimple;
 
+/**
+ * Vanilla DNA handler of Far Core.
+ * @author ueyudiud
+ *
+ */
 public final class DNAs
 {
 	public static final String MAP_ENG = "abcdefghijklmnopqrstuvwxyz";

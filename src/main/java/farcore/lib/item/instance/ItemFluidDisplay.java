@@ -9,7 +9,7 @@ import farcore.FarCore;
 import farcore.data.Config;
 import farcore.data.EnumItem;
 import farcore.lib.item.ItemBase;
-import farcore.lib.model.item.FarCoreItemModelLoader;
+import farcore.lib.model.item.unused.FarCoreItemModelLoader;
 import farcore.lib.util.Log;
 import farcore.lib.util.UnlocalizedList;
 import net.minecraft.creativetab.CreativeTabs;

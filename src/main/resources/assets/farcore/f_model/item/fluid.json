@@ -1,7 +1,0 @@
-{
-	"include": "[forge:fluid",
-	"layers": {
-		"submeta": "#farcore:display_fluid",
-		"colorMultiplier": "farcore:display_fluid"
-	}
-}

@@ -13,7 +13,7 @@ import farcore.handler.FarCoreTextureHandler;
 import farcore.handler.FarCoreWorldHandler;
 import farcore.lib.material.IMaterialRegister;
 import farcore.lib.model.block.ICustomItemModelSelector;
-import farcore.lib.model.item.FarCoreItemModelLoader;
+import farcore.lib.model.item.unused.FarCoreItemModelLoader;
 import farcore.lib.render.Colormap;
 import farcore.lib.render.IIconLoader;
 import farcore.lib.util.LanguageManager;
@@ -92,6 +92,9 @@ public class FarCoreRegistry
 		}
 		catch(Exception exception)
 		{
+			/**
+			 * I think no one like to register an invalid class.
+			 */
 			Log.catching(exception);
 		}
 	}
@@ -139,13 +142,13 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register entity type to FML.
-	 * @param name
-	 * @param entityClass
-	 * @param id
-	 * @param mod
-	 * @param trackingRange
-	 * @param updateFrequency
-	 * @param sendsVelocityUpdates
+	 * @param name The entity registered name.
+	 * @param entityClass The entity class.
+	 * @param id The id of entity (Different mod needn't to sort same id).
+	 * @param mod The modification of this entity type belong.
+	 * @param trackingRange The update range.
+	 * @param updateFrequency The frequency of update.
+	 * @param sendsVelocityUpdates Should send velocity to client side. (I don't know what effect this option takes)
 	 */
 	public static void registerEntity(String name, Class<? extends Entity> entityClass, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
 	{
@@ -207,7 +210,7 @@ public class FarCoreRegistry
 	 * etc.
 	 * @param item
 	 * @param location
-	 * @see farcore.lib.model.item.FarCoreItemModelLoader
+	 * @see farcore.lib.model.item.unused.FarCoreItemModelLoader
 	 */
 	@SideOnly(Side.CLIENT)
 	public static void registerItemModel(Item item, ResourceLocation location)
@@ -266,6 +269,10 @@ public class FarCoreRegistry
 		return Colormap.getColormap(location);
 	}
 	
+	/**
+	 * Added icon loader, for loading icon during resource manager reloaded.
+	 * @param loader
+	 */
 	@SideOnly(Side.CLIENT)
 	public static void addIconLoader(IIconLoader loader)
 	{

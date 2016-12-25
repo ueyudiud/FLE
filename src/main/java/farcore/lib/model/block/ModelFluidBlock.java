@@ -30,7 +30,7 @@ public class ModelFluidBlock
 	@SideOnly(Side.CLIENT)
 	public static enum Loader implements IFarCustomModelLoader
 	{
-		instance;
+		INSTANCE;
 		
 		@Override
 		public String getLoaderPrefix()

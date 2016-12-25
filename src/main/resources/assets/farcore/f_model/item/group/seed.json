@@ -1,4 +1,0 @@
-{
-    "include": "[farcore:group/seed",
-    "layers": "~farcore:material"
-}
