@@ -27,7 +27,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FarCoreItemModelCache
 {
-	public static final JsonDeserializer<FarCoreItemModelLayerCache> DESERIALIZER_2 = (element, typeOfT, context) -> {
+	/**
+	 * Model layer deserializer.
+	 */
+	public static final JsonDeserializer<FarCoreItemModelLayerCache> DESERIALIZER_2 = (element, typeOfT, context) ->
+	{
 		FarCoreItemModelLayerCache cache = new FarCoreItemModelLayerCache();
 		try
 		{
@@ -153,7 +157,11 @@ public class FarCoreItemModelCache
 		}
 		return cache;
 	};
-	public static final JsonDeserializer<FarCoreItemModelCache> DESERIALIZER_1 = (element, typeOfT, context) -> {
+	/**
+	 * Model deserializer.
+	 */
+	public static final JsonDeserializer<FarCoreItemModelCache> DESERIALIZER_1 = (element, typeOfT, context) ->
+	{
 		FarCoreItemModelCache cache = new FarCoreItemModelCache();
 		try
 		{
@@ -198,6 +206,11 @@ public class FarCoreItemModelCache
 		return cache;
 	};
 	
+	/**
+	 * Cached model layer.
+	 * @author ueyudiud
+	 *
+	 */
 	public static class FarCoreItemModelLayerCache
 	{
 		int index;

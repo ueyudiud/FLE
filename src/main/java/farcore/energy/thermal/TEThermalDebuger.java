@@ -9,7 +9,7 @@ import farcore.lib.tile.IDebugableTile;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import farcore.lib.tile.abstracts.TESynchronization;
 import farcore.lib.util.Direction;
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -106,7 +106,7 @@ implements IThermalHandler, IDebugableTile, ITB_BlockPlacedBy
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		NBTTagCompound nbt = U.ItemStacks.getOrSetupNBT(stack, false);
+		NBTTagCompound nbt = ItemStacks.getOrSetupNBT(stack, false);
 		tc = nbt.getFloat("conductivity");
 		switch (mode = nbt.getByte("mode"))
 		{

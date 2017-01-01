@@ -7,20 +7,23 @@ package fle.core.items;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
 import farcore.lib.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import farcore.lib.item.ItemSubBehavior;
 import farcore.lib.item.behavior.IBehavior;
 import farcore.lib.model.item.FarCoreColorMultiplier;
+import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.model.item.FarCoreItemSubmetaGetterLoader;
-import farcore.lib.model.item.unused.FarCoreItemModelLoader;
+import farcore.lib.model.item.FarCoreTextureSet;
 import farcore.lib.render.IProgressBarStyle;
 import farcore.lib.stack.fluid.IItemFluidContainerV1;
 import farcore.lib.util.UnlocalizedList;
+import farcore.util.FluidStacks;
+import farcore.util.ItemStacks;
 import farcore.util.Localization;
 import farcore.util.NBTs;
 import farcore.util.U;
-import farcore.util.U.FluidStacks;
-import farcore.util.U.ItemStacks;
 import fle.core.FLE;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
@@ -61,6 +64,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	protected void init()
 	{
 		addSubItem(1, "barrel", "Barrel", new FluidContainerProperty(1000, 256));
+		addSubItem(2, "bowl_wooden", "Wooden Bowl", new FluidContainerProperty(250, 128));
 	}
 	
 	public void addSubItem(int id, String name, String localName, FluidContainerProperty property,
@@ -76,6 +80,8 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	{
 		super.registerRender();
 		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "fluidcontainer"));
+		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/bottom"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "textures/items/tool/tank/" + key)));
+		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "textures/items/tool/tank/" + key + "_overlay")));
 		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
 		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
 		this.style = new IProgressBarStyle()
@@ -158,7 +164,6 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		return hasFluid(stack);
 	}
 	
-	
 	@Override
 	public boolean canFill(ItemStack stack, FluidStack resource)
 	{
@@ -184,7 +189,6 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		return amount;
 	}
 	
-	
 	@Override
 	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
 	{
@@ -200,7 +204,6 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		contain.amount = amount;
 		return contain;
 	}
-	
 	
 	@Override
 	public FluidStack drain(ItemStack stack, FluidStack resource, boolean doDrain)

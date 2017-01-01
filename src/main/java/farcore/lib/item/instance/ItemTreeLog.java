@@ -9,7 +9,7 @@ import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.UnlocalizedList;
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -67,11 +67,11 @@ public class ItemTreeLog extends ItemMulti
 	
 	public static void setLogSize(ItemStack stack, int size)
 	{
-		U.ItemStacks.getOrSetupNBT(stack, true).setShort("length", (short) size);
+		ItemStacks.getOrSetupNBT(stack, true).setShort("length", (short) size);
 	}
 	
 	public static int getLogSize(ItemStack stack)
 	{
-		return U.ItemStacks.getOrSetupNBT(stack, false).getShort("length");
+		return ItemStacks.getOrSetupNBT(stack, false).getShort("length");
 	}
 }

@@ -44,6 +44,12 @@ public class FarCoreColorMultiplier
 		return FarCoreItemModelLoader.NORMAL_MULTIPLIER;
 	}
 	
+	/**
+	 * Wrap model cache to a color applier for ItemColors, which use to
+	 * apply color for render.
+	 * @param cache
+	 * @return
+	 */
 	static IItemColor createColorMultiplier(FarCoreItemModelCache cache)
 	{
 		final ToIntFunction<ItemStack>[] list = new ToIntFunction[cache.caches.length];

@@ -5,8 +5,7 @@ import java.util.Random;
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
 import farcore.data.EnumSlabState;
-import farcore.data.MP;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.lib.block.BlockSlab;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.material.Mat;
@@ -44,35 +43,35 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 			String localName)
 	{
 		super(name + ".slab", Material.ROCK);
-		meta = id;
+		this.meta = id;
 		this.group = group;
 		this.parent = parent;
 		this.material = parent.material;
 		this.localName = localName;
-		property = parent.property;
-		setHardness(property.hardness * 0.6F);
-		setResistance(property.explosionResistance * 0.4F);
-		if(RockType.values()[id].displayInTab)
+		this.property = parent.property;
+		setHardness(this.property.hardness * 0.6F);
+		setResistance(this.property.explosionResistance * 0.4F);
+		if(EnumRockType.values()[id].displayInTab)
 		{
 			setCreativeTab(CT.tabBuilding);
 		}
 		setTickRandomly(true);
 		setDefaultState(getDefaultState().withProperty(BlockRock.HEATED, false));
 	}
-
+	
 	@Override
 	protected String getLocalName()
 	{
-		return localName;
+		return this.localName;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperExt(material.modid, "rock/slab/" + material.name, null, BlockRock.HEATED);
-		mapper.setVariants("type", RockType.values()[meta].getName());
+		StateMapperExt mapper = new StateMapperExt(this.material.modid, "rock/slab/" + this.material.name, null, BlockRock.HEATED);
+		mapper.setVariants("type", EnumRockType.values()[this.meta].getName());
 		ClientProxy.registerCompactModel(mapper, this, 1);
 	}
 	
@@ -103,23 +102,23 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
-		RockType type = RockType.values()[meta];
+		EnumRockType type = EnumRockType.values()[this.meta];
 		switch (type)
 		{
 		case cobble_art:
 			return 1;
 		case cobble :
 		case mossy :
-			return property.harvestLevel / 2;
+			return this.property.harvestLevel / 2;
 		default:
-			return property.harvestLevel;
+			return this.property.harvestLevel;
 		}
 	}
 	
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return RockType.values()[meta].burnable;
+		return EnumRockType.values()[this.meta].burnable;
 	}
 	
 	@Override
@@ -133,7 +132,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	{
 		if(isFlammable(world, pos, direction.of()))
 		{
-			U.Worlds.setBlock(world, pos, group[RockType.values()[meta].noMossy],
+			U.Worlds.setBlock(world, pos, this.group[EnumRockType.values()[this.meta].noMossy],
 					U.Worlds.getBlockMeta(world, pos), 3);
 			return true;
 		}
@@ -149,7 +148,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	@Override
 	public double getThermalConduct(World world, BlockPos pos)
 	{
-		return material.getProperty(MP.property_basic).thermalConduct;
+		return this.material.thermalConductivity;
 	}
 	
 	@Override

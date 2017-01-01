@@ -10,8 +10,8 @@ import farcore.lib.stack.AbstractStack;
 import farcore.lib.stack.ArrayStack;
 import farcore.lib.stack.BaseStack;
 import farcore.lib.stack.OreStack;
+import farcore.util.ItemStacks;
 import farcore.util.L;
-import farcore.util.U;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -92,7 +92,7 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 					itr.previous();
 				}
 			}
-			return new RecipeItemInputConfig(U.ItemStacks.sizeOf(decodeStack(object), size));
+			return new RecipeItemInputConfig(ItemStacks.sizeOf(decodeStack(object), size));
 		}
 	}
 	
@@ -128,9 +128,9 @@ public class ShapedRecipeItemInput extends ShapedRecipeInput<ItemStack, RecipeIt
 		case 1 :
 			return arg.neededSizeSimilar ? arg.input.similar(target) && arg.input.size(target) == target.stackSize : arg.input.contain(target);
 		case 2 :
-			List<EnumToolType> types = U.ItemStacks.getCurrentToolType(target);
+			List<EnumToolType> types = ItemStacks.getCurrentToolType(target);
 			if(!types.contains(arg.toolType)) return false;
-			if(arg.levelRequire != -1 && arg.levelRequire >= U.ItemStacks.getToolLevel(target, arg.toolType)) return false;
+			if(arg.levelRequire != -1 && arg.levelRequire >= ItemStacks.getToolLevel(target, arg.toolType)) return false;
 			return true;
 		default:
 			return false;

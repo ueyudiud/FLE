@@ -7,7 +7,7 @@ import farcore.lib.util.NoisePerlin;
 import farcore.lib.world.CalendarHandler;
 import farcore.lib.world.ICalendarWithMonth;
 import farcore.lib.world.IWorldPropProvider;
-import farcore.util.U.Maths;
+import farcore.util.Maths;
 import fargen.core.biome.BiomeBase;
 import fargen.core.util.ClimaticZone;
 import net.minecraft.block.Block;

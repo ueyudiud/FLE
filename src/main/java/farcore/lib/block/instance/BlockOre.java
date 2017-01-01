@@ -7,7 +7,7 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumToolType;
 import farcore.data.M;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.lib.block.BlockSingleTE;
 import farcore.lib.block.material.MaterialOre;
 import farcore.lib.material.Mat;
@@ -42,7 +42,7 @@ public class BlockOre extends BlockSingleTE
 		public final Mat ore;
 		public final EnumOreAmount amount;
 		public final Mat rock;
-		public final RockType type;
+		public final EnumRockType type;
 
 		OreStateWrapper(IBlockState state, TEOre ore)
 		{
@@ -52,7 +52,7 @@ public class BlockOre extends BlockSingleTE
 			rock = ore.rock;
 			type = ore.rockType;
 		}
-		public OreStateWrapper(IBlockState state, Mat ore, EnumOreAmount amount, Mat rock, RockType rockType)
+		public OreStateWrapper(IBlockState state, Mat ore, EnumOreAmount amount, Mat rock, EnumRockType rockType)
 		{
 			super(state);
 			this.ore = ore;
@@ -102,7 +102,7 @@ public class BlockOre extends BlockSingleTE
 		if(FarCore.worldGenerationFlag && ORE_ELEMENT_THREAD.get() != null)
 		{
 			Object[] elements = ORE_ELEMENT_THREAD.get();
-			worldIn.setTileEntity(pos, new TEOre((Mat) elements[0], (EnumOreAmount) elements[1], (Mat) elements[2], (RockType) elements[3]));
+			worldIn.setTileEntity(pos, new TEOre((Mat) elements[0], (EnumOreAmount) elements[1], (Mat) elements[2], (EnumRockType) elements[3]));
 		}
 		else
 		{
@@ -123,7 +123,7 @@ public class BlockOre extends BlockSingleTE
 		{
 			for(EnumOreAmount amount : EnumOreAmount.values())
 			{
-				NBTTagCompound nbt = ItemOre.setRock(ItemOre.setAmount(new NBTTagCompound(), amount), M.stone, RockType.resource);
+				NBTTagCompound nbt = ItemOre.setRock(ItemOre.setAmount(new NBTTagCompound(), amount), M.stone, EnumRockType.resource);
 				ItemStack stack = new ItemStack(this, 1, ore.id);
 				stack.setTagCompound(nbt);
 				LanguageManager.registerLocal(getTranslateNameForItemStack(stack),
@@ -177,7 +177,7 @@ public class BlockOre extends BlockSingleTE
 			{
 				//				for(Mat rock : Mat.filt(SubTag.ROCK))
 				{
-					list.add(((ItemOre) itemIn).createItemStack(1, ore, amount, M.stone, RockType.resource));
+					list.add(((ItemOre) itemIn).createItemStack(1, ore, amount, M.stone, EnumRockType.resource));
 				}
 			}
 		}

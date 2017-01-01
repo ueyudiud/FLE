@@ -28,22 +28,45 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
+ * Unbaked item model.
  * @author ueyudiud
  * @since 1.5
  */
 @SideOnly(Side.CLIENT)
 public class FarCoreItemModelUnbaked extends ModelBase
 {
+	/**
+	 * Create a new model with texture location.
+	 * @param location
+	 * @return
+	 */
+	public static IModel createNewModel(ResourceLocation location)
+	{
+		return new FarCoreItemModelUnbaked(location);
+	}
+	
 	Map<String, ResourceLocation> textures;
 	Collection<ResourceLocation> particles;
 	FarCoreItemModelLayerUnbaked[] layers;
 	
+	FarCoreItemModelUnbaked(ResourceLocation location)
+	{
+		this.textures = ImmutableMap.of(FarCoreItemModelLoader.NORMAL, location);
+		this.particles = ImmutableList.of(location);
+		this.layers = new FarCoreItemModelLayerUnbaked[]{ new FarCoreItemModelLayerUnbaked(location) };
+	}
+	
+	/**
+	 * Cached model wrapper.
+	 * @param cache
+	 */
 	FarCoreItemModelUnbaked(FarCoreItemModelCache cache)
 	{
 		this.textures = cache.textureCol.buildTextureMap();
@@ -55,12 +78,20 @@ public class FarCoreItemModelUnbaked extends ModelBase
 		}
 	}
 	
+	/**
+	 * Get texture collection apply by model.<br>
+	 * Still have something to do.
+	 * TODO
+	 */
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
 		return this.textures.values();
 	}
 	
+	/**
+	 * Bake model.
+	 */
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -84,6 +115,11 @@ public class FarCoreItemModelUnbaked extends ModelBase
 		return new FarCoreItemModel(layers1, particleIcon);
 	}
 	
+	/**
+	 * Unbaked model layer.
+	 * @author ueyudiud
+	 *
+	 */
 	class FarCoreItemModelLayerUnbaked
 	{
 		int layer;
@@ -97,7 +133,7 @@ public class FarCoreItemModelUnbaked extends ModelBase
 		byte layerType = 0;
 		SubmetaGetter convertApplier = null;
 		
-		public FarCoreItemModelLayerUnbaked(FarCoreTextureSet set, FarCoreItemModelLayerCache cache)
+		FarCoreItemModelLayerUnbaked(FarCoreTextureSet set, FarCoreItemModelLayerCache cache)
 		{
 			this.layer = cache.index;
 			this.zOffset = cache.zOffset;
@@ -127,6 +163,29 @@ public class FarCoreItemModelUnbaked extends ModelBase
 			this.convertApplier = cache.convertApplier;
 		}
 		
+		/**
+		 * Create new layer for single icon model
+		 * @param location
+		 */
+		FarCoreItemModelLayerUnbaked(ResourceLocation location)
+		{
+			this.layer = 1;
+			this.zOffset = 0.5F;
+			this.baseColor = FarCoreItemModelLoader.NORMAL_COLOR;
+			this.allowedVariants = ImmutableList.of(FarCoreItemModelLoader.NORMAL);
+			this.convertsAllowTextures = ImmutableList.of();
+			this.variantApplier = FarCoreItemModelLoader.NORMAL_FUNCTION;
+			this.colorMultiplier = FarCoreItemModelLoader.NORMAL_MULTIPLIER;
+		}
+		
+		/**
+		 * Wrap model layer as a Baked Quad applier, use the
+		 * <code>ItemStack->List</code> logic.
+		 * @param transformation
+		 * @param format
+		 * @param bakedTextureGetter
+		 * @return
+		 */
 		public java.util.function.Function<ItemStack, List<BakedQuad>> bake(TRSRTransformation transformation, VertexFormat format,
 				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 		{

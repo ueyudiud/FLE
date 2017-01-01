@@ -8,7 +8,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
-import farcore.util.U.ItemStacks;
+import farcore.util.ItemStacks;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

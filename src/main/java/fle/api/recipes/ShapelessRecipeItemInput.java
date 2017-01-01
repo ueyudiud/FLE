@@ -5,8 +5,8 @@ import java.util.List;
 import farcore.data.EnumToolType;
 import farcore.lib.collection.ArrayIterator;
 import farcore.lib.item.ITool;
+import farcore.util.ItemStacks;
 import farcore.util.L;
-import farcore.util.U;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -30,9 +30,9 @@ public class ShapelessRecipeItemInput extends ShapelessRecipeInput<ItemStack, Re
 			int size = arg.input.size(target);
 			return arg.input.similar(target) ? ((arg.neededSizeSimilar ? size == target.stackSize : size <= target.stackSize) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL) : EnumActionResult.PASS;
 		case 2 :
-			List<EnumToolType> types = U.ItemStacks.getCurrentToolType(target);
+			List<EnumToolType> types = ItemStacks.getCurrentToolType(target);
 			if(!types.contains(arg.toolType)) return EnumActionResult.PASS;
-			if(arg.levelRequire != -1 && arg.levelRequire >= U.ItemStacks.getToolLevel(target, arg.toolType)) return EnumActionResult.FAIL;
+			if(arg.levelRequire != -1 && arg.levelRequire >= ItemStacks.getToolLevel(target, arg.toolType)) return EnumActionResult.FAIL;
 			return EnumActionResult.SUCCESS;
 		default:
 			return EnumActionResult.PASS;

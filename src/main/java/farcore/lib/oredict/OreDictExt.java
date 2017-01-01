@@ -11,7 +11,7 @@ import java.util.function.Function;
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.collection.Ety;
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPrismarine;
 import net.minecraft.init.Blocks;
@@ -36,7 +36,7 @@ public class OreDictExt
 	stack == null ? INVALID_STACK_ID : (long) GameData.getItemRegistry().getId(stack.getItem().getRegistryName()) << 32 | stack.getItemDamage();;
 	
 	private static final OreDictExt INSTANCE = new OreDictExt();
-
+	
 	public static final ImmutableList<ItemStack> EMPTY_LIST = ImmutableList.of();
 	
 	/**
@@ -51,10 +51,14 @@ public class OreDictExt
 		registerVanillaOres();
 	}
 	
+	/**
+	 * OD will called before Event Bus begin to listen ore register
+	 * event. It needed to add in again.
+	 */
 	private static void registerVanillaOres()
 	{
-		// Register dyes
-		String[] dyes =	{
+		// Dye list.
+		final String[] dyes = {
 				"Black",
 				"Red",
 				"Green",
@@ -120,7 +124,7 @@ public class OreDictExt
 		registerOre("blockEmerald",   Blocks.EMERALD_BLOCK);
 		registerOre("blockQuartz",    Blocks.QUARTZ_BLOCK);
 		registerOre("blockCoal",      Blocks.COAL_BLOCK);
-
+		
 		// crops
 		registerOre("cropWheat",      Items.WHEAT);
 		registerOre("cropPotato",     Items.POTATO);
@@ -128,21 +132,21 @@ public class OreDictExt
 		registerOre("cropNetherWart", Items.NETHER_WART);
 		registerOre("sugarcane",      Items.REEDS);
 		registerOre("blockCactus",    Blocks.CACTUS);
-
+		
 		registerOre("seedWheat",      Items.WHEAT_SEEDS);//Far core added.
 		registerOre("seedPotato",     Items.POTATO);//Far core added.
 		registerOre("seedCarrot",     Items.CARROT);//Far core added.
 		registerOre("seedMelon",      Items.MELON_SEEDS);//Far core added.
 		registerOre("seedPumpkin",    Items.PUMPKIN_SEEDS);//Far core added.
 		registerOre("seedNetherWart", Items.NETHER_WART);//Far core added.
-
+		
 		// misc materials
 		registerOre("dye",            new ItemStack(Items.DYE, 1, WILDCARD_VALUE));
 		registerOre("paper",          new ItemStack(Items.PAPER));
 		registerOre("book",           new ItemStack(Items.BOOK));//Far core added.
 		registerOre("book",           new ItemStack(Items.ENCHANTED_BOOK));//Far core added.
 		registerOre("book",           new ItemStack(Items.WRITTEN_BOOK));//Far core added.
-
+		
 		// mob drops
 		registerOre("slimeball",      Items.SLIME_BALL);
 		registerOre("enderpearl",     Items.ENDER_PEARL);
@@ -155,7 +159,7 @@ public class OreDictExt
 		registerOre("feather",        Items.FEATHER);
 		registerOre("stickBlaze",     Items.BLAZE_ROD);//Far core added.
 		registerOre("egg",            Items.EGG);
-
+		
 		// records
 		registerOre("record",         Items.RECORD_13);
 		registerOre("record",         Items.RECORD_CAT);
@@ -169,7 +173,7 @@ public class OreDictExt
 		registerOre("record",         Items.RECORD_WARD);
 		registerOre("record",         Items.RECORD_11);
 		registerOre("record",         Items.RECORD_WAIT);
-
+		
 		// blocks
 		registerOre("dirt",           Blocks.DIRT);
 		registerOre("grass",          Blocks.GRASS);
@@ -206,7 +210,7 @@ public class OreDictExt
 		registerOre("paneGlass",      Blocks.GLASS_PANE);
 		registerOre("paneGlass",      Blocks.STAINED_GLASS_PANE);
 		//paneGlass{Color} is added below with dyes
-
+		
 		// chests
 		registerOre("chest",          Blocks.CHEST);
 		registerOre("chest",          Blocks.ENDER_CHEST);
@@ -214,7 +218,7 @@ public class OreDictExt
 		registerOre("chestWood",      Blocks.CHEST);
 		registerOre("chestEnder",     Blocks.ENDER_CHEST);
 		registerOre("chestTrapped",   Blocks.TRAPPED_CHEST);
-
+		
 		// dyes
 		for(int i = 0; i < 16; ++i)
 		{
@@ -234,12 +238,12 @@ public class OreDictExt
 			ID_TO_NAME.add(name);
 			NAME_TO_ID.put(name, id);
 			FUNCTION_MAP.add(new ArrayList());
-			List<ItemStack> stacks;
-			ID_TO_STACK.add(new Ety(stacks = new ArrayList(), Collections.unmodifiableList(stacks)));
+			List<ItemStack> stacks = new ArrayList();
+			ID_TO_STACK.add(new Ety(stacks, Collections.unmodifiableList(stacks)));
 		}
 		return id.intValue();
 	}
-
+	
 	private static int setOreIDWithSuggestedList(String name, Function<ItemStack, Boolean> function, List<ItemStack> stacks)
 	{
 		Integer id = NAME_TO_ID.get(name);
@@ -253,12 +257,12 @@ public class OreDictExt
 		}
 		return id.intValue();
 	}
-
+	
 	public static String getOreName(int id)
 	{
 		return (id >= 0 && id < ID_TO_NAME.size()) ? ID_TO_NAME.get(id) : null;
 	}
-
+	
 	public static void registerOre(String name, Block block)           { registerOre(name, Item.getItemFromBlock(block)); }
 	public static void registerOre(String name, Block block, int meta) { registerOre(name, Item.getItemFromBlock(block), meta); }
 	public static void registerOre(String name, Item item)
@@ -268,11 +272,11 @@ public class OreDictExt
 		int itemID = GameData.getItemRegistry().getId(item.getRegistryName());
 		if(itemID == -1) throw new RuntimeException("An invalid registeration has a raw item id!");
 		long stackID = (long) itemID << 32 | WILDCARD_VALUE_LONG;
-		registerOreFunction(name, (ItemStack stack1) -> {return item == stack1.getItem();});
+		registerOreFunction(name, stack1 -> item == stack1.getItem());
 		registerIDToStackObject(oreID, new ItemStack(item));
 		registerStackToIDObject(oreID, stackID);
 	}
-	public static void registerOre(String name, Item item, int meta)   { registerOre(name, U.ItemStacks.stack(item, meta)); }
+	public static void registerOre(String name, Item item, int meta)   { registerOre(name, ItemStacks.stack(item, meta)); }
 	public static void registerOre(String name, ItemStack stack)
 	{
 		if(name == null || stack == null) return;
@@ -317,12 +321,12 @@ public class OreDictExt
 			registerStackToIDObject(oreID, stackID);
 		}
 	}
-
+	
 	private static List<ItemStack> getOres(int id)
 	{
 		return ID_TO_STACK.size() > id ? ID_TO_STACK.get(id).getValue() : EMPTY_LIST;
 	}
-
+	
 	public static List<ItemStack> getOres(String name)
 	{
 		return getOres(getOreID(name));
@@ -338,7 +342,7 @@ public class OreDictExt
 	{
 		return alwaysCreateEntry || NAME_TO_ID.get(name) != null ? getOres(getOreID(name)) : EMPTY_LIST;
 	}
-
+	
 	public static List<String> getOreNames(ItemStack stack)
 	{
 		return getOreNames(stack, true);
@@ -388,7 +392,7 @@ public class OreDictExt
 		}
 		return list;
 	}
-
+	
 	public static boolean oreMatchs(ItemStack stack, String oreName)
 	{
 		if(NAME_TO_ID.containsKey(oreName))
@@ -403,7 +407,7 @@ public class OreDictExt
 	}
 	
 	private OreDictExt(){ }
-
+	
 	@SubscribeEvent
 	public void onOreRegistered(OreDictionary.OreRegisterEvent event)
 	{

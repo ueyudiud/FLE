@@ -149,13 +149,13 @@ public class BlockStairV1 extends BlockBase
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 	}
-
+	
 	@Override
 	public String getTranslateNameForItemStack(int metadata)
 	{
 		return getUnlocalizedName();
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
@@ -202,7 +202,7 @@ public class BlockStairV1 extends BlockBase
 	{
 		EnumFacing enumfacing = bstate.getValue(FACING);
 		EnumFacing enumfacing1;
-
+		
 		switch (bstate.getValue(SHAPE))
 		{
 		case OUTER_LEFT:
@@ -218,9 +218,9 @@ public class BlockStairV1 extends BlockBase
 		case INNER_LEFT:
 			enumfacing1 = enumfacing.rotateYCCW();
 		}
-
+		
 		boolean flag = bstate.getValue(HALF) == BlockStairs.EnumHalf.TOP;
-
+		
 		switch (enumfacing1)
 		{
 		case NORTH:
@@ -256,7 +256,7 @@ public class BlockStairV1 extends BlockBase
 			return flag ? AABB_QTR_BOT_EAST : AABB_QTR_TOP_EAST;
 		}
 	}
-
+	
 	/**
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
@@ -265,7 +265,7 @@ public class BlockStairV1 extends BlockBase
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean isFullCube(IBlockState state)
 	{
@@ -280,7 +280,7 @@ public class BlockStairV1 extends BlockBase
 	{
 		return state.getValue(HALF) == BlockStairs.EnumHalf.TOP;
 	}
-
+	
 	/**
 	 * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
 	 * IBlockstate
@@ -326,7 +326,7 @@ public class BlockStairV1 extends BlockBase
 		
 		return raytraceresult1;
 	}
-
+	
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
@@ -337,7 +337,7 @@ public class BlockStairV1 extends BlockBase
 		state = state.withProperty(FACING, EnumFacing.getFront(5 - (meta & 3)));
 		return state;
 	}
-
+	
 	/**
 	 * Convert the BlockState into the correct metadata value
 	 */
@@ -345,12 +345,12 @@ public class BlockStairV1 extends BlockBase
 	public int getMetaFromState(IBlockState state)
 	{
 		int i = 0;
-
+		
 		if (state.getValue(HALF) == BlockStairs.EnumHalf.TOP)
 		{
 			i |= 4;
 		}
-
+		
 		i = i | 5 - state.getValue(FACING).getIndex();
 		return i;
 	}
@@ -484,7 +484,7 @@ public class BlockStairV1 extends BlockBase
 	{
 		return new BlockStateContainer(this, new IProperty[] {FACING, HALF, SHAPE});
 	}
-
+	
 	@Override
 	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

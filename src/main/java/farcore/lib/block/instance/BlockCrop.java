@@ -2,7 +2,6 @@ package farcore.lib.block.instance;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,15 +61,15 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		
 		private static final Gson GSON = new GsonBuilder()
 				.registerTypeAdapter(CropSelectBoxHeightHandler.class, (JsonDeserializer<CropSelectBoxHeightHandler>)
-						(JsonElement json, Type typeOfT, JsonDeserializationContext context) -> INSTANCE.decode(json, context)).create();
+						(json, typeOfT, context) -> INSTANCE.decode(json, context)).create();
 		private static final AxisAlignedBB selectBoundBoxCache = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, 1F, .9375F);
-
+		
 		private Mat loadingMaterial;
 		private Map<String, Float> bounds;
-
+		
 		private CropSelectBoxHeightHandler decode(JsonElement json, JsonDeserializationContext context)
 		{
-			if(loadingMaterial == null) throw new RuntimeException("No material is loading!");
+			if(this.loadingMaterial == null) throw new RuntimeException("No material is loading!");
 			if(!json.isJsonObject()) throw new JsonParseException("Should be an object");
 			JsonObject object = json.getAsJsonObject();
 			if(object.has("height"))
@@ -78,9 +77,9 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 				JsonObject object2 = object.getAsJsonObject("height");
 				for(Entry<String, JsonElement> entry : object2.entrySet())
 				{
-					if(bounds.containsKey(entry.getKey()))
+					if(this.bounds.containsKey(entry.getKey()))
 						throw new RuntimeException("The same state has registered twice!");
-					bounds.put(entry.getKey(), entry.getValue().getAsFloat() / 16F);//Use 16 pixel per block.
+					this.bounds.put(entry.getKey(), entry.getValue().getAsFloat() / 16F);//Use 16 pixel per block.
 				}
 			}
 			return this;
@@ -89,12 +88,12 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		@Override
 		public void onResourceManagerReload(IResourceManager resourceManager)
 		{
-			bounds = new HashMap();
+			this.bounds = new HashMap();
 			Log.reset();
 			ResourceLocation location;
 			for(Mat material : Mat.filt(SubTag.CROP))
 			{
-				loadingMaterial = material;
+				this.loadingMaterial = material;
 				location = new ResourceLocation(material.modid, "blockstates/crop/" + material.name + ".json");
 				try
 				{
@@ -111,14 +110,14 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 					Log.error("Fail to load %s.", exception, location.toString());
 				}
 			}
-			loadingMaterial = null;
-			Log.logCachedInformations((Object object) -> ((ResourceLocation) object).toString(), "The crop path is mssing a height mapping.");
-			bounds = ImmutableMap.copyOf(bounds);
+			this.loadingMaterial = null;
+			Log.logCachedInformations(object -> ((ResourceLocation) object).toString(), "The crop path is mssing a height mapping.");
+			this.bounds = ImmutableMap.copyOf(this.bounds);
 		}
-
+		
 		public AxisAlignedBB getSelectBoundBox(String state, AxisAlignedBB def)
 		{
-			Float val = bounds.get(state);
+			Float val = this.bounds.get(state);
 			if(val == null) return def;
 			return selectBoundBoxCache.setMaxY(val);
 		}
@@ -144,15 +143,15 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		super(FarCore.ID, "crop", Material.PLANTS);
 		EnumBlock.crop.set(this);
 		setHardness(0.5F);
-		unharvestableSpeedMultiplier = 600F;
+		this.unharvestableSpeedMultiplier = 600F;
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, PROP_CROP_TYPE);
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
@@ -164,7 +163,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	{
 		return 0;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -172,10 +171,10 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		super.registerRender();
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(CropSelectBoxHeightHandler.INSTANCE);
 		ModelLoader.setCustomStateMapper(this, new StateMapperCrop());
-		ModelLoader.registerItemVariants(item, new ResourceLocation[0]);
-		ModelLoader.setCustomMeshDefinition(item, (ItemStack stack) -> Client.MODEL_MISSING);
+		ModelLoader.registerItemVariants(this.item, new ResourceLocation[0]);
+		ModelLoader.setCustomMeshDefinition(this.item, (ItemStack stack) -> Client.MODEL_MISSING);
 	}
-
+	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
@@ -216,7 +215,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		}
 		return new TECrop();
 	}
-
+	
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
@@ -239,7 +238,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	{
 		return false;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
@@ -254,7 +253,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		 */
 		return BlockRenderLayer.CUTOUT;
 	}
-
+	
 	public boolean canBlockStay(World world, BlockPos pos)
 	{
 		TileEntity tile;
@@ -262,14 +261,14 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			return ((TECrop) tile).canPlantAt();
 		return true;
 	}
-
+	
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 		return tile instanceof TECrop ? ((TECrop) tile).getPlantType() : EnumPlantType.Crop;
 	}
-
+	
 	@Override
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{

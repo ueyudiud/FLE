@@ -2,7 +2,7 @@ package farcore.lib.block.instance;
 
 import farcore.data.EnumOreAmount;
 import farcore.data.M;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.ItemBlockBase;
 import farcore.lib.material.Mat;
@@ -16,7 +16,7 @@ public class ItemOre extends ItemBlockBase
 		super(block);
 	}
 
-	public ItemStack createItemStack(int size, Mat ore, EnumOreAmount amount, Mat rock, RockType type)
+	public ItemStack createItemStack(int size, Mat ore, EnumOreAmount amount, Mat rock, EnumRockType type)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		ItemStack stack = new ItemStack(this, size, ore.id);
@@ -47,19 +47,19 @@ public class ItemOre extends ItemBlockBase
 		return Mat.material(nbt.getString("rock"), M.stone);
 	}
 	
-	public static RockType getRockType(NBTTagCompound nbt)
+	public static EnumRockType getRockType(NBTTagCompound nbt)
 	{
 		try
 		{
-			return RockType.values()[nbt.getByte("type")];
+			return EnumRockType.values()[nbt.getByte("type")];
 		}
 		catch(Exception exception)
 		{
-			return RockType.resource;
+			return EnumRockType.resource;
 		}
 	}
 	
-	public static NBTTagCompound setRock(NBTTagCompound nbt, Mat material, RockType type)
+	public static NBTTagCompound setRock(NBTTagCompound nbt, Mat material, EnumRockType type)
 	{
 		nbt.setString("rock", material.name);
 		nbt.setByte("type", (byte) type.ordinal());

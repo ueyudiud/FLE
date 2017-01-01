@@ -8,7 +8,7 @@ import farcore.lib.block.BlockSingleTE;
 import farcore.lib.block.IExtendedDataBlock;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.UnlocalizedList;
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -100,7 +100,7 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 			boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
-		NBTTagCompound nbt = U.ItemStacks.getOrSetupNBT(stack, false);
+		NBTTagCompound nbt = ItemStacks.getOrSetupNBT(stack, false);
 		float tc = nbt.getFloat("conductivity");
 		tooltip.addLocal("Thermal Conductivity: " + tc + "W/K");
 		switch (nbt.getByte("mode"))

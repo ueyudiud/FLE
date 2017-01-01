@@ -2,7 +2,7 @@ package farcore.lib.render;
 
 import org.lwjgl.opengl.GL11;
 
-import farcore.util.U.Maths;
+import farcore.util.Maths;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

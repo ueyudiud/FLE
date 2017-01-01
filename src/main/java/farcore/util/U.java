@@ -21,24 +21,18 @@ import farcore.data.ColorMultiplier;
 import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.lib.block.ISmartFallableBlock;
-import farcore.lib.block.IToolableBlock;
 import farcore.lib.entity.EntityFallingBlockExtended;
-import farcore.lib.fluid.FluidStackExt;
 import farcore.lib.inv.IBasicInventory;
 import farcore.lib.item.ITool;
 import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.block.statemap.StateMapperExt;
-import farcore.lib.nbt.NBTTagCompoundEmpty;
 import farcore.lib.net.world.PacketBreakBlock;
 import farcore.lib.oredict.OreDictExt;
 import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.IProgressBarStyle;
 import farcore.lib.render.ParticleDiggingExt;
 import farcore.lib.stack.AbstractStack;
-import farcore.lib.stack.ArrayStack;
-import farcore.lib.stack.BaseStack;
-import farcore.lib.stack.OreStack;
 import farcore.lib.tile.IItemHandlerIO;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.abstracts.TEBase;
@@ -73,14 +67,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRenderLayer;
@@ -96,7 +88,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldType;
@@ -124,113 +115,6 @@ public class U
 	private static final Random RNG = new Random();
 	@SidedProxy(serverSide = "farcore.util.U$CommonHandler", clientSide = "farcore.util.U$ClientHandler")
 	static CommonHandler handlerGatway;
-	
-	public static class Maths
-	{
-		public static double[][] gaussianL(int size, double sigma)
-		{
-			int size1 = size * 2 + 1;
-			double t = 0D;
-			double[][] ret = new double[size1][size1];
-			double s2 = sigma * sigma;
-			for(int i = 0; i < size1; ++i)
-			{
-				for(int j = 0; j < size1; ++j)
-				{
-					int i1 = i - size - 1;
-					int j1 = j - size - 1;
-					t += (ret[i][j] = Math.exp(- (i1 * i1 + j1 * j1) / (2 * s2)));
-				}
-			}
-			for(int i = 0; i < size1; ++i)
-			{
-				for(int j = 0; j < size1; ++j)
-				{
-					ret[i][j] /= t;
-				}
-			}
-			return ret;
-		}
-		
-		public static float[][] gaussianLf(int size, float sigma)
-		{
-			int size1 = size * 2 + 1;
-			float t = 0F;
-			float[][] ret = new float[size1][size1];
-			double s2 = sigma * sigma;
-			for(int i = 0; i < size1; ++i)
-			{
-				for(int j = 0; j < size1; ++j)
-				{
-					int i1 = i - size - 1;
-					int j1 = j - size - 1;
-					t += (ret[i][j] = (float) Math.exp(- (i1 * i1 + j1 * j1) / (2 * s2)));
-				}
-			}
-			for(int i = 0; i < size1; ++i)
-			{
-				for(int j = 0; j < size1; ++j)
-				{
-					ret[i][j] /= t;
-				}
-			}
-			return ret;
-		}
-		
-		public static double mod(double a, double b)
-		{
-			double v;
-			return (v = a % b) > 0 ? v : v + b;
-		}
-		
-		public static float mod(float a, float b)
-		{
-			float v;
-			return (v = a % b) > 0 ? v : v + b;
-		}
-		
-		public static int mod(int a, int b)
-		{
-			int v;
-			return (v = a % b) > 0 ? v : v + b;
-		}
-		
-		public static long mod(long a, long b)
-		{
-			long v;
-			return (v = a % b) > 0 ? v : v + b;
-		}
-		
-		public static float average(float...floats)
-		{
-			float j = 0;
-			for(float i : floats)
-			{
-				j += i;
-			}
-			return j / floats.length;
-		}
-		
-		public static double average(double...doubles)
-		{
-			double j = 0;
-			for(double i : doubles)
-			{
-				j += i;
-			}
-			return j / doubles.length;
-		}
-		
-		public static float lerp(float a, float b, float x)
-		{
-			return a + (b - a) * x;
-		}
-		
-		public static double lerp(double a, double b, double x)
-		{
-			return a + (b - a) * x;
-		}
-	}
 	
 	public static class Mod
 	{
@@ -409,7 +293,7 @@ public class U
 		
 		public static void registerValid(String name, ItemStack ore)
 		{
-			if(U.ItemStacks.valid(ore) == null) return;
+			if(ItemStacks.valid(ore) == null) return;
 			ItemStack register = ore.copy();
 			register.stackSize = 1;
 			OreDictionary.registerOre(name, ore);
@@ -1051,322 +935,6 @@ public class U
 				}
 			}
 			return -1;
-		}
-	}
-	
-	public static class ItemStacks
-	{
-		/**
-		 * Some item may override item meta get method,
-		 * this method will give a stack with item select
-		 * meta.
-		 * @param item
-		 * @param meta
-		 * @return
-		 */
-		public static ItemStack stack(Item item, int meta)
-		{
-			ItemStack stack = new ItemStack(item, 1);
-			stack.setItemDamage(meta);
-			return stack;
-		}
-		
-		public static ItemStack valid(ItemStack stack)
-		{
-			if(stack == null || stack.stackSize <= 0)
-				return null;
-			if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
-			{
-				stack = stack.copy();
-				stack.setItemDamage(0);
-			}
-			return stack;
-		}
-		
-		public static NBTTagCompound getOrSetupNBT(ItemStack stack, boolean createTag)
-		{
-			if(!stack.hasTagCompound())
-			{
-				if(createTag)
-				{
-					stack.setTagCompound(new NBTTagCompound());
-					return stack.getTagCompound();
-				}
-				return NBTTagCompoundEmpty.INSTANCE;
-			}
-			return stack.getTagCompound();
-		}
-		
-		public static NBTTagCompound getSubOrSetupNBT(ItemStack stack, String tag, boolean createTag)
-		{
-			NBTTagCompound nbt = stack.getTagCompound();
-			if(nbt == null)
-			{
-				if(!createTag) return NBTTagCompoundEmpty.INSTANCE;
-				stack.setTagInfo(tag, nbt = new NBTTagCompound());
-				return nbt;
-			}
-			return NBTs.getCompound(nbt, tag, createTag);
-		}
-		
-		public static ImmutableList<ItemStack> sizeOf(List<ItemStack> stacks, int size)
-		{
-			if(stacks == null || stacks.isEmpty()) return ImmutableList.of();
-			ImmutableList.Builder builder = ImmutableList.builder();
-			for(ItemStack stack : stacks)
-				if(stack != null)
-				{
-					ItemStack stack2 = stack.copy();
-					stack2.stackSize = size;
-					builder.add(valid(stack2.copy()));
-				}
-			return builder.build();
-		}
-		
-		public static ItemStack sizeOf(ItemStack stack, int size)
-		{
-			ItemStack ret;
-			(ret = stack.copy()).stackSize = size;
-			return ret;
-		}
-		
-		public static AbstractStack sizeOf(AbstractStack stack, int size)
-		{
-			return size <= 0 ? null : stack instanceof BaseStack ?
-					BaseStack.sizeOf((BaseStack) stack, size) :
-						stack instanceof ArrayStack ?
-								ArrayStack.sizeOf((ArrayStack) stack, size) :
-									stack instanceof OreStack ?
-											OreStack.sizeOf((OreStack) stack, size) : null;
-		}
-		
-		public static boolean isItemAndTagEqual(ItemStack stack1, ItemStack stack2)
-		{
-			return stack1 == null || stack2 == null ?
-					stack1 == stack2 :
-						stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
-		}
-		
-		public static boolean areTagEqual(NBTTagCompound nbt1, NBTTagCompound nbt2)
-		{
-			return nbt1 == null || nbt2 == null ? nbt1 == nbt2 : nbt1.equals(nbt2);
-		}
-		
-		/**
-		 * This method should called by item onItemUse.
-		 * @param stack
-		 * @param player
-		 * @param world
-		 * @param pos
-		 * @param side
-		 * @param hitX
-		 * @param hitY
-		 * @param hitZ
-		 * @return
-		 */
-		public static EnumActionResult onUseOnBlock(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
-		{
-			List<EnumToolType> toolTypes;
-			if(stack == null)
-			{
-				toolTypes = EnumToolType.HAND_USABLE_TOOL;
-			}
-			else if(stack.getItem() instanceof ITool)
-			{
-				toolTypes = ((ITool) stack.getItem()).getToolTypes(stack);
-			}
-			else return EnumActionResult.PASS;
-			Direction direction = Direction.of(side);
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() instanceof IToolableBlock)
-			{
-				IToolableBlock block = (IToolableBlock) state.getBlock();
-				for(EnumToolType tool : toolTypes)
-				{
-					ActionResult<Float> result = block.onToolClick(player, tool, stack, world, pos, direction, hitX, hitY, hitZ);
-					if(result.getType() != EnumActionResult.PASS)
-					{
-						((ITool) stack.getItem()).onToolUse(player, stack, tool, farcore.util.L.cast(result.getResult()));
-						return result.getType();
-					}
-				}
-			}
-			return EnumActionResult.PASS;
-		}
-		
-		public static List<EnumToolType> getCurrentToolType(ItemStack stack)
-		{
-			if(stack == null)
-				return EnumToolType.HAND_USABLE_TOOL;
-			if(stack.getItem() instanceof ITool)
-				return ((ITool) stack.getItem()).getToolTypes(stack);
-			List<EnumToolType> list = new ArrayList();
-			for(EnumToolType toolType : EnumToolType.values())
-			{
-				if(toolType.match(stack))
-				{
-					list.add(toolType);
-				}
-			}
-			return list;
-		}
-		
-		public static int getToolLevel(ItemStack stack, EnumToolType toolType)
-		{
-			if(stack == null)
-				return -1;
-			if(stack.getItem() instanceof ITool)
-				return ((ITool) stack.getItem()).getToolLevel(stack, toolType);
-			return toolType.match(stack) ? 1 : -1;
-		}
-	}
-	
-	public static class FluidStacks
-	{
-		public static int getTemperature(FluidStack stack, int def)
-		{
-			return stack instanceof FluidStackExt ?
-					((FluidStackExt) stack).getTemperature() :
-						stack != null ? stack.getFluid().getTemperature(stack) : def;
-		}
-		
-		public static int getColor(FluidStack stack)
-		{
-			return stack.getFluid().getColor(stack);
-		}
-	}
-	
-	public static class Entities
-	{
-		public static double movementSpeedSq(Entity entity)
-		{
-			return entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ;
-		}
-		
-		public static double movementSpeed(Entity entity)
-		{
-			return Math.sqrt(movementSpeedSq(entity));
-		}
-	}
-	
-	public static class Players
-	{
-		public static EntityPlayer player()
-		{
-			return handlerGatway.playerInstance();
-		}
-		
-		public static List<EnumToolType> getCurrentToolType(EntityPlayer player)
-		{
-			ItemStack stack = player.getHeldItemMainhand();
-			if(stack == null)
-			{
-				stack = player.getHeldItemOffhand();
-			}
-			if(stack == null)
-				return EnumToolType.HAND_USABLE_TOOL;
-			if(stack.getItem() instanceof ITool)
-				return ((ITool) stack.getItem()).getToolTypes(stack);
-			List<EnumToolType> list = new ArrayList();
-			for(EnumToolType toolType : EnumToolType.values())
-			{
-				if(toolType.match(stack))
-				{
-					list.add(toolType);
-				}
-			}
-			return list;
-		}
-		
-		public static boolean matchCurrentToolType(EntityPlayer player, EnumToolType...types)
-		{
-			ItemStack stack = player.getHeldItemMainhand();
-			if(stack == null)
-			{
-				stack = player.getHeldItemOffhand();
-			}
-			if(stack == null)
-			{
-				for(EnumToolType type : types)
-					if(type == EnumToolType.hand)
-						return true;
-				return false;
-			}
-			List<EnumToolType> list;
-			if(stack.getItem() instanceof ITool)
-			{
-				list = ((ITool) stack.getItem()).getToolTypes(stack);
-				for(EnumToolType type : types)
-				{
-					if(list.contains(type)) return true;
-				}
-				return false;
-			}
-			for(EnumToolType type : types)
-			{
-				if(type.match(stack))
-					return true;
-			}
-			return false;
-			
-		}
-		
-		public static void destoryPlayerCurrentItem(EntityPlayer player)
-		{
-			if(player == null) return;
-			if(player.getHeldItemMainhand() != null && player.getHeldItemMainhand().stackSize <= 0)
-			{
-				player.renderBrokenItemStack(player.getHeldItemMainhand());
-				player.setHeldItem(EnumHand.MAIN_HAND, null);
-			}
-			if(player.getHeldItemOffhand() != null && player.getHeldItemOffhand().stackSize <= 0)
-			{
-				player.renderBrokenItemStack(player.getHeldItemOffhand());
-				player.setHeldItem(EnumHand.OFF_HAND, null);
-			}
-		}
-		
-		public static Entity moveEntityToAnotherDim(Entity entity, int dim, double x, double y, double z)
-		{
-			WorldServer targetWorld = DimensionManager.getWorld(dim);
-			if(targetWorld != null)
-				return moveEntityToAnotherDim(entity, dim, x, y, z, targetWorld.getDefaultTeleporter());
-			return null;
-		}
-		
-		public static Entity moveEntityToAnotherDim(Entity entity, int dim, double x, double y, double z, Teleporter teleporter)
-		{
-			WorldServer targetWorld = DimensionManager.getWorld(dim);
-			WorldServer originalWorld = DimensionManager.getWorld(entity.worldObj.provider.getDimension());
-			if(targetWorld != null && originalWorld != null && targetWorld != originalWorld)
-			{
-				if(entity.isRiding())
-				{
-					entity.dismountRidingEntity();
-				}
-				if(entity.isBeingRidden())
-				{
-					entity.removePassengers();
-				}
-				if (entity instanceof EntityPlayerMP)
-				{
-					EntityPlayerMP player = (EntityPlayerMP) entity;
-					player.mcServer.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
-					player.connection.sendPacket(new SPacketEffect(1032, BlockPos.ORIGIN, 0, false));
-					player.setLocationAndAngles(x, y, z, player.rotationYaw, player.rotationPitch);
-					return player;
-				}
-				else
-				{
-					Entity newEntity = entity.changeDimension(dim);
-					if (newEntity != null)
-					{
-						entity.setPosition(x + 0.5D, y + 0.5D, z + 0.5D);
-					}
-					return newEntity;
-				}
-			}
-			return null;
 		}
 	}
 	

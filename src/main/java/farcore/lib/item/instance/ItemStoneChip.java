@@ -4,7 +4,7 @@ import farcore.data.EnumItem;
 import farcore.data.KS;
 import farcore.data.MC;
 import farcore.data.MP;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.entity.EntityProjectileItem;
 import farcore.lib.item.IProjectileItem;
@@ -62,7 +62,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			if(material.contain(SubTag.ROCK))
 			{
 				PropertyRock property = material.getProperty(MP.property_rock);
-				if(worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, RockType.cobble_art), 3))
+				if(worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, EnumRockType.cobble_art), 3))
 				{
 					stack.stackSize -= 9;
 					return EnumActionResult.SUCCESS;

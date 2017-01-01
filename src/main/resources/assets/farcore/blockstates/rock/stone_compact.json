@@ -1,0 +1,61 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"type": {
+			"resource": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "farcore:blocks/rock/stone_compact/chiseled"
+				}
+			}
+		}
+	}
+}

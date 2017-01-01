@@ -29,6 +29,7 @@ import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.world.WorldPropHandler;
 import farcore.util.L;
+import farcore.util.Players;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -319,7 +320,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	@Override
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
-		return U.Players.getCurrentToolType(player).contains(EnumToolType.shovel);
+		return Players.getCurrentToolType(player).contains(EnumToolType.shovel);
 	}
 	
 	@Override

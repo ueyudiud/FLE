@@ -2,7 +2,6 @@ package farcore.lib.model;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import javax.vecmath.Quat4f;
@@ -11,26 +10,17 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import farcore.lib.model.item.unused.FarCoreItemModelLoader;
-import farcore.lib.model.item.unused.ModelItemBase;
-import farcore.lib.model.item.unused.ModelLayer;
-import farcore.lib.model.item.unused.ModelLayerV1;
+import farcore.lib.model.item.FarCoreItemModelUnbaked;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ItemLayerModel;
-import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -259,31 +249,12 @@ public class ModelHelper
 	
 	public static IModel makeItemModel(String textureName)
 	{
-		return new ModelSurface(new ResourceLocation(textureName));
+		return makeItemModel(new ResourceLocation(textureName));
 	}
 	
 	public static IModel makeItemModel(ResourceLocation location)
 	{
-		return new ModelSurface(location);
-	}
-	
-	private static class ModelSurface implements IModel
-	{
-		private ResourceLocation location;
-		public ModelSurface(ResourceLocation location) { this.location = location; }
-		@Override
-		public Collection<ResourceLocation> getTextures() { return ImmutableList.of(this.location); }
-		@Override
-		public Collection<ResourceLocation> getDependencies() { return ImmutableList.of(); }
-		@Override
-		public IModelState getDefaultState() { return TRSRTransformation.identity(); }
-		@Override
-		public IBakedModel bake(IModelState state, VertexFormat format,
-				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
-		{
-			TextureAtlasSprite icon = bakedTextureGetter.apply(this.location);
-			return new ModelItemBase.BakedModelItemBase(new ModelLayer[]{new ModelLayerV1(0, ImmutableMap.of(FarCoreItemModelLoader.NORMAL, ItemLayerModel.getQuadsForSprite(0, icon, format, Optional.of(TRSRTransformation.identity()))), FarCoreItemModelLoader.NORMAL_FUNCTION, FarCoreItemModelLoader.NORMAL_MULTIPLIER)}, icon);
-		}
+		return FarCoreItemModelUnbaked.createNewModel(location);
 	}
 	
 	public static TRSRTransformation transformation(

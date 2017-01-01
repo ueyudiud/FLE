@@ -7,6 +7,11 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Fluid slot type.
+ * @author ueyudiud
+ *
+ */
 public class FSlot
 {
 	public FluidTank tank;
@@ -16,7 +21,7 @@ public class FSlot
 	public int u;
 	public int v;
 	public int slotNumber;
-
+	
 	public FSlot(FluidTank tank, int x, int y, int u, int v)
 	{
 		this.tank = tank;
@@ -28,39 +33,64 @@ public class FSlot
 	
 	public FSlot setNoRender()
 	{
-		shouldRender = false;
+		this.shouldRender = false;
 		return this;
 	}
-
+	
+	/**
+	 * Get slot capacity.
+	 * @return
+	 */
 	public int getCapacity()
 	{
-		return tank.getCapacity();
-	}
-
-	public FluidStack getStackInSlot()
-	{
-		return tank.getFluid();
+		return this.tank.getCapacity();
 	}
 	
+	/**
+	 * Get fluid stack current in slot.
+	 * @return
+	 */
+	public FluidStack getStackInSlot()
+	{
+		return this.tank.getFluid();
+	}
+	
+	/**
+	 * Set stack to slot.
+	 * @param stack
+	 */
 	public void putStack(FluidStack stack)
 	{
-		tank.setFluid(stack);
+		this.tank.setFluid(stack);
 	}
-
+	
+	/**
+	 * Called when player clicked slot.
+	 * @param player The player.
+	 * @param currentStack The current item stack.
+	 */
 	public void onSlotClick(EntityPlayer player, ItemStack currentStack)
 	{
-
+		
 	}
-
+	
+	/**
+	 * Render fluid slot into GUI.
+	 * @param gui
+	 */
 	@SideOnly(Side.CLIENT)
 	public void renderSlot(GuiContainerBase gui)
 	{
-		if(shouldRender)
+		if(this.shouldRender)
 		{
-			gui.drawFluid(x, y, tank.getInfo(), u, v);
+			gui.drawFluid(this.x, this.y, this.tank.getInfo(), this.u, this.v);
 		}
 	}
 	
+	/**
+	 * Should slot visible to click or do others actions.
+	 * @return
+	 */
 	public boolean isVisible()
 	{
 		return true;

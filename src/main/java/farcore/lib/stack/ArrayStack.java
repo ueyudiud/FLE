@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -75,13 +75,13 @@ public class ArrayStack implements AbstractStack
 	@Override
 	public ItemStack instance()
 	{
-		return U.ItemStacks.sizeOf(array.get(0), size);
+		return ItemStacks.sizeOf(array.get(0), size);
 	}
 
 	@Override
 	public List<ItemStack> display()
 	{
-		return U.ItemStacks.sizeOf(array, size);
+		return ItemStacks.sizeOf(array, size);
 	}
 
 	@Override

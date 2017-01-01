@@ -32,7 +32,7 @@ import farcore.lib.block.instance.BlockOre.OreStateWrapper;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.ItemOre;
 import farcore.lib.material.Mat;
-import farcore.lib.model.item.unused.ICustomItemRenderModel;
+import farcore.lib.model.item.ICustomItemRenderModel;
 import farcore.lib.util.Log;
 import farcore.lib.util.SubTag;
 import net.minecraft.block.Block;

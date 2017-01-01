@@ -24,9 +24,9 @@ import farcore.lib.util.ISubTagContainer;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.UnlocalizedList;
 import farcore.lib.world.IEnvironment;
+import farcore.util.ItemStacks;
 import farcore.util.Localization;
 import farcore.util.U;
-import farcore.util.U.ItemStacks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -70,7 +70,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	
 	public static float getToolDamage(ItemStack stack)
 	{
-		return U.ItemStacks.getOrSetupNBT(stack, false).getCompoundTag("durability").getFloat("damage");
+		return ItemStacks.getOrSetupNBT(stack, false).getCompoundTag("durability").getFloat("damage");
 	}
 	
 	public static int getDefaultMaxDurability(ToolProp prop, ItemStack stack)

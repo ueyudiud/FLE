@@ -41,7 +41,7 @@ import farcore.lib.tile.instance.circuit.TESensorLight;
 import farcore.lib.util.Direction;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.UnlocalizedList;
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -311,7 +311,7 @@ public class BlockRedstoneCircuit extends BlockTE
 			boolean advanced)
 	{
 		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
-		Mat material = Mat.material(U.ItemStacks.getOrSetupNBT(stack, false).getString("material"), M.stone);
+		Mat material = Mat.material(ItemStacks.getOrSetupNBT(stack, false).getString("material"), M.stone);
 		tooltip.add("info.redstone.circuit.material", material.getLocalName());
 	}
 }

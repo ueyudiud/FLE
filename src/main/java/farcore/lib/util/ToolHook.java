@@ -8,7 +8,7 @@ import farcore.data.EnumToolType;
 import farcore.lib.block.instance.BlockLog;
 import farcore.lib.block.instance.BlockOre;
 import farcore.util.L;
-import farcore.util.U;
+import farcore.util.Players;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +52,7 @@ public class ToolHook
 	
 	private static boolean mapMatch(Map<Material, List<EnumToolType>> map, IBlockState state, EntityPlayer player)
 	{
-		List<EnumToolType> list = U.Players.getCurrentToolType(player);
+		List<EnumToolType> list = Players.getCurrentToolType(player);
 		Material material = state.getMaterial();
 		if(material.isToolNotRequired()) return true;
 		if(!map.containsKey(material)) return false;

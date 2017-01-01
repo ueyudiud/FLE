@@ -2,7 +2,7 @@ package farcore.lib.util;
 
 import java.util.Random;
 
-import farcore.util.U.Maths;
+import farcore.util.Maths;
 
 public class NoiseCell extends NoiseBase
 {

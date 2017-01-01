@@ -11,8 +11,8 @@ import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.behavior.IItemMatProp;
 import farcore.util.L;
+import farcore.util.Players;
 import farcore.util.R;
-import farcore.util.U;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -152,7 +152,7 @@ public class WeaponHelper
 				player.addExhaustion(0.3F);
 			}
 		}
-		U.Players.destoryPlayerCurrentItem(player);
+		Players.destoryPlayerCurrentItem(player);
 	}
 	
 	public static boolean matchCritical(EntityPlayer player)

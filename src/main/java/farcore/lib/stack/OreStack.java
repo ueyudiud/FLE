@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.oredict.OreDictExt;
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.item.ItemStack;
 
 public class OreStack implements AbstractStack
@@ -74,7 +74,7 @@ public class OreStack implements AbstractStack
 	{
 		if(list == null)
 		{
-			list = U.ItemStacks.sizeOf(ore, size);
+			list = ItemStacks.sizeOf(ore, size);
 		}
 		return list;
 	}

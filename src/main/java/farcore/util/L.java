@@ -345,4 +345,9 @@ public class L
 	{
 		return table.contains(rowKey, columnKey) ? table.get(rowKey, columnKey) : defaultValue;
 	}
+	
+	public static <E> ArrayList<E> castToArrayListOrWrap(Collection<?> col)
+	{
+		return col instanceof ArrayList ? (ArrayList<E>) col : new ArrayList(col);
+	}
 }

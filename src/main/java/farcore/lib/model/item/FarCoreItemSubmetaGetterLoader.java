@@ -100,7 +100,7 @@ public class FarCoreItemSubmetaGetterLoader
 			ResourceLocation location2 = new ResourceLocation(location.getResourceDomain(), "models/mg/" + location.getResourcePath() + ".js");
 			try
 			{
-				SubmetaGetter getter = new ScriptSubmetaGetter(IO.copyResource(FarCoreItemModelLoader.getResourceManaer(), location));
+				SubmetaGetter getter = new ScriptSubmetaGetter(IO.copyResource(FarCoreItemModelLoader.getResourceManaer(), location2));
 				STORED_FUNCTION.put(location, getter);
 				return getter;
 			}

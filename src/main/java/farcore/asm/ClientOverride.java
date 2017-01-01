@@ -7,7 +7,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import farcore.lib.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
-import farcore.lib.model.item.unused.ICustomItemRenderModel;
+import farcore.lib.model.item.ICustomItemRenderModel;
 import farcore.lib.render.IWorldRender;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

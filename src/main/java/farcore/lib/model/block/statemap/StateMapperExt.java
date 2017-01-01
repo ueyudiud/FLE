@@ -28,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class StateMapperExt extends StateMapperBase
 {
-	private static final Comparator<IProperty<?>> PROPERTY_COMPARATOR = (IProperty<?> property1, IProperty<?> property2) -> property1.getName().compareTo(property2.getName());
+	private static final Comparator<IProperty<?>> PROPERTY_COMPARATOR = (property1, property2) -> property1.getName().compareTo(property2.getName());
 	
 	private String path;
 	private IProperty<?> fileProperty;
@@ -36,7 +36,7 @@ public class StateMapperExt extends StateMapperBase
 	private String variantsKey;
 	private String variantsValue;
 	
-	private IProperty<String> fakeProperty;
+	IProperty<String> fakeProperty;
 	
 	public StateMapperExt(String modid, String path, IProperty property1, IProperty...properties)
 	{
@@ -45,68 +45,74 @@ public class StateMapperExt extends StateMapperBase
 	public StateMapperExt(String path, IProperty property1, IProperty...properties)
 	{
 		this.path = path;
-		fileProperty = property1;
-		ignore = ImmutableList.copyOf(properties);
+		this.fileProperty = property1;
+		this.ignore = ImmutableList.copyOf(properties);
 	}
-
+	
 	public void markVariantProperty()
 	{
-		markVariantProperty(createFakeProperty(variantsKey, variantsValue));
+		markVariantProperty(createFakeProperty(this.variantsKey, this.variantsValue));
 	}
 	
 	public void markVariantProperty(IProperty<String> property)
 	{
-		fakeProperty = property;
+		this.fakeProperty = property;
 	}
-
+	
 	public void setVariants(String key, String value)
 	{
-		variantsKey = key;
-		variantsValue = value;
+		this.variantsKey = key;
+		this.variantsValue = value;
 	}
-
+	
 	@Override
 	public ModelResourceLocation getModelResourceLocation(IBlockState state)
 	{
 		Map<IProperty<?>, Comparable<?>> map = new HashMap(state.getProperties());
-		if (variantsKey != null)
-		{
-			if (fakeProperty == null)
-			{
-				markVariantProperty();
-			}
-			map.put(fakeProperty, variantsValue);
-		}
 		
-		String key = path;
-		if(fileProperty != null)
-		{
-			key += "/" + removeAndGet(fileProperty, map);
-		}
-		else
-		{
-			;
-		}
-		for(IProperty property : ignore)
-		{
-			map.remove(property);
-		}
-
+		String path = modifyMap(map);
+		
 		map = ImmutableSortedMap.copyOf(map, PROPERTY_COMPARATOR);
-
+		
 		ModelResourceLocation location = new ModelResourceLocation(path, getPropertyKey(map));
 		return location;
 	}
 	
-	public static IProperty<String> createFakeProperty(String key, String value)
+	/**
+	 * Modify property map.
+	 * @param map
+	 * @return
+	 */
+	protected String modifyMap(Map<IProperty<?>, Comparable<?>> map)
+	{
+		if (this.variantsKey != null)
+		{
+			if (this.fakeProperty == null)
+			{
+				markVariantProperty();
+			}
+			map.put(this.fakeProperty, this.variantsValue);
+		}
+		
+		String key = this.path;
+		if(this.fileProperty != null)
+		{
+			key += "/" + removeAndGetName(this.fileProperty, map);
+		}
+		
+		for(IProperty property : this.ignore)
+		{
+			map.remove(property);
+		}
+		return key;
+	}
+	
+	public static IProperty<String> createFakeProperty(String key, String...values)
 	{
 		return new PropertyHelper<String>(key, String.class)
 		{
-			@Override
-			public Collection<String> getAllowedValues() { return ImmutableList.of(value); }
-			@Override
+			public Collection<String> getAllowedValues() { return ImmutableList.copyOf(values); }
 			public Optional<String> parseValue(String value) { return Optional.of(value); }
-			@Override
 			public String getName(String value) { return value; }
 		};
 	}
@@ -135,8 +141,13 @@ public class StateMapperExt extends StateMapperBase
 		return builder.toString();
 	}
 	
-	public static <T extends Comparable<T>> String removeAndGet(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
+	public static <T extends Comparable<T>> String removeAndGetName(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
 	{
-		return property.getName((T) map.remove(property));
+		return property.getName(removeAndGetValue(property, map));
+	}
+	
+	public static <T extends Comparable<T>> T removeAndGetValue(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
+	{
+		return (T) map.remove(property);
 	}
 }

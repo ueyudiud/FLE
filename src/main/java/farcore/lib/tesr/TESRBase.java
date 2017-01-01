@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import farcore.lib.render.RenderHelper;
 import farcore.lib.util.Direction;
-import farcore.util.U.Maths;
+import farcore.util.Maths;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

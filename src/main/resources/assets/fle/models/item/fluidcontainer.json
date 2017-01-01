@@ -1,0 +1,29 @@
+{
+	"textures": {
+		"bottom": "[fle:fluidcontainer/bottom",
+		"fluid": "[forge:fluid",
+		"empty": "farcore:items/void",
+		"convert": "[fle:fluidcontainer/convert"
+	},
+	"layers": [
+		{
+			"include": "#bottom",
+			"submeta": {
+				"prefix": "bottom",
+				"parent": "#fle:fluidcontainer"
+			}
+		},
+		{
+			"include": {
+				"converts": [ "#convert" ],
+				"textures": [ "#fluid", "#empty" ]
+			},
+			"convert": "#fle:fluidcontainer",
+			"submeta": {
+				"prefix": "fluid",
+				"parent": "#fle:fluidcontainer_getfluid"
+			},
+			"colorMultiplier": "fle:fluidcontainer/fluidcolor"
+		}
+	]
+}

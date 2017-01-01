@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 import com.google.common.collect.ImmutableMap;
@@ -22,7 +23,6 @@ import farcore.lib.item.instance.ItemFluidDisplay;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.model.item.FarCoreItemSubmetaGetterLoader.SubmetaGetter;
-import farcore.lib.model.item.unused.FarCoreSubMetaGetterLoader;
 import farcore.lib.util.Log;
 import farcore.util.IO;
 import net.minecraft.client.Minecraft;
@@ -147,6 +147,9 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 		MODELLOCATION_TO_ITEM.put(location1, item);
 	}
 	
+	static final Function<Object, String> ERROR_REPORT_FUNCTION = object ->
+	object instanceof ResourceLocation ? String.format("File not found : %s/%s", ((ResourceLocation) object).getResourceDomain(), ((ResourceLocation) object).getResourcePath()) : "";
+	
 	/**
 	 * Called when resource manager reload.<br>
 	 * To re-register models and reload texture set in this phase.
@@ -190,7 +193,7 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 			}
 		}
 		ProgressManager.pop(bar);
-		Log.logCachedInformations(object -> object instanceof ResourceLocation ? String.format("Not found : %s/%s", ((ResourceLocation) object).getResourceDomain(), ((ResourceLocation) object).getResourcePath()) : "", "Catching exceptions during loading models.");
+		Log.logCachedInformations(ERROR_REPORT_FUNCTION, "Catching exceptions during loading models.");
 		Log.info("Far Core Item Model Loader finished model loading.");
 	}
 	
@@ -223,15 +226,15 @@ public enum FarCoreItemModelLoader implements ICustomModelLoader
 	
 	static
 	{
-		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation("minecraft", "damage"), stack -> Integer.toString(stack.getItemDamage()));
-		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation("forge", "registry_name"), stack -> stack.getItem().getRegistryName().toString());
-		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation("forge", "contain_fluid"), stack ->
+		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation("minecraft", "damage"), stack -> Integer.toString(stack.getItemDamage()));
+		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation("forge", "registry_name"), stack -> stack.getItem().getRegistryName().toString());
+		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation("forge", "contain_fluid"), stack ->
 		{
 			FluidStack stack1 = FluidUtil.getFluidContained(stack);
 			return stack1 == null ? "fluid:empty" : "fluid:" + stack1.getFluid().getName();
 		});
-		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
-		FarCoreSubMetaGetterLoader.registerSubmetaProvider(new ResourceLocation(FarCore.ID, "display_fluid"), stack -> "fluid:" + ItemFluidDisplay.getFluid(stack).getName());
+		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
+		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FarCore.ID, "display_fluid"), stack -> "fluid:" + ItemFluidDisplay.getFluid(stack).getName());
 		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation("forge", "fluid"), () ->
 		{
 			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();

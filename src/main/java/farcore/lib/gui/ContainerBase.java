@@ -12,8 +12,8 @@ import farcore.lib.collection.Node;
 import farcore.lib.fluid.FluidStackExt;
 import farcore.lib.net.gui.PacketFluidUpdateAll;
 import farcore.lib.net.gui.PacketFluidUpdateSingle;
+import farcore.util.ItemStacks;
 import farcore.util.L;
-import farcore.util.U;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -32,7 +32,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 	{
 		return stack == null ||
 				slotIn.isItemValid(stack) && (!slotIn.getHasStack() ||
-						((slotIn != null && slotIn.getHasStack() && U.ItemStacks.isItemAndTagEqual(stack, slotIn.getStack())) &&
+						((slotIn != null && slotIn.getHasStack() && ItemStacks.isItemAndTagEqual(stack, slotIn.getStack())) &&
 								(slotIn.getStack().stackSize + (stackSizeMatters ? 0 : stack.stackSize) <= Math.min(slotIn.getItemStackLimit(stack), stack.getMaxStackSize()))));
 	}
 	public static ItemStack extractStackFrom(@Nullable EntityPlayer player, SlotBase slotIn, int maxSize, boolean simulate)
@@ -76,7 +76,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 	}
 	public static int extractStackFrom(@Nullable EntityPlayer player, SlotBase slotIn, ItemStack stack, boolean simulate)
 	{
-		stack = U.ItemStacks.valid(stack);
+		stack = ItemStacks.valid(stack);
 		if(stack == null) return 0;
 		if(player != null)
 		{
@@ -85,7 +85,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 		if(slotIn.getHasStack())
 		{
 			ItemStack stack2 = slotIn.getStack();
-			if(U.ItemStacks.isItemAndTagEqual(stack, stack2))
+			if(ItemStacks.isItemAndTagEqual(stack, stack2))
 			{
 				int size = Math.min(stack.getMaxStackSize() - stack.stackSize, stack2.stackSize);
 				if(!simulate)
@@ -116,7 +116,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 	}
 	public static int injectStackIn(@Nullable EntityPlayer player, SlotBase slotIn, ItemStack stack, boolean simulate)
 	{
-		stack = U.ItemStacks.valid(stack);
+		stack = ItemStacks.valid(stack);
 		if(stack == null) return 0;
 		if(!slotIn.isItemValid(stack)) return 0;
 		if(player != null)
@@ -127,7 +127,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 		if(slotIn.getHasStack())
 		{
 			ItemStack stack2 = slotIn.getStack();
-			if(!U.ItemStacks.isItemAndTagEqual(stack, stack2)) return 0;
+			if(!ItemStacks.isItemAndTagEqual(stack, stack2)) return 0;
 			int size = Math.min(max - stack2.stackSize, stack.stackSize);
 			if(size <= 0) return 0;
 			if(!simulate)
@@ -510,7 +510,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 						}
 						else if (slot.isItemValid(itemstack2))
 						{
-							if (U.ItemStacks.isItemAndTagEqual(itemstack1, itemstack2))
+							if (ItemStacks.isItemAndTagEqual(itemstack1, itemstack2))
 							{
 								int j2 = L.min(dragType == TOTAL_PICK ? itemstack2.stackSize : 1, slot.getItemStackLimit(itemstack2) - itemstack1.stackSize, itemstack2.getMaxStackSize() - itemstack1.stackSize);
 								
@@ -528,7 +528,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 								inv.setItemStack(itemstack1);
 							}
 						}
-						else if (U.ItemStacks.isItemAndTagEqual(itemstack1, itemstack2) && itemstack2.getMaxStackSize() > 1)
+						else if (ItemStacks.isItemAndTagEqual(itemstack1, itemstack2) && itemstack2.getMaxStackSize() > 1)
 						{
 							int i2 = itemstack1.stackSize;
 							
@@ -745,7 +745,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 			{
 				Slot slot = inventorySlots.get(i);
 				ItemStack itemstack = slot.getStack();
-				if (itemstack != null && U.ItemStacks.isItemAndTagEqual(stack, itemstack))
+				if (itemstack != null && ItemStacks.isItemAndTagEqual(stack, itemstack))
 				{
 					int maxSize = Math.min(slot.getItemStackLimit(itemstack), stack.getMaxStackSize());
 					if(itemstack.stackSize >= maxSize)

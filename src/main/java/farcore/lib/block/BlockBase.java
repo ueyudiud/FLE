@@ -10,6 +10,7 @@ import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
 import farcore.lib.util.ToolHook;
 import farcore.lib.util.UnlocalizedList;
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -38,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockBase extends Block implements IRegisteredNameable, IRenderRegister
 {
 	private static List<BlockBase> list = new ArrayList();
-
+	
 	/**
 	 * Called when all others object(fluids, blocks, configurations, materials, etc)
 	 * are already initialized.
@@ -70,9 +71,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		super(materialIn);
 		if(list == null)
 			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
-		setUnlocalizedName(blockName = name);
+		setUnlocalizedName(this.blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
-		U.Mod.registerBlock(this, modid, name, item = createItemBlock());
+		U.Mod.registerBlock(this, modid, name, this.item = createItemBlock());
 		list.add(this);//Added for re-register.
 	}
 	public BlockBase(String name, Material blockMaterialIn, MapColor blockMapColorIn)
@@ -84,9 +85,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		super(blockMaterialIn, blockMapColorIn);
 		if(list == null)
 			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
-		setUnlocalizedName(blockName = name);
+		setUnlocalizedName(this.blockName = name);
 		setDefaultState(initDefaultState(getDefaultState()));
-		U.Mod.registerBlock(this, modid, name, item = createItemBlock());
+		U.Mod.registerBlock(this, modid, name, this.item = createItemBlock());
 		list.add(this);//Added for re-register.
 	}
 	
@@ -96,10 +97,10 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		
 	}
-
+	
 	public void postInitalizedBlocks()
 	{
-
+		
 	}
 	
 	protected IBlockState initDefaultState(IBlockState state)
@@ -115,7 +116,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public String getUnlocalizedName()
 	{
-		return "block." + blockName;
+		return "block." + this.blockName;
 	}
 	
 	@Override
@@ -126,7 +127,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public String getTranslateNameForItemStack(ItemStack stack)
 	{
-		return getTranslateNameForItemStack(item.getDamage(stack));
+		return getTranslateNameForItemStack(this.item.getDamage(stack));
 	}
 	
 	public String getTranslateNameForItemStack(int metadata)
@@ -156,9 +157,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		{
 			if(!onBlockHarvest(worldIn, pos, state, player, true))
 			{
-				List<ItemStack> items = getDrops(worldIn, pos, state, te, 0, true);
+				List<ItemStack> items = L.castToArrayListOrWrap(getDrops(worldIn, pos, state, te, 0, true));
 				
-				ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, 0, 1.0f, true, player);
+				ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, 0, 1.0F, true, player);
 				for (ItemStack item : items)
 				{
 					spawnAsEntity(worldIn, pos, item);
@@ -167,19 +168,26 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		}
 		else if(!onBlockHarvest(worldIn, pos, state, player, false))
 		{
-			thread1.set(te);
-			harvesters.set(player);
+			this.thread1.set(te);
+			this.harvesters.set(player);
 			int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
-			dropBlockAsItem(worldIn, pos, state, i);
-			harvesters.set(null);
-			thread1.remove();
+			List<ItemStack> items = L.castToArrayListOrWrap(getDrops(worldIn, pos, state, te, i, false));
+			
+			ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, i, 1.0F, false, player);
+			for (ItemStack item : items)
+			{
+				spawnAsEntity(worldIn, pos, item);
+			}
+			//			dropBlockAsItem(worldIn, pos, state, i);
+			this.harvesters.set(null);
+			this.thread1.remove();
 		}
 	}
 	
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return item;
+		return this.item;
 	}
 	
 	/**
@@ -201,15 +209,15 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		float hardness = state.getBlockHardness(worldIn, pos);
 		if (hardness < 0.0F)
 			return 0.0F;
-
+		
 		if (!canBreakBlock(worldIn, pos, player))
 			return 0F;
 		else if(!canBreakEffective(state, player, worldIn, pos))
-			return player.getDigSpeed(state, pos) / hardness / unharvestableSpeedMultiplier;
+			return player.getDigSpeed(state, pos) / hardness / this.unharvestableSpeedMultiplier;
 		else
-			return player.getDigSpeed(state, pos) / hardness / harvestableSpeedMultiplier;
+			return player.getDigSpeed(state, pos) / hardness / this.harvestableSpeedMultiplier;
 	}
-
+	
 	/**
 	 * Match the block can be break by player (Not similar with harvest).
 	 * @param world
@@ -221,7 +229,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		return ToolHook.isToolBreakable(world.getBlockState(pos), player);
 	}
-
+	
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
 		return canHarvestBlock(worldIn, pos, player);
@@ -232,8 +240,8 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots) // do not drop items while restoring blockstates, prevents item dupe
 		{
-			List<ItemStack> items = getDrops(worldIn, pos, state, thread1.get(), fortune, false);
-			chance = ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, fortune, chance, false, harvesters.get());
+			List<ItemStack> items = getDrops(worldIn, pos, state, this.thread1.get(), fortune, false);
+			chance = ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, fortune, chance, false, this.harvesters.get());
 			
 			for (ItemStack item : items)
 				if (worldIn.rand.nextFloat() <= chance)
@@ -342,7 +350,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	{
 		return false;
 	}
-
+	
 	public CreativeTabs[] getCreativeTabs()
 	{
 		return new CreativeTabs[]{getCreativeTabToDisplayOn()};

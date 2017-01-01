@@ -9,7 +9,7 @@ import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBasic;
-import farcore.util.U;
+import farcore.util.FluidStacks;
 import fle.api.tile.IDitchTile;
 import fle.api.tile.IDitchTile.DitchBlockHandler;
 import fle.api.tile.IDitchTile.DitchFactory;
@@ -39,7 +39,7 @@ public class DefaultDitchFactory implements DitchFactory
 	{
 		FluidTank tank = tile.getTank();
 		PropertyBasic property = tile.getMaterial().getProperty(MP.property_basic);
-		if(property.meltingPoint < U.FluidStacks.getTemperature(tank.getFluid(), (int) ThermalNet.getTemperature(tile)))
+		if(property.meltingPoint < FluidStacks.getTemperature(tank.getFluid(), (int) ThermalNet.getTemperature(tile)))
 		{
 			if(EnumBlock.fire.block.canPlaceBlockAt(tile.world(), tile.pos()))
 			{

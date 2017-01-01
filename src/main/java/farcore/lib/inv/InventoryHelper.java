@@ -2,8 +2,8 @@ package farcore.lib.inv;
 
 import javax.annotation.Nullable;
 
+import farcore.util.ItemStacks;
 import farcore.util.L;
-import farcore.util.U;
 import net.minecraft.item.ItemStack;
 
 public class InventoryHelper
@@ -26,10 +26,10 @@ public class InventoryHelper
 		switch (type)
 		{
 		case MATCH_STACK_SAME :
-			return U.ItemStacks.isItemAndTagEqual(stack, target);
+			return ItemStacks.isItemAndTagEqual(stack, target);
 		case MATCH_STACK_FULLY_INSERT :
 			max = Math.min(limit, stack.getMaxStackSize());
-			if(max > 1 && U.ItemStacks.isItemAndTagEqual(stack, target))
+			if(max > 1 && ItemStacks.isItemAndTagEqual(stack, target))
 			{
 				size = stack.stackSize + target.stackSize;
 				return size <= max;
@@ -46,7 +46,7 @@ public class InventoryHelper
 			}
 			return false;
 		case MATCH_STACK_CONTAIN :
-			return U.ItemStacks.isItemAndTagEqual(stack, target) && stack.stackSize >= target.stackSize;
+			return ItemStacks.isItemAndTagEqual(stack, target) && stack.stackSize >= target.stackSize;
 		case MATCH_STACK_CONTAIN_WITHOUTNBT :
 			return stack.isItemEqual(target) && stack.stackSize >= target.stackSize;
 		case MATCH_STACK_EMPTY :
@@ -87,7 +87,7 @@ public class InventoryHelper
 				return matchStack(MATCH_STACK_FULLY_INSERT, inventory, index, stack) ? stack.stackSize : 0;
 			else
 				return !inventory.hasStackInSlot(index) ? Math.min(stack.stackSize, inventory.getInventoryStackLimit()) :
-					U.ItemStacks.isItemAndTagEqual(inventory.getStackInSlot(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)))) : 0;
+					ItemStacks.isItemAndTagEqual(inventory.getStackInSlot(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)))) : 0;
 		}
 		else
 		{
@@ -107,7 +107,7 @@ public class InventoryHelper
 				}
 				return result;
 			}
-			else if(U.ItemStacks.isItemAndTagEqual(inventory.getStackInSlot(index), stack))
+			else if(ItemStacks.isItemAndTagEqual(inventory.getStackInSlot(index), stack))
 			{
 				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)));
 				if(affectOnSourceStack)

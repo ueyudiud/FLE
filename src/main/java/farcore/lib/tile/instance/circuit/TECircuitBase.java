@@ -26,6 +26,7 @@ import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.abstracts.TESynchronization;
 import farcore.lib.util.Direction;
 import farcore.lib.util.Facing;
+import farcore.util.ItemStacks;
 import farcore.util.NBTs;
 import farcore.util.U;
 import farcore.util.U.Client;
@@ -141,7 +142,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	
 	public static Mat getRockType(ItemStack stack)
 	{
-		return Mat.material(U.ItemStacks.getOrSetupNBT(stack, false).getString("material"), M.stone);
+		return Mat.material(ItemStacks.getOrSetupNBT(stack, false).getString("material"), M.stone);
 	}
 
 	@Override

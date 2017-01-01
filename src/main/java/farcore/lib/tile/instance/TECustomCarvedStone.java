@@ -9,7 +9,7 @@ import farcore.data.Config;
 import farcore.data.EnumToolType;
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.material.Mat;
@@ -76,7 +76,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	
 	private Mat rock = M.stone;
 	private PropertyRock property = null;
-	public RockType type = RockType.resource;
+	public EnumRockType type = EnumRockType.resource;
 	private boolean neighbourChanged = false;
 	private boolean modified = true;
 	private AxisAlignedBB box = null;
@@ -94,7 +94,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		return this.property;
 	}
 	
-	public void setRock(Mat rock, RockType type)
+	public void setRock(Mat rock, EnumRockType type)
 	{
 		this.rock = rock;
 		this.type = type;
@@ -144,7 +144,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	{
 		super.readFromNBT(compound);
 		this.rock = NBTs.getMaterialByNameOrDefault(compound, "rock", M.stone);
-		this.type = NBTs.getEnumOrDefault(compound, "type", RockType.resource);
+		this.type = NBTs.getEnumOrDefault(compound, "type", EnumRockType.resource);
 		this.carvedState = compound.getLong("carve");
 		this.property = null;
 	}

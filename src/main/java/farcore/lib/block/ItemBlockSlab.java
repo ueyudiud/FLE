@@ -37,16 +37,16 @@ public class ItemBlockSlab extends ItemBlockBase
 				if (stack.stackSize == 0 || !playerIn.canPlayerEdit(pos, facing, stack) ||
 						pos.getY() == 255)
 					return EnumActionResult.FAIL;
-				EnumSlabState state = EnumSlabState.double_ud;
+				EnumSlabState state = EnumSlabState.DOUBLE_UD;
 				switch (slabState)
 				{
-				case north :
-				case south :
-					state = EnumSlabState.double_ns;
+				case NORTH :
+				case SOUTH :
+					state = EnumSlabState.DOUBLE_NS;
 					break;
-				case east :
-				case west :
-					state = EnumSlabState.double_we;
+				case EAST :
+				case WEST :
+					state = EnumSlabState.DOUBLE_WE;
 					break;
 				default:
 					break;

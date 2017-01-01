@@ -2,7 +2,7 @@ package farcore.handler;
 
 import farcore.lib.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
 import farcore.lib.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
-import farcore.util.U;
+import farcore.util.Players;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
@@ -42,7 +42,7 @@ public class FarCoreItemHandler
 		if(stack != null && stack.getItem() instanceof IIB_BlockHarvested)
 		{
 			((IIB_BlockHarvested) stack.getItem()).onBlockHarvested(stack, event);
-			U.Players.destoryPlayerCurrentItem(event.getHarvester());
+			Players.destoryPlayerCurrentItem(event.getHarvester());
 		}
 	}
 }

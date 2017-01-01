@@ -8,7 +8,7 @@ import farcore.data.EnumOreAmount;
 import farcore.data.EnumToolType;
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.energy.thermal.IThermalHandler;
 import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.ItemOre;
@@ -34,6 +34,7 @@ import farcore.lib.util.Direction;
 import farcore.lib.util.SubTag;
 import farcore.network.IPacket;
 import farcore.util.NBTs;
+import farcore.util.Players;
 import farcore.util.U;
 import farcore.util.U.Worlds;
 import net.minecraft.block.state.IBlockState;
@@ -74,10 +75,10 @@ ITP_Drops, IToolableTile
 	private Mat ore = Mat.VOID;
 	public EnumOreAmount amount = EnumOreAmount.normal;
 	public Mat rock = STONE;
-	public RockType rockType = RockType.resource;
+	public EnumRockType rockType = EnumRockType.resource;
 	public double heat;
 
-	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, RockType type)
+	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, EnumRockType type)
 	{
 		this.ore = ore;
 		this.amount = amount;
@@ -128,7 +129,7 @@ ITP_Drops, IToolableTile
 		ore = Mat.material(compound.getString("ore"));
 		amount = EnumOreAmount.values()[compound.getByte("amount")];
 		rock = Mat.material(compound.getString("rock"), STONE);
-		rockType = RockType.values()[compound.getByte("type")];
+		rockType = EnumRockType.values()[compound.getByte("type")];
 		heat = compound.getDouble("heat");
 	}
 
@@ -150,7 +151,7 @@ ITP_Drops, IToolableTile
 		ore = NBTs.getMaterialByIDOrDefault(nbt, "o", Mat.VOID);
 		amount = NBTs.getEnumOrDefault(nbt, "a", EnumOreAmount.normal);
 		rock = NBTs.getMaterialByIDOrDefault(nbt, "r", STONE);
-		rockType = NBTs.getEnumOrDefault(nbt, "t", RockType.resource);
+		rockType = NBTs.getEnumOrDefault(nbt, "t", EnumRockType.resource);
 	}
 
 	@Override
@@ -239,7 +240,7 @@ ITP_Drops, IToolableTile
 	@Override
 	public boolean onBlockHarvest(IBlockState state, EntityPlayer player, boolean silkHarvest)
 	{
-		Worlds.spawnDropsInWorld(this, getDrops(U.Players.getCurrentToolType(player)));
+		Worlds.spawnDropsInWorld(this, getDrops(Players.getCurrentToolType(player)));
 		return true;
 	}
 	

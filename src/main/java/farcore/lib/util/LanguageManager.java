@@ -29,7 +29,12 @@ public class LanguageManager
 	private static final Map<String, String> MAP2 = new HashMap();
 	private static final FileFilter FILTER = file -> file.getName().endsWith(".lang");
 	private static boolean loadFile = false;
-
+	
+	public static void registerLocal(String unlocalized, String localized, Object...formats)
+	{
+		registerLocal(unlocalized, String.format(localized, formats));
+	}
+	
 	public static void registerLocal(String unlocalized, String localized)
 	{
 		if(!MAP1.getOrDefault(ENGLISH, ImmutableMap.of()).containsKey(unlocalized))
@@ -38,7 +43,7 @@ public class LanguageManager
 		}
 		MAP2.put(unlocalized, localized);
 	}
-
+	
 	public static String translateToLocal(String unlocalized, Object...objects)
 	{
 		String locale = Strings.locale();
@@ -83,7 +88,7 @@ public class LanguageManager
 		else return net.minecraft.util.text.translation.I18n.translateToLocal(unlocalized);
 		return translate == null ? unlocalized : translate;
 	}
-
+	
 	public static String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
 	{
 		String locale = Strings.locale();
@@ -110,30 +115,30 @@ public class LanguageManager
 			return null;
 		}
 	}
-
+	
 	private File file;
-
+	
 	public LanguageManager(File file)
 	{
 		this.file = file;
 	}
-
+	
 	public void reset()
 	{
 		Log.info("Far Core reset language manager.");
 		MAP1.clear();
 	}
-
+	
 	public void read()
 	{
-		if (!file.canRead())
+		if (!this.file.canRead())
 			return;
 		MAP1.clear();
 		BufferedReader reader = null;
 		Log.info("Start read localized file.");
 		try
 		{
-			for(File file : file.listFiles(FILTER))
+			for(File file : this.file.listFiles(FILTER))
 			{
 				String name = file.getName();
 				Log.info("Loading " + name + " language file.");
@@ -188,16 +193,16 @@ public class LanguageManager
 			Log.warn("Fail to read language file.", exception);
 		}
 	}
-
+	
 	public void write()
 	{
 		if(loadFile)
 			return;
-		if(!file.exists())
+		if(!this.file.exists())
 		{
-			file.mkdirs();
+			this.file.mkdirs();
 		}
-		if(!file.canWrite())
+		if(!this.file.canWrite())
 		{
 			Log.info("Fail to write language file because can not write lang in.");
 			return;

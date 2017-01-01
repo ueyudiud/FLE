@@ -1,0 +1,224 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": {
+			"gui": {
+				"translation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					0.18122242,
+					-0.8155009,
+					0.42699528,
+					-0.34610933
+				],
+				"scale": 0.625
+			},
+			"ground": {
+				"translation": [
+					0.0,
+					3.0,
+					0.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					0.0,
+					1.0
+				],
+				"scale": 0.25
+			},
+			"fixed": {
+				"translation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					0.0,
+					0.0,
+					0.0,
+					1.0
+				],
+				"scale": 0.5
+			},
+			"head": {
+				"translation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					0.0,
+					0.8435636,
+					0.0,
+					-0.53702927
+				],
+				"scale": 1.0
+			},
+			"thirdperson_righthand": {
+				"translation": [
+					0.0,
+					2.5,
+					0.0
+				],
+				"rotation": [
+					0.6249438,
+					-0.3749663,
+					0.49082968,
+					-0.4774219
+				],
+				"scale": 0.375
+			},
+			"thirdperson_lefthand": {
+				"translation": [
+					0.0,
+					2.5,
+					0.0
+				],
+				"rotation": [
+					0.31045628,
+					0.5588213,
+					-0.7314954,
+					-0.23717113
+				],
+				"scale": 0.375
+			},
+			"firstperson_righthand": {
+				"translation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					0.0,
+					-0.6176678,
+					0.0,
+					-0.78643906
+				],
+				"scale": 0.4
+			},
+			"firstperson_lefthand": {
+				"translation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"rotation": [
+					0.0,
+					-0.9690734,
+					0.0,
+					-0.24677253
+				],
+				"scale": 0.4
+			}
+		},
+		"uvlock": true,
+		"textures": {
+			"top": "#all",
+			"side": "#all",
+			"bottom": "#all"
+		}
+	},
+	"variants": {
+		"type": {
+			"resource": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "minecraft:blocks/rock/stone/chiseled"
+				}
+			}
+		},
+		"shape": {
+			"normal": {
+				"model": "farcore:stairs_normal"
+			},
+			"inner": {
+				"model": "farcore:stairs_inner"
+			},
+			"outer": {
+				"model": "farcore:stairs_outer"
+			}
+		},
+		"state": {
+			"bottom_east": {
+				"x": 0,
+				"y": 0
+			},
+			"bottom_south": {
+				"x": 0,
+				"y": 90
+			},
+			"bottom_west": {
+				"x": 0,
+				"y": 180
+			},
+			"bottom_north": {
+				"x": 0,
+				"y": 270
+			},
+			"top_east": {
+				"x": 180,
+				"y": 0
+			},
+			"top_south": {
+				"x": 180,
+				"y": 90
+			},
+			"top_west": {
+				"x": 180,
+				"y": 180
+			},
+			"top_north": {
+				"x": 180,
+				"y": 270
+			}
+		}
+	}
+}

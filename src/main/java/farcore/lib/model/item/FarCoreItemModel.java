@@ -16,7 +16,6 @@ import com.google.common.collect.ImmutableList;
 
 import farcore.FarCore;
 import farcore.lib.model.ModelHelper;
-import farcore.lib.model.item.unused.ICustomItemRenderModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;

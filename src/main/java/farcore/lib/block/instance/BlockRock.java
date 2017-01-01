@@ -11,7 +11,7 @@ import farcore.data.EnumItem;
 import farcore.data.EnumToolType;
 import farcore.data.MC;
 import farcore.data.MP;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
 import farcore.lib.block.ISmartFallableBlock;
@@ -59,74 +59,86 @@ public class BlockRock extends BlockBase
 implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUpdateDelayBlock
 {
 	public static final PropertyBool HEATED = PropertyBool.create("heated");
-	public static final PropertyEnum<RockType> ROCK_TYPE = PropertyEnum.create("type", RockType.class);
+	public static final PropertyEnum<EnumRockType> ROCK_TYPE = PropertyEnum.create("type", EnumRockType.class);
 	
 	public final Mat material;
 	public final PropertyRock property;
 	private final float detTempCap;
 	private String localName;
 	public final BlockRockSlab[] slabGroup;
+	public final BlockRockStairs[] stairsGroup;
 	
 	public BlockRock(String name, Mat material, PropertyRock property)
 	{
 		super(material.modid, name, Material.ROCK);
 		this.material = material;
 		this.property = property;
-		localName = material.localName;
-		detTempCap = property.minTemperatureForExplosion;
-		slabGroup = makeSlabs(name, material, localName);
+		this.localName = material.localName;
+		this.detTempCap = property.minTemperatureForExplosion;
+		this.slabGroup = makeSlabs(name, material, this.localName);
+		this.stairsGroup = makeStairs(name, material, this.localName);
 		setSoundType(SoundType.STONE);
 		setHardness(property.hardness);
 		setResistance(property.explosionResistance);
 		setTickRandomly(true);
 		setCreativeTab(CT.tabTerria);
 	}
-
+	
 	@Override
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
 		
-		for(RockType type : RockType.values())
+		for(EnumRockType type : EnumRockType.values())
 		{
-			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), String.format(type.local, localName));
+			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), String.format(type.local, this.localName));
 		}
 		
-		MC.stone.registerOre(material, new ItemStack(this, 1, 0));
-		MC.stone.registerOre(material, new ItemStack(this, 1, 1));
-		MC.cobble.registerOre(material, new ItemStack(this, 1, 2));
-		MC.cobble.registerOre(material, new ItemStack(this, 1, 4));
-		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 5));
-		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 6));
-		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 7));
-		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 8));
-		MC.brickBlock.registerOre(material, new ItemStack(this, 1, 9));
-		OreDict.registerValid("stoneSmoothed" + material.oreDictName, new ItemStack(this, 1, 3));
-		OreDict.registerValid("stoneSlab" + material.oreDictName, slabGroup[0]);
-		OreDict.registerValid("cobbleSlab" + material.oreDictName, slabGroup[2]);
-		OreDict.registerValid("stoneSmoothedSlab" + material.oreDictName, slabGroup[3]);
-		OreDict.registerValid("cobbleSlab" + material.oreDictName, slabGroup[4]);
-		OreDict.registerValid("brickSlab" + material.oreDictName, slabGroup[5]);
-		OreDict.registerValid("brickSlab" + material.oreDictName, slabGroup[6]);
-		OreDict.registerValid("brickSlab" + material.oreDictName, slabGroup[7]);
-		OreDict.registerValid("brickSlab" + material.oreDictName, slabGroup[8]);
-		OreDict.registerValid("brickSlab" + material.oreDictName, slabGroup[9]);
+		MC.stone.registerOre(this.material, new ItemStack(this, 1, 0));
+		MC.stone.registerOre(this.material, new ItemStack(this, 1, 1));
+		MC.cobble.registerOre(this.material, new ItemStack(this, 1, 2));
+		MC.cobble.registerOre(this.material, new ItemStack(this, 1, 4));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 5));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 6));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 7));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 8));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 9));
+		OreDict.registerValid("stoneSmoothed" + this.material.oreDictName, new ItemStack(this, 1, 3));
+		OreDict.registerValid("stoneSlab" + this.material.oreDictName, this.slabGroup[0]);
+		OreDict.registerValid("cobbleSlab" + this.material.oreDictName, this.slabGroup[2]);
+		OreDict.registerValid("stoneSmoothedSlab" + this.material.oreDictName, this.slabGroup[3]);
+		OreDict.registerValid("cobbleSlab" + this.material.oreDictName, this.slabGroup[4]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[5]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[6]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[7]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[8]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[9]);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
 		super.registerRender();
-		ClientProxy.registerCompactModel(new StateMapperExt(material.modid, "rock/" + material.name, null, HEATED), this, ROCK_TYPE);
+		ClientProxy.registerCompactModel(new StateMapperExt(this.material.modid, "rock/" + this.material.name, null, HEATED), this, ROCK_TYPE);
 	}
 	
 	protected BlockRockSlab[] makeSlabs(String name, Mat material, String localName)
 	{
-		BlockRockSlab[] ret = new BlockRockSlab[RockType.values().length];
-		for(RockType type : RockType.values())
+		BlockRockSlab[] ret = new BlockRockSlab[EnumRockType.values().length];
+		for(EnumRockType type : EnumRockType.values())
 		{
 			ret[type.ordinal()] = new BlockRockSlab(type.ordinal(), this, ret, name + "." + type.name(), material, String.format(type.local, localName));
+		}
+		return ret;
+	}
+	
+	protected BlockRockStairs[] makeStairs(String name, Mat material2, String localName2)
+	{
+		BlockRockStairs[] ret = new BlockRockStairs[EnumRockType.values().length];
+		for(EnumRockType type : EnumRockType.values())
+		{
+			ret[type.ordinal()] = new BlockRockStairs(type.ordinal(), this, ret, name + "." + type.name(), this.material, String.format(type.local, this.localName));
 		}
 		return ret;
 	}
@@ -152,7 +164,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(ROCK_TYPE, RockType.values()[meta]);
+		return getDefaultState().withProperty(ROCK_TYPE, EnumRockType.values()[meta]);
 	}
 	
 	@Override
@@ -167,11 +179,11 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	{
 		if(tab == CT.tabTerria)
 		{
-			list.add(new ItemStack(itemIn, 1, RockType.resource.ordinal()));
+			list.add(new ItemStack(itemIn, 1, EnumRockType.resource.ordinal()));
 		}
 		else
 		{
-			for(RockType type : RockType.values())
+			for(EnumRockType type : EnumRockType.values())
 				if(type.displayInTab)
 				{
 					list.add(new ItemStack(itemIn, 1, type.ordinal()));
@@ -200,19 +212,19 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
-		RockType type = state.getValue(ROCK_TYPE);
+		EnumRockType type = state.getValue(ROCK_TYPE);
 		switch (type)
 		{
 		case cobble_art:
 			return 1;
 		case cobble :
 		case mossy :
-			return property.harvestLevel / 2;
+			return this.property.harvestLevel / 2;
 		default:
-			return property.harvestLevel;
+			return this.property.harvestLevel;
 		}
 	}
-
+	
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
@@ -225,15 +237,15 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 		else
 		{
 			Random rand = world instanceof World ? ((World) world).rand : RANDOM;
-			RockType type = state.getValue(ROCK_TYPE);
+			EnumRockType type = state.getValue(ROCK_TYPE);
 			switch (type)
 			{
 			case resource:
 			case cobble:
-				ret.add(new ItemStack(EnumItem.stone_chip.item, rand.nextInt(4) + 3, material.id));
+				ret.add(new ItemStack(EnumItem.stone_chip.item, rand.nextInt(4) + 3, this.material.id));
 				break;
 			case cobble_art:
-				ret.add(new ItemStack(EnumItem.stone_chip.item, 9, material.id));
+				ret.add(new ItemStack(EnumItem.stone_chip.item, 9, this.material.id));
 				break;
 			default:
 				ret.add(new ItemStack(this, 1, type.noSilkTouchDropMeta));
@@ -242,15 +254,15 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 		}
 		return ret;
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
-		RockType type = state.getValue(ROCK_TYPE);
+		EnumRockType type = state.getValue(ROCK_TYPE);
 		switch (type)
 		{
 		case resource :
-			if(ThermalNet.getTemperature(worldIn, pos, false) > property.minTemperatureForExplosion)
+			if(ThermalNet.getTemperature(worldIn, pos, false) > this.property.minTemperatureForExplosion)
 			{
 				if(!state.getValue(HEATED) && random.nextInt(3) == 0)
 				{
@@ -258,7 +270,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 				}
 				else if(Worlds.isBlockNearby(worldIn, pos, EnumBlock.water.block, true))
 				{
-					worldIn.setBlockState(pos, state.withProperty(ROCK_TYPE, RockType.cobble), 3);
+					worldIn.setBlockState(pos, state.withProperty(ROCK_TYPE, EnumRockType.cobble), 3);
 					worldIn.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS,
 							.5F, 2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F, true);
 					for (int k = 0; k < 8; ++k)
@@ -286,7 +298,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 			Worlds.fallBlock(worldIn, pos, state);
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
@@ -329,7 +341,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	
 	public boolean canBlockStay(IBlockAccess world, BlockPos pos, IBlockState state)
 	{
-		RockType type = state.getValue(ROCK_TYPE);
+		EnumRockType type = state.getValue(ROCK_TYPE);
 		switch (type)
 		{
 		case cobble :
@@ -347,7 +359,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	
 	public boolean canBlockStayTotally(IBlockAccess world, BlockPos pos, IBlockState state, Random rand)
 	{
-		RockType type = state.getValue(ROCK_TYPE);
+		EnumRockType type = state.getValue(ROCK_TYPE);
 		switch (type)
 		{
 		case cobble :
@@ -385,7 +397,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	{
 		worldIn.scheduleUpdate(pos, blockIn, tickRate(worldIn));
 	}
-
+	
 	@Override
 	public void notifyAfterTicking(IBlockState state, World world, BlockPos pos, IBlockState state1)
 	{
@@ -409,7 +421,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
 	{
 		IBlockState state;
-		RockType type = (state = world.getBlockState(pos)).getValue(ROCK_TYPE);
+		EnumRockType type = (state = world.getBlockState(pos)).getValue(ROCK_TYPE);
 		if(type.burnable)
 		{
 			world.setBlockState(pos, state.withProperty(ROCK_TYPE, type.burned()), 3);
@@ -426,7 +438,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public double getThermalConduct(World world, BlockPos pos)
 	{
-		return material.getProperty(MP.property_basic).thermalConduct;
+		return this.material.getProperty(MP.property_basic).thermalConduct;
 	}
 	
 	@Override
@@ -454,7 +466,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 		boolean broken = height < 2 ? false : height < 5 ? RANDOM.nextInt(5 - height) == 0 : true;
 		if(broken)
 		{
-			state = state.withProperty(ROCK_TYPE, RockType.values()[state.getValue(ROCK_TYPE).fallBreakMeta]);
+			state = state.withProperty(ROCK_TYPE, EnumRockType.values()[state.getValue(ROCK_TYPE).fallBreakMeta]);
 		}
 		state = state.withProperty(HEATED, false);
 		world.setBlockState(pos, state, 3);
@@ -470,7 +482,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
 	{
-		return (float) ((1.0F + material.getProperty(MP.property_tool).damageToEntity) * block.motionY * block.motionY * 0.25F);
+		return (float) ((1.0F + this.material.getProperty(MP.property_tool).damageToEntity) * block.motionY * block.motionY * 0.25F);
 	}
 	
 	@Override
@@ -494,13 +506,13 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public void onHeatChanged(World world, BlockPos pos, Direction direction, double amount)
 	{
-		if(amount >= property.minTemperatureForExplosion * material.getProperty(MP.property_basic).heatCap)
+		if(amount >= this.property.minTemperatureForExplosion * this.material.getProperty(MP.property_basic).heatCap)
 		{
 			Worlds.switchProp(world, pos, HEATED, true, 2);
 			world.scheduleUpdate(pos, this, tickRate(world));
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
@@ -516,13 +528,13 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 		{
 			if(player.canPlayerEdit(pos, side.of(), stack))
 			{
-				RockType type = world.getBlockState(pos).getValue(ROCK_TYPE);
+				EnumRockType type = world.getBlockState(pos).getValue(ROCK_TYPE);
 				if(world.setBlockState(pos, EnumBlock.carved_rock.block.getDefaultState(), 2))
 				{
 					TileEntity tile = world.getTileEntity(pos);
 					if(tile instanceof TECustomCarvedStone)
 					{
-						((TECustomCarvedStone) tile).setRock(material, type);
+						((TECustomCarvedStone) tile).setRock(this.material, type);
 						return ((TECustomCarvedStone) tile).carveRock(player, hitX, hitY, hitZ);
 					}
 				}

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import farcore.data.M;
-import farcore.data.RockType;
+import farcore.data.EnumRockType;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.render.IIconLoader;
@@ -166,9 +166,9 @@ public class MaterialTextureLoader implements IIconLoader
 	
 	static
 	{
-		for(RockType type : RockType.values())
+		for(EnumRockType type : EnumRockType.values())
 		{
-			if(type == RockType.cobble_art) continue;
+			if(type == EnumRockType.cobble_art) continue;
 			MTFBuilder builder = new MTFBuilder(type.condition, type.variant);
 			builder.put("blocks/rock/", "/" + type.name());
 			switch (type)

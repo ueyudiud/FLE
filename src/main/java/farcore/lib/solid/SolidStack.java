@@ -1,6 +1,6 @@
 package farcore.lib.solid;
 
-import farcore.util.U;
+import farcore.util.ItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.RegistryDelegate;
 
@@ -61,7 +61,7 @@ public class SolidStack
 	
 	public boolean isStackEqual(SolidStack other)
 	{
-		return other == null ? false : other.getSolid() == getSolid() && U.ItemStacks.areTagEqual(tag, other.tag);
+		return other == null ? false : other.getSolid() == getSolid() && ItemStacks.areTagEqual(tag, other.tag);
 	}
 
 	public static SolidStack copyOf(SolidStack stack)

@@ -49,18 +49,18 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 		@Override
 		public String getName()
 		{
-			return name;
+			return this.name;
 		}
 	}
 	
 	public static final PropertyEnum<EnumPlankState> STATE = PropertyEnum.create("state", EnumPlankState.class);
 	
 	public final BlockPlankSlab[] slabGroup;
-
+	
 	public BlockPlank(Mat material, PropertyWood property)
 	{
 		super(material.modid, "plank." + material.name, Material.WOOD, material, property);
-		slabGroup = makeSlabs(blockName, material.localName + " Plank");
+		this.slabGroup = makeSlabs(this.blockName, material.localName + " Plank");
 		setSoundType(SoundType.WOOD);
 		setCreativeTab(CT.tabTree);
 	}
@@ -70,11 +70,11 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	{
 		super.postInitalizedBlocks();
 		OreDict.registerValid("plankWood", this);
-		MC.plankBlock.registerOre(material, this);
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), material.localName + " Plank");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Fire Resistance " + material.localName + " Plank");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Anticorrosive " + material.localName + " Plank");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(3), "Broke " + material.localName + " Plank");
+		MC.plankBlock.registerOre(this.material, this);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "%s Plank", this.material.localName);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Fire Resistance %s Plank", this.material.localName);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Anticorrosive %s Plank", this.material.localName);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(3), "Broke %s Plank", this.material.localName);
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperExt(material.modid, "plank/" + material.name, null);
+		StateMapperExt mapper = new StateMapperExt(this.material.modid, "plank/" + this.material.name, null);
 		ClientProxy.registerCompactModel(mapper, this, EnumPlankState.values().length);
 	}
 	
@@ -98,7 +98,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	{
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
-
+	
 	protected BlockPlankSlab[] makeSlabs(String name, String localName)
 	{
 		BlockPlankSlab[] ret = new BlockPlankSlab[4];
@@ -114,7 +114,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	{
 		return state.withProperty(STATE, EnumPlankState.DEFAULT);
 	}
-
+	
 	@Override
 	public int getLightOpacity(IBlockState state)
 	{
@@ -138,13 +138,13 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	{
 		return (state.getValue(STATE) == EnumPlankState.BROKE ? 0.1F : 1.0F) * super.getBlockHardness(state, worldIn, pos);
 	}
-
+	
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
 		return world.getBlockState(pos).getValue(STATE) == EnumPlankState.BROKE ? 0F : super.getExplosionResistance(world, pos, exploder, explosion);
 	}
-
+	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
@@ -156,7 +156,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	{
 		return state.getValue(STATE) == EnumPlankState.BROKE ? EnumPushReaction.DESTROY : state.getMaterial().getMobilityFlag();
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{

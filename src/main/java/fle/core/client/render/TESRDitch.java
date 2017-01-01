@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import farcore.lib.tesr.TESRBase;
 import farcore.lib.util.Direction;
-import farcore.util.U.Maths;
+import farcore.util.Maths;
 import fle.core.tile.ditchs.TEDitch;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

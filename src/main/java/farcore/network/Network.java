@@ -8,6 +8,7 @@ import java.util.List;
 
 import farcore.lib.collection.Register;
 import farcore.lib.world.ICoord;
+import farcore.util.Players;
 import farcore.util.U;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -183,9 +184,9 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		if(!needToSend(packet)) return;
 		if(U.Sides.isSimulating())
 		{
-			if(U.Players.player() instanceof EntityPlayerMP)
+			if(Players.player() instanceof EntityPlayerMP)
 			{
-				sendToPlayer(packet, U.Players.player());
+				sendToPlayer(packet, Players.player());
 			}
 		}
 		else

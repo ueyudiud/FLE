@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.ImmutableList;
+
 import farcore.FarCore;
 import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
+import farcore.lib.block.IHitByFallenBehaviorBlock;
 import farcore.lib.block.material.MaterialIce;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
+import farcore.util.L;
 import farcore.util.U;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
@@ -31,20 +35,21 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockIce extends BlockBase
+public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 {
-	private static final Material ICE = new MaterialIce();;
-
+	private static final Material ICE = new MaterialIce();
+	
 	public BlockIce()
 	{
 		super(FarCore.ID, "ice", ICE);
-		slipperiness = 0.98F;
+		this.slipperiness = 0.98F;
+		this.unharvestableSpeedMultiplier = 800F;//Do you think you can easily break a 1m^3 icy cube?
 		setHardness(0.7F);
 		setTickRandomly(true);
 		EnumBlock.ice.set(this);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Ice");
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -52,7 +57,7 @@ public class BlockIce extends BlockBase
 		super.registerRender();
 		U.Mod.registerItemBlockModel(this, 0, FarCore.ID, "ice");
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
@@ -65,7 +70,7 @@ public class BlockIce extends BlockBase
 	{
 		return getUnlocalizedName();
 	}
-
+	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
@@ -77,7 +82,7 @@ public class BlockIce extends BlockBase
 	{
 		return 1;
 	}
-
+	
 	@Override
 	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player,
 			boolean silkHarvest)
@@ -120,7 +125,7 @@ public class BlockIce extends BlockBase
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
-		return new ArrayList();
+		return silkTouch ? ImmutableList.of(new ItemStack(this, 1)) : new ArrayList();
 	}
 	
 	@Override
@@ -161,5 +166,35 @@ public class BlockIce extends BlockBase
 			worldIn.setBlockState(pos, EnumBlock.water.block.getDefaultState(), 2);
 			worldIn.notifyBlockOfStateChange(pos, EnumBlock.water.block);
 		}
+	}
+	
+	@Override
+	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player)
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean isPermeatableBy(World world, BlockPos pos, IBlockState state, IBlockState fallen)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean onFallingOn(World world, BlockPos pos, IBlockState state, IBlockState fallen, int height)
+	{
+		if(height > 10 || height > 4 && L.nextInt(11 - height) == 0)
+		{
+			world.setBlockToAir(pos);
+			//Drop ice cube? TODO
+			return true;
+		}
+		return false;
 	}
 }

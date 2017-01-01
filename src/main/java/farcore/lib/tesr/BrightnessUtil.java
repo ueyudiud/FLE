@@ -9,7 +9,7 @@ import static farcore.lib.util.Direction.W;
 import java.util.Arrays;
 
 import farcore.lib.util.Direction;
-import farcore.util.U.Maths;
+import farcore.util.Maths;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

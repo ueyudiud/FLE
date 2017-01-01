@@ -9,6 +9,11 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * The container with block position, active with block has GUI but no
+ * TileEntity.
+ * @author ueyudiud
+ */
 public class ContainerBlockPosition extends ContainerBase implements IInventoryChangedListener
 {
 	protected World world;
@@ -16,7 +21,7 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 	private IBlockState state;
 	private int[] lastCurrentValue;
 	protected int[] currentValue;
-
+	
 	public ContainerBlockPosition(EntityPlayer player, ICoord coord)
 	{
 		this(player, coord.world(), coord.pos());
@@ -26,11 +31,12 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 		super(player);
 		this.world = world;
 		this.pos = pos;
-		state = world.getBlockState(pos);
-		currentValue = new int[getFieldCount()];
-		lastCurrentValue = new int[getFieldCount()];
+		//Get block state, to check if block changed to close GUI.
+		this.state = world.getBlockState(pos);
+		this.currentValue = new int[getFieldCount()];
+		this.lastCurrentValue = new int[getFieldCount()];
 	}
-
+	
 	protected int getFieldCount()
 	{
 		return 0;
@@ -40,25 +46,25 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 	public void addListener(IContainerListener listener)
 	{
 		super.addListener(listener);
-		for(int i = 0; i < currentValue.length; ++i)
+		for(int i = 0; i < this.currentValue.length; ++i)
 		{
-			listener.sendProgressBarUpdate(this, i, currentValue[i]);
+			listener.sendProgressBarUpdate(this, i, this.currentValue[i]);
 		}
 	}
-
+	
 	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(int i = 0; i < currentValue.length; ++i)
+		for(int i = 0; i < this.currentValue.length; ++i)
 		{
-			if(lastCurrentValue[i] != currentValue[i])
+			if(this.lastCurrentValue[i] != this.currentValue[i])
 			{
-				for(IContainerListener listener : listeners)
+				for(IContainerListener listener : this.listeners)
 				{
-					listener.sendProgressBarUpdate(this, i, currentValue[i]);
+					listener.sendProgressBarUpdate(this, i, this.currentValue[i]);
 				}
-				lastCurrentValue[i] = currentValue[i];
+				this.lastCurrentValue[i] = this.currentValue[i];
 			}
 		}
 	}
@@ -66,17 +72,17 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return match(state, world.getBlockState(pos)) && playerIn.worldObj == world && playerIn.getDistanceSq(pos.getX() + .5F, pos.getY() + .5F, pos.getZ() + .5F) <= 16;
+		return match(this.state, this.world.getBlockState(this.pos)) && playerIn.worldObj == this.world && playerIn.getDistanceSq(this.pos.getX() + .5F, this.pos.getY() + .5F, this.pos.getZ() + .5F) <= 16;
 	}
 	
 	protected boolean match(IBlockState oldState, IBlockState newstate)
 	{
 		return oldState == newstate;
 	}
-
+	
 	@Override
 	public void onInventoryChanged(InventoryBasic inventory)
 	{
-
+		
 	}
 }

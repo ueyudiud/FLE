@@ -9,6 +9,7 @@ import farcore.FarCore;
 import farcore.lib.collection.IRegister;
 import farcore.lib.collection.Register;
 import farcore.lib.net.PacketKey;
+import farcore.util.Players;
 import farcore.util.Strings;
 import farcore.util.U;
 import net.minecraft.client.Minecraft;
@@ -120,17 +121,17 @@ public class FarCoreKeyHandler
 							v |= (1L << i);
 					FarCore.network.sendToServer(new PacketKey(v));
 				}
-				reset(U.Players.player());
+				reset(Players.player());
 				for(int i = 0; i < keys.size(); ++i)
 					if(GameSettings.isKeyDown(keys.get(i)))
-						add(U.Players.player(), keys.name(i));
+						add(Players.player(), keys.name(i));
 			}
 		}
 		else
 		{
 			if(U.Sides.isSimulating())
 				FarCore.network.sendToServer(new PacketKey(0L));
-			reset(U.Players.player());
+			reset(Players.player());
 		}
 	}
 }
