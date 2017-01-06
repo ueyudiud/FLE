@@ -7,6 +7,7 @@ import farcore.lib.nbt.NBTSynclizedCompound;
 import farcore.lib.net.tile.PacketTESAsk;
 import farcore.lib.net.tile.PacketTESync;
 import farcore.lib.tile.ISynchronizableTile;
+import farcore.util.NBTs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -45,80 +46,80 @@ implements ISynchronizableTile
 	{
 		
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setLong("state", state);
+		nbt.setLong("state", this.state);
 		return super.writeToNBT(nbt);
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		state = nbt.getLong("state");
+		this.state = nbt.getLong("state");
 	}
 	
 	@Override
 	public void syncToAll()
 	{
-		syncState |= 0x1;
+		this.syncState |= 0x1;
 	}
 	
 	@Override
 	public void syncToDim()
 	{
-		syncState |= 0x2;
+		this.syncState |= 0x2;
 	}
 	
 	@Override
 	public void syncToNearby()
 	{
-		syncState |= 0x4;
+		this.syncState |= 0x4;
 	}
 	
 	@Override
 	public void syncToPlayer(EntityPlayer player)
 	{
-		syncAskedPlayer.add(player);
+		this.syncAskedPlayer.add(player);
 	}
 	
 	@Override
 	public void markBlockUpdate()
 	{
-		syncState |= 0x8;
+		this.syncState |= 0x8;
 	}
 	
 	@Override
 	public void markBlockRenderUpdate()
 	{
-		syncState |= 0x10;
+		this.syncState |= 0x10;
 	}
 	
 	@Override
 	public void markDirty()
 	{
-		syncState |= 0x80;
+		this.syncState |= 0x80;
 	}
-
+	
 	@Override
 	public void markLightForUpdate(EnumSkyBlock type)
 	{
 		if(type == EnumSkyBlock.SKY)
 		{
-			syncState |= 0x20;
+			this.syncState |= 0x20;
 		}
 		if(type == EnumSkyBlock.BLOCK)
 		{
-			syncState |= 0x40;
+			this.syncState |= 0x40;
 		}
 	}
 	
 	@Override
 	public boolean isInitialized()
 	{
-		return initialized;
+		return this.initialized;
 	}
 	
 	@Override
@@ -128,20 +129,17 @@ implements ISynchronizableTile
 		//Needn't always update render and block states.
 		//		markBlockUpdate();
 		//		markBlockRenderUpdate();
-		initialized = true;
+		this.initialized = true;
 	}
 	
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
-		if(nbt.hasKey("s"))
-		{
-			state = nbt.getLong("s");
-		}
+		this.state = NBTs.getLongOrDefault(nbt, "s", this.state);
 	}
 	
 	public void writeToDescription(NBTTagCompound nbt)
 	{
-		nbt.setLong("s", state);
+		nbt.setLong("s", this.state);
 	}
 	
 	//TESynchronization use custom packet for sync.
@@ -157,7 +155,7 @@ implements ISynchronizableTile
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
 	}
-
+	
 	@Override
 	public void onLoad()
 	{
@@ -179,7 +177,7 @@ implements ISynchronizableTile
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag)
 	{
-		if(!initialized)
+		if(!this.initialized)
 		{
 			initClient(tag);
 		}
@@ -188,7 +186,7 @@ implements ISynchronizableTile
 			readFromDescription(tag);
 		}
 	}
-
+	
 	@Override
 	protected final void updateEntity2()
 	{
@@ -206,86 +204,86 @@ implements ISynchronizableTile
 	
 	protected void updateServerStates()
 	{
-		if(lastState != state)
+		if(this.lastState != this.state)
 		{
 			onStateChanged(true);
-			lastState = state;
+			this.lastState = this.state;
 		}
-		nbt.reset();
-		writeToDescription(nbt);
-		if((syncState & 0x1) != 0)
+		this.nbt.reset();
+		writeToDescription(this.nbt);
+		if((this.syncState & 0x1) != 0)
 		{
-			sendToAll(new PacketTESync(worldObj, pos, nbt.getChanged(true)));
+			sendToAll(new PacketTESync(this.worldObj, this.pos, this.nbt.getChanged(true)));
 		}
-		else if((syncState & 0x2) != 0)
+		else if((this.syncState & 0x2) != 0)
 		{
-			sendToDim(new PacketTESync(worldObj, pos, nbt.getChanged(true)));
+			sendToDim(new PacketTESync(this.worldObj, this.pos, this.nbt.getChanged(true)));
 		}
-		else if((syncState & 0x4) != 0)
+		else if((this.syncState & 0x4) != 0)
 		{
-			sendToNearby(new PacketTESync(worldObj, pos, nbt.getChanged(true)), getSyncRange());
+			sendToNearby(new PacketTESync(this.worldObj, this.pos, this.nbt.getChanged(true)), getSyncRange());
 		}
-		if((syncState & 0x8) != 0)
+		if((this.syncState & 0x8) != 0)
 		{
-			worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
+			this.worldObj.notifyNeighborsOfStateChange(this.pos, getBlockType());
 		}
-		if((syncState & 0x80) != 0)
+		if((this.syncState & 0x80) != 0)
 		{
 			super.markDirty();
 		}
 		int state = 0;
-		if((syncState & 0x10) != 0) { state |= 0x1; }
-		if((syncState & 0x20) != 0) { state |= 0x2; }
-		if((syncState & 0x40) != 0) { state |= 0x4; }
-		sendToNearby(new PacketTESAsk(worldObj, pos, state), getSyncRange());
+		if((this.syncState & 0x10) != 0) { state |= 0x1; }
+		if((this.syncState & 0x20) != 0) { state |= 0x2; }
+		if((this.syncState & 0x40) != 0) { state |= 0x4; }
+		sendToNearby(new PacketTESAsk(this.worldObj, this.pos, state), getSyncRange());
 		onCheckingSyncState();
-		syncState = 0;
-		if(!syncAskedPlayer.isEmpty())
+		this.syncState = 0;
+		if(!this.syncAskedPlayer.isEmpty())
 		{
-			for(EntityPlayer player : syncAskedPlayer)
+			for(EntityPlayer player : this.syncAskedPlayer)
 			{
-				sendToPlayer(new PacketTESync(worldObj, pos, nbt.asCompound()), player);
+				sendToPlayer(new PacketTESync(this.worldObj, this.pos, this.nbt.asCompound()), player);
 			}
 		}
-		syncAskedPlayer.clear();
+		this.syncAskedPlayer.clear();
 	}
 	
 	protected void updateClientStates()
 	{
-		if(lastState != state)
+		if(this.lastState != this.state)
 		{
 			onStateChanged(false);
-			lastState = state;
+			this.lastState = this.state;
 		}
-		if((syncState & 0x8) != 0)
+		if((this.syncState & 0x8) != 0)
 		{
 			super.markBlockUpdate();
 		}
-		if((syncState & 0x10) != 0)
+		if((this.syncState & 0x10) != 0)
 		{
 			int range = getRenderUpdateRange();
-			worldObj.markBlockRangeForRenderUpdate(pos.add(-range, -range, -range), pos.add(range, range, range));
+			this.worldObj.markBlockRangeForRenderUpdate(this.pos.add(-range, -range, -range), this.pos.add(range, range, range));
 		}
-		if((syncState & 0x20) != 0)
+		if((this.syncState & 0x20) != 0)
 		{
 			super.markLightForUpdate(EnumSkyBlock.SKY);
 		}
-		if((syncState & 0x40) != 0)
+		if((this.syncState & 0x40) != 0)
 		{
 			super.markLightForUpdate(EnumSkyBlock.BLOCK);
 		}
 		onCheckingSyncState();
-		syncState = 0;
-		syncAskedPlayer.clear();
+		this.syncState = 0;
+		this.syncAskedPlayer.clear();
 	}
 	
-
+	
 	/**
 	 * Called when checking state.
 	 */
 	protected void onCheckingSyncState()
 	{
-
+		
 	}
 	
 	
@@ -302,7 +300,7 @@ implements ISynchronizableTile
 			markBlockRenderUpdate();
 		}
 	}
-
+	
 	protected float getSyncRange()
 	{
 		return 16F;
@@ -315,7 +313,7 @@ implements ISynchronizableTile
 	
 	protected void initServer()
 	{
-		initialized = true;
+		this.initialized = true;
 	}
 	
 	protected void initClient(NBTTagCompound nbt)
@@ -327,7 +325,6 @@ implements ISynchronizableTile
 	{
 		
 	}
-
 	
 	protected void updateClient()
 	{
@@ -340,7 +337,6 @@ implements ISynchronizableTile
 		super.onChunkUnload();
 		onRemoveFromLoadedWorld();
 	}
-
 	
 	@Override
 	public void invalidate()
@@ -348,36 +344,35 @@ implements ISynchronizableTile
 		super.invalidate();
 		onRemoveFromLoadedWorld();
 	}
-
 	
 	public void onRemoveFromLoadedWorld()
 	{
-		nbt.clear();
+		this.nbt.clear();
 	}
-
+	
 	protected boolean is(int i)
 	{
-		return (state & (1 << i)) != 0;
+		return (this.state & (1 << i)) != 0;
 	}
-
+	
 	protected boolean islast(int i)
 	{
-		return (lastState & (1 << i)) != 0;
+		return (this.lastState & (1 << i)) != 0;
 	}
 	
 	protected void change(int i)
 	{
-		state ^= 1 << i;
+		this.state ^= 1 << i;
 	}
 	
 	protected void disable(int i)
 	{
-		state &= ~(1 << i);
+		this.state &= ~(1 << i);
 	}
-
+	
 	protected void enable(int i)
 	{
-		state |= (1 << i);
+		this.state |= (1 << i);
 	}
 	
 	protected void set(int i, boolean flag)

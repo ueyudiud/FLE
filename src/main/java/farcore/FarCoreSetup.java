@@ -84,12 +84,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 		 * The major version will not be 1.1 until Far Core is
 		 * enough to make FLE.
 		 */
-		version = "1.0n",
+		version = "1.0o",
 		name = "Far Core")
 public class FarCoreSetup
 {
 	private LanguageManager lang;
-
+	
 	/**
 	 * The sided proxy of far core.
 	 */
@@ -173,7 +173,7 @@ public class FarCoreSetup
 		 */
 		try
 		{
-			lang = new LanguageManager(new File(U.Mod.getMCFile(), "lang"));
+			this.lang = new LanguageManager(new File(U.Mod.getMCFile(), "lang"));
 			Log.info("Loading configuration.");
 			File file = event.getSuggestedConfigurationFile();
 			Configuration configuration = new Configuration(file);
@@ -185,7 +185,7 @@ public class FarCoreSetup
 		{
 			Log.warn("Fail to load configuration.", exception);
 		}
-		lang.read();
+		this.lang.read();
 		FarCoreSetup.proxy.load(event);
 	}
 	
@@ -205,7 +205,7 @@ public class FarCoreSetup
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		FarCoreSetup.proxy.load(event);
-		lang.write();
+		this.lang.write();
 	}
 	
 	@EventHandler
@@ -213,7 +213,7 @@ public class FarCoreSetup
 	{
 		event.registerServerCommand(new CommandDate());
 	}
-
+	
 	@NetworkCheckHandler
 	public static boolean check(Map<String, String> versions, Side side)
 	{
@@ -231,7 +231,7 @@ public class FarCoreSetup
 		
 		public Proxy()
 		{
-			loader = createLoader();
+			this.loader = createLoader();
 		}
 		
 		protected CommonLoader createLoader()
@@ -241,24 +241,24 @@ public class FarCoreSetup
 		
 		public void load(FMLPreInitializationEvent event)
 		{
-			loader.preload();
+			this.loader.preload();
 		}
 		
 		public void load(FMLInitializationEvent event)
 		{
-			loader.load();
+			this.loader.load();
 		}
 		
 		public void load(FMLPostInitializationEvent event)
 		{
-			loader.postload();
+			this.loader.postload();
 		}
 		
 		public void load(FMLLoadCompleteEvent event)
 		{
-			loader.complete();
+			this.loader.complete();
 		}
-
+		
 		@Override
 		public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
@@ -267,7 +267,7 @@ public class FarCoreSetup
 				return ((ITB_Containerable) tile).openContainer(ID, player);
 			return null;
 		}
-
+		
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
@@ -286,7 +286,7 @@ public class FarCoreSetup
 			//Take this proxy into resource manager reload listener.
 			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 		}
-
+		
 		@Override
 		protected CommonLoader createLoader()
 		{
@@ -327,7 +327,7 @@ public class FarCoreSetup
 				U.Client.getFontRender().onResourceManagerReload(manager);
 			}
 		}
-
+		
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
@@ -336,7 +336,7 @@ public class FarCoreSetup
 				return ((ITB_Containerable) tile).openGUI(ID, player);
 			return null;
 		}
-
+		
 		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, int metaCount)
 		{
 			Item item = Item.getItemFromBlock(block);
@@ -346,7 +346,7 @@ public class FarCoreSetup
 			}
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
-
+		
 		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, IProperty<T> property)
 		{
 			Item item = Item.getItemFromBlock(block);
@@ -365,7 +365,7 @@ public class FarCoreSetup
 			}
 			ModelLoader.setCustomStateMapper(block, mapper);
 		}
-
+		
 		public void addRenderRegisterListener(IRenderRegister register)
 		{
 			if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
@@ -377,7 +377,7 @@ public class FarCoreSetup
 				farcore.util.L.put(registers, U.Mod.getActiveModID(), register);
 			}
 		}
-
+		
 		/**
 		 * Let client proxy called this method when FML pre-initialization.
 		 */

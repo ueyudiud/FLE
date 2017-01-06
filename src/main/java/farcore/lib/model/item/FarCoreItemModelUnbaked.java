@@ -16,9 +16,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 
-import farcore.lib.model.block.ModelBase;
+import farcore.lib.model.ModelBase;
 import farcore.lib.model.item.FarCoreItemModelCache.FarCoreItemModelLayerCache;
 import farcore.lib.model.item.FarCoreItemSubmetaGetterLoader.SubmetaGetter;
+import farcore.lib.model.part.IFarCoreBakedModelPart;
+import farcore.lib.model.part.IFarCoreModelPart;
 import farcore.util.L;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -40,8 +42,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @since 1.5
  */
 @SideOnly(Side.CLIENT)
-public class FarCoreItemModelUnbaked extends ModelBase
+public class FarCoreItemModelUnbaked implements ModelBase
 {
+	static final float LAYER_OFFSET = 1E-3F;
+	
 	/**
 	 * Create a new model with texture location.
 	 * @param location
@@ -120,7 +124,7 @@ public class FarCoreItemModelUnbaked extends ModelBase
 	 * @author ueyudiud
 	 *
 	 */
-	class FarCoreItemModelLayerUnbaked
+	class FarCoreItemModelLayerUnbaked implements IFarCoreModelPart
 	{
 		int layer;
 		float zOffset;
@@ -178,6 +182,23 @@ public class FarCoreItemModelUnbaked extends ModelBase
 			this.colorMultiplier = FarCoreItemModelLoader.NORMAL_MULTIPLIER;
 		}
 		
+		@Override
+		public Collection<String> getTextures()
+		{
+			ImmutableList.Builder<String> builder = ImmutableList.builder();
+			builder.addAll(this.allowedVariants);
+			builder.addAll(this.convertsAllowTextures);
+			return builder.build();
+		}
+		
+		@Override
+		public IFarCoreBakedModelPart bake(TRSRTransformation transformation, VertexFormat format,
+				java.util.function.Function<String, TextureAtlasSprite> textureGetter)
+		{
+			return IFarCoreBakedModelPart.bake(
+					bake(transformation, format, (Function<ResourceLocation, TextureAtlasSprite>) location -> textureGetter.apply(location.toString())));
+		}
+		
 		/**
 		 * Wrap model layer as a Baked Quad applier, use the
 		 * <code>ItemStack->List</code> logic.
@@ -199,7 +220,7 @@ public class FarCoreItemModelUnbaked extends ModelBase
 					ResourceLocation location = FarCoreItemModelUnbaked.this.textures.get(variant);
 					if(location == null) location = new ResourceLocation(variant);
 					TextureAtlasSprite icon = bakedTextureGetter.apply(location);
-					map.put(variant, ItemTextureHelper.getQuadsForSprite(this.layer, icon, format, transformation, this.zOffset, this.baseColor));
+					map.put(variant, ItemTextureHelper.getQuadsForSprite(this.layer, icon, format, transformation, this.zOffset + LAYER_OFFSET * this.layer, this.baseColor));
 				}
 				return this.variantApplier.andThen(L.toFunction(ImmutableMap.copyOf(map), ImmutableList.of()));
 			case 1 :
@@ -210,7 +231,7 @@ public class FarCoreItemModelUnbaked extends ModelBase
 					ResourceLocation location = FarCoreItemModelUnbaked.this.textures.get(variant);
 					if(location == null) location = new ResourceLocation(variant);
 					TextureAtlasSprite icon = bakedTextureGetter.apply(location);
-					map.put(variant, ItemTextureHelper.getSurfaceQuadsForSprite(this.layer, format, transformation, this.zOffset, icon, this.baseColor));
+					map.put(variant, ItemTextureHelper.getSurfaceQuadsForSprite(this.layer, format, transformation, this.zOffset + LAYER_OFFSET * this.layer, icon, this.baseColor));
 				}
 				return this.variantApplier.andThen(L.toFunction(ImmutableMap.copyOf(map), ImmutableList.of()));
 			case 2 :
@@ -225,8 +246,8 @@ public class FarCoreItemModelUnbaked extends ModelBase
 						if(location == null) location = new ResourceLocation(variant);
 						TextureAtlasSprite icon = bakedTextureGetter.apply(location);
 						ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
-						builder.addAll(ItemTextureHelper.convertTexture(format, transformation, convert, icon, (8F - this.zOffset) / 16F, EnumFacing.NORTH, this.layer, this.baseColor));
-						builder.addAll(ItemTextureHelper.convertTexture(format, transformation, convert, icon, (8F + this.zOffset) / 16F, EnumFacing.SOUTH, this.layer, this.baseColor));
+						builder.addAll(ItemTextureHelper.convertTexture(format, transformation, convert, icon, (8F - this.zOffset - LAYER_OFFSET * this.layer) / 16F, EnumFacing.NORTH, this.layer, this.baseColor));
+						builder.addAll(ItemTextureHelper.convertTexture(format, transformation, convert, icon, (8F + this.zOffset + LAYER_OFFSET * this.layer) / 16F, EnumFacing.SOUTH, this.layer, this.baseColor));
 						map.put(variant, builder.build());
 					}
 					return this.variantApplier.andThen(L.toFunction(ImmutableMap.copyOf(map), ImmutableList.of()));
@@ -241,8 +262,8 @@ public class FarCoreItemModelUnbaked extends ModelBase
 						{
 							TextureAtlasSprite icon = bakedTextureGetter.apply(FarCoreItemModelUnbaked.this.textures.getOrDefault(row, new ResourceLocation(row)));
 							ImmutableList.Builder<BakedQuad> builder1 = ImmutableList.builder();
-							builder1.addAll(ItemTextureHelper.convertTexture(format, transformation, icon1, icon, (8F - this.zOffset) / 16F, EnumFacing.NORTH, this.layer, this.baseColor));
-							builder1.addAll(ItemTextureHelper.convertTexture(format, transformation, icon1, icon, (8F + this.zOffset) / 16F, EnumFacing.SOUTH, this.layer, this.baseColor));
+							builder1.addAll(ItemTextureHelper.convertTexture(format, transformation, icon1, icon, (8F - this.zOffset - LAYER_OFFSET * this.layer) / 16F, EnumFacing.NORTH, this.layer, this.baseColor));
+							builder1.addAll(ItemTextureHelper.convertTexture(format, transformation, icon1, icon, (8F + this.zOffset + LAYER_OFFSET * this.layer) / 16F, EnumFacing.SOUTH, this.layer, this.baseColor));
 							builder.put(row, column, builder1.build());
 						}
 					}

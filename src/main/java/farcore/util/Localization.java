@@ -66,6 +66,6 @@ public class Localization
 	@SideOnly(Side.CLIENT)
 	public static void addFluidInformation(FluidStack stack, UnlocalizedList unlocalizedList)
 	{
-		unlocalizedList.add("info.fluidcontainer.contain", stack == null ? "Empty" : (stack.getLocalizedName() + "x" + stack.amount + "L"));
+		unlocalizedList.add("info.fluidcontainer.contain", stack == null ? "Empty" : (stack.getLocalizedName() + " " + stack.amount + "L"));
 	}
 }

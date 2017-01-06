@@ -269,7 +269,6 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	protected void renderCube(
 			double x1, double y1, double z1,
 			double x2, double y2, double z2,
-			ICoordableBrightnessProvider provider, int i, int j, int k,
 			TextureAtlasSprite icon)
 	{
 		if(this.renderUp)

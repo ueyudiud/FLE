@@ -14,7 +14,6 @@ import farcore.util.Maths;
 import fle.core.tile.ditchs.TEDitch;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,7 +38,8 @@ public class TESRDitch extends TESRBase<TEDitch>
 		GL11.glPushMatrix();
 		GlStateManager.disableLighting();
 		GL11.glTranslated(x, y, z);
-		float height0 = 0.9F;//tile.getFlowHeight();
+		GlStateManager.enableBlend();
+		float height0 = tile.getFlowHeight();
 		float height1 = getFlowHeight(height0, tile, Direction.N);//--Z
 		float height2 = getFlowHeight(height0, tile, Direction.S);//++Z
 		float height3 = getFlowHeight(height0, tile, Direction.W);//--X
@@ -49,15 +49,16 @@ public class TESRDitch extends TESRBase<TEDitch>
 		float hc = Maths.lerp(height0, height3, WEIGHT2);
 		float hd = Maths.lerp(height0, height4, WEIGHT2);
 		FluidTank tank = tile.getTank();
-		//		if(tank.getFluid() != null)
+		if(tank.getFluid() != null)
 		{
-			FluidStack stack = new FluidStack(FluidRegistry.WATER, 1000);//tank.getFluid();
+			FluidStack stack = tank.getFluid();
 			setColor(stack);
 			TextureAtlasSprite icon = getTexture(stack.getFluid().getStill(stack));
 			renderFluidFace(0F, 0F, 1F, 1F,
 					(ha + hc) / 2F, (hb + hc) / 2F, (hb + hd) / 2F, (hb + hc) / 2F,
 					stack, new Vector2f(1.0F, 0.0F));
 		}
+		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}

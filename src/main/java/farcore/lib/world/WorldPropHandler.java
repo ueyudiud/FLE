@@ -9,6 +9,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * The world properties handler, use to get temperature,
+ * rainfall, etc. from a world location.<br>
+ * The general properties is given by each provider, and it is
+ * not affected by block properties contain in each world.
+ * @author ueyudiud
+ *
+ */
 public class WorldPropHandler
 {
 	private static final Map<Integer, IWorldPropProvider> WORLD_PROPERTIES = new HashMap();

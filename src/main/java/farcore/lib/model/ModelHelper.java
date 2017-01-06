@@ -98,22 +98,36 @@ public class ModelHelper
 	public static void addCuboid(
 			float x1, float y1, float z1,
 			float x2, float y2, float z2,
+			float u1, float v1, float u2, float v2,
+			TextureAtlasSprite icon, IntBuffer buffer, List<BakedQuad> generalquads, VertexFormat format)
+	{
+		addCuboid(x1, y1, z1, x2, y2, z2, u1, v1, u2, v2, icon, 0xFFFFFFFF, buffer, generalquads, format);
+	}
+	public static void addCuboid(
+			float x1, float y1, float z1,
+			float x2, float y2, float z2,
+			float u1, float v1, float u2, float v2, TextureAtlasSprite icon,
+			int color, IntBuffer buffer, List<BakedQuad> generalquads, VertexFormat format)
+	{
+		addCuboid(x1, y1, z1, x2, y2, z2, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, u1, v1, u2, v2, icon,
+				color, buffer, generalquads, format);
+	}
+	public static void addCuboid(
+			float x1, float y1, float z1,
+			float x2, float y2, float z2,
 			float xOffset, float yOffset, float zOffset,
 			float xRot, float yRot, float zRot,
 			float xTranslate, float yTranslate, float zTranslate,
-			int u1, int v1, int u2, int v2,
-			EnumFacing facing, TextureAtlasSprite icon,
-			int color, IntBuffer buffer, List<BakedQuad>[] facequads, List<BakedQuad> generalquads, VertexFormat format)
+			float u1, float v1, float u2, float v2, TextureAtlasSprite icon,
+			int color, IntBuffer buffer, List<BakedQuad> generalquads, VertexFormat format)
 	{
-		float w = icon.getMaxU() - icon.getMinU();
-		float h = icon.getMaxV() - icon.getMinV();
-		float ua = icon.getMinU() + w * u1 / 16F;
-		float va = icon.getMinU() + h * v1 / 16F;
-		float ub = icon.getMinU() + w * u2 / 16F;
-		float vb = icon.getMinU() + h * v2 / 16F;
+		float ua = icon.getInterpolatedU(u1);
+		float va = icon.getInterpolatedV(v1);
+		float ub = icon.getInterpolatedU(u2);
+		float vb = icon.getInterpolatedV(v2);
 		addCuboid(x1, y1, z1, x2, y2, z2,
 				xOffset, yOffset, zOffset, xRot, yRot, zRot, xTranslate, yTranslate, zTranslate,
-				ua, va, ub, vb, facing, color, buffer, facequads, generalquads, format);
+				ua, va, ub, vb, color, buffer, generalquads, format);
 	}
 	public static void addCuboid(
 			float x1, float y1, float z1,
@@ -122,8 +136,7 @@ public class ModelHelper
 			float xRot, float yRot, float zRot,
 			float xTranslate, float yTranslate, float zTranslate,
 			float u1, float v1, float u2, float v2,
-			EnumFacing facing,
-			int color, IntBuffer buffer, List<BakedQuad>[] facequads, List<BakedQuad> generalquads, VertexFormat format)
+			int color, IntBuffer buffer, List<BakedQuad> generalquads, VertexFormat format)
 	{
 		Matrix4f matrix = new Matrix4f();
 		matrix.translate(new Vector3f(xOffset, yOffset, zOffset));
@@ -142,7 +155,7 @@ public class ModelHelper
 				vector4f2.x, vector4f2.y, vector4f2.z,
 				vector4f2.x, vector4f2.y, vector4f1.z,
 				vector4f1.x, vector4f2.y, vector4f1.z,
-				u1, v1, u2, v2, color, buffer, facequads, generalquads, format);
+				u1, v1, u2, v2, color, buffer, generalquads, format);
 	}
 	public static void addCuboid(
 			float x1, float y1, float z1,
@@ -154,8 +167,7 @@ public class ModelHelper
 			float x7, float y7, float z7,
 			float x8, float y8, float z8,
 			float u1, float v1, float u2, float v2,
-			int color, IntBuffer buffer,
-			List<BakedQuad>[] facequads, List<BakedQuad> generalquads, VertexFormat format)
+			int color, IntBuffer buffer, List<BakedQuad> generalquads, VertexFormat format)
 	{
 		buffer.rewind();
 		addFace(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, u1, v1, u2, v2, EnumFacing.DOWN, color, buffer);

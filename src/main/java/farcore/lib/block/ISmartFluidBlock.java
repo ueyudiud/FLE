@@ -2,11 +2,11 @@ package farcore.lib.block;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 public interface ISmartFluidBlock
 {
-	
 	/**
 	 * Attempt to drain the block. This method should be called by devices such as pumps.
 	 *
@@ -17,7 +17,7 @@ public interface ISmartFluidBlock
 	 * @return
 	 */
 	FluidStack drain(World world, BlockPos pos, int maxDrain, boolean doDrain);
-
+	
 	/**
 	 * Fill fluid to the block.
 	 * @param resource The resource of this action.
@@ -25,4 +25,6 @@ public interface ISmartFluidBlock
 	 * @return
 	 */
 	int fill(World world, BlockPos pos, FluidStack resource, boolean doFill);
+	
+	Fluid getFluid();
 }

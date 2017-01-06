@@ -10,10 +10,12 @@ import farcore.FarCoreRegistry;
 import farcore.data.M;
 import farcore.lib.block.BlockSingleTE;
 import farcore.lib.material.Mat;
+import farcore.lib.model.OrderModelLoader;
 import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.LanguageManager;
 import fle.api.tile.IDitchTile.DitchBlockHandler;
+import fle.core.client.model.ModelDitch;
 import fle.core.tile.ditchs.TEDitch;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -63,6 +65,7 @@ public class BlockDitch extends BlockSingleTE
 	public void registerRender()
 	{
 		super.registerRender();
+		OrderModelLoader.putModel(this, new ModelDitch());
 	}
 	
 	@Override
@@ -101,7 +104,7 @@ public class BlockDitch extends BlockSingleTE
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		return EnumBlockRenderType.MODEL;
 	}
 	
 	@Override

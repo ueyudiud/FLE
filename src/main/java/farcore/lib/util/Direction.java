@@ -1,5 +1,6 @@
 package farcore.lib.util;
 
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -78,6 +79,11 @@ public enum Direction implements IStringSerializable
 	{
 		return direction == null ? Q :
 			values()[direction.ordinal()];
+	}
+	
+	public static Direction of(ModelRotation rotation, EnumFacing facing)
+	{
+		return of(rotation.rotateFace(facing));
 	}
 	
 	public static EnumFacing of(Direction direction)

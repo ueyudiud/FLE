@@ -18,7 +18,10 @@
 				"converts": [ "#convert" ],
 				"textures": [ "#fluid", "#empty" ]
 			},
-			"convert": "#fle:fluidcontainer",
+			"convert": {
+				"prefix": "convert",
+				"parent": "#fle:fluidcontainer"
+			},
 			"submeta": {
 				"prefix": "fluid",
 				"parent": "#fle:fluidcontainer_getfluid"

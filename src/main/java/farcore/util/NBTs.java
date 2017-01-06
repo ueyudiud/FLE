@@ -69,13 +69,14 @@ public class NBTs
 	}
 	public static NBTTagCompound getCompound(NBTTagCompound nbt, String tag, boolean create)
 	{
-		NBTTagCompound compound = nbt.getCompoundTag(tag);
-		if(compound == null)
+		if(!nbt.hasKey(tag))
 		{
 			if(!create) return NBTTagCompoundEmpty.INSTANCE;
+			NBTTagCompound compound;
 			nbt.setTag(tag, compound = new NBTTagCompound());
+			return compound;
 		}
-		return compound;
+		return nbt.getCompoundTag(tag);
 	}
 	
 	public static void plusRemovableNumber(NBTTagCompound nbt, String key, int add)
@@ -187,6 +188,11 @@ public class NBTs
 	public static double getDoubleOrDefault(NBTTagCompound nbt, String key, double def)
 	{
 		return nbt.hasKey(key) ? nbt.getLong(key) : def;
+	}
+	
+	public static int[] getIntArrayOrDefault(NBTTagCompound nbt, String key, int[] def)
+	{
+		return nbt.hasKey(key, NBT.TAG_INT_ARRAY) ? nbt.getIntArray(key) : def;
 	}
 	
 	public static long[] getLongArrayOrDefault(NBTTagCompound nbt, String key, long[] def)

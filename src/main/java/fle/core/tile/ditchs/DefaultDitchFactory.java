@@ -5,15 +5,21 @@
 package fle.core.tile.ditchs;
 
 import farcore.data.EnumBlock;
+import farcore.data.MC;
 import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
+import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBasic;
+import farcore.lib.util.SubTag;
 import farcore.util.FluidStacks;
 import fle.api.tile.IDitchTile;
 import fle.api.tile.IDitchTile.DitchBlockHandler;
 import fle.api.tile.IDitchTile.DitchFactory;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -24,16 +30,16 @@ public class DefaultDitchFactory implements DitchFactory
 	{
 		DitchBlockHandler.rawFactory = this;
 	}
-
+	
 	@Override
 	public boolean access(Mat material) { return true; }
-
+	
 	@Override
 	public FluidTank apply(IDitchTile tile)
 	{
 		return new FluidTank(1000);
 	}
-
+	
 	@Override
 	public void onUpdate(IDitchTile tile)
 	{
@@ -47,16 +53,25 @@ public class DefaultDitchFactory implements DitchFactory
 			}
 		}
 	}
-
+	
 	@Override
 	public int getSpeedMultiple(IDitchTile tile)
 	{
 		return 32000;
 	}
-
+	
 	@Override
 	public int getMaxTransferLimit(IDitchTile tile)
 	{
 		return 100;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public TextureAtlasSprite getMaterialIcon(Mat material)
+	{
+		return material.contain(SubTag.WOOD) ? MaterialTextureLoader.getIcon(material, MC.plankBlock) :
+			material.contain(SubTag.ROCK) ? MaterialTextureLoader.getIcon(material, MC.stone) :
+				MaterialTextureLoader.getIcon(material, MC.brickBlock);
 	}
 }

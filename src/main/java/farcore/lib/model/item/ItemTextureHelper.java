@@ -11,6 +11,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import farcore.util.U.Client;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -453,7 +454,7 @@ public class ItemTextureHelper
 							start * hScale,
 							endX * wScale,
 							y * hScale,
-							z, sprite, facing, color));
+							z, sprite, facing, Client.mulColor(color, pixel)));//Blind convert color.
 					
 					// update X if all the columns match. no need to rescan
 					if (endX - x > 1)
@@ -563,10 +564,10 @@ public class ItemTextureHelper
 				}
 				break;
 			case COLOR:
+				float a = ((color >> 24) & 0xFF) / 255f; // alpha
 				float r = ((color >> 16) & 0xFF) / 255f; // red
 				float g = ((color >> 8) & 0xFF) / 255f; // green
 				float b = ((color >> 0) & 0xFF) / 255f; // blue
-				float a = ((color >> 24) & 0xFF) / 255f; // alpha
 				builder.put(e, r, g, b, a);
 				break;
 			case UV:

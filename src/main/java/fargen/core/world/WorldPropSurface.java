@@ -17,6 +17,11 @@ import net.minecraft.util.math.BlockPos.PooledMutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+/**
+ * The surface properties wrapper.
+ * @author ueyudiud
+ * @see farcore.lib.world.WorldPropHandler
+ */
 public class WorldPropSurface implements IWorldPropProvider
 {
 	public static final ICalendarWithMonth calendar = CalendarHandler.OVERWORLD;
@@ -27,11 +32,11 @@ public class WorldPropSurface implements IWorldPropProvider
 	private void setData(World world)
 	{
 		long seed = world.getSeed();
-		offsetNoise.setSeed(seed);
-		temperatureUndulateNoise.setSeed(seed);
-		rainfallUndulateNoise.setSeed(seed);
+		this.offsetNoise.setSeed(seed);
+		this.temperatureUndulateNoise.setSeed(seed);
+		this.rainfallUndulateNoise.setSeed(seed);
 	}
-
+	
 	private float getTemperatureLocal(World world, BlockPos pos, int a, int b, float d)
 	{
 		Biome biome = world.getBiomeGenForCoords(pos);
@@ -41,14 +46,16 @@ public class WorldPropSurface implements IWorldPropProvider
 			return Maths.lerp(zone.temperature[a], zone.temperature[b], d);
 		}
 		else
+		{
 			return biome.getFloatTemperature(pos);
+		}
 	}
 	
 	@Override
 	public float getTemperature(World world, BlockPos pos)
 	{
 		setData(world);
-		double offset = offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
+		double offset = this.offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
 		double l = offset + calendar.dProgressInYear(world.getWorldTime()) * 12D;
 		int a = (int) l;
 		int b = (a + 1) % 12;
@@ -72,10 +79,10 @@ public class WorldPropSurface implements IWorldPropProvider
 				}
 			}
 		}
-		float undulate = (float) temperatureUndulateNoise.noise(x, y, z) * 0.06F - 0.03F;
+		float undulate = (float) this.temperatureUndulateNoise.noise(x, y, z) * 0.06F - 0.03F;
 		return c == 0 ? 0 : tempTotal / c + undulate;
 	}
-
+	
 	@Override
 	public float getAverageTemperature(World world, BlockPos pos)
 	{
@@ -84,18 +91,18 @@ public class WorldPropSurface implements IWorldPropProvider
 		if(biome instanceof BiomeBase)
 		{
 			ClimaticZone zone = ((BiomeBase) biome).zone;
-			float undulate = (float) temperatureUndulateNoise.noise(pos.getX(), pos.getY(), pos.getZ()) * 0.06F - 0.03F;
+			float undulate = (float) this.temperatureUndulateNoise.noise(pos.getX(), pos.getY(), pos.getZ()) * 0.06F - 0.03F;
 			return zone.temperatureAverage + undulate;
 		}
 		else
 			return biome.getTemperature();
 	}
-
+	
 	@Override
 	public float getSunshine(World world, BlockPos pos)
 	{
 		setData(world);
-		double offset = offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
+		double offset = this.offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
 		double l = offset + calendar.dProgressInYear(world.getWorldTime()) * 12D;
 		int a = (int) l;
 		int b = (a + 1) % 12;
@@ -112,7 +119,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		}
 		return Maths.lerp(zone.sunshine[a], zone.sunshine[b], d) * V.sq2f;// * world.getSunBrightnessFactor(0F);
 	}
-
+	
 	@Override
 	public float getRainstrength(World world, BlockPos pos)
 	{
@@ -124,7 +131,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	{
 		return world.getSunBrightnessFactor(0F);
 	}
-
+	
 	private float getHumidityLocal(World world, BlockPos pos, int a, int b, float d)
 	{
 		if(!world.isBlockLoaded(pos))
@@ -143,7 +150,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	public float getHumidity(World world, BlockPos pos)
 	{
 		setData(world);
-		double offset = offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
+		double offset = this.offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
 		double l = offset + calendar.dProgressInYear(world.getWorldTime()) * 12D;
 		int a = (int) l;
 		int b = (a + 1) % 12;
@@ -167,10 +174,10 @@ public class WorldPropSurface implements IWorldPropProvider
 				}
 			}
 		}
-		float undulate = (float) rainfallUndulateNoise.noise(pos.getX(), pos.getY(), pos.getZ()) * 0.06F - 0.03F;
+		float undulate = (float) this.rainfallUndulateNoise.noise(pos.getX(), pos.getY(), pos.getZ()) * 0.06F - 0.03F;
 		return c == 0 ? 0 : humTotal / c + undulate;
 	}
-
+	
 	@Override
 	public float getAverageHumidity(World world, BlockPos pos)
 	{
@@ -178,25 +185,25 @@ public class WorldPropSurface implements IWorldPropProvider
 		if(biome instanceof BiomeBase)
 		{
 			ClimaticZone zone = ((BiomeBase) biome).zone;
-			float undulate = (float) rainfallUndulateNoise.noise(pos.getX(), pos.getY(), pos.getZ()) * 0.06F - 0.03F;
+			float undulate = (float) this.rainfallUndulateNoise.noise(pos.getX(), pos.getY(), pos.getZ()) * 0.06F - 0.03F;
 			return zone.rainAverage + undulate;
 		}
 		else
 			return biome.getRainfall();
 	}
-
+	
 	@Override
 	public Block getMainFluidBlock()
 	{
 		return EnumBlock.water.block;
 	}
-
+	
 	@Override
 	public boolean canMainFluidBlockFreeze(World world, BlockPos pos)
 	{
 		return getTemperature(world, pos) < BiomeBase.minSnowTemperature;
 	}
-
+	
 	@Override
 	public void freezeMainFluidAt(World world, BlockPos pos)
 	{

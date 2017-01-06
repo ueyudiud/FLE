@@ -6,6 +6,7 @@ import farcore.handler.FarCoreTextureHandler;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.entity.EntityProjectileItem;
+import farcore.lib.model.OrderModelLoader;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.item.FarCoreItemModelLoader;
 import farcore.lib.render.Colormap.ColormapFactory;
@@ -46,5 +47,7 @@ public class ClientLoader extends CommonLoader
 		ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.INSTANCE);
 		//The custom block model loaders.
 		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.INSTANCE);
+		
+		ModelLoaderRegistry.registerLoader(OrderModelLoader.INSTANCE);
 	}
 }

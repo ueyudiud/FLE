@@ -59,7 +59,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * This is like icon get in the item class before 1.7.10.<p>
  * 
  * The texture selector can use JavaScript to write down,
- * but player need add <code>nashorn</code> by manual for it
+ * but modder need add <code>nashorn</code> by manual for it
  * might not included in runtime environment. (I don't exactly
  * know about this.)
  * The model loader also support to register a hard-coded
@@ -73,6 +73,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * 
  * @author ueyudiud
  * @version 1.5
+ * @see farcore.lib.model.item.FarCoreItemModel
  */
 @SideOnly(Side.CLIENT)
 public enum FarCoreItemModelLoader implements ICustomModelLoader

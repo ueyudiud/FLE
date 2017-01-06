@@ -20,6 +20,7 @@ import farcore.FarCore;
 import farcore.data.MC;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
+import farcore.lib.model.ModelBase;
 import farcore.lib.model.ModelHelper;
 import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.model.item.ICustomItemRenderModel;
@@ -52,7 +53,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
-public class ModelRedstoneCircuit extends ModelBase implements IRetexturableModel, IModelCustomData
+public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IModelCustomData
 {
 	private static final float PLATE_HEIGHT = .125F;
 	private static final IModel MODEL = new ModelRedstoneCircuit();

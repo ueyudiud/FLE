@@ -15,8 +15,11 @@ import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
 import farcore.lib.util.Log;
 import farcore.lib.world.IModifiableCoord;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -26,9 +29,9 @@ public interface IDitchTile extends IModifiableCoord
 	public static final class DitchBlockHandler implements IDataChecker<Mat>
 	{
 		public static final List<Mat> DITCH_ALLOWED_MATERIALS = new ArrayList();
-
+		
 		public static final DitchBlockHandler HANDLER = new DitchBlockHandler();
-
+		
 		private static final List<DitchFactory> FACTORIES = new ArrayList();
 		public static DitchFactory rawFactory;
 		
@@ -36,7 +39,7 @@ public interface IDitchTile extends IModifiableCoord
 		{
 			DITCH_ALLOWED_MATERIALS.add(material);
 		}
-
+		
 		public static void addFactory(DitchFactory factory)
 		{
 			FACTORIES.add(factory);
@@ -59,8 +62,7 @@ public interface IDitchTile extends IModifiableCoord
 					select = factory;
 				}
 			}
-			if(select == null) return rawFactory;
-			return select;
+			return select == null ? rawFactory : select;
 		}
 		
 		DitchBlockHandler() {	}
@@ -75,9 +77,9 @@ public interface IDitchTile extends IModifiableCoord
 	public static interface DitchFactory
 	{
 		boolean access(Mat material);
-
+		
 		FluidTank apply(IDitchTile tile);
-
+		
 		void onUpdate(IDitchTile tile);
 		
 		/**
@@ -87,7 +89,15 @@ public interface IDitchTile extends IModifiableCoord
 		 */
 		int getSpeedMultiple(IDitchTile tile);
 		
+		/**
+		 * Get max fluid transfer limit, use L for unit.
+		 * @param tile
+		 * @return
+		 */
 		int getMaxTransferLimit(IDitchTile tile);
+		
+		@SideOnly(Side.CLIENT)
+		TextureAtlasSprite getMaterialIcon(Mat material);
 	}
 	
 	default Fluid getFluidContain()
@@ -96,12 +106,12 @@ public interface IDitchTile extends IModifiableCoord
 	}
 	
 	Mat getMaterial();
-
+	
 	FluidTank getTank();
-
+	
 	float getFlowHeight();
-
+	
 	boolean isLinked(Direction direction);
-
+	
 	void setLink(Direction direction, boolean state);
 }

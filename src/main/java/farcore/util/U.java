@@ -368,7 +368,7 @@ public class U
 				{
 					world.setBlockToAir(pos);
 				}
-				if(world.isAirBlock(pos)) return;
+				if(isAir(world, pos)) return;
 				IBlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();
 				block.breakBlock(world, pos, state);
@@ -641,15 +641,21 @@ public class U
 					(meta < 0 || state.getBlock().getMetaFromState(state) == meta);
 		}
 		
+		public static boolean isAir(World world, BlockPos pos)
+		{
+			IBlockState state = world.getBlockState(pos);
+			return state.getBlock().isAir(state, world, pos);
+		}
+		
 		public static boolean isAirNearby(World world, BlockPos pos, boolean ignoreUnloadChunk)
 		{
 			return (!ignoreUnloadChunk || world.isAreaLoaded(pos, 1)) && (
-					world.isAirBlock(pos.up())   ||
-					world.isAirBlock(pos.down()) ||
-					world.isAirBlock(pos.west()) ||
-					world.isAirBlock(pos.east()) ||
-					world.isAirBlock(pos.north())||
-					world.isAirBlock(pos.south()));
+					isAir(world, pos.up())   ||
+					isAir(world, pos.down()) ||
+					isAir(world, pos.west()) ||
+					isAir(world, pos.east()) ||
+					isAir(world, pos.north())||
+					isAir(world, pos.south()));
 		}
 		
 		public static boolean isNotOpaqueNearby(World world, BlockPos pos)
@@ -959,6 +965,15 @@ public class U
 	public static class Client
 	{
 		public static final ModelResourceLocation MODEL_MISSING = new ModelResourceLocation("builtin/missing", "missing");
+		
+		public static int mulColor(int ARGB1, int ARGB2)
+		{
+			int a = ((ARGB1 >> 24) & 0xFF) * ((ARGB2 >> 24) & 0xFF) >> 8;
+			int r = ((ARGB1 >> 16) & 0xFF) * ((ARGB2 >> 16) & 0xFF) >> 8;
+			int g = ((ARGB1 >> 8 ) & 0xFF) * ((ARGB2 >> 8 ) & 0xFF) >> 8;
+			int b = ((ARGB1      ) & 0xFF) * ((ARGB2      ) & 0xFF) >> 8;
+			return a << 24 | r << 16 | g << 8 | b;
+		}
 		
 		public static void addBlockHitEffect(World world, Random rand, IBlockState state, EnumFacing side, BlockPos pos, ParticleManager manager)
 		{

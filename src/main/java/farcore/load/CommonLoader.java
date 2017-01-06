@@ -28,6 +28,7 @@ import farcore.lib.block.instance.BlockCarvedRock;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
 import farcore.lib.block.instance.BlockIce;
+import farcore.lib.block.instance.BlockModelDebug;
 import farcore.lib.block.instance.BlockOre;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.block.instance.BlockSapling;
@@ -197,6 +198,7 @@ public class CommonLoader
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		new ItemFluidDisplay().setCreativeTab(CT.tabFluids);
 		new BlockThermalDebug();
+		new BlockModelDebug();
 		if(Config.createRock)
 		{
 			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);

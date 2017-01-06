@@ -5,10 +5,12 @@
 package fle.core.items;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import farcore.data.EnumFluid;
 import farcore.lib.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import farcore.lib.item.ItemSubBehavior;
 import farcore.lib.item.behavior.IBehavior;
@@ -29,7 +31,13 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,11 +51,19 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	{
 		int capacity;
 		int durbility;
+		boolean enableToFill;
+		boolean enableToDrain;
 		
 		public FluidContainerProperty(int capacity, int durbility)
 		{
+			this(capacity, durbility, false, false);
+		}
+		public FluidContainerProperty(int capacity, int durbility, boolean enableToFill, boolean enableToDrain)
+		{
 			this.capacity = capacity;
 			this.durbility = durbility;
+			this.enableToDrain = enableToDrain;
+			this.enableToFill = enableToFill;
 		}
 	}
 	
@@ -58,13 +74,14 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	public ItemSimpleFluidContainer()
 	{
 		super(FLE.MODID, "simple.fluid.container");
+		setMaxStackSize(1);
 		init();
 	}
 	
 	protected void init()
 	{
-		addSubItem(1, "barrel", "Barrel", new FluidContainerProperty(1000, 256));
-		addSubItem(2, "bowl_wooden", "Wooden Bowl", new FluidContainerProperty(250, 128));
+		addSubItem(1, "barrel", "Barrel", new FluidContainerProperty(1000, 256, true, true));
+		addSubItem(2, "bowl_wooden", "Wooden Bowl", new FluidContainerProperty(250, 128, true, false));
 	}
 	
 	public void addSubItem(int id, String name, String localName, FluidContainerProperty property,
@@ -80,8 +97,8 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	{
 		super.registerRender();
 		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "fluidcontainer"));
-		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/bottom"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "textures/items/tool/tank/" + key)));
-		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "textures/items/tool/tank/" + key + "_overlay")));
+		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/bottom"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key)));
+		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key + "_overlay")));
 		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
 		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
 		this.style = new IProgressBarStyle()
@@ -114,6 +131,57 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		return true;
 	}
 	
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
+			EnumHand hand)
+	{
+		ActionResult<ItemStack> result = super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+		if(result.getType() != EnumActionResult.PASS) return result;
+		itemStackIn = result.getResult();
+		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(itemStackIn));
+		if(property != null)
+		{
+			FluidStack fluid = getFluid(itemStackIn);
+			if(property.enableToDrain && !playerIn.isSneaking() && fluid != null)
+			{
+				RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, false);
+				if(raytraceresult == null || !playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, itemStackIn)) return result;
+				int amount = FluidStacks.drainFluidToWorld(worldIn, raytraceresult, fluid, !worldIn.isRemote);
+				if(amount > 0)
+				{
+					itemStackIn = itemStackIn.copy();
+					fluid.amount -= amount;
+					setFluid(itemStackIn, fluid);
+					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+				}
+			}
+			if(property.enableToFill)
+			{
+				RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, true);
+				if(raytraceresult == null ||
+						!playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, itemStackIn) ||
+						!worldIn.canMineBlockBody(playerIn, raytraceresult.getBlockPos())) return result;
+				FluidStack stack = FluidStacks.fillFluidFromWorld(worldIn, raytraceresult, property.capacity - FluidStacks.getAmount(fluid), FluidStacks.getFluid(fluid), !worldIn.isRemote);
+				
+				if(stack != null)
+				{
+					itemStackIn = itemStackIn.copy();
+					if(fluid == null)
+					{
+						setFluid(itemStackIn, stack);
+					}
+					else
+					{
+						fluid.amount += stack.amount;
+						setFluid(itemStackIn, fluid);
+					}
+					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+				}
+			}
+		}
+		return result;
+	}
+	
 	protected FluidStack getFluid(ItemStack stack)
 	{
 		return stack.hasTagCompound() ? FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tank")) : null;
@@ -142,7 +210,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	
 	protected void setFluid(ItemStack stack, FluidStack contain)
 	{
-		if(contain == null)
+		if(contain == null || contain.amount == 0)
 		{
 			ItemStacks.getOrSetupNBT(stack, false).removeTag("tank");
 		}
@@ -216,11 +284,26 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
+	protected void createSubItem(int meta, List<ItemStack> subItems)
+	{
+		ItemStack stack = new ItemStack(this, 1, meta);
+		if(this.propertyMap.get(meta).capacity >= 1000)
+		{
+			setFluid(stack, new FluidStack(FluidRegistry.WATER, 1000));
+			subItems.add(stack.copy());
+		}
+		setFluid(stack, new FluidStack(EnumFluid.water.fluid, 100));
+		subItems.add(stack);
+	}
+	
+	@Override
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		Localization.addFluidInformation(getFluid(stack), unlocalizedList);
-		Localization.addDamageInformation(getCustomDamage(stack), getMaxCustomDamage(stack), unlocalizedList);;
+		int max = getMaxCustomDamage(stack);
+		Localization.addDamageInformation(max - getCustomDamage(stack), max, unlocalizedList);
 	}
 }

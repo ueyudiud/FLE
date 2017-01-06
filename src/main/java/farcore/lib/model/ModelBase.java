@@ -1,4 +1,4 @@
-package farcore.lib.model.block;
+package farcore.lib.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,26 +21,26 @@ import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
-public abstract class ModelBase implements IModel
+public interface ModelBase extends IModel
 {
 	@Override
-	public Collection<ResourceLocation> getDependencies()
+	default Collection<ResourceLocation> getDependencies()
 	{
 		return ImmutableList.of();
 	}
-
+	
 	@Override
-	public IModelState getDefaultState()
+	default IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
 	
-	protected ResourceLocation getRealLocationFromPath(String key, ImmutableMap<String, String> map)
+	default ResourceLocation getRealLocationFromPath(String key, ImmutableMap<String, String> map)
 	{
 		return getRealLocationFromPathOrDefault(key, map, TextureMap.LOCATION_MISSING_TEXTURE);
 	}
 	
-	protected ResourceLocation getRealLocationFromPathOrDefault(String key, ImmutableMap<String, String> map, ResourceLocation def)
+	default ResourceLocation getRealLocationFromPathOrDefault(String key, ImmutableMap<String, String> map, ResourceLocation def)
 	{
 		String key1 = key;
 		List<String> currents = new ArrayList();
@@ -58,17 +58,17 @@ public abstract class ModelBase implements IModel
 		while (key1.charAt(0) == '#');
 		return new ResourceLocation(key1);
 	}
-
-	public static IModel makeWrapperModel(IModel model)
+	
+	static IModel makeWrapperModel(IModel model)
 	{
 		return new RetextureWrapperModel(model);
 	}
-
-	private static class RetextureWrapperModel implements IRetexturableModel
+	
+	class RetextureWrapperModel implements IRetexturableModel
 	{
 		private IModel parent;
 		private ImmutableMap<String, String> textures;
-
+		
 		private RetextureWrapperModel(IModel model)
 		{
 			this(model, ImmutableMap.of());
@@ -78,7 +78,7 @@ public abstract class ModelBase implements IModel
 			parent = model;
 			this.textures = textures;
 		}
-
+		
 		@Override
 		public Collection<ResourceLocation> getDependencies()
 		{

@@ -39,13 +39,18 @@ import net.minecraftforge.fml.common.registry.IThrowableEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Some bug still contain, it is need to be solved.
+ * @author ueyudiud
+ * FIXME
+ */
 public class EntityProjectileItem extends Entity implements IThrowableEntity, IProjectile, IDescribable
 {
 	private static final Predicate<Entity> ARROW_TARGETS =
 			Predicates.and(new Predicate[] {
 					EntitySelectors.NOT_SPECTATING,
 					EntitySelectors.IS_ALIVE,
-					(Object entity) -> {return ((Entity) entity).canBeCollidedWith();}});
+					entity -> ((Entity) entity).canBeCollidedWith()});
 	public boolean inGround = false;
 	private int tickInGround;
 	private int tickInAir;
@@ -61,15 +66,15 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	public EntityProjectileItem(World worldIn)
 	{
 		super(worldIn);
-		blockPos = BlockPos.ORIGIN;
+		this.blockPos = BlockPos.ORIGIN;
 		setSize(.5F, .5F);
 	}
 	public EntityProjectileItem(World world, ItemStack stack)
 	{
 		this(world);
-		currentItem = stack;
+		this.currentItem = stack;
 	}
-
+	
 	public EntityProjectileItem(World world, double x, double y, double z, ItemStack stack)
 	{
 		this(world, stack);
@@ -81,14 +86,14 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this(world, shooter.posX, shooter.posY + shooter.getEyeHeight() - .1, shooter.posZ, stack);
 		this.shooter = shooter;
 		setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
-		posX -= MathHelper.cos(rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
-		posY -= 0.1;
-		posZ -= MathHelper.sin(rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
-		setPosition(posX, posY, posZ);
-		motionX = -MathHelper.sin(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI);
-		motionZ = MathHelper.cos(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI);
-		motionY = (-MathHelper.sin(rotationPitch / 180.0F * (float)Math.PI));
-		setThrowableHeading(motionX, motionY, motionZ, hardness * 1.5F, 1.0F);
+		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		this.posY -= 0.1;
+		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		setPosition(this.posX, this.posY, this.posZ);
+		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
+		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
+		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		setThrowableHeading(this.motionX, this.motionY, this.motionZ, hardness * 1.5F, 1.0F);
 	}
 	
 	public EntityProjectileItem(World world, EntityLivingBase shooter, float hardness, ItemStack stack, boolean useSkill)
@@ -96,13 +101,13 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this(world, shooter.posX, shooter.posY + shooter.getEyeHeight() - .1, shooter.posZ, stack);
 		this.shooter = shooter;
 		setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
-		posX -= MathHelper.cos(rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
-		posY -= 0.10000000149011612D;
-		posZ -= MathHelper.sin(rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
-		setPosition(posX, posY, posZ);
-		motionX = -MathHelper.sin(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI);
-		motionZ = MathHelper.cos(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI);
-		motionY = (-MathHelper.sin(rotationPitch / 180.0F * (float)Math.PI));
+		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		this.posY -= 0.10000000149011612D;
+		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
+		setPosition(this.posX, this.posY, this.posZ);
+		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
+		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);
+		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
 		float inaccuracy;
 		if(useSkill && (shooter instanceof EntityPlayer))
 		{
@@ -112,42 +117,42 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		{
 			inaccuracy = 1F;
 		}
-		setThrowableHeading(motionX, motionY, motionZ, hardness * 1.5F, inaccuracy);
+		setThrowableHeading(this.motionX, this.motionY, this.motionZ, hardness * 1.5F, inaccuracy);
 	}
-
+	
 	@Override
 	public void setThrowableHeading(double x, double y, double z, float velocity, float inaccuracy)
 	{
-		float f2 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
-		motionX /= f2;
-		motionY /= f2;
-		motionZ /= f2;
-		motionX += rand.nextGaussian() * (rand.nextBoolean() ? -1 : 1) * 0.0075 * inaccuracy;
-		motionY += rand.nextGaussian() * (rand.nextBoolean() ? -1 : 1) * 0.0075 * inaccuracy;
-		motionZ += rand.nextGaussian() * (rand.nextBoolean() ? -1 : 1) * 0.0075 * inaccuracy;
-		motionX *= velocity;
-		motionY *= velocity;
-		motionZ *= velocity;
-		float f3 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-		prevRotationYaw = rotationYaw = (float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
-		prevRotationPitch = rotationPitch = (float)(Math.atan2(motionY, f3) * 180.0D / Math.PI);
+		float f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+		this.motionX /= f2;
+		this.motionY /= f2;
+		this.motionZ /= f2;
+		this.motionX += this.rand.nextGaussian() * (this.rand.nextBoolean() ? -1 : 1) * 0.0075 * inaccuracy;
+		this.motionY += this.rand.nextGaussian() * (this.rand.nextBoolean() ? -1 : 1) * 0.0075 * inaccuracy;
+		this.motionZ += this.rand.nextGaussian() * (this.rand.nextBoolean() ? -1 : 1) * 0.0075 * inaccuracy;
+		this.motionX *= velocity;
+		this.motionY *= velocity;
+		this.motionZ *= velocity;
+		float f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, f3) * 180.0D / Math.PI);
 	}
-
+	
 	@Override
 	public Entity getThrower()
 	{
-		return shooter;
+		return this.shooter;
 	}
-
+	
 	@Override
 	public void setThrower(Entity entity)
 	{
 		if(entity instanceof EntityLivingBase)
 		{
-			shooter = (EntityLivingBase) entity;
+			this.shooter = (EntityLivingBase) entity;
 		}
 	}
-
+	
 	@Override
 	protected void entityInit()
 	{
@@ -159,116 +164,116 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	public void setVelocity(double x, double y, double z)
 	{
 		super.setVelocity(x, y, z);
-		if (prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
+		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
 		{
 			float f = MathHelper.sqrt_double(x * x + z * z);
-			prevRotationYaw = rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
-			prevRotationPitch = rotationPitch = (float)(Math.atan2(y, f) * 180.0D / Math.PI);
-			prevRotationPitch = rotationPitch;
-			prevRotationYaw = rotationYaw;
-			setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
+			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, f) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch;
+			this.prevRotationYaw = this.rotationYaw;
+			setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
 		}
 	}
-
+	
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
-		tickInAir = compound.getInteger("tickInAir");
-		tickInGround = compound.getInteger("tickInGround");
-		inGround = compound.getBoolean("inGround");
-		currentItem = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("item"));
-		attacked = compound.getBoolean("attacked");
+		this.tickInAir = compound.getInteger("tickInAir");
+		this.tickInGround = compound.getInteger("tickInGround");
+		this.inGround = compound.getBoolean("inGround");
+		this.currentItem = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("item"));
+		this.attacked = compound.getBoolean("attacked");
 	}
-
+	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
-		compound.setInteger("tickInAir", tickInAir);
-		compound.setInteger("tickInGround", tickInGround);
-		compound.setTag("item", currentItem.writeToNBT(new NBTTagCompound()));
-		compound.setBoolean("attacked", attacked);
-		compound.setBoolean("inGround", inGround);
+		compound.setInteger("tickInAir", this.tickInAir);
+		compound.setInteger("tickInGround", this.tickInGround);
+		compound.setTag("item", this.currentItem.writeToNBT(new NBTTagCompound()));
+		compound.setBoolean("attacked", this.attacked);
+		compound.setBoolean("inGround", this.inGround);
 	}
 	
 	@Override
 	public void onUpdate()
 	{
-		if(worldObj.isRemote && currentItem == null)
+		if(this.worldObj.isRemote && this.currentItem == null)
 		{
 			FarCore.network.sendToServer(new PacketEntityAsk(this));
 			return;
 		}
-		++age;
-		if(!worldObj.isRemote)
+		++this.age;
+		if(!this.worldObj.isRemote)
 		{
-			if(!inited)
+			if(!this.inited)
 			{
-				if(currentItem == null)
+				if(this.currentItem == null)
 				{
 					setDead();
 					return;
 				}
-				if(currentItem.getItem() instanceof IProjectileItem)
+				if(this.currentItem.getItem() instanceof IProjectileItem)
 				{
-					((IProjectileItem) currentItem.getItem()).initEntity(this);
+					((IProjectileItem) this.currentItem.getItem()).initEntity(this);
 				}
-				if(inGround)
+				if(this.inGround)
 				{
-					inBlock = worldObj.getBlockState(blockPos = new BlockPos(this));
-					AxisAlignedBB axisAlignedBB = inBlock.getCollisionBoundingBox(worldObj, blockPos);
-					if(axisAlignedBB == null || !axisAlignedBB.offset(blockPos).isVecInside(new Vec3d(posX, posY, posZ)))
+					this.inBlock = this.worldObj.getBlockState(this.blockPos = new BlockPos(this));
+					AxisAlignedBB axisAlignedBB = this.inBlock.getCollisionBoundingBox(this.worldObj, this.blockPos);
+					if(axisAlignedBB == null || !axisAlignedBB.offset(this.blockPos).isVecInside(new Vec3d(this.posX, this.posY, this.posZ)))
 					{
-						inGround = false;
-						inBlock = null;
+						this.inGround = false;
+						this.inBlock = null;
 					}
 				}
-				inited = true;
+				this.inited = true;
 			}
-			synchronized (list)
+			synchronized (this.list)
 			{
-				if(!list.isEmpty())
+				if(!this.list.isEmpty())
 				{
-					for(EntityPlayer player : list)
+					for(EntityPlayer player : this.list)
 					{
 						FarCore.network.sendToPlayer(new PacketEntity(this), player);
 					}
-					list.clear();
+					this.list.clear();
 				}
 			}
 		}
-		if(currentItem.getItem() instanceof IProjectileItem)
+		if(this.currentItem.getItem() instanceof IProjectileItem)
 		{
-			((IProjectileItem) currentItem.getItem()).onEntityTick(this);
+			((IProjectileItem) this.currentItem.getItem()).onEntityTick(this);
 		}
-		if(currentItem.getItem() instanceof IUpdatableItem)
+		if(this.currentItem.getItem() instanceof IUpdatableItem)
 		{
-			((IUpdatableItem) currentItem.getItem()).updateItem(new EnviornmentEntity(this), currentItem);
+			((IUpdatableItem) this.currentItem.getItem()).updateItem(new EnviornmentEntity(this), this.currentItem);
 		}
-		if(isDead)
+		if(this.isDead)
 			return;
 		super.onEntityUpdate();
-		if (prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
+		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
 		{
 			recountYawAndPitch();
 		}
-		blockPos = new BlockPos(this);
-
-		if(inGround)
+		this.blockPos = new BlockPos(this);
+		
+		if(this.inGround)
 		{
-			IBlockState state = worldObj.getBlockState(blockPos);
-			if(state != inBlock)
+			IBlockState state = this.worldObj.getBlockState(this.blockPos);
+			if(state != this.inBlock)
 			{
-				tickInAir = 0;
-				tickInGround = 0;
-				motionX *= rand.nextFloat() * 0.2F;
-				motionY *= rand.nextFloat() * 0.2F;
-				motionZ *= rand.nextFloat() * 0.2F;
-				inGround = false;
+				this.tickInAir = 0;
+				this.tickInGround = 0;
+				this.motionX *= this.rand.nextFloat() * 0.2F;
+				this.motionY *= this.rand.nextFloat() * 0.2F;
+				this.motionZ *= this.rand.nextFloat() * 0.2F;
+				this.inGround = false;
 			}
 			else
 			{
-				++tickInGround;
-				if(tickInGround >= 72000)
+				++this.tickInGround;
+				if(this.tickInGround >= 72000)
 				{
 					setDead();
 					return;
@@ -277,30 +282,30 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		}
 		else
 		{
-			tickInGround = 0;
-			++tickInAir;
-			if(tickInAir >= 20)
+			this.tickInGround = 0;
+			++this.tickInAir;
+			if(this.tickInAir >= 20)
 			{
-				attacked = false;
+				this.attacked = false;
 			}
-			if(!worldObj.isRemote)
+			if(!this.worldObj.isRemote)
 			{
-				if(posY <= -32 || tickInAir >= 3600)
+				if(this.posY <= -32 || this.tickInAir >= 3600)
 				{
 					setDead();
 					return;
 				}
 			}
-			Vec3d vec3d1 = new Vec3d(posX, posY, posZ);
-			Vec3d vec3d = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
-			RayTraceResult raytraceresult = worldObj.rayTraceBlocks(vec3d1, vec3d, false, true, false);
-			vec3d1 = new Vec3d(posX, posY, posZ);
-			vec3d = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
+			Vec3d vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
+			Vec3d vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+			RayTraceResult raytraceresult = this.worldObj.rayTraceBlocks(vec3d1, vec3d, false, true, false);
+			vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
+			vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			if (raytraceresult != null)
 			{
 				vec3d = new Vec3d(raytraceresult.hitVec.xCoord, raytraceresult.hitVec.yCoord, raytraceresult.hitVec.zCoord);
 			}
-			if(!attacked)
+			if(!this.attacked)
 			{
 				Entity entity = findEntityOnPath(vec3d1, vec3d);
 				if (entity != null)
@@ -310,7 +315,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 				if (raytraceresult != null && raytraceresult.entityHit != null && raytraceresult.entityHit instanceof EntityPlayer)
 				{
 					EntityPlayer entityplayer = (EntityPlayer)raytraceresult.entityHit;
-					if (shooter instanceof EntityPlayer && !((EntityPlayer) shooter).canAttackPlayer(entityplayer))
+					if (this.shooter instanceof EntityPlayer && !((EntityPlayer) this.shooter).canAttackPlayer(entityplayer))
 					{
 						raytraceresult = null;
 					}
@@ -321,31 +326,31 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 				}
 			}
 		}
-		posX += motionX;
-		posY += motionY;
-		posZ += motionZ;
-		if(!inGround)
+		this.posX += this.motionX;
+		this.posY += this.motionY;
+		this.posZ += this.motionZ;
+		if(!this.inGround)
 		{
-			float f4 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-			rotationYaw = (float)(MathHelper.atan2(motionX, motionZ) * (180D / Math.PI));
-			for (rotationPitch = (float)(MathHelper.atan2(motionY, f4) * (180D / Math.PI)); rotationPitch - prevRotationPitch < -180.0F; prevRotationPitch -= 360.0F)
+			float f4 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+			this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
+			for (this.rotationPitch = (float)(MathHelper.atan2(this.motionY, f4) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
 			{
 				;
 			}
-			while (rotationPitch - prevRotationPitch >= 180.0F)
+			while (this.rotationPitch - this.prevRotationPitch >= 180.0F)
 			{
-				prevRotationPitch += 360.0F;
+				this.prevRotationPitch += 360.0F;
 			}
-			while (rotationYaw - prevRotationYaw < -180.0F)
+			while (this.rotationYaw - this.prevRotationYaw < -180.0F)
 			{
-				prevRotationYaw -= 360.0F;
+				this.prevRotationYaw -= 360.0F;
 			}
-			while (rotationYaw - prevRotationYaw >= 180.0F)
+			while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
 			{
-				prevRotationYaw += 360.0F;
+				this.prevRotationYaw += 360.0F;
 			}
-			rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
-			rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
+			this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
+			this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
 			float f1 = 0.99F;
 			float f2 = 0.05F;
 			
@@ -354,7 +359,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 				for (int i = 0; i < 4; ++i)
 				{
 					float f3 = 0.25F;
-					worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * 0.25D, posY - motionY * 0.25D, posZ - motionZ * 0.25D, motionX, motionY, motionZ, new int[0]);
+					this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
 				}
 				
 				f1 = 0.6F;
@@ -364,23 +369,23 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 				extinguish();
 			}
 			
-			motionX *= f1;
-			motionY *= f1;
-			motionZ *= f1;
+			this.motionX *= f1;
+			this.motionY *= f1;
+			this.motionZ *= f1;
 			if (!func_189652_ae())
 			{
-				motionY -= 0.05;
+				this.motionY -= 0.05;
 			}
-			setPosition(posX, posY, posZ);
+			setPosition(this.posX, this.posY, this.posZ);
 		}
 		doBlockCollisions();
 	}
 	
 	private void recountYawAndPitch()
 	{
-		float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-		prevRotationYaw = rotationYaw = (float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
-		prevRotationPitch = rotationPitch = (float)(Math.atan2(motionY, f) * 180.0D / Math.PI);
+		float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, f) * 180.0D / Math.PI);
 	}
 	
 	private void onHit(RayTraceResult result)
@@ -393,84 +398,84 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		}
 		else
 		{
-			blockPos = result.getBlockPos();
-			state = worldObj.getBlockState(blockPos);
-			if(!state.getBlock().isAir(state, worldObj, blockPos))
+			this.blockPos = result.getBlockPos();
+			state = this.worldObj.getBlockState(this.blockPos);
+			if(!state.getBlock().isAir(state, this.worldObj, this.blockPos))
 			{
-				AxisAlignedBB aabb = state.getCollisionBoundingBox(worldObj, blockPos).offset(blockPos);
-				state.getBlock().onEntityCollidedWithBlock(worldObj, blockPos, state, this);
+				AxisAlignedBB aabb = state.getCollisionBoundingBox(this.worldObj, this.blockPos).offset(this.blockPos);
+				state.getBlock().onEntityCollidedWithBlock(this.worldObj, this.blockPos, state, this);
 				hitOnGround(aabb);
 			}
 		}
-		if(!isDead)
+		if(!this.isDead)
 		{
-			posX = result.hitVec.xCoord + motionX * 4E-2F;
-			posY = result.hitVec.yCoord + motionY * 4E-2F;
-			posZ = result.hitVec.zCoord + motionZ * 4E-2F;
+			this.posX = result.hitVec.xCoord + this.motionX * 4E-2F;
+			this.posY = result.hitVec.yCoord + this.motionY * 4E-2F;
+			this.posZ = result.hitVec.zCoord + this.motionZ * 4E-2F;
 			if(result.typeOfHit == Type.BLOCK)
 			{
-				motionX = 0;
-				motionY = 0;
-				motionZ = 0;
-				inBlock = state;
-				inGround = true;
+				this.motionX = 0;
+				this.motionY = 0;
+				this.motionZ = 0;
+				this.inBlock = state;
+				this.inGround = true;
 			}
 		}
 	}
-
+	
 	private void hitOnGround(AxisAlignedBB aabb)
 	{
-		Direction direction = U.Worlds.getCollideSide(aabb, new double[]{posX, posY, posZ}, new double[]{posX + motionX, posY + motionY, posZ + motionZ});
+		Direction direction = U.Worlds.getCollideSide(aabb, new double[]{this.posX, this.posY, this.posZ}, new double[]{this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ});
 		if(direction == null)
 		{
 			direction = Direction.Q;
 		}
-		if(currentItem.getItem() instanceof IProjectileItem)
-			if(((IProjectileItem) currentItem.getItem()).onHitGround(worldObj, blockPos, this, direction))
+		if(this.currentItem.getItem() instanceof IProjectileItem)
+			if(((IProjectileItem) this.currentItem.getItem()).onHitGround(this.worldObj, this.blockPos, this, direction))
 				return;
-		if(!worldObj.isRemote)
+		if(!this.worldObj.isRemote)
 		{
-			EntityItem entity = new EntityItem(worldObj, posX, posY, posZ, currentItem);
-			entity.motionX = direction.boundX * motionX * .1 + rand.nextDouble() * 0.08 - rand.nextDouble() * 0.08;
-			entity.motionY = direction.boundY * motionY * .1 + rand.nextDouble() * 0.08 - rand.nextDouble() * 0.08 + 0.2;
-			entity.motionZ = direction.boundZ * motionZ * .1 + rand.nextDouble() * 0.08 - rand.nextDouble() * 0.08;
-			worldObj.spawnEntityInWorld(entity);
+			EntityItem entity = new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, this.currentItem);
+			entity.motionX = direction.boundX * this.motionX * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08;
+			entity.motionY = direction.boundY * this.motionY * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08 + 0.2;
+			entity.motionZ = direction.boundZ * this.motionZ * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08;
+			this.worldObj.spawnEntityInWorld(entity);
 		}
 		setDead();
 	}
 	
 	private void hitOnEntity(Entity entity)
 	{
-		if(currentItem.getItem() instanceof IProjectileItem)
-			if(((IProjectileItem) currentItem.getItem()).onHitEntity(worldObj, entity, this))
+		if(this.currentItem.getItem() instanceof IProjectileItem)
+			if(((IProjectileItem) this.currentItem.getItem()).onHitEntity(this.worldObj, entity, this))
 			{
-				attacked = true;
+				this.attacked = true;
 				return;
 			}
-		entity.addVelocity(motionX * .1, motionY * .1 + 0.1, motionZ * .1);
-		if(!worldObj.isRemote)
+		entity.addVelocity(this.motionX * .1, this.motionY * .1 + 0.1, this.motionZ * .1);
+		if(!this.worldObj.isRemote)
 		{
-			EntityItem entity1 = new EntityItem(worldObj, posX - motionX, posY - motionY, posZ - motionZ, currentItem);
-			entity1.motionX = motionX * .1 + rand.nextDouble() * 0.08 - rand.nextDouble() * 0.08;
-			entity1.motionY = motionY * .1 + rand.nextDouble() * 0.08 - rand.nextDouble() * 0.08 + 0.2;
-			entity1.motionZ = motionZ * .1 + rand.nextDouble() * 0.08 - rand.nextDouble() * 0.08;
-			worldObj.spawnEntityInWorld(entity1);
+			EntityItem entity1 = new EntityItem(this.worldObj, this.posX - this.motionX, this.posY - this.motionY, this.posZ - this.motionZ, this.currentItem);
+			entity1.motionX = this.motionX * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08;
+			entity1.motionY = this.motionY * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08 + 0.2;
+			entity1.motionZ = this.motionZ * .1 + this.rand.nextDouble() * 0.08 - this.rand.nextDouble() * 0.08;
+			this.worldObj.spawnEntityInWorld(entity1);
 		}
 		setDead();
 	}
-
+	
 	@Nullable
 	protected Entity findEntityOnPath(Vec3d start, Vec3d end)
 	{
 		Entity entity = null;
-		List<Entity> list = worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expandXyz(1.0D), ARROW_TARGETS);
+		List<Entity> list = this.worldObj.getEntitiesInAABBexcluding(this, getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expandXyz(1.0D), ARROW_TARGETS);
 		double d0 = 0.0D;
 		
 		for (int i = 0; i < list.size(); ++i)
 		{
 			Entity entity1 = list.get(i);
 			
-			if (entity1 != shooter || ticksExisted >= 5)
+			if (entity1 != this.shooter || this.ticksExisted >= 5)
 			{
 				AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expandXyz(0.30000001192092896D);
 				RayTraceResult raytraceresult = axisalignedbb.calculateIntercept(start, end);
@@ -490,28 +495,28 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		
 		return entity;
 	}
-
+	
 	@Override
 	public NBTTagCompound writeDescriptionsToNBT(NBTTagCompound nbt)
 	{
-		nbt.setLong("p", blockPos.toLong());
-		nbt.setTag("i", currentItem.writeToNBT(new NBTTagCompound()));
+		nbt.setLong("p", this.blockPos.toLong());
+		nbt.setTag("i", this.currentItem.writeToNBT(new NBTTagCompound()));
 		return nbt;
 	}
-
+	
 	@Override
 	public void readDescriptionsFromNBT(NBTTagCompound nbt)
 	{
-		blockPos = BlockPos.fromLong(nbt.getLong("p"));
-		currentItem = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("i"));
+		this.blockPos = BlockPos.fromLong(nbt.getLong("p"));
+		this.currentItem = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("i"));
 	}
-
+	
 	@Override
 	public void markNBTSync(EntityPlayer player)
 	{
-		synchronized (list)
+		synchronized (this.list)
 		{
-			list.add(player);
+			this.list.add(player);
 		}
 	}
 }
