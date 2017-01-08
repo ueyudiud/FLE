@@ -39,14 +39,7 @@ public class BlockDitch extends BlockSingleTE
 	public BlockDitch()
 	{
 		super("ditch", Material.ROCK);
-		setCreativeTab(new CreativeTabBase("fle.ditch", "Ditches")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return new ItemStack(BlockDitch.this, 1, M.oak.id);
-			}
-		});
+		setCreativeTab(new CreativeTabBase("fle.ditch", "Ditches", () -> new ItemStack(BlockDitch.this, 1, M.oak.id)));
 	}
 	
 	@Override

@@ -1,5 +1,13 @@
 package farcore.load;
 
+import static farcore.energy.thermal.ThermalNet.registerWorldThermalHandler;
+import static farcore.handler.FarCoreEnergyHandler.addNet;
+import static farcore.lib.util.LanguageManager.registerLocal;
+import static net.minecraftforge.fml.common.ProgressManager.pop;
+import static net.minecraftforge.fml.common.ProgressManager.push;
+import static net.minecraftforge.fml.common.registry.EntityRegistry.registerModEntity;
+import static net.minecraftforge.fml.common.registry.GameRegistry.registerTileEntity;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.FarCore;
@@ -21,6 +29,7 @@ import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreItemHandler;
 import farcore.handler.FarCoreKeyHandler;
+import farcore.handler.FarCoreSynchronizationHandler;
 import farcore.handler.FarCoreWorldHandler;
 import farcore.instances.TemperatureHandler;
 import farcore.lib.block.BlockBase;
@@ -55,6 +64,7 @@ import farcore.lib.net.gui.PacketFluidSlotClick;
 import farcore.lib.net.gui.PacketFluidUpdateAll;
 import farcore.lib.net.gui.PacketFluidUpdateSingle;
 import farcore.lib.net.gui.PacketGuiTickUpdate;
+import farcore.lib.net.tile.PacketChunkNetData;
 import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.net.tile.PacketTEAskType;
 import farcore.lib.net.tile.PacketTESAsk;
@@ -69,125 +79,60 @@ import farcore.lib.tile.instance.TELossTile;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.tile.instance.TESapling;
 import farcore.lib.util.CreativeTabBase;
-import farcore.lib.util.LanguageManager;
 import farcore.network.Network;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonLoader
 {
 	public void preload()
 	{
-		ProgressBar bar = ProgressManager.push("Far Core Preload", 10);
+		ProgressBar bar = push("Far Core Preload", 10);
 		bar.step("Add Creative Tabs");
 		if(Config.displayFluidInTab)
 		{
-			CT.tabFluids = new CreativeTabBase("farcore.fluids", "Fluids[FarCore]")
-			{
-				@Override
-				public ItemStack getIconItemStack()
-				{
-					return new ItemStack(Items.WATER_BUCKET);
-				}
-			};
+			CT.tabFluids = new CreativeTabBase("farcore.fluids", "Fluids[FarCore]", () -> new ItemStack(Items.WATER_BUCKET));
 		}
-		CT.tabCropAndWildPlants = new CreativeTabBase("farcore.crop.plants", "Far Crop And Wild Plant")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return new ItemStack(Items.WHEAT);
-			}
-		};
-		CT.tabTree = new CreativeTabBase("farcore.tree", "Far Tree")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return Config.createLog ? new ItemStack(M.oak.getProperty(MP.property_wood).block) : new ItemStack(Blocks.LOG);
-			}
-		};
-		CT.tabTerria = new CreativeTabBase("farcore.terria", "Far Terria")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return Config.createRock ? new ItemStack(M.peridotite.getProperty(MP.property_rock).block, 1, 2) : new ItemStack(Blocks.STONE);
-			}
-		};
-		CT.tabBuilding = new CreativeTabBase("farcore.building", "Far Building Blocks")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return Config.createRock ? new ItemStack(M.marble.getProperty(MP.property_rock).block, 1, 5) : new ItemStack(Blocks.STONEBRICK);
-			}
-		};
-		CT.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return Config.createRock ? new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id) : new ItemStack(Items.GOLD_INGOT);
-			}
-		};
-		CT.tabMachine = new CreativeTabBase("farcore.machine", "Far Machine")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return new ItemStack(Blocks.CRAFTING_TABLE);
-			}
-		};
-		CT.tabMaterial = new CreativeTabBase("farcore.material", "Far Material")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return new ItemStack(Items.EMERALD);
-			}
-		};
-		CT.tabTool = new CreativeTabBase("farcore.tool", "Far Tool")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return new ItemStack(EnumItem.debug.item);
-			}
-		};
-		CT.tabRedstone = new CreativeTabBase("farcore.redstone", "Far Redstone")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return Config.createRock ? BlockRedstoneCircuit.createItemStack(1, M.stone) : new ItemStack(Items.COMPARATOR);
-			}
-		};
+		CT.tabCropAndWildPlants = new CreativeTabBase("farcore.crop.plants", "Far Crop And Wild Plant", () -> new ItemStack(Items.WHEAT));
+		CT.tabTree = new CreativeTabBase("farcore.tree", "Far Tree",
+				() -> Config.createLog ? new ItemStack(M.oak.getProperty(MP.property_wood).block) : new ItemStack(Blocks.LOG));
+		CT.tabTerria = new CreativeTabBase("farcore.terria", "Far Terria",
+				() -> Config.createRock ? new ItemStack(M.peridotite.getProperty(MP.property_rock).block, 1, 2) : new ItemStack(Blocks.STONE));
+		CT.tabBuilding = new CreativeTabBase("farcore.building", "Far Building Blocks",
+				() -> Config.createRock ? new ItemStack(M.marble.getProperty(MP.property_rock).block, 1, 5) : new ItemStack(Blocks.STONEBRICK));
+		CT.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item",
+				() -> Config.createRock ? new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id) : new ItemStack(Items.GOLD_INGOT));
+		CT.tabMachine = new CreativeTabBase("farcore.machine", "Far Machine",
+				() -> new ItemStack(Blocks.CRAFTING_TABLE));
+		CT.tabMaterial = new CreativeTabBase("farcore.material", "Far Material",
+				() -> new ItemStack(Items.EMERALD));
+		CT.tabTool = new CreativeTabBase("farcore.tool", "Far Tool",
+				() -> new ItemStack(EnumItem.debug.item));
+		CT.tabRedstone = new CreativeTabBase("farcore.redstone", "Far Redstone",
+				() -> Config.createRock ? BlockRedstoneCircuit.createItemStack(1, M.stone) : new ItemStack(Items.COMPARATOR));
 		//Register common handler.
 		bar.step("Register Game Handlers");
-		MinecraftForge.EVENT_BUS.register(new FarCoreKeyHandler());
-		MinecraftForge.EVENT_BUS.register(FarCoreEnergyHandler.getHandler());
-		MinecraftForge.EVENT_BUS.register(new FarCoreWorldHandler());
-		MinecraftForge.EVENT_BUS.register(new FarCoreItemHandler());
+		registerForgeEventListener(new FarCoreKeyHandler());
+		registerForgeEventListener(new FarCoreSynchronizationHandler());
+		registerForgeEventListener(FarCoreEnergyHandler.getHandler());
+		registerForgeEventListener(new FarCoreWorldHandler());
+		registerForgeEventListener(new FarCoreItemHandler());
 		//Register energy nets.
 		bar.step("Add Energy Nets");
-		FarCoreEnergyHandler.addNet(ThermalNet.instance);
-		FarCoreEnergyHandler.addNet(KineticNet.instance);
-		FarCoreEnergyHandler.addNet(ElectricNet.instance);
+		addNet(ThermalNet.instance);
+		addNet(KineticNet.instance);
+		addNet(ElectricNet.instance);
 		//Register world objects.
 		bar.step("Register World Objects");
 		FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
 		//Register local world handler.
 		bar.step("Register Local World Handlers");
-		ThermalNet.registerWorldThermalHandler(new TemperatureHandler());
+		registerWorldThermalHandler(new TemperatureHandler());
 		//Initialize materials
 		//Some material will create blocks and items.
 		//DO NOT CALL CLASS farcore.data.M BEFORE FAR CORE PRE INITIALIZED.
@@ -230,70 +175,76 @@ public class CommonLoader
 		new BlockFire();
 		//Register tile entities.
 		bar.step("Register Tile Entities");
-		GameRegistry.registerTileEntity(TELossTile.class, "farcore.loss.tile");
-		GameRegistry.registerTileEntity(TECrop.class, "farcore.crop");
-		GameRegistry.registerTileEntity(TEOre.class, "farcore.ore");
-		GameRegistry.registerTileEntity(TECustomCarvedStone.class, "farcore.carved.stone");
-		GameRegistry.registerTileEntity(TESapling.class, "farcore.sapling");
-		GameRegistry.registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
+		registerTileEntity(TELossTile.class, "farcore.loss.tile");
+		registerTileEntity(TECrop.class, "farcore.crop");
+		registerTileEntity(TEOre.class, "farcore.ore");
+		registerTileEntity(TECustomCarvedStone.class, "farcore.carved.stone");
+		registerTileEntity(TESapling.class, "farcore.sapling");
+		registerTileEntity(TECoreLeaves.class, "farcore.core.leaves");
 		//Register entities.
 		bar.step("Register Entities");
 		int id = 0;
-		EntityRegistry.registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
-		EntityRegistry.registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
+		registerModEntity(EntityFallingBlockExtended.class, "fle.falling.block", id++, FarCore.ID, 32, 20, true);
+		registerModEntity(EntityProjectileItem.class, "fle.projectile", id++, FarCore.ID, 32, 20, true);
 		//Initialize potions and mob effects.
 		bar.step("Add Potion Effects");
 		Potions.init();
-		ProgressManager.pop(bar);
+		pop(bar);
 	}
 	
 	public void load()
 	{
+		ProgressBar bar = push("Far Core Load", 3);
 		//Post load item and block.
 		//For register to Ore Dictionary, Tool Uses, Compatibility, etc.
+		bar.step("Post initalizing items and blocks");
 		ItemBase.post();
 		BlockBase.post();
 		//Register languages.
-		LanguageManager.registerLocal("info.debug.date", "Date : ");
-		LanguageManager.registerLocal("info.log.length", "Legnth : %d");
-		LanguageManager.registerLocal("info.slab.place", "Place slab in sneaking can let slab only has up or down facing.");
-		LanguageManager.registerLocal("info.stone.chip.throwable", "You can throw it out to attack entities.");
-		LanguageManager.registerLocal("info.crop.type", "Crop Name : %s");
-		LanguageManager.registerLocal("info.crop.generation", "Generation : %d");
-		LanguageManager.registerLocal("info.tool.damage", "Durability : " + ChatFormatting.GREEN + " %d / %d");
-		LanguageManager.registerLocal("info.tool.harvest.level", "Harvest Level : " + ChatFormatting.YELLOW + " lv%d");
-		LanguageManager.registerLocal("info.tool.hardness", "Hardness : " + ChatFormatting.BLUE + "%s");
-		LanguageManager.registerLocal("info.tool.head.name", "Tool Head : " + ChatFormatting.LIGHT_PURPLE + "%s");
-		LanguageManager.registerLocal("info.tool.handle.name", "Tool Handle : " + ChatFormatting.LIGHT_PURPLE + "%s");
-		LanguageManager.registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");
-		LanguageManager.registerLocal("info.redstone.circuit.material", "Material : " + ChatFormatting.YELLOW + "%s");
-		LanguageManager.registerLocal("info.shift.click", ChatFormatting.WHITE + "Press " + ChatFormatting.ITALIC + "<%s>" + ChatFormatting.RESET + " to get more information.");
-		LanguageManager.registerLocal("info.food.label", ChatFormatting.RED + "Food Stat:");
-		LanguageManager.registerLocal("info.food.display", ChatFormatting.RED + "F-%s S-%s W-%s");
-		LanguageManager.registerLocal("info.tree.log.length", "Length : " + ChatFormatting.GREEN + "%d");
-		LanguageManager.registerLocal("info.fluidcontainer.contain", "Contain : " + ChatFormatting.AQUA + "%s");
-		LanguageManager.registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
-		LanguageManager.registerLocal("commands.date.usage", "/date");
-		LanguageManager.registerLocal("commands.date.arg.err", "Invalid command argument");
-		LanguageManager.registerLocal(EnumPhysicalDamageType.PUNCTURE.getTranslation(), ChatFormatting.GOLD + "Puncture");
-		LanguageManager.registerLocal(EnumPhysicalDamageType.SMASH.getTranslation(), ChatFormatting.GOLD + "Smash");
-		LanguageManager.registerLocal(EnumPhysicalDamageType.CUT.getTranslation(), ChatFormatting.GOLD + "Cut");
+		bar.step("Register localize file");
+		registerLocal("info.debug.date", "Date : ");
+		registerLocal("info.log.length", "Legnth : %d");
+		registerLocal("info.slab.place", "Place slab in sneaking can let slab only has up or down facing.");
+		registerLocal("info.stone.chip.throwable", "You can throw it out to attack entities.");
+		registerLocal("info.crop.type", "Crop Name : %s");
+		registerLocal("info.crop.generation", "Generation : %d");
+		registerLocal("info.tool.damage", "Durability : " + ChatFormatting.GREEN + " %d / %d");
+		registerLocal("info.tool.harvest.level", "Harvest Level : " + ChatFormatting.YELLOW + " lv%d");
+		registerLocal("info.tool.hardness", "Hardness : " + ChatFormatting.BLUE + "%s");
+		registerLocal("info.tool.head.name", "Tool Head : " + ChatFormatting.LIGHT_PURPLE + "%s");
+		registerLocal("info.tool.handle.name", "Tool Handle : " + ChatFormatting.LIGHT_PURPLE + "%s");
+		registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");
+		registerLocal("info.redstone.circuit.material", "Material : " + ChatFormatting.YELLOW + "%s");
+		registerLocal("info.shift.click", ChatFormatting.WHITE + "Press " + ChatFormatting.ITALIC + "<%s>" + ChatFormatting.RESET + " to get more information.");
+		registerLocal("info.food.label", ChatFormatting.RED + "Food Stat:");
+		registerLocal("info.food.display", ChatFormatting.RED + "F-%s S-%s W-%s");
+		registerLocal("info.tree.log.length", "Length : " + ChatFormatting.GREEN + "%d");
+		registerLocal("info.fluidcontainer.contain", "Contain : " + ChatFormatting.AQUA + "%s");
+		registerLocal("skill.upgrade.info", "The skill " + ChatFormatting.ITALIC + "%s" + ChatFormatting.RESET + " is upgrade from %d to %d level.");
+		registerLocal("commands.date.usage", "/date");
+		registerLocal("commands.date.arg.err", "Invalid command argument");
+		registerLocal(EnumPhysicalDamageType.PUNCTURE.getTranslation(), ChatFormatting.GOLD + "Puncture");
+		registerLocal(EnumPhysicalDamageType.SMASH.getTranslation(), ChatFormatting.GOLD + "Smash");
+		registerLocal(EnumPhysicalDamageType.CUT.getTranslation(), ChatFormatting.GOLD + "Cut");
 		//Setup network.
-		FarCore.network = Network.network(FarCore.ID);
-		FarCore.network.registerPacket(PacketEntity.class, Side.CLIENT);
-		FarCore.network.registerPacket(PacketEntityAsk.class, Side.SERVER);
-		FarCore.network.registerPacket(PacketKey.class, Side.SERVER);
-		FarCore.network.registerPacket(PacketTESync.class, Side.CLIENT);
-		FarCore.network.registerPacket(PacketTETypeResult.class, Side.CLIENT);
-		FarCore.network.registerPacket(PacketTESAsk.class, Side.CLIENT);
-		FarCore.network.registerPacket(PacketTEAsk.class, Side.SERVER);
-		FarCore.network.registerPacket(PacketTEAskType.class, Side.SERVER);
-		FarCore.network.registerPacket(PacketBreakBlock.class, Side.CLIENT);
-		FarCore.network.registerPacket(PacketFluidUpdateAll.class, Side.CLIENT);
-		FarCore.network.registerPacket(PacketFluidUpdateSingle.class, Side.CLIENT);
-		FarCore.network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
-		FarCore.network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
-		FarCore.network.registerPacket(PacketCustomChunkData.class, Side.CLIENT);
+		bar.step("Setup network handler");
+		final Network network = FarCore.network = Network.network(FarCore.ID);
+		network.registerPacket(PacketEntity.class, Side.CLIENT);
+		network.registerPacket(PacketEntityAsk.class, Side.SERVER);
+		network.registerPacket(PacketKey.class, Side.SERVER);
+		network.registerPacket(PacketTESync.class, Side.CLIENT);
+		network.registerPacket(PacketTETypeResult.class, Side.CLIENT);
+		network.registerPacket(PacketTESAsk.class, Side.CLIENT);
+		network.registerPacket(PacketTEAsk.class, Side.SERVER);
+		network.registerPacket(PacketTEAskType.class, Side.SERVER);
+		network.registerPacket(PacketBreakBlock.class, Side.CLIENT);
+		network.registerPacket(PacketFluidUpdateAll.class, Side.CLIENT);
+		network.registerPacket(PacketFluidUpdateSingle.class, Side.CLIENT);
+		network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
+		network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
+		network.registerPacket(PacketCustomChunkData.class, Side.CLIENT);
+		network.registerPacket(PacketChunkNetData.class, Side.CLIENT);
+		pop(bar);
 	}
 	
 	public void postload()
@@ -303,11 +254,11 @@ public class CommonLoader
 		{
 			if(material.customDisplayInformation != null)
 			{
-				LanguageManager.registerLocal("info.material.custom." + material.name, material.customDisplayInformation);
+				registerLocal("info.material.custom." + material.name, material.customDisplayInformation);
 			}
 			if(material.chemicalFormula != null)
 			{
-				LanguageManager.registerLocal("info.material.chemical.formula." + material.name, material.chemicalFormula);
+				registerLocal("info.material.chemical.formula." + material.name, material.chemicalFormula);
 			}
 		}
 	}
@@ -319,5 +270,10 @@ public class CommonLoader
 		{
 			LightFix.startThread();
 		}
+	}
+	
+	private static void registerForgeEventListener(Object object)
+	{
+		MinecraftForge.EVENT_BUS.register(object);
 	}
 }

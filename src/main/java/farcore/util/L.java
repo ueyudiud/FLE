@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -17,6 +18,7 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ObjectArrays;
@@ -185,6 +187,29 @@ public class L
 		{
 			list.addAll(list);
 		}
+	}
+	
+	public static <K, V1, V2> void put(Map<K, Map<V1, V2>> map, K key, V1 value1, V2 value2)
+	{
+		Map<V1, V2> m = map.get(key);
+		if(m == null)
+		{
+			map.put(key, m = new HashMap(ImmutableMap.of(value1, value2)));
+		}
+		else
+		{
+			m.put(value1, value2);
+		}
+	}
+	
+	public static <K, K1, V1> Map<K1, V1> getOrPut(Map<K, Map<K1, V1>> map, K key)
+	{
+		Map<K1, V1> map2 = map.get(key);
+		if(map2 == null)
+		{
+			map.put(key, map2 = new HashMap());
+		}
+		return map2;
 	}
 	
 	public static <K, V> boolean remove(Map<K, List<V>> map, K key, V value)

@@ -31,13 +31,13 @@ public class PacketLarge implements IPacket
 	}
 	public PacketLarge(byte[] arrays)
 	{
-		bs = arrays;
+		this.bs = arrays;
 	}
 	
 	@Override
 	public Side getSide()
 	{
-		return side;
+		return this.side;
 	}
 	
 	@Override
@@ -55,16 +55,16 @@ public class PacketLarge implements IPacket
 	@Override
 	public EntityPlayer getPlayer()
 	{
-		return (handler instanceof NetHandlerPlayServer) ?
-				((NetHandlerPlayServer) handler).playerEntity :
+		return (this.handler instanceof NetHandlerPlayServer) ?
+				((NetHandlerPlayServer) this.handler).playerEntity :
 					Players.player();
 	}
 	
 	@Override
 	public ByteBuf encode(ByteBuf buf) throws IOException
 	{
-		buf.writeShort(bs.length);
-		buf.writeBytes(bs);
+		buf.writeShort(this.bs.length);
+		buf.writeBytes(this.bs);
 		return buf;
 	}
 	
@@ -75,7 +75,7 @@ public class PacketLarge implements IPacket
 		buf.readBytes(b);
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(b));
 		int type = stream.readInt();
-		id = type >> 2;
+		this.id = type >> 2;
 		if((type & 0x1) != 0)
 		{
 			largePacketCache = Unpooled.buffer();
@@ -88,17 +88,17 @@ public class PacketLarge implements IPacket
 		}
 		if((type & 0x2) != 0)
 		{
-			flag = true;
+			this.flag = true;
 		}
 	}
 	
 	@Override
 	public IPacket process(Network network)
 	{
-		if(!flag) return null;
+		if(!this.flag) return null;
 		try
 		{
-			network.processPacket(id, largePacketCache, side, handler);
+			network.processPacket(this.id, Unpooled.wrappedBuffer(largePacketCache), this.side, this.handler);
 			largePacketCache = null;
 		}
 		catch(Throwable exception)

@@ -30,8 +30,6 @@ public class TESRDitch extends TESRBase<TEDitch>
 	private static final float POS1 = 7.0F / 16.0F;
 	private static final float POS2 = 9.0F / 16.0F;
 	
-	private static final Vector2f ZERO_VEC = new Vector2f(0F, 0F);
-	
 	@Override
 	public void renderTileEntityAt(TEDitch tile, double x, double y, double z, float partialTicks, int destroyStage)
 	{

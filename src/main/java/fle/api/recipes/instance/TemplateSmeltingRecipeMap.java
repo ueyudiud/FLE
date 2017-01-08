@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import farcore.lib.stack.AbstractStack;
-import farcore.util.U;
+import farcore.util.TileEntities;
 import fle.api.recipes.IRecipe;
 import fle.api.recipes.IRecipeCache;
 import fle.api.recipes.IRecipeInput;
@@ -123,13 +123,13 @@ public class TemplateSmeltingRecipeMap implements IRecipeMap<SmeltingEntry, Smel
 					@Override
 					public boolean matchOutput(SmeltingEntry cache, TileEntityFurnace matrix)
 					{
-						return U.TileEntities.matchOutput(output, matrix.getStackInSlot(2), matrix.getInventoryStackLimit());
+						return TileEntities.matchOutput(output, matrix.getStackInSlot(2), matrix.getInventoryStackLimit());
 					}
 					
 					@Override
 					public void onOutput(TileEntityFurnace matrix)
 					{
-						U.TileEntities.insertStack(output, matrix, 2);
+						TileEntities.insertStack(output, matrix, 2);
 					}
 
 					@Override

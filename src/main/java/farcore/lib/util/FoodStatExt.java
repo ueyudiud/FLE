@@ -48,7 +48,7 @@ public class FoodStatExt extends FoodStats
 	
 	private int prevDim;
 	private long worldTimer = Long.MIN_VALUE;
-
+	
 	/** The player's food level. */
 	private float foodLevel = MAX_FOOD_LEVEL;
 	/** The player's food saturation. */
@@ -63,20 +63,20 @@ public class FoodStatExt extends FoodStats
 	
 	private float waterLevel = MAX_WATER_LEVEL;
 	private float waterExhaustionLevel = 0;
-
+	
 	private float[] nutrition = {80, 80, 80, 80, 80, 80};
 	private int prevFoodLevel = 20;
 	private int prevWaterLevel = 20;
 	
 	public void addDirectStats(float amount, float saturation)
 	{
-		foodLevel = Math.min(foodLevel + amount, MAX_FOOD_LEVEL);
-		foodSaturationLevel = Math.min(foodSaturationLevel + saturation, foodLevel);
+		this.foodLevel = Math.min(this.foodLevel + amount, MAX_FOOD_LEVEL);
+		this.foodSaturationLevel = Math.min(this.foodSaturationLevel + saturation, this.foodLevel);
 	}
-
+	
 	public void addWaterStats(float amount)
 	{
-		waterLevel = Math.min(waterLevel + amount, MAX_WATER_LEVEL);
+		this.waterLevel = Math.min(this.waterLevel + amount, MAX_WATER_LEVEL);
 	}
 	
 	@Override
@@ -103,24 +103,24 @@ public class FoodStatExt extends FoodStats
 	
 	private void addFoodStats(IFoodStat stat, ItemStack stack)
 	{
-		foodDigestionLevel = Math.min(MAX_FOOD_LEVEL, foodDigestionLevel + stat.getFoodAmount(stack));
-		foodSaturationLevel = Math.min(foodLevel, foodSaturationLevel + stat.getSaturation(stack));
-		waterLevel = Math.min(MAX_WATER_LEVEL, waterLevel + stat.getDrinkAmount(stack));
+		this.foodDigestionLevel = Math.min(MAX_FOOD_LEVEL, this.foodDigestionLevel + stat.getFoodAmount(stack));
+		this.foodSaturationLevel = Math.min(this.foodLevel, this.foodSaturationLevel + stat.getSaturation(stack));
+		this.waterLevel = Math.min(MAX_WATER_LEVEL, this.waterLevel + stat.getDrinkAmount(stack));
 		float[] nutr = stat.getNutritionAmount(stack);
 		if(nutr != null)
 		{
 			for(int i = 0; i < 6; ++i)
 			{
-				nutrition[i] = Math.min(MAX_NUTRITION_LEVEL, nutrition[i] + nutr[i]);
+				this.nutrition[i] = Math.min(MAX_NUTRITION_LEVEL, this.nutrition[i] + nutr[i]);
 			}
 		}
 	}
 	
 	public void addThirsty(float thirsty)
 	{
-		waterExhaustionLevel += thirsty;
+		this.waterExhaustionLevel += thirsty;
 	}
-
+	
 	@Override
 	public void onUpdate(EntityPlayer player)
 	{
@@ -129,51 +129,51 @@ public class FoodStatExt extends FoodStats
 		boolean flag = player.worldObj.getGameRules().getBoolean("naturalRegeneration");
 		int dim = player.worldObj.provider.getDimension();
 		long time = player.worldObj.getWorldTime();
-		prevFoodLevel = (int) foodLevel;
-		prevWaterLevel = (int) waterLevel;
+		this.prevFoodLevel = (int) this.foodLevel;
+		this.prevWaterLevel = (int) this.waterLevel;
 		updateStat(player);
-		if(prevDim != dim)
+		if(this.prevDim != dim)
 		{
-			prevDim = dim;
+			this.prevDim = dim;
 			time = player.worldObj.getWorldTime() + 1L;
 		}
-		else if(time >= worldTimer)
+		else if(time >= this.worldTimer)
 		{
-			worldTimer += 20L;
-			++foodTimer;
+			this.worldTimer += 20L;
+			++this.foodTimer;
 			updateHeal(player, difficulty, flag);
 		}
 		updateNatural(player, difficulty);
 	}
-
+	
 	private void updateStat(EntityPlayer player)
 	{
-		if (foodDigestionLevel > 0F && foodLevel >= 4)
+		if (this.foodDigestionLevel > 0F && this.foodLevel >= 4)
 		{
-			if(++digestionTimer > 200)
+			if(++this.digestionTimer > 200)
 			{
-				float amt = Math.min(foodDigestionLevel, 1);
-				foodDigestionLevel -= amt;
-				foodLevel += amt;
+				float amt = Math.min(this.foodDigestionLevel, 1);
+				this.foodDigestionLevel -= amt;
+				this.foodLevel += amt;
 			}
 		}
-		if (foodExhaustionLevel >= 4.0F)
+		if (this.foodExhaustionLevel >= 4.0F)
 		{
-			foodExhaustionLevel -= 4.0F;
-
-			if (foodSaturationLevel > 0.0F)
+			this.foodExhaustionLevel -= 4.0F;
+			
+			if (this.foodSaturationLevel > 0.0F)
 			{
-				foodSaturationLevel = Math.max(foodSaturationLevel - 1.0F, 0.0F);
+				this.foodSaturationLevel = Math.max(this.foodSaturationLevel - 1.0F, 0.0F);
 			}
 			else//if (enumdifficulty != EnumDifficulty.PEACEFUL)
 			{
-				foodLevel = Math.max(foodLevel - 1, 0);
+				this.foodLevel = Math.max(this.foodLevel - 1, 0);
 			}
 		}
-		if (Config.enableWaterStat && waterExhaustionLevel > 10.0F)
+		if (Config.enableWaterStat && this.waterExhaustionLevel > 10.0F)
 		{
-			waterExhaustionLevel -= 10F;
-			waterLevel = Math.max(waterLevel - 1, 0);
+			this.waterExhaustionLevel -= 10F;
+			this.waterLevel = Math.max(this.waterLevel - 1, 0);
 		}
 	}
 	
@@ -188,35 +188,35 @@ public class FoodStatExt extends FoodStats
 			}
 			addThirsty(amt);
 		}
-		if (flag && foodLevel >= 10F && player.shouldHeal())
+		if (flag && this.foodLevel >= 10F && player.shouldHeal())
 		{
-			switch ((int) foodLevel)
+			switch ((int) this.foodLevel)
 			{
 			case 20 :
-				if(foodSaturationLevel > 0F)
+				if(this.foodSaturationLevel > 0F)
 				{
-					float f = Math.min(foodSaturationLevel, 4.0F);
+					float f = Math.min(this.foodSaturationLevel, 4.0F);
 					player.heal(f / 4.0F);
 					addExhaustion(f);
-					foodTimer = 0;
+					this.foodTimer = 0;
 					break;
 				}
 			case 19 :
-				if(foodTimer >= 3)
+				if(this.foodTimer >= 3)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
-					foodTimer = 0;
+					this.foodTimer = 0;
 					break;
 				}
 			case 18 :
 			case 17 :
 			case 16 :
-				if(foodTimer >= 6)
+				if(this.foodTimer >= 6)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
-					foodTimer = 0;
+					this.foodTimer = 0;
 					break;
 				}
 			case 15 :
@@ -225,56 +225,56 @@ public class FoodStatExt extends FoodStats
 			case 12 :
 			case 11 :
 			case 10 :
-				if(foodTimer >= 10)
+				if(this.foodTimer >= 10)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
-					foodTimer = 0;
+					this.foodTimer = 0;
 					break;
 				}
 			default : break;
 			}
 		}
-		if (foodLevel <= 0)
+		if (this.foodLevel <= 0)
 		{
-			if (++foodTimer >= 40)
+			if (++this.foodTimer >= 40)
 			{
 				if (player.getHealth() > 10.0F || difficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && difficulty == EnumDifficulty.NORMAL)
 				{
 					player.attackEntityFrom(DamageSource.starve, 1.0F);
 				}
-
-				foodTimer = 0;
+				
+				this.foodTimer = 0;
 			}
 		}
 	}
 	
 	private void updateNatural(EntityPlayer player, EnumDifficulty difficulty)
 	{
-		if (foodLevel < 4)
+		if (this.foodLevel < 4)
 		{
-			if(prevFoodLevel >= 4)
+			if(this.prevFoodLevel >= 4)
 			{
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(HUNGER_WEAKNESS_I);
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(HUNGER_WEAKNESS_II);
 			}
 		}
-		else if(prevFoodLevel < 4)
+		else if(this.prevFoodLevel < 4)
 		{
 			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(HUNGER_WEAKNESS_I);
 			player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HUNGER_WEAKNESS_II);
 		}
 		if(Config.enableWaterStat)
 		{
-			if(waterLevel < 4F)
+			if(this.waterLevel < 4F)
 			{
-				if(prevWaterLevel >= 4)
+				if(this.prevWaterLevel >= 4)
 				{
 					player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(THIRSTY_WEAKNESS_I);
 					player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(THIRSTY_WEAKNESS_II);
 				}
 			}
-			else if(prevWaterLevel < 4F)
+			else if(this.prevWaterLevel < 4F)
 			{
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_SPEED).removeModifier(THIRSTY_WEAKNESS_I);
 				player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(THIRSTY_WEAKNESS_II);
@@ -285,98 +285,98 @@ public class FoodStatExt extends FoodStats
 	@Override
 	public void writeNBT(NBTTagCompound compound)
 	{
-		compound.setInteger("dim", prevDim);
-		compound.setLong("worldTimer", worldTimer);
-
-		compound.setShort("foodTickTimer", (short) foodTimer);
-		compound.setShort("digestionTimer", (short) digestionTimer);
+		compound.setInteger("dim", this.prevDim);
+		compound.setLong("worldTimer", this.worldTimer);
 		
-		compound.setFloat("foodLevel", foodLevel);
-		compound.setFloat("foodSaturationLevel", foodSaturationLevel);
-		compound.setFloat("foodExhaustionLevel", foodExhaustionLevel);
+		compound.setShort("foodTickTimer", (short) this.foodTimer);
+		compound.setShort("digestionTimer", (short) this.digestionTimer);
+		
+		compound.setFloat("foodLevel", this.foodLevel);
+		compound.setFloat("foodSaturationLevel", this.foodSaturationLevel);
+		compound.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
 		for(int i = 0; i < 6; ++i)
 		{
-			compound.setFloat("nutrition" + EnumNutrition.values()[i].getRegisteredName(), nutrition[i]);
+			compound.setFloat("nutrition" + EnumNutrition.values()[i].getRegisteredName(), this.nutrition[i]);
 		}
-
-		compound.setFloat("waterLevel", waterLevel);
-		compound.setFloat("waterExhaustionLevel", waterExhaustionLevel);
+		
+		compound.setFloat("waterLevel", this.waterLevel);
+		compound.setFloat("waterExhaustionLevel", this.waterExhaustionLevel);
 	}
-
+	
 	@Override
 	public void readNBT(NBTTagCompound compound)
 	{
-		prevDim = compound.getInteger("dim");
-		worldTimer = NBTs.getLongOrDefault(compound, "worldTimer", Long.MIN_VALUE);
+		this.prevDim = compound.getInteger("dim");
+		this.worldTimer = NBTs.getLongOrDefault(compound, "worldTimer", Long.MIN_VALUE);
 		if (compound.hasKey("waterLevel", 99))
 		{
-			waterLevel = compound.getFloat("waterLevel");
-			waterExhaustionLevel = compound.getFloat("waterExhaustionLevel");
+			this.waterLevel = compound.getFloat("waterLevel");
+			this.waterExhaustionLevel = compound.getFloat("waterExhaustionLevel");
 		}
 		if (compound.hasKey("foodLevel", 99))
 		{
-			foodLevel = compound.getFloat("foodLevel");
-			foodSaturationLevel = compound.getFloat("foodSaturationLevel");
-			foodExhaustionLevel = compound.getFloat("foodExhaustionLevel");
+			this.foodLevel = compound.getFloat("foodLevel");
+			this.foodSaturationLevel = compound.getFloat("foodSaturationLevel");
+			this.foodExhaustionLevel = compound.getFloat("foodExhaustionLevel");
 			for(int i = 0; i < 6; ++i)
 			{
-				nutrition[i] = compound.getFloat("nutrition" + EnumNutrition.values()[i].getRegisteredName());
+				this.nutrition[i] = compound.getFloat("nutrition" + EnumNutrition.values()[i].getRegisteredName());
 			}
-
-			foodTimer = compound.getInteger("foodTickTimer");
-			digestionTimer = compound.getInteger("digestionTimer");
+			
+			this.foodTimer = compound.getInteger("foodTickTimer");
+			this.digestionTimer = compound.getInteger("digestionTimer");
 		}
 	}
-
+	
 	@Override
 	public void addExhaustion(float exhaustion)
 	{
-		foodExhaustionLevel += exhaustion;
+		this.foodExhaustionLevel += exhaustion;
 	}
 	
 	@Override
 	public void addStats(int foodLevelIn, float foodSaturationModifier)
 	{
-		foodDigestionLevel = Math.min(foodLevelIn + foodDigestionLevel, MAX_FOOD_LEVEL);
-		foodSaturationLevel = Math.min(foodSaturationLevel + foodSaturationModifier * foodLevelIn, foodLevel);
+		this.foodDigestionLevel = Math.min(foodLevelIn + this.foodDigestionLevel, MAX_FOOD_LEVEL);
+		this.foodSaturationLevel = Math.min(this.foodSaturationLevel + foodSaturationModifier * foodLevelIn, this.foodLevel);
 	}
-
+	
 	@Override
 	public boolean needFood()
 	{
-		return foodDigestionLevel < MAX_FOOD_LEVEL - foodLevel;
+		return this.foodDigestionLevel < MAX_FOOD_LEVEL - this.foodLevel;
 	}
 	
 	@Override
 	public int getFoodLevel()
 	{
-		return (int) foodLevel;
+		return (int) this.foodLevel;
 	}
-
+	
 	public int getWaterLevel()
 	{
-		return (int) waterLevel;
+		return (int) this.waterLevel;
 	}
 	
 	@Override
 	public float getSaturationLevel()
 	{
-		return foodSaturationLevel;
+		return this.foodSaturationLevel;
 	}
 	
 	@Override
 	public void setFoodLevel(int foodLevelIn)
 	{
-		foodLevel = foodLevelIn;
+		this.foodLevel = foodLevelIn;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void setFoodSaturationLevel(float foodSaturationLevelIn)
 	{
-		foodSaturationLevel = foodSaturationLevelIn;
+		this.foodSaturationLevel = foodSaturationLevelIn;
 	}
-
+	
 	public void setWaterLevel(int waterLevel)
 	{
 		this.waterLevel = waterLevel;

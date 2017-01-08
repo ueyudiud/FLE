@@ -172,4 +172,15 @@ public class FluidStacks
 		}
 		return 0;//Unknown fluid type will prevent to drain to world.
 	}
+	
+	public static boolean areFluidStacksEqual(FluidStack stack1, FluidStack stack2)
+	{
+		return stack1 == null || stack2 == null ? stack1 == stack2 :
+			stack1.isFluidStackIdentical(stack2);
+	}
+	
+	public static FluidStack copy(FluidStack fluid)
+	{
+		return fluid == null ? null : fluid.copy();
+	}
 }

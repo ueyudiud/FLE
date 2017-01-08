@@ -38,14 +38,7 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 	public BlockThermalDebug()
 	{
 		super(FarCore.ID, "debug.thermal", Material.IRON);
-		setCreativeTab(new CreativeTabBase("debug.thermal", "Thermal[Debug]")
-		{
-			@Override
-			public ItemStack getIconItemStack()
-			{
-				return new ItemStack(Blocks.FURNACE);
-			}
-		});
+		setCreativeTab(new CreativeTabBase("debug.thermal", "Thermal[Debug]", () -> new ItemStack(Blocks.FURNACE)));
 		FarCoreRegistry.registerTileEntity("farcore.debug.thermal", TEThermalDebuger.class);
 	}
 	
@@ -60,14 +53,14 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
 			int meta, EntityLivingBase placer)
 	{
 		return getDefaultState().withProperty(INT, 20);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
@@ -94,7 +87,7 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 			}
 		}
 	}
-
+	
 	@Override
 	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
 			boolean advanced)
@@ -119,19 +112,19 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 			break;
 		}
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TEThermalDebuger();
 	}
-
+	
 	@Override
 	public int getDataFromState(IBlockState state)
 	{
 		return state.getValue(INT);
 	}
-
+	
 	@Override
 	public IBlockState getStateFromData(int meta)
 	{

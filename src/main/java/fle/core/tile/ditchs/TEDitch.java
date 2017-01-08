@@ -4,19 +4,23 @@
 
 package fle.core.tile.ditchs;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import farcore.handler.FarCoreSynchronizationHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
+import farcore.lib.tile.INetworkedSyncTile;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import farcore.lib.tile.IUpdatableTile;
 import farcore.lib.tile.abstracts.TESynchronization;
 import farcore.lib.util.Direction;
+import farcore.network.PacketBufferExt;
 import farcore.util.FluidStacks;
 import farcore.util.L;
 import farcore.util.NBTs;
-import farcore.util.U;
+import farcore.util.TileEntities;
 import fle.api.tile.IDitchTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -41,7 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEDitch extends TESynchronization implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, IDebugableTile
+public class TEDitch extends TESynchronization implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, IDebugableTile, INetworkedSyncTile
 {
 	private static final AxisAlignedBB AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F);
 	
@@ -102,6 +106,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	private int[] flowBuffer = new int[4];
 	private int[] flowAmount = {0, 0, 0, 0};
 	private int[] lastFlowAmount = {0, 0, 0, 0};
+	private byte[] lastConnectionState = new byte[4];
 	
 	private Mat material = Mat.VOID;
 	private DitchFactory factory = DitchBlockHandler.getFactory(null);
@@ -147,7 +152,21 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
 		super.causeUpdate(pos, state, tileUpdate);
-		markBlockRenderUpdate();
+		boolean flag = false;
+		for(Direction direction : Direction.DIRECTIONS_2D)
+		{
+			byte s = (byte) getLinkState(direction);
+			if(this.lastConnectionState[direction.horizontalOrdinal] != s)
+			{
+				flag = true;
+				this.lastConnectionState[direction.horizontalOrdinal] = s;
+			}
+		}
+		if(flag)
+		{
+			markBlockUpdate();
+			markBlockRenderUpdate();
+		}
 	}
 	
 	@Override
@@ -181,12 +200,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 			this.material = material1;
 			this.factory = DitchBlockHandler.getFactory(material1);
 			this.tank = this.factory.apply(this);
-			this.tank.setFluid(NBTs.getFluidStackOrDefault(nbt, "t", null));
 			markBlockRenderUpdate();
-		}
-		else
-		{
-			this.tank.setFluid(NBTs.getFluidStackOrDefault(nbt, "t", this.tank.getFluid()));
 		}
 	}
 	
@@ -195,12 +209,19 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	{
 		super.writeToDescription(nbt);
 		nbt.setShort("m", this.material.id);
-		NBTs.setFluidStack(nbt, "t", this.tank.getFluid(), true);
+	}
+	
+	@Override
+	protected void initClient(NBTTagCompound nbt)
+	{
+		super.initClient(nbt);
+		markBlockRenderUpdate();
 	}
 	
 	@Override
 	protected void updateServer()
 	{
+		FluidStack stack = FluidStacks.copy(this.tank.getFluid());
 		super.updateServer();
 		this.factory.onUpdate(this);
 		if(!isInvalid())
@@ -209,32 +230,38 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 			if(FluidStacks.isGaseous(this.tank.getFluid()))
 			{
 				this.tank.setFluid(null);
-				syncToNearby();
 			}
-			int val;
-			final int viscosity = FluidStacks.getViscosity(this.tank.getFluid());
-			final int speedMutiple = this.factory.getSpeedMultiple(this);
-			final int limit = this.factory.getMaxTransferLimit(this);
-			for(Direction direction : Direction.DIRECTIONS_2D)
+			else
 			{
-				if(is(Connect[direction.horizontalOrdinal]))
+				int val;
+				final int viscosity = FluidStacks.getViscosity(this.tank.getFluid());
+				final int speedMutiple = this.factory.getSpeedMultiple(this);
+				final int limit = this.factory.getMaxTransferLimit(this);
+				for(Direction direction : Direction.DIRECTIONS_2D)
 				{
-					this.flowBuffer[direction.horizontalOrdinal] = Math.min(speedMutiple + this.flowBuffer[direction.horizontalOrdinal], limit << 10);
-					val = tryFillFluidInto(this.flowBuffer[direction.horizontalOrdinal], viscosity, limit, direction);
-					if(val >= 0)
+					if(is(Connect[direction.horizontalOrdinal]))
 					{
-						this.flowAmount[direction.horizontalOrdinal] += val;
+						this.flowBuffer[direction.horizontalOrdinal] = Math.min(speedMutiple + this.flowBuffer[direction.horizontalOrdinal], limit << 10);
+						val = tryFillFluidInto(this.flowBuffer[direction.horizontalOrdinal], viscosity, limit, direction);
+						if(val >= 0)
+						{
+							this.flowAmount[direction.horizontalOrdinal] += val;
+							this.flowBuffer[direction.horizontalOrdinal] = 0;
+						}
+					}
+					else
+					{
 						this.flowBuffer[direction.horizontalOrdinal] = 0;
 					}
-				}
-				else
-				{
-					this.flowBuffer[direction.horizontalOrdinal] = 0;
 				}
 			}
 		}
 		System.arraycopy(this.flowAmount, 0, this.lastFlowAmount, 0, this.lastFlowAmount.length);
 		Arrays.fill(this.flowAmount, 0);
+		if(!FluidStacks.areFluidStacksEqual(stack, this.tank.getFluid()))
+		{
+			FarCoreSynchronizationHandler.markTileEntityForUpdate(this, 0);
+		}
 	}
 	
 	protected int tryFillFluidInto(int buffer, int viscosity, int limit, Direction direction)
@@ -267,8 +294,6 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 				if(speed < 1) return 0;
 				int amount = ditch.getTank().fill(this.tank.drain(speed, false), true);
 				this.tank.drain(amount, true);
-				syncToNearby();
-				markDirty();
 				return amount;
 			}
 			//else if(h1 < h2) ? Let another ditch tile to handle!
@@ -278,7 +303,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		{
 			int speed = getFlowSpeed(buffer, limit, viscosity);
 			int result;
-			if((result = U.TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true)) != -1)
+			if((result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true)) != -1)
 			{
 				return result;
 			}
@@ -293,7 +318,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 				}
 				else
 				{
-					result = U.TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true);
+					result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true);
 					return result;
 				}
 			}
@@ -336,7 +361,6 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	public void setLink(Direction direction, boolean state)
 	{
 		set(Connect[direction.horizontalOrdinal], state);
-		syncToNearby();
 	}
 	
 	@Override
@@ -379,5 +403,32 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		list.add("Amount : " + this.tank.getFluidAmount() + "/" + this.tank.getCapacity());
 		list.add("Flow : " + Arrays.toString(this.lastFlowAmount));
 		list.add("Buffer : " + Arrays.toString(this.flowBuffer));
+	}
+	
+	@Override
+	public void writeNetworkData(int type, PacketBufferExt buf) throws IOException
+	{
+		switch (type)
+		{
+		case 0 :
+			buf.writeFluidStack(this.tank.getFluid());
+			break;
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void readNetworkData(int type, PacketBufferExt buf) throws IOException
+	{
+		switch (type)
+		{
+		case 0 :
+			this.tank.setFluid(buf.readFluidStack());
+			break;
+		default:
+			break;
+		}
 	}
 }

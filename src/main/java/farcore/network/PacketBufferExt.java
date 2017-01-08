@@ -9,6 +9,7 @@ import java.io.IOException;
 import farcore.lib.fluid.FluidStackExt;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -21,16 +22,23 @@ public class PacketBufferExt extends PacketBuffer
 	{
 		super(wrapped);
 	}
-
+	
 	public FluidStackExt readFluidStack() throws IOException
 	{
 		int amt = readInt();
 		if (amt > 0)
 		{
-			if (readBoolean())//Fluid stack type maker.
-				return new FluidStackExt(FluidRegistry.getFluid(readShort()), amt, readNBTTagCompoundFromBuffer());
+			boolean marker = readBoolean();
+			Fluid fluid = FluidRegistry.getFluid(readShort());
+			if (marker)//Fluid stack type maker.
+			{
+				int temperature = readInt();
+				return new FluidStackExt(fluid, amt, temperature, readNBTTagCompoundFromBuffer());
+			}
 			else
-				return new FluidStackExt(FluidRegistry.getFluid(readShort()), amt, readInt(), readNBTTagCompoundFromBuffer());
+			{
+				return new FluidStackExt(fluid, amt, readNBTTagCompoundFromBuffer());
+			}
 		}
 		return null;
 	}

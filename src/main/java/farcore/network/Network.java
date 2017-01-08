@@ -1,6 +1,5 @@
 package farcore.network;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.EnumMap;
@@ -8,6 +7,7 @@ import java.util.List;
 
 import farcore.lib.collection.Register;
 import farcore.lib.world.ICoord;
+import farcore.util.Executable;
 import farcore.util.Players;
 import farcore.util.U;
 import io.netty.buffer.ByteBuf;
@@ -49,10 +49,10 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void registerPacket(Class<? extends IPacket> packet, Side side)
 	{
-		if(packetTypes.contain(packet.getName())) throw new IllegalArgumentException("Duplicate Packet! " + id);
-		if(id >= 256) throw new ArrayIndexOutOfBoundsException(id);
-		packetTypes.register(id, packet.getName(), packet);
-		++id;
+		if(this.packetTypes.contain(packet.getName())) throw new IllegalArgumentException("Duplicate Packet! " + this.id);
+		if(this.id >= 256) throw new ArrayIndexOutOfBoundsException(this.id);
+		this.packetTypes.register(this.id, packet.getName(), packet);
+		++this.id;
 	}
 	
 	private final EnumMap<Side, FMLEmbeddedChannel> channel;
@@ -62,8 +62,8 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	protected Network(String name)
 	{
-		channelName = name;
-		channel = NetworkRegistry.INSTANCE.newChannel(name, new ChannelHandler[]{this, new HandlerClient(this), new HandlerServer(this)});
+		this.channelName = name;
+		this.channel = NetworkRegistry.INSTANCE.newChannel(name, new ChannelHandler[]{this, new HandlerClient(this), new HandlerServer(this)});
 		registerPacket(PacketLarge.class, Side.CLIENT);//This is a important packet, used in the method in basic network.
 	}
 	
@@ -72,7 +72,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 			List<Object> out) throws Exception
 	{
 		out.add(new FMLProxyPacket(new PacketBuffer(
-				msg.encode(Unpooled.buffer().writeByte(packetTypes.id(msg.getClass()))).copy()), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get()));
+				msg.encode(Unpooled.buffer().writeByte(this.packetTypes.id(msg.getClass()))).copy()), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get()));
 	}
 	
 	@Override
@@ -81,9 +81,9 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	{
 		ByteBuf buf = msg.payload();
 		int id = buf.readByte();
-		if (!packetTypes.contain(id))
+		if (!this.packetTypes.contain(id))
 		{
-			FMLLog.warning("Your Version of '" + channelName + "' definetly does not match the Version installed on the Server you joined! Do not report this as a Bug! You failed to install the proper Version of '" + channelName + "' all by yourself!");
+			FMLLog.warning("Your Version of '" + this.channelName + "' definetly does not match the Version installed on the Server you joined! Do not report this as a Bug! You failed to install the proper Version of '" + this.channelName + "' all by yourself!");
 		}
 		else
 		{
@@ -109,7 +109,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		protected void channelRead0(ChannelHandlerContext ctx, IPacket packet)
 				throws Exception
 		{
-			IPacket obj = packet.process(network);
+			IPacket obj = packet.process(this.network);
 			if(obj != null)
 			{
 				Channel tChannel = ctx.channel();
@@ -140,7 +140,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		protected void channelRead0(ChannelHandlerContext ctx, IPacket packet)
 				throws Exception
 		{
-			IPacket retPacket = packet.process(network);
+			IPacket retPacket = packet.process(this.network);
 			if(retPacket != null)
 			{
 				Channel tChannel = ctx.channel();
@@ -166,7 +166,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public FMLEmbeddedChannel getChannel(Side side)
 	{
-		return channel.get(side);
+		return this.channel.get(side);
 	}
 	
 	/**
@@ -273,65 +273,28 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendLargeToPlayer(IPacket packet, EntityPlayer player)
 	{
-		if(!needToSend(packet)) return;
-		try
-		{
-			ByteBuf buffer = Unpooled.buffer();
-			byte[] data = packet.encode(buffer).array();
-			//			ByteArrayInputStream input = new ByteArrayInputStream(data);
-			//			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
-			//			int len;
-			//			byte[] cache = new byte[4096];
-			//			while ((len = input.read(cache)) != -1)
-			//			{
-			//				buf.write(cache, 0, len);
-			//			}
-			//			data = buf.toByteArray();
-			
-			int maxSize = Short.MAX_VALUE - 5;
-			for (int offset = 0; offset < data.length; offset += maxSize)
-			{
-				ByteArrayOutputStream osRaw = new ByteArrayOutputStream();
-				DataOutputStream os = new DataOutputStream(osRaw);
-				int state = 0;
-				if (offset == 0)
-				{
-					state |= 0x1;
-				}
-				
-				if (offset + maxSize > data.length)
-				{
-					state |= 0x2;
-				}
-				int id = packetTypes.id(packet.getClass());
-				state |= id << 2;
-				os.writeInt(state);
-				os.write(data, offset, Math.min(maxSize, data.length - offset));
-				sendToPlayer(new PacketLarge(osRaw.toByteArray()), player);
-			}
-		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
-		}
+		sendLarge(packet, pkt -> sendToPlayer(pkt, player));
+	}
+	
+	public void sendLargeToNearby(IPacket packet, int dim, int x, int y, int z, float range)
+	{
+		sendLarge(packet, pkt -> sendToNearBy(pkt, dim, x, y, z, range));
 	}
 	
 	public void sendLargeToAll(IPacket packet)
+	{
+		sendLarge(packet, this.LARGE_TO_ALL);
+	}
+	
+	public void sendLarge(IPacket packet, Executable<PacketLarge> pachetExecutor)
 	{
 		if(!needToSend(packet)) return;
 		try
 		{
 			ByteBuf buffer = Unpooled.buffer();
-			byte[] data = packet.encode(buffer).array();
-			ByteArrayInputStream input = new ByteArrayInputStream(data);
-			ByteArrayOutputStream buf = new ByteArrayOutputStream(16384);
-			int len;
-			byte[] cache = new byte[4096];
-			while ((len = input.read(cache)) != -1)
-			{
-				buf.write(cache, 0, len);
-			}
-			data = buf.toByteArray();
+			packet.encode(buffer);
+			byte[] data = new byte[buffer.readableBytes()];
+			buffer.readBytes(data);
 			
 			int maxSize = Short.MAX_VALUE - 5;
 			for (int offset = 0; offset < data.length; offset += maxSize)
@@ -348,11 +311,11 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 				{
 					state |= 0x2;
 				}
-				int id = packetTypes.id(packet.getClass());
+				int id = this.packetTypes.id(packet.getClass());
 				state |= id << 2;
 				os.writeInt(state);
 				os.write(data, offset, Math.min(maxSize, data.length - offset));
-				sendToAll(new PacketLarge(osRaw.toByteArray()));
+				pachetExecutor.execute(new PacketLarge(osRaw.toByteArray()));
 			}
 		}
 		catch(Throwable e)
@@ -363,10 +326,12 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public IPacket processPacket(int id, ByteBuf buf, Side side, INetHandler handler) throws Exception
 	{
-		IPacket packet = packetTypes.get(id).newInstance();
+		IPacket packet = this.packetTypes.get(id).newInstance();
 		packet.decode(buf);
 		packet.side(side);
 		packet.handler(handler);
 		return packet.process(this);
 	}
+	
+	private final Executable<PacketLarge> LARGE_TO_ALL = packet -> sendToAll(packet);
 }

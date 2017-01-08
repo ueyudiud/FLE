@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -19,11 +17,8 @@ import farcore.FarCoreSetup;
 import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.ColorMultiplier;
 import farcore.data.Config;
-import farcore.data.EnumToolType;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.entity.EntityFallingBlockExtended;
-import farcore.lib.inv.IBasicInventory;
-import farcore.lib.item.ITool;
 import farcore.lib.model.block.ICustomItemModelSelector;
 import farcore.lib.model.block.ModelFluidBlock;
 import farcore.lib.model.block.statemap.StateMapperExt;
@@ -32,10 +27,6 @@ import farcore.lib.oredict.OreDictExt;
 import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.IProgressBarStyle;
 import farcore.lib.render.ParticleDiggingExt;
-import farcore.lib.stack.AbstractStack;
-import farcore.lib.tile.IItemHandlerIO;
-import farcore.lib.tile.IToolableTile;
-import farcore.lib.tile.abstracts.TEBase;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IRenderRegister;
 import farcore.lib.util.LanguageManager;
@@ -74,12 +65,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -97,10 +85,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.BlockFluidBase;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
@@ -780,167 +764,6 @@ public class U
 			}
 			Vec3d vec3d1 = vec3d.addVector(f6 * d3, f5 * d3, f7 * d3);
 			return world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
-		}
-	}
-	
-	public static class TileEntities
-	{
-		public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
-				Direction facing, float hitX, float hitY, float hitZ, TileEntity tile)
-		{
-			if(tile == null) return false;
-			if(tile instanceof TEBase && !((TEBase) tile).isInitialized())
-				return false;
-			EnumFacing facing2 = facing.of();
-			if(heldItem != null && heldItem.getItem() instanceof ITool &&
-					tile instanceof IToolableTile)
-			{
-				ITool tool = (ITool) heldItem.getItem();
-				ActionResult<Float> result;
-				for(EnumToolType toolType : tool.getToolTypes(heldItem))
-				{
-					if((result = ((IToolableTile) tile).onToolClick(playerIn, toolType, heldItem, facing, hitX, hitY, hitZ)).getType() != EnumActionResult.PASS)
-					{
-						tool.onToolUse(playerIn, heldItem, toolType, result.getResult());
-						return true;
-					}
-				}
-			}
-			if(tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2))
-			{
-				if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
-				{
-					IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2);
-					IFluidHandler handler2 = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-					FluidStack input;
-					FluidStack output;
-					int amt;
-					if((output = handler2.drain(Integer.MAX_VALUE, false)) != null)
-					{
-						if((amt = handler.fill(output, true)) != 0)
-						{
-							input = output.copy();
-							input.amount = amt;
-							handler2.drain(input, true);
-							return true;
-						}
-					}
-					else if((output = handler.drain(Integer.MAX_VALUE, false)) != null)
-					{
-						if((amt = handler2.fill(output, true)) != 0)
-						{
-							input = output.copy();
-							input.amount = amt;
-							handler.drain(input, true);
-							return true;
-						}
-					}
-				}
-			}
-			if(tile instanceof IItemHandlerIO)
-			{
-				IItemHandlerIO handler = (IItemHandlerIO) tile;
-				ActionResult<ItemStack> result = handler.onPlayerTryUseIO(heldItem, playerIn, facing, hitX, hitY, hitZ, true);
-				if(result.getType() == EnumActionResult.SUCCESS)
-				{
-					if(heldItem != result.getResult())
-					{
-						playerIn.setHeldItem(hand, heldItem = ItemStack.copyItemStack(result.getResult()));
-						for(int i = 0; i < playerIn.inventory.getSizeInventory(); ++i)
-						{
-							ItemStack stack = playerIn.inventory.getStackInSlot(i);
-							if(stack != null && stack != heldItem)
-							{
-								result = handler.onPlayerTryUseIO(stack, playerIn, facing, hitX, hitY, hitZ, false);
-								switch(result.getType())
-								{
-								case FAIL : return true;
-								case SUCCESS :
-									if(result.getResult() != stack)
-									{
-										playerIn.inventory.setInventorySlotContents(i, stack);
-									}
-								case PASS : break;
-								}
-							}
-						}
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		
-		public static boolean matchOutput(AbstractStack output, ItemStack stackInSlot)
-		{
-			return matchOutput(output, stackInSlot, 64);
-		}
-		
-		public static boolean matchOutput(AbstractStack output, ItemStack stackInSlot, int stackLimit)
-		{
-			return output == null || stackInSlot == null ? true :
-				output.similar(stackInSlot) && stackInSlot.stackSize + output.size(stackInSlot) <= Math.min(stackLimit, stackInSlot.getMaxStackSize());
-		}
-		
-		public static void insertStack(AbstractStack stack, IBasicInventory inventory, int idx)
-		{
-			if(inventory.getStackInSlot(idx) == null)
-			{
-				inventory.setInventorySlotContents(idx, stack.instance());
-			}
-			else
-			{
-				ItemStack stack2 = inventory.getStackInSlot(idx);
-				stack2.stackSize += stack.size(stack2);
-			}
-		}
-		
-		public static void insertStack(AbstractStack stack, IInventory inventory, int idx)
-		{
-			if(inventory.getStackInSlot(idx) == null)
-			{
-				inventory.setInventorySlotContents(idx, stack.instance());
-			}
-			else
-			{
-				ItemStack stack2 = inventory.getStackInSlot(idx);
-				stack2.stackSize += stack.size(stack2);
-			}
-		}
-		
-		public static int tryFlowFluidInto(IFluidTank tank, @Nullable TileEntity tile, Direction source, int amount, boolean process)
-		{
-			if(tile == null) return -1;
-			FluidStack fill = tank.drain(amount, false);
-			if(fill == null) return -1;
-			if(tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, source.of()))
-			{
-				IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, source.of());
-				
-				if(handler.fill(fill, false) != 0)
-				{
-					amount = handler.fill(fill, process);
-					if(process && amount > 0)
-					{
-						tank.drain(amount, true);
-					}
-					return amount;
-				}
-			}
-			if(tile instanceof net.minecraftforge.fluids.IFluidHandler)
-			{
-				net.minecraftforge.fluids.IFluidHandler handler = (net.minecraftforge.fluids.IFluidHandler) tile;
-				if(handler.canFill(source.of(), fill.getFluid()))
-				{
-					amount = handler.fill(source.of(), fill, process);
-					if(process && amount > 0)
-					{
-						tank.drain(amount, true);
-					}
-					return amount;
-				}
-			}
-			return -1;
 		}
 	}
 	
