@@ -1,5 +1,5 @@
 /*
- * copyright© 2016 ueyudiud
+ * copyright© 2016-2017 ueyudiud
  */
 
 package farcore.lib.item;

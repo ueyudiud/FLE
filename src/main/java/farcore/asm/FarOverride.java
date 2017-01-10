@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.asm;
 
 import java.util.Arrays;
@@ -18,12 +22,12 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 public class FarOverride extends DummyModContainer
 {
 	public static boolean isFleLoad;
-
+	
 	@Instance(FarCore.OVERRIDE_ID)
 	public static FarOverride override;
 	
 	public static final String VERSION = "1.1";
-
+	
 	public FarOverride()
 	{
 		super(new ModMetadata());
@@ -38,14 +42,14 @@ public class FarOverride extends DummyModContainer
 		meta.screenshots = new String[0];
 		meta.logoFile = "";
 	}
-
+	
 	@Override
 	public boolean registerBus(EventBus bus, LoadController controller)
 	{
 		bus.register(this);
 		return true;
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{

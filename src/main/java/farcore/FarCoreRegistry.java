@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore;
 
 import java.lang.reflect.ParameterizedType;

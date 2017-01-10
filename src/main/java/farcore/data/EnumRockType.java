@@ -1,5 +1,5 @@
 /*
- * copyright© 2016 ueyudiud
+ * copyright© 2016-2017 ueyudiud
  */
 
 package farcore.data;
@@ -27,12 +27,11 @@ public enum EnumRockType implements IStringSerializable
 	static
 	{
 		resource.noSilkTouchDropMeta = cobble_art.ordinal();
+		cobble.noSilkTouchDropMeta = cobble_art.ordinal();
 		resource.fallBreakMeta = cobble.ordinal();
 		brick.fallBreakMeta = brick_crushed.ordinal();
-		cobble.noSilkTouchDropMeta = cobble_art.ordinal();
 		cobble.displayInTab = false;
-		mossy.burnable = true;
-		brick_mossy.burnable = true;
+		mossy.burnable = brick_mossy.burnable = true;
 	}
 	
 	/**

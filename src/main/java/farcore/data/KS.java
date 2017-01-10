@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.data;
 
 import farcore.lib.skill.SkillAbstract;
@@ -15,7 +19,7 @@ public class KS
 	 * Just for debug.
 	 */
 	public static final SkillAbstract DEBUGGING = new SkillAbstract("debug"){}.setExpInfo(100, 1F, 1F);
-
+	
 	public static final SkillAbstract DIGGING = new SkillAbstract("digging", "Digging"){}.setExpInfo(20, 20F, 0.7F);
 	public static final SkillAbstract FIGHTING = new SkillAbstract("fighting", "Fighting"){}.setExpInfo(20, 16F, 0.8F);
 	public static final SkillAbstract SHOOTING = new SkillAbstract("shooting", "Shooting"){}.setExpInfo(20, 16F, 0.8F);

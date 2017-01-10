@@ -1,5 +1,5 @@
 /*
- * copyright© 2016 ueyudiud
+ * copyright© 2016-2017 ueyudiud
  */
 
 package farcore.lib.block;
@@ -140,14 +140,17 @@ public class BlockStairV1 extends BlockBase
 	public BlockStairV1(String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(name, blockMaterialIn, blockMapColorIn);
+		this.useNeighborBrightness = true;
 	}
 	public BlockStairV1(String modid, String name, Material materialIn)
 	{
 		super(modid, name, materialIn);
+		this.useNeighborBrightness = true;
 	}
 	public BlockStairV1(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
+		this.useNeighborBrightness = true;
 	}
 	
 	@Override

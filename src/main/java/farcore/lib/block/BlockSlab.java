@@ -37,21 +37,25 @@ public abstract class BlockSlab extends BlockBase
 	{
 		super(name, materialIn);
 		this.lightOpacity = -1;
+		this.useNeighborBrightness = true;
 	}
 	public BlockSlab(String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(name, blockMaterialIn, blockMapColorIn);
 		this.lightOpacity = -1;
+		this.useNeighborBrightness = true;
 	}
 	public BlockSlab(String modid, String name, Material materialIn)
 	{
 		super(modid, name, materialIn);
 		this.lightOpacity = -1;
+		this.useNeighborBrightness = true;
 	}
 	public BlockSlab(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 		this.lightOpacity = -1;
+		this.useNeighborBrightness = true;
 	}
 	
 	protected abstract String getLocalName();

@@ -10,4 +10,10 @@ public class MaterialIce extends Material
 		super(MapColor.ICE);
 		setRequiresTool();
 	}
+	
+	@Override
+	public boolean blocksLight()
+	{
+		return super.blocksLight();
+	}
 }

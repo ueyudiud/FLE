@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.energy;
 
 import farcore.lib.collection.Register;
@@ -18,18 +22,18 @@ public class EnergyHandler
 		FLOAT,
 		DOUBLE;
 	}
-
+	
 	private static final Register<Energy> REGISTER = new Register();
 	
 	public static final Energy STANDARD_DOUBLE;
 	public static final Energy STANDARD_LONG;
-
+	
 	static
 	{
 		STANDARD_DOUBLE = registerEnergy("standard_double", 1.0, EnergyScaleType.DOUBLE);
 		STANDARD_LONG = registerEnergy("standard_long", 1.0, EnergyScaleType.LONG);
 	}
-
+	
 	public static Energy registerEnergy(String name, double energyScale, EnergyScaleType type)
 	{
 		if(REGISTER.contain(name))
@@ -46,12 +50,12 @@ public class EnergyHandler
 			return energy;
 		}
 	}
-
+	
 	public static Energy getEnergy(String name)
 	{
 		return REGISTER.get(name);
 	}
-
+	
 	public static class Energy
 	{
 		private final double energyScale;
@@ -65,7 +69,7 @@ public class EnergyHandler
 		
 		public Number formatCodedEnergy(long amount)
 		{
-			switch (type)
+			switch (this.type)
 			{
 			case INTEGER :
 				return amount & 0xFFFFFFFF;
@@ -82,7 +86,7 @@ public class EnergyHandler
 		
 		public Number formatEnergy(double amount)
 		{
-			switch (type)
+			switch (this.type)
 			{
 			case INTEGER :
 				return (int) amount;
@@ -99,7 +103,7 @@ public class EnergyHandler
 		
 		public Number transferToAnotherEnergy(long amount, Energy energy)
 		{
-			double mul = energy.energyScale / energyScale;
+			double mul = energy.energyScale / this.energyScale;
 			switch (energy.type)
 			{
 			case INTEGER : return (int) (amount * mul);
@@ -112,7 +116,7 @@ public class EnergyHandler
 		
 		public Number transferToAnotherEnergy(double amount, Energy energy)
 		{
-			double mul = energy.energyScale / energyScale;
+			double mul = energy.energyScale / this.energyScale;
 			switch (energy.type)
 			{
 			case INTEGER : return (int) (amount * mul);

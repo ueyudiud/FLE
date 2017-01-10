@@ -13,7 +13,7 @@ public class TEBuffered extends TEUpdatable implements IUpdatableTile
 	public long timer = Long.MIN_VALUE;
 	public long lastActived = Long.MIN_VALUE;
 	
-	private TileEntity[] tileNearby = new TileEntity[6];
+	private TileEntity[] tileNearby = null;
 	
 	public TEBuffered()
 	{
@@ -24,33 +24,48 @@ public class TEBuffered extends TEUpdatable implements IUpdatableTile
 	public void onLoad()
 	{
 		super.onLoad();
-		regetTileNearby();
+		regetTileNearby(true);
+	}
+	
+	@Override
+	public void update()
+	{
+		super.update();
 	}
 	
 	@Override
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
-		regetTileNearby();
+		regetTileNearby(true);
 	}
 	
 	@Override
 	public TileEntity getTE(Direction offset)
 	{
-		return this.tileNearby[offset.ordinal()];
+		TileEntity[] tileEntities = regetTileNearby(false);
+		return tileEntities == null ? null : tileEntities[offset.ordinal()];
 	}
 	
-	private void regetTileNearby()
+	private TileEntity[] regetTileNearby(boolean forceToUpdate)
 	{
 		if(this.worldObj.isBlockLoaded(this.pos))
 		{
-			for(Direction direction : Direction.DIRECTIONS_3D)
+			boolean flag = this.tileNearby == null;
+			if(flag) this.tileNearby = new TileEntity[6];
+			if(forceToUpdate || flag)
 			{
-				this.tileNearby[direction.ordinal()] = super.getTE(direction);
+				for(Direction direction : Direction.DIRECTIONS_3D)
+				{
+					this.tileNearby[direction.ordinal()] = super.getTE(direction);
+				}
 			}
+			return this.tileNearby;
 		}
 		else
 		{
+			if(this.tileNearby == null) this.tileNearby = new TileEntity[6];
 			Arrays.fill(this.tileNearby, null);
+			return this.tileNearby;
 		}
 	}
 	

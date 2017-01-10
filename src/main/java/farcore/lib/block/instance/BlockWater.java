@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.block.instance;
 
 import java.util.Random;
@@ -17,6 +21,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
+/**
+ * The override water block with limited water amount.
+ * @author ueyudiud
+ */
 public class BlockWater extends BlockStandardFluid
 {
 	public BlockWater(FluidBase fluid)
@@ -24,12 +32,12 @@ public class BlockWater extends BlockStandardFluid
 		super(fluid, Material.WATER);
 		EnumBlock.water.set(this);
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
 		int level = getFluidLevel(worldIn, pos);
-		if(!worldIn.isRemote && level == quantaPerBlock)
+		if(!worldIn.isRemote && level == this.quantaPerBlock)
 		{
 			if(Config.enableWaterFreezeAndIceMeltTempCheck)
 			{
@@ -65,7 +73,7 @@ public class BlockWater extends BlockStandardFluid
 		if(worldIn.provider.isSurfaceWorld() && worldIn.canSeeSky(pos))
 		{
 			int level = getFluidLevel(worldIn, pos);
-			if(level < quantaPerBlock - 1)
+			if(level < this.quantaPerBlock - 1)
 			{
 				IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
 				float rainstrength = properties.getRainstrength(worldIn, pos);

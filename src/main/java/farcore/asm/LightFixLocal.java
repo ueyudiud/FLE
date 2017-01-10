@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.asm;
 
 import java.util.HashMap;
@@ -23,7 +27,7 @@ public class LightFixLocal implements Runnable
 {
 	private static final int cacheSize = 64;
 	private static final int[][] caches = new int[cacheSize][];
-
+	
 	static class $
 	{
 		World world;
@@ -37,16 +41,16 @@ public class LightFixLocal implements Runnable
 		{
 			this.world = world;
 			this.type = type;
-			x = pos.getX();
-			y = pos.getY();
-			z = pos.getZ();
-			time = System.currentTimeMillis();
+			this.x = pos.getX();
+			this.y = pos.getY();
+			this.z = pos.getZ();
+			this.time = System.currentTimeMillis();
 		}
 	}
 	final LinkedList<$> list = new LinkedList();
 	final Map<IntegerArray, Byte> lightMap = new HashMap(65536, 1.0F);
 	private final int[] lightUpdateBlockList = new int[32768];
-
+	
 	$ checking;
 	World world;
 	EnumSkyBlock type;
@@ -55,7 +59,7 @@ public class LightFixLocal implements Runnable
 	int z;
 	IntegerArray array = new IntegerArray(5);
 	MutableBlockPos pos = new MutableBlockPos();
-
+	
 	public void startThread()
 	{
 		if(Config.multiThreadLight)
@@ -78,20 +82,20 @@ public class LightFixLocal implements Runnable
 				catch(InterruptedException exception){}
 			}
 			long time = System.currentTimeMillis();
-			while(!list.isEmpty())
+			while(!this.list.isEmpty())
 			{
-				synchronized (list)
+				synchronized (this.list)
 				{
-					checking = list.removeFirst();
+					this.checking = this.list.removeFirst();
 				}
-				if(time - checking.time >= 10000)
+				if(time - this.checking.time >= 10000)
 				{
 					continue;
 				}
 				boolean flag = true;
 				try
 				{
-					check0(checking);
+					check0(this.checking);
 				}
 				catch(Exception exception)
 				{
@@ -100,13 +104,13 @@ public class LightFixLocal implements Runnable
 			}
 		}
 	}
-
+	
 	public void onWorldUnload(World world)
 	{
 		int i = world.provider.getDimension();
-		synchronized (list)
+		synchronized (this.list)
 		{
-			Iterator<$> iterator = list.iterator();
+			Iterator<$> iterator = this.list.iterator();
 			while(iterator.hasNext())
 			{
 				if(iterator.next().world == world)
@@ -115,25 +119,25 @@ public class LightFixLocal implements Runnable
 				}
 			}
 		}
-		synchronized (lightMap)
+		synchronized (this.lightMap)
 		{
-			Set<IntegerArray> set = ImmutableSet.copyOf(lightMap.keySet());
+			Set<IntegerArray> set = ImmutableSet.copyOf(this.lightMap.keySet());
 			for(IntegerArray array : set)
 			{
 				if(array.array[1] == i)
 				{
-					lightMap.remove(array);
+					this.lightMap.remove(array);
 				}
 			}
 		}
 	}
-
+	
 	public void markLightForCheck(World world, EnumSkyBlock type, BlockPos pos)
 	{
-		synchronized (list)
+		synchronized (this.list)
 		{
 			$ info = new $(world, type, pos);
-			list.add(info);
+			this.list.add(info);
 			synchronized (this)
 			{
 				notifyAll();
@@ -143,13 +147,13 @@ public class LightFixLocal implements Runnable
 	
 	private void check0($ check)
 	{
-		world = check.world;
-		type = check.type;
-		x = check.x;
-		y = check.y;
-		z = check.z;
-		array.array[0] = type.ordinal();
-		array.array[1] = world.provider.getDimension();
+		this.world = check.world;
+		this.type = check.type;
+		this.x = check.x;
+		this.y = check.y;
+		this.z = check.z;
+		this.array.array[0] = this.type.ordinal();
+		this.array.array[1] = this.world.provider.getDimension();
 		check();
 	}
 	
@@ -159,21 +163,21 @@ public class LightFixLocal implements Runnable
 		int j = 0;
 		int k = getLight(0, 0, 0);
 		int l = getRawLight(0, 0, 0);
-		int i1 = pos.getX();
-		int j1 = pos.getY();
-		int k1 = pos.getZ();
-
+		int i1 = this.pos.getX();
+		int j1 = this.pos.getY();
+		int k1 = this.pos.getZ();
+		
 		if (l > k)
 		{
-			lightUpdateBlockList[j++] = 133152;
+			this.lightUpdateBlockList[j++] = 133152;
 		}
 		else if (l < k)
 		{
-			lightUpdateBlockList[j++] = 133152 | k << 18;
-
+			this.lightUpdateBlockList[j++] = 133152 | k << 18;
+			
 			while (i < j)
 			{
-				int l1 = lightUpdateBlockList[i++];
+				int l1 = this.lightUpdateBlockList[i++];
 				int i2 = (l1 & 63) - 32;
 				int j2 = (l1 >> 6 & 63) - 32;
 				int k2 = (l1 >> 12 & 63) - 32;
@@ -198,11 +202,11 @@ public class LightFixLocal implements Runnable
 								int k4 = k2 + facing.getFrontOffsetZ();
 								pos3.setPos(i4 + i1, j4 + j1, k4 + k1);
 								IBlockState state;
-								int l4 = Math.max(1, (state = world.getBlockState(pos3)).getBlock().getLightOpacity(state, world, pos3));
+								int l4 = Math.max(1, (state = this.world.getBlockState(pos3)).getBlock().getLightOpacity(state, this.world, pos3));
 								i3 = getLight(i4, j4, k4);
-								if (i3 == l2 - l4 && j < lightUpdateBlockList.length)
+								if (i3 == l2 - l4 && j < this.lightUpdateBlockList.length)
 								{
-									lightUpdateBlockList[j++] = i4 - i1 + 32 | j4 - j1 + 32 << 6 | k4 - k1 + 32 << 12 | l2 - l4 << 18;
+									this.lightUpdateBlockList[j++] = i4 - i1 + 32 | j4 - j1 + 32 << 6 | k4 - k1 + 32 << 12 | l2 - l4 << 18;
 								}
 							}
 							pos3.release();
@@ -214,70 +218,70 @@ public class LightFixLocal implements Runnable
 		}
 		while (i < j)
 		{
-			int i5 = lightUpdateBlockList[i++];
+			int i5 = this.lightUpdateBlockList[i++];
 			int j5 = (i5 & 63) - 32;
 			int k5 = (i5 >> 6 & 63) - 32;
 			int l5 = (i5 >> 12 & 63) - 32;
 			BlockPos blockpos1 = new BlockPos(j5 + i1, k5 + j1, l5 + k1);
 			int i6 = getLight(j5, k5, l5);
 			int j6 = getRawLight(j5, k5, l5);
-
+			
 			if (j6 != i6)
 			{
 				setLight(j5, k5, l5, j6);
-
+				
 				if (j6 > i6)
 				{
 					int k6 = Math.abs(j5);
 					int l6 = Math.abs(k5);
 					int i7 = Math.abs(l5);
-					boolean flag = j < lightUpdateBlockList.length - 6;
+					boolean flag = j < this.lightUpdateBlockList.length - 6;
 					if (k6 + l6 + i7 < 17 && flag)
 					{
 						if (getLight(blockpos1.west()) < j6)
 						{
-							lightUpdateBlockList[j++] = j5 - 1 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
+							this.lightUpdateBlockList[j++] = j5 - 1 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
 						}
 						if (getLight(blockpos1.east()) < j6)
 						{
-							lightUpdateBlockList[j++] = j5 + 1 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
+							this.lightUpdateBlockList[j++] = j5 + 1 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
 						}
 						if (getLight(blockpos1.down()) < j6)
 						{
-							lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 - 1 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
+							this.lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 - 1 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
 						}
 						if (getLight(blockpos1.up()) < j6)
 						{
-							lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 + 1 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
+							this.lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 + 1 - j1 + 32 << 6) + (l5 - k1 + 32 << 12);
 						}
 						if (getLight(blockpos1.north()) < j6)
 						{
-							lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 - 1 - k1 + 32 << 12);
+							this.lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 - 1 - k1 + 32 << 12);
 						}
 						if (getLight(blockpos1.south()) < j6)
 						{
-							lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 + 1 - k1 + 32 << 12);
+							this.lightUpdateBlockList[j++] = j5 - i1 + 32 + (k5 - j1 + 32 << 6) + (l5 + 1 - k1 + 32 << 12);
 						}
 					}
 				}
 			}
 		}
 	}
-
+	
 	/**
 	 * gets the light level at the supplied position
 	 */
 	private int getRawLight(int x, int y, int z)
 	{
 		BlockPos pos = pos(x, y, z);
-		if (type == EnumSkyBlock.SKY && world.canSeeSky(pos))
+		if (this.type == EnumSkyBlock.SKY && this.world.canSeeSky(pos))
 			return 15;
 		else
 		{
-			IBlockState iblockstate = world.getBlockState(pos);
-			int blockLight = iblockstate.getBlock().getLightValue(iblockstate, world, pos);
-			int i = type == EnumSkyBlock.SKY ? 0 : blockLight;
-			int j = iblockstate.getBlock().getLightOpacity(iblockstate, world, pos);
+			IBlockState iblockstate = this.world.getBlockState(pos);
+			int blockLight = iblockstate.getBlock().getLightValue(iblockstate, this.world, pos);
+			int i = this.type == EnumSkyBlock.SKY ? 0 : blockLight;
+			int j = iblockstate.getBlock().getLightOpacity(iblockstate, this.world, pos);
 			if (j >= 15 && blockLight > 0)
 			{
 				j = 1;
@@ -312,46 +316,46 @@ public class LightFixLocal implements Runnable
 			}
 		}
 	}
-
+	
 	private void setLight(int ofX, int ofY, int ofZ, int value)
 	{
-		array.set(2, x + ofX).set(3, y + ofY).set(4, z + ofZ);
-		synchronized (lightMap)
+		this.array.set(2, this.x + ofX).set(3, this.y + ofY).set(4, this.z + ofZ);
+		synchronized (this.lightMap)
 		{
-			lightMap.put(array.copy(), (byte) value);
+			this.lightMap.put(this.array.copy(), (byte) value);
 		}
 	}
-
+	
 	private int getLight(int ofX, int ofY, int ofZ)
 	{
-		array.set(2, x + ofX).set(3, y + ofY).set(4, z + ofZ);
-		if(lightMap.containsKey(array))
-			return lightMap.get(array).byteValue();
-		pos.setPos(x + ofX, y + ofY, z + ofZ);
-		return world.getLightFor(type, pos);
+		this.array.set(2, this.x + ofX).set(3, this.y + ofY).set(4, this.z + ofZ);
+		if(this.lightMap.containsKey(this.array))
+			return this.lightMap.get(this.array).byteValue();
+		this.pos.setPos(this.x + ofX, this.y + ofY, this.z + ofZ);
+		return this.world.getLightFor(this.type, this.pos);
 	}
-
+	
 	private int getLight(BlockPos pos)
 	{
-		array.set(2, pos.getX()).set(3, pos.getY()).set(4, pos.getZ());
-		if(lightMap.containsKey(array))
-			return lightMap.get(array).byteValue();
-		return world.getLightFor(type, pos);
+		this.array.set(2, pos.getX()).set(3, pos.getY()).set(4, pos.getZ());
+		if(this.lightMap.containsKey(this.array))
+			return this.lightMap.get(this.array).byteValue();
+		return this.world.getLightFor(this.type, pos);
 	}
-
+	
 	private BlockPos pos(int ofX, int ofY, int ofZ)
 	{
-		return pos.setPos(x + ofX, y + ofY, z + ofZ);
+		return this.pos.setPos(this.x + ofX, this.y + ofY, this.z + ofZ);
 	}
-
+	
 	
 	public void tickLightUpdate(World world)
 	{
 		int dim = world.provider.getDimension();
 		PooledMutableBlockPos pos = PooledMutableBlockPos.retain();
-		synchronized (lightMap)
+		synchronized (this.lightMap)
 		{
-			Set<IntegerArray> set = ImmutableSet.copyOf(lightMap.keySet());
+			Set<IntegerArray> set = ImmutableSet.copyOf(this.lightMap.keySet());
 			for(IntegerArray array : set)
 			{
 				if(array.array[1] == dim)
@@ -359,9 +363,9 @@ public class LightFixLocal implements Runnable
 					pos.setPos(array.array[2], array.array[3], array.array[4]);
 					if(world.isAreaLoaded(pos, 1))
 					{
-						world.setLightFor(EnumSkyBlock.values()[array.array[0]], pos, lightMap.get(array));
+						world.setLightFor(EnumSkyBlock.values()[array.array[0]], pos, this.lightMap.get(array));
 					}
-					lightMap.remove(array);
+					this.lightMap.remove(array);
 				}
 			}
 		}

@@ -1,5 +1,9 @@
 /*
- * copyright© 2016 ueyudiud
+ * copyright© 2016-2017 ueyudiud
+ */
+
+/*
+ * copyright© 2016-2017 ueyudiud
  */
 
 package fle.core.blocks;
@@ -19,6 +23,7 @@ import fle.core.client.model.ModelDitch;
 import fle.core.tile.ditchs.TEDitch;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,6 +33,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -59,6 +65,8 @@ public class BlockDitch extends BlockSingleTE
 	{
 		super.registerRender();
 		OrderModelLoader.putModel(this, new ModelDitch());
+		ModelResourceLocation location = new ModelResourceLocation(getRegistryName(), "normal");
+		ModelLoader.setCustomMeshDefinition(this.item, stack -> location);
 	}
 	
 	@Override

@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.block.instance;
 
 import static farcore.data.Others.PROP_EAST;
@@ -122,9 +126,9 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		TUNDRA_SNOW("tundra_snow"),
 		TUNDRA_FROZEN_SNOW("tundra_frozen_snow"),
 		MYCELIUM_SNOW("mycelium_snow");
-
+		
 		public static final EnumCoverType[] VALUES = values();
-
+		
 		static
 		{
 			setCover(NONE, WATER, SNOW);
@@ -138,7 +142,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			TUNDRA_FROZEN.isWet = FROZEN.isWet = false;
 			FROZEN.isFrozen = FROZEN_SNOW.isFrozen = TUNDRA_FROZEN.isFrozen = TUNDRA_FROZEN_SNOW.isFrozen = true;
 		}
-
+		
 		static void setCover(EnumCoverType no, EnumCoverType water, EnumCoverType snow)
 		{
 			no.noCover    = water.noCover    = snow.noCover    = no;
@@ -156,31 +160,31 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		boolean isWet;
 		boolean isSnow;
 		boolean isFrozen;
-
+		
 		EnumCoverType(String name)
 		{
 			this.name = name;
 		}
-
+		
 		@Override
 		public String getName()
 		{
-			return name;
+			return this.name;
 		}
-
+		
 		public EnumCoverType getNoCover()
 		{
-			return noCover;
+			return this.noCover;
 		}
-
+		
 		public EnumCoverType getWaterCover()
 		{
-			return waterCover;
+			return this.waterCover;
 		}
-
+		
 		public EnumCoverType getSnowCover()
 		{
-			return snowCover;
+			return this.snowCover;
 		}
 	}
 	
@@ -190,8 +194,8 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		super(modid, name, materialIn, mat, soil);
 		setTickRandomly(true);
-		unharvestableSpeedMultiplier = 150F;
-		harvestableSpeedMultiplier = 20F;
+		this.unharvestableSpeedMultiplier = 150F;
+		this.harvestableSpeedMultiplier = 20F;
 		setCreativeTab(CT.tabTerria);
 	}
 	
@@ -199,36 +203,36 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn, mat, soil);
 		setTickRandomly(true);
-		unharvestableSpeedMultiplier = 150F;
-		harvestableSpeedMultiplier = 20F;
+		this.unharvestableSpeedMultiplier = 150F;
+		this.harvestableSpeedMultiplier = 20F;
 		setCreativeTab(CT.tabTerria);
 	}
-
+	
 	@Override
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), material.localName);
-		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Frozen " + material.localName);
-		LanguageManager.registerLocal(getTranslateNameForItemStack(2), material.localName + " Grass");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(3), material.localName + " Tundra");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(4), material.localName + " Mycelium");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), this.material.localName);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Frozen " + this.material.localName);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(2), this.material.localName + " Grass");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(3), this.material.localName + " Tundra");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(4), this.material.localName + " Mycelium");
 		//The meta higher than 5 can not be harvested, so no name display.
-		MC.soil.registerOre(material, this);
+		MC.soil.registerOre(this.material, this);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
 		super.registerRender();
 		U.Mod.registerColorMultiplier(ColorMultiplier.SOIL_COLOR, this);
-		U.Mod.registerColorMultiplier(ColorMultiplier.ITEM_SOIL_COLOR, item);
-		StateMapperExt mapper = new StateMapperExt(material.modid, "soil", null);
-		mapper.setVariants("type", material.name);
+		U.Mod.registerColorMultiplier(ColorMultiplier.ITEM_SOIL_COLOR, this.item);
+		StateMapperExt mapper = new StateMapperExt(this.material.modid, "soil", null);
+		mapper.setVariants("type", this.material.name);
 		ClientProxy.registerCompactModel(mapper, this, 16);
 	}
-
+	
 	@Override
 	public String getTranslateNameForItemStack(ItemStack stack)
 	{
@@ -278,7 +282,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		return state;
 	}
-
+	
 	protected boolean matchConnectable(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing facing)
 	{
 		BlockPos pos1;
@@ -310,13 +314,13 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
@@ -338,7 +342,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		return hardness;
 	}
-
+	
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
@@ -358,7 +362,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
-
+	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
@@ -396,7 +400,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		return false;
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
@@ -416,7 +420,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			updateBase(worldIn, pos, state, rand);
 		}
 	}
-
+	
 	protected void spreadCoverPlant(World world, BlockPos pos, IBlockState state, Random rand)
 	{
 		EnumCoverType type = state.getValue(COVER_TYPE).noCover;
@@ -487,7 +491,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			}
 		}
 	}
-
+	
 	protected IBlockState updateBase(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
 		IBlockState oldState = state;
@@ -533,7 +537,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		return state;
 	}
-
+	
 	protected boolean canBlockGrass(IBlockAccess world, BlockPos pos)
 	{
 		BlockPos up = pos.up();
@@ -548,7 +552,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			return false;
 		return canFallNearby(world, pos, state).size() < 2;
 	}
-
+	
 	@Override
 	public void onStartFalling(World world, BlockPos pos)
 	{
@@ -570,16 +574,16 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
 	{
 		EnumCoverType type = block.getBlock().getValue(COVER_TYPE);
-		float amt = material.getProperty(MP.property_tool).damageToEntity;
+		float amt = this.material.getProperty(MP.property_tool).damageToEntity;
 		amt *= block.motionY * block.motionY;
 		amt /= 25F;
 		return type.isFrozen ? amt * 1.2F : amt;
 	}
-
+	
 	@Override
 	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
 	{
-		float amt = 1F - material.getProperty(MP.fallen_damage_deduction) / 10000F;
+		float amt = 1F - this.material.getProperty(MP.fallen_damage_deduction) / 10000F;
 		EnumCoverType type = worldIn.getBlockState(pos).getValue(COVER_TYPE);
 		if(type.isWet)
 		{
@@ -591,7 +595,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		entityIn.fall(fallDistance, amt);
 	}
-
+	
 	@Override
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{
