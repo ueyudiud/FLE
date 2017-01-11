@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
+import farcore.lib.util.CoordTransformer;
 import farcore.lib.util.Direction;
 import fle.api.client.CompactModel;
 import fle.api.tile.IDitchTile;
@@ -51,18 +52,18 @@ public class ModelDitch extends CompactModel
 		return genQuads(IDitchTile.DitchBlockHandler.getFactory(material).getMaterialIcon(material), (byte) 0x11);
 	}
 	
-	private static final float f   = 0.0625F;//Pixel length.
-	private static final float f1  = 0.0F;//Block bound min.
-	private static final float f2  = 1.0F;//Block bound max.
-	private static final float f3  = 0.375F;//Ditch side min.
-	private static final float f4  = 0.625F;//Ditch side max.
-	private static final float f5  = f3 - f;//Ditch edge(state=0) min.
-	private static final float f6  = f4 + f;//Ditch edge(state=0) max.
-	private static final float f7  = 0.25F;//Ditch surface height.
-	private static final float f8  = 0.5F;//Ditch wall height.
-	private static final float f9  = f7 - f;//Ditch bottom height.
-	private static final float f10 = -0.375F;//Ditch edge(state=2) min.
-	private static final float f11 = 1.375F;//(Ditch edge(state=2) max.
+	private static final float fPixel = 0.0625F;
+	private static final float fMin  = 0.0F;//Block bound min.
+	private static final float fMax  = 1.0F;//Block bound max.
+	private static final float fWN  = 0.375F;//Ditch side min.
+	private static final float fWP  = 0.625F;//Ditch side max.
+	private static final float fEN  = fWN - fPixel;//Ditch edge(state=0) min.
+	private static final float fEP  = fWP + fPixel;//Ditch edge(state=0) max.
+	private static final float fSP  = 0.25F;//Ditch surface height.
+	private static final float fW  = 0.5F;//Ditch wall height.
+	private static final float fSN  = fSP - fPixel;//Ditch bottom height.
+	//	private static final float f10 = -0.375F;//Ditch edge(state=2) min.
+	//	private static final float f11 = 1.375F;//(Ditch edge(state=2) max.
 	//	private static final float f12 = -0.625F;
 	//	private static final float f13 = 1.625F;
 	//	private static final float f14 = -0.5F;
@@ -71,80 +72,168 @@ public class ModelDitch extends CompactModel
 	{
 		ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
 		this.qb.setIcon(retexture);
-		//Block face pad.
-		this.qb.renderZNeg = (connectState & 0x30) == 0;
-		this.qb.renderZPos = (connectState & 0x03) == 0;
-		this.qb.renderXNeg = (connectState & 0x0C) == 0;
-		this.qb.renderXPos = (connectState & 0xC0) == 0;
-		this.qb.putCubeQuads(builder, f5, f9, f5, f6, f7, f6);//Render bottom.
-		//		qb.putCubeQuads(builder, f3, f9, f3, f4, f7, f4);
-		this.qb.renderXNeg = this.qb.renderXPos = this.qb.renderZNeg = this.qb.renderZPos = true;
-		this.qb.putCubeQuads(builder, f5, f9, f5, f3, f8, f3);
-		this.qb.putCubeQuads(builder, f5, f9, f4, f3, f8, f6);
-		this.qb.putCubeQuads(builder, f4, f9, f4, f6, f8, f6);
-		this.qb.putCubeQuads(builder, f4, f9, f5, f6, f8, f3);
+		this.qb.setApplyDiffuseLighting(true);
+		this.qb.setBound(fWN, fSP, fWN, fWP, fSP, fWP);
+		builder.add(this.qb.bakeYPosFace());
+		this.qb.setBound(fEN, fSN, fEN, fEP, fSN, fEP);
+		builder.add(this.qb.bakeYNegFace());
+		CoordTransformer transformer = this.qb.getTransformer();
+		boolean flag = false;
+		this.qb.resetOption();
 		switch (connectState & 0x03)//Z pos
 		{
 		case 0x02:
-			this.qb.putCubeQuads(builder, f5, f9, f6, f3, f8, f11);
-			this.qb.putCubeQuads(builder, f4, f9, f6, f6, f8, f11);
-			this.qb.putCubeQuads(builder, f3, f9, f4, f4, f7, f11);
-			break;
+			flag = true;
+			transformer.setTransform(0.0, 0.0, 1.0);
+			this.qb.renderYPos = this.qb.renderZNeg = this.qb.renderZPos = false;
+			this.qb.putCubeQuads(builder, fEN, fSN, fMin, fEP, fW, fWN);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fWN, fSP, fMin, fWP, fW, fWN);
+			this.qb.renderOppisite = false;
+			this.qb.renderYPos = this.qb.renderZPos = true;
+			this.qb.renderXPos = this.qb.renderXNeg = this.qb.renderYNeg = false;
+			this.qb.putCubeQuads(builder, fEN, fSN, fMin, fWN, fW, fWN);
+			this.qb.putCubeQuads(builder, fWP, fSN, fMin, fEP, fW, fWN);
+			this.qb.setBound(fWN, fSN, fMin, fWP, fSP, fWN);
+			builder.add(this.qb.bakeZPosFace());
+			this.qb.resetOption();
 		case 0x01:
-			this.qb.putCubeQuads(builder, f5, f9, f6, f3, f8, f2);
-			this.qb.putCubeQuads(builder, f4, f9, f6, f6, f8, f2);
-			this.qb.putCubeQuads(builder, f3, f9, f4, f4, f7, f2);
+			this.qb.renderYPos = this.qb.renderZNeg = this.qb.renderZPos = false;
+			this.qb.putCubeQuads(builder, fEN, fSN, fEP, fEP, fW, fMax);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fWN, fSP, fWP, fWP, fW, fMax);
+			this.qb.renderOppisite = false;
+			this.qb.setBound(fEN, fSN, fWP, fWN, fW, fMax);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fWP, fSN, fEP, fEP, fW, fMax);
+			builder.add(this.qb.bakeYPosFace());
 			break;
 		case 0x00 :
-			this.qb.putCubeQuads(builder, f3, f9, f4, f4, f8, f6);
+			this.qb.setBound(fEN, fSN, fWP, fWP, fW, fEP);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fEN, fSN, fWP, fEP, fW, fEP);
+			builder.add(this.qb.bakeZPosFace());
+			this.qb.setBound(fWN, fSP, fWP, fWP, fW, fEP);
+			builder.add(this.qb.bakeZNegFace());
 			break;
 		}
+		this.qb.resetOption();
+		flag = false;
 		switch (connectState & 0x0C)//X neg
 		{
 		case 0x08:
-			this.qb.putCubeQuads(builder, f10, f9, f5, f5, f8, f3);
-			this.qb.putCubeQuads(builder, f10, f9, f4, f5, f8, f6);
-			this.qb.putCubeQuads(builder, f10, f9, f3, f3, f7, f4);
-			break;
+			flag = true;
+			transformer.setTransform(-1.0, 0.0, 0.0);
+			this.qb.renderYPos = this.qb.renderXNeg = this.qb.renderXPos = false;
+			this.qb.putCubeQuads(builder, fWP, fSN, fEN, fMax, fW, fEP);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fWP, fSP, fWN, fMax, fW, fWP);
+			this.qb.renderOppisite = false;
+			this.qb.renderYPos = this.qb.renderXNeg = true;
+			this.qb.renderZPos = this.qb.renderZNeg = this.qb.renderYNeg = false;
+			this.qb.putCubeQuads(builder, fWP, fSN, fEN, fMax, fW, fWN);
+			this.qb.putCubeQuads(builder, fWP, fSN, fWP, fMax, fW, fEP);
+			this.qb.renderYNeg = true;
+			this.qb.setBound(fWP, fSN, fWN, fMax, fSP, fWP);
+			builder.add(this.qb.bakeXNegFace());
+			this.qb.resetOption();
 		case 0x04:
-			this.qb.putCubeQuads(builder, f1, f9, f5, f5, f8, f3);
-			this.qb.putCubeQuads(builder, f1, f9, f4, f5, f8, f6);
-			this.qb.putCubeQuads(builder, f1, f9, f3, f3, f7, f4);
+			this.qb.renderYPos = this.qb.renderXNeg = this.qb.renderXPos = false;
+			this.qb.putCubeQuads(builder, fMin, fSN, fEN, fEN, fW, fEP);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fMin, fSP, fWN, fWN, fW, fWP);
+			this.qb.renderOppisite = false;
+			this.qb.setBound(fMin, fSN, fEN, fWN, fW, fWN);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fMin, fSN, fWP, fEN, fW, fEP);
+			builder.add(this.qb.bakeYPosFace());
 			break;
 		case 0x00:
-			this.qb.putCubeQuads(builder, f5, f9, f3, f3, f8, f4);
+			this.qb.setBound(fEN, fSN, fEN, fWN, fW, fWP);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fEN, fSN, fEN, fWN, fW, fEP);
+			builder.add(this.qb.bakeXNegFace());
+			this.qb.setBound(fEN, fSP, fWN, fWN, fW, fWP);
+			builder.add(this.qb.bakeXPosFace());
 			break;
 		}
+		this.qb.resetOption();
+		flag = false;
 		switch (connectState & 0x30)//Z neg
 		{
 		case 0x20:
-			this.qb.putCubeQuads(builder, f5, f9, f10, f3, f8, f5);
-			this.qb.putCubeQuads(builder, f4, f9, f10, f6, f8, f5);
-			this.qb.putCubeQuads(builder, f3, f9, f10, f4, f7, f3);
-			break;
+			flag = true;
+			transformer.setTransform(0.0, 0.0, -1.0);
+			this.qb.renderYPos = this.qb.renderZNeg = this.qb.renderZPos = false;
+			this.qb.putCubeQuads(builder, fEN, fSN, fWP, fEP, fW, fMax);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fWN, fSP, fWP, fWP, fW, fMax);
+			this.qb.renderOppisite = false;
+			this.qb.renderYPos = this.qb.renderZNeg = true;
+			this.qb.renderXPos = this.qb.renderXNeg = this.qb.renderYNeg = false;
+			this.qb.putCubeQuads(builder, fEN, fSN, fWP, fWN, fW, fMax);
+			this.qb.putCubeQuads(builder, fWP, fSN, fWP, fEP, fW, fMax);
+			this.qb.setBound(fWN, fSN, fWP, fWP, fSP, fMax);
+			builder.add(this.qb.bakeZNegFace());
+			this.qb.resetOption();
 		case 0x10:
-			this.qb.putCubeQuads(builder, f5, f9, f1, f3, f8, f5);
-			this.qb.putCubeQuads(builder, f4, f9, f1, f6, f8, f5);
-			this.qb.putCubeQuads(builder, f3, f9, f1, f4, f7, f3);
+			this.qb.renderYPos = this.qb.renderZNeg = this.qb.renderZPos = false;
+			this.qb.putCubeQuads(builder, fEN, fSN, fMin, fEP, fW, fEN);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fWN, fSP, fMin, fWP, fW, fWN);
+			this.qb.renderOppisite = false;
+			this.qb.setBound(fEN, fSN, fMin, fWN, fW, fEN);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fWP, fSN, fMin, fEP, fW, fWN);
+			builder.add(this.qb.bakeYPosFace());
 			break;
-		case 0x00:
-			this.qb.putCubeQuads(builder, f3, f9, f5, f4, f8, f3);
+		case 0x00 :
+			this.qb.setBound(fWN, fSN, fEN, fEP, fW, fWN);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fEN, fSN, fEN, fEP, fW, fWN);
+			builder.add(this.qb.bakeZNegFace());
+			this.qb.setBound(fWN, fSP, fEN, fWP, fW, fWN);
+			builder.add(this.qb.bakeZPosFace());
 			break;
 		}
+		this.qb.resetOption();
+		flag = false;
 		switch (connectState & 0xC0)//X pos
 		{
 		case 0x80:
-			this.qb.putCubeQuads(builder, f6, f9, f5, f11, f8, f3);
-			this.qb.putCubeQuads(builder, f6, f9, f4, f11, f8, f6);
-			this.qb.putCubeQuads(builder, f4, f9, f3, f11, f7, f4);
-			break;
+			flag = true;
+			transformer.setTransform(1.0, 0.0, 0.0);
+			this.qb.renderYPos = this.qb.renderXNeg = this.qb.renderXPos = false;
+			this.qb.putCubeQuads(builder, fMin, fSN, fEN, fWN, fW, fEP);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fMin, fSP, fWN, fWN, fW, fWP);
+			this.qb.renderOppisite = false;
+			this.qb.renderYPos = this.qb.renderXPos = true;
+			this.qb.renderZPos = this.qb.renderZNeg = this.qb.renderYNeg = false;
+			this.qb.putCubeQuads(builder, fMin, fSN, fEN, fWN, fW, fWN);
+			this.qb.putCubeQuads(builder, fMin, fSN, fWP, fWN, fW, fEP);
+			this.qb.renderYNeg = true;
+			this.qb.setBound(fMin, fSN, fWN, fWN, fSP, fWP);
+			builder.add(this.qb.bakeXPosFace());
+			this.qb.resetOption();
 		case 0x40:
-			this.qb.putCubeQuads(builder, f6, f9, f5, f2, f8, f3);
-			this.qb.putCubeQuads(builder, f6, f9, f4, f2, f8, f6);
-			this.qb.putCubeQuads(builder, f4, f9, f3, f2, f7, f4);
+			this.qb.renderYPos = this.qb.renderXNeg = this.qb.renderXPos = false;
+			this.qb.putCubeQuads(builder, fEP, fSN, fEN, fMax, fW, fEP);
+			this.qb.renderOppisite = true;
+			this.qb.putCubeQuads(builder, fWP, fSP, fWN, fMax, fW, fWP);
+			this.qb.renderOppisite = false;
+			this.qb.setBound(fEP, fSN, fEN, fMax, fW, fWN);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fWP, fSN, fWP, fMax, fW, fEP);
+			builder.add(this.qb.bakeYPosFace());
 			break;
 		case 0x00:
-			this.qb.putCubeQuads(builder, f4, f9, f3, f6, f8, f4);
+			this.qb.setBound(fWP, fSN, fWN, fEP, fW, fEP);
+			builder.add(this.qb.bakeYPosFace());
+			this.qb.setBound(fWP, fSN, fEN, fEP, fW, fEP);
+			builder.add(this.qb.bakeXPosFace());
+			this.qb.setBound(fWP, fSP, fWN, fEP, fW, fWP);
+			builder.add(this.qb.bakeXNegFace());
 			break;
 		}
 		return builder.build();

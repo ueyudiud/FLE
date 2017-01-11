@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
 import com.google.common.collect.ImmutableList;
@@ -56,6 +57,7 @@ public final class ModelQuadBuilder
 	public boolean renderYPos = true;
 	public boolean renderZNeg = true;
 	public boolean renderZPos = true;
+	public boolean renderOppisite = false;
 	
 	public static ModelQuadBuilder newInstance()
 	{
@@ -134,121 +136,101 @@ public final class ModelQuadBuilder
 	public List<BakedQuad> bakeCube()
 	{
 		List<BakedQuad> list = new ArrayList();
-		if(this.renderYNeg) list.add(bakeYNegFace());
-		if(this.renderYPos) list.add(bakeYPosFace());
-		if(this.renderZNeg) list.add(bakeZNegFace());
-		if(this.renderZPos) list.add(bakeZPosFace());
-		if(this.renderXNeg) list.add(bakeXNegFace());
-		if(this.renderXPos) list.add(bakeXPosFace());
+		putCubeQuads(quad -> list.add(quad), this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
 		return list;
+	}
+	
+	public BakedQuad bakeFace(@Nullable EnumFacing facing, float normalX, float normalY, float normalZ,
+			float x1, float y1, float z1,
+			float x2, float y2, float z2,
+			float x3, float y3, float z3,
+			float x4, float y4, float z4,
+			float u1, float v1, float u2, float v2)
+	{
+		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
+		builder.setQuadTint(this.tidx);
+		builder.setTexture(this.icon);
+		builder.setQuadOrientation(this.transformer.transform(facing));
+		builder.setApplyDiffuseLighting(this.applyDiffuseLighting);
+		float minU = this.icon.getInterpolatedU(u1 * 16.0F);
+		float maxU = this.icon.getInterpolatedU(u2 * 16.0F);
+		float minV = this.icon.getInterpolatedV(v1 * 16.0F);
+		float maxV = this.icon.getInterpolatedV(v2 * 16.0F);
+		if(this.renderOppisite)
+		{
+			putVertex(builder, this.format, x1, y1, z1, minU, minV, normalX, normalY, normalZ, this.renderOppisite);
+			putVertex(builder, this.format, x4, y4, z4, maxU, minV, normalX, normalY, normalZ, this.renderOppisite);
+			putVertex(builder, this.format, x3, y3, z3, maxU, maxV, normalX, normalY, normalZ, this.renderOppisite);
+			putVertex(builder, this.format, x2, y2, z2, minU, maxV, normalX, normalY, normalZ, this.renderOppisite);
+		}
+		else
+		{
+			putVertex(builder, this.format, x1, y1, z1, minU, minV, normalX, normalY, normalZ, this.renderOppisite);
+			putVertex(builder, this.format, x2, y2, z2, minU, maxV, normalX, normalY, normalZ, this.renderOppisite);
+			putVertex(builder, this.format, x3, y3, z3, maxU, maxV, normalX, normalY, normalZ, this.renderOppisite);
+			putVertex(builder, this.format, x4, y4, z4, maxU, minV, normalX, normalY, normalZ, this.renderOppisite);
+		}
+		return builder.build();
 	}
 	
 	public BakedQuad bakeYPosFace()
 	{
-		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
-		builder.setQuadTint(this.tidx);
-		builder.setTexture(this.icon);
-		builder.setQuadOrientation(EnumFacing.UP);
-		builder.setApplyDiffuseLighting(this.applyDiffuseLighting);
-		float minU = this.icon.getInterpolatedU(this.minX * 16.0F);
-		float maxU = this.icon.getInterpolatedU(this.maxX * 16.0F);
-		float minV = this.icon.getInterpolatedV(this.minZ * 16.0F);
-		float maxV = this.icon.getInterpolatedV(this.maxZ * 16.0F);
-		putVertex(builder, this.format, this.minX, this.maxY, this.minZ, minU, minV, Direction.U, false);
-		putVertex(builder, this.format, this.minX, this.maxY, this.maxZ, minU, maxV, Direction.U, false);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.maxZ, maxU, maxV, Direction.U, false);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.minZ, maxU, minV, Direction.U, false);
-		return builder.build();
+		return bakeFace(EnumFacing.UP, Direction.U.x, Direction.U.y, Direction.U.z,
+				this.minX, this.maxY, this.minZ,
+				this.minX, this.maxY, this.maxZ,
+				this.maxX, this.maxY, this.maxZ,
+				this.maxX, this.maxY, this.minZ,
+				this.minX, this.minZ, this.maxX, this.maxZ);
 	}
 	
 	public BakedQuad bakeYNegFace()
 	{
-		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
-		builder.setQuadTint(this.tidx);
-		builder.setTexture(this.icon);
-		builder.setQuadOrientation(EnumFacing.DOWN);
-		builder.setApplyDiffuseLighting(this.applyDiffuseLighting);
-		float minU = this.icon.getInterpolatedU(this.minX * 16.0F);
-		float maxU = this.icon.getInterpolatedU(this.maxX * 16.0F);
-		float minV = this.icon.getInterpolatedV(16F - this.maxZ * 16.0F);
-		float maxV = this.icon.getInterpolatedV(16F - this.minZ * 16.0F);
-		putVertex(builder, this.format, this.minX, this.maxY, this.maxZ, minU, minV, Direction.D, false);
-		putVertex(builder, this.format, this.minX, this.maxY, this.minZ, minU, maxV, Direction.D, false);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.minZ, maxU, maxV, Direction.D, false);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.maxZ, maxU, minV, Direction.D, false);
-		return builder.build();
+		return bakeFace(EnumFacing.DOWN, Direction.D.x, Direction.D.y, Direction.D.z,
+				this.minX, this.minY, this.maxZ,
+				this.minX, this.minY, this.minZ,
+				this.maxX, this.minY, this.minZ,
+				this.maxX, this.minY, this.maxZ,
+				this.minX, 1F - this.maxZ, this.maxX, 1F - this.minZ);
 	}
 	
 	public BakedQuad bakeXPosFace()
 	{
-		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
-		builder.setQuadTint(this.tidx);
-		builder.setTexture(this.icon);
-		builder.setQuadOrientation(EnumFacing.EAST);
-		builder.setApplyDiffuseLighting(this.applyDiffuseLighting);
-		float minU = this.icon.getInterpolatedU(16F - this.maxZ * 16.0F);
-		float maxU = this.icon.getInterpolatedU(16F - this.minZ * 16.0F);
-		float minV = this.icon.getInterpolatedV(16F - this.maxY * 16.0F);
-		float maxV = this.icon.getInterpolatedV(16F - this.minY * 16.0F);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.maxZ, minU, minV, Direction.E, false);
-		putVertex(builder, this.format, this.maxX, this.minY, this.maxZ, minU, maxV, Direction.E, false);
-		putVertex(builder, this.format, this.maxX, this.minY, this.minZ, maxU, maxV, Direction.E, false);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.minZ, maxU, minV, Direction.E, false);
-		return builder.build();
+		return bakeFace(EnumFacing.EAST, Direction.E.x, Direction.E.y, Direction.E.z,
+				this.maxX, this.maxY, this.maxZ,
+				this.maxX, this.minY, this.maxZ,
+				this.maxX, this.minY, this.minZ,
+				this.maxX, this.maxY, this.minZ,
+				1F - this.maxZ, 1F - this.maxY, 1F - this.minZ, 1F - this.minY);
 	}
 	
 	public BakedQuad bakeXNegFace()
 	{
-		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
-		builder.setQuadTint(this.tidx);
-		builder.setTexture(this.icon);
-		builder.setQuadOrientation(EnumFacing.WEST);
-		builder.setApplyDiffuseLighting(this.applyDiffuseLighting);
-		float minU = this.icon.getInterpolatedU(this.minZ * 16.0F);
-		float maxU = this.icon.getInterpolatedU(this.maxZ * 16.0F);
-		float minV = this.icon.getInterpolatedV(16F - this.maxY * 16.0F);
-		float maxV = this.icon.getInterpolatedV(16F - this.minY * 16.0F);
-		putVertex(builder, this.format, this.minX, this.maxY, this.minZ, minU, minV, Direction.W, false);
-		putVertex(builder, this.format, this.minX, this.minY, this.minZ, minU, maxV, Direction.W, false);
-		putVertex(builder, this.format, this.minX, this.minY, this.maxZ, maxU, maxV, Direction.W, false);
-		putVertex(builder, this.format, this.minX, this.maxY, this.maxZ, maxU, minV, Direction.W, false);
-		return builder.build();
+		return bakeFace(EnumFacing.WEST, Direction.W.x, Direction.W.y, Direction.W.z,
+				this.minX, this.maxY, this.minZ,
+				this.minX, this.minY, this.minZ,
+				this.minX, this.minY, this.maxZ,
+				this.minX, this.maxY, this.maxZ,
+				this.minZ, 1F - this.maxY, this.maxZ, 1F - this.minY);
 	}
 	
 	public BakedQuad bakeZPosFace()
 	{
-		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
-		builder.setQuadTint(this.tidx);
-		builder.setTexture(this.icon);
-		builder.setQuadOrientation(EnumFacing.SOUTH);
-		builder.setApplyDiffuseLighting(this.applyDiffuseLighting);
-		float minU = this.icon.getInterpolatedU(this.minX * 16.0F);
-		float maxU = this.icon.getInterpolatedU(this.maxX * 16.0F);
-		float minV = this.icon.getInterpolatedV(16F - this.maxY * 16.0F);
-		float maxV = this.icon.getInterpolatedV(16F - this.minY * 16.0F);
-		putVertex(builder, this.format, this.minX, this.maxY, this.maxZ, minU, minV, Direction.S, false);
-		putVertex(builder, this.format, this.minX, this.minY, this.maxZ, minU, maxV, Direction.S, false);
-		putVertex(builder, this.format, this.maxX, this.minY, this.maxZ, maxU, maxV, Direction.S, false);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.maxZ, maxU, minV, Direction.S, false);
-		return builder.build();
+		return bakeFace(EnumFacing.SOUTH, Direction.S.x, Direction.S.y, Direction.S.z,
+				this.minX, this.maxY, this.maxZ,
+				this.minX, this.minY, this.maxZ,
+				this.maxX, this.minY, this.maxZ,
+				this.maxX, this.maxY, this.maxZ,
+				this.minX, 1F - this.maxY, this.maxX, 1F - this.minY);
 	}
 	
 	public BakedQuad bakeZNegFace()
 	{
-		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
-		builder.setQuadTint(this.tidx);
-		builder.setTexture(this.icon);
-		builder.setQuadOrientation(EnumFacing.NORTH);
-		builder.setApplyDiffuseLighting(this.applyDiffuseLighting);
-		float minU = this.icon.getInterpolatedU(16F - this.maxX * 16.0F);
-		float maxU = this.icon.getInterpolatedU(16F - this.minX * 16.0F);
-		float minV = this.icon.getInterpolatedV(16F - this.maxY * 16.0F);
-		float maxV = this.icon.getInterpolatedV(16F - this.minY * 16.0F);
-		putVertex(builder, this.format, this.maxX, this.maxY, this.minZ, minU, minV, Direction.N, false);
-		putVertex(builder, this.format, this.maxX, this.minY, this.minZ, minU, maxV, Direction.N, false);
-		putVertex(builder, this.format, this.minX, this.minY, this.minZ, maxU, maxV, Direction.N, false);
-		putVertex(builder, this.format, this.minX, this.maxY, this.minZ, maxU, minV, Direction.N, false);
-		return builder.build();
+		return bakeFace(EnumFacing.NORTH, Direction.N.x, Direction.N.y, Direction.N.z,
+				this.maxX, this.maxY, this.minZ,
+				this.maxX, this.minY, this.minZ,
+				this.minX, this.minY, this.minZ,
+				this.minX, this.maxY, this.minZ,
+				1F - this.maxX, 1F - this.maxY, 1F - this.minX, 1F - this.minY);
 	}
 	
 	private void putVertex(UnpackedBakedQuad.Builder builder, VertexFormat format, float x, float y, float z, float u, float v, Direction face, boolean oppisite)
@@ -263,7 +245,9 @@ public final class ModelQuadBuilder
 			{
 			case POSITION:
 			{
-				builder.put(e, x, y, z, 1);
+				float[] xyz = {x,y,z};
+				this.transformer.transform(xyz);
+				builder.put(e, xyz[0], xyz[1], xyz[2], 1);
 				break;
 			}
 			case COLOR:
@@ -279,7 +263,7 @@ public final class ModelQuadBuilder
 			case NORMAL:
 			{
 				Vector3f vector3f = new Vector3f(normalX, normalY, normalZ);
-				this.transformer.transform(vector3f);
+				this.transformer.normal(vector3f);
 				if(!oppisite)
 				{
 					builder.put(e, vector3f.x, vector3f.y, vector3f.z, 0f);
@@ -299,9 +283,22 @@ public final class ModelQuadBuilder
 		}
 	}
 	
+	public CoordTransformer getTransformer()
+	{
+		return this.transformer;
+	}
 	
 	public VertexFormat getFormat()
 	{
 		return this.format;
+	}
+	
+	
+	public void resetOption()
+	{
+		this.renderXNeg = this.renderXPos = this.renderYNeg = this.renderYPos = this.renderZNeg = this.renderZPos = true;
+		this.red = this.green = this.blue = this.alpha = 1.0F;
+		this.renderOppisite = false;
+		this.transformer.normalize();
 	}
 }

@@ -13,21 +13,18 @@ import javax.vecmath.Tuple3d;
 import javax.vecmath.Tuple3f;
 
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3i;
 
 /**
  * @author ueyudiud
  */
 public class CoordTransformer
 {
-	double[]
-			oppisite  = {0.0, 0.0, 0.0},
-			rotation  = {0.0, 0.0, 0.0, 1.0},
-			scale     = {1.0, 1.0, 1.0},
-			transform = {0.0, 0.0, 0.0};
-	boolean changed = false;
-	Function<Tuple3d, Tuple3d> function = Function.identity();//If no change detected, use identity function.
+	double[] oppisite, rotation, scale, transform;
+	boolean changed;
+	Function<Tuple3d, Tuple3d> function;//If no change detected, use identity function.
 	
-	public CoordTransformer() { }
+	public CoordTransformer() { normalize(); }
 	CoordTransformer(double[] oppisite, double[] rotation, double[] scale, double[] transform)
 	{
 		this.oppisite = oppisite;
@@ -40,6 +37,17 @@ public class CoordTransformer
 	public CoordTransformer copy()
 	{
 		return new CoordTransformer(this.oppisite, this.rotation, this.scale, this.transform);
+	}
+	
+	public CoordTransformer normalize()
+	{
+		this.oppisite  = new double[]{0.0, 0.0, 0.0};
+		this.rotation  = new double[]{0.0, 0.0, 0.0, 1.0};
+		this.scale     = new double[]{1.0, 1.0, 1.0};
+		this.transform = new double[]{0.0, 0.0, 0.0};
+		this.changed   = false;
+		this.function  = Function.identity();
+		return this;
 	}
 	
 	public CoordTransformer multiple(CoordTransformer transformer)
@@ -171,6 +179,14 @@ public class CoordTransformer
 			};
 		}
 		return this.function;
+	}
+	
+	public EnumFacing transform(EnumFacing facing)
+	{
+		Vec3i vec = facing.getDirectionVec();
+		float[] fs = new float[]{vec.getX(), vec.getY(), vec.getZ()};
+		transform(fs);
+		return EnumFacing.getFacingFromVector(fs[0], fs[1], fs[2]);
 	}
 	
 	public float[] transform(float[] tuple)
