@@ -1,13 +1,12 @@
 package farcore.energy.electric.instance;
 
-import farcore.energy.electric.EnumCurrentType;
 import farcore.energy.electric.IElectricalElement;
 
 public class ElementResistance implements IElectricalElement
 {
 	private IElectricalHandlerHelper helper;
 	public final double resistance;
-
+	
 	public ElementResistance(double resistance)
 	{
 		this.resistance = resistance;
@@ -21,15 +20,15 @@ public class ElementResistance implements IElectricalElement
 	@Override
 	public void onUpdate(double voltage, double current)
 	{
-		if(helper != null)
+		if(this.helper != null)
 		{
-			helper.heatByCurrent(current * current / resistance);
+			this.helper.heatByCurrent(current * current / this.resistance);
 		}
 	}
 	
 	@Override
-	public double eResistance(EnumCurrentType type)
+	public double resistance()
 	{
-		return resistance;
+		return this.resistance;
 	}
 }

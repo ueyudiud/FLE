@@ -1,0 +1,61 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
+package farcore.handler;
+
+import farcore.FarCore;
+import farcore.lib.capability.IFluidHandler;
+import farcore.lib.util.Direction;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+/**
+ * The capabilities wrapper handler.
+ * @author ueyudiud
+ */
+public class FarCoreCapabilitiesHandler
+{
+	@SubscribeEvent
+	public void onCapabilityWraped(AttachCapabilitiesEvent.TileEntity event)
+	{
+		TileEntity tile = event.getTileEntity();
+		event.addCapability(new ResourceLocation(FarCore.ID, "capabilities"), new WrapperChecker(tile));
+	}
+	
+	static class WrapperChecker implements ICapabilityProvider
+	{
+		TileEntity tile;
+		
+		public WrapperChecker(TileEntity tile)
+		{
+			this.tile = tile;
+		}
+		
+		@Override
+		public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+		{
+			return
+					(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this.tile instanceof IFluidHandler && ((IFluidHandler) this.tile).shouldProviedeFluidIOFrom(Direction.of(facing)));
+		}
+		
+		@Override
+		public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+		{
+			return !hasCapability(capability, facing) ? null : (T) castCapability(capability, facing);
+		}
+		
+		@SuppressWarnings("unchecked")
+		private Object castCapability(Capability capability, EnumFacing facing)
+		{
+			if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return new IFluidHandler.FluidHandlerWrapper(this.tile, Direction.of(facing));
+			return null;
+		}
+	}
+}

@@ -22,6 +22,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 {
+	protected static final Vector2f STILL = new Vector2f(0.0F, 0.0F);
+	
 	private static final float UP_LIGHT_MULTIPLER = 1.0F;
 	private static final float DOWN_LIGHT_MULTIPLER = 0.5F;
 	private static final float X_LIGHT_MULTIPLER = 0.6F;
@@ -48,6 +50,11 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	protected TextureAtlasSprite getTexture(IBlockState state)
 	{
 		return Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager().getBlockModelShapes().getTexture(state);
+	}
+	
+	protected TextureAtlasSprite getStillTexture(FluidStack stack)
+	{
+		return getTexture(stack.getFluid().getStill(stack));
 	}
 	
 	protected TextureAtlasSprite getTexture(ResourceLocation location)
@@ -106,7 +113,7 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 			float u1, u2, v1, v2;
 			//			if(L.similar(flow.x, 0F) && L.similar(flow.y, 0F))
 			{
-				icon = getTexture(stack.getFluid().getStill(stack));
+				icon = getStillTexture(stack);
 				u1 = getU(icon, (float) xMin);
 				u2 = getU(icon, (float) xMax);
 				v1 = getV(icon, (float) zMin);

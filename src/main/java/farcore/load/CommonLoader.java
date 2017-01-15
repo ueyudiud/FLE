@@ -26,6 +26,7 @@ import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.BlockThermalDebug;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
+import farcore.handler.FarCoreCapabilitiesHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.handler.FarCoreItemHandler;
 import farcore.handler.FarCoreKeyHandler;
@@ -122,6 +123,7 @@ public class CommonLoader
 		registerForgeEventListener(FarCoreEnergyHandler.getHandler());
 		registerForgeEventListener(new FarCoreWorldHandler());
 		registerForgeEventListener(new FarCoreItemHandler());
+		registerForgeEventListener(new FarCoreCapabilitiesHandler());
 		//Register energy nets.
 		bar.step("Add Energy Nets");
 		addNet(ThermalNet.instance);

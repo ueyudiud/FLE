@@ -10,6 +10,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import farcore.FarCore;
+import farcore.lib.capability.IFluidHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.util.Direction;
 import farcore.lib.util.IDataChecker;
@@ -17,6 +18,7 @@ import farcore.lib.util.Log;
 import farcore.lib.world.IModifiableCoord;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public interface IDitchTile extends IModifiableCoord
+public interface IDitchTile extends IModifiableCoord, IFluidHandler
 {
 	public static final class DitchBlockHandler implements IDataChecker<Mat>
 	{
@@ -114,4 +116,90 @@ public interface IDitchTile extends IModifiableCoord
 	boolean isLinked(Direction direction);
 	
 	void setLink(Direction direction, boolean state);
+	
+	@Override
+	default boolean canFill(Direction direction, FluidStack stack)
+	{
+		switch (direction)
+		{
+		case D :
+		case A :
+		case B :
+			return false;
+		case Q :
+			return getTank().canFillFluidType(stack);
+		default:
+			return isLinked(direction) && getTank().canFillFluidType(stack);
+		}
+	}
+	
+	@Override
+	default boolean canDrain(Direction direction, FluidStack stack)
+	{
+		switch (direction)
+		{
+		case D :
+		case A :
+		case B :
+			return false;
+		case Q :
+			return getTank().canDrainFluidType(stack);
+		default:
+			return isLinked(direction) && getTank().canDrainFluidType(stack);
+		}
+	}
+	
+	@Override
+	default SidedFluidIOProperty getProperty(Direction direction)
+	{
+		return new IFluidHandler.SidedFluidIOTankPropertyWrapper(getTank());
+	}
+	
+	@Override
+	default int fill(Direction direction, FluidStack resource, boolean process)
+	{
+		switch (direction)
+		{
+		case D :
+		case A :
+		case B :
+			return 0;
+		case Q :
+			return getTank().fill(resource, process);
+		default:
+			return !isLinked(direction) ? 0 : getTank().fill(resource, process);
+		}
+	}
+	
+	@Override
+	default FluidStack drain(Direction direction, FluidStack required, boolean process)
+	{
+		switch (direction)
+		{
+		case D :
+		case A :
+		case B :
+			return null;
+		case Q :
+			return getTank().drain(required, process);
+		default:
+			return !isLinked(direction) ? null : getTank().drain(required, process);
+		}
+	}
+	
+	@Override
+	default FluidStack drain(Direction direction, int maxAmount, boolean process)
+	{
+		switch (direction)
+		{
+		case D :
+		case A :
+		case B :
+			return null;
+		case Q :
+			return getTank().drain(maxAmount, process);
+		default:
+			return !isLinked(direction) ? null : getTank().drain(maxAmount, process);
+		}
+	}
 }

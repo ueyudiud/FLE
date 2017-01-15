@@ -32,13 +32,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,78 +48,22 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	
 	private static final int[] Connect = {0x0, 0x1, 0x2, 0x3};
 	
-	private class DitchSidedHandler implements IFluidHandler
-	{
-		final EnumFacing facing;
-		
-		DitchSidedHandler(EnumFacing facing)
-		{
-			this.facing = facing;
-		}
-		
-		@Override
-		public IFluidTankProperties[] getTankProperties()
-		{
-			return TEDitch.this.tank.getTankProperties();
-		}
-		
-		@Override
-		public int fill(FluidStack resource, boolean doFill)
-		{
-			int amount = TEDitch.this.tank.fill(resource, doFill);
-			if(doFill && amount > 0)
-			{
-				TEDitch.this.flowAmount[this.facing.getHorizontalIndex()] -= amount;
-				syncToNearby();
-			}
-			return amount;
-		}
-		
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain)
-		{
-			FluidStack stack = TEDitch.this.tank.drain(resource, doDrain);
-			if(doDrain && stack != null)
-			{
-				TEDitch.this.flowAmount[this.facing.getHorizontalIndex()] += stack.amount;
-				syncToNearby();
-			}
-			return stack;
-		}
-		
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain)
-		{
-			FluidStack stack = TEDitch.this.tank.drain(maxDrain, doDrain);
-			if(doDrain && stack != null)
-			{
-				TEDitch.this.flowAmount[this.facing.getHorizontalIndex()] += stack.amount;
-				syncToNearby();
-			}
-			return stack;
-		}
-	}
-	
-	private int[] flowBuffer = new int[4];
-	private int[] flowAmount = {0, 0, 0, 0};
-	private int[] lastFlowAmount = {0, 0, 0, 0};
+	private int[]
+			flowBuffer = new int[4],
+			flowAmount = {0, 0, 0, 0},
+			lastFlowAmount = {0, 0, 0, 0};
 	private byte[] lastConnectionState = new byte[4];
 	
 	private Mat material = Mat.VOID;
 	private DitchFactory factory = DitchBlockHandler.getFactory(null);
 	private FluidTank tank;
-	private DitchSidedHandler[] handlers;
 	
 	public TEDitch()
 	{
 		this.tank = new FluidTank(0);
-		this.handlers = new DitchSidedHandler[4];
-		for(EnumFacing facing : EnumFacing.HORIZONTALS)
-		{
-			this.handlers[facing.getHorizontalIndex()] = new DitchSidedHandler(facing);
-		}
 		for(int i : Connect) enable(i);
 	}
+	
 	public TEDitch(Mat material)
 	{
 		this();
@@ -354,7 +295,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	@Override
 	public boolean isLinked(Direction direction)
 	{
-		return is(Connect[direction.horizontalOrdinal]);
+		return direction.horizontal ? is(Connect[direction.horizontalOrdinal]) : direction == Direction.U;
 	}
 	
 	@Override
@@ -380,20 +321,6 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	public TextureAtlasSprite getMaterialIcon()
 	{
 		return this.factory.getMaterialIcon(this.material);
-	}
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-	}
-	
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	{
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing.getHorizontalIndex() != -1)
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.handlers[facing.getHorizontalIndex()]);
-		return super.getCapability(capability, facing);
 	}
 	
 	@Override
@@ -430,5 +357,38 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 		default:
 			break;
 		}
+	}
+	
+	@Override
+	public int fill(Direction direction, FluidStack resource, boolean process)
+	{
+		int amount = IDitchTile.super.fill(direction, resource, process);
+		if(process && direction.horizontal)
+		{
+			this.flowAmount[direction.horizontalOrdinal] -= amount;
+		}
+		return amount;
+	}
+	
+	@Override
+	public FluidStack drain(Direction direction, FluidStack required, boolean process)
+	{
+		FluidStack stack = IDitchTile.super.drain(direction, required, process);
+		if(process && direction.horizontal)
+		{
+			this.flowAmount[direction.horizontalOrdinal] += FluidStacks.getAmount(stack);
+		}
+		return stack;
+	}
+	
+	@Override
+	public FluidStack drain(Direction direction, int maxAmount, boolean process)
+	{
+		FluidStack stack = IDitchTile.super.drain(direction, maxAmount, process);
+		if(process && direction.horizontal)
+		{
+			this.flowAmount[direction.horizontalOrdinal] += FluidStacks.getAmount(stack);
+		}
+		return stack;
 	}
 }

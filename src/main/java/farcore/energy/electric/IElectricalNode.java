@@ -25,8 +25,7 @@ public interface IElectricalNode
 	 * resistance after voltage source).<br>
 	 * The far core use this voltage as approximation
 	 * of real battery output voltage.<br>
-	 * @param type
 	 * @return
 	 */
-	double eVoltage(EnumCurrentType type);
+	double voltage();
 }

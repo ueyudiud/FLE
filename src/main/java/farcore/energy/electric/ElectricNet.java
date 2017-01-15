@@ -8,12 +8,10 @@ import java.util.Map.Entry;
 
 import farcore.FarCore;
 import farcore.energy.IEnergyNet;
-import farcore.energy.electric.util.EquationResolver;
-import farcore.energy.electric.util.RoutesAC;
-import farcore.energy.electric.util.RoutesAC.Link;
-import farcore.energy.electric.util.RoutesAC.Node;
-import farcore.energy.electric.util.RoutesAC.NodeReal;
-import farcore.energy.electric.util.RoutesAC.NodeRebuild;
+import farcore.energy.electric.util.ElectricNetCaculator;
+import farcore.energy.electric.util.NodeReal;
+import farcore.energy.electric.util.NodeRebuild;
+import farcore.energy.electric.util.Routes;
 import farcore.lib.collection.IntegerArray;
 import farcore.lib.util.EnumModifyFlag;
 import farcore.lib.util.Log;
@@ -38,36 +36,36 @@ public class ElectricNet implements IEnergyNet
 	@Override
 	public void add(Object tile)
 	{
-		if(tile instanceof IACHandler)
+		if(tile instanceof IElectricalHandler)
 		{
-			getNet(((IACHandler) tile).world(), false).add((IACHandler) tile);
+			getNet(((IElectricalHandler) tile).world(), false).add((IElectricalHandler) tile);
 		}
 	}
 	
 	@Override
 	public void remove(Object tile)
 	{
-		if(tile instanceof IACHandler)
+		if(tile instanceof IElectricalHandler)
 		{
-			getNet(((IACHandler) tile).world(), false).remove((IACHandler) tile);
+			getNet(((IElectricalHandler) tile).world(), false).remove((IElectricalHandler) tile);
 		}
 	}
 	
 	@Override
 	public void mark(Object tile)
 	{
-		if(tile instanceof IACHandler)
+		if(tile instanceof IElectricalHandler)
 		{
-			getNet(((IACHandler) tile).world(), false).mark((IACHandler) tile);
+			getNet(((IElectricalHandler) tile).world(), false).mark((IElectricalHandler) tile);
 		}
 	}
 	
 	@Override
 	public void reload(Object tile)
 	{
-		if(tile instanceof IACHandler)
+		if(tile instanceof IElectricalHandler)
 		{
-			getNet(((IACHandler) tile).world(), false).reload((IACHandler) tile);
+			getNet(((IElectricalHandler) tile).world(), false).reload((IElectricalHandler) tile);
 		}
 	}
 	
@@ -100,24 +98,23 @@ public class ElectricNet implements IEnergyNet
 		
 		private volatile boolean isUpdating = false;
 		
-		private boolean coefficientChanged = false;
+		//		private boolean coefficientChanged = false;
 		private boolean structureChanged = false;
 		
 		private final World world;
 		private final IntegerArray cache = new IntegerArray(5);
-		private final EquationResolver resolver = new EquationResolver();
-		private final RoutesAC routes = new RoutesAC();
-		private final List<IACHandler> list = new ArrayList();
-		private final List<IACHandler> routeChangedList = new ArrayList();
-		private final Map<IACHandler, EnumModifyFlag> cacheChangedList = new HashMap();
-		private final List<Double> voltageCache = new ArrayList();
+		private final ElectricNetCaculator resolver = new ElectricNetCaculator();
+		private final Routes routes = new Routes();
+		private final List<IElectricalHandler> list = new ArrayList();
+		private final List<IElectricalHandler> routeChangedList = new ArrayList();
+		private final Map<IElectricalHandler, EnumModifyFlag> cacheChangedList = new HashMap();
 		
 		public Local(World world)
 		{
 			this.world = world;
 		}
 		
-		public void add(IACHandler tile)
+		public void add(IElectricalHandler tile)
 		{
 			if(this.isUpdating)
 			{
@@ -129,14 +126,14 @@ public class ElectricNet implements IEnergyNet
 			}
 		}
 		
-		private void addUnsafe(IACHandler tile)
+		private void addUnsafe(IElectricalHandler tile)
 		{
 			this.list.add(tile);
 			this.routes.addHandler(tile);
 			this.structureChanged = true;
 		}
 		
-		public void remove(IACHandler tile)
+		public void remove(IElectricalHandler tile)
 		{
 			if(this.isUpdating)
 			{
@@ -148,7 +145,7 @@ public class ElectricNet implements IEnergyNet
 			}
 		}
 		
-		private void removeUnsafe(IACHandler tile)
+		private void removeUnsafe(IElectricalHandler tile)
 		{
 			this.list.remove(tile);
 			this.routes.removeHandler(tile);
@@ -157,14 +154,6 @@ public class ElectricNet implements IEnergyNet
 		
 		@Override
 		public void reload(IElectricalHandler tile)
-		{
-			if(tile instanceof IACHandler)
-			{
-				reload((IACHandler) tile);
-			}
-		}
-		
-		public void reload(IACHandler tile)
 		{
 			if(this.isUpdating)
 			{
@@ -184,15 +173,14 @@ public class ElectricNet implements IEnergyNet
 			{
 				refind();
 			}
-			else if(this.coefficientChanged)
-			{
-				recalculate();
-			}
-			this.structureChanged = this.coefficientChanged = false;
+			this.structureChanged = false;
 			this.isUpdating = true;
 			try
 			{
-				this.routes.onUpdate(this.voltageCache);
+				for(IElectricalHandler handler : this.list)
+				{
+					handler.onElectricNetTicking(this);
+				}
 			}
 			catch(Exception exception)
 			{
@@ -201,7 +189,7 @@ public class ElectricNet implements IEnergyNet
 					Log.error("Fail to update energy net.", exception);
 				}
 			}
-			for(Entry<IACHandler, EnumModifyFlag> entry : this.cacheChangedList.entrySet())
+			for(Entry<IElectricalHandler, EnumModifyFlag> entry : this.cacheChangedList.entrySet())
 			{
 				switch(entry.getValue())
 				{
@@ -214,7 +202,7 @@ public class ElectricNet implements IEnergyNet
 					addUnsafe(entry.getKey());
 					break;
 				case mark :
-					this.coefficientChanged = true;
+					//					this.coefficientChanged = true;
 					break;
 				}
 			}
@@ -230,33 +218,11 @@ public class ElectricNet implements IEnergyNet
 			List<NodeRebuild> list = this.routes.rebuildNodes;
 			int size = list.size();
 			if(size <= 1) return;//If only has one electrical element, will not calculate.
-			this.resolver.rewind(size);
-			double[] I = new double[size];
-			
-			//Get all coefficients of matrix.
-			for(int y = 0; y < size; ++y)
-			{
-				Node node = list.get(y);
-				Map<Node, Link> links = node.links();
-				I[y] = getBasicCurrent(links, node);
-				for(int x = 0; x < size; ++x)
-				{
-					this.resolver.push(getCoefficient(list, links, x, y));
-				}
-				this.resolver.enter();
-			}
-			this.resolver.finalized();
-			//Solve equations.
-			if(!this.resolver.solve(I)) throw new RuntimeException("Invalid solving!");
-			//Set voltage cache to each node.
-			this.voltageCache.clear();
-			for(int i = 0; i < size; ++i)
-			{
-				this.voltageCache.add(i, I[i]);
-			}
+			this.resolver.refreshNodes(this.routes);
 			this.routes.resetChanging();
 		}
 		
+		@Deprecated
 		private void recalculate()
 		{
 			List<NodeReal> changedNodes = this.routes.getChangedNodes();
@@ -265,7 +231,7 @@ public class ElectricNet implements IEnergyNet
 			refind();
 		}
 		
-		public void mark(IACHandler tile)
+		public void mark(IElectricalHandler tile)
 		{
 			if(this.isUpdating)
 			{
@@ -277,78 +243,15 @@ public class ElectricNet implements IEnergyNet
 			}
 		}
 		
-		private void markUnsafe(IACHandler tile)
+		private void markUnsafe(IElectricalHandler tile)
 		{
-			this.coefficientChanged = true;
+			//			this.coefficientChanged = true;
 		}
 		
-		/**
-		 * Get basic current of each node, add in matrix.
-		 * @param links
-		 * @param node
-		 * @return
-		 */
-		private double getBasicCurrent(Map<Node, Link> links, Node node)
+		public void updateNetBody(float tickToNext)
 		{
-			double ret = 0;
-			double V = node.voltage();
-			double V1;
-			if(links.size() != 1)
-			{
-				if(V == 0) return ret;
-			}
-			else if(V == 0)
-			{
-				V = -1D;
-			}
-			else
-			{
-				for(Entry<Node, Link> entry : links.entrySet())
-				{
-					V1 = entry.getKey().voltage();
-					ret -= V - V1 / entry.getValue().resistance();
-				}
-			}
-			return ret;
-		}
-		
-		/**
-		 *  The equation used Kirchhoff laws, the independent variable is
-		 *  each node voltage.<br>
-		 *  The coefficient is resistance of each node.<br>
-		 *  Example:
-		 *    U1 * G(total) - U2 * G12 - U3 * G13 = 0
-		 *  - U1 * G21 + U2 * G(total) - U3 * G31 = 0
-		 *  - U1 * G31 - U2 * G31 - U3 * G(total) = 0<br>
-		 *  This method is to get coefficient of each element.
-		 *  @param links All links of node.
-		 *  @param x
-		 *  @param y
-		 *  @param node The select node (Of y size).
-		 *  @return The coefficient added in matrix.
-		 */
-		private double getCoefficient(List<NodeRebuild> list, Map<Node, Link> links, int x, int y)
-		{
-			double cellData = 0;
-			if(x == y)
-			{
-				for(Entry<Node, Link> entry : links.entrySet())
-				{
-					cellData -= 1.0 / entry.getValue().resistance();
-				}
-			}
-			else
-			{
-				for(Entry<Node, Link> entry : links.entrySet())
-				{
-					if(list.indexOf(entry.getKey()) == x)
-					{
-						cellData += 1.0 / entry.getValue().resistance();
-						break;
-					}
-				}
-			}
-			return cellData;
+			this.resolver.caculate();
+			this.routes.onUpdate(this.resolver.getResult());
 		}
 	}
 }

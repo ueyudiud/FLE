@@ -7,33 +7,39 @@ public class EquationResolver
 	int x;
 	int y;
 	int nZ;
-
+	
 	public void rewind(int size)
 	{
-		A = new double[size][size];
-		nZ = 0;
+		this.A = new double[size][size];
+		this.nZ = 0;
 	}
 	
 	public void push(double v)
 	{
 		if (v >= EPSILON)
 		{
-			nZ += 1;
+			this.nZ ++;
 		}
-		A[y][x] = v;
-		x += 1;
+		this.A[this.y][this.x] = v;
+		this.x ++;
 	}
-
+	
+	public void push(double v, int index)
+	{
+		this.A[this.y][index] = v;
+		enter();
+	}
+	
 	public void enter()
 	{
-		y += 1;
-		x = 0;
+		this.y ++;
+		this.x = 0;
 	}
 	
 	public void finalized()
 	{
-		x = -1;
-		y = -1;
+		this.x = -1;
+		this.y = -1;
 	}
 	
 	public boolean solve(double[] b)
@@ -105,7 +111,7 @@ public class EquationResolver
 		}
 		return x;
 	}
-
+	
 	/**
 	 * Use in complex number.
 	 * @param A

@@ -4,18 +4,19 @@
 
 package fle.core.client.render;
 
-import javax.vecmath.Vector2f;
+import static farcore.util.Maths.lerp;
 
 import org.lwjgl.opengl.GL11;
 
 import farcore.lib.tesr.TESRBase;
 import farcore.lib.util.Direction;
-import farcore.util.Maths;
+import fle.api.tile.IDitchTile;
 import fle.core.tile.ditchs.TEDitch;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,8 +28,10 @@ public class TESRDitch extends TESRBase<TEDitch>
 {
 	private static final float WEIGHT1 = 8.0F / 16.0F;
 	private static final float WEIGHT2 = 2.0F / 16.0F;
-	private static final float POS1 = 7.0F / 16.0F;
-	private static final float POS2 = 9.0F / 16.0F;
+	private static final float P1 = 6.0F / 16.0F;
+	private static final float P2 = 10.0F / 16.0F;
+	private static final float P3 = 0.0F / 16.0F;
+	private static final float P4 = 16.0F / 16.0F;
 	
 	@Override
 	public void renderTileEntityAt(TEDitch tile, double x, double y, double z, float partialTicks, int destroyStage)
@@ -38,23 +41,72 @@ public class TESRDitch extends TESRBase<TEDitch>
 		GL11.glTranslated(x, y, z);
 		GlStateManager.enableBlend();
 		float height0 = tile.getFlowHeight();
-		float height1 = getFlowHeight(height0, tile, Direction.N);//--Z
-		float height2 = getFlowHeight(height0, tile, Direction.S);//++Z
-		float height3 = getFlowHeight(height0, tile, Direction.W);//--X
-		float height4 = getFlowHeight(height0, tile, Direction.E);//++X
-		float ha = Maths.lerp(height0, height1, WEIGHT2);
-		float hb = Maths.lerp(height0, height2, WEIGHT2);
-		float hc = Maths.lerp(height0, height3, WEIGHT2);
-		float hd = Maths.lerp(height0, height4, WEIGHT2);
+		float
+		height1 = getFlowHeight(height0, tile, Direction.N),//--Z
+		height2 = getFlowHeight(height0, tile, Direction.S),//++Z
+		height3 = getFlowHeight(height0, tile, Direction.W),//--X
+		height4 = getFlowHeight(height0, tile, Direction.E);//++X
 		FluidTank tank = tile.getTank();
 		if(tank.getFluid() != null)
 		{
 			FluidStack stack = tank.getFluid();
-			setColor(stack);
-			TextureAtlasSprite icon = getTexture(stack.getFluid().getStill(stack));
-			renderFluidFace(0F, 0F, 1F, 1F,
-					(ha + hc) / 2F, (hb + hc) / 2F, (hb + hd) / 2F, (hb + hc) / 2F,
-					stack, new Vector2f(1.0F, 0.0F));
+			float
+			ha = lerp(height0, height1, WEIGHT2),
+			hb = lerp(height0, height2, WEIGHT2),
+			hc = lerp(height0, height3, WEIGHT2),
+			hd = lerp(height0, height4, WEIGHT2),
+			
+			y1 = (ha + hc) * .125F + .25F,//x- z-
+			y2 = (hb + hc) * .125F + .25F,//x- z+
+			y3 = (hb + hd) * .125F + .25F,//x+ z+
+			y4 = (hb + hc) * .125F + .25F,//x+ z-
+			
+			y5 = (height0 + height1) * .125F + .25F,
+			y6 = (height0 + height2) * .125F + .25F,
+			y7 = (height0 + height3) * .125F + .25F,
+			y8 = (height0 + height4) * .125F + .25F;
+			
+			renderFluidFace(P1, P1, P2, P2, y1, y2, y3, y4, stack, STILL);
+			switch(tile.getLinkState(Direction.N))
+			{
+			case 1 :
+				renderFluidFace(P1, P3, P2, P1, y5, y1, y4, y5, stack, STILL);
+				break;
+			case 2 :
+				renderFluidFace(P1, P3, P2, P1, y5, y1, y4, y5, stack, STILL);
+				break;
+			default: break;
+			}
+			switch(tile.getLinkState(Direction.S))
+			{
+			case 1 :
+				renderFluidFace(P1, P2, P2, P4, y2, y6, y6, y3, stack, STILL);
+				break;
+			case 2 :
+				renderFluidFace(P1, P2, P2, P4, y2, y6, y6, y3, stack, STILL);
+				break;
+			default: break;
+			}
+			switch(tile.getLinkState(Direction.W))
+			{
+			case 1 :
+				renderFluidFace(P3, P1, P1, P2, y7, y7, y1, y2, stack, STILL);
+				break;
+			case 2 :
+				renderFluidFace(P3, P1, P1, P2, y7, y7, y1, y2, stack, STILL);
+				break;
+			default: break;
+			}
+			switch(tile.getLinkState(Direction.E))
+			{
+			case 1 :
+				renderFluidFace(P2, P1, P4, P2, y3, y4, y8, y8, stack, STILL);
+				break;
+			case 2 :
+				renderFluidFace(P2, P1, P4, P2, y3, y4, y8, y8, stack, STILL);
+				break;
+			default: break;
+			}
 		}
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
@@ -63,22 +115,21 @@ public class TESRDitch extends TESRBase<TEDitch>
 	
 	private float getFlowHeight(float base, TEDitch tile, Direction side)
 	{
-		return base;
-		//		if(!tile.isLinked(side)) return base;
-		//		TileEntity t1 = tile.getTE(side);
-		//		if(t1 instanceof IDitchTile)
-		//		{
-		//			return ((IDitchTile) t1).getFlowHeight();
-		//		}
-		//		else if(t1.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()) &&
-		//				t1.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()).getTankProperties().length > 0)
-		//		{
-		//			return Math.max(base - 0.0625F, 0F);
-		//		}
-		//		else if(t1 instanceof IFluidHandler)
-		//		{
-		//			return Math.max(base - 0.0625F, 0F);
-		//		}
-		//		else return base;
+		if(!tile.isLinked(side)) return base;
+		TileEntity t1 = tile.getTE(side);
+		if(t1 == null)
+		{
+			return base;
+		}
+		else if(t1 instanceof IDitchTile)
+		{
+			return ((IDitchTile) t1).getFlowHeight();
+		}
+		else if(t1.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()) &&
+				t1.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()).getTankProperties().length > 0)
+		{
+			return Math.max(base - 0.0625F, base * .25F);
+		}
+		else return base;
 	}
 }

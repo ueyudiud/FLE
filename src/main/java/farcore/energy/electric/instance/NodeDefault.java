@@ -1,6 +1,5 @@
 package farcore.energy.electric.instance;
 
-import farcore.energy.electric.EnumCurrentType;
 import farcore.energy.electric.IElectricalNode;
 
 public class NodeDefault implements IElectricalNode
@@ -11,7 +10,7 @@ public class NodeDefault implements IElectricalNode
 	public NodeDefault(int idx, int...links)
 	{
 		this.idx = idx;
-		link = links;
+		this.link = links;
 	}
 	
 	@Override
@@ -22,17 +21,17 @@ public class NodeDefault implements IElectricalNode
 	@Override
 	public int getIndex()
 	{
-		return idx;
+		return this.idx;
 	}
 	
 	@Override
 	public int[] link()
 	{
-		return link;
+		return this.link;
 	}
-
+	
 	@Override
-	public double eVoltage(EnumCurrentType type)
+	public double voltage()
 	{
 		return 0;
 	}
