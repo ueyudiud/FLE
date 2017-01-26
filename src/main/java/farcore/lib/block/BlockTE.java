@@ -33,7 +33,7 @@ public abstract class BlockTE extends BlockSingleTE
 //, ITileEntityProvider
 {
 	private boolean registerTE;
-
+	
 	public BlockTE(String name, Material materialIn)
 	{
 		super(name, materialIn);
@@ -55,10 +55,10 @@ public abstract class BlockTE extends BlockSingleTE
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
-		if(registerTE)
+		if(this.registerTE)
 		{
 			String path = getRegistryName().getResourceDomain() + "." + getRegistryName().getResourcePath();
-			for(TETag tag : property_TE.getAllowedValues())
+			for(TETag tag : this.property_TE.getAllowedValues())
 			{
 				tag.registerTileEntity(path);
 			}
@@ -66,17 +66,17 @@ public abstract class BlockTE extends BlockSingleTE
 	}
 	
 	public PropertyTE property_TE;
-
+	
 	protected abstract boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register);
 	
 	protected final PropertyTE createTEProperty()
 	{
 		IRegister<Class<? extends TileEntity>> map = new Register();
 		map.register(0, "void", TELossTile.class);
-		registerTE = registerTileEntities(map);
-		return property_TE = PropertyTE.create("tile", map);
+		this.registerTE = registerTileEntities(map);
+		return this.property_TE = PropertyTE.create("tile", map);
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
@@ -86,13 +86,13 @@ public abstract class BlockTE extends BlockSingleTE
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return state.withProperty(property_TE, property_TE.parseValue("void").get());
+		return state.withProperty(this.property_TE, this.property_TE.parseValue("void").get());
 	}
 	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntity tile = state.getValue(property_TE).newInstance();
+		TileEntity tile = state.getValue(this.property_TE).newInstance();
 		worldIn.setTileEntity(pos, tile);
 		if(tile instanceof ITB_BlockAdded)
 		{
@@ -101,28 +101,28 @@ public abstract class BlockTE extends BlockSingleTE
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
-			int meta, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
+			float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return property_TE.withProperty(getDefaultState(), meta);
+		return this.property_TE.withProperty(getDefaultState(), stackIn.getMetadata());
 	}
-
+	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
-		return property_TE.withProperty(state, worldIn.getTileEntity(pos));
+		return this.property_TE.withProperty(state, worldIn.getTileEntity(pos));
 	}
-
+	
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		if(ItemBlockBase.placeflag) return state.getValue(property_TE).newInstance();
+		if(ItemBlockBase.placeflag) return state.getValue(this.property_TE).newInstance();
 		return new TELossTile();//Only for client, the server not need use this method to create tile entity.
 	}
 	
@@ -130,7 +130,7 @@ public abstract class BlockTE extends BlockSingleTE
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(TETag tag : property_TE.getAllowedValues())
+		for(TETag tag : this.property_TE.getAllowedValues())
 		{
 			if(tag.isValidTag())
 			{
@@ -138,7 +138,7 @@ public abstract class BlockTE extends BlockSingleTE
 			}
 		}
 	}
-
+	
 	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
@@ -152,13 +152,13 @@ public abstract class BlockTE extends BlockSingleTE
 		if(tile instanceof ITP_Drops)
 			return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
 		List<ItemStack> list = new ArrayList();
-		list.add(new ItemStack(this, 1, property_TE.getMetaFromState(state)));
+		list.add(new ItemStack(this, 1, this.property_TE.getMetaFromState(state)));
 		return list;
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return property_TE.getTileFromMeta(meta);
+		return this.property_TE.getTileFromMeta(meta);
 	}
 }

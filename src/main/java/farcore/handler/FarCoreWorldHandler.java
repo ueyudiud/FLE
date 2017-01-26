@@ -1,7 +1,6 @@
 package farcore.handler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,11 +11,8 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.FarCore;
 import farcore.asm.LightFix;
-import farcore.lib.block.IExtendedDataBlock;
 import farcore.lib.block.IUpdateDelayBlock;
-import farcore.lib.net.world.PacketCustomChunkData;
 import farcore.lib.util.Log;
 import farcore.lib.world.IObjectInWorld;
 import farcore.util.U;
@@ -25,7 +21,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -37,11 +32,9 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -67,17 +60,17 @@ public class FarCoreWorldHandler
 		}
 		NotifyEntry(IBlockState changed, BlockPos pos, int x, int y, int z)
 		{
-			changedBlock = changed;
-			source = pos;
+			this.changedBlock = changed;
+			this.source = pos;
 			this.x = x;
 			this.y = y;
 			this.z = z;
 		}
-
+		
 		@Override
 		public int hashCode()
 		{
-			return x << 16 ^ y << 8 ^ z;
+			return this.x << 16 ^ this.y << 8 ^ this.z;
 		}
 		
 		@Override
@@ -86,9 +79,9 @@ public class FarCoreWorldHandler
 			NotifyEntry entry;
 			return obj == this ? true :
 				!(obj instanceof NotifyEntry) ? false :
-					(entry = (NotifyEntry) obj).x == x &&
-					entry.y == y &&
-					entry.z == z;
+					(entry = (NotifyEntry) obj).x == this.x &&
+					entry.y == this.y &&
+					entry.z == this.z;
 		}
 	}
 	
@@ -98,15 +91,15 @@ public class FarCoreWorldHandler
 	private static final String key = "objsinw";
 	private static Map<Integer, List<IObjectInWorld>> objects = new HashMap();
 	private static Map<Integer, List<NotifyEntry>> updatePos = new HashMap();
-
+	
 	private static Map<Integer, List<IObjectInWorld>> unlistedObjects = new HashMap();
-
+	
 	public static void registerObject(String id, Class<? extends IObjectInWorld> clazz)
 	{
 		OBJECTS_TO_ID.put(clazz, id);
 		ID_TO_OBJECTS.put(id, clazz);
 	}
-
+	
 	public static List<IObjectInWorld> getObjectInRange(World world, BlockPos pos, double range)
 	{
 		return getObjectInRange(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, range);
@@ -127,12 +120,12 @@ public class FarCoreWorldHandler
 		}
 		return list;
 	}
-
+	
 	public static void putNewObjectInWorld(IObjectInWorld world)
 	{
 		farcore.util.L.put(objects, world.world().provider.getDimension(), world);
 	}
-
+	
 	public static void markBlockForUpdate(World world, Collection<NotifyEntry> pos)
 	{
 		U.Worlds.getListFromWorldDimention(updatePos, world, true).addAll(pos);
@@ -194,7 +187,7 @@ public class FarCoreWorldHandler
 			farcore.util.L.put(unlistedObjects, dim, removed);
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onUpdate(TickEvent.WorldTickEvent event)
 	{
@@ -214,7 +207,6 @@ public class FarCoreWorldHandler
 		{
 			NBTTagCompound nbt = event.getData().getCompoundTag(key);
 			loadOIW(event.getWorld(), event.getChunk(), nbt);
-			loadBlockState(event.getWorld(), event.getChunk(), nbt);
 		}
 	}
 	
@@ -223,17 +215,9 @@ public class FarCoreWorldHandler
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		saveOIW(event.getWorld(), event.getChunk(), nbt);
-		saveBlockState(event.getWorld(), event.getChunk(), nbt);
 		event.getData().setTag(key, nbt);
 	}
 	
-	@SubscribeEvent
-	public void onPlayerWatch(ChunkWatchEvent.Watch event)
-	{
-		EntityPlayerMP player = event.getPlayer();
-		FarCore.network.sendLargeToPlayer(new PacketCustomChunkData(player.worldObj, event.getChunk(), CACHE), player);
-	}
-
 	public void loadOIW(World world, Chunk chunk, NBTTagCompound nbt)
 	{
 		if(world.getWorldType() == WorldType.DEBUG_WORLD) return;
@@ -329,85 +313,6 @@ public class FarCoreWorldHandler
 		}
 	}
 	
-	public void loadBlockState(World world, Chunk chunk, NBTTagCompound nbt)
-	{
-		if(world.getWorldType() == WorldType.DEBUG_WORLD) return;
-		if(nbt.hasKey("edb"))
-		{
-			int[] array = nbt.getIntArray("edb");
-			if(array.length != CHUNK_LENGTH)
-				throw new RuntimeException("The block state array length is not valid length, the nbt might broken!");
-			int index = 0;
-			for(int i = 0; i < 16; ++i)
-			{
-				ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[i];
-				if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
-				{
-					for(int i1 = 0; i1 < 16; ++i1)
-					{
-						for(int j = 0; j < 16; ++j)
-						{
-							for(int k = 0; k < 16; ++k)
-							{
-								IBlockState state = extendedblockstorage.get(j, i1, k);
-								if(state.getBlock() instanceof IExtendedDataBlock)
-								{
-									state = ((IExtendedDataBlock) state.getBlock()).getStateFromData(array[index]);
-									extendedblockstorage.set(j, i1, k, state);
-								}
-								++index;
-							}
-						}
-					}
-				}
-				else
-				{
-					index += 0x1000;
-				}
-			}
-		}
-	}
-
-	public void saveBlockState(World world, Chunk chunk, NBTTagCompound nbt)
-	{
-		if(world.getWorldType() == WorldType.DEBUG_WORLD) return;
-		int[] data = CACHE;
-		boolean save = false;
-		Arrays.fill(data, 0);
-		int index = 0;
-		for(int i = 0; i < 16; ++i)
-		{
-			ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[i];
-			if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
-			{
-				for(int i1 = 0; i1 < 16; ++i1)
-				{
-					for(int j = 0; j < 16; ++j)
-					{
-						for(int k = 0; k < 16; ++k)
-						{
-							IBlockState state = extendedblockstorage.get(j, i1, k);
-							if(state.getBlock() instanceof IExtendedDataBlock)
-							{
-								save = true;
-								data[index] = ((IExtendedDataBlock) state.getBlock()).getDataFromState(state);
-							}
-							++index;
-						}
-					}
-				}
-			}
-			else
-			{
-				index += 0x1000;
-			}
-		}
-		if(save)
-		{
-			nbt.setIntArray("edb", data.clone());
-		}
-	}
-
 	private void updateAllObjectInWorld(World world)
 	{
 		List<IObjectInWorld> list = Worlds.getListFromWorldDimention(objects, world, false);
@@ -424,7 +329,7 @@ public class FarCoreWorldHandler
 			}
 		}
 	}
-
+	
 	private void updateNotifiedNeighbours(World world)
 	{
 		List<NotifyEntry> list = updatePos.remove(world.provider.getDimension());
@@ -442,7 +347,7 @@ public class FarCoreWorldHandler
 					}
 					else
 					{
-						state.neighborChanged(world, pos, entry.changedBlock.getBlock());
+						state.neighborChanged(world, pos.toImmutable(), entry.changedBlock.getBlock());
 					}
 				}
 				catch (Throwable throwable)
@@ -467,14 +372,14 @@ public class FarCoreWorldHandler
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onNotifyNeighbours(NeighborNotifyEvent event)
 	{
 		if(event.getState().getBlock() instanceof IUpdateDelayBlock)
 		{
 			event.setCanceled(true);
-			if(notifyFlag)
+			if(this.notifyFlag)
 			{
 				Set<NotifyEntry> set = new HashSet(event.getNotifiedSides().size());
 				for(EnumFacing facing : event.getNotifiedSides())
@@ -484,7 +389,7 @@ public class FarCoreWorldHandler
 				markBlockForUpdate(event.getWorld(), set);
 				return;
 			}
-			notifyFlag = true;
+			this.notifyFlag = true;
 			IUpdateDelayBlock block = (IUpdateDelayBlock) event.getState().getBlock();
 			int range = block.getCheckRange(event.getState());
 			int r1 = 2 * range + 1;
@@ -503,7 +408,7 @@ public class FarCoreWorldHandler
 				}
 			}
 			markBlockForUpdate(event.getWorld(), set);
-			notifyFlag = false;
+			this.notifyFlag = false;
 		}
 	}
 }

@@ -1,13 +1,13 @@
 package farcore.util;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -28,6 +28,7 @@ import farcore.lib.render.FontRenderExtend;
 import farcore.lib.render.IProgressBarStyle;
 import farcore.lib.render.ParticleDiggingExt;
 import farcore.lib.util.Direction;
+import farcore.lib.util.IDataChecker;
 import farcore.lib.util.IRenderRegister;
 import farcore.lib.util.LanguageManager;
 import farcore.lib.util.Log;
@@ -283,9 +284,9 @@ public class U
 			OreDictionary.registerOre(name, ore);
 		}
 		
-		public static void registerValid(String name, Function<ItemStack, Boolean> function, ItemStack...instances)
+		public static void registerValid(String name, Item item, IDataChecker<ItemStack> function, ItemStack...instances)
 		{
-			OreDictExt.registerOreFunction(name, function, instances);
+			OreDictExt.registerOreFunction(name, item, function, instances);
 		}
 		
 		public static void registerValid(String name, ItemStack ore, boolean autoValid)
@@ -764,6 +765,24 @@ public class U
 			}
 			Vec3d vec3d1 = vec3d.addVector(f6 * d3, f5 * d3, f7 * d3);
 			return world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
+		}
+		
+		private static Method isChunkLoaded;
+		
+		public static boolean isChunkLoaded(World world, int x, int z, boolean allowEmpty)
+		{
+			if(isChunkLoaded == null)
+			{
+				isChunkLoaded = R.getMethod(World.class, "isChunkLoaded", "func_175680_a", int.class, int.class, boolean.class);
+			}
+			try
+			{
+				return (Boolean) isChunkLoaded.invoke(world, x, z, allowEmpty);
+			}
+			catch (Exception exception)
+			{
+				return false;
+			}
 		}
 	}
 	

@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import farcore.data.M;
 import farcore.data.EnumRockType;
+import farcore.data.M;
+import farcore.data.MC;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.render.IIconLoader;
@@ -166,10 +167,21 @@ public class MaterialTextureLoader implements IIconLoader
 	
 	static
 	{
+		MTFBuilder builder;
+		
+		builder = new MTFBuilder(MC.plankBlock, "");
+		builder.put(M.oak, new ResourceLocation("minecraft", "blocks/planks_oak"));
+		builder.put(M.spruce, new ResourceLocation("minecraft", "blocks/planks_spruce"));
+		builder.put(M.birch, new ResourceLocation("minecraft", "blocks/planks_birch"));
+		builder.put(M.ceiba, new ResourceLocation("minecraft", "blocks/planks_jungle"));
+		builder.put(M.acacia, new ResourceLocation("minecraft", "blocks/planks_acacia"));
+		builder.put(M.oak_black, new ResourceLocation("minecraft", "blocks/planks_big_oak"));
+		builder.build();
+		
 		for(EnumRockType type : EnumRockType.values())
 		{
 			if(type == EnumRockType.cobble_art) continue;
-			MTFBuilder builder = new MTFBuilder(type.condition, type.variant);
+			builder = new MTFBuilder(type.condition, type.variant);
 			builder.put("blocks/rock/", "/" + type.name());
 			switch (type)
 			{

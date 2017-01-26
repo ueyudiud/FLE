@@ -1,5 +1,9 @@
 package farcore.lib.nbt;
 
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -64,7 +68,11 @@ public class NBTTagCompoundEmpty extends NBTTagCompound
 	@Override
 	public boolean hasKey(String tag) {return false;}
 	@Override
-	public boolean hasNoTags() {return true;}
+	public boolean hasNoTags() { return true; }
+	@Override
+	public Set<String> getKeySet() { return ImmutableSet.of(); }
+	@Override
+	public void removeTag(String key) {}
 	
 	@Override
 	public int hashCode()

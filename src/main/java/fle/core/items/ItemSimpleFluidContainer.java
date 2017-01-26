@@ -152,7 +152,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 					itemStackIn = itemStackIn.copy();
 					fluid.amount -= amount;
 					setFluid(itemStackIn, fluid);
-					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+					return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 				}
 			}
 			if(property.enableToFill)
@@ -175,7 +175,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 						fluid.amount += stack.amount;
 						setFluid(itemStackIn, fluid);
 					}
-					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+					return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 				}
 			}
 		}
@@ -298,6 +298,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{

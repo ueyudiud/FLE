@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import farcore.FarCore;
 import farcore.energy.IEnergyNet;
+import farcore.energy.IEnergyNet.LocalEnergyNet;
 import farcore.lib.collection.IntegerArray;
 import farcore.lib.util.Direction;
 import farcore.lib.util.EnumModifyFlag;
@@ -15,256 +16,219 @@ import farcore.lib.util.Log;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class KineticNet implements IEnergyNet
+public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> implements IKineticAccess, IEnergyNet.LocalEnergyNetProvider
 {
-	public static final KineticNet instance = new KineticNet();
-
-	private static Map<Integer, Local> netMap = new HashMap();
-
-	@Override
-	public void update(World world)
+	public static final KineticNet instance = new KineticNet(null);
+	
+	private volatile boolean isUpdating = false;
+	
+	private final Map<BlockPos, IKineticHandler> map = new HashMap();
+	private final Map<IntegerArray, double[]> cachedSend = new HashMap();
+	private final List<IntegerArray> cachedSended = new ArrayList();
+	private IKineticHandler cachedTile;
+	private BlockPos cachedPos = BlockPos.ORIGIN;
+	private final Map<IKineticHandler, EnumModifyFlag> cachedChangedTile = new HashMap();
+	
+	public KineticNet(World world)
 	{
-		getNet(world, false).updateNet();
+		super(world);
 	}
 	
 	@Override
-	public void add(Object tile)
+	protected void add(IKineticHandler tile)
 	{
-		if(tile instanceof IKineticHandler)
+		if(this.world == null) return;
+		if(this.isUpdating)
 		{
-			getNet(((IKineticHandler) tile).world(), false).add((IKineticHandler) tile);
+			this.cachedChangedTile.put(tile, EnumModifyFlag.add);
 		}
-	}
-	
-	@Override
-	public void remove(Object tile)
-	{
-		if(tile instanceof IKineticHandler)
+		else
 		{
-			getNet(((IKineticHandler) tile).world(), false).remove((IKineticHandler) tile);
-		}
-	}
-
-	@Override
-	public void mark(Object tile)
-	{
-		//Do nothing.
-	}
-	
-	@Override
-	public void reload(Object tile)
-	{
-		if(tile instanceof IKineticHandler)
-		{
-			getNet(((IKineticHandler) tile).world(), false).reload((IKineticHandler) tile);
+			this.map.put(tile.pos(), tile);
 		}
 	}
 	
 	@Override
-	public void unload(World world)
+	public void remove(IKineticHandler tile)
 	{
-		netMap.remove(world.provider.getDimension());
+		if(this.world == null) return;
+		if(this.isUpdating)
+		{
+			this.cachedChangedTile.put(tile, EnumModifyFlag.remove);
+		}
+		else
+		{
+			this.map.remove(tile.pos());
+		}
 	}
 	
 	@Override
-	public void load(World world)
+	protected void mark(IKineticHandler tile)
 	{
-		netMap.put(world.provider.getDimension(), new Local(world));
+		
 	}
-
-	private Local getNet(World world, boolean create)
+	
+	@Override
+	public void reload(IKineticHandler tile)
 	{
-		if(!create)
-			return netMap.getOrDefault(world.provider.getDimension(), Local.instance);
-		if(!netMap.containsKey(world.provider.getDimension()))
-		{
-			netMap.put(world.provider.getDimension(), new Local(world));
-		}
-		return netMap.get(world.provider.getDimension());
+		if(this.world == null) return;
+		remove(tile);
+		add(tile);
 	}
-
-	private static class Local implements IKineticAccess
+	
+	@Override
+	protected void update()
 	{
-		private static final Local instance = new Local(null);
-
-		private volatile boolean isUpdating = false;
-
-		private World world;
-
-		private final Map<BlockPos, IKineticHandler> map = new HashMap();
-		private final Map<IntegerArray, double[]> cachedSend = new HashMap();
-		private final List<IntegerArray> cachedSended = new ArrayList();
-		private IKineticHandler cachedTile;
-		private BlockPos cachedPos = BlockPos.ORIGIN;
-		private final Map<IKineticHandler, EnumModifyFlag> cachedChangedTile = new HashMap();
-
-		public Local(World world)
+		if(this.world == null) return;
+		//Switch update flag to true, to prevent remove element in map when iterating.
+		this.isUpdating = true;
+		boolean updated = true;
+		try
 		{
-			this.world = world;
-		}
-
-		public void add(IKineticHandler tile)
-		{
-			if(world == null) return;
-			if(isUpdating)
+			//Check if last tick is already updated, or just update lasting tile.
+			if(this.cachedSend.isEmpty())
 			{
-				cachedChangedTile.put(tile, EnumModifyFlag.add);
-			}
-			else
-			{
-				map.put(tile.pos(), tile);
-			}
-		}
-
-		public void remove(IKineticHandler tile)
-		{
-			if(world == null) return;
-			if(isUpdating)
-			{
-				cachedChangedTile.put(tile, EnumModifyFlag.remove);
-			}
-			else
-			{
-				map.remove(tile.pos());
-			}
-		}
-
-		public void reload(IKineticHandler tile)
-		{
-			if(world == null) return;
-			remove(tile);
-			add(tile);
-		}
-
-		public void updateNet()
-		{
-			if(world == null) return;
-			//Switch update flag to true, to prevent remove element in map when iterating.
-			isUpdating = true;
-			boolean updated = true;
-			try
-			{
-				//Check if last tick is already updated, or just update lasting tile.
-				if(cachedSend.isEmpty())
+				//Pre-update all tile(Suggested update emitter in this method).
+				for(IKineticHandler tile : this.map.values())
 				{
-					//Pre-update all tile(Suggested update emitter in this method).
-					for(IKineticHandler tile : map.values())
-					{
-						cachedTile = tile;
-						tile.kineticPreUpdate(this);
-					}
+					this.cachedTile = tile;
+					tile.kineticPreUpdate(this);
 				}
-				cachedTile = null;
-				//Send kinetic energy to other tile.
-				Map<IntegerArray, double[]> sends = new HashMap();
-				Direction direction;
-				do
+			}
+			this.cachedTile = null;
+			//Send kinetic energy to other tile.
+			Map<IntegerArray, double[]> sends = new HashMap();
+			Direction direction;
+			do
+			{
+				sends.clear();
+				sends.putAll(this.cachedSend);
+				this.cachedSend.clear();
+				for(Entry<IntegerArray, double[]> entry : sends.entrySet())
 				{
-					sends.clear();
-					sends.putAll(cachedSend);
-					cachedSend.clear();
-					for(Entry<IntegerArray, double[]> entry : sends.entrySet())
+					int[] info = entry.getKey().array;
+					this.cachedPos = new BlockPos(info[0], info[1], info[2]);
+					IKineticHandler source = this.map.get(this.cachedPos);
+					direction = Direction.DIRECTIONS_3D[info[3]];
+					this.cachedPos = direction.offset(this.cachedPos);
+					double[] pkg = entry.getValue();
+					if(this.map.containsKey(this.cachedPos))
 					{
-						int[] info = entry.getKey().array;
-						cachedPos = new BlockPos(info[0], info[1], info[2]);
-						IKineticHandler source = map.get(cachedPos);
-						direction = Direction.DIRECTIONS_3D[info[3]];
-						cachedPos = direction.offset(cachedPos);
-						double[] pkg = entry.getValue();
-						if(map.containsKey(cachedPos))
+						IKineticHandler tile = this.map.get(this.cachedPos);
+						if(!tile.canAccessKineticEnergyFromDirection(direction.getOpposite()))
 						{
-							IKineticHandler tile = map.get(cachedPos);
-							if(!tile.canAccessKineticEnergyFromDirection(direction.getOpposite()))
-							{
-								cachedTile = source;
-								source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
-							}
-							else if(!tile.isRotatable(direction.getOpposite(), pkg[0], pkg[1]))
-							{
-								cachedTile = source;
-								source.onStuck(direction, pkg[0], pkg[1]);
-								source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
-							}
-							else
-							{
-								double speed = pkg[0];
-								cachedTile = tile;
-								double send = tile.receiveKineticEnergy(this, direction.getOpposite(), pkg[0], pkg[1]);
-								cachedTile = source;
-								if(speed != send)
-								{
-									source.onStuck(direction, Math.abs(send - speed), pkg[1]);
-								}
-								source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
-							}
+							this.cachedTile = source;
+							source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
+						}
+						else if(!tile.isRotatable(direction.getOpposite(), pkg[0], pkg[1]))
+						{
+							this.cachedTile = source;
+							source.onStuck(direction, pkg[0], pkg[1]);
+							source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
 						}
 						else
 						{
-							cachedTile = source;
+							double speed = pkg[0];
+							this.cachedTile = tile;
+							double send = tile.receiveKineticEnergy(this, direction.getOpposite(), pkg[0], pkg[1]);
+							this.cachedTile = source;
+							if(speed != send)
+							{
+								source.onStuck(direction, Math.abs(send - speed), pkg[1]);
+							}
 							source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
 						}
-						cachedSended.add(entry.getKey());
 					}
-				}
-				//Some tile maybe is a kinetic conductor, looped check.
-				while (!cachedSend.isEmpty());
-			}
-			catch(StackOverflowError error)
-			{
-				updated = false;
-				if(FarCore.debug)
-				{
-					Log.warn("Stack overflow when update kinetic net.", error);
-				}
-			}
-			catch (OutOfMemoryError error)
-			{
-				updated = false;
-				if(FarCore.debug)
-				{
-					Log.warn("Out of memory when update kinetic net.", error);
-				}
-			}
-			cachedPos = BlockPos.ORIGIN;
-			cachedTile = null;
-			if(updated)
-			{
-				isUpdating = false;
-				cachedSended.clear();
-				for(Entry<IKineticHandler, EnumModifyFlag> entry : cachedChangedTile.entrySet())
-				{
-					switch (entry.getValue())
+					else
 					{
-					case add :
-						map.put(entry.getKey().pos(), entry.getKey());
-						break;
-					case remove :
-						map.remove(entry.getKey().pos());
-						break;
-					case reload :
-						map.remove(entry.getKey().pos());
-						map.put(entry.getKey().pos(), entry.getKey());
-						break;
-					case mark:
-						break;
+						this.cachedTile = source;
+						source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
 					}
+					this.cachedSended.add(entry.getKey());
 				}
-				cachedChangedTile.clear();
+			}
+			//Some tile maybe is a kinetic conductor, looped check.
+			while (!this.cachedSend.isEmpty());
+		}
+		catch(StackOverflowError error)
+		{
+			updated = false;
+			if(FarCore.debug)
+			{
+				Log.warn("Stack overflow when update kinetic net.", error);
 			}
 		}
-		
-		@Override
-		public void sendEnergyTo(Direction direction, double speed, double torque)
+		catch (OutOfMemoryError error)
 		{
-			if(world == null || cachedTile == null || !isUpdating || torque <= 0) return;
-			BlockPos pos = cachedTile.pos();
-			IntegerArray array = new IntegerArray(new int[]{
-					pos.getX(),
-					pos.getY(),
-					pos.getZ(),
-					direction.ordinal()});
-			if(cachedSended.contains(array)) return;
-			cachedSend.put(array, new double[]{speed, torque});
+			updated = false;
+			if(FarCore.debug)
+			{
+				Log.warn("Out of memory when update kinetic net.", error);
+			}
 		}
+		this.cachedPos = BlockPos.ORIGIN;
+		this.cachedTile = null;
+		if(updated)
+		{
+			this.isUpdating = false;
+			this.cachedSended.clear();
+			for(Entry<IKineticHandler, EnumModifyFlag> entry : this.cachedChangedTile.entrySet())
+			{
+				switch (entry.getValue())
+				{
+				case add :
+					this.map.put(entry.getKey().pos(), entry.getKey());
+					break;
+				case remove :
+					this.map.remove(entry.getKey().pos());
+					break;
+				case reload :
+					this.map.remove(entry.getKey().pos());
+					this.map.put(entry.getKey().pos(), entry.getKey());
+					break;
+				case mark:
+					break;
+				}
+			}
+			this.cachedChangedTile.clear();
+		}
+	}
+	
+	@Override
+	public void sendEnergyTo(Direction direction, double speed, double torque)
+	{
+		if(this.world == null || this.cachedTile == null || !this.isUpdating || torque <= 0) return;
+		BlockPos pos = this.cachedTile.pos();
+		IntegerArray array = new IntegerArray(new int[]{
+				pos.getX(),
+				pos.getY(),
+				pos.getZ(),
+				direction.ordinal()});
+		if(this.cachedSended.contains(array)) return;
+		this.cachedSend.put(array, new double[]{speed, torque});
+	}
+	
+	@Override
+	protected void load()
+	{
+		
+	}
+	
+	@Override
+	protected void unload()
+	{
+		
+	}
+	
+	@Override
+	public LocalEnergyNet createEnergyNet(World world)
+	{
+		return new KineticNet(world);
+	}
+	
+	@Override
+	public World getWorldFromTile(Object tile)
+	{
+		return tile instanceof IKineticHandler ? ((IKineticHandler) tile).world() : null;
 	}
 }

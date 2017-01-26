@@ -29,13 +29,13 @@ public class MP
 	public static final String fallen_damage_deduction = "fallen_damage_deduction";
 	public static final String tool_attackspeed = "tool_attackspeed";
 	
-	public static final IProperty<PropertyBasic> property_basic = new IProperty<PropertyBasic>() { @Override public PropertyBasic defValue() { return new PropertyBasic(); } };
-	public static final IProperty<PropertyTool> property_tool = new IProperty<PropertyTool>(){};
-	public static final IProperty<PropertyOre> property_ore = new IProperty<PropertyOre>(){@Override public PropertyOre defValue() { return new PropertyOre(); } };
-	public static final IProperty<PropertyWood> property_wood = new IProperty<PropertyWood>(){};
-	public static final IProperty<PropertyBlockable> property_soil = new IProperty<PropertyBlockable>(){};
-	public static final IProperty<PropertyRock> property_rock = new IProperty<PropertyRock>(){};
-	public static final IProperty<ICrop> property_crop = new IProperty<ICrop>(){@Override public ICrop defValue() { return ICrop.VOID; } };
-	public static final IProperty<IPlant> property_plant = new IProperty<IPlant>(){};
-	public static final IProperty<PropertyEdible> property_edible = new IProperty<PropertyEdible>() { };
+	public static final IProperty<PropertyBasic> property_basic = () -> new PropertyBasic();
+	public static final IProperty<PropertyTool> property_tool = () -> null;
+	public static final IProperty<PropertyOre> property_ore = () -> new PropertyOre();
+	public static final IProperty<PropertyWood> property_wood = () -> null;
+	public static final IProperty<PropertyBlockable> property_soil = () -> null;
+	public static final IProperty<PropertyRock> property_rock = () -> null;
+	public static final IProperty<ICrop> property_crop = () -> ICrop.VOID;
+	public static final IProperty<IPlant> property_plant = () -> null;
+	public static final IProperty<PropertyEdible> property_edible = () -> null;
 }

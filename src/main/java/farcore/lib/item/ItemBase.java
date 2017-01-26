@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemBase extends Item implements IRegisteredNameable, IRenderRegister
 {
 	private static List<ItemBase> list = new ArrayList();
-
+	
 	/**
 	 * Called when all others object(fluids, blocks, configurations, materials, etc)
 	 * are already initialized.
@@ -33,7 +33,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		}
 		list = null;
 	}
-
+	
 	protected final String modid;
 	protected String localized;
 	protected String unlocalized;
@@ -52,7 +52,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		if(list == null)
 			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
 		this.modid = modid;
-		unlocalized = modid + "." + name;
+		this.unlocalized = modid + "." + name;
 		if(unlocalizedTooltip != null)
 		{
 			this.unlocalizedTooltip = modid + "." + unlocalizedTooltip;
@@ -64,17 +64,17 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		 */
 		list.add(this);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-
+		
 	}
-
+	
 	public void postInitalizedItems()
 	{
-
+		
 	}
 	
 	@Override
@@ -82,17 +82,17 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	{
 		return this;
 	}
-
+	
 	@Override
 	public final String getUnlocalizedName()
 	{
-		return unlocalized;
+		return this.unlocalized;
 	}
-
+	
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return hasSubtypes ?
+		return this.hasSubtypes ?
 				getUnlocalizedName() + "@" + getDamage(stack) :
 					getUnlocalizedName();
 	}
@@ -118,25 +118,27 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	{
 		return REGISTRY.getNameForObject(this).toString();
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
 	{
 		super.addInformation(stack, playerIn, tooltip, advanced);
-		addInformation(stack, playerIn, new UnlocalizedList(tooltip), advanced);
+		UnlocalizedList list = new UnlocalizedList(tooltip);
+		addInformation(stack, playerIn, list, advanced);
+		list.list();//Build list.
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
-		if(unlocalizedTooltip != null)
+		if(this.unlocalizedTooltip != null)
 		{
-			unlocalizedList.addToolTip(unlocalizedTooltip);
+			unlocalizedList.addToolTip(this.unlocalizedTooltip);
 		}
 	}
-
+	
 	/**
 	 * The offset meta given by item nbt. Use to divide
 	 * the sub item of each material.
@@ -152,7 +154,7 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	{
 		return super.getDamage(stack);
 	}
-
+	
 	@Override
 	public int getDamage(ItemStack stack)
 	{

@@ -118,13 +118,13 @@ public class ItemDebugger extends ItemBase
 		}
 		return EnumActionResult.PASS;
 	}
-
+	
 	@Override
 	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
 	}
-
+	
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{

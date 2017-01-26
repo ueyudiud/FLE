@@ -16,24 +16,24 @@ import net.minecraft.item.ItemStack;
 public class MatCondition implements IDataChecker<ISubTagContainer>
 {
 	public static final Register<MatCondition> register = new Register();
-
+	
 	public final String name;
 	public final String orePrefix;
 	public final String localName;
 	public final String withOreLocalName;
-
+	
 	public int stackLimit = 64;
-
+	
 	public long size = 1296L;
 	public long latticeSize = 1296L;
 	public float specificArea = 1.0F;
-
+	
 	public boolean isFluid = false;
 	public float fluidViscosityMultiply = 1.0F;
-
+	
 	public float maxTemp = 1E16F;
 	public float minTemp = 0F;
-
+	
 	public IDataChecker<ISubTagContainer> filter = IDataChecker.FALSE;
 	public Set<Mat> blacklist = new HashSet();
 	
@@ -44,39 +44,39 @@ public class MatCondition implements IDataChecker<ISubTagContainer>
 	public MatCondition(String name, String prefix, String localName, String withOreLocalName)
 	{
 		this.name = name;
-		orePrefix = prefix;
+		this.orePrefix = prefix;
 		this.localName = localName;
 		this.withOreLocalName = withOreLocalName;
 		register.register(name, this);
 		LanguageManager.registerLocal(getTranslateName(), localName);
 		LanguageManager.registerLocal(getWithOreTranslateName(), withOreLocalName);
 	}
-
+	
 	public MatCondition setFilter(IDataChecker<ISubTagContainer> filter)
 	{
 		this.filter = filter;
 		return this;
 	}
-
+	
 	public MatCondition addToBlackList(Mat...mats)
 	{
 		if(mats.length == 1)
 		{
-			blacklist.add(mats[0]);
+			this.blacklist.add(mats[0]);
 		}
 		else
 		{
-			blacklist.addAll(Arrays.asList(mats));
+			this.blacklist.addAll(Arrays.asList(mats));
 		}
 		return this;
 	}
-
+	
 	public MatCondition setStackLimit(int stackLimit)
 	{
 		this.stackLimit = stackLimit;
 		return this;
 	}
-
+	
 	public MatCondition setSize(long size)
 	{
 		return setSize(size, size, 1F);
@@ -88,99 +88,104 @@ public class MatCondition implements IDataChecker<ISubTagContainer>
 	public MatCondition setSize(long size, long latticSize, float specificArea)
 	{
 		this.size = size;
-		latticeSize = latticSize;
+		this.latticeSize = latticSize;
 		this.specificArea = specificArea;
 		return this;
 	}
 	
 	public MatCondition setUnsizable()
 	{
-		size = -1L;
-		latticeSize = -1L;
-		specificArea = -1F;
+		this.size = -1L;
+		this.latticeSize = -1L;
+		this.specificArea = -1F;
 		return this;
 	}
-
+	
 	public MatCondition setFluid()
 	{
 		return setFluid(1.0F);
 	}
 	public MatCondition setFluid(float viscosityMultiply)
 	{
-		isFluid = true;
-		fluidViscosityMultiply = viscosityMultiply;
-		size = 1;
-		latticeSize = 1L;
-		specificArea = 1296F;
+		this.isFluid = true;
+		this.fluidViscosityMultiply = viscosityMultiply;
+		this.size = 1;
+		this.latticeSize = 1L;
+		this.specificArea = 1296F;
 		return this;
 	}
-
+	
 	public MatCondition setTemp(float maxTemp, float minTemp)
 	{
 		this.maxTemp = maxTemp;
 		this.minTemp = minTemp;
 		return this;
 	}
-
+	
 	public boolean isBelongTo(Mat material)
 	{
-		return filter.isTrue(material) && !blacklist.contains(material);
+		return this.filter.isTrue(material) && !this.blacklist.contains(material);
 	}
-
+	
 	String getWithOreTranslateName()
 	{
-		return "matcondition." + name + ".a.name";
+		return "matcondition." + this.name + ".a.name";
 	}
-
+	
 	String getTranslateName()
 	{
-		return "matcondition." + name + ".name";
+		return "matcondition." + this.name + ".name";
 	}
-
+	
 	public void registerOre(Mat material, Item stack)
 	{
-		OreDict.registerValid(orePrefix + material.oreDictName, stack);
+		OreDict.registerValid(this.orePrefix + material.oreDictName, stack);
 	}
-
+	
 	public void registerOre(Mat material, Block stack)
 	{
-		OreDict.registerValid(orePrefix + material.oreDictName, stack);
+		OreDict.registerValid(this.orePrefix + material.oreDictName, stack);
 	}
-
+	
 	public void registerOre(Mat material, ItemStack stack)
 	{
-		OreDict.registerValid(orePrefix + material.oreDictName, stack);
+		OreDict.registerValid(this.orePrefix + material.oreDictName, stack);
 	}
-
+	
 	public void registerOre(String prefix1, Mat material, ItemStack stack)
 	{
-		OreDict.registerValid(orePrefix + prefix1 + material.oreDictName, stack);
+		OreDict.registerValid(this.orePrefix + prefix1 + material.oreDictName, stack);
 	}
-
+	
+	public String getOreName(Mat material)
+	{
+		return this.orePrefix + material.oreDictName;
+	}
+	
 	public String translateToLocal()
 	{
 		return LanguageManager.translateToLocal(getTranslateName());
 	}
-
+	
 	public String translateToLocal(Mat material)
 	{
 		return LanguageManager.translateToLocal(getWithOreTranslateName(), material.getLocalName());
 	}
-
+	
 	public String getLocal(Mat material)
 	{
-		return String.format(withOreLocalName, material.localName);
+		return String.format(this.withOreLocalName, material.localName);
 	}
-
+	
 	public String translateToLocal(String ore)
 	{
 		return LanguageManager.translateToLocal(getWithOreTranslateName(), ore);
 	}
-
+	
 	@Override
 	public boolean isTrue(ISubTagContainer target)
 	{
-		return filter.isTrue(target) &&
+		return this.filter.isTrue(target) &&
 				(!(target instanceof Mat) || isBelongTo((Mat) target));
 	}
 }

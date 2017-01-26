@@ -17,11 +17,12 @@ import farcore.data.Config;
 import farcore.data.EnumFluid;
 import farcore.data.EnumItem;
 import farcore.data.EnumPhysicalDamageType;
+import farcore.data.EnumRockType;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.MP;
 import farcore.data.Potions;
-import farcore.energy.electric.ElectricNet;
+import farcore.energy.IEnergyNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.BlockThermalDebug;
 import farcore.energy.thermal.HeatWave;
@@ -41,6 +42,7 @@ import farcore.lib.block.instance.BlockIce;
 import farcore.lib.block.instance.BlockModelDebug;
 import farcore.lib.block.instance.BlockOre;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
+import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.block.instance.BlockWater;
 import farcore.lib.entity.EntityFallingBlockExtended;
@@ -72,7 +74,6 @@ import farcore.lib.net.tile.PacketTESAsk;
 import farcore.lib.net.tile.PacketTESync;
 import farcore.lib.net.tile.PacketTETypeResult;
 import farcore.lib.net.world.PacketBreakBlock;
-import farcore.lib.net.world.PacketCustomChunkData;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tile.instance.TECrop;
 import farcore.lib.tile.instance.TECustomCarvedStone;
@@ -103,9 +104,9 @@ public class CommonLoader
 		CT.tabTree = new CreativeTabBase("farcore.tree", "Far Tree",
 				() -> Config.createLog ? new ItemStack(M.oak.getProperty(MP.property_wood).block) : new ItemStack(Blocks.LOG));
 		CT.tabTerria = new CreativeTabBase("farcore.terria", "Far Terria",
-				() -> Config.createRock ? new ItemStack(M.peridotite.getProperty(MP.property_rock).block, 1, 2) : new ItemStack(Blocks.STONE));
+				() -> Config.createRock ? BlockRock.stack(M.peridotite, EnumRockType.resource) : new ItemStack(Blocks.STONE));
 		CT.tabBuilding = new CreativeTabBase("farcore.building", "Far Building Blocks",
-				() -> Config.createRock ? new ItemStack(M.marble.getProperty(MP.property_rock).block, 1, 5) : new ItemStack(Blocks.STONEBRICK));
+				() -> Config.createRock ? BlockRock.stack(M.marble, EnumRockType.brick) : new ItemStack(Blocks.STONEBRICK));
 		CT.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item",
 				() -> Config.createRock ? new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id) : new ItemStack(Items.GOLD_INGOT));
 		CT.tabMachine = new CreativeTabBase("farcore.machine", "Far Machine",
@@ -127,8 +128,7 @@ public class CommonLoader
 		//Register energy nets.
 		bar.step("Add Energy Nets");
 		addNet(ThermalNet.instance);
-		addNet(KineticNet.instance);
-		addNet(ElectricNet.instance);
+		addNet(new IEnergyNet.Impl(KineticNet.instance));
 		//Register world objects.
 		bar.step("Register World Objects");
 		FarCoreWorldHandler.registerObject("heat.wave", HeatWave.class);
@@ -146,6 +146,7 @@ public class CommonLoader
 		new ItemFluidDisplay().setCreativeTab(CT.tabFluids);
 		new BlockThermalDebug();
 		new BlockModelDebug();
+		new BlockRock("rock");
 		if(Config.createRock)
 		{
 			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
@@ -244,7 +245,6 @@ public class CommonLoader
 		network.registerPacket(PacketFluidUpdateSingle.class, Side.CLIENT);
 		network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
 		network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
-		network.registerPacket(PacketCustomChunkData.class, Side.CLIENT);
 		network.registerPacket(PacketChunkNetData.class, Side.CLIENT);
 		pop(bar);
 	}

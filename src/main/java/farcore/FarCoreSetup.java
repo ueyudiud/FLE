@@ -26,10 +26,13 @@ import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
 import farcore.util.U;
 import farcore.util.U.ClientHandler;
+import farcore.util.U.Sides;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiErrorScreen;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -273,6 +276,14 @@ public class FarCoreSetup
 		{
 			return null;
 		}
+		
+		public void handleIDMissing()
+		{
+			if(!Config.replaceMissingIDToAir)
+			{
+				throw new RuntimeException("The id map is missing, to see log to find which block state is missing, still to start server, please switch configuration idfix:replaceMissingStateToAir to start server.");
+			}
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -400,6 +411,26 @@ public class FarCoreSetup
 		{
 			shapes.registerBuiltInBlocks(farcore.util.L.cast(buildInRender, Block.class));
 			buildInRender = null;
+		}
+		
+		@Override
+		public void handleIDMissing()
+		{
+			if(!Sides.isSimulating())
+			{
+				Minecraft.getMinecraft().displayGuiScreen(
+						new GuiYesNo((flag, id) -> {
+							if(flag)
+							{
+								Minecraft.getMinecraft().stopIntegratedServer();
+								Minecraft.getMinecraft().displayGuiScreen(null);
+							}
+						}, "Some id detected is missing. The invalid block willbe removed, do you still want to join in to game?", "The missing block ids to see log.", 0));
+			}
+			else //Could this take effective?
+			{
+				Minecraft.getMinecraft().displayGuiScreen(new GuiErrorScreen("Invalid block state map.", "Some id is missing, you can not join in to server."));
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import farcore.FarCore;
+import farcore.lib.block.IExtendedDataBlock;
 import farcore.lib.block.IHitByFallenBehaviorBlock;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.net.entity.PacketEntity;
@@ -284,7 +285,14 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 	{
 		nbt.setString("block", this.state == null ? Blocks.AIR.getRegistryName().toString() :
 			this.state.getBlock().getRegistryName().toString());
-		nbt.setByte("data", (byte) this.state.getBlock().getMetaFromState(this.state));
+		if(this.state.getBlock() instanceof IExtendedDataBlock)
+		{
+			nbt.setInteger("data1", ((IExtendedDataBlock) this.state.getBlock()).getDataFromState(this.state));
+		}
+		else
+		{
+			nbt.setByte("data", (byte) this.state.getBlock().getMetaFromState(this.state));
+		}
 		nbt.setByte("time", (byte) this.lifeTime);
 		nbt.setBoolean("drop", this.shouldDropItem);
 		nbt.setBoolean("hit", this.hitEntity);
@@ -315,8 +323,14 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 			setDead();
 			return;
 		}
-		
-		this.state = block.getStateFromMeta(nbt.getByte("data") & 255);
+		if(block instanceof IExtendedDataBlock)
+		{
+			this.state = ((IExtendedDataBlock) block).getStateFromData(nbt.getInteger("data1"));
+		}
+		else
+		{
+			this.state = block.getStateFromMeta(nbt.getByte("data") & 255);
+		}
 		this.lifeTime = nbt.getByte("time") & 255;
 		
 		this.hitEntity = nbt.getBoolean("hit");
@@ -377,7 +391,14 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 	public NBTTagCompound writeDescriptionsToNBT(NBTTagCompound nbt)
 	{
 		nbt.setString("block", this.state.getBlock().getRegistryName().toString());
-		nbt.setByte("data", (byte) this.state.getBlock().getMetaFromState(this.state));
+		if(this.state.getBlock() instanceof IExtendedDataBlock)
+		{
+			nbt.setInteger("data1", ((IExtendedDataBlock) this.state.getBlock()).getDataFromState(this.state));
+		}
+		else
+		{
+			nbt.setByte("data", (byte) this.state.getBlock().getMetaFromState(this.state));
+		}
 		nbt.setLong("origin", new BlockPos(this).toLong());
 		return nbt;
 	}
@@ -392,7 +413,14 @@ public class EntityFallingBlockExtended extends Entity implements IDescribable
 		}
 		else
 		{
-			this.state = block.getStateFromMeta(nbt.getByte("data") & 255);
+			if(block instanceof IExtendedDataBlock)
+			{
+				this.state = ((IExtendedDataBlock) block).getStateFromData(nbt.getInteger("data1"));
+			}
+			else
+			{
+				this.state = block.getStateFromMeta(nbt.getByte("data") & 255);
+			}
 		}
 		this.pos = BlockPos.fromLong(nbt.getLong("origin"));
 	}

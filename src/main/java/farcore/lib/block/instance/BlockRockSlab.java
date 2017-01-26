@@ -8,6 +8,7 @@ import farcore.data.EnumSlabState;
 import farcore.data.EnumRockType;
 import farcore.lib.block.BlockSlab;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
+import farcore.lib.block.instance.old.BlockRockOld;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.model.block.statemap.StateMapperExt;
@@ -27,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBlock
 {
 	private final Mat material;
-	private final BlockRock parent;
+	private final BlockRockOld parent;
 	private String localName;
 	/**
 	 * The meta of main block.
@@ -39,7 +40,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	private final BlockRockSlab[] group;
 	public final PropertyRock property;
 	
-	public BlockRockSlab(int id, BlockRock parent, BlockRockSlab[] group, String name, Mat material,
+	public BlockRockSlab(int id, BlockRockOld parent, BlockRockSlab[] group, String name, Mat material,
 			String localName)
 	{
 		super(name + ".slab", Material.ROCK);
@@ -56,7 +57,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 			setCreativeTab(CT.tabBuilding);
 		}
 		setTickRandomly(true);
-		setDefaultState(getDefaultState().withProperty(BlockRock.HEATED, false));
+		setDefaultState(getDefaultState().withProperty(BlockRockOld.HEATED, false));
 	}
 	
 	@Override
@@ -70,7 +71,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperExt(this.material.modid, "rock/slab/" + this.material.name, null, BlockRock.HEATED);
+		StateMapperExt mapper = new StateMapperExt(this.material.modid, "rock/slab/" + this.material.name, null, BlockRockOld.HEATED);
 		mapper.setVariants("type", EnumRockType.values()[this.meta].getName());
 		ClientProxy.registerCompactModel(mapper, this, 1);
 	}
@@ -78,7 +79,7 @@ public class BlockRockSlab extends BlockSlab implements IThermalCustomBehaviorBl
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, EnumSlabState.PROPERTY, BlockRock.HEATED);
+		return new BlockStateContainer(this, EnumSlabState.PROPERTY, BlockRockOld.HEATED);
 	}
 	
 	@Override

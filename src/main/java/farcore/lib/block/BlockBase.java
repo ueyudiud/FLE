@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import farcore.lib.util.IRegisteredNameable;
 import farcore.lib.util.IRenderRegister;
 import farcore.lib.util.LanguageManager;
@@ -20,6 +22,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.EnumDyeColor;
@@ -259,7 +262,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		List<ItemStack> ret = new ArrayList<ItemStack>();
+		List<ItemStack> ret = new ArrayList<>();
 		
 		if(silkTouch)
 		{
@@ -354,5 +357,21 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public CreativeTabs[] getCreativeTabs()
 	{
 		return new CreativeTabs[]{getCreativeTabToDisplayOn()};
+	}
+	
+	/**
+	 * Override.
+	 */
+	@Override
+	@Deprecated
+	public final IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
+			int meta, @Nullable EntityLivingBase placer)
+	{
+		return getBlockPlaceState(worldIn, pos, facing, hitX, hitY, hitZ, placer == null ? new ItemStack(this, 1, meta) : placer.getHeldItemMainhand(), placer);
+	}
+	
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
+	{
+		return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, stackIn.getItem().getMetadata(stackIn), placer);
 	}
 }

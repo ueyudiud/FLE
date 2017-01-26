@@ -18,7 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class UnlocalizedList
 {
 	List<String> list;
-
+	List<String> postList = new ArrayList();
+	
 	public UnlocalizedList()
 	{
 		this(new ArrayList());
@@ -27,18 +28,32 @@ public class UnlocalizedList
 	{
 		this.list = list;
 	}
-
+	
 	public void add(String arg, Object...translation)
 	{
-		list.add(LanguageManager.translateToLocal(arg, translation));
+		this.list.add(LanguageManager.translateToLocal(arg, translation));
 	}
-
+	
+	public void addPost(String arg, Object...translation)
+	{
+		this.postList.add(LanguageManager.translateToLocal(arg, translation));
+	}
+	
 	public void addNotNull(String arg, Object...translation)
 	{
 		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg, translation);
 		if(val != null)
 		{
-			list.add(val);
+			this.list.add(val);
+		}
+	}
+	
+	public void addPostNotNull(String arg, Object...translation)
+	{
+		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg, translation);
+		if(val != null)
+		{
+			this.postList.add(val);
 		}
 	}
 	
@@ -60,37 +75,38 @@ public class UnlocalizedList
 		String val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg);
 		if(val != null)
 		{
-			list.add(val);
+			this.postList.add(val);
 		}
 		else
 		{
 			int i = 1;
 			while((val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg + "." + i)) != null)
 			{
-				list.add(val);
+				this.postList.add(val);
 			}
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public boolean isSneakDown()
 	{
 		return Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode());
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public void addShiftClickInfo()
 	{
-		add("info.shift.click", Minecraft.getMinecraft().gameSettings.keyBindSneak.getDisplayName());
+		addPost("info.shift.click", Minecraft.getMinecraft().gameSettings.keyBindSneak.getDisplayName());
 	}
-
+	
 	public void addLocal(String arg)
 	{
-		list.add(arg);
+		this.list.add(arg);
 	}
-
+	
 	public List<String> list()
 	{
-		return list;
+		this.list.addAll(this.postList);
+		return this.list;
 	}
 }

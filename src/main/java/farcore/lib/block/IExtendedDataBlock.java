@@ -4,6 +4,7 @@
 
 package farcore.lib.block;
 
+import farcore.lib.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.state.IBlockState;
 
 /**
@@ -14,4 +15,6 @@ public interface IExtendedDataBlock
 	int getDataFromState(IBlockState state);
 	
 	IBlockState getStateFromData(int meta);
+	
+	void registerStateToRegister(ExtendedBlockStateRegister register);
 }

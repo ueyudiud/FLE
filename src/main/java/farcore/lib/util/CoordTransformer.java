@@ -22,7 +22,7 @@ public class CoordTransformer
 {
 	double[] oppisite, rotation, scale, transform;
 	boolean changed;
-	Function<Tuple3d, Tuple3d> function;//If no change detected, use identity function.
+	Function<Tuple3d, Tuple3d> function = Function.identity();//If no change detected, use identity function.
 	
 	public CoordTransformer() { normalize(); }
 	CoordTransformer(double[] oppisite, double[] rotation, double[] scale, double[] transform)
@@ -46,7 +46,6 @@ public class CoordTransformer
 		this.scale     = new double[]{1.0, 1.0, 1.0};
 		this.transform = new double[]{0.0, 0.0, 0.0};
 		this.changed   = false;
-		this.function  = Function.identity();
 		return this;
 	}
 	
@@ -154,7 +153,7 @@ public class CoordTransformer
 	private void markChanged()
 	{
 		this.changed = true;
-		this.function = null;
+		this.function = Function.identity();
 	}
 	
 	private Function<Tuple3d, Tuple3d> buildMatrix()

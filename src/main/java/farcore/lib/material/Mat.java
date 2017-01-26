@@ -16,7 +16,6 @@ import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.block.instance.BlockPlank;
-import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockSoil;
 import farcore.lib.collection.HashPropertyMap;
 import farcore.lib.collection.IPropertyMap;
@@ -381,7 +380,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.minTemperatureForExplosion = minDetTemp;
 		if(Config.createRock)
 		{
-			property.block = new BlockRock("rock." + this.name, this, property);
+			/**
+			 * Use new block instead.
+			 */
+			//			property.block = new BlockRockOld("rock." + this.name, this, property);
 		}
 		add(SubTag.ROCK);
 		return addProperty(MP.property_rock, property);

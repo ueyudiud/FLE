@@ -1,46 +1,34 @@
-/*
- * copyright© 2016-2017 ueyudiud
- */
-
-package farcore.lib.block.instance;
+package farcore.lib.block.instance.old;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
 
-import com.google.common.collect.ImmutableList;
-
-import farcore.FarCore;
+import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
 import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
-import farcore.data.EnumRockType;
 import farcore.data.EnumToolType;
-import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.MP;
+import farcore.data.EnumRockType;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockBase;
-import farcore.lib.block.IExtendedDataBlock;
 import farcore.lib.block.ISmartFallableBlock;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.block.IToolableBlock;
 import farcore.lib.block.IUpdateDelayBlock;
-import farcore.lib.block.state.PropertyMaterial;
+import farcore.lib.block.instance.BlockRockSlab;
+import farcore.lib.block.instance.BlockRockStairs;
 import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.material.Mat;
+import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.model.block.statemap.StateMapperExt;
-import farcore.lib.oredict.OreDictExt;
 import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.util.Direction;
-import farcore.lib.util.IDataChecker;
 import farcore.lib.util.LanguageManager;
-import farcore.lib.util.Log;
-import farcore.lib.util.SubTag;
-import farcore.lib.world.chunk.ExtendedBlockStateRegister;
-import farcore.util.ItemStacks;
+import farcore.util.U.OreDict;
 import farcore.util.U.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -66,41 +54,36 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-/**
- * @author ueyudiud
- */
-public class BlockRock extends BlockBase
-implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUpdateDelayBlock, IExtendedDataBlock
+public class BlockRockOld extends BlockBase
+implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUpdateDelayBlock
 {
 	public static final PropertyBool HEATED = PropertyBool.create("heated");
 	public static final PropertyEnum<EnumRockType> ROCK_TYPE = PropertyEnum.create("type", EnumRockType.class);
-	public static final PropertyMaterial ROCK_MATERIAL = PropertyMaterial.create("material", SubTag.ROCK);
 	
-	public static ItemStack stack(Mat material, EnumRockType type)
-	{
-		return ((BlockRock) EnumBlock.rock.block).createStackedBlock(material, type);
-	}
+	public final Mat material;
+	public final PropertyRock property;
+	private final float detTempCap;
+	private String localName;
+	public final BlockRockSlab[] slabGroup;
+	public final BlockRockStairs[] stairsGroup;
 	
-	public BlockRock(String name)
+	public BlockRockOld(String name, Mat material, PropertyRock property)
 	{
-		super(name, Material.ROCK);
+		super(material.modid, name, Material.ROCK);
+		this.material = material;
+		this.property = property;
+		this.localName = material.localName;
+		this.detTempCap = property.minTemperatureForExplosion;
+		this.slabGroup = makeSlabs(name, material, this.localName);
+		this.stairsGroup = makeStairs(name, material, this.localName);
 		setSoundType(SoundType.STONE);
+		setHardness(property.hardness);
+		setResistance(property.explosionResistance);
 		setTickRandomly(true);
-		EnumBlock.rock.set(this);
-		EnumBlock.rock.stateApplier = objects ->
-		{
-			Mat material;
-			EnumRockType type = EnumRockType.resource;
-			if(objects.length == 0) throw new IllegalArgumentException();
-			material = (Mat) objects[0];
-			if(objects.length >= 2)
-				type = (EnumRockType) objects[1];
-			return getDefaultState().withProperty(ROCK_MATERIAL, material).withProperty(ROCK_TYPE, type);
-		};
+		setCreativeTab(CT.tabTerria);
 	}
 	
 	@Override
@@ -108,166 +91,82 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	{
 		super.postInitalizedBlocks();
 		
-		final Function<ItemStack, IBlockState> applier = stack -> getStateFromData(getMetaFromStack(stack));
 		for(EnumRockType type : EnumRockType.values())
 		{
-			ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
-			for(Mat material : ROCK_MATERIAL.getAllowedValues())
-			{
-				ItemStack stack = createStackedBlock(material, type);
-				LanguageManager.registerLocal(getTranslateNameForItemStack(stack), String.format(type.local, material.localName));
-				builder.add(stack);
-				switch (type)
-				{
-				case resource :
-					OreDictExt.registerOreFunction(MC.stone.getOreName(material), this.item,
-							((IDataChecker<IBlockState>) state -> state.getValue(ROCK_MATERIAL) == material && state.getValue(ROCK_TYPE) == type).from(applier), stack);
-					break;
-				case cobble :
-				case mossy :
-					OreDictExt.registerOreFunction(MC.cobble.getOreName(material), this.item,
-							((IDataChecker<IBlockState>) state -> state.getValue(ROCK_MATERIAL) == material && state.getValue(ROCK_TYPE) == type).from(applier), stack);
-					break;
-				case brick :
-				case brick_compacted :
-				case brick_crushed :
-				case brick_mossy :
-					OreDictExt.registerOreFunction(MC.brickBlock.getOreName(material), this.item,
-							((IDataChecker<IBlockState>) state -> state.getValue(ROCK_MATERIAL) == material && state.getValue(ROCK_TYPE) == type).from(applier), stack);
-					break;
-				default:
-					break;
-				}
-			}
-			List<ItemStack> list = builder.build();
-			switch (type)
-			{
-			case resource :
-				OreDictExt.registerOreFunction("stone", this.item,
-						((IDataChecker<IBlockState>) state -> state.getValue(ROCK_TYPE) == type).from(applier), list);
-				break;
-			case cobble :
-				OreDictExt.registerOreFunction("cobble", this.item,
-						((IDataChecker<IBlockState>) state -> state.getValue(ROCK_TYPE) == type).from(applier), list);
-				break;
-			default:
-				break;
-			}
+			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), String.format(type.local, this.localName));
 		}
-	}
-	
-	@Override
-	public void registerStateToRegister(ExtendedBlockStateRegister register)
-	{
-		register.registerStates(this, ROCK_MATERIAL, ROCK_TYPE, HEATED);
+		
+		MC.stone.registerOre(this.material, new ItemStack(this, 1, 0));
+		MC.stone.registerOre(this.material, new ItemStack(this, 1, 1));
+		MC.cobble.registerOre(this.material, new ItemStack(this, 1, 2));
+		MC.cobble.registerOre(this.material, new ItemStack(this, 1, 4));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 5));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 6));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 7));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 8));
+		MC.brickBlock.registerOre(this.material, new ItemStack(this, 1, 9));
+		OreDict.registerValid("stoneSmoothed" + this.material.oreDictName, new ItemStack(this, 1, 3));
+		OreDict.registerValid("stoneSlab" + this.material.oreDictName, this.slabGroup[0]);
+		OreDict.registerValid("cobbleSlab" + this.material.oreDictName, this.slabGroup[2]);
+		OreDict.registerValid("stoneSmoothedSlab" + this.material.oreDictName, this.slabGroup[3]);
+		OreDict.registerValid("cobbleSlab" + this.material.oreDictName, this.slabGroup[4]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[5]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[6]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[7]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[8]);
+		OreDict.registerValid("brickSlab" + this.material.oreDictName, this.slabGroup[9]);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "rock", ROCK_MATERIAL, HEATED);
-		ModelLoader.setCustomStateMapper(this, mapper);
-		ModelLoader.setCustomMeshDefinition(this.item,
-				stack -> mapper.getModelResourceLocation(getStateFromData(getMetaFromStack(stack))));
-		for(Mat material : ROCK_MATERIAL.getAllowedValues())
-		{
-			for(EnumRockType type : EnumRockType.values())
-			{
-				ModelLoader.registerItemVariants(this.item, mapper.getModelResourceLocation(EnumBlock.rock.apply(material, type)));
-			}
-		}
+		super.registerRender();
+		ClientProxy.registerCompactModel(new StateMapperExt(this.material.modid, "rock/" + this.material.name, null, HEATED), this, ROCK_TYPE);
 	}
 	
-	@Override
-	public String getTranslateNameForItemStack(ItemStack stack)
+	protected BlockRockSlab[] makeSlabs(String name, Mat material, String localName)
 	{
-		StringBuilder builder = new StringBuilder(super.getUnlocalizedName());
-		int meta = ItemStacks.getOrSetupNBT(stack, false).getShort("data");
-		Mat material = Mat.material(stack.getItemDamage());
-		if(material == null) material = Mat.VOID;
-		return builder.append("@").append(material.name).append(".").append(EnumRockType.values()[meta & 0xF].name()).toString();
+		BlockRockSlab[] ret = new BlockRockSlab[EnumRockType.values().length];
+		for(EnumRockType type : EnumRockType.values())
+		{
+			ret[type.ordinal()] = new BlockRockSlab(type.ordinal(), this, ret, name + "." + type.name(), material, String.format(type.local, localName));
+		}
+		return ret;
+	}
+	
+	protected BlockRockStairs[] makeStairs(String name, Mat material2, String localName2)
+	{
+		BlockRockStairs[] ret = new BlockRockStairs[EnumRockType.values().length];
+		for(EnumRockType type : EnumRockType.values())
+		{
+			ret[type.ordinal()] = new BlockRockStairs(type.ordinal(), this, ret, name + "." + type.name(), this.material, String.format(type.local, this.localName));
+		}
+		return ret;
 	}
 	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, ROCK_MATERIAL, ROCK_TYPE, HEATED);
+		return new BlockStateContainer(this, ROCK_TYPE, HEATED);
 	}
 	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return state.withProperty(ROCK_MATERIAL, M.stone).withProperty(ROCK_TYPE, EnumRockType.resource).withProperty(HEATED, false);
+		return state.withProperty(HEATED, false);
 	}
 	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return 0;
+		return state.getValue(ROCK_TYPE).ordinal();
 	}
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getStateFromData(meta);
-	}
-	
-	//Meta part | ID part
-	//FFFF      | FFFF
-	
-	@Override
-	public int getDataFromState(IBlockState state)
-	{
-		int data = 0;
-		data |= state.getValue(ROCK_MATERIAL).id;
-		data |= state.getValue(ROCK_TYPE).ordinal() << 16;
-		if(state.getValue(HEATED))
-			data |= 0x100000;
-		return data;
-	}
-	
-	@Override
-	protected ItemStack createStackedBlock(IBlockState state)
-	{
-		state = state.withProperty(HEATED, false);
-		int data = getDataFromState(state);
-		ItemStack stack = new ItemStack(this.item, 1, data & 0xFFFF);
-		ItemStacks.getOrSetupNBT(stack, true).setShort("data", (short) ((data >> 16) & 0xFFFF));
-		return stack;
-	}
-	
-	private ItemStack createStackedBlock(Mat material, EnumRockType type)
-	{
-		ItemStack stack = new ItemStack(this.item, 1, material.id);
-		ItemStacks.getOrSetupNBT(stack, true).setShort("data", (short) type.ordinal());
-		return stack;
-	}
-	
-	private int getMetaFromStack(ItemStack stack)
-	{
-		int data = stack.getItemDamage();
-		int meta = ItemStacks.getOrSetupNBT(stack, false).getShort("data");
-		data |= meta << 16;
-		return data;
-	}
-	
-	@Override
-	public IBlockState getStateFromData(int meta)
-	{
-		try
-		{
-			IBlockState state = getDefaultState();
-			state = state.withProperty(ROCK_MATERIAL, Mat.material(meta & 0xFFFF));
-			state = state.withProperty(ROCK_TYPE, EnumRockType.values()[(meta >> 16) & 0xFF]);
-			if((meta & 0x100000) != 0) state = state.withProperty(HEATED, true);
-			return state;
-		}
-		catch (Exception exception)
-		{
-			Log.warn("The id : {} is invalid for rock, use default id replaced.", meta);
-			return getDefaultState();
-		}
+		return getDefaultState().withProperty(ROCK_TYPE, EnumRockType.values()[meta]);
 	}
 	
 	@Override
@@ -286,31 +185,12 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 		}
 		else
 		{
-			for(Mat material : ROCK_MATERIAL.getAllowedValues())
-			{
-				for(EnumRockType type : EnumRockType.values())
+			for(EnumRockType type : EnumRockType.values())
+				if(type.displayInTab)
 				{
-					if(type.displayInTab)
-					{
-						list.add(createStackedBlock(material, type));
-					}
+					list.add(new ItemStack(itemIn, 1, type.ordinal()));
 				}
-			}
 		}
-	}
-	
-	@Override
-	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, ItemStack stackIn, EntityLivingBase placer)
-	{
-		IBlockState state = getDefaultState();
-		int data = getMetaFromStack(stackIn);
-		Mat material = Mat.material(data & 0xFFFF);
-		if(!ROCK_MATERIAL.getAllowedValues().contains(material))
-			material = M.stone;
-		state = state.withProperty(ROCK_MATERIAL, material);
-		state = state.withProperty(ROCK_TYPE, EnumRockType.values()[(data >> 16) & 0xF]);
-		return state;
 	}
 	
 	@Override
@@ -334,7 +214,6 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
-		Mat material = state.getValue(ROCK_MATERIAL);
 		EnumRockType type = state.getValue(ROCK_TYPE);
 		switch (type)
 		{
@@ -342,9 +221,9 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 			return 1;
 		case cobble :
 		case mossy :
-			return material.getProperty(MP.property_rock).harvestLevel / 2;
+			return this.property.harvestLevel / 2;
 		default:
-			return material.getProperty(MP.property_rock).harvestLevel;
+			return this.property.harvestLevel;
 		}
 	}
 	
@@ -352,9 +231,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
-		Mat material = state.getValue(ROCK_MATERIAL);
-		
-		List<ItemStack> ret = new ArrayList<>();
+		List<ItemStack> ret = new ArrayList<ItemStack>();
 		if(silkTouch)
 		{
 			ret.add(new ItemStack(this, 1, state.getValue(ROCK_TYPE).ordinal()));
@@ -367,10 +244,10 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 			{
 			case resource:
 			case cobble:
-				ret.add(new ItemStack(EnumItem.stone_chip.item, rand.nextInt(4) + 3, material.id));
+				ret.add(new ItemStack(EnumItem.stone_chip.item, rand.nextInt(4) + 3, this.material.id));
 				break;
 			case cobble_art:
-				ret.add(new ItemStack(EnumItem.stone_chip.item, 9, material.id));
+				ret.add(new ItemStack(EnumItem.stone_chip.item, 9, this.material.id));
 				break;
 			default:
 				ret.add(new ItemStack(this, 1, type.noSilkTouchDropMeta));
@@ -383,12 +260,11 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
-		Mat material = state.getValue(ROCK_MATERIAL);
 		EnumRockType type = state.getValue(ROCK_TYPE);
 		switch (type)
 		{
 		case resource :
-			if(ThermalNet.getTemperature(worldIn, pos, false) > material.getProperty(MP.property_rock).minTemperatureForExplosion)
+			if(ThermalNet.getTemperature(worldIn, pos, false) > this.property.minTemperatureForExplosion)
 			{
 				if(!state.getValue(HEATED) && random.nextInt(3) == 0)
 				{
@@ -564,7 +440,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public double getThermalConduct(World world, BlockPos pos)
 	{
-		return world.getBlockState(pos).getValue(ROCK_MATERIAL).getProperty(MP.property_basic).thermalConduct;
+		return this.material.getProperty(MP.property_basic).thermalConduct;
 	}
 	
 	@Override
@@ -608,7 +484,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
 	{
-		return (float) ((1.0F + block.getBlock().getValue(ROCK_MATERIAL).getProperty(MP.property_tool).damageToEntity) * block.motionY * block.motionY * 0.25F);
+		return (float) ((1.0F + this.material.getProperty(MP.property_tool).damageToEntity) * block.motionY * block.motionY * 0.25F);
 	}
 	
 	@Override
@@ -632,8 +508,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	@Override
 	public void onHeatChanged(World world, BlockPos pos, Direction direction, double amount)
 	{
-		Mat material = world.getBlockState(pos).getValue(ROCK_MATERIAL);
-		if(amount >= material.getProperty(MP.property_rock).minTemperatureForExplosion * material.getProperty(MP.property_basic).heatCap)
+		if(amount >= this.property.minTemperatureForExplosion * this.material.getProperty(MP.property_basic).heatCap)
 		{
 			Worlds.switchProp(world, pos, HEATED, true, 2);
 			world.scheduleUpdate(pos, this, tickRate(world));
@@ -655,15 +530,13 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 		{
 			if(player.canPlayerEdit(pos, side.of(), stack))
 			{
-				IBlockState state = world.getBlockState(pos);
-				Mat material = state.getValue(ROCK_MATERIAL);
-				EnumRockType type = state.getValue(ROCK_TYPE);
+				EnumRockType type = world.getBlockState(pos).getValue(ROCK_TYPE);
 				if(world.setBlockState(pos, EnumBlock.carved_rock.block.getDefaultState(), 2))
 				{
 					TileEntity tile = world.getTileEntity(pos);
 					if(tile instanceof TECustomCarvedStone)
 					{
-						((TECustomCarvedStone) tile).setRock(material, type);
+						((TECustomCarvedStone) tile).setRock(this.material, type);
 						return ((TECustomCarvedStone) tile).carveRock(player, hitX, hitY, hitZ);
 					}
 				}

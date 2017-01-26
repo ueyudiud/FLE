@@ -4,12 +4,6 @@
 
 package farcore.asm;
 
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.GETFIELD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.NEW;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,7 +50,7 @@ import net.minecraft.launchwrapper.IClassTransformer;
  * @author ueyudiud
  *
  */
-public class ClassTransformerModifyMethod implements IClassTransformer
+public class ClassTransformerBase implements IClassTransformer
 {
 	private static final DecimalFormat FORMAT = new DecimalFormat("000");
 	private static final boolean codeOutput = true;
@@ -75,17 +69,17 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			{
 				file = file.getParentFile();
 			}
-			ClassTransformerModifyMethod.file = new File(file, "far_asm");
-			if(!ClassTransformerModifyMethod.file.exists())
+			ClassTransformerBase.file = new File(file, "far_asm");
+			if(!ClassTransformerBase.file.exists())
 			{
-				ClassTransformerModifyMethod.file.mkdirs();
+				ClassTransformerBase.file.mkdirs();
 			}
 		}
 		if(keyOutputStream == null)
 		{
 			try
 			{
-				File file = new File(ClassTransformerModifyMethod.file, "keys.txt");
+				File file = new File(ClassTransformerBase.file, "keys.txt");
 				if(!file.exists())
 				{
 					file.createNewFile();
@@ -192,13 +186,23 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 		}
 	}
 	
-	private OpInformation create(String name)
+	OpInformation create(String name)
 	{
 		return new OpInformation(name);
 	}
 	
 	private boolean putedReplacements = false;
 	private int numInsertions = 0;
+	
+	protected void initObfModifies()
+	{
+		
+	}
+	
+	protected void initMcpModifies()
+	{
+		
+	}
 	
 	private void init()
 	{
@@ -208,212 +212,11 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			this.putedReplacements = true;
 			if(FarOverrideLoadingPlugin.runtimeDeobf)
 			{
-				create("net.minecraft.util.text.TextComponentTranslation")
-				.lName("g|()V")
-				.lPosition(51, 5)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/lib/util/LanguageManager", "translateToLocalOfText", "(Ljava/lang/String;)Ljava/lang/String;", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.entity.player.EntityPlayer")
-				.lName("<init>|(Laid;Lcom/mojang/authlib/GameProfile;)V")
-				.lPosition(115, 2)
-				.lNode(new TypeInsnNode(NEW, "farcore/lib/util/FoodStatExt"))
-				.lLabel(OpType.REPLACE)
-				.lPosition(115, 4)
-				.lNode(new MethodInsnNode(INVOKESPECIAL, "farcore/lib/util/FoodStatExt", "<init>", "()V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraftforge.client.model.ModelLoader")
-				.lName("onRegisterAllBlocks|(Lbou;)V")
-				.lPosition(1079, 0)
-				.lNode(new VarInsnNode(ALOAD, 0),
-						new MethodInsnNode(INVOKESTATIC, "farcore/FarCoreSetup$ClientProxy", "onRegisterAllBlocks", "(Lbou;)V", false))
-				.lLabel(OpType.INSERT)
-				.lPut()
-				.put();
-				create("net.minecraft.world.chunk.Chunk")
-				.lName("a|(Lcm;Laiu;)Laiq;")
-				.lPosition(1202, 3)
-				.lNode(new VarInsnNode(ALOAD, 1),
-						new VarInsnNode(ALOAD, 2),
-						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILcm;Laiu;)Laiq;", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.client.renderer.EntityRenderer")
-				.lName("e|()V")
-				.lPosition(416, 2)
-				.lNode(new FieldInsnNode(GETFIELD, "bnz", "j", "Ljava/util/Random;"),
-						new VarInsnNode(ALOAD, 0),
-						new FieldInsnNode(GETFIELD, "bnz", "N", "I"),
-						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.client.renderer.RenderItem")
-				.lName("a|(Lbyl;ILadz;)V")
-				.lPosition(160, 4)
-				.lLength(2)
-				.lLabel(OpType.REMOVE)
-				.lPosition(160, 8)
-				.lNode(new VarInsnNode(ALOAD, 3),
-						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lbyl;Lct;JLadz;)Ljava/util/List;", false))
-				.lLabel(OpType.REPLACE)
-				.lPosition(163, 5)
-				.lLength(2)
-				.lLabel(OpType.REMOVE)
-				.lPosition(163, 10)
-				.lNode(new VarInsnNode(ALOAD, 3),
-						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lbyl;Lct;JLadz;)Ljava/util/List;", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.client.gui.inventory.GuiContainer")
-				.lName("a|(Ladz;IILjava/lang/String;)V")
-				.lPosition(206, 19)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("a|(Lacc;)V")
-				.lPosition(299, 9)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.world.World")
-				.lName("B|(Lcm;)Z")
-				.lPosition(3590, 18)
-				.lNode(new VarInsnNode(ALOAD, 0),
-						new VarInsnNode(ALOAD, 1),
-						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Laiq;Laid;Lcm;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("w|(Lcm;)Z")
-				.lPosition(2774, 5)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPosition(2777, 6)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("a|(IIII)V")
-				.lPosition(438, 9)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Laid;Laij;Lcm;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("d|()V")
-				.lPosition(2543, 2)
-				.lNode(new VarInsnNode(ALOAD, 0))
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Laid;)V", false))
-				.lLabel(OpType.INSERT)
-				.put();
+				initObfModifies();
 			}
 			else
 			{
-				create("net.minecraft.util.text.TextComponentTranslation")
-				.lName("ensureInitialized|()V")
-				.lPosition(60, 5)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/lib/util/LanguageManager", "translateToLocalOfText", "(Ljava/lang/String;)Ljava/lang/String;", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.entity.player.EntityPlayer")
-				.lName("<init>|(Lnet/minecraft/world/World;Lcom/mojang/authlib/GameProfile;)V")
-				.lPosition(119, 2)
-				.lNode(new TypeInsnNode(NEW, "farcore/lib/util/FoodStatExt"))
-				.lLabel(OpType.REPLACE)
-				.lPosition(119, 4)
-				.lNode(new MethodInsnNode(INVOKESPECIAL, "farcore/lib/util/FoodStatExt", "<init>", "()V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraftforge.client.model.ModelLoader")
-				.lName("onRegisterAllBlocks|(Lnet/minecraft/client/renderer/BlockModelShapes;)V")
-				.lPosition(1079, 0)
-				.lNode(new VarInsnNode(ALOAD, 0),
-						new MethodInsnNode(INVOKESTATIC, "farcore/FarCoreSetup$ClientProxy", "onRegisterAllBlocks", "(Lnet/minecraft/client/renderer/BlockModelShapes;)V", false))
-				.lLabel(OpType.INSERT)
-				.lPut()
-				.put();
-				create("net.minecraft.world.chunk.Chunk")
-				.lName("getBiome|(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;")
-				.lPosition(1278, 3)
-				.lNode(new VarInsnNode(ALOAD, 1),
-						new VarInsnNode(ALOAD, 2),
-						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "regetBiome", "(ILnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.client.renderer.EntityRenderer")
-				.lName("updateRenderer|()V")
-				.lPosition(325, 2)
-				.lNode(new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "random", "Ljava/util/Random;"),
-						new VarInsnNode(ALOAD, 0),
-						new FieldInsnNode(GETFIELD, "net/minecraft/client/renderer/EntityRenderer", "rainSoundCounter", "I"),
-						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderDropOnGround", "(Ljava/util/Random;I)V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.client.renderer.RenderItem")
-				.lName("renderModel|(Lnet/minecraft/client/renderer/block/model/IBakedModel;ILnet/minecraft/item/ItemStack;)V")
-				.lPosition(133, 4)
-				.lLength(2)
-				.lLabel(OpType.REMOVE)
-				.lPosition(133, 8)
-				.lNode(new VarInsnNode(ALOAD, 3),
-						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
-				.lLabel(OpType.REPLACE)
-				.lPosition(136, 5)
-				.lLength(2)
-				.lLabel(OpType.REMOVE)
-				.lPosition(136, 10)
-				.lNode(new VarInsnNode(ALOAD, 3),
-						new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderItemModel", "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.client.gui.inventory.GuiContainer")
-				.lName("drawItemStack|(Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
-				.lPosition(206, 19)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lnet/minecraft/client/renderer/RenderItem;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("drawSlot|(Lnet/minecraft/inventory/Slot;)V")
-				.lPosition(299, 9)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/ClientOverride", "renderCustomItemOverlayIntoGUI", "(Lnet/minecraft/client/renderer/RenderItem;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.put();
-				create("net.minecraft.world.World")
-				.lName("isRainingAt|(Lnet/minecraft/util/math/BlockPos;)Z")
-				.lPosition(3882, 18)
-				.lNode(new VarInsnNode(ALOAD, 0),
-						new VarInsnNode(ALOAD, 1),
-						new MethodInsnNode(INVOKESTATIC, "farcore/util/U$Worlds", "isRainingAtBiome", "(Lnet/minecraft/world/biome/Biome;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("checkLight|(Lnet/minecraft/util/math/BlockPos;)Z")
-				.lPosition(2984, 5)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPosition(2987, 6)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("markBlocksDirtyVertical|(IIII)V")
-				.lPosition(500, 9)
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "checkLightFor", "(Lnet/minecraft/world/World;Lnet/minecraft/world/EnumSkyBlock;Lnet/minecraft/util/math/BlockPos;)Z", false))
-				.lLabel(OpType.REPLACE)
-				.lPut()
-				.lName("tick|()V")
-				.lPosition(2741, 2)
-				.lNode(new VarInsnNode(ALOAD, 0))
-				.lNode(new MethodInsnNode(INVOKESTATIC, "farcore/asm/LightFix", "tickLightUpdate", "(Lnet/minecraft/world/World;)V", false))
-				.lLabel(OpType.INSERT)
-				.lPut()
-				.put();
+				initMcpModifies();
 			}
 		}
 		outputInit();
@@ -437,8 +240,8 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 	{
 		try
 		{
-			LOG.info("Far Core start to modify class {" + clazzName + "}.");
-			LOG.debug("Checking targets are {" + information.modifies + "}");
+			LOG.info("Far Core start to modify class {}.", clazzName);
+			LOG.debug("Checking targets are {}", information.modifies);
 			ClassNode node = new ClassNode();
 			ClassReader reader = new ClassReader(basicClass);
 			reader.accept(node, 0);
@@ -447,17 +250,17 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 				String name = node2.name + "|" + node2.desc;
 				if(information.modifies.containsKey(name))
 				{
-					LOG.debug("Injecting method  {" + name + "}.");
+					LOG.debug("Injecting method  {}.", name);
 					logOutput(clazzName + "." + node2.name + "~source", node2.instructions);
 					boolean success = modifyMethodNode(node2.instructions, information.modifies.remove(name));
 					logOutput(clazzName + "." + node2.name + "~modified", node2.instructions);
 					if(!success)
 					{
-						LOG.info("Injected method {" + name + "} failed.");
+						LOG.info("Injected method {} failed.", name);
 					}
 					else
 					{
-						LOG.debug("Injected method {" + name + "} success.");
+						LOG.debug("Injected method {} success.", name);
 					}
 					if(information.modifies.isEmpty())
 					{
@@ -467,7 +270,7 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			}
 			ClassWriter writer = new ClassWriter(1);
 			node.accept(writer);
-			LOG.info("End modify class {" + clazzName + "}.");
+			LOG.info("End modify class {}.", clazzName);
 			return writer.toByteArray();
 		}
 		catch(Exception exception)
@@ -694,6 +497,30 @@ public class ClassTransformerModifyMethod implements IClassTransformer
 			this.cacheName = null;
 			this.label = null;
 			return this;
+		}
+		
+		public OpInformation insert(int line, int off, boolean isBefore, AbstractInsnNode...nodes)
+		{
+			return lPosition(line, off).lNode(nodes).lLabel(isBefore ? OpType.INSERT_BEFORE : OpType.INSERT);
+		}
+		
+		public OpInformation remove(int line, int off)
+		{
+			return remove(line, off, 1);
+		}
+		
+		public OpInformation remove(int line, int off, int length)
+		{
+			return lPosition(line, off).lLength(length).lLabel(OpType.REMOVE);
+		}
+		
+		public OpInformation replace(int line, int off, AbstractInsnNode...nodes)
+		{
+			return replace(line, off, 1, nodes);
+		}
+		public OpInformation replace(int line, int off, int len, AbstractInsnNode...nodes)
+		{
+			return lPosition(line, off).lLength(len).lNode(nodes).lLabel(OpType.REPLACE);
 		}
 		
 		public void put()

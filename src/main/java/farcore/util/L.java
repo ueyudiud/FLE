@@ -149,6 +149,11 @@ public class L
 		for(E element : iterable) executable.execute(element);
 	}
 	
+	public static <E> void executeAll(E[] iterable, Executable<E> executable)
+	{
+		for(E element : iterable) executable.execute(element);
+	}
+	
 	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, Function<? super K, ? extends V> function)
 	{
 		for(K key : collection) { map.put(key, function.apply(key)); }
@@ -293,6 +298,24 @@ public class L
 		}
 	}
 	
+	/**
+	 * Create a array with ranged number.<p>
+	 * Examples :
+	 * <code>
+	 * Arrays.toString(rangeIntArray(1, 3));
+	 * </code>
+	 * and the result is {@code [1, 2]}
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public static int[] rangeIntArray(int from, int to)
+	{
+		int[] array = new int[to - from];
+		for(int i = 0; i < array.length; array[i] = from + i, i++);
+		return array;
+	}
+	
 	public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
 	{
 		return arg1 == arg2 ? true :
@@ -374,5 +397,48 @@ public class L
 	public static <E> ArrayList<E> castToArrayListOrWrap(Collection<?> col)
 	{
 		return col instanceof ArrayList ? (ArrayList<E>) col : new ArrayList(col);
+	}
+	
+	public static <E> boolean contain(E[] list, E arg)
+	{
+		for(E element : list) if(equal(element, arg)) return true;
+		return false;
+	}
+	
+	public static <E> int indexOf(E[] list, E arg)
+	{
+		for(int i = 0; i < list.length; ++i) if(equal(list[i], arg)) return i;
+		return -1;
+	}
+	
+	public static boolean contain(int[] list, int arg)
+	{
+		for(int element : list) if(element == arg) return true;
+		return false;
+	}
+	
+	public static int indexOf(int[] list, int arg)
+	{
+		for(int i = 0; i < list.length; ++i) if(list[i] == arg) return i;
+		return -1;
+	}
+	
+	public static int[] copyToLength(int[] array, int len)
+	{
+		int[] result = new int[len];
+		System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
+		return result;
+	}
+	
+	public static <T> T[] copyToLength(T[] array, int len)
+	{
+		T[] result = (T[]) Array.newInstance(array.getClass().getComponentType(), len);
+		System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
+		return result;
+	}
+	
+	public static <S, K, T> Function<S, T> withCast(Function<K, T> function, Class<K> clazz)
+	{
+		return resource -> function.apply(clazz.cast(resource));
 	}
 }

@@ -31,6 +31,7 @@ public class BlockWater extends BlockStandardFluid
 	{
 		super(fluid, Material.WATER);
 		EnumBlock.water.set(this);
+		EnumBlock.water.stateApplier = createFunctionApplier(this);
 	}
 	
 	@Override

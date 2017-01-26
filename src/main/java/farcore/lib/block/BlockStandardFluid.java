@@ -1,6 +1,7 @@
 package farcore.lib.block;
 
 import java.util.Random;
+import java.util.function.Function;
 
 import farcore.data.CT;
 import farcore.event.FluidBlockEvent.FluidTouchBlockEvent;
@@ -31,6 +32,12 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 {
 	public final FluidBase fluid;
 	private final FluidStack blockValue;
+	
+	protected static Function<Object[], IBlockState> createFunctionApplier(BlockStandardFluid block)
+	{
+		return objects -> objects.length == 0 ?  block.getDefaultState() :
+			block.getDefaultState().withProperty(LEVEL, ((Number) objects[0]).intValue() + 1);
+	}
 	
 	public BlockStandardFluid(String registerName, FluidBase fluid, Material material)
 	{

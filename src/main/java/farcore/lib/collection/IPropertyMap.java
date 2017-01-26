@@ -17,8 +17,9 @@ public interface IPropertyMap
 	
 	Set<IProperty> keySet();
 	
-	static interface IProperty<V>
+	@FunctionalInterface
+	interface IProperty<V>
 	{
-		default V defValue() { return null; }
+		V defValue();
 	}
 }

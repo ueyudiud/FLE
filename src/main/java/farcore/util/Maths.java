@@ -64,25 +64,25 @@ public class Maths
 	public static double mod(double a, double b)
 	{
 		double v;
-		return (v = a % b) > 0 ? v : v + b;
+		return (v = a % b) >= 0 ? v : v + b;
 	}
 	
 	public static float mod(float a, float b)
 	{
 		float v;
-		return (v = a % b) > 0 ? v : v + b;
+		return (v = a % b) >= 0 ? v : v + b;
 	}
 	
 	public static int mod(int a, int b)
 	{
 		int v;
-		return (v = a % b) > 0 ? v : v + b;
+		return (v = a % b) >= 0 ? v : v + b;
 	}
 	
 	public static long mod(long a, long b)
 	{
 		long v;
-		return (v = a % b) > 0 ? v : v + b;
+		return (v = a % b) >= 0 ? v : v + b;
 	}
 	
 	public static float average(float...floats)

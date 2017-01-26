@@ -33,5 +33,11 @@ public interface INBTWriter<T>
 		return nbt;
 	}
 	
+	@SuppressWarnings("unchecked")
+	default NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	{
+		return writeToNBT1((T) this, nbt);
+	}
+	
 	void writeToNBT(T target, NBTTagCompound nbt);
 }

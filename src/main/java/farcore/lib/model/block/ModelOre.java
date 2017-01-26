@@ -27,11 +27,10 @@ import com.google.gson.stream.JsonReader;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
-import farcore.data.MP;
 import farcore.lib.block.instance.BlockOre.OreStateWrapper;
-import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.ItemOre;
 import farcore.lib.material.Mat;
+import farcore.lib.model.BakedModelBase;
 import farcore.lib.model.item.ICustomItemRenderModel;
 import farcore.lib.util.Log;
 import farcore.lib.util.SubTag;
@@ -125,7 +124,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	{
 		LOAD_TARGETS.add(location);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	static class OreRenderConfig
 	{
@@ -133,19 +132,19 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		Map<String, ResourceLocation> sourceMap = new HashMap();
 		Map<String, ResourceLocation> modelMap = new HashMap();
 	}
-
+	
 	private Map<String, String> renderTypes = new HashMap();
 	private Map<String, ResourceLocation> sourceMap = new HashMap();
 	private Map<String, ResourceLocation> models = new HashMap();
 	
 	private ModelOre(){ }
-
+	
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
-		models.clear();
-		sourceMap.clear();
-		renderTypes.clear();
+		this.models.clear();
+		this.sourceMap.clear();
+		this.renderTypes.clear();
 		getSource();
 		for(ResourceLocation location : LOAD_TARGETS)
 		{
@@ -162,9 +161,9 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 				InputStream stream = blockstateResource.getInputStream();
 				reader = new JsonReader(new BufferedReader(new InputStreamReader(stream)));
 				OreRenderConfig config = GSON.fromJson(reader, OreRenderConfig.class);
-				models.putAll(config.modelMap);
-				sourceMap.putAll(config.sourceMap);
-				renderTypes.putAll(config.renderTypes);
+				this.models.putAll(config.modelMap);
+				this.sourceMap.putAll(config.sourceMap);
+				this.renderTypes.putAll(config.renderTypes);
 			}
 			catch (IOException exception)
 			{
@@ -190,14 +189,14 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			}
 		}
 	}
-
+	
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
 		return MODEL_RESOURCE_LOCATION.toString().equals(modelLocation.toString()) ||
 				MODEL_ITEM_RESOURCE_LOCATION.toString().equals(modelLocation.toString());
 	}
-
+	
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
@@ -230,7 +229,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	
 	private Map<String, ResourceLocation> getSource()
 	{
-		if(sourceMap.isEmpty())
+		if(this.sourceMap.isEmpty())
 		{
 			for(Mat material : Mat.materials())
 			{
@@ -238,26 +237,26 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 				{
 					for(EnumOreAmount amount : EnumOreAmount.values())
 					{
-						sourceMap.put(material.name + "@" + amount.name(), new ResourceLocation(material.modid, "blocks/ore/" + amount.name() + "/" + material.name));
+						this.sourceMap.put(material.name + "@" + amount.name(), new ResourceLocation(material.modid, "blocks/ore/" + amount.name() + "/" + material.name));
 					}
 				}
 			}
 		}
-		return sourceMap;
+		return this.sourceMap;
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
 		return ImmutableList.of();
 	}
-
+	
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
 		return getSource().values();
 	}
-
+	
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
@@ -270,9 +269,9 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			{
 				String key = material.name;
 				String type = null;
-				if(renderTypes.containsKey(key))
+				if(this.renderTypes.containsKey(key))
 				{
-					type = renderTypes.get(key);
+					type = this.renderTypes.get(key);
 					if(this.models.containsKey(type))
 					{
 						type = this.models.get(type).toString();
@@ -296,7 +295,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 					String key1 = key + "@" + amount.name();
 					if(model instanceof IRetexturableModel)
 					{
-						String location = sourceMap.containsKey(key) ? sourceMap.get(key).toString() : sourceMap.containsKey(key1) ? sourceMap.get(key1).toString() : material.modid + "blocks/ore/" + material.name;
+						String location = this.sourceMap.containsKey(key) ? this.sourceMap.get(key).toString() : this.sourceMap.containsKey(key1) ? this.sourceMap.get(key1).toString() : material.modid + "blocks/ore/" + material.name;
 						model = ((IRetexturableModel) model).retexture(ImmutableMap.of("ore", location));
 					}
 					typeBuilder.put(key1, model.bake(state, format, bakedTextureGetter));
@@ -306,13 +305,13 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		Map<String, IBakedModel> bakedmodels = typeBuilder.build();
 		return new BakedModelOre(bakedmodels, format);
 	}
-
+	
 	@Override
 	public IModelState getDefaultState()
 	{
 		return TRSRTransformation.identity();
 	}
-
+	
 	private class ModelOreItem implements IModel
 	{
 		@Override
@@ -324,7 +323,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		@Override
 		public Collection<ResourceLocation> getTextures()
 		{
-			return sourceMap.values();
+			return ModelOre.this.sourceMap.values();
 		}
 		
 		@Override
@@ -340,9 +339,9 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 				{
 					String key = material.name;
 					String type = null;
-					if(renderTypes.containsKey(key))
+					if(ModelOre.this.renderTypes.containsKey(key))
 					{
-						type = renderTypes.get(key);
+						type = ModelOre.this.renderTypes.get(key);
 						if(ModelOre.this.models.containsKey(type))
 						{
 							type = ModelOre.this.models.get(type).toString();
@@ -366,7 +365,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 						String key1 = key + "@" + amount.name();
 						if(model instanceof IRetexturableModel)
 						{
-							String location = sourceMap.containsKey(key) ? sourceMap.get(key).toString() : sourceMap.containsKey(key1) ? sourceMap.get(key1).toString() : material.modid + "blocks/ore/" + material.name;
+							String location = ModelOre.this.sourceMap.containsKey(key) ? ModelOre.this.sourceMap.get(key).toString() : ModelOre.this.sourceMap.containsKey(key1) ? ModelOre.this.sourceMap.get(key1).toString() : material.modid + "blocks/ore/" + material.name;
 							model = ((IRetexturableModel) model).retexture(ImmutableMap.of("ore", location));
 						}
 						typeBuilder.put(key1, model.bake(state, format, bakedTextureGetter));
@@ -383,7 +382,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			return TRSRTransformation.identity();
 		}
 	}
-
+	
 	private static class BakedModelOreItem extends BakedModelOre
 	{
 		private IBakedModel parent;
@@ -393,27 +392,27 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			super(models, format);
 			this.parent = parent;
 		}
-
+		
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms()
 		{
-			return parent.getItemCameraTransforms();
+			return this.parent.getItemCameraTransforms();
 		}
-
+		
 		@Override
 		public ItemOverrideList getOverrides()
 		{
-			return parent.getOverrides();
+			return this.parent.getOverrides();
 		}
 		
 		@Override
 		public boolean isGui3d()
 		{
-			return parent.isGui3d();
+			return this.parent.isGui3d();
 		}
 	}
 	
-	private static class BakedModelOre implements ICustomItemRenderModel
+	private static class BakedModelOre implements ICustomItemRenderModel, BakedModelBase
 	{
 		Map<String, TextureAtlasSprite> icons;
 		Map<String, IBakedModel> models;
@@ -422,7 +421,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		{
 			this.models = models;
 		}
-
+		
 		@Override
 		public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 		{
@@ -432,7 +431,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			state = new OreStateWrapper(state, Mat.material(stack.getItemDamage()), ItemOre.getAmount(nbt), ItemOre.getRockMaterial(nbt), ItemOre.getRockType(nbt));
 			return getQuads(state, facing, rand);
 		}
-
+		
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
@@ -441,56 +440,31 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 				OreStateWrapper wrapper = (OreStateWrapper) state;
 				Mat ore = wrapper.ore;
 				if(ore == Mat.VOID) return ImmutableList.of();
-				Block block = wrapper.rock.getProperty(MP.property_rock).block;
-				IBlockState state2 = block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, wrapper.type);
+				IBlockState state1 = EnumBlock.rock.apply(wrapper.rock, wrapper.type);
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 						.getModelManager().getBlockModelShapes()
-						.getModelForState(state2);
+						.getModelForState(state1);
 				ImmutableList.Builder<BakedQuad> list = ImmutableList.builder();
-				list.addAll(model.getQuads(state2, side, rand));
-				if(models.containsKey(ore.name + "@" + wrapper.amount.name()))
+				list.addAll(model.getQuads(state1, side, rand));
+				if(this.models.containsKey(ore.name + "@" + wrapper.amount.name()))
 				{
-					list.addAll(models.get(ore.name + "@" + wrapper.amount.name()).getQuads(state.getBlock().getDefaultState(), side, rand));
+					list.addAll(this.models.get(ore.name + "@" + wrapper.amount.name()).getQuads(state.getBlock().getDefaultState(), side, rand));
 				}
 				return list.build();
 			}
 			return ImmutableList.of();
 		}
-
+		
 		@Override
 		public boolean isAmbientOcclusion()
 		{
 			return false;
 		}
-
+		
 		@Override
 		public boolean isGui3d()
 		{
 			return true;
-		}
-
-		@Override
-		public boolean isBuiltInRenderer()
-		{
-			return false;
-		}
-
-		@Override
-		public TextureAtlasSprite getParticleTexture()
-		{
-			return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-		}
-
-		@Override
-		public ItemCameraTransforms getItemCameraTransforms()
-		{
-			return ItemCameraTransforms.DEFAULT;
-		}
-
-		@Override
-		public ItemOverrideList getOverrides()
-		{
-			return ItemOverrideList.NONE;
 		}
 	}
 }

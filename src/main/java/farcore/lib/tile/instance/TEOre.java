@@ -10,8 +10,8 @@ import farcore.data.M;
 import farcore.data.MP;
 import farcore.data.EnumRockType;
 import farcore.energy.thermal.IThermalHandler;
-import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.ItemOre;
+import farcore.lib.block.instance.old.BlockRockOld;
 import farcore.lib.material.Mat;
 import farcore.lib.net.tile.PacketTEAsk;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
@@ -419,7 +419,7 @@ ITP_Drops, IToolableTile
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
 	{
-		U.Server.addBlockLandingEffects(worldObj, pos, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), entity, numberOfParticles);
+		U.Server.addBlockLandingEffects(worldObj, pos, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRockOld.ROCK_TYPE, rockType), entity, numberOfParticles);
 		return true;
 	}
 	
@@ -427,7 +427,7 @@ ITP_Drops, IToolableTile
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
-		U.Client.addBlockHitEffect(worldObj, random, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), target.sideHit, pos, manager);
+		U.Client.addBlockHitEffect(worldObj, random, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRockOld.ROCK_TYPE, rockType), target.sideHit, pos, manager);
 		return true;
 	}
 	
@@ -435,7 +435,7 @@ ITP_Drops, IToolableTile
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
-		U.Client.addBlockDestroyEffects(worldObj, pos, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, rockType), manager);
+		U.Client.addBlockDestroyEffects(worldObj, pos, rock.getProperty(MP.property_rock).block.getDefaultState().withProperty(BlockRockOld.ROCK_TYPE, rockType), manager);
 		return true;
 	}
 }

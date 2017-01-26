@@ -8,6 +8,7 @@ import farcore.lib.block.BlockSingleTE;
 import farcore.lib.block.IExtendedDataBlock;
 import farcore.lib.util.CreativeTabBase;
 import farcore.lib.util.UnlocalizedList;
+import farcore.lib.world.chunk.ExtendedBlockStateRegister;
 import farcore.util.ItemStacks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
@@ -55,8 +56,8 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
-			int meta, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
+			float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
 		return getDefaultState().withProperty(INT, 20);
 	}
@@ -129,5 +130,11 @@ public class BlockThermalDebug extends BlockSingleTE implements IExtendedDataBlo
 	public IBlockState getStateFromData(int meta)
 	{
 		return getDefaultState().withProperty(INT, meta);
+	}
+	
+	@Override
+	public void registerStateToRegister(ExtendedBlockStateRegister register)
+	{
+		register.registerStates(this);
 	}
 }

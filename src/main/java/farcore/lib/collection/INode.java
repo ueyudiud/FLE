@@ -26,7 +26,7 @@ public interface INode<T> extends Iterable<T>
 	@Override
 	default Iterator<T> iterator()
 	{
-		return new NodeIterator<T>();
+		return new NodeIterator<>(this);
 	}
 	
 	T value();
@@ -120,6 +120,11 @@ public interface INode<T> extends Iterable<T>
 	static final class NodeIterator<E> implements Iterator<E>
 	{
 		INode<E> currentNode;
+		
+		public NodeIterator(INode<E> node)
+		{
+			this.currentNode = node;
+		}
 		
 		@Override
 		public boolean hasNext()

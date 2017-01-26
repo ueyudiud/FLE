@@ -2,7 +2,7 @@ package fargen.core.biome.layer;
 
 import java.util.Random;
 
-import farcore.lib.block.instance.BlockRock;
+import farcore.lib.block.instance.old.BlockRockOld;
 import fargen.core.biome.BiomeBase;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
@@ -14,6 +14,6 @@ public abstract class BiomeLayerGenerator
 
 	protected boolean isRock(Block block)
 	{
-		return block instanceof BlockRock;
+		return block instanceof BlockRockOld;
 	}
 }

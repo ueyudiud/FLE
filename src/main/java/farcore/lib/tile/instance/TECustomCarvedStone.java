@@ -11,7 +11,7 @@ import farcore.data.M;
 import farcore.data.MP;
 import farcore.data.EnumRockType;
 import farcore.instances.MaterialTextureLoader;
-import farcore.lib.block.instance.BlockRock;
+import farcore.lib.block.instance.old.BlockRockOld;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
@@ -578,7 +578,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
 	{
-		IBlockState state2 = property().block.getDefaultState().withProperty(BlockRock.ROCK_TYPE, this.type);
+		IBlockState state2 = property().block.getDefaultState().withProperty(BlockRockOld.ROCK_TYPE, this.type);
 		U.Server.addBlockLandingEffects(this.worldObj, this.pos, state2, entity, numberOfParticles);
 		return true;
 	}

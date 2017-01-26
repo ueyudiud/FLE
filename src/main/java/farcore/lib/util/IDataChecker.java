@@ -1,6 +1,8 @@
 package farcore.lib.util;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Function;
 
 import farcore.util.L;
 
@@ -12,7 +14,24 @@ public interface IDataChecker<T>
 	IDataChecker NOT_NULL = arg -> arg != null;
 	IDataChecker NULL     = arg -> arg == null;
 	
+	/**
+	 * Uses for modifiable collection checker.
+	 * @param collection
+	 * @return
+	 */
+	static <T> IDataChecker<T> or(Collection<IDataChecker<T>> collection)
+	{
+		return target -> {
+			for(IDataChecker<T> checker : collection) if(checker.isTrue(target)) return true; return false;
+		};
+	}
+	
 	boolean isTrue(T target);
+	
+	default <K> IDataChecker<K> from(Function<K, T> function)
+	{
+		return key -> isTrue(function.apply(key));
+	}
 	
 	default IDataChecker<T> not()
 	{

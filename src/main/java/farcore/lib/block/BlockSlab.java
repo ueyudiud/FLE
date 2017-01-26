@@ -101,8 +101,8 @@ public abstract class BlockSlab extends BlockBase
 	}
 	
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
-			int meta, EntityLivingBase placer)
+	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
+			float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
 		return getDefaultState().withProperty(EnumSlabState.PROPERTY,
 				placer.isSneaking() ? (hitY > .5F ? EnumSlabState.UP : EnumSlabState.DOWN) :

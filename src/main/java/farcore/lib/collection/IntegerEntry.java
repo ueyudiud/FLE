@@ -4,23 +4,23 @@ public class IntegerEntry<K>
 {
 	K key;
 	int value;
-
+	
 	public IntegerEntry(K key, int value)
 	{
 		this.key = key;
 		this.value = value;
 	}
-
+	
 	public K getKey()
 	{
-		return key;
+		return this.key;
 	}
-
+	
 	public int getValue()
 	{
-		return value;
+		return this.value;
 	}
-
+	
 	public int setValue(int value)
 	{
 		int old = this.value;

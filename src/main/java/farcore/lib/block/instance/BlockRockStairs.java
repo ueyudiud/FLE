@@ -11,6 +11,7 @@ import farcore.data.CT;
 import farcore.data.EnumRockType;
 import farcore.lib.block.BlockStairV1;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
+import farcore.lib.block.instance.old.BlockRockOld;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.model.block.statemap.StateMapperExt;
@@ -35,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockRockStairs extends BlockStairV1 implements IThermalCustomBehaviorBlock
 {
 	private final Mat material;
-	private final BlockRock parent;
+	private final BlockRockOld parent;
 	private String localName;
 	/**
 	 * The meta of main block.
@@ -47,7 +48,7 @@ public class BlockRockStairs extends BlockStairV1 implements IThermalCustomBehav
 	private final BlockRockStairs[] group;
 	public final PropertyRock property;
 	
-	public BlockRockStairs(int id, BlockRock parent, BlockRockStairs[] group, String name, Mat material,
+	public BlockRockStairs(int id, BlockRockOld parent, BlockRockStairs[] group, String name, Mat material,
 			String localName)
 	{
 		super(name + ".stairs", Material.ROCK);
@@ -64,7 +65,7 @@ public class BlockRockStairs extends BlockStairV1 implements IThermalCustomBehav
 			setCreativeTab(CT.tabBuilding);
 		}
 		setTickRandomly(true);
-		setDefaultState(getDefaultState().withProperty(BlockRock.HEATED, false));
+		setDefaultState(getDefaultState().withProperty(BlockRockOld.HEATED, false));
 	}
 	
 	@Override
@@ -79,7 +80,7 @@ public class BlockRockStairs extends BlockStairV1 implements IThermalCustomBehav
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperStiars(this.material.modid, "rock/stairs/" + this.material.name, null, BlockRock.HEATED);
+		StateMapperExt mapper = new StateMapperStiars(this.material.modid, "rock/stairs/" + this.material.name, null, BlockRockOld.HEATED);
 		mapper.setVariants("type", EnumRockType.values()[this.meta].getName());
 		ClientProxy.registerCompactModel(mapper, this, 1);
 	}
@@ -87,7 +88,7 @@ public class BlockRockStairs extends BlockStairV1 implements IThermalCustomBehav
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, FACING, HALF, SHAPE, BlockRock.HEATED);
+		return new BlockStateContainer(this, FACING, HALF, SHAPE, BlockRockOld.HEATED);
 	}
 	
 	@Override

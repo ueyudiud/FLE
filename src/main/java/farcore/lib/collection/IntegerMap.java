@@ -3,126 +3,186 @@ package farcore.lib.collection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
+
+import com.google.common.collect.Iterators;
+
+import farcore.util.L;
+import farcore.util.Maths;
 
 public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 {
-	private final float extFactor;
-	private int point;
+	private final float loadFactor;
 	private int size;
-	private int[] list;
-	private Object[] keys;
-
-	public IntegerMap(float v)
+	private INode<IntegerEntry<T>>[] entries;
+	
+	protected int hashcode(Object object)
 	{
-		this.extFactor = v;
-		this.list = new int[4];
-		this.keys = new Object[4];
+		return Objects.hashCode(object);
 	}
+	
 	public IntegerMap()
 	{
-		this(0.25F);
+		this(4);
+	}
+	public IntegerMap(int initialCapacity)
+	{
+		this(initialCapacity, 0.75F);
+	}
+	public IntegerMap(int initialCapacity, float loadFactor)
+	{
+		if (initialCapacity < 0)
+			throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
+		if (loadFactor <= 0 || Float.isNaN(loadFactor))
+			throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
+		this.loadFactor = loadFactor;
+		this.entries = new INode[initialCapacity];
 	}
 	
-	private int freePoint()
+	private Integer putChecked(T target, int value)
 	{
-		while(point < keys.length)
+		if(this.size + 1 > this.entries.length)
 		{
-			if(keys[point] == null)
-				return point;
-			++point;
+			INode<IntegerEntry<T>>[] entries = this.entries;
+			this.entries = new INode[(this.size + 1) + (this.size >> 1)];
+			for(INode<IntegerEntry<T>> node : entries)
+			{
+				if(node == null) continue;
+				for(IntegerEntry<T> entry : node)
+				{
+					putUnchecked(entry);
+				}
+			}
 		}
-		extList((int) (point * (1 + extFactor)) + 1);
-		++point;
-		return point;
+		return putUnchecked(new IntegerEntry(target, value));
 	}
 	
-	private void extList(int size)
+	private Integer putUnchecked(IntegerEntry<T> entry)
 	{
-		if(size() > size) return;
-		int[] l = new int[size];
-		Object[] k = new Object[size];
-		System.arraycopy(list, 0, l, 0, list.length);
-		System.arraycopy(keys, 0, k, 0, keys.length);
-		list = l;
-		keys = k;
-	}
-	
-	private int indexOf(Object key)
-	{
-		int i = 0;
-		for(Object string; i < keys.length;)
+		int hashcode = hashcode(entry.key);
+		int i = Maths.mod(hashcode, this.entries.length);
+		if(this.entries[i] == null)
 		{
-			string = keys[i];
-			if(string != null && string.equals(key))
-				return i;
-			++i;
+			this.entries[i] = Node.first(entry);
+			return null;
 		}
-		return -1;
+		else
+		{
+			for(IntegerEntry<T> entry1 : this.entries[i])
+			{
+				if(Objects.equals(entry.key, entry1.key))
+				{
+					int old = entry1.value;
+					entry1.value = entry.value;
+					return old;
+				}
+			}
+			this.entries[i].addNext(entry);
+			return null;
+		}
+	}
+	
+	private IntegerEntry<T> getEntry(Object key)
+	{
+		int hashcode = hashcode(key);
+		int i = Maths.mod(hashcode, this.entries.length);
+		if(this.entries[i] == null) return null;
+		else
+		{
+			for(IntegerEntry<T> entry : this.entries[i])
+			{
+				if(Objects.equals(key, entry.key))
+					return entry;
+			}
+		}
+		return null;
 	}
 	
 	public int size()
 	{
-		return size;
+		return this.size;
 	}
-
+	
 	public boolean isEmpty()
 	{
 		return size() == 0;
 	}
-
+	
 	public boolean containsKey(Object key)
 	{
-		return indexOf(key) != -1;
+		return getEntry(key) != null;
 	}
-
+	
 	public int get(Object key)
 	{
-		int v = indexOf(key);
-		return v == -1 ? 0 : list[v];
+		return getOrDefault(key, 0);
 	}
 	
 	public int getOrDefault(Object key, int value)
 	{
-		int v = indexOf(key);
-		return v == -1 ? value : list[v];
+		IntegerEntry<T> entry = getEntry(key);
+		return entry == null ? value : entry.value;
 	}
-
+	
 	public int put(T key, int value)
 	{
-		int v = indexOf(key);
-		if(v != -1)
+		Integer old = putChecked(key, value);
+		if(old == null)
 		{
-			int r = list[v];
-			list[v] = value;
-			return r;
+			++this.size;
+			return 0;
 		}
-		v = freePoint();
-		keys[v] = key;
-		list[v] = value;
-		++size;
-		return 0;
+		else
+		{
+			return old;
+		}
+	}
+	
+	private int removeAt(int id, INode<IntegerEntry<T>> node)
+	{
+		boolean flag1 = !node.hasLast();
+		boolean flag2 = !node.hasNext();
+		if(flag1 && flag2)
+		{
+			this.entries[id] = null;
+		}
+		else if(flag1)
+		{
+			this.entries[id] = node.next();
+		}
+		node.remove();
+		return node.value().value;
 	}
 	
 	public int remove(Object key)
 	{
-		int v = indexOf(key);
-		if(v == -1) return 0;
-		int r = list[v];
-		list[v] = 0;
-		keys[v] = null;
-		--size;
-		point = v;
-		return r;
+		int hashcode = hashcode(key);
+		int i = Maths.mod(hashcode, this.entries.length);
+		if(this.entries[i] == null) return 0;
+		else
+		{
+			INode<IntegerEntry<T>> node0 = INode.telomereNode(this.entries[i]);
+			do
+			{
+				node0 = node0.next();
+				if(L.equal(node0.value().key, key))
+				{
+					return removeAt(i, node0);
+				}
+			}
+			while (node0.hasNext());
+			return 0;
+		}
+		
 	}
-
+	
 	public void clear()
 	{
-		Arrays.fill(list, 0);
-		Arrays.fill(keys, null);
-		size = 0;
+		Arrays.fill(this.entries, null);
+		this.size = 0;
 	}
-
+	
 	public Set<T> keySet()
 	{
 		return new IntegerMapSet();
@@ -134,145 +194,140 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		return new IntegerMapItr();
 	}
 	
-	private class IntegerMapItr implements Iterator<IntegerEntry<T>>
+	class IntegerMapItr implements Iterator<IntegerEntry<T>>
 	{
+		boolean modified;
 		int pointer = -1;
+		INode<IntegerEntry<T>> currentNode;
 		
-		private int nextPoint(boolean flag)
-		{
-			if(flag)
-			{
-				while(pointer < keys.length - 1)
-				{
-					if(keys[++pointer] != null)
-						return pointer;
-				}
-			}
-			else
-			{
-				int pointer = this.pointer;
-				while(pointer < keys.length - 1)
-				{
-					if(keys[++pointer] != null)
-						return pointer;
-				}
-			}
-			return -1;
-		}
-
 		@Override
 		public boolean hasNext()
 		{
-			return nextPoint(false) != -1;
+			if(this.currentNode == null && !this.currentNode.hasNext())
+			{
+				int pointer = this.pointer + 1;
+				while (pointer < IntegerMap.this.entries.length && IntegerMap.this.entries[pointer] != null)
+				{
+					++pointer;
+				}
+				return IntegerMap.this.entries[pointer] != null;
+			}
+			return true;
 		}
-
+		
 		@Override
 		public IntegerEntry<T> next()
 		{
-			int v = nextPoint(true);
-			return new IntegerEntry(keys[v], list[v]);
+			this.modified = false;
+			if(this.currentNode == null || !this.currentNode.hasNext())
+			{
+				while (IntegerMap.this.entries[++this.pointer] != null);
+				this.currentNode = IntegerMap.this.entries[this.pointer];
+				return this.currentNode.value();
+			}
+			this.currentNode = this.currentNode.next();
+			return this.currentNode.value();
 		}
 		
 		@Override
 		public void remove()
 		{
-			if(pointer == -1 || keys[pointer] == null)
-				throw new IllegalStateException();
-			keys[pointer] = null;
-			list[pointer] = 0;
-			if(pointer <= point)
+			if(this.modified) throw new IllegalStateException("The element already removed!");
+			INode old = this.currentNode;
+			removeAt(this.pointer, old);
+			if(this.currentNode.hasLast())
 			{
-				point = pointer - 1;
+				this.currentNode = this.currentNode.last();
 			}
+			else
+			{
+				this.currentNode = null;
+			}
+			old.remove();
+			IntegerMap.this.size--;
+			this.modified = true;
 		}
 	}
 	
-	private class IntegerMapSet implements Set<T>
+	class IntegerMapSet implements Set<T>
 	{
 		@Override
 		public int size()
 		{
-			return size;
+			return IntegerMap.this.size;
 		}
-
+		
 		@Override
 		public boolean isEmpty()
 		{
 			return IntegerMap.this.isEmpty();
 		}
-
+		
 		@Override
 		public boolean contains(Object o)
 		{
 			return IntegerMap.this.containsKey(o);
 		}
-
+		
 		@Override
 		public Iterator<T> iterator()
 		{
-			return (Iterator<T>) Arrays.asList(keys).iterator();
+			return Iterators.transform(IntegerMap.this.iterator(), entry -> entry.key);
 		}
-
+		
 		@Override
 		public Object[] toArray()
 		{
-			return keys;
+			return Iterators.toArray(iterator(), Object.class);
 		}
-
+		
 		@Override
 		public <E> E[] toArray(E[] a)
 		{
-			if(a.length < size())
-				return (E[]) Arrays.copyOf(keys, size(), a.getClass());
-			System.arraycopy(keys, 0, a, 0, keys.length);
-			return a;
+			return Iterators.toArray((Iterator<E>) iterator(), (Class<E>) a.getClass().getComponentType());
 		}
-
+		
 		@Override
 		public boolean add(T e)
 		{
-			throw new IllegalArgumentException();
+			throw new UnsupportedOperationException();
 		}
-
+		
 		@Override
 		public boolean remove(Object o)
 		{
-			throw new IllegalArgumentException();
+			throw new UnsupportedOperationException();
 		}
-
+		
 		@Override
 		public boolean containsAll(Collection<?> c)
 		{
-			for(Object object : c)
-			{
-				if(!IntegerMap.this.containsKey(object))
-					return false;
-			}
+			for(Object object : c) if(!IntegerMap.this.containsKey(object)) return false;
 			return true;
 		}
-
+		
 		@Override
 		public boolean addAll(Collection<? extends T> c)
 		{
-			throw new IllegalArgumentException();
+			throw new UnsupportedOperationException();
 		}
-
+		
 		@Override
 		public boolean retainAll(Collection<?> c)
 		{
-			throw new IllegalArgumentException();
+			throw new UnsupportedOperationException();
 		}
-
+		
 		@Override
 		public boolean removeAll(Collection<?> c)
 		{
-			throw new IllegalArgumentException();
+			throw new UnsupportedOperationException();
 		}
-
+		
 		@Override
 		public void clear()
 		{
-			throw new IllegalArgumentException();
+			throw new UnsupportedOperationException();
 		}
 	}
 }
