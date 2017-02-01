@@ -2,8 +2,8 @@ package farcore.lib.block.instance;
 
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import farcore.lib.tile.instance.TECoreLeaves;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;

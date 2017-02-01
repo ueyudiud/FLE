@@ -22,54 +22,54 @@ public class ImmutableState implements IFarBlockState
 	{
 		this.block = block;
 		this.state = state;
-		extraValues = map;
+		this.extraValues = map;
 	}
 	
 	@Override
-	public Collection<IProperty<?>> getPropertyNames()
+	public Collection<IProperty<?>> getPropertyKeys()
 	{
 		ImmutableList.Builder<IProperty<?>> builder = ImmutableList.builder();
-		builder.addAll(state.getPropertyNames());
-		builder.addAll(extraValues.keySet());
+		builder.addAll(this.state.getPropertyKeys());
+		builder.addAll(this.extraValues.keySet());
 		return builder.build();
 	}
 	
 	@Override
 	public <T extends Comparable<T>> T getValue(IProperty<T> property)
 	{
-		T value = (T) extraValues.get(property);
-		return value == null ? state.getValue(property) : value;
+		T value = (T) this.extraValues.get(property);
+		return value == null ? this.state.getValue(property) : value;
 	}
 	
 	@Override
 	public <T extends Comparable<T>, V extends T> IBlockState withProperty(IProperty<T> property, V value)
 	{
-		if(extraValues.containsKey(property))
+		if(this.extraValues.containsKey(property))
 			throw new UnsupportedOperationException();
-		return new ImmutableState(block, state.withProperty(property, value), extraValues);
+		return new ImmutableState(this.block, this.state.withProperty(property, value), this.extraValues);
 	}
 	
 	@Override
 	public <T extends Comparable<T>> IBlockState cycleProperty(IProperty<T> property)
 	{
-		if(extraValues.containsKey(property))
+		if(this.extraValues.containsKey(property))
 			throw new UnsupportedOperationException();
-		return new ImmutableState(block, state.cycleProperty(property), extraValues);
+		return new ImmutableState(this.block, this.state.cycleProperty(property), this.extraValues);
 	}
 	
 	@Override
 	public ImmutableMap<IProperty<?>, Comparable<?>> getProperties()
 	{
 		ImmutableMap.Builder<IProperty<?>, Comparable<?>> builder = ImmutableMap.builder();
-		builder.putAll(extraValues);
-		builder.putAll(state.getProperties());
+		builder.putAll(this.extraValues);
+		builder.putAll(this.state.getProperties());
 		return builder.build();
 	}
 	
 	@Override
 	public Block getBlock()
 	{
-		return block;
+		return this.block;
 	}
 	
 	@Override

@@ -4,11 +4,12 @@
 
 package farcore.lib.material.behavior;
 
+import farcore.energy.thermal.ThermalNet;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
-import farcore.lib.util.UnlocalizedList;
-import farcore.lib.world.IEnvironment;
-import farcore.util.ItemStacks;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.enviornment.IEnvironment;
+import nebula.common.util.ItemStacks;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,13 +38,13 @@ public class MatBehaviorRottenable implements IItemMatProp
 			break;
 		}
 	}
-
+	
 	@Override
 	public int getMetaOffset(ItemStack stack, Mat material, MatCondition condition, String saveTag)
 	{
 		return ItemStacks.getSubOrSetupNBT(stack, saveTag, false).getBoolean("rotten") ? 1 : 0;
 	}
-
+	
 	@Override
 	public ItemStack updateItem(ItemStack stack, Mat material, MatCondition condition, IEnvironment environment,
 			String saveTag)
@@ -53,7 +54,7 @@ public class MatBehaviorRottenable implements IItemMatProp
 		{
 			int progress = nbt.getInteger("progress");
 			int max = material.getProperty("quality_period");
-			float temperature = environment.temperature() - material.getProperty("rotten_temperature");
+			float temperature = ThermalNet.getTemperature(environment.coord()) - material.getProperty("rotten_temperature");
 			int speed = (int) (Math.exp(- temperature * temperature) * condition.specificArea);
 			if(speed > 0)
 			{
@@ -70,7 +71,7 @@ public class MatBehaviorRottenable implements IItemMatProp
 		}
 		return stack;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list,
@@ -84,10 +85,10 @@ public class MatBehaviorRottenable implements IItemMatProp
 		else
 		{
 			float progress = (float) nbt.getInteger("progress") / (float) material.getProperty("quality_period");
-			list.add("info.material.behavior.rottenable.progress", farcore.util.Strings.progress(progress));
+			list.add("info.material.behavior.rottenable.progress", nebula.common.util.Strings.progress(progress));
 		}
 	}
-
+	
 	@Override
 	public float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target)
 	{

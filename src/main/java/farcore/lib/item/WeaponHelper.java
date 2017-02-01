@@ -7,12 +7,11 @@ package farcore.lib.item;
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.MP;
 import farcore.event.AttackEvent;
-import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.behavior.IItemMatProp;
-import farcore.util.L;
-import farcore.util.Players;
-import farcore.util.R;
+import nebula.common.util.L;
+import nebula.common.util.Players;
+import nebula.common.util.R;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,7 +59,7 @@ public class WeaponHelper
 			case CUT :
 				break;
 			case PUNCTURE :
-				baseMultiple = 0.8F + farcore.util.L.range(0F, 0.4F, (float) (player.motionX * player.motionX + player.motionY * player.motionY + player.motionZ * player.motionZ) / 20F);
+				baseMultiple = 0.8F + nebula.common.util.L.range(0F, 0.4F, (float) (player.motionX * player.motionX + player.motionY * player.motionY + player.motionZ * player.motionZ) / 20F);
 				break;
 			default:
 				break;
@@ -95,7 +94,7 @@ public class WeaponHelper
 				float knockback = prop.stat.getKnockback(stack, material, entity) + EnchantmentHelper.getKnockbackModifier(player);
 				if(player.isSprinting())
 				{
-					player.worldObj.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, player.getSoundCategory(), 1.0F, 1.0F);
+					player.world.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, player.getSoundCategory(), 1.0F, 1.0F);
 					knockback += 1F;
 				}
 				if(knockback > 0)
@@ -110,7 +109,7 @@ public class WeaponHelper
 				if(box != null)
 				{
 					causeAOEAttack(prop.stat, player, entity, box);
-					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0F, 1.0F);
+					player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 1.0F, 1.0F);
 					player.spawnSweepParticles();
 				}
 				
@@ -124,11 +123,11 @@ public class WeaponHelper
 				}
 				else if(!flagCritical)
 				{
-					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, player.getSoundCategory(), 1.0F, 1.0F);
+					player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, player.getSoundCategory(), 1.0F, 1.0F);
 				}
 				else
 				{
-					player.worldObj.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
+					player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, player.getSoundCategory(), 1.0F, 1.0F);
 					player.onCriticalHit(entity);
 				}
 				
@@ -165,7 +164,7 @@ public class WeaponHelper
 	
 	public static void causeAOEAttack(IToolStat stat, EntityLivingBase attacker, Entity target, float[] boundBox)
 	{
-		for (EntityLivingBase entitylivingbase : attacker.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().expand(boundBox[0], boundBox[1], boundBox[0])))
+		for (EntityLivingBase entitylivingbase : attacker.world.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().expand(boundBox[0], boundBox[1], boundBox[0])))
 		{
 			if (entitylivingbase != attacker && entitylivingbase != target && !attacker.isOnSameTeam(entitylivingbase) && attacker.getDistanceSqToEntity(entitylivingbase) < 9.0D)
 			{

@@ -2,7 +2,7 @@ package farcore.lib.tile;
 
 import java.util.List;
 
-import farcore.lib.util.Direction;
+import nebula.common.util.Direction;
 import net.minecraft.entity.player.EntityPlayer;
 
 public interface IDebugableTile

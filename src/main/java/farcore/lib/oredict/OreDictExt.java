@@ -11,10 +11,10 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.lib.collection.Ety;
-import farcore.lib.util.IDataChecker;
-import farcore.util.ItemStacks;
-import farcore.util.L;
+import nebula.common.base.Ety;
+import nebula.common.util.IDataChecker;
+import nebula.common.util.ItemStacks;
+import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPrismarine;
 import net.minecraft.init.Blocks;

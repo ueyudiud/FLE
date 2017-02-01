@@ -1,16 +1,16 @@
 package fle.core.items.behavior;
 
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import farcore.data.KS;
-import farcore.lib.entity.EntityProjectileItem;
-import farcore.lib.item.IProjectileItem;
-import farcore.lib.item.ITool;
 import farcore.lib.item.ItemTool;
-import farcore.lib.item.behavior.BehaviorBase;
 import farcore.lib.material.Mat;
 import farcore.lib.util.DamageSourceProjectile;
-import farcore.lib.util.Direction;
-import farcore.util.U;
+import nebula.common.entity.EntityProjectileItem;
+import nebula.common.item.BehaviorBase;
+import nebula.common.item.IProjectileItem;
+import nebula.common.item.ITool;
+import nebula.common.util.Direction;
+import nebula.common.util.Worlds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,11 +36,11 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
 	{
-		RayTraceResult result = U.Worlds.rayTrace(worldIn, playerIn, false);
+		RayTraceResult result = Worlds.rayTrace(worldIn, playerIn, false);
 		if(result == null)
 		{
 			playerIn.setActiveHand(hand);
-			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 		}
 		return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
 	}
@@ -73,8 +73,9 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 		}
 		if(!world.isRemote)
 		{
-			EntityProjectileItem entity1 = new EntityProjectileItem(world, entity, f * 1.0F, stack1, true);
-			world.spawnEntityInWorld(entity1);
+			float inaccuracy = !(entity instanceof EntityPlayer) ? 1.0F : 6F / (1F + KS.SHOOTING.level((EntityPlayer) entity));
+			EntityProjectileItem entity1 = new EntityProjectileItem(world, entity, f * 1.0F, stack1, inaccuracy);
+			world.spawnEntity(entity1);
 		}
 	}
 	
@@ -86,9 +87,9 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	@Override
 	public void onEntityTick(EntityProjectileItem entity)
 	{
-		if(entity.inGround && !entity.worldObj.isRemote)
+		if(entity.inGround && !entity.world.isRemote)
 		{
-			EntityPlayer player = entity.worldObj.getClosestPlayerToEntity(entity, 0.8F);
+			EntityPlayer player = entity.world.getClosestPlayerToEntity(entity, 0.8F);
 			if(player != null && (player.capabilities.isCreativeMode || player.inventory.addItemStackToInventory(entity.currentItem)))
 			{
 				entity.setDead();
@@ -108,7 +109,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 		if(target instanceof EntityLivingBase)
 		{
 			EntityLivingBase entity1 = (EntityLivingBase) target;
-			float damage = MathHelper.sqrt_double(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
+			float damage = MathHelper.sqrt(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
 			float speed = damage;
 			Mat material = ItemTool.getMaterial(entity.currentItem, "head");
 			if(material != null)
@@ -130,8 +131,8 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 				entity1.attackEntityFrom(DamageSourceProjectile.instance, damage);
 			}
 			entity1.addVelocity(entity.motionX * .02, entity.motionY * .02, entity.motionZ * .02);
-			float use = entity.worldObj.rand.nextFloat() * speed * 0.2F + 0.8F;
-			((ITool) entity.currentItem.getItem()).onToolUse(null, entity.currentItem, EnumToolType.spear, use);
+			float use = entity.world.rand.nextFloat() * speed * 0.2F + 0.8F;
+			((ITool) entity.currentItem.getItem()).onToolUse(null, entity.currentItem, EnumToolTypes.SPEAR, use);
 			if(entity.currentItem.stackSize <= 0)
 			{
 				entity.setDead();

@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 import com.google.common.collect.ImmutableMap;
 
-import farcore.lib.collection.IntegerEntry;
-import farcore.lib.collection.Selector;
-import farcore.util.L;
+import nebula.common.base.IntegerEntry;
+import nebula.common.base.Selector;
+import nebula.common.util.L;
 
 /**
  * @author ueyudiud

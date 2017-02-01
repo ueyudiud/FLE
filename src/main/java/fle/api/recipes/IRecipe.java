@@ -1,6 +1,6 @@
 package fle.api.recipes;
 
-import farcore.lib.util.IRegisteredNameable;
+import nebula.common.util.IRegisteredNameable;
 
 public interface IRecipe extends IRegisteredNameable
 {

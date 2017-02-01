@@ -1,7 +1,7 @@
 package fle.api.recipes;
 
-import farcore.lib.collection.ArrayIterator;
 import fle.api.recipes.ShapedRecipeFluidInput.RecipeFluidInputConfig;
+import nebula.common.base.ArrayIterator;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
 

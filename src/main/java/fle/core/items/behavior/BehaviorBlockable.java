@@ -1,6 +1,6 @@
 package fle.core.items.behavior;
 
-import farcore.lib.item.behavior.BehaviorBase;
+import nebula.common.item.BehaviorBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -24,12 +24,12 @@ public class BehaviorBlockable extends BehaviorBase
 		this.block = block;
 		this.usePerBlock = usePerBlock;
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if(stack.stackSize < usePerBlock)
+		if(stack.stackSize < this.usePerBlock)
 			return EnumActionResult.PASS;
 		else
 		{
@@ -43,13 +43,13 @@ public class BehaviorBlockable extends BehaviorBase
 			
 			if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(this.block, pos, false, facing, (Entity)null, stack))
 			{
-				IBlockState iblockstate1 = this.block.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, stack.getItemDamage(), player);
+				IBlockState iblockstate1 = this.block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, stack.getMetadata(), player, stack);
 				
 				if (placeBlockAt(stack, player, world, pos, facing, hitX, hitY, hitZ, iblockstate1))
 				{
 					SoundType soundtype = this.block.getSoundType();
 					world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-					stack.stackSize -= usePerBlock;
+					stack.stackSize -= this.usePerBlock;
 				}
 				
 				return EnumActionResult.SUCCESS;
@@ -72,11 +72,11 @@ public class BehaviorBlockable extends BehaviorBase
 		if (!world.setBlockState(pos, newState, 3)) return false;
 		
 		IBlockState state = world.getBlockState(pos);
-		if (state.getBlock() == block)
+		if (state.getBlock() == this.block)
 		{
 			//Set tile entity NBT in block place.
 			//ItemBlockBase.setTileEntityNBT(world, player, pos, stack);
-			block.onBlockPlacedBy(world, pos, state, player, stack);
+			this.block.onBlockPlacedBy(world, pos, state, player, stack);
 		}
 		
 		return true;

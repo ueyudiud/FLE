@@ -3,16 +3,17 @@ package farcore.lib.block.instance;
 import java.util.List;
 
 import farcore.data.EnumBlock;
-import farcore.lib.block.BlockBase;
+import farcore.data.SubTags;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.model.block.ModelSapling;
-import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.tile.instance.TESapling;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.SubTag;
-import farcore.util.U;
-import farcore.util.U.Client;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.util.Client;
+import nebula.client.util.Renders;
+import nebula.common.LanguageManager;
+import nebula.common.block.BlockBase;
+import nebula.common.util.OreDict;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -51,8 +52,8 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
-		U.OreDict.registerValid("treeSapling", this);
-		for(Mat material : Mat.filt(SubTag.TREE))
+		OreDict.registerValid("treeSapling", this);
+		for(Mat material : Mat.filt(SubTags.TREE))
 		{
 			LanguageManager.registerLocal(getTranslateNameForItemStack(material.id), material.localName + " Sapling");
 		}
@@ -65,7 +66,7 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 		super.registerRender();
 		ModelLoaderRegistry.registerLoader(ModelSapling.instance);
 		ModelLoader.setCustomStateMapper(this, ModelSapling.instance);
-		U.Mod.registerCustomItemModelSelector(this, ModelSapling.instance);
+		Renders.registerCustomItemModelSelector(this, ModelSapling.instance);
 	}
 	
 	@Override
@@ -96,7 +97,7 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(Mat material : Mat.filt(SubTag.TREE))
+		for(Mat material : Mat.filt(SubTags.TREE))
 		{
 			list.add(new ItemStack(item, 1, material.id));
 		}
@@ -149,12 +150,12 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager)
+	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager)
 	{
-		TileEntity tile = worldObj.getTileEntity(target.getBlockPos());
+		TileEntity tile = world.getTileEntity(target.getBlockPos());
 		if(tile instanceof TESapling)
 		{
-			Client.addBlockHitEffect(worldObj, RANDOM, state, target.sideHit, target.getBlockPos(), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).tree.getRegisteredName()));
+			Client.addBlockHitEffect(world, RANDOM, state, target.sideHit, target.getBlockPos(), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).tree.getRegisteredName()));
 			return true;
 		}
 		return false;

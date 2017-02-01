@@ -1,7 +1,7 @@
 package farcore.energy.thermal;
 
-import farcore.lib.util.Direction;
 import farcore.lib.world.IWorldSubContainer;
+import nebula.common.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 /**

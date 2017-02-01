@@ -27,13 +27,15 @@ import com.google.gson.stream.JsonReader;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
+import farcore.data.MP;
+import farcore.data.SubTags;
 import farcore.lib.block.instance.BlockOre.OreStateWrapper;
 import farcore.lib.block.instance.ItemOre;
 import farcore.lib.material.Mat;
-import farcore.lib.model.BakedModelBase;
-import farcore.lib.model.item.ICustomItemRenderModel;
-import farcore.lib.util.Log;
-import farcore.lib.util.SubTag;
+import nebula.Log;
+import nebula.client.model.BakedModelBase;
+import nebula.client.model.ICustomItemModelSelector;
+import nebula.client.model.ICustomItemRenderModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -233,7 +235,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		{
 			for(Mat material : Mat.materials())
 			{
-				if(material.contain(SubTag.ORE))
+				if(material.contain(SubTags.ORE))
 				{
 					for(EnumOreAmount amount : EnumOreAmount.values())
 					{
@@ -265,7 +267,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		ImmutableMap.Builder<String, IBakedModel> typeBuilder = ImmutableMap.builder();
 		for(Mat material : Mat.materials())
 		{
-			if(material.contain(SubTag.ORE))
+			if(material.contain(SubTags.ORE))
 			{
 				String key = material.name;
 				String type = null;
@@ -335,7 +337,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 			ImmutableMap.Builder<String, IBakedModel> typeBuilder = ImmutableMap.builder();
 			for(Mat material : Mat.materials())
 			{
-				if(material.contain(SubTag.ORE))
+				if(material.contain(SubTags.ORE))
 				{
 					String key = material.name;
 					String type = null;
@@ -440,7 +442,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 				OreStateWrapper wrapper = (OreStateWrapper) state;
 				Mat ore = wrapper.ore;
 				if(ore == Mat.VOID) return ImmutableList.of();
-				IBlockState state1 = EnumBlock.rock.apply(wrapper.rock, wrapper.type);
+				IBlockState state1 = wrapper.rock.getProperty(MP.property_rock).block.getDefaultState();
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 						.getModelManager().getBlockModelShapes()
 						.getModelForState(state1);

@@ -8,8 +8,8 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import farcore.lib.collection.Register;
-import farcore.util.L;
+import nebula.common.base.Register;
+import nebula.common.util.L;
 
 /**
  * @author ueyudiud

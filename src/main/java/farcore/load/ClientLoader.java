@@ -1,25 +1,21 @@
 package farcore.load;
 
+import com.google.common.collect.ImmutableMap;
+
 import farcore.FarCore;
 import farcore.handler.FarCoreGuiHandler;
 import farcore.handler.FarCoreTextureHandler;
 import farcore.instances.MaterialTextureLoader;
-import farcore.lib.entity.EntityFallingBlockExtended;
-import farcore.lib.entity.EntityProjectileItem;
-import farcore.lib.model.OrderModelLoader;
-import farcore.lib.model.block.ModelFluidBlock;
-import farcore.lib.model.item.FarCoreItemModelLoader;
-import farcore.lib.render.Colormap.ColormapFactory;
-import farcore.lib.render.FontMap;
-import farcore.lib.render.FontRenderExtend;
-import farcore.lib.render.entity.RenderFallingBlockExt;
-import farcore.lib.render.entity.RenderProjectileItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
+import farcore.lib.item.ItemMulti;
+import farcore.lib.material.Mat;
+import farcore.lib.material.MatCondition;
+import nebula.client.model.ColorMultiplier;
+import nebula.client.model.FlexibleItemSubmetaGetterLoader;
+import nebula.client.model.FlexibleTextureSet;
+import nebula.client.render.FontMap;
+import nebula.client.render.FontRenderExtend;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,8 +26,6 @@ public class ClientLoader extends CommonLoader
 	public void preload()
 	{
 		super.preload();
-		//Register color map loader.
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
 		//Register client side handler.
 		MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 		MinecraftForge.EVENT_BUS.register(new FarCoreTextureHandler());
@@ -39,15 +33,21 @@ public class ClientLoader extends CommonLoader
 		FarCoreTextureHandler.addIconLoader(new MaterialTextureLoader());
 		
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
-		//Register entity rendering handlers.
-		RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);
-		RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, RenderProjectileItem.Factory.instance);
 		//Register model loaders, state mappers and item model selectors.
-		//The base item model loader.
-		ModelLoaderRegistry.registerLoader(FarCoreItemModelLoader.INSTANCE);
-		//The custom block model loaders.
-		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.INSTANCE);
+		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
 		
-		ModelLoaderRegistry.registerLoader(OrderModelLoader.INSTANCE);
+		for(MatCondition condition : MatCondition.register)
+		{
+			FlexibleTextureSet.registerTextureSetApplier(new ResourceLocation(FarCore.ID, "group/" + condition.name), () ->
+			{
+				ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
+				for (Mat material : Mat.filt(condition))
+				{
+					builder.put("material:" + material.name, new ResourceLocation(material.modid, "items/group/" + condition.name + "/" + material.name));
+				}
+				return builder.build();
+			});
+		}
+		ColorMultiplier.registerColorMultiplier(new ResourceLocation(FarCore.ID, "material"), stack -> ItemMulti.getMaterial(stack).RGB);
 	}
 }

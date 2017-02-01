@@ -3,7 +3,7 @@ package farcore.lib.world;
 import java.util.HashMap;
 import java.util.Map;
 
-import farcore.util.U;
+import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -40,17 +40,17 @@ public class WorldPropHandler
 		@Override
 		public float getSkylight(World world)
 		{
-			return world.provider.getHasNoSky() ? 0F : 0.8F;
+			return world.provider.hasNoSky() ? 0F : 0.8F;
 		}
 		@Override
 		public float getRainstrength(World world, BlockPos pos)
 		{
-			return U.Worlds.isCatchingRain(world, pos) ? world.getRainStrength(0F) : 0F;
+			return Worlds.isCatchingRain(world, pos) ? world.getRainStrength(0F) : 0F;
 		}
 		@Override
 		public float getHumidity(World world, BlockPos pos)
 		{
-			return world.getBiomeGenForCoords(pos).getRainfall();
+			return world.getBiome(pos).getRainfall();
 		}
 		@Override
 		public float getAverageHumidity(World world, BlockPos pos)

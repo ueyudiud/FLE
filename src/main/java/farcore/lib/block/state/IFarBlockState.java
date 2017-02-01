@@ -29,7 +29,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getActualState(this, blockAccess, pos);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	default float getAmbientOcclusionLightValue()
@@ -42,7 +42,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getBlockHardness(this, worldIn, pos);
 	}
-
+	
 	@Override
 	default AxisAlignedBB getBoundingBox(IBlockAccess blockAccess, BlockPos pos)
 	{
@@ -55,7 +55,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getCollisionBoundingBox(this, worldIn, pos);
 	}
-
+	
 	@Override
 	default int getComparatorInputOverride(World worldIn, BlockPos pos)
 	{
@@ -73,7 +73,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getLightOpacity(this, world, pos);
 	}
-
+	
 	@Override
 	default int getLightValue()
 	{
@@ -85,7 +85,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getLightValue(this, world, pos);
 	}
-
+	
 	@Override
 	default MapColor getMapColor()
 	{
@@ -97,13 +97,13 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getMaterial(this);
 	}
-
+	
 	@Override
 	default EnumPushReaction getMobilityFlag()
 	{
 		return getBlock().getMobilityFlag(this);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	default int getPackedLightmapCoords(IBlockAccess source, BlockPos pos)
@@ -116,7 +116,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getPlayerRelativeBlockHardness(this, player, worldIn, pos);
 	}
-
+	
 	@Override
 	default EnumBlockRenderType getRenderType()
 	{
@@ -141,7 +141,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getWeakPower(this, blockAccess, pos, side);
 	}
-
+	
 	@Override
 	default boolean isBlockNormalCube()
 	{
@@ -153,13 +153,13 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().isFullBlock(this);
 	}
-
+	
 	@Override
 	default boolean isFullyOpaque()
 	{
 		return getBlock().isFullyOpaque(this);
 	}
-
+	
 	@Override
 	default boolean isFullCube()
 	{
@@ -171,13 +171,13 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().isNormalCube(this);
 	}
-
+	
 	@Override
 	default boolean isOpaqueCube()
 	{
 		return getBlock().isOpaqueCube(this);
 	}
-
+	
 	@Override
 	default boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
@@ -196,7 +196,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().getUseNeighborBrightness(this);
 	}
-
+	
 	@Override
 	default void addCollisionBoxToList(World worldIn, BlockPos pos, AxisAlignedBB aabb,
 			List<AxisAlignedBB> list, Entity entity)
@@ -209,7 +209,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().canProvidePower(this);
 	}
-
+	
 	@Override
 	default RayTraceResult collisionRayTrace(World worldIn, BlockPos pos, Vec3d start, Vec3d end)
 	{
@@ -227,7 +227,7 @@ public interface IFarBlockState extends IBlockState
 	{
 		return getBlock().hasComparatorInputOverride(this);
 	}
-
+	
 	@Override
 	default void neighborChanged(World worldIn, BlockPos pos, Block block)
 	{
@@ -235,11 +235,11 @@ public interface IFarBlockState extends IBlockState
 	}
 	
 	@Override
-	default boolean func_189884_a(Entity entity)
+	default boolean canEntitySpawn(Entity entityIn)
 	{
-		return getBlock().func_189872_a(this, entity);
+		return getBlock().canEntitySpawn(this, entityIn);
 	}
-
+	
 	@Override
 	default boolean onBlockEventReceived(World worldIn, BlockPos pos, int id, int param)
 	{

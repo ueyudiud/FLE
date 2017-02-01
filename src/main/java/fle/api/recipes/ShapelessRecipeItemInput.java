@@ -2,12 +2,12 @@ package fle.api.recipes;
 
 import java.util.List;
 
-import farcore.data.EnumToolType;
-import farcore.lib.collection.ArrayIterator;
-import farcore.lib.item.ITool;
-import farcore.util.ItemStacks;
-import farcore.util.L;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
+import nebula.common.base.ArrayIterator;
+import nebula.common.data.EnumToolType;
+import nebula.common.item.ITool;
+import nebula.common.util.ItemStacks;
+import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 

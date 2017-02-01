@@ -9,24 +9,27 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 
 import farcore.FarCore;
-import farcore.data.EnumToolType;
 import farcore.data.MC;
 import farcore.data.MP;
-import farcore.lib.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
-import farcore.lib.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
-import farcore.lib.item.behavior.IBehavior;
-import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.skill.ISkill;
-import farcore.lib.util.IDataChecker;
-import farcore.lib.util.ISubTagContainer;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.UnlocalizedList;
-import farcore.lib.world.IEnvironment;
-import farcore.util.ItemStacks;
 import farcore.util.Localization;
-import farcore.util.U;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.LanguageManager;
+import nebula.common.data.EnumToolType;
+import nebula.common.enviornment.IEnvironment;
+import nebula.common.item.IBehavior;
+import nebula.common.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
+import nebula.common.item.ITool;
+import nebula.common.item.IUpdatableItem;
+import nebula.common.item.ItemSubBehavior;
+import nebula.common.util.Game;
+import nebula.common.util.IDataChecker;
+import nebula.common.util.ISubTagContainer;
+import nebula.common.util.ItemStacks;
+import nebula.common.util.Sides;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -91,7 +94,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		NBTTagCompound tag = stack.getSubCompound("durability", true);
 		if(!tag.hasKey("maxDurability"))
 		{
-			if(U.Sides.isServer() || !U.Sides.isSimulating())
+			if(Sides.isServer() || !Sides.isSimulating())
 			{
 				tag.setInteger("maxDurability", (int) (prop.stat.getMaxDurabilityMultiplier() * getDefaultMaxDurability(prop, stack)));
 			}
@@ -167,7 +170,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		super.addSubItem(id, name, localName, stat, behaviors);
 		if(this.modelFlag)
 		{
-			U.Mod.registerItemModel(this, id, this.modid, this.textureFileName + name);
+			Game.registerItemModel(this, id, this.modid, this.textureFileName + name);
 		}
 		ToolProp prop = new ToolProp();
 		prop.id = id;
@@ -215,7 +218,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public int getToolLevel(ItemStack stack, EnumToolType type)
 	{
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-		int level = prop.stat.getToolHarvestLevel(stack, type.name(), getMaterial(stack, "head"));
+		int level = prop.stat.getToolHarvestLevel(stack, type.name, getMaterial(stack, "head"));
 		return level == -1 ?
 				prop.toolTypes.contains(type) ? getMaterial(stack, "head").getProperty(MP.property_tool).harvestLevel : -1 :
 					level;
@@ -254,21 +257,21 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		{
 		case SMASH :
 		default :
-			multiple = .9F * farcore.util.L.range(0F, 1F, cooldown * attackSpeed / 100F) + .1F;
+			multiple = .9F * nebula.common.util.L.range(0F, 1F, cooldown * attackSpeed / 100F) + .1F;
 			if(isAttackerFalling)
 			{
 				baseAttack *= 1.5F;
 			}
 			break;
 		case PUNCTURE :
-			multiple = .75F * farcore.util.L.range(0F, 1F, cooldown * cooldown * cooldown * attackSpeed / 100F) + .25F;
+			multiple = .75F * nebula.common.util.L.range(0F, 1F, cooldown * cooldown * cooldown * attackSpeed / 100F) + .25F;
 			if(isAttackerFalling)
 			{
 				baseAttack *= 1.25F;
 			}
 			break;
 		case CUT :
-			multiple = .8F * farcore.util.L.range(0F, 1F, cooldown * cooldown * attackSpeed / 100F) + .2F;
+			multiple = .8F * nebula.common.util.L.range(0F, 1F, cooldown * cooldown * attackSpeed / 100F) + .2F;
 			if(isAttackerFalling)
 			{
 				baseAttack *= 1.75F;
@@ -282,7 +285,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public float replaceDigSpeed(ItemStack stack, BreakSpeed event)
 	{
-		return !isItemUsable(stack) ? 0.0F : this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getMiningSpeed(stack, event.getEntityPlayer(), event.getEntityPlayer().worldObj, event.getPos(), event.getState(), event.getOriginalSpeed());
+		return !isItemUsable(stack) ? 0.0F : this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getMiningSpeed(stack, event.getEntityPlayer(), event.getEntityPlayer().world, event.getPos(), event.getState(), event.getOriginalSpeed());
 	}
 	
 	@Override
@@ -326,9 +329,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		if(prop.stat.canBlock())
 		{
 			playerIn.setActiveHand(hand);
-			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStackIn);
+		return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
 	}
 	
 	@Override
@@ -359,12 +362,6 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public float getStrVsBlock(ItemStack stack, IBlockState state)
 	{
 		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getSpeedMultiplier(stack);
-	}
-	
-	@Override
-	public boolean isItemTool(ItemStack stack)
-	{
-		return true;
 	}
 	
 	@Override
@@ -435,7 +432,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
 		ItemStack stack2 = stack;
-		if(!entityIn.worldObj.isRemote)
+		if(!entityIn.world.isRemote)
 		{
 			try
 			{
@@ -463,7 +460,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
 		boolean flag = super.onEntityItemUpdate(entityItem);
-		if(!entityItem.worldObj.isRemote)
+		if(!entityItem.world.isRemote)
 		{
 			try
 			{

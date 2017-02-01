@@ -5,9 +5,9 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.lib.util.NoiseBase;
-import farcore.lib.util.NoiseCoherent;
-import farcore.lib.util.NoisePerlin;
+import nebula.common.util.noise.NoiseBase;
+import nebula.common.util.noise.NoiseCoherent;
+import nebula.common.util.noise.NoisePerlin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;

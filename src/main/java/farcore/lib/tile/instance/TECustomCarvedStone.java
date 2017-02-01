@@ -1,36 +1,38 @@
 package farcore.lib.tile.instance;
 
-import static farcore.util.L.index8i;
+import static nebula.common.util.L.index8i;
 
 import java.util.Arrays;
 import java.util.List;
 
 import farcore.data.Config;
-import farcore.data.EnumToolType;
+import farcore.data.EnumRockType;
+import farcore.data.EnumToolTypes;
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.data.EnumRockType;
 import farcore.instances.MaterialTextureLoader;
-import farcore.lib.block.instance.old.BlockRockOld;
+import farcore.lib.block.behavior.RockBehavior;
+import farcore.lib.block.instance.BlockRock;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyRock;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddLandingEffects;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Light;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_SideSolid;
-import farcore.lib.tile.IToolableTile;
-import farcore.lib.tile.abstracts.TEStatic;
-import farcore.lib.util.Direction;
-import farcore.lib.world.IBlockCoordQuarterProperties;
-import farcore.util.L;
-import farcore.util.NBTs;
-import farcore.util.U;
-import farcore.util.U.Lights;
+import nebula.client.util.Client;
+import nebula.client.util.Lights;
+import nebula.common.data.EnumToolType;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddLandingEffects;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_SideSolid;
+import nebula.common.tile.IToolableTile;
+import nebula.common.tile.TEStatic;
+import nebula.common.util.Direction;
+import nebula.common.util.L;
+import nebula.common.util.NBTs;
+import nebula.common.util.Server;
+import nebula.common.world.IBlockCoordQuarterProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -75,7 +77,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	}
 	
 	private Mat rock = M.stone;
-	private PropertyRock property = null;
+	private RockBehavior property = null;
 	public EnumRockType type = EnumRockType.resource;
 	private boolean neighbourChanged = false;
 	private boolean modified = true;
@@ -85,7 +87,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	
 	private long carvedState= 0x0;
 	
-	private PropertyRock property()
+	private RockBehavior property()
 	{
 		if(this.property == null)
 		{
@@ -143,7 +145,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		this.rock = NBTs.getMaterialByNameOrDefault(compound, "rock", M.stone);
+		this.rock = Mat.getMaterialByNameOrDefault(compound, "rock", M.stone);
 		this.type = NBTs.getEnumOrDefault(compound, "type", EnumRockType.resource);
 		this.carvedState = compound.getLong("carve");
 		this.property = null;
@@ -162,7 +164,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		this.rock = NBTs.getMaterialByIDOrDefault(nbt, "r", this.rock);
+		this.rock = Mat.getMaterialByIDOrDefault(nbt, "r", this.rock);
 		this.type = NBTs.getEnumOrDefault(nbt, "t", this.type);
 		this.property = null;
 		long state = NBTs.getLongOrDefault(nbt, "c", this.carvedState);
@@ -191,7 +193,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		double vx1 = hitX == 1.0 ? 0.9999 : hitX;
 		double vy1 = hitY == 1.0 ? 0.9999 : hitY;
 		double vz1 = hitZ == 1.0 ? 0.9999 : hitZ;
-		while(farcore.util.L.inRange(1.0, 0.0, vx1) && farcore.util.L.inRange(1.0, 0.0, vy1) && farcore.util.L.inRange(1.0, 0.0, vz1))
+		while(nebula.common.util.L.inRange(1.0, 0.0, vx1) && nebula.common.util.L.inRange(1.0, 0.0, vy1) && nebula.common.util.L.inRange(1.0, 0.0, vz1))
 		{
 			int x = (int) (vx1 * 4);
 			int y = (int) (vy1 * 4);
@@ -208,13 +210,13 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 					markDirty();
 					syncToNearby();
 				}
-				return new ActionResult<Float>(EnumActionResult.SUCCESS, property().hardness / 64F);
+				return new ActionResult<>(EnumActionResult.SUCCESS, property().hardness / 64F);
 			}
 			vx1 += vx;
 			vy1 += vy;
 			vz1 += vz;
 		}
-		return new ActionResult<Float>(EnumActionResult.FAIL, null);
+		return new ActionResult<>(EnumActionResult.FAIL, null);
 	}
 	
 	protected void carveRockUnmark(int x, int y, int z)
@@ -230,17 +232,17 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		if(isCarved(x, y, z))
 			return false;
 		if(x == 3 && facing == Direction.E)
-			return !this.worldObj.isSideSolid(this.pos.east(), EnumFacing.WEST);
+			return !this.world.isSideSolid(this.pos.east(), EnumFacing.WEST);
 		if(y == 3 && facing == Direction.U)
-			return !this.worldObj.isSideSolid(this.pos.up(), EnumFacing.DOWN);
+			return !this.world.isSideSolid(this.pos.up(), EnumFacing.DOWN);
 		if(z == 3 && facing == Direction.S)
-			return !this.worldObj.isSideSolid(this.pos.south(), EnumFacing.NORTH);
+			return !this.world.isSideSolid(this.pos.south(), EnumFacing.NORTH);
 		if(x == 0 && facing == Direction.W)
-			return !this.worldObj.isSideSolid(this.pos.west(), EnumFacing.EAST);
+			return !this.world.isSideSolid(this.pos.west(), EnumFacing.EAST);
 		if(y == 0 && facing == Direction.D)
-			return !this.worldObj.isSideSolid(this.pos.down(), EnumFacing.UP);
+			return !this.world.isSideSolid(this.pos.down(), EnumFacing.UP);
 		if(z == 0 && facing == Direction.N)
-			return !this.worldObj.isSideSolid(this.pos.north(), EnumFacing.SOUTH);
+			return !this.world.isSideSolid(this.pos.north(), EnumFacing.SOUTH);
 		return isCarved(x + facing.x, y + facing.y, z + facing.z);
 	}
 	
@@ -544,7 +546,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side, float hitX,
 			float hitY, float hitZ)
 	{
-		if(tool == EnumToolType.chisel)
+		if(tool == EnumToolTypes.CHISEL)
 		{
 			if(player.canPlayerEdit(this.pos, side.of(), stack))
 				return carveRock(player, hitX, hitY, hitZ);
@@ -562,7 +564,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
-		U.Client.addBlockHitEffect(this.worldObj, this.random, getBlockState(), target.sideHit, target.getBlockPos(), manager, getIcon());
+		Client.addBlockHitEffect(this.world, this.random, getBlockState(), target.sideHit, target.getBlockPos(), manager, getIcon());
 		return true;
 	}
 	
@@ -570,7 +572,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
-		U.Client.addBlockDestroyEffects(this.worldObj, this.pos, getBlockState(), manager, getIcon());
+		Client.addBlockDestroyEffects(this.world, this.pos, getBlockState(), manager, getIcon());
 		return true;
 	}
 	
@@ -578,8 +580,8 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity,
 			int numberOfParticles)
 	{
-		IBlockState state2 = property().block.getDefaultState().withProperty(BlockRockOld.ROCK_TYPE, this.type);
-		U.Server.addBlockLandingEffects(this.worldObj, this.pos, state2, entity, numberOfParticles);
+		IBlockState state2 = property().block.getDefaultState().withProperty(BlockRock.TYPE, this.type);
+		Server.addBlockLandingEffects(this.world, this.pos, state2, entity, numberOfParticles);
 		return true;
 	}
 	
@@ -590,7 +592,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 		int idx = index8i(x, y, z);
 		return Config.splitBrightnessOfSmallBlock ?
 				Lights.mixSkyBlockLight(this.lightmapSky[idx], this.lightmapBlock[idx]) :
-					this.worldObj.getCombinedLight(this.pos, 0);
+					this.world.getCombinedLight(this.pos, 0);
 	}
 	
 	@Override

@@ -1,0 +1,7 @@
+{
+	"textures": "[forge:fluid",
+	"layers": {
+		"submeta": "#nebula:display_fluid",
+		"colorMultiplier": "nebula:display_fluid"
+	}
+}

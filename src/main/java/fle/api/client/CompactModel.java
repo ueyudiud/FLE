@@ -14,11 +14,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import farcore.lib.model.BakedModelBase;
-import farcore.lib.model.ModelBase;
-import farcore.lib.model.ModelHelper;
-import farcore.lib.model.ModelQuadBuilder;
-import farcore.lib.model.item.ICustomItemRenderModel;
+import nebula.client.model.BakedModelBase;
+import nebula.client.model.ICustomItemRenderModel;
+import nebula.client.model.ModelBase;
+import nebula.client.model.ModelHelper;
+import nebula.client.model.ModelQuadBuilder;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

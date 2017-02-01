@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import farcore.lib.collection.Register;
-import farcore.lib.util.IDataChecker;
-import farcore.lib.util.ISubTagContainer;
-import farcore.lib.util.LanguageManager;
-import farcore.util.U.OreDict;
+import nebula.common.LanguageManager;
+import nebula.common.base.Register;
+import nebula.common.util.IDataChecker;
+import nebula.common.util.ISubTagContainer;
+import nebula.common.util.OreDict;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

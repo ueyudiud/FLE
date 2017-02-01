@@ -1,6 +1,6 @@
 package fle.core.items.tool;
 
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -11,7 +11,7 @@ public class ToolHardHammer extends Tool
 	
 	public ToolHardHammer(float speedMultiplier)
 	{
-		super(EnumToolType.hammer_digable);
+		super(EnumToolTypes.HAMMER_DIGABLE);
 		this.speedMultiplier = speedMultiplier;
 	}
 	

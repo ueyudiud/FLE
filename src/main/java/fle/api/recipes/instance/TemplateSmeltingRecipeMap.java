@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import farcore.lib.stack.AbstractStack;
-import farcore.util.TileEntities;
 import fle.api.recipes.IRecipe;
 import fle.api.recipes.IRecipeCache;
 import fle.api.recipes.IRecipeInput;
 import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.IRecipeOutput;
 import fle.api.recipes.instance.TemplateSmeltingRecipeMap.SmeltingEntry;
+import nebula.common.stack.AbstractStack;
+import nebula.common.util.TileEntities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;

@@ -5,9 +5,9 @@
 package farcore.lib.material;
 
 import farcore.data.MP;
+import farcore.data.SubTags;
 import farcore.lib.material.prop.PropertyBasic;
-import farcore.lib.util.SubTag;
-import farcore.util.U.Mod;
+import nebula.common.util.Game;
 
 /**
  * @author ueyudiud
@@ -33,7 +33,7 @@ public class MaterialBuilder
 	
 	public MaterialBuilder(int id, String name, String oreDict, String localized)
 	{
-		this(id, Mod.getActiveModID(), name, oreDict, localized);
+		this(id, Game.getActiveModID(), name, oreDict, localized);
 	}
 	public MaterialBuilder(int id, String modid, String name, String oreDict, String localized)
 	{
@@ -112,7 +112,7 @@ public class MaterialBuilder
 		material.maxTorque = this.property.maxTorque;
 		if(this.isTool)
 		{
-			material.add(SubTag.TOOL);
+			material.add(SubTags.TOOL);
 			material.toolMaxUse = this.toolMaxUse;
 			material.toolHarvestLevel = this.toolHarvestLevel;
 			material.toolHardness = this.toolHardness;

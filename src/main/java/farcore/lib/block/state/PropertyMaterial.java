@@ -4,13 +4,16 @@
 
 package farcore.lib.block.state;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.material.Mat;
-import farcore.lib.util.IDataChecker;
+import nebula.common.util.IDataChecker;
+import nebula.common.util.L;
 import net.minecraft.block.properties.PropertyHelper;
 
 /**
@@ -18,7 +21,7 @@ import net.minecraft.block.properties.PropertyHelper;
  */
 public class PropertyMaterial extends PropertyHelper<Mat>
 {
-	final Collection<Mat> collection;
+	final List<Mat> list;
 	
 	public static PropertyMaterial create(String name, IDataChecker<? super Mat> checker)
 	{
@@ -26,19 +29,31 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 	}
 	public static PropertyMaterial create(String name, Collection<Mat> collection)
 	{
-		return new PropertyMaterial(name, ImmutableList.copyOf(collection));
+		Mat[] materials = L.cast(collection, Mat.class);
+		Arrays.sort(materials, (m1, m2) -> m1.name.compareTo(m2.name));
+		return new PropertyMaterial(name, ImmutableList.copyOf(materials));
 	}
 	
-	PropertyMaterial(String name, Collection<Mat> collection)
+	PropertyMaterial(String name, List<Mat> collection)
 	{
 		super(name, Mat.class);
-		this.collection = collection;
+		this.list = collection;
+	}
+	
+	public int indexOf(Mat material)
+	{
+		return this.list.indexOf(material);
+	}
+	
+	public Mat getMaterialFromID(int id, Mat def)
+	{
+		return id >= 0 && id < this.list.size() ? this.list.get(id) : def;
 	}
 	
 	@Override
 	public Collection<Mat> getAllowedValues()
 	{
-		return this.collection;
+		return this.list;
 	}
 	
 	@Override
@@ -46,7 +61,7 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 	{
 		Mat material = Mat.material(value);
 		
-		return this.collection.contains(material) ? Optional.of(material) : Optional.absent();
+		return this.list.contains(material) ? Optional.of(material) : Optional.absent();
 	}
 	
 	@Override

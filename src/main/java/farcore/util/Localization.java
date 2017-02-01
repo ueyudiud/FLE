@@ -6,11 +6,11 @@ package farcore.util;
 
 import java.text.DecimalFormat;
 
-import farcore.lib.item.behavior.IFoodStat;
-import farcore.lib.item.behavior.IToolStat;
+import farcore.data.SubTags;
+import farcore.lib.item.IToolStat;
 import farcore.lib.material.Mat;
-import farcore.lib.util.SubTag;
-import farcore.lib.util.UnlocalizedList;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.item.IFoodStat;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,7 +56,7 @@ public class Localization
 	@SideOnly(Side.CLIENT)
 	public static void addToolMaterialInformation(Mat material, IToolStat stat, UnlocalizedList unlocalizedList)
 	{
-		if(!material.contain(SubTag.TOOL)) return;
+		if(!material.contain(SubTags.TOOL)) return;
 		unlocalizedList.add("info.tool.head.name", material.getLocalName());
 		unlocalizedList.add("info.tool.harvest.level", material.toolHarvestLevel);
 		unlocalizedList.add("info.tool.hardness", FORMAT_1.format(material.toolHardness));

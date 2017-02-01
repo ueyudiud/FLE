@@ -1,6 +1,6 @@
 package fargen.core.worldgen;
 
-import farcore.lib.util.LanguageManager;
+import nebula.common.LanguageManager;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -30,7 +30,7 @@ public class FarWorldType extends WorldType
 		WORLD_TYPES[oldIndex] = null;
 		try
 		{
-			farcore.util.R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
+			nebula.common.util.R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
 		}
 		catch (Exception exception)
 		{

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.data.EnumToolType;
 import farcore.lib.bio.ISpecie;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
-import farcore.lib.util.Direction;
-import farcore.lib.util.IRegisteredNameable;
+import nebula.common.data.EnumToolType;
+import nebula.common.util.Direction;
+import nebula.common.util.IRegisteredNameable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;

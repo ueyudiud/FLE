@@ -4,14 +4,14 @@
 
 package farcore.lib.block.instance;
 
-import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
 import farcore.lib.block.BlockSlab;
 import farcore.lib.block.instance.BlockPlank.EnumPlankState;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.model.block.statemap.StateMapperExt;
-import farcore.util.U.OreDict;
+import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
+import nebula.common.util.OreDict;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -39,22 +39,22 @@ public class BlockPlankSlab extends BlockSlab
 	 */
 	private final BlockPlankSlab[] group;
 	private final PropertyWood property;
-
+	
 	public BlockPlankSlab(int id, BlockPlank parent, BlockPlankSlab[] group, String localName)
 	{
 		super(parent.material.modid, "plank." + parent.material.name + ".slab." + id, Material.WOOD);
-		meta = id;
+		this.meta = id;
 		this.group = group;
 		this.parent = parent;
 		this.localName = localName;
-		material = parent.material;
-		property = parent.property;
+		this.material = parent.material;
+		this.property = parent.property;
 		if(id == EnumPlankState.BROKE.ordinal())
 		{
-			lightOpacity = 100;
+			this.lightOpacity = 100;
 		}
-		setHardness(id == EnumPlankState.BROKE.ordinal() ? property.hardness * 0.06F : property.hardness * 0.6F);
-		setResistance(id == EnumPlankState.BROKE.ordinal() ? 0F : property.explosionResistance * 0.4F);
+		setHardness(id == EnumPlankState.BROKE.ordinal() ? this.property.hardness * 0.06F : this.property.hardness * 0.6F);
+		setResistance(id == EnumPlankState.BROKE.ordinal() ? 0F : this.property.explosionResistance * 0.4F);
 		setSoundType(SoundType.WOOD);
 		setCreativeTab(CT.tabTree);
 	}
@@ -64,7 +64,7 @@ public class BlockPlankSlab extends BlockSlab
 	{
 		super.postInitalizedBlocks();
 		OreDict.registerValid("slabWood", this);
-		OreDict.registerValid("slab" + material.oreDictName, this);
+		OreDict.registerValid("slab" + this.material.oreDictName, this);
 	}
 	
 	@Override
@@ -72,38 +72,38 @@ public class BlockPlankSlab extends BlockSlab
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperExt(material.modid, "plank/slab/" + material.name, null);
-		mapper.setVariants("state", EnumPlankState.values()[meta].getName());
-		ClientProxy.registerCompactModel(mapper, this, EnumPlankState.values().length);
+		StateMapperExt mapper = new StateMapperExt(this.material.modid, "plank/slab/" + this.material.name, null);
+		mapper.setVariants("state", EnumPlankState.values()[this.meta].getName());
+		Renders.registerCompactModel(mapper, this, EnumPlankState.values().length);
 	}
-
+	
 	@Override
 	protected String getLocalName()
 	{
-		return localName;
+		return this.localName;
 	}
-
+	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return meta != EnumPlankState.BROKE.ordinal();
+		return this.meta != EnumPlankState.BROKE.ordinal();
 	}
 	
 	@Override
 	public EnumPushReaction getMobilityFlag(IBlockState state)
 	{
-		return meta == EnumPlankState.BROKE.ordinal() ? EnumPushReaction.DESTROY : blockMaterial.getMobilityFlag();
+		return this.meta == EnumPlankState.BROKE.ordinal() ? EnumPushReaction.DESTROY : this.blockMaterial.getMobilityFlag();
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 : 5;
+		return this.meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 : 5;
 	}
 	
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 : 20;
+		return this.meta == EnumPlankState.FIRE_RESISTANCE.ordinal() ? 0 : 20;
 	}
 }

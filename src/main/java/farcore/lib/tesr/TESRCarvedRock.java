@@ -3,7 +3,9 @@ package farcore.lib.tesr;
 import org.lwjgl.opengl.GL11;
 
 import farcore.lib.tile.instance.TECustomCarvedStone;
-import farcore.lib.util.Direction;
+import nebula.client.render.BrightnessUtil;
+import nebula.client.render.TESRBase;
+import nebula.common.util.Direction;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;

@@ -8,9 +8,9 @@ import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.model.item.FarCoreItemSubmetaGetterLoader;
-import farcore.lib.util.LanguageManager;
-import farcore.util.ItemStacks;
+import nebula.client.model.FlexibleItemSubmetaGetterLoader;
+import nebula.common.LanguageManager;
+import nebula.common.util.ItemStacks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -43,7 +43,7 @@ public class ItemOreChip extends ItemMulti
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), stack -> "material:" + ItemStacks.getOrSetupNBT(stack, false).getString("rock"));
+		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FarCore.ID, "group/ore_chip/rock"), stack -> "material:" + ItemStacks.getOrSetupNBT(stack, false).getString("rock"));
 	}
 	
 	public static ItemStack createOreChip(int size, Mat ore, Mat rock)

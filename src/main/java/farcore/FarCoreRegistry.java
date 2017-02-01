@@ -12,22 +12,22 @@ import farcore.energy.IEnergyNet;
 import farcore.energy.thermal.IWorldThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
-import farcore.handler.FarCoreKeyHandler;
 import farcore.handler.FarCoreTextureHandler;
-import farcore.handler.FarCoreWorldHandler;
 import farcore.lib.material.IMaterialRegister;
-import farcore.lib.model.block.ICustomItemModelSelector;
-import farcore.lib.model.item.unused.FarCoreItemModelLoader;
-import farcore.lib.render.Colormap;
-import farcore.lib.render.IIconLoader;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.Log;
-import farcore.lib.world.IObjectInWorld;
 import farcore.lib.world.IWorldGenerateReplacer;
-import farcore.network.IPacket;
-import farcore.network.Network;
-import farcore.util.U;
-import farcore.util.U.Mod;
+import nebula.Log;
+import nebula.client.ClientProxy;
+import nebula.client.model.ICustomItemModelSelector;
+import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.render.Colormap;
+import nebula.client.render.IIconLoader;
+import nebula.client.util.Renders;
+import nebula.common.LanguageManager;
+import nebula.common.NebulaKeyHandler;
+import nebula.common.NebulaWorldHandler;
+import nebula.common.network.IPacket;
+import nebula.common.network.Network;
+import nebula.common.world.IObjectInWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -130,9 +130,9 @@ public class FarCoreRegistry
 	 * @param id
 	 * @param objInWorldClass
 	 */
-	public static void registerWorldObject(String id, Class<? extends IObjectInWorld> objInWorldClass)
+	public static void registerworldect(String id, Class<? extends IObjectInWorld> objInWorldClass)
 	{
-		FarCoreWorldHandler.registerObject(id, objInWorldClass);
+		NebulaWorldHandler.registerObject(id, objInWorldClass);
 	}
 	
 	/**
@@ -199,12 +199,12 @@ public class FarCoreRegistry
 	 */
 	public static void registerKey(String modid, String id, int keycode)
 	{
-		FarCoreKeyHandler.register(id, keycode, modid);
+		NebulaKeyHandler.register(id, keycode, modid);
 	}
 	
 	public static void registerKey(String id, int keycode)
 	{
-		FarCoreKeyHandler.register(id, keycode);
+		NebulaKeyHandler.register(id, keycode);
 	}
 	
 	/**
@@ -219,13 +219,13 @@ public class FarCoreRegistry
 	@SideOnly(Side.CLIENT)
 	public static void registerItemModel(Item item, ResourceLocation location)
 	{
-		FarCoreItemModelLoader.registerModel(item, location);
+		NebulaItemModelLoader.registerModel(item, location);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public static void registerModelSelector(Block block, ICustomItemModelSelector selector)
 	{
-		U.Mod.registerCustomItemModelSelector(block, selector);
+		Renders.registerCustomItemModelSelector(block, selector);
 	}
 	
 	/**
@@ -236,19 +236,19 @@ public class FarCoreRegistry
 	@SideOnly(Side.CLIENT)
 	public static void registerModelSelector(Item item, ICustomItemModelSelector selector)
 	{
-		U.Mod.registerCustomItemModelSelector(item, selector);
+		Renders.registerCustomItemModelSelector(item, selector);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public static void registerColorMultiplier(Block block, IBlockColor colors)
 	{
-		U.Mod.registerColorMultiplier(colors, block);
+		Renders.registerColorMultiplier(colors, block);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public static void registerColorMultiplier(Item item, IItemColor colors)
 	{
-		U.Mod.registerColorMultiplier(colors, item);
+		Renders.registerColorMultiplier(colors, item);
 	}
 	
 	/**
@@ -258,7 +258,7 @@ public class FarCoreRegistry
 	@SideOnly(Side.CLIENT)
 	public static void setBuildinModel(Block block)
 	{
-		Mod.registerBuildInModel(block);
+		ClientProxy.registerBuildInModel(block);
 	}
 	
 	/**

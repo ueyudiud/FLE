@@ -1,6 +1,6 @@
 package fle.core.items.tool;
 
-import farcore.data.EnumToolType;
+import nebula.common.data.EnumToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

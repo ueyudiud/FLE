@@ -1,6 +1,7 @@
 package farcore.lib.fluid;
 
 import farcore.energy.thermal.ThermalNet;
+import nebula.common.fluid.FluidBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

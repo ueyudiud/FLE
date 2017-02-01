@@ -1,7 +1,7 @@
 package farcore.handler;
 
-import farcore.asm.LightFix;
-import farcore.data.Config;
+import nebula.client.light.LightFix;
+import nebula.common.NebulaConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -16,7 +16,7 @@ public class FarCoreGuiHandler
 	{
 		if (Minecraft.getMinecraft().gameSettings.showDebugInfo)
 		{
-			if(Config.multiThreadLight)
+			if(NebulaConfig.multiThreadLight)
 			{
 				event.getLeft().add(LightFix.getOverlayInfo());
 			}

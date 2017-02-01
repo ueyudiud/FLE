@@ -2,7 +2,7 @@ package farcore.lib.block;
 
 import java.util.Random;
 
-import farcore.lib.util.Direction;
+import nebula.common.util.Direction;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;

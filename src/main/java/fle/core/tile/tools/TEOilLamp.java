@@ -1,14 +1,15 @@
 package fle.core.tile.tools;
 
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import farcore.lib.material.Mat;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Containerable;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Light;
-import farcore.lib.tile.abstracts.TESynchronization;
-import farcore.lib.tile.IToolableTile;
-import farcore.lib.util.Direction;
 import fle.core.gui.ContainerOilLampCrafting;
 import fle.core.gui.GuiOilLampCrafting;
+import nebula.common.data.EnumToolType;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Containerable;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
+import nebula.common.tile.IToolableTile;
+import nebula.common.tile.TESynchronization;
+import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,13 +43,13 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		material = Mat.material(nbt.getString("material"));
+		this.material = Mat.material(nbt.getString("material"));
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setString("material", material.name);
+		nbt.setString("material", this.material.name);
 		return super.writeToNBT(nbt);
 	}
 	
@@ -58,9 +59,9 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 		super.updateClient();
 		if(is(Burning) && is(HasSmoke))
 		{
-			if(random.nextInt(4) == 0)
+			if(this.random.nextInt(4) == 0)
 			{
-				worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + .5, pos.getY() + .8, pos.getZ() + .5, 0F, 0.01F, 0F);
+				this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.pos.getX() + .5, this.pos.getY() + .8, this.pos.getZ() + .5, 0F, 0.01F, 0F);
 			}
 		}
 	}
@@ -71,7 +72,7 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 		super.updateServer();
 		burnFuel();
 	}
-
+	
 	protected void burnFuel()
 	{
 		if(is(Burning))
@@ -81,12 +82,12 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 				disable(Burning);
 				return;
 			}
-			if(fuelBurnTime <= 0)
+			if(this.fuelBurnTime <= 0)
 			{
-				if(fuelAmount > 0)
+				if(this.fuelAmount > 0)
 				{
-					fuelAmount --;
-					fuelBurnTime = fuelTotalBurnTime;
+					this.fuelAmount --;
+					this.fuelBurnTime = this.fuelTotalBurnTime;
 				}
 				else
 				{
@@ -94,21 +95,21 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 					return;
 				}
 			}
-			--fuelBurnTime;
+			--this.fuelBurnTime;
 		}
 	}
-
+	
 	@Override
 	public int getLightValue(IBlockState state)
 	{
-		return is(Burning) ? fuelLightValue : 0;
+		return is(Burning) ? this.fuelLightValue : 0;
 	}
-
+	
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		if(tool == EnumToolType.firestarter)
+		if(tool == EnumToolTypes.FIRESTARTER)
 		{
 			if(is(HasWick) && !is(Burning))
 			{

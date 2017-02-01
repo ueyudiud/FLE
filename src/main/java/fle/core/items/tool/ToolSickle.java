@@ -1,6 +1,6 @@
 package fle.core.items.tool;
 
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,7 +12,7 @@ public class ToolSickle extends Tool
 {
 	public ToolSickle()
 	{
-		super(EnumToolType.sickle);
+		super(EnumToolTypes.SICKLE);
 	}
 	
 	@Override

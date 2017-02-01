@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import farcore.lib.collection.ArrayIterator;
 import fle.api.recipes.ShapedRecipeInput.ShapedRecipeCache;
+import nebula.common.base.ArrayIterator;
 
 public abstract class ShapedRecipeInput<T, S> implements IRecipeInput<ShapedRecipeCache, ICraftingMatrix<T>, T>
 {

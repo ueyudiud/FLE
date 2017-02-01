@@ -2,7 +2,7 @@ package fle.api.cg;
 
 import java.util.List;
 
-import farcore.lib.stack.AbstractStack;
+import nebula.common.stack.AbstractStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

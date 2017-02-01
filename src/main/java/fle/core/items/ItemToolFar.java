@@ -3,21 +3,21 @@ package fle.core.items;
 import java.util.List;
 
 import farcore.data.EnumItem;
-import farcore.data.EnumToolType;
 import farcore.data.KS;
-import farcore.lib.entity.EntityProjectileItem;
-import farcore.lib.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
-import farcore.lib.item.IProjectileItem;
+import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool;
-import farcore.lib.item.behavior.IBehavior;
-import farcore.lib.item.behavior.IToolStat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.skill.SkillAbstract;
-import farcore.lib.util.Direction;
-import farcore.lib.util.IDataChecker;
-import farcore.lib.util.ISubTagContainer;
-import farcore.util.U;
 import fle.core.FLE;
+import nebula.client.util.Client;
+import nebula.common.data.EnumToolType;
+import nebula.common.entity.EntityProjectileItem;
+import nebula.common.item.IBehavior;
+import nebula.common.item.IProjectileItem;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
+import nebula.common.util.Direction;
+import nebula.common.util.IDataChecker;
+import nebula.common.util.ISubTagContainer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.Entity;
@@ -106,9 +106,9 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	public boolean renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x,
 			int z, String text)
 	{
-		U.Client.renderItemSubscirptInGUI(render, fontRenderer, stack, x, z, text);
-		U.Client.renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z);
-		U.Client.renderItemCooldownInGUI(render, fontRenderer, stack, x, z);
+		Client.renderItemSubscirptInGUI(render, fontRenderer, stack, x, z, text);
+		Client.renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z);
+		Client.renderItemCooldownInGUI(render, fontRenderer, stack, x, z);
 		return true;
 	}
 	

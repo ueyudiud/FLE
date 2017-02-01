@@ -6,8 +6,8 @@ import java.util.List;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.ISpecie;
-import farcore.lib.util.IRegisteredNameable;
-import farcore.lib.util.LanguageManager;
+import nebula.common.LanguageManager;
+import nebula.common.util.IRegisteredNameable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
 

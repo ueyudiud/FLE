@@ -5,7 +5,7 @@ import java.util.Random;
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
-import farcore.util.L;
+import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;

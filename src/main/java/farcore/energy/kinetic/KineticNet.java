@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import farcore.FarCore;
 import farcore.energy.IEnergyNet;
 import farcore.energy.IEnergyNet.LocalEnergyNet;
-import farcore.lib.collection.IntegerArray;
-import farcore.lib.util.Direction;
 import farcore.lib.util.EnumModifyFlag;
-import farcore.lib.util.Log;
+import nebula.Log;
+import nebula.Nebula;
+import nebula.common.base.IntegerArray;
+import nebula.common.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -153,7 +153,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 		catch(StackOverflowError error)
 		{
 			updated = false;
-			if(FarCore.debug)
+			if(Nebula.debug)
 			{
 				Log.warn("Stack overflow when update kinetic net.", error);
 			}
@@ -161,7 +161,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 		catch (OutOfMemoryError error)
 		{
 			updated = false;
-			if(FarCore.debug)
+			if(Nebula.debug)
 			{
 				Log.warn("Out of memory when update kinetic net.", error);
 			}

@@ -11,14 +11,14 @@ import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.block.BlockBase;
-import farcore.lib.block.IHitByFallenBehaviorBlock;
 import farcore.lib.block.material.MaterialIce;
-import farcore.lib.util.LanguageManager;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
-import farcore.util.L;
-import farcore.util.U;
+import nebula.common.LanguageManager;
+import nebula.common.block.BlockBase;
+import nebula.common.block.IHitByFallenBehaviorBlock;
+import nebula.common.util.L;
+import nebula.common.util.Game;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -55,7 +55,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		U.Mod.registerItemBlockModel(this, 0, FarCore.ID, "ice");
+		Game.registerItemBlockModel(this, 0, FarCore.ID, "ice");
 	}
 	
 	@Override

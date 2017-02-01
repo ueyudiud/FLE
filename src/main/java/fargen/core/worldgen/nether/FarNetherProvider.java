@@ -14,9 +14,9 @@ public class FarNetherProvider extends WorldProvider
 {
 	public FarNetherProvider()
 	{
-		biomeProvider = new BiomeProviderSingle(Biomes.HELL);
-		isHellWorld = true;
-		hasNoSky = true;
+		this.biomeProvider = new BiomeProviderSingle(Biomes.HELL);
+		this.doesWaterVaporize = true;
+		this.hasNoSky = true;
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class FarNetherProvider extends WorldProvider
 		for (int i = 0; i <= 15; ++i)
 		{
 			float f1 = 1.0F - i / 15.0F;
-			lightBrightnessTable[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * 0.9F + 0.1F;
+			this.lightBrightnessTable[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * 0.9F + 0.1F;
 		}
 	}
 	
@@ -107,7 +107,7 @@ public class FarNetherProvider extends WorldProvider
 			}
 		};
 	}
-
+	
 	@Override
 	public DimensionType getDimensionType()
 	{

@@ -1,6 +1,6 @@
 package fargen.core.layer;
 
-import farcore.lib.util.NoisePerlin;
+import nebula.common.util.noise.NoisePerlin;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 

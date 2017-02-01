@@ -1,7 +1,7 @@
 package farcore.lib.tile.instance.circuit;
 
-import farcore.lib.util.Direction;
-import farcore.lib.util.Facing;
+import nebula.common.util.Direction;
+import nebula.common.util.Facing;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class TECircuitRepeater extends TECircuitFrontBack

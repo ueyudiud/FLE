@@ -11,17 +11,17 @@ import java.util.List;
 import farcore.handler.FarCoreSynchronizationHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
-import farcore.lib.tile.INetworkedSyncTile;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
-import farcore.lib.tile.IUpdatableTile;
-import farcore.lib.tile.abstracts.TESynchronization;
-import farcore.lib.util.Direction;
-import farcore.network.PacketBufferExt;
-import farcore.util.FluidStacks;
-import farcore.util.L;
-import farcore.util.NBTs;
-import farcore.util.TileEntities;
 import fle.api.tile.IDitchTile;
+import nebula.common.network.PacketBufferExt;
+import nebula.common.tile.INetworkedSyncTile;
+import nebula.common.tile.IUpdatableTile;
+import nebula.common.tile.TESynchronization;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
+import nebula.common.util.Direction;
+import nebula.common.util.FluidStacks;
+import nebula.common.util.L;
+import nebula.common.util.NBTs;
+import nebula.common.util.TileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
@@ -114,7 +114,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.material = NBTs.getMaterialByNameOrDefault(nbt, "material", Mat.VOID);
+		this.material = Mat.getMaterialByNameOrDefault(nbt, "material", Mat.VOID);
 		this.factory = DitchBlockHandler.getFactory(this.material);
 		this.tank = this.factory.apply(this);
 		this.tank.readFromNBT(NBTs.getCompound(nbt, "tank", false));
@@ -135,7 +135,7 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		Mat material1 = NBTs.getMaterialByIDOrDefault(nbt, "m", this.material);
+		Mat material1 = Mat.getMaterialByIDOrDefault(nbt, "m", this.material);
 		if(this.material != material1)
 		{
 			this.material = material1;

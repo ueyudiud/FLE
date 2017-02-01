@@ -4,8 +4,8 @@
 
 package farcore.data;
 
-import farcore.lib.potion.MobEffect;
 import farcore.lib.potion.MobEffectBleeding;
+import nebula.common.mobeffect.MobEffect;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.Potion;
 

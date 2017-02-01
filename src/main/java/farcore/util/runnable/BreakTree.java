@@ -6,8 +6,7 @@ import farcore.data.EnumItem;
 import farcore.data.V;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.item.instance.ItemTreeLog;
-import farcore.util.U;
-import farcore.util.U.Worlds;
+import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -75,7 +74,7 @@ public class BreakTree implements Runnable
 			beginLeavesDecay(world, pos1.north());
 			beginLeavesDecay(world, pos1.east());
 			beginLeavesDecay(world, pos1.west());
-			U.Worlds.spawnDropsInWorld(world, pos1, block.tree.getLogOtherDrop(world, pos1, new ArrayList()));
+			Worlds.spawnDropsInWorld(world, pos1, block.tree.getLogOtherDrop(world, pos1, new ArrayList()));
 		}
 	}
 	

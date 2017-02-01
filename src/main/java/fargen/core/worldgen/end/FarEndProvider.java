@@ -26,10 +26,10 @@ public class FarEndProvider extends WorldProvider
 	@Override
 	public void createBiomeProvider()
 	{
-		biomeProvider = new BiomeProviderSingle(Biomes.SKY);
-		hasNoSky = true;
-		NBTTagCompound nbttagcompound = worldObj.getWorldInfo().getDimensionData(DimensionType.THE_END);
-		dragonFightManager = worldObj instanceof WorldServer ? new DragonFightManager((WorldServer)worldObj, nbttagcompound.getCompoundTag("DragonFight")) : null;
+		this.biomeProvider = new BiomeProviderSingle(Biomes.SKY);
+		this.hasNoSky = true;
+		NBTTagCompound nbttagcompound = this.world.getWorldInfo().getDimensionData(DimensionType.THE_END);
+		this.dragonFightManager = this.world instanceof WorldServer ? new DragonFightManager((WorldServer)this.world, nbttagcompound.getCompoundTag("DragonFight")) : null;
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class FarEndProvider extends WorldProvider
 	{
 		int i = 10518688;
 		float f = MathHelper.cos(p_76562_1_ * ((float)Math.PI * 2F)) * 2.0F + 0.5F;
-		f = MathHelper.clamp_float(f, 0.0F, 1.0F);
+		f = MathHelper.clamp(f, 0.0F, 1.0F);
 		float f1 = 0.627451F;
 		float f2 = 0.5019608F;
 		float f3 = 0.627451F;
@@ -111,7 +111,7 @@ public class FarEndProvider extends WorldProvider
 	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
 	{
-		return worldObj.getGroundAboveSeaLevel(new BlockPos(x, 0, z)).getMaterial().blocksMovement();
+		return this.world.getGroundAboveSeaLevel(new BlockPos(x, 0, z)).getMaterial().blocksMovement();
 	}
 	
 	@Override
@@ -151,12 +151,12 @@ public class FarEndProvider extends WorldProvider
 	{
 		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		
-		if (dragonFightManager != null)
+		if (this.dragonFightManager != null)
 		{
-			nbttagcompound.setTag("DragonFight", dragonFightManager.getCompound());
+			nbttagcompound.setTag("DragonFight", this.dragonFightManager.getCompound());
 		}
 		
-		worldObj.getWorldInfo().setDimensionData(FarGen.FAR_END, nbttagcompound);
+		this.world.getWorldInfo().setDimensionData(FarGen.FAR_END, nbttagcompound);
 	}
 	
 	/**
@@ -166,15 +166,15 @@ public class FarEndProvider extends WorldProvider
 	@Override
 	public void onWorldUpdateEntities()
 	{
-		if (dragonFightManager != null)
+		if (this.dragonFightManager != null)
 		{
-			dragonFightManager.tick();
+			this.dragonFightManager.tick();
 		}
 	}
 	
 	@Nullable
 	public DragonFightManager getDragonFightManager()
 	{
-		return dragonFightManager;
+		return this.dragonFightManager;
 	}
 }

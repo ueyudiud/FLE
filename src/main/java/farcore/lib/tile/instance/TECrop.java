@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.bio.DNAPair;
@@ -15,19 +15,19 @@ import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Update;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_Drops;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
-import farcore.lib.tile.IUpdatableTile;
-import farcore.lib.tile.abstracts.TEAged;
-import farcore.lib.util.Direction;
-import farcore.util.NBTs;
-import farcore.util.Players;
-import farcore.util.U.Client;
-import farcore.util.U.Worlds;
+import nebula.client.util.Client;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Update;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
+import nebula.common.tile.IUpdatableTile;
+import nebula.common.tile.TEAged;
+import nebula.common.util.Direction;
+import nebula.common.util.NBTs;
+import nebula.common.util.Players;
+import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -125,7 +125,7 @@ ITB_AddHitEffects
 	{
 		super.readFromDescription1(nbt);
 		this.stage = NBTs.getIntOrDefault(nbt, "s", this.stage);
-		Mat material = NBTs.getMaterialByNameOrDefault(nbt, "c", null);
+		Mat material = Mat.getMaterialByNameOrDefault(nbt, "c", null);
 		if(material != null)
 		{
 			this.card = material.getProperty(MP.property_crop, ICrop.VOID);
@@ -179,7 +179,7 @@ ITB_AddHitEffects
 	@Override
 	public boolean canHarvestBlock(EntityPlayer player)
 	{
-		return Players.matchCurrentToolType(player, EnumToolType.sickle);
+		return Players.matchCurrentToolType(player, EnumToolTypes.SICKLE);
 	}
 	
 	@Override
@@ -203,7 +203,7 @@ ITB_AddHitEffects
 	@Override
 	public Biome biome()
 	{
-		return this.worldObj.getBiomeGenForCoords(this.pos);
+		return this.world.getBiome(this.pos);
 	}
 	
 	@Override
@@ -271,7 +271,7 @@ ITB_AddHitEffects
 	@Override
 	public float temp()
 	{
-		return ThermalNet.getTemperature(this.worldObj, this.pos, true);
+		return ThermalNet.getTemperature(this.world, this.pos, true);
 	}
 	
 	@Override
@@ -308,7 +308,7 @@ ITB_AddHitEffects
 	@Override
 	public boolean canBlockStay()
 	{
-		return this.worldObj == null || this.card == ICrop.VOID ? true : this.card.canPlantAt(this);
+		return this.world == null || this.card == ICrop.VOID ? true : this.card.canPlantAt(this);
 	}
 	
 	@Override
@@ -365,7 +365,7 @@ ITB_AddHitEffects
 	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
 	{
 		IBlockState state = getBlockState();
-		Client.addBlockHitEffect(this.worldObj, this.random, state.getActualState(this.worldObj, this.pos), target.sideHit, this.pos, manager);
+		Client.addBlockHitEffect(this.world, this.random, state.getActualState(this.world, this.pos), target.sideHit, this.pos, manager);
 		return true;
 	}
 	
@@ -374,7 +374,7 @@ ITB_AddHitEffects
 	public boolean addDestroyEffects(ParticleManager manager)
 	{
 		IBlockState state = getBlockState();
-		Client.addBlockDestroyEffects(this.worldObj, this.pos, state.getActualState(this.worldObj, this.pos), manager);
+		Client.addBlockDestroyEffects(this.world, this.pos, state.getActualState(this.world, this.pos), manager);
 		return true;
 	}
 }

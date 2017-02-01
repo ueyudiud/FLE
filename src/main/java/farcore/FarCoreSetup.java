@@ -5,59 +5,25 @@
 package farcore;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.logging.log4j.LogManager;
-
-import farcore.asm.FarOverride;
 import farcore.data.Config;
 import farcore.lib.command.CommandDate;
-import farcore.lib.model.block.statemap.StateMapperExt;
 import farcore.lib.oredict.OreDictExt;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_Containerable;
-import farcore.lib.util.IRenderRegister;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.Log;
 import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
-import farcore.util.U;
-import farcore.util.U.ClientHandler;
-import farcore.util.U.Sides;
-import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiErrorScreen;
-import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
+import nebula.Log;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Containerable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -88,11 +54,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 		 * enough to make FLE.
 		 */
 		version = "1.0o",
-		name = "Far Core")
+		name = "Far Core",
+		dependencies = "required-after:nebula")
 public class FarCoreSetup
 {
-	private LanguageManager lang;
-	
 	/**
 	 * The sided proxy of far core.
 	 */
@@ -105,52 +70,7 @@ public class FarCoreSetup
 	public FarCoreSetup()
 	{
 		setup = this;
-		Log.logger = LogManager.getLogger(FarCore.ID);
 		OreDictExt.init();
-	}
-	
-	@EventHandler
-	public void check(FMLFingerprintViolationEvent event)
-	{
-		/**
-		 * The Far Core mod used Java8. There are method
-		 * is added in Java8, so I use a method exist since
-		 * Java8.
-		 */
-		Log.info("Far Core start check java version...");
-		try
-		{
-			Map map = new HashMap();
-			map.getOrDefault("", "");
-		}
-		catch(Exception exception)
-		{
-			throw new IllegalArgumentException("Java version is out of date, this mod is suggested use java 8 to run.", exception);
-		}
-		/**
-		 * Coded checking.
-		 */
-		Log.info("Far Core checking mod version...");
-		try
-		{
-			new BlockPos(1, 2, 3).add(0, 0, 0);
-		}
-		catch(Exception exception)
-		{
-			throw new IllegalArgumentException("You may download dev version, please check your mod version and use default version.", exception);
-		}
-		/**
-		 * Checking forge version.
-		 */
-		Log.info("Far Core checking forge version...");
-		int forge = ForgeVersion.getBuildVersion();
-		if ((forge > 0) && (forge < FarCore.MIN_FORGE))
-			throw new RuntimeException("The currently installed version of "
-					+ "Minecraft Forge (" + ForgeVersion.getMajorVersion() + "." + ForgeVersion.getMinorVersion() + "." +
-					ForgeVersion.getRevisionVersion() + "." + forge + ") is too old.\n" +
-					"Please update the Minecraft Forge.\n" + "\n" +
-					"(Technical information: " + forge + " < " + FarCore.MIN_FORGE + ")");
-		Log.info("Checking end.");
 	}
 	
 	@EventHandler
@@ -161,22 +81,10 @@ public class FarCoreSetup
 		modMetadata.name = "Far Core";
 		modMetadata.credits = "ueyudiud";
 		/**
-		 * Put child mods into ModMetadata.
-		 */
-		for(ModContainer container : Loader.instance().getModList())
-		{
-			if(FarCore.OVERRIDE_ID.equals(container.getName()))
-			{
-				modMetadata.childMods.add(container);
-				break;
-			}
-		}
-		/**
 		 * Loading non-resource-file from Minecraft running path.
 		 */
 		try
 		{
-			this.lang = new LanguageManager(new File(U.Mod.getMCFile(), "lang"));
 			Log.info("Loading configuration.");
 			File file = event.getSuggestedConfigurationFile();
 			Configuration configuration = new Configuration(file);
@@ -188,7 +96,6 @@ public class FarCoreSetup
 		{
 			Log.warn("Fail to load configuration.", exception);
 		}
-		this.lang.read();
 		FarCoreSetup.proxy.load(event);
 	}
 	
@@ -208,7 +115,6 @@ public class FarCoreSetup
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		FarCoreSetup.proxy.load(event);
-		this.lang.write();
 	}
 	
 	@EventHandler
@@ -220,11 +126,6 @@ public class FarCoreSetup
 	@NetworkCheckHandler
 	public static boolean check(Map<String, String> versions, Side side)
 	{
-		if(!versions.containsKey(FarCore.OVERRIDE_ID) || !FarOverride.VERSION.equals(versions.get(FarCore.OVERRIDE_ID)))
-		{
-			Log.warn("Fail to check " + side + " the FarOverride mod is missing or outdate please check your modpack is available to use.");
-			return false;
-		}
 		return true;
 	}
 	
@@ -276,28 +177,11 @@ public class FarCoreSetup
 		{
 			return null;
 		}
-		
-		public void handleIDMissing()
-		{
-			if(!Config.replaceMissingIDToAir)
-			{
-				throw new RuntimeException("The id map is missing, to see log to find which block state is missing, still to start server, please switch configuration idfix:replaceMissingStateToAir to start server.");
-			}
-		}
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static class ClientProxy extends Proxy implements IResourceManagerReloadListener
+	public static class ClientProxy extends Proxy
 	{
-		private static Map<String, List<IRenderRegister>> registers = new HashMap();
-		public static List<Block> buildInRender = new ArrayList();
-		
-		public ClientProxy()
-		{
-			//Take this proxy into resource manager reload listener.
-			((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
-		}
-		
 		@Override
 		protected CommonLoader createLoader()
 		{
@@ -310,33 +194,7 @@ public class FarCoreSetup
 			super.load(event);
 			//Register all render object.
 			//PLACED CALL THIS METHOD ONCE IN CLIENT PROXY IF YOUR MOD CREATE NEW GAMING ELEMENTS(BLOCK, ITEM, ETC).
-			registerRenderObject();
-		}
-		
-		@Override
-		public void onResourceManagerReload(IResourceManager manager)
-		{
-			//Checking is reached in preinitalization state.
-			if (Loader.instance().hasReachedState(LoaderState.PREINITIALIZATION))
-			{
-				BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
-				ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
-				for(Entry<IBlockColor, List<Block>> entry : ClientHandler.blockColorMap.entrySet())
-				{
-					blockColors.registerBlockColorHandler(
-							entry.getKey(), farcore.util.L.cast(entry.getValue(), Block.class));
-				}
-				for(Entry<IItemColor, List<Item>> entry : ClientHandler.itemColorMap.entrySet())
-				{
-					itemColors.registerItemColorHandler(
-							entry.getKey(), farcore.util.L.cast(entry.getValue(), Item.class));
-				}
-			}
-			
-			if (Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION))
-			{
-				U.Client.getFontRender().onResourceManagerReload(manager);
-			}
+			nebula.client.ClientProxy.registerRenderObject();
 		}
 		
 		@Override
@@ -346,91 +204,6 @@ public class FarCoreSetup
 			if(tile instanceof ITB_Containerable)
 				return ((ITB_Containerable) tile).openGUI(ID, player);
 			return null;
-		}
-		
-		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, int metaCount)
-		{
-			Item item = Item.getItemFromBlock(block);
-			for (int i = 0; i < metaCount; ++i)
-			{
-				ModelLoader.setCustomModelResourceLocation(item, i, mapper.getModelResourceLocation(block.getStateFromMeta(i)));
-			}
-			ModelLoader.setCustomStateMapper(block, mapper);
-		}
-		
-		public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, IProperty<T> property)
-		{
-			Item item = Item.getItemFromBlock(block);
-			IBlockState state = block.getDefaultState();
-			if(property != null)
-			{
-				for (T value : property.getAllowedValues())
-				{
-					IBlockState state2 = state.withProperty(property, value);
-					ModelLoader.setCustomModelResourceLocation(item, block.getMetaFromState(state2), mapper.getModelResourceLocation(state2));
-				}
-			}
-			else
-			{
-				ModelLoader.setCustomModelResourceLocation(item, 0, mapper.getModelResourceLocation(state));
-			}
-			ModelLoader.setCustomStateMapper(block, mapper);
-		}
-		
-		public void addRenderRegisterListener(IRenderRegister register)
-		{
-			if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
-			{
-				Log.warn("Register too late, place register before initalization.");
-			}
-			else if(register != null)
-			{
-				farcore.util.L.put(registers, U.Mod.getActiveModID(), register);
-			}
-		}
-		
-		/**
-		 * Let client proxy called this method when FML pre-initialization.
-		 */
-		public static void registerRenderObject()
-		{
-			List<IRenderRegister> reg = registers.remove(U.Mod.getActiveModID());
-			if(reg != null)
-			{
-				for(IRenderRegister register : reg)
-				{
-					register.registerRender();
-				}
-			}
-		}
-		
-		/**
-		 * Internal, do not use. (Use ASM from forge)
-		 */
-		public static void onRegisterAllBlocks(BlockModelShapes shapes)
-		{
-			shapes.registerBuiltInBlocks(farcore.util.L.cast(buildInRender, Block.class));
-			buildInRender = null;
-		}
-		
-		@Override
-		public void handleIDMissing()
-		{
-			if(!Sides.isSimulating())
-			{
-				Minecraft.getMinecraft().displayGuiScreen(
-						new GuiYesNo((flag, id) -> {
-							if(flag)
-							{
-								Minecraft.getMinecraft().stopIntegratedServer();
-								Minecraft.getMinecraft().displayGuiScreen(null);
-							}
-						}, "Some id detected is missing. The invalid block willbe removed, do you still want to join in to game?", "The missing block ids to see log.", 0));
-			}
-			else //Could this take effective?
-			{
-				Minecraft.getMinecraft().displayGuiScreen(new GuiErrorScreen("Invalid block state map.", "Some id is missing, you can not join in to server."));
-			}
 		}
 	}
 }

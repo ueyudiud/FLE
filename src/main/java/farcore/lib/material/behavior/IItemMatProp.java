@@ -2,8 +2,8 @@ package farcore.lib.material.behavior;
 
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
-import farcore.lib.util.UnlocalizedList;
-import farcore.lib.world.IEnvironment;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.enviornment.IEnvironment;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,10 +49,10 @@ public interface IItemMatProp
 	{
 		addInformation(stack, material, condition, list, DEFAULT_SAVE_TAG);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	void addInformation(ItemStack stack, Mat material, MatCondition condition, UnlocalizedList list, String saveTag);
-
+	
 	/**
 	 * Get entity attack damage multiple.
 	 * @param stack

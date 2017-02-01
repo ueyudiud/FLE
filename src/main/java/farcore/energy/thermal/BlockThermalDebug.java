@@ -4,12 +4,12 @@ import java.util.List;
 
 import farcore.FarCore;
 import farcore.FarCoreRegistry;
-import farcore.lib.block.BlockSingleTE;
-import farcore.lib.block.IExtendedDataBlock;
-import farcore.lib.util.CreativeTabBase;
-import farcore.lib.util.UnlocalizedList;
-import farcore.lib.world.chunk.ExtendedBlockStateRegister;
-import farcore.util.ItemStacks;
+import nebula.client.CreativeTabBase;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.block.BlockSingleTE;
+import nebula.common.block.IExtendedDataBlock;
+import nebula.common.util.ItemStacks;
+import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;

@@ -4,16 +4,16 @@
 
 package farcore.data;
 
-import farcore.lib.collection.IPropertyMap.IProperty;
+import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.material.prop.PropertyEdible;
 import farcore.lib.material.prop.PropertyOre;
-import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
+import nebula.common.base.IPropertyMap.IProperty;
 
 /**
  * Material properties.
@@ -34,7 +34,7 @@ public class MP
 	public static final IProperty<PropertyOre> property_ore = () -> new PropertyOre();
 	public static final IProperty<PropertyWood> property_wood = () -> null;
 	public static final IProperty<PropertyBlockable> property_soil = () -> null;
-	public static final IProperty<PropertyRock> property_rock = () -> null;
+	public static final IProperty<RockBehavior> property_rock = () -> null;
 	public static final IProperty<ICrop> property_crop = () -> ICrop.VOID;
 	public static final IProperty<IPlant> property_plant = () -> null;
 	public static final IProperty<PropertyEdible> property_edible = () -> null;

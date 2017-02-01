@@ -10,7 +10,7 @@ import static farcore.data.EnumTempCategory.TROPICAL;
 import java.util.Arrays;
 
 import farcore.data.EnumTempCategory;
-import farcore.util.Maths;
+import nebula.common.util.Maths;
 import net.minecraft.world.biome.Biome.TempCategory;
 
 public enum ClimaticZone

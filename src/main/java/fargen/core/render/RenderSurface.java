@@ -2,10 +2,10 @@ package fargen.core.render;
 
 import java.util.Random;
 
-import farcore.lib.render.IWorldRender;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import fargen.core.biome.BiomeBase;
+import nebula.client.render.IWorldRender;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderSurface implements IWorldRender
 {
 	private int rainSoundCounter;
-
+	
 	@Override
 	public boolean renderDropOnGround(World world, Entity entity, Random random, int rendererUpdateCount)
 	{
@@ -62,7 +62,7 @@ public class RenderSurface implements IWorldRender
 			for (int l = 0; l < k; ++l)
 			{
 				BlockPos blockpos1 = world.getPrecipitationHeight(blockpos.add(random.nextInt(10) - random.nextInt(10), 0, random.nextInt(10) - random.nextInt(10)));
-				Biome biome = world.getBiomeGenForCoords(blockpos1);
+				Biome biome = world.getBiome(blockpos1);
 				BlockPos blockpos2 = blockpos1.down();
 				IBlockState state = world.getBlockState(blockpos2);
 				
@@ -75,7 +75,7 @@ public class RenderSurface implements IWorldRender
 					double d4 = random.nextDouble();
 					AxisAlignedBB axisalignedbb = state.getBoundingBox(world, blockpos2);
 					
-					if (state.getMaterial() != Material.LAVA && state.getBlock() != Blocks.field_189877_df)
+					if (state.getMaterial() != Material.LAVA && state.getBlock() != Blocks.MAGMA)
 					{
 						if (state.getMaterial() != Material.AIR)
 						{
@@ -98,11 +98,11 @@ public class RenderSurface implements IWorldRender
 				}
 			}
 			
-			if (j > 0 && random.nextInt(3) < rainSoundCounter++)
+			if (j > 0 && random.nextInt(3) < this.rainSoundCounter++)
 			{
-				rainSoundCounter = 0;
+				this.rainSoundCounter = 0;
 				
-				if (d1 > blockpos.getY() + 1 && world.getPrecipitationHeight(blockpos).getY() > MathHelper.floor_float(blockpos.getY()))
+				if (d1 > blockpos.getY() + 1 && world.getPrecipitationHeight(blockpos).getY() > MathHelper.floor(blockpos.getY()))
 				{
 					world.playSound(d0, d1, d2, SoundEvents.WEATHER_RAIN_ABOVE, SoundCategory.WEATHER, 0.1F, 0.5F, false);
 				}

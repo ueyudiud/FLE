@@ -1,7 +1,9 @@
 package farcore.lib.block;
 
 import farcore.data.EnumSlabState;
-import farcore.lib.util.Direction;
+import nebula.common.block.BlockBase;
+import nebula.common.block.ItemBlockBase;
+import nebula.common.util.Direction;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -21,14 +23,14 @@ public class ItemBlockSlab extends ItemBlockBase
 	{
 		super(block);
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		IBlockState iblockstate = worldIn.getBlockState(pos);
 		Block block = iblockstate.getBlock();
-
+		
 		if (block == this.block)
 		{
 			EnumSlabState slabState = iblockstate.getValue(EnumSlabState.PROPERTY);
@@ -63,12 +65,12 @@ public class ItemBlockSlab extends ItemBlockBase
 		}
 		if (!block.isReplaceable(worldIn, pos))
 			pos = pos.offset(facing);
-
+		
 		if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, facing, stack) && worldIn.canBlockBePlaced(this.block, pos, false, facing, (Entity)null, stack))
 		{
 			int i = this.getMetadata(stack.getMetadata());
-			IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn);
-
+			IBlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn, stack);
+			
 			if (placeBlockAt(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1))
 			{
 				SoundType soundtype = this.block.getSoundType();

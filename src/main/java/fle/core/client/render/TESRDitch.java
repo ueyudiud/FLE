@@ -4,14 +4,14 @@
 
 package fle.core.client.render;
 
-import static farcore.util.Maths.lerp;
+import static nebula.common.util.Maths.lerp;
 
 import org.lwjgl.opengl.GL11;
 
-import farcore.lib.tesr.TESRBase;
-import farcore.lib.util.Direction;
 import fle.api.tile.IDitchTile;
 import fle.core.tile.ditchs.TEDitch;
+import nebula.client.render.TESRBase;
+import nebula.common.util.Direction;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;

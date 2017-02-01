@@ -8,10 +8,10 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import farcore.data.MP;
-import farcore.lib.block.BlockBase;
 import farcore.lib.material.Mat;
 import farcore.lib.plant.IPlant;
-import farcore.lib.util.Direction;
+import nebula.common.block.BlockBase;
+import nebula.common.util.Direction;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;

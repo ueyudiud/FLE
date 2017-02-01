@@ -16,13 +16,13 @@ public class FarVoidProvider extends WorldProvider
 {
 	public FarVoidProvider()
 	{
-
+		
 	}
-
+	
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new FarVoidChunkGenerator(worldObj, worldObj.getSeed());
+		return new FarVoidChunkGenerator(this.world, this.world.getSeed());
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class FarVoidProvider extends WorldProvider
 	{
 		return FarGen.FAR_VOID;
 	}
-
+	
 	/**
 	 * Called to determine if the chunk at the given chunk coordinates within the provider's world can be dropped. Used
 	 * in WorldProviderSurface to prevent spawn chunks from being unloaded.
@@ -38,9 +38,9 @@ public class FarVoidProvider extends WorldProvider
 	@Override
 	public boolean canDropChunk(int x, int z)
 	{
-		return !worldObj.isSpawnChunk(x, z) || !worldObj.provider.getDimensionType().shouldLoadSpawn();
+		return !this.world.isSpawnChunk(x, z) || !this.world.provider.getDimensionType().shouldLoadSpawn();
 	}
-
+	
 	/**
 	 * The far core override classic ice, prevent vanilla water freeze now.
 	 */
@@ -68,26 +68,26 @@ public class FarVoidProvider extends WorldProvider
 	{
 		return FarGenBiomes.v_void;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Vec3d getSkyColor(Entity cameraEntity, float partialTicks)
 	{
 		return new Vec3d(0.01F, 0.01F, 0.01F);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Vec3d getFogColor(float f1, float f2)
 	{
 		return new Vec3d(0F, 0F, 0F);
 	}
-
+	
 	@Override
 	protected void generateLightBrightnessTable()
 	{
 	}
-
+	
 	/**
 	 * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
 	 */
@@ -96,7 +96,7 @@ public class FarVoidProvider extends WorldProvider
 	{
 		return 0.0F;
 	}
-
+	
 	/**
 	 * Returns array with sunrise/sunset colors
 	 */
@@ -131,7 +131,7 @@ public class FarVoidProvider extends WorldProvider
 	{
 		return false;
 	}
-
+	
 	/**
 	 * the y level at which clouds are rendered.
 	 */
@@ -141,7 +141,7 @@ public class FarVoidProvider extends WorldProvider
 	{
 		return 8.0F;
 	}
-
+	
 	/**
 	 * Will check if the x, z position specified is alright to be set as the map spawn point
 	 */
@@ -150,9 +150,9 @@ public class FarVoidProvider extends WorldProvider
 	{
 		return x == 0 && z == 0;
 	}
-
+	
 	@Override
-	public boolean getHasNoSky()
+	public boolean hasNoSky()
 	{
 		return true;
 	}
@@ -160,7 +160,7 @@ public class FarVoidProvider extends WorldProvider
 	@Override
 	public long getWorldTime()
 	{
-		return worldObj.getWorldInfo().getWorldTime();
+		return this.world.getWorldInfo().getWorldTime();
 	}
 	
 	@Override

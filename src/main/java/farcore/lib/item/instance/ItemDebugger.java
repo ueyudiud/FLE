@@ -8,17 +8,18 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.FarCore;
 import farcore.data.EnumItem;
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.IDebugableBlock;
-import farcore.lib.block.IToolableBlock;
-import farcore.lib.item.ItemBase;
 import farcore.lib.tile.IDebugableTile;
-import farcore.lib.tile.IToolableTile;
-import farcore.lib.util.Direction;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.Log;
-import farcore.util.U;
+import nebula.Log;
+import nebula.Nebula;
+import nebula.common.LanguageManager;
+import nebula.common.block.IToolableBlock;
+import nebula.common.item.ItemBase;
+import nebula.common.tile.IToolableTile;
+import nebula.common.util.Direction;
+import nebula.common.util.Game;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -50,7 +51,7 @@ public class ItemDebugger extends ItemBase
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		U.Mod.registerItemModel(EnumItem.debug.item, 0, FarCore.ID, "debugger");
+		Game.registerItemModel(EnumItem.debug.item, 0, FarCore.ID, "debugger");
 	}
 	
 	@Override
@@ -69,12 +70,12 @@ public class ItemDebugger extends ItemBase
 				Block block = state.getBlock();
 				if(block instanceof IToolableBlock)
 				{
-					((IToolableBlock) block).onToolClick(player, EnumToolType.screw_driver, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
+					((IToolableBlock) block).onToolClick(player, EnumToolTypes.SCREW_DRIVER, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
 				}
 				TileEntity tile = world.getTileEntity(pos);
 				if(tile instanceof IToolableTile)
 				{
-					((IToolableTile) tile).onToolClick(player, EnumToolType.screw_driver, stack, Direction.of(side), hitX, hitY, hitZ);
+					((IToolableTile) tile).onToolClick(player, EnumToolTypes.SCREW_DRIVER, stack, Direction.of(side), hitX, hitY, hitZ);
 				}
 				List<String> list = new ArrayList();
 				//This information is added in F3 information, so should I remove these information display?
@@ -104,13 +105,13 @@ public class ItemDebugger extends ItemBase
 				}
 				for(String string : list)
 				{
-					player.addChatComponentMessage(new TextComponentString(string));
+					player.sendMessage(new TextComponentString(string));
 				}
 			}
 			catch(Exception exception)
 			{
-				player.addChatComponentMessage(new TextComponentString("Fail to debug."));
-				if(FarCore.debug)
+				player.sendMessage(new TextComponentString("Fail to debug."));
+				if(Nebula.debug)
 				{
 					Log.warn("Fail to get information from coord.", exception);
 				}
@@ -132,11 +133,11 @@ public class ItemDebugger extends ItemBase
 		{
 			try
 			{
-				entity.worldObj.removeEntity(entity);
+				entity.world.removeEntity(entity);
 			}
 			catch(Exception exception)
 			{
-				if(FarCore.debug)
+				if(Nebula.debug)
 				{
 					Log.warn("Fail to remove %s from world.", exception, entity);
 				}

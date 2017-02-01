@@ -7,18 +7,18 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.MC;
 import farcore.data.MP;
+import farcore.data.SubTags;
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropAccessSimulated;
 import farcore.lib.crop.ICrop;
 import farcore.lib.item.ItemMulti;
-import farcore.lib.item.behavior.IFoodStat;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyEdible;
-import farcore.lib.util.SubTag;
-import farcore.lib.util.UnlocalizedList;
 import farcore.util.Localization;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.item.IFoodStat;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -51,7 +51,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		Mat material = getMaterialFromItem(stack);
-		if(material.contain(SubTag.CROP))
+		if(material.contain(SubTags.CROP))
 		{
 			IBlockState state = worldIn.getBlockState(pos);
 			if(!state.getBlock().isReplaceable(worldIn, pos))

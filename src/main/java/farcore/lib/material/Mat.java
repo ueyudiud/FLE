@@ -11,37 +11,39 @@ import com.google.common.collect.ImmutableList;
 
 import farcore.data.Config;
 import farcore.data.MP;
+import farcore.data.SubTags;
+import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.block.instance.BlockPlank;
+import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.BlockSoil;
-import farcore.lib.collection.HashPropertyMap;
-import farcore.lib.collection.IPropertyMap;
-import farcore.lib.collection.IPropertyMap.IProperty;
-import farcore.lib.collection.IntegerMap;
-import farcore.lib.collection.Register;
 import farcore.lib.crop.ICrop;
-import farcore.lib.io.javascript.ScriptLoad;
 import farcore.lib.material.behavior.IItemMatProp;
 import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.material.prop.PropertyOre;
-import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tree.ITree;
-import farcore.lib.util.IDataChecker;
-import farcore.lib.util.IRegisteredNameable;
-import farcore.lib.util.ISubTagContainer;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.SubTag;
-import farcore.util.U.Mod;
-import net.minecraft.block.Block;
+import nebula.common.LanguageManager;
+import nebula.common.base.HashPropertyMap;
+import nebula.common.base.IPropertyMap;
+import nebula.common.base.IPropertyMap.IProperty;
+import nebula.common.base.IntegerMap;
+import nebula.common.base.Register;
+import nebula.common.util.Game;
+import nebula.common.util.IDataChecker;
+import nebula.common.util.IRegisteredNameable;
+import nebula.common.util.ISubTagContainer;
+import nebula.common.util.SubTag;
+import nebula.io.javascript.ScriptLoad;
 import net.minecraft.block.material.Material;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
@@ -151,7 +153,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public Mat(int id, String name, String oreDict, String localized)
 	{
-		this(id, Mod.getActiveModID(), name, oreDict, localized);
+		this(id, Game.getActiveModID(), name, oreDict, localized);
 	}
 	public Mat(int id, String modid, String name, String oreDict, String localized)
 	{
@@ -257,7 +259,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		this.toolDamageToEntity = property.damageToEntity = dVE;
 		property.enchantability = enchantability;
 		property.attackSpeed = attackSpeed;
-		add(SubTag.TOOL);
+		add(SubTags.TOOL);
 		return addProperty(MP.property_tool, property);
 	}
 	
@@ -265,13 +267,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setHandable(float toughness)
 	{
 		//		handleToughness = toughness;
-		add(SubTag.HANDLE);
+		add(SubTags.HANDLE);
 		return this;
 	}
 	
 	public Mat setOreProperty(int harvestLevel, float hardness, float resistance)
 	{
-		return setOreProperty(harvestLevel, hardness, resistance, SubTag.ORE_SIMPLE);
+		return setOreProperty(harvestLevel, hardness, resistance, SubTags.ORE_SIMPLE);
 	}
 	
 	public Mat setOreProperty(int harvestLevel, float hardness, float resistance, SubTag type)
@@ -298,7 +300,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.harvestLevel = harvestLevel;
 		property.hardness = hardness;
 		property.explosionResistance = resistance;
-		add(SubTag.ORE, type);
+		add(SubTags.ORE, type);
 		return addProperty(MP.property_ore, property);
 	}
 	
@@ -314,7 +316,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		addProperty(MP.flammability, 50);
 		addProperty(MP.fire_encouragement, 4);
 		addProperty(MP.fire_spread_speed, 25);
-		add(SubTag.WOOD);
+		add(SubTags.WOOD);
 		return addProperty(MP.property_wood, property);
 	}
 	
@@ -340,7 +342,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.explosionResistance = property0.explosionResistance;
 		property.hardness = property0.hardness;
 		property.harvestLevel = property0.harvestLevel;
-		add(SubTag.TREE);
+		add(SubTags.TREE);
 		if(createBlock && Config.createLog)
 		{
 			BlockLogNatural logNatural = BlockLogNatural.create(this, property);
@@ -366,45 +368,27 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		{
 			new BlockSoil(this.modid, "soil." + this.name, material, this, property);
 		}
-		add(SubTag.DIRT);
+		add(SubTags.DIRT);
 		return addProperty(MP.property_soil, property);
 	}
 	
-	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp)
+	public Mat setRock(int harvestLevel, float hardness, float resistance, RockBehavior behavior)
 	{
-		PropertyRock property = new PropertyRock();
-		property.material = this;
-		property.harvestLevel = harvestLevel;
-		property.hardness = hardness;
-		property.explosionResistance = resistance;
-		property.minTemperatureForExplosion = minDetTemp;
-		if(Config.createRock)
-		{
-			/**
-			 * Use new block instead.
-			 */
-			//			property.block = new BlockRockOld("rock." + this.name, this, property);
-		}
-		add(SubTag.ROCK);
-		return addProperty(MP.property_rock, property);
+		behavior.harvestLevel = harvestLevel;
+		behavior.hardness = hardness;
+		behavior.explosionResistance = resistance;
+		behavior.block = new BlockRock(this, behavior);
+		add(SubTags.ROCK);
+		return addProperty(MP.property_rock, behavior);
 	}
-	
-	public Mat setRock(int harvestLevel, float hardness, float resistance, int minDetTemp, Block rock)
+	public Mat setRock(int harvestLevel, float hardness, float resistance)
 	{
-		PropertyRock property = new PropertyRock();
-		property.material = this;
-		property.harvestLevel = harvestLevel;
-		property.hardness = hardness;
-		property.explosionResistance = resistance;
-		property.minTemperatureForExplosion = minDetTemp;
-		property.block = rock;//Use custom rock block might have other use, will not auto-register into ore dictionary.
-		add(SubTag.ROCK);
-		return addProperty(MP.property_rock, property);
+		return setRock(harvestLevel, hardness, resistance, new RockBehavior(this));
 	}
 	
 	public Mat setCrop(ICrop crop)
 	{
-		add(SubTag.CROP);
+		add(SubTags.CROP);
 		return addProperty(MP.property_crop, crop);
 	}
 	
@@ -457,5 +441,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public String toString()
 	{
 		return this.name;
+	}
+	public static Mat getMaterialByIDOrDefault(NBTTagCompound nbt, String key, Mat def)
+	{
+		return nbt.hasKey(key) ? material(nbt.getShort(key), def) : def;
+	}
+	public static Mat getMaterialByNameOrDefault(NBTTagCompound nbt, String key, Mat def)
+	{
+		return nbt.hasKey(key) ? material(nbt.getString(key), def) : def;
 	}
 }

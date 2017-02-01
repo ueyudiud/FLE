@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import farcore.FarCore;
 import farcore.data.V;
 import farcore.energy.IEnergyNet;
-import farcore.handler.FarCoreWorldHandler;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
-import farcore.lib.util.Direction;
 import farcore.lib.util.EnumModifyFlag;
-import farcore.lib.util.Log;
-import farcore.lib.world.ICoord;
-import farcore.lib.world.IObjectInWorld;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
-import farcore.util.L;
-import farcore.util.U;
+import nebula.Log;
+import nebula.Nebula;
+import nebula.common.NebulaWorldHandler;
+import nebula.common.util.Direction;
+import nebula.common.util.L;
+import nebula.common.util.Worlds;
+import nebula.common.world.ICoord;
+import nebula.common.world.IObjectInWorld;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -53,11 +53,11 @@ public class ThermalNet implements IEnergyNet
 			base = box.getTemperature(pos);
 		}
 		float affected = 0;
-		for(IObjectInWorld obj : FarCoreWorldHandler.getObjectInRange(world, pos, 24))
+		for(IObjectInWorld obj : NebulaWorldHandler.getObjectInRange(world, pos, 24))
 		{
 			if(obj instanceof IThermalObjectInWorld)
 			{
-				affected += ((IThermalObjectInWorld) obj).getDetTemp(U.Worlds.distanceSqTo(obj, pos), base);
+				affected += ((IThermalObjectInWorld) obj).getDetTemp(Worlds.distanceSqTo(obj, pos), base);
 			}
 		}
 		return base + affected;
@@ -433,7 +433,7 @@ public class ThermalNet implements IEnergyNet
 							}
 							catch(Exception exception)
 							{
-								if(FarCore.debug)
+								if(Nebula.debug)
 								{
 									Log.error("Catching an exception during emmit thermal energy.", exception);
 								}
@@ -450,7 +450,7 @@ public class ThermalNet implements IEnergyNet
 			}
 			catch(OutOfMemoryError error)
 			{
-				if(FarCore.debug)
+				if(Nebula.debug)
 				{
 					Log.warn("The net update is out of memory, "
 							+ "this error will prevent update.", error);

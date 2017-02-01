@@ -4,11 +4,11 @@ import farcore.FarCore;
 import farcore.FarCoreRegistry;
 import farcore.data.Config;
 import farcore.data.EnumBlock;
-import farcore.data.EnumToolType;
-import farcore.lib.block.BlockSingleTE;
 import farcore.lib.tesr.TESRCarvedRock;
 import farcore.lib.tile.instance.TECustomCarvedStone;
-import farcore.util.U;
+import nebula.common.block.BlockSingleTE;
+import nebula.common.data.EnumToolType;
+import nebula.common.util.Game;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +28,7 @@ public class BlockCarvedRock extends BlockSingleTE
 		EnumBlock.carved_rock.set(this);
 		if(!Config.splitBrightnessOfSmallBlock)
 		{
-			useNeighborBrightness = true;
+			this.useNeighborBrightness = true;
 		}
 	}
 	
@@ -38,10 +38,10 @@ public class BlockCarvedRock extends BlockSingleTE
 	{
 		super.registerRender();
 		FarCoreRegistry.setBuildinModel(this);
-		U.Mod.registerItemModel(item, 0, FarCore.ID, "rock.stone.resource");
+		Game.registerItemModel(this.item, 0, FarCore.ID, "rock.stone.resource");
 		ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 	}
-
+	
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
@@ -54,7 +54,7 @@ public class BlockCarvedRock extends BlockSingleTE
 	{
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
-
+	
 	@Override
 	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -73,7 +73,7 @@ public class BlockCarvedRock extends BlockSingleTE
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
-		return EnumToolType.pickaxe.name();
+		return EnumToolType.PICKAXE.name;
 	}
 	
 	@Override

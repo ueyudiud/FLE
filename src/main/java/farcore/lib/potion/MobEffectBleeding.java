@@ -1,5 +1,6 @@
 package farcore.lib.potion;
 
+import nebula.common.mobeffect.MobEffect;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;

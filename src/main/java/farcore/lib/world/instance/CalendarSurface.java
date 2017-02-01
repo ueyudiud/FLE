@@ -1,8 +1,8 @@
 package farcore.lib.world.instance;
 
 import farcore.lib.world.ICalendarWithMonth;
-import farcore.util.Maths;
-import farcore.util.Strings;
+import nebula.common.util.Maths;
+import nebula.common.util.Strings;
 
 public class CalendarSurface implements ICalendarWithMonth
 {

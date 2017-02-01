@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
+import nebula.common.block.BlockBase;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStairs.EnumHalf;

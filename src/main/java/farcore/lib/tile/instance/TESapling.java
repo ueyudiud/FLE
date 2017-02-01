@@ -5,15 +5,15 @@ import java.util.Random;
 
 import farcore.data.M;
 import farcore.data.MP;
-import farcore.data.Others;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.tile.abstracts.TEAged;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.TreeInfo;
-import farcore.lib.util.Direction;
-import farcore.util.NBTs;
+import nebula.common.data.Misc;
+import nebula.common.tile.TEAged;
+import nebula.common.util.Direction;
+import nebula.common.util.NBTs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,7 +59,7 @@ implements ISaplingAccess, IDebugableBlock
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("t"))
 		{
-			tree = (PropertyTree) NBTs.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_wood, PropertyTree.VOID);
+			tree = (PropertyTree) Mat.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_wood, PropertyTree.VOID);
 			markBlockRenderUpdate();
 		}
 	}
@@ -105,11 +105,11 @@ implements ISaplingAccess, IDebugableBlock
 	
 	public boolean grow()
 	{
-		IBlockState state = worldObj.getBlockState(pos);
-		worldObj.setBlockState(pos, Others.AIR, 4);
-		if(tree.generateTreeAt(worldObj, pos, random, info))
+		IBlockState state = world.getBlockState(pos);
+		world.setBlockState(pos, Misc.AIR, 4);
+		if(tree.generateTreeAt(world, pos, random, info))
 			return true;
-		worldObj.setBlockState(pos, state, 4);
+		world.setBlockState(pos, state, 4);
 		return false;
 	}
 	
@@ -133,7 +133,7 @@ implements ISaplingAccess, IDebugableBlock
 	@Override
 	public Biome biome()
 	{
-		return worldObj.getBiomeGenForCoords(pos);
+		return world.getBiome(pos);
 	}
 	
 	@Override

@@ -4,37 +4,37 @@
 
 package farcore.lib.block.instance;
 
-import static farcore.data.Others.PROP_EAST;
-import static farcore.data.Others.PROP_NORTH;
-import static farcore.data.Others.PROP_SOUTH;
-import static farcore.data.Others.PROP_UP;
-import static farcore.data.Others.PROP_WEST;
+import static nebula.common.data.Misc.PROP_EAST;
+import static nebula.common.data.Misc.PROP_NORTH;
+import static nebula.common.data.Misc.PROP_SOUTH;
+import static nebula.common.data.Misc.PROP_UP;
+import static nebula.common.data.Misc.PROP_WEST;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
 import farcore.data.ColorMultiplier;
 import farcore.data.EnumBlock;
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.data.MP;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockMaterial;
-import farcore.lib.block.IHitByFallenBehaviorBlock;
-import farcore.lib.block.ISmartFallableBlock;
-import farcore.lib.entity.EntityFallingBlockExtended;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
-import farcore.lib.model.block.statemap.StateMapperExt;
-import farcore.lib.util.LanguageManager;
 import farcore.lib.world.WorldPropHandler;
-import farcore.util.L;
-import farcore.util.Players;
-import farcore.util.U;
+import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
+import nebula.common.LanguageManager;
+import nebula.common.block.IHitByFallenBehaviorBlock;
+import nebula.common.block.ISmartFallableBlock;
+import nebula.common.entity.EntityFallingBlockExtended;
+import nebula.common.util.L;
+import nebula.common.util.Players;
+import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -226,11 +226,11 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		U.Mod.registerColorMultiplier(ColorMultiplier.SOIL_COLOR, this);
-		U.Mod.registerColorMultiplier(ColorMultiplier.ITEM_SOIL_COLOR, this.item);
+		Renders.registerColorMultiplier(ColorMultiplier.SOIL_COLOR, this);
+		Renders.registerColorMultiplier(ColorMultiplier.ITEM_SOIL_COLOR, this.item);
 		StateMapperExt mapper = new StateMapperExt(this.material.modid, "soil", null);
 		mapper.setVariants("type", this.material.name);
-		ClientProxy.registerCompactModel(mapper, this, 16);
+		Renders.registerCompactModel(mapper, this, 16);
 	}
 	
 	@Override
@@ -324,7 +324,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	@Override
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
-		return Players.getCurrentToolType(player).contains(EnumToolType.shovel);
+		return Players.getCurrentToolType(player).contains(EnumToolTypes.SHOVEL);
 	}
 	
 	@Override
@@ -373,7 +373,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	protected boolean checkAndFall(World world, BlockPos pos, IBlockState state, Random rand, boolean checkFallToNearby)
 	{
 		if(canFallBelow(world, pos, state))
-			return U.Worlds.fallBlock(world, pos, state);
+			return Worlds.fallBlock(world, pos, state);
 		if(checkFallToNearby)
 		{
 			List<EnumFacing> sides = canFallNearby(world, pos, state);
@@ -381,18 +381,18 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 			{
 			case NONE :
 				if(sides.size() >= 2)
-					return U.Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+					return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
 			case FROZEN :
 				if(!sides.isEmpty())
-					return U.Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+					return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
 			case GRASS :
 			case MYCELIUM :
 			case TUNDRA :
 			case TUNDRA_FROZEN :
 				if(sides.size() >= 3 || (sides.size() == 2 && rand.nextInt(5) == 0))
-					return U.Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
+					return Worlds.fallBlock(world, pos, pos.down().offset(L.random(sides, rand)), state);
 				break;
 			default:
 				break;
@@ -495,7 +495,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	protected IBlockState updateBase(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
 		IBlockState oldState = state;
-		boolean wet = U.Worlds.isBlockNearby(worldIn, pos, EnumBlock.water.block, true);
+		boolean wet = Worlds.isBlockNearby(worldIn, pos, EnumBlock.water.block, true);
 		EnumCoverType type = state.getValue(COVER_TYPE);
 		if(type.noCover != EnumCoverType.NONE && type.noCover != EnumCoverType.FROZEN)
 		{

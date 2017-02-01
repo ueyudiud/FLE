@@ -2,7 +2,7 @@ package farcore.lib.crop;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.IBiology;
-import farcore.lib.world.ICoord;
+import nebula.common.world.ICoord;
 import net.minecraft.world.biome.Biome;
 
 public interface ICropAccess extends ICoord, IBiology

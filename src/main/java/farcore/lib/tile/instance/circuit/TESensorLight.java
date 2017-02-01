@@ -1,6 +1,6 @@
 package farcore.lib.tile.instance.circuit;
 
-import farcore.lib.util.Direction;
+import nebula.common.util.Direction;
 
 public class TESensorLight extends TESensor
 {

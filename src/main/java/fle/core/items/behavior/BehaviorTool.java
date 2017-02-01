@@ -1,6 +1,6 @@
 package fle.core.items.behavior;
 
-import farcore.lib.item.behavior.BehaviorBase;
+import nebula.common.item.BehaviorBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

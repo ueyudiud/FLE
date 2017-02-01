@@ -1,7 +1,7 @@
 package fle.core;
 
-import farcore.lib.util.ModCompator;
 import fle.core.common.CommonLoader;
+import nebula.common.util.ModCompator;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;

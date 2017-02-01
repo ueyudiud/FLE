@@ -1,12 +1,12 @@
 package farcore.lib.block.instance;
 
-import static farcore.lib.util.Direction.D;
-import static farcore.lib.util.Direction.E;
-import static farcore.lib.util.Direction.N;
-import static farcore.lib.util.Direction.Q;
-import static farcore.lib.util.Direction.S;
-import static farcore.lib.util.Direction.U;
-import static farcore.lib.util.Direction.W;
+import static nebula.common.util.Direction.D;
+import static nebula.common.util.Direction.E;
+import static nebula.common.util.Direction.N;
+import static nebula.common.util.Direction.Q;
+import static nebula.common.util.Direction.S;
+import static nebula.common.util.Direction.U;
+import static nebula.common.util.Direction.W;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,13 @@ import javax.annotation.Nullable;
 
 import farcore.FarCore;
 import farcore.data.EnumBlock;
-import farcore.data.Others;
-import farcore.lib.block.BlockBase;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
-import farcore.lib.model.block.statemap.StateMapperExt;
-import farcore.lib.util.Direction;
-import farcore.lib.util.LanguageManager;
+import nebula.client.model.StateMapperExt;
+import nebula.common.LanguageManager;
+import nebula.common.block.BlockBase;
+import nebula.common.data.Misc;
+import nebula.common.util.Direction;
+import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -53,11 +54,11 @@ public class BlockFire extends BlockBase
 	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 15);
 	public static final PropertyEnum<SpreadDir> SPREAD_PREFERENCE =
 			PropertyEnum.create("spread_preference", SpreadDir.class);
-	public static final PropertyBool NORTH = Others.PROP_NORTH;
-	public static final PropertyBool EAST = Others.PROP_EAST;
-	public static final PropertyBool SOUTH = Others.PROP_SOUTH;
-	public static final PropertyBool WEST = Others.PROP_WEST;
-	public static final PropertyBool UPPER = Others.PROP_UP;
+	public static final PropertyBool NORTH = Misc.PROP_NORTH;
+	public static final PropertyBool EAST = Misc.PROP_EAST;
+	public static final PropertyBool SOUTH = Misc.PROP_SOUTH;
+	public static final PropertyBool WEST = Misc.PROP_WEST;
+	public static final PropertyBool UPPER = Misc.PROP_UP;
 	public static final PropertyBool SMOLDER = PropertyBool.create("smoldering");
 	
 	private static enum SpreadDir implements IStringSerializable
@@ -177,7 +178,7 @@ public class BlockFire extends BlockBase
 
 	private boolean canBlockStayAt(World world, BlockPos pos)
 	{
-		return farcore.util.U.Worlds.isAirNearby(world, pos, true) &&
+		return nebula.common.util.Worlds.isAirNearby(world, pos, true) &&
 				(canStayFire(world, pos.down(), EnumFacing.UP) ||
 						canStayFire(world, pos.up(), EnumFacing.DOWN) ||
 						canStayFire(world, pos.north(), EnumFacing.SOUTH) ||
@@ -188,7 +189,7 @@ public class BlockFire extends BlockBase
 
 	private boolean canBlockBurnAt(World world, BlockPos pos)
 	{
-		boolean isCatchRain = farcore.util.U.Worlds.isCatchingRain(world, pos, true);
+		boolean isCatchRain = nebula.common.util.Worlds.isCatchingRain(world, pos, true);
 		return canBurnFire(world, pos.down(), EnumFacing.UP, isCatchRain) ||
 				canBurnFire(world, pos.up(), EnumFacing.DOWN, isCatchRain) ||
 				canBurnFire(world, pos.north(), EnumFacing.SOUTH, isCatchRain) ||
@@ -690,7 +691,7 @@ public class BlockFire extends BlockBase
 			list[0] = 2;
 			for(EnumFacing facing : EnumFacing.VALUES)
 			{
-				boolean isCatchingRaining = farcore.util.U.Worlds.isCatchingRain(world, pos1, true);
+				boolean isCatchingRaining = nebula.common.util.Worlds.isCatchingRain(world, pos1, true);
 				if((state.getBlock() instanceof IThermalCustomBehaviorBlock &&
 						((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(world, pos1, facing, isCatchingRaining)) ||
 						state.getBlock().isFlammable(world, pos1, facing))

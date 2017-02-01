@@ -1,7 +1,7 @@
 package farcore.lib.cover;
 
 import farcore.lib.tile.IPlateCoverableTile;
-import farcore.lib.util.Direction;
+import nebula.common.util.Direction;
 
 public interface ICoverable
 {

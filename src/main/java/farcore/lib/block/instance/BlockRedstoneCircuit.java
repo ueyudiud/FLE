@@ -12,16 +12,9 @@ import com.google.common.collect.ImmutableMap;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.M;
-import farcore.data.Others;
-import farcore.lib.block.BlockTE;
-import farcore.lib.collection.IRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.ModelRedstoneCircuit;
-import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.model.block.statemap.StateMapperCircuit;
-import farcore.lib.prop.PropertyString;
-import farcore.lib.prop.PropertyTE.TETag;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import farcore.lib.tile.instance.circuit.TECircuitAnd;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
 import farcore.lib.tile.instance.circuit.TECircuitCross;
@@ -38,10 +31,18 @@ import farcore.lib.tile.instance.circuit.TECircuitSynchronizer;
 import farcore.lib.tile.instance.circuit.TECircuitTicking;
 import farcore.lib.tile.instance.circuit.TECircuitXor;
 import farcore.lib.tile.instance.circuit.TESensorLight;
-import farcore.lib.util.Direction;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.UnlocalizedList;
-import farcore.util.ItemStacks;
+import nebula.Nebula;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.LanguageManager;
+import nebula.common.base.IRegister;
+import nebula.common.block.BlockTE;
+import nebula.common.block.property.PropertyString;
+import nebula.common.block.property.PropertyTE.TETag;
+import nebula.common.data.Misc;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
+import nebula.common.util.Direction;
+import nebula.common.util.ItemStacks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -102,7 +103,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		super(FarCore.ID, "red.circuit", Material.CIRCUITS);
 		EnumBlock.circuit.set(this);
 	}
-
+	
 	@Override
 	public void postInitalizedBlocks()
 	{
@@ -122,7 +123,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		LanguageManager.registerLocal(getTranslateNameForItemStack(33), "Redstone Invert");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(64), "Redstone Light Sensor");
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -130,12 +131,12 @@ public class BlockRedstoneCircuit extends BlockTE
 		super.registerRender();
 		ModelLoaderRegistry.registerLoader(ModelRedstoneCircuit.RedstoneCircuitModelLoader.INSTANCE);
 		ModelLoader.setCustomStateMapper(this, new StateMapperCircuit());
-		for(TETag tag : property_TE.getAllowedValues())
+		for(TETag tag : this.property_TE.getAllowedValues())
 		{
-			ModelLoader.setCustomModelResourceLocation(item, tag.id(), new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(this.item, tag.id(), new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), "inventory"));
 		}
 	}
-
+	
 	public static ItemStack createItemStack(int meta, Mat material)
 	{
 		ItemStack stack = new ItemStack(EnumBlock.circuit.block, 1, meta);
@@ -144,42 +145,42 @@ public class BlockRedstoneCircuit extends BlockTE
 		nbt.setString("material", material.name);
 		return stack;
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return super.initDefaultState(state).withProperty(Others.PROP_DIRECTION_HORIZONTALS, Direction.N);
+		return super.initDefaultState(state).withProperty(Misc.PROP_DIRECTION_HORIZONTALS, Direction.N);
 	}
 	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, createTEProperty(), Others.PROP_DIRECTION_HORIZONTALS, CUSTOM_VALUE);
+		return new BlockStateContainer(this, createTEProperty(), Misc.PROP_DIRECTION_HORIZONTALS, CUSTOM_VALUE);
 	}
 	
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
-		state = property_TE.withProperty(state, tile);
+		state = this.property_TE.withProperty(state, tile);
 		if(tile instanceof TECircuitBase)
 		{
 			try
 			{
 				state = state
-						.withProperty(Others.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation())
+						.withProperty(Misc.PROP_DIRECTION_HORIZONTALS, ((TECircuitBase) tile).getRotation())
 						.withProperty(CUSTOM_VALUE, ((TECircuitBase) tile).getState());
 			}
 			catch(Exception exception)
 			{
-				if(FarCore.debug)
+				if(Nebula.debug)
 					throw exception;
 				return state;
 			}
 		}
 		return state;
 	}
-
+	
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
@@ -188,7 +189,7 @@ public class BlockRedstoneCircuit extends BlockTE
 			return BlockStateTileEntityWapper.wrap(tile, state);
 		return super.getExtendedState(state, world, pos);
 	}
-
+	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
@@ -202,15 +203,12 @@ public class BlockRedstoneCircuit extends BlockTE
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(TETag tag : property_TE.getAllowedValues())
+		for(TETag tag : this.property_TE.getAllowedValues())
 		{
-			if(tag.isValidTag())
-			{
-				list.add(createItemStack(tag.id(), M.stone));
-			}
+			list.add(createItemStack(tag.id(), M.stone));
 		}
 	}
-
+	
 	@Override
 	public boolean isNormalCube(IBlockState state)
 	{
@@ -222,18 +220,18 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
 	{
 		return canBlockStay(worldIn, pos);
 	}
-
+	
 	public boolean canBlockStay(World worldIn, BlockPos pos)
 	{
 		return worldIn.isSideSolid(pos.down(), EnumFacing.UP);
 	}
-
+	
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
@@ -244,7 +242,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		return true;
 	}
-
+	
 	/**
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
@@ -284,14 +282,14 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		return BlockRenderLayer.CUTOUT;
 	}
-
+	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
-		register.register(1, "repeater", TECircuitRepeater.class);
-		register.register(2, "ticking", TECircuitTicking.class);
-		register.register(3, "rslatch", TECircuitRSLatch.class);
-		register.register(4, "synchronizer", TECircuitSynchronizer.class);
+		register.register(0, "repeater", TECircuitRepeater.class);
+		register.register(1, "ticking", TECircuitTicking.class);
+		register.register(2, "rslatch", TECircuitRSLatch.class);
+		register.register(3, "synchronizer", TECircuitSynchronizer.class);
 		register.register(16, "not", TECircuitNot.class);
 		register.register(17, "or", TECircuitOr.class);
 		register.register(18, "and", TECircuitAnd.class);
@@ -305,7 +303,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		register.register(64, "sensor_light", TESensorLight.class);
 		return true;
 	}
-
+	
 	@Override
 	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
 			boolean advanced)

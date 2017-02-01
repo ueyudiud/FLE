@@ -1,6 +1,6 @@
 package farcore.energy.kinetic;
 
-import farcore.lib.util.Direction;
+import nebula.common.util.Direction;
 
 /**
  * The kinetic energy handler interface.

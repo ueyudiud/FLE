@@ -1,7 +1,5 @@
 package fargen.core;
 
-import farcore.asm.ClientOverride;
-import farcore.lib.util.Log;
 import farcore.lib.world.WorldPropHandler;
 import fargen.core.render.RenderSurface;
 import fargen.core.world.WorldPropSurface;
@@ -9,6 +7,8 @@ import fargen.core.worldgen.FarWorldType;
 import fargen.core.worldgen.end.FarEndProvider;
 import fargen.core.worldgen.nether.FarNetherProvider;
 import fargen.core.worldgen.surface.FarSurfaceProvider;
+import nebula.Log;
+import nebula.client.ClientOverride;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;

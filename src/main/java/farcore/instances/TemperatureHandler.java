@@ -1,7 +1,7 @@
 package farcore.instances;
 
 import farcore.energy.thermal.IWorldThermalHandler;
-import farcore.lib.block.BlockStandardFluid;
+import nebula.common.block.BlockStandardFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;

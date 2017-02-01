@@ -24,7 +24,7 @@ public class FleEntityHandler
 			EntityDamageSource source = (EntityDamageSource) event.getSource();
 			if(source.getSourceOfDamage() instanceof EntityZombie)
 			{
-				float dif = entity.worldObj.getDifficultyForLocation(event.getEntityLiving().getPosition()).getAdditionalDifficulty();
+				float dif = entity.world.getDifficultyForLocation(event.getEntityLiving().getPosition()).getAdditionalDifficulty();
 				float hardness = dif * event.getEntityLiving().getRNG().nextFloat() + 1.5F;
 				if(dif != 0.0F)
 				{

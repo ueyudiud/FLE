@@ -3,8 +3,8 @@ package farcore.lib.plant;
 import java.util.List;
 import java.util.Random;
 
-import farcore.lib.block.IMetaHandler;
-import farcore.lib.util.Direction;
+import nebula.common.block.IMetaHandler;
+import nebula.common.util.Direction;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;

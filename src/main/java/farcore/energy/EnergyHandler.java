@@ -4,7 +4,7 @@
 
 package farcore.energy;
 
-import farcore.lib.collection.Register;
+import nebula.common.base.Register;
 
 /**
  * The far core provide an energy formatter to give

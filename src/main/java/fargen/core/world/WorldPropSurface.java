@@ -2,14 +2,14 @@ package fargen.core.world;
 
 import farcore.data.EnumBlock;
 import farcore.data.V;
-import farcore.lib.util.NoiseBase;
-import farcore.lib.util.NoisePerlin;
 import farcore.lib.world.CalendarHandler;
 import farcore.lib.world.ICalendarWithMonth;
 import farcore.lib.world.IWorldPropProvider;
-import farcore.util.Maths;
 import fargen.core.biome.BiomeBase;
 import fargen.core.util.ClimaticZone;
+import nebula.common.util.Maths;
+import nebula.common.util.noise.NoiseBase;
+import nebula.common.util.noise.NoisePerlin;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -39,7 +39,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	
 	private float getTemperatureLocal(World world, BlockPos pos, int a, int b, float d)
 	{
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		if(biome instanceof BiomeBase)
 		{
 			ClimaticZone zone = ((BiomeBase) biome).zone;
@@ -87,7 +87,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	public float getAverageTemperature(World world, BlockPos pos)
 	{
 		setData(world);
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		if(biome instanceof BiomeBase)
 		{
 			ClimaticZone zone = ((BiomeBase) biome).zone;
@@ -108,7 +108,7 @@ public class WorldPropSurface implements IWorldPropProvider
 		int b = (a + 1) % 12;
 		float d = (float) (l - a);
 		ClimaticZone zone;
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		if(biome instanceof BiomeBase)
 		{
 			zone = ((BiomeBase) biome).zone;
@@ -136,7 +136,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	{
 		if(!world.isBlockLoaded(pos))
 			return -1;
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		if(biome instanceof BiomeBase)
 		{
 			ClimaticZone zone = ((BiomeBase) biome).zone;
@@ -181,7 +181,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	@Override
 	public float getAverageHumidity(World world, BlockPos pos)
 	{
-		Biome biome = world.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 		if(biome instanceof BiomeBase)
 		{
 			ClimaticZone zone = ((BiomeBase) biome).zone;

@@ -6,10 +6,10 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.tile.IDebugableTile;
-import farcore.lib.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
-import farcore.lib.tile.abstracts.TESynchronization;
-import farcore.lib.util.Direction;
-import farcore.util.ItemStacks;
+import nebula.common.tile.TESynchronization;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
+import nebula.common.util.Direction;
+import nebula.common.util.ItemStacks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

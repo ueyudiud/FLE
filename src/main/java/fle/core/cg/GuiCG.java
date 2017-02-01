@@ -10,20 +10,20 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
-import farcore.asm.ClientOverride;
-import farcore.lib.collection.Ety;
-import farcore.lib.stack.AbstractStack;
-import farcore.lib.stack.ArrayStack;
-import farcore.lib.stack.BaseStack;
-import farcore.lib.stack.OreStack;
-import farcore.util.L;
-import farcore.util.U;
 import fle.api.cg.CraftGuideRegister;
 import fle.api.cg.IDisplayable;
 import fle.api.cg.IGuiRecipeHanler;
 import fle.api.cg.IRecipeDisplayHelper;
 import fle.api.cg.renderelement.IPage;
 import fle.api.cg.renderelement.ITransferBox;
+import nebula.client.ClientOverride;
+import nebula.client.util.Client;
+import nebula.common.base.Ety;
+import nebula.common.stack.AbstractStack;
+import nebula.common.stack.ArrayStack;
+import nebula.common.stack.BaseStack;
+import nebula.common.stack.OreStack;
+import nebula.common.util.L;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -187,7 +187,7 @@ public class GuiCG extends GuiScreen implements IGuiRecipeHanler, IRecipeDisplay
 			}
 			if (font == null)
 			{
-				font = U.Client.getFontRender();
+				font = Client.getFontRender();
 			}
 			ClientOverride.renderCustomItemOverlayIntoGUI(itemRender, font, stack, x, y, text);
 		}
@@ -206,7 +206,7 @@ public class GuiCG extends GuiScreen implements IGuiRecipeHanler, IRecipeDisplay
 	@Override
 	public void drawString(int x, int y, String text, int rgba)
 	{
-		drawString(U.Client.getFontRender(), x, y, text, rgba);
+		drawString(Client.getFontRender(), x, y, text, rgba);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class GuiCG extends GuiScreen implements IGuiRecipeHanler, IRecipeDisplay
 	@Override
 	public void drawTooltip(int x, int y, List<String> tooltips)
 	{
-		drawTooltip(U.Client.getFontRender(), x, y, tooltips);
+		drawTooltip(Client.getFontRender(), x, y, tooltips);
 	}
 	
 	@Override
@@ -283,13 +283,13 @@ public class GuiCG extends GuiScreen implements IGuiRecipeHanler, IRecipeDisplay
 	@Override
 	public void openGUI(Object mod, int id)
 	{
-		mc.thePlayer.openGui(mod, id, mc.theWorld, (int) mc.thePlayer.posX, (int) mc.thePlayer.posY, (int) mc.thePlayer.posZ);
+		mc.player.openGui(mod, id, mc.world, (int) mc.player.posX, (int) mc.player.posY, (int) mc.player.posZ);
 	}
 	
 	@Override
 	public void closeGUI()
 	{
-		mc.thePlayer.closeScreen();
+		mc.player.closeScreen();
 	}
 	
 	@Override

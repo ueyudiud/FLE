@@ -20,16 +20,16 @@ import com.google.gson.JsonParseException;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.MP;
-import farcore.lib.block.BlockSingleTE;
+import farcore.data.SubTags;
 import farcore.lib.crop.ICrop;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.statemap.StateMapperCrop;
-import farcore.lib.prop.PropertyString;
 import farcore.lib.tile.instance.TECrop;
-import farcore.lib.util.Log;
-import farcore.lib.util.SubTag;
-import farcore.util.U.Client;
+import nebula.Log;
+import nebula.client.util.Client;
+import nebula.common.block.BlockSingleTE;
+import nebula.common.block.property.PropertyString;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -91,7 +91,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			this.bounds = new HashMap();
 			Log.reset();
 			ResourceLocation location;
-			for(Mat material : Mat.filt(SubTag.CROP))
+			for(Mat material : Mat.filt(SubTags.CROP))
 			{
 				this.loadingMaterial = material;
 				location = new ResourceLocation(material.modid, "blockstates/crop/" + material.name + ".json");
@@ -130,7 +130,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	static
 	{
 		List<String> list = new ArrayList();
-		for(Mat material : Mat.filt(SubTag.CROP))
+		for(Mat material : Mat.filt(SubTags.CROP))
 		{
 			list.addAll(material.getProperty(MP.property_crop).getAllowedState());
 		}

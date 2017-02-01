@@ -10,10 +10,10 @@ import farcore.data.Config;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.block.BlockStandardFluid;
-import farcore.lib.fluid.FluidBase;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
+import nebula.common.block.BlockStandardFluid;
+import nebula.common.fluid.FluidBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -48,7 +48,7 @@ public class BlockWater extends BlockStandardFluid
 						(det = V.WATER_FREEZE_POINT_F - ThermalNet.getTemperature(worldIn, pos, true)) > 0)
 				{
 					int chance = 5 / (int) (det / 3F + 1F);
-					if(chance < 10 && farcore.util.L.nextInt(chance, random) == 0)
+					if(chance < 10 && nebula.common.util.L.nextInt(chance, random) == 0)
 					{
 						worldIn.setBlockState(pos, EnumBlock.ice.block.getDefaultState(), 2);
 						return;
@@ -57,7 +57,7 @@ public class BlockWater extends BlockStandardFluid
 			}
 			else if(worldIn.getPrecipitationHeight(pos).getY() == pos.getY() && random.nextInt(6) == 0)
 			{
-				if(worldIn.getBiomeGenForCoords(pos).isSnowyBiome() && worldIn.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
+				if(worldIn.getBiome(pos).isSnowyBiome() && worldIn.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
 				{
 					worldIn.setBlockState(pos, EnumBlock.ice.block.getDefaultState(), 3);
 					return;

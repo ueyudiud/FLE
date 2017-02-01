@@ -1,9 +1,9 @@
 package fle.core.items.behavior;
 
-import farcore.data.EnumToolType;
-import farcore.lib.item.ITool;
-import farcore.lib.item.behavior.BehaviorBase;
-import farcore.util.U;
+import nebula.common.data.EnumToolType;
+import nebula.common.item.BehaviorBase;
+import nebula.common.item.ITool;
+import nebula.common.util.Worlds;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -61,7 +61,7 @@ public class BehaviorHoe extends BehaviorBase
 		int tick = stack.getMaxItemUseDuration() - timeLeft;
 		if(tick > 20)
 		{
-			RayTraceResult result = U.Worlds.rayTrace(world, entity, false);
+			RayTraceResult result = Worlds.rayTrace(world, entity, false);
 			if(result != null && result.typeOfHit == Type.BLOCK && result.sideHit == EnumFacing.UP)
 			{
 				if(tick > 40 || entity.getRNG().nextInt(100) < hoeChance)

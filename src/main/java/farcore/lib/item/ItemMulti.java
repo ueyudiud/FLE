@@ -5,11 +5,13 @@ import java.util.List;
 import farcore.FarCore;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
-import farcore.lib.model.item.FarCoreItemModelLoader;
-import farcore.lib.util.EnviornmentEntity;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.UnlocalizedList;
-import farcore.lib.world.IEnvironment;
+import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.LanguageManager;
+import nebula.common.enviornment.EnviornmentEntity;
+import nebula.common.enviornment.IEnvironment;
+import nebula.common.item.IUpdatableItem;
+import nebula.common.item.ItemBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -79,7 +81,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(this.modid, "group/" + this.condition.name));
+		NebulaItemModelLoader.registerModel(this, new ResourceLocation(this.modid, "group/" + this.condition.name));
 	}
 	
 	@Override
@@ -101,7 +103,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
 		ItemStack stack2 = stack;
-		if(!entityIn.worldObj.isRemote)
+		if(!entityIn.world.isRemote)
 		{
 			stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityIn), stack);
 			if(entityIn instanceof EntityPlayer)
@@ -120,7 +122,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
-		if(!entityItem.worldObj.isRemote)
+		if(!entityItem.world.isRemote)
 		{
 			ItemStack stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityItem), entityItem.getEntityItem());
 			if(stack == null)

@@ -1,9 +1,9 @@
 package fargen.compact.fle;
 
-import farcore.lib.util.ModCompator.ICompatible;
 import fargen.core.FarGen;
 import fargen.core.worldgen.v.FarVoidProvider;
 import fle.api.FLEAPI;
+import nebula.common.util.ModCompator.ICompatible;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 

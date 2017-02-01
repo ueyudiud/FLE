@@ -2,9 +2,6 @@ package fargen.core.biome;
 
 import java.util.Random;
 
-import farcore.lib.collection.Register;
-import farcore.lib.util.IRegisteredNameable;
-import farcore.lib.world.IBiomeExtended;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import fargen.core.FarGen;
@@ -12,6 +9,9 @@ import fargen.core.biome.decorator.BiomeDecorator;
 import fargen.core.biome.layer.BiomeLayerGenerator;
 import fargen.core.biome.layer.surface.BLGSStandard;
 import fargen.core.util.ClimaticZone;
+import nebula.common.base.Register;
+import nebula.common.util.IRegisteredNameable;
+import nebula.common.world.IBiomeExtended;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ColorizerFoliage;
@@ -100,10 +100,10 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	@SideOnly(Side.CLIENT)
 	public int getGrassColorAtPos(BlockPos pos)
 	{
-		World world = Minecraft.getMinecraft().theWorld;
+		World world = Minecraft.getMinecraft().world;
 		IWorldPropProvider prop = WorldPropHandler.getWorldProperty(world);
-		float temperature = farcore.util.L.range(0.0F, 1.0F, prop.getTemperature(world, pos) * .3F);
-		float humidity = farcore.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
+		float temperature = nebula.common.util.L.range(0.0F, 1.0F, prop.getTemperature(world, pos) * .3F);
+		float humidity = nebula.common.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
 		return ColorizerGrass.getGrassColor(temperature, humidity);
 	}
 	
@@ -111,10 +111,10 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	@SideOnly(Side.CLIENT)
 	public int getFoliageColorAtPos(BlockPos pos)
 	{
-		World world = Minecraft.getMinecraft().theWorld;
+		World world = Minecraft.getMinecraft().world;
 		IWorldPropProvider prop = WorldPropHandler.getWorldProperty(world);
-		float temperature = farcore.util.L.range(0.0F, 1.0F, prop.getTemperature(world, pos) * .3F);
-		float humidity = farcore.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
+		float temperature = nebula.common.util.L.range(0.0F, 1.0F, prop.getTemperature(world, pos) * .3F);
+		float humidity = nebula.common.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
 		return ColorizerFoliage.getFoliageColor(temperature, humidity);
 	}
 	
@@ -198,12 +198,12 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		public BiomePropertiesExtended setClimaticZone(ClimaticZone zone)
 		{
 			this.zone = zone;
-			if(farcore.util.L.max(zone.rain) < minRainHumidity)
+			if(nebula.common.util.L.max(zone.rain) < minRainHumidity)
 			{
 				setRainDisabled();
 				this.canRain = false;
 			}
-			if(farcore.util.L.min(zone.temperature) < minSnowTemperature)
+			if(nebula.common.util.L.min(zone.temperature) < minSnowTemperature)
 			{
 				setSnowEnabled();
 				this.canSnow = true;

@@ -18,18 +18,19 @@ import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
 import farcore.data.MC;
+import farcore.data.SubTags;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
-import farcore.lib.model.ModelBase;
-import farcore.lib.model.ModelHelper;
-import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
-import farcore.lib.model.item.ICustomItemRenderModel;
-import farcore.lib.model.item.ItemTextureHelper;
 import farcore.lib.tile.instance.circuit.TECircuitBase;
-import farcore.lib.util.Log;
-import farcore.lib.util.SubTag;
-import farcore.util.L;
-import farcore.util.Maths;
+import nebula.Log;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.model.ICustomItemRenderModel;
+import nebula.client.model.INebulaCustomModelLoader;
+import nebula.client.model.ItemTextureHelper;
+import nebula.client.model.ModelBase;
+import nebula.client.model.ModelHelper;
+import nebula.common.util.L;
+import nebula.common.util.Maths;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -58,7 +59,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	private static final float PLATE_HEIGHT = .125F;
 	private static final IModel MODEL = new ModelRedstoneCircuit();
 	
-	public static enum RedstoneCircuitModelLoader implements IFarCustomModelLoader
+	public static enum RedstoneCircuitModelLoader implements INebulaCustomModelLoader
 	{
 		INSTANCE;
 		
@@ -66,6 +67,12 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		public void onResourceManagerReload(IResourceManager resourceManager)
 		{
 			bakedQuads.clear();
+		}
+		
+		@Override
+		public String getModID()
+		{
+			return FarCore.ID;
 		}
 		
 		@Override
@@ -130,7 +137,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			}
 			Map<EnumFacing, List<BakedQuad>> map1 = builder.build();
 			ImmutableMap.Builder<Mat, Map<EnumFacing, List<BakedQuad>>> builder2 = ImmutableMap.builder();
-			for(Mat material : Mat.filt(SubTag.ROCK))
+			for(Mat material : Mat.filt(SubTags.ROCK))
 			{
 				TextureAtlasSprite sprite;
 				try
@@ -335,7 +342,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 					float minY;
 					float maxY = (L.unsignedToInt(height[idx]) + 1) * PLATE_HEIGHT / 256F;
 					float minU, maxU, minV, maxV;
-					if(u1 == 0 || L.compareUnsigned(height[idx - 1], height[idx]) > 0)
+					if(u1 == 0 || L.minusUbyte(height[idx - 1], height[idx]) > 0)
 					{
 						minY = u1 == 0 ? 0 : value(height[idx - 1]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minZ);
@@ -348,7 +355,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 								minX, maxY, maxZ, maxU, maxV,
 								minX, maxY, minZ, minU, maxV));
 					}
-					if(u1 == u - 1 || L.compareUnsigned(height[idx + 1], height[idx]) > 0)
+					if(u1 == u - 1 || L.minusUbyte(height[idx + 1], height[idx]) > 0)
 					{
 						minY = u1 == u - 1 ? 0 : value(height[idx + 1]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minZ);
@@ -361,7 +368,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 								maxX, maxY, minZ, maxU, maxV,
 								maxX, maxY, maxZ, minU, maxV));
 					}
-					if(v1 == 0 || L.compareUnsigned(height[idx - u], height[idx]) > 0)
+					if(v1 == 0 || L.minusUbyte(height[idx - u], height[idx]) > 0)
 					{
 						minY = v1 == 0 ? 0 : value(height[idx - u]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minX);
@@ -374,7 +381,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 								maxX, maxY, minZ, maxU, maxV,
 								maxX, minY, minZ, maxU, minV));
 					}
-					if(v1 == v - 1 || L.compareUnsigned(height[idx + u], height[idx]) > 0)
+					if(v1 == v - 1 || L.minusUbyte(height[idx + u], height[idx]) > 0)
 					{
 						minY = v1 == v - 1 ? 0 : value(height[idx + u]) * PLATE_HEIGHT / 256F;
 						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minX);

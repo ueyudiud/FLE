@@ -5,55 +5,55 @@
 		"model": "farcore:base_simple"
 	},
 	"variants": {
-		"type": {
+		"rocktype": {
 			"resource": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/resource"
+					"all": "farcore:blocks/rock/granite_p/resource"
 				}
 			},
 			"cobble": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/cobble"
+					"all": "farcore:blocks/rock/granite_p/cobble"
 				}
 			},
 			"cobble_art": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/cobble"
+					"all": "farcore:blocks/rock/granite_p/cobble"
 				}
 			},
 			"smoothed": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/smoothed"
+					"all": "farcore:blocks/rock/granite_p/smoothed"
 				}
 			},
 			"mossy": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/mossy"
+					"all": "farcore:blocks/rock/granite_p/mossy"
 				}
 			},
 			"brick": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/brick"
+					"all": "farcore:blocks/rock/granite_p/brick"
 				}
 			},
 			"brick_crushed": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/brick_crushed"
+					"all": "farcore:blocks/rock/granite_p/brick_crushed"
 				}
 			},
 			"brick_mossy": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/brick_mossy"
+					"all": "farcore:blocks/rock/granite_p/brick_mossy"
 				}
 			},
 			"brick_compacted": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/brick_compacted"
+					"all": "farcore:blocks/rock/granite_p/brick_compacted"
 				}
 			},
 			"chiseled": {
 				"textures": {
-					"all": "farcore:blocks/rock/graniteP/chiseled"
+					"all": "farcore:blocks/rock/granite_p/chiseled"
 				}
 			}
 		}

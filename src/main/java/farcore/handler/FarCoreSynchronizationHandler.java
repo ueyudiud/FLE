@@ -11,19 +11,16 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.FarCore;
-import farcore.lib.net.PacketBlockData;
-import farcore.lib.net.tile.PacketChunkNetData;
-import farcore.lib.tile.INetworkedSyncTile;
-import farcore.util.L;
-import farcore.util.U.Sides;
+import nebula.Nebula;
+import nebula.common.network.packet.PacketChunkNetData;
+import nebula.common.tile.INetworkedSyncTile;
+import nebula.common.util.L;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
@@ -37,15 +34,6 @@ public class FarCoreSynchronizationHandler
 	public static void markTileEntityForUpdate(INetworkedSyncTile tile, int type)
 	{
 		L.put(L.getOrPut(L.getOrPut(SYNC_NETWORK_MAP, tile.getDimension()), type), new ChunkPos(tile.pos()), tile.pos());
-	}
-	
-	@SubscribeEvent
-	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
-	{
-		if(Sides.isServer())
-		{
-			FarCore.network.sendLargeToPlayer(new PacketBlockData(), event.player);
-		}
 	}
 	
 	@SubscribeEvent
@@ -64,10 +52,10 @@ public class FarCoreSynchronizationHandler
 						int mark = entry2.getKey();
 						for(Entry<ChunkPos, List<BlockPos>> entry3 : entry2.getValue().entrySet())
 						{
-							int centerX = entry3.getKey().getCenterXPos();
-							int centerZ = entry3.getKey().getCenterZPosition();
+							int centerX = entry3.getKey().getXCenter();
+							int centerZ = entry3.getKey().getZCenter();
 							Chunk chunk = world.getChunkFromChunkCoords(entry3.getKey().chunkXPos, entry3.getKey().chunkZPos);
-							FarCore.network.sendLargeToNearby(new PacketChunkNetData(mark, chunk, entry3.getValue()), dim, centerX, 128, centerZ, 128.0F);
+							Nebula.network.sendLargeToNearby(new PacketChunkNetData(mark, chunk, entry3.getValue()), dim, centerX, 128, centerZ, 128.0F);
 						}
 					}
 					entry.getValue().clear();

@@ -2,7 +2,7 @@ package farcore.lib.tree;
 
 import java.util.Random;
 
-import farcore.lib.world.ICoord;
+import nebula.common.world.ICoord;
 import net.minecraft.world.biome.Biome;
 
 public interface ISaplingAccess extends ICoord

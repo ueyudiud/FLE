@@ -1,6 +1,6 @@
 package farcore.lib.tile.instance.circuit;
 
-import farcore.lib.util.Facing;
+import nebula.common.util.Facing;
 
 public class TECircuitImples extends TECircuitTripleInput
 {

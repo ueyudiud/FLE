@@ -1,6 +1,6 @@
 package farcore.lib.skill;
 
-import farcore.lib.util.LanguageManager;
+import nebula.common.LanguageManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
@@ -12,46 +12,46 @@ public class SkillAbstract implements ISkill
 	private float expIncrease;
 	private float expBase;
 	private float maxLevel;
-
+	
 	public SkillAbstract(String name)
 	{
 		this.name = name;
-		id = REGISTER.register(name, this);
+		this.id = REGISTER.register(name, this);
 	}
 	public SkillAbstract(String name, String localName)
 	{
 		this(name);
 		LanguageManager.registerLocal("skill." + name + ".name", localName);
 	}
-
+	
 	public SkillAbstract setExpInfo(int maxLv, float expBase, float expIncr)
 	{
-		maxLevel = maxLv;
+		this.maxLevel = maxLv;
 		this.expBase = expBase;
-		expIncrease = expIncr;
+		this.expIncrease = expIncr;
 		return this;
 	}
 	
 	public String getLocalName()
 	{
-		return LanguageManager.translateToLocal("skill." + name + ".name");
+		return LanguageManager.translateToLocal("skill." + this.name + ".name");
 	}
-
+	
 	@Override
 	public String getRegisteredName()
 	{
-		return name;
+		return this.name;
 	}
-
+	
 	@Override
 	public int level(EntityPlayer player)
 	{
 		NBTTagCompound tag = player.getEntityData();
 		if(tag.hasKey("skill"))
-			return tag.getCompoundTag("skill").getCompoundTag(name).getByte("lv");
+			return tag.getCompoundTag("skill").getCompoundTag(this.name).getByte("lv");
 		return 0;
 	}
-
+	
 	@Override
 	public void using(EntityPlayer player, float exp)
 	{
@@ -63,30 +63,30 @@ public class SkillAbstract implements ISkill
 		}
 		tag = tag.getCompoundTag("skill");
 		NBTTagCompound tag1;
-		if(!tag.hasKey(name))
+		if(!tag.hasKey(this.name))
 		{
 			tag1 = new NBTTagCompound();
-			tag.setTag(name, tag1);
+			tag.setTag(this.name, tag1);
 		}
 		else
 		{
-			tag1 = tag.getCompoundTag(name);
+			tag1 = tag.getCompoundTag(this.name);
 		}
 		byte level = tag1.getByte("lv");
 		if(level < 0)
 		{
 			level = 0;
 		}
-		if(level < maxLevel)
+		if(level < this.maxLevel)
 		{
 			float e = tag1.getFloat("exp");
-			float eNeed = (float) Math.exp(level * expIncrease) * expBase;
+			float eNeed = (float) Math.exp(level * this.expIncrease) * this.expBase;
 			e += exp;
 			if(e >= eNeed)
 			{
 				tag1.setByte("lv", (byte) (level + 1));
 				tag1.setFloat("exp", e - eNeed);
-				player.addChatComponentMessage(new TextComponentString(
+				player.sendMessage(new TextComponentString(
 						LanguageManager.translateToLocal("skill.upgrade.info", getLocalName(), level, level + 1)));
 			}
 			else
@@ -106,14 +106,14 @@ public class SkillAbstract implements ISkill
 		}
 		tag = tag.getCompoundTag("skill");
 		NBTTagCompound tag1;
-		if(!tag.hasKey(name))
+		if(!tag.hasKey(this.name))
 		{
 			tag1 = new NBTTagCompound();
-			tag.setTag(name, tag1);
+			tag.setTag(this.name, tag1);
 		}
 		else
 		{
-			tag1 = tag.getCompoundTag(name);
+			tag1 = tag.getCompoundTag(this.name);
 		}
 		tag1.setByte("lv", (byte) level);
 	}

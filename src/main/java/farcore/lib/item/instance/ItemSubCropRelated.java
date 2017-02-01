@@ -4,15 +4,19 @@
 
 package farcore.lib.item.instance;
 
+import com.google.common.collect.Maps;
+
 import farcore.FarCore;
 import farcore.data.EnumItem;
-import farcore.data.EnumNutrition;
 import farcore.data.M;
 import farcore.data.MC;
-import farcore.lib.item.ItemSubEdible;
-import farcore.lib.item.behavior.FoodStatBase;
-import farcore.lib.item.behavior.IFoodStat;
-import farcore.lib.model.item.unused.FarCoreItemModelLoader;
+import nebula.client.model.FlexibleItemSubmetaGetterLoader;
+import nebula.client.model.FlexibleTextureSet;
+import nebula.client.model.NebulaItemModelLoader;
+import nebula.common.foodstat.EnumNutrition;
+import nebula.common.item.FoodStatBase;
+import nebula.common.item.IFoodStat;
+import nebula.common.item.ItemSubEdible;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -75,8 +79,8 @@ public class ItemSubCropRelated extends ItemSubEdible
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FarCore.ID, "group/crop_related"));
-		FarCoreItemModelLoader.registerMultiIconProvider(getRegistryName(), this.idMap.keySet(), key -> new ResourceLocation(FarCore.ID, "items/group/crop_related/" + key));
-		FarCoreItemModelLoader.registerSubmetaProvider(getRegistryName(), this.nameMap, this);
+		NebulaItemModelLoader.registerModel(this, new ResourceLocation(FarCore.ID, "group/crop_related"));
+		FlexibleTextureSet.registerTextureSetApplier(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FarCore.ID, "items/group/crop_related/" + key)));
+		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
 	}
 }

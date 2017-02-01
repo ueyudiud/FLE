@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import farcore.data.EnumToolType;
 import farcore.data.V;
 import farcore.lib.bio.DNAHandler;
 import farcore.lib.bio.GeneticMaterial;
@@ -12,10 +11,11 @@ import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
-import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.instance.TECoreLeaves;
-import farcore.lib.util.Direction;
-import farcore.util.U;
+import nebula.common.data.EnumToolType;
+import nebula.common.tile.IToolableTile;
+import nebula.common.util.Direction;
+import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -89,7 +89,7 @@ public abstract class TreeBase implements ITree
 	
 	protected boolean canLeaveGrowNearby(World world, BlockPos pos)
 	{
-		return U.Worlds.isBlockNearby(world, pos, this.logNat, false);
+		return Worlds.isBlockNearby(world, pos, this.logNat, false);
 	}
 	
 	protected boolean shouldLeavesDency(World world, BlockPos pos)
@@ -100,12 +100,12 @@ public abstract class TreeBase implements ITree
 	@Override
 	public void beginLeavesDency(World world, BlockPos pos)
 	{
-		U.Worlds.switchProp(world, pos, net.minecraft.block.BlockLeaves.CHECK_DECAY, true, 2);
+		Worlds.switchProp(world, pos, net.minecraft.block.BlockLeaves.CHECK_DECAY, true, 2);
 	}
 	
 	public void stopLeavesDency(World world, BlockPos pos)
 	{
-		U.Worlds.switchProp(world, pos, net.minecraft.block.BlockLeaves.CHECK_DECAY, false, 2);
+		Worlds.switchProp(world, pos, net.minecraft.block.BlockLeaves.CHECK_DECAY, false, 2);
 	}
 	
 	protected void checkDencyLeaves(World world, BlockPos pos, int maxL)
@@ -246,7 +246,7 @@ public abstract class TreeBase implements ITree
 	
 	protected void onLeavesDead(World world, BlockPos pos)
 	{
-		U.Worlds.spawnDropsInWorld(world, pos, getLeavesDrops(world, pos, world.getBlockState(pos), 0, false, new ArrayList()));
+		Worlds.spawnDropsInWorld(world, pos, getLeavesDrops(world, pos, world.getBlockState(pos), 0, false, new ArrayList()));
 		world.setBlockToAir(pos);
 	}
 	
@@ -331,12 +331,12 @@ public abstract class TreeBase implements ITree
 		int state = V.generateState ? 2 : 3;
 		if(world.rand.nextDouble() <= generateCoreLeavesChance)
 		{
-			U.Worlds.setBlock(world, pos, this.leavesCore, meta, state);
-			U.Worlds.setTileEntity(world, pos, new TECoreLeaves(this, info), !V.generateState);
+			Worlds.setBlock(world, pos, this.leavesCore, meta, state);
+			Worlds.setTileEntity(world, pos, new TECoreLeaves(this, info), !V.generateState);
 		}
 		else
 		{
-			U.Worlds.setBlock(world, pos, this.leaves, meta, state);
+			Worlds.setBlock(world, pos, this.leaves, meta, state);
 		}
 	}
 }

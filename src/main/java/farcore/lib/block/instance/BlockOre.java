@@ -5,19 +5,19 @@ import java.util.List;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
-import farcore.data.EnumToolType;
-import farcore.data.M;
 import farcore.data.EnumRockType;
-import farcore.lib.block.BlockSingleTE;
+import farcore.data.M;
+import farcore.data.SubTags;
 import farcore.lib.block.material.MaterialOre;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.ModelOre;
 import farcore.lib.tile.instance.TEOre;
-import farcore.lib.util.BlockStateWrapper;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.SubTag;
-import farcore.lib.util.UnlocalizedList;
-import farcore.util.U;
+import nebula.client.blockstate.BlockStateWrapper;
+import nebula.client.util.Renders;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.LanguageManager;
+import nebula.common.block.BlockSingleTE;
+import nebula.common.data.EnumToolType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,14 +43,14 @@ public class BlockOre extends BlockSingleTE
 		public final EnumOreAmount amount;
 		public final Mat rock;
 		public final EnumRockType type;
-
+		
 		OreStateWrapper(IBlockState state, TEOre ore)
 		{
 			super(state);
 			this.ore = ore.getOre();
-			amount = ore.amount;
-			rock = ore.rock;
-			type = ore.rockType;
+			this.amount = ore.amount;
+			this.rock = ore.rock;
+			this.type = ore.rockType;
 		}
 		public OreStateWrapper(IBlockState state, Mat ore, EnumOreAmount amount, Mat rock, EnumRockType rockType)
 		{
@@ -58,13 +58,13 @@ public class BlockOre extends BlockSingleTE
 			this.ore = ore;
 			this.amount = amount;
 			this.rock = rock;
-			type = rockType;
+			this.type = rockType;
 		}
-
+		
 		@Override
 		protected BlockStateWrapper wrapState(IBlockState state)
 		{
-			return new OreStateWrapper(state, ore, amount, rock, type);
+			return new OreStateWrapper(state, this.ore, this.amount, this.rock, this.type);
 		}
 	}
 	
@@ -78,14 +78,14 @@ public class BlockOre extends BlockSingleTE
 		setTickRandomly(true);
 		EnumBlock.ore.set(this);
 	}
-
+	
 	@Override
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
 		registerLocalized();
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
@@ -93,7 +93,7 @@ public class BlockOre extends BlockSingleTE
 		super.registerRender();
 		ModelLoaderRegistry.registerLoader(ModelOre.INSTANCE);
 		ModelLoader.setCustomStateMapper(this, ModelOre.INSTANCE);
-		U.Mod.registerCustomItemModelSelector(this, ModelOre.INSTANCE);
+		Renders.registerCustomItemModelSelector(this, ModelOre.INSTANCE);
 	}
 	
 	@Override
@@ -115,11 +115,11 @@ public class BlockOre extends BlockSingleTE
 	{
 		return new TEOre();
 	}
-
+	
 	private void registerLocalized()
 	{
 		LanguageManager.registerLocal(getTranslateNameForItemStack(OreDictionary.WILDCARD_VALUE), "Ore");
-		for(Mat ore : Mat.filt(SubTag.ORE))
+		for(Mat ore : Mat.filt(SubTags.ORE))
 		{
 			for(EnumOreAmount amount : EnumOreAmount.values())
 			{
@@ -127,7 +127,7 @@ public class BlockOre extends BlockSingleTE
 				ItemStack stack = new ItemStack(this, 1, ore.id);
 				stack.setTagCompound(nbt);
 				LanguageManager.registerLocal(getTranslateNameForItemStack(stack),
-						String.format("%s %s Ore", farcore.util.Strings.upcaseFirst(amount.name()), ore.localName));
+						String.format("%s %s Ore", nebula.common.util.Strings.upcaseFirst(amount.name()), ore.localName));
 			}
 		}
 	}
@@ -173,7 +173,7 @@ public class BlockOre extends BlockSingleTE
 		//		for(EnumOreAmount amount : EnumOreAmount.values())
 		{
 			EnumOreAmount amount = EnumOreAmount.normal;//Only provide normal amount ore in creative tab or it is too many ore to display.
-			for(Mat ore : Mat.filt(SubTag.ORE))
+			for(Mat ore : Mat.filt(SubTags.ORE))
 			{
 				//				for(Mat rock : Mat.filt(SubTag.ROCK))
 				{
@@ -182,11 +182,11 @@ public class BlockOre extends BlockSingleTE
 			}
 		}
 	}
-
+	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
-		return EnumToolType.pickaxe.name();
+		return EnumToolType.PICKAXE.name;
 	}
 	
 	@Override

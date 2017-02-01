@@ -5,7 +5,7 @@
 		"model": "farcore:base_simple"
 	},
 	"variants": {
-		"type": {
+		"rocktype": {
 			"resource": {
 				"textures": {
 					"all": "farcore:blocks/rock/andesite/resource"

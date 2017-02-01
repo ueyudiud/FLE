@@ -1,21 +1,21 @@
 package farcore.lib.item.instance;
 
 import farcore.data.EnumItem;
+import farcore.data.EnumRockType;
 import farcore.data.KS;
 import farcore.data.MC;
 import farcore.data.MP;
-import farcore.data.EnumRockType;
-import farcore.lib.block.instance.old.BlockRockOld;
-import farcore.lib.entity.EntityProjectileItem;
-import farcore.lib.item.IProjectileItem;
+import farcore.data.SubTags;
+import farcore.lib.block.behavior.RockBehavior;
+import farcore.lib.block.instance.BlockRock;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyRock;
 import farcore.lib.util.DamageSourceProjectile;
-import farcore.lib.util.Direction;
-import farcore.lib.util.SubTag;
-import farcore.lib.util.UnlocalizedList;
-import farcore.util.U;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.entity.EntityProjectileItem;
+import nebula.common.item.IProjectileItem;
+import nebula.common.util.Direction;
+import nebula.common.util.Worlds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,10 +59,10 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		else
 		{
 			Mat material = getMaterialFromItem(stack);
-			if(material.contain(SubTag.ROCK))
+			if(material.contain(SubTags.ROCK))
 			{
-				PropertyRock property = material.getProperty(MP.property_rock);
-				if(worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRockOld.ROCK_TYPE, EnumRockType.cobble_art), 3))
+				RockBehavior property = material.getProperty(MP.property_rock);
+				if(worldIn.setBlockState(pos, property.block.getDefaultState().withProperty(BlockRock.TYPE, EnumRockType.cobble_art), 3))
 				{
 					stack.stackSize -= 9;
 					return EnumActionResult.SUCCESS;
@@ -76,11 +76,11 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
 	{
-		RayTraceResult result = U.Worlds.rayTrace(worldIn, playerIn, false);
+		RayTraceResult result = Worlds.rayTrace(worldIn, playerIn, false);
 		if(result == null)
 		{
 			playerIn.setActiveHand(hand);
-			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 		}
 		return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
 	}
@@ -125,8 +125,9 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		}
 		if(!worldIn.isRemote)
 		{
-			EntityProjectileItem entity = new EntityProjectileItem(worldIn, entityLiving, f * 3.0F, stack1, true);
-			worldIn.spawnEntityInWorld(entity);
+			float inaccuracy = !(entityLiving instanceof EntityPlayer) ? 1.0F : 3F / (1F + KS.SHOOTING.level((EntityPlayer) entityLiving));
+			EntityProjectileItem entity = new EntityProjectileItem(worldIn, entityLiving, f * 3.0F, stack1, inaccuracy);
+			worldIn.spawnEntity(entity);
 		}
 	}
 	
@@ -148,7 +149,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		if(target instanceof EntityLivingBase)
 		{
 			EntityLivingBase entity1 = (EntityLivingBase) target;
-			float damage = MathHelper.sqrt_double(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
+			float damage = MathHelper.sqrt(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
 			float speed = damage;
 			damage *= 0.4F;
 			Mat material = getMaterialFromItem(entity.currentItem);
@@ -171,7 +172,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 				entity1.attackEntityFrom(DamageSourceProjectile.instance, damage);
 			}
 			entity1.addVelocity(entity.motionX * .02, entity.motionY * .02, entity.motionZ * .02);
-			if(entity.worldObj.rand.nextFloat() * 4F + 1F < speed)
+			if(entity.world.rand.nextFloat() * 4F + 1F < speed)
 			{
 				entity.setDead();
 			}

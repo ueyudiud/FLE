@@ -7,8 +7,8 @@ package farcore.lib.bio;
 import java.util.Random;
 import java.util.function.Function;
 
-import farcore.lib.nbt.INBTReaderAndWritter;
-import farcore.util.NBTs;
+import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 

@@ -2,7 +2,7 @@ package fargen.core.biome.layer.surface;
 
 import java.util.Random;
 
-import farcore.lib.util.NoisePerlin;
+import nebula.common.util.noise.NoisePerlin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;

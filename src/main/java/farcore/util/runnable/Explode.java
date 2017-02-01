@@ -30,7 +30,7 @@ public class Explode implements Runnable
 	/** whether or not this explosion spawns smoke particles */
 	private final boolean isSmoking;
 	private final Random explosionRNG;
-	private final World worldObj;
+	private final World world;
 	private final double explosionX;
 	private final double explosionY;
 	private final double explosionZ;
@@ -58,7 +58,7 @@ public class Explode implements Runnable
 		explosionRNG = new Random();
 		affectedBlockPositions = Lists.<BlockPos>newArrayList();
 		playerKnockbackMap = Maps.<EntityPlayer, Vec3d>newHashMap();
-		worldObj = worldIn;
+		world = worldIn;
 		exploder = entityIn;
 		explosionSize = size;
 		explosionX = x;

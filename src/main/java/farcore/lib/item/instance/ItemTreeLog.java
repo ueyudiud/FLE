@@ -7,9 +7,9 @@ import farcore.data.EnumItem;
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.UnlocalizedList;
-import farcore.util.ItemStacks;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.LanguageManager;
+import nebula.common.util.ItemStacks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,18 +22,18 @@ public class ItemTreeLog extends ItemMulti
 	public ItemTreeLog()
 	{
 		super(FarCore.ID, MC.log_cutted);
-		enableChemicalFormula = false;
+		this.enableChemicalFormula = false;
 		EnumItem.log.set(this);
 	}
 	
 	@Override
 	public void postInitalizedItems()
 	{
-		for(Mat material : Mat.filt(condition))
+		for(Mat material : Mat.filt(this.condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
-			LanguageManager.registerLocal(getTranslateName(templete), condition.getLocal(material));
-			condition.registerOre(material, templete);
+			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
+			this.condition.registerOre(material, templete);
 		}
 	}
 	
@@ -43,19 +43,19 @@ public class ItemTreeLog extends ItemMulti
 	{
 		super.registerRender();
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(Mat material : Mat.filt(condition))
+		for(Mat material : Mat.filt(this.condition))
 		{
 			ItemStack stack = new ItemStack(itemIn, 1, material.id);
 			setLogSize(stack, 16);
 			subItems.add(stack);
 		}
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,

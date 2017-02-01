@@ -37,7 +37,7 @@ public class RenderWeatherSurface extends IRenderHandler
 			{
 				float f = j - 16;
 				float f1 = i - 16;
-				float f2 = MathHelper.sqrt_float(f * f + f1 * f1);
+				float f2 = MathHelper.sqrt(f * f + f1 * f1);
 				rainXCoords[i << 5 | j] = -f1 / f2;
 				rainYCoords[i << 5 | j] = f / f2;
 			}
@@ -50,15 +50,15 @@ public class RenderWeatherSurface extends IRenderHandler
 		float f = world.getRainStrength(partialTicks);
 		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(world);
 		EntityRenderer renderer = mc.entityRenderer;
-		int rendererUpdateCount = farcore.util.R.getInt(EntityRenderer.class, "rendererUpdateCount", "field_78529_t", renderer, false);
-		Random random = (Random) farcore.util.R.getValue(EntityRenderer.class, "random", "field_78537_ab", renderer, false);
+		int rendererUpdateCount = nebula.common.util.R.getInt(EntityRenderer.class, "rendererUpdateCount", "field_78529_t", renderer, false);
+		Random random = (Random) nebula.common.util.R.getValue(EntityRenderer.class, "random", "field_78537_ab", renderer, false);
 		if (f > 0.0F)
 		{
 			renderer.enableLightmap();
 			Entity entity = mc.getRenderViewEntity();
-			int i = MathHelper.floor_double(entity.posX);
-			int j = MathHelper.floor_double(entity.posY);
-			int k = MathHelper.floor_double(entity.posZ);
+			int i = MathHelper.floor(entity.posX);
+			int j = MathHelper.floor(entity.posY);
+			int k = MathHelper.floor(entity.posZ);
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer vertexbuffer = tessellator.getBuffer();
 			GlStateManager.disableCull();
@@ -69,7 +69,7 @@ public class RenderWeatherSurface extends IRenderHandler
 			double d0 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
 			double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
 			double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
-			int l = MathHelper.floor_double(d1);
+			int l = MathHelper.floor(d1);
 			int i1 = 5;
 			
 			if (mc.gameSettings.fancyGraphics)
@@ -91,7 +91,7 @@ public class RenderWeatherSurface extends IRenderHandler
 					double d3 = rainXCoords[i2] * 0.5D;
 					double d4 = rainYCoords[i2] * 0.5D;
 					pos.setPos(l1, 0, k1);
-					Biome biome = world.getBiomeGenForCoords(pos);
+					Biome biome = world.getBiome(pos);
 					
 					if (properties.getRainstrength(world, pos) > 1E-3F)
 					{
@@ -130,7 +130,7 @@ public class RenderWeatherSurface extends IRenderHandler
 								double d5 = -((double)(rendererUpdateCount + l1 * l1 * 3121 + l1 * 45238971 + k1 * k1 * 418711 + k1 * 13761 & 31) + partialTicks) / 32.0D * (3.0D + random.nextDouble());
 								double d6 = l1 + 0.5F - entity.posX;
 								double d7 = k1 + 0.5F - entity.posZ;
-								float f3 = MathHelper.sqrt_double(d6 * d6 + d7 * d7) / i1;
+								float f3 = MathHelper.sqrt(d6 * d6 + d7 * d7) / i1;
 								float f4 = ((1.0F - f3 * f3) * 0.5F + 0.5F) * f;
 								pos.setPos(l1, i3, k1);
 								int j3 = world.getCombinedLight(pos, 0);
@@ -157,7 +157,7 @@ public class RenderWeatherSurface extends IRenderHandler
 								double d10 = random.nextDouble() + f1 * (float)random.nextGaussian() * 0.001D;
 								double d11 = l1 + 0.5F - entity.posX;
 								double d12 = k1 + 0.5F - entity.posZ;
-								float f6 = MathHelper.sqrt_double(d11 * d11 + d12 * d12) / i1;
+								float f6 = MathHelper.sqrt(d11 * d11 + d12 * d12) / i1;
 								float f5 = ((1.0F - f6 * f6) * 0.3F + 0.5F) * f;
 								pos.setPos(l1, i3, k1);
 								int i4 = (world.getCombinedLight(pos, 0) * 3 + 15728880) / 4;

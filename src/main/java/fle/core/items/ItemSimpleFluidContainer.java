@@ -11,22 +11,22 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import farcore.data.EnumFluid;
-import farcore.lib.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
-import farcore.lib.item.ItemSubBehavior;
-import farcore.lib.item.behavior.IBehavior;
-import farcore.lib.model.item.FarCoreColorMultiplier;
-import farcore.lib.model.item.FarCoreItemModelLoader;
-import farcore.lib.model.item.FarCoreItemSubmetaGetterLoader;
-import farcore.lib.model.item.FarCoreTextureSet;
-import farcore.lib.render.IProgressBarStyle;
 import farcore.lib.stack.fluid.IItemFluidContainerV1;
-import farcore.lib.util.UnlocalizedList;
-import farcore.util.FluidStacks;
-import farcore.util.ItemStacks;
 import farcore.util.Localization;
-import farcore.util.NBTs;
-import farcore.util.U;
 import fle.core.FLE;
+import nebula.client.model.ColorMultiplier;
+import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.model.FlexibleItemSubmetaGetterLoader;
+import nebula.client.model.FlexibleTextureSet;
+import nebula.client.render.IProgressBarStyle;
+import nebula.client.util.Client;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.item.IBehavior;
+import nebula.common.item.ItemSubBehavior;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
+import nebula.common.util.FluidStacks;
+import nebula.common.util.ItemStacks;
+import nebula.common.util.NBTs;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -96,11 +96,11 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "fluidcontainer"));
-		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/bottom"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key)));
-		FarCoreTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key + "_overlay")));
-		FarCoreItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
-		FarCoreColorMultiplier.registerColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
+		NebulaItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "fluidcontainer"));
+		FlexibleTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/bottom"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key)));
+		FlexibleTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key + "_overlay")));
+		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
+		ColorMultiplier.registerColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
 		this.style = new IProgressBarStyle()
 		{
 			@Override
@@ -125,9 +125,9 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	public boolean renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x,
 			int z, String text)
 	{
-		U.Client.renderItemSubscirptInGUI(render, fontRenderer, stack, x, z, text);
-		U.Client.renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z, 1, this.style);
-		U.Client.renderItemCooldownInGUI(render, fontRenderer, stack, x, z);
+		Client.renderItemSubscirptInGUI(render, fontRenderer, stack, x, z, text);
+		Client.renderItemDurabilityBarInGUI(render, fontRenderer, stack, x, z, 1, this.style);
+		Client.renderItemCooldownInGUI(render, fontRenderer, stack, x, z);
 		return true;
 	}
 	

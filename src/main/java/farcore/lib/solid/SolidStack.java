@@ -1,6 +1,6 @@
 package farcore.lib.solid;
 
-import farcore.util.ItemStacks;
+import nebula.common.util.ItemStacks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.RegistryDelegate;
 

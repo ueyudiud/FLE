@@ -2,11 +2,11 @@ package fle.core.handler;
 
 import org.lwjgl.opengl.GL11;
 
-import farcore.event.ClientEvent;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
-import farcore.lib.render.RenderHelper;
 import fle.core.FLE;
+import nebula.client.ClientEvent.EntityProjectileItemRenderEvent;
+import nebula.client.render.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
@@ -22,7 +22,7 @@ public class FleClientHandler
 	private static final ResourceLocation LOCATION_SPEAR_ROCKY = new ResourceLocation(FLE.MODID, "textures/entity/spear.rocky.png");
 	
 	@SubscribeEvent
-	public void onProjectileItemRender(ClientEvent.EntityProjectileItemRenderEvent event)
+	public void onProjectileItemRender(EntityProjectileItemRenderEvent event)
 	{
 		Item item = event.getStack().getItem();
 		if(item instanceof ItemTool)
@@ -35,8 +35,8 @@ public class FleClientHandler
 			}
 		}
 	}
-
-	private void renderSpear(ClientEvent.EntityProjectileItemRenderEvent event, int meta)
+	
+	private void renderSpear(EntityProjectileItemRenderEvent event, int meta)
 	{
 		final float size = 1F / 16F;
 		final float pixel = 1F / 32F;
@@ -118,7 +118,7 @@ public class FleClientHandler
 				-2, -4, 0, 28 * pixel, 4 * pixel,
 				-2,  0, 0, 24 * pixel, 4 * pixel);
 		RenderHelper.instance.draw();
-
+		
 		GlStateManager.cullFace(GlStateManager.CullFace.BACK);
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableBlend();

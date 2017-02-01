@@ -1,7 +1,7 @@
 package farcore.lib.knowledge;
 
-import farcore.lib.collection.Register;
-import farcore.lib.util.IRegisteredNameable;
+import nebula.common.base.Register;
+import nebula.common.util.IRegisteredNameable;
 import net.minecraft.entity.player.EntityPlayer;
 
 public interface IKnowledge extends IRegisteredNameable

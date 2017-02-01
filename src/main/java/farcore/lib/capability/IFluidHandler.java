@@ -9,8 +9,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import farcore.lib.util.Direction;
-import farcore.util.L;
+import nebula.common.util.Direction;
+import nebula.common.util.L;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;

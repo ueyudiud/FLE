@@ -1,6 +1,6 @@
 package fargen.core.layer;
 
-import farcore.lib.util.NoiseBase;
+import nebula.common.util.noise.NoiseBase;
 
 public abstract class LayerNoise extends Layer
 {

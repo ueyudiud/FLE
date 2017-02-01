@@ -2,7 +2,7 @@ package farcore.lib.world.gen;
 
 import java.util.Random;
 
-import farcore.lib.world.ICoord;
+import nebula.common.world.ICoord;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;

@@ -24,7 +24,6 @@ public enum EnumBlock
 	water,
 	fire,
 	ice,
-	rock,
 	ore,
 	carved_rock,
 	circuit;

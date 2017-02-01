@@ -40,7 +40,7 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public boolean canDropChunk(int x, int z)
 	{
-		return !this.worldObj.isSpawnChunk(x, z) || !this.worldObj.provider.getDimensionType().shouldLoadSpawn();
+		return !this.world.isSpawnChunk(x, z) || !this.world.provider.getDimensionType().shouldLoadSpawn();
 	}
 	
 	/**
@@ -49,26 +49,26 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public boolean canBlockFreeze(BlockPos pos, boolean byWater)
 	{
-		//		if(this.worldObj.getWorldType() != FarWorldType.DEFAULT &&
-		//				this.worldObj.getWorldType() != FarWorldType.FLAT &&
-		//				this.worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+		//		if(this.world.getWorldType() != FarWorldType.DEFAULT &&
+		//				this.world.getWorldType() != FarWorldType.FLAT &&
+		//				this.world.getWorldType() != FarWorldType.LARGE_BIOMES)
 		return super.canBlockFreeze(pos, byWater);
-		//		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldObj);
-		//		float temp = properties.getTemperature(worldObj, pos);
+		//		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(world);
+		//		float temp = properties.getTemperature(world, pos);
 		//		if (temp > BiomeBase.minSnowTemperature)
 		//			return false;
 		//		else
 		//		{
-		//			if (pos.getY() >= 0 && pos.getY() < 256 && worldObj.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
+		//			if (pos.getY() >= 0 && pos.getY() < 256 && world.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
 		//			{
-		//				IBlockState state = worldObj.getBlockState(pos);
+		//				IBlockState state = world.getBlockState(pos);
 		//				Block block = state.getBlock();
 		//				if ((block == Blocks.WATER || block == Blocks.FLOWING_WATER) &&
 		//						state.getValue(BlockLiquid.LEVEL).intValue() == 0)
 		//				{
 		//					if (!byWater)
 		//						return true;
-		//					boolean flag = Worlds.isBlockNearby(worldObj, pos, Blocks.WATER, true);
+		//					boolean flag = Worlds.isBlockNearby(world, pos, Blocks.WATER, true);
 		//					if (!flag)
 		//						return true;
 		//				}
@@ -88,12 +88,12 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public boolean canSnowAt(BlockPos pos, boolean checkLightAndSnow)
 	{
-		//		if(this.worldObj.getWorldType() != FarWorldType.DEFAULT &&
-		//				this.worldObj.getWorldType() != FarWorldType.FLAT &&
-		//				this.worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+		//		if(this.world.getWorldType() != FarWorldType.DEFAULT &&
+		//				this.world.getWorldType() != FarWorldType.FLAT &&
+		//				this.world.getWorldType() != FarWorldType.LARGE_BIOMES)
 		return super.canSnowAt(pos, checkLightAndSnow);
-		//		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(this.worldObj);
-		//		float temp = properties.getTemperature(this.worldObj, pos);
+		//		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(this.world);
+		//		float temp = properties.getTemperature(this.world, pos);
 		//
 		//		if (temp > BiomeBase.minSnowTemperature)
 		//			return false;
@@ -101,11 +101,11 @@ public class FarSurfaceProvider extends WorldProvider
 		//			return true;
 		//		else
 		//		{
-		//			if (pos.getY() >= 0 && pos.getY() < 256 && this.worldObj.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
+		//			if (pos.getY() >= 0 && pos.getY() < 256 && this.world.getLightFor(EnumSkyBlock.BLOCK, pos) < 10)
 		//			{
-		//				IBlockState state = this.worldObj.getBlockState(pos);
-		//				if (state.getBlock().isAir(state, this.worldObj, pos) &&
-		//						Blocks.SNOW_LAYER.canPlaceBlockAt(this.worldObj, pos))
+		//				IBlockState state = this.world.getBlockState(pos);
+		//				if (state.getBlock().isAir(state, this.world, pos) &&
+		//						Blocks.SNOW_LAYER.canPlaceBlockAt(this.world, pos))
 		//					return true;
 		//			}
 		//			return false;
@@ -115,13 +115,13 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public Biome getBiomeForCoords(BlockPos pos)
 	{
-		//		if (worldObj.isBlockLoaded(pos))
+		//		if (world.isBlockLoaded(pos))
 		//		{
-		//			if(worldObj.getWorldType() != FarWorldType.DEFAULT &&
-		//					worldObj.getWorldType() != FarWorldType.FLAT &&
-		//					worldObj.getWorldType() != FarWorldType.LARGE_BIOMES)
+		//			if(world.getWorldType() != FarWorldType.DEFAULT &&
+		//					world.getWorldType() != FarWorldType.FLAT &&
+		//					world.getWorldType() != FarWorldType.LARGE_BIOMES)
 		//				return super.getBiomeForCoords(pos);
-		//			Chunk chunk = worldObj.getChunkFromBlockCoords(pos);
+		//			Chunk chunk = world.getChunkFromBlockCoords(pos);
 		//			try
 		//			{
 		//				int i = pos.getX() & 15;

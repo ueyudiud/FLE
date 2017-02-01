@@ -1,8 +1,9 @@
 package farcore.lib.block;
 
-import farcore.data.Others;
 import farcore.lib.tile.abstracts.TEWiring;
-import farcore.lib.util.Direction;
+import nebula.common.block.BlockSingleTE;
+import nebula.common.data.Misc;
+import nebula.common.util.Direction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -33,7 +34,7 @@ public abstract class BlockWiring extends BlockSingleTE //The wiring block will 
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, Others.PROPS_SIDE);
+		return new BlockStateContainer(this, Misc.PROPS_SIDE);
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public abstract class BlockWiring extends BlockSingleTE //The wiring block will 
 			{
 				if(tile.canConnectWith(direction))
 				{
-					state = state.withProperty(Others.PROPS_SIDE[direction.ordinal()], true);
+					state = state.withProperty(Misc.PROPS_SIDE[direction.ordinal()], true);
 				}
 			}
 			return state;

@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import farcore.lib.collection.ArrayIterator;
 import fle.api.recipes.ShapelessRecipeInput.ShapelessRecipeCache;
+import nebula.common.base.ArrayIterator;
 import net.minecraft.util.EnumActionResult;
 
 public abstract class ShapelessRecipeInput<T, S> implements IRecipeInput<ShapelessRecipeCache, ICraftingMatrix<T>, T>

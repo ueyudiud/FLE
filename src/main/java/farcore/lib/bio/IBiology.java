@@ -8,7 +8,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import farcore.util.L;
+import nebula.common.util.L;
 
 /**
  * @author ueyudiud

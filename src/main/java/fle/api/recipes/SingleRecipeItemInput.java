@@ -1,9 +1,9 @@
 package fle.api.recipes;
 
-import farcore.lib.collection.ArrayIterator;
-import farcore.lib.item.ITool;
-import farcore.util.L;
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
+import nebula.common.base.ArrayIterator;
+import nebula.common.item.ITool;
+import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 
 public class SingleRecipeItemInput extends SingleRecipeInput<RecipeItemInputConfig, ICraftingMatrix<ItemStack>, ItemStack>

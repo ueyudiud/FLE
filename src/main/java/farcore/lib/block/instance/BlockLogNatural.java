@@ -2,15 +2,15 @@ package farcore.lib.block.instance;
 
 import java.util.Random;
 
-import farcore.data.EnumToolType;
-import farcore.lib.block.IToolableBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.util.Direction;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.Log;
-import farcore.util.U;
 import farcore.util.runnable.BreakTree;
+import nebula.Log;
+import nebula.common.LanguageManager;
+import nebula.common.block.IToolableBlock;
+import nebula.common.data.EnumToolType;
+import nebula.common.util.Direction;
+import nebula.common.util.Worlds;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -159,7 +159,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	
 	public boolean isLog(World worldIn, BlockPos pos)
 	{
-		return U.Worlds.isBlock(worldIn, pos, this, -1, false);
+		return Worlds.isBlock(worldIn, pos, this, -1, false);
 	}
 	
 	private void breakTree(World world, BlockPos pos)

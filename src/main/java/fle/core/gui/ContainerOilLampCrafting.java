@@ -1,10 +1,10 @@
 package fle.core.gui;
 
-import farcore.lib.gui.ContainerBlockPosition;
-import farcore.lib.gui.SlotBase;
-import farcore.lib.gui.SlotButton;
-import farcore.lib.gui.SlotOutput;
-import farcore.lib.world.ICoord;
+import nebula.common.gui.ContainerBlockPosition;
+import nebula.common.gui.SlotBase;
+import nebula.common.gui.SlotButton;
+import nebula.common.gui.SlotOutput;
+import nebula.common.world.ICoord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;

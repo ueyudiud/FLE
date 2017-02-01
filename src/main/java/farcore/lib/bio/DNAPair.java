@@ -7,7 +7,7 @@ package farcore.lib.bio;
 import java.util.Comparator;
 import java.util.Random;
 
-import farcore.lib.nbt.INBTWriter;
+import nebula.common.nbt.INBTWriter;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

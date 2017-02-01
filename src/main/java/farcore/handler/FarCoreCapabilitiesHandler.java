@@ -6,7 +6,7 @@ package farcore.handler;
 
 import farcore.FarCore;
 import farcore.lib.capability.IFluidHandler;
-import farcore.lib.util.Direction;
+import nebula.common.util.Direction;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;

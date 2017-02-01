@@ -2,9 +2,9 @@ package farcore.lib.tree;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
+import nebula.common.base.IntegerEntry;
+import nebula.common.base.IntegerMap;
 import farcore.lib.bio.IBiology;
-import farcore.lib.collection.IntegerEntry;
-import farcore.lib.collection.IntegerMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;

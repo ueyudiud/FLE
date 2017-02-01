@@ -11,10 +11,10 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import farcore.lib.bio.DNAPair;
-import farcore.lib.collection.IntegerEntry;
-import farcore.lib.collection.Selector;
 import farcore.lib.crop.ICropAccess;
-import farcore.util.L;
+import nebula.common.base.IntegerEntry;
+import nebula.common.base.Selector;
+import nebula.common.util.L;
 
 /**
  * @author ueyudiud

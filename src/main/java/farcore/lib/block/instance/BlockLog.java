@@ -1,12 +1,12 @@
 package farcore.lib.block.instance;
 
-import farcore.FarCoreSetup.ClientProxy;
-import farcore.data.EnumToolType;
-import farcore.lib.block.BlockBase;
+import farcore.data.EnumToolTypes;
 import farcore.lib.block.material.MaterialLog;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
-import farcore.lib.model.block.statemap.StateMapperExt;
+import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
+import nebula.common.block.BlockBase;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -45,13 +45,13 @@ public class BlockLog extends BlockBase
 		Mat material = this.tree.material();
 		StateMapperExt mapper = new StateMapperExt(material.modid, "log", null);
 		mapper.setVariants("type", material.name);
-		ClientProxy.registerCompactModel(mapper, this, null);
+		Renders.registerCompactModel(mapper, this, null);
 	}
 	
 	@Override
 	public String getHarvestTool(IBlockState state)
 	{
-		return EnumToolType.axe.name();
+		return EnumToolTypes.AXE.name;
 	}
 	
 	@Override

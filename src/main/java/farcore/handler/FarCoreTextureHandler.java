@@ -3,8 +3,8 @@ package farcore.handler;
 import java.util.ArrayList;
 import java.util.List;
 
-import farcore.lib.render.IIconLoader;
-import farcore.lib.render.IIconRegister;
+import nebula.client.render.IIconLoader;
+import nebula.client.render.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;

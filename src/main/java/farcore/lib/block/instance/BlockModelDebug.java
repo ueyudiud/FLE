@@ -11,11 +11,11 @@ import java.util.List;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 
-import farcore.lib.block.BlockBase;
-import farcore.lib.model.BakedModelBase;
-import farcore.lib.model.ModelBase;
-import farcore.lib.model.part.IFarCoreBakedModelPart;
-import farcore.lib.model.part.PackedVerticalCube;
+import nebula.client.model.BakedModelBase;
+import nebula.client.model.INebulaBakedModelPart;
+import nebula.client.model.ModelBase;
+import nebula.client.model.part.PackedVerticalCube;
+import nebula.common.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -99,9 +99,9 @@ public class BlockModelDebug extends BlockBase
 	@SideOnly(Side.CLIENT)
 	public static class DebugModelBaked implements BakedModelBase
 	{
-		private IFarCoreBakedModelPart part;
+		private INebulaBakedModelPart part;
 		
-		public DebugModelBaked(IFarCoreBakedModelPart part)
+		public DebugModelBaked(INebulaBakedModelPart part)
 		{
 			this.part = part;
 		}
@@ -110,7 +110,7 @@ public class BlockModelDebug extends BlockBase
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
 			List<BakedQuad> quads = new ArrayList();
-			((IFarCoreBakedModelPart.WrapedBakedModelPart) this.part).putQuads(quads);
+			((INebulaBakedModelPart.WrapedBakedModelPart) this.part).putQuads(quads);
 			return quads;
 		}
 	}

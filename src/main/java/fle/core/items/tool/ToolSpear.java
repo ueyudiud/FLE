@@ -1,7 +1,7 @@
 package fle.core.items.tool;
 
 import farcore.data.EnumPhysicalDamageType;
-import farcore.data.EnumToolType;
+import farcore.data.EnumToolTypes;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,9 +13,9 @@ public class ToolSpear extends Tool
 {
 	public ToolSpear()
 	{
-		super(EnumToolType.spear);
+		super(EnumToolTypes.SPEAR);
 	}
-
+	
 	@Override
 	public EnumPhysicalDamageType getPhysicalDamageType()
 	{
@@ -27,7 +27,7 @@ public class ToolSpear extends Tool
 	{
 		return -0.1F;
 	}
-
+	
 	@Override
 	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos,
 			IBlockState block)
@@ -58,7 +58,7 @@ public class ToolSpear extends Tool
 	{
 		return true;
 	}
-
+	
 	@Override
 	protected String getDeathMessage(Entity target, EntityLivingBase user)
 	{

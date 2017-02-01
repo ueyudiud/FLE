@@ -9,12 +9,12 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.material.Mat;
-import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
-import farcore.lib.util.CoordTransformer;
-import farcore.lib.util.Direction;
 import fle.api.client.CompactModel;
 import fle.api.tile.IDitchTile;
 import fle.core.tile.ditchs.TEDitch;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.util.CoordTransformer;
+import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

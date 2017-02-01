@@ -1,6 +1,6 @@
 package farcore.energy.thermal;
 
-import farcore.lib.world.IObjectInWorld;
+import nebula.common.world.IObjectInWorld;
 
 /**
  * Object in world with temperature property.

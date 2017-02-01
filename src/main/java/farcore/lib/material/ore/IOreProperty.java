@@ -4,10 +4,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import farcore.data.EnumToolType;
-import farcore.lib.tile.IToolableTile;
 import farcore.lib.tile.instance.TEOre;
-import farcore.lib.util.Direction;
+import nebula.common.data.EnumToolType;
+import nebula.common.tile.IToolableTile;
+import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

@@ -10,17 +10,17 @@ import net.minecraft.world.World;
 public class CommandDate extends CommandBase
 {
 	@Override
-	public String getCommandName()
+	public String getName()
 	{
 		return "date";
 	}
-
+	
 	@Override
-	public String getCommandUsage(ICommandSender sender)
+	public String getUsage(ICommandSender sender)
 	{
 		return "commands.date.usage";
 	}
-
+	
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{

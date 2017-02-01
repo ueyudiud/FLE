@@ -1,8 +1,8 @@
 package fle.core.gui;
 
-import farcore.lib.gui.GuiContainerBase;
-import farcore.lib.world.ICoord;
 import fle.core.FLE;
+import nebula.client.gui.GuiContainerBase;
+import nebula.common.world.ICoord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

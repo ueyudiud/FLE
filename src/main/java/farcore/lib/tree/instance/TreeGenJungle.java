@@ -4,7 +4,7 @@ import java.util.Random;
 
 import farcore.lib.tree.TreeBase;
 import farcore.lib.tree.TreeInfo;
-import farcore.util.L;
+import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;

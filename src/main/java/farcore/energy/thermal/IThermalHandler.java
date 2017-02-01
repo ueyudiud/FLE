@@ -1,7 +1,7 @@
 package farcore.energy.thermal;
 
-import farcore.lib.util.Direction;
-import farcore.lib.world.ICoord;
+import nebula.common.util.Direction;
+import nebula.common.world.ICoord;
 
 /**
  * The thermal handler.

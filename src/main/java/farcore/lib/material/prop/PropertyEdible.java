@@ -4,7 +4,7 @@
 
 package farcore.lib.material.prop;
 
-import farcore.lib.item.behavior.IFoodStat;
+import nebula.common.item.IFoodStat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;

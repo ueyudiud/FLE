@@ -11,11 +11,14 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
+import farcore.data.SubTags;
 import farcore.lib.material.Mat;
-import farcore.lib.model.ModelHelper;
-import farcore.lib.model.block.statemap.BlockStateTileEntityWapper;
 import farcore.lib.tile.instance.TESapling;
-import farcore.lib.util.SubTag;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.model.BakedModelRetexture;
+import nebula.client.model.ICustomItemModelSelector;
+import nebula.client.model.INebulaCustomModelLoader;
+import nebula.client.model.ModelHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -36,7 +39,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel
+public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel
 {
 	instance;
 	
@@ -76,7 +79,7 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 		if(this.textures == null)
 		{
 			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-			for(Mat material : Mat.filt(SubTag.TREE))
+			for(Mat material : Mat.filt(SubTags.TREE))
 			{
 				builder.add(new ResourceLocation(material.modid, "blocks/sapling/" + material.name));
 			}
@@ -92,7 +95,7 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 		ICON_MAP.clear();
 		IModel model = ModelLoaderRegistry.getModelOrMissing(PARENT_LOCATION);
 		ImmutableMap.Builder<String, TextureAtlasSprite> builder = ImmutableMap.builder();
-		for(Mat material : Mat.filt(SubTag.TREE))
+		for(Mat material : Mat.filt(SubTags.TREE))
 		{
 			TextureAtlasSprite icon = bakedTextureGetter.apply(new ResourceLocation(material.modid, "blocks/sapling/" + material.name));
 			builder.put(material.name, icon);
@@ -135,7 +138,7 @@ public enum ModelSapling implements IFarCustomModelLoader, ICustomItemModelSelec
 	public List<ResourceLocation> getAllowedResourceLocations(Item item)
 	{
 		ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-		for(Mat material : Mat.filt(SubTag.TREE))
+		for(Mat material : Mat.filt(SubTags.TREE))
 		{
 			builder.add(new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory"));
 		}

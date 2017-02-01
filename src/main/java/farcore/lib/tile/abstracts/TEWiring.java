@@ -1,7 +1,8 @@
 package farcore.lib.tile.abstracts;
 
-import farcore.lib.util.Direction;
-import farcore.util.U;
+import nebula.common.tile.TESynchronization;
+import nebula.common.util.Direction;
+import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,148 +22,148 @@ public abstract class TEWiring extends TESynchronization
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setByte("connectFlag", connectFlag);
-		if(lastWorldDim != null)
+		nbt.setByte("connectFlag", this.connectFlag);
+		if(this.lastWorldDim != null)
 		{
-			nbt.setIntArray("lastpos", new int[]{lastWorldDim.intValue(), last.getX(), last.getY(), last.getZ()});
+			nbt.setIntArray("lastpos", new int[]{this.lastWorldDim.intValue(), this.last.getX(), this.last.getY(), this.last.getZ()});
 		}
-		if(nextWorldDim != null)
+		if(this.nextWorldDim != null)
 		{
-			nbt.setIntArray("nextpos", new int[]{nextWorldDim.intValue(), next.getX(), next.getY(), next.getZ()});
+			nbt.setIntArray("nextpos", new int[]{this.nextWorldDim.intValue(), this.next.getX(), this.next.getY(), this.next.getZ()});
 		}
 		return super.writeToNBT(nbt);
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		connectFlag = nbt.getByte("connectFlag");
+		this.connectFlag = nbt.getByte("connectFlag");
 		if(nbt.hasKey("lastpos"))
 		{
 			int[] pos = nbt.getIntArray("lastpos");
 			if(pos.length != 4)
 				throw new RuntimeException("The position length is not 4, the nbt is broken.");
-			lastWorldDim = pos[0];
-			last = new BlockPos(pos[1], pos[2], pos[3]);
+			this.lastWorldDim = pos[0];
+			this.last = new BlockPos(pos[1], pos[2], pos[3]);
 		}
 		if(nbt.hasKey("nextpos"))
 		{
 			int[] pos = nbt.getIntArray("nextpos");
 			if(pos.length != 4)
 				throw new RuntimeException("The position length is not 4, the nbt is broken.");
-			nextWorldDim = pos[0];
-			next = new BlockPos(pos[1], pos[2], pos[3]);
+			this.nextWorldDim = pos[0];
+			this.next = new BlockPos(pos[1], pos[2], pos[3]);
 		}
 	}
-
+	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setByte("cf", connectFlag);
+		nbt.setByte("cf", this.connectFlag);
 	}
-
+	
 	@Override
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("cf"))
 		{
-			connectFlag = nbt.getByte("cf");
+			this.connectFlag = nbt.getByte("cf");
 		}
 	}
-
+	
 	@Override
 	protected void initServer()
 	{
 		super.initServer();
-		if(lastWorldDim != null)
+		if(this.lastWorldDim != null)
 		{
-			lastWorld = U.Worlds.world(lastWorldDim);
+			this.lastWorld = Worlds.world(this.lastWorldDim);
 		}
-		if(nextWorldDim != null)
+		if(this.nextWorldDim != null)
 		{
-			nextWorld = U.Worlds.world(nextWorldDim);
+			this.nextWorld = Worlds.world(this.nextWorldDim);
 		}
 	}
-
+	
 	public void setNextLink(int nextWorld, BlockPos nextPos)
 	{
-		World world = U.Worlds.world(nextWorld);
+		World world = Worlds.world(nextWorld);
 		if(world != null)
 		{
 			setNextLink(world, nextPos);
 		}
 		else
 		{
-			nextWorldDim = nextWorld;//Might the world already not deleted.
-			next = nextPos;
+			this.nextWorldDim = nextWorld;//Might the world already not deleted.
+			this.next = nextPos;
 		}
 	}
 	public void setNextLink(World nextWorld, BlockPos nextPos)
 	{
 		if(nextWorld != null)
 		{
-			nextWorldDim = nextWorld.provider.getDimension();
+			this.nextWorldDim = nextWorld.provider.getDimension();
 			this.nextWorld = nextWorld;
-			next = nextPos;
+			this.next = nextPos;
 		}
 		else
 		{
-			nextWorldDim = null;
+			this.nextWorldDim = null;
 			this.nextWorld = null;
-			next = null;
+			this.next = null;
 		}
 	}
 	
 	public void setLastLink(int lastWorld, BlockPos lastPos)
 	{
 		World world;
-		if((world = U.Worlds.world(lastWorld)) != null)
+		if((world = Worlds.world(lastWorld)) != null)
 		{
 			setLastLink(world, lastPos);
 		}
 		else
 		{
-			lastWorldDim = lastWorld;//Might the world already not deleted.
-			last = lastPos;
+			this.lastWorldDim = lastWorld;//Might the world already not deleted.
+			this.last = lastPos;
 		}
 	}
 	public void setLastLink(World lastWorld, BlockPos lastPos)
 	{
-		if(nextWorld != null)
+		if(this.nextWorld != null)
 		{
-			lastWorldDim = lastWorld.provider.getDimension();
+			this.lastWorldDim = lastWorld.provider.getDimension();
 			this.lastWorld = lastWorld;
-			last = lastPos;
+			this.last = lastPos;
 		}
 		else
 		{
-			lastWorldDim = null;
+			this.lastWorldDim = null;
 			this.lastWorld = null;
-			last = null;
+			this.last = null;
 		}
 	}
-
+	
 	public void switchConnectState(Direction direction)
 	{
 		if(isServer())
 		{
-			connectFlag |= direction.flag;
+			this.connectFlag |= direction.flag;
 			syncToNearby();
 			markBlockUpdate();
 			markDirty();
 		}
 	}
-
+	
 	public boolean isAllowConnect(Direction direction)
 	{
 		if(direction == null || direction == Direction.Q)
 			return false;
-		return (connectFlag & direction.flag) != 0;
+		return (this.connectFlag & direction.flag) != 0;
 	}
-
+	
 	public boolean canConnectWith(Direction direction)
 	{
 		if(!isAllowConnect(direction))
@@ -172,16 +173,16 @@ public abstract class TEWiring extends TESynchronization
 			if(isServer())
 			{
 				if(direction == Direction.A)
-					return canConnectWith(lastWorld, last);
+					return canConnectWith(this.lastWorld, this.last);
 				else if(direction == Direction.B)
-					return canConnectWith(nextWorld, next);
+					return canConnectWith(this.nextWorld, this.next);
 				return false;
 			}
 			else
 				return false;//I don't know what uses can take this option affect in client world.
 		}
 		else
-			return canConnectWith(worldObj, direction.offset(pos));
+			return canConnectWith(this.world, direction.offset(this.pos));
 	}
 	
 	protected boolean canConnectWith(World targetWorld, BlockPos targetPos)

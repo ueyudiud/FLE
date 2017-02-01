@@ -3,11 +3,12 @@ package farcore.lib.block;
 import java.util.Random;
 
 import farcore.data.MP;
+import farcore.data.SubTags;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
-import farcore.lib.util.Direction;
-import farcore.lib.util.SubTag;
+import nebula.common.block.BlockBase;
+import nebula.common.util.Direction;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -90,7 +91,7 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	@Override
 	public boolean isFireSource(World world, BlockPos pos, EnumFacing side)
 	{
-		return material.contain(SubTag.FIRE_SOURCE);
+		return material.contain(SubTags.FIRE_SOURCE);
 	}
 
 	@Override

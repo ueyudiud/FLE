@@ -7,14 +7,12 @@ package farcore.data;
 import farcore.lib.block.instance.BlockSoil;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.ItemTool;
+import nebula.client.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.ColorizerGrass;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -55,7 +53,7 @@ public class ColorMultiplier
 		BlockSoil.EnumCoverType type = state.getValue(BlockSoil.COVER_TYPE);
 		switch (type)
 		{
-		case GRASS : return worldIn == null || pos == null ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : worldIn.getBiomeGenForCoords(pos).getGrassColorAtPos(pos);
+		case GRASS : return worldIn == null || pos == null ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : worldIn.getBiome(pos).getGrassColorAtPos(pos);
 		default : return 0xFFFFFFFF;
 		}
 	};
@@ -71,18 +69,5 @@ public class ColorMultiplier
 		}
 	};
 	
-	public static final IBlockColor BIOME_COLOR = (state, worldIn, pos, tintIndex) ->
-	{
-		boolean flag = worldIn == null || pos == null;
-		Biome biome = flag ? null : worldIn.getBiomeGenForCoords(pos);
-		switch(tintIndex)
-		{
-		case 0 : return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) :
-			BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
-		case 1 : return flag ? ColorizerFoliage.getFoliageColorBasic() :
-			BiomeColorHelper.getFoliageColorAtPos(worldIn, pos);
-		case 2 : return flag ? -1 : BiomeColorHelper.getWaterColorAtPos(worldIn, pos);
-		default: return -1;
-		}
-	};
+	public static final IBlockColor BIOME_COLOR = ClientProxy.BIOME_COLOR;
 }

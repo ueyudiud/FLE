@@ -58,7 +58,7 @@ public class CropAccessSimulated implements ICropAccess
 	@Override
 	public Biome biome()
 	{
-		return this.world.getBiomeGenForCoords(this.pos);
+		return this.world.getBiome(this.pos);
 	}
 	
 	@Override

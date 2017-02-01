@@ -5,12 +5,14 @@
 package farcore.data;
 
 import farcore.lib.material.MatCondition;
+import nebula.common.util.Properties.EnumStateName;
 import net.minecraft.util.IStringSerializable;
 
 /**
  * The rock types.
  * @author ueyudiud
  */
+@EnumStateName("rocktype")
 public enum EnumRockType implements IStringSerializable
 {
 	resource		(MC.stone, 		""			, "%s"),

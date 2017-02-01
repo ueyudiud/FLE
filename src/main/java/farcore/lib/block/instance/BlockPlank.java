@@ -4,15 +4,15 @@
 
 package farcore.lib.block.instance;
 
-import farcore.FarCoreSetup.ClientProxy;
 import farcore.data.CT;
 import farcore.data.MC;
 import farcore.lib.block.BlockMaterial;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.model.block.statemap.StateMapperExt;
-import farcore.lib.util.LanguageManager;
-import farcore.util.U.OreDict;
+import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
+import nebula.common.LanguageManager;
+import nebula.common.util.OreDict;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -83,7 +83,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	{
 		super.registerRender();
 		StateMapperExt mapper = new StateMapperExt(this.material.modid, "plank/" + this.material.name, null);
-		ClientProxy.registerCompactModel(mapper, this, EnumPlankState.values().length);
+		Renders.registerCompactModel(mapper, this, EnumPlankState.values().length);
 	}
 	
 	@Override

@@ -9,13 +9,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import farcore.FarCore;
 import farcore.lib.capability.IFluidHandler;
 import farcore.lib.material.Mat;
-import farcore.lib.util.Direction;
-import farcore.lib.util.IDataChecker;
-import farcore.lib.util.Log;
-import farcore.lib.world.IModifiableCoord;
+import nebula.Log;
+import nebula.Nebula;
+import nebula.common.util.Direction;
+import nebula.common.util.IDataChecker;
+import nebula.common.world.IModifiableCoord;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -58,7 +58,7 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 					if(select != null)
 					{
 						RuntimeException exception = new RuntimeException("The factory " + select + " and " + factory + " both want to handle material " + material.name + ".");
-						if(FarCore.debug) throw exception;
+						if(Nebula.debug) throw exception;
 						Log.warn("Catching an exception during getting ditch factory.", exception);
 					}
 					select = factory;

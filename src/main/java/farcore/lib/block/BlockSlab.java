@@ -3,9 +3,10 @@ package farcore.lib.block;
 import java.util.Random;
 
 import farcore.data.EnumSlabState;
-import farcore.lib.util.LanguageManager;
-import farcore.lib.util.UnlocalizedList;
-import farcore.util.U;
+import nebula.client.util.UnlocalizedList;
+import nebula.common.LanguageManager;
+import nebula.common.block.BlockBase;
+import nebula.common.util.Worlds;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -110,6 +111,19 @@ public abstract class BlockSlab extends BlockBase
 	}
 	
 	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return state.getValue(EnumSlabState.PROPERTY).fullCube;
+	}
+	
+	@Override
+	public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+	{
+		IBlockState state = worldIn.getBlockState(pos);
+		return state.isOpaqueCube() || state.getValue(EnumSlabState.PROPERTY).ordinal() == side.ordinal();
+	}
+	
+	@Override
 	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return state.isOpaqueCube() || state.getValue(EnumSlabState.PROPERTY).ordinal() == face.ordinal();
@@ -195,7 +209,7 @@ public abstract class BlockSlab extends BlockBase
 	}
 	
 	@Override
-	protected ItemStack createStackedBlock(IBlockState state)
+	protected ItemStack getSilkTouchDrop(IBlockState state)
 	{
 		return new ItemStack(this, quantityDropped(state, 0, RANDOM), damageDropped(state));
 	}
@@ -206,7 +220,7 @@ public abstract class BlockSlab extends BlockBase
 		EnumSlabState state = world.getBlockState(pos).getValue(EnumSlabState.PROPERTY);
 		if(state != EnumSlabState.rotationState[axis.ordinal()][state.ordinal()])
 		{
-			U.Worlds.switchProp(world, pos, EnumSlabState.PROPERTY, EnumSlabState.rotationState[axis.ordinal()][state.ordinal()], 3);
+			Worlds.switchProp(world, pos, EnumSlabState.PROPERTY, EnumSlabState.rotationState[axis.ordinal()][state.ordinal()], 3);
 			return true;
 		}
 		return false;

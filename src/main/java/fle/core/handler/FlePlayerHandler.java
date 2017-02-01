@@ -75,7 +75,7 @@ public class FlePlayerHandler
 		{
 			if(getOrCreateInformation((EntityPlayer) event.getEntityLiving()).dronInToVoid)
 			{
-				if(event.getEntityLiving().worldObj.provider.getDimension() != FLEAPI.voidDimID)
+				if(event.getEntityLiving().world.provider.getDimension() != FLEAPI.voidDimID)
 				{
 					((EntityPlayerMP) event.getEntityLiving()).inventory.clear();
 					event.getEntityLiving().setDead();

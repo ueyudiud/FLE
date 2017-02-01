@@ -7,6 +7,7 @@ package farcore.lib.model.block.statemap;
 import java.util.Map;
 
 import farcore.lib.block.BlockStairV1;
+import nebula.client.model.StateMapperExt;
 import net.minecraft.block.BlockStairs.EnumHalf;
 import net.minecraft.block.BlockStairs.EnumShape;
 import net.minecraft.block.properties.IProperty;
