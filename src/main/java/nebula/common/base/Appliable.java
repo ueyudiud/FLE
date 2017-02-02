@@ -4,6 +4,7 @@
 
 package nebula.common.base;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
@@ -23,6 +24,7 @@ public interface Appliable<T> extends Callable<T>
 	
 	default <V> Appliable<V> andThen(Function<T, V> function)
 	{
+		Objects.requireNonNull(function);
 		return () -> function.apply(apply());
 	}
 	

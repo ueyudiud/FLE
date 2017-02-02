@@ -4,8 +4,10 @@
 
 package nebula.common.data;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+import nebula.common.base.Appliable;
 import nebula.common.util.Direction;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
@@ -15,6 +17,7 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fluids.Fluid;
 
 /**
  * 
@@ -26,7 +29,7 @@ public class Misc
 	public static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	public static final Item ITEM_AIR = Item.getItemFromBlock(Blocks.AIR);
 	
-	public static final int BUCKET_CAPACITY = 1000;
+	public static final int BUCKET_CAPACITY = Fluid.BUCKET_VOLUME;
 	
 	public static final PropertyBool PROP_NORTH = PropertyBool.create("north");
 	public static final PropertyBool PROP_EAST = PropertyBool.create("east");
@@ -41,10 +44,13 @@ public class Misc
 	public static final PropertyEnum<Direction> PROP_DIRECTION_ALL = PropertyEnum.create("direction", Direction.class, Direction.DIRECTIONS_3D);
 	public static final PropertyEnum<Direction> PROP_DIRECTION_HORIZONTALS = PropertyEnum.create("direction", Direction.class, Direction.DIRECTIONS_2D);
 	
-	public static final IAttribute PROJECTILE_DAMAGE = (new RangedAttribute((IAttribute)null, "far.projectile.damage", 0.0D, 0, Double.MAX_VALUE)).setShouldWatch(true);
+	public static final IAttribute PROJECTILE_DAMAGE = (new RangedAttribute((IAttribute) null, "far.projectile.damage", 0.0D, 0, Double.MAX_VALUE)).setShouldWatch(true);
 	
 	public static final Function TO_NULL = arg -> null;
+	public static final Consumer NO_ACTION = arg -> {};
+	public static final Appliable NO_APPLY = () -> null;
 	
+	public static final boolean[] BOOLS_EMPTY = new boolean[0];
 	public static final byte[] BYTES_EMPTY = new byte[0];
 	public static final short[] SHORTS_EMPTY = new short[0];
 	public static final int[] INTS_EMPTY = new int[0];

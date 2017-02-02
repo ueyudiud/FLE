@@ -74,6 +74,12 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	}
 	
 	@Override
+	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player)
+	{
+		return player.getDigSpeed(state, this.pos) / getBlockHardness(state) / 30F;
+	}
+	
+	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);

@@ -14,9 +14,10 @@ import farcore.lib.tile.IDebugableTile;
 import fle.api.tile.IDitchTile;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
 import nebula.common.tile.IUpdatableTile;
 import nebula.common.tile.TESynchronization;
-import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;
 import nebula.common.util.L;
@@ -42,7 +43,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TEDitch extends TESynchronization implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, IDebugableTile, INetworkedSyncTile
+public class TEDitch extends TESynchronization
+implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, ITP_BlockHardness,
+IDebugableTile, INetworkedSyncTile
 {
 	private static final AxisAlignedBB AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F);
 	
@@ -81,6 +84,18 @@ public class TEDitch extends TESynchronization implements IDitchTile, IUpdatable
 	public Mat getMaterial()
 	{
 		return this.material;
+	}
+	
+	@Override
+	public float getBlockHardness(IBlockState state)
+	{
+		return 0.5F;
+	}
+	
+	@Override
+	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player)
+	{
+		return player.getDigSpeed(state, this.pos) / getBlockHardness(state) / 30F;
 	}
 	
 	@Override

@@ -65,7 +65,7 @@ public interface BakedModelBase extends IBakedModel
 	}
 	
 	/**
-	 * 
+	 * Get item overrides? (But what is item override?)
 	 */
 	@Override
 	default ItemOverrideList getOverrides()

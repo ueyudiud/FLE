@@ -72,7 +72,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		@Override
 		public String getModID()
 		{
-			return FarCore.ID;
+			return FarCore.INNER_RENDER;
 		}
 		
 		@Override

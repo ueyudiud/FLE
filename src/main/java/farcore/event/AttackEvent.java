@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 /**
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  * @author ueyudiud
  */
 @Cancelable
-public class AttackEvent extends net.minecraftforge.event.entity.player.PlayerEvent
+public class AttackEvent extends PlayerEvent
 {
 	public final Entity target;
 	public final ItemStack weapon;

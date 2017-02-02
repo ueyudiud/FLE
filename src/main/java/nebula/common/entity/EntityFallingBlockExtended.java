@@ -3,12 +3,10 @@ package nebula.common.entity;
 import java.util.ArrayList;
 
 import nebula.Log;
-import nebula.Nebula;
 import nebula.common.block.IHitByFallenBehaviorBlock;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.data.DataSerializers;
 import nebula.common.data.Misc;
-import nebula.common.network.packet.PacketEntityAsk;
 import nebula.common.util.Worlds;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.state.IBlockState;
@@ -90,6 +88,7 @@ public class EntityFallingBlockExtended extends Entity
 	public EntityFallingBlockExtended(World world)
 	{
 		super(world);
+		this.fallable = INSTANCE;
 	}
 	public EntityFallingBlockExtended(World world, BlockPos pos, BlockPos pos1, IBlockState state, TileEntity tile)
 	{
@@ -170,9 +169,9 @@ public class EntityFallingBlockExtended extends Entity
 	@Override
 	public void onUpdate()
 	{
-		if(this.world.isRemote && this.state == null)
+		if(this.world.isRemote && (this.state == null || this.state == Misc.AIR))
 		{
-			Nebula.network.sendToServer(new PacketEntityAsk(this));
+			this.state = this.dataManager.get(STATE);
 			return;
 		}
 		if(this.isDead)
