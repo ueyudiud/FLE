@@ -10,14 +10,12 @@ import com.google.common.collect.Multimap;
 
 import farcore.FarCore;
 import farcore.data.MC;
-import farcore.data.MP;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.skill.ISkill;
 import farcore.util.Localization;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
-import nebula.common.data.EnumToolType;
 import nebula.common.enviornment.IEnvironment;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
@@ -25,9 +23,9 @@ import nebula.common.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
 import nebula.common.item.ITool;
 import nebula.common.item.IUpdatableItem;
 import nebula.common.item.ItemSubBehavior;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Game;
 import nebula.common.util.IDataChecker;
-import nebula.common.util.ISubTagContainer;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.Sides;
 import net.minecraft.block.state.IBlockState;
@@ -85,7 +83,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		//			return (int) (head.toolMaxUse * handle.handleToughness);
 		//		}
 		//		else
-		return getMaterial(stack, "head").getProperty(MP.property_tool).maxUse;
+		return getMaterial(stack, "head").toolMaxUse;
 	}
 	
 	public static int getMaxDurability(ItemStack stack)
@@ -137,9 +135,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		boolean hasHandle;
 		MatCondition condition;
 		IToolStat stat;
-		IDataChecker<? extends ISubTagContainer> filterHead;
-		IDataChecker<? extends ISubTagContainer> filterTie;
-		IDataChecker<? extends ISubTagContainer> filterHandle;
+		IDataChecker<? super Mat> filterHead;
+		IDataChecker<? super Mat> filterTie;
+		IDataChecker<? super Mat> filterHandle;
 		List<EnumToolType> toolTypes;
 		String customToolInformation;
 		public ISkill skillEfficiency;
@@ -162,9 +160,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	
 	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
 			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
-			IDataChecker<? extends ISubTagContainer> filterHead,
-			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,
-			List<EnumToolType> toolTypes,
+			IDataChecker<? super Mat> filterHead, IDataChecker<? super Mat> filterTie,
+			IDataChecker<? super Mat> filterHandle, List<EnumToolType> toolTypes,
 			IBehavior... behaviors)
 	{
 		super.addSubItem(id, name, localName, stat, behaviors);
@@ -220,7 +217,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		int level = prop.stat.getToolHarvestLevel(stack, type.name, getMaterial(stack, "head"));
 		return level == -1 ?
-				prop.toolTypes.contains(type) ? getMaterial(stack, "head").getProperty(MP.property_tool).harvestLevel : -1 :
+				prop.toolTypes.contains(type) ? getMaterial(stack, "head").toolHarvestLevel : -1 :
 					level;
 	}
 	
@@ -361,24 +358,13 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public float getStrVsBlock(ItemStack stack, IBlockState state)
 	{
-		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getSpeedMultiplier(stack);
+		IToolStat stat = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat;
+		return stat.canBreakEffective(stack, state) ? stat.getSpeedMultiplier(stack) * getMaterial(stack, "head").toolHardness : 1.0F;
 	}
 	
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
 	{
-		//		if(slot == EntityEquipmentSlot.MAINHAND)
-		//		{
-		//			Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-		//			Mat material = getMaterial(stack, "head");
-		//			ToolProp prop = toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
-		//			float speed = prop.stat.getAttackSpeed(stack, material);
-		//			if(speed != 0)
-		//			{
-		//				multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", speed, 0));
-		//			}
-		//			return multimap;
-		//		}
 		return super.getAttributeModifiers(slot, stack);
 	}
 	
@@ -401,7 +387,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{
-		subItems.add(setMaterialToItem(new ItemStack(this, 1, meta), "head", Mat.VOID));
+		for (Mat material : Mat.filt(this.toolPropMap.get(meta).filterHead))
+			subItems.add(setMaterialToItem(new ItemStack(this, 1, meta), "head", material));
 	}
 	
 	@Override

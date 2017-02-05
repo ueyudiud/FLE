@@ -53,17 +53,14 @@ public class MC
 	
 	public static final MatCondition adz_metal = new MatCondition("adz_metal", "adz", "Adz", "%s Adz").setSize(288L, 288L, 1.2F).setFilter(IDataChecker.and(SubTags.METAL, SubTags.TOOL));
 	public static final MatCondition adz_rock = new MatCondition("adz_rock", "adz", "Adz", "%s Adz").setSize(288L, 288L, 1.2F).setFilter(IDataChecker.and(IDataChecker.or(SubTags.ROCK, SubTags.FLINT), SubTags.TOOL));
-	
 	public static final MatCondition hard_hammer_flint = new MatCondition("hard.hammer.flint", "hardHammer", "Hard Hammer", "%s Hammer").setSize(288L, 288L, 1.0F).setFilter(IDataChecker.and(SubTags.FLINT, SubTags.TOOL));
-	
 	public static final MatCondition shovel_rock = new MatCondition("shovel_rock", "shovel", "Shovel", "%s Shovel").setSize(288L, 288L, 1.2F).setFilter(IDataChecker.and(IDataChecker.or(SubTags.ROCK, SubTags.FLINT), SubTags.TOOL));
 	public static final MatCondition shovel_metal = new MatCondition("shovel_metal", "shovel", "Shovel", "%s Shovel").setSize(144L, 144L, 1.2F).setFilter(IDataChecker.and(SubTags.METAL, SubTags.TOOL));
-	
 	public static final MatCondition spade_hoe_rock = new MatCondition("spade_hoe.rock", "spadeHoe", "Spade-Hoe", "%s Spade-Hoe").setSize(288L, 288L, 1.3F).setFilter(IDataChecker.and(SubTags.ROCK, SubTags.TOOL));
-	
 	public static final MatCondition spear_rock = new MatCondition("spear_rock", "spear", "Spear", "%s Spear").setSize(288L, 288L, 1.2F).setFilter(IDataChecker.and(SubTags.ROCK, SubTags.TOOL));
-	
 	public static final MatCondition sickle_rock = new MatCondition("sickle_rock", "sickle", "Sickle", "%s Sickle").setSize(288L, 288L, 1.0F).setFilter(IDataChecker.and(SubTags.ROCK, SubTags.TOOL));
+	public static final MatCondition decorticating_plate = new MatCondition("decorticating.plate", "decorticatingPlate", "Decorticating Plate", "%s Decorticating Plate").setFilter(IDataChecker.and(SubTags.ROCK, SubTags.TOOL));
+	public static final MatCondition decorticating_stick = new MatCondition("decorticating.stick", "decorticatingStick", "Decorticating Stick", "%s Decorticating Stick").setFilter(IDataChecker.and(SubTags.ROCK, SubTags.TOOL));
 	
 	public static void init() {}
 }

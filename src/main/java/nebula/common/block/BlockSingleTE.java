@@ -168,12 +168,12 @@ implements ITileEntityProvider
 	
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			ItemStack stack)
+			EnumFacing facing, ItemStack stack)
 	{
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof ITB_BlockPlacedBy)
 		{
-			((ITB_BlockPlacedBy) tile).onBlockPlacedBy(state, placer, stack);
+			((ITB_BlockPlacedBy) tile).onBlockPlacedBy(state, placer, Direction.of(facing), stack);
 		}
 	}
 	

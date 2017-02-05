@@ -13,7 +13,7 @@ import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
 import nebula.common.block.IToolableBlock;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Game;
 import nebula.common.util.OreDict;

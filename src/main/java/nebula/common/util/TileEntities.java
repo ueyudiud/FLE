@@ -6,13 +6,13 @@ package nebula.common.util;
 
 import javax.annotation.Nullable;
 
-import nebula.common.data.EnumToolType;
 import nebula.common.inventory.IBasicInventory;
 import nebula.common.item.ITool;
 import nebula.common.stack.AbstractStack;
 import nebula.common.tile.IItemHandlerIO;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.TEBase;
+import nebula.common.tool.EnumToolType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

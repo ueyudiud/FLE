@@ -11,7 +11,6 @@ import farcore.instances.MaterialTextureLoader;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
-import nebula.common.data.EnumToolType;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockDestroyedByPlayer;
@@ -23,6 +22,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ConnectRedstone;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_RedstonePower;
+import nebula.common.tool.EnumToolType;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.IUpdatableTile;
 import nebula.common.tile.TESynchronization;
@@ -152,7 +152,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	}
 	
 	@Override
-	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
+	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		this.material = getRockType(stack);
 		this.facing = Direction.heading(placer);

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import farcore.data.Config;
 import farcore.lib.command.CommandDate;
+import farcore.lib.command.CommandSkill;
 import farcore.lib.oredict.OreDictExt;
 import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
@@ -121,6 +122,7 @@ public class FarCoreSetup
 	public void load(FMLServerStartingEvent event)
 	{
 		event.registerServerCommand(new CommandDate());
+		event.registerServerCommand(new CommandSkill());
 	}
 	
 	@NetworkCheckHandler

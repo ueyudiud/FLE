@@ -8,7 +8,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
 import nebula.common.LanguageManager;
 import nebula.common.block.IToolableBlock;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.OreDict;
 import net.minecraft.block.BlockLog.EnumAxis;

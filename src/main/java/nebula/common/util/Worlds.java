@@ -226,7 +226,7 @@ public class Worlds
 	{
 		if(!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
 		{
-			//			world.setBlockToAir(pos);
+			world.setBlockToAir(pos);
 			return world.isRemote || world.spawnEntity(new EntityFallingBlockExtended(world, pos, dropPos, state, world.getTileEntity(pos)));
 		}
 		else

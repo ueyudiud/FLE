@@ -1,7 +1,7 @@
 package nebula.common.block;
 
-import nebula.common.data.EnumToolType;
 import nebula.common.tile.IToolableTile;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

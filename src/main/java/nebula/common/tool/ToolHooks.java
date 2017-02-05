@@ -1,9 +1,9 @@
-package nebula.common.util;
+package nebula.common.tool;
 
-import static nebula.common.data.EnumToolType.AXE;
-import static nebula.common.data.EnumToolType.PICKAXE;
-import static nebula.common.data.EnumToolType.SHOVEL;
-import static nebula.common.data.EnumToolType.SWORD;
+import static nebula.common.tool.EnumToolType.AXE;
+import static nebula.common.tool.EnumToolType.PICKAXE;
+import static nebula.common.tool.EnumToolType.SHOVEL;
+import static nebula.common.tool.EnumToolType.SWORD;
 import static net.minecraft.block.material.Material.CLAY;
 import static net.minecraft.block.material.Material.GRASS;
 import static net.minecraft.block.material.Material.GROUND;
@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import nebula.common.data.EnumToolType;
+import nebula.common.util.ItemStacks;
+import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -67,14 +68,21 @@ public class ToolHooks
 		L.put(efficiencyToolMap, material, toolTypes);
 	}
 	
-	public static boolean isToolBreakable(IBlockState state, EntityPlayer player)
+	public static void addHarvestableTool(Material material, boolean efficiency, EnumToolType...toolTypes)
 	{
-		return mapMatch(breakableToolMap, state, player);
+		L.put(breakableToolMap, material, toolTypes);//The harvestable tool should be able to break it.
+		if (efficiency) L.put(efficiencyToolMap, material, toolTypes);
+		L.put(harvestableToolMap, material, toolTypes);
 	}
 	
-	public static boolean isToolEffciency(IBlockState state, EntityPlayer player)
+	public static boolean isToolBreakable(IBlockState state, ItemStack stack)
 	{
-		return mapMatch(efficiencyToolMap, state, player);
+		return mapMatch(breakableToolMap, state, stack);
+	}
+	
+	public static boolean isToolEffciency(IBlockState state, ItemStack stack)
+	{
+		return mapMatch(efficiencyToolMap, state, stack);
 	}
 	
 	public static boolean isToolHarvestable(Block block, IBlockAccess world, BlockPos pos, EntityPlayer player)
@@ -84,8 +92,8 @@ public class ToolHooks
 	
 	private static boolean matchHarvestable(IBlockState state, EntityPlayer player)
 	{
-		if (!mapMatch(harvestableToolMap, state, player)) return false;
 		ItemStack stack = player.getHeldItemMainhand();
+		if (!mapMatch(harvestableToolMap, state, stack)) return false;
 		Set<String> set = stack.getItem().getToolClasses(stack);
 		if (set.isEmpty()) return false;
 		//Only get a default level, I don't think there is any tool have different harvest level for different tool type...
@@ -93,12 +101,13 @@ public class ToolHooks
 		return level >= state.getBlock().getHarvestLevel(state);
 	}
 	
-	private static boolean mapMatch(Map<Material, List<EnumToolType>> map, IBlockState state, EntityPlayer player)
+	private static boolean mapMatch(Map<Material, List<EnumToolType>> map, IBlockState state, ItemStack stack)
 	{
 		Material material = state.getMaterial();
 		if(material.isToolNotRequired()) return true;
 		if(!map.containsKey(material)) return false;
 		List<EnumToolType> toolTypes = map.get(material);
-		return Players.matchCurrentToolType(player, L.cast(toolTypes, EnumToolType.class));
+		List<EnumToolType> target = ItemStacks.getCurrentToolType(stack);
+		return L.contain(toolTypes, type -> target.contains(type));
 	}
 }

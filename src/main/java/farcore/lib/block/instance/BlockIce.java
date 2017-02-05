@@ -17,8 +17,8 @@ import farcore.lib.world.WorldPropHandler;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
 import nebula.common.block.IHitByFallenBehaviorBlock;
-import nebula.common.util.L;
 import nebula.common.util.Game;
+import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -37,13 +37,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 {
-	private static final Material ICE = new MaterialIce();
+	public static final Material ICE = new MaterialIce();
 	
 	public BlockIce()
 	{
 		super(FarCore.ID, "ice", ICE);
 		this.slipperiness = 0.98F;
-		this.unharvestableSpeedMultiplier = 800F;//Do you think you can easily break a 1m^3 icy cube?
+		//Do you think you can easily break a 1m^3 icy cube?
+		this.uneffectiveSpeedMultiplier = 1F / 800F;
 		setHardness(0.7F);
 		setTickRandomly(true);
 		EnumBlock.ice.set(this);

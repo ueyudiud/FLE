@@ -143,7 +143,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		super(FarCore.ID, "crop", Material.PLANTS);
 		EnumBlock.crop.set(this);
 		setHardness(0.5F);
-		this.unharvestableSpeedMultiplier = 600F;
+		this.uneffectiveSpeedMultiplier = 1F / 600F;
 	}
 	
 	@Override

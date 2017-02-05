@@ -21,8 +21,8 @@ import farcore.data.MC;
 import farcore.data.MP;
 import farcore.data.Potions;
 import farcore.energy.IEnergyNet;
+import farcore.energy.kinetic.BlockKineticDebug;
 import farcore.energy.kinetic.KineticNet;
-import farcore.energy.thermal.BlockThermalDebug;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreCapabilitiesHandler;
@@ -39,6 +39,7 @@ import farcore.lib.block.instance.BlockOre;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.block.instance.BlockWater;
+import farcore.lib.command.CommandSkill;
 import farcore.lib.fluid.FluidWater;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemDebugger;
@@ -57,7 +58,7 @@ import farcore.lib.tile.instance.TESapling;
 import nebula.client.CreativeTabBase;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.fluid.FluidBase;
-import nebula.common.util.ToolHooks;
+import nebula.common.tool.ToolHooks;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -114,7 +115,7 @@ public class CommonLoader
 		bar.step("Add Items");
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		EnumItem.display_fluid.set(Item.REGISTRY.getObject(new ResourceLocation("nebula", "display.fluid")));
-		new BlockThermalDebug();
+		new BlockKineticDebug();
 		new BlockModelDebug();
 		if(Config.createRock)
 		{
@@ -171,6 +172,8 @@ public class CommonLoader
 		ToolHooks.addEfficiencyTool(Material.ANVIL, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
 		ToolHooks.addEfficiencyTool(BlockOre.ORE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
 		ToolHooks.addEfficiencyTool(BlockLog.LOG, EnumToolTypes.AXE, EnumToolTypes.ADZ, EnumToolTypes.SAW, EnumToolTypes.BOW_SAW);
+		ToolHooks.addEfficiencyTool(BlockIce.ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
+		ToolHooks.addHarvestableTool(BlockIce.ICE, true, EnumToolTypes.CHISEL);
 		//Register languages.
 		bar.step("Register localize file");
 		registerLocal("info.debug.date", "Date : ");
@@ -213,6 +216,7 @@ public class CommonLoader
 				registerLocal("info.material.chemical.formula." + material.name, material.chemicalFormula);
 			}
 		}
+		CommandSkill.addCommandInformations();
 	}
 	
 	public void complete()

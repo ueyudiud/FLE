@@ -4,7 +4,7 @@
 
 package farcore.data;
 
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 
 /**
  * @author ueyudiud

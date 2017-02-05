@@ -206,7 +206,7 @@ public class Client
 		@Override
 		public int[] getProgressColor(ItemStack stack, double progress)
 		{
-			int i = (int) (progress * 255);
+			int i = (int) ((1 - progress) * 255);
 			return new int[]{i, 255 - i, 0};
 		}
 	};

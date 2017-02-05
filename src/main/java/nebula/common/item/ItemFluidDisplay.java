@@ -89,7 +89,7 @@ public class ItemFluidDisplay extends ItemBase
 			list.add(ChatFormatting.BLUE + "Amount : " + amount + "L");
 		}
 		list.add(ChatFormatting.RED + "Temperature : " + fluid.getTemperature() + "K");
-		list.add(ChatFormatting.GREEN + "Viscosity : " + (int) (1E6 / fluid.getViscosity()) / 1000F + "mm/s^2");
+		list.add(ChatFormatting.GREEN + "Viscosity : " + fluid.getViscosity() + "mm/s^2");
 		list.add(ChatFormatting.YELLOW + "State : " + (fluid.isGaseous() ? "Gas" : "Liquid"));
 	}
 	

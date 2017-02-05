@@ -39,7 +39,7 @@ public interface ITilePropertiesAndBehavior
 			else
 				return player.getDigSpeed(state, tile.getPos()) / hardness / 30F;
 		}
-
+		
 		float getBlockHardness(IBlockState state);
 	}
 	
@@ -47,13 +47,13 @@ public interface ITilePropertiesAndBehavior
 	{
 		float getExplosionResistance(Entity exploder, Explosion explosion);
 	}
-
+	
 	public static interface ITP_BoundingBox
 	{
 		AxisAlignedBB getBoundBox(IBlockState state);
 		
 		AxisAlignedBB getCollisionBoundingBox(IBlockState state);
-
+		
 		void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox,
 				List<AxisAlignedBB> collidingBoxes, Entity entity);
 		
@@ -65,7 +65,7 @@ public interface ITilePropertiesAndBehavior
 	{
 		int getComparatorInputOverride(IBlockState state);
 	}
-
+	
 	public static interface ITP_RedstonePower
 	{
 		int getStrongPower(IBlockState blockState, Direction side);
@@ -77,7 +77,7 @@ public interface ITilePropertiesAndBehavior
 			return false;
 		}
 	}
-
+	
 	public static interface ITP_ConnectRedstone
 	{
 		boolean canConnectRedstone(IBlockState state, Direction side);
@@ -112,41 +112,41 @@ public interface ITilePropertiesAndBehavior
 	{
 		boolean canHarvestBlock(EntityPlayer player);
 	}
-
+	
 	public static interface ITP_EnchantPowerBonus
 	{
 		float getEnchantPowerBonus();
 	}
-
+	
 	public static interface ITP_Burn extends ITP_FireSource, ITP_FireSpreadSpeed, ITP_Flammability, ITP_Flammable
 	{
 		boolean canBeBurned();
 		
 		int getFireEncouragement();
-
+		
 		boolean canFireBurnOn(Direction side, boolean isCatchRain);
 	}
-
+	
 	public static interface ITP_FireSource
 	{
 		boolean isFireSource(Direction side);
 	}
-
+	
 	public static interface ITP_Flammable
 	{
 		boolean isFlammable(Direction side);
 	}
-
+	
 	public static interface ITP_FireSpreadSpeed
 	{
 		int getFireSpreadSpeed(Direction side);
 	}
-
+	
 	public static interface ITP_Flammability
 	{
 		int getFlammability(Direction side);
 	}
-
+	
 	public static interface ITP_Drops
 	{
 		List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch);
@@ -159,30 +159,30 @@ public interface ITilePropertiesAndBehavior
 		{
 			return 0;
 		}
-
+		
 		int getLightValue(IBlockState state);
 	}
-
+	
 	public static interface ITB_BlockAdded
 	{
 		void onBlockAdded(IBlockState state);
 	}
-
+	
 	public static interface ITB_BlockPlacedBy
 	{
-		void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack);
+		void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack);
 	}
-
+	
 	public static interface ITB_BlockExploded
 	{
 		void onBlockExploded(Explosion explosion);
 	}
-
+	
 	public static interface ITB_BlockDestroyedByPlayer
 	{
 		void onBlockDestroyedByPlayer(IBlockState state);
 	}
-
+	
 	public static interface ITB_BlockClicked
 	{
 		boolean onBlockClicked(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ);
@@ -212,12 +212,12 @@ public interface ITilePropertiesAndBehavior
 	{
 		void onBlockBreak(IBlockState state);
 	}
-
+	
 	public static interface ITB_EntityCollidedWithBlock
 	{
 		void onEntityCollidedWithBlock(IBlockState state, Entity entity);
 	}
-
+	
 	public static interface ITB_EntityWalk
 	{
 		void onEntityWalk(Entity entity);
@@ -232,7 +232,7 @@ public interface ITilePropertiesAndBehavior
 	{
 		void onEntityLanded(Entity entity);
 	}
-
+	
 	public static interface ITB_PlantGrow
 	{
 		void onPlantGrow(IBlockState state, BlockPos source);
@@ -257,7 +257,7 @@ public interface ITilePropertiesAndBehavior
 		
 		void onHeatChange(Direction direction, double amount);
 	}
-
+	
 	public static interface ITB_AddDestroyEffects
 	{
 		@SideOnly(Side.CLIENT)
@@ -274,11 +274,11 @@ public interface ITilePropertiesAndBehavior
 	{
 		boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles);
 	}
-
+	
 	public static interface ITB_Containerable
 	{
 		Container openContainer(int id, EntityPlayer player);
-
+		
 		@SideOnly(Side.CLIENT)
 		GuiContainer openGUI(int id, EntityPlayer player);
 	}

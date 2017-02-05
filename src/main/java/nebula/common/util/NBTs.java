@@ -145,6 +145,18 @@ public class NBTs
 		nbt.setTag(key, list);
 	}
 	
+	public static <E extends Enum<E>> void setEnum(NBTTagCompound nbt, String key, E value)
+	{
+		if (value == null)
+		{
+			nbt.removeTag(key);
+		}
+		else
+		{
+			nbt.setInteger(key, value.ordinal());
+		}
+	}
+	
 	public static void setFluidStack(NBTTagCompound nbt, String key, FluidStack stack, boolean markEmpty)
 	{
 		if(stack != null)

@@ -7,7 +7,7 @@ import farcore.data.EnumBlock;
 import farcore.lib.tesr.TESRCarvedRock;
 import farcore.lib.tile.instance.TECustomCarvedStone;
 import nebula.common.block.BlockSingleTE;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Game;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

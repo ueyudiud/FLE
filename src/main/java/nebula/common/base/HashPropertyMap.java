@@ -10,50 +10,55 @@ public class HashPropertyMap implements IPropertyMap
 	
 	public HashPropertyMap()
 	{
-		map = new HashMap();
+		this.map = new HashMap();
 	}
 	public HashPropertyMap(int initialCapacity)
 	{
-		map = new HashMap(initialCapacity);
+		this.map = new HashMap(initialCapacity);
 	}
 	public HashPropertyMap(int initialCapacity, float loadFactor)
 	{
-		map = new HashMap(initialCapacity, loadFactor);
+		this.map = new HashMap(initialCapacity, loadFactor);
 	}
 	
 	@Override
 	public <V> V put(IProperty<V> property, V value)
 	{
-		return (V) map.put(property, value);
+		return (V) this.map.put(property, value);
 	}
 	
 	@Override
 	public <V> V get(IProperty<V> property)
 	{
-		return (V) map.get(property);
+		return (V) this.map.get(property);
 	}
 	
 	@Override
 	public <V> V remove(IProperty<V> property)
 	{
-		return (V) map.remove(property);
+		return (V) this.map.remove(property);
+	}
+	
+	public void clear()
+	{
+		this.map.clear();
 	}
 	
 	@Override
 	public boolean contain(IProperty property)
 	{
-		return map.containsKey(property);
+		return this.map.containsKey(property);
 	}
 	
 	@Override
 	public Set<Entry<IProperty, Object>> entrySet()
 	{
-		return map.entrySet();
+		return this.map.entrySet();
 	}
 	
 	@Override
 	public Set<IProperty> keySet()
 	{
-		return map.keySet();
+		return this.map.keySet();
 	}
 }

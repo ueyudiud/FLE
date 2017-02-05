@@ -2,12 +2,12 @@ package fle.core.items.tool;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import farcore.data.MP;
 import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import farcore.lib.util.DamageSourceEntityAttack;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
+import nebula.common.tool.ToolHooks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,7 +25,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class Tool implements IToolStat
 {
 	protected boolean hasHandleColor = false;
-	private EnumToolType type;
+	protected float damagePerBreak = 1.0F;
+	protected float damagePerAttack = 1.0F;
+	protected float damageVsEntity = 1.0F;
+	protected float speedMultiplier = 1.0F;
+	protected float durabilityMultiplier = 1.0F;
+	protected float knockback = 0.0F;
+	protected float[] attackExpandBoxing = null;
+	private final EnumToolType type;
 	
 	protected Tool(EnumToolType type)
 	{
@@ -53,19 +60,19 @@ public abstract class Tool implements IToolStat
 	public float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos,
 			IBlockState block)
 	{
-		return 1.0F;
+		return this.damagePerBreak;
 	}
 	
 	@Override
 	public float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target)
 	{
-		return 1.0F;
+		return this.damagePerAttack;
 	}
 	
 	@Override
-	public float getDamageVsEntity(ItemStack stack)
+	public float getDamageVsEntity(ItemStack stack, Entity entity)
 	{
-		return 1.0F;
+		return this.damageVsEntity;
 	}
 	
 	@Override
@@ -77,19 +84,19 @@ public abstract class Tool implements IToolStat
 	@Override
 	public float getSpeedMultiplier(ItemStack stack)
 	{
-		return 1.0F;
+		return this.speedMultiplier;
 	}
 	
 	@Override
 	public float getMaxDurabilityMultiplier()
 	{
-		return 1.0F;
+		return this.durabilityMultiplier;
 	}
 	
 	@Override
 	public int getToolHarvestLevel(ItemStack stack, String toolClass, Mat baseMaterial)
 	{
-		return this.type.isToolClass(toolClass) ? baseMaterial.getProperty(MP.property_tool).harvestLevel : -1;
+		return this.type.isToolClass(toolClass) ? baseMaterial.toolHarvestLevel : -1;
 	}
 	
 	@Override
@@ -107,13 +114,13 @@ public abstract class Tool implements IToolStat
 	@Override
 	public float getKnockback(ItemStack stack, Mat material, Entity entity)
 	{
-		return 0F;
+		return this.knockback;
 	}
 	
 	@Override
 	public float[] getAttackExpandBoxing(ItemStack stack, Mat material)
 	{
-		return null;
+		return this.attackExpandBoxing != null ? this.attackExpandBoxing.clone() : null;
 	}
 	
 	@Override
@@ -143,6 +150,12 @@ public abstract class Tool implements IToolStat
 	public boolean isWeapon()
 	{
 		return false;
+	}
+	
+	@Override
+	public boolean canBreakEffective(ItemStack stack, IBlockState state)
+	{
+		return ToolHooks.isToolEffciency(state, stack);
 	}
 	
 	@Override

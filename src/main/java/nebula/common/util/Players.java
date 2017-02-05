@@ -4,12 +4,11 @@
 
 package nebula.common.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import nebula.Nebula;
-import nebula.common.data.EnumToolType;
 import nebula.common.item.ITool;
+import nebula.common.tool.EnumToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,23 +32,7 @@ public class Players
 	
 	public static List<EnumToolType> getCurrentToolType(EntityPlayer player)
 	{
-		ItemStack stack = player.getHeldItemMainhand();
-		//		if(stack == null)
-		//		{
-		//			stack = player.getHeldItemOffhand();
-		//		}
-		if(stack == null) return EnumToolType.HAND_USABLE_TOOL;
-		if(stack.getItem() instanceof ITool)
-			return ((ITool) stack.getItem()).getToolTypes(stack);
-		List<EnumToolType> list = new ArrayList();
-		for(EnumToolType toolType : EnumToolType.getToolList())
-		{
-			if(toolType.match(stack))
-			{
-				list.add(toolType);
-			}
-		}
-		return list;
+		return ItemStacks.getCurrentToolType(player.getHeldItemMainhand());
 	}
 	
 	public static boolean matchCurrentToolType(EntityPlayer player, EnumToolType...types)

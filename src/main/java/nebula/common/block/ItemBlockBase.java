@@ -98,8 +98,20 @@ public class ItemBlockBase extends ItemBlock
 			float hitX, float hitY, float hitZ, IBlockState newState)
 	{
 		placeflag = true;
-		boolean flag = super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
+		if (!world.setBlockState(pos, newState, 3))
+		{
+			placeflag = false;
+			return false;
+		}
+		
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() == this.block)
+		{
+			setTileEntityNBT(world, player, pos, stack);
+			this.block.onBlockPlacedBy(world, pos, state, player, side, stack);
+		}
+		
 		placeflag = false;
-		return flag;
+		return true;
 	}
 }

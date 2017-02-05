@@ -7,11 +7,10 @@ import net.minecraft.item.ItemStack;
 
 public class ToolHardHammer extends Tool
 {
-	private float speedMultiplier;
-	
 	public ToolHardHammer(float speedMultiplier)
 	{
 		super(EnumToolTypes.HAMMER_DIGABLE);
+		this.damagePerAttack = 2.0F;
 		this.speedMultiplier = speedMultiplier;
 	}
 	
@@ -19,18 +18,6 @@ public class ToolHardHammer extends Tool
 	public float getAttackSpeed(ItemStack stack, float mutiplier)
 	{
 		return -2.5F + mutiplier * 0.4F;
-	}
-	
-	@Override
-	public float getSpeedMultiplier(ItemStack stack)
-	{
-		return this.speedMultiplier;
-	}
-	
-	@Override
-	public float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target)
-	{
-		return 2.0F;
 	}
 	
 	@Override

@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package nebula.common.data;
+package nebula.common.tool;
 
 import java.util.List;
 import java.util.Set;

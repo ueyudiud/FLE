@@ -194,8 +194,8 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		super(modid, name, materialIn, mat, soil);
 		setTickRandomly(true);
-		this.unharvestableSpeedMultiplier = 150F;
-		this.harvestableSpeedMultiplier = 20F;
+		this.uneffectiveSpeedMultiplier = 1F / 150F;
+		this.effectiveSpeedMultiplier = 1F / 20F;
 		setCreativeTab(CT.tabTerria);
 	}
 	
@@ -203,8 +203,8 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn, mat, soil);
 		setTickRandomly(true);
-		this.unharvestableSpeedMultiplier = 150F;
-		this.harvestableSpeedMultiplier = 20F;
+		this.uneffectiveSpeedMultiplier = 150F;
+		this.effectiveSpeedMultiplier = 20F;
 		setCreativeTab(CT.tabTerria);
 	}
 	
@@ -357,9 +357,8 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			ItemStack stack)
+			EnumFacing facing, ItemStack stack)
 	{
-		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 		worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 	}
 	

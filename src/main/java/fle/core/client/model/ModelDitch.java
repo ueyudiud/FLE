@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 
 import farcore.lib.material.Mat;
 import fle.api.client.CompactModel;
-import fle.api.tile.IDitchTile;
+import fle.api.ditch.DitchBlockHandler;
 import fle.core.tile.ditchs.TEDitch;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.util.CoordTransformer;
@@ -49,7 +49,7 @@ public class ModelDitch extends CompactModel
 	public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 	{
 		Mat material = Mat.material(stack.getItemDamage());
-		return genQuads(IDitchTile.DitchBlockHandler.getFactory(material).getMaterialIcon(material), (byte) 0x11);
+		return genQuads(DitchBlockHandler.getFactory(material).getMaterialIcon(material), (byte) 0x11);
 	}
 	
 	private static final float fPixel = 0.0625F;

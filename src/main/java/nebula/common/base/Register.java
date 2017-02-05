@@ -623,6 +623,6 @@ public class Register<T> implements IRegister<T>
 				key.append(string);
 			}
 		}
-		return "reg{" + key + "}";
+		return "{" + key + "}";
 	}
 }

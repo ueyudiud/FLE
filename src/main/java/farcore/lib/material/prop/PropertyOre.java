@@ -4,8 +4,8 @@ import java.util.Random;
 
 import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.tile.instance.TEOre;
-import nebula.common.data.EnumToolType;
 import nebula.common.tile.IToolableTile;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;

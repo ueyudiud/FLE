@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 
@@ -46,6 +47,7 @@ public enum Direction implements IStringSerializable
 	};
 	
 	public static final int[] OPPISITE = {1, 0, 3, 2, 5, 4, 7, 6, 8};
+	private static final int[] POSITIVE = {1, 1, 3, 3, 5, 5, 7, 7, 8};
 	public static final byte T_2D = 0x0;
 	public static final byte T_3D = 0x1;
 	public static final byte T_4D = 0x2;
@@ -110,6 +112,7 @@ public enum Direction implements IStringSerializable
 	public final char chr;
 	public final boolean horizontal;
 	public final int horizontalOrdinal;
+	public final Axis axis;
 	
 	Direction(int x, int y, int z, int t, int h)
 	{
@@ -125,11 +128,32 @@ public enum Direction implements IStringSerializable
 		this.chr = name().toLowerCase().charAt(0);
 		this.horizontal = (x | z) != 0;
 		this.horizontalOrdinal = h;
+		this.axis = x != 0 ? Axis.X : y != 0 ? Axis.Y : z != 0 ? Axis.Z : null;
 	}
 	
 	public Direction getOpposite()
 	{
 		return this == Q ? Q : DIRECTIONS_3D[ordinal() ^ 1];
+	}
+	
+	public Direction getPositive()
+	{
+		return values()[POSITIVE[ordinal()]];
+	}
+	
+	public Direction getNegative()
+	{
+		return values()[OPPISITE[POSITIVE[ordinal()]]];
+	}
+	
+	public boolean isPositive()
+	{
+		return this != Q && POSITIVE[ordinal()] == ordinal();
+	}
+	
+	public boolean isNegative()
+	{
+		return this != Q && POSITIVE[ordinal()] == OPPISITE[ordinal()];
 	}
 	
 	public Direction getRotation4D(Direction axis)

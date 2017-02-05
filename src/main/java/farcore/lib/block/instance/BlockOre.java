@@ -17,7 +17,7 @@ import nebula.client.util.Renders;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSingleTE;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

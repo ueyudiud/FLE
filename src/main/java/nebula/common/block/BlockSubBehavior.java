@@ -9,9 +9,9 @@ import java.util.Random;
 
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import nebula.Log;
-import nebula.common.data.EnumToolType;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.tile.IToolableTile;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.MapColor;
@@ -617,11 +617,11 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			ItemStack stack)
+			EnumFacing facing, ItemStack stack)
 	{
 		try
 		{
-			getBehavior(state).onBlockPlacedBy(this, state, worldIn, pos, placer, stack);
+			getBehavior(state).onBlockPlacedBy(this, state, worldIn, pos, placer, facing, stack);
 		}
 		catch (Exception exception)
 		{

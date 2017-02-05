@@ -1,6 +1,10 @@
 package farcore.lib.skill;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import nebula.common.LanguageManager;
+import nebula.common.util.NBTs;
+import nebula.common.util.Strings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
@@ -46,52 +50,39 @@ public class SkillAbstract implements ISkill
 	@Override
 	public int level(EntityPlayer player)
 	{
-		NBTTagCompound tag = player.getEntityData();
-		if(tag.hasKey("skill"))
-			return tag.getCompoundTag("skill").getCompoundTag(this.name).getByte("lv");
-		return 0;
+		return NBTs.getCompound(player.getEntityData(), "skill", false).getCompoundTag(this.name).getByte("lv");
+	}
+	
+	private float getExperenceNeed(int lvl)
+	{
+		return (float) Math.exp(lvl * this.expIncrease) * this.expBase;
 	}
 	
 	@Override
 	public void using(EntityPlayer player, float exp)
 	{
 		if(exp == 0) return;
-		NBTTagCompound tag = player.getEntityData();
-		if(!tag.hasKey("skill"))
-		{
-			tag.setTag("skill", new NBTTagCompound());
-		}
-		tag = tag.getCompoundTag("skill");
-		NBTTagCompound tag1;
-		if(!tag.hasKey(this.name))
-		{
-			tag1 = new NBTTagCompound();
-			tag.setTag(this.name, tag1);
-		}
-		else
-		{
-			tag1 = tag.getCompoundTag(this.name);
-		}
-		byte level = tag1.getByte("lv");
+		NBTTagCompound tag = NBTs.getCompound(NBTs.getCompound(player.getEntityData(), "skill", true), this.name, true);
+		byte level = tag.getByte("lv");
 		if(level < 0)
 		{
 			level = 0;
 		}
 		if(level < this.maxLevel)
 		{
-			float e = tag1.getFloat("exp");
-			float eNeed = (float) Math.exp(level * this.expIncrease) * this.expBase;
+			float e = tag.getFloat("exp");
+			float eNeed = getExperenceNeed(level);
 			e += exp;
 			if(e >= eNeed)
 			{
-				tag1.setByte("lv", (byte) (level + 1));
-				tag1.setFloat("exp", e - eNeed);
+				tag.setByte("lv", (byte) (level + 1));
+				tag.setFloat("exp", e - eNeed);
 				player.sendMessage(new TextComponentString(
 						LanguageManager.translateToLocal("skill.upgrade.info", getLocalName(), level, level + 1)));
 			}
 			else
 			{
-				tag1.setFloat("exp", e);
+				tag.setFloat("exp", e);
 			}
 		}
 	}
@@ -116,5 +107,31 @@ public class SkillAbstract implements ISkill
 			tag1 = tag.getCompoundTag(this.name);
 		}
 		tag1.setByte("lv", (byte) level);
+	}
+	
+	@Override
+	public String getSkillInfo(EntityPlayer player)
+	{
+		NBTTagCompound tag = NBTs.getCompound(player.getEntityData(), "skill", false).getCompoundTag(this.name);
+		byte level = tag.getByte("lv");
+		if(level < 0)
+		{
+			level = 0;
+		}
+		String expInfo;
+		if(level < this.maxLevel)
+		{
+			float e = tag.getFloat("exp");
+			float eNeed =getExperenceNeed(level);
+			expInfo = "exp" + ChatFormatting.GREEN + Strings.getDecimalNumber(e, 1) + ChatFormatting.WHITE + "/" + Strings.getDecimalNumber(eNeed, 1);
+		}
+		else
+		{
+			expInfo = ChatFormatting.GREEN + "maxlevel";
+		}
+		return String.format("%s%s%s lv%s%d%s/%d %s",
+				ChatFormatting.ITALIC.toString(), getLocalName(), ChatFormatting.RESET.toString(),
+				ChatFormatting.GOLD.toString(), level, ChatFormatting.WHITE.toString(), (int) this.maxLevel,
+				expInfo);
 	}
 }

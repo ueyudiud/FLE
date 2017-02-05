@@ -1,10 +1,8 @@
 package nebula.common;
 
 import nebula.common.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
-import nebula.common.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
 import nebula.common.util.Players;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -15,21 +13,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class NebulaItemHandler
 {
-	@SubscribeEvent
-	public void getDigSpeed(BreakSpeed event)
-	{
-		if(event.getEntityPlayer() == null) return;
-		ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
-		if(stack == null)
-		{
-			stack = event.getEntityPlayer().getHeldItemOffhand();
-		}
-		else if(stack.getItem() instanceof IIP_DigSpeed)
-		{
-			event.setNewSpeed(((IIP_DigSpeed) stack.getItem()).replaceDigSpeed(stack, event));
-		}
-	}
-	
 	@SubscribeEvent
 	public void onHarvestBlock(HarvestDropsEvent event)
 	{

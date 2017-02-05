@@ -4,8 +4,8 @@ import javax.annotation.Nullable;
 
 import farcore.data.EnumPhysicalDamageType;
 import farcore.lib.material.Mat;
-import nebula.common.data.EnumToolType;
 import nebula.common.item.IItemCapabilityProvider;
+import nebula.common.tool.EnumToolType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,8 +28,24 @@ public interface IToolStat extends IItemCapabilityProvider
 	
 	void onToolCrafted(ItemStack stack, EntityPlayer player);
 	
+	/**
+	 * Get causes damage per digging block.
+	 * @param stack
+	 * @param user
+	 * @param world
+	 * @param pos
+	 * @param block
+	 * @return
+	 */
 	float getToolDamagePerBreak(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block);
 	
+	/**
+	 * Get causes damage per attack entity.
+	 * @param stack
+	 * @param user
+	 * @param target
+	 * @return
+	 */
 	float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target);
 	
 	/**
@@ -38,12 +54,7 @@ public interface IToolStat extends IItemCapabilityProvider
 	 * @param entity
 	 * @return
 	 */
-	default float getDamageVsEntity(ItemStack stack, Entity entity)
-	{
-		return getDamageVsEntity(stack);
-	}
-	
-	float getDamageVsEntity(ItemStack stack);
+	float getDamageVsEntity(ItemStack stack, Entity entity);
 	
 	float getAttackSpeed(ItemStack stack, float mutiplier);
 	
@@ -55,14 +66,30 @@ public interface IToolStat extends IItemCapabilityProvider
 	
 	int getToolHarvestLevel(ItemStack stack, String toolClass, Mat baseMaterial);
 	
+	boolean canBreakEffective(ItemStack stack, IBlockState state);
+	
 	boolean canHarvestDrop(ItemStack stack, IBlockState state);
 	
 	float getMiningSpeed(ItemStack stack, EntityLivingBase user, World world, BlockPos pos, IBlockState block, float speedBase);
 	
+	/**
+	 * Get damage source.
+	 * @param user
+	 * @param target
+	 * @return
+	 */
 	DamageSource getDamageSource(EntityLivingBase user, Entity target);
 	
+	/**
+	 * Get this tool can block as sword.
+	 * @return
+	 */
 	boolean canBlock();
 	
+	/**
+	 * Is tool shootable.
+	 * @return
+	 */
 	boolean isShootable();
 	
 	/**
@@ -78,5 +105,9 @@ public interface IToolStat extends IItemCapabilityProvider
 	@SideOnly(Side.CLIENT)
 	int getColor(ItemStack stack, int pass);
 	
+	/**
+	 * Is tool is a weapon.
+	 * @return
+	 */
 	boolean isWeapon();
 }

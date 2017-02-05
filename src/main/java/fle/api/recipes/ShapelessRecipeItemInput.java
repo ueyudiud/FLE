@@ -4,8 +4,8 @@ import java.util.List;
 
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
 import nebula.common.base.ArrayIterator;
-import nebula.common.data.EnumToolType;
 import nebula.common.item.ITool;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;

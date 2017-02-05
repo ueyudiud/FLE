@@ -9,5 +9,5 @@ import nebula.common.util.Direction;
  */
 public interface IKineticAccess
 {
-	void sendEnergyTo(Direction direction, double speed, double torque);
+	void sendEnergyTo(Direction direction, KineticPackage pkg);
 }

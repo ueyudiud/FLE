@@ -6,19 +6,20 @@ package nebula.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
 import nebula.common.block.IToolableBlock;
-import nebula.common.data.EnumToolType;
 import nebula.common.item.ITool;
 import nebula.common.nbt.NBTTagCompoundEmpty;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.ArrayStack;
 import nebula.common.stack.BaseStack;
 import nebula.common.stack.OreStack;
+import nebula.common.tool.EnumToolType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -186,16 +187,21 @@ public class ItemStacks
 	 */
 	public static List<EnumToolType> getCurrentToolType(@Nullable ItemStack stack)
 	{
-		if(stack == null)
-			return EnumToolType.HAND_USABLE_TOOL;
+		if(stack == null) return EnumToolType.HAND_USABLE_TOOL;
 		if(stack.getItem() instanceof ITool)
 			return ((ITool) stack.getItem()).getToolTypes(stack);
-		List<EnumToolType> list = new ArrayList();
-		for(EnumToolType toolType : EnumToolType.getToolList())
+		Set<String> toolClasses = stack.getItem().getToolClasses(stack);
+		List<EnumToolType> list = new ArrayList<>();
+		for (String toolClass : toolClasses)
 		{
-			if(toolType.match(stack))
+			EnumToolType toolType = EnumToolType.getToolList().get(toolClass);
+			if (toolType != null)
 			{
 				list.add(toolType);
+			}
+			else //If the tool type does not present, create a new tool type.
+			{
+				list.add(new EnumToolType(toolClass, Strings.validateOre(true, toolClass)));
 			}
 		}
 		return list;

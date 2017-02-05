@@ -5,12 +5,12 @@ import java.util.List;
 
 import fle.api.recipes.ShapedRecipeItemInput.RecipeItemInputConfig;
 import nebula.common.base.ArrayIterator;
-import nebula.common.data.EnumToolType;
 import nebula.common.item.ITool;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.ArrayStack;
 import nebula.common.stack.BaseStack;
 import nebula.common.stack.OreStack;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.block.Block;

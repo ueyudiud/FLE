@@ -5,8 +5,8 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import farcore.lib.tile.instance.TEOre;
-import nebula.common.data.EnumToolType;
 import nebula.common.tile.IToolableTile;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;

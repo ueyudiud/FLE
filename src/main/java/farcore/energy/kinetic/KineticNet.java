@@ -13,6 +13,7 @@ import nebula.Log;
 import nebula.Nebula;
 import nebula.common.base.IntegerArray;
 import nebula.common.util.Direction;
+import nebula.common.util.L;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -23,7 +24,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	private volatile boolean isUpdating = false;
 	
 	private final Map<BlockPos, IKineticHandler> map = new HashMap();
-	private final Map<IntegerArray, double[]> cachedSend = new HashMap();
+	private final Map<IntegerArray, KineticPackage> cachedSend = new HashMap();
 	private final List<IntegerArray> cachedSended = new ArrayList();
 	private IKineticHandler cachedTile;
 	private BlockPos cachedPos = BlockPos.ORIGIN;
@@ -97,55 +98,58 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 			}
 			this.cachedTile = null;
 			//Send kinetic energy to other tile.
-			Map<IntegerArray, double[]> sends = new HashMap();
+			Map<IntegerArray, KineticPackage> sends = new HashMap();
 			Direction direction;
 			do
 			{
 				sends.clear();
 				sends.putAll(this.cachedSend);
 				this.cachedSend.clear();
-				for(Entry<IntegerArray, double[]> entry : sends.entrySet())
+				for(Entry<IntegerArray, KineticPackage> entry : sends.entrySet())
 				{
 					int[] info = entry.getKey().array;
 					this.cachedPos = new BlockPos(info[0], info[1], info[2]);
 					IKineticHandler source = this.map.get(this.cachedPos);
 					direction = Direction.DIRECTIONS_3D[info[3]];
 					this.cachedPos = direction.offset(this.cachedPos);
-					double[] pkg = entry.getValue();
+					KineticPackage pkg = entry.getValue();
 					if(this.map.containsKey(this.cachedPos))
 					{
 						IKineticHandler tile = this.map.get(this.cachedPos);
 						if(!tile.canAccessKineticEnergyFromDirection(direction.getOpposite()))
 						{
 							this.cachedTile = source;
-							source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
+							source.emitKineticEnergy(this, null, direction, pkg);
 						}
-						else if(!tile.isRotatable(direction.getOpposite(), pkg[0], pkg[1]))
+						else if(!tile.isRotatable(direction.getOpposite(), pkg))
 						{
 							this.cachedTile = source;
-							source.onStuck(direction, pkg[0], pkg[1]);
-							source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
+							source.onStuck(direction, pkg);
+							source.emitKineticEnergy(this, tile, direction, pkg);
 						}
 						else
 						{
-							double speed = pkg[0];
+							double speed = pkg.speed;
 							this.cachedTile = tile;
-							double send = tile.receiveKineticEnergy(this, direction.getOpposite(), pkg[0], pkg[1]);
+							double send = tile.receiveKineticEnergy(this, source, direction.getOpposite(), pkg);
 							this.cachedTile = source;
-							if(speed != send)
+							if(!L.similar(speed, send))
 							{
-								source.onStuck(direction, Math.abs(send - speed), pkg[1]);
+								pkg.setSpeed(pkg.speed - send);
+								source.onStuck(direction, pkg);
+								pkg.setSpeed(send);
 							}
-							source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
+							source.emitKineticEnergy(this, tile, direction, pkg);
 						}
 					}
 					else
 					{
 						this.cachedTile = source;
-						source.emitKineticEnergy(this, direction, pkg[0], pkg[1]);
+						source.emitKineticEnergy(this, null, direction, pkg);
 					}
 					this.cachedSended.add(entry.getKey());
 				}
+				this.cachedTile = null;
 			}
 			//Some tile maybe is a kinetic conductor, looped check.
 			while (!this.cachedSend.isEmpty());
@@ -195,9 +199,9 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	}
 	
 	@Override
-	public void sendEnergyTo(Direction direction, double speed, double torque)
+	public void sendEnergyTo(Direction direction, KineticPackage pkg)
 	{
-		if(this.world == null || this.cachedTile == null || !this.isUpdating || torque <= 0) return;
+		if(this.world == null || this.cachedTile == null || !this.isUpdating || !pkg.isUsable()) return;
 		BlockPos pos = this.cachedTile.pos();
 		IntegerArray array = new IntegerArray(new int[]{
 				pos.getX(),
@@ -205,7 +209,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 				pos.getZ(),
 				direction.ordinal()});
 		if(this.cachedSended.contains(array)) return;
-		this.cachedSend.put(array, new double[]{speed, torque});
+		this.cachedSend.put(array, pkg);
 	}
 	
 	@Override

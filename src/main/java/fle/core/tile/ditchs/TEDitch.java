@@ -11,6 +11,8 @@ import java.util.List;
 import farcore.handler.FarCoreSynchronizationHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
+import fle.api.ditch.DitchBlockHandler;
+import fle.api.ditch.DitchFactory;
 import fle.api.tile.IDitchTile;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
@@ -76,7 +78,7 @@ IDebugableTile, INetworkedSyncTile
 	public void setMaterial(Mat material)
 	{
 		this.material = material;
-		this.factory = IDitchTile.DitchBlockHandler.getFactory(material);
+		this.factory = DitchBlockHandler.getFactory(material);
 		this.tank = this.factory.apply(this);
 	}
 	
@@ -99,7 +101,7 @@ IDebugableTile, INetworkedSyncTile
 	}
 	
 	@Override
-	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
+	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		setMaterial(Mat.material(stack.getItemDamage()));
 	}

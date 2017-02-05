@@ -13,18 +13,20 @@ import java.util.List;
 import farcore.FarCoreRegistry;
 import farcore.data.M;
 import farcore.lib.material.Mat;
-import fle.api.tile.IDitchTile.DitchBlockHandler;
+import fle.api.ditch.DitchBlockHandler;
 import fle.core.client.model.ModelDitch;
 import fle.core.tile.ditchs.TEDitch;
 import nebula.client.CreativeTabBase;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.OrderModelLoader;
+import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSingleTE;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -87,6 +89,30 @@ public class BlockDitch extends BlockSingleTE
 		for(Mat material : Mat.filt(DitchBlockHandler.HANDLER, true))
 		{
 			list.add(new ItemStack(itemIn, 1, material.id));
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip,
+			boolean advanced)
+	{
+		super.addUnlocalizedInfomation(stack, player, tooltip, advanced);
+		if (tooltip.isSneakDown())
+		{
+			Mat material = Mat.material(stack.getItemDamage());
+			try
+			{
+				DitchBlockHandler.getFactory(material).addTooltip(material, tooltip);
+			}
+			catch (Exception exception)
+			{
+				tooltip.addLocal("Error Ditch Inforamtion!");
+			}
+		}
+		else
+		{
+			tooltip.addShiftClickInfo();
 		}
 	}
 	

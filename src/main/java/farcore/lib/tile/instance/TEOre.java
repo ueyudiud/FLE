@@ -15,7 +15,6 @@ import farcore.lib.block.instance.BlockRock;
 import farcore.lib.block.instance.ItemOre;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
-import nebula.common.data.EnumToolType;
 import nebula.common.network.IPacket;
 import nebula.common.network.packet.PacketTEAsk;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
@@ -31,6 +30,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Burn;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
+import nebula.common.tool.EnumToolType;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.IUpdatableTile;
 import nebula.common.tile.TEStatic;
@@ -222,7 +222,7 @@ ITP_Drops, IToolableTile
 	}
 	
 	@Override
-	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack)
+	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		if(stack.hasTagCompound())
 		{

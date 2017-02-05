@@ -11,6 +11,8 @@ public interface IPropertyMap
 	
 	<V> V remove(IProperty<V> property);
 	
+	void clear();
+	
 	boolean contain(IProperty property);
 	
 	Set<Entry<IProperty, Object>> entrySet();

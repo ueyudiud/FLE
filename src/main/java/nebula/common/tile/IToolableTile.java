@@ -1,6 +1,6 @@
 package nebula.common.tile;
 
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.world.ICoord;
 import net.minecraft.entity.player.EntityPlayer;

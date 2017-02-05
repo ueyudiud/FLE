@@ -81,7 +81,7 @@ public class UnlocalizedList
 		else
 		{
 			int i = 1;
-			while((val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg + "." + i)) != null)
+			while((val = LanguageManager.translateToLocalWithIgnoreUnmapping(arg + "." + i++)) != null)
 			{
 				this.postList.add(val);
 			}

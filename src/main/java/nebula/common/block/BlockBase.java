@@ -8,10 +8,10 @@ import nebula.Log;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
+import nebula.common.tool.ToolHooks;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.L;
-import nebula.common.util.ToolHooks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -60,8 +60,8 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public final String blockName;
 	protected final Item item;
 	
-	protected float harvestableSpeedMultiplier = 30F;
-	protected float unharvestableSpeedMultiplier = 100F;
+	protected float effectiveSpeedMultiplier = 1 / 30F;
+	protected float uneffectiveSpeedMultiplier = 1F / 100F;
 	
 	public BlockBase(String name, Material materialIn)
 	{
@@ -185,6 +185,10 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 					spawnAsEntity(worldIn, pos, item);
 				}
 			}
+			else
+			{
+				
+			}
 		}
 		else if(!onBlockHarvest(worldIn, pos, state, player, false))
 		{
@@ -198,7 +202,6 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 			{
 				spawnAsEntity(worldIn, pos, item);
 			}
-			//			dropBlockAsItem(worldIn, pos, state, i);
 			this.harvesters.set(null);
 			this.thread1.remove();
 		}
@@ -227,15 +230,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
 		float hardness = state.getBlockHardness(worldIn, pos);
-		if (hardness < 0.0F)
-			return 0.0F;
-		
-		if (!canBreakBlock(worldIn, pos, player))
-			return 0F;
-		else if(!canBreakEffective(state, player, worldIn, pos))
-			return player.getDigSpeed(state, pos) / hardness / this.unharvestableSpeedMultiplier;
-		else
-			return player.getDigSpeed(state, pos) / hardness / this.harvestableSpeedMultiplier;
+		return hardness < 0.0F || !canBreakBlock(worldIn, pos, player) ? 0F
+				: player.getDigSpeed(state, pos) / hardness *
+				(!canBreakEffective(state, player, worldIn, pos) ? this.uneffectiveSpeedMultiplier : this.effectiveSpeedMultiplier);
 	}
 	
 	/**
@@ -247,7 +244,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	 */
 	public boolean canBreakBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
-		return ToolHooks.isToolBreakable(world.getBlockState(pos), player);
+		return ToolHooks.isToolBreakable(world.getBlockState(pos), player.getHeldItemMainhand());
 	}
 	
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
@@ -274,7 +271,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public final List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		return L.castToArrayListOrWrap(getDrops(world, pos, state, world.getTileEntity(pos), fortune, false));
+		return getDrops(world, pos, state, world.getTileEntity(pos), fortune, false);
 	}
 	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
@@ -308,7 +305,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
 	{
-		addUnlocalizedInfomation(stack, player, new UnlocalizedList(tooltip), advanced);
+		UnlocalizedList list = new UnlocalizedList(tooltip);
+		addUnlocalizedInfomation(stack, player, list, advanced);
+		list.list();
 	}
 	
 	protected void addUnlocalizedInfomation(ItemStack stack, EntityPlayer player, UnlocalizedList tooltip, boolean advanced)
@@ -386,5 +385,20 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
 		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, stackIn.getItem().getMetadata(stackIn), placer, stackIn);
+	}
+	
+	@Override
+	@Deprecated
+	public final void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
+			ItemStack stack)
+	{
+		// TODO Auto-generated method stub
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+	}
+	
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, EnumFacing facing,
+			ItemStack stack)
+	{
+		onBlockPlacedBy(worldIn, pos, state, placer, stack);
 	}
 }

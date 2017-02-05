@@ -348,7 +348,6 @@ public class LightFixLocal implements Runnable
 		return this.pos.setPos(this.x + ofX, this.y + ofY, this.z + ofZ);
 	}
 	
-	
 	public void tickLightUpdate(World world)
 	{
 		int dim = world.provider.getDimension();

@@ -15,7 +15,20 @@ import nebula.Nebula;
  */
 public class Strings
 {
-	static final DecimalFormat format1 = new DecimalFormat("##0.0%");
+	static final DecimalFormat FORMAT1;
+	static final long[] OFFSET;
+	
+	static
+	{
+		FORMAT1 = new DecimalFormat("##0.0%");
+		OFFSET = new long[16];
+		long v = 1;
+		for (int i = 0; i < OFFSET.length; ++i)
+		{
+			OFFSET[i] = v;
+			v *= 10;
+		}
+	}
 	
 	public static String locale()
 	{
@@ -54,37 +67,71 @@ public class Strings
 	public static String upcaseFirst(@Nullable String name)
 	{
 		String s = validate(name);
-		if(s.length() == 0) return s;
-		char chr = name.charAt(0);
-		String sub = name.substring(1);
-		return Character.toString(Character.toUpperCase(chr)) + sub;
+		if(s.length() == 0) return "";
+		char[] array = s.toCharArray();
+		array[0] = Character.toUpperCase(array[0]);
+		return new String(array);
 	}
 	
-	public static String validateOre(boolean upperFirst, String name)
+	/**
+	 * Format a name use '_', '@', ' ', etc to split word to use Upper case character
+	 * to split word.<p>
+	 * The name will be trim before format.<p>
+	 * Return "" if input name is null.
+	 * @param upperFirst Should first character be upper case.
+	 * @param name The formated name.
+	 * @return The validate name.
+	 */
+	public static String validateOre(boolean upperFirst, @Nullable String name)
 	{
 		String string = validate(name);
-		String ret = "";
+		if (string.length() == 0) return string;
 		boolean shouldUpperCase = upperFirst;
-		for(char chr : string.toCharArray())
-			if(chr == '_' || chr == ' ' ||
-			chr == '-' || chr == '$' ||
-			chr == '@' || chr == ' ')
+		char[] array = string.toCharArray();
+		int j = -1;
+		for (int i = 0; i < array.length; ++i)
+		{
+			char place = ' ';
+			switch (array[i])
+			{
+			case '_' :
+			case ' ' :
+			case '-' :
+			case '$' :
+			case '@' :
+				if (array.length == i + 1) break;
+				place = ' ';
+				break;
+			default:
+				place = array[i];
+				++j;
+				break;
+			}
+			if (place == ' ')
 			{
 				shouldUpperCase = true;
 				continue;
 			}
-			else if(shouldUpperCase)
-			{
-				ret += Character.toString(Character.toUpperCase(chr));
-				shouldUpperCase = false;
-			}
 			else
 			{
-				ret += Character.toString(chr);
+				if (shouldUpperCase)
+				{
+					place = Character.toUpperCase(place);
+					shouldUpperCase = false;
+				}
+				array[j] = place;
 			}
-		return ret;
+		}
+		return new String(array, 0, j + 1);
 	}
 	
+	/**
+	 * For split string may throw an exception if split key is not exist in split string,
+	 * return the full string if it is no words exist.
+	 * @param str The split string.
+	 * @param split The split character.
+	 * @return
+	 */
 	public static String[] split(@Nullable String str, char split)
 	{
 		if(str == null) return new String[0];
@@ -94,11 +141,21 @@ public class Strings
 			return new String[]{str};
 	}
 	
+	/**
+	 * Format a double value as a progress.
+	 * @param value
+	 * @return
+	 */
 	public static String progress(double value)
 	{
-		return format1.format(value);
+		return FORMAT1.format(value);
 	}
 	
+	/**
+	 * Format a value to ordinal number.
+	 * @param value
+	 * @return
+	 */
 	public static String toOrdinalNumber(int value)
 	{
 		if(value < 0)
@@ -147,8 +204,6 @@ public class Strings
 			return value / 1000L + "." + value % 1000L / 10L + "k";
 		return String.valueOf(value);
 	}
-	
-	private static final long[] OFFSET = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 	
 	public static String getDecimalNumber(double value, int digit)
 	{

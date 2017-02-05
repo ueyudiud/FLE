@@ -5,8 +5,11 @@
 package nebula.common;
 
 import nebula.Nebula;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
 import nebula.common.network.packet.PacketBlockData;
 import nebula.common.util.Sides;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -15,6 +18,19 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
  */
 public class NebulaPlayerHandler
 {
+	@SubscribeEvent
+	public void getDigSpeed(BreakSpeed event)
+	{
+		if(event.getEntityPlayer() == null) return;
+		
+		ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
+		
+		if (stack.getItem() instanceof IIP_DigSpeed)
+		{
+			event.setNewSpeed(((IIP_DigSpeed) stack.getItem()).replaceDigSpeed(stack, event));
+		}
+	}
+	
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
 	{

@@ -25,7 +25,7 @@ public interface IKineticHandler extends ICoord
 	 * @param torque The torque from source.
 	 * @return
 	 */
-	boolean isRotatable(Direction direction, double speed, double torque);
+	boolean isRotatable(Direction direction, KineticPackage pkg);
 	
 	/**
 	 * Emit kinetic energy to target.
@@ -34,7 +34,7 @@ public interface IKineticHandler extends ICoord
 	 * @param speed
 	 * @param torque
 	 */
-	void emitKineticEnergy(IKineticAccess access, Direction direction, double speed, double torque);
+	void emitKineticEnergy(IKineticAccess access, IKineticHandler destination, Direction direction, KineticPackage pkg);
 	
 	/**
 	 * Recieve kinetic energy from target.
@@ -44,7 +44,7 @@ public interface IKineticHandler extends ICoord
 	 * @param torque
 	 * @return
 	 */
-	double receiveKineticEnergy(IKineticAccess access, Direction direction, double speed, double torque);
+	double receiveKineticEnergy(IKineticAccess access, IKineticHandler source, Direction direction, KineticPackage pkg);
 	
 	/**
 	 * Called when energy fail to send to next kinetic handler.
@@ -52,7 +52,7 @@ public interface IKineticHandler extends ICoord
 	 * @param speed
 	 * @param torque
 	 */
-	void onStuck(Direction direction, double speed, double torque);
+	void onStuck(Direction direction, KineticPackage pkg);
 	
 	/**
 	 * Called when kinetic access pre update.

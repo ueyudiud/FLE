@@ -42,7 +42,7 @@ public class ToolSpear extends Tool
 	}
 	
 	@Override
-	public float getDamageVsEntity(ItemStack stack)
+	public float getDamageVsEntity(ItemStack stack, Entity entity)
 	{
 		return 2.0F;
 	}

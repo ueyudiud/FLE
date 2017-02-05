@@ -9,9 +9,9 @@ import static net.minecraftforge.fml.common.registry.EntityRegistry.registerModE
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -100,7 +100,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String MODID = "nebula";
 	public static final String NAME = "Nebula";
-	public static final String VERSION = "0.4";
+	public static final String VERSION = "0.5";
 	
 	public static final String INNER_RENDER = "nebula_inner";
 	
@@ -151,18 +151,17 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	{
 		/**
 		 * The Far Core mod used Java8. There are method
-		 * is added in Java8, so I use a method exist since
-		 * Java8.
+		 * is added in Java8, so it is checked by a type
+		 * exist since Java8.
 		 */
 		Log.info("Nebula start check java version...");
 		try
 		{
-			Map map = new HashMap();
-			map.getOrDefault("", "");
+			Function function = arg -> null;
 		}
 		catch(Exception exception)
 		{
-			throw new RuntimeException("Java version is out of date, this mod is suggested use java 8 to run.", exception);
+			throw new RuntimeException("Java version is out of date, please use java 8 to launch.", exception);
 		}
 		/**
 		 * Coded checking.
@@ -203,6 +202,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		}
 		catch (Exception exception)
 		{
+			throw exception;
 		}
 		this.lang.read();
 		
@@ -429,7 +429,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 				nbttagcompound1.setInteger("x", nextticklistentry.position.getX());
 				nbttagcompound1.setInteger("y", nextticklistentry.position.getY());
 				nbttagcompound1.setInteger("z", nextticklistentry.position.getZ());
-				nbttagcompound1.setInteger("t", (int)(nextticklistentry.scheduledTime - j));
+				nbttagcompound1.setInteger("t", (int) (nextticklistentry.scheduledTime - j));
 				nbttagcompound1.setInteger("p", nextticklistentry.priority);
 				nbttaglist3.appendTag(nbttagcompound1);
 			}

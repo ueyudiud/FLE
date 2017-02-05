@@ -40,9 +40,11 @@ import nebula.common.util.Game;
 import nebula.common.util.IDataChecker;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
+import nebula.common.util.ItemStacks;
 import nebula.common.util.SubTag;
 import nebula.io.javascript.ScriptLoad;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
@@ -85,7 +87,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		return REGISTER.contain(name);
 	}
-	public static List<Mat> filt(IDataChecker<ISubTagContainer> filter)
+	public static List<Mat> filt(IDataChecker<? super Mat> filter)
 	{
 		return filt(filter, false);
 	}
@@ -132,7 +134,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	//Multi item configuration.
 	public IItemMatProp itemProp;
 	
+	/**
+	 * The heat capacity of material, unit : J/(m^3*K)
+	 */
 	public double heatCapacity;
+	/**
+	 * The thermal conductivity of material, unit : W/(m*K)
+	 */
 	public double thermalConductivity;
 	public double maxSpeed;
 	public double maxTorque;
@@ -442,12 +450,24 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		return this.name;
 	}
+	
 	public static Mat getMaterialByIDOrDefault(NBTTagCompound nbt, String key, Mat def)
 	{
 		return nbt.hasKey(key) ? material(nbt.getShort(key), def) : def;
 	}
+	
 	public static Mat getMaterialByNameOrDefault(NBTTagCompound nbt, String key, Mat def)
 	{
 		return nbt.hasKey(key) ? material(nbt.getString(key), def) : def;
+	}
+	
+	public static void setMaterialToStack(ItemStack stack, String key, Mat material)
+	{
+		ItemStacks.getOrSetupNBT(stack, true).setString(key, material.name);
+	}
+	
+	public static Mat getMaterialFromStack(ItemStack stack, String key, Mat def)
+	{
+		return getMaterialByNameOrDefault(ItemStacks.getOrSetupNBT(stack, false), key, def);
 	}
 }

@@ -13,7 +13,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;
 import net.minecraft.block.state.IBlockState;

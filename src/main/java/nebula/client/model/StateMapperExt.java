@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedMap;
@@ -38,11 +40,19 @@ public class StateMapperExt extends StateMapperBase
 	
 	IProperty<String> fakeProperty;
 	
-	public StateMapperExt(String modid, String path, IProperty property1, IProperty...properties)
+	/**
+	 * Create a new extended block state map.
+	 * @param modid The mod belong.
+	 * @param path The state file path.
+	 * @param property1 The file split property, use this property value name as file name, no property
+	 * means state mapper don't split file.
+	 * @param properties The ignore properties, those properties will not present in model state.
+	 */
+	public StateMapperExt(String modid, String path, @Nullable IProperty property1, IProperty...properties)
 	{
 		this(modid + ":" + path, property1, properties);
 	}
-	public StateMapperExt(String path, IProperty property1, IProperty...properties)
+	public StateMapperExt(String path, @Nullable IProperty property1, IProperty...properties)
 	{
 		this.path = path;
 		this.fileProperty = property1;
@@ -59,12 +69,21 @@ public class StateMapperExt extends StateMapperBase
 		this.fakeProperty = property;
 	}
 	
+	/**
+	 * The block may is a sub block in a block group (But for different id), set
+	 * the variant entry for each block to identify them.
+	 * @param key The property name.
+	 * @param value The state mapper variant name.
+	 */
 	public void setVariants(String key, String value)
 	{
 		this.variantsKey = key;
 		this.variantsValue = value;
 	}
 	
+	/**
+	 * The map will create a instance ModelResourceLocation for selected block state.
+	 */
 	@Override
 	public ModelResourceLocation getModelResourceLocation(IBlockState state)
 	{
@@ -107,6 +126,12 @@ public class StateMapperExt extends StateMapperBase
 		return key;
 	}
 	
+	/**
+	 * Create a fake property, only contain a single value.
+	 * @param key
+	 * @param values
+	 * @return
+	 */
 	public static IProperty<String> createFakeProperty(String key, String...values)
 	{
 		return new PropertyHelper<String>(key, String.class)

@@ -1,8 +1,8 @@
 package fle.core.items.behavior;
 
-import nebula.common.data.EnumToolType;
 import nebula.common.item.BehaviorBase;
 import nebula.common.item.ITool;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Worlds;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,13 +25,13 @@ public class BehaviorHoe extends BehaviorBase
 {
 	int hoeChance;
 	EnumToolType toolType;
-
+	
 	public BehaviorHoe(EnumToolType toolType, int chance)
 	{
 		this.toolType = toolType;
-		hoeChance = chance;
+		this.hoeChance = chance;
 	}
-
+	
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ)
@@ -45,7 +45,7 @@ public class BehaviorHoe extends BehaviorBase
 				return EnumActionResult.FAIL;
 			else if(event.getResult() == Result.ALLOW)
 				return EnumActionResult.SUCCESS;
-
+			
 			if(facing == EnumFacing.UP)
 			{
 				player.setActiveHand(hand);
@@ -54,7 +54,7 @@ public class BehaviorHoe extends BehaviorBase
 			return EnumActionResult.PASS;
 		}
 	}
-
+	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
 	{
@@ -64,7 +64,7 @@ public class BehaviorHoe extends BehaviorBase
 			RayTraceResult result = Worlds.rayTrace(world, entity, false);
 			if(result != null && result.typeOfHit == Type.BLOCK && result.sideHit == EnumFacing.UP)
 			{
-				if(tick > 40 || entity.getRNG().nextInt(100) < hoeChance)
+				if(tick > 40 || entity.getRNG().nextInt(100) < this.hoeChance)
 				{
 					if(!world.isRemote)
 					{
@@ -74,11 +74,11 @@ public class BehaviorHoe extends BehaviorBase
 						}
 						world.setBlockState(result.getBlockPos(), Blocks.FARMLAND.getDefaultState());
 					}
-					((ITool) stack.getItem()).onToolUse(entity, stack, toolType, 1.0F);
+					((ITool) stack.getItem()).onToolUse(entity, stack, this.toolType, 1.0F);
 				}
 				else
 				{
-					((ITool) stack.getItem()).onToolUse(entity, stack, toolType, 0.3F);
+					((ITool) stack.getItem()).onToolUse(entity, stack, this.toolType, 0.3F);
 				}
 			}
 		}

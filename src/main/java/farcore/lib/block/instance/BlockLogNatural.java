@@ -8,7 +8,7 @@ import farcore.util.runnable.BreakTree;
 import nebula.Log;
 import nebula.common.LanguageManager;
 import nebula.common.block.IToolableBlock;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
 import net.minecraft.block.state.BlockStateContainer;

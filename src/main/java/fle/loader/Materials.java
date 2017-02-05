@@ -5,7 +5,7 @@
 package fle.loader;
 
 import farcore.data.M;
-import fle.api.tile.IDitchTile.DitchBlockHandler;
+import fle.api.ditch.DitchBlockHandler;
 
 /**
  * @author ueyudiud

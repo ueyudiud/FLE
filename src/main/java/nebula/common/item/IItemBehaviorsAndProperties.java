@@ -12,6 +12,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IItemBehaviorsAndProperties
 {
+	/**
+	 * After a thinking, I think we need't this interface to get real dig speed.
+	 * @author ueyudiud
+	 *
+	 */
+	@Deprecated
 	public static interface IIP_DigSpeed
 	{
 		float replaceDigSpeed(ItemStack stack, BreakSpeed event);

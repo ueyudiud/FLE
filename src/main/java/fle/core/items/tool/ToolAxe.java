@@ -1,18 +1,16 @@
 package fle.core.items.tool;
 
 import farcore.data.EnumPhysicalDamageType;
-import nebula.common.data.EnumToolType;
+import nebula.common.tool.EnumToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 
 public class ToolAxe extends Tool
 {
-	private float speedMultiplier;
-	
 	public ToolAxe(EnumToolType type, float speedMultiplier)
 	{
 		super(type);
+		this.damagePerAttack = 2.0F;
 		this.speedMultiplier = speedMultiplier;
 	}
 	
@@ -21,19 +19,7 @@ public class ToolAxe extends Tool
 	{
 		return EnumPhysicalDamageType.CUT;
 	}
-
-	@Override
-	public float getSpeedMultiplier(ItemStack stack)
-	{
-		return speedMultiplier;
-	}
-
-	@Override
-	public float getToolDamagePerAttack(ItemStack stack, EntityLivingBase user, Entity target)
-	{
-		return 2.0F;
-	}
-
+	
 	@Override
 	protected String getDeathMessage(Entity target, EntityLivingBase user)
 	{

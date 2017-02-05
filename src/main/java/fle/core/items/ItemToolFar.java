@@ -6,18 +6,18 @@ import farcore.data.EnumItem;
 import farcore.data.KS;
 import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool;
+import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.skill.SkillAbstract;
 import fle.core.FLE;
 import nebula.client.util.Client;
-import nebula.common.data.EnumToolType;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.IBehavior;
-import nebula.common.item.IProjectileItem;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
+import nebula.common.item.IProjectileItem;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IDataChecker;
-import nebula.common.util.ISubTagContainer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.Entity;
@@ -39,10 +39,11 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	}
 	
 	@Override
-	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle, IDataChecker<? extends ISubTagContainer> filterHead,
-			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,
-			List<EnumToolType> toolTypes, IBehavior... behaviors)
+	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
+			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
+			IDataChecker<? super Mat> filterHead, IDataChecker<? super Mat> filterTie,
+			IDataChecker<? super Mat> filterHandle, List<EnumToolType> toolTypes,
+			IBehavior... behaviors)
 	{
 		ToolProp prop = super.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie,
 				filterHandle, toolTypes, behaviors);
@@ -50,11 +51,10 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		prop.skillAttack = new SkillAbstract(name + ".attack", localName + " Attack"){}.setExpInfo(30, 12F, 1.4F);
 		return prop;
 	}
-
+	
 	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle,
-			IDataChecker<? extends ISubTagContainer> filterTie, IDataChecker<? extends ISubTagContainer> filterHandle,
-			List<EnumToolType> toolTypes, IBehavior... behaviors)
+			IToolStat stat, boolean hasTie, boolean hasHandle, IDataChecker<? super Mat> filterTie,
+			IDataChecker<? super Mat> filterHandle, List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
 		return addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition.filter, filterTie, filterHandle, toolTypes, behaviors);
 	}
@@ -68,7 +68,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		super.onBlockHarvested(stack, event);
 	}
-
+	
 	@Override
 	public float replaceDigSpeed(ItemStack stack, BreakSpeed event)
 	{
@@ -94,7 +94,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		}
 		return super.getPlayerRelatedAttackDamage(prop, stack, player, baseAttack, attackSpeed, cooldown, isAttackerFalling);
 	}
-
+	
 	@Override
 	public void postInitalizedItems()
 	{

@@ -10,11 +10,11 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import nebula.common.data.EnumToolType;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.tile.IToolableTile;
+import nebula.common.tool.EnumToolType;
+import nebula.common.tool.ToolHooks;
 import nebula.common.util.Direction;
-import nebula.common.util.ToolHooks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.EnumPushReaction;
@@ -253,7 +253,7 @@ public interface IBlockBehavior<B>
 		
 	}
 	
-	default void onBlockPlacedBy(B block, IBlockState state, World world, BlockPos pos, EntityLivingBase placer,
+	default void onBlockPlacedBy(B block, IBlockState state, World world, BlockPos pos, EntityLivingBase placer, EnumFacing facing,
 			ItemStack stack)
 	{
 		
@@ -296,7 +296,7 @@ public interface IBlockBehavior<B>
 	
 	default boolean canBreakBlock(B block, IBlockState state, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
-		return ToolHooks.isToolBreakable(state, player);
+		return ToolHooks.isToolBreakable(state, player.getHeldItemMainhand());
 	}
 	
 	default boolean canBreakEffective(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player)

@@ -196,7 +196,7 @@ public class EntityFallingBlockExtended extends Entity
 				if (this.lifeTime == 1)
 				{
 					this.fallable.onStartFalling(this.world, pos);
-					this.world.setBlockToAir(pos);
+					//					this.world.setBlockToAir(pos);
 				}
 				
 				if (this.onGround)

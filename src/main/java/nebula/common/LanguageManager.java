@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
+import java.util.IllegalFormatException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,6 +20,7 @@ import com.google.common.collect.ImmutableSortedMap;
 import nebula.Log;
 import nebula.common.util.Strings;
 import net.minecraft.client.resources.I18n;
+import scala.actors.threadpool.Arrays;
 
 public class LanguageManager
 {
@@ -31,9 +33,32 @@ public class LanguageManager
 	private static final FileFilter FILTER = file -> file.getName().endsWith(".lang");
 	private static boolean loadFile = false;
 	
+	public static void registerTooltip(String unlocalized, String...localized)
+	{
+		if (localized.length == 1)
+		{
+			registerLocal(unlocalized, localized[0]);
+		}
+		else
+		{
+			for (int i = 0; i < localized.length; ++i)
+			{
+				registerLocal(unlocalized + "." + (i + 1), localized[i]);
+			}
+		}
+	}
+	
 	public static void registerLocal(String unlocalized, String localized, Object...formats)
 	{
-		registerLocal(unlocalized, String.format(localized, formats));
+		try
+		{
+			String format = String.format(localized, formats);
+			registerLocal(unlocalized, format);
+		}
+		catch (IllegalFormatException exception)
+		{
+			Log.error("Invalid format {}, {}", localized, Arrays.toString(formats));
+		}
 	}
 	
 	public static void registerLocal(String unlocalized, String localized)
@@ -65,7 +90,8 @@ public class LanguageManager
 		}
 		catch(Exception exception)
 		{
-			return "Error Translation";
+			Log.catchingIfDebug(exception);
+			return "Translation Error";
 		}
 	}
 	
