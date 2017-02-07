@@ -12,12 +12,12 @@ import javax.annotation.Nullable;
 import farcore.lib.material.Mat;
 import nebula.Log;
 import nebula.Nebula;
-import nebula.common.util.IDataChecker;
+import nebula.common.base.Judgable;
 
 /**
  * @author ueyudiud
  */
-public final class DitchBlockHandler implements IDataChecker<Mat>
+public final class DitchBlockHandler implements Judgable<Mat>
 {
 	public static final List<Mat> DITCH_ALLOWED_MATERIALS = new ArrayList();
 	

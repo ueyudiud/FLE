@@ -22,9 +22,9 @@ import fle.core.items.tool.ToolHoe;
 import fle.core.items.tool.ToolShovel;
 import fle.core.items.tool.ToolSickle;
 import fle.core.items.tool.ToolSpear;
+import nebula.common.base.Judgable;
 import nebula.common.item.IBehavior;
 import nebula.common.tool.EnumToolType;
-import nebula.common.util.IDataChecker;
 
 public class Tools
 {
@@ -42,8 +42,8 @@ public class Tools
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle, IDataChecker<? super Mat> filterHead,
-			IDataChecker<? super Mat> filterTie, IDataChecker<? super Mat> filterHandle,
+			IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterHead,
+			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle,
 			List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
 		return BlocksItems.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, toolTypes, behaviors);
@@ -51,7 +51,7 @@ public class Tools
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle,
-			IDataChecker<? super Mat> filterTie, IDataChecker<? super Mat> filterHandle,
+			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle,
 			List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
 		return BlocksItems.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, toolTypes, behaviors);

@@ -22,6 +22,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+
+import nebula.common.base.Judgable;
+
 import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Table;
 
@@ -228,7 +231,7 @@ public class L
 		return key -> map.getOrDefault(key, defaultValue);
 	}
 	
-	public static <T> boolean contain(Collection<? extends T> collection, IDataChecker<T> checker)
+	public static <T> boolean contain(Collection<? extends T> collection, Judgable<T> checker)
 	{
 		if(collection == null || collection.isEmpty()) return false;
 		for(T target : collection)
@@ -236,7 +239,7 @@ public class L
 		return false;
 	}
 	
-	public static <T> Set<T> containSet(Collection<? extends T> collection, IDataChecker<T> checker)
+	public static <T> Set<T> containSet(Collection<? extends T> collection, Judgable<T> checker)
 	{
 		if(collection == null || collection.isEmpty()) return ImmutableSet.of();
 		Builder<T> builder = ImmutableSet.builder();
@@ -400,13 +403,13 @@ public class L
 		return col instanceof ArrayList ? (ArrayList<E>) col : new ArrayList(col);
 	}
 	
-	public static <E> boolean or(E[] list, IDataChecker<E> checker)
+	public static <E> boolean or(E[] list, Judgable<E> checker)
 	{
 		for(E element : list) if (checker.isTrue(element)) return true;
 		return false;
 	}
 	
-	public static <E> boolean and(E[] list, IDataChecker<E> checker)
+	public static <E> boolean and(E[] list, Judgable<E> checker)
 	{
 		for(E element : list) if (!checker.isTrue(element)) return false;
 		return true;

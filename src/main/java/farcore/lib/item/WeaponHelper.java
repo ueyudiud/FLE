@@ -7,6 +7,7 @@ package farcore.lib.item;
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.MP;
 import farcore.event.AttackEvent;
+import farcore.lib.entity.IEntityDamageEffect;
 import farcore.lib.material.Mat;
 import farcore.lib.material.behavior.IItemMatProp;
 import nebula.common.util.L;
@@ -68,7 +69,13 @@ public class WeaponHelper
 			{
 				baseMultiple += materialProperty.entityAttackDamageMultiple(stack, material, entity);
 			}
+			if (entity instanceof IEntityDamageEffect)
+			{
+				baseMultiple *= ((IEntityDamageEffect) entity).getDamageMultiplier(type);
+			}
 			float attack = prop.stat.getDamageVsEntity(stack, entity) * material.toolDamageToEntity * baseMultiple;
+			float r = player.getRNG().nextFloat();
+			attack = attack * (.5F + r * r * (3.0F - 2.0F * r));
 			boolean flagCritical = matchCritical(player) && (entity instanceof EntityLivingBase);
 			float speed = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).getAttributeValue() + prop.stat.getAttackSpeed(stack, material.getPropertyF(MP.tool_attackspeed));
 			speed = L.range(0.1F, 20.0F, speed);

@@ -17,21 +17,21 @@ public class MobEffect extends Potion
 		setRegistryName(Game.getActiveModID(), name);
 		GameRegistry.register(this);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldRenderInvText(PotionEffect effect)
 	{
 		return super.shouldRenderInvText(effect);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean shouldRenderHUD(PotionEffect effect)
 	{
 		return super.shouldRenderHUD(effect);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderInventoryEffect(int x, int y, PotionEffect effect, Minecraft mc)

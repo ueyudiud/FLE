@@ -7,8 +7,6 @@ package nebula.common.base;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import nebula.common.util.IDataChecker;
-
 /**
  * @author ueyudiud
  */
@@ -16,16 +14,16 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 {
 	public static <E> ArrayList<E> requireNonnull()
 	{
-		return new ArrayListAddWithCheck<>(IDataChecker.NOT_NULL);
+		return new ArrayListAddWithCheck<>(Judgable.NOT_NULL);
 	}
 	
-	IDataChecker<E> checker;
+	Judgable<E> checker;
 	
-	public ArrayListAddWithCheck(IDataChecker<E> checker)
+	public ArrayListAddWithCheck(Judgable<E> checker)
 	{
 		this.checker = checker;
 	}
-	public ArrayListAddWithCheck(IDataChecker<E> checker, int initicalCapacity)
+	public ArrayListAddWithCheck(Judgable<E> checker, int initicalCapacity)
 	{
 		super(initicalCapacity);
 		this.checker = checker;

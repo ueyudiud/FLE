@@ -11,13 +11,13 @@ import farcore.lib.material.MatCondition;
 import farcore.lib.skill.SkillAbstract;
 import fle.core.FLE;
 import nebula.client.util.Client;
+import nebula.common.base.Judgable;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import nebula.common.item.IProjectileItem;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
-import nebula.common.util.IDataChecker;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.Entity;
@@ -41,8 +41,8 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	@Override
 	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
 			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
-			IDataChecker<? super Mat> filterHead, IDataChecker<? super Mat> filterTie,
-			IDataChecker<? super Mat> filterHandle, List<EnumToolType> toolTypes,
+			Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie,
+			Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes,
 			IBehavior... behaviors)
 	{
 		ToolProp prop = super.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie,
@@ -53,8 +53,8 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	}
 	
 	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle, IDataChecker<? super Mat> filterTie,
-			IDataChecker<? super Mat> filterHandle, List<EnumToolType> toolTypes, IBehavior... behaviors)
+			IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterTie,
+			Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
 		return addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition.filter, filterTie, filterHandle, toolTypes, behaviors);
 	}

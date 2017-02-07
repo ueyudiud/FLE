@@ -40,6 +40,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
@@ -335,7 +336,7 @@ public class Worlds
 				(meta < 0 || state.getBlock().getMetaFromState(state) == meta);
 	}
 	
-	public static boolean isAir(World world, BlockPos pos)
+	public static boolean isAir(IBlockAccess world, BlockPos pos)
 	{
 		IBlockState state = world.getBlockState(pos);
 		return state.getBlock().isAir(state, world, pos);

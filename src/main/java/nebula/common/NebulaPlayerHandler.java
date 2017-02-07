@@ -25,6 +25,7 @@ public class NebulaPlayerHandler
 		
 		ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
 		
+		if (stack == null) return;
 		if (stack.getItem() instanceof IIP_DigSpeed)
 		{
 			event.setNewSpeed(((IIP_DigSpeed) stack.getItem()).replaceDigSpeed(stack, event));

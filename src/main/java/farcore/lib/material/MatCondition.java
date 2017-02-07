@@ -5,15 +5,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import nebula.common.LanguageManager;
+import nebula.common.base.Judgable;
 import nebula.common.base.Register;
-import nebula.common.util.IDataChecker;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.OreDict;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class MatCondition implements IDataChecker<ISubTagContainer>
+public class MatCondition implements Judgable<ISubTagContainer>
 {
 	public static final Register<MatCondition> register = new Register();
 	
@@ -34,7 +34,7 @@ public class MatCondition implements IDataChecker<ISubTagContainer>
 	public float maxTemp = 1E16F;
 	public float minTemp = 0F;
 	
-	public IDataChecker<ISubTagContainer> filter = IDataChecker.FALSE;
+	public Judgable<ISubTagContainer> filter = Judgable.FALSE;
 	public Set<Mat> blacklist = new HashSet();
 	
 	public MatCondition(String prefix, String localName, String withOreLocalName)
@@ -52,7 +52,7 @@ public class MatCondition implements IDataChecker<ISubTagContainer>
 		LanguageManager.registerLocal(getWithOreTranslateName(), withOreLocalName);
 	}
 	
-	public MatCondition setFilter(IDataChecker<ISubTagContainer> filter)
+	public MatCondition setFilter(Judgable<ISubTagContainer> filter)
 	{
 		this.filter = filter;
 		return this;

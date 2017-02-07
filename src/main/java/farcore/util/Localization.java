@@ -60,6 +60,7 @@ public class Localization
 		unlocalizedList.add("info.tool.head.name", material.getLocalName());
 		unlocalizedList.add("info.tool.harvest.level", material.toolHarvestLevel);
 		unlocalizedList.add("info.tool.hardness", FORMAT_1.format(material.toolHardness));
+		unlocalizedList.add("info.tool.attack", FORMAT_1.format(material.toolDamageToEntity));
 		unlocalizedList.addToolTip("info.material.custom." + material.name);
 	}
 	

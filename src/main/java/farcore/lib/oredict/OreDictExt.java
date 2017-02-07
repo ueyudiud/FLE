@@ -12,7 +12,7 @@ import java.util.function.Function;
 import com.google.common.collect.ImmutableList;
 
 import nebula.common.base.Ety;
-import nebula.common.util.IDataChecker;
+import nebula.common.base.Judgable;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
@@ -32,7 +32,7 @@ public class OreDictExt
 	private static final List<String>									ID_TO_NAME = new ArrayList<>();
 	private static final Map<String, Integer>							NAME_TO_ID = new HashMap<>(128);
 	private static final List<
-	Map<Item, Entry<IDataChecker<ItemStack>, List<IDataChecker<ItemStack>>>>>FUNCTION_MAP = new ArrayList();
+	Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>>>FUNCTION_MAP = new ArrayList();
 	private static final Map<Long, List<Integer>>						STACK_TO_IDS = new HashMap<>();
 	private static final List<Entry<List<ItemStack>, List<ItemStack>>>	ID_TO_STACK = new ArrayList();
 	private static final Function<ItemStack, Long>						STACK_SERIALIZER = stack ->
@@ -248,7 +248,7 @@ public class OreDictExt
 	}
 	
 	@Deprecated
-	private static int setOreIDWithSuggestedList(String name, IDataChecker<ItemStack> function, List<ItemStack> stacks)
+	private static int setOreIDWithSuggestedList(String name, Judgable<ItemStack> function, List<ItemStack> stacks)
 	{
 		Integer id = NAME_TO_ID.get(name);
 		if(id == null)
@@ -275,7 +275,7 @@ public class OreDictExt
 		int itemID = GameData.getItemRegistry().getId(item.getRegistryName());
 		if(itemID == -1) throw new RuntimeException("An invalid registeration has a raw item id!");
 		long stackID = (long) itemID << 32 | WILDCARD_VALUE_LONG;
-		registerOreFunction(name, item, IDataChecker.TRUE);
+		registerOreFunction(name, item, Judgable.TRUE);
 		registerIDToStackObject(oreID, new ItemStack(item));
 		registerStackToIDObject(oreID, stackID);
 	}
@@ -302,7 +302,7 @@ public class OreDictExt
 		list.add(oreID);
 	}
 	
-	public static void registerOreFunction(String name, Item item, IDataChecker<ItemStack> function, Collection<ItemStack> instances) { registerOreFunction(name, item, function, L.cast(instances, ItemStack.class)); }
+	public static void registerOreFunction(String name, Item item, Judgable<ItemStack> function, Collection<ItemStack> instances) { registerOreFunction(name, item, function, L.cast(instances, ItemStack.class)); }
 	
 	/**
 	 * Registers a ore function into the dictionary.
@@ -312,17 +312,17 @@ public class OreDictExt
 	 * @param function
 	 * @param instances
 	 */
-	public static void registerOreFunction(String name, Item item, IDataChecker<ItemStack> function, ItemStack...instances)
+	public static void registerOreFunction(String name, Item item, Judgable<ItemStack> function, ItemStack...instances)
 	{
 		if(name == null || function == null) return;
 		int oreID = getOreID(name);
 		List<ItemStack> list1 = ID_TO_STACK.get(oreID).getKey();
-		Map<Item, Entry<IDataChecker<ItemStack>, List<IDataChecker<ItemStack>>>> map = FUNCTION_MAP.get(oreID);
-		List<IDataChecker<ItemStack>> list;
+		Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map = FUNCTION_MAP.get(oreID);
+		List<Judgable<ItemStack>> list;
 		if(!map.containsKey(item))
 		{
 			list = new ArrayList();
-			map.put(item, new Ety(IDataChecker.or(list), list));
+			map.put(item, new Ety(Judgable.or(list), list));
 		}
 		else list = map.get(item).getValue();
 		list.add(function);
@@ -396,7 +396,7 @@ public class OreDictExt
 		Item item = stack.getItem();
 		for(int i = 0; i < FUNCTION_MAP.size(); ++i)
 		{
-			Map<Item, Entry<IDataChecker<ItemStack>, List<IDataChecker<ItemStack>>>> map = FUNCTION_MAP.get(i);
+			Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map = FUNCTION_MAP.get(i);
 			if(map.containsKey(item) && map.get(item).getKey().isTrue(stack))
 				list.add(ID_TO_NAME.get(i));
 		}
@@ -405,7 +405,7 @@ public class OreDictExt
 	
 	public static boolean oreMatchs(ItemStack stack, String oreName)
 	{
-		Map<Item, Entry<IDataChecker<ItemStack>, List<IDataChecker<ItemStack>>>> map;
+		Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map;
 		return
 				NAME_TO_ID.containsKey(oreName) ?
 						(map = FUNCTION_MAP.get(NAME_TO_ID.get(oreName)))

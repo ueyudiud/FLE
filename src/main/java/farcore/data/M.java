@@ -33,24 +33,24 @@ import net.minecraft.block.material.Material;
 public class M
 {
 	//Metal
-	public static final Mat Copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 2.5F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build();
+	public static final Mat Copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build();
 	//Rocks
-	public static final Mat stone 			= new MaterialBuilder(7001, "minecraft", "stone"			, "Stone"			, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F, 1.0F, -0.5F).build().setRock( 4, 1.5F,  8.0F);
-	public static final Mat compact_stone	= new MaterialBuilder(7002, FarCore.ID , "compactstone"		, "CompactStone"	, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F, 1.0F, -0.5F).build().setRock( 5, 2.0F, 12.0F);
-	public static final Mat andesite		= new MaterialBuilder(7003, FarCore.ID , "andesite"			, "Andesite"		, "Andesite"			).setRGBa(0x616162FF).setToolProp(  32,  8, 2.3F, 0.8F, 1.5F, -0.5F).build().setRock( 7, 4.9F, 16.6F);
-	public static final Mat basalt			= new MaterialBuilder(7004, FarCore.ID , "basalt"			, "Basalt"			, "Basalt"				).setRGBa(0x3A3A3AFF).setToolProp(  38,  8, 2.5F, 0.8F, 1.2F, -0.5F).build().setRock( 7, 5.3F, 18.3F);
-	public static final Mat diorite			= new MaterialBuilder(7005, FarCore.ID , "diorite"			, "Diorite"			, "Diorite"				).setRGBa(0xC9C9CDFF).setToolProp(  42, 10, 2.7F, 0.8F, 1.4F, -0.6F).build().setRock( 9, 6.5F, 23.3F);
-	public static final Mat gabbro			= new MaterialBuilder(7006, FarCore.ID , "gabbro"			, "Gabbro"			, "Gabbro"				).setRGBa(0x53524EFF).setToolProp(  40, 11, 2.6F, 0.8F, 1.5F, -0.5F).build().setRock(10, 6.9F, 25.2F);
-	public static final Mat granite			= new MaterialBuilder(7007, FarCore.ID , "granite"			, "Granite"			, "Granite"				).setRGBa(0x986C5DFF).setToolProp(  44, 11, 2.8F, 0.8F, 1.8F, -0.6F).build().setRock(10, 7.4F, 29.8F);
-	public static final Mat kimberlite		= new MaterialBuilder(7008, FarCore.ID , "kimberlite"		, "Kimberlite"		, "Kimberlite"			).setRGBa(0x4D4D49FF).setToolProp(  46, 11, 3.1F, 0.8F, 1.8F, -0.6F).build().setRock(10, 7.8F, 31.4F);
-	public static final Mat limestone		= new MaterialBuilder(7009, FarCore.ID , "limestone"		, "Lime"			, "Limestone"			).setRGBa(0xC9C9C8FF)                                               .build().setRock( 4, 1.3F,  5.5F);
-	public static final Mat marble			= new MaterialBuilder(7010, FarCore.ID , "marble"			, "Marble"			, "Marble"				).setRGBa(0xE2E6F0FF)                                               .build().setRock( 6, 7.8F,  8.4F);
-	public static final Mat netherrack		= new MaterialBuilder(7011, "minecraft", "netherrack"		, "Netherrack"		, "Netherrack"			).setRGBa(0x5F3636FF)                                               .build().setRock( 3, 1.3F,  3.8F);
-	public static final Mat obsidian		= new MaterialBuilder(7012, FarCore.ID , "obsidian"			, "Obsidian"		, "Obsidian"			).setRGBa(0x12121BFF).setToolProp(   8, 12, 5.2F, 2.7F, 3.0F,  0.2F).build().setRock(17, 9.8F,  4.2F);
-	public static final Mat peridotite		= new MaterialBuilder(7013, FarCore.ID , "peridotite"		, "Peridotite"		, "Peridotite"			).setRGBa(0x717A5CFF).setToolProp(  45, 11, 3.0F, 0.8F, 2.0F, -0.6F).build().setRock(10, 7.7F, 30.5F);
-	public static final Mat rhyolite		= new MaterialBuilder(7014, FarCore.ID , "rhyolite"			, "Rhyolite"		, "Rhyolite"			).setRGBa(0x4F535AFF).setToolProp(  39, 10, 2.6F, 0.8F, 2.0F, -0.5F).build().setRock( 9, 6.0F, 21.7F);
-	public static final Mat graniteP		= new MaterialBuilder(7015, FarCore.ID , "granite_p"		, "GranitePegmatite", "Granite Pegmatite"	).setRGBa(0x4F535AFF).setToolProp(  45, 11, 2.8F, 0.8F, 1.8F, -0.6F).build().setRock(10, 7.6F, 30.1F);
-	public static final Mat whitestone		= new MaterialBuilder(7016, "minecraft", "whitestone"		, "Whitestone"		, "End Stone"			).setRGBa(0xE2E2B5FF)                                               .build().setRock( 8, 6.0F, 14.7F);
+	public static final Mat stone 			= new MaterialBuilder(7001, "minecraft", "stone"			, "Stone"			, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F,  4.0F, -0.5F).build().setRock( 4, 1.5F,  8.0F);
+	public static final Mat compact_stone	= new MaterialBuilder(7002, FarCore.ID , "compactstone"		, "CompactStone"	, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F,  4.0F, -0.5F).build().setRock( 5, 2.0F, 12.0F);
+	public static final Mat andesite		= new MaterialBuilder(7003, FarCore.ID , "andesite"			, "Andesite"		, "Andesite"			).setRGBa(0x616162FF).setToolProp(  32,  8, 2.3F, 0.8F,  6.0F, -0.5F).build().setRock( 7, 4.9F, 16.6F);
+	public static final Mat basalt			= new MaterialBuilder(7004, FarCore.ID , "basalt"			, "Basalt"			, "Basalt"				).setRGBa(0x3A3A3AFF).setToolProp(  38,  8, 2.5F, 0.8F,  4.8F, -0.5F).build().setRock( 7, 5.3F, 18.3F);
+	public static final Mat diorite			= new MaterialBuilder(7005, FarCore.ID , "diorite"			, "Diorite"			, "Diorite"				).setRGBa(0xC9C9CDFF).setToolProp(  42, 10, 2.7F, 0.8F,  5.6F, -0.6F).build().setRock( 9, 6.5F, 23.3F);
+	public static final Mat gabbro			= new MaterialBuilder(7006, FarCore.ID , "gabbro"			, "Gabbro"			, "Gabbro"				).setRGBa(0x53524EFF).setToolProp(  40, 11, 2.6F, 0.8F,  6.0F, -0.5F).build().setRock(10, 6.9F, 25.2F);
+	public static final Mat granite			= new MaterialBuilder(7007, FarCore.ID , "granite"			, "Granite"			, "Granite"				).setRGBa(0x986C5DFF).setToolProp(  44, 11, 2.8F, 0.8F,  7.2F, -0.6F).build().setRock(10, 7.4F, 29.8F);
+	public static final Mat kimberlite		= new MaterialBuilder(7008, FarCore.ID , "kimberlite"		, "Kimberlite"		, "Kimberlite"			).setRGBa(0x4D4D49FF).setToolProp(  46, 11, 3.1F, 0.8F,  7.2F, -0.6F).build().setRock(10, 7.8F, 31.4F);
+	public static final Mat limestone		= new MaterialBuilder(7009, FarCore.ID , "limestone"		, "Lime"			, "Limestone"			).setRGBa(0xC9C9C8FF)                                                .build().setRock( 4, 1.3F,  5.5F);
+	public static final Mat marble			= new MaterialBuilder(7010, FarCore.ID , "marble"			, "Marble"			, "Marble"				).setRGBa(0xE2E6F0FF)                                                .build().setRock( 6, 7.8F,  8.4F);
+	public static final Mat netherrack		= new MaterialBuilder(7011, "minecraft", "netherrack"		, "Netherrack"		, "Netherrack"			).setRGBa(0x5F3636FF)                                                .build().setRock( 3, 1.3F,  3.8F);
+	public static final Mat obsidian		= new MaterialBuilder(7012, FarCore.ID , "obsidian"			, "Obsidian"		, "Obsidian"			).setRGBa(0x12121BFF).setToolProp(   8, 12, 5.2F, 2.7F, 12.0F,  0.2F).build().setRock(17, 9.8F,  4.2F);
+	public static final Mat peridotite		= new MaterialBuilder(7013, FarCore.ID , "peridotite"		, "Peridotite"		, "Peridotite"			).setRGBa(0x717A5CFF).setToolProp(  45, 11, 3.0F, 0.8F,  8.0F, -0.6F).build().setRock(10, 7.7F, 30.5F);
+	public static final Mat rhyolite		= new MaterialBuilder(7014, FarCore.ID , "rhyolite"			, "Rhyolite"		, "Rhyolite"			).setRGBa(0x4F535AFF).setToolProp(  39, 10, 2.6F, 0.8F,  8.0F, -0.5F).build().setRock( 9, 6.0F, 21.7F);
+	public static final Mat graniteP		= new MaterialBuilder(7015, FarCore.ID , "granite_p"		, "GranitePegmatite", "Granite Pegmatite"	).setRGBa(0x4F535AFF).setToolProp(  45, 11, 2.8F, 0.8F,  7.2F, -0.6F).build().setRock(10, 7.6F, 30.1F);
+	public static final Mat whitestone		= new MaterialBuilder(7016, "minecraft", "whitestone"		, "Whitestone"		, "End Stone"			).setRGBa(0xE2E2B5FF)                                                .build().setRock( 8, 6.0F, 14.7F);
 	//Soils
 	public static final Mat latosol			= new MaterialBuilder(7101, FarCore.ID , "latosol"			, "Latosol"			, "Latosol"				).setRGBa(0x652A1FFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	public static final Mat latoaluminosol	= new MaterialBuilder(7102, FarCore.ID , "latoaluminosol"	, "Latoaluminosol"	, "Latoaluminosol"		).setRGBa(0x77412FFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
@@ -126,6 +126,8 @@ public class M
 	
 	static
 	{
+		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow);
+		
 		oak			.setTree(new TreeOak());
 		spruce		.setTree(new TreeBirch());
 		birch		.setTree(new TreeBirch());

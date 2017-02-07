@@ -1,57 +1,59 @@
-package nebula.common.util;
+package nebula.common.base;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
 
+import nebula.common.util.L;
+
 @FunctionalInterface
-public interface IDataChecker<T>
+public interface Judgable<T>
 {
-	IDataChecker TRUE     = arg -> true;
-	IDataChecker FALSE    = arg -> false;
-	IDataChecker NOT_NULL = arg -> arg != null;
-	IDataChecker NULL     = arg -> arg == null;
+	Judgable TRUE     = arg -> true;
+	Judgable FALSE    = arg -> false;
+	Judgable NOT_NULL = arg -> arg != null;
+	Judgable NULL     = arg -> arg == null;
 	
-	static <T> IDataChecker<T> or(IDataChecker<T>...checkers) { return or(Arrays.asList(checkers)); }
+	static <T> Judgable<T> or(Judgable<T>...checkers) { return or(Arrays.asList(checkers)); }
 	
-	static <T> IDataChecker<T> and(IDataChecker<T>...checkers) { return and(Arrays.asList(checkers)); }
+	static <T> Judgable<T> and(Judgable<T>...checkers) { return and(Arrays.asList(checkers)); }
 	
 	/**
 	 * Uses for modifiable collection checker.
 	 * @param collection
 	 * @return
 	 */
-	static <T> IDataChecker<T> or(Collection<IDataChecker<T>> collection)
+	static <T> Judgable<T> or(Collection<Judgable<T>> collection)
 	{
 		return target -> {
-			for(IDataChecker<T> checker : collection) if(checker.isTrue(target)) return true; return false;
+			for(Judgable<T> checker : collection) if(checker.isTrue(target)) return true; return false;
 		};
 	}
 	
-	static <T> IDataChecker<T> and(Collection<IDataChecker<T>> collection)
+	static <T> Judgable<T> and(Collection<Judgable<T>> collection)
 	{
 		return target -> {
-			for(IDataChecker<T> checker : collection) if(!checker.isTrue(target)) return false; return true;
+			for(Judgable<T> checker : collection) if(!checker.isTrue(target)) return false; return true;
 		};
 	}
 	
 	boolean isTrue(T target);
 	
-	default <K> IDataChecker<K> from(Function<K, T> function)
+	default <K> Judgable<K> from(Function<K, T> function)
 	{
 		return key -> isTrue(function.apply(key));
 	}
 	
-	default IDataChecker<T> not()
+	default Judgable<T> not()
 	{
 		return target -> !isTrue(target);
 	}
 	
-	class Nor<O> implements IDataChecker<O>
+	class Nor<O> implements Judgable<O>
 	{
-		private final IDataChecker<O>[] checks;
+		private final Judgable<O>[] checks;
 		
-		public Nor(IDataChecker<O>... checks)
+		public Nor(Judgable<O>... checks)
 		{
 			this.checks = checks;
 		}
@@ -59,7 +61,7 @@ public interface IDataChecker<T>
 		@Override
 		public boolean isTrue(O target)
 		{
-			for (IDataChecker<O> tCondition : this.checks)
+			for (Judgable<O> tCondition : this.checks)
 				if (tCondition.isTrue(target))
 					return false;
 			return true;
@@ -87,11 +89,11 @@ public interface IDataChecker<T>
 		}
 	}
 	
-	class Nand<O> implements IDataChecker<O>
+	class Nand<O> implements Judgable<O>
 	{
-		private final IDataChecker<O>[] checks;
+		private final Judgable<O>[] checks;
 		
-		public Nand(IDataChecker<O>... checks)
+		public Nand(Judgable<O>... checks)
 		{
 			this.checks = checks;
 		}
@@ -99,7 +101,7 @@ public interface IDataChecker<T>
 		@Override
 		public boolean isTrue(O target)
 		{
-			for (IDataChecker<O> tCondition : this.checks)
+			for (Judgable<O> tCondition : this.checks)
 				if (!tCondition.isTrue(target))
 					return true;
 			return false;
@@ -127,12 +129,12 @@ public interface IDataChecker<T>
 		}
 	}
 	
-	class Xor<O> implements IDataChecker<O>
+	class Xor<O> implements Judgable<O>
 	{
-		private final IDataChecker<O> check1;
-		private final IDataChecker<O> check2;
+		private final Judgable<O> check1;
+		private final Judgable<O> check2;
 		
-		public Xor(IDataChecker<O> check1, IDataChecker<O> check2)
+		public Xor(Judgable<O> check1, Judgable<O> check2)
 		{
 			this.check1 = check1;
 			this.check2 = check2;
@@ -167,12 +169,12 @@ public interface IDataChecker<T>
 		}
 	}
 	
-	class Equal<O> implements IDataChecker<O>
+	class Equal<O> implements Judgable<O>
 	{
-		private final IDataChecker<O> check1;
-		private final IDataChecker<O> check2;
+		private final Judgable<O> check1;
+		private final Judgable<O> check2;
 		
-		public Equal(IDataChecker<O> check1, IDataChecker<O> check2)
+		public Equal(Judgable<O> check1, Judgable<O> check2)
 		{
 			this.check1 = check1;
 			this.check2 = check2;

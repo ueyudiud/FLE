@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import nebula.common.util.ItemStacks;
+import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -41,15 +42,8 @@ public class ArrayStack implements AbstractStack
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		if(stack == null) return false;
-		for(ItemStack target : this.array)
-		{
-			if(OreDictionary.itemMatches(target, stack, false))
-			{
-				return true;
-			}
-		}
-		return false;
+		return stack != null &&
+				L.contain(this.array, target -> OreDictionary.itemMatches(target, stack, false));
 	}
 	
 	@Override

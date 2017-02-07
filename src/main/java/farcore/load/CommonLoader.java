@@ -185,6 +185,7 @@ public class CommonLoader
 		registerLocal("info.tool.damage", "Durability : " + ChatFormatting.GREEN + " %d / %d");
 		registerLocal("info.tool.harvest.level", "Harvest Level : " + ChatFormatting.YELLOW + " lv%d");
 		registerLocal("info.tool.hardness", "Hardness : " + ChatFormatting.BLUE + "%s");
+		registerLocal("info.tool.attack", "Attack : " + ChatFormatting.DARK_RED + "%s");
 		registerLocal("info.tool.head.name", "Tool Head : " + ChatFormatting.LIGHT_PURPLE + "%s");
 		registerLocal("info.tool.handle.name", "Tool Handle : " + ChatFormatting.LIGHT_PURPLE + "%s");
 		registerLocal("info.tool.tie.name", "Tool Tie : " + ChatFormatting.LIGHT_PURPLE + "%s");

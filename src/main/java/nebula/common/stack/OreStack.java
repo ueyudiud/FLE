@@ -71,7 +71,7 @@ public class OreStack implements AbstractStack
 	public ItemStack instance()
 	{
 		if(!display().isEmpty())
-			return this.list.get(0);
+			return ItemStack.copyItemStack(this.list.get(0));
 		return null;
 	}
 	

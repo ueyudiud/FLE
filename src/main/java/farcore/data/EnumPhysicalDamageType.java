@@ -14,15 +14,16 @@ public enum EnumPhysicalDamageType
 {
 	PUNCTURE,
 	SMASH,
-	CUT;
-
+	CUT,
+	HIT;
+	
 	public String getTranslation()
 	{
 		return "damage.type." + name() + ".name";
 	}
-
+	
 	static { EnumHelper.testEnum(EnumPhysicalDamageType.class, new Class[0]); }
-
+	
 	public EnumPhysicalDamageType getType(String key)
 	{
 		return EnumHelper.addEnum(EnumPhysicalDamageType.class, key, new Class[0]);

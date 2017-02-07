@@ -7,15 +7,20 @@ import net.minecraft.util.DamageSource;
 
 public class MobEffectBleeding extends MobEffect
 {
-	public MobEffectBleeding(String name, int liquidColorIn)
+	protected int duration;
+	protected float amount;
+	
+	public MobEffectBleeding(String name, int liquidColorIn, int duration, float amount)
 	{
 		super(name, true, liquidColorIn);
+		this.duration = duration;
+		this.amount = amount;
 	}
 	
 	@Override
 	public boolean isReady(int duration, int amplifier)
 	{
-		int k = 30 >> amplifier;
+		int k = duration >> amplifier;
 		return duration % k == 0;
 	}
 	
@@ -25,7 +30,7 @@ public class MobEffectBleeding extends MobEffect
 	{
 		if(entityLivingBaseIn.isEntityUndead())
 		{
-			entityLivingBaseIn.attackEntityFrom(DamageSource.generic, 2.0F);
+			entityLivingBaseIn.attackEntityFrom(DamageSource.generic, this.amount);
 		}
 	}
 }

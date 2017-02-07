@@ -16,6 +16,7 @@ import farcore.lib.skill.ISkill;
 import farcore.util.Localization;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
+import nebula.common.base.Judgable;
 import nebula.common.enviornment.IEnvironment;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
@@ -25,7 +26,6 @@ import nebula.common.item.IUpdatableItem;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Game;
-import nebula.common.util.IDataChecker;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.Sides;
 import net.minecraft.block.state.IBlockState;
@@ -120,9 +120,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		EMPTY_PROP.id = -1;
 		EMPTY_PROP.hasHandle = false;
 		EMPTY_PROP.hasTie = false;
-		EMPTY_PROP.filterHead = IDataChecker.FALSE;
-		EMPTY_PROP.filterHandle = IDataChecker.FALSE;
-		EMPTY_PROP.filterTie = IDataChecker.FALSE;
+		EMPTY_PROP.filterHead = Judgable.FALSE;
+		EMPTY_PROP.filterHandle = Judgable.FALSE;
+		EMPTY_PROP.filterTie = Judgable.FALSE;
 		EMPTY_PROP.customToolInformation = null;
 		EMPTY_PROP.condition = MC.LATTICE;
 		EMPTY_PROP.toolTypes = ImmutableList.of();
@@ -135,9 +135,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		boolean hasHandle;
 		MatCondition condition;
 		IToolStat stat;
-		IDataChecker<? super Mat> filterHead;
-		IDataChecker<? super Mat> filterTie;
-		IDataChecker<? super Mat> filterHandle;
+		Judgable<? super Mat> filterHead;
+		Judgable<? super Mat> filterTie;
+		Judgable<? super Mat> filterHandle;
 		List<EnumToolType> toolTypes;
 		String customToolInformation;
 		public ISkill skillEfficiency;
@@ -160,8 +160,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	
 	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
 			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
-			IDataChecker<? super Mat> filterHead, IDataChecker<? super Mat> filterTie,
-			IDataChecker<? super Mat> filterHandle, List<EnumToolType> toolTypes,
+			Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie,
+			Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes,
 			IBehavior... behaviors)
 	{
 		super.addSubItem(id, name, localName, stat, behaviors);

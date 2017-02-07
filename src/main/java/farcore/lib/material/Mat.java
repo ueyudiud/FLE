@@ -32,12 +32,12 @@ import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tree.ITree;
 import nebula.common.LanguageManager;
 import nebula.common.base.HashPropertyMap;
+import nebula.common.base.Judgable;
 import nebula.common.base.IPropertyMap;
 import nebula.common.base.IPropertyMap.IProperty;
 import nebula.common.base.IntegerMap;
 import nebula.common.base.Register;
 import nebula.common.util.Game;
-import nebula.common.util.IDataChecker;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.ItemStacks;
@@ -51,7 +51,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 {
 	private static final Register<Mat> REGISTER = new Register(32768);
 	
-	private static final Map<IDataChecker<? super Mat>, List<Mat>> MATERIALS_CACHE = new HashMap();
+	private static final Map<Judgable<? super Mat>, List<Mat>> MATERIALS_CACHE = new HashMap();
 	
 	/**
 	 * Default material, will not register in to list.
@@ -87,11 +87,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		return REGISTER.contain(name);
 	}
-	public static List<Mat> filt(IDataChecker<? super Mat> filter)
+	public static List<Mat> filt(Judgable<? super Mat> filter)
 	{
 		return filt(filter, false);
 	}
-	public static List<Mat> filt(IDataChecker<? super Mat> filter, boolean alwaysInit)
+	public static List<Mat> filt(Judgable<? super Mat> filter, boolean alwaysInit)
 	{
 		if(!MATERIALS_CACHE.containsKey(filter) || alwaysInit)
 		{

@@ -8,6 +8,7 @@ import fle.core.client.render.TESRDitch;
 import fle.core.common.CommonLoader;
 import fle.core.handler.FleClientHandler;
 import fle.loader.BlocksItems;
+import fle.loader.Entities;
 import nebula.client.ClientProxy;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
@@ -32,6 +33,8 @@ public class ClientLoader extends CommonLoader
 		Renders.registerColorMultiplier(ColorMultiplier.TOOL_ITEM_MATERIAL_COLOR, EnumItem.tool.item);
 		
 		ModelLoader.setCustomStateMapper(BlocksItems.ditch, new StateMapperExt(FLE.MODID, "ditch", null, Misc.PROPS_SIDE_HORIZONTALS));
+		
+		Entities.clientInit();
 		FarCoreRegistry.registerTESR(TESRDitch.class);
 	}
 }

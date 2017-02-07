@@ -1,6 +1,7 @@
 package farcore.lib.item.instance;
 
 import farcore.data.EnumItem;
+import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumRockType;
 import farcore.data.KS;
 import farcore.data.MC;
@@ -8,6 +9,7 @@ import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.block.instance.BlockRock;
+import farcore.lib.entity.IEntityDamageEffect;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.util.DamageSourceProjectile;
@@ -156,6 +158,10 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			if(material != null)
 			{
 				damage *= (1F + material.toolDamageToEntity);
+			}
+			if (target instanceof IEntityDamageEffect)
+			{
+				damage *= ((IEntityDamageEffect) target).getDamageMultiplier(EnumPhysicalDamageType.HIT);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)

@@ -1,7 +1,9 @@
 package fle.core.items.behavior;
 
+import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumToolTypes;
 import farcore.data.KS;
+import farcore.lib.entity.IEntityDamageEffect;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import farcore.lib.util.DamageSourceProjectile;
@@ -115,6 +117,10 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 			if(material != null)
 			{
 				damage *= (1F + material.toolDamageToEntity);
+			}
+			if (target instanceof IEntityDamageEffect)
+			{
+				damage *= ((IEntityDamageEffect) target).getDamageMultiplier(EnumPhysicalDamageType.PUNCTURE);
 			}
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)

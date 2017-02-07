@@ -12,7 +12,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.material.Mat;
-import nebula.common.util.IDataChecker;
+import nebula.common.base.Judgable;
 import nebula.common.util.L;
 import net.minecraft.block.properties.PropertyHelper;
 
@@ -23,7 +23,7 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 {
 	final List<Mat> list;
 	
-	public static PropertyMaterial create(String name, IDataChecker<? super Mat> checker)
+	public static PropertyMaterial create(String name, Judgable<? super Mat> checker)
 	{
 		return new PropertyMaterial(name, Mat.filt(checker, false));
 	}

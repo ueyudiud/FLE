@@ -3,9 +3,10 @@ package nebula.common.util;
 import java.util.Collection;
 import java.util.HashSet;
 
+import nebula.common.base.Judgable;
 import nebula.common.base.Register;
 
-public final class SubTag implements IDataChecker<ISubTagContainer>
+public final class SubTag implements Judgable<ISubTagContainer>
 {
 	public static final Register<SubTag> TAGS = new Register();
 	

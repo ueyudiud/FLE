@@ -24,6 +24,12 @@ public interface AbstractStack
 	 */
 	boolean similar(ItemStack stack);
 	
+	/**
+	 * Check this stack is fully to input with
+	 * target stack.
+	 * @param stack
+	 * @return
+	 */
 	boolean contain(ItemStack stack);
 	
 	int size(@Nullable ItemStack stack);
@@ -61,5 +67,6 @@ public interface AbstractStack
 	 * is false)
 	 * @return
 	 */
+	@Deprecated
 	boolean useContainer();
 }
