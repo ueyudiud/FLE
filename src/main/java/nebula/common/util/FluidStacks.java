@@ -150,7 +150,8 @@ public class FluidStacks
 		}
 		else if(blockRaw instanceof BlockFluidBase)
 		{
-			if(stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAir(world, pos))
+			IBlockState state = world.getBlockState(pos);
+			if(stack.amount >= Misc.BUCKET_CAPACITY && (state.getBlock().isAir(state, world, pos) || state.getBlock().isReplaceable(world, pos)))
 			{
 				if(doDrain)
 				{
@@ -161,7 +162,8 @@ public class FluidStacks
 		}
 		else if(blockRaw instanceof BlockLiquid)//Use for vanilla water and lava.
 		{
-			if(stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAir(world, pos))
+			IBlockState state = world.getBlockState(pos);
+			if(stack.amount >= Misc.BUCKET_CAPACITY && (state.getBlock().isAir(state, world, pos) || state.getBlock().isReplaceable(world, pos)))
 			{
 				if(doDrain)
 				{

@@ -203,7 +203,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		@Override
 		public boolean hasNext()
 		{
-			if(this.currentNode == null && !this.currentNode.hasNext())
+			if (this.currentNode == null || !this.currentNode.hasNext())
 			{
 				int pointer = this.pointer + 1;
 				while (pointer < IntegerMap.this.entries.length && IntegerMap.this.entries[pointer] != null)

@@ -2,6 +2,7 @@ package fle.core;
 
 import fle.core.common.CommonLoader;
 import nebula.common.util.ModCompator;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -16,19 +17,19 @@ public class FLE
 	public static final String MODID = "fle";
 	public static final String NAME = "Far Land Era";
 	public static final String VERSION = FLEVersion.MAJOR_VERSION + "." + FLEVersion.MINOR_VERSION + "." + FLEVersion.SUB_VERSION;
-
+	
 	@Instance(FLE.MODID)
 	public static FLE mod;
 	
 	@SidedProxy(serverSide = "fle.core.common.CommonLoader", clientSide = "fle.core.client.ClientLoader")
 	public static CommonLoader loader;
-
+	
 	public static ModCompator compator;
-
+	
 	public FLE()
 	{
 	}
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -38,10 +39,13 @@ public class FLE
 		modMetadata.credits = "ueyudiud";
 		modMetadata.version = FLEVersion.isSnapshotVersion() ? VERSION : VERSION + "-pre" + FLEVersion.SNAPSHOT_VERSION;
 		compator = ModCompator.newCompactor();
-		loader.init(event);
+		Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
+		configuration.load();
+		loader.init(event, configuration);
+		configuration.save();
 		compator.addCompatible("fg", "fargen.compact.fle.SubCompact");
 	}
-
+	
 	@EventHandler
 	public void load(FMLPostInitializationEvent event)
 	{

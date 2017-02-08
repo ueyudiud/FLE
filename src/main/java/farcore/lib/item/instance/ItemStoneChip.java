@@ -21,6 +21,7 @@ import nebula.common.util.Worlds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -163,6 +164,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 			{
 				damage *= ((IEntityDamageEffect) target).getDamageMultiplier(EnumPhysicalDamageType.HIT);
 			}
+			entity1.playSound(SoundEvents.BLOCK_STONE_HIT, 1.0F, 3.0F);
 			if(entity.shooter != null)
 				if(entity.shooter instanceof EntityPlayer)
 				{

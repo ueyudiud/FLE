@@ -1,26 +1,41 @@
 package fle.core.handler;
 
+import static fle.core.FLEConfig.getEntityAttributeTag;
+
+import java.lang.reflect.Method;
+
 import farcore.data.Potions;
+import fle.core.entity.misc.EntityAttributeTag;
 import fle.core.entity.monster.EntityFLECreeper;
 import fle.core.entity.monster.EntityFLESkeleton;
 import fle.core.entity.monster.EntityFLESpider;
 import fle.core.entity.monster.EntityFLEZombie;
+import nebula.Log;
+import nebula.common.util.R;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FleEntityHandler
@@ -33,48 +48,40 @@ public class FleEntityHandler
 		{
 			EntityFLEZombie replace = new EntityFLEZombie(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			replace.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(200.0);
-			replace.setHealth(200.0F);
-			replace.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0);
-			replace.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24);
-			replace.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0);
-			replace.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(5.0);
+			setAttributes(replace, getEntityAttributeTag("Zombie"));
 			event.setCanceled(true);
 		}
 		else if(clazz == EntitySkeleton.class)
 		{
 			EntityFLESkeleton replace = new EntityFLESkeleton(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			replace.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(200.0);
-			replace.setHealth(200.0F);
-			replace.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20.0);
-			replace.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25);
-			replace.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0);
-			replace.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(5.0);
+			setAttributes(replace, getEntityAttributeTag("Skeleton"));
 			event.setCanceled(true);
 		}
 		else if(clazz == EntitySpider.class)
 		{
 			EntityFLESpider replace = new EntityFLESpider(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			replace.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(160.0);
-			replace.setHealth(160.0F);
-			replace.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20.0);
-			replace.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
-			replace.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
+			setAttributes(replace, getEntityAttributeTag("Spider"));
 			event.setCanceled(true);
 		}
 		else if(clazz == EntityCreeper.class)
 		{
 			EntityFLECreeper replace = new EntityFLECreeper(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			replace.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(200.0);
-			replace.setHealth(200.0F);
-			replace.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20.0);
-			replace.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
-			replace.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
+			setAttributes(replace, getEntityAttributeTag("Creeper"));
 			event.setCanceled(true);
 		}
+	}
+	
+	private void setAttributes(EntityMob entity, EntityAttributeTag tag)
+	{
+		entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(tag.maxHealth);
+		entity.setHealth(tag.maxHealth);
+		entity.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(tag.followRange);
+		entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(tag.movementSpeed);
+		entity.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(tag.attackDamage);
+		entity.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(tag.armor);
 	}
 	
 	private <E extends Entity> E replaceEntitySpawn(World world, E replace, Entity source)
@@ -133,30 +140,54 @@ public class FleEntityHandler
 		}
 	}
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityFall(LivingFallEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
-		float distance = event.getDistance();
+		float a = (float) entity.motionY;//For motion is distance caculation.
+		a *= a;
+		a *= .25F;
+		a *= event.getDamageMultiplier();
+		PotionEffect effect = entity.getActivePotionEffect(MobEffects.JUMP_BOOST);
+		a -= effect == null ? 1.0F : (effect.getAmplifier() + 2.0F);
 		float damage;
-		if(distance < 2F)
+		if (a > 0)
 		{
-			damage = 0F;
+			if(a < 4F)
+			{
+				damage = a / 3F;
+			}
+			else
+			{
+				damage = a / 3F + (a - 4F) * a / 8F;
+			}
+			SoundEvent sound;
+			try
+			{
+				Method method = R.getMethod(EntityLivingBase.class, "getFallSound", "", int.class);
+				sound = (SoundEvent) method.invoke(entity, (int) damage);
+				entity.playSound(sound, 1.0F, 1.0F);
+			}
+			catch (Exception exception)
+			{
+				Log.catchingIfDebug(exception);
+			}
+			entity.attackEntityFrom(DamageSource.fall, damage);
+			BlockPos pos = new BlockPos(entity.posX, entity.posY - .2, entity.posZ);
+			IBlockState state = entity.world.getBlockState(pos);
+			
+			if (state.getMaterial() != Material.AIR)
+			{
+				SoundType soundtype = state.getBlock().getSoundType(state, entity.world, pos, entity);
+				entity.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
+			}
+			float tick = a + (entity.getRNG().nextFloat() - entity.getRNG().nextFloat()) * a - 4;
+			if(tick > 0)
+			{
+				entity.addPotionEffect(new PotionEffect(Potions.JUMP_REDUCE, (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
+				entity.addPotionEffect(new PotionEffect(Potions.FRACTURE   , (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
+			}
 		}
-		else if(distance < 6F)
-		{
-			damage = distance / 3F;
-		}
-		else
-		{
-			damage = distance / 3F + (distance - 6F) * distance / 8F;
-		}
-		event.setDamageMultiplier(damage);
-		float tick = distance + (entity.getRNG().nextFloat() - entity.getRNG().nextFloat()) * distance - 4;
-		if(tick > 0)
-		{
-			entity.addPotionEffect(new PotionEffect(Potions.JUMP_REDUCE, (int) (tick * 1200), distance < 8 ? 0 : distance < 15 ? 1 : 2));
-			entity.addPotionEffect(new PotionEffect(Potions.FRACTURE   , (int) (tick * 1200), distance < 8 ? 0 : distance < 15 ? 1 : 2));
-		}
+		event.setDamageMultiplier(0.0F);
 	}
 }
