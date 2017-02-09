@@ -152,7 +152,7 @@ public class LanguageManager
 	
 	public void reset()
 	{
-		Log.info("Nebula reset language manager.");
+		Log.info("Reset language manager.");
 		MAP1.clear();
 	}
 	

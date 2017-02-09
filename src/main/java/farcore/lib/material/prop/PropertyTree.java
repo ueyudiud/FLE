@@ -28,6 +28,11 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 {
 	public static final PropertyTree VOID = new PropertyTree.PropertyTreeWrapper(ITree.VOID);
 	
+	static
+	{
+		VOID.setMaterial(Mat.VOID);
+	}
+	
 	private Mat material;
 	public BlockLogNatural logNatural;
 	public BlockLogArtificial logArtificial;

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import farcore.lib.block.state.PropertyFarInt;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.IStringSerializable;
 
@@ -22,6 +23,11 @@ public class Properties
 {
 	private static final Map<Class<?>, PropertyEnum<?>> PROPERTIES = new HashMap();
 	
+	/**
+	 * Get a enumeration property.
+	 * @param enumClass
+	 * @return
+	 */
 	public static <E extends Enum<E> & IStringSerializable> PropertyEnum<E> get(Class<E> enumClass)
 	{
 		if(PROPERTIES.containsKey(enumClass)) return (PropertyEnum<E>) PROPERTIES.get(enumClass);
@@ -35,6 +41,11 @@ public class Properties
 	public static PropertyFarInt create(String name, int min, int max)
 	{
 		return new PropertyFarInt(name, min, max);
+	}
+	
+	public static PropertyBool create(String name)
+	{
+		return PropertyBool.create(name);
 	}
 	
 	/**

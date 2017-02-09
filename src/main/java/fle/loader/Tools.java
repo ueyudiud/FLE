@@ -11,12 +11,15 @@ import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool.ToolProp;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import fle.api.recipes.instance.FlamableItems;
+import fle.core.items.behavior.BehaviorFirestarter;
 import fle.core.items.behavior.BehaviorHoe;
 import fle.core.items.behavior.BehaviorSpear;
 import fle.core.items.behavior.BehaviorTool;
 import fle.core.items.tool.ToolAxe;
 import fle.core.items.tool.ToolDecorticatingPlate;
 import fle.core.items.tool.ToolDecorticatingStick;
+import fle.core.items.tool.ToolFirestarter;
 import fle.core.items.tool.ToolHardHammer;
 import fle.core.items.tool.ToolHoe;
 import fle.core.items.tool.ToolShovel;
@@ -24,7 +27,9 @@ import fle.core.items.tool.ToolSickle;
 import fle.core.items.tool.ToolSpear;
 import nebula.common.base.Judgable;
 import nebula.common.item.IBehavior;
+import nebula.common.stack.BaseStack;
 import nebula.common.tool.EnumToolType;
+import net.minecraft.init.Items;
 
 public class Tools
 {
@@ -37,8 +42,11 @@ public class Tools
 		addTool(5, "spade.hoe.rock", "Spade Hoe", null, MC.spade_hoe_rock, new ToolHoe(EnumToolTypes.SPADE_HOE), true, true, SubTags.ROPE, SubTags.HANDLE, ImmutableList.of(EnumToolTypes.SPADE_HOE), new BehaviorHoe(EnumToolTypes.SPADE_HOE, 60));
 		addTool(6, "spear.rock", "Spear", "Right click to throw spear out.", MC.spear_rock, new ToolSpear(), true, true, SubTags.ROPE, SubTags.HANDLE, ImmutableList.of(EnumToolTypes.SPEAR), new BehaviorSpear());
 		addTool(7, "sickle.rock", "Sickle", null, MC.sickle_rock, new ToolSickle(), true, true, SubTags.ROPE, SubTags.HANDLE, ImmutableList.of(EnumToolTypes.SICKLE), new BehaviorTool());
+		addTool(8, "firestarter", "Firestarter", null, MC.firestarter, new ToolFirestarter(), false, false, null, null, ImmutableList.of(EnumToolTypes.FIRESTARTER), new BehaviorFirestarter());
 		addTool(11, "decorticating.plate", "Decorticating Plate", null, MC.decorticating_plate, new ToolDecorticatingPlate(), false, false, null, null, ImmutableList.of(EnumToolTypes.DECORTICATING_PLATE));
 		addTool(12, "decorticating.stick", "Decorticating Stick", null, MC.decorticating_stick, new ToolDecorticatingStick(), false, false, null, null, ImmutableList.of(EnumToolTypes.DECORTICATING_STICK));
+		
+		FlamableItems.addFlamableItem(new BaseStack(Items.PAPER), 60F, 200F);
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,

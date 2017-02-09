@@ -5,19 +5,15 @@ import java.util.List;
 import farcore.data.EnumBlock;
 import farcore.data.SubTags;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.tile.instance.TESapling;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
-import nebula.client.util.Client;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
-import nebula.common.block.BlockBase;
+import nebula.common.block.BlockSingleTE;
 import nebula.common.util.OreDict;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +22,6 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -36,7 +31,7 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockSapling extends BlockBase implements IPlantable, ITileEntityProvider
+public class BlockSapling extends BlockSingleTE implements IPlantable
 {
 	public static final AxisAlignedBB SAPLING_AABB = new AxisAlignedBB(.1F, .0F, .1F, .9F, .8F, .9F);
 	
@@ -129,36 +124,16 @@ public class BlockSapling extends BlockBase implements IPlantable, ITileEntityPr
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public boolean isFullCube(IBlockState state)
 	{
-		return BlockRenderLayer.CUTOUT_MIPPED;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager)
-	{
-		TileEntity tile = world.getTileEntity(target.getBlockPos());
-		if(tile instanceof TESapling)
-		{
-			Client.addBlockHitEffect(world, RANDOM, state, target.sideHit, target.getBlockPos(), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).tree.getRegisteredName()));
-			return true;
-		}
 		return false;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
+	public BlockRenderLayer getBlockLayer()
 	{
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TESapling && ((TESapling) tile).tree != PropertyTree.VOID)
-		{
-			Client.addBlockDestroyEffects(world, pos, world.getBlockState(pos), manager, ModelSapling.ICON_MAP.get(((TESapling) tile).tree.getRegisteredName()));
-			return true;
-		}
-		return true;
+		return BlockRenderLayer.CUTOUT;
 	}
 	
 	@Override

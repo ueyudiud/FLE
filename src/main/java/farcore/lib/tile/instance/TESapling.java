@@ -8,24 +8,32 @@ import farcore.data.MP;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
+import farcore.lib.model.block.ModelSapling;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.TreeInfo;
+import nebula.client.util.Client;
 import nebula.common.data.Misc;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.tile.TEAged;
 import nebula.common.util.Direction;
 import nebula.common.util.NBTs;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TESapling extends TEAged
-implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy
+implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects, ITB_AddDestroyEffects
 {
 	private float age;
 	public TreeInfo info;
@@ -51,7 +59,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.tree = (PropertyTree) Mat.material(nbt.getString("tree")).getProperty(MP.property_wood, PropertyTree.VOID);
+		this.tree = (PropertyTree) Mat.getMaterialByNameOrDefault(nbt, "tree", Mat.VOID).getProperty(MP.property_wood);
 		this.age = nbt.getFloat("age");
 	}
 	
@@ -61,27 +69,29 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("t"))
 		{
-			this.tree = (PropertyTree) Mat.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_wood, PropertyTree.VOID);
+			this.tree = (PropertyTree) Mat.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_wood);
 			markBlockRenderUpdate();
 		}
-	}
-	
-	public void setTree(EntityLivingBase entity, Mat material)
-	{
-		this.tree = (PropertyTree) material.getProperty(MP.property_wood, PropertyTree.VOID);
-		syncToNearby();
 	}
 	
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
-		setTree(placer, Mat.material(stack.getItemDamage()));
+		this.tree = (PropertyTree) Mat.material(stack.getItemDamage()).getProperty(MP.property_wood);
+		if (this.tree == PropertyTree.VOID)
+		{
+			removeBlock();
+		}
+		else
+		{
+			syncToNearby();
+		}
 	}
 	
 	@Override
 	protected void updateServer1()
 	{
-		if(!canBlockStay())
+		if(!canBlockStay() || this.tree == PropertyTree.VOID)
 		{
 			removeBlock();
 			return;
@@ -97,7 +107,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy
 	@Override
 	protected float getSyncRange()
 	{
-		return 80F;
+		return 64F;
 	}
 	
 	public float age()
@@ -162,5 +172,21 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy
 		list.add("Name : " + this.tree.getRegisteredName());
 		list.add("DNA : " + this.info.DNA);
 		list.add("Grow Progress : " + (int) this.age + "/" + getMaxAge());
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
+	{
+		Client.addBlockHitEffect(this.world, this.random, getBlockState(), target.sideHit, target.getBlockPos(), manager, ModelSapling.ICON_MAP.get(this.tree.getRegisteredName()));
+		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(ParticleManager manager)
+	{
+		Client.addBlockDestroyEffects(this.world, this.pos, getBlockState(), manager, ModelSapling.ICON_MAP.get(this.tree.getRegisteredName()));
+		return true;
 	}
 }

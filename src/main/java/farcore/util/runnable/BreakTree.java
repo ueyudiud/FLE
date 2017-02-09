@@ -31,18 +31,18 @@ public class BreakTree implements Runnable
 	public void run()
 	{
 		boolean[][][] cacheArray;
-		scanLog(world, cacheArray = new boolean[2 * V.treeScanRange + 1][256][2 * V.treeScanRange + 1], (byte) 0, (byte) 0, (byte) 0);
-		if(cacheDrop > 0)
+		scanLog(this.world, cacheArray = new boolean[2 * V.treeScanRange + 1][256][2 * V.treeScanRange + 1], (byte) 0, (byte) 0, (byte) 0);
+		if(this.cacheDrop > 0)
 		{
-			ItemStack stack = new ItemStack(EnumItem.log.item, 1, block.tree.material().id);
-			ItemTreeLog.setLogSize(stack, cacheDrop);
-			Worlds.spawnDropInWorld(world, pos, stack);
+			ItemStack stack = new ItemStack(EnumItem.log.item, 1, this.block.tree.material().id);
+			ItemTreeLog.setLogSize(stack, this.cacheDrop);
+			Worlds.spawnDropInWorld(this.world, this.pos, stack);
 		}
 	}
 	
 	public void scanLog(World world, boolean[][][] array, byte x, byte y, byte z)
 	{
-		if(y >= 0 && pos.getY() + y < 256)
+		if(y >= 0 && this.pos.getY() + y < 256)
 		{
 			int offsetX = 0,
 					offsetY = 0,
@@ -56,25 +56,24 @@ public class BreakTree implements Runnable
 						if((offsetX != 0 || offsetY != 0 || offsetZ != 0) &&
 								Math.abs(x + offsetX) <= V.treeScanRange &&
 								Math.abs(z + offsetZ) <= V.treeScanRange &&
-								pos.getY() + y + offsetY < 256)
+								this.pos.getY() + y + offsetY < 256)
 							if(!array[x + offsetX + V.treeScanRange][y + offsetY][z + offsetZ + V.treeScanRange] &&
-									block.isLog(world, pos.add(x + offsetX, y + offsetY, z + offsetZ)))
+									this.block.isLog(world, this.pos.add(x + offsetX, y + offsetY, z + offsetZ)))
 							{
 								scanLog(world, array, (byte) (x + offsetX), (byte) (y + offsetY), (byte) (z + offsetZ));
 							}
 				}
 			}
-			++cacheDrop;
-			BlockPos pos1 = pos.add(x, y, z);
-			world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 2);
-			
+			++this.cacheDrop;
+			BlockPos pos1 = this.pos.add(x, y, z);
+			world.setBlockState(pos1, Blocks.AIR.getDefaultState(), 2);//Some update causes out of sych.
 			beginLeavesDecay(world, pos1.up());
 			beginLeavesDecay(world, pos1.down());
 			beginLeavesDecay(world, pos1.south());
 			beginLeavesDecay(world, pos1.north());
 			beginLeavesDecay(world, pos1.east());
 			beginLeavesDecay(world, pos1.west());
-			Worlds.spawnDropsInWorld(world, pos1, block.tree.getLogOtherDrop(world, pos1, new ArrayList()));
+			Worlds.spawnDropsInWorld(world, pos1, this.block.tree.getLogOtherDrop(world, pos1, new ArrayList()));
 		}
 	}
 	

@@ -2,6 +2,7 @@ package farcore.lib.block.instance;
 
 import java.util.Random;
 
+import farcore.data.Config;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.util.runnable.BreakTree;
@@ -47,7 +48,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			{
 				return $tree.getLogState(this, meta, false);
 			}
-
+			
 			@Override
 			protected IBlockState initDefaultState(IBlockState state)
 			{
@@ -69,7 +70,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		tree.breakLog(worldIn, pos, state, false);
+		this.tree.breakLog(worldIn, pos, state, false);
 	}
 	
 	@Override
@@ -81,7 +82,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		tree.updateLog(worldIn, pos, rand, false);
+		this.tree.updateLog(worldIn, pos, rand, false);
 		label:
 		{
 			if(!worldIn.isRemote)
@@ -120,7 +121,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		return tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, false);
+		return this.tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, false);
 	}
 	
 	@Override
@@ -128,7 +129,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	{
 		harvestBlock(worldIn, player, pos, state, null, player.getHeldItemMainhand());
 	}
-
+	
 	@Override
 	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
@@ -165,21 +166,28 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	private void breakTree(World world, BlockPos pos)
 	{
 		BreakTree runnable = new BreakTree(this, world, pos);
-		new Thread(runnable).start();
+		if (Config.breakTreeMultiThread)
+		{
+			new Thread(runnable).start();
+		}
+		else
+		{
+			runnable.run();
+		}
 	}
 	
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
-		return tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, false);
+		return this.tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, false);
 	}
 	
 	@Override
 	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
-		return tree.onToolUseLog(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ, false);
+		return this.tree.onToolUseLog(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ, false);
 	}
 	
 	@Override

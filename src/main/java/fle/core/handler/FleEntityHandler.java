@@ -1,6 +1,6 @@
 package fle.core.handler;
 
-import static fle.core.FLEConfig.getEntityAttributeTag;
+import static fle.loader.FLEConfig.getEntityAttributeTag;
 
 import java.lang.reflect.Method;
 

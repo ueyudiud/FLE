@@ -101,32 +101,32 @@ public class Client
 			int k = pos.getZ();
 			float f = 0.1F;
 			AxisAlignedBB axisalignedbb = state.getBoundingBox(world, pos);
-			double d0 = i + rand.nextDouble() * (axisalignedbb.maxX - axisalignedbb.minX - 0.20000000298023224D) + 0.10000000149011612D + axisalignedbb.minX;
-			double d1 = j + rand.nextDouble() * (axisalignedbb.maxY - axisalignedbb.minY - 0.20000000298023224D) + 0.10000000149011612D + axisalignedbb.minY;
-			double d2 = k + rand.nextDouble() * (axisalignedbb.maxZ - axisalignedbb.minZ - 0.20000000298023224D) + 0.10000000149011612D + axisalignedbb.minZ;
+			double d0 = i + rand.nextDouble() * (axisalignedbb.maxX - axisalignedbb.minX - 0.2) + 0.1 + axisalignedbb.minX;
+			double d1 = j + rand.nextDouble() * (axisalignedbb.maxY - axisalignedbb.minY - 0.2) + 0.1 + axisalignedbb.minY;
+			double d2 = k + rand.nextDouble() * (axisalignedbb.maxZ - axisalignedbb.minZ - 0.2) + 0.1 + axisalignedbb.minZ;
 			if (side == EnumFacing.DOWN)
 			{
-				d1 = j + axisalignedbb.minY - 0.10000000149011612D;
+				d1 = j + axisalignedbb.minY - 0.1;
 			}
 			if (side == EnumFacing.UP)
 			{
-				d1 = j + axisalignedbb.maxY + 0.10000000149011612D;
+				d1 = j + axisalignedbb.maxY + 0.1;
 			}
 			if (side == EnumFacing.NORTH)
 			{
-				d2 = k + axisalignedbb.minZ - 0.10000000149011612D;
+				d2 = k + axisalignedbb.minZ - 0.1;
 			}
 			if (side == EnumFacing.SOUTH)
 			{
-				d2 = k + axisalignedbb.maxZ + 0.10000000149011612D;
+				d2 = k + axisalignedbb.maxZ + 0.1;
 			}
 			if (side == EnumFacing.WEST)
 			{
-				d0 = i + axisalignedbb.minX - 0.10000000149011612D;
+				d0 = i + axisalignedbb.minX - 0.1;
 			}
 			if (side == EnumFacing.EAST)
 			{
-				d0 = i + axisalignedbb.maxX + 0.10000000149011612D;
+				d0 = i + axisalignedbb.maxX + 0.1;
 			}
 			manager.addEffect((new ParticleDiggingExt(world, d0, d1, d2, 0.0D, 0.0D, 0.0D, state, icon)).setBlockPos(pos).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F));
 		}

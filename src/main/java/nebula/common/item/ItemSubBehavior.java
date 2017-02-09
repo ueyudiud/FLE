@@ -27,6 +27,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -399,10 +400,38 @@ public class ItemSubBehavior extends ItemBase
 		return flag;
 	}
 	
+	/**
+	 * The ** forge, the meta data is initialized after capabilities initialized! These
+	 * cause I can only make provider with lazy loading.
+	 */
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
 	{
-		return this.providers.getOrDefault(getDamage(stack), IItemCapabilityProvider.NONE).initCapabilities(stack, nbt);
+		return new ICapabilityProvider()
+		{
+			ICapabilityProvider provider;
+			
+			private ICapabilityProvider getProvider()
+			{
+				if (this.provider == null)
+				{
+					this.provider = ItemSubBehavior.this.providers.getOrDefault(getBaseDamage(stack), IItemCapabilityProvider.NONE).initCapabilities(stack, nbt);
+				}
+				return this.provider;
+			}
+			
+			@Override
+			public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+			{
+				return getProvider().hasCapability(capability, facing);
+			}
+			
+			@Override
+			public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+			{
+				return getProvider().getCapability(capability, facing);
+			}
+		};
 	}
 	
 	/**

@@ -33,7 +33,7 @@ import net.minecraft.block.material.Material;
 public class M
 {
 	//Metal
-	public static final Mat Copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build();
+	public static final Mat copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build();
 	//Rocks
 	public static final Mat stone 			= new MaterialBuilder(7001, "minecraft", "stone"			, "Stone"			, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F,  4.0F, -0.5F).build().setRock( 4, 1.5F,  8.0F);
 	public static final Mat compact_stone	= new MaterialBuilder(7002, FarCore.ID , "compactstone"		, "CompactStone"	, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F,  4.0F, -0.5F).build().setRock( 5, 2.0F, 12.0F);
@@ -63,15 +63,15 @@ public class M
 	public static final Mat pheosol			= new MaterialBuilder(7109, FarCore.ID , "pheosol"			, "Pheosol"			, "Pheosol"				).setRGBa(0x6C4626FF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	public static final Mat aterocalcosol	= new MaterialBuilder(7110, FarCore.ID , "aterocalcosol"	, "Aterocalcosol"	, "Aterocalcosol"		).setRGBa(0x25211EFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	//Trees
-	public static final Mat oak				= new Mat(8001, "minecraft", "oak", "Oak", "Oak").setWood(5.3F, 1.0F, 20.0F);
-	public static final Mat spruce			= new Mat(8002, "minecraft", "spruce", "Spruce", "Spruce").setWood(2.3F, 1.0F, 20.0F);
-	public static final Mat birch			= new Mat(8003, "minecraft", "birch", "Birch", "Birch").setWood(4.0F, 1.0F, 20.0F);
-	public static final Mat ceiba			= new Mat(8004, "minecraft", "ceiba", "Ceiba", "Ceiba").setWood(1.1F, 1.0F, 20.0F);
-	public static final Mat acacia			= new Mat(8005, "minecraft", "acacia", "Acacia", "Acacia").setWood(3.0F, 1.0F, 20.0F);
-	public static final Mat oak_black		= new Mat(8006, "minecraft", "oak-black", "DarkOak", "Dark Oak").setWood(5.4F, 1.0F, 20.0F);
-	public static final Mat aspen			= new Mat(8011, FarCore.ID, "aspen", "Aspen", "Aspen").setWood(1.6F, 1.0F, 20.0F);
-	public static final Mat morus			= new Mat(8012, FarCore.ID, "morus", "Morus", "Morus").setWood(3.0F, 1.0F, 20.0F);
-	public static final Mat willow			= new Mat(8013, FarCore.ID, "willow", "Willow", "Willow").setWood(3.0F, 1.0F, 20.0F);
+	public static final Mat oak				= new MaterialBuilder(8001, "minecraft", "oak"				, "Oak"				, "Oak"					)                    .setToolProp(   7,  4, 1.2F, 0.1F,  2.0F, -0.2F).build().setWood(5.3F, 1.0F, 20.0F);
+	public static final Mat spruce			= new MaterialBuilder(8002, "minecraft", "spruce"			, "Spruce"			, "Spruce"				)                                                                    .build().setWood(2.3F, 1.0F, 20.0F);
+	public static final Mat birch			= new MaterialBuilder(8003, "minecraft", "birch"			, "Birch"			, "Birch"				)                    .setToolProp(   6,  3, 1.0F, 0.1F,  1.6F, -0.2F).build().setWood(4.0F, 1.0F, 20.0F);
+	public static final Mat ceiba			= new MaterialBuilder(8004, "minecraft", "ceiba"			, "Ceiba"			, "Ceiba"				)                                                                    .build().setWood(1.1F, 1.0F, 20.0F);
+	public static final Mat acacia			= new MaterialBuilder(8005, "minecraft", "acacia"			, "Acacia"			, "Acacia"				)                    .setToolProp(   5,  2, 0.8F, 0.1F,  1.0F, -0.2F).build().setWood(3.0F, 1.0F, 20.0F);
+	public static final Mat oak_black		= new MaterialBuilder(8006, "minecraft", "oak-black"		, "DarkOak"			, "Dark Oak"			)                    .setToolProp(   7,  4, 1.3F, 0.1F,  2.0F, -0.2F).build().setWood(5.4F, 1.0F, 20.0F);
+	public static final Mat aspen			= new MaterialBuilder(8011, FarCore.ID , "aspen"			, "Aspen"			, "Aspen"				)                                                                    .build().setWood(1.6F, 1.0F, 20.0F);
+	public static final Mat morus			= new MaterialBuilder(8012, FarCore.ID , "morus"			, "Morus"			, "Morus"				)                                                                    .build().setWood(3.0F, 1.0F, 20.0F);
+	public static final Mat willow			= new MaterialBuilder(8013, FarCore.ID , "willow"			, "Willow"			, "Willow"				)                                                                    .build().setWood(3.0F, 1.0F, 20.0F);
 	//Crops
 	public static final Mat wheat			= new Mat(9001, FarCore.ID, "wheat", "Wheat", "Wheat");
 	public static final Mat millet			= new Mat(9002, FarCore.ID, "millet", "Millet", "Millet");

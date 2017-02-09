@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Maps;
 
 import farcore.data.EnumFluid;
@@ -15,15 +17,15 @@ import farcore.lib.stack.fluid.IItemFluidContainerV1;
 import farcore.util.Localization;
 import fle.core.FLE;
 import nebula.client.model.ColorMultiplier;
-import nebula.client.model.NebulaItemModelLoader;
 import nebula.client.model.FlexibleItemSubmetaGetterLoader;
 import nebula.client.model.FlexibleTextureSet;
+import nebula.client.model.NebulaItemModelLoader;
 import nebula.client.render.IProgressBarStyle;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.item.IBehavior;
-import nebula.common.item.ItemSubBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
+import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.FluidStacks;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
@@ -37,7 +39,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -208,7 +209,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		return fluid == null ? 0 : fluid.amount;
 	}
 	
-	protected void setFluid(ItemStack stack, FluidStack contain)
+	protected void setFluid(ItemStack stack, @Nullable FluidStack contain)
 	{
 		if(contain == null || contain.amount == 0)
 		{
@@ -288,12 +289,9 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{
 		ItemStack stack = new ItemStack(this, 1, meta);
-		if(this.propertyMap.get(meta).capacity >= 1000)
-		{
-			setFluid(stack, new FluidStack(FluidRegistry.WATER, 1000));
-			subItems.add(stack.copy());
-		}
-		setFluid(stack, new FluidStack(EnumFluid.water.fluid, 100));
+		FluidContainerProperty property = this.propertyMap.get(meta);
+		subItems.add(stack.copy());
+		setFluid(stack, new FluidStack(EnumFluid.water.fluid, property.capacity));
 		subItems.add(stack);
 	}
 	

@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package fle.core;
+package fle.loader;
 
 import java.util.HashMap;
 import java.util.Map;

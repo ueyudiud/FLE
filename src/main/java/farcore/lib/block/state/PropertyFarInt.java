@@ -18,13 +18,13 @@ public class PropertyFarInt implements IFarProperty<Integer>
 		this.name = name;
 		this.min = min;
 		this.max = max;
-		instance = min;
+		this.instance = min;
 		ImmutableList.Builder<Integer> builder = ImmutableList.builder();
 		for (int i = min; i <= max; ++i)
 		{
 			builder.add(i);
 		}
-		list = builder.build();
+		this.list = builder.build();
 	}
 	
 	public PropertyFarInt setInstance(int instance)
@@ -32,17 +32,17 @@ public class PropertyFarInt implements IFarProperty<Integer>
 		this.instance = instance;
 		return this;
 	}
-
+	
 	@Override
 	public String getName()
 	{
-		return name;
+		return this.name;
 	}
 	
 	@Override
 	public Collection<Integer> getAllowedValues()
 	{
-		return list;
+		return this.list;
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class PropertyFarInt implements IFarProperty<Integer>
 	public Optional<Integer> parseValue(String value)
 	{
 		Integer integer = Integer.getInteger(value);
-		return integer == null ? Optional.absent() : Optional.of(integer);
+		return integer == null || (integer > this.max || integer < this.min) ? Optional.absent() : Optional.of(integer);
 	}
 	
 	@Override
@@ -67,6 +67,6 @@ public class PropertyFarInt implements IFarProperty<Integer>
 	@Override
 	public Integer instance()
 	{
-		return instance;
+		return this.instance;
 	}
 }

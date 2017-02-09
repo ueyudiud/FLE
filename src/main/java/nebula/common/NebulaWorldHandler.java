@@ -134,11 +134,17 @@ public class NebulaWorldHandler
 	
 	public static void markBlockForUpdate(World world, Collection<NotifyEntry> pos)
 	{
-		Worlds.getListFromWorldDimention(updatePos, world, true).addAll(pos);
+		synchronized (updatePos)
+		{
+			Worlds.getListFromWorldDimention(updatePos, world, true).addAll(pos);
+		}
 	}
 	public static void markBlockForUpdate(World world, BlockPos pos)
 	{
-		Worlds.getListFromWorldDimention(updatePos, world, true).add(new NotifyEntry(world.getBlockState(pos), pos));
+		synchronized (updatePos)
+		{
+			Worlds.getListFromWorldDimention(updatePos, world, true).add(new NotifyEntry(world.getBlockState(pos), pos));
+		}
 	}
 	
 	private boolean notifyFlag = false;
@@ -159,7 +165,10 @@ public class NebulaWorldHandler
 		{
 			nebula.common.util.L.put(unlistedObjects, dim, list);
 		}
-		updatePos.remove(dim);
+		synchronized (updatePos)
+		{
+			updatePos.remove(dim);
+		}
 	}
 	
 	@SubscribeEvent
@@ -338,7 +347,11 @@ public class NebulaWorldHandler
 	
 	private void updateNotifiedNeighbours(World world)
 	{
-		List<NotifyEntry> list = updatePos.remove(world.provider.getDimension());
+		List<NotifyEntry> list;
+		synchronized (updatePos)
+		{
+			list = updatePos.remove(world.provider.getDimension());
+		}
 		if(list != null)
 		{
 			MutableBlockPos pos = new MutableBlockPos();

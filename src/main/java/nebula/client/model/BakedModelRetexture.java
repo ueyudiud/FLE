@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Iterators;
 
+import nebula.Log;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.blockstate.BlockStateWrapper;
 import net.minecraft.block.state.IBlockState;
@@ -44,7 +45,15 @@ public abstract class BakedModelRetexture implements IBakedModel
 	{
 		List<BakedQuad> quads = this.parent.getQuads(unwrapState(state), side, rand);
 		ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
-		replaceQuads(state, builder, quads);
+		try
+		{
+			replaceQuads(state, builder, quads);
+		}
+		catch (Exception exception)
+		{
+			Log.catchingIfDebug(exception);
+			return ImmutableList.of();
+		}
 		return builder.build();
 	}
 	

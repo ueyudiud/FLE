@@ -14,8 +14,11 @@ import farcore.lib.tile.IDebugableTile;
 import fle.api.ditch.DitchBlockHandler;
 import fle.api.ditch.DitchFactory;
 import fle.api.tile.IDitchTile;
+import nebula.client.util.Client;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
 import nebula.common.tile.IUpdatableTile;
@@ -26,6 +29,7 @@ import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.util.TileEntities;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +39,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -47,7 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TEDitch extends TESynchronization
 implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, ITP_BlockHardness,
-IDebugableTile, INetworkedSyncTile
+IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
 	private static final AxisAlignedBB AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F);
 	
@@ -407,5 +412,21 @@ IDebugableTile, INetworkedSyncTile
 			this.flowAmount[direction.horizontalOrdinal] += FluidStacks.getAmount(stack);
 		}
 		return stack;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(RayTraceResult target, ParticleManager manager)
+	{
+		Client.addBlockDestroyEffects(this.world, this.pos, getBlockState(), manager, getMaterialIcon());
+		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(ParticleManager manager)
+	{
+		Client.addBlockDestroyEffects(this.world, this.pos, getBlockState(), manager, getMaterialIcon());
+		return true;
 	}
 }

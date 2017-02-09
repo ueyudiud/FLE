@@ -56,6 +56,12 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 	}
 	
 	@Override
+	public String getModID()
+	{
+		return FarCore.INNER_RENDER;
+	}
+	
+	@Override
 	public String getLoaderPrefix()
 	{
 		return "sapling";

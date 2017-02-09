@@ -59,6 +59,7 @@ public class MC
 	public static final MatCondition spade_hoe_rock = new MatCondition("spade_hoe.rock", "spadeHoe", "Spade-Hoe", "%s Spade-Hoe").setSize(288L, 288L, 1.3F).setFilter(Judgable.and(SubTags.ROCK, SubTags.TOOL));
 	public static final MatCondition spear_rock = new MatCondition("spear_rock", "spear", "Spear", "%s Spear").setSize(288L, 288L, 1.2F).setFilter(Judgable.and(SubTags.ROCK, SubTags.TOOL));
 	public static final MatCondition sickle_rock = new MatCondition("sickle_rock", "sickle", "Sickle", "%s Sickle").setSize(288L, 288L, 1.0F).setFilter(Judgable.and(SubTags.ROCK, SubTags.TOOL));
+	public static final MatCondition firestarter = new MatCondition("firestarter", "firestarter", "Firestarter", "%s Firestarter").setSize(288L, 288L, 1.0F).setFilter(Judgable.and(SubTags.WOOD, SubTags.TOOL));
 	public static final MatCondition decorticating_plate = new MatCondition("decorticating.plate", "decorticatingPlate", "Decorticating Plate", "%s Decorticating Plate").setFilter(Judgable.and(SubTags.ROCK, SubTags.TOOL));
 	public static final MatCondition decorticating_stick = new MatCondition("decorticating.stick", "decorticatingStick", "Decorticating Stick", "%s Decorticating Stick").setFilter(Judgable.and(SubTags.ROCK, SubTags.TOOL));
 	

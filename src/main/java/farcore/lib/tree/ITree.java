@@ -25,6 +25,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+/**
+ * Unused now, use PropertyTree instead.
+ * @author ueyudiud
+ * @see farcore.lib.material.prop.PropertyTree
+ */
+@Deprecated
 public interface ITree extends ITreeGenerator, ISpecie<TreeInfo>, IRegisteredNameable
 {
 	ITree VOID = new TreeVoid();

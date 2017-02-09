@@ -288,12 +288,19 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public void onBlockHarvested(ItemStack stack, HarvestDropsEvent event)
 	{
-		if(!isItemUsable(stack)) return;
+	}
+	
+	@Override
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos,
+			EntityLivingBase entityLiving)
+	{
+		if(!isItemUsable(stack)) return false;
 		IToolStat stat = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat;
-		if(stat.canHarvestDrop(stack, event.getState()))
+		if(stat.canHarvestDrop(stack, state))
 		{
-			onToolUse(event.getHarvester(), stack, stat.getToolType(), stat.getToolDamagePerBreak(stack, event.getHarvester(), event.getWorld(), event.getPos(), event.getState()));
+			onToolUse(entityLiving, stack, stat.getToolType(), stat.getToolDamagePerBreak(stack, entityLiving, worldIn, pos, state));
 		}
+		return true;
 	}
 	
 	@Override

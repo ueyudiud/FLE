@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 
@@ -35,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -54,6 +56,12 @@ public class Worlds
 			{3, 2, 5, 4},
 			{1, 0, 5, 4},
 			{1, 0, 3, 2}};
+	
+	public static boolean isAirOrReplacable(IBlockAccess world, BlockPos pos)
+	{
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().isAir(state, world, pos) || state.getBlock().isReplaceable(world, pos);
+	}
 	
 	public static void breakBlockWithoutSource(World world, BlockPos pos, boolean harvestBlock)
 	{
@@ -466,5 +474,16 @@ public class Worlds
 		{
 			return false;
 		}
+	}
+	
+	public static void spawnParticleWithRandomOffset(World world, EnumParticleTypes types, double xCoord,
+			double yCoord, double zCoord, double motionX, double motionY, double motionZ, double randScale, int...datas)
+	{
+		Random random = L.random();
+		world.spawnParticle(types,
+				xCoord + (random.nextFloat() - random.nextFloat()) * randScale,
+				yCoord + (random.nextFloat() - random.nextFloat()) * randScale,
+				zCoord + (random.nextFloat() - random.nextFloat()) * randScale,
+				motionX, motionY, motionZ, datas);
 	}
 }

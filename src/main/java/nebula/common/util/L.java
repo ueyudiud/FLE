@@ -22,12 +22,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-
-import nebula.common.base.Judgable;
-
 import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Table;
 
+import nebula.common.base.Judgable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
@@ -239,6 +237,15 @@ public class L
 		return false;
 	}
 	
+	public static <T> T get(Collection<? extends T> collection, Judgable<T> judgable)
+	{
+		if (collection == null || collection.isEmpty()) return null;
+		for (T target : collection)
+			if (judgable.isTrue(target))
+				return target;
+		return null;
+	}
+	
 	public static <T> Set<T> containSet(Collection<? extends T> collection, Judgable<T> checker)
 	{
 		if(collection == null || collection.isEmpty()) return ImmutableSet.of();
@@ -385,7 +392,7 @@ public class L
 		if (bound < 0) throw new IllegalArgumentException("The bound must be possitive number!");
 		switch (bound)
 		{
-		case 0 : 
+		case 0 :
 		case 1 : return 0;
 		default: return rand.nextInt(bound);
 		}

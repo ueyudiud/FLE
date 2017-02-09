@@ -11,6 +11,7 @@ import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.material.prop.PropertyEdible;
 import farcore.lib.material.prop.PropertyOre;
 import farcore.lib.material.prop.PropertyTool;
+import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
 import nebula.common.base.IPropertyMap.IProperty;
@@ -32,7 +33,7 @@ public class MP
 	public static final IProperty<PropertyBasic> property_basic = () -> new PropertyBasic();
 	public static final IProperty<PropertyTool> property_tool = () -> null;
 	public static final IProperty<PropertyOre> property_ore = () -> new PropertyOre();
-	public static final IProperty<PropertyWood> property_wood = () -> null;
+	public static final IProperty<PropertyWood> property_wood = () -> PropertyTree.VOID;
 	public static final IProperty<PropertyBlockable> property_soil = () -> null;
 	public static final IProperty<RockBehavior> property_rock = () -> null;
 	public static final IProperty<ICrop> property_crop = () -> ICrop.VOID;
