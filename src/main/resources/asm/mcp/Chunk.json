@@ -1,0 +1,34 @@
+{
+	"name": "net.minecraft.world.chunk.Chunk",
+	"modification": [
+		{
+			"name": "getBiome|(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;",
+			"labels": [
+				{
+					"type": "replace",
+					"owner": "net/minecraft/world/biome/Biome",
+					"name": "getBiome",
+					"desc": "(I)Lnet/minecraft/world/biome/Biome;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 1
+						},
+						{
+							"opcode": 25,
+							"var": 2
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/common/CommonOverride",
+							"name": "regetBiome",
+							"desc": "(ILnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/BiomeProvider;)Lnet/minecraft/world/biome/Biome;",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

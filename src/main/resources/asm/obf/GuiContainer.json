@@ -1,0 +1,43 @@
+{
+	"name": "net.minecraft.client.gui.inventory.GuiContainer",
+	"modification": [
+		{
+			"name": "a|(Ladz;IILjava/lang/String;)V",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 206,
+					"off": 19,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderCustomItemOverlayIntoGUI",
+							"desc": "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "a|(Lacc;)V",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 267,
+					"off": 9,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderCustomItemOverlayIntoGUI",
+							"desc": "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.block;
 
 import net.minecraft.block.state.IBlockState;

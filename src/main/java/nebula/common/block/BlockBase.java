@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.block;
 
 import java.util.ArrayList;
@@ -37,6 +41,10 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The base block type of nebula.
+ * @author ueyudiud
+ */
 public class BlockBase extends Block implements IRegisteredNameable, IRenderRegister
 {
 	private static List<BlockBase> list = new ArrayList();

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -55,25 +53,20 @@ public class ClassTransformerBase implements IClassTransformer
 {
 	private static final DecimalFormat FORMAT = new DecimalFormat("000");
 	private static final boolean codeOutput = true;
-	private static File file;
-	private static PrintStream keyOutputStream;
+	static File file;
+	static PrintStream keyOutputStream;
 	public static final Logger LOG = LogManager.getLogger("Nebula ASM");
 	
-	private static final Map<String, OpInformation> informations = new HashMap();
+	static final Map<String, OpInformation> informations = new HashMap();
 	
 	private static void outputInit()
 	{
 		if(file == null)
 		{
-			File file = NebulaLoadingPlugin.location;
-			if(file.isFile())
+			file = new File(new File(NebulaLoadingPlugin.location, "asm"), "logs");
+			if(!file.exists())
 			{
-				file = file.getParentFile();
-			}
-			ClassTransformerBase.file = new File(file, "nebula.asm");
-			if(!ClassTransformerBase.file.exists())
-			{
-				ClassTransformerBase.file.mkdirs();
+				file.mkdirs();
 			}
 		}
 		if(keyOutputStream == null)
@@ -232,38 +225,12 @@ public class ClassTransformerBase implements IClassTransformer
 	private boolean putedReplacements = false;
 	private int numInsertions = 0;
 	
-	protected void initObfModifies()
-	{
-		
-	}
-	
-	protected void initMcpModifies()
-	{
-		
-	}
-	
-	private void init()
-	{
-		if(!NebulaLoadingPlugin.loadedData) return;
-		if(!this.putedReplacements)
-		{
-			this.putedReplacements = true;
-			if(NebulaLoadingPlugin.runtimeDeobf)
-			{
-				initObfModifies();
-			}
-			else
-			{
-				initMcpModifies();
-			}
-		}
-		outputInit();
-	}
-	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
-		init();
+		if (transformedName.startsWith("com.google.gson."))
+			return basicClass;//Gson uses do not modify.
+		outputInit();
 		if(transformedName.startsWith("net.minecraft."))
 		{
 			keyOutputStream.println(name + "=" + transformedName);
@@ -329,18 +296,22 @@ public class ClassTransformerBase implements IClassTransformer
 		{
 			info = list.get(0);
 		}
-		else
-			return false;
-		for(int idx = 0; (idx < instructions.size() && !list.isEmpty()); ++idx)
+		else return false;
+		for (int idx = 0; (idx < instructions.size() && !list.isEmpty()); ++idx)
 		{
 			this.numInsertions = 0;
 			while (info != null)
 			{
-				if (!isLine(instructions.get(idx), info.line))
+				if (!info.matchNode(instructions.get(idx))) break;
+				int off = info.performAnchorOperation(instructions, idx, this.numInsertions);
+				if (info.off < 0)//If offset is negative, will return to last node to check (For it may modified before)
 				{
-					break;
+					idx += off;
 				}
-				performAnchorOperation(instructions, idx, info);
+				else
+				{
+					this.numInsertions += off;
+				}
 				list.remove(0);
 				if (!list.isEmpty())
 				{
@@ -432,165 +403,6 @@ public class ClassTransformerBase implements IClassTransformer
 			current1 = methodInsn.get(anchor + input.off + this.numInsertions + input.len);
 			methodInsn.insert(current1, current);
 			break;
-		}
-	}
-	
-	private int findLine(InsnList methodList, int line)
-	{
-		for (int index = 0; index < methodList.size(); index++)
-		{
-			if (isLine(methodList.get(index), line))
-				return index;
-		}
-		return -1;
-	}
-	
-	private boolean isLine(AbstractInsnNode current, int line)
-	{
-		if (current instanceof LineNumberNode)
-		{
-			int l = ((LineNumberNode) current).line;
-			if (l == line)
-				return true;
-		}
-		return false;
-	}
-	
-	public static enum OpType
-	{
-		INSERT,
-		INSERT_BEFORE,
-		REPLACE,
-		REMOVE,
-		SWITCH;
-	}
-	
-	protected class OpInformation
-	{
-		final String mcpname;
-		Map<String, List<OpLabel>> modifies = new HashMap();
-		String cacheName;
-		List<OpLabel> label;
-		int line = -1;
-		int off = -1;
-		int length = 1;
-		List<AbstractInsnNode> cacheList;
-		@Deprecated
-		Map<Label, int[]> labelLocate = new HashMap();
-		
-		OpInformation(String name)
-		{
-			this.mcpname = name;
-		}
-		
-		public OpInformation lName(String name)
-		{
-			this.cacheName = name;
-			return this;
-		}
-		
-		public OpInformation lPosition(int line, int off)
-		{
-			this.line = line;
-			this.off = off;
-			this.length = 1;
-			return this;
-		}
-		
-		public OpInformation lLength(int len)
-		{
-			this.length = len;
-			return this;
-		}
-		
-		public OpInformation lNode(AbstractInsnNode...nodes)
-		{
-			if(this.cacheList == null)
-			{
-				this.cacheList = new ArrayList();
-			}
-			for(AbstractInsnNode node : nodes)
-			{
-				this.cacheList.add(node);
-			}
-			return this;
-		}
-		
-		public OpInformation lLabel(OpType type)
-		{
-			if(this.label == null)
-			{
-				this.label = new ArrayList();
-			}
-			this.label.add(new OpLabel(this.line, this.off, this.length, type, this.cacheList));
-			this.line = -1;
-			this.off = -1;
-			this.cacheList = null;
-			return this;
-		}
-		
-		public OpInformation lPut()
-		{
-			if(!this.modifies.containsKey(this.cacheName))
-			{
-				this.modifies.put(this.cacheName, this.label);
-			}
-			this.cacheName = null;
-			this.label = null;
-			return this;
-		}
-		
-		public OpInformation insert(int line, int off, boolean isBefore, AbstractInsnNode...nodes)
-		{
-			return lPosition(line, off).lNode(nodes).lLabel(isBefore ? OpType.INSERT_BEFORE : OpType.INSERT);
-		}
-		
-		public OpInformation remove(int line, int off)
-		{
-			return remove(line, off, 1);
-		}
-		
-		public OpInformation remove(int line, int off, int length)
-		{
-			return lPosition(line, off).lLength(length).lLabel(OpType.REMOVE);
-		}
-		
-		public OpInformation replace(int line, int off, AbstractInsnNode...nodes)
-		{
-			return replace(line, off, 1, nodes);
-		}
-		public OpInformation replace(int line, int off, int len, AbstractInsnNode...nodes)
-		{
-			return lPosition(line, off).lLength(len).lNode(nodes).lLabel(OpType.REPLACE);
-		}
-		
-		public void put()
-		{
-			informations.put(this.mcpname, this);
-		}
-	}
-	
-	protected class OpLabel
-	{
-		int line;
-		int off;
-		int len;
-		OpType type;
-		List<AbstractInsnNode> nodes;
-		
-		OpLabel(int line, int off, int len, OpType type, List<AbstractInsnNode> nodes)
-		{
-			this.line = line;
-			this.off = off;
-			this.len = len;
-			this.type = type;
-			this.nodes = nodes;
-		}
-		
-		@Override
-		public String toString()
-		{
-			return "label:" + this.type.name() + ":" + (this.nodes != null ? Arrays.toString(this.nodes.toArray()) : "");
 		}
 	}
 }

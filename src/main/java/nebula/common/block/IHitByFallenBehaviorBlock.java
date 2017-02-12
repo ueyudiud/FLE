@@ -1,9 +1,17 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.block;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * The block has custom behavior when hit by fallen block.
+ * @author ueyudiud
+ */
 public interface IHitByFallenBehaviorBlock
 {
 	/**

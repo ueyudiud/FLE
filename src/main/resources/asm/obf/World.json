@@ -1,0 +1,107 @@
+{
+	"name": "net.minecraft.world.World",
+	"modification": [
+		{
+			"name": "B|(Lcm;)Z",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 3591,
+					"off": 18,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 0
+						},
+						{
+							"opcode": 25,
+							"var": 1
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/common/CommonOverride", 
+							"name": "isRainingAtBiome", 
+							"desc": "(Laiq;Laid;Lcm;)Z",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "w|(Lcm;)Z",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 2776,
+					"off": 5,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/client/light/LightFix", 
+							"name": "checkLightFor", 
+							"desc": "(Laid;Laij;Lcm;)Z",
+							"itf": false
+						}
+					]
+				},
+				{
+					"type": "replace",
+					"line": 2779,
+					"off": 6,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/client/light/LightFix", 
+							"name": "checkLightFor", 
+							"desc": "(Laid;Laij;Lcm;)Z",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "a|(IIII)V",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 438,
+					"off": 9,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/client/light/LightFix", 
+							"name": "checkLightFor", 
+							"desc": "(Laid;Laij;Lcm;)Z",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "d|()V",
+			"labels": [
+				{
+					"type": "insert",
+					"line": 2546,
+					"off": 2,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 0
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/light/LightFix", 
+							"name": "tickLightUpdate", 
+							"desc": "(Laid;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

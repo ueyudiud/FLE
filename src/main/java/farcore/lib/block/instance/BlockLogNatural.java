@@ -141,6 +141,7 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	{
 		if(!worldIn.isRemote)
 		{
+			player.addExhaustion(0.1F);
 			breakTree(worldIn, pos);
 		}
 	}

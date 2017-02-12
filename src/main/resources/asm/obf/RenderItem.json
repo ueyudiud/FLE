@@ -1,0 +1,58 @@
+{
+	"name": "net.minecraft.client.renderer.RenderItem",
+	"modification": [
+		{
+			"name": "a|(Lbyl;ILadz;)V",
+			"labels": [
+				{
+					"type": "remove",
+					"line": 160,
+					"off": 4,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"line": 160,
+					"off": 8,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lbyl;Lct;JLadz;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				},
+				{
+					"type": "remove",
+					"line": 163,
+					"off": 5,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"line": 163,
+					"off": 10,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lbyl;Lct;JLadz;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

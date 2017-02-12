@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.block;
 
 import java.util.Random;
@@ -28,6 +32,11 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The standard fluid type.
+ * @author ueyudiud
+ *
+ */
 public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlock, IRenderRegister
 {
 	public final FluidBase fluid;

@@ -1,0 +1,35 @@
+{
+	"name": "net.minecraft.world.chunk.storage.ExtendedBlockStorage",
+	"modification": [
+		{
+			"name": "<init>|(IZ)V",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 41,
+					"off": 2,
+					"nodes": [
+						{
+							"opcode": 187,
+							"desc": "nebula/common/world/chunk/BlockStateContainerExt"
+						}
+					]
+				},
+				{
+					"type": "replace",
+					"line": 41,
+					"off": 4,
+					"nodes": [
+						{
+							"opcode": 183,
+							"owner": "nebula/common/world/chunk/BlockStateContainerExt",
+							"name": "<init>",
+							"desc": "()V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

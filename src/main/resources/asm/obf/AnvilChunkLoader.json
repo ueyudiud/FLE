@@ -1,0 +1,72 @@
+{
+	"name": "net.minecraft.world.chunk.storage.AnvilChunkLoader",
+	"modification": [
+		{
+			"name": "checkedReadChunkFromNBT__Async|(Laid;IILdr;)[Ljava/lang/Object;",
+			"labels": [
+				{
+					"type": "remove",
+					"line": 131,
+					"off": 2
+				},
+				{
+					"type": "replace",
+					"line": 131,
+					"off": 5,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/Nebula",
+							"name": "loadChunkData",
+							"desc": "(Laid;Ldr;)Lasv;",
+							"itf": false
+						}
+					]
+				},
+				{
+					"type": "remove",
+					"line": 152,
+					"off": 2
+				},
+				{
+					"type": "replace",
+					"line": 152,
+					"off": 5,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/Nebula",
+							"name": "loadChunkData",
+							"desc": "(Laid;Ldr;)Lasv;",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "a|(Laid;Lasv;)V",
+			"labels": [
+				{
+					"type": "remove",
+					"line": 175,
+					"off": 1
+				},
+				{
+					"type": "replace",
+					"line": 175,
+					"off": 5,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/Nebula",
+							"name": "saveChunkData",
+							"desc": "(Lasv;Laid;Ldr;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

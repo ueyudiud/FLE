@@ -144,9 +144,10 @@ public abstract class BlockSlab extends BlockBase
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
 	{
-		return getBoundingBox(state, worldIn, pos);
+		return getBoundingBox(state, worldIn, pos).offset(pos);
 	}
 	
 	@Override

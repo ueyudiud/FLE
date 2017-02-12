@@ -1,0 +1,84 @@
+{
+	"name": "net.minecraft.world.chunk.storage.AnvilChunkLoader",
+	"modification": [
+		{
+			"name": "checkedReadChunkFromNBT__Async|(Lnet/minecraft/world/World;IILnet/minecraft/nbt/NBTTagCompound;)[Ljava/lang/Object;",
+			"labels": [
+				{
+					"type": "remove",
+					"owner": "net/minecraft/world/chunk/storage/AnvilChunkLoader",
+					"name": "readChunkFromNBT",
+					"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
+					"off": -3
+				},
+				{
+					"type": "replace",
+					"owner": "net/minecraft/world/chunk/storage/AnvilChunkLoader",
+					"name": "readChunkFromNBT",
+					"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/Nebula",
+							"name": "loadChunkData",
+							"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
+							"itf": false
+						}
+					]
+				},
+				{
+					"type": "remove",
+					"owner": "net/minecraft/world/chunk/storage/AnvilChunkLoader",
+					"name": "readChunkFromNBT",
+					"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
+					"off": -3
+				},
+				{
+					"type": "replace",
+					"owner": "net/minecraft/world/chunk/storage/AnvilChunkLoader",
+					"name": "readChunkFromNBT",
+					"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/Nebula",
+							"name": "loadChunkData",
+							"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "saveChunk|(Lnet/minecraft/world/World;Lnet/minecraft/world/chunk/Chunk;)V",
+			"labels": [
+				{
+					"type": "remove",
+					"owner": "net/minecraft/world/chunk/storage/AnvilChunkLoader",
+					"name": "writeChunkToNBT",
+					"desc": "(Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)V",
+					"off": -4
+				},
+				{
+					"type": "replace",
+					"owner": "net/minecraft/world/chunk/storage/AnvilChunkLoader",
+					"name": "writeChunkToNBT",
+					"desc": "(Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)V",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/Nebula",
+							"name": "saveChunkData",
+							"desc": "(Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

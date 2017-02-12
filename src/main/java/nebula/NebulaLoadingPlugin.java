@@ -19,7 +19,7 @@ public class NebulaLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[] {"nebula.asm.ClassTransformer"};
+		return new String[] {"nebula.asm.ClassTransformerBase"};
 	}
 	
 	@Override
@@ -31,14 +31,14 @@ public class NebulaLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String getSetupClass()
 	{
-		return null;
+		return "nebula.asm.NebulaSetup";
 	}
 	
 	@Override
 	public void injectData(Map<String, Object> data)
 	{
 		runtimeDeobf = ((Boolean) data.get("runtimeDeobfuscationEnabled")).booleanValue();
-		location = (File) data.get("coremodLocation");
+		location = (File) data.get("mcLocation");
 		loadedData = true;
 	}
 	

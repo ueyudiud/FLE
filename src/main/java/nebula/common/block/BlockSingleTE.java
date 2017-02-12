@@ -74,6 +74,11 @@ import net.minecraftforge.fml.common.Optional.InterfaceList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The block with single tile entity type.
+ * @author ueyudiud
+ *
+ */
 @InterfaceList({@Interface(iface = "farcore.lib.block.IThermalCustomBehaviorBlock", modid = "farcore")})
 public abstract class BlockSingleTE extends BlockBase
 implements ITileEntityProvider
