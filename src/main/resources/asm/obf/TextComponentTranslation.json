@@ -6,8 +6,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 51,
-					"off": 5,
+					"owner": "dl",
+					"name": "a",
+					"desc": "(Ljava/lang/String;)Ljava/lang/String;",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,

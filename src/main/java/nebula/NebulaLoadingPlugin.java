@@ -19,7 +19,7 @@ public class NebulaLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[] {"nebula.asm.ClassTransformerBase"};
+		return new String[] {"nebula.asm.ClassTransformer"};
 	}
 	
 	@Override

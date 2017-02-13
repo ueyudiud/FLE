@@ -6,13 +6,17 @@
 			"labels": [
 				{
 					"type": "remove",
-					"line": 131,
-					"off": 2
+					"owner": "atj",
+					"name": "a",
+					"desc": "(Laid;Ldr;)Lasv;",
+					"off": -3
 				},
 				{
 					"type": "replace",
-					"line": 131,
-					"off": 5,
+					"owner": "atj",
+					"name": "a",
+					"desc": "(Laid;Ldr;)Lasv;",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,
@@ -25,13 +29,17 @@
 				},
 				{
 					"type": "remove",
-					"line": 152,
-					"off": 2
+					"owner": "atj",
+					"name": "a",
+					"desc": "(Laid;Ldr;)Lasv;",
+					"off": -3
 				},
 				{
 					"type": "replace",
-					"line": 152,
-					"off": 5,
+					"owner": "atj",
+					"name": "a",
+					"desc": "(Laid;Ldr;)Lasv;",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,
@@ -49,13 +57,17 @@
 			"labels": [
 				{
 					"type": "remove",
-					"line": 175,
-					"off": 1
+					"owner": "atj",
+					"name": "a",
+					"desc": "(Lasv;Laid;Ldr;)V",
+					"off": -4
 				},
 				{
 					"type": "replace",
-					"line": 175,
-					"off": 5,
+					"owner": "atj",
+					"name": "a",
+					"desc": "(Lasv;Laid;Ldr;)V",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,

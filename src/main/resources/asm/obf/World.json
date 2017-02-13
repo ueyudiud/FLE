@@ -6,8 +6,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 3591,
-					"off": 18,
+					"owner": "aiq",
+					"name": "d",
+					"desc": "()Z",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 25,
@@ -33,8 +35,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 2776,
-					"off": 5,
+					"owner": "aid",
+					"name": "c",
+					"desc": "(Laij;Lcm;)Z",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,
@@ -47,8 +51,10 @@
 				},
 				{
 					"type": "replace",
-					"line": 2779,
-					"off": 6,
+					"owner": "aid",
+					"name": "c",
+					"desc": "(Laij;Lcm;)Z",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,
@@ -66,8 +72,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 438,
-					"off": 9,
+					"owner": "aid",
+					"name": "c",
+					"desc": "(Laij;Lcm;)Z",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,
@@ -85,7 +93,7 @@
 			"labels": [
 				{
 					"type": "insert",
-					"line": 2546,
+					"line": 2545,
 					"off": 2,
 					"nodes": [
 						{

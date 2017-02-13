@@ -385,14 +385,14 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	@Override
 	public final IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, int meta, EntityLivingBase placer, ItemStack stack)
+			float hitZ, int meta, EntityLivingBase placer)
 	{
-		return getBlockPlaceState(world, pos, facing, hitX, hitY, hitZ, stack, placer);
+		return getBlockPlaceState(world, pos, facing, hitX, hitY, hitZ, placer.getHeldItemMainhand(), placer);
 	}
 	
 	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, stackIn.getItem().getMetadata(stackIn), placer, stackIn);
+		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, this.item.getMetadata(stackIn), placer);
 	}
 	
 	@Override

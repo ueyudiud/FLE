@@ -8,6 +8,8 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import nebula.common.util.Properties;
+import nebula.common.util.Properties.EnumStateName;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -17,6 +19,7 @@ import net.minecraft.util.IStringSerializable;
  * @author ueyudiud
  *
  */
+@EnumStateName("facing")
 public enum EnumSlabState implements IStringSerializable
 {
 	DOWN	("down"	, EnumFacing.DOWN),
@@ -32,7 +35,7 @@ public enum EnumSlabState implements IStringSerializable
 	/**
 	 * The general property of slab state.
 	 */
-	public static final PropertyEnum<EnumSlabState> PROPERTY = PropertyEnum.create("facing", EnumSlabState.class);
+	public static final PropertyEnum<EnumSlabState> PROPERTY = Properties.get(EnumSlabState.class);
 	/**
 	 * The rotation for slab state.
 	 */

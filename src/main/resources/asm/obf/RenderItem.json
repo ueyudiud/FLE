@@ -6,14 +6,18 @@
 			"labels": [
 				{
 					"type": "remove",
-					"line": 160,
-					"off": 4,
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": -4,
 					"len": 2
 				},
 				{
 					"type": "replace",
-					"line": 160,
-					"off": 8,
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 25,
@@ -30,14 +34,18 @@
 				},
 				{
 					"type": "remove",
-					"line": 163,
-					"off": 5,
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": -5,
 					"len": 2
 				},
 				{
 					"type": "replace",
-					"line": 163,
-					"off": 10,
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 25,

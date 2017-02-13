@@ -13,8 +13,6 @@ import com.google.common.collect.ImmutableSet;
 import nebula.common.base.IRegister;
 import nebula.common.base.Register;
 import nebula.common.stack.OreStack;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -90,10 +88,10 @@ public class EnumToolType
 		return item.getToolClasses(stack).contains(this.name);
 	}
 	
-	public int toolLevelMatch(ItemStack stack, EntityPlayer player, IBlockState state)
+	public int toolLevelMatch(ItemStack stack)
 	{
 		Item item = stack.getItem();
-		return item.getHarvestLevel(stack, this.name, player, state);
+		return item.getHarvestLevel(stack, this.name);
 	}
 	
 	public Set<String> getToolClasses()

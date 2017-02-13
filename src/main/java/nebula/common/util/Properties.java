@@ -57,6 +57,10 @@ public class Properties
 	@Target({ElementType.TYPE})
 	public static @interface EnumStateName
 	{
+		/**
+		 * The name of enum property key.
+		 * @return
+		 */
 		String value();
 	}
 	

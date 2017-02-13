@@ -6,8 +6,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 325,
-					"off": 2,
+					"owner": "bnz",
+					"name": "p",
+					"desc": "()V",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 180,

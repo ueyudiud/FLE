@@ -178,7 +178,7 @@ public class FleEntityHandler
 			
 			if (state.getMaterial() != Material.AIR)
 			{
-				SoundType soundtype = state.getBlock().getSoundType(state, entity.world, pos, entity);
+				SoundType soundtype = state.getBlock().getSoundType();
 				entity.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
 			}
 			float tick = a + (entity.getRNG().nextFloat() - entity.getRNG().nextFloat()) * a - 4;

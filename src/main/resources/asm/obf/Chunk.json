@@ -6,8 +6,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 1202,
-					"off": 3,
+					"owner": "aiq",
+					"name": "b",
+					"desc": "(I)Laiq;",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 25,

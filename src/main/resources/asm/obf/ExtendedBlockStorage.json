@@ -6,8 +6,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 41,
-					"off": 2,
+					"owner": "aso",
+					"name": "<init>",
+					"desc": "()V",
+					"off": -2,
 					"nodes": [
 						{
 							"opcode": 187,
@@ -17,8 +19,10 @@
 				},
 				{
 					"type": "replace",
-					"line": 41,
-					"off": 4,
+					"owner": "aso",
+					"name": "<init>",
+					"desc": "()V",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 183,

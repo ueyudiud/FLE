@@ -97,7 +97,7 @@ public class ToolHooks
 		Set<String> set = stack.getItem().getToolClasses(stack);
 		if (set.isEmpty()) return false;
 		//Only get a default level, I don't think there is any tool have different harvest level for different tool type...
-		int level = stack.getItem().getHarvestLevel(stack, set.iterator().next(), player, state);
+		int level = stack.getItem().getHarvestLevel(stack, set.iterator().next());
 		return level >= state.getBlock().getHarvestLevel(state);
 	}
 	

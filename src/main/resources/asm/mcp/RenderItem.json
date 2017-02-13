@@ -37,7 +37,7 @@
 					"owner": "net/minecraft/client/renderer/block/model/IBakedModel",
 					"name": "getQuads",
 					"desc": "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/EnumFacing;J)Ljava/util/List;",
-					"off": -4,
+					"off": -5,
 					"len": 2
 				},
 				{

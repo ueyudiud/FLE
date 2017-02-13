@@ -11,6 +11,7 @@ import farcore.data.EnumRockType;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.material.Mat;
 import nebula.client.model.StateMapperExt;
+import nebula.common.LanguageManager;
 import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
 import nebula.common.block.ISmartFallableBlock;
@@ -72,6 +73,10 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
+		for (EnumRockType type : EnumRockType.values())
+		{
+			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), type.local, this.material.localName);
+		}
 	}
 	
 	@Override
@@ -82,7 +87,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUp
 		ModelLoader.setCustomStateMapper(this, mapper);
 		ModelLoader.setCustomMeshDefinition(this.item,
 				stack -> mapper.getModelResourceLocation(getStateFromMeta(stack.getItemDamage())));
-		for(EnumRockType type : EnumRockType.values())
+		for (EnumRockType type : EnumRockType.values())
 		{
 			ModelLoader.registerItemVariants(this.item, mapper.getModelResourceLocation(getDefaultState().withProperty(TYPE, type)));
 		}

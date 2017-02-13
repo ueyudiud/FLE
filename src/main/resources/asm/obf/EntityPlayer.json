@@ -2,12 +2,14 @@
 	"name": "net.minecraft.entity.player.EntityPlayer",
 	"modification": [
 		{
-			"name": "<init>|(Lnet/minecraft/world/World;Lcom/mojang/authlib/GameProfile;)V",
+			"name": "<init>|(Laid;Lcom/mojang/authlib/GameProfile;)V",
 			"labels": [
 				{
 					"type": "replace",
-					"line": 115,
-					"off": 2,
+					"owner": "abb",
+					"name": "<init>",
+					"desc": "()V",
+					"off": -2,
 					"nodes": [
 						{
 							"opcode": 187,
@@ -17,8 +19,10 @@
 				},
 				{
 					"type": "replace",
-					"line": 115,
-					"off": 4,
+					"owner": "abb",
+					"name": "<init>",
+					"desc": "()V",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 183,

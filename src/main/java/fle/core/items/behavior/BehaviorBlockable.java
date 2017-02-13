@@ -17,11 +17,17 @@ import net.minecraft.world.World;
 public class BehaviorBlockable extends BehaviorBase
 {
 	public final Block block;
+	public final int meta;
 	public int usePerBlock;
 	
 	public BehaviorBlockable(Block block, int usePerBlock)
 	{
+		this(block, 0, usePerBlock);
+	}
+	public BehaviorBlockable(Block block, int meta, int usePerBlock)
+	{
 		this.block = block;
+		this.meta = meta;
 		this.usePerBlock = usePerBlock;
 	}
 	
@@ -43,7 +49,7 @@ public class BehaviorBlockable extends BehaviorBase
 			
 			if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(this.block, pos, false, facing, (Entity)null, stack))
 			{
-				IBlockState iblockstate1 = this.block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, stack.getMetadata(), player, stack);
+				IBlockState iblockstate1 = this.block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, this.meta, player);
 				
 				if (placeBlockAt(stack, player, world, pos, facing, hitX, hitY, hitZ, iblockstate1))
 				{

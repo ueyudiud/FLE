@@ -6,8 +6,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 206,
-					"off": 19,
+					"owner": "bsu",
+					"name": "a",
+					"desc": "(Lbdl;Ladz;IILjava/lang/String;)V",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,
@@ -25,8 +27,10 @@
 			"labels": [
 				{
 					"type": "replace",
-					"line": 267,
-					"off": 9,
+					"owner": "bsu",
+					"name": "a",
+					"desc": "(Lbdl;Ladz;IILjava/lang/String;)V",
+					"off": 0,
 					"nodes": [
 						{
 							"opcode": 184,
