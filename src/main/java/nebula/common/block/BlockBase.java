@@ -257,7 +257,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
-		return canHarvestBlock(worldIn, pos, player);
+		return ToolHooks.isToolEffciency(state, player.getHeldItemMainhand());
 	}
 	
 	@Override

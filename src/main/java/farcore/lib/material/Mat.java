@@ -32,10 +32,10 @@ import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tree.ITree;
 import nebula.common.LanguageManager;
 import nebula.common.base.HashPropertyMap;
-import nebula.common.base.Judgable;
 import nebula.common.base.IPropertyMap;
 import nebula.common.base.IPropertyMap.IProperty;
 import nebula.common.base.IntegerMap;
+import nebula.common.base.Judgable;
 import nebula.common.base.Register;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
@@ -57,6 +57,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 * Default material, will not register in to list.
 	 */
 	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID);
+	
+	private static void onDataChanged()
+	{
+		MATERIALS_CACHE.clear();
+	}
 	
 	static
 	{
@@ -230,6 +235,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public <V> Mat addProperty(IProperty<V> property, V value)
 	{
 		this.propertyMap.put(property, value);
+		onDataChanged();
 		return this;
 	}
 	
@@ -431,6 +437,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public void add(SubTag... tags)
 	{
 		this.subTags.addAll(Arrays.asList(tags));
+		onDataChanged();
 	}
 	
 	@Override

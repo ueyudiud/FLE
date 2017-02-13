@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -53,12 +54,14 @@ public class FlexibleItemModelUnbaked implements ModelBase
 		return new FlexibleItemModelUnbaked(location);
 	}
 	
+	final Item item;
 	Map<String, ResourceLocation> textures;
 	Collection<ResourceLocation> particles;
 	FlexibleItemModelLayerUnbaked[] layers;
 	
 	FlexibleItemModelUnbaked(ResourceLocation location)
 	{
+		this.item = null;
 		this.textures = ImmutableMap.of(NebulaItemModelLoader.NORMAL, location);
 		this.particles = ImmutableList.of(location);
 		this.layers = new FlexibleItemModelLayerUnbaked[]{ new FlexibleItemModelLayerUnbaked(location) };
@@ -68,8 +71,9 @@ public class FlexibleItemModelUnbaked implements ModelBase
 	 * Cached model wrapper.
 	 * @param cache
 	 */
-	FlexibleItemModelUnbaked(FlexibleItemModelCache cache)
+	FlexibleItemModelUnbaked(Item item, FlexibleItemModelCache cache)
 	{
+		this.item = item;//Item marker
 		this.textures = cache.textureCol.buildTextureMap();
 		this.particles = cache.textureCol.buildVariantMap(cache.particle).values();
 		this.layers = new FlexibleItemModelLayerUnbaked[cache.caches.length];

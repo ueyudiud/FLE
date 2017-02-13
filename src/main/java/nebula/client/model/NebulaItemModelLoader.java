@@ -34,7 +34,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -215,10 +214,11 @@ public enum NebulaItemModelLoader implements ICustomModelLoader
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
 		Item item = MODELLOCATION_TO_ITEM.get(modelLocation);
-		if(item == null)//If item is null, it means the loader of location shoudn't be this loader.
+		if (item == null)//If item is null, it means the loader of location shoudn't be this loader.
 			throw new RuntimeException(String.format("The model location {%s} is not belong to FarCoreItemModelLoader. There must be some wrong of other model loader.", modelLocation));
-		if(!cache.containsKey(item)) return ModelLoaderRegistry.getMissingModel();
-		return new FlexibleItemModelUnbaked(cache.get(item));
+		FlexibleItemModelCache c = cache.remove(item);
+		if (cache.isEmpty()) cache = null;
+		return new FlexibleItemModelUnbaked(item, c);
 	}
 	
 	static

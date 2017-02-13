@@ -53,7 +53,7 @@ public class FlexibleItemSubmetaGetterLoader
 			{
 				final SubmetaGetter getter1 = getter;
 				SubmetaGetter postfix = context.deserialize(object.get("postfix"), SubmetaGetter.class);
-				getter = stack -> getter1.apply(stack)  + postfix.apply(stack);
+				getter = stack -> getter1.apply(stack) + postfix.apply(stack);
 			}
 			return getter;
 		}

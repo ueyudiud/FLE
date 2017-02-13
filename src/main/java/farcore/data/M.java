@@ -165,7 +165,7 @@ public class M
 			}
 			catch (Exception exception)
 			{
-				Log.warn("Fail to register materials.", exception);
+				Log.warn("Caught an exception during {} is registering materials.", exception, register.toString());
 			}
 		}
 	}

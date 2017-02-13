@@ -7,6 +7,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * A font map example.
+ * @author ueyudiud
+ */
 @SideOnly(Side.CLIENT)
 public class FontMap implements IFontMap
 {
@@ -25,39 +29,39 @@ public class FontMap implements IFontMap
 		this.fontMap = fontMap;
 		this.readSize = readSize;
 	}
-
+	
 	@Override
 	public ResourceLocation getSource()
 	{
-		return location;
+		return this.location;
 	}
-
+	
 	@Override
 	public boolean shouldRender(char chr)
 	{
-		return fontMap.indexOf(chr) != -1;
+		return this.fontMap.indexOf(chr) != -1;
 	}
-
+	
 	@Override
 	public void initalizeResource(BufferedImage bufferedimage)
 	{
-		characterWidth = new int[readSize * readSize];
+		this.characterWidth = new int[this.readSize * this.readSize];
 		int w = bufferedimage.getWidth();
 		int h = bufferedimage.getHeight();
 		int[] RGB = new int[w * h];
 		bufferedimage.getRGB(0, 0, w, h, RGB, 0, w);
-		int w1 = w / readSize;
-		int h1 = h / readSize;
+		int w1 = w / this.readSize;
+		int h1 = h / this.readSize;
 		float width = 8.0F / w1;
 		
-		for (int i = 0; i < readSize * readSize; ++i)
+		for (int i = 0; i < this.readSize * this.readSize; ++i)
 		{
-			int j1 = i % readSize;
-			int k1 = i / readSize;
+			int j1 = i % this.readSize;
+			int k1 = i / this.readSize;
 			
 			if (i == 32)
 			{
-				characterWidth[i] = 4;
+				this.characterWidth[i] = 4;
 			}
 			
 			int l1;
@@ -80,26 +84,26 @@ public class FontMap implements IFontMap
 				}
 			}
 			++l1;
-			characterWidth[i] = (int)(0.5D + l1 * width) + 1;
+			this.characterWidth[i] = (int)(0.5D + l1 * width) + 1;
 		}
 	}
-
+	
 	@Override
 	public int characterWidth(char chr)
 	{
-		return characterWidth[fontMap.indexOf(chr)];
+		return this.characterWidth[this.fontMap.indexOf(chr)];
 	}
-
+	
 	@Override
 	public int renderCharacter(char chr, boolean italic, FontRenderExtend render)
 	{
-		int i0 = fontMap.indexOf(chr);
+		int i0 = this.fontMap.indexOf(chr);
 		if(i0 == -1) return 0;
 		int i = (i0 % 16) * 8;
 		int j = (i0 / 16) * 8;
 		int k = italic ? 1 : 0;
-		render.bindTexture(location);
-		int l = characterWidth[i0];
+		render.bindTexture(this.location);
+		int l = this.characterWidth[i0];
 		float f = l - 0.01F;
 		float[] pos = render.getPosition();
 		GlStateManager.glBegin(5);
