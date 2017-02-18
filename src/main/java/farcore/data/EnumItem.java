@@ -20,9 +20,11 @@ public enum EnumItem
 	ore_chip,
 	seed,
 	stone_fragment,
+	ingot,
 	nugget,
 	crop_related,
 	branch,
+	misc_resource,
 	/** From fle. */
 	tool;
 	

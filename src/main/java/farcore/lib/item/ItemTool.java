@@ -194,7 +194,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		return Mat.material(nbt.getString(part));
 	}
 	
-	public ItemStack setMaterialToItem(ItemStack stack, String part, Mat material)
+	public static ItemStack setMaterialToItem(ItemStack stack, String part, Mat material)
 	{
 		stack.getSubCompound("tool", true).setString(part, material.name);
 		return stack;

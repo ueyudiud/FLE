@@ -1,0 +1,14 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"normal": {
+			"transform": "forge:default-block",
+			"model": "farcore:base_topdown",
+			"textures": {
+				"side": "fle:blocks/machine/alpha/polish_side",
+				"top": "fle:blocks/machine/alpha/polish_top",
+				"bottom": "fle:blocks/machine/alpha/polish_bottom"
+			}
+		}
+	}
+}

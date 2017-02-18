@@ -9,6 +9,8 @@ import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.skill.SkillAbstract;
+import fle.api.item.behavior.IPolishableBehavior;
+import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.core.FLE;
 import nebula.client.util.Client;
 import nebula.common.base.Judgable;
@@ -30,7 +32,7 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IProjectileItem
+public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IProjectileItem, IPolishableItem
 {
 	public ItemToolFar()
 	{
@@ -158,5 +160,40 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 					return true;
 			}
 		return false;
+	}
+	
+	@Override
+	public int getPolishLevel(ItemStack stack)
+	{
+		List<IBehavior> list = getBehavior(stack);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IPolishableBehavior)
+			{
+				return ((IPolishableBehavior) behavior).getPolishLevel(stack);
+			}
+		return -1;
+	}
+	
+	@Override
+	public char getPolishResult(ItemStack stack, char base)
+	{
+		List<IBehavior> list = getBehavior(stack);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IPolishableBehavior)
+			{
+				return ((IPolishableBehavior) behavior).getPolishResult(stack, base);
+			}
+		return base;
+	}
+	
+	@Override
+	public void onPolished(EntityPlayer player, ItemStack stack)
+	{
+		List<IBehavior> list = getBehavior(stack);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IPolishableBehavior)
+			{
+				((IPolishableBehavior) behavior).onPolished(player, stack);
+			}
 	}
 }

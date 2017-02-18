@@ -1,0 +1,6 @@
+{
+	"textures": "fle:items/tool_head/hammer_flint",
+	"layers": {
+		"colorMultiplier": "farcore:material"
+	}
+}

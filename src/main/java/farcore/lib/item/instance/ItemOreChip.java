@@ -24,6 +24,7 @@ public class ItemOreChip extends ItemMulti
 	public ItemOreChip()
 	{
 		super(FarCore.ID, MC.chip_ore);
+		setDisableRegisterToOreDict();
 		EnumItem.ore_chip.set(this);
 	}
 	

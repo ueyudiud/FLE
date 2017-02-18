@@ -4,6 +4,7 @@
 
 package farcore.data;
 
+import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.prop.PropertyBasic;
@@ -31,6 +32,7 @@ public class MP
 	public static final String tool_attackspeed = "tool_attackspeed";
 	
 	public static final IProperty<PropertyBasic> property_basic = () -> new PropertyBasic();
+	public static final IProperty<MetalBlockBehavior> property_metal_block = () -> null;
 	public static final IProperty<PropertyTool> property_tool = () -> null;
 	public static final IProperty<PropertyOre> property_ore = () -> new PropertyOre();
 	public static final IProperty<PropertyWood> property_wood = () -> PropertyTree.VOID;

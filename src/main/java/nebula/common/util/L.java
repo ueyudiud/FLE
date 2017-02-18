@@ -186,7 +186,7 @@ public class L
 		}
 		else
 		{
-			list.addAll(list);
+			list.addAll(values);
 		}
 	}
 	
@@ -432,6 +432,12 @@ public class L
 	{
 		for(int i = 0; i < list.length; ++i) if(equal(list[i], arg)) return i;
 		return -1;
+	}
+	
+	public static boolean contain(char[] list, char arg)
+	{
+		for(char element : list) if(element == arg) return true;
+		return false;
 	}
 	
 	public static boolean contain(int[] list, int arg)

@@ -4,6 +4,9 @@
 
 package nebula.common.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import nebula.common.inventory.IBasicInventory;
@@ -174,5 +177,12 @@ public class TileEntities
 			}
 		}
 		return -1;
+	}
+	
+	public static <T extends TileEntity & IInventory> void dropItemStacks(T tile)
+	{
+		List<ItemStack> list = new ArrayList<>();
+		for (int i = 0; i < tile.getSizeInventory(); list.add(tile.removeStackFromSlot(i)), ++i);
+		Worlds.spawnDropsInWorld(tile.getWorld(), tile.getPos(), list);
 	}
 }

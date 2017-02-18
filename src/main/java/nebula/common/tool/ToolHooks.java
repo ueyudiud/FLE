@@ -59,7 +59,7 @@ public class ToolHooks
 	
 	public static void addBreakableTool(Material material, EnumToolType...toolTypes)
 	{
-		L.put(efficiencyToolMap, material, toolTypes);
+		L.put(breakableToolMap, material, toolTypes);
 	}
 	
 	public static void addEfficiencyTool(Material material, EnumToolType...toolTypes)

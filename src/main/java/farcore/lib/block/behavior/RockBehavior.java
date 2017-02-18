@@ -37,6 +37,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -71,6 +72,21 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		}
 	}
 	
+	public float getExplosionResistance(B block, IBlockState state, World world, BlockPos pos, Entity exploder, Explosion explosion)
+	{
+		return this.explosionResistance;
+	}
+	
+	public int getHarvestLevel(B block, IBlockState state)
+	{
+		return this.harvestLevel;
+	}
+	
+	public String getHarvestTool(B block, IBlockState state)
+	{
+		return EnumToolTypes.PICKAXE.name;
+	}
+	
 	public void onBlockPlacedBy(B block, IBlockState state, World world, BlockPos pos, EntityLivingBase placer,
 			ItemStack stack)
 	{
@@ -97,7 +113,13 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 			{
 			case resource:
 			case cobble:
-				ret.add(new ItemStack(EnumItem.stone_chip.item, rand.nextInt(4) + 3, block.material.id));
+				int count = rand.nextInt(4) + 3;
+				if (rand.nextBoolean())
+				{
+					ret.add(new ItemStack(EnumItem.stone_fragment.item, 1, block.material.id));
+					count -= 2;
+				}
+				ret.add(new ItemStack(EnumItem.stone_chip.item, count, block.material.id));
 				break;
 			case cobble_art:
 				ret.add(new ItemStack(EnumItem.stone_chip.item, 9, this.material.id));

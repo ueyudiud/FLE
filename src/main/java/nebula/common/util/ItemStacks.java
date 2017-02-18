@@ -113,7 +113,7 @@ public class ItemStacks
 	
 	public static ItemStack copyNomoreThan(@Nullable ItemStack stack, int size)
 	{
-		return stack == null ? null : stack.stackSize > size ? sizeOf(stack, size) : stack;
+		return stack == null ? null : stack.stackSize > size ? sizeOf(stack, size) : stack.copy();
 	}
 	
 	public static AbstractStack sizeOf(AbstractStack stack, int size)

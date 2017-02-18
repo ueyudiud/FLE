@@ -5,14 +5,19 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 
 import nebula.Nebula;
+import nebula.client.ClientOverride;
 import nebula.client.util.Client;
 import nebula.common.gui.ContainerBase;
 import nebula.common.gui.FSlot;
+import nebula.common.gui.IGUIActionListener;
 import nebula.common.network.packet.PacketFluidSlotClick;
+import nebula.common.network.packet.PacketGuiAction;
 import nebula.common.network.packet.PacketGuiTickUpdate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -30,6 +35,7 @@ public abstract class GuiContainerBase extends GuiContainer
 {
 	private ResourceLocation location;
 	protected Slot lastClickSlot;
+	protected ContainerBase container;
 	
 	public GuiContainerBase(ContainerBase inventorySlotsIn, ResourceLocation location)
 	{
@@ -38,10 +44,20 @@ public abstract class GuiContainerBase extends GuiContainer
 	public GuiContainerBase(ContainerBase inventorySlotsIn, ResourceLocation location, int width, int height)
 	{
 		super(inventorySlotsIn);
+		this.container = inventorySlotsIn;
 		this.fontRendererObj = Client.getFontRender();
 		this.xSize = width;
 		this.ySize = height;
 		this.location = location;
+	}
+	
+	protected void sendGuiData(int type, long code, boolean processOnClient)
+	{
+		Nebula.network.sendToServer(new PacketGuiAction((byte) type, code, this.container));
+		if (processOnClient && (this.inventorySlots instanceof IGUIActionListener))
+		{
+			((IGUIActionListener) this.inventorySlots).onRecieveGUIAction((byte) type, code);
+		}
 	}
 	
 	@Override
@@ -67,13 +83,13 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected void drawOtherSlots()
 	{
-		for(FSlot slot : ((ContainerBase) this.inventorySlots).fluidSlots)
+		for(FSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
 		{
 			slot.renderSlot(this);
 		}
 	}
 	
-	private void drawOther(int mouseX, int mouseY)
+	protected void drawOther(int mouseX, int mouseY)
 	{
 		
 	}
@@ -122,7 +138,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected FSlot getFluidSlotAtPosition(int x, int y)
 	{
-		for(FSlot slot : ((ContainerBase) this.inventorySlots).fluidSlots)
+		for(FSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
 		{
 			if(slot.isVisible() && isPointInRegion(slot.x, slot.y, slot.u, slot.v, x, y))
 				return slot;
@@ -217,5 +233,22 @@ public abstract class GuiContainerBase extends GuiContainer
 			}
 		}
 		tessellator.draw();
+	}
+	
+	protected void drawItemStack(ItemStack stack, int x, int y, boolean renderOverlay, String altText, float zLevel)
+	{
+		GlStateManager.translate(0.0F, 0.0F, 32.0F);
+		float oldZ = zLevel;
+		this.zLevel = this.itemRender.zLevel = zLevel;
+		FontRenderer font = null;
+		if (stack != null) font = stack.getItem().getFontRenderer(stack);
+		if (font == null) font = this.fontRendererObj;
+		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
+		if (renderOverlay)
+		{
+			ClientOverride.renderCustomItemOverlayIntoGUI(this.itemRender, font, stack, x, y, altText);
+		}
+		this.zLevel = oldZ;
+		this.itemRender.zLevel = 0.0F;
 	}
 }

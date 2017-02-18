@@ -71,6 +71,17 @@ public class ItemSubBehavior extends ItemBase
 		}
 	}
 	
+	public final ItemStack getSubItem(String name)
+	{
+		return getSubItem(name, 1);
+	}
+	
+	public ItemStack getSubItem(String name, int size)
+	{
+		Integer value = this.idMap.get(name);
+		return value == null ? null : new ItemStack(this, size, value.intValue());
+	}
+	
 	protected List<IBehavior> getBehavior(ItemStack stack)
 	{
 		return this.behaviors.getOrDefault(getDamage(stack), IBehavior.NONE);
@@ -416,6 +427,10 @@ public class ItemSubBehavior extends ItemBase
 				if (this.provider == null)
 				{
 					this.provider = ItemSubBehavior.this.providers.getOrDefault(getBaseDamage(stack), IItemCapabilityProvider.NONE).initCapabilities(stack, nbt);
+					if (this.provider == null)
+					{
+						this.provider = IItemCapabilityProvider.PROVIDER;
+					}
 				}
 				return this.provider;
 			}

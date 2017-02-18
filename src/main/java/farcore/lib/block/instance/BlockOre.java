@@ -7,8 +7,8 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumOreAmount;
 import farcore.data.EnumRockType;
 import farcore.data.M;
+import farcore.data.Materials;
 import farcore.data.SubTags;
-import farcore.lib.block.material.MaterialOre;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.ModelOre;
 import farcore.lib.tile.instance.TEOre;
@@ -70,11 +70,9 @@ public class BlockOre extends BlockSingleTE
 	
 	public static final ThreadLocal<Object[]> ORE_ELEMENT_THREAD = new ThreadLocal();
 	
-	public static final MaterialOre ORE = new MaterialOre();
-	
 	public BlockOre()
 	{
-		super(FarCore.ID, "ore", ORE);
+		super(FarCore.ID, "ore", Materials.ORE);
 		setTickRandomly(true);
 		EnumBlock.ore.set(this);
 	}

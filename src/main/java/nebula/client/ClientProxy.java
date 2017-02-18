@@ -27,6 +27,7 @@ import nebula.client.util.IRenderRegister;
 import nebula.common.CommonProxy;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.entity.EntityProjectileItem;
+import nebula.common.tile.IGuiTile;
 import nebula.common.util.Game;
 import nebula.common.util.Sides;
 import net.minecraft.block.Block;
@@ -45,6 +46,8 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.World;
@@ -52,6 +55,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
@@ -103,6 +107,9 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		//Register entity rendering handlers.
 		RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExtended.class, RenderFallingBlockExt.Factory.instance);
 		RenderingRegistry.registerEntityRenderingHandler(EntityProjectileItem.class, RenderProjectileItem.Factory.instance);
+		
+		MinecraftForge.EVENT_BUS.register(new NebulaTextureHandler());
+		
 		registerRenderObject();
 	}
 	
@@ -295,5 +302,16 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 				register.registerRender();
 			}
 		}
+	}
+	
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+		if (tile instanceof IGuiTile)
+		{
+			return ((IGuiTile) tile).openGui(ID, player);
+		}
+		return null;
 	}
 }

@@ -33,7 +33,7 @@ import net.minecraft.block.material.Material;
 public class M
 {
 	//Metal
-	public static final Mat copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build();
+	public static final Mat copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build().setMetalic(12, 4.0F, 8.0F);
 	//Rocks
 	public static final Mat stone 			= new MaterialBuilder(7001, "minecraft", "stone"			, "Stone"			, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F,  4.0F, -0.5F).build().setRock( 4, 1.5F,  8.0F);
 	public static final Mat compact_stone	= new MaterialBuilder(7002, FarCore.ID , "compactstone"		, "CompactStone"	, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F,  4.0F, -0.5F).build().setRock( 5, 2.0F, 12.0F);
@@ -62,6 +62,8 @@ public class M
 	public static final Mat podzol			= new MaterialBuilder(7108, FarCore.ID , "podzol"			, "Podzol"			, "Podzol"				).setRGBa(0x281812FF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	public static final Mat pheosol			= new MaterialBuilder(7109, FarCore.ID , "pheosol"			, "Pheosol"			, "Pheosol"				).setRGBa(0x6C4626FF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	public static final Mat aterocalcosol	= new MaterialBuilder(7110, FarCore.ID , "aterocalcosol"	, "Aterocalcosol"	, "Aterocalcosol"		).setRGBa(0x25211EFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
+	//Misc terria
+	public static final Mat flint			= new MaterialBuilder(7601, "minecraft", "flint"			, "Flint"			, "Flint"				).setRGBa(0x5A5A5AFF).setToolProp(  10,  8, 1.1F, 1.0F,  5.0F, -0.4F).build();
 	//Trees
 	public static final Mat oak				= new MaterialBuilder(8001, "minecraft", "oak"				, "Oak"				, "Oak"					)                    .setToolProp(   7,  4, 1.2F, 0.1F,  2.0F, -0.2F).build().setWood(5.3F, 1.0F, 20.0F);
 	public static final Mat spruce			= new MaterialBuilder(8002, "minecraft", "spruce"			, "Spruce"			, "Spruce"				)                                                                    .build().setWood(2.3F, 1.0F, 20.0F);
@@ -127,6 +129,7 @@ public class M
 	static
 	{
 		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow);
+		SubTags.FLINT.addTo(flint, obsidian);
 		
 		oak			.setTree(new TreeOak());
 		spruce		.setTree(new TreeBirch());

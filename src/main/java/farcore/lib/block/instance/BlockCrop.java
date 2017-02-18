@@ -20,6 +20,7 @@ import com.google.gson.JsonParseException;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.MP;
+import farcore.data.Materials;
 import farcore.data.SubTags;
 import farcore.lib.crop.ICrop;
 import farcore.lib.item.instance.ItemSeed;
@@ -30,7 +31,6 @@ import nebula.Log;
 import nebula.client.util.Client;
 import nebula.common.block.BlockSingleTE;
 import nebula.common.block.property.PropertyString;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -140,7 +140,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	
 	public BlockCrop()
 	{
-		super(FarCore.ID, "crop", Material.PLANTS);
+		super(FarCore.ID, "crop", Materials.PLANT);
 		EnumBlock.crop.set(this);
 		setHardness(0.5F);
 		this.uneffectiveSpeedMultiplier = 1F / 600F;

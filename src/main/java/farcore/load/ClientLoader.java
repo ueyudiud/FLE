@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
 import farcore.handler.FarCoreGuiHandler;
-import farcore.handler.FarCoreTextureHandler;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import nebula.client.NebulaTextureHandler;
 import nebula.client.model.ColorMultiplier;
 import nebula.client.model.FlexibleItemSubmetaGetterLoader;
 import nebula.client.model.FlexibleTextureSet;
@@ -28,9 +28,8 @@ public class ClientLoader extends CommonLoader
 		super.preload();
 		//Register client side handler.
 		MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
-		MinecraftForge.EVENT_BUS.register(new FarCoreTextureHandler());
 		
-		FarCoreTextureHandler.addIconLoader(new MaterialTextureLoader());
+		NebulaTextureHandler.addIconLoader(new MaterialTextureLoader());
 		
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
 		//Register model loaders, state mappers and item model selectors.

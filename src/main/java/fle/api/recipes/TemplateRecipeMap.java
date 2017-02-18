@@ -1,60 +1,194 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package fle.api.recipes;
 
-import fle.api.recipes.TemplateRecipeMap.RecipeCacheWraper;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
 
-public abstract class TemplateRecipeMap<R extends IRecipe> extends TemplateRecipeMapBase<R, RecipeCacheWraper<R>, ICraftingHandler>
+import nebula.Log;
+import nebula.common.base.Judgable;
+import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.util.L;
+import net.minecraft.nbt.NBTTagCompound;
+
+/**
+ * @author ueyudiud
+ */
+public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.TemplateRecipe, TemplateRecipeMap.TemplateRecipeCache<H>, H>
 {
-	public static class RecipeCacheWraper<R extends IRecipe> implements IRecipeCache<R>
+	public static <H> Builder<H> builder(String name)
 	{
-		R recipe;
-		Object[] caches;
-
-		public RecipeCacheWraper(R recipe, Object...caches)
+		return new Builder<>(name);
+	}
+	
+	public static class Builder<H>
+	{
+		final String name;
+		List<TemplateRecipeMap.TemplateRecipe> list = new ArrayList<>();
+		List<TemplateRecipeCacheEntryHandler<H, ?>> list1 = new ArrayList<>();
+		
+		public Builder(String name)
 		{
-			this.recipe = recipe;
-			this.caches = caches;
+			this.name = name;
 		}
-
-		@Override
-		public R recipe()
+		
+		public Builder<H> setList(List<TemplateRecipeMap.TemplateRecipe> list)
 		{
-			return recipe;
+			this.list = list;
+			return this;
+		}
+		
+		public <D> Builder<H> addCacheEntry(String key, Class<D> type, INBTReaderAndWritter<? super D> nbtHandler)
+		{
+			this.list1.add(new TemplateRecipeCacheEntryHandler<>(key, type, nbtHandler));
+			return this;
+		}
+		
+		public TemplateRecipeMap<H> build()
+		{
+			return new TemplateRecipeMap<>(this.name, this.list, L.cast(this.list1, TemplateRecipeCacheEntryHandler.class));
 		}
 	}
-
-	protected final int[][] matchingLocates;
 	
-	public TemplateRecipeMap(int[][] locates)
+	protected static class TemplateRecipeCacheEntryHandler<H, D>
 	{
-		this.matchingLocates = locates;
+		String entryName;
+		Class<D> type;
+		INBTReaderAndWritter<? super D> nbtHandler;
+		
+		TemplateRecipeCacheEntryHandler(String name, Class<D> type, INBTReaderAndWritter<? super D> nbtHandler)
+		{
+			this.entryName = name;
+			this.type = type;
+			this.nbtHandler = nbtHandler;
+		}
+	}
+	
+	public static class TemplateRecipeCache<H>
+	{
+		TemplateRecipeMap<H> map;
+		Object[] storeData;
+		
+		TemplateRecipeCache(TemplateRecipeMap<H> map, Object...datas)
+		{
+			this.map = map;
+			this.storeData = datas;
+		}
+		
+		public <T> T get(int i)
+		{
+			return (T) this.storeData[i];
+		}
+	}
+	
+	public static class TemplateRecipe<H>
+	{
+		Judgable<H> judgable;
+		Function<H, ?>[] dataProvider;
+		Object[] customDisplayData;
+		
+		public TemplateRecipe(Judgable<H>[] judgables, Function<H, ?>...dataProviders)
+		{
+			this(Judgable.and(judgables), dataProviders);
+		}
+		public TemplateRecipe(Judgable<H> judgable, Function<H, ?>...dataProviders)
+		{
+			this.judgable = judgable;
+			this.dataProvider = dataProviders;
+		}
+		
+		public TemplateRecipe<H> setData(Object...objects)
+		{
+			this.customDisplayData = objects;
+			return this;
+		}
+		
+		public <T> T get(int i)
+		{
+			return (T) this.customDisplayData[i];
+		}
+	}
+	
+	protected final String name;
+	protected final List<TemplateRecipeMap.TemplateRecipe> recipes;
+	protected final TemplateRecipeCacheEntryHandler[] handlers;
+	
+	protected TemplateRecipeMap(String name, List<TemplateRecipeMap.TemplateRecipe> recipeList, TemplateRecipeCacheEntryHandler[] handlers)
+	{
+		this.name = name;
+		this.recipes = recipeList;
+		this.handlers = handlers;
 	}
 	
 	@Override
-	protected RecipeCacheWraper matchMatrixs(R recipe, ICraftingHandler handler)
+	public final String getRegisteredName()
 	{
-		Object[] caches = new Object[matchingLocates.length];
-		for(int i = 0; i < matchingLocates.length; ++i)
+		return this.name;
+	}
+	
+	@Override
+	public TemplateRecipeCache<H> readFromNBT(NBTTagCompound nbt)
+	{
+		try
 		{
-			int[] locate = matchingLocates[i];
-			Object cache = recipe.getInput(locate[0]).matchInput(handler.getInputMatrix(locate[1]));
-			if(cache != null)
+			Object[] store = new Object[this.handlers.length];
+			for (int i = 0; i < this.handlers.length; ++i)
 			{
-				caches[i] = cache;
+				store[i] = this.handlers[i].nbtHandler.readFromNBT(nbt, this.handlers[i].entryName);
 			}
-			else
-				return null;
+			return new TemplateRecipeCache<>(this, store);
 		}
-		return new RecipeCacheWraper(recipe, caches);
-	}
-
-	@Override
-	public void onRecipeInput(RecipeCacheWraper<R> wraper, ICraftingHandler handler)
-	{
-		R recipe = wraper.recipe;
-		Object[] inputCaches = wraper.caches;
-		for(int i = 0; i < recipe.getRecipeInputSize(); ++i)
+		catch (Exception exception)
 		{
-			recipe.getInput(i).onInput(handler.getInputMatrix(i), inputCaches[i]);
+			Log.warn("Invalid nbt {} for recipe {}", exception, nbt, this.name);
 		}
+		return null;
+	}
+	
+	@Override
+	public void writeToNBT(TemplateRecipeCache<H> target, NBTTagCompound nbt)
+	{
+		try
+		{
+			for (int i = 0; i < this.handlers.length; ++i)
+			{
+				this.handlers[i].nbtHandler.writeToNBT(target.storeData[i], nbt, this.handlers[i].entryName);
+			}
+		}
+		catch (Exception exception)
+		{
+			Log.warn("Invalid recipe data {}", exception, target.storeData);
+		}
+	}
+	
+	@Override
+	public boolean addRecipe(TemplateRecipeMap.TemplateRecipe recipe)
+	{
+		if (recipe.dataProvider.length != this.handlers.length)
+		{
+			return false;
+		}
+		this.recipes.add(recipe);
+		return true;
+	}
+	
+	@Override
+	public TemplateRecipeCache<H> findRecipe(H handler)
+	{
+		TemplateRecipeMap.TemplateRecipe recipe = L.get(this.recipes, r->r.judgable.isTrue(handler));
+		if (recipe == null) return null;
+		Object[] stores = new Object[this.handlers.length];
+		for (int i = 0; i < this.handlers.length; stores[i] = recipe.dataProvider[i].apply(handler), ++i);
+		return new TemplateRecipeCache<>(this, stores);
+	}
+	
+	@Override
+	public final Collection<TemplateRecipeMap.TemplateRecipe> recipes()
+	{
+		return this.recipes;
 	}
 }

@@ -7,6 +7,8 @@ import farcore.lib.material.Mat;
 import fle.api.FLEAPI;
 import fle.core.blocks.BlockDitch;
 import fle.core.blocks.BlockGear;
+import fle.core.blocks.BlockWoodenSimpleWorkbench;
+import fle.core.items.ItemMiscResources;
 import fle.core.items.ItemSimpleFluidContainer;
 import fle.core.items.ItemToolFar;
 import fle.core.tile.kinetic.TEGear.GearSize;
@@ -18,8 +20,10 @@ public class BlocksItems
 {
 	public static ItemToolFar tool;
 	public static ItemSimpleFluidContainer fluidContainer;
+	public static ItemMiscResources miscResources;
 	public static Block ditch;
 	public static Block gear;
+	public static Block simple_wooden_workbench;
 	
 	public static void registerItemsAndBlocks()
 	{
@@ -31,8 +35,10 @@ public class BlocksItems
 		
 		tool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.tabTool);
 		fluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.tabTool);
+		miscResources = new ItemMiscResources();
 		ditch = new BlockDitch();
 		gear = new BlockGear();
+		simple_wooden_workbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.tabMachine);
 	}
 	
 	public static void setBlocksItemsProperties()

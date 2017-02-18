@@ -16,8 +16,8 @@ import javax.annotation.Nullable;
 
 import farcore.FarCore;
 import farcore.data.EnumBlock;
+import farcore.data.Materials;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
-import farcore.lib.block.state.PropertyFarInt;
 import nebula.client.model.StateMapperExt;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
@@ -29,10 +29,10 @@ import nebula.common.util.Properties.EnumStateName;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -54,7 +54,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockFire extends BlockBase implements IExtendedDataBlock
 {
-	public static final PropertyFarInt STATE = Properties.create("state", 0, 15);
+	public static final PropertyInteger STATE = Properties.create("state", 0, 15);
 	public static final PropertyEnum<SpreadDir> SPREAD_PREFERENCE = Properties.get(SpreadDir.class);
 	public static final PropertyBool NORTH = Misc.PROP_NORTH;
 	public static final PropertyBool EAST = Misc.PROP_EAST;
@@ -75,7 +75,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	
 	public BlockFire()
 	{
-		super("fire", Material.FIRE);
+		super("fire", Materials.FIRE);
 		setDefaultState(getDefaultState().withProperty(STATE, 0)
 				.withProperty(NORTH, false)
 				.withProperty(EAST, false)

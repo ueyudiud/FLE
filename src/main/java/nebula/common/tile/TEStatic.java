@@ -12,7 +12,7 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	{
 		
 	}
-
+	
 	@Override
 	public void onLoad()
 	{
@@ -30,23 +30,23 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 		nbt.merge(super.getUpdateTag());
 		return nbt;
 	}
-
+	
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag)
 	{
 		readFromDescription(tag);
-		initialized = true;
+		this.initialized = true;
 	}
 	
 	protected void initServer()
 	{
-		initialized = true;
+		this.initialized = true;
 	}
 	
 	@Override
 	public boolean isInitialized()
 	{
-		return initialized;
+		return this.initialized;
 	}
 	
 	@Override
@@ -70,27 +70,36 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	@Override
 	public void syncToAll()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToDescription(nbt);
-		sendToAll(new PacketTESync(world, pos, nbt));
+		if (isServer())
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			writeToDescription(nbt);
+			sendToAll(new PacketTESync(this.world, this.pos, nbt));
+		}
 	}
 	
 	@Override
 	public void syncToDim()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToDescription(nbt);
-		sendToDim(new PacketTESync(world, pos, nbt));
+		if (isServer())
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			writeToDescription(nbt);
+			sendToDim(new PacketTESync(this.world, this.pos, nbt));
+		}
 	}
 	
 	@Override
 	public void syncToNearby()
 	{
-		float range = getSyncRange();
-		if(!world.isAreaLoaded(pos, (int) range)) return;
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToDescription(nbt);
-		sendToNearby(new PacketTESync(world, pos, nbt), range);
+		if (isServer())
+		{
+			float range = getSyncRange();
+			if(!this.world.isAreaLoaded(this.pos, (int) range)) return;
+			NBTTagCompound nbt = new NBTTagCompound();
+			writeToDescription(nbt);
+			sendToNearby(new PacketTESync(this.world, this.pos, nbt), range);
+		}
 	}
 	
 	protected float getSyncRange()
@@ -101,8 +110,11 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	@Override
 	public void syncToPlayer(EntityPlayer player)
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToDescription(nbt);
-		sendToPlayer(new PacketTESync(world, pos, nbt), player);
+		if (isServer())
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			writeToDescription(nbt);
+			sendToPlayer(new PacketTESync(this.world, this.pos, nbt), player);
+		}
 	}
 }

@@ -93,7 +93,7 @@ public class GeneticMaterial
 			{
 				String specie = nbt.getString("specie");
 				int generation = nbt.getInteger("generation");
-				DNAPair[] coders = NBTs.getListOrDefault(nbt, "coders", DNAPair.class, null, FUNCTION1);
+				DNAPair[] coders = NBTs.getListOrDefault(nbt, "coders", DNAPair.class, null, FUNCTION1, false);
 				return new GeneticMaterial(specie, generation, coders);
 			}
 			return null;
@@ -104,7 +104,7 @@ public class GeneticMaterial
 		{
 			nbt.setString("specie", target.specie);
 			nbt.setInteger("generation", target.generation);
-			NBTs.setList(nbt, "coders", target.coders, FUNCTION2);
+			NBTs.setList(nbt, "coders", target.coders, FUNCTION2, false);
 		}
 	}
 }

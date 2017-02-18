@@ -41,6 +41,7 @@ import nebula.common.network.packet.PacketEntityAsk;
 import nebula.common.network.packet.PacketFluidSlotClick;
 import nebula.common.network.packet.PacketFluidUpdateAll;
 import nebula.common.network.packet.PacketFluidUpdateSingle;
+import nebula.common.network.packet.PacketGuiAction;
 import nebula.common.network.packet.PacketGuiTickUpdate;
 import nebula.common.network.packet.PacketKey;
 import nebula.common.network.packet.PacketTEAsk;
@@ -82,6 +83,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLModIdMappingEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -230,6 +232,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		registerLocal("info.shift.click", ChatFormatting.WHITE + "Press " + ChatFormatting.ITALIC + "<%s>" + ChatFormatting.RESET + " to get more information.");
 		registerLocal("info.food.label", ChatFormatting.RED + "Food Stat:");
 		registerLocal("info.food.display", ChatFormatting.RED + "F-%s S-%s W-%s");
+		NetworkRegistry.INSTANCE.registerGuiHandler(MODID, proxy);
 		network = Network.network(Nebula.MODID);
 		network.registerPacket(PacketEntity.class, Side.CLIENT);
 		network.registerPacket(PacketEntityAsk.class, Side.SERVER);
@@ -243,6 +246,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		network.registerPacket(PacketFluidSlotClick.class, Side.SERVER);
 		network.registerPacket(PacketGuiTickUpdate.class, Side.SERVER);
 		network.registerPacket(PacketChunkNetData.class, Side.CLIENT);
+		network.registerPacket(PacketGuiAction.class, Side.SERVER);
 	}
 	
 	@Subscribe

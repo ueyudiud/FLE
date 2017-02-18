@@ -1,0 +1,6 @@
+{
+	"textures": "fle:items/tool_head/sickle_rock",
+	"layers": {
+		"colorMultiplier": "farcore:material"
+	}
+}

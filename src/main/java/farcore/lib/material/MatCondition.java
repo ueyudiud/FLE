@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import farcore.lib.item.ItemMulti;
 import nebula.common.LanguageManager;
 import nebula.common.base.Judgable;
 import nebula.common.base.Register;
@@ -33,6 +34,8 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public float maxTemp = 1E16F;
 	public float minTemp = 0F;
+	
+	public ItemMulti instance;
 	
 	public Judgable<ISubTagContainer> filter = Judgable.FALSE;
 	public Set<Mat> blacklist = new HashSet();

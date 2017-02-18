@@ -9,9 +9,9 @@ import com.google.common.collect.ImmutableList;
 import farcore.FarCore;
 import farcore.data.Config;
 import farcore.data.EnumBlock;
+import farcore.data.Materials;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.block.material.MaterialIce;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import nebula.common.LanguageManager;
@@ -37,11 +37,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 {
-	public static final Material ICE = new MaterialIce();
-	
 	public BlockIce()
 	{
-		super(FarCore.ID, "ice", ICE);
+		super(FarCore.ID, "ice", Materials.ICE);
 		this.slipperiness = 0.98F;
 		//Do you think you can easily break a 1m^3 icy cube?
 		this.uneffectiveSpeedMultiplier = 1F / 800F;

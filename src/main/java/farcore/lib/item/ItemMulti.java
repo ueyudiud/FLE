@@ -39,8 +39,24 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			return Mat.VOID;
 	}
 	
+	public static ItemStack createStack(Mat material, MatCondition condition)
+	{
+		return createStack(material, condition, 1);
+	}
+	public static ItemStack createStack(Mat material, MatCondition condition, int size)
+	{
+		if (condition.isBelongTo(material) && condition.instance != null)
+		{
+			ItemStack stack = new ItemStack(condition.instance, size);
+			condition.instance.setMaterialToItem(stack, material);
+			return stack;
+		}
+		return null;
+	}
+	
 	public final MatCondition condition;
 	protected boolean enableChemicalFormula = true;
+	protected boolean registerToOreDict = true;
 	
 	public ItemMulti(MatCondition mc)
 	{
@@ -51,7 +67,14 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		super(modid, "multi." + mc.name);
 		this.condition = mc;
+		this.condition.instance = this;
 		this.hasSubtypes = true;
+	}
+	
+	public ItemMulti setDisableRegisterToOreDict()
+	{
+		this.registerToOreDict = false;
+		return this;
 	}
 	
 	/**
@@ -72,7 +95,10 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
 			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
-			this.condition.registerOre(material, templete);
+			if (this.registerToOreDict)
+			{
+				this.condition.registerOre(material, templete);
+			}
 		}
 	}
 	
@@ -96,7 +122,12 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	
 	protected Mat getMaterialFromItem(ItemStack stack)
 	{
-		return Mat.material(getBaseDamage(stack));
+		return Mat.material(getBaseDamage(stack), Mat.VOID);
+	}
+	
+	protected void setMaterialToItem(ItemStack stack, Mat material)
+	{
+		setDamage(stack, material.id);
 	}
 	
 	@Override

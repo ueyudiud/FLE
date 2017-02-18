@@ -6,6 +6,8 @@ package farcore.util;
 
 import java.text.DecimalFormat;
 
+import javax.annotation.Nullable;
+
 import farcore.data.SubTags;
 import farcore.lib.item.IToolStat;
 import farcore.lib.material.Mat;
@@ -54,7 +56,7 @@ public class Localization
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void addToolMaterialInformation(Mat material, IToolStat stat, UnlocalizedList unlocalizedList)
+	public static void addToolMaterialInformation(Mat material, @Nullable IToolStat stat, UnlocalizedList unlocalizedList)
 	{
 		if(!material.contain(SubTags.TOOL)) return;
 		unlocalizedList.add("info.tool.head.name", material.getLocalName());

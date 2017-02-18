@@ -36,7 +36,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -306,7 +305,7 @@ public interface IBlockBehavior<B>
 	
 	default boolean canHarvestBlock(B block, IBlockState state, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
-		return ForgeHooks.canHarvestBlock(state.getBlock(), player, world, pos);
+		return ToolHooks.isToolHarvestable((Block) block, world, pos, player);
 	}
 	
 	default boolean canConnectRedstone(B block, IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)

@@ -26,7 +26,8 @@ public enum EnumBlock
 	ice,
 	ore,
 	carved_rock,
-	circuit;
+	circuit,
+	metalblock;
 	
 	static
 	{

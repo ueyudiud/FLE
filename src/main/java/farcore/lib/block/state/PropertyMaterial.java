@@ -15,6 +15,7 @@ import farcore.lib.material.Mat;
 import nebula.common.base.Judgable;
 import nebula.common.util.L;
 import net.minecraft.block.properties.PropertyHelper;
+import net.minecraft.block.state.IBlockState;
 
 /**
  * @author ueyudiud
@@ -30,7 +31,7 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 	public static PropertyMaterial create(String name, Collection<Mat> collection)
 	{
 		Mat[] materials = L.cast(collection, Mat.class);
-		Arrays.sort(materials, (m1, m2) -> m1.name.compareTo(m2.name));
+		Arrays.sort(materials, (m1, m2) -> m1.id-m2.id);
 		return new PropertyMaterial(name, ImmutableList.copyOf(materials));
 	}
 	
@@ -38,6 +39,11 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 	{
 		super(name, Mat.class);
 		this.list = collection;
+	}
+	
+	public int indexOf(IBlockState state)
+	{
+		return indexOf(state.getValue(this));
 	}
 	
 	public int indexOf(Mat material)

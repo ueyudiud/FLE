@@ -23,8 +23,11 @@ public class FLEConfig
 	private static final IntegerMap<String> intValueMap = new IntegerMap<>();
 	private static final Map<String, EntityAttributeTag> entityAttributesMap = new HashMap<>();
 	
+	public static boolean createAllToolCreativeTabs;
+	
 	public static void init(Configuration config)
 	{
+		createAllToolCreativeTabs = config.getBoolean("enableAllToolHeadCreativeTabs", "client", true, "");
 		setValue(config, "Zombie", 200.0F, 40.0F, 0.24F, 4.0F, 5.0F);
 		setValue(config, "Skeleton", 200.0F, 20.0F, 0.25F, 4.0F, 5.0F);
 		setValue(config, "Spider", 160.0F, 20.0F, 0.3F, 3.0F, 0.0F);

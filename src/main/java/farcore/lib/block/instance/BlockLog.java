@@ -1,7 +1,7 @@
 package farcore.lib.block.instance;
 
 import farcore.data.EnumToolTypes;
-import farcore.lib.block.material.MaterialLog;
+import farcore.data.Materials;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
 import nebula.client.model.StateMapperExt;
@@ -21,13 +21,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockLog extends BlockBase
 {
-	public static final MaterialLog LOG = new MaterialLog();
-	
 	public PropertyTree tree;
 	
 	protected BlockLog(String name, Mat material, PropertyTree tree)
 	{
-		super(material.modid, name, LOG);
+		super(material.modid, name, Materials.LOG);
 		this.tree = tree;
 	}
 	

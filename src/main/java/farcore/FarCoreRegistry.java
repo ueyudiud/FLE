@@ -12,11 +12,11 @@ import farcore.energy.IEnergyNet;
 import farcore.energy.thermal.IWorldThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
-import farcore.handler.FarCoreTextureHandler;
 import farcore.lib.material.IMaterialRegister;
 import farcore.lib.world.IWorldGenerateReplacer;
 import nebula.Log;
 import nebula.client.ClientProxy;
+import nebula.client.NebulaTextureHandler;
 import nebula.client.model.ICustomItemModelSelector;
 import nebula.client.model.NebulaItemModelLoader;
 import nebula.client.render.Colormap;
@@ -280,6 +280,6 @@ public class FarCoreRegistry
 	@SideOnly(Side.CLIENT)
 	public static void addIconLoader(IIconLoader loader)
 	{
-		FarCoreTextureHandler.addIconLoader(loader);
+		NebulaTextureHandler.addIconLoader(loader);
 	}
 }

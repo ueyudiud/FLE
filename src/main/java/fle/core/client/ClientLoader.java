@@ -3,13 +3,16 @@ package fle.core.client;
 import farcore.FarCoreRegistry;
 import farcore.data.ColorMultiplier;
 import farcore.data.EnumItem;
+import fle.api.client.PolishingStateIconLoader;
 import fle.core.FLE;
 import fle.core.client.render.TESRDitch;
 import fle.core.common.CommonLoader;
 import fle.core.handler.FleClientHandler;
 import fle.loader.BlocksItems;
 import fle.loader.Entities;
+import fle.loader.Recipes;
 import nebula.client.ClientProxy;
+import nebula.client.NebulaTextureHandler;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.data.Misc;
@@ -29,6 +32,7 @@ public class ClientLoader extends CommonLoader
 		super.init(event, config);
 		
 		MinecraftForge.EVENT_BUS.register(new FleClientHandler());
+		NebulaTextureHandler.addIconLoader(new PolishingStateIconLoader());
 		
 		ClientProxy.registerRenderObject();
 		
@@ -37,6 +41,7 @@ public class ClientLoader extends CommonLoader
 		ModelLoader.setCustomStateMapper(BlocksItems.ditch, new StateMapperExt(FLE.MODID, "ditch", null, Misc.PROPS_SIDE_HORIZONTALS));
 		
 		Entities.clientInit();
+		Recipes.addRenderStates();
 		FarCoreRegistry.registerTESR(TESRDitch.class);
 	}
 }

@@ -1,5 +1,10 @@
 package farcore.load;
 
+import static farcore.data.Materials.ICE;
+import static farcore.data.Materials.LOG;
+import static farcore.data.Materials.METALIC;
+import static farcore.data.Materials.ORE;
+import static farcore.data.Materials.ROCK;
 import static farcore.energy.thermal.ThermalNet.registerWorldThermalHandler;
 import static farcore.handler.FarCoreEnergyHandler.addNet;
 import static nebula.common.LanguageManager.registerLocal;
@@ -33,7 +38,7 @@ import farcore.lib.block.instance.BlockCarvedRock;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
 import farcore.lib.block.instance.BlockIce;
-import farcore.lib.block.instance.BlockLog;
+import farcore.lib.block.instance.BlockMetal;
 import farcore.lib.block.instance.BlockModelDebug;
 import farcore.lib.block.instance.BlockOre;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
@@ -43,6 +48,7 @@ import farcore.lib.command.CommandSkill;
 import farcore.lib.fluid.FluidWater;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemDebugger;
+import farcore.lib.item.instance.ItemIngot;
 import farcore.lib.item.instance.ItemOreChip;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
@@ -86,7 +92,7 @@ public class CommonLoader
 		CT.tabMachine = new CreativeTabBase("farcore.machine", "Far Machine",
 				() -> new ItemStack(Blocks.CRAFTING_TABLE));
 		CT.tabMaterial = new CreativeTabBase("farcore.material", "Far Material",
-				() -> new ItemStack(Items.EMERALD));
+				() -> new ItemStack(EnumItem.ingot.item, 1, M.copper.id));
 		CT.tabTool = new CreativeTabBase("farcore.tool", "Far Tool",
 				() -> new ItemStack(EnumItem.debug.item));
 		CT.tabRedstone = new CreativeTabBase("farcore.redstone", "Far Redstone",
@@ -138,7 +144,8 @@ public class CommonLoader
 			EnumItem.branch.set(new ItemMulti(MC.branch).setCreativeTab(CT.tabTree));
 			new ItemTreeLog().setCreativeTab(CT.tabTree);
 		}
-		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabResourceItem));
+		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabMaterial));
+		new ItemIngot().setCreativeTab(CT.tabMaterial);
 		if(Config.replaceWater)
 		{
 			EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
@@ -146,6 +153,7 @@ public class CommonLoader
 			new BlockIce().setCreativeTab(CT.tabTerria);
 		}
 		new BlockFire();
+		new BlockMetal();
 		//Register tile entities.
 		bar.step("Register Tile Entities");
 		registerTileEntity(TECrop.class, "farcore.crop");
@@ -167,13 +175,14 @@ public class CommonLoader
 		//Post load item and block.
 		//For register to Ore Dictionary, Tool Uses, Compatibility, etc.
 		bar.step("Post initalizing items and blocks");
-		ToolHooks.addEfficiencyTool(Material.ROCK, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
-		ToolHooks.addEfficiencyTool(Material.IRON, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
+		ToolHooks.addEfficiencyTool(ROCK, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
+		ToolHooks.addHarvestableTool(ROCK, true, EnumToolTypes.HAMMER_DIGABLE);
+		ToolHooks.addEfficiencyTool(METALIC, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
 		ToolHooks.addEfficiencyTool(Material.ANVIL, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
-		ToolHooks.addEfficiencyTool(BlockOre.ORE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
-		ToolHooks.addEfficiencyTool(BlockLog.LOG, EnumToolTypes.AXE, EnumToolTypes.ADZ, EnumToolTypes.SAW, EnumToolTypes.BOW_SAW);
-		ToolHooks.addEfficiencyTool(BlockIce.ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
-		ToolHooks.addHarvestableTool(BlockIce.ICE, true, EnumToolTypes.CHISEL);
+		ToolHooks.addEfficiencyTool(ORE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
+		ToolHooks.addEfficiencyTool(LOG, EnumToolTypes.AXE, EnumToolTypes.ADZ, EnumToolTypes.SAW, EnumToolTypes.BOW_SAW);
+		ToolHooks.addEfficiencyTool(ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
+		ToolHooks.addHarvestableTool(ICE, true, EnumToolTypes.CHISEL);
 		//Register languages.
 		bar.step("Register localize file");
 		registerLocal("info.debug.date", "Date : ");

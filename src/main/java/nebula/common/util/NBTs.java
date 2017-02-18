@@ -14,6 +14,7 @@ import nebula.Log;
 import nebula.common.base.IRegister;
 import nebula.common.nbt.INBTReader;
 import nebula.common.nbt.NBTTagCompoundEmpty;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -43,21 +44,43 @@ public class NBTs
 		}
 	}
 	
-	public static <E> void setList(NBTTagCompound nbt, String key, E[] value, Function<E, NBTBase> writer)
+	public static <E> void setList(NBTTagCompound nbt, String key, E[] value, Function<E, ? extends NBTBase> writer, boolean ordered)
 	{
 		NBTTagList list = new NBTTagList();
-		for(E element : value)
+		if (ordered)
 		{
-			try
+			for(int i = 0; i < value.length; ++i)
 			{
-				list.appendTag(writer.apply(element));
+				try
+				{
+					NBTBase nbt1 = writer.apply(value[i]);
+					NBTTagCompound compound = new NBTTagCompound();
+					compound.setTag("element", nbt1);
+					setNumber(compound, "idx", i);
+					list.appendTag(compound);
+				}
+				catch(Exception exception)
+				{
+					Log.catchingIfDebug(exception);
+				}
 			}
-			catch(Exception exception)
-			{
-				Log.catchingIfDebug(exception);
-			}
+			nbt.setTag(key, list);
 		}
-		nbt.setTag(key, list);
+		else
+		{
+			for(E element : value)
+			{
+				try
+				{
+					list.appendTag(writer.apply(element));
+				}
+				catch(Exception exception)
+				{
+					Log.catchingIfDebug(exception);
+				}
+			}
+			nbt.setTag(key, list);
+		}
 	}
 	
 	public static NBTTagCompound getOrCreate(NBTTagCompound nbt, String tag)
@@ -157,6 +180,18 @@ public class NBTs
 		}
 	}
 	
+	public static void setItemStack(NBTTagCompound nbt, String key, ItemStack stack, boolean markEmpty)
+	{
+		if(stack != null)
+		{
+			nbt.setTag(key, stack.writeToNBT(new NBTTagCompound()));
+		}
+		else if(markEmpty)
+		{
+			nbt.setTag(key, new NBTTagCompound());//Mark for empty stack.
+		}
+	}
+	
 	public static void setFluidStack(NBTTagCompound nbt, String key, FluidStack stack, boolean markEmpty)
 	{
 		if(stack != null)
@@ -247,6 +282,11 @@ public class NBTs
 		return def;
 	}
 	
+	public static ItemStack getItemStackOrDefault(NBTTagCompound nbt, String key, ItemStack def)
+	{
+		return nbt.hasKey(key, NBT.TAG_COMPOUND) ? ItemStack.loadItemStackFromNBT(nbt.getCompoundTag(key)) : def;
+	}
+	
 	public static FluidStack getFluidStackOrDefault(NBTTagCompound nbt, String key, FluidStack def)
 	{
 		return nbt.hasKey(key, NBT.TAG_COMPOUND) ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag(key)) : def;
@@ -319,26 +359,84 @@ public class NBTs
 		return container;
 	}
 	
-	public static <E> E[] getListOrDefault(NBTTagCompound nbt, String key, Class<E> elementClass, @Nullable E[] def, Function<NBTBase, E> reader)
+	public static <E> E[] getListOrDefault(NBTTagCompound nbt, String key, Class<E> elementClass, @Nullable E[] def, Function<NBTBase, E> reader, boolean ordered)
 	{
 		if(nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = (NBTTagList) nbt.getTag(key);
-			E[] array = (E[]) Array.newInstance(elementClass, list.tagCount());
-			for(int i = 0; i < list.tagCount(); ++i)
+			E[] array;
+			if (ordered)
 			{
-				NBTBase nbt1 = list.get(i);
-				try
+				array = (E[]) Array.newInstance(elementClass, def.length);
+				for(int i = 0; i < list.tagCount(); ++i)
 				{
-					array[i] = reader.apply(nbt1);
+					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
+					try
+					{
+						array[nbt1.getInteger("idx")] = reader.apply(nbt1.getTag("element"));
+					}
+					catch (Exception exception)
+					{
+						Log.catchingIfDebug(exception);
+					}
 				}
-				catch (Exception exception)
+			}
+			else
+			{
+				array = (E[]) Array.newInstance(elementClass, list.tagCount());
+				for(int i = 0; i < list.tagCount(); ++i)
 				{
-					Log.catchingIfDebug(exception);
+					NBTBase nbt1 = list.get(i);
+					try
+					{
+						array[i] = reader.apply(nbt1);
+					}
+					catch (Exception exception)
+					{
+						Log.catchingIfDebug(exception);
+					}
 				}
 			}
 			return array;
 		}
 		return def;
+	}
+	
+	public static <E> void insertToList(NBTTagCompound nbt, String key, @Nullable E[] def, Function<NBTBase, E> reader, boolean ordered)
+	{
+		if(nbt.hasKey(key, NBT.TAG_LIST))
+		{
+			NBTTagList list = (NBTTagList) nbt.getTag(key);
+			if (ordered)
+			{
+				for(int i = 0; i < list.tagCount(); ++i)
+				{
+					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
+					try
+					{
+						def[nbt1.getInteger("idx")] = reader.apply(nbt1.getTag("element"));
+					}
+					catch (Exception exception)
+					{
+						Log.catchingIfDebug(exception);
+					}
+				}
+			}
+			else
+			{
+				for(int i = 0; i < list.tagCount(); ++i)
+				{
+					NBTBase nbt1 = list.get(i);
+					try
+					{
+						def[i] = reader.apply(nbt1);
+					}
+					catch (Exception exception)
+					{
+						Log.catchingIfDebug(exception);
+					}
+				}
+			}
+		}
 	}
 }

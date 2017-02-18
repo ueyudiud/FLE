@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableList;
 import farcore.data.Config;
 import farcore.data.MP;
 import farcore.data.SubTags;
+import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
@@ -261,6 +262,17 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		this.electrialResistance = property.electrialResistance = electrialResistance;
 		this.redstoneResistance = property.redstoneResistance = redstoneResistance;
 		return addProperty(MP.property_basic, property);
+	}
+	
+	public Mat setMetalic(int harvestLevel, float hardness, float resistance)
+	{
+		MetalBlockBehavior behavior = new MetalBlockBehavior<>();
+		behavior.explosionResistance = resistance;
+		behavior.hardness = hardness;
+		behavior.harvestLevel = harvestLevel;
+		behavior.material = this;
+		add(SubTags.METAL);
+		return this;
 	}
 	
 	public Mat setToolable(int harvestLevel, int maxUse, float hardness, float brittleness, float attackSpeed, float dVE, int enchantability)

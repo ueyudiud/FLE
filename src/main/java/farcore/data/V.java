@@ -23,6 +23,8 @@ public class V
 	public static final int WATER_FREEZE_POINT_I = 273;
 	public static final float WATER_FREEZE_POINT_F = 273.15F;
 	
+	public static final int GENERAL_MAX_STACK_SIZE = 64;
+	
 	public static final int BUCKET_CAPACITY = Fluid.BUCKET_VOLUME;
 	
 	/** Vacuum Heat Conduct Constant */

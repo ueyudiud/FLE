@@ -1,16 +1,40 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package fle.api.recipes;
 
 import java.util.Collection;
 
+import javax.annotation.Nullable;
+
 import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.util.IRegisteredNameable;
 
-public interface IRecipeMap<R, C extends IRecipeCache<? extends R>, H> extends INBTReaderAndWritter<C>
+/**
+ * The recipe map.
+ * @author ueyudiud
+ */
+public interface IRecipeMap<R, C, H> extends INBTReaderAndWritter<C>, IRegisteredNameable
 {
-	C findRecipe(H handler);
-
-	void onRecipeInput(C cache, H handler);
+	/**
+	 * Add a recipe to recipe map.
+	 * @param recipe
+	 * @return Return true if the recipe is adding success.
+	 */
+	boolean addRecipe(R recipe);
 	
-	void addRecipe(R recipe);
+	/**
+	 * Find recipe by crafting handler, it stored by
+	 * a cache, null means no recipe matched.
+	 * @param handler
+	 * @return
+	 */
+	@Nullable C findRecipe(H handler);
 	
-	Collection<R> getRecipes();
+	/**
+	 * Get all recipes.
+	 * @return
+	 */
+	Collection<R> recipes();
 }

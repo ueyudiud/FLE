@@ -1,0 +1,6 @@
+{
+	"textures": "fle:items/tool_head/shovel_rock",
+	"layers": {
+		"colorMultiplier": "farcore:material"
+	}
+}

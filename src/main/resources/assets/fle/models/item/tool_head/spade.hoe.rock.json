@@ -1,0 +1,6 @@
+{
+	"textures": "fle:items/tool_head/spade_hoe",
+	"layers": {
+		"colorMultiplier": "farcore:material"
+	}
+}
