@@ -2,6 +2,8 @@ package nebula.common.inventory;
 
 import javax.annotation.Nullable;
 
+import nebula.common.base.Appliable;
+import nebula.common.stack.AbstractStack;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -11,6 +13,19 @@ import net.minecraft.item.ItemStack;
  */
 public interface IBasicInventory
 {
+	/**
+	 * Return inventory slot as an array.
+	 * For general uses, the array is suggested be a copy of source array.
+	 * @return
+	 */
+	ItemStack[] toArray();
+	
+	/**
+	 * Copy stacks data from array.
+	 * @param stacks
+	 */
+	void fromArray(ItemStack[] stacks);
+	
 	/**
 	 * Returns the number of slots in the inventory.
 	 */
@@ -41,6 +56,12 @@ public interface IBasicInventory
 	default ItemStack decrStackSize(int index, int count)
 	{
 		return decrStackSize(index, count, true);
+	}
+	
+	@Nullable
+	default ItemStack decrStackSize(int index, AbstractStack stack)
+	{
+		return decrStackSize(index, stack.size(getStackInSlot(index)));
 	}
 	
 	int insertStack(int index, ItemStack resource, boolean process);
@@ -76,5 +97,15 @@ public interface IBasicInventory
 	default boolean isItemValidForSlot(int index, ItemStack stack)
 	{
 		return true;
+	}
+	
+	default <T> T insertAllStacks(ItemStack[] stacks, Appliable<T> consumer)
+	{
+		return insertAllStacks(stacks, 0, getSizeInventory(), consumer);
+	}
+	
+	default <T> T insertAllStacks(ItemStack[] stacks, int from, int to, Appliable<T> consumer)
+	{
+		return InventoryHelper.insertAllStacks(this, from, to, stacks, consumer);
 	}
 }

@@ -5,13 +5,11 @@ import java.util.Random;
 
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving.SpawnPlacementType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
@@ -275,11 +273,7 @@ public interface ITilePropertiesAndBehavior
 		boolean addLandingEffects(IBlockState state, IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles);
 	}
 	
-	public static interface ITB_Containerable
+	public static interface ITB_Containerable extends IGuiTile
 	{
-		Container openContainer(int id, EntityPlayer player);
-		
-		@SideOnly(Side.CLIENT)
-		GuiContainer openGUI(int id, EntityPlayer player);
 	}
 }

@@ -12,7 +12,8 @@ import javax.annotation.Nullable;
 
 import nebula.Log;
 import nebula.common.base.IRegister;
-import nebula.common.nbt.INBTReader;
+import nebula.common.nbt.INBTCompoundReader;
+import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.nbt.NBTTagCompoundEmpty;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -331,7 +332,7 @@ public class NBTs
 		return nbt.hasKey(key) ? register.get(nbt.getString(key), def) : def;
 	}
 	
-	public static <E> E[] getArrayOrDefault(NBTTagCompound nbt, String key, E[] container, INBTReader<E> reader)
+	public static <E> E[] getArrayOrDefault(NBTTagCompound nbt, String key, E[] container, INBTCompoundReader<E> reader)
 	{
 		if(nbt.hasKey(key, NBT.TAG_LIST))
 		{
@@ -438,5 +439,32 @@ public class NBTs
 				}
 			}
 		}
+	}
+	
+	public static <E, N extends NBTBase>
+	INBTReaderAndWritter<E[], NBTTagList> wrapAsUnorderedArrayWriterAndReader(INBTReaderAndWritter<E, N> rw)
+	{
+		final Class<E> clazz = (Class<E>) rw.getTargetType();
+		return new INBTReaderAndWritter<E[], NBTTagList>()
+		{
+			@Override
+			public E[] readFromNBT(NBTTagList nbt)
+			{
+				E[] result = (E[]) Array.newInstance(clazz, nbt.tagCount());
+				for (int i = 0; i < nbt.tagCount(); ++i)
+				{
+					result[i] = rw.readFromNBT((N) nbt.get(i));
+				}
+				return result;
+			}
+			
+			@Override
+			public NBTTagList writeToNBT(E[] target)
+			{
+				NBTTagList list = new NBTTagList();
+				for (E element : target) { list.appendTag(rw.writeToNBT(element)); }
+				return list;
+			}
+		};
 	}
 }

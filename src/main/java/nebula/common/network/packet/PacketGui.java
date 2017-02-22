@@ -17,24 +17,24 @@ public abstract class PacketGui extends PacketAbstract
 	}
 	public PacketGui(ContainerBase container)
 	{
-		guiid = container.windowId;
+		this.guiid = container.windowId;
 	}
 	
 	@Override
 	protected void encode(PacketBufferExt output) throws IOException
 	{
-		output.writeInt(guiid);
+		output.writeInt(this.guiid);
 	}
 	
 	@Override
 	protected void decode(PacketBufferExt input) throws IOException
 	{
-		guiid = input.readInt();
+		this.guiid = input.readInt();
 	}
 	
 	protected ContainerBase container()
 	{
 		EntityPlayer player = getPlayer();
-		return player.openContainer.windowId == guiid ? (ContainerBase) player.openContainer : null;
+		return player.openContainer.windowId == this.guiid && (player.openContainer instanceof ContainerBase) ? (ContainerBase) player.openContainer : null;
 	}
 }

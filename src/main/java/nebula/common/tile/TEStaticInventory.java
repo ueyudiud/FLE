@@ -12,6 +12,7 @@ import nebula.common.inventory.IBasicInventory;
 import nebula.common.inventory.InventoryHelper;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import nebula.common.util.ItemStacks;
+import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.util.TileEntities;
 import net.minecraft.block.state.IBlockState;
@@ -128,6 +129,18 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	}
 	
 	@Override
+	public ItemStack[] toArray()
+	{
+		return L.transform(this.stacks, ItemStack.class, stack->ItemStack.copyItemStack(stack));
+	}
+	
+	@Override
+	public void fromArray(ItemStack[] stacks)
+	{
+		System.arraycopy(stacks, 0, this.stacks, 0, this.stacks.length);
+	}
+	
+	@Override
 	public int getSizeInventory()
 	{
 		return this.stacks.length;
@@ -142,7 +155,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public int insertStack(int index, ItemStack resource, boolean process)
 	{
-		int size = InventoryHelper.addStack(this, index, false, resource, process, false);
+		int size = InventoryHelper.incrStack(this, index, false, resource, process, false);
 		if (size != 0 && process)
 		{
 			onInventoryChanged(index);

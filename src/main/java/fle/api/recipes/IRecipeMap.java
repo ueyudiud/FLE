@@ -8,14 +8,14 @@ import java.util.Collection;
 
 import javax.annotation.Nullable;
 
-import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.IRegisteredNameable;
 
 /**
  * The recipe map.
  * @author ueyudiud
  */
-public interface IRecipeMap<R, C, H> extends INBTReaderAndWritter<C>, IRegisteredNameable
+public interface IRecipeMap<R, C, H> extends INBTCompoundReaderAndWritter<C>, IRegisteredNameable
 {
 	/**
 	 * Add a recipe to recipe map.

@@ -6,14 +6,14 @@ package nebula.common.nbt;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.Constants.NBT;
 
 /**
  * @author ueyudiud
- * @param <T> The reading target type.
  */
-public interface INBTReader<T>
+@FunctionalInterface
+public interface INBTReader<T, N extends NBTBase>
 {
 	/**
 	 * Read target from nbt with sub tag.
@@ -23,8 +23,8 @@ public interface INBTReader<T>
 	 */
 	default @Nullable T readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return nbt.hasKey(key, NBT.TAG_COMPOUND) ? readFromNBT(nbt.getCompoundTag(key)) : null;
+		return nbt.hasKey(key) ? readFromNBT((N) nbt.getTag(key)) : null;
 	}
 	
-	T readFromNBT(NBTTagCompound nbt);
+	T readFromNBT(N nbt);
 }

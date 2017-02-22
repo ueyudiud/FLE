@@ -185,4 +185,20 @@ public class TileEntities
 		for (int i = 0; i < tile.getSizeInventory(); list.add(tile.removeStackFromSlot(i)), ++i);
 		Worlds.spawnDropsInWorld(tile.getWorld(), tile.getPos(), list);
 	}
+	
+	public static void damageTool(IBasicInventory inventory, int index, float amount,
+			EntityPlayer user, EnumToolType type)
+	{
+		ItemStack stack = inventory.getStackInSlot(index);
+		if (stack == null) return;
+		ItemStacks.damageTool(stack, amount, user, type);
+		if (stack.stackSize <= 0)
+		{
+			inventory.setInventorySlotContents(index, null);
+			if (user != null)
+			{
+				user.renderBrokenItemStack(stack);
+			}
+		}
+	}
 }

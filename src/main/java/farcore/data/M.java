@@ -63,7 +63,9 @@ public class M
 	public static final Mat pheosol			= new MaterialBuilder(7109, FarCore.ID , "pheosol"			, "Pheosol"			, "Pheosol"				).setRGBa(0x6C4626FF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	public static final Mat aterocalcosol	= new MaterialBuilder(7110, FarCore.ID , "aterocalcosol"	, "Aterocalcosol"	, "Aterocalcosol"		).setRGBa(0x25211EFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	//Misc terria
-	public static final Mat flint			= new MaterialBuilder(7601, "minecraft", "flint"			, "Flint"			, "Flint"				).setRGBa(0x5A5A5AFF).setToolProp(  10,  8, 1.1F, 1.0F,  5.0F, -0.4F).build();
+	public static final Mat flint			= new MaterialBuilder(7601, "minecraft", "flint"			, "Flint"			, "Flint"				).setRGBa(0x2D2D2DFF).setToolProp(  10,  8, 1.1F, 1.0F,  5.0F, -0.4F).build();
+	public static final Mat gravel			= new MaterialBuilder(7602, "minecraft", "gravel"			, "Gravel"			, "Gravel"				).setRGBa(0xAEB1BFFF).build();
+	public static final Mat quartz			= new MaterialBuilder(7603, FarCore.ID , "quartz"			, "Quartz"			, "Quartz"				).setRGBa(0xDADBE5FF).setToolProp(  12, 11, 1.9F, 1.0F,  4.0F, -0.5F).build();
 	//Trees
 	public static final Mat oak				= new MaterialBuilder(8001, "minecraft", "oak"				, "Oak"				, "Oak"					)                    .setToolProp(   7,  4, 1.2F, 0.1F,  2.0F, -0.2F).build().setWood(5.3F, 1.0F, 20.0F);
 	public static final Mat spruce			= new MaterialBuilder(8002, "minecraft", "spruce"			, "Spruce"			, "Spruce"				)                                                                    .build().setWood(2.3F, 1.0F, 20.0F);
@@ -129,7 +131,10 @@ public class M
 	static
 	{
 		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow);
-		SubTags.FLINT.addTo(flint, obsidian);
+		SubTags.FLINT.addTo(flint, obsidian, quartz);
+		SubTags.PILEABLE.addTo(gravel);
+		
+		MC.axe_rock.addToWhiteList(quartz);
 		
 		oak			.setTree(new TreeOak());
 		spruce		.setTree(new TreeBirch());

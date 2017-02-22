@@ -166,12 +166,12 @@ public abstract class Tool implements IToolStat
 		{
 		//0 for base.
 		case 1 : return ItemTool.getMaterial(stack, "head").RGB;
-		//3 for base override.
-		case 4 : return ItemTool.getMaterial(stack, "tie").RGB;
+		case 3 : return ItemTool.getMaterial(stack, "tie").RGB;
+		//4 for base override.
 		case 5 : return ItemTool.getMaterial(stack, "rust").RGB;
 		case 6 : return ItemTool.getMaterial(stack, "inlay").RGB;
-		case 2 : if(this.hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
 		//7 for extended override.
+		case 2 : if(this.hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
 		default: return 0xFFFFFFFF;
 		}
 	}

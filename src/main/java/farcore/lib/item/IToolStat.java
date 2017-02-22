@@ -23,7 +23,7 @@ public interface IToolStat extends IItemCapabilityProvider
 	
 	default EnumPhysicalDamageType getPhysicalDamageType()
 	{
-		return EnumPhysicalDamageType.SMASH;
+		return EnumPhysicalDamageType.HIT;
 	}
 	
 	void onToolCrafted(ItemStack stack, EntityPlayer player);

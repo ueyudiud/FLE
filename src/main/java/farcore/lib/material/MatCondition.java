@@ -38,7 +38,8 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	public ItemMulti instance;
 	
 	public Judgable<ISubTagContainer> filter = Judgable.FALSE;
-	public Set<Mat> blacklist = new HashSet();
+	public Set<Mat> blacklist = new HashSet<>();
+	public Set<Mat> whitelist = new HashSet<>();
 	
 	public MatCondition(String prefix, String localName, String withOreLocalName)
 	{
@@ -70,6 +71,19 @@ public class MatCondition implements Judgable<ISubTagContainer>
 		else
 		{
 			this.blacklist.addAll(Arrays.asList(mats));
+		}
+		return this;
+	}
+	
+	public MatCondition addToWhiteList(Mat...mats)
+	{
+		if(mats.length == 1)
+		{
+			this.whitelist.add(mats[0]);
+		}
+		else
+		{
+			this.whitelist.addAll(Arrays.asList(mats));
 		}
 		return this;
 	}
@@ -127,7 +141,8 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public boolean isBelongTo(Mat material)
 	{
-		return this.filter.isTrue(material) && !this.blacklist.contains(material);
+		return (this.filter.isTrue(material) && !this.blacklist.contains(material)) ||
+				this.whitelist.contains(material);
 	}
 	
 	String getWithOreTranslateName()

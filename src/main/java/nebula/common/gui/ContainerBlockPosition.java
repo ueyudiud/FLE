@@ -1,13 +1,18 @@
 package nebula.common.gui;
 
+import nebula.common.inventory.IBasicInventory;
+import nebula.common.util.Worlds;
 import nebula.common.world.ICoord;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The container with block position, active with block has GUI but no
@@ -70,6 +75,16 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int id, int data)
+	{
+		if (id < this.currentValue.length)
+		{
+			this.currentValue[id] = data;
+		}
+	}
+	
+	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
 		return match(this.state, this.world.getBlockState(this.pos)) && playerIn.world == this.world && playerIn.getDistanceSq(this.pos.getX() + .5F, this.pos.getY() + .5F, this.pos.getZ() + .5F) <= 16;
@@ -84,5 +99,23 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 	public void onInventoryChanged(InventoryBasic inventory)
 	{
 		
+	}
+	
+	protected void dropInventoryItems(IBasicInventory inventory)
+	{
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		{
+			ItemStack stack = inventory.removeStackFromSlot(i);
+			Worlds.spawnDropInWorld(this.world, this.pos, stack);
+		}
+	}
+	
+	protected void dropPlayerItems(IBasicInventory inventory)
+	{
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		{
+			ItemStack stack = inventory.removeStackFromSlot(i);
+			Worlds.spawnDropInWorld(this.opener, stack);
+		}
 	}
 }

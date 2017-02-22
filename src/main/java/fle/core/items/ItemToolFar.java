@@ -16,14 +16,17 @@ import nebula.client.util.Client;
 import nebula.common.base.Judgable;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.IBehavior;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import nebula.common.item.IProjectileItem;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -32,7 +35,7 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IProjectileItem, IPolishableItem
+public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IProjectileItem, IPolishableItem, IIP_Containerable
 {
 	public ItemToolFar()
 	{
@@ -195,5 +198,30 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 			{
 				((IPolishableBehavior) behavior).onPolished(player, stack);
 			}
+	}
+	
+	@Override
+	public Container openContainer(World world, BlockPos pos, EntityPlayer player, ItemStack stack)
+	{
+		List<IBehavior> list = getBehavior(stack);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IIP_Containerable)
+			{
+				return ((IIP_Containerable) behavior).openContainer(world, pos, player, stack);
+			}
+		return null;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiContainer openGui(World world, BlockPos pos, EntityPlayer player, ItemStack stack)
+	{
+		List<IBehavior> list = getBehavior(stack);
+		for(IBehavior behavior : list)
+			if(behavior instanceof IIP_Containerable)
+			{
+				return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
+			}
+		return null;
 	}
 }

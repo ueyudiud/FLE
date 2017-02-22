@@ -22,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -534,5 +535,13 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 			}
 		}
 		super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
+	}
+	
+	@Override
+	public Boolean isAABBInsideMaterial(World world, BlockPos pos, AxisAlignedBB boundingBox, Material materialIn)
+	{
+		IBlockState state = world.getBlockState(pos);
+		if (materialIn != state.getMaterial()) return false;
+		return boundingBox.intersectsWith(getCollisionBoundingBox(state, world, pos));
 	}
 }

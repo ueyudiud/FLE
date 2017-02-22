@@ -6,12 +6,14 @@ package nebula.common.nbt;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author ueyudiud
  */
-public interface INBTWriter<T>
+@FunctionalInterface
+public interface INBTWriter<T, N extends NBTBase>
 {
 	/**
 	 * Write target to nbt with sub tag.
@@ -23,21 +25,20 @@ public interface INBTWriter<T>
 	default NBTTagCompound writeToNBT(@Nullable T target, NBTTagCompound nbt, String key)
 	{
 		if(target == null) return nbt;
-		nbt.setTag(key, writeToNBT1(target, new NBTTagCompound()));
-		return nbt;
-	}
-	
-	default NBTTagCompound writeToNBT1(T target, NBTTagCompound nbt)
-	{
-		writeToNBT(target, nbt);
+		nbt.setTag(key, writeToNBT(target));
 		return nbt;
 	}
 	
 	@SuppressWarnings("unchecked")
-	default NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	default N writeToNBT()
 	{
-		return writeToNBT1((T) this, nbt);
+		return writeToNBT((T) this);
 	}
 	
-	void writeToNBT(T target, NBTTagCompound nbt);
+	N writeToNBT(T target);
+	
+	default N apply(T target)
+	{
+		return writeToNBT(target);
+	}
 }

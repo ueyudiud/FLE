@@ -1,5 +1,6 @@
 package fle.core.items.tool;
 
+import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumToolTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,6 +13,12 @@ public class ToolHardHammer extends Tool
 		super(EnumToolTypes.HAMMER_DIGABLE);
 		this.damagePerAttack = 2.0F;
 		this.speedMultiplier = speedMultiplier;
+	}
+	
+	@Override
+	public EnumPhysicalDamageType getPhysicalDamageType()
+	{
+		return EnumPhysicalDamageType.SMASH;
 	}
 	
 	@Override

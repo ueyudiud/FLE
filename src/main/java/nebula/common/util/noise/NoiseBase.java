@@ -1,5 +1,7 @@
 package nebula.common.util.noise;
 
+import java.util.Arrays;
+
 public abstract class NoiseBase
 {
 	protected long seed;
@@ -13,6 +15,22 @@ public abstract class NoiseBase
 	{
 		this.seed = seed;
 		return this;
+	}
+	
+	protected static double[] getOrCreate(double[] array, int u, int v, int w, boolean init)
+	{
+		if (array == null || array.length <= u * v * w)
+		{
+			return new double[u * v * w];
+		}
+		else
+		{
+			if (init)
+			{
+				Arrays.fill(array, 0.0);
+			}
+			return array;
+		}
 	}
 	
 	public double[] noise(double[] array, int u, int w, double x, double z)

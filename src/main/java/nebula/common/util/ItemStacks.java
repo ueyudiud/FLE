@@ -21,6 +21,7 @@ import nebula.common.stack.BaseStack;
 import nebula.common.stack.OreStack;
 import nebula.common.tool.EnumToolType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,6 +30,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -249,6 +251,18 @@ public class ItemStacks
 		else
 		{
 			getOrSetupNBT(stack, true).setInteger("damage", damage);
+		}
+	}
+	
+	public static void damageTool(ItemStack stack, float amount, EntityLivingBase user, EnumToolType type)
+	{
+		if (stack.getItem() instanceof ITool)
+		{
+			((ITool) stack.getItem()).onToolUse(user, stack, type, amount);
+		}
+		else
+		{
+			stack.damageItem(MathHelper.ceil(amount), user);
 		}
 	}
 }

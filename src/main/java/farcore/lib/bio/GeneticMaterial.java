@@ -7,7 +7,7 @@ package farcore.lib.bio;
 import java.util.Random;
 import java.util.function.Function;
 
-import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,12 +79,12 @@ public class GeneticMaterial
 		return new GeneticMaterial(this.specie, this.generation, this.coders);
 	}
 	
-	public static enum GenticMaterialFactory implements INBTReaderAndWritter<GeneticMaterial>
+	public static enum GenticMaterialFactory implements INBTCompoundReaderAndWritter<GeneticMaterial>
 	{
 		INSTANCE;
 		
 		private static final Function<NBTBase, DNAPair> FUNCTION1 = tag -> DNAPair.loadFromNBT((NBTTagCompound) tag);
-		private static final Function<DNAPair, NBTBase> FUNCTION2 = pair -> pair.writeToNBT1(pair, new NBTTagCompound());
+		private static final Function<DNAPair, NBTBase> FUNCTION2 = pair -> pair.writeToNBT(pair);
 		
 		@Override
 		public GeneticMaterial readFromNBT(NBTTagCompound nbt)

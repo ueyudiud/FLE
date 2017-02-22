@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.item.ItemStack;
 
 /**
@@ -30,25 +32,27 @@ public interface AbstractStack
 	 * @param stack
 	 * @return
 	 */
-	boolean contain(ItemStack stack);
+	default boolean contain(ItemStack stack) { return similar(stack) && stack.stackSize >= size(stack); }
 	
 	int size(@Nullable ItemStack stack);
 	
-	AbstractStack split(ItemStack stack);
+	default AbstractStack split(ItemStack stack)  { throw new UnsupportedOperationException(); }
 	
-	AbstractStack copyWithSize(int size);
+	default AbstractStack copyWithSize(int size) { throw new UnsupportedOperationException(); }
 	
+	//INFO : Please at least override instance or display one, or
+	//       the stack will be over flow!
 	/**
 	 * Create a instance stack.
 	 * @return
 	 */
-	ItemStack instance();
+	default ItemStack instance() { return display().get(0); }
 	
 	/**
 	 * Display most of stack matched.
 	 * @return
 	 */
-	List<ItemStack> display();
+	default List<ItemStack> display() { return ImmutableList.of(instance()); }
 	
 	/**
 	 * If this stack is valid.
@@ -58,7 +62,7 @@ public interface AbstractStack
 	 * list, no container item, etc.
 	 * @return Is this stack valid.
 	 */
-	boolean valid();
+	default boolean valid() { return true; }
 	
 	/**
 	 * Some tools or container has container item.
@@ -68,5 +72,5 @@ public interface AbstractStack
 	 * @return
 	 */
 	@Deprecated
-	boolean useContainer();
+	default boolean useContainer() { return false; }
 }

@@ -11,9 +11,12 @@ import static nebula.common.LanguageManager.registerLocal;
 import static net.minecraftforge.fml.common.ProgressManager.pop;
 import static net.minecraftforge.fml.common.ProgressManager.push;
 import static net.minecraftforge.fml.common.registry.GameRegistry.registerTileEntity;
+import static org.lwjgl.input.Keyboard.KEY_P;
+import static org.lwjgl.input.Keyboard.KEY_R;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import farcore.FarCore;
 import farcore.data.CT;
 import farcore.data.Config;
 import farcore.data.EnumFluid;
@@ -21,6 +24,7 @@ import farcore.data.EnumItem;
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
+import farcore.data.Keys;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.MP;
@@ -62,6 +66,7 @@ import farcore.lib.tile.instance.TECustomCarvedStone;
 import farcore.lib.tile.instance.TEOre;
 import farcore.lib.tile.instance.TESapling;
 import nebula.client.CreativeTabBase;
+import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.fluid.FluidBase;
 import nebula.common.tool.ToolHooks;
@@ -146,6 +151,7 @@ public class CommonLoader
 		}
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabMaterial));
 		new ItemIngot().setCreativeTab(CT.tabMaterial);
+		new ItemMulti(MC.pile).setCreativeTab(CT.tabMaterial);
 		if(Config.replaceWater)
 		{
 			EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
@@ -207,8 +213,11 @@ public class CommonLoader
 		registerLocal(EnumPhysicalDamageType.PUNCTURE.getTranslation(), ChatFormatting.GOLD + "Puncture");
 		registerLocal(EnumPhysicalDamageType.SMASH.getTranslation(), ChatFormatting.GOLD + "Smash");
 		registerLocal(EnumPhysicalDamageType.CUT.getTranslation(), ChatFormatting.GOLD + "Cut");
+		registerLocal(EnumPhysicalDamageType.HIT.getTranslation(), ChatFormatting.GOLD + "Hit");
 		//		//Setup network.
 		//		bar.step("Setup network handler");
+		NebulaKeyHandler.register(Keys.ROTATE, KEY_R, FarCore.ID);
+		NebulaKeyHandler.register(Keys.PLACE, KEY_P, FarCore.ID);
 		pop(bar);
 	}
 	

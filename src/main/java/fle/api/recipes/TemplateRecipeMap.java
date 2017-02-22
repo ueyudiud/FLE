@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import nebula.Log;
 import nebula.common.base.Judgable;
 import nebula.common.nbt.INBTReaderAndWritter;
@@ -42,7 +44,12 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 			return this;
 		}
 		
-		public <D> Builder<H> addCacheEntry(String key, Class<D> type, INBTReaderAndWritter<? super D> nbtHandler)
+		public <D> Builder<H> addCacheEntry(String key, INBTReaderAndWritter<? super D, ?> nbtHandler)
+		{
+			return addCacheEntry(key, (Class<D>) nbtHandler.getTargetType(), nbtHandler);
+		}
+		
+		public <D> Builder<H> addCacheEntry(String key, Class<D> type, INBTReaderAndWritter<? super D, ?> nbtHandler)
 		{
 			this.list1.add(new TemplateRecipeCacheEntryHandler<>(key, type, nbtHandler));
 			return this;
@@ -58,9 +65,9 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	{
 		String entryName;
 		Class<D> type;
-		INBTReaderAndWritter<? super D> nbtHandler;
+		INBTReaderAndWritter<? super D, ?> nbtHandler;
 		
-		TemplateRecipeCacheEntryHandler(String name, Class<D> type, INBTReaderAndWritter<? super D> nbtHandler)
+		TemplateRecipeCacheEntryHandler(String name, Class<D> type, INBTReaderAndWritter<? super D, ?> nbtHandler)
 		{
 			this.entryName = name;
 			this.type = type;
@@ -71,17 +78,28 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	public static class TemplateRecipeCache<H>
 	{
 		TemplateRecipeMap<H> map;
+		/**
+		 * Will not stored into NBT, but it will be exist by {@link TemplateRecipeMap#findRecipe} method.
+		 */
+		@Nullable
+		TemplateRecipe<H> recipe;
 		Object[] storeData;
 		
-		TemplateRecipeCache(TemplateRecipeMap<H> map, Object...datas)
+		TemplateRecipeCache(TemplateRecipeMap<H> map, TemplateRecipe<H> recipe, Object...datas)
 		{
 			this.map = map;
+			this.recipe = recipe;
 			this.storeData = datas;
 		}
 		
 		public <T> T get(int i)
 		{
 			return (T) this.storeData[i];
+		}
+		
+		public <T> T get1(int i)
+		{
+			return (T) this.recipe.customDisplayData[i];
 		}
 	}
 	
@@ -140,7 +158,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 			{
 				store[i] = this.handlers[i].nbtHandler.readFromNBT(nbt, this.handlers[i].entryName);
 			}
-			return new TemplateRecipeCache<>(this, store);
+			return new TemplateRecipeCache<>(this, null, store);
 		}
 		catch (Exception exception)
 		{
@@ -183,7 +201,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 		if (recipe == null) return null;
 		Object[] stores = new Object[this.handlers.length];
 		for (int i = 0; i < this.handlers.length; stores[i] = recipe.dataProvider[i].apply(handler), ++i);
-		return new TemplateRecipeCache<>(this, stores);
+		return new TemplateRecipeCache<>(this, recipe, stores);
 	}
 	
 	@Override

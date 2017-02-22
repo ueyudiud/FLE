@@ -7,13 +7,13 @@ package farcore.lib.bio;
 import java.util.Comparator;
 import java.util.Random;
 
-import nebula.common.nbt.INBTWriter;
+import nebula.common.nbt.INBTCompoundWriter;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author ueyudiud
  */
-public class DNAPair<T extends IBiology> implements INBTWriter<DNAPair>
+public class DNAPair<T extends IBiology> implements INBTCompoundWriter<DNAPair>
 {
 	static final String SORT = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	

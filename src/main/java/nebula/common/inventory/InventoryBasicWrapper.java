@@ -19,21 +19,35 @@ public class InventoryBasicWrapper implements IBasicInventory, IInventory
 {
 	private static final ITextComponent EMPTY = new TextComponentString("");
 	
-	public static IInventory wrap(IBasicInventory inventory)
+	public static IInventory wrap(String name, IBasicInventory inventory)
 	{
-		return new InventoryBasicWrapper(inventory);
+		return new InventoryBasicWrapper(name, inventory);
 	}
 	
 	private final IBasicInventory inventory;
+	private final String name;
 	
-	InventoryBasicWrapper(IBasicInventory inventory)
+	InventoryBasicWrapper(String name, IBasicInventory inventory)
 	{
 		this.inventory = inventory;
+		this.name = name;
 	}
 	
-	public String getName() { return ""; }
+	@Override
+	public ItemStack[] toArray()
+	{
+		return this.inventory.toArray();
+	}
+	
+	@Override
+	public void fromArray(ItemStack[] stacks)
+	{
+		this.inventory.fromArray(stacks);
+	}
+	
+	public String getName() { return this.name; }
 	public boolean hasCustomName() { return false; }
-	public ITextComponent getDisplayName() { return EMPTY; }
+	public ITextComponent getDisplayName() { return this.name == null ? EMPTY : new TextComponentString(getName()); }
 	public void markDirty() { }
 	public boolean isUsableByPlayer(EntityPlayer player) { return true; }
 	public void openInventory(EntityPlayer player) { }

@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import nebula.Nebula;
 import nebula.client.ClientOverride;
 import nebula.client.util.Client;
+import nebula.common.NebulaKeyHandler;
 import nebula.common.gui.ContainerBase;
 import nebula.common.gui.FSlot;
 import nebula.common.gui.IGUIActionListener;
@@ -25,6 +26,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fml.relauncher.Side;
@@ -104,6 +106,11 @@ public abstract class GuiContainerBase extends GuiContainer
 		return this.mc.gameSettings.touchscreen;
 	}
 	
+	protected boolean matchKey(String key, int keycode)
+	{
+		return NebulaKeyHandler.getBinding(key).getKeyCode() == keycode;
+	}
+	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
@@ -150,7 +157,11 @@ public abstract class GuiContainerBase extends GuiContainer
 	public void updateScreen()
 	{
 		super.updateScreen();
-		Nebula.network.sendToServer(new PacketGuiTickUpdate((ContainerBase) this.inventorySlots));
+		if (this.container instanceof ITickable)
+		{
+			((ITickable) this.container).update();
+		}
+		Nebula.network.sendToServer(new PacketGuiTickUpdate(this.container));
 	}
 	
 	protected void bindDefaultTexture()
@@ -250,5 +261,49 @@ public abstract class GuiContainerBase extends GuiContainer
 		}
 		this.zLevel = oldZ;
 		this.itemRender.zLevel = 0.0F;
+	}
+	
+	protected void drawProgressScaleUTD(int x, int y, int u, int v, int w, int h, int p, int mp)
+	{
+		int scale = (int) ((float) p / (float) mp * h);
+		if (scale <= 0) return;
+		if (scale > h)
+		{
+			scale = h;
+		}
+		drawTexturedModalRect(x, y, u, v, w, scale);
+	}
+	
+	protected void drawProgressScaleDTU(int x, int y, int u, int v, int w, int h, int p, int mp)
+	{
+		int scale = (int) ((float) p / (float) mp * h);
+		if (scale <= 0) return;
+		if (scale > h)
+		{
+			scale = h;
+		}
+		drawTexturedModalRect(x, y + h - scale, u, v + h - scale, w, scale);
+	}
+	
+	protected void drawProgressScaleLTR(int x, int y, int u, int v, int w, int h, int p, int mp)
+	{
+		int scale = (int) ((float) p / (float) mp * w);
+		if (scale <= 0) return;
+		if (scale > h)
+		{
+			scale = h;
+		}
+		drawTexturedModalRect(x, y, u, v, scale, h);
+	}
+	
+	protected void drawProgressScaleRTL(int x, int y, int u, int v, int w, int h, int p, int mp)
+	{
+		int scale = (int) ((float) p / (float) mp * w);
+		if (scale <= 0) return;
+		if (scale > h)
+		{
+			scale = h;
+		}
+		drawTexturedModalRect(x + w - scale, y, u + w - scale, v, scale, h);
 	}
 }

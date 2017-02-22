@@ -41,6 +41,11 @@ public interface Selector<E> extends Function<Random, E>
 		return random -> L.random(random, elements);
 	}
 	
+	default <T> Function<T, E> anyTo()
+	{
+		return t -> next();
+	}
+	
 	default E next()
 	{
 		return next(L.random());

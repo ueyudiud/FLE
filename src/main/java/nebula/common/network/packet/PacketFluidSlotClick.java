@@ -40,7 +40,7 @@ public class PacketFluidSlotClick extends PacketGui
 		ContainerBase container = container();
 		if(container != null)
 		{
-			container.fluidSlots.get(this.clickID).onSlotClick(getPlayer(), getPlayer().inventory.getItemStack());
+			container.getFluidSlots().get(this.clickID).onSlotClick(getPlayer(), getPlayer().inventory.getItemStack());
 		}
 		return null;
 	}

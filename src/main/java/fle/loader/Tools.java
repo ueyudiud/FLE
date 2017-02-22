@@ -12,6 +12,7 @@ import farcore.lib.item.ItemTool.ToolProp;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import fle.core.items.ItemToolHead;
+import fle.core.items.behavior.BehaviorBarGrizzly;
 import fle.core.items.behavior.BehaviorFirestarter;
 import fle.core.items.behavior.BehaviorHoe;
 import fle.core.items.behavior.BehaviorPolishable;
@@ -19,6 +20,8 @@ import fle.core.items.behavior.BehaviorSpear;
 import fle.core.items.behavior.BehaviorTool;
 import fle.core.items.tool.ToolAwl;
 import fle.core.items.tool.ToolAxe;
+import fle.core.items.tool.ToolBarGrizzly;
+import fle.core.items.tool.ToolBiface;
 import fle.core.items.tool.ToolDecorticatingPlate;
 import fle.core.items.tool.ToolDecorticatingStick;
 import fle.core.items.tool.ToolFirestarter;
@@ -57,6 +60,8 @@ public class Tools
 		addTool(11, "decorticating.plate", "Decorticating Plate", null, MC.decorticating_plate, new ToolDecorticatingPlate(), false, false, null, null, ImmutableList.of(EnumToolTypes.DECORTICATING_PLATE));
 		addTool(12, "decorticating.stick", "Decorticating Stick", null, MC.decorticating_stick, new ToolDecorticatingStick(), false, false, null, null, ImmutableList.of(EnumToolTypes.DECORTICATING_STICK));
 		addTool(13, "whetstone", "Whetstone", null, MC.whetstone, new ToolWhetstone(), false, false, null, null, ImmutableList.of(EnumToolTypes.WHESTONE), new BehaviorPolishable(EnumToolTypes.WHESTONE, 4, 0.75F, 'p', ' '));
+		addTool(14, "biface", "Biface", "Multi-purpose tool", MC.biface, new ToolBiface(), false, false, null, null, ImmutableList.of(EnumToolTypes.BIFACE, EnumToolTypes.ADZ, EnumToolTypes.SICKLE), new BehaviorPolishable(EnumToolTypes.BIFACE, 2, 1.25F, 'c', ' ', 'p'));
+		addTool(15, "bar.grizzly", "Bar Grizzly", null, MC.bar_grizzly, new ToolBarGrizzly(), false, false, null, null, ImmutableList.of(EnumToolTypes.BAR_GRIZZLY), new BehaviorBarGrizzly());
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,

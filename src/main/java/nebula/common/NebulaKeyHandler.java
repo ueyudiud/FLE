@@ -32,7 +32,7 @@ public class NebulaKeyHandler
 	@SidedProxy(serverSide = "nebula.common.NebulaKeyHandler$KB", clientSide= "nebula.common.NebulaKeyHandler$KC")
 	private static KB keyRegister;
 	
-	private static IRegister<KeyBinding> keys = new Register();
+	private static IRegister keys = new Register();
 	private static Map<EntityPlayer, List<String>> keyMap = new HashMap();
 	
 	public static void remove(EntityPlayer player)
@@ -69,11 +69,20 @@ public class NebulaKeyHandler
 		keyRegister.register(name, keycode, modid);
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public static KeyBinding getBinding(String name)
+	{
+		return (KeyBinding) ((KC) keyRegister).keyCodeMap.get(name);
+	}
+	
 	public static class KB
 	{
+		Map<String, Object> keyCodeMap = new HashMap<>();
+		
 		public void register(String name, int keycode, String modid)
 		{
 			keys.register(name, null);
+			this.keyCodeMap.put(name, keycode);
 		}
 	}
 	
@@ -86,6 +95,7 @@ public class NebulaKeyHandler
 			KeyBinding binding = new KeyBinding(Strings.validate(name), keycode, modid);
 			ClientRegistry.registerKeyBinding(binding);
 			keys.register(name, binding);
+			this.keyCodeMap.put(name, binding);
 		}
 	}
 	
@@ -118,13 +128,13 @@ public class NebulaKeyHandler
 				{
 					long v = 0;
 					for(int i = 0; i < keys.size(); ++i)
-						if(GameSettings.isKeyDown(keys.get(i)))
+						if(GameSettings.isKeyDown((KeyBinding) keys.get(i)))
 							v |= (1L << i);
 					Nebula.network.sendToServer(new PacketKey(v));
 				}
 				reset(Players.player());
 				for(int i = 0; i < keys.size(); ++i)
-					if(GameSettings.isKeyDown(keys.get(i)))
+					if(GameSettings.isKeyDown((KeyBinding) keys.get(i)))
 						add(Players.player(), keys.name(i));
 			}
 		}

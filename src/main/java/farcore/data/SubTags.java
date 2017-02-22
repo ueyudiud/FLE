@@ -34,5 +34,5 @@ public class SubTags
 	 * To check block is fire source.
 	 */
 	public static final SubTag FIRE_SOURCE = SubTag.getNewSubTag("FIRE_SOURCE");
-	
+	public static final SubTag PILEABLE = SubTag.getNewSubTag("PILEABLE");
 }

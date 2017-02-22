@@ -6,6 +6,8 @@ package nebula.common;
 
 import java.io.File;
 
+import nebula.common.item.IItemBehaviorsAndProperties;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
 import nebula.common.tile.IGuiTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -82,10 +84,27 @@ public class CommonProxy implements IGuiHandler
 	@Override
 	public Container getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-		if (tile instanceof IGuiTile)
+		if (ID >= 0)
 		{
-			return ((IGuiTile) tile).openContainer(ID, player);
+			TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+			if(tile instanceof IGuiTile)
+			{
+				return ((IGuiTile) tile).openContainer(ID, player);
+			}
+		}
+		else if (ID < 0)
+		{
+			switch (ID)
+			{
+			case -1 :
+				if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() instanceof IItemBehaviorsAndProperties.IIP_Containerable)
+				{
+					return ((IIP_Containerable) player.getHeldItemMainhand().getItem()).openContainer(world, new BlockPos(x, y, z), player, player.getHeldItemMainhand());
+				}
+				break;
+			default:
+				break;
+			}
 		}
 		return null;
 	}

@@ -27,6 +27,8 @@ import nebula.client.util.IRenderRegister;
 import nebula.common.CommonProxy;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.entity.EntityProjectileItem;
+import nebula.common.item.IItemBehaviorsAndProperties;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
 import nebula.common.tile.IGuiTile;
 import nebula.common.util.Game;
 import nebula.common.util.Sides;
@@ -307,10 +309,24 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-		if (tile instanceof IGuiTile)
+		if (ID >= 0)
 		{
-			return ((IGuiTile) tile).openGui(ID, player);
+			TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+			if(tile instanceof IGuiTile)
+				return ((IGuiTile) tile).openGui(ID, player);
+		}
+		else
+		{
+			switch (ID)
+			{
+			case -1 :
+				if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() instanceof IItemBehaviorsAndProperties.IIP_Containerable)
+				{
+					return ((IIP_Containerable) player.getHeldItemMainhand().getItem()).openGui(world, new BlockPos(x, y, z), player, player.getHeldItemMainhand());
+				}
+			default:
+				break;
+			}
 		}
 		return null;
 	}

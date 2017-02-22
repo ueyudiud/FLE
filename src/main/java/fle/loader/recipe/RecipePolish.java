@@ -29,6 +29,10 @@ public class RecipePolish
 		PolishRecipe.addPolishRecipe(new OreStack(ore), "c c      ", new ItemStack(Items.FLINT));
 		PolishRecipe.addPolishRecipe(new OreStack(ore), " c ccc c ", BlocksItems.miscResources.getSubItem("flint_small", 4));
 		addFlintRecipe(new OreStack(ore), M.flint);
+		ore = MC.fragment.getOreName(M.quartz);
+		PolishRecipe.addPolishLevel(new OreStack(ore), 10);
+		addFlintRecipe(new OreStack(ore), M.quartz);
+		PolishRecipe.addPolishRecipe(new OreStack(ore), "c c   c c", BlocksItems.miscResources.getSubItem("quartz_chip"));
 		addFlintRecipe(new OreStack(MC.chip_rock.getOreName(M.obsidian)), M.obsidian);
 		for (Mat material : Mat.filt(MC.ROCKY))
 		{
@@ -43,6 +47,29 @@ public class RecipePolish
 		ItemStack stack1 = BlocksItems.tool.getSubItem("awl");
 		ItemTool.setMaterialToItem(stack1, "head", material);
 		PolishRecipe.addPolishRecipe(input, "   c cc c", stack1);
+		stack1 = ItemMulti.createStack(material, MC.hard_hammer_flint);
+		if (stack1 != null)
+		{
+			PolishRecipe.addPolishRecipe(input, "     cccc", stack1);
+			PolishRecipe.addPolishRecipe(input, "   c  ccc", stack1);
+		}
+		stack1 = ItemMulti.createStack(material, MC.axe_rock);
+		if (stack1 != null)
+		{
+			PolishRecipe.addPolishRecipe(input, "  c ccccc", stack1);
+			PolishRecipe.addPolishRecipe(input, "c  cc ccc", stack1);
+		}
+		stack1 = ItemMulti.createStack(material, MC.spear_rock);
+		if (stack1 != null)
+		{
+			PolishRecipe.addPolishRecipe(input, " ccc  c c", stack1);
+			PolishRecipe.addPolishRecipe(input, "cc   cc c", stack1);
+		}
+		stack1 = ItemMulti.createStack(material, MC.shovel_rock);
+		if (stack1 != null)
+		{
+			PolishRecipe.addPolishRecipe(input, "c ccccccc", stack1);
+		}
 	}
 	
 	private static void addPolishedStoneRecipe(AbstractStack input, Mat material)
@@ -83,11 +110,8 @@ public class RecipePolish
 			PolishRecipe.addPolishRecipe(input, "p   ccccc", stack1);
 		}
 		stack1 = BlocksItems.tool.getSubItem("whetstone");
-		if (stack1 != null)
-		{
-			ItemTool.setMaterialToItem(stack1, "head", material);
-			PolishRecipe.addPolishRecipe(input, "ppp   ppp", stack1);
-			PolishRecipe.addPolishRecipe(input, "ppp   ppp", stack1);
-		}
+		ItemTool.setMaterialToItem(stack1, "head", material);
+		PolishRecipe.addPolishRecipe(input, "ppp   ppp", stack1);
+		PolishRecipe.addPolishRecipe(input, "ppp   ppp", stack1);
 	}
 }

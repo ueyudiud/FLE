@@ -39,6 +39,7 @@ public class ItemSubCropRelated extends ItemSubEdible
 	protected void initalize()
 	{
 		final IFoodStat NFS = null;
+		addSubItem(201, "vine", "Vine", null, NFS);
 		addSubItem(401, "bristlegrass", "Bristlegrass", null, NFS);
 		addSubItem(402, "dandelion", "Dandelion", null, NFS);
 		addSubItem(403, "rugosa", "A.Rugosa", null, NFS);

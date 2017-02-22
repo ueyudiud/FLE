@@ -6,9 +6,9 @@ import fle.core.client.gui.GuiOilLampCrafting;
 import fle.core.gui.ContainerOilLampCrafting;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Containerable;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
-import nebula.common.tool.EnumToolType;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.TESynchronization;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -130,7 +130,7 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public GuiContainer openGUI(int id, EntityPlayer player)
+	public GuiContainer openGui(int id, EntityPlayer player)
 	{
 		return new GuiOilLampCrafting(player, this);
 	}

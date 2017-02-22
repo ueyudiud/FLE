@@ -222,11 +222,9 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 	protected void addOpenerSlots()
 	{
 		int id = this.inventorySlots.size();
-		this.locationBag = new TL(id, id + 27, false);
-		this.locationHand = new TL(id + 27, id + 36, false);
+		this.locationBag = new TL(id, id + 27, false).addToList();
+		this.locationHand = new TL(id + 27, id + 36, false).addToList();
 		this.locationPlayer = new TL(id, id + 36, false);
-		this.transferLocates.add(this.locationBag);
-		this.transferLocates.add(this.locationHand);
 		addOpenerBagSlots();
 		addOpenerHandSlots();
 	}
@@ -254,6 +252,16 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 			for(int j = 0; j < widthSlot; ++j)
 			{
 				addSlotToContainer(new SlotBase(inventory, offSlot + i * widthSlot + j, x + j * spacingU, y + i * spacingV));
+			}
+		}
+	}
+	protected void addOutputSlotMatrix(IInventory inventory, int x, int y, int widthSlot, int heightSlot, int offSlot, int spacingU, int spacingV)
+	{
+		for(int i = 0; i < heightSlot; ++i)
+		{
+			for(int j = 0; j < widthSlot; ++j)
+			{
+				addSlotToContainer(new SlotOutput(inventory, offSlot + i * widthSlot + j, x + j * spacingU, y + i * spacingV));
 			}
 		}
 	}
@@ -334,20 +342,25 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 		Slot slot = this.inventorySlots.get(index);
 		if (slot != null && slot.getHasStack())
 		{
-			ItemStack itemstack1 = slot.getStack();
+			ItemStack itemstack1 = slot.getStack().copy();
 			itemstack = itemstack1.copy();
 			TL tl = L.get(this.transferLocates, label->label.contain(index));
 			if (tl != null)
 			{
 				if(!tl.tryTransferItemStack(itemstack1))
 					return null;
-				if (itemstack1.stackSize <= 0)
-					slot.putStack((ItemStack) null);
-				else
-					slot.onSlotChanged();
 				if (itemstack1.stackSize == itemstack.stackSize)
 				{
+					slot.onSlotChanged();
 					return null;
+				}
+				else
+				{
+					/**
+					 * Shift click always can not check decr in inventory for some uses,
+					 * for this, I use decr stack size instead of slot.onSlotChanged().
+					 */
+					slot.decrStackSize(itemstack.stackSize - itemstack1.stackSize);
 				}
 				slot.onPickupFromSlot(playerIn, itemstack1);
 			}
@@ -372,6 +385,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 					int maxSize = Math.min(slot.getItemStackLimit(itemstack), stack.getMaxStackSize());
 					if(itemstack.stackSize >= maxSize)
 					{
+						if (reverseDirection) --i; else ++i;
 						continue;
 					}
 					int j = itemstack.stackSize + stack.stackSize;
@@ -391,14 +405,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 						flag = true;
 					}
 				}
-				if (reverseDirection)
-				{
-					--i;
-				}
-				else
-				{
-					++i;
-				}
+				if (reverseDirection) --i; else ++i;
 			}
 		}
 		
@@ -471,6 +478,12 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 			this.startId = startId;
 			this.endId = endId;
 			this.reverseDirection = reverseDirection;
+		}
+		
+		public TL addToList()
+		{
+			ContainerBase.this.transferLocates.add(this);
+			return this;
 		}
 		
 		public TL appendTransferLocate(TL transferLocate)

@@ -42,7 +42,7 @@ public class PacketFluidUpdateSingle extends PacketGui
 		ContainerBase container = container();
 		if(container != null)
 		{
-			container.fluidSlots.get(this.id).putStack(this.stack);
+			container.getFluidSlots().get(this.id).putStack(this.stack);
 		}
 		return null;
 	}

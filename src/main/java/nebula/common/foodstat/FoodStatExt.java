@@ -149,8 +149,9 @@ public class FoodStatExt extends FoodStats
 			if(++this.digestionTimer > 200)
 			{
 				float amt = Math.min(this.foodDigestionLevel, 1);
-				this.foodDigestionLevel -= amt;
+				this.foodDigestionLevel -= 1.0F;
 				this.foodLevel += amt;
+				this.digestionTimer = 0;
 			}
 		}
 		if (this.foodExhaustionLevel >= 4.0F)
@@ -163,7 +164,7 @@ public class FoodStatExt extends FoodStats
 			}
 			else//if (enumdifficulty != EnumDifficulty.PEACEFUL)
 			{
-				this.foodLevel = Math.max(this.foodLevel - 1, 0);
+				this.foodLevel = Math.max(this.foodLevel - 1.0F, 0F);
 			}
 		}
 		if (NebulaConfig.enableWaterStat && this.waterExhaustionLevel > 10.0F)

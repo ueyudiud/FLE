@@ -42,10 +42,7 @@ public class NoiseCell extends NoiseBase
 	public double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale,
 			double yScale, double zScale)
 	{
-		if(array == null || array.length < u * v * w)
-		{
-			array = new double[u * v * w];
-		}
+		array = getOrCreate(array, u, v, w, false);
 		int c = 0;
 		for(int k = 0; k < u; ++k)
 		{
@@ -67,33 +64,33 @@ public class NoiseCell extends NoiseBase
 		int x1 = (int) (x < 0 ? x - 1 : x);
 		int y1 = (int) (y < 0 ? y - 1 : y);
 		int z1 = (int) (z < 0 ? z - 1 : z);
-		double v1 = Maths.mod(x, size) / size;
-		double v2 = Maths.mod(y, size) / size;
-		double v3 = Maths.mod(z, size) / size;
-		for(int i = - length + 1; i <= length; ++i)
+		double v1 = Maths.mod(x, this.size) / this.size;
+		double v2 = Maths.mod(y, this.size) / this.size;
+		double v3 = Maths.mod(z, this.size) / this.size;
+		for(int i = - this.length + 1; i <= this.length; ++i)
 		{
-			for(int j = - length + 1; j <= length; ++j)
+			for(int j = - this.length + 1; j <= this.length; ++j)
 			{
-				for(int k = - length + 1; k <= length; ++k)
+				for(int k = - this.length + 1; k <= this.length; ++k)
 				{
 					double[] l = nextCell(x1 + i, y1 + j, z1 + k);
-					val += l[3] / (1.0 + persistence * distance(v1, v2, v3, i + l[0], j + l[1], k + l[2]));
+					val += l[3] / (1.0 + this.persistence * distance(v1, v2, v3, i + l[0], j + l[1], k + l[2]));
 				}
 			}
 		}
-		return Math.min(val * coe, 1.0);
+		return Math.min(val * this.coe, 1.0);
 	}
 	
 	private double[] nextCell(int x, int y, int z)
 	{
-		cache[0] = next(x, y, z, 382947L);
-		cache[1] = next(x, y, z, 472813L);
-		cache[2] = next(x, y, z, 382048L);
-		cache[3] = next(x, y, z, 192719L);
-		cache[3] *= cache[3];
-		return cache;
+		this.cache[0] = next(x, y, z, 382947L);
+		this.cache[1] = next(x, y, z, 472813L);
+		this.cache[2] = next(x, y, z, 382048L);
+		this.cache[3] = next(x, y, z, 192719L);
+		this.cache[3] *= this.cache[3];
+		return this.cache;
 	}
-
+	
 	private double distance(double x1, double y1, double z1, double x2, double y2, double z2)
 	{
 		return distance(x1 - x2, y1 - y2, z1 - z2);
@@ -101,7 +98,7 @@ public class NoiseCell extends NoiseBase
 	
 	private double distance(double a, double b, double c)
 	{
-		switch (disType)
+		switch (this.disType)
 		{
 		case 0 : return Math.abs(a) + Math.abs(b) + Math.abs(c);
 		case 1 : return Math.sqrt(a * a + b * b + c * c);
@@ -114,7 +111,7 @@ public class NoiseCell extends NoiseBase
 	private double next(long n)
 	{
 		n ^= (n >> 13);
-		n = (n * (n * n * 60493 + 19990303) + 1376312589 + seed) & 0x7FFFFFFF;
+		n = (n * (n * n * 60493 + 19990303) + 1376312589 + this.seed) & 0x7FFFFFFF;
 		return (double)n / (double) 0x7FFFFFFFL;
 	}
 	private double next(long x, long y, long z, long t)
@@ -123,7 +120,7 @@ public class NoiseCell extends NoiseBase
 		y ^= (y >> 10);
 		z ^= (z >> 11);
 		t ^= (t >> 13);
-		x = x * 749471927491L + y * 3759173371L + z * 3759184203L + t * 473847382947195L + seed;
+		x = x * 74947192492749139L + y * 375917283833371L + z * 375912083924203L + t * 47384738294497195L + this.seed;
 		return next(x);
 	}
 }

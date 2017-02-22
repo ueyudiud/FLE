@@ -12,6 +12,8 @@ import nebula.common.tool.EnumToolType;
 public class EnumToolTypes
 {
 	public static final EnumToolType
+	BIFACE = new EnumToolType("biface", "Biface"),
+	
 	ADZ = new EnumToolType("adz", "Adz"),
 	AWL = new EnumToolType("awl", "Awl"),
 	AXE = EnumToolType.AXE,

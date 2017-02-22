@@ -28,6 +28,11 @@ public interface Appliable<T> extends Callable<T>
 		return () -> function.apply(apply());
 	}
 	
+	default <E> Function<E, T> anyTo()
+	{
+		return a->apply();
+	}
+	
 	@Override
 	default T call()
 	{

@@ -40,14 +40,12 @@ public class ContainerPolishTable extends ContainerTileInventory<TEWoodenPolishT
 			{
 				return PolishRecipe.isPolishable(stack);
 			}
-		},
-		output = new TL(id + 1);
+		}.addToList(),
+		output = new TL(id + 1).addToList();
 		this.locationHand.appendTransferLocate(input).appendTransferLocate(this.locationBag);
 		this.locationBag.appendTransferLocate(input).appendTransferLocate(this.locationHand);
 		input.appendTransferLocate(this.locationPlayer);
 		output.appendTransferLocate(this.locationPlayer);
-		this.transferLocates.add(input);
-		this.transferLocates.add(output);
 		tile.syncToPlayer(player);
 	}
 	

@@ -1,5 +1,6 @@
 package fargen.core.worldgen;
 
+import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
 import nebula.common.LanguageManager;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.World;
@@ -11,7 +12,6 @@ import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.gen.ChunkProviderEnd;
 import net.minecraft.world.gen.ChunkProviderFlat;
 import net.minecraft.world.gen.ChunkProviderHell;
-import net.minecraft.world.gen.ChunkProviderOverworld;
 import net.minecraft.world.gen.FlatGeneratorInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -83,7 +83,8 @@ public class FarWorldType extends WorldType
 		{
 		case  0 : //The surface type.
 			if(this == DEFAULT)
-				return new ChunkProviderOverworld(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
+				return new FarSurfaceChunkGenerator(world, world.getSeed());
+			//	return new ChunkProviderOverworld(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
 			else if(this == FLAT)
 				return new ChunkProviderFlat(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), generatorOptions);
 			break;

@@ -14,10 +14,7 @@ import farcore.lib.oredict.OreDictExt;
 import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
 import nebula.Log;
-import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Containerable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -32,6 +29,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,7 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 		 * The major version will not be 1.1 until Far Core is
 		 * enough to make FLE.
 		 */
-		version = "1.0o",
+		version = "1.1a",
 		name = "Far Core",
 		dependencies = "required-after:nebula")
 public class FarCoreSetup
@@ -152,6 +150,7 @@ public class FarCoreSetup
 		
 		public void load(FMLInitializationEvent event)
 		{
+			NetworkRegistry.INSTANCE.registerGuiHandler(FarCore.ID, proxy);
 			this.loader.load();
 		}
 		
@@ -168,9 +167,6 @@ public class FarCoreSetup
 		@Override
 		public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
-			TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-			if(tile instanceof ITB_Containerable)
-				return ((ITB_Containerable) tile).openContainer(ID, player);
 			return null;
 		}
 		
@@ -202,9 +198,6 @@ public class FarCoreSetup
 		@Override
 		public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 		{
-			TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-			if(tile instanceof ITB_Containerable)
-				return ((ITB_Containerable) tile).openGUI(ID, player);
 			return null;
 		}
 	}

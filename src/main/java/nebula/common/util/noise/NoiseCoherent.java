@@ -4,43 +4,60 @@ import java.util.Random;
 
 public class NoiseCoherent extends NoiseBase
 {
+	@FunctionalInterface
+	public static interface RandomMapGenerator
+	{
+		double generate(long x, long y, long z);
+		
+		default void setSeed(long seed) {}
+	}
+	
+	static RandomMapGenerator generator(long seed)
+	{
+		return (x, y, z) -> next(x, y, z, seed);
+	}
+	
 	private double length;
 	private double offsetX;
 	private double offsetY;
 	private double offsetZ;
-
+	private RandomMapGenerator generator;
+	
 	public NoiseCoherent(long seed)
 	{
 		this(seed, 1D);
 	}
 	public NoiseCoherent(long seed, double length)
 	{
+		this(seed, length, generator(seed));
+	}
+	public NoiseCoherent(long seed, double length, RandomMapGenerator generator)
+	{
 		super(seed);
 		this.length = length;
+		this.generator = generator;
 		Random random = new Random(seed);
-		offsetX = random.nextDouble() * 0xFF;
-		offsetY = random.nextDouble() * 0xFF;
-		offsetZ = random.nextDouble() * 0xFF;
+		this.offsetX = random.nextDouble() * 0xFF;
+		this.offsetY = random.nextDouble() * 0xFF;
+		this.offsetZ = random.nextDouble() * 0xFF;
 	}
 	
 	@Override
 	public double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale,
 			double yScale, double zScale)
 	{
-		if(array == null || array.length < u * v * w)
-		{
-			array = new double[u * v * w];
-		}
-		double xM = xScale / length;
-		double yM = yScale / length;
-		double zM = zScale / length;
-		double x0 = x * xScale / length + offsetX;
-		double y0 = y * yScale / length + offsetY;
-		double z0 = z * zScale / length + offsetZ;
+		array = getOrCreate(array, u, v, w, false);
+		double xM = xScale / this.length;
+		double yM = yScale / this.length;
+		double zM = zScale / this.length;
+		double x0 = x * xScale / this.length + this.offsetX;
+		double y0 = y * yScale / this.length + this.offsetY;
+		double z0 = z * zScale / this.length + this.offsetZ;
 		double x1 = x0, y1 = y0, z1 = z0;
-		long lastX = (long) x0;
-		long lastY = (long) y0;
-		long lastZ = (long) z0;
+		long
+		lastX = (long) x0,
+		lastY = (long) y0,
+		lastZ = (long) z0;
 		double n1 = next(lastX, lastY, lastZ);
 		double n2 = next(lastX + 1, lastY, lastZ);
 		double n3 = next(lastX, lastY + 1, lastZ);
@@ -157,13 +174,13 @@ public class NoiseCoherent extends NoiseBase
 		}
 		return array;
 	}
-
+	
 	@Override
 	public double noise(double x, double y, double z)
 	{
-		double x0 = x / length + offsetX;
-		double y0 = y / length + offsetY;
-		double z0 = z / length + offsetZ;
+		double x0 = x / this.length + this.offsetX;
+		double y0 = y / this.length + this.offsetY;
+		double z0 = z / this.length + this.offsetZ;
 		long x1 = (long) x0;
 		long y1 = (long) y0;
 		long z1 = (long) z0;
@@ -188,19 +205,24 @@ public class NoiseCoherent extends NoiseBase
 		u3 = lerp(y2, u3, u4);
 		return lerp(z2, u1, u3);
 	}
-
-	private double next(long n)
+	
+	private double next(long x, long y, long z)
+	{
+		return this.generator.generate(x, y, z);
+	}
+	
+	static double next(long n, long seed)
 	{
 		n ^= (n >> 13);
-		n = (n * (n * n * 60493 + 19990303) + 1376312589 + seed) & 0x7FFFFFFF;
-		return (double)n / (double) 0x7FFFFFFFL;
+		n = (n * (n * n * 4837491L + 2372847491729401L) + 474828475927192749L + seed) & 0x7FFFFFFFFFFFFFFFL;
+		return (double) n / (double) 0x7FFFFFFFFFFFFFFFL;
 	}
-	private double next(long x, long y, long z)
+	static double next(long x, long y, long z, long seed)
 	{
 		x ^= (x >> 12);
 		y ^= (y >> 10);
 		z ^= (z >> 11);
-		x = x * 749471927491L + y * 3759173371L + z * 3759184203L + seed;
-		return next(x);
+		x = x * 749471927491L + y * 3759173371L + z * 3759184203L;
+		return next(x, seed);
 	}
 }

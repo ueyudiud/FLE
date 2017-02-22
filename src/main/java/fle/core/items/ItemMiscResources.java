@@ -38,6 +38,11 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(1, "flint_fragment", "Flint Fragment", null);
 		addSubItem(2, "flint_sharp", "Sharp Flint Chip", null);
 		addSubItem(3, "flint_small", "Small Flint", null);
+		addSubItem(11, "quartz_large", "Quartz", null);
+		addSubItem(12, "quartz_chip", "Quartz Chip", null);
+		addSubItem(21, "opal", "Opal", null);
+		
+		addSubItem(1001, "vine_rope", "Vine Rope", null);
 	}
 	
 	@Override
@@ -45,6 +50,8 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	{
 		super.postInitalizedItems();
 		MC.fragment.registerOre(M.flint, new ItemStack(this, 1, 1));
+		MC.fragment.registerOre(M.quartz, new ItemStack(this, 1, 11));
+		MC.chip_rock.registerOre(M.quartz, new ItemStack(this, 1, 12));
 	}
 	
 	@Override
@@ -63,6 +70,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		switch (stack.getItemDamage())
 		{
 		case 3 : return  8;
+		case 12 : return 11;
 		default: return -1;
 		}
 	}
@@ -73,6 +81,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		switch (stack.getItemDamage())
 		{
 		case 3 : return 'c';
+		case 12 : return 'c';
 		default: return base;
 		}
 	}

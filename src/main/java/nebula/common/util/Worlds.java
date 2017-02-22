@@ -155,8 +155,8 @@ public class Worlds
 	public static void spawnDropInWorld(World world, BlockPos pos, ItemStack drop)
 	{
 		if(world.isRemote ||
-				world.getWorldType() == WorldType.DEBUG_WORLD ||
 				//Debug world can drop item will crash the game...
+				world.getWorldType() == WorldType.DEBUG_WORLD ||
 				drop == null)
 			return;
 		float f = 0.7F;
@@ -200,7 +200,7 @@ public class Worlds
 		spawnDropsInWorld(coord.world(), coord.pos(), drop);
 	}
 	
-	public static void spawnDropsInWorld(EntityPlayer player, ItemStack drop)
+	public static void spawnDropInWorld(EntityPlayer player, ItemStack drop)
 	{
 		if(drop == null || drop.stackSize == 0 || player.world.isRemote) return;
 		player.dropItem(drop, false);
@@ -211,7 +211,7 @@ public class Worlds
 		if(player.world.isRemote) return;
 		for(int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
-			spawnDropsInWorld(player, inventory.removeStackFromSlot(i));
+			spawnDropInWorld(player, inventory.removeStackFromSlot(i));
 		}
 	}
 	
