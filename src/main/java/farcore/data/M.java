@@ -14,6 +14,7 @@ import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MaterialBuilder;
 import farcore.lib.material.prop.PropertyEdible;
+import farcore.lib.plant.PlantDandelion;
 import farcore.lib.tree.instance.TreeAcacia;
 import farcore.lib.tree.instance.TreeAspen;
 import farcore.lib.tree.instance.TreeBirch;
@@ -34,6 +35,8 @@ public class M
 {
 	//Metal
 	public static final Mat copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build().setMetalic(12, 4.0F, 8.0F);
+	//Mob Resources
+	public static final Mat spider_silk		= new Mat(6001, FarCore.ID, "spider_silk", "SpiderSilk", "Spider's Silk").setRGBa(0xFAFAFAFF);
 	//Rocks
 	public static final Mat stone 			= new MaterialBuilder(7001, "minecraft", "stone"			, "Stone"			, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F,  4.0F, -0.5F).build().setRock( 4, 1.5F,  8.0F);
 	public static final Mat compact_stone	= new MaterialBuilder(7002, FarCore.ID , "compactstone"		, "CompactStone"	, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F,  4.0F, -0.5F).build().setRock( 5, 2.0F, 12.0F);
@@ -88,11 +91,12 @@ public class M
 	public static final Mat cotton			= new Mat(9009, FarCore.ID, "cotton", "Cotton", "Cotton");
 	public static final Mat ramie			= new Mat(9010, FarCore.ID, "ramie", "Ramie", "Ramie");
 	//Plants
-	public static final Mat vine			= new Mat(9201, FarCore.ID, "vine", "Vine", "Vine").setRGBa(0x867C50FF).setTag(SubTags.ROPE);
-	public static final Mat ivy				= new Mat(9202, FarCore.ID, "ivy", "Ivy", "Ivy").setRGBa(0x867C50FF).setTag(SubTags.ROPE);
-	public static final Mat rattan			= new Mat(9203, FarCore.ID, "rattan", "Rattan", "Rattan").setRGBa(0x867C50FF).setTag(SubTags.ROPE);
-	public static final Mat spider_silk		= new Mat(9204, FarCore.ID, "spider_silk", "SpiderSilk", "Spider's Silk").setRGBa(0xFAFAFAFF).setTag(SubTags.ROPE);
-	public static final Mat ramie_dry		= new Mat(9205, FarCore.ID, "ramie_dry", "RamieDry", "Ramie").setRGBa(0xCFC898FF).setTag(SubTags.ROPE);
+	public static final Mat vine			= new Mat(9201, FarCore.ID, "vine", "Vine", "Vine").setRGBa(0x867C50FF);
+	public static final Mat ivy				= new Mat(9202, FarCore.ID, "ivy", "Ivy", "Ivy").setRGBa(0x867C50FF);
+	public static final Mat rattan			= new Mat(9203, FarCore.ID, "rattan", "Rattan", "Rattan").setRGBa(0x867C50FF);
+	public static final Mat ramie_dry		= new Mat(9205, FarCore.ID, "ramie_dry", "RamieDry", "Ramie").setRGBa(0xCFC898FF);
+	
+	public static final Mat dandelion		= new Mat(9301, FarCore.ID, "dandelion", "Dandelion", "Dandelion");
 	//Ores
 	public static final Mat native_copper	= new Mat(10001, FarCore.ID, "nativeCopper", "NativeCopper", "Native Copper").setChemicalFormula("Cu").setRGBa(0xFF834CFF).setOreProperty(7, 8.0F, 9.0F);
 	public static final Mat malachite		= new Mat(10002, FarCore.ID, "malachite", "Malachite", "Malachite").setChemicalFormula("Cu(OH)2·CuCO3").setRGBa(0x30CE88FF).setOreProperty(8, 8.8F, 9.0F);
@@ -131,6 +135,9 @@ public class M
 	static
 	{
 		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow);
+		SubTags.ROPE.addTo(vine, ramie_dry, rattan, ivy);
+		SubTags.VINES.addTo(vine, rattan, ivy);
+		SubTags.HERB.addTo(dandelion);
 		SubTags.FLINT.addTo(flint, obsidian, quartz);
 		SubTags.PILEABLE.addTo(gravel);
 		
@@ -155,6 +162,8 @@ public class M
 		reed		.setCrop(new CropTemplate(reed, 6, 1400));
 		flax		.setCrop(new CropTemplate(flax, 6, 1500));
 		cotton		.setCrop(new CropTemplate(cotton, 6, 1400));
+		
+		dandelion	.setPlant(new PlantDandelion());
 		
 		ramie_dry	.setUnificationMaterial(ramie);
 		

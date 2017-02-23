@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.data.SubTags;
@@ -11,6 +12,7 @@ import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool.ToolProp;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.skill.SkillAbstract;
 import fle.core.items.ItemToolHead;
 import fle.core.items.behavior.BehaviorBarGrizzly;
 import fle.core.items.behavior.BehaviorFirestarter;
@@ -39,6 +41,11 @@ public class Tools
 {
 	public static void initalizeTools()
 	{
+		EnumPhysicalDamageType.HIT.setSkill(new SkillAbstract("damage.hit", "Hit"){}.setExpInfo(100, 4.0F, 0.8F));
+		EnumPhysicalDamageType.CUT.setSkill(new SkillAbstract("damage.cutting", "Cutting"){}.setExpInfo(100, 4.0F, 0.8F));
+		EnumPhysicalDamageType.PUNCTURE.setSkill(new SkillAbstract("damage.puncture", "Puncture"){}.setExpInfo(100, 4.0F, 0.8F));
+		EnumPhysicalDamageType.SMASH.setSkill(new SkillAbstract("damage.smash", "Smash"){}.setExpInfo(100, 4.0F, 0.8F));
+		
 		new ItemToolHead(MC.hard_hammer_flint);
 		new ItemToolHead(MC.shovel_rock);
 		new ItemToolHead(MC.hard_hammer_rock);

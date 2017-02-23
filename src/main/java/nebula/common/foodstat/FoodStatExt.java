@@ -181,16 +181,14 @@ public class FoodStatExt extends FoodStats
 			switch ((int) this.foodLevel)
 			{
 			case 20 :
-				if(this.foodSaturationLevel > 0F)
+				if(this.foodSaturationLevel > 0.0F)
 				{
 					float f = Math.min(this.foodSaturationLevel, 4.0F);
 					player.heal(f / 4.0F);
 					addExhaustion(f);
-					this.foodTimer = 0;
-					break;
 				}
 			case 19 :
-				if(this.foodTimer >= 3)
+				if(this.foodTimer >= 5)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
@@ -200,7 +198,7 @@ public class FoodStatExt extends FoodStats
 			case 18 :
 			case 17 :
 			case 16 :
-				if(this.foodTimer >= 6)
+				if(this.foodTimer >= 12)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
@@ -213,7 +211,7 @@ public class FoodStatExt extends FoodStats
 			case 12 :
 			case 11 :
 			case 10 :
-				if(this.foodTimer >= 10)
+				if(this.foodTimer >= 30)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
@@ -223,9 +221,9 @@ public class FoodStatExt extends FoodStats
 			default : break;
 			}
 		}
-		if (this.foodLevel <= 0)
+		else if (this.foodLevel <= 0)
 		{
-			if (++this.foodTimer >= 40)
+			if (this.foodTimer >= 40)
 			{
 				if (player.getHealth() > 10.0F || difficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && difficulty == EnumDifficulty.NORMAL)
 				{
@@ -234,6 +232,10 @@ public class FoodStatExt extends FoodStats
 				
 				this.foodTimer = 0;
 			}
+		}
+		else
+		{
+			this.foodTimer = 0;
 		}
 	}
 	

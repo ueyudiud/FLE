@@ -45,14 +45,19 @@ public class WeaponHelper
 		if(entity.canBeAttackedWithItem() && !entity.hitByEntity(player))// && !entity.isInvisibleToPlayer(player))
 		{
 			float baseMultiple = 1F;
+			if (type.getSkill() != null)
+			{
+				int level = type.getSkill().level(player);
+				baseMultiple += level * 0.02F;
+			}
 			switch (type)
 			{
 			case SMASH :
-				if(player.isPotionActive(MobEffects.STRENGTH))
+				if (player.isPotionActive(MobEffects.STRENGTH))
 				{
 					baseMultiple += (player.getActivePotionEffect(MobEffects.STRENGTH).getAmplifier() + 1) * 0.25F;
 				}
-				if(player.isPotionActive(MobEffects.WEAKNESS))
+				if (player.isPotionActive(MobEffects.WEAKNESS))
 				{
 					baseMultiple -= (player.getActivePotionEffect(MobEffects.WEAKNESS).getAmplifier() + 1) * 0.25F;
 				}
@@ -153,6 +158,10 @@ public class WeaponHelper
 				if(prop.stat.isWeapon() && prop.skillAttack != null)
 				{
 					prop.skillAttack.using(player, 1.0F);
+				}
+				if (type.getSkill() != null)
+				{
+					type.getSkill().using(player, 1.0F);
 				}
 				tool.onToolUse(player, stack, prop.stat.getToolType(), prop.stat.getToolDamagePerAttack(stack, player, entity));
 				player.addExhaustion(0.3F);

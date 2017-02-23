@@ -7,7 +7,7 @@ package nebula.common.network.packet;
 import java.io.IOException;
 
 import nebula.common.gui.ContainerBase;
-import nebula.common.gui.IGUIActionListener;
+import nebula.common.gui.IGuiActionListener;
 import nebula.common.network.IPacket;
 import nebula.common.network.Network;
 import nebula.common.network.PacketBufferExt;
@@ -51,9 +51,9 @@ public class PacketGuiAction extends PacketGui
 	public IPacket process(Network network) throws IOException
 	{
 		Container container = container();
-		if (container instanceof IGUIActionListener)
+		if (container instanceof IGuiActionListener)
 		{
-			((IGUIActionListener) container).onRecieveGUIAction(this.type, this.code);
+			((IGuiActionListener) container).onRecieveGUIAction(this.type, this.code);
 		}
 		return null;
 	}

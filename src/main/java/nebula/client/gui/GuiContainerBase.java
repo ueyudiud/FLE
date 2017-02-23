@@ -9,8 +9,8 @@ import nebula.client.ClientOverride;
 import nebula.client.util.Client;
 import nebula.common.NebulaKeyHandler;
 import nebula.common.gui.ContainerBase;
-import nebula.common.gui.FSlot;
-import nebula.common.gui.IGUIActionListener;
+import nebula.common.gui.FluidSlot;
+import nebula.common.gui.IGuiActionListener;
 import nebula.common.network.packet.PacketFluidSlotClick;
 import nebula.common.network.packet.PacketGuiAction;
 import nebula.common.network.packet.PacketGuiTickUpdate;
@@ -56,9 +56,9 @@ public abstract class GuiContainerBase extends GuiContainer
 	protected void sendGuiData(int type, long code, boolean processOnClient)
 	{
 		Nebula.network.sendToServer(new PacketGuiAction((byte) type, code, this.container));
-		if (processOnClient && (this.inventorySlots instanceof IGUIActionListener))
+		if (processOnClient && (this.inventorySlots instanceof IGuiActionListener))
 		{
-			((IGUIActionListener) this.inventorySlots).onRecieveGUIAction((byte) type, code);
+			((IGuiActionListener) this.inventorySlots).onRecieveGUIAction((byte) type, code);
 		}
 	}
 	
@@ -85,7 +85,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected void drawOtherSlots()
 	{
-		for(FSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
+		for(FluidSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
 		{
 			slot.renderSlot(this);
 		}
@@ -117,7 +117,7 @@ public abstract class GuiContainerBase extends GuiContainer
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		if(!this.dragSplitting)
 		{
-			FSlot slot = getFluidSlotAtPosition(mouseX, mouseY);
+			FluidSlot slot = getFluidSlotAtPosition(mouseX, mouseY);
 			ItemStack stack = Minecraft.getMinecraft().player.inventory.getItemStack();
 			if(stack == null && isTouchingMode() && this.lastClickSlot != null &&
 					this.lastClickSlot.canTakeStack(Minecraft.getMinecraft().player))
@@ -143,9 +143,9 @@ public abstract class GuiContainerBase extends GuiContainer
 		}
 	}
 	
-	protected FSlot getFluidSlotAtPosition(int x, int y)
+	protected FluidSlot getFluidSlotAtPosition(int x, int y)
 	{
-		for(FSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
+		for(FluidSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
 		{
 			if(slot.isVisible() && isPointInRegion(slot.x, slot.y, slot.u, slot.v, x, y))
 				return slot;

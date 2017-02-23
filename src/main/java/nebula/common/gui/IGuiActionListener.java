@@ -1,6 +1,6 @@
 package nebula.common.gui;
 
-public interface IGUIActionListener
+public interface IGuiActionListener
 {
 	void onRecieveGUIAction(byte type, long value);
 }

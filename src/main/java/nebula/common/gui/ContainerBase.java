@@ -22,7 +22,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class ContainerBase extends Container implements IGUIActionListener
+public abstract class ContainerBase extends Container implements IGuiActionListener
 {
 	public static boolean canAddItemToSlot(Slot slotIn, ItemStack stack, boolean stackSizeMatters)
 	{
@@ -165,7 +165,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 	
 	protected EntityPlayer opener;
 	protected List<TL> transferLocates = new ArrayList();
-	protected List<FSlot> fluidSlots = new ArrayList();
+	protected List<FluidSlot> fluidSlots = new ArrayList();
 	private List<FluidStack> lastFluidStacks = new ArrayList();
 	
 	public ContainerBase(EntityPlayer player)
@@ -178,7 +178,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 		return this.opener;
 	}
 	
-	public List<FSlot> getFluidSlots()
+	public List<FluidSlot> getFluidSlots()
 	{
 		return this.fluidSlots;
 	}
@@ -266,7 +266,7 @@ public abstract class ContainerBase extends Container implements IGUIActionListe
 		}
 	}
 	
-	protected FSlot addSlotToContainer(FSlot slot)
+	protected FluidSlot addSlotToContainer(FluidSlot slot)
 	{
 		slot.slotNumber = this.inventorySlots.size();
 		this.fluidSlots.add(slot);

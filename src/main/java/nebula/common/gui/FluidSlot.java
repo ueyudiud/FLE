@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  *
  */
-public class FSlot
+public class FluidSlot
 {
 	public FluidTank tank;
 	protected boolean shouldRender = true;
@@ -23,7 +23,7 @@ public class FSlot
 	public int v;
 	public int slotNumber;
 	
-	public FSlot(FluidTank tank, int x, int y, int u, int v)
+	public FluidSlot(FluidTank tank, int x, int y, int u, int v)
 	{
 		this.tank = tank;
 		this.x = x;
@@ -32,7 +32,7 @@ public class FSlot
 		this.v = v;
 	}
 	
-	public FSlot setNoRender()
+	public FluidSlot setNoRender()
 	{
 		this.shouldRender = false;
 		return this;

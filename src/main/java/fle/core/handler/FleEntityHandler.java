@@ -146,7 +146,6 @@ public class FleEntityHandler
 		EntityLivingBase entity = event.getEntityLiving();
 		float a = (float) entity.motionY;//For motion is distance caculation.
 		a *= a;
-		a *= .25F;
 		a *= event.getDamageMultiplier();
 		PotionEffect effect = entity.getActivePotionEffect(MobEffects.JUMP_BOOST);
 		a -= effect == null ? 1.0F : (effect.getAmplifier() + 2.0F);
@@ -155,16 +154,17 @@ public class FleEntityHandler
 		{
 			if(a < 4F)
 			{
-				damage = a / 3F;
+				damage = a;
 			}
 			else
 			{
-				damage = a / 3F + (a - 4F) * a / 8F;
+				damage = a + (a - 4F) * a / 4F;
 			}
 			SoundEvent sound;
 			try
 			{
 				Method method = R.getMethod(EntityLivingBase.class, "getFallSound", "", int.class);
+				method.setAccessible(true);
 				sound = (SoundEvent) method.invoke(entity, (int) damage);
 				entity.playSound(sound, 1.0F, 1.0F);
 			}
@@ -188,6 +188,9 @@ public class FleEntityHandler
 				entity.addPotionEffect(new PotionEffect(Potions.FRACTURE   , (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
 			}
 		}
-		event.setDamageMultiplier(0.0F);
+		if (!event.getEntityLiving().world.isRemote)
+		{
+			event.setCanceled(true);
+		}
 	}
 }

@@ -42,16 +42,21 @@ public class ItemDebugger extends ItemBase
 	public ItemDebugger()
 	{
 		super(FarCore.ID, "debugger", "debugger", "Don't play this item~");
-		LanguageManager.registerLocal(getTranslateName(new ItemStack(this)), "Debugger");
 		setMaxStackSize(1);
 		EnumItem.debug.set(this);
+	}
+	
+	@Override
+	public void postInitalizedItems()
+	{
+		LanguageManager.registerLocal(getTranslateName(new ItemStack(this)), "Debugger");
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		Game.registerItemModel(EnumItem.debug.item, 0, FarCore.ID, "debugger");
+		Game.registerItemModel(this, 0, FarCore.ID, "debugger");
 	}
 	
 	@Override
@@ -72,6 +77,7 @@ public class ItemDebugger extends ItemBase
 				{
 					((IToolableBlock) block).onToolClick(player, EnumToolTypes.SCREW_DRIVER, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
 				}
+				block.randomTick(world, pos, state, itemRand);
 				TileEntity tile = world.getTileEntity(pos);
 				if(tile instanceof IToolableTile)
 				{

@@ -30,6 +30,7 @@ import farcore.lib.material.prop.PropertyOre;
 import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
+import farcore.lib.plant.IPlant;
 import farcore.lib.tree.ITree;
 import nebula.common.LanguageManager;
 import nebula.common.base.HashPropertyMap;
@@ -416,6 +417,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		add(SubTags.CROP);
 		return addProperty(MP.property_crop, crop);
+	}
+	
+	public Mat setPlant(IPlant plant)
+	{
+		add(SubTags.PLANT);
+		return addProperty(MP.property_plant, plant);
 	}
 	
 	public Mat setTag(SubTag...tags)

@@ -23,6 +23,8 @@ public class SubTags
 	public static final SubTag PLANT = SubTag.getNewSubTag("PLANT");
 	public static final SubTag TREE = SubTag.getNewSubTag("TREE");
 	public static final SubTag ROPE = SubTag.getNewSubTag("ROPE");
+	public static final SubTag VINES = SubTag.getNewSubTag("VINES");
+	public static final SubTag HERB = SubTag.getNewSubTag("HERB");
 	public static final SubTag ORE = SubTag.getNewSubTag("ORE");
 	public static final SubTag ORE_SIMPLE = SubTag.getNewSubTag("ORE_SIMPLE");
 	public static final SubTag ORE_GEM = SubTag.getNewSubTag("ORE_GEM");

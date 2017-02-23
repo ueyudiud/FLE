@@ -22,6 +22,10 @@ public class RecipeMaps
 	public static final
 	VanillaCraftingHandler CRAFTING_VANILLA =
 	new VanillaCraftingHandler();
+	//NAME        : minecraft.smelting
+	public static final
+	VanillaSmeltingHandler SMELTING_VANILLA =
+	new VanillaSmeltingHandler();
 	//NAME        : fle.crafting
 	//NBT ENTRY   : time(int), output(ItemStack)
 	//DISPLAYMENTS: materialRequired(@Nullable Material)

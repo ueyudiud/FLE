@@ -92,6 +92,35 @@ public interface INode<T> extends Iterable<T>
 	}
 	
 	/**
+	 * Find first matched element in node chain.
+	 * @param judgable
+	 * @return The matched target.
+	 */
+	default T find(Judgable<T> judgable)
+	{
+		T result;
+		return judgable.isTrue(value()) ? value() :
+			(result = findBefore(judgable)) != null ? result :
+				findAfter(judgable);
+	}
+	
+	default T findAfter(Judgable<T> judgable)
+	{
+		if (!hasNext()) return null;
+		INode<T> node = next();
+		T result;
+		return judgable.isTrue(result = node.value()) ? result : node.findAfter(judgable);
+	}
+	
+	default T findBefore(Judgable<T> judgable)
+	{
+		if (!hasLast()) return null;
+		INode<T> node = last();
+		T result;
+		return judgable.isTrue(result = node.value()) ? result : node.findBefore(judgable);
+	}
+	
+	/**
 	 * Add a new node at the start of node chain.
 	 * @param target The target will contain in new node.
 	 * @throws java.lang.UnsupportedOperationException If this node is immutable node chain.

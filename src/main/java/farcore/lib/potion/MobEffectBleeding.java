@@ -25,8 +25,8 @@ public class MobEffectBleeding extends MobEffect
 	}
 	
 	@Override
-	public void affectEntity(Entity source, Entity indirectSource, EntityLivingBase entityLivingBaseIn, int amplifier,
-			double health)
+	public void affectEntity(Entity source, Entity indirectSource,
+			EntityLivingBase entityLivingBaseIn, int amplifier, double health)
 	{
 		if(entityLivingBaseIn.isEntityUndead())
 		{
