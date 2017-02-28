@@ -4,7 +4,7 @@
 
 package nebula.common.inventory;
 
-import nebula.common.util.L;
+import nebula.common.util.A;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -22,7 +22,7 @@ public class InventorySimple implements IBasicInventory
 	@Override
 	public ItemStack[] toArray()
 	{
-		return L.transform(this.stacks, ItemStack.class, stack->ItemStack.copyItemStack(stack));
+		return A.transform(this.stacks, ItemStack.class, stack->ItemStack.copyItemStack(stack));
 	}
 	
 	@Override

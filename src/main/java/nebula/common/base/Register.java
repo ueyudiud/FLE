@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import nebula.common.util.L;
+import nebula.common.util.A;
 
 /**
  * A register instanceof of register.
@@ -51,8 +51,8 @@ public class Register<T> implements IRegister<T>
 	private void extraList(int size)
 	{
 		if(size < this.names.length) return;
-		this.names = L.copyToLength(this.names, size);
-		this.targets = L.copyToLength(this.targets, size);
+		this.names = A.copyToLength(this.names, size);
+		this.targets = A.copyToLength(this.targets, size);
 	}
 	
 	private int freePoint()

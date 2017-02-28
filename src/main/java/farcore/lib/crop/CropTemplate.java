@@ -1,42 +1,61 @@
 package farcore.lib.crop;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
-import farcore.data.EnumBlock;
-import farcore.lib.bio.DNAHandler;
+import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
-import nebula.common.util.Direction;
+import nebula.common.base.Appliable;
 import nebula.common.util.L;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.EnumPlantType;
-import net.minecraftforge.common.IPlantable;
 
-public class CropTemplate extends CropBase implements IPlantable
+public class CropTemplate extends Crop
 {
 	public EnumPlantType type = EnumPlantType.Crop;
+	private Appliable<ItemStack> drop;
+	private int dropChance;
+	private Appliable<ItemStack> dropRare;
+	private int grain = 1;
+	private int seed = 1;
 	
-	public CropTemplate(Mat material)
+	public CropTemplate(Mat material, int maxStage, int growRequire)
 	{
-		super(material);
-	}
-	public CropTemplate(Mat material, int maxStage, int growReq)
-	{
-		super(material);
+		this.material = material;
 		this.maxStage = maxStage;
-		this.growReq = growReq;
+		this.growRequire = growRequire;
 	}
 	
-	public CropTemplate setDNAHelper(DNAHandler...handlers)
+	public CropTemplate setFamily(FamilyTemplate<Crop, ICropAccess> family)
 	{
-		this.helper = handlers;
+		this.family = family;
+		family.addSpecies(this);
+		return this;
+	}
+	
+	public CropTemplate setNativeData(int grain, int growth, int resistance, int vitality, int saving)
+	{
+		this.nativeCropData = new int[]{grain, growth, resistance, vitality, saving};
+		return this;
+	}
+	
+	public CropTemplate setDrop(Appliable<ItemStack> appliable, int grain)
+	{
+		return setDrop(appliable, grain, 0, null);
+	}
+	
+	public CropTemplate setDrop(Appliable<ItemStack> appliable1, int grain, int chance, Appliable<ItemStack> appliable2)
+	{
+		this.drop = appliable1;
+		this.grain = grain;
+		this.dropChance = chance;
+		this.dropRare = appliable2;
+		return this;
+	}
+	
+	public CropTemplate setSeedMul(int size)
+	{
+		this.seed = size;
 		return this;
 	}
 	
@@ -49,25 +68,6 @@ public class CropTemplate extends CropBase implements IPlantable
 	}
 	
 	@Override
-	public boolean canPlantAt(ICropAccess access)
-	{
-		IBlockState state;
-		return (state = access.getBlockState(Direction.D)).getBlock().canSustainPlant(state, access.world(), access.pos().down(), EnumFacing.UP, this);
-	}
-	
-	@Override
-	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
-	{
-		return EnumBlock.crop.block.getDefaultState();
-	}
-	
-	@Override
-	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
-	{
-		return this.type;
-	}
-	
-	@Override
 	public EnumPlantType getPlantType(ICropAccess access)
 	{
 		return this.type;
@@ -76,35 +76,33 @@ public class CropTemplate extends CropBase implements IPlantable
 	@Override
 	public void getDrops(ICropAccess access, ArrayList<ItemStack> list)
 	{
-		if(access.stage() == this.maxStage - 1)
+		if(access.stage() == this.maxStage)
 		{
-			ItemStack stack = applyChildSeed(1 + L.nextInt(5) / 3, access.info());
+			ItemStack stack = applyChildSeed(this.seed + L.nextInt(5 + access.info().resistance / 2 + access.info().grain) / 3, access.info());
 			if(stack != null)
 			{
 				list.add(stack);
+			}
+			stack = this.drop.apply();
+			if (stack != null)
+			{
+				stack.stackSize = stack.stackSize * (2 + access.rng().nextInt(access.info().grain + this.grain)) / 2;
+				list.add(stack);
+			}
+			if (this.dropChance > 0 && access.rng().nextInt(10000) < this.dropChance)
+			{
+				stack = this.dropRare.apply();
+				if (stack != null)
+				{
+					list.add(stack);
+				}
 			}
 		}
 	}
 	
 	public ItemStack applyChildSeed(int size, CropInfo info)
 	{
-		return ItemSeed.applySeed(size, this.material, info.gamete == null ? info.geneticMaterial : info.gamete);
-	}
-	
-	@Override
-	public String getState(ICropAccess access)
-	{
-		return getRegisteredName() + "_stage_" + access.stage();
-	}
-	
-	@Override
-	public List<String> getAllowedState()
-	{
-		ImmutableList.Builder<String> builder = ImmutableList.builder();
-		for(int i = 0; i < getMaxStage(); ++i)
-		{
-			builder.add(getRegisteredName() + "_stage_" + i);
-		}
-		return builder.build();
+		ICrop crop = this.family.getSpecieFromGM(info.geneticMaterial);
+		return ItemSeed.applySeed(size, ((Crop) crop).material, info.gamete == null ? info.geneticMaterial : info.gamete);
 	}
 }

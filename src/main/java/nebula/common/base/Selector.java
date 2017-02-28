@@ -51,7 +51,10 @@ public interface Selector<E> extends Function<Random, E>
 		return next(L.random());
 	}
 	
-	default E apply(Random random) { return next(random); }
+	default E apply(Random random)
+	{
+		return next(random);
+	}
 	
 	/**
 	 * Get next element from selector,

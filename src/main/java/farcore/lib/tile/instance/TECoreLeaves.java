@@ -7,9 +7,9 @@ import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import nebula.common.tile.TEStatic;
 import nebula.common.util.Worlds;
-import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,10 +27,9 @@ public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 		if(info == null)
 		{
 			info = new TreeInfo();
-			info.DNA = tree.applyNativeDNA();
+			info.gm = tree.createNativeGeneticMaterial();
 		}
 		this.info = info;
-		info.DNA.expressTrait(info);
 	}
 	
 	@Override

@@ -10,7 +10,7 @@ import fle.api.item.behavior.IPolishableBehavior;
 import nebula.common.item.BehaviorBase;
 import nebula.common.item.ITool;
 import nebula.common.tool.EnumToolType;
-import nebula.common.util.L;
+import nebula.common.util.A;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -44,7 +44,7 @@ public class BehaviorPolishable extends BehaviorBase implements IPolishableBehav
 	@Override
 	public char getPolishResult(ItemStack stack, char base)
 	{
-		return L.contain(this.allowTransferStates, base) ? this.target : base;
+		return A.contain(this.allowTransferStates, base) ? this.target : base;
 	}
 	
 	@Override

@@ -31,7 +31,7 @@ import net.minecraft.world.World;
  * @see farcore.lib.material.prop.PropertyTree
  */
 @Deprecated
-public interface ITree extends ITreeGenerator, ISpecie<TreeInfo>, IRegisteredNameable
+public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegisteredNameable
 {
 	ITree VOID = new TreeVoid();
 	
@@ -110,11 +110,11 @@ public interface ITree extends ITreeGenerator, ISpecie<TreeInfo>, IRegisteredNam
 	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ);
 	
-	ActionResult<Float> onToolUseLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ, boolean isArt);
+	//	ActionResult<Float> onToolUseLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
+	//			Direction side, float hitX, float hitY, float hitZ, boolean isArt);
 	
-	ActionResult<Float> onToolUseLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
-			Direction side, float hitX, float hitY, float hitZ);
+	//	ActionResult<Float> onToolUseLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
+	//			Direction side, float hitX, float hitY, float hitZ);
 	
 	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList list);
 	

@@ -6,7 +6,9 @@ package nebula.common.base;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Represents function that can direct return a result without argument.<p>
@@ -18,9 +20,32 @@ import java.util.function.Function;
  * @author ueyudiud
  */
 @FunctionalInterface
-public interface Appliable<T> extends Callable<T>
+public interface Appliable<T> extends Callable<T>, Supplier<T>
 {
+	abstract class AppliableCached<T> implements Appliable<T>
+	{
+		T cache;
+		
+		@Override
+		public T apply()
+		{
+			if (cache == null)
+			{
+				cache = apply$();
+			}
+			
+			return cache;
+		}
+		
+		abstract T apply$();
+	}
+	
 	static Appliable<?> NULL = () -> null;
+	
+	static <V> Appliable<V> or(BooleanSupplier supplier, Appliable<V> a1, Appliable<V> a2)
+	{
+		return () -> supplier.getAsBoolean() ? a1.apply() : a2.apply();
+	}
 	
 	default <V> Appliable<V> andThen(Function<T, V> function)
 	{
@@ -34,10 +59,21 @@ public interface Appliable<T> extends Callable<T>
 	}
 	
 	@Override
+	default T get()
+	{
+		return apply();
+	}
+	
+	@Override
 	default T call()
 	{
 		return apply();
 	}
 	
+	/**
+	 * Get apply value.
+	 * @throws IllegalStateException When target is not initialize or connected to server, etc.
+	 * @return The applied value.
+	 */
 	T apply();
 }

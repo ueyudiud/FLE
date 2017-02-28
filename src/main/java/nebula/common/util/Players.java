@@ -60,7 +60,7 @@ public class Players
 			return false;
 		}
 		final ItemStack stack2 = stack;
-		return L.or(types, type -> type.toolMatch(stack2));
+		return A.or(types, type -> type.toolMatch(stack2));
 	}
 	
 	public static void destoryPlayerCurrentItem(EntityPlayer player)

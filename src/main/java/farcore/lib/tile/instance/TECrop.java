@@ -7,15 +7,14 @@ import java.util.Random;
 import farcore.data.EnumToolTypes;
 import farcore.data.MP;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.bio.DNAPair;
 import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.CropInfo;
 import farcore.lib.crop.ICrop;
 import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
 import nebula.client.util.Client;
+import nebula.common.data.Misc;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Update;
@@ -46,19 +45,19 @@ public class TECrop extends TEAged
 implements ICropAccess, IDebugableTile, IUpdatableTile, ITP_BoundingBox, ITB_Update, ITP_HarvestCheck, ITP_Drops, ITB_AddDestroyEffects,
 ITB_AddHitEffects
 {
-	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, .9375F, .9375F);
+	private static final AxisAlignedBB CROP_AABB = new AxisAlignedBB(0.0F, .0F, 0.0F, 1.0F, .125F, 1.0F);
 	
 	private static final CropInfo NO_DATA_INFO = new CropInfo();
 	
 	static
 	{
-		NO_DATA_INFO.geneticMaterial = GeneticMaterial.newGeneticMaterial("", -1, new DNAPair[0]);
+		NO_DATA_INFO.geneticMaterial = new GeneticMaterial("", -1, Misc.LONGS_EMPTY, Misc.INTS_EMPTY);
 	}
 	
 	private int waterLevel = 6400;
 	private boolean isWild = false;
 	private float growBuffer;
-	private int stage;
+	private int stage = 1;
 	private ICrop card = ICrop.VOID;
 	private CropInfo info = NO_DATA_INFO;
 	
@@ -68,16 +67,15 @@ ITB_AddHitEffects
 	}
 	public TECrop(ICrop crop)
 	{
-		this(crop, crop.applyNativeDNA(), 0);
+		this(crop, crop.createNativeGeneticMaterial());
 		this.isWild = true;
 	}
-	public TECrop(ICrop crop, GeneticMaterial geneticMaterial, int generation)
+	public TECrop(ICrop crop, GeneticMaterial geneticMaterial)
 	{
 		this.card = crop;
 		this.info = new CropInfo();
 		this.info.geneticMaterial = geneticMaterial;
-		this.info.generations = generation;
-		this.info.geneticMaterial.expressTrait(this);
+		this.card.expressTrait(this, geneticMaterial);
 	}
 	
 	@Override
@@ -87,7 +85,7 @@ ITB_AddHitEffects
 		nbt.setInteger("water", this.waterLevel);
 		nbt.setBoolean("isWild", this.isWild);
 		nbt.setFloat("growBuf", this.growBuffer);
-		nbt.setInteger("stage", this.stage);
+		NBTs.setNumber(nbt, "stage", this.stage);
 		nbt.setString("crop", this.card.getRegisteredName());
 		if(this.info != null)
 		{
@@ -103,7 +101,7 @@ ITB_AddHitEffects
 		this.waterLevel = nbt.getInteger("water");
 		this.isWild = nbt.getBoolean("isWild");
 		this.growBuffer = nbt.getFloat("growBuf");
-		this.stage = nbt.getInteger("stage");
+		this.stage = NBTs.getIntOrDefault(nbt, "stage", 1);
 		this.card = Mat.material(nbt.getString("crop")).getProperty(MP.property_crop, ICrop.VOID);
 		this.info = new CropInfo();
 		this.info.readFromNBT(nbt);
@@ -160,7 +158,12 @@ ITB_AddHitEffects
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 	{
-		return BlockCrop.CropSelectBoxHeightHandler.INSTANCE.getSelectBoundBox(getStateName(), CROP_AABB);
+		return CROP_AABB;
+	}
+	
+	public String getStateName()
+	{
+		return this.card.getRegisteredName() + "_" + this.stage;
 	}
 	
 	@Override
@@ -240,7 +243,7 @@ ITB_AddHitEffects
 	@Override
 	public void grow(int amt)
 	{
-		if(this.stage + 1 < this.card.getMaxStage())
+		if(this.stage < this.card.getMaxStage())
 		{
 			int i = this.card.getGrowReq(this);
 			this.growBuffer += amt;
@@ -291,11 +294,8 @@ ITB_AddHitEffects
 	@Override
 	public void addDebugInformation(EntityPlayer player, Direction side, List<String> list)
 	{
-		list.add("Tag : " + getStateName());
-		list.add("Name : " + this.card.getTranslatedName(this.info.geneticMaterial));
-		list.add("DNA : " + this.info.geneticMaterial.getDNAString());
-		int max = this.card.getMaxStage();
-		int req = this.card.getGrowReq(this);
+		list.add("Tag : " + this.card.getRegisteredName());
+		list.add("Name : " + this.card.getLocalName(this.info.geneticMaterial));
 		
 		this.card.addInformation(this, list);
 	}
@@ -346,17 +346,12 @@ ITB_AddHitEffects
 		}
 	}
 	
-	public String getStateName()
-	{
-		return this.card != null ? this.card.getState(this) : "void";
-	}
-	
 	@Override
 	public void pollinate(GeneticMaterial gm)
 	{
 		if(this.info.gamete == null && this.card.getRegisteredName().equals(gm.specie))
 		{
-			this.info.gamete = GeneticMaterial.newGeneticMaterial(this, this.random, this.info.geneticMaterial.generateGameteDNA(this, this.random, true), gm);
+			this.info.gamete = this.card.createGameteGeneticMaterial(this, gm);
 		}
 	}
 	

@@ -2,7 +2,7 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
@@ -19,7 +19,7 @@ public class TreeGenTaiga extends TreeGenAbstract
 	protected int randHeight = 4;
 	protected float generateCoreLeavesChance;
 
-	public TreeGenTaiga(TreeBase tree, float generateCoreLeavesChance)
+	public TreeGenTaiga(Tree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}

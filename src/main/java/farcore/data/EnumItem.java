@@ -22,10 +22,10 @@ public enum EnumItem
 	stone_fragment,
 	ingot,
 	nugget,
-	crop_related,
 	branch,
-	misc_resource,
 	/** From fle. */
+	misc_resource,
+	crop_related,
 	tool;
 	
 	public Item item;

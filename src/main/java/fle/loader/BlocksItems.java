@@ -10,6 +10,7 @@ import fle.core.blocks.BlockGear;
 import fle.core.blocks.BlockWoodenSimpleWorkbench;
 import fle.core.items.ItemMiscResources;
 import fle.core.items.ItemSimpleFluidContainer;
+import fle.core.items.ItemSubCropRelated;
 import fle.core.items.ItemToolFar;
 import fle.core.tile.kinetic.TEGear.GearSize;
 import nebula.client.CreativeTabBase;
@@ -21,6 +22,7 @@ public class BlocksItems
 	public static ItemToolFar tool;
 	public static ItemSimpleFluidContainer fluidContainer;
 	public static ItemMiscResources miscResources;
+	public static ItemSubCropRelated crop;
 	public static Block ditch;
 	public static Block gear;
 	public static Block simple_wooden_workbench;
@@ -32,6 +34,7 @@ public class BlocksItems
 			Mat.setMaterialToStack(stack, "material", M.oak);
 			return stack;
 		});
+		crop = (ItemSubCropRelated) new ItemSubCropRelated().setCreativeTab(CT.tabCropAndWildPlants);
 		
 		tool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.tabTool);
 		fluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.tabTool);

@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import nebula.common.base.Appliable;
 import nebula.common.base.ArrayListAddWithCheck;
+import nebula.common.util.A;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.inventory.ItemStackHelper;
@@ -195,7 +196,7 @@ public class InventoryHelper
 		ItemStack[] array = inventory.toArray();
 		int limit = inventory.getInventoryStackLimit();
 		List<ItemStack> list = ArrayListAddWithCheck.requireNonnull();
-		L.executeAll(stacks, stack->list.add(ItemStack.copyItemStack(stack)));
+		A.executeAll(stacks, stack->list.add(ItemStack.copyItemStack(stack)));
 		for (int i = from; i < to; ++i)
 		{
 			if (array[i] != null)

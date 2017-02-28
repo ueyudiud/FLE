@@ -2,19 +2,16 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.bio.DNAHandler;
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeWillow extends TreeBase
+public class TreeWillow extends Tree
 {
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.08F, true);
 	
 	public TreeWillow()
 	{
-		super("willow");
-		this.helper = new DNAHandler[0];
 		this.generator1.setTreeLeavesShape(1, 6, 2, 3.6F);
 		this.leavesCheckRange = 5;
 	}

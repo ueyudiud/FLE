@@ -11,8 +11,8 @@ import nebula.common.data.NBTLSs;
 import nebula.common.inventory.IBasicInventory;
 import nebula.common.inventory.InventoryHelper;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
+import nebula.common.util.A;
 import nebula.common.util.ItemStacks;
-import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.util.TileEntities;
 import net.minecraft.block.state.IBlockState;
@@ -131,7 +131,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ItemStack[] toArray()
 	{
-		return L.transform(this.stacks, ItemStack.class, stack->ItemStack.copyItemStack(stack));
+		return A.transform(this.stacks, ItemStack.class, stack->ItemStack.copyItemStack(stack));
 	}
 	
 	@Override

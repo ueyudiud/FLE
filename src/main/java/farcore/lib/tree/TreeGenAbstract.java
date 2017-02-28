@@ -13,14 +13,14 @@ import net.minecraft.world.World;
 public abstract class TreeGenAbstract implements ITreeGenerator
 {
 	protected float generateCoreLeavesChance;
-	protected TreeBase tree;
-
-	public TreeGenAbstract(TreeBase tree, float generateCoreLeavesChance)
+	protected Tree tree;
+	
+	public TreeGenAbstract(Tree tree, float generateCoreLeavesChance)
 	{
 		this.tree = tree;
 		this.generateCoreLeavesChance = generateCoreLeavesChance;
 	}
-
+	
 	protected boolean isLogReplaceable(World world, int x, int y, int z)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
@@ -63,7 +63,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 		}
 		return true;
 	}
-
+	
 	protected boolean checkLogGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
@@ -89,17 +89,17 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 		}
 		return true;
 	}
-
+	
 	protected void generateLog(World world, int x, int y, int z, int meta)
 	{
-		Worlds.setBlock(world, new BlockPos(x, y, z), tree.logNat, meta, V.generateState ? 2 : 3);
+		Worlds.setBlock(world, new BlockPos(x, y, z), this.tree.blocks[0], meta, V.generateState ? 2 : 3);
 	}
-
+	
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, Random rand, TreeInfo info)
 	{
-		generateTreeLeaves(world, x, y, z, meta, generateCoreLeavesChance, rand, info);
+		generateTreeLeaves(world, x, y, z, meta, this.generateCoreLeavesChance, rand, info);
 	}
-
+	
 	protected void generateCloudlyLeaves(World world, int x, int y, int z, int size, int meta, Random rand, TreeInfo info, byte core)
 	{
 		switch (core)
@@ -130,7 +130,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 			break;
 		}
 	}
-
+	
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, float generateCoreLeavesChance, Random rand, TreeInfo info)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
@@ -141,16 +141,16 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 			int flag = V.generateState ? 2 : 3;
 			if(rand.nextDouble() <= generateCoreLeavesChance)
 			{
-				Worlds.setBlock(world, pos, tree.leavesCore, meta, flag);
-				Worlds.setTileEntity(world, pos, new TECoreLeaves(tree, info), !V.generateState);
+				Worlds.setBlock(world, pos, this.tree.blocks[3], meta, flag);
+				Worlds.setTileEntity(world, pos, new TECoreLeaves(this.tree, info), !V.generateState);
 			}
 			else
 			{
-				Worlds.setBlock(world, pos, tree.leaves, meta, flag);
+				Worlds.setBlock(world, pos, this.tree.blocks[2], meta, flag);
 			}
 		}
 	}
-
+	
 	@Override
 	public abstract boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info);
 }

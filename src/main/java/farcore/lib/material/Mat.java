@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 import farcore.data.Config;
 import farcore.data.MP;
@@ -93,6 +94,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public static boolean contain(String name)
 	{
 		return REGISTER.contain(name);
+	}
+	public static <V> Iterable<V> filtAndGet(Judgable<? super Mat> filter, IProperty<V> property)
+	{
+		return Iterables.transform(filt(filter), m->m.getProperty(property));
+	}
+	public static <V> Iterable<V> filtAndGet(Judgable<? super Mat> filter, boolean alwaysInit, IProperty<V> property)
+	{
+		return Iterables.transform(filt(filter, alwaysInit), m->m.getProperty(property));
 	}
 	public static List<Mat> filt(Judgable<? super Mat> filter)
 	{

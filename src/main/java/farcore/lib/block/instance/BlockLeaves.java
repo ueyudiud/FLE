@@ -238,13 +238,6 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	}
 	
 	@Override
-	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
-	{
-		return this.tree.onToolUseLeaves(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ);
-	}
-	
-	@Override
 	public boolean isLeaves(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return true;

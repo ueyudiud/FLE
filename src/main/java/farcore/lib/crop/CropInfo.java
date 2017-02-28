@@ -15,14 +15,11 @@ public class CropInfo
 	/**
 	 * The genertic material already contain this prop.
 	 */
-	@Deprecated
-	public int generations;
 	public int grain;
 	public int growth;
-	public int coldResistance;
-	public int hotResistance;
-	public int weedResistance;
-	public int dryResistance;
+	public int resistance;
+	public int vitality;
+	public int saving;
 	
 	public IntegerMap<String> map = new IntegerMap();
 	
@@ -33,10 +30,9 @@ public class CropInfo
 		this.geneticMaterial = GenticMaterialFactory.INSTANCE.readFromNBT(nbt, "gm");
 		this.grain = nbt.getInteger("gra");
 		this.growth = nbt.getInteger("gro");
-		this.coldResistance = nbt.getInteger("cRes");
-		this.hotResistance = nbt.getInteger("hRes");
-		this.weedResistance = nbt.getInteger("wRes");
-		this.dryResistance = nbt.getInteger("dRes");
+		this.resistance = nbt.getInteger("res");
+		this.vitality = nbt.getInteger("vit");
+		this.saving = nbt.getInteger("sav");
 		NBTTagList list = nbt.getTagList("prop", NBT.TAG_COMPOUND);
 		for(int i = 0; i < list.tagCount(); ++i)
 		{
@@ -51,10 +47,9 @@ public class CropInfo
 		GenticMaterialFactory.INSTANCE.writeToNBT(this.geneticMaterial, nbt, "gm");
 		nbt.setInteger("gra", this.grain);
 		nbt.setInteger("gro", this.growth);
-		nbt.setInteger("cRes", this.coldResistance);
-		nbt.setInteger("hRes", this.hotResistance);
-		nbt.setInteger("wRes", this.weedResistance);
-		nbt.setInteger("dRes", this.dryResistance);
+		nbt.setInteger("res", this.resistance);
+		nbt.setInteger("vit", this.vitality);
+		nbt.setInteger("sav", this.saving);
 		NBTTagList list = new NBTTagList();
 		for(IntegerEntry<String> prop : this.map)
 		{

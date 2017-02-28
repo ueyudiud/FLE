@@ -6,6 +6,7 @@ package nebula.common.base;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * @author ueyudiud
@@ -17,13 +18,13 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 		return new ArrayListAddWithCheck<>(Judgable.NOT_NULL);
 	}
 	
-	Judgable<E> checker;
+	Predicate<E> checker;
 	
-	public ArrayListAddWithCheck(Judgable<E> checker)
+	public ArrayListAddWithCheck(Predicate<E> checker)
 	{
 		this.checker = checker;
 	}
-	public ArrayListAddWithCheck(Judgable<E> checker, int initicalCapacity)
+	public ArrayListAddWithCheck(Predicate<E> checker, int initicalCapacity)
 	{
 		super(initicalCapacity);
 		this.checker = checker;
@@ -32,7 +33,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	@Override
 	public boolean add(E e)
 	{
-		if (this.checker.isTrue(e))
+		if (this.checker.test(e))
 		{
 			return super.add(e);
 		}
@@ -42,7 +43,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	@Override
 	public void add(int index, E element)
 	{
-		if (this.checker.isTrue(element))
+		if (this.checker.test(element))
 		{
 			super.add(index, element);
 		}

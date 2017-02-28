@@ -63,11 +63,13 @@ public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDa
 	protected BlockPlant(String name, IPlant plant)
 	{
 		super(name, Materials.PLANT);
+		setTickRandomly(true);
 		this.plant = plant;
 	}
 	protected BlockPlant(String modid, String name, IPlant plant)
 	{
 		super(modid, name, Materials.PLANT);
+		setTickRandomly(true);
 		this.plant = plant;
 	}
 	

@@ -22,6 +22,7 @@ import nebula.common.base.IntegerMap;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
 import nebula.common.network.PacketBufferExt;
+import nebula.common.util.A;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -228,7 +229,7 @@ public enum ExtendedBlockStateRegister
 				try
 				{
 					state = block.getStateFromMeta(i);
-					if(!L.contain(states, state))
+					if(!A.contain(states, state))
 					{
 						states[i] = state;
 					}

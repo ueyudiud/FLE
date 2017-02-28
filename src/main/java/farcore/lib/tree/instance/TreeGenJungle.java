@@ -2,7 +2,7 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class TreeGenJungle extends TreeGenHuge
 {
-	public TreeGenJungle(TreeBase tree, float generateCoreLeavesChance)
+	public TreeGenJungle(Tree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}

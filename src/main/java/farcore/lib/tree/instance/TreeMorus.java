@@ -2,19 +2,16 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.bio.DNAHandler;
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeMorus extends TreeBase
+public class TreeMorus extends Tree
 {
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.08F, false);
 	
 	public TreeMorus()
 	{
-		super("morus");
-		this.helper = new DNAHandler[0];
 		this.generator1.setTreeLeavesShape(2, 5, 1, 3.2F);
 	}
 	

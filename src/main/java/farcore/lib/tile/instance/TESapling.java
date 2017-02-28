@@ -170,7 +170,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	public void addInformation(EntityPlayer player, World world, BlockPos pos, Direction side, List<String> list)
 	{
 		list.add("Name : " + this.tree.getRegisteredName());
-		list.add("DNA : " + this.info.DNA);
+		list.add("DNA : " + this.info.gm);
 		list.add("Grow Progress : " + (int) this.age + "/" + getMaxAge());
 	}
 	

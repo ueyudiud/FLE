@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.lib.bio.GeneticMaterial;
+import farcore.lib.bio.IFamily;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
@@ -77,6 +78,24 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		}
 		
 		@Override
+		public void expressTrait(ISaplingAccess biology, GeneticMaterial gm)
+		{
+			this.tree.expressTrait(biology, gm);
+		}
+		
+		@Override
+		public IFamily<ISaplingAccess> getFamily()
+		{
+			return this.tree.getFamily();
+		}
+		
+		@Override
+		public GeneticMaterial createGameteGeneticMaterial(ISaplingAccess biology, GeneticMaterial gm)
+		{
+			return this.tree.createGameteGeneticMaterial(biology, gm);
+		}
+		
+		@Override
 		public void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves,
 				BlockLeavesCore leavesCore)
 		{
@@ -142,20 +161,6 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		}
 		
 		@Override
-		public ActionResult<Float> onToolUseLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world,
-				long useTick, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
-		{
-			return this.tree.onToolUseLog(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ, isArt);
-		}
-		
-		@Override
-		public ActionResult<Float> onToolUseLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world,
-				long useTick, BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
-		{
-			return this.tree.onToolUseLeaves(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ);
-		}
-		
-		@Override
 		public List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList list)
 		{
 			return this.tree.getLogOtherDrop(world, pos, list);
@@ -187,9 +192,9 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		}
 		
 		@Override
-		public GeneticMaterial applyNativeDNA()
+		public GeneticMaterial createNativeGeneticMaterial()
 		{
-			return this.tree.applyNativeDNA();
+			return this.tree.createNativeGeneticMaterial();
 		}
 	}
 }

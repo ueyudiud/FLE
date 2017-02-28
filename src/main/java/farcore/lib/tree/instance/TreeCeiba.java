@@ -2,20 +2,17 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.bio.DNAHandler;
 import farcore.lib.tree.ISaplingAccess;
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeCeiba extends TreeBase
+public class TreeCeiba extends Tree
 {
 	private final TreeGenJungle generator1 = new TreeGenJungle(this, 1.2E-2F);
 	
 	public TreeCeiba()
 	{
-		super("ceiba");
-		this.helper = new DNAHandler[0];
 		this.leavesCheckRange = 6;
 	}
 	

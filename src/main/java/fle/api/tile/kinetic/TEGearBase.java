@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 import farcore.energy.kinetic.IKineticAccess;
 import farcore.energy.kinetic.IKineticHandler;
 import farcore.energy.kinetic.KineticPackage;
+import nebula.common.util.A;
 import nebula.common.util.Direction;
-import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -159,7 +159,7 @@ public abstract class TEGearBase extends TEGearBoxBase implements IGearHandler, 
 				if (tile instanceof IAxisHandler)
 				{
 					IAxisHandler handler = (IAxisHandler) tile;
-					if (L.contain(handler.getAxisHandlerAxis(), this.axis))
+					if (A.contain(handler.getAxisHandlerAxis(), this.axis))
 					{
 						allows[count++] = direction;
 					}

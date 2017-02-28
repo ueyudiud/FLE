@@ -25,5 +25,12 @@ public interface IBiology
 		return L.random();
 	}
 	
+	default <T extends IBiology> IFamily<T> getFamily()
+	{
+		return (IFamily<T>) getSpecie().getFamily();
+	}
+	
+	<T extends IBiology> ISpecie<T> getSpecie();
+	
 	GeneticMaterial getGeneticMaterial();
 }

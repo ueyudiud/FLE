@@ -1,0 +1,19 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "fle:crop/lattice"
+	},
+	"variants": {
+		"state": {
+			"1": { "textures": { "crop": "fle:blocks/crop/wheat/1" } },
+			"2": { "textures": { "crop": "fle:blocks/crop/wheat/2" } },
+			"3": { "textures": { "crop": "fle:blocks/crop/wheat/3" } },
+			"4": { "textures": { "crop": "fle:blocks/crop/wheat/4" } },
+			"5": { "textures": { "crop": "fle:blocks/crop/wheat/5" } },
+			"6": { "textures": { "crop": "fle:blocks/crop/wheat/6" } },
+			"7": { "textures": { "crop": "fle:blocks/crop/wheat/7" } },
+			"8": { "textures": { "crop": "fle:blocks/crop/wheat/8" } }
+		}
+	}
+}

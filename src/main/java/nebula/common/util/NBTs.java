@@ -245,7 +245,7 @@ public class NBTs
 		if(nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = nbt.getTagList(key, NBT.TAG_LONG);
-			if(def.length != list.tagCount())
+			if(def != null && def.length != list.tagCount())
 				return def;
 			long[] result = new long[list.tagCount()];
 			for(int i = 0; i < result.length; ++i)
@@ -271,7 +271,7 @@ public class NBTs
 		if(nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = nbt.getTagList(key, NBT.TAG_STRING);
-			if(def.length != list.tagCount())
+			if(def != null && def.length != list.tagCount())
 				return def;
 			String[] result = new String[list.tagCount()];
 			for(int i = 0; i < result.length; ++i)

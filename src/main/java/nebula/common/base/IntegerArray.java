@@ -2,6 +2,7 @@ package nebula.common.base;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.IntConsumer;
 
 /**
  * The integer array, used when needed add
@@ -33,6 +34,11 @@ public class IntegerArray
 	{
 		this.array[id] = value;
 		return this;
+	}
+	
+	public void forEach(IntConsumer consumer)
+	{
+		for (int i : this.array) consumer.accept(i);
 	}
 	
 	@Override

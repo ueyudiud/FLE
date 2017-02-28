@@ -3,11 +3,12 @@ package nebula.common.base;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import nebula.common.util.L;
 
 @FunctionalInterface
-public interface Judgable<T>
+public interface Judgable<T> extends Predicate<T>
 {
 	Judgable TRUE     = arg -> true;
 	Judgable FALSE    = arg -> false;
@@ -37,6 +38,12 @@ public interface Judgable<T>
 		};
 	}
 	
+	@Override
+	default boolean test(T t)
+	{
+		return isTrue(t);
+	}
+	
 	boolean isTrue(T target);
 	
 	default <K> Judgable<K> from(Function<K, T> function)
@@ -47,6 +54,12 @@ public interface Judgable<T>
 	default Judgable<T> not()
 	{
 		return target -> !isTrue(target);
+	}
+	
+	@Override
+	default Judgable<T> negate()
+	{
+		return not();
 	}
 	
 	class Nor<O> implements Judgable<O>
@@ -195,7 +208,7 @@ public interface Judgable<T>
 		@Override
 		public int hashCode()
 		{
-			return check1.hashCode() + check2.hashCode();
+			return check1.hashCode() ^ check2.hashCode();
 		}
 		
 		@Override

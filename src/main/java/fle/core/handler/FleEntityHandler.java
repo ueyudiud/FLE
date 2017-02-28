@@ -143,9 +143,10 @@ public class FleEntityHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityFall(LivingFallEvent event)
 	{
+		if (event.getEntityLiving().world.isRemote)
+			return;
 		EntityLivingBase entity = event.getEntityLiving();
-		float a = (float) entity.motionY;//For motion is distance caculation.
-		a *= a;
+		float a = event.getDistance();//For motion is distance caculation.
 		a *= event.getDamageMultiplier();
 		PotionEffect effect = entity.getActivePotionEffect(MobEffects.JUMP_BOOST);
 		a -= effect == null ? 1.0F : (effect.getAmplifier() + 2.0F);
@@ -188,9 +189,6 @@ public class FleEntityHandler
 				entity.addPotionEffect(new PotionEffect(Potions.FRACTURE   , (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
 			}
 		}
-		if (!event.getEntityLiving().world.isRemote)
-		{
-			event.setCanceled(true);
-		}
+		event.setCanceled(true);
 	}
 }

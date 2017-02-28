@@ -47,7 +47,7 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 			{
 				return $tree.getLogState(this, meta, true);
 			}
-
+			
 			@Override
 			protected IBlockState initDefaultState(IBlockState state)
 			{
@@ -72,7 +72,7 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 	{
 		super.postInitalizedBlocks();
 		OreDict.registerValid("logWood", this);
-		MC.log.registerOre(tree.material(), this);
+		MC.log.registerOre(this.tree.material(), this);
 	}
 	
 	@Override
@@ -86,11 +86,11 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 	{
 		return true;
 	}
-
+	
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		tree.breakLog(worldIn, pos, state, true);
+		this.tree.breakLog(worldIn, pos, state, true);
 	}
 	
 	@Override
@@ -102,7 +102,7 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		tree.updateLog(worldIn, pos, rand, true);
+		this.tree.updateLog(worldIn, pos, rand, true);
 	}
 	
 	@Override
@@ -119,21 +119,14 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		return tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, true);
+		return this.tree.onLogRightClick(playerIn, worldIn, pos, Direction.of(side), hitX, hitY, hitZ, true);
 	}
 	
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
-		return tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, true);
-	}
-	
-	@Override
-	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
-	{
-		return tree.onToolUseLog(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ, true);
+		return this.tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, true);
 	}
 	
 	@Override

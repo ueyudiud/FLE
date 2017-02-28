@@ -7,12 +7,13 @@ package nebula.common.base;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 
 /**
  * @author ueyudiud
  */
 @FunctionalInterface
-public interface SequenceConsumer<T>
+public interface SequenceConsumer<T> extends ObjIntConsumer<T>
 {
 	default void accept(Iterable<? extends T> iterable)
 	{
@@ -33,6 +34,12 @@ public interface SequenceConsumer<T>
 				accept(i++, iterator.next());
 			}
 		}
+	}
+	
+	@Override
+	default void accept(T t, int value)
+	{
+		accept(value, t);
 	}
 	
 	void accept(int index, T target);

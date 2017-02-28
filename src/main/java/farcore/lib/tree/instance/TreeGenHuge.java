@@ -2,7 +2,7 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeGenAbstract;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
@@ -18,7 +18,7 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 	/** The random height of the tree */
 	protected int randHeight;
 
-	public TreeGenHuge(TreeBase tree, float generateCoreLeavesChance)
+	public TreeGenHuge(Tree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}

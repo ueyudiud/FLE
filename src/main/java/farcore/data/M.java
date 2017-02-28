@@ -7,22 +7,10 @@ package farcore.data;
 import static farcore.FarCoreRegistry.MATERIAL_REGISTERS;
 
 import farcore.FarCore;
-import farcore.lib.crop.CropTemplate;
-import farcore.lib.crop.instance.CropCabbage;
-import farcore.lib.crop.instance.CropMillet;
 import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MaterialBuilder;
-import farcore.lib.material.prop.PropertyEdible;
 import farcore.lib.plant.PlantDandelion;
-import farcore.lib.tree.instance.TreeAcacia;
-import farcore.lib.tree.instance.TreeAspen;
-import farcore.lib.tree.instance.TreeBirch;
-import farcore.lib.tree.instance.TreeCeiba;
-import farcore.lib.tree.instance.TreeMorus;
-import farcore.lib.tree.instance.TreeOak;
-import farcore.lib.tree.instance.TreeOakBlack;
-import farcore.lib.tree.instance.TreeWillow;
 import nebula.Log;
 import net.minecraft.block.material.Material;
 
@@ -36,7 +24,7 @@ public class M
 	//Metal
 	public static final Mat copper			= new MaterialBuilder(1001, FarCore.ID , "copper"			, "Copper"			, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).build().setMetalic(12, 4.0F, 8.0F);
 	//Mob Resources
-	public static final Mat spider_silk		= new Mat(6001, FarCore.ID, "spider_silk", "SpiderSilk", "Spider's Silk").setRGBa(0xFAFAFAFF);
+	public static final Mat spider_silk		= new MaterialBuilder(6001, FarCore.ID, "spider_silk"		, "SpiderSilk"		, "Spider's Silk"		).setRGBa(0xFAFAFAFF).build();
 	//Rocks
 	public static final Mat stone 			= new MaterialBuilder(7001, "minecraft", "stone"			, "Stone"			, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F,  4.0F, -0.5F).build().setRock( 4, 1.5F,  8.0F);
 	public static final Mat compact_stone	= new MaterialBuilder(7002, FarCore.ID , "compactstone"		, "CompactStone"	, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F,  4.0F, -0.5F).build().setRock( 5, 2.0F, 12.0F);
@@ -79,17 +67,6 @@ public class M
 	public static final Mat aspen			= new MaterialBuilder(8011, FarCore.ID , "aspen"			, "Aspen"			, "Aspen"				)                                                                    .build().setWood(1.6F, 1.0F, 20.0F);
 	public static final Mat morus			= new MaterialBuilder(8012, FarCore.ID , "morus"			, "Morus"			, "Morus"				)                                                                    .build().setWood(3.0F, 1.0F, 20.0F);
 	public static final Mat willow			= new MaterialBuilder(8013, FarCore.ID , "willow"			, "Willow"			, "Willow"				)                                                                    .build().setWood(3.0F, 1.0F, 20.0F);
-	//Crops
-	public static final Mat wheat			= new Mat(9001, FarCore.ID, "wheat", "Wheat", "Wheat");
-	public static final Mat millet			= new Mat(9002, FarCore.ID, "millet", "Millet", "Millet");
-	public static final Mat soybean			= new Mat(9003, FarCore.ID, "soybean", "Soybean", "Soybean");
-	public static final Mat potato			= new Mat(9004, FarCore.ID, "potato", "Potato", "Potato");
-	public static final Mat sweet_potato	= new Mat(9005, FarCore.ID, "sweetpotato", "SweetPotato", "Sweet Potato");
-	public static final Mat cabbage			= new Mat(9006, FarCore.ID, "cabbage", "Cabbage", "Cabbage");
-	public static final Mat reed			= new Mat(9007, FarCore.ID, "reed", "Reed", "Reed");
-	public static final Mat flax			= new Mat(9008, FarCore.ID, "flax", "Flax", "Flax");
-	public static final Mat cotton			= new Mat(9009, FarCore.ID, "cotton", "Cotton", "Cotton");
-	public static final Mat ramie			= new Mat(9010, FarCore.ID, "ramie", "Ramie", "Ramie");
 	//Plants
 	public static final Mat vine			= new Mat(9201, FarCore.ID, "vine", "Vine", "Vine").setRGBa(0x867C50FF);
 	public static final Mat ivy				= new Mat(9202, FarCore.ID, "ivy", "Ivy", "Ivy").setRGBa(0x867C50FF);
@@ -97,6 +74,7 @@ public class M
 	public static final Mat ramie_dry		= new Mat(9205, FarCore.ID, "ramie_dry", "RamieDry", "Ramie").setRGBa(0xCFC898FF);
 	
 	public static final Mat dandelion		= new Mat(9301, FarCore.ID, "dandelion", "Dandelion", "Dandelion");
+	public static final Mat bristlegrass	= new Mat(9302, FarCore.ID, "bristlegrass", "Bristlegrass", "Bristlegrass");
 	//Ores
 	public static final Mat native_copper	= new Mat(10001, FarCore.ID, "nativeCopper", "NativeCopper", "Native Copper").setChemicalFormula("Cu").setRGBa(0xFF834CFF).setOreProperty(7, 8.0F, 9.0F);
 	public static final Mat malachite		= new Mat(10002, FarCore.ID, "malachite", "Malachite", "Malachite").setChemicalFormula("Cu(OH)2·CuCO3").setRGBa(0x30CE88FF).setOreProperty(8, 8.8F, 9.0F);
@@ -143,33 +121,7 @@ public class M
 		
 		MC.axe_rock.addToWhiteList(quartz);
 		
-		oak			.setTree(new TreeOak());
-		spruce		.setTree(new TreeBirch());
-		birch		.setTree(new TreeBirch());
-		ceiba		.setTree(new TreeCeiba());
-		acacia		.setTree(new TreeAcacia());
-		oak_black	.setTree(new TreeOakBlack());
-		aspen		.setTree(new TreeAspen());
-		morus		.setTree(new TreeMorus());
-		willow		.setTree(new TreeWillow());
-		
-		wheat		.setCrop(new CropTemplate(wheat, 8, 800).setMultiplicationProp(6, 5, 2).setDNAHelper(DNAs.get('w'), DNAs.GRAIN_III, DNAs.GROWTH_II, DNAs.GRAIN_II, DNAs.get('w'), DNAs.GROWTH_IV));
-		millet		.setCrop(new CropMillet(millet));
-		soybean		.setCrop(new CropTemplate(soybean, 7, 1600).setMultiplicationProp(5, 5, 2).setDNAHelper(DNAs.get('p')));
-		potato		.setCrop(new CropTemplate(potato, 7, 1300).setDNAHelper());
-		sweet_potato.setCrop(new CropTemplate(sweet_potato, 6, 1500).setDNAHelper());
-		cabbage		.setCrop(new CropCabbage(cabbage));
-		reed		.setCrop(new CropTemplate(reed, 6, 1400));
-		flax		.setCrop(new CropTemplate(flax, 6, 1500));
-		cotton		.setCrop(new CropTemplate(cotton, 6, 1400));
-		
 		dandelion	.setPlant(new PlantDandelion());
-		
-		ramie_dry	.setUnificationMaterial(ramie);
-		
-		potato      .addProperty(MP.property_edible, new PropertyEdible(2.0F, 0.5F, 0.0F, new float[]{3.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F}));
-		sweet_potato.addProperty(MP.property_edible, new PropertyEdible(2.0F, 0.5F, 0.0F, new float[]{3.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F}));
-		reed        .addProperty(MP.property_edible, new PropertyEdible(0.0F, 2.0F, 3.0F, new float[]{0.0F, 0.0F, 3.0F, 0.0F, 0.0F, 0.0F}));
 	}
 	
 	public static void init()

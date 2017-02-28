@@ -2,19 +2,16 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.bio.DNAHandler;
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeAspen extends TreeBase
+public class TreeAspen extends Tree
 {
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.09F, false);
 	
 	public TreeAspen()
 	{
-		super("aspen");
-		this.helper = new DNAHandler[0];
 		this.generator1.setTreeLeavesShape(5, 8, 1, 1.8F);
 	}
 	

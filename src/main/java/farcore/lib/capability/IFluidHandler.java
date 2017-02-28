@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import nebula.common.util.A;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import net.minecraft.tileentity.TileEntity;
@@ -181,7 +182,7 @@ public interface IFluidHandler
 			SidedFluidIOProperty property = handler.getProperty(direction);
 			List<FluidStack> list = property.getStacks();
 			return properties = (list.isEmpty() ? new IFluidTankProperties[]{ new SidedFluidIOPropertyWrapper(property) } :
-				L.transform(L.cast(list, FluidStack.class), IFluidTankProperties.class,
+				A.transform(L.cast(list, FluidStack.class), IFluidTankProperties.class,
 						stack -> new SidedFluidIOPropertyWrapper(property, stack)));
 		}
 		

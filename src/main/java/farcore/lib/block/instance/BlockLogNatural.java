@@ -185,13 +185,6 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 	}
 	
 	@Override
-	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick,
-			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
-	{
-		return this.tree.onToolUseLog(player, tool, stack, world, useTick, pos, side, hitX, hitY, hitZ, false);
-	}
-	
-	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return true;

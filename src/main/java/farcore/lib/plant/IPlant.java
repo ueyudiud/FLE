@@ -22,7 +22,15 @@ import net.minecraftforge.common.IPlantable;
 public interface IPlant<B extends BlockPlant> extends
 IMetaExtHandler, IBlockBehavior<B>, IPlantable
 {
+	AxisAlignedBB BUSH_AABB = new AxisAlignedBB(0.3, 0.0, 0.3, 0.7, 0.7, 0.7);
+	
 	Mat material();
+	
+	@Override
+	default AxisAlignedBB getBoundingBox(B block, IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return BUSH_AABB;
+	}
 	
 	@Override
 	default AxisAlignedBB getCollisionBoundingBox(B block, IBlockState state, World world, BlockPos pos)
@@ -50,6 +58,12 @@ IMetaExtHandler, IBlockBehavior<B>, IPlantable
 	
 	@Override
 	default boolean canPlaceTorchOnTop(B block, IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return false;
+	}
+	
+	@Override
+	default boolean isSideSolid(B block, IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return false;
 	}

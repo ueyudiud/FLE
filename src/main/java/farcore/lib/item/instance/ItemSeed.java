@@ -80,7 +80,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		{
 			ICrop crop = material.getProperty(MP.property_crop);
 			assert(crop != null);
-			ItemStack stack = applySeed(1, material, crop.applyNativeDNA());
+			ItemStack stack = applySeed(1, material, crop.createNativeGeneticMaterial());
 			subItems.add(stack);
 		}
 	}
@@ -97,14 +97,6 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		if(playerIn.capabilities.isCreativeMode)
 		{
 			Localization.addFoodStatInformation(getMaterialFromItem(stack).getProperty(MP.property_edible), stack, unlocalizedList);
-			if(unlocalizedList.isSneakDown())
-			{
-				unlocalizedList.addLocal("DNA:" + geneticMaterial.getDNAString());
-			}
-			else
-			{
-				unlocalizedList.addShiftClickInfo();
-			}
 		}
 	}
 	
@@ -121,12 +113,6 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	{
 		return !stack.hasTagCompound() ? null :
 			GenticMaterialFactory.INSTANCE.readFromNBT(stack.getTagCompound(), "genetic");
-	}
-	
-	@Deprecated
-	public static int getGenerationFromStack(ItemStack stack)
-	{
-		return !stack.hasTagCompound() ? 0 : stack.getTagCompound().getShort("generation");
 	}
 	
 	@Override

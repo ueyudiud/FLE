@@ -14,6 +14,7 @@ import farcore.data.M;
 import farcore.lib.block.instance.BlockPlant;
 import farcore.lib.material.Mat;
 import farcore.lib.world.CalendarHandler;
+import farcore.lib.world.ICalendar;
 import farcore.lib.world.ICalendarWithMonth;
 import nebula.client.ClientProxy;
 import nebula.client.model.StateMapperExt;
@@ -104,11 +105,14 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 		IBlockState newState = state;
 		float temp = world.getBiome(pos).getFloatTemperature(pos);
 		float humidity = world.getBiome(pos).getRainfall();
-		if (temp <= 0.8F && temp >= -0.3F && humidity >= 0.2F && humidity <= 0.8F)
+		if (temp <= 0.8F && temp >= -0.3F && humidity >= 0.2F && humidity <= 0.8F &&
+				world.provider.isSurfaceWorld())
 		{
 			int age = state.getValue(AGE);
 			int progress = state.getValue(PROGRESS);
-			ICalendarWithMonth calendar = (ICalendarWithMonth) CalendarHandler.getCalendar(world);
+			ICalendar calendarRaw = CalendarHandler.getCalendar(world);
+			if (!(calendarRaw instanceof ICalendarWithMonth)) return;
+			ICalendarWithMonth calendar = (ICalendarWithMonth) calendarRaw;
 			long day = calendar.dayInYear(world);
 			if (age == 3)
 			{

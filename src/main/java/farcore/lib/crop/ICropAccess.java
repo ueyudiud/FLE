@@ -2,11 +2,24 @@ package farcore.lib.crop;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.IBiology;
+import farcore.lib.bio.IFamily;
 import nebula.common.world.ICoord;
 import net.minecraft.world.biome.Biome;
 
 public interface ICropAccess extends ICoord, IBiology
 {
+	@Override
+	default ICrop getSpecie()
+	{
+		return crop();
+	}
+	
+	@Override
+	default IFamily<ICropAccess> getFamily()
+	{
+		return crop().getFamily();
+	}
+	
 	ICrop crop();
 	
 	CropInfo info();

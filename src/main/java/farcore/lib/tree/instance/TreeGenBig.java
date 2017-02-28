@@ -2,7 +2,7 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.block.BlockSapling;
@@ -35,7 +35,7 @@ public class TreeGenBig extends TreeGenAbstract
 	/** Contains a list of a points at which to generate groups of leaves. */
 	int[][] leafNodes;
 	
-	public TreeGenBig(TreeBase tree, float generateCoreLeavesChance)
+	public TreeGenBig(Tree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}

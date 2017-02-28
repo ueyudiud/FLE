@@ -15,6 +15,7 @@ import fle.api.recipes.ShapelessFleRecipe;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
 import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
+import nebula.common.util.A;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
@@ -58,7 +59,7 @@ public class RecipeAdder
 		Function<E, ItemStack[]> result;
 		if (chances == null)
 		{
-			result = any-> L.transform(list, ItemStack.class, stack -> stack.copy());
+			result = any-> A.transform(list, ItemStack.class, stack -> stack.copy());
 		}
 		else if (list.length != chances.length) throw new IllegalArgumentException();
 		else

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Table;
 
 import nebula.common.base.Judgable;
@@ -138,26 +137,14 @@ public class L
 		return new ArrayList(Arrays.asList(list));
 	}
 	
-	public static <K, T> T[] transform(K[] array, Class<T> elementClass, Function<K, T> function)
-	{
-		T[] result = ObjectArrays.newArray(elementClass, array.length);
-		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
-		return result;
-	}
-	
-	public static <E> void executeAll(E[] iterable, Consumer<E> consumer)
-	{
-		for(E element : iterable) consumer.accept(element);
-	}
-	
 	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, Function<? super K, ? extends V> function)
 	{
-		for(K key : collection) { map.put(key, function.apply(key)); }
+		collection.forEach(k->map.put(k, function.apply(k)));
 	}
 	
 	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, V constant)
 	{
-		for(K key : collection) { map.put(key, constant); }
+		collection.forEach(k->map.put(k, constant));
 	}
 	
 	public static <K, V> void put(Map<K, List<V>> map, K key, V value)
@@ -172,9 +159,14 @@ public class L
 	
 	public static <K, V> void put(Map<K, List<V>> map, K key, V...values)
 	{
-		if(values.length == 0) return;
-		if(values.length == 1) put(map, key, values[0]);
-		else put(map, key, Arrays.<V>asList(values));
+		switch (values.length)
+		{
+		case 0 : return;
+		case 1 : put(map, key, values[0]);
+		break;
+		default: put(map, key, Arrays.<V>asList(values));
+		break;
+		}
 	}
 	
 	public static <K, V> void put(Map<K, List<V>> map, K key, Collection<? extends V> values)
@@ -221,7 +213,7 @@ public class L
 	
 	public static <K, V> Function<K, V> toFunction(Map<K, V> map)
 	{
-		return key -> map.get(key);
+		return map::get;
 	}
 	
 	public static <K, V> Function<K, V> toFunction(Map<K, V> map, V defaultValue)
@@ -232,17 +224,14 @@ public class L
 	public static <T> boolean contain(Collection<? extends T> collection, Judgable<T> checker)
 	{
 		if(collection == null || collection.isEmpty()) return false;
-		for(T target : collection)
-			if(checker.isTrue(target)) return true;
+		for(T target : collection) if(checker.isTrue(target)) return true;
 		return false;
 	}
 	
 	public static <T> T get(Collection<? extends T> collection, Judgable<T> judgable)
 	{
 		if (collection == null || collection.isEmpty()) return null;
-		for (T target : collection)
-			if (judgable.isTrue(target))
-				return target;
+		for (T target : collection) if (judgable.isTrue(target)) return target;
 		return null;
 	}
 	
@@ -250,11 +239,7 @@ public class L
 	{
 		if(collection == null || collection.isEmpty()) return ImmutableSet.of();
 		Builder<T> builder = ImmutableSet.builder();
-		for(T target : collection)
-			if(checker.isTrue(target))
-			{
-				builder.add(target);
-			}
+		collection.forEach(t-> { if (checker.isTrue(t)) builder.add(t); });
 		return builder.build();
 	}
 	
@@ -288,37 +273,6 @@ public class L
 			return (T) ((List) collection).get(random.nextInt(((List) collection).size()));
 		else
 			return (T) random(collection.toArray(), random);
-	}
-	
-	public static int[] fillIntArray(int length, int value)
-	{
-		switch(length)
-		{
-		case 0 : return new int[0];
-		case 1 : return new int[]{value};
-		default:
-			int[] ret = new int[length];
-			Arrays.fill(ret, value);
-			return ret;
-		}
-	}
-	
-	/**
-	 * Create a array with ranged number.<p>
-	 * Examples :
-	 * <code>
-	 * Arrays.toString(rangeIntArray(1, 3));
-	 * </code>
-	 * and the result is {@code [1, 2]}
-	 * @param from
-	 * @param to
-	 * @return
-	 */
-	public static int[] rangeIntArray(int from, int to)
-	{
-		int[] array = new int[to - from];
-		for(int i = 0; i < array.length; array[i] = from + i, i++);
-		return array;
 	}
 	
 	public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
@@ -377,6 +331,16 @@ public class L
 			target < (v = Math.min(m1, m2)) ? v : target;
 	}
 	
+	public static void consume(int len, IntConsumer consumer)
+	{
+		for (int i = 0; i < len; consumer.accept(i++));
+	}
+	
+	public static void consume(int start, int end, IntConsumer consumer)
+	{
+		for (int i = start; i < end; consumer.accept(i++));
+	}
+	
 	public static boolean inRange(double max, double min, double target)
 	{
 		return target <= max && target >= min;
@@ -410,60 +374,10 @@ public class L
 		return col instanceof ArrayList ? (ArrayList<E>) col : new ArrayList(col);
 	}
 	
-	public static <E> boolean or(E[] list, Judgable<E> checker)
-	{
-		for(E element : list) if (checker.isTrue(element)) return true;
-		return false;
-	}
-	
-	public static <E> boolean and(E[] list, Judgable<E> checker)
-	{
-		for(E element : list) if (!checker.isTrue(element)) return false;
-		return true;
-	}
-	
-	public static <E> boolean contain(E[] list, E arg)
-	{
-		for(E element : list) if(equal(element, arg)) return true;
-		return false;
-	}
-	
-	public static <E> int indexOf(E[] list, E arg)
-	{
-		for(int i = 0; i < list.length; ++i) if(equal(list[i], arg)) return i;
-		return -1;
-	}
-	
-	public static boolean contain(char[] list, char arg)
-	{
-		for(char element : list) if(element == arg) return true;
-		return false;
-	}
-	
-	public static boolean contain(int[] list, int arg)
-	{
-		for(int element : list) if(element == arg) return true;
-		return false;
-	}
-	
 	public static int indexOf(int[] list, int arg)
 	{
 		for(int i = 0; i < list.length; ++i) if(list[i] == arg) return i;
 		return -1;
-	}
-	
-	public static int[] copyToLength(int[] array, int len)
-	{
-		int[] result = new int[len];
-		System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
-		return result;
-	}
-	
-	public static <T> T[] copyToLength(T[] array, int len)
-	{
-		T[] result = (T[]) Array.newInstance(array.getClass().getComponentType(), len);
-		System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
-		return result;
 	}
 	
 	public static <S, K, T> Function<S, T> withCast(Function<K, T> function, Class<K> clazz)

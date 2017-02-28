@@ -1,0 +1,17 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "fle:crop/cross"
+	},
+	"variants": {
+		"state": {
+			"1": { "textures": { "crop": "fle:blocks/crop/cotton/1" } },
+			"2": { "textures": { "crop": "fle:blocks/crop/cotton/2" } },
+			"3": { "textures": { "crop": "fle:blocks/crop/cotton/3" } },
+			"4": { "textures": { "crop": "fle:blocks/crop/cotton/4" } },
+			"5": { "textures": { "crop": "fle:blocks/crop/cotton/5" } },
+			"6": { "textures": { "crop": "fle:blocks/crop/cotton/6" } }
+		}
+	}
+}

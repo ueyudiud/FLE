@@ -4,12 +4,12 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-import farcore.FarCore;
 import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.Mat;
+import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -27,10 +27,10 @@ public class StateMapperCrop implements IStateMapper
 		ImmutableMap.Builder<IBlockState, ModelResourceLocation> builder = ImmutableMap.builder();
 		for(Mat material : Mat.filt(SubTags.CROP))
 		{
-			for(String tag : material.getProperty(MP.property_crop, ICrop.VOID).getAllowedState())
-			{
-				builder.put(state.withProperty(BlockCrop.PROP_CROP_TYPE, tag), new ModelResourceLocation(FarCore.ID + ":crop/" + material.name, "state=" + tag));
-			}
+			ICrop crop = material.getProperty(MP.property_crop);
+			L.consume(1, 1 + crop.getMaxStage(),
+					idx->builder.put(state.withProperty(BlockCrop.PROP_CROP_TYPE, material.name + "_" + idx),
+							new ModelResourceLocation(material.modid + ":crop/" + material.name, "state=" + idx)));
 		}
 		return builder.build();
 	}

@@ -1,6 +1,8 @@
 package fle.core;
 
+import farcore.FarCoreRegistry;
 import fle.core.common.CommonLoader;
+import fle.loader.MaterialRegister;
 import nebula.common.util.ModCompator;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +31,7 @@ public class FLE
 	
 	public FLE()
 	{
+		FarCoreRegistry.addMaterialRegister(MaterialRegister.INSTANCE);
 	}
 	
 	@EventHandler

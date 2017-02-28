@@ -1,21 +1,7 @@
 package farcore.lib.block.instance;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 import farcore.FarCore;
 import farcore.data.EnumBlock;
@@ -27,22 +13,15 @@ import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.statemap.StateMapperCrop;
 import farcore.lib.tile.instance.TECrop;
-import nebula.Log;
 import nebula.client.util.Client;
 import nebula.common.block.BlockSingleTE;
 import nebula.common.block.property.PropertyString;
+import nebula.common.util.L;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -54,75 +33,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockCrop extends BlockSingleTE implements IPlantable
 {
-	@SideOnly(Side.CLIENT)
-	public static enum CropSelectBoxHeightHandler implements IResourceManagerReloadListener
-	{
-		INSTANCE;
-		
-		private static final Gson GSON = new GsonBuilder()
-				.registerTypeAdapter(CropSelectBoxHeightHandler.class, (JsonDeserializer<CropSelectBoxHeightHandler>)
-						(json, typeOfT, context) -> INSTANCE.decode(json, context)).create();
-		private static final AxisAlignedBB selectBoundBoxCache = new AxisAlignedBB(.0625F, .0F, .0625F, .9375F, 1F, .9375F);
-		
-		private Mat loadingMaterial;
-		private Map<String, Float> bounds;
-		
-		private CropSelectBoxHeightHandler decode(JsonElement json, JsonDeserializationContext context)
-		{
-			if(this.loadingMaterial == null) throw new RuntimeException("No material is loading!");
-			if(!json.isJsonObject()) throw new JsonParseException("Should be an object");
-			JsonObject object = json.getAsJsonObject();
-			if(object.has("height"))
-			{
-				JsonObject object2 = object.getAsJsonObject("height");
-				for(Entry<String, JsonElement> entry : object2.entrySet())
-				{
-					if(this.bounds.containsKey(entry.getKey()))
-						throw new RuntimeException("The same state has registered twice!");
-					this.bounds.put(entry.getKey(), entry.getValue().getAsFloat() / 16F);//Use 16 pixel per block.
-				}
-			}
-			return this;
-		}
-		
-		@Override
-		public void onResourceManagerReload(IResourceManager resourceManager)
-		{
-			this.bounds = new HashMap();
-			Log.reset();
-			ResourceLocation location;
-			for(Mat material : Mat.filt(SubTags.CROP))
-			{
-				this.loadingMaterial = material;
-				location = new ResourceLocation(material.modid, "blockstates/crop/" + material.name + ".json");
-				try
-				{
-					IResource resource = resourceManager.getResource(location);
-					GSON.fromJson(new InputStreamReader(resource.getInputStream()), CropSelectBoxHeightHandler.class);
-					resource.close();
-				}
-				catch (IOException | JsonParseException exception)
-				{
-					Log.cache(location);
-				}
-				catch (RuntimeException exception)
-				{
-					Log.error("Fail to load %s.", exception, location.toString());
-				}
-			}
-			this.loadingMaterial = null;
-			Log.logCachedInformations(object -> ((ResourceLocation) object).toString(), "The crop path is mssing a height mapping.");
-			this.bounds = ImmutableMap.copyOf(this.bounds);
-		}
-		
-		public AxisAlignedBB getSelectBoundBox(String state, AxisAlignedBB def)
-		{
-			Float val = this.bounds.get(state);
-			if(val == null) return def;
-			return selectBoundBoxCache.setMaxY(val);
-		}
-	}
-	
 	public static final ThreadLocal<ICrop> CROP_THREAD = new ThreadLocal();
 	public static final ThreadLocal<ItemStack> ITEM_THREAD = new ThreadLocal();
 	public static final PropertyString PROP_CROP_TYPE;
@@ -132,7 +42,8 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		List<String> list = new ArrayList();
 		for(Mat material : Mat.filt(SubTags.CROP))
 		{
-			list.addAll(material.getProperty(MP.property_crop).getAllowedState());
+			ICrop crop = material.getProperty(MP.property_crop);
+			L.consume(1, 1 + crop.getMaxStage(), idx->list.add(material.name + "_" + idx));
 		}
 		list.add("void");//Empty crop mark.
 		PROP_CROP_TYPE = new PropertyString("crop", list);
@@ -169,10 +80,9 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 	public void registerRender()
 	{
 		super.registerRender();
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(CropSelectBoxHeightHandler.INSTANCE);
 		ModelLoader.setCustomStateMapper(this, new StateMapperCrop());
-		ModelLoader.registerItemVariants(this.item, new ResourceLocation[0]);
-		ModelLoader.setCustomMeshDefinition(this.item, (ItemStack stack) -> Client.MODEL_MISSING);
+		ModelLoader.registerItemVariants(this.item);
+		ModelLoader.setCustomMeshDefinition(this.item, stack -> Client.MODEL_MISSING);
 	}
 	
 	@Override
@@ -194,8 +104,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 				TECrop crop;
 				worldIn.setTileEntity(pos, crop = new TECrop(
 						ItemSeed.getMaterial(stack).getProperty(MP.property_crop),
-						ItemSeed.getDNAFromStack(stack),
-						ItemSeed.getGenerationFromStack(stack)));
+						ItemSeed.getDNAFromStack(stack)));
 				crop.syncToNearby();
 			}
 		}
@@ -210,8 +119,7 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 			if(stack.getItem() instanceof ItemSeed)
 				return new TECrop(
 						ItemSeed.getMaterial(stack).getProperty(MP.property_crop),
-						ItemSeed.getDNAFromStack(stack),
-						ItemSeed.getGenerationFromStack(stack));
+						ItemSeed.getDNAFromStack(stack));
 		}
 		return new TECrop();
 	}

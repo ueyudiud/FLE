@@ -2,13 +2,14 @@ package farcore.lib.tree;
 
 import java.util.Random;
 
+import farcore.lib.material.Mat;
 import net.minecraft.world.World;
 
-public class TreeVoid extends TreeBase
+public class TreeVoid extends Tree
 {
 	public TreeVoid()
 	{
-		super("void");
+		this.material = Mat.VOID;
 	}
 	
 	@Override

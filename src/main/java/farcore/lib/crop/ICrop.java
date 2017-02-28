@@ -1,7 +1,6 @@
 package farcore.lib.crop;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import farcore.lib.bio.GeneticMaterial;
@@ -15,12 +14,10 @@ public interface ICrop extends IRegisteredNameable, ISpecie<ICropAccess>
 {
 	ICrop VOID = new CropVoid();
 	
-	default String getLocalName(GeneticMaterial dna)
+	default String getLocalName(GeneticMaterial gm)
 	{
-		return LanguageManager.translateToLocal("crop." + getTranslatedName(dna) + ".name");
+		return LanguageManager.translateToLocal("crop." + getRegisteredName() + ".name");
 	}
-	
-	String getTranslatedName(GeneticMaterial dna);
 	
 	int getMaxStage();
 	
@@ -40,9 +37,4 @@ public interface ICrop extends IRegisteredNameable, ISpecie<ICropAccess>
 	{
 		return EnumPlantType.Crop;
 	}
-	
-	Collection<String> getAllowedState();
-	
-	String getState(ICropAccess access);
-	
 }

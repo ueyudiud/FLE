@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
-import nebula.common.util.L;
+import nebula.common.util.A;
 
 /**
  * The mapped register, use index->real id to sort list.<p>
@@ -43,7 +43,7 @@ public class MappedRegister<T> implements IRegister<T>
 	
 	int nextFreeID()
 	{
-		while (L.contain(this.pointToID, this.idFree++));
+		while (A.contain(this.pointToID, this.idFree++));
 		return this.idFree;
 	}
 	
@@ -54,9 +54,9 @@ public class MappedRegister<T> implements IRegister<T>
 			if(this.pointToID.length <= this.point)
 			{
 				int len = this.point + (this.point >> 1);
-				this.pointToID = L.copyToLength(this.pointToID, len);
-				this.pointToNames = L.copyToLength(this.pointToNames, len);
-				this.pointToTargets = L.copyToLength(this.pointToTargets, len);
+				this.pointToID = A.copyToLength(this.pointToID, len);
+				this.pointToNames = A.copyToLength(this.pointToNames, len);
+				this.pointToTargets = A.copyToLength(this.pointToTargets, len);
 			}
 		}
 		while (this.pointToID[this.point ++] != null);
@@ -92,60 +92,60 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public boolean contain(int id)
 	{
-		return indexOf(this.pointToID, id) != -1;
+		return A.indexOf(this.pointToID, id) != -1;
 	}
 	
 	@Override
 	public boolean contain(String name)
 	{
-		return indexOf(this.pointToNames, name) != -1;
+		return A.indexOf(this.pointToNames, name) != -1;
 	}
 	
 	@Override
 	public boolean contain(T arg)
 	{
-		return indexOf(this.pointToTargets, arg) != -1;
+		return A.indexOf(this.pointToTargets, arg) != -1;
 	}
 	
 	@Override
 	public int id(T arg)
 	{
-		int id = indexOf(this.pointToTargets, arg);
+		int id = A.indexOf(this.pointToTargets, arg);
 		return id == -1 ? -1 : this.pointToID[id];
 	}
 	
 	@Override
 	public int id(String name)
 	{
-		int id = indexOf(this.pointToNames, name);
+		int id = A.indexOf(this.pointToNames, name);
 		return id == -1 ? -1 : this.pointToID[id];
 	}
 	
 	@Override
 	public String name(T arg)
 	{
-		int id = indexOf(this.pointToTargets, arg);
+		int id = A.indexOf(this.pointToTargets, arg);
 		return id == -1 ? null : this.pointToNames[id];
 	}
 	
 	@Override
 	public String name(int id0)
 	{
-		int id = indexOf(this.pointToID, id0);
+		int id = A.indexOf(this.pointToID, id0);
 		return id == -1 ? null : this.pointToNames[id];
 	}
 	
 	@Override
 	public T get(String name)
 	{
-		int id = indexOf(this.pointToNames, name);
+		int id = A.indexOf(this.pointToNames, name);
 		return (T) (id == -1 ? null : this.pointToTargets[id]);
 	}
 	
 	@Override
 	public T get(int id0)
 	{
-		int id = indexOf(this.pointToID, id0);
+		int id = A.indexOf(this.pointToID, id0);
 		return (T) (id == -1 ? null : this.pointToTargets[id]);
 	}
 	
@@ -181,7 +181,7 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public T remove(String name)
 	{
-		int id = indexOf(this.pointToNames, name);
+		int id = A.indexOf(this.pointToNames, name);
 		if(id == -1) return null;
 		Object obj = this.pointToTargets[id];
 		remove(id);
@@ -191,7 +191,7 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public String remove(T arg)
 	{
-		int id = indexOf(this.pointToTargets, arg);
+		int id = A.indexOf(this.pointToTargets, arg);
 		if(id == -1) return null;
 		String name = this.pointToNames[id];
 		remove(id);

@@ -7,8 +7,8 @@ package fle.api.tile.kinetic;
 import javax.annotation.Nullable;
 
 import farcore.energy.kinetic.IKineticHandler;
+import nebula.common.util.A;
 import nebula.common.util.Direction;
-import nebula.common.util.L;
 import net.minecraft.util.EnumFacing.Axis;
 
 /**
@@ -19,7 +19,7 @@ public interface IAxisHandler extends IKineticHandler
 	@Override
 	default boolean canAccessKineticEnergyFromDirection(Direction direction)
 	{
-		return L.or(getAxisHandlerAxis(), axis -> direction.axis == axis);
+		return A.or(getAxisHandlerAxis(), axis -> direction.axis == axis);
 	}
 	
 	@Nullable Axis[] getAxisHandlerAxis();

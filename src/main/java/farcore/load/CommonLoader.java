@@ -57,7 +57,6 @@ import farcore.lib.item.instance.ItemOreChip;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.item.instance.ItemStoneFragment;
-import farcore.lib.item.instance.ItemSubCropRelated;
 import farcore.lib.item.instance.ItemTreeLog;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TECoreLeaves;
@@ -141,7 +140,6 @@ public class CommonLoader
 		{
 			new ItemSeed().setCreativeTab(CT.tabCropAndWildPlants);
 			new BlockCrop();
-			new ItemSubCropRelated().setCreativeTab(CT.tabCropAndWildPlants);
 		}
 		if(Config.createLog)
 		{

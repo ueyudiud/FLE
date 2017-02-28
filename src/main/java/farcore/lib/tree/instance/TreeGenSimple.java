@@ -2,7 +2,7 @@ package farcore.lib.tree.instance;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeBase;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
@@ -29,16 +29,16 @@ public class TreeGenSimple extends TreeGenAbstract
 	private float leavesWidth;
 	private short checkRange;
 	
-	public TreeGenSimple(TreeBase tree, float generateCoreLeavesChance, boolean leavesConnect)
+	public TreeGenSimple(Tree tree, float generateCoreLeavesChance, boolean leavesConnect)
 	{
 		super(tree, generateCoreLeavesChance);
 		this.leavesConnect = leavesConnect;
 	}
-
+	
 	public TreeGenSimple setTreeLogShape(int minHeiht, int randHeight)
 	{
-		minTreeHeight = (short) minHeiht;
-		randTreeHeight = (short) randHeight;
+		this.minTreeHeight = (short) minHeiht;
+		this.randTreeHeight = (short) randHeight;
 		return this;
 	}
 	public TreeGenSimple setTreeLeavesShape(int minLeavesHeight,
@@ -48,24 +48,24 @@ public class TreeGenSimple extends TreeGenAbstract
 		this.maxLeavesHeight = (short) maxLeavesHeight;
 		this.logCheckWidth = (short) logCheckWidth;
 		this.leavesWidth = leavesWidth;
-		checkRange = (short) (leavesWidth + 0.5);
+		this.checkRange = (short) (leavesWidth + 0.5);
 		return this;
 	}
-
+	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		int r = randTreeHeight == 0 ? 0 : random.nextInt(randTreeHeight);
-		int l = minTreeHeight + r;
+		int r = this.randTreeHeight == 0 ? 0 : random.nextInt(this.randTreeHeight);
+		int l = this.minTreeHeight + r;
 		boolean flag = true;
-
+		
 		if (y >= 1 && y + l + 1 <= 256)
 		{
-			byte b0 = (byte) checkRange;
+			byte b0 = (byte) this.checkRange;
 			int k1;
 			Block block;
 			
-			if (!checkLogGrow(world, x, y, z, logCheckWidth, l + 1, logCheckWidth, false))
+			if (!checkLogGrow(world, x, y, z, this.logCheckWidth, l + 1, this.logCheckWidth, false))
 				return false;
 			else
 			{
@@ -81,12 +81,12 @@ public class TreeGenSimple extends TreeGenAbstract
 					int k;
 					int ch;
 					float dis;
-					int km = Math.max(l + 1, maxLeavesHeight + r);
+					int km = Math.max(l + 1, this.maxLeavesHeight + r);
 					boolean[][] cache = new boolean[b0 * 2 + 1][b0 * 2 + 1];
 					for(k = 0; k < l; ++k)
 					{
 						generateLog(world, x, y + k, z, 1);
-						if(k >= minLeavesHeight)
+						if(k >= this.minLeavesHeight)
 						{
 							cache[b0][b0] = true;
 							for(int i1 = -b0; i1 <= b0; ++i1)
@@ -98,16 +98,16 @@ public class TreeGenSimple extends TreeGenAbstract
 										continue;
 									}
 									dis = (float) Math.sqrt(i1 * i1 + j1 * j1) + (random.nextFloat() - random.nextFloat()) * 0.2F;
-									if(dis > leavesWidth)
+									if(dis > this.leavesWidth)
 									{
 										continue;
 									}
 									if(!cache[i1 + b0][j1 + b0] &&
-											((leavesConnect && k - minLeavesHeight >= 2) ||
-													dis < leavesWidth / 1.3F ||
-													L.nextInt((int) ((3 + minLeavesHeight - k) * dis / 4F), random) == 0))
+											((this.leavesConnect && k - this.minLeavesHeight >= 2) ||
+													dis < this.leavesWidth / 1.3F ||
+													L.nextInt((int) ((3 + this.minLeavesHeight - k) * dis / 4F), random) == 0))
 									{
-										if(leavesConnect)
+										if(this.leavesConnect)
 										{
 											if(i1 < b0 && cache[i1 + b0 + 1][j1 + b0])
 											{
@@ -172,13 +172,13 @@ public class TreeGenSimple extends TreeGenAbstract
 								for(int j1 = -b0; j1 <= b0; ++j1)
 								{
 									dis = (float) Math.sqrt(i1 * i1 + j1 * j1);
-									if(dis > checkRange)
+									if(dis > this.checkRange)
 									{
 										continue;
 									}
-									if((i1 | j1) != 0 && cache[i1 + b0][j1 + b0] && !(maxLeavesHeight - k >= 1 ||
-											(ch = (int) dis) < checkRange / 2 ||
-											((ch += k - maxLeavesHeight) < 0 ||
+									if((i1 | j1) != 0 && cache[i1 + b0][j1 + b0] && !(this.maxLeavesHeight - k >= 1 ||
+											(ch = (int) dis) < this.checkRange / 2 ||
+											((ch += k - this.maxLeavesHeight) < 0 ||
 													ch < 5 && random.nextInt(ch) == 0)))
 									{
 										int c = 4;
@@ -198,7 +198,7 @@ public class TreeGenSimple extends TreeGenAbstract
 										{
 											--c;
 										}
-										if(leavesConnect ? c > 2 : (c > 2 || (c == 2 && random.nextBoolean())))
+										if(this.leavesConnect ? c > 2 : (c > 2 || (c == 2 && random.nextBoolean())))
 										{
 											cache[i1 + b0][j1 + b0] = false;
 										}

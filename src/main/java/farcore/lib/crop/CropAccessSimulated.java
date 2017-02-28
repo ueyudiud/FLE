@@ -4,6 +4,7 @@ import java.util.Random;
 
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.bio.GeneticMaterial;
+import farcore.lib.bio.IFamily;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -53,6 +54,12 @@ public class CropAccessSimulated implements ICropAccess
 	public GeneticMaterial getGeneticMaterial()
 	{
 		return this.dna;
+	}
+	
+	@Override
+	public IFamily<ICropAccess> getFamily()
+	{
+		return this.crop.getFamily();
 	}
 	
 	@Override
