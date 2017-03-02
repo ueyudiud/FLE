@@ -18,15 +18,18 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import farcore.data.EnumBlock;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
+import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import nebula.common.util.A;
 import nebula.common.util.Direction;
+import nebula.common.util.L;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.EnumPlantType;
@@ -71,6 +74,7 @@ public class Crop implements ICrop, IPlantable
 	{
 		if ((gm.coders.length & 0x1) != 0) return null;
 		Random random = biology.rng();
+		int chance = MathHelper.ceil(gm.generation * gm.generation * Math.exp(- (float) gm.generation / 10.0F));
 		long[] coders = A.createLongArray(gm.coders.length >> 1, idx-> {
 			long a = gm.coders[idx << 1];
 			long b = gm.coders[idx << 1 | 1];
@@ -83,13 +87,18 @@ public class Crop implements ICrop, IPlantable
 					result |= x;
 				}
 			}
-			if (random.nextInt(10000) < 10)
+			if (random.nextInt(10000) < chance)
 			{
 				result ^= (1L << random.nextInt(64));
 			}
 			return result;
 		});
-		int[] datas = gm.nativeValues.clone();
+		int off = MathHelper.ceil(gm.generation * gm.generation * Math.exp(- (float) gm.generation / 5.0F));
+		int[] datas = A.createIntArray(gm.nativeValues.length, i-> {
+			int val = gm.nativeValues[i];
+			val += random.nextInt(off) - random.nextInt(off);
+			return L.range(0, 256, val);
+		});
 		return new GeneticMaterial(this.family.getRegisteredName(), gm.generation + 1, coders, datas);
 	}
 	
@@ -279,5 +288,11 @@ public class Crop implements ICrop, IPlantable
 	public IBlockState getPlant(IBlockAccess world, BlockPos pos)
 	{
 		return EnumBlock.crop.block.getDefaultState();
+	}
+	
+	public ItemStack applyChildSeed(int size, CropInfo info)
+	{
+		ICrop crop = this.family.getSpecieFromGM(info.geneticMaterial);
+		return ItemSeed.applySeed(size, ((Crop) crop).material, info.gamete == null ? info.geneticMaterial : info.gamete);
 	}
 }

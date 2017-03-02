@@ -25,6 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class Game
 {
+	/**
+	 * Get active modid, or get minecraft as modid if no active mod container found.
+	 * @return
+	 */
 	public static String getActiveModID()
 	{
 		try
@@ -39,26 +43,56 @@ public class Game
 		}
 	}
 	
+	/**
+	 * Query if we know of a mod named modname.
+	 * @param name
+	 * @return
+	 */
 	public static boolean isModLoaded(String name)
 	{
 		return Loader.isModLoaded(name);
 	}
 	
+	/**
+	 * Get Minecraft runtime file direction, the default file position is
+	 * ./.minecraft/ in client side, and ./ in server side.
+	 * @return
+	 */
 	public static File getMCFile()
 	{
 		return Nebula.proxy.fileDir();
 	}
 	
+	/**
+	 * Register block.
+	 * @param block
+	 * @param name
+	 */
 	public static void registerBlock(Block block, String name)
 	{
 		registerBlock(block, getActiveModID(), name);
 	}
 	
+	/**
+	 * Register block with modid.
+	 * (The Forge given big warning if the modid and active mod id can not matched,
+	 * I don't think this warning should be given.)
+	 * @param block
+	 * @param modid
+	 * @param name
+	 */
 	public static void registerBlock(Block block, String modid, String name)
 	{
 		registerBlock(block, modid, name, new ItemBlock(block));
 	}
 	
+	/**
+	 * Register block with modid and ItemBlock type.
+	 * @param block
+	 * @param modid
+	 * @param name
+	 * @param itemBlock
+	 */
 	public static void registerBlock(Block block, String modid, String name, Item itemBlock)
 	{
 		GameRegistry.register(block.setRegistryName(modid, name));
@@ -77,12 +111,26 @@ public class Game
 		Nebula.proxy.registerRender(item);
 	}
 	
+	/**
+	 * Register normal block model.
+	 * @param block
+	 * @param meta
+	 * @param modid
+	 * @param locate
+	 */
 	@SideOnly(Side.CLIENT)
 	public static void registerItemBlockModel(Block block, int meta, String modid, String locate)
 	{
 		registerItemBlockModel(Item.getItemFromBlock(block), meta, modid, locate);
 	}
 	
+	/**
+	 * Register normal block model.
+	 * @param item The item block.
+	 * @param meta
+	 * @param modid
+	 * @param locate
+	 */
 	@SideOnly(Side.CLIENT)
 	public static void registerItemBlockModel(Item item, int meta, String modid, String locate)
 	{
@@ -113,6 +161,10 @@ public class Game
 		Nebula.proxy.registerBiomeColorMultiplier(block);
 	}
 	
+	/**
+	 * Register fluid block.
+	 * @param block
+	 */
 	@SideOnly(Side.CLIENT)
 	public static void registerFluid(BlockFluidBase block)
 	{

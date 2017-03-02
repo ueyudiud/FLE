@@ -8,11 +8,11 @@ import java.util.function.Function;
 
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.nbt.INBTReaderAndWritter;
-import nebula.common.nbt.NBTTagCompoundEmpty;
+import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 
@@ -49,7 +49,15 @@ public class NBTLSs
 		
 		public Class<Integer> getTargetType() { return int.class; }
 	};
+	public static final INBTReaderAndWritter<Float, NBTTagFloat> RW_FLOAT = new INBTReaderAndWritter<Float, NBTTagFloat>()
+	{
+		public NBTTagFloat writeToNBT(Float target) { return new NBTTagFloat(target); }
+		
+		public Float readFromNBT(NBTTagFloat nbt) { return nbt.getFloat(); }
+		
+		public Class<Float> getTargetType() { return float.class; }
+	};
 	
-	public static final Function<ItemStack, NBTBase> ITEMSTACK_WRITER = stack -> stack == null ? NBTTagCompoundEmpty.INSTANCE : stack.writeToNBT(new NBTTagCompound());
-	public static final Function<NBTBase, ItemStack> ITEMSTACK_READER = nbt -> ItemStack.loadItemStackFromNBT((NBTTagCompound) nbt);
+	public static final Function<ItemStack, NBTTagCompound> ITEMSTACK_WRITER = ItemStacks::writeItemStackToNBT;
+	public static final Function<NBTTagCompound, ItemStack> ITEMSTACK_READER = ItemStack::loadItemStackFromNBT;
 }

@@ -13,6 +13,8 @@ import java.util.function.IntToLongFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongPredicate;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ObjectArrays;
 
 import nebula.common.base.Judgable;
@@ -22,6 +24,12 @@ import nebula.common.base.Judgable;
  */
 public class A
 {
+	/**
+	 * Copy array elements to a new array with selected length.
+	 * @param array The source array.
+	 * @param len The length of new array, use old array length if the select length is smaller than old array length.
+	 * @return The copied array.
+	 */
 	public static int[] copyToLength(int[] array, int len)
 	{
 		int[] result = new int[len];
@@ -29,6 +37,13 @@ public class A
 		return result;
 	}
 	
+	/**
+	 * Copy array elements to a new array with selected length.
+	 * The result array type is same to old array type.
+	 * @param array
+	 * @param len
+	 * @return
+	 */
 	public static <T> T[] copyToLength(T[] array, int len)
 	{
 		T[] result = (T[]) Array.newInstance(array.getClass().getComponentType(), len);
@@ -36,12 +51,25 @@ public class A
 		return result;
 	}
 	
+	/**
+	 * Given action to every element in array.
+	 * @see java.util.Collection#forEach(Consumer)
+	 * @param iterable
+	 * @param consumer
+	 */
 	public static <E> void executeAll(E[] iterable, Consumer<E> consumer)
 	{
 		for(E element : iterable) consumer.accept(element);
 	}
 	
-	public static <E> boolean contain(E[] list, E arg)
+	/**
+	 * Match same element in array, use {@code L.equal(element, arg)} to
+	 * match objects.
+	 * @param list The given array.
+	 * @param arg The matched argument.
+	 * @return
+	 */
+	public static <E> boolean contain(E[] list, @Nullable E arg)
 	{
 		for(E element : list) if(L.equal(element, arg)) return true;
 		return false;
@@ -59,6 +87,12 @@ public class A
 		return false;
 	}
 	
+	/**
+	 * Match is target
+	 * @param list
+	 * @param checker
+	 * @return
+	 */
 	public static <E> boolean and(E[] list, Judgable<E> checker)
 	{
 		for(E element : list) if (!checker.isTrue(element)) return false;
@@ -95,6 +129,12 @@ public class A
 		return false;
 	}
 	
+	/**
+	 * Create new integer array with same elements.
+	 * @param length
+	 * @param value
+	 * @return
+	 */
 	public static int[] fillIntArray(int length, int value)
 	{
 		switch(length)
@@ -108,13 +148,26 @@ public class A
 		}
 	}
 	
+	/**
+	 * Get first matched element index in list.
+	 * @param list
+	 * @param arg The matching target.
+	 * @return The index of element, -1 means no element matched.
+	 */
 	public static <E> int indexOf(E[] list, E arg)
 	{
 		for(int i = 0; i < list.length; ++i) if(L.equal(list[i], arg)) return i;
 		return -1;
 	}
 	
-	public static <K, T> T[] transform(K[] array, Class<T> elementClass, Function<K, T> function)
+	/**
+	 * Transform key array to target array.
+	 * @param array
+	 * @param elementClass
+	 * @param function Transform function.
+	 * @return
+	 */
+	public static <K, T> T[] transform(K[] array, Class<T> elementClass, Function<? super K, ? extends T> function)
 	{
 		T[] result = ObjectArrays.newArray(elementClass, array.length);
 		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
@@ -139,6 +192,17 @@ public class A
 		return array;
 	}
 	
+	/**
+	 * Create a array with selected generator.<p>
+	 * Examples :
+	 * <code>
+	 * Arrays.toString(createIntArray(3, i->i*i));
+	 * </code>
+	 * and the result is {@code [0, 1, 4]}
+	 * @param from
+	 * @param to
+	 * @return
+	 */
 	public static int[] createIntArray(int length, IntUnaryOperator function)
 	{
 		int[] result = new int[length];

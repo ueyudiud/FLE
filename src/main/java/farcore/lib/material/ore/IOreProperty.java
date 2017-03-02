@@ -5,7 +5,6 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import farcore.lib.tile.instance.TEOre;
-import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
@@ -26,27 +25,20 @@ public interface IOreProperty
 	IOreProperty PROPERTY = new OrePropStandard();
 	
 	void updateTick(TEOre ore, Random rand);
-
+	
 	boolean onBlockClicked(TEOre ore, EntityPlayer playerIn, Direction side);
 	
 	void onEntityWalk(TEOre ore, Entity entityIn);
-
+	
 	EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, Direction side, float hitX, float hitY, float hitZ);
 	
 	boolean onBurn(TEOre ore, float burnHardness, Direction direction);
 	
 	boolean onBurningTick(TEOre ore, Random rand, Direction fireSourceDir, IBlockState fireState);
-
+	
 	ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
 			Direction side, float hitX, float hitY, float hitZ);
-
-	@Deprecated
-	default ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore,
-			Direction side, float hitX, float hitY, float hitZ, long tick)
-	{
-		return IToolableTile.DEFAULT_RESULT;
-	}
-
+	
 	@SideOnly(Side.CLIENT)
 	void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, TEOre ore, Random rand);
 }

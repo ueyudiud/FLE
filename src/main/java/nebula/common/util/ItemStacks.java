@@ -7,7 +7,9 @@ package nebula.common.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
@@ -39,6 +41,14 @@ import net.minecraftforge.oredict.OreDictionary;
  */
 public class ItemStacks
 {
+	public static final Function<ItemStack, ItemStack> COPY_ITEMSTACK = ItemStack::copyItemStack;
+	
+	@Nullable
+	public static NBTTagCompound writeItemStackToNBT(@Nullable ItemStack stack)
+	{
+		return stack == null ? null : stack.writeToNBT(new NBTTagCompound());
+	}
+	
 	/**
 	 * Some item may override item meta get method,
 	 * this method will give a stack with item select
@@ -54,7 +64,13 @@ public class ItemStacks
 		return stack;
 	}
 	
-	public static ItemStack valid(ItemStack stack)
+	/**
+	 * Validate item stack, the stack size is negative will returned as null.
+	 * @param stack
+	 * @return
+	 */
+	@Nullable
+	public static ItemStack valid(@Nullable ItemStack stack)
 	{
 		if(stack == null || stack.stackSize <= 0)
 			return null;
@@ -66,6 +82,13 @@ public class ItemStacks
 		return stack;
 	}
 	
+	/**
+	 * Get item stack NBT or create a new stack NBT.
+	 * @param stack The stack.
+	 * @param createTag Should create a new NBT for stack, or only give a simulated NBT as empty NBT.
+	 * @return
+	 */
+	@Nonnull
 	public static NBTTagCompound getOrSetupNBT(ItemStack stack, boolean createTag)
 	{
 		if(!stack.hasTagCompound())
@@ -80,6 +103,13 @@ public class ItemStacks
 		return stack.getTagCompound();
 	}
 	
+	/**
+	 * Get sub NBT compound.
+	 * @param stack
+	 * @param tag
+	 * @param createTag
+	 * @return
+	 */
 	public static NBTTagCompound getSubOrSetupNBT(ItemStack stack, String tag, boolean createTag)
 	{
 		NBTTagCompound nbt = stack.getTagCompound();
@@ -106,6 +136,12 @@ public class ItemStacks
 		return builder.build();
 	}
 	
+	/**
+	 * Copy a new stack with same data of old stack but different size.
+	 * @param stack
+	 * @param size
+	 * @return
+	 */
 	public static ItemStack sizeOf(ItemStack stack, int size)
 	{
 		ItemStack ret;
@@ -113,11 +149,19 @@ public class ItemStacks
 		return ret;
 	}
 	
+	/**
+	 * Copy a new stack no more than selected size.<p>
+	 * This method can be used in inventory by decreasing stack size.
+	 * @param stack
+	 * @param size
+	 * @return
+	 */
 	public static ItemStack copyNomoreThan(@Nullable ItemStack stack, int size)
 	{
 		return stack == null ? null : stack.stackSize > size ? sizeOf(stack, size) : stack.copy();
 	}
 	
+	@Deprecated
 	public static AbstractStack sizeOf(AbstractStack stack, int size)
 	{
 		return size <= 0 ? null : stack instanceof BaseStack ?
@@ -128,6 +172,12 @@ public class ItemStacks
 										OreStack.sizeOf((OreStack) stack, size) : null;
 	}
 	
+	/**
+	 * Matched is item and tag is equal.
+	 * @param stack1
+	 * @param stack2
+	 * @return
+	 */
 	public static boolean isItemAndTagEqual(ItemStack stack1, ItemStack stack2)
 	{
 		return stack1 == null || stack2 == null ?
@@ -142,8 +192,8 @@ public class ItemStacks
 	
 	/**
 	 * This method should called by item onItemUse.
-	 * @param stack
-	 * @param player
+	 * @param stack The using stack.
+	 * @param player The player.
 	 * @param world
 	 * @param pos
 	 * @param side
@@ -174,7 +224,7 @@ public class ItemStacks
 				ActionResult<Float> result = block.onToolClick(player, tool, stack, world, pos, direction, hitX, hitY, hitZ);
 				if(result.getType() != EnumActionResult.PASS)
 				{
-					((ITool) stack.getItem()).onToolUse(player, stack, tool, nebula.common.util.L.cast(result.getResult()));
+					((ITool) stack.getItem()).onToolUse(player, stack, tool, L.cast(result.getResult()));
 					return result.getType();
 				}
 			}
@@ -230,11 +280,21 @@ public class ItemStacks
 		return list.size() > 0 ? list.get(0).copy() : null;
 	}
 	
+	/**
+	 * The custom damage getter.
+	 * @param stack
+	 * @return
+	 */
 	public static int getCustomDamage(ItemStack stack)
 	{
 		return getOrSetupNBT(stack, false).getInteger("damage");
 	}
 	
+	/**
+	 * The custom damage setter.
+	 * @param stack
+	 * @param damage
+	 */
 	public static void setCustomDamage(ItemStack stack, int damage)
 	{
 		if (damage == 0)
@@ -264,5 +324,10 @@ public class ItemStacks
 		{
 			stack.damageItem(MathHelper.ceil(amount), user);
 		}
+	}
+
+	public static ItemStack[] copyStacks(ItemStack[] stacks)
+	{
+		return A.transform(stacks, ItemStack.class, COPY_ITEMSTACK);
 	}
 }

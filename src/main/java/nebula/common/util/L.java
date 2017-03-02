@@ -18,7 +18,6 @@ import java.util.function.IntConsumer;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -34,6 +33,11 @@ public class L
 {
 	private static final Random RNG = new Random();
 	
+	/**
+	 * Count enabled bit size.
+	 * @param value
+	 * @return
+	 */
 	public static int bitCounts(byte value)
 	{
 		int c = 0;
@@ -48,18 +52,35 @@ public class L
 		return c;
 	}
 	
+	/**
+	 * Is two value similar.
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public static boolean similar(float a, float b)
 	{
 		a -= b;
 		return a > -1E-5F && a < 1E-5F;
 	}
 	
+	/**
+	 * Is two value similar.
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public static boolean similar(double a, double b)
 	{
 		a -= b;
 		return a > -1E-5 && a < 1E-5;
 	}
 	
+	/**
+	 * Cast value as ubyte (range from 0~255).
+	 * @param value
+	 * @return
+	 */
 	public static int unsignedToInt(byte value)
 	{
 		return (value & 0xFF);
@@ -70,21 +91,45 @@ public class L
 		return unsignedToInt(v1) - unsignedToInt(v2);
 	}
 	
+	/**
+	 * Combine quarter byte data.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
 	public static int index8i(int x, int y, int z)
 	{
 		return z << 4 | y << 2 | x;
 	}
 	
+	/**
+	 * Combine half byte data.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
 	public static int index12i(int x, int y, int z)
 	{
 		return z << 8 | y << 4 | x;
 	}
 	
+	/**
+	 * Cast double value.
+	 * @param d
+	 * @return
+	 */
 	public static double cast(@Nullable Double d)
 	{
 		return d == null ? 0 : d.doubleValue();
 	}
 	
+	/**
+	 * Cast float value.
+	 * @param f
+	 * @return
+	 */
 	public static float cast(@Nullable Float f)
 	{
 		return f == null ? 0 : f.floatValue();
@@ -95,21 +140,33 @@ public class L
 		return integer == null ? 0 : integer.intValue();
 	}
 	
-	public static short cast(Short short1)
+	public static short cast(@Nullable Short short1)
 	{
 		return short1 == null ? 0 : short1.shortValue();
 	}
 	
+	/**
+	 * Cast value as ubyte to int.
+	 * @param val
+	 * @return
+	 */
 	public static int castPositive(byte val)
 	{
 		return (val & 0xFF);
 	}
 	
+	/**
+	 * Get default random number generator.
+	 * @return
+	 */
 	public static Random random()
 	{
 		return RNG;
 	}
 	
+	/**
+	 * Exit game.
+	 */
 	public static void exit()
 	{
 		exit(0, false);
@@ -120,23 +177,35 @@ public class L
 		FMLCommonHandler.instance().exitJava(code, hardExit);
 	}
 	
+	/**
+	 * Cast collection to an array.
+	 * @param collection The casting col.
+	 * @param clazz The result array class type.
+	 * @return
+	 */
 	public static <T> T[] cast(Collection<? extends T> collection, Class<T> clazz)
 	{
 		T[] ret = (T[]) Array.newInstance(clazz, collection.size());
 		return collection.toArray(ret);
 	}
 	
-	public static <T> ImmutableList<T> castImmutable(T...list)
-	{
-		return ImmutableList.copyOf(list);
-	}
-	
+	/**
+	 * Cast as an ArrayList.
+	 * @param list
+	 * @return
+	 */
 	public static <T> ArrayList<T> castArray(T...list)
 	{
 		if(list == null || list.length == 0) return new ArrayList();
 		return new ArrayList(Arrays.asList(list));
 	}
 	
+	/**
+	 * Put transformed element into map.
+	 * @param map
+	 * @param collection
+	 * @param function
+	 */
 	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, Function<? super K, ? extends V> function)
 	{
 		collection.forEach(k->map.put(k, function.apply(k)));
@@ -157,6 +226,15 @@ public class L
 		list.add(value);
 	}
 	
+	//=============================Fake multimap method start================================
+	
+	/**
+	 * Put numerous values into fake Multimap.
+	 * @param map
+	 * @param key
+	 * @param values
+	 * @see com.google.common.collect.Multimap
+	 */
 	public static <K, V> void put(Map<K, List<V>> map, K key, V...values)
 	{
 		switch (values.length)
@@ -182,6 +260,19 @@ public class L
 		}
 	}
 	
+	public static <K, V> boolean remove(Map<K, List<V>> map, K key, V value)
+	{
+		List<V> list = map.get(key);
+		return list != null ? list.remove(value) : false;
+	}
+	
+	public static <K, V> boolean contain(Map<K, List<V>> map, K key, V value)
+	{
+		return map.containsKey(key) && map.get(key).contains(value);
+	}
+	
+	//==============================Fake multimap method end=================================
+	
 	public static <K, V1, V2> void put(Map<K, Map<V1, V2>> map, K key, V1 value1, V2 value2)
 	{
 		Map<V1, V2> m = map.get(key);
@@ -205,11 +296,7 @@ public class L
 		return map2;
 	}
 	
-	public static <K, V> boolean remove(Map<K, List<V>> map, K key, V value)
-	{
-		List<V> list = map.get(key);
-		return list != null ? list.remove(value) : false;
-	}
+	//====================================Functional method start==================================
 	
 	public static <K, V> Function<K, V> toFunction(Map<K, V> map)
 	{
@@ -220,6 +307,8 @@ public class L
 	{
 		return key -> map.getOrDefault(key, defaultValue);
 	}
+	
+	//=====================================Functional method end===================================
 	
 	public static <T> boolean contain(Collection<? extends T> collection, Judgable<T> checker)
 	{

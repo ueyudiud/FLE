@@ -3,7 +3,6 @@ package farcore.lib.crop;
 import java.util.ArrayList;
 
 import farcore.lib.bio.FamilyTemplate;
-import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.material.Mat;
 import nebula.common.base.Appliable;
 import nebula.common.util.L;
@@ -98,11 +97,5 @@ public class CropTemplate extends Crop
 				}
 			}
 		}
-	}
-	
-	public ItemStack applyChildSeed(int size, CropInfo info)
-	{
-		ICrop crop = this.family.getSpecieFromGM(info.geneticMaterial);
-		return ItemSeed.applySeed(size, ((Crop) crop).material, info.gamete == null ? info.geneticMaterial : info.gamete);
 	}
 }

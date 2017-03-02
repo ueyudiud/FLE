@@ -8,5 +8,9 @@ package nebula.common.util;
  */
 public interface IRegisteredNameable
 {
+	/**
+	 * Get registered name.
+	 * @return
+	 */
 	String getRegisteredName();
 }

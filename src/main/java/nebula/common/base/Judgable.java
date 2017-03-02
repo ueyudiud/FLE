@@ -15,6 +15,8 @@ public interface Judgable<T> extends Predicate<T>
 	Judgable NOT_NULL = arg -> arg != null;
 	Judgable NULL     = arg -> arg == null;
 	
+	static <T> Judgable<T> fromPredicate(Predicate<T> predicate) { return predicate::test; }
+	
 	static <T> Judgable<T> or(Judgable<T>...checkers) { return or(Arrays.asList(checkers)); }
 	
 	static <T> Judgable<T> and(Judgable<T>...checkers) { return and(Arrays.asList(checkers)); }
@@ -162,7 +164,7 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public String toString()
 		{
-			return "^" + check1.toString() + "~" + check2.toString();
+			return "=" + check1.toString() + "^" + check2.toString();
 		}
 		
 		@Override
@@ -202,7 +204,7 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public String toString()
 		{
-			return "=" + check1.toString() + "~" + check2.toString();
+			return "=" + check1.toString() + "==" + check2.toString();
 		}
 		
 		@Override

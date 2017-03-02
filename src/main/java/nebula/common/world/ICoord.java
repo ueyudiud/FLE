@@ -218,6 +218,11 @@ public interface ICoord
 		return world().isAirBlock(pos().add(x, y, z));
 	}
 	
+	default boolean isRaining()
+	{
+		return world().isRaining();
+	}
+	
 	default boolean isCatchingRain(boolean checkNeayby)
 	{
 		return Worlds.isCatchingRain(world(), pos(), checkNeayby);

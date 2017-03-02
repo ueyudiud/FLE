@@ -4,6 +4,7 @@
 
 package fle.api.recipes.instance;
 
+import static nebula.common.data.NBTLSs.RW_FLOAT;
 import static nebula.common.data.NBTLSs.RW_INT;
 import static nebula.common.data.NBTLSs.RW_ITEMSTACK;
 import static nebula.common.data.NBTLSs.RW_UNORDERED_ITEMSTACKS;
@@ -50,4 +51,10 @@ public class RecipeMaps
 	public static final
 	TemplateRecipeMap<IPolishRecipeHandler> POLISHING =
 	TemplateRecipeMap.<IPolishRecipeHandler>builder("fle.polishing").addCacheEntry("output", RW_ITEMSTACK).build();
+	//NAME        : fle.dring
+	//NBT ENTRY   : duration(int), multiplier(float), output(ItemStack)
+	//DISPLAYMENTS: input(AbstractStack), duration(int), multiplier(float), output(ItemStack)
+	public static final
+	TemplateRecipeMap<ItemStack> DRYING =
+	TemplateRecipeMap.<ItemStack>builder("fle.dring").addCacheEntry("duration", RW_INT).addCacheEntry("multiplier", RW_FLOAT).addCacheEntry("output", RW_ITEMSTACK).build();
 }

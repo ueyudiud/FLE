@@ -131,7 +131,7 @@ public enum NebulaItemModelLoader implements ICustomModelLoader
 	public static void registerModel(Item item, ResourceLocation location)
 	{
 		//The default model location of item.
-		ModelResourceLocation location1 = new ModelResourceLocation(item.getRegistryName(), "iventory");
+		ModelResourceLocation location1 = new ModelResourceLocation(item.getRegistryName(), "inventory");
 		//For stack to location logic, it will only return single model location, the variant will be match in model.
 		ModelLoader.setCustomMeshDefinition(item, stack -> location1);
 		//Register allowed build item variant.

@@ -360,7 +360,7 @@ public class NBTs
 		return container;
 	}
 	
-	public static <E> E[] getListOrDefault(NBTTagCompound nbt, String key, Class<E> elementClass, @Nullable E[] def, Function<NBTBase, E> reader, boolean ordered)
+	public static <E, N extends NBTBase> E[] getListOrDefault(NBTTagCompound nbt, String key, Class<E> elementClass, @Nullable E[] def, Function<N, E> reader, boolean ordered)
 	{
 		if(nbt.hasKey(key, NBT.TAG_LIST))
 		{
@@ -374,7 +374,7 @@ public class NBTs
 					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 					try
 					{
-						array[nbt1.getInteger("idx")] = reader.apply(nbt1.getTag("element"));
+						array[nbt1.getInteger("idx")] = reader.apply((N) nbt1.getTag("element"));
 					}
 					catch (Exception exception)
 					{
@@ -390,7 +390,7 @@ public class NBTs
 					NBTBase nbt1 = list.get(i);
 					try
 					{
-						array[i] = reader.apply(nbt1);
+						array[i] = reader.apply((N) nbt1);
 					}
 					catch (Exception exception)
 					{
@@ -403,7 +403,7 @@ public class NBTs
 		return def;
 	}
 	
-	public static <E> void insertToList(NBTTagCompound nbt, String key, @Nullable E[] def, Function<NBTBase, E> reader, boolean ordered)
+	public static <N extends NBTBase, E> void insertToList(NBTTagCompound nbt, String key, @Nullable E[] def, Function<N, E> reader, boolean ordered)
 	{
 		if(nbt.hasKey(key, NBT.TAG_LIST))
 		{
@@ -415,7 +415,7 @@ public class NBTs
 					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 					try
 					{
-						def[nbt1.getInteger("idx")] = reader.apply(nbt1.getTag("element"));
+						def[nbt1.getInteger("idx")] = reader.apply((N) nbt1.getTag("element"));
 					}
 					catch (Exception exception)
 					{
@@ -430,7 +430,7 @@ public class NBTs
 					NBTBase nbt1 = list.get(i);
 					try
 					{
-						def[i] = reader.apply(nbt1);
+						def[i] = reader.apply((N) nbt1);
 					}
 					catch (Exception exception)
 					{

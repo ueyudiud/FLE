@@ -4,10 +4,7 @@
 
 package nebula.common.tile;
 
-import java.util.Arrays;
-
 import farcore.data.V;
-import nebula.common.data.NBTLSs;
 import nebula.common.inventory.IBasicInventory;
 import nebula.common.inventory.InventoryHelper;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
@@ -27,18 +24,13 @@ import net.minecraftforge.common.util.Constants.NBT;
 /**
  * @author ueyudiud
  */
-public abstract class TEStaticInventory extends TEStatic
+public class TEInventorySingleSlot extends TESynchronization
 implements IBasicInventory, IInventory, ITB_BreakBlock
 {
-	protected final ItemStack[] stacks;
 	protected String customName;
+	protected ItemStack stack;
 	
-	protected TEStaticInventory(int invSize)
-	{
-		this.stacks = new ItemStack[invSize];
-	}
-	
-	protected void onInventoryChanged(int index)
+	protected void onInventoryChanged()
 	{
 		markDirty();
 	}
@@ -47,7 +39,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
-		NBTs.setList(compound, "items", this.stacks, NBTLSs.ITEMSTACK_WRITER, true);
+		NBTs.setItemStack(compound, "item", this.stack, false);
 		if (this.customName != null)
 		{
 			compound.setString("customName", this.customName);
@@ -59,7 +51,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		NBTs.insertToList(compound, "items", this.stacks, NBTLSs.ITEMSTACK_READER, true);
+		this.stack = NBTs.getItemStackOrDefault(compound, "item", null);
 		if (compound.hasKey("customName", NBT.TAG_STRING))
 		{
 			this.customName = compound.getString("customName");
@@ -123,32 +115,39 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public void clear()
 	{
-		Arrays.fill(this.stacks, null);
-		onInventoryChanged(-1);
+		this.stack = null;
+		onInventoryChanged();
 	}
 	
 	@Override
 	public ItemStack[] toArray()
 	{
-		return ItemStacks.copyStacks(this.stacks);
+		return new ItemStack[]{this.stack.copy()};
 	}
 	
 	@Override
 	public void fromArray(ItemStack[] stacks)
 	{
-		System.arraycopy(stacks, 0, this.stacks, 0, this.stacks.length);
+		if (stacks.length > 0)
+		{
+			this.stack = stacks[0];
+		}
+		else
+		{
+			this.stack = null;
+		}
 	}
 	
 	@Override
 	public int getSizeInventory()
 	{
-		return this.stacks.length;
+		return 1;
 	}
 	
 	@Override
 	public ItemStack getStackInSlot(int index)
 	{
-		return this.stacks[index];
+		return this.stack;
 	}
 	
 	@Override
@@ -157,7 +156,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 		int size = InventoryHelper.incrStack(this, index, false, resource, process, false);
 		if (size != 0 && process)
 		{
-			onInventoryChanged(index);
+			onInventoryChanged();
 		}
 		return size;
 	}
@@ -165,20 +164,20 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ItemStack decrStackSize(int index, int count, boolean process)
 	{
-		ItemStack result = ItemStacks.copyNomoreThan(this.stacks[index], count);
+		ItemStack result = ItemStacks.copyNomoreThan(this.stack, count);
 		if (result != null)
 		{
 			if (process)
 			{
-				if (this.stacks[index].stackSize == result.stackSize)
+				if (this.stack.stackSize == result.stackSize)
 				{
-					this.stacks[index] = null;
+					this.stack = null;
 				}
 				else
 				{
-					this.stacks[index].stackSize -= result.stackSize;
+					this.stack.stackSize -= result.stackSize;
 				}
-				onInventoryChanged(index);
+				onInventoryChanged();
 			}
 			return result;
 		}
@@ -188,17 +187,17 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ItemStack removeStackFromSlot(int index)
 	{
-		ItemStack stack = this.stacks[index];
-		this.stacks[index] = null;
-		onInventoryChanged(index);
+		ItemStack stack = this.stack;
+		this.stack = null;
+		onInventoryChanged();
 		return stack;
 	}
 	
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack)
 	{
-		this.stacks[index] = ItemStack.copyItemStack(stack);
-		onInventoryChanged(index);
+		this.stack = ItemStack.copyItemStack(stack);
+		onInventoryChanged();
 	}
 	
 	@Override

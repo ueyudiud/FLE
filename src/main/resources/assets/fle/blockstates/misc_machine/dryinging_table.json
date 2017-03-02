@@ -1,0 +1,9 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"normal": {
+			"transform": "forge:default-block",
+			"model": "fle:machine/drying_table"
+		}
+	}
+}

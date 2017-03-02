@@ -10,6 +10,9 @@ import net.minecraft.nbt.NBTTagList;
 
 public class NBTTagCompoundEmpty extends NBTTagCompound
 {
+	/**
+	 * The empty NBT tag.
+	 */
 	public static final NBTTagCompoundEmpty INSTANCE = new NBTTagCompoundEmpty();
 	
 	/** The empty tag compound hash is 10. */

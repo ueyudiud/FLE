@@ -19,6 +19,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class IO
 {
+	/**
+	 * Copy resource to byte array, this method only take effect in client side.
+	 * @param manager
+	 * @param location
+	 * @return The copied of source.
+	 * @throws IOException If fail to copy resource or get resource failed.
+	 */
 	@SideOnly(Side.CLIENT)
 	public static byte[] copyResource(IResourceManager manager, ResourceLocation location) throws IOException
 	{

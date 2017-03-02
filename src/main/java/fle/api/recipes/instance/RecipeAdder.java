@@ -4,7 +4,10 @@
 
 package fle.api.recipes.instance;
 
+import static fle.api.recipes.instance.RecipeMaps.DRYING;
 import static fle.api.recipes.instance.RecipeMaps.WASHING_BARGRIZZLY;
+import static nebula.common.data.Misc.anyTo;
+import static nebula.common.util.ItemStacks.COPY_ITEMSTACK;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +16,7 @@ import java.util.function.Function;
 import fle.api.recipes.ShapedFleRecipe;
 import fle.api.recipes.ShapelessFleRecipe;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
-import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
-import nebula.common.util.A;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
@@ -45,8 +46,8 @@ public class RecipeAdder
 	
 	public static void addWashingBarGrizzlyRecipe(AbstractStack input, int duration, ItemStack[] output, int[][] chances)
 	{
-		WASHING_BARGRIZZLY.addRecipe(new TemplateRecipe<ItemStack>(stack->input.contain(stack), Misc.anyTo(duration), asShapelessChanceOutput(output, chances))
-				.setData(input, duration, output, chances));
+		WASHING_BARGRIZZLY.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), asShapelessChanceOutput(output, chances))
+				.setData(input, duration, ItemStacks.copyStacks(output), chances));
 	}
 	
 	public static void addPolishRecipe(AbstractStack input, String map, ItemStack output)
@@ -54,12 +55,18 @@ public class RecipeAdder
 		PolishRecipe.addPolishRecipe(input, map, output);
 	}
 	
+	public static void addDringRecipe(AbstractStack input, int duration, float rainfall, ItemStack output)
+	{
+		DRYING.addRecipe(new TemplateRecipe<>(input.similarCheck(), anyTo(duration), anyTo(rainfall), anyTo(output).compose(COPY_ITEMSTACK))
+				.setData(input, duration, rainfall, output.copy()));
+	}
+	
 	private static <E> Function<E, ItemStack[]> asShapelessChanceOutput(ItemStack[] list, int[][] chances)
 	{
 		Function<E, ItemStack[]> result;
 		if (chances == null)
 		{
-			result = any-> A.transform(list, ItemStack.class, stack -> stack.copy());
+			result = any->ItemStacks.copyStacks(list);
 		}
 		else if (list.length != chances.length) throw new IllegalArgumentException();
 		else

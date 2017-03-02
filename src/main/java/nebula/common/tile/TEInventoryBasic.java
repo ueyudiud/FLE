@@ -27,15 +27,15 @@ import net.minecraftforge.common.util.Constants.NBT;
 /**
  * @author ueyudiud
  */
-public abstract class TEStaticInventory extends TEStatic
+public class TEInventoryBasic extends TESynchronization
 implements IBasicInventory, IInventory, ITB_BreakBlock
 {
 	protected final ItemStack[] stacks;
 	protected String customName;
 	
-	protected TEStaticInventory(int invSize)
+	public TEInventoryBasic(int size)
 	{
-		this.stacks = new ItemStack[invSize];
+		this.stacks = new ItemStack[size];
 	}
 	
 	protected void onInventoryChanged(int index)

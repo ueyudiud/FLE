@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
+import nebula.common.base.Judgable;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -73,4 +74,8 @@ public interface AbstractStack
 	 */
 	@Deprecated
 	default boolean useContainer() { return false; }
+	
+	default Judgable<ItemStack> similarCheck() { return this::similar; }
+	
+	default Judgable<ItemStack> containCheck() { return this::contain; }
 }

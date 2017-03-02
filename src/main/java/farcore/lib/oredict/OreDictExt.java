@@ -36,7 +36,7 @@ public class OreDictExt
 	private static final Map<Long, List<Integer>>						STACK_TO_IDS = new HashMap<>();
 	private static final List<Entry<List<ItemStack>, List<ItemStack>>>	ID_TO_STACK = new ArrayList();
 	private static final Function<ItemStack, Long>						STACK_SERIALIZER = stack ->
-	stack == null ? INVALID_STACK_ID : (long) GameData.getItemRegistry().getId(stack.getItem().getRegistryName()) << 32 | stack.getItemDamage();;
+	stack == null ? INVALID_STACK_ID : (long) GameData.getItemRegistry().getId(stack.getItem().getRegistryName()) << 32 | stack.getItemDamage();
 	
 	private static final OreDictExt INSTANCE = new OreDictExt();
 	
@@ -284,7 +284,7 @@ public class OreDictExt
 	{
 		if(name == null || stack == null) return;
 		final int damage = stack.getItemDamage();
-		registerOreFunction(name, stack.getItem(), stack1 -> stack1.getItemDamage() == damage, stack);
+		registerOreFunction(name, stack.getItem(), s-> s.getItemDamage() == damage, stack);
 	}
 	
 	private static void registerIDToStackObject(int oreID, ItemStack stack)

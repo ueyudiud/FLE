@@ -24,37 +24,37 @@ public class OrePropStandard implements IOreProperty
 	public void updateTick(TEOre ore, Random rand)
 	{
 	}
-
+	
 	@Override
 	public boolean onBlockClicked(TEOre ore, EntityPlayer playerIn, Direction side)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public void onEntityWalk(TEOre ore, Entity entityIn)
 	{
 	}
-
+	
 	@Override
 	public EnumActionResult onBlockActivated(TEOre ore, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
 		return EnumActionResult.PASS;
 	}
-
+	
 	@Override
 	public boolean onBurn(TEOre ore, float burnHardness, Direction direction)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean onBurningTick(TEOre ore, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore, Direction side,
 			float hitX, float hitY, float hitZ)
@@ -62,13 +62,6 @@ public class OrePropStandard implements IOreProperty
 		return IToolableTile.DEFAULT_RESULT;
 	}
 	
-	@Override
-	public ActionResult<Float> onToolUse(EntityPlayer player, EnumToolType tool, ItemStack stack, TEOre ore, Direction side,
-			float hitX, float hitY, float hitZ, long tick)
-	{
-		return IToolableTile.DEFAULT_RESULT;
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, TEOre ore, Random rand)
