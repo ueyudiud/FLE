@@ -4,15 +4,25 @@
 
 package nebula.common.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
+
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 /**
  * @author ueyudiud
  */
-public class Jsons
+public final class Jsons
 {
+	private Jsons() {}
+	
 	public static int getOrDefault(JsonObject object, String key, int def) throws JsonParseException
 	{
 		try
@@ -103,7 +113,7 @@ public class Jsons
 			float[] ret = new float[array.size()];
 			for(int i = 0; i < array.size(); ++i)
 			{
-				ret[i] = array.get(i).getAsInt();
+				ret[i] = array.get(i).getAsFloat();
 			}
 			return ret;
 		}
@@ -123,7 +133,7 @@ public class Jsons
 			double[] ret = new double[array.size()];
 			for(int i = 0; i < array.size(); ++i)
 			{
-				ret[i] = array.get(i).getAsInt();
+				ret[i] = array.get(i).getAsDouble();
 			}
 			return ret;
 		}
@@ -131,5 +141,19 @@ public class Jsons
 		{
 			throw new JsonParseException(String.format("The key '%s' is not an array.", key));
 		}
+	}
+	
+	public static <E> Map<String, E> getAsMap(JsonObject object, Function<JsonElement, E> function)
+	{
+		Map<String, E> map = new HashMap<>();
+		for (Entry<String, JsonElement> entry : object.entrySet()) map.put(entry.getKey(), function.apply(entry.getValue()));
+		return map;
+	}
+	
+	public static <E> List<E> getAsList(JsonArray array, Function<JsonElement, E> function)
+	{
+		List<E> list = new ArrayList<>();
+		for (JsonElement element : array) list.add(function.apply(element));
+		return list;
 	}
 }

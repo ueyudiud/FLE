@@ -1,0 +1,92 @@
+{
+	"textures": {
+		"wood": "fle:blocks/machine/alpha/drying_table",
+		"particle": "#wood"
+	},
+	"part": [
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 0, 5, 6, 16, 6 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 0, 10, 6, 16, 11 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 10, 0, 5, 11, 16, 6 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 10, 0, 10, 11, 16, 11 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 0, 7, 4, 16, 8, 5 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 0, 7, 11, 16, 8, 12 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 7, 0, 5, 8, 16 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 11, 7, 0, 12, 8, 16 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 0, 11, 4, 16, 12, 5 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 0, 11, 11, 16, 12, 12 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 11, 0, 5, 12, 16 ],
+			"textures": {
+				"all": "#wood"
+			}
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 11, 11, 0, 12, 12, 16 ],
+			"textures": {
+				"all": "#wood"
+			}
+		}
+	]
+}

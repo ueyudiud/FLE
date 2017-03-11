@@ -11,11 +11,11 @@ import org.lwjgl.opengl.GL11;
 import fle.api.tile.IDitchTile;
 import fle.core.tile.ditchs.TEDitch;
 import nebula.client.render.TESRBase;
+import nebula.common.fluid.FluidTankN;
 import nebula.common.util.Direction;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,7 +46,7 @@ public class TESRDitch extends TESRBase<TEDitch>
 		height2 = getFlowHeight(height0, tile, Direction.S),//++Z
 		height3 = getFlowHeight(height0, tile, Direction.W),//--X
 		height4 = getFlowHeight(height0, tile, Direction.E);//++X
-		FluidTank tank = tile.getTank();
+		FluidTankN tank = tile.getTank();
 		if(tank.getFluid() != null)
 		{
 			FluidStack stack = tank.getFluid();

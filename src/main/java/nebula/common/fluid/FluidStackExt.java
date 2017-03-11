@@ -34,12 +34,12 @@ public class FluidStackExt extends FluidStack
 		return stacka == null || stackb == null ? stacka == stackb :
 			stacka.isFluidEqual(stackb) && stacka.amount == stackb.amount;
 	}
-
+	
 	public static FluidStackExt copyOf(FluidStack stack)
 	{
 		return stack == null ? null : new FluidStackExt(stack);
 	}
-
+	
 	public FluidStackExt(Fluid fluid, int amount)
 	{
 		super(fluid, amount);
@@ -56,20 +56,29 @@ public class FluidStackExt extends FluidStack
 	public FluidStackExt(FluidStack stack, int amount)
 	{
 		super(stack, amount);
+		if(stack instanceof FluidStackExt)
+		{
+			this.temperature = ((FluidStackExt) stack).temperature;
+		}
+	}
+	public FluidStackExt(FluidStack stack, int amount, int temperature)
+	{
+		super(stack, amount);
+		this.temperature = temperature;
 	}
 	FluidStackExt(FluidStack stack)
 	{
 		super(stack.getFluid(), stack.amount, stack.tag);
 		if(stack instanceof FluidStackExt)
 		{
-			temperature = ((FluidStackExt) stack).temperature;
+			this.temperature = ((FluidStackExt) stack).temperature;
 		}
 	}
 	FluidStackExt(Fluid fluid)
 	{
 		super(fluid, 1);
 	}
-
+	
 	@Override
 	public boolean isFluidEqual(FluidStack other)
 	{
@@ -81,15 +90,15 @@ public class FluidStackExt extends FluidStack
 	
 	public boolean isPropertiesEqual(FluidStackExt other)
 	{
-		return temperature == other.temperature;
+		return this.temperature == other.temperature;
 	}
-
+	
 	public int getTemperature()
 	{
 		Fluid fluid = getFluid();
 		if(fluid instanceof IFP_Temperature)
-			return ((IFP_Temperature) fluid).regetTemperature(this, temperature);
-		return temperature;
+			return ((IFP_Temperature) fluid).regetTemperature(this, this.temperature);
+		return this.temperature;
 	}
 	
 	public boolean isSolutable(ItemStack stack)
@@ -99,33 +108,38 @@ public class FluidStackExt extends FluidStack
 			return ((IFP_Solutability) fluid).isItemSolutable(this, stack);
 		return false;
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt = super.writeToNBT(nbt);
-		nbt.setInteger("Temperature", temperature);
+		nbt.setInteger("Temperature", this.temperature);
 		return nbt;
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		amount = nbt.getInteger("Amount");
+		this.amount = nbt.getInteger("Amount");
 		if(nbt.hasKey("Tag"))
 		{
-			tag = nbt.getCompoundTag("Tag");
+			this.tag = nbt.getCompoundTag("Tag");
 		}
-		temperature = nbt.getInteger("Temperature");
+		this.temperature = nbt.getInteger("Temperature");
 	}
 	
 	public void onCreate(IEnvironment environment)
 	{
-		temperature = (int) environment.biomeTemperature();
+		this.temperature = (int) environment.biomeTemperature();
 	}
-
+	
 	@Override
 	public FluidStack copy()
 	{
 		return new FluidStackExt(this);
+	}
+	
+	public FluidStack toSimple()
+	{
+		return new FluidStack(getFluid(), this.amount, this.tag);
 	}
 }

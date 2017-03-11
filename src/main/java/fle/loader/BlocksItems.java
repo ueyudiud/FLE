@@ -7,6 +7,8 @@ import farcore.lib.material.Mat;
 import fle.api.FLEAPI;
 import fle.core.blocks.BlockDitch;
 import fle.core.blocks.BlockGear;
+import fle.core.blocks.BlockPottery;
+import fle.core.blocks.BlockWoodenMiscMachine;
 import fle.core.blocks.BlockWoodenSimpleWorkbench;
 import fle.core.items.ItemMiscResources;
 import fle.core.items.ItemSimpleFluidContainer;
@@ -26,6 +28,8 @@ public class BlocksItems
 	public static Block ditch;
 	public static Block gear;
 	public static Block simple_wooden_workbench;
+	public static Block misc_wooden_machine;
+	public static Block pottery;
 	
 	public static void registerItemsAndBlocks()
 	{
@@ -42,6 +46,8 @@ public class BlocksItems
 		ditch = new BlockDitch();
 		gear = new BlockGear();
 		simple_wooden_workbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.tabMachine);
+		misc_wooden_machine = new BlockWoodenMiscMachine().setCreativeTab(CT.tabMachine);
+		pottery = new BlockPottery().setCreativeTab(CT.tabMachine);
 	}
 	
 	public static void setBlocksItemsProperties()

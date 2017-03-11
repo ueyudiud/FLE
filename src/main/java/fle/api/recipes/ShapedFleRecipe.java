@@ -56,7 +56,7 @@ public class ShapedFleRecipe implements IRecipe
 		{
 			return (SingleInputMatch) object;
 		}
-		else throw new RuntimeException();
+		else throw new RuntimeException("Unknown element: " + object);
 	}
 	
 	protected SingleInputMatch[][] inputs;
@@ -105,6 +105,7 @@ public class ShapedFleRecipe implements IRecipe
 					list.add(array);
 				}
 				while(inputs[++i] instanceof String);
+				this.height = i;
 				map = L.cast(list, char[].class);
 			}
 			else throw new RuntimeException();
@@ -194,7 +195,7 @@ public class ShapedFleRecipe implements IRecipe
 					match.applyOutput(stack, result);
 				}
 		}
-		return null;
+		return result;
 	}
 	
 	@Override

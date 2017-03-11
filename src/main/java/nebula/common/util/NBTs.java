@@ -27,8 +27,10 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public class NBTs
+public final class NBTs
 {
+	private NBTs() {}
+	
 	public static void setString(NBTTagCompound nbt, String key, IRegisteredNameable nameable)
 	{
 		if(nameable != null)
@@ -55,6 +57,7 @@ public class NBTs
 				try
 				{
 					NBTBase nbt1 = writer.apply(value[i]);
+					if (nbt1 == null) continue;
 					NBTTagCompound compound = new NBTTagCompound();
 					compound.setTag("element", nbt1);
 					setNumber(compound, "idx", i);

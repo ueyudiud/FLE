@@ -1,0 +1,124 @@
+{
+	"textures": {
+		"particle": "#all",
+		"all": "farcore:blocks/iconsets/argil"
+	},
+	"part": [
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 0, 5, 11, 1, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 1, 5, 5, 3, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 1, 4, 11, 3, 5 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 11, 1, 5, 12, 3, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 1, 11, 11, 3, 12 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 3, 3, 4, 4, 7, 12 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 3, 3, 12, 7, 4 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 12, 3, 4, 13, 7, 12 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 3, 12, 12, 7, 13 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 3, 4, 5, 7, 5 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 11, 3, 4, 12, 7, 5 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 11, 3, 11, 12, 7, 12 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 3, 11, 5, 7, 12 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 4, 7, 5, 5, 9, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 7, 4, 11, 9, 5 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 11, 7, 5, 12, 9, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 7, 11, 11, 9, 12 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 8, 5, 6, 9, 6 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 10, 8, 5, 11, 9, 6 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 8, 10, 6, 9, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 10, 8, 10, 11, 9, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 9, 6, 6, 13, 10 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 6, 9, 5, 10, 13, 6 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 10, 9, 6, 11, 13, 10 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 6, 9, 10, 10, 13, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 13, 5, 6, 14, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 13, 5, 11, 14, 6 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 10, 13, 5, 11, 14, 11 ]
+		},
+		{
+			"extend": "nebula:verticalcube",
+			"pos": [ 5, 13, 10, 11, 14, 11 ]
+		}
+	]
+}

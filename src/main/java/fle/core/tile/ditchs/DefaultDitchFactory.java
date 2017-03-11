@@ -12,7 +12,6 @@ import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.data.MC;
 import farcore.data.SubTags;
-import farcore.energy.thermal.ThermalNet;
 import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import fle.api.ditch.DitchBlockHandler;
@@ -21,9 +20,8 @@ import fle.api.ditch.DitchInformation;
 import fle.api.tile.IDitchTile;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
-import nebula.common.util.FluidStacks;
+import nebula.common.fluid.FluidTankN;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -80,7 +78,7 @@ public class DefaultDitchFactory implements DitchFactory
 		LanguageManager.registerLocal("info.ditch.factory.default.capacity", "Capacity : " + ChatFormatting.AQUA + "%dL");
 		LanguageManager.registerLocal("info.ditch.factory.default.transfer.limit", "Transfer Limit : " + ChatFormatting.BLUE + "%dL/t");
 		LanguageManager.registerLocal("info.ditch.factory.default.speed", "Speed : " + ChatFormatting.GREEN + "%dm^2s");
-		LanguageManager.registerLocal("info.ditch.factory.default.temperature", "Temperature Limit : " + ChatFormatting.RED + "%dK");
+		LanguageManager.registerLocal("info.ditch.factory.default.destory.temperature", "Temperature Limit : " + ChatFormatting.RED + "%dK");
 		LanguageManager.registerTooltip("info.ditch.factory.default.speed.guide",
 				"The ditch block can only transfer liquid.",
 				"The ditch block speed provide basic flow speed multiplier, caculate real flow speed by m / v. The m is ditch block transfer Speed, and v is Viscosity of fluid.");
@@ -93,17 +91,17 @@ public class DefaultDitchFactory implements DitchFactory
 	}
 	
 	@Override
-	public FluidTank apply(IDitchTile tile)
+	public FluidTankN apply(IDitchTile tile)
 	{
-		return new FluidTank(tile.getMaterial().getProperty(DITCH_INFORMATION_PROPERTY).tankCapacity);
+		return new FluidTankN(tile.getMaterial().getProperty(DITCH_INFORMATION_PROPERTY).tankCapacity).enableTemperature();
 	}
 	
 	@Override
 	public void onUpdate(IDitchTile tile)
 	{
-		FluidTank tank = tile.getTank();
+		FluidTankN tank = tile.getTank();
 		DitchInformation information = tile.getMaterial().getProperty(DITCH_INFORMATION_PROPERTY);
-		if(information.destroyTemperature < FluidStacks.getTemperature(tank.getFluid(), (int) ThermalNet.getTemperature(tile)))
+		if(information.destroyTemperature < tank.getTemperature())
 		{
 			if(EnumBlock.fire.block.canPlaceBlockAt(tile.world(), tile.pos()))
 			{

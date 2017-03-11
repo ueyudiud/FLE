@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import nebula.common.fluid.FluidTankN;
 import nebula.common.util.A;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
@@ -98,6 +99,52 @@ public interface IFluidHandler
 		public boolean canDrain(FluidStack stack)
 		{
 			return tank.canDrainFluidType(stack);
+		}
+	}
+	
+	class SidedFluidIOTankNPropertyWrapper implements SidedFluidIOProperty
+	{
+		FluidTankN tank;
+		
+		public SidedFluidIOTankNPropertyWrapper(FluidTankN tank)
+		{
+			this.tank = tank;
+		}
+		
+		@Override
+		public int getCapacity()
+		{
+			return tank.getCapacity();
+		}
+		
+		@Override
+		public List<FluidStack> getStacks()
+		{
+			return tank.hasFluid() ? Arrays.asList(tank.getFluid()) : ImmutableList.of();
+		}
+		
+		@Override
+		public boolean canFill()
+		{
+			return tank.canInsertFluid(Direction.Q, null) && tank.isFull();
+		}
+		
+		@Override
+		public boolean canDrain()
+		{
+			return tank.canExtractFluid(Direction.Q) && tank.hasFluid();
+		}
+		
+		@Override
+		public boolean canFill(FluidStack stack)
+		{
+			return canFill();
+		}
+		
+		@Override
+		public boolean canDrain(FluidStack stack)
+		{
+			return tank.canExtractFluidWithType(Direction.Q, stack) && tank.hasFluid();
 		}
 	}
 	

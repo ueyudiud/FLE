@@ -14,7 +14,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import nebula.client.model.INebulaModelPart;
+import nebula.client.model.part.INebulaModelPart.INebulaRetexturableModelPart;
+import nebula.common.util.Jsons;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -26,6 +27,12 @@ public class NebulaModelPartDecoder implements JsonDeserializer<INebulaModelPart
 	
 	private static final Map<ResourceLocation, IModelPartLoader> LOCATION_TO_LOADER_MAP = new HashMap();
 	private static final Map<Class<? extends INebulaModelPart>, IModelPartLoader> CLASS_TO_LOADER_MAP = new HashMap();
+	
+	static
+	{
+		registerDeserializer(new ResourceLocation("nebula", "quad"), PackedQuadData.class, PackedQuadData.LOADER);
+		registerDeserializer(new ResourceLocation("nebula", "verticalcube"), PackedVerticalCube.class, PackedVerticalCube.LOADER);
+	}
 	
 	public static void registerDeserializer(ResourceLocation location, Class<? extends INebulaModelPart> targetClass, IModelPartLoader loader)
 	{
@@ -42,16 +49,17 @@ public class NebulaModelPartDecoder implements JsonDeserializer<INebulaModelPart
 		try
 		{
 			JsonObject object = json.getAsJsonObject();
+			INebulaModelPart part;
 			if(!object.has("extend"))
 			{
 				if(object.has("parent"))
 				{
 					String location = object.get("parent").getAsString();
-					INebulaModelPart part = loadModelPart(new ResourceLocation(location));
+					part = loadModelPart(new ResourceLocation(location));
 					IModelPartLoader loader = CLASS_TO_LOADER_MAP.get(part.getClass());
 					if(loader == null)
 						throw new JsonParseException("No allowed loader with class " + part.getClass() + " detected!");
-					return loader.load(part, object, context);
+					part = loader.load(part, object, context);
 				}
 				else throw new JsonParseException("No model part creator detected!");
 			}
@@ -65,10 +73,24 @@ public class NebulaModelPartDecoder implements JsonDeserializer<INebulaModelPart
 					location = object.get("parent").getAsString();
 					parent = loadModelPart(new ResourceLocation(location));
 				}
-				if(location == null)
+				if(loader == null)
 					throw new JsonParseException("The loader at '" + location + "' does not exist.");
-				return loader.load(parent, object, context);
+				part = loader.load(parent, object, context);
 			}
+			if (object.has("textures"))
+			{
+				if (!(part instanceof INebulaRetexturableModelPart))
+					throw new JsonParseException("The type of part : " + part.getClass() + " does not "
+							+ "implements INebulaRetexturableModelPart type, you can't retexture it.");
+				JsonElement json1 = object.get("textures");
+				if (json1.isJsonObject())
+				{
+					Map<String, String> map = Jsons.getAsMap(json1.getAsJsonObject(), JsonElement::getAsString);
+					part = ((INebulaRetexturableModelPart) part).retexture(map);
+				}
+				else throw new JsonParseException("Unknown retexture collction.");
+			}
+			return part;
 		}
 		catch (JsonParseException exception)
 		{
@@ -80,8 +102,17 @@ public class NebulaModelPartDecoder implements JsonDeserializer<INebulaModelPart
 		}
 	}
 	
+	public static INebulaModelPart replaceModelTexture(INebulaModelPart part, Map<String, String> map)
+	{
+		if (part instanceof INebulaRetexturableModelPart)
+		{
+			return ((INebulaRetexturableModelPart) part).retexture(map);
+		}
+		return part;
+	}
+	
 	public static INebulaModelPart loadModelPart(ResourceLocation location) throws Exception
 	{
-		return null;
+		throw new UnsupportedOperationException();//Not finish yet. TODO
 	}
 }

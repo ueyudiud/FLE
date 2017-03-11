@@ -3,6 +3,8 @@ package nebula.common.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import nebula.client.model.NebulaBlockModelLoader;
+import nebula.client.model.StateMapperExt;
 import nebula.common.base.IRegister;
 import nebula.common.base.Register;
 import nebula.common.block.property.PropertyTE;
@@ -19,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -64,6 +67,12 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 				tag.registerTileEntity(path);
 			}
 		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	protected void registerCustomBlockRender(StateMapperExt map, int meta, String location)
+	{
+		NebulaBlockModelLoader.registerModel(map.getModelResourceLocation(this.property_TE.withProperty(getDefaultState(), meta)), new ResourceLocation(getRegistryName().getResourceDomain(), location));
 	}
 	
 	public PropertyTE property_TE;

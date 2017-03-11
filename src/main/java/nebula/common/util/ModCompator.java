@@ -48,7 +48,7 @@ public class ModCompator
 			}
 			catch (Exception exception)
 			{
-				Log.error("Fail to put '%s' into compatibles map, this compatibility will be removed.", exception, location);
+				Log.error("Fail to put '{}' into compatibles map, this compatibility will be removed.", exception, location);
 			}
 		}
 	}
@@ -57,14 +57,14 @@ public class ModCompator
 	{
 		for(Entry<String, ICompatible> entry : this.compatibles.entrySet())
 		{
-			Log.info("The compatible from %s to %s start to invoke with phase %s.", this.modid, entry.getKey(), phase);
+			Log.info("The compatible from {} to {} start to invoke with phase {}.", this.modid, entry.getKey(), phase);
 			try
 			{
 				entry.getValue().call(phase);
 			}
 			catch (Exception exception)
 			{
-				Log.warn("Fail to make compatible with %s and %s mod.", exception, this.modid, entry.getKey());
+				Log.warn("Fail to make compatible with {} and {} mod.", exception, this.modid, entry.getKey());
 			}
 		}
 	}

@@ -29,8 +29,10 @@ import net.minecraftforge.fluids.IFluidBlock;
 /**
  * @author ueyudiud
  */
-public class FluidStacks
+public final class FluidStacks
 {
+	private FluidStacks() {}
+	
 	public static @Nullable Fluid getFluid(@Nullable FluidStack stack)
 	{
 		return stack == null ? null : stack.getFluid();

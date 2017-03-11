@@ -5,6 +5,7 @@
 package nebula.client.model.part;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.vecmath.Vector3f;
@@ -15,10 +16,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import nebula.client.model.INebulaModelPart;
 import nebula.client.model.INebulaBakedModelPart;
+import nebula.client.model.part.INebulaModelPart.INebulaRetexturableModelPart;
 import nebula.client.util.CoordTransformer;
 import nebula.common.util.Jsons;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
@@ -27,7 +29,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 /**
  * @author ueyudiud
  */
-public class PackedQuadData implements INebulaModelPart
+public class PackedQuadData implements INebulaRetexturableModelPart
 {
 	static final IModelPartLoader<PackedQuadData> LOADER = (parent, object, context) ->
 	{
@@ -223,13 +225,44 @@ public class PackedQuadData implements INebulaModelPart
 			}
 			else throw new JsonParseException("Invalid oppisite type.");
 		}
+		else
+		{
+			target.setOppisite(source);
+		}
 		if(from.has("rotation"))
 		{
-			JsonElement element = from.get("rotation");
-			if(element.isJsonPrimitive())
+			if (type)
 			{
-				
+				target.setRotation(source);
 			}
+			JsonElement element = from.get("rotation");
+			if(element.isJsonArray())
+			{
+				double[] array = Jsons.getDoubleArray(from, "rotation", 4);
+				target.applyRotation(array[0], array[1], array[2], array[3]);
+			}
+			else if (element.isJsonObject())
+			{
+				JsonObject object = from.getAsJsonObject();
+				String t = object.get("type").getAsString();
+				switch (t)
+				{
+				case "quad" :
+					double[] array = Jsons.getDoubleArray(from, "array", 4);
+					target.applyRotation(array[0], array[1], array[2], array[3]);
+					break;
+				case "xy" :
+					int[] xy = Jsons.getIntArray(object, "array", 2);
+					target.applyRotation(ModelRotation.getModelRotation(xy[0], xy[1]));
+					break;
+				default: throw new JsonParseException("Unknown rotation type '" + type + "'.");
+				}
+			}
+			else throw new JsonParseException("Unknown rotation data.");
+		}
+		else
+		{
+			target.setRotation(source);
 		}
 		return target;
 	}
@@ -249,6 +282,26 @@ public class PackedQuadData implements INebulaModelPart
 	float red = 1.0F, green = 1.0F, blue = 1.0F, alpha = 1.0F;
 	
 	String location;
+	
+	public PackedQuadData()
+	{
+	}
+	
+	@Override
+	protected PackedQuadData clone()
+	{
+		PackedQuadData data;
+		try
+		{
+			data = (PackedQuadData) super.clone();
+			data.transformer = data.transformer.copy();
+			return data;
+		}
+		catch (CloneNotSupportedException exception)
+		{
+			return new PackedQuadData();
+		}
+	}
 	
 	public void setPos(float x, float y, float z)
 	{
@@ -299,6 +352,21 @@ public class PackedQuadData implements INebulaModelPart
 			this.normalY = vector3f.getY();
 			this.normalZ = vector3f.getZ();
 		}
+	}
+	
+	@Override
+	public PackedQuadData retexture(Map<String, String> textures)
+	{
+		PackedQuadData data = clone();
+		if (textures.containsKey("location"))
+		{
+			data.location = textures.get("location");
+		}
+		if (this.location.charAt(0) == '#')
+		{
+			data.location = textures.getOrDefault(this.location.substring(1), this.location);
+		}
+		return data;
 	}
 	
 	@Override

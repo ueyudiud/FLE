@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.vecmath.Matrix4f;
@@ -16,11 +17,17 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
-import nebula.client.model.INebulaModelPart;
 import nebula.client.model.INebulaBakedModelPart;
+import nebula.client.model.part.INebulaModelPart.INebulaRetexturableModelPart;
 import nebula.client.util.CoordTransformer;
+import nebula.common.base.ArrayListAddWithCheck;
 import nebula.common.util.Direction;
+import nebula.common.util.Jsons;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -35,8 +42,170 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
-public class PackedVerticalCube implements INebulaModelPart
+public class PackedVerticalCube implements INebulaRetexturableModelPart
 {
+	static final IModelPartLoader<PackedVerticalCube> LOADER = (parent, object, context) ->
+	{
+		PackedVerticalCube result = new PackedVerticalCube();
+		if (parent == null)
+		{
+			parent = new PackedVerticalCube();
+		}
+		if (object.has("uvLock"))
+		{
+			result.setUVLock(object.get("uvLock").getAsBoolean());
+		}
+		else
+		{
+			result.setUVLock(parent.uvLock);
+		}
+		boolean flag = object.has("face");
+		if (object.has("pos"))
+		{
+			JsonElement element1 = object.get("pos");
+			if(element1.isJsonArray())
+			{
+				float[] array = Jsons.getFloatArray(object, "pos", 6);
+				if(array.length != 6)
+					throw new JsonParseException("Position array length is 6, got " + array.length);
+				if(flag)
+				{
+					result.xyzPos = array;
+				}
+				else
+				{
+					result.setBound(array[0] / 16.0F, array[1] / 16.0F, array[2] / 16.0F, array[3] / 16.0F, array[4] / 16.0F, array[5] / 16.0F);
+				}
+			}
+			else throw new JsonParseException("Invalid position type.");
+		}
+		else
+		{
+			result.xyzPos = parent.xyzPos.clone();
+		}
+		if (flag)
+		{
+			JsonArray array = object.getAsJsonArray("face");
+			for (JsonElement element : array)
+			{
+				loadFaceData(result, element);
+			}
+		}
+		if (object.has("rotation"))
+		{
+			int[] rotation = Jsons.getIntArray(object, "rotation", 2);
+			result.setRotate(rotation[0], rotation[1]);
+		}
+		if (object.has("rgba"))
+		{
+			float[] rgba = Jsons.getFloatArray(object, "rgba", 3);
+			result.setColor(rgba[0], rgba[1], rgba[2], rgba.length > 3 ? rgba[3] : 1.0F);
+		}
+		return result;
+	};
+	
+	static void loadFaceData(PackedVerticalCube cube, JsonElement json) throws JsonParseException
+	{
+		if (!json.isJsonObject()) throw new JsonParseException("The face data should be json object.");
+		JsonObject object = json.getAsJsonObject();
+		
+		String side = object.get("side").getAsString();
+		String location = object.get("texture").getAsString();
+		if (object.has("uv"))
+		{
+			float[] uv = Jsons.getFloatArray(object, "uv", 4);
+			cube.setFaceData(Direction.valueOf(side), uv[0], uv[1], uv[2], uv[3], location);
+		}
+		else
+		{
+			cube.setFaceData(Direction.valueOf(side), location);
+		}
+	}
+	
+	static CoordTransformer decodeTransformer(PackedVerticalCube cube, CoordTransformer target, CoordTransformer source, JsonObject from) throws JsonParseException
+	{
+		boolean type = !from.has("modify") || from.get("modify").getAsBoolean();
+		if(from.has("transform"))
+		{
+			double[] array = Jsons.getDoubleArray(from, "transform", 3);
+			if(type)
+			{
+				target.addTransform(array[0], array[1], array[2]);
+			}
+			else
+			{
+				target.setTransform(array[0], array[1], array[2]);
+			}
+		}
+		else
+		{
+			target.setTransform(source);
+		}
+		if(from.has("oppisite"))
+		{
+			JsonElement element = from.get("oppisite");
+			if(element.isJsonPrimitive())
+			{
+				switch (element.getAsString())
+				{
+				case "center" :
+					target.setOppisite((cube.xyzPos[0] + cube.xyzPos[3]) / 2, (cube.xyzPos[1] + cube.xyzPos[4]) / 2, (cube.xyzPos[2] + cube.xyzPos[5]) / 2);
+					break;
+				case "start" :
+					target.setOppisite(0, 0, 0);
+					break;
+				default: throw new JsonParseException("The '" + element.getAsString() + "' is unknown position in PackedQuadData.");
+				}
+			}
+			else if(element.isJsonArray())
+			{
+				double[] array = Jsons.getDoubleArray(from, "oppisite", 3);
+				target.setOppisite(array[0], array[1], array[2]);
+			}
+			else throw new JsonParseException("Invalid oppisite type.");
+		}
+		else
+		{
+			target.setOppisite(source);
+		}
+		if(from.has("rotation"))
+		{
+			if (type)
+			{
+				target.setRotation(source);
+			}
+			JsonElement element = from.get("rotation");
+			if(element.isJsonArray())
+			{
+				double[] array = Jsons.getDoubleArray(from, "rotation", 4);
+				target.applyRotation(array[0], array[1], array[2], array[3]);
+			}
+			else if (element.isJsonObject())
+			{
+				JsonObject object = from.getAsJsonObject();
+				String t = object.get("type").getAsString();
+				switch (t)
+				{
+				case "quad" :
+					double[] array = Jsons.getDoubleArray(from, "array", 4);
+					target.applyRotation(array[0], array[1], array[2], array[3]);
+					break;
+				case "xy" :
+					int[] xy = Jsons.getIntArray(object, "array", 2);
+					target.applyRotation(ModelRotation.getModelRotation(xy[0], xy[1]));
+					break;
+				default: throw new JsonParseException("Unknown rotation type '" + type + "'.");
+				}
+			}
+			else throw new JsonParseException("Unknown rotation data.");
+		}
+		else
+		{
+			target.setRotation(source);
+		}
+		return target;
+	}
+	
 	float[] xyzPos = {0, 0, 0, 1, 1, 1};
 	float[][] uvPos = {
 			{0, 0, 16, 16},
@@ -46,7 +215,7 @@ public class PackedVerticalCube implements INebulaModelPart
 			{0, 0, 16, 16},
 			{0, 0, 16, 16}};
 	
-	byte renderFlag;
+	byte renderFlag = 0x3F;
 	CoordTransformer transformer = new CoordTransformer();
 	//	boolean renderTwoFace;
 	boolean uvLock;
@@ -60,6 +229,25 @@ public class PackedVerticalCube implements INebulaModelPart
 	
 	String[] location = new String[6];
 	
+	@Override
+	protected PackedVerticalCube clone()
+	{
+		PackedVerticalCube cube;
+		try
+		{
+			cube = (PackedVerticalCube) super.clone();
+			cube.transformer = this.transformer.copy();
+			cube.xyzPos = this.xyzPos.clone();
+			cube.uvPos = this.uvPos.clone();
+			cube.location = this.location.clone();
+			return cube;
+		}
+		catch (CloneNotSupportedException exception)
+		{
+			return new PackedVerticalCube();
+		}
+	}
+	
 	public CoordTransformer getTransformer()
 	{
 		return this.transformer;
@@ -67,6 +255,7 @@ public class PackedVerticalCube implements INebulaModelPart
 	
 	public void setBound(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 	{
+		this.fullCube = false;
 		this.xyzPos[0] = minX;
 		this.xyzPos[1] = minY;
 		this.xyzPos[2] = minZ;
@@ -85,12 +274,14 @@ public class PackedVerticalCube implements INebulaModelPart
 	
 	public void setFaceData(Direction facing, String location)
 	{
+		if (location == null) return;
 		this.renderFlag |= facing.flag;
 		this.location[facing.ordinal()] = location;
 	}
 	
 	public void setFaceData(Direction facing, float u1, float v1, float u2, float v2, String location)
 	{
+		if (location == null) return;
 		if(this.uvLock) throw new IllegalStateException("The lockedUV model part can not remark texture position.");
 		this.renderFlag |= facing.flag;
 		this.location[facing.ordinal()] = location;
@@ -134,7 +325,35 @@ public class PackedVerticalCube implements INebulaModelPart
 	@Override
 	public Collection<String> getTextures()
 	{
-		return ImmutableList.copyOf(this.location);
+		List<String> list = ArrayListAddWithCheck.requireNonnull();
+		for (String loc : this.location) list.add(loc);
+		return ImmutableList.copyOf(list);
+	}
+	
+	@Override
+	public PackedVerticalCube retexture(Map<String, String> textures)
+	{
+		PackedVerticalCube cube = clone();
+		if (textures.containsKey("all"))
+		{
+			cube.setResourceLocation(textures.get("all"));
+		}
+		else
+		{
+			cube.setFaceData(Direction.D, textures.getOrDefault("down", cube.location[0]));
+			cube.setFaceData(Direction.U, textures.getOrDefault("up", cube.location[1]));
+			cube.setFaceData(Direction.S, textures.getOrDefault("south", cube.location[2]));
+			cube.setFaceData(Direction.N, textures.getOrDefault("north", cube.location[3]));
+			cube.setFaceData(Direction.E, textures.getOrDefault("east", cube.location[4]));
+			cube.setFaceData(Direction.W, textures.getOrDefault("west", cube.location[5]));
+		}
+		if (cube.location[0] != null && cube.location[0].charAt(0) == '#') cube.location[0] = textures.getOrDefault(cube.location[0].substring(1), cube.location[0]);
+		if (cube.location[1] != null && cube.location[1].charAt(0) == '#') cube.location[1] = textures.getOrDefault(cube.location[1].substring(1), cube.location[1]);
+		if (cube.location[2] != null && cube.location[2].charAt(0) == '#') cube.location[2] = textures.getOrDefault(cube.location[2].substring(1), cube.location[2]);
+		if (cube.location[3] != null && cube.location[3].charAt(0) == '#') cube.location[3] = textures.getOrDefault(cube.location[3].substring(1), cube.location[3]);
+		if (cube.location[4] != null && cube.location[4].charAt(0) == '#') cube.location[4] = textures.getOrDefault(cube.location[4].substring(1), cube.location[4]);
+		if (cube.location[5] != null && cube.location[5].charAt(0) == '#') cube.location[5] = textures.getOrDefault(cube.location[5].substring(1), cube.location[5]);
+		return cube;
 	}
 	
 	@Override
@@ -146,7 +365,7 @@ public class PackedVerticalCube implements INebulaModelPart
 		float[][] coords;
 		ModelRotation rotation = ModelRotation.getModelRotation((this.rotateX & 0x3) * 90, (this.rotateY & 0x3) * 90);
 		ArrayList<BakedQuad> list = new ArrayList();
-		if((this.renderFlag & 0x1) != 0)
+		if((this.renderFlag & 0x1) != 0 && this.location[0] != null)
 		{
 			icon = textureGetter.apply(this.location[0]);
 			direction = Direction.of(rotation, EnumFacing.UP);
@@ -158,7 +377,7 @@ public class PackedVerticalCube implements INebulaModelPart
 			};
 			putFace(list, coords, icon, format, transformation, direction, rotation);
 		}
-		if((this.renderFlag & 0x2) != 0)
+		if((this.renderFlag & 0x2) != 0 && this.location[1] != null)
 		{
 			icon = textureGetter.apply(this.location[1]);
 			direction = Direction.of(rotation, EnumFacing.DOWN);
@@ -170,7 +389,7 @@ public class PackedVerticalCube implements INebulaModelPart
 			};
 			putFace(list, coords, icon, format, transformation, direction, rotation);
 		}
-		if((this.renderFlag & 0x4) != 0)
+		if((this.renderFlag & 0x4) != 0 && this.location[2] != null)
 		{
 			icon = textureGetter.apply(this.location[2]);
 			direction = Direction.of(rotation, EnumFacing.NORTH);
@@ -182,7 +401,7 @@ public class PackedVerticalCube implements INebulaModelPart
 			};
 			putFace(list, coords, icon, format, transformation, direction, rotation);
 		}
-		if((this.renderFlag & 0x8) != 0)
+		if((this.renderFlag & 0x8) != 0 && this.location[3] != null)
 		{
 			icon = textureGetter.apply(this.location[3]);
 			direction = Direction.of(rotation, EnumFacing.SOUTH);
@@ -194,7 +413,7 @@ public class PackedVerticalCube implements INebulaModelPart
 			};
 			putFace(list, coords, icon, format, transformation, direction, rotation);
 		}
-		if((this.renderFlag & 0x10) != 0)
+		if((this.renderFlag & 0x10) != 0 && this.location[4] != null)
 		{
 			icon = textureGetter.apply(this.location[4]);
 			direction = Direction.of(rotation, EnumFacing.WEST);
@@ -206,7 +425,7 @@ public class PackedVerticalCube implements INebulaModelPart
 			};
 			putFace(list, coords, icon, format, transformation, direction, rotation);
 		}
-		if((this.renderFlag & 0x20) != 0)
+		if((this.renderFlag & 0x20) != 0 && this.location[5] != null)
 		{
 			icon = textureGetter.apply(this.location[5]);
 			direction = Direction.of(rotation, EnumFacing.EAST);

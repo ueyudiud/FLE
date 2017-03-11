@@ -82,7 +82,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		{
 			int level1 = KS.DIGGING.level(event.getEntityPlayer());
 			int level2 = getToolProp(stack).skillEfficiency.level(event.getEntityPlayer());
-			speed *= 1 + level1 * 1E-5F + level2 * 5E-3F;
+			speed *= 1 + level1 * 1E-3F + level2 * 5E-3F;
 		}
 		return speed;
 	}

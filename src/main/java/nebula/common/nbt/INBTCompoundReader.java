@@ -26,4 +26,10 @@ public interface INBTCompoundReader<T> extends INBTReader<T, NBTTagCompound>
 	{
 		return nbt.hasKey(key, NBT.TAG_COMPOUND) ? readFromNBT(nbt.getCompoundTag(key)) : null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	default void readFromNBT1(NBTTagCompound nbt)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

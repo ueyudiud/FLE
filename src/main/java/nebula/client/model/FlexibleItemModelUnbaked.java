@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableTable;
 
 import nebula.client.model.FlexibleItemModelCache.NebulaItemModelLayerCache;
 import nebula.client.model.FlexibleItemSubmetaGetterLoader.SubmetaGetter;
+import nebula.client.model.part.INebulaModelPart;
 import nebula.common.util.L;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;

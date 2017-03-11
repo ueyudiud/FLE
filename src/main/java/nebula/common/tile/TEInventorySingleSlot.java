@@ -144,6 +144,11 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 		return 1;
 	}
 	
+	public ItemStack getStack()
+	{
+		return this.stack;
+	}
+	
 	@Override
 	public ItemStack getStackInSlot(int index)
 	{

@@ -50,8 +50,16 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void registerPacket(Class<? extends IPacket> packet, Side side)
 	{
-		if(this.packetTypes.contain(packet.getName())) throw new IllegalArgumentException("Duplicate Packet! " + this.id);
-		if(this.id >= 256) throw new ArrayIndexOutOfBoundsException(this.id);
+		if (this.packetTypes.contain(packet.getName())) throw new IllegalArgumentException("Duplicate Packet! " + this.id);
+		try
+		{
+			packet.getConstructor();
+		}
+		catch (NoSuchMethodException | SecurityException exception)
+		{
+			throw new IllegalArgumentException("Illegal packet : " + packet.getName() + ", which is missing a allowed default constructor.");
+		}
+		if (this.id >= 256) throw new ArrayIndexOutOfBoundsException(this.id);
 		this.packetTypes.register(this.id, packet.getName(), packet);
 		++this.id;
 	}
@@ -334,5 +342,5 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		return packet.process(this);
 	}
 	
-	private final Consumer<PacketLarge> LARGE_TO_ALL = packet -> sendToAll(packet);
+	private final Consumer<PacketLarge> LARGE_TO_ALL = this::sendLargeToAll;
 }

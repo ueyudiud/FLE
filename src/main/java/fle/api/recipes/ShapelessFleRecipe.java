@@ -49,6 +49,7 @@ public class ShapelessFleRecipe implements IRecipe
 					int a = (Integer) inputs[i + 1];
 					
 					for (int j = 0; j < a; this.inputs.add(match), ++j);
+					++i;
 				}
 				else
 				{
@@ -58,7 +59,7 @@ public class ShapelessFleRecipe implements IRecipe
 		}
 		catch (Exception exception)
 		{
-			throw new RuntimeException("Invalid recipe table, " + Arrays.toString(ObjectArrays.concat(inputs, output)));
+			throw new RuntimeException("Invalid recipe table, " + Arrays.toString(ObjectArrays.concat(inputs, output)), exception);
 		}
 	}
 	

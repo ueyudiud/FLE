@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 
 import nebula.Log;
 import nebula.client.model.ModelFluidBlock;
+import nebula.client.model.NebulaBlockModelLoader;
 import nebula.client.model.NebulaItemModelLoader;
 import nebula.client.model.OrderModelLoader;
 import nebula.client.model.StateMapperExt;
@@ -103,6 +104,8 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
 		//The base item model loader.
 		ModelLoaderRegistry.registerLoader(NebulaItemModelLoader.INSTANCE);
+		//The base block model loader.
+		ModelLoaderRegistry.registerLoader(NebulaBlockModelLoader.INSTANCE);
 		//The custom block model loaders.
 		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.INSTANCE);
 		ModelLoaderRegistry.registerLoader(OrderModelLoader.INSTANCE);

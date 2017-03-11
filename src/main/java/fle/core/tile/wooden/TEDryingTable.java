@@ -6,15 +6,22 @@ package fle.core.tile.wooden;
 
 import static fle.api.recipes.instance.RecipeMaps.DRYING;
 
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.TEInventorySingleSlot;
 import nebula.common.util.Direction;
 import nebula.common.util.NBTs;
 import nebula.common.util.Worlds;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
@@ -24,7 +31,7 @@ import net.minecraft.util.EnumHand;
  * @author ueyudiud
  */
 public class TEDryingTable extends TEInventorySingleSlot
-implements ITB_BlockActived
+implements ITB_BlockActived, ITP_Drops
 {
 	protected int dryingTick;
 	protected TemplateRecipeCache<ItemStack> cache;
@@ -88,14 +95,14 @@ implements ITB_BlockActived
 		{
 			this.cache = DRYING.findRecipe(this.stack);
 		}
-		IWorldPropProvider provider = WorldPropHandler.getWorldProperty(this.world);
-		float rain = provider.getHumidity(this);
-		if (isRaining())
-		{
-			rain *= 5.0F;
-		}
 		if (this.cache != null)
 		{
+			IWorldPropProvider provider = WorldPropHandler.getWorldProperty(this.world);
+			float rain = provider.getHumidity(this);
+			if (isRaining())
+			{
+				rain *= 5.0F;
+			}
 			this.dryingTick += Math.ceil(this.cache.<Float>get(1) / rain);
 			if (this.dryingTick >= this.cache.<Integer>get(0))
 			{
@@ -133,8 +140,10 @@ implements ITB_BlockActived
 						{
 							Worlds.spawnDropInWorld(this, this.stack);
 						}
+						this.stack = null;
 					}
 				}
+				onInventoryChanged();
 			}
 			return EnumActionResult.SUCCESS;
 		}
@@ -145,5 +154,11 @@ implements ITB_BlockActived
 	public String getName()
 	{
 		return "inventory.drying.table";
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
+	{
+		return ImmutableList.of(new ItemStack(Items.STICK, 4));
 	}
 }

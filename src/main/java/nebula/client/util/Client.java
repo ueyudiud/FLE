@@ -173,14 +173,14 @@ public class Client
 		return Blocks.LEAVES.getBlockLayer() == BlockRenderLayer.CUTOUT_MIPPED;
 	}
 	
-	public static void registerModel(Block block, int meta, String modid, String path)
+	public static void registerModel(Block block, int meta, String location, String variant)
 	{
-		registerModel(Item.getItemFromBlock(block), meta, modid, path);
+		registerModel(Item.getItemFromBlock(block), meta, location, variant);
 	}
 	
-	public static void registerModel(Item item, int meta, String modid, String path)
+	public static void registerModel(Item item, int meta, String location, String variant)
 	{
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(modid, path));
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, variant));
 	}
 	
 	private static FontRenderExtend render;

@@ -13,6 +13,7 @@ import java.util.function.IntToLongFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongPredicate;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ObjectArrays;
@@ -22,8 +23,10 @@ import nebula.common.base.Judgable;
 /**
  * @author ueyudiud
  */
-public class A
+public final class A
 {
+	private A() {}
+	
 	/**
 	 * Copy array elements to a new array with selected length.
 	 * @param array The source array.
@@ -215,5 +218,12 @@ public class A
 		long[] result = new long[length];
 		for (int i = 0; i < length; result[i] = function.applyAsLong(i), ++i);
 		return result;
+	}
+	
+	public static <E> E[] createArray(int length, @Nonnull E value)
+	{
+		E[] array = (E[]) Array.newInstance(value.getClass(), length);
+		Arrays.fill(array, value);
+		return array;
 	}
 }

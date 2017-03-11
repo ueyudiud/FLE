@@ -9,8 +9,8 @@ import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
 import fle.api.recipes.instance.RecipeMaps;
 import nebula.common.gui.ContainerBlockPosition;
 import nebula.common.gui.SlotBase;
-import nebula.common.inventory.InventoryBasicWrapper;
 import nebula.common.inventory.InventorySimple;
+import nebula.common.inventory.InventoryWrapFactory;
 import nebula.common.stack.AbstractStack;
 import nebula.common.util.TileEntities;
 import net.minecraft.block.state.IBlockState;
@@ -32,7 +32,7 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 	public ContainerBarGrizzly(EntityPlayer player, World world, BlockPos pos)
 	{
 		super(player, world, pos);
-		IInventory real = InventoryBasicWrapper.wrap("inventory.bar.grizzly", this.inventory);
+		IInventory real = InventoryWrapFactory.wrap("inventory.bar.grizzly", this.inventory);
 		addOpenerSlots();
 		int size = this.inventorySlots.size();
 		addSlotToContainer(new SlotBase(real, 0, 40, 16));

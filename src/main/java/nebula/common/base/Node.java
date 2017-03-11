@@ -9,7 +9,24 @@ public class Node<T> implements INode<T>
 	 */
 	public static <T> Node<T> first(T target)
 	{
-		return new Node<T>(target);
+		return new Node<>(target);
+	}
+	
+	public static <T> Node<T> chain(T...ts)
+	{
+		switch (ts.length)
+		{
+		case 0 : return null;
+		case 1 : return new Node<>(ts[0]);
+		default:
+			Node<T> result = new Node<>(ts[0]);
+			Node<T> n1 = result;
+			for (int i = 1; i < ts.length; ++i)
+			{
+				n1 = (n1.next = new Node<>(ts[i]));
+			}
+			return result;
+		}
 	}
 	
 	private T target;
@@ -48,7 +65,7 @@ public class Node<T> implements INode<T>
 		}
 		else
 		{
-			this.last = new Node<T>(target);
+			this.last = new Node<>(target);
 			this.last.next = this;
 		}
 	}
@@ -62,7 +79,7 @@ public class Node<T> implements INode<T>
 		}
 		else
 		{
-			this.next = new Node<T>(target);
+			this.next = new Node<>(target);
 			this.next.last = this;
 		}
 	}
@@ -71,7 +88,7 @@ public class Node<T> implements INode<T>
 	public void insertAfter(T target)
 	{
 		Node<T> node = this.next;
-		this.next = new Node<T>(target);
+		this.next = new Node<>(target);
 		this.next.last = this;
 		if(node != null)
 		{
@@ -84,7 +101,7 @@ public class Node<T> implements INode<T>
 	public void insertBefore(T target)
 	{
 		Node<T> node = this.last;
-		this.last = new Node<T>(target);
+		this.last = new Node<>(target);
 		this.last.next = this;
 		if(node != null)
 		{
@@ -94,7 +111,7 @@ public class Node<T> implements INode<T>
 	}
 	
 	@Override
-	public void remove()
+	public T remove()
 	{
 		if(this.last != null)
 		{
@@ -105,5 +122,6 @@ public class Node<T> implements INode<T>
 			this.next.last = this.last;
 		}
 		this.next = this.last = null;
+		return this.target;
 	}
 }

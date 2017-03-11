@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package farcore.lib.stack.fluid;
+package nebula.common.fluid.container;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;

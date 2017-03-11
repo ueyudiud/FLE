@@ -9,8 +9,10 @@ import net.minecraft.entity.Entity;
 /**
  * @author ueyudiud
  */
-public class Entities
+public final class Entities
 {
+	private Entities() {}
+	
 	public static double movementSpeedSq(Entity entity)
 	{
 		return entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ;

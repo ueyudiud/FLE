@@ -38,6 +38,14 @@ public interface INebulaBakedModelPart
 		return new WrapedBakedItemStackModelPart(function);
 	}
 	
+	static void putQuads(List<BakedQuad> quads, INebulaBakedModelPart part, IBlockState state, EnumFacing side, long rand)
+	{
+		if (part instanceof INebulaWorldPropBakedModelPart)
+		{
+			((INebulaWorldPropBakedModelPart) part).putQuads(quads, side, state, rand);
+		}
+	}
+	
 	@SideOnly(Side.CLIENT)
 	interface INebulaWorldPropBakedModelPart extends INebulaBakedModelPart
 	{
@@ -80,7 +88,10 @@ public interface INebulaBakedModelPart
 		@Override
 		public void putQuads(List<BakedQuad> quads, @Nullable EnumFacing facing, IBlockState state, long rand)
 		{
-			quads.addAll(this.quads);
+			if (facing == null)
+			{
+				quads.addAll(this.quads);
+			}
 		}
 		
 		@Override

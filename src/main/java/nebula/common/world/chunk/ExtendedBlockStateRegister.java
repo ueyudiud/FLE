@@ -47,7 +47,7 @@ public enum ExtendedBlockStateRegister
 		}
 	};
 	
-	static final Function<Object, String> INFO_FUNCTION = L.withCast(
+	static final Function<Object, String> INFO_FUNCTION = L.withCastIn(
 			objects -> " # " + ((Block) objects[0]).getRegistryName().toString() + ":" + ((Integer) objects[1]).toString(),
 			Object[].class);
 	

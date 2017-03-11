@@ -15,6 +15,7 @@ import fle.api.ditch.DitchBlockHandler;
 import fle.api.ditch.DitchFactory;
 import fle.api.tile.IDitchTile;
 import nebula.client.util.Client;
+import nebula.common.fluid.FluidTankN;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
@@ -42,7 +43,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -66,11 +66,11 @@ IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects
 	
 	private Mat material = Mat.VOID;
 	private DitchFactory factory = DitchBlockHandler.getFactory(null);
-	private FluidTank tank;
+	private FluidTankN tank;
 	
 	public TEDitch()
 	{
-		this.tank = new FluidTank(0);
+		this.tank = new FluidTankN(0);
 		for(int i : Connect) enable(i);
 	}
 	
@@ -334,7 +334,7 @@ IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects
 	}
 	
 	@Override
-	public FluidTank getTank()
+	public FluidTankN getTank()
 	{
 		return this.tank;
 	}

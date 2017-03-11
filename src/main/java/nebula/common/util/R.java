@@ -13,18 +13,21 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
+ * Reflection helper.
  * @author ueyudiud
  */
-public class R
+public final class R
 {
+	private R() {}
+	
 	static final Map<String, Field> FIELD_CACHE = new HashMap();
 	private static Field modifiersField;
-
+	
 	public static void resetFieldCache()
 	{
 		FIELD_CACHE.clear();
 	}
-
+	
 	private static void initModifierField()
 	{
 		try
@@ -40,7 +43,7 @@ public class R
 			e.printStackTrace();
 		}
 	}
-
+	
 	private static Field getField(Class<?> clazz, String mcpName, String obfName, boolean isPrivate, boolean isFinal, boolean alwaysInit) throws Exception
 	{
 		if(isFinal)
@@ -80,12 +83,12 @@ public class R
 		}
 		throw new FileNotFoundException();
 	}
-
+	
 	public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 	{
 		overrideField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 	}
-
+	
 	public static <T, F> void overrideField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 	{
 		try
@@ -98,12 +101,12 @@ public class R
 			throw new RuntimeException();
 		}
 	}
-
+	
 	public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 	{
 		overrideFinalField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 	}
-
+	
 	public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
 	{
 		try
@@ -116,7 +119,7 @@ public class R
 			throw new RuntimeException("FLE: fail to find and override field " + mcpName);
 		}
 	}
-
+	
 	public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, int override, boolean isPrivate, boolean alwaysInit) throws Exception
 	{
 		try
@@ -129,7 +132,7 @@ public class R
 			throw new RuntimeException("FLE: fail to find and override field " + mcpName);
 		}
 	}
-
+	
 	public static <T> Object getValue(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, boolean alwaysInit)
 	{
 		try
@@ -141,7 +144,7 @@ public class R
 			return null;
 		}
 	}
-
+	
 	public static <T> int getInt(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, boolean alwaysInit)
 	{
 		try
@@ -153,7 +156,7 @@ public class R
 			return 0;
 		}
 	}
-
+	
 	public static Method getMethod(Class clazz, String mcpName, String obfName, Class...classes)
 	{
 		for(String str : new String[]{mcpName, obfName})

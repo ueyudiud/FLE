@@ -23,8 +23,13 @@ public class Materials
 	public static final Material DIRT = Material.GROUND;
 	public static final Material DIRT_GRASSY = Material.GRASS;
 	public static final Material ORE = new MaterialOre();
+	
 	public static final Material ICE = new MaterialIce();
+	
 	public static final Material WATER = Material.WATER;
 	public static final Material LAVA = Material.LAVA;
+	
 	public static final Material FIRE = Material.FIRE;
+	
+	public static final Material POTTERY = Material.ROCK;
 }

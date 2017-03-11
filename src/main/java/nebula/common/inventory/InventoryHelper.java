@@ -2,26 +2,45 @@ package nebula.common.inventory;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
 import nebula.common.base.Appliable;
 import nebula.common.base.ArrayListAddWithCheck;
+import nebula.common.base.IntegerEntry;
+import nebula.common.fluid.container.FluidContainerHandler;
+import nebula.common.fluid.container.IItemFluidContainer;
+import nebula.common.fluid.container.IItemFluidContainerV1;
+import nebula.common.fluid.container.IItemFluidContainerV2;
+import nebula.common.tile.IFluidHandlerIO;
 import nebula.common.util.A;
+import nebula.common.util.Direction;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
+import nebula.common.util.Players;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.fluids.FluidStack;
 
 public class InventoryHelper
 {
-	public static final byte MATCH_STACK_FULLY_INSERT = 0x0;
-	public static final byte MATCH_STACK_SAME = 0x1;
-	public static final byte MATCH_STACK_FULLY_INSERT_WITHOUTNBT = 0x2;
-	public static final byte MATCH_STACK_SAME_WITHOUTNBT = 0x3;
-	public static final byte MATCH_STACK_EMPTY = 0x4;
-	public static final byte MATCH_STACK_CONTAIN = 0x5;
-	public static final byte MATCH_STACK_CONTAIN_WITHOUTNBT = 0x6;
+	public static final byte
+	MATCH_STACK_FULLY_INSERT = 0x0,
+	MATCH_STACK_SAME = 0x1,
+	MATCH_STACK_FULLY_INSERT_WITHOUTNBT = 0x2,
+	MATCH_STACK_SAME_WITHOUTNBT = 0x3,
+	MATCH_STACK_EMPTY = 0x4,
+	MATCH_STACK_CONTAIN = 0x5,
+	MATCH_STACK_CONTAIN_WITHOUTNBT = 0x6;
+	
+	public static final byte
+	FD_FILL_SIMPLE = 0x1,
+	FD_FILL_ONLYFULL = 0x2,
+	FD_FILL_ANY = 0x3,
+	FD_DRAIN = 0x8;
 	
 	public static ItemStack removeStack(ItemStack[] stacks, int index)
 	{
@@ -164,6 +183,219 @@ public class InventoryHelper
 			}
 			else return 0;
 		}
+	}
+	
+	public static boolean drainTankFromInventoryItem(IBasicInventory inventory, IFluidHandlerIO io, int in, int out, int maxFill)
+	{
+		if (inventory.hasStackInSlot(in))
+		{
+			ItemStack stack = inventory.getStackInSlot(in);
+			IntegerEntry<ItemStack> entry;
+			if (in == out)
+			{
+				if (stack.stackSize > 1)
+				{
+					stack = ItemStacks.sizeOf(stack, 1);
+					entry = FluidContainerHandler.fillContainerFromIO(stack, maxFill, io, Direction.Q, true);
+					if (entry != null && entry.getKey() == null)
+					{
+						stack = inventory.decrStackSize(in, 1);
+						FluidContainerHandler.fillContainerFromIO(stack, maxFill, io, Direction.Q, false);
+						return true;
+					}
+				}
+				else
+				{
+					entry = FluidContainerHandler.fillContainerFromIO(stack, maxFill, io, Direction.Q, false);
+					if (entry != null)
+					{
+						inventory.setInventorySlotContents(in, entry.getKey());
+						return true;
+					}
+				}
+			}
+			else
+			{
+				ItemStack stack1 = ItemStacks.sizeOf(stack, 1);
+				entry = FluidContainerHandler.fillContainerFromIO(stack1, maxFill, io, Direction.Q, true);
+				if (entry != null)
+				{
+					if (inventory.insertStack(out, entry.getKey(), true) != 0)
+					{
+						stack1 = inventory.decrStackSize(in, 1);
+						FluidContainerHandler.fillContainerFromIO(stack1, maxFill, io, Direction.Q, false);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean fillTankFromInventoryItem(IBasicInventory inventory, IFluidHandlerIO io, int in, int out, int maxDrain, boolean onlyFullyDrain)
+	{
+		if (inventory.hasStackInSlot(in))
+		{
+			ItemStack stack = inventory.getStackInSlot(in);
+			Entry<ItemStack, FluidStack> entry;
+			if (in == out)
+			{
+				if (stack.stackSize == 1)
+				{
+					entry = FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, false);
+					if (entry != null)
+					{
+						inventory.setInventorySlotContents(in, entry.getKey());
+						return true;
+					}
+				}
+			}
+			else
+			{
+				stack = ItemStacks.sizeOf(stack, 1);
+				entry = FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, true);
+				if (entry != null)
+				{
+					if (inventory.insertStack(out, entry.getKey(), true) > 0)
+					{
+						stack = inventory.decrStackSize(in, 1);
+						FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, false);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean drainOrFillTank(IBasicInventory inventory, IFluidHandlerIO io, int in, int out, byte fdType)
+	{
+		return drainOrFillTank(inventory, io, in, out, Integer.MAX_VALUE, fdType);
+	}
+	
+	public static boolean drainOrFillTank(IBasicInventory inventory, IFluidHandlerIO io, int in, int out, int maxIO, byte fdType)
+	{
+		if (inventory.hasStackInSlot(in))
+		{
+			if ((fdType & FD_DRAIN) != 0)
+			{
+				if (drainTankFromInventoryItem(inventory, io, in, out, maxIO))
+				{
+					return true;
+				}
+			}
+			if ((fdType & FD_FILL_ANY) != 0)
+			{
+				if (fillTankFromInventoryItem(inventory, io, in, out, maxIO, (fdType & FD_FILL_ONLYFULL) != 0))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean drainOrFillTank(IFluidHandlerIO io, EntityPlayer player, EnumHand hand, Direction direction, @Nullable ItemStack stack, byte fdType)
+	{
+		if (stack == null) return false;
+		if (stack.getItem() instanceof IItemFluidContainer)
+		{
+			if (stack.getItem() instanceof IItemFluidContainerV1)
+			{
+				IItemFluidContainerV1 container = (IItemFluidContainerV1) stack.getItem();
+				boolean flag = container.hasFluid(stack);
+				if (!flag || container.canFill(stack, null))
+				{
+					if ((fdType & FD_DRAIN) != 0)
+					{
+						FluidStack stack2 = io.extractFluid(Integer.MAX_VALUE, direction, true);
+						if (stack2 != null)
+						{
+							ItemStack item1 = stack;
+							if (item1.stackSize > 1)
+							{
+								item1 = item1.splitStack(1);
+								io.extractFluid(container.fill(item1, stack2, true), direction, false);
+								Players.giveOrDrop(player, item1);
+							}
+							else
+							{
+								io.extractFluid(container.fill(item1, stack2, true), direction, false);
+							}
+							return true;
+						}
+					}
+				}
+				if (flag)
+				{
+					if ((fdType & FD_FILL_ANY) != 0)
+					{
+						FluidStack stack2 = container.drain(stack, Integer.MAX_VALUE, false);
+						if (io.canInsertFluid(direction, stack2))
+						{
+							ItemStack item1 = stack;
+							if (item1.stackSize > 1)
+							{
+								item1 = item1.splitStack(1);
+								io.insertFluid(container.drain(item1, stack2, true), direction, false);
+								Players.giveOrDrop(player, item1);
+							}
+							else
+							{
+								io.insertFluid(container.drain(item1, stack2, true), direction, false);
+							}
+							return true;
+						}
+					}
+				}
+			}
+			else
+			{
+				IItemFluidContainerV2 container = (IItemFluidContainerV2) stack.getItem();
+				if (!container.hasFluid(stack))
+				{
+					if ((fdType & FD_DRAIN) == 0) return false;
+					int capacity = container.capacity(stack);
+					FluidStack stack2 = io.extractFluid(capacity, direction, true);
+					if (stack2.amount == capacity && container.canFill(stack, stack2))
+					{
+						if (stack.stackSize > 1)
+						{
+							Players.giveOrDrop(player, container.fill(stack, stack2, true));
+						}
+						else
+						{
+							player.setHeldItem(hand, container.fill(stack, stack2, true));
+						}
+						return true;
+					}
+				}
+				else
+				{
+					if ((fdType & FD_FILL_ANY) == 0) return false;
+					FluidStack stack2 = container.getContain(stack);
+					if (io.canInsertFluid(direction, stack2))
+					{
+						int amount = io.insertFluid(stack2, direction, true);
+						if ((fdType & FD_FILL_ONLYFULL) != 0 ? amount == stack2.amount : amount > 0)
+						{
+							io.insertFluid(stack2, direction, false);
+							if (stack.stackSize > 1)
+							{
+								Players.giveOrDrop(player, container.drain(stack));
+							}
+							else
+							{
+								player.setHeldItem(hand, container.drain(stack));
+							}
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		}
+		return false;
 	}
 	
 	private static int getAllowedInsertSize(ItemStack stack)

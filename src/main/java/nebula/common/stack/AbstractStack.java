@@ -65,16 +65,6 @@ public interface AbstractStack
 	 */
 	default boolean valid() { return true; }
 	
-	/**
-	 * Some tools or container has container item.
-	 * This option is result whether use the
-	 * container item. (Default command value
-	 * is false)
-	 * @return
-	 */
-	@Deprecated
-	default boolean useContainer() { return false; }
-	
 	default Judgable<ItemStack> similarCheck() { return this::similar; }
 	
 	default Judgable<ItemStack> containCheck() { return this::contain; }

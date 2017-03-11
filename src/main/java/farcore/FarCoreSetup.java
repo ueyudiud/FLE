@@ -49,10 +49,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 		 * Now Far Core is main update continent. Please
 		 * use FLE version to compact your Far Core modification
 		 * is needed update.
-		 * The major version will not be 1.1 until Far Core is
-		 * enough to make FLE.
 		 */
-		version = "1.1a",
+		version = "1.1b",
 		name = "Far Core",
 		dependencies = "required-after:nebula")
 public class FarCoreSetup

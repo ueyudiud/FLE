@@ -34,6 +34,7 @@ public class RecipeCraftingTool
 	{
 		LIST.add(new Ety<>(new BaseStack(Items.STRING), M.spider_silk));
 		LIST.add(new Ety<>(new BaseStack(BlocksItems.miscResources.getSubItem("vine_rope")), M.vine));
+		LIST.add(new Ety<>(new BaseStack(BlocksItems.miscResources.getSubItem("ramie_rope")), M.ramie_dry));
 		
 		addSpecialToolRecipe1("adz.rock", M.flint, BlocksItems.miscResources.getSubItem("flint_sharp"), TIE_MATCH1, "branch");
 		addSpecialToolRecipe1("adz.rock", M.quartz, BlocksItems.miscResources.getSubItem("quartz_chip"), TIE_MATCH1, "branch");

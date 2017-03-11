@@ -20,17 +20,17 @@ public interface IFluidHandlerIO
 	 * @return
 	 */
 	boolean canExtractFluid(Direction to);
-
+	
 	/**
 	 * Match side can insert item.
 	 * @param stack For asked stack, null for ask general behavior.
 	 * @return
 	 */
-	boolean canExtractFluid(Direction from, @Nullable FluidStack stack);
-
-	FluidStackExt extractFluid(int size, Direction to, boolean simulate);
+	boolean canInsertFluid(Direction from, @Nullable FluidStack stack);
+	
+	FluidStackExt extractFluid(int amount, Direction to, boolean simulate);
 	
 	FluidStackExt extractFluid(FluidStack suggested, Direction to, boolean simulate);
-
+	
 	int insertFluid(FluidStack stack, Direction from, boolean simulate);
 }

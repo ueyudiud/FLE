@@ -23,8 +23,10 @@ import net.minecraftforge.common.DimensionManager;
 /**
  * @author ueyudiud
  */
-public class Players
+public final class Players
 {
+	private Players() {}
+	
 	public static EntityPlayer player()
 	{
 		return Nebula.proxy.playerInstance();
@@ -119,5 +121,14 @@ public class Players
 			}
 		}
 		return null;
+	}
+	
+	public static void giveOrDrop(EntityPlayer player, ItemStack stack)
+	{
+		if (player.world.isRemote || stack == null) return;
+		if (!player.inventory.addItemStackToInventory(stack))
+		{
+			player.dropItem(stack, false);
+		}
 	}
 }

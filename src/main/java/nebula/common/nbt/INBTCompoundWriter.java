@@ -39,6 +39,18 @@ public interface INBTCompoundWriter<T> extends INBTWriter<T, NBTTagCompound>
 		return nbt;
 	}
 	
+	/**
+	 * Only call when this type is implements the writer.
+	 * @param nbt
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	default NBTTagCompound writeToNBT(NBTTagCompound nbt, String key)
+	{
+		writeToNBT((T) this, nbt, key);
+		return nbt;
+	}
+	
 	@Override
 	default NBTTagCompound writeToNBT(T target)
 	{

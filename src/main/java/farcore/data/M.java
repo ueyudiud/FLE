@@ -7,6 +7,7 @@ package farcore.data;
 import static farcore.FarCoreRegistry.MATERIAL_REGISTERS;
 
 import farcore.FarCore;
+import farcore.lib.block.behavior.RockBehaviorFlammable;
 import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MaterialBuilder;
@@ -42,6 +43,9 @@ public class M
 	public static final Mat rhyolite		= new MaterialBuilder(7014, FarCore.ID , "rhyolite"			, "Rhyolite"		, "Rhyolite"			).setRGBa(0x4F535AFF).setToolProp(  39, 10, 2.6F, 0.8F,  8.0F, -0.5F).build().setRock( 9, 6.0F, 21.7F);
 	public static final Mat graniteP		= new MaterialBuilder(7015, FarCore.ID , "granite_p"		, "GranitePegmatite", "Granite Pegmatite"	).setRGBa(0x4F535AFF).setToolProp(  45, 11, 2.8F, 0.8F,  7.2F, -0.6F).build().setRock(10, 7.6F, 30.1F);
 	public static final Mat whitestone		= new MaterialBuilder(7016, "minecraft", "whitestone"		, "Whitestone"		, "End Stone"			).setRGBa(0xE2E2B5FF)                                                .build().setRock( 8, 6.0F, 14.7F);
+	public static final Mat bituminous_coal	= new MaterialBuilder(7017, FarCore.ID , "bituminous_coal"	, "BituminousCoal"	, "Bituminous Coal"		).setRGBa(0x1C1C1CFF)                                                .build();
+	public static final Mat lignite			= new MaterialBuilder(7018, FarCore.ID , "lignite"			, "Lignite"			, "Lignite"				).setRGBa(0x211E1DFF)                                                .build();
+	public static final Mat travertine		= new MaterialBuilder(7019, FarCore.ID , "travertine"		, "Travertine"		, "Travertine"			).setRGBa(0xE0E8EFFF)                                                .build().setRock( 5, 2.4F,  6.2F);
 	//Soils
 	public static final Mat latosol			= new MaterialBuilder(7101, FarCore.ID , "latosol"			, "Latosol"			, "Latosol"				).setRGBa(0x652A1FFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
 	public static final Mat latoaluminosol	= new MaterialBuilder(7102, FarCore.ID , "latoaluminosol"	, "Latoaluminosol"	, "Latoaluminosol"		).setRGBa(0x77412FFF).build().setSoil(0.6F, 3.0F, Material.GROUND);
@@ -122,6 +126,9 @@ public class M
 		MC.axe_rock.addToWhiteList(quartz);
 		
 		dandelion	.setPlant(new PlantDandelion());
+		
+		bituminous_coal	.setRock( 4, 2.5F,  7.7F, new RockBehaviorFlammable<>(bituminous_coal));
+		lignite			.setRock( 3, 2.2F,  6.4F, new RockBehaviorFlammable<>(lignite));
 	}
 	
 	public static void init()

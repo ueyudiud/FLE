@@ -32,8 +32,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 /**
  * @author ueyudiud
  */
-public class TileEntities
+public final class TileEntities
 {
+	private TileEntities() {}
+	
 	public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
 			Direction facing, float hitX, float hitY, float hitZ, TileEntity tile)
 	{

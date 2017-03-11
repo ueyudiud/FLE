@@ -13,10 +13,16 @@ import net.minecraft.item.ItemStack;
 public class InventorySimple implements IBasicInventory
 {
 	protected ItemStack[] stacks;
+	protected int limit;
 	
 	public InventorySimple(int size)
 	{
+		this(size, 64);
+	}
+	public InventorySimple(int size, int limit)
+	{
 		this.stacks = new ItemStack[size];
+		this.limit = limit;
 	}
 	
 	@Override
@@ -41,6 +47,12 @@ public class InventorySimple implements IBasicInventory
 	public ItemStack getStackInSlot(int index)
 	{
 		return this.stacks[index];
+	}
+	
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return this.limit;
 	}
 	
 	@Override

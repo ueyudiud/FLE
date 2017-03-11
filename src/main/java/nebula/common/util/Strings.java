@@ -13,7 +13,7 @@ import nebula.Nebula;
 /**
  * @author ueyudiud
  */
-public class Strings
+public final class Strings
 {
 	static final DecimalFormat FORMAT1;
 	static final long[] OFFSET;
@@ -29,6 +29,8 @@ public class Strings
 			v *= 10;
 		}
 	}
+	
+	private Strings() {}
 	
 	public static String locale()
 	{

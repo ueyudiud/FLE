@@ -9,9 +9,12 @@ import nebula.common.util.Maths;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderEntityItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,6 +48,8 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	protected float blue = 1.0F;
 	protected float alpha = 1.0F;
 	protected float ao = 1.0F;
+	protected RenderEntityItem renderEntityItem;
+	protected EntityItem entityItem;
 	
 	protected TextureAtlasSprite getTexture(IBlockState state)
 	{
@@ -387,5 +392,24 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 		this.helper.vertex(d6, d14, d10, d2, d3);
 		this.helper.vertex(d5, d13, d9, d2, d1);
 		this.helper.draw();
+	}
+	
+	public void renderItem(ItemStack stack, double x, double y, double z)
+	{
+		if (this.renderEntityItem == null || this.entityItem == null)
+		{
+			this.renderEntityItem = new RenderEntityItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem());
+			this.entityItem = new EntityItem(getWorld());
+		}
+		this.entityItem.hoverStart = 0.0F;
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) x, (float) y, (float) z);
+		if (this.renderEntityItem.getRenderManager().options.fancyGraphics)
+		{
+			GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
+		}
+		this.entityItem.setEntityItemStack(stack);
+		this.renderEntityItem.doRender(this.entityItem, 0, 0, 0, 0, 0);
+		GL11.glPopMatrix();
 	}
 }

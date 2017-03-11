@@ -39,9 +39,11 @@ import net.minecraftforge.oredict.OreDictionary;
 /**
  * @author ueyudiud
  */
-public class ItemStacks
+public final class ItemStacks
 {
 	public static final Function<ItemStack, ItemStack> COPY_ITEMSTACK = ItemStack::copyItemStack;
+	
+	private ItemStacks() {}
 	
 	@Nullable
 	public static NBTTagCompound writeItemStackToNBT(@Nullable ItemStack stack)
@@ -325,7 +327,7 @@ public class ItemStacks
 			stack.damageItem(MathHelper.ceil(amount), user);
 		}
 	}
-
+	
 	public static ItemStack[] copyStacks(ItemStack[] stacks)
 	{
 		return A.transform(stacks, ItemStack.class, COPY_ITEMSTACK);

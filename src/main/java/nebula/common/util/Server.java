@@ -15,8 +15,10 @@ import net.minecraft.world.WorldServer;
 /**
  * @author ueyudiud
  */
-public class Server
+public final class Server
 {
+	private Server() {}
+	
 	/**
 	 * I don't know why this method should use in server.
 	 * @param world

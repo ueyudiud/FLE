@@ -39,6 +39,33 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSeed extends ItemMulti implements IFoodStat
 {
+	public static boolean tryPlantSeed(Mat material, ItemStack stack, World worldIn, BlockPos pos)
+	{
+		ICrop crop = material.getProperty(MP.property_crop);
+		CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, crop, getDNAFromStack(stack));
+		if (!crop.canPlantAt(access)) return false;
+		BlockCrop.ITEM_THREAD.set(stack);
+		boolean flag = worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3);
+		BlockCrop.ITEM_THREAD.set(null);
+		if (!flag) return false;
+		return true;
+	}
+	
+	public static ItemStack applySeed(int size, Mat material, GeneticMaterial dna)
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		GenticMaterialFactory.INSTANCE.writeToNBT(dna, nbt, "genetic");
+		ItemStack stack = new ItemStack(EnumItem.seed.item, size, material.id);
+		stack.setTagCompound(nbt);
+		return stack;
+	}
+	
+	public static GeneticMaterial getDNAFromStack(ItemStack stack)
+	{
+		return !stack.hasTagCompound() ? null :
+			GenticMaterialFactory.INSTANCE.readFromNBT(stack.getTagCompound(), "genetic");
+	}
+	
 	public ItemSeed()
 	{
 		super(FarCore.ID, MC.seed);
@@ -60,13 +87,10 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 			}
 			if(!playerIn.canPlayerEdit(pos, facing, stack))
 				return EnumActionResult.FAIL;
-			ICrop crop = material.getProperty(MP.property_crop);
-			CropAccessSimulated access = new CropAccessSimulated(worldIn, pos, crop, getDNAFromStack(stack));
-			if(!crop.canPlantAt(access)) return EnumActionResult.SUCCESS;
-			BlockCrop.ITEM_THREAD.set(stack);
-			worldIn.setBlockState(pos, EnumBlock.crop.block.getDefaultState(), 3);
-			BlockCrop.ITEM_THREAD.set(null);
-			--stack.stackSize;
+			if(tryPlantSeed(material, stack, worldIn, pos))
+			{
+				--stack.stackSize;
+			}
 			return EnumActionResult.SUCCESS;
 		}
 		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
@@ -98,21 +122,6 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		{
 			Localization.addFoodStatInformation(getMaterialFromItem(stack).getProperty(MP.property_edible), stack, unlocalizedList);
 		}
-	}
-	
-	public static ItemStack applySeed(int size, Mat material, GeneticMaterial dna)
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		GenticMaterialFactory.INSTANCE.writeToNBT(dna, nbt, "genetic");
-		ItemStack stack = new ItemStack(EnumItem.seed.item, size, material.id);
-		stack.setTagCompound(nbt);
-		return stack;
-	}
-	
-	public static GeneticMaterial getDNAFromStack(ItemStack stack)
-	{
-		return !stack.hasTagCompound() ? null :
-			GenticMaterialFactory.INSTANCE.readFromNBT(stack.getTagCompound(), "genetic");
 	}
 	
 	@Override

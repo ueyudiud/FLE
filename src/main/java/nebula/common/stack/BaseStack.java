@@ -184,12 +184,6 @@ public class BaseStack implements AbstractStack
 	}
 	
 	@Override
-	public boolean useContainer()
-	{
-		return this.useContainer;
-	}
-	
-	@Override
 	public String toString()
 	{
 		return "[" + this.stack.getUnlocalizedName() + "]" + "x" + this.stack.stackSize;

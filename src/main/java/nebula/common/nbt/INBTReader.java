@@ -26,5 +26,22 @@ public interface INBTReader<T, N extends NBTBase>
 		return nbt.hasKey(key) ? readFromNBT((N) nbt.getTag(key)) : null;
 	}
 	
+	/**
+	 * Used if this instance implements target type.
+	 * @param nbt
+	 * @param key
+	 */
+	@SuppressWarnings("unchecked")
+	default void readFromNBT1(NBTTagCompound nbt, String key)
+	{
+		readFromNBT1((N) nbt.getTag(key));
+	}
+	
+	@SuppressWarnings("unchecked")
+	default void readFromNBT1(N nbt)
+	{
+		throw new UnsupportedOperationException();
+	}
+	
 	T readFromNBT(N nbt);
 }

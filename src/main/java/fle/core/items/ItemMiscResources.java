@@ -43,6 +43,11 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(21, "opal", "Opal", null);
 		
 		addSubItem(1001, "vine_rope", "Vine Rope", null);
+		addSubItem(1002, "dry_ramie_fiber", "Dried Ramie Fiber", null);
+		addSubItem(1003, "hay", "Hay", null);
+		
+		addSubItem(2001, "ramie_rope", "Ramie Rope", null);
+		addSubItem(2002, "ramie_rope_bundle", "Ramie Rope Bundle", null);
 	}
 	
 	@Override

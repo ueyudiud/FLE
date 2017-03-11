@@ -23,8 +23,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class Game
+public final class Game
 {
+	private Game() {}
+	
 	/**
 	 * Get active modid, or get minecraft as modid if no active mod container found.
 	 * @return

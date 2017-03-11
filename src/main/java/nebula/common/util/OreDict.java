@@ -12,8 +12,10 @@ import net.minecraftforge.oredict.OreDictionary;
 /**
  * @author ueyudiud
  */
-public class OreDict
+public final class OreDict
 {
+	private OreDict() {}
+	
 	public static void registerValid(String name, Block ore)
 	{
 		registerValid(name, new ItemStack(ore, 1, OreDictionary.WILDCARD_VALUE));

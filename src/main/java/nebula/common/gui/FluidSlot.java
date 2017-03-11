@@ -1,10 +1,10 @@
 package nebula.common.gui;
 
 import nebula.client.gui.GuiContainerBase;
+import nebula.common.fluid.FluidTankN;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class FluidSlot
 {
-	public FluidTank tank;
+	public FluidTankN tank;
 	protected boolean shouldRender = true;
 	public int x;
 	public int y;
@@ -23,7 +23,7 @@ public class FluidSlot
 	public int v;
 	public int slotNumber;
 	
-	public FluidSlot(FluidTank tank, int x, int y, int u, int v)
+	public FluidSlot(FluidTankN tank, int x, int y, int u, int v)
 	{
 		this.tank = tank;
 		this.x = x;

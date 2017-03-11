@@ -10,8 +10,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import nebula.client.model.INebulaModelPart;
-
 /**
  * @author ueyudiud
  */

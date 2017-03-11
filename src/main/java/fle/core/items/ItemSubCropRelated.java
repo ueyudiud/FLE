@@ -6,7 +6,6 @@ package fle.core.items;
 
 import com.google.common.collect.Maps;
 
-import farcore.FarCore;
 import farcore.data.EnumItem;
 import farcore.data.MC;
 import fle.core.FLE;
@@ -42,6 +41,7 @@ public class ItemSubCropRelated extends ItemSubEdible
 	{
 		final IFoodStat NFS = null;
 		addSubItem(201, "vine", "Vine", NFS);
+		addSubItem(202, "grass", "Grass Stems", NFS);
 		addSubItem(401, "bristlegrass", "Bristlegrass", NFS);
 		addSubItem(402, "dandelion", "Dandelion", NFS);
 		addSubItem(403, "rugosa", "A.Rugosa", NFS);
@@ -90,7 +90,7 @@ public class ItemSubCropRelated extends ItemSubEdible
 	{
 		super.registerRender();
 		NebulaItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/crop_related"));
-		FlexibleTextureSet.registerTextureSetApplier(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FarCore.ID, "items/group/crop_related/" + key)));
+		FlexibleTextureSet.registerTextureSetApplier(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/crop_related/" + key)));
 		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
 	}
 }

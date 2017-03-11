@@ -14,6 +14,7 @@ import nebula.common.base.IRegister;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,7 +40,7 @@ public class BlockWoodenMiscMachine extends BlockTE
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
-		register.register(0, "dryinging_table", TEDryingTable.class);
+		register.register(0, "drying_table", TEDryingTable.class);
 		return true;
 	}
 	
@@ -49,16 +50,23 @@ public class BlockWoodenMiscMachine extends BlockTE
 	{
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
 		ClientProxy.registerCompactModel(mapper, this, this.property_TE);
+		registerCustomBlockRender(mapper, 0, "misc_machine/drying_table");
 	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
 	
 	@Override
-	public boolean isNormalCube(IBlockState state)
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}

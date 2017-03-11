@@ -9,8 +9,10 @@ import net.minecraft.util.math.MathHelper;
 /**
  * @author ueyudiud
  */
-public class Maths
+public final class Maths
 {
+	private Maths() {}
+	
 	public static double[][] gaussianL(int size, double sigma)
 	{
 		int size1 = size * 2 + 1;

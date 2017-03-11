@@ -1,0 +1,19 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"normal": {
+			"transform": "forge:default-block",
+			"textures": {
+				"all": "farcore:blocks/icon/argil"
+			},
+			"model": "fle:pottery/terrine"
+		},
+		"inventory": {
+			"transform": "forge:default-item",
+			"textures": {
+				"layer0": "fle:items/pottery/terrine"
+			},
+			"model": "nebula:item"
+		}
+	}
+}

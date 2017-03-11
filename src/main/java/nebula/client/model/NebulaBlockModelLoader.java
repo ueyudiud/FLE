@@ -12,22 +12,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import nebula.Log;
-import nebula.common.data.Misc;
+import nebula.client.model.part.INebulaModelPart;
+import nebula.client.model.part.NebulaModelPartDecoder;
 import nebula.common.util.IO;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,39 +36,36 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public enum NebulaBlockModelLoader implements ICustomModelLoader
 {
+	/**
+	 * The instance of model loader.
+	 */
 	INSTANCE;
 	
-	private static final Map<Block, ResourceLocation> ACCEPT_BLOCKS = new HashMap<>();
-	private static final Map<ResourceLocation, Block> MODELLOCATION_TO_BLOCK = new HashMap<>();
-	private Map<Block, FlexiableStateMap> map;
+	/**
+	 * The accept location cache.
+	 */
+	private static final Map<ResourceLocation, ResourceLocation> ACCEPT_LOCATION = new HashMap<>();
+	private Map<ResourceLocation, FlexibleBlockModelCache> map;
 	
 	private static IResourceManager manager;
 	
 	static final Gson GSON = new GsonBuilder()
+			.registerTypeAdapter(INebulaModelPart.class, NebulaModelPartDecoder.INSTANCE)
+			.registerTypeAdapter(FlexibleBlockModelCache.class, FlexibleBlockModelCache.DESERIALIZER)
 			.create();
 	
-	public static void registerModel(Block block, ResourceLocation location)
+	public static void registerModel(ResourceLocation location, ResourceLocation location1)
 	{
-		//The default model location of block.
-		ModelResourceLocation location1 = new ModelResourceLocation(block.getRegistryName(), "normal");
-		//For stack to location logic, it will only return single model location, the variant will be match in model.
-		ModelLoader.setCustomStateMapper(block, block1->
-		Maps.toMap(block1.getBlockState().getValidStates(), (Function<IBlockState, ModelResourceLocation>) Misc.anyTo(location1)));
-		//		//Register allowed build item variant.
-		//		ModelLoader.registerItemVariants(item, location1);
-		//The real location of model.
-		location = new ResourceLocation(location.getResourceDomain(), "models/block1/" + location.getResourcePath() + ".json");
-		
-		ACCEPT_BLOCKS.put(block, location);
-		MODELLOCATION_TO_BLOCK.put(location1, block);
+		ACCEPT_LOCATION.put(location, new ResourceLocation(location1.getResourceDomain(), "models/block1/" + location1.getResourcePath() + ".json"));
 	}
 	
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
 		manager = resourceManager;
+		this.map = new HashMap<>();
 		Log.reset();
-		for (Entry<Block, ResourceLocation> entry : ACCEPT_BLOCKS.entrySet())
+		for (Entry<ResourceLocation, ResourceLocation> entry : ACCEPT_LOCATION.entrySet())
 		{
 			ResourceLocation location = entry.getValue();
 			byte[] codes = null;
@@ -89,10 +81,10 @@ public enum NebulaBlockModelLoader implements ICustomModelLoader
 			{
 				try
 				{
-					FlexiableStateMap map = GSON.fromJson(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(codes))), FlexiableStateMap.class);
-					if (map != null)
+					FlexibleBlockModelCache cache = GSON.fromJson(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(codes))), FlexibleBlockModelCache.class);
+					if (cache != null)
 					{
-						this.map.put(entry.getKey(), map);
+						this.map.put(entry.getKey(), cache);
 					}
 				}
 				catch (Exception exception)
@@ -107,12 +99,12 @@ public enum NebulaBlockModelLoader implements ICustomModelLoader
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		return MODELLOCATION_TO_BLOCK.containsKey(modelLocation);
+		return this.map.containsKey(modelLocation);
 	}
 	
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
-		return null;
+		return new FlexibleBlockModelUnbaked(this.map.get(modelLocation));
 	}
 }

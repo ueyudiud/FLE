@@ -13,6 +13,9 @@ public class PacketFluidUpdateSingle extends PacketGui
 	private int id;
 	private FluidStack stack;
 	
+	public PacketFluidUpdateSingle()
+	{
+	}
 	public PacketFluidUpdateSingle(ContainerBase container, int id, FluidStack stack)
 	{
 		super(container);

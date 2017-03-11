@@ -50,12 +50,14 @@ import net.minecraft.world.chunk.Chunk;
 /**
  * @author ueyudiud
  */
-public class Worlds
+public final class Worlds
 {
 	private static final int[][] rotateFix = {
 			{3, 2, 5, 4},
 			{1, 0, 5, 4},
 			{1, 0, 3, 2}};
+	
+	private Worlds() {}
 	
 	public static boolean isAirOrReplacable(IBlockAccess world, BlockPos pos)
 	{

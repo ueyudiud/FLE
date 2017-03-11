@@ -7,8 +7,8 @@ package fle.api.ditch;
 import farcore.lib.material.Mat;
 import fle.api.tile.IDitchTile;
 import nebula.client.util.UnlocalizedList;
+import nebula.common.fluid.FluidTankN;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,7 +19,7 @@ public interface DitchFactory
 {
 	boolean access(Mat material);
 	
-	FluidTank apply(IDitchTile tile);
+	FluidTankN apply(IDitchTile tile);
 	
 	void onUpdate(IDitchTile tile);
 	

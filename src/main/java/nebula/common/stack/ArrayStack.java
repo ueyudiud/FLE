@@ -89,10 +89,4 @@ public class ArrayStack implements AbstractStack
 	{
 		return !this.array.isEmpty();
 	}
-	
-	@Override
-	public boolean useContainer()
-	{
-		return false;
-	}
 }

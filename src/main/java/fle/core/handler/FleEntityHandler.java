@@ -149,7 +149,7 @@ public class FleEntityHandler
 		float a = event.getDistance();//For motion is distance caculation.
 		a *= event.getDamageMultiplier();
 		PotionEffect effect = entity.getActivePotionEffect(MobEffects.JUMP_BOOST);
-		a -= effect == null ? 1.0F : (effect.getAmplifier() + 2.0F);
+		a -= effect == null ? 2.5F : (effect.getAmplifier() + 3.5F);
 		float damage;
 		if (a > 0)
 		{
@@ -173,20 +173,23 @@ public class FleEntityHandler
 			{
 				Log.catchingIfDebug(exception);
 			}
-			entity.attackEntityFrom(DamageSource.fall, damage);
-			BlockPos pos = new BlockPos(entity.posX, entity.posY - .2, entity.posZ);
-			IBlockState state = entity.world.getBlockState(pos);
-			
-			if (state.getMaterial() != Material.AIR)
+			if (damage > 0)
 			{
-				SoundType soundtype = state.getBlock().getSoundType();
-				entity.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
-			}
-			float tick = a + (entity.getRNG().nextFloat() - entity.getRNG().nextFloat()) * a - 4;
-			if(tick > 0)
-			{
-				entity.addPotionEffect(new PotionEffect(Potions.JUMP_REDUCE, (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
-				entity.addPotionEffect(new PotionEffect(Potions.FRACTURE   , (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
+				entity.attackEntityFrom(DamageSource.fall, damage);
+				BlockPos pos = new BlockPos(entity.posX, entity.posY - .2, entity.posZ);
+				IBlockState state = entity.world.getBlockState(pos);
+				
+				if (state.getMaterial() != Material.AIR)
+				{
+					SoundType soundtype = state.getBlock().getSoundType();
+					entity.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
+				}
+				float tick = a + (entity.getRNG().nextFloat() - entity.getRNG().nextFloat()) * a - 4;
+				if(tick > 0)
+				{
+					entity.addPotionEffect(new PotionEffect(Potions.JUMP_REDUCE, (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
+					entity.addPotionEffect(new PotionEffect(Potions.FRACTURE   , (int) (tick * 1200), a < 8 ? 0 : a < 15 ? 1 : 2));
+				}
 			}
 		}
 		event.setCanceled(true);

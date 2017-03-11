@@ -40,7 +40,7 @@ public class OreStack implements AbstractStack
 	@Override
 	public boolean similar(ItemStack stack)
 	{
-		return OreDictionary.containsMatch(false, this.ore, stack);
+		return this.ore.stream().anyMatch(target->OreDictionary.itemMatches(target, stack, false));
 	}
 	
 	@Override
@@ -92,8 +92,8 @@ public class OreStack implements AbstractStack
 	}
 	
 	@Override
-	public boolean useContainer()
+	public String toString()
 	{
-		return this.useContainer;
+		return "[ore:" + this.oreName + "]x" + this.size;
 	}
 }

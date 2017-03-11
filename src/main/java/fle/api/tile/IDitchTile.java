@@ -6,11 +6,11 @@ package fle.api.tile;
 
 import farcore.lib.capability.IFluidHandler;
 import farcore.lib.material.Mat;
+import nebula.common.fluid.FluidTankN;
 import nebula.common.util.Direction;
 import nebula.common.world.IModifiableCoord;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 /**
  * @author ueyudiud
@@ -24,7 +24,7 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 	
 	Mat getMaterial();
 	
-	FluidTank getTank();
+	FluidTankN getTank();
 	
 	float getFlowHeight();
 	
@@ -42,9 +42,9 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 		case B :
 			return false;
 		case Q :
-			return getTank().canFillFluidType(stack);
+			return getTank().canInsertFluid(direction, stack);
 		default:
-			return isLinked(direction) && getTank().canFillFluidType(stack);
+			return isLinked(direction) && getTank().canInsertFluid(direction, stack);
 		}
 	}
 	
@@ -58,16 +58,16 @@ public interface IDitchTile extends IModifiableCoord, IFluidHandler
 		case B :
 			return false;
 		case Q :
-			return getTank().canDrainFluidType(stack);
+			return getTank().canInsertFluid(direction, stack);
 		default:
-			return isLinked(direction) && getTank().canDrainFluidType(stack);
+			return isLinked(direction) && getTank().canInsertFluid(direction, stack);
 		}
 	}
 	
 	@Override
 	default SidedFluidIOProperty getProperty(Direction direction)
 	{
-		return new IFluidHandler.SidedFluidIOTankPropertyWrapper(getTank());
+		return new IFluidHandler.SidedFluidIOTankNPropertyWrapper(getTank());
 	}
 	
 	@Override

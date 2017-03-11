@@ -230,6 +230,7 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 		if(playerIn.capabilities.isCreativeMode)
 		{
 			IFoodStat stat = this.foodstats.getOrDefault(getBaseDamage(stack), IFoodStat.NO_EATABLE);
+			if (stat == IFoodStat.NO_EATABLE) return;
 			if(unlocalizedList.isSneakDown())
 			{
 				unlocalizedList.add("info.food.label");

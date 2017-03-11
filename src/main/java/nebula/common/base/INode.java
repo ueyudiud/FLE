@@ -6,6 +6,8 @@ package nebula.common.base;
 
 import java.util.Iterator;
 
+import com.google.common.collect.Iterators;
+
 import nebula.common.util.L;
 
 /**
@@ -196,9 +198,30 @@ public interface INode<T> extends Iterable<T>
 	 * After:<br>
 	 * N1->N3, N2<br>
 	 */
-	default void remove()
+	default T remove()
 	{
 		throw new UnsupportedOperationException();
+	}
+	
+	default T removeNext()
+	{
+		if (!hasNext())
+			throw new IllegalStateException();
+		INode<T> node = next();
+		return node.remove();
+	}
+	
+	default T removeLast()
+	{
+		if (!hasLast())
+			throw new IllegalStateException();
+		INode<T> node = last();
+		return node.remove();
+	}
+	
+	default T[] toArray(Class<T> clazz)
+	{
+		return Iterators.toArray(iterator(), clazz);
 	}
 	
 	static final class NodeIterator<E> implements Iterator<E>

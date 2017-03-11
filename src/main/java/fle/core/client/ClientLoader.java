@@ -6,6 +6,7 @@ import farcore.data.EnumItem;
 import fle.api.client.PolishingStateIconLoader;
 import fle.core.FLE;
 import fle.core.client.render.TESRDitch;
+import fle.core.client.render.TESRDryingTable;
 import fle.core.common.CommonLoader;
 import fle.core.handler.FleClientHandler;
 import fle.loader.BlocksItems;
@@ -43,5 +44,6 @@ public class ClientLoader extends CommonLoader
 		Entities.clientInit();
 		Recipes.addRenderStates();
 		FarCoreRegistry.registerTESR(TESRDitch.class);
+		FarCoreRegistry.registerTESR(TESRDryingTable.class);
 	}
 }

@@ -37,10 +37,28 @@ public interface Appliable<T> extends Callable<T>, Supplier<T>
 			return cache;
 		}
 		
-		abstract T apply$();
+		protected abstract T apply$();
 	}
 	
 	static Appliable<?> NULL = () -> null;
+	
+	static <V> Appliable<V> to(V value)
+	{
+		return value == null ? (Appliable<V>) NULL : ()-> value;
+	}
+	
+	static <V> AppliableCached<V> wrapCached(Appliable<V> appliable)
+	{
+		if (appliable instanceof AppliableCached) return (AppliableCached<V>) appliable;
+		return new AppliableCached<V>()
+		{
+			@Override
+			protected V apply$()
+			{
+				return appliable.apply();
+			}
+		};
+	}
 	
 	static <V> Appliable<V> or(BooleanSupplier supplier, Appliable<V> a1, Appliable<V> a2)
 	{

@@ -19,6 +19,9 @@ public class FLE
 {
 	public static final String MODID = "fle";
 	public static final String NAME = "Far Land Era";
+	/**
+	 * Main mod version.
+	 */
 	public static final String VERSION = FLEVersion.MAJOR_VERSION + "." + FLEVersion.MINOR_VERSION + "." + FLEVersion.SUB_VERSION;
 	
 	@Instance(FLE.MODID)

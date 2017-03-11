@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 
 import farcore.data.EnumFluid;
-import farcore.lib.stack.fluid.IItemFluidContainerV1;
 import farcore.util.Localization;
 import fle.core.FLE;
 import nebula.client.model.ColorMultiplier;
@@ -23,6 +22,7 @@ import nebula.client.model.NebulaItemModelLoader;
 import nebula.client.render.IProgressBarStyle;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
+import nebula.common.fluid.container.IItemFluidContainerV1;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import nebula.common.item.ItemSubBehavior;
@@ -233,34 +233,49 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	}
 	
 	@Override
-	public boolean canDrain(ItemStack stack)
+	public boolean isFull(ItemStack stack)
 	{
-		return hasFluid(stack);
+		return getFluidAmount(stack) >= this.propertyMap.get(getBaseDamage(stack)).capacity;
 	}
 	
 	@Override
-	public boolean canFill(ItemStack stack, FluidStack resource)
+	public boolean canDrain(ItemStack stack)
 	{
-		FluidStack stack1 = getFluid(stack);
-		return (stack1 == null || stack1.isFluidEqual(resource)) && getCustomDamage(stack) < getMaxCustomDamage(stack);
+		return true;
+	}
+	
+	@Override
+	public boolean canFill(ItemStack stack, @Nullable FluidStack resource)
+	{
+		if (getCustomDamage(stack) >= getMaxCustomDamage(stack)) return false;
+		FluidStack stack1;
+		return resource == null || ((stack1 = getFluid(stack)) == null || stack1.isFluidEqual(resource));
 	}
 	
 	@Override
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
-		if(resource == null) return 0;
+		if (resource == null) return 0;
 		FluidStack contain = getFluid(stack);
-		if(contain != null && !contain.isFluidEqual(resource)) return 0;
 		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(stack));
-		if(contain.amount == property.capacity) return 0;
-		int amount = resource.amount + (contain == null ? 0 : contain.amount);
+		if (contain == null)
+		{
+			int amount = Math.min(resource.amount, property.capacity);
+			if (doFill)
+			{
+				setFluid(stack, FluidStacks.sizeOf(resource, amount));
+			}
+			return amount;
+		}
+		else if(!contain.isFluidEqual(resource)) return 0;
+		else if(contain.amount == property.capacity) return 0;
+		int result = Math.min(property.capacity - contain.amount, resource.amount);
 		if(doFill)
 		{
-			resource = resource.copy();
-			resource.amount = amount;
-			setFluid(stack, resource);
+			contain.amount += result;
+			setFluid(stack, contain);
 		}
-		return amount;
+		return result;
 	}
 	
 	@Override
@@ -268,6 +283,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	{
 		if(maxDrain == 0) return null;
 		FluidStack contain = getFluid(stack);
+		if (contain == null) return null;
 		int amount = Math.min(maxDrain, contain.amount);
 		if(doDrain)
 		{

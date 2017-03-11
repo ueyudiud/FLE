@@ -85,10 +85,12 @@ public abstract class GuiContainerBase extends GuiContainer
 	
 	protected void drawOtherSlots()
 	{
+		this.zLevel = 200F;
 		for(FluidSlot slot : ((ContainerBase) this.inventorySlots).getFluidSlots())
 		{
 			slot.renderSlot(this);
 		}
+		this.zLevel = 0F;
 	}
 	
 	protected void drawOther(int mouseX, int mouseY)
@@ -209,24 +211,24 @@ public abstract class GuiContainerBase extends GuiContainer
 					drawRepeated(fluidIcon, this.guiLeft + x, this.guiTop + y + height - (double) (info.fluid.amount * height) / (double) info.capacity, width, (double) (info.fluid.amount * height) / (double) info.capacity, this.zLevel, color);
 				}
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				this.mc.renderEngine.bindTexture(this.location);
+				bindTexture(this.location);
 			}
 		}
 	}
 	
 	protected void drawRepeated(TextureAtlasSprite icon, double x, double y, double width, double height, double z, int color)
 	{
-		double iconWidthStep = ((double)icon.getMaxU() - (double)icon.getMinU()) / 16D;
-		double iconHeightStep = ((double)icon.getMaxV() - (double)icon.getMinV()) / 16D;
-		int a = color >>> 24 & 0xFF;
-		int r = color >>> 16 & 0xFF;
-		int g = color >>> 8 & 0xFF;
-		int b = color & 0xFF;
+		double iconWidthStep = (icon.getMaxU() - icon.getMinU()) / 16.0;
+		double iconHeightStep = (icon.getMaxV() - icon.getMinV()) / 16.0;
+		float a = (color >>> 24 & 0xFF) / 255.0F;
+		float r = (color >>> 16 & 0xFF) / 255.0F;
+		float g = (color >>> 8 & 0xFF) / 255.0F;
+		float b = (color & 0xFF) / 255.0F;
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glColor4f(r, g, b, a);
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer buffer = tessellator.getBuffer();
-		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		for (double cy = y; cy < y + height; cy += 16D)
 		{
 			double quadHeight = Math.min(16D, (height + y) - cy);
@@ -237,13 +239,14 @@ public abstract class GuiContainerBase extends GuiContainer
 				double quadWidth = Math.min(16D, (width + x) - cx);
 				double maxX = cx + quadWidth;
 				double maxU = icon.getMinU() + iconWidthStep * quadWidth;
-				buffer.pos(cx,   maxY, z).tex(icon.getMinU(), maxV          ).color(r, g, b, a);
-				buffer.pos(maxX, maxY, z).tex(maxU,           maxV          ).color(r, g, b, a);
-				buffer.pos(maxX, cy,   z).tex(maxU,           icon.getMinV()).color(r, g, b, a);
-				buffer.pos(cx,   cy,   z).tex(icon.getMinU(), icon.getMinV()).color(r, g, b, a);
+				buffer.pos(cx,   maxY, z).tex(icon.getMinU(), maxV          ).endVertex();
+				buffer.pos(maxX, maxY, z).tex(maxU,           maxV          ).endVertex();
+				buffer.pos(maxX, cy,   z).tex(maxU,           icon.getMinV()).endVertex();
+				buffer.pos(cx,   cy,   z).tex(icon.getMinU(), icon.getMinV()).endVertex();
 			}
 		}
 		tessellator.draw();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
 	
 	protected void drawItemStack(ItemStack stack, int x, int y, boolean renderOverlay, String altText, float zLevel)

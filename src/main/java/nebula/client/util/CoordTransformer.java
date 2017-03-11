@@ -4,6 +4,8 @@
 
 package nebula.client.util;
 
+import static nebula.common.util.L.SQRT_DIV2;
+
 import java.util.function.Function;
 
 import javax.vecmath.Matrix3d;
@@ -12,14 +14,17 @@ import javax.vecmath.Quat4d;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Tuple3f;
 
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3i;
 
 /**
  * @author ueyudiud
  */
-public class CoordTransformer
+public class CoordTransformer implements Cloneable
 {
+	static final double[][] MODEL_ROTATION_VAL = {{1, 0}, {SQRT_DIV2, SQRT_DIV2}, {0, 1}, {-SQRT_DIV2, SQRT_DIV2}, {-1, 0}};
+	
 	double[] oppisite, rotation, scale, transform;
 	boolean changed;
 	Function<Tuple3d, Tuple3d> function = Function.identity();//If no change detected, use identity function.
@@ -34,9 +39,15 @@ public class CoordTransformer
 		this.changed = true;
 	}
 	
+	@Override
+	protected CoordTransformer clone()
+	{
+		return copy();
+	}
+	
 	public CoordTransformer copy()
 	{
-		return new CoordTransformer(this.oppisite, this.rotation, this.scale, this.transform);
+		return new CoordTransformer(this.oppisite.clone(), this.rotation.clone(), this.scale.clone(), this.transform.clone());
 	}
 	
 	public CoordTransformer normalize()
@@ -77,6 +88,13 @@ public class CoordTransformer
 		return this;
 	}
 	
+	public CoordTransformer setOppisite(CoordTransformer transformer)
+	{
+		this.oppisite = transformer.oppisite.clone();
+		markChanged();
+		return this;
+	}
+	
 	public CoordTransformer setOppisite(double x, double y, double z)
 	{
 		this.oppisite[0] = x;
@@ -88,7 +106,9 @@ public class CoordTransformer
 	
 	public CoordTransformer setTransform(CoordTransformer transformer)
 	{
-		return setTransform(transformer.transform[0], transformer.transform[1], transformer.transform[2]);
+		this.transform = transformer.transform.clone();
+		markChanged();
+		return this;
 	}
 	
 	public CoordTransformer setTransform(double x, double y, double z)
@@ -112,6 +132,12 @@ public class CoordTransformer
 	public CoordTransformer setRotationArray(double x, double y, double z, int size, int count)
 	{
 		return setRotation(x, y, size, 360.0 * count / size);
+	}
+	
+	public CoordTransformer setRotation(CoordTransformer transformer)
+	{
+		this.rotation = transformer.rotation.clone();
+		return this;
 	}
 	
 	public CoordTransformer setRotation(double x, double y, double z, double angle)
@@ -150,6 +176,36 @@ public class CoordTransformer
 		return this;
 	}
 	
+	public CoordTransformer applyRotation(ModelRotation rotation)
+	{
+		int x, y;
+		switch (rotation)
+		{
+		case X0_Y0     : x = 0; y = 0; break;
+		case X0_Y90    : x = 0; y = 1; break;
+		case X0_Y180   : x = 0; y = 2; break;
+		case X0_Y270   : x = 0; y = 3; break;
+		case X90_Y0    : x = 1; y = 0; break;
+		case X90_Y90   : x = 1; y = 1; break;
+		case X90_Y180  : x = 1; y = 2; break;
+		case X90_Y270  : x = 1; y = 3; break;
+		case X180_Y0   : x = 2; y = 0; break;
+		case X180_Y90  : x = 2; y = 1; break;
+		case X180_Y180 : x = 2; y = 2; break;
+		case X180_Y270 : x = 2; y = 3; break;
+		case X270_Y0   : x = 3; y = 0; break;
+		case X270_Y90  : x = 3; y = 1; break;
+		case X270_Y180 : x = 3; y = 2; break;
+		case X270_Y270 : x = 3; y = 3; break;
+		default : throw new IllegalArgumentException();
+		}
+		double[] ds1 = MODEL_ROTATION_VAL[x];
+		double[] ds2 = MODEL_ROTATION_VAL[y];
+		this.rotation = mulQuat(new double[]{ds1[0] * ds2[0], ds1[1] * ds2[0], ds1[0] * ds2[1], ds1[1] * ds2[1]}, this.rotation);
+		markChanged();
+		return this;
+	}
+	
 	private void markChanged()
 	{
 		this.changed = true;
@@ -160,7 +216,7 @@ public class CoordTransformer
 	{
 		if(this.changed)
 		{
-			final Matrix3d rotation = new Matrix3d();
+			Matrix3d rotation = new Matrix3d();
 			rotation.set(new Quat4d(this.rotation));
 			this.function = tuple ->
 			{

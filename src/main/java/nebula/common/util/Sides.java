@@ -9,8 +9,10 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 /**
  * @author ueyudiud
  */
-public class Sides
+public final class Sides
 {
+	private Sides() {}
+	
 	public static boolean isClient()
 	{
 		return FMLCommonHandler.instance().getSide().isClient();

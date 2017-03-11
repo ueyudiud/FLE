@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public interface INBTCompoundReaderAndWritter<T>
 extends INBTCompoundReader<T>, INBTCompoundWriter<T>,
-INBTReaderAndWritter<T, NBTTagCompound
->
+INBTReaderAndWritter<T, NBTTagCompound>
 {
 }

@@ -126,52 +126,52 @@
 		"type": {
 			"resource": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/resource"
+					"all": "farcore:blocks/rock/compactstone/resource"
 				}
 			},
 			"cobble": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/cobble"
+					"all": "farcore:blocks/rock/compactstone/cobble"
 				}
 			},
 			"cobble_art": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/cobble"
+					"all": "farcore:blocks/rock/compactstone/cobble"
 				}
 			},
 			"smoothed": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/smoothed"
+					"all": "farcore:blocks/rock/compactstone/smoothed"
 				}
 			},
 			"mossy": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/mossy"
+					"all": "farcore:blocks/rock/compactstone/mossy"
 				}
 			},
 			"brick": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/brick"
+					"all": "farcore:blocks/rock/compactstone/brick"
 				}
 			},
 			"brick_crushed": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/brick_crushed"
+					"all": "farcore:blocks/rock/compactstone/brick_crushed"
 				}
 			},
 			"brick_mossy": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/brick_mossy"
+					"all": "farcore:blocks/rock/compactstone/brick_mossy"
 				}
 			},
 			"brick_compacted": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/brick_compacted"
+					"all": "farcore:blocks/rock/compactstone/brick_compacted"
 				}
 			},
 			"chiseled": {
 				"textures": {
-					"all": "farcore:blocks/rock/stone_compact/chiseled"
+					"all": "farcore:blocks/rock/compactstone/chiseled"
 				}
 			}
 		},
