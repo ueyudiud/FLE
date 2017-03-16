@@ -33,7 +33,7 @@ public class GuiIconButton extends GuiButton
 	
 	public static enum ButtonSize
 	{
-		Standard(18),  Slot(16),  Small(10);
+		Standard(18),  Slot(16),  Small(10), Tiny(7);
 		
 		final int size;
 		
@@ -119,6 +119,9 @@ public class GuiIconButton extends GuiButton
 				break;
 			case Small:
 				drawTexturedModalRect(this.xPosition, this.yPosition, 18, k * this.size.size, this.width, this.height);
+				break;
+			case Tiny :
+				drawTexturedModalRect(this.xPosition, this.yPosition, 28, k * this.size.size, this.width, this.height);
 				break;
 			default:;
 			}

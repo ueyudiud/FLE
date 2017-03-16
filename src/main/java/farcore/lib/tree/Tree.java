@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import farcore.data.EnumItem;
 import farcore.data.V;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
@@ -19,10 +20,14 @@ import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TECoreLeaves;
+import fle.loader.BlocksItems;
+import nebula.common.base.Appliable;
+import nebula.common.data.Misc;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.A;
 import nebula.common.util.Direction;
+import nebula.common.util.L;
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -38,17 +43,34 @@ import net.minecraft.world.World;
  */
 public abstract class Tree implements ITree
 {
+	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER1 = Appliable.wrapCached(()-> BlocksItems.crop.getSubItem("broadleaf"));
+	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER2 = Appliable.wrapCached(()-> BlocksItems.crop.getSubItem("coniferous"));
+	
 	protected Mat material;
 	protected FamilyTemplate<Tree, ISaplingAccess> family;
 	//logNative logArtifical leaves leavesCore
 	public Block[] blocks;
-	protected long[] nativeTreeValue;
-	protected int[] nativeTreeDatas = new int[0];
+	protected long[] nativeTreeValue = Misc.LONGS_EMPTY;
+	protected int[] nativeTreeDatas = Misc.INTS_EMPTY;
 	protected int leavesCheckRange = 4;
+	protected boolean isBroadLeaf = true;
 	
 	public Tree setMaterial(Mat material)
 	{
 		this.material = material;
+		return this;
+	}
+	
+	public Tree setDefFamily()
+	{
+		this.family = new FamilyTemplate<>(this);
+		return this;
+	}
+	
+	public Tree setFamily(FamilyTemplate<Tree, ISaplingAccess> family)
+	{
+		this.family = family;
+		family.addSpecies(this);
 		return this;
 	}
 	
@@ -346,6 +368,14 @@ public abstract class Tree implements ITree
 	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune,
 			boolean silkTouching, ArrayList list)
 	{
+		if (L.nextInt(4) == 0)
+		{
+			list.add(new ItemStack(EnumItem.branch.item, 1, this.material.id));
+		}
+		if (L.nextInt(6) == 0)
+		{
+			list.add((this.isBroadLeaf ? LEAVES_APPLIER1 : LEAVES_APPLIER2).apply().copy());
+		}
 		return list;
 	}
 	

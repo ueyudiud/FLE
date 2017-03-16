@@ -11,6 +11,7 @@ import static nebula.common.util.ItemStacks.COPY_ITEMSTACK;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import fle.api.recipes.ShapedFleRecipe;
@@ -63,6 +64,7 @@ public class RecipeAdder
 	
 	private static <E> Function<E, ItemStack[]> asShapelessChanceOutput(ItemStack[] list, int[][] chances)
 	{
+		Objects.requireNonNull(list);
 		Function<E, ItemStack[]> result;
 		if (chances == null)
 		{

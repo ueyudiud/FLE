@@ -21,6 +21,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ColorMultiplier
 {
+	/**
+	 * The default color (RGBa) in model quad.<br>
+	 */
+	public static final int NORMAL_COLOR = 0xFFFFFFFF;
+	/**
+	 * The normal color get function used to get color multiple, it will return default color.
+	 */
+	public static final ToIntFunction<ItemStack> NORMAL_MULTIPLIER = stack->NORMAL_COLOR;
+	
 	private static final Map<ResourceLocation, ToIntFunction<ItemStack>> BUILTIN_COLOR_MULTIPLIERS = new HashMap();
 	
 	public static final Map<ResourceLocation, ToIntFunction<ItemStack>> STORED_FUNCTION = new HashMap();
@@ -28,6 +37,11 @@ public class ColorMultiplier
 	static void cleanCache()
 	{
 		STORED_FUNCTION.clear();
+	}
+	
+	public static void registerColorMultiplier(String location, ToIntFunction<ItemStack> function)
+	{
+		registerColorMultiplier(new ResourceLocation(location), function);
 	}
 	
 	public static void registerColorMultiplier(ResourceLocation location, ToIntFunction<ItemStack> function)
@@ -41,7 +55,7 @@ public class ColorMultiplier
 		{
 			return BUILTIN_COLOR_MULTIPLIERS.get(location);
 		}
-		return NebulaItemModelLoader.NORMAL_MULTIPLIER;
+		return ColorMultiplier.NORMAL_MULTIPLIER;
 	}
 	
 	/**
@@ -52,13 +66,14 @@ public class ColorMultiplier
 	 */
 	static IItemColor createColorMultiplier(FlexibleItemModelCache cache)
 	{
-		final ToIntFunction<ItemStack>[] list = new ToIntFunction[cache.caches.length];
+		ToIntFunction<ItemStack>[] list = new ToIntFunction[cache.caches.length];
 		boolean flag = false;
+		
 		for(int i = 0; i < list.length; ++i)
 		{
-			if((list[i] = cache.caches[i].colorMultiplier) != NebulaItemModelLoader.NORMAL_MULTIPLIER)
+			if((list[i] = cache.caches[i].colorMultiplier) != ColorMultiplier.NORMAL_MULTIPLIER)
 				flag = true;
 		}
-		return flag ? (stack, tindex) -> list[tindex].applyAsInt(stack) : null;
+		return flag ? (stack, tint) -> list[tint].applyAsInt(stack) : null;
 	}
 }

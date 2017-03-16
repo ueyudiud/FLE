@@ -4,6 +4,8 @@
 
 package nebula.common.inventory;
 
+import java.util.Arrays;
+
 import nebula.common.util.A;
 import net.minecraft.item.ItemStack;
 
@@ -71,6 +73,12 @@ public class InventorySimple implements IBasicInventory
 	public ItemStack removeStackFromSlot(int index)
 	{
 		return InventoryHelper.removeStack(this.stacks, index);
+	}
+	
+	@Override
+	public void removeAllStacks()
+	{
+		Arrays.fill(this.stacks, null);
 	}
 	
 	@Override

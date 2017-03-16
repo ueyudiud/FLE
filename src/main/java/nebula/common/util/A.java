@@ -12,6 +12,7 @@ import java.util.function.IntPredicate;
 import java.util.function.IntToLongFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongPredicate;
+import java.util.function.ObjIntConsumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,6 +64,17 @@ public final class A
 	public static <E> void executeAll(E[] iterable, Consumer<E> consumer)
 	{
 		for(E element : iterable) consumer.accept(element);
+	}
+	
+	/**
+	 * Given action to every element in array.
+	 * @see java.util.Collection#forEach(Consumer)
+	 * @param iterable
+	 * @param consumer
+	 */
+	public static <E> void executeAll(E[] iterable, ObjIntConsumer<E> consumer)
+	{
+		for(int i = 0; i < iterable.length; ++i) consumer.accept(iterable[i], i);
 	}
 	
 	/**

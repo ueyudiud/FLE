@@ -7,7 +7,7 @@ package fle.loader.recipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import farcore.data.M;
 import farcore.data.MC;
@@ -51,9 +51,9 @@ public class RecipeCraftingTool
 	}
 	
 	private static final List<Entry<AbstractStack, Mat>> LIST  = new ArrayList<>();
-	private static final Consumer<Entry<ItemStack, ItemStack>> CONSUMER1 = entry -> {
-		Mat material = ItemMulti.getMaterial(entry.getKey());
-		ItemTool.setMaterialToItem(entry.getValue(), "head", material);
+	private static final BiConsumer<ItemStack, ItemStack> CONSUMER1 = (input, output) -> {
+		Mat material = ItemMulti.getMaterial(input);
+		ItemTool.setMaterialToItem(output, "head", material);
 	};
 	
 	private static final SingleInputMatch TIE_MATCH1
@@ -76,11 +76,11 @@ public class RecipeCraftingTool
 			return this.list;
 		}
 	},
-	entry-> {
-		Entry<AbstractStack, Mat> entry1 = L.get(LIST, e->e.getKey().similar(entry.getKey()));
+	(input, output)-> {
+		Entry<AbstractStack, Mat> entry1 = L.get(LIST, e->e.getKey().similar(input));
 		if (entry1 != null)
 		{
-			ItemToolFar.setMaterialToItem(entry.getValue(), "tie", entry1.getValue());
+			ItemToolFar.setMaterialToItem(output, "tie", entry1.getValue());
 		}
 	}, null);
 	

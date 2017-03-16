@@ -2,6 +2,8 @@ package fle.core.items;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import farcore.data.EnumItem;
 import farcore.data.KS;
 import farcore.lib.item.IToolStat;
@@ -21,6 +23,7 @@ import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import nebula.common.item.IProjectileItem;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
+import nebula.common.util.OreDict;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderItem;
@@ -54,6 +57,11 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 				filterHandle, toolTypes, behaviors);
 		prop.skillEfficiency = new SkillAbstract(name + ".efficiency", localName + " Efficiency"){}.setExpInfo(30, 10F, 1.5F);
 		prop.skillAttack = new SkillAbstract(name + ".attack", localName + " Attack"){}.setExpInfo(30, 12F, 1.4F);
+		ItemStack stack = new ItemStack(this, 1, id);
+		for (EnumToolType toolType : toolTypes)
+		{
+			OreDict.registerValid(toolType.ore(), stack);
+		}
 		return prop;
 	}
 	
@@ -62,6 +70,13 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 			Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
 		return addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition.filter, filterTie, filterHandle, toolTypes, behaviors);
+	}
+	
+	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
+			IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterTie,
+			Judgable<? super Mat> filterHandle, IBehavior... behaviors)
+	{
+		return addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition.filter, filterTie, filterHandle, ImmutableList.of(stat.getToolType()), behaviors);
 	}
 	
 	@Override

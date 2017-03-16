@@ -59,7 +59,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	/**
 	 * Default material, will not register in to list.
 	 */
-	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID);
+	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID).setWood(0.0F, 0.0F, 0.0F).setTree(ITree.VOID);
 	
 	private static void onDataChanged()
 	{
@@ -387,6 +387,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, this, property);
 			BlockPlank plank = new BlockPlank(this, property);
 			property.block = logArtificial;
+			property.plank = plank;
 			property.initInfo(logNatural, logArtificial, leaves, coreLeaves);
 		}
 		property.setMaterial(this);

@@ -42,6 +42,8 @@ public class ItemSubCropRelated extends ItemSubEdible
 		final IFoodStat NFS = null;
 		addSubItem(201, "vine", "Vine", NFS);
 		addSubItem(202, "grass", "Grass Stems", NFS);
+		addSubItem(203, "broadleaf", "Broadleaf", NFS);
+		addSubItem(204, "coniferous", "Coniferous", NFS);
 		addSubItem(401, "bristlegrass", "Bristlegrass", NFS);
 		addSubItem(402, "dandelion", "Dandelion", NFS);
 		addSubItem(403, "rugosa", "A.Rugosa", NFS);

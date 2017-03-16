@@ -10,6 +10,9 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
+
+import nebula.Log;
 import nebula.client.model.ICustomItemRenderModel;
 import nebula.client.render.IWorldRender;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
@@ -138,18 +141,40 @@ public class ClientOverride
 	
 	public static List<BakedQuad> renderItemModel(IBakedModel model, EnumFacing facing, long rand, ItemStack stack)
 	{
-		if (model instanceof ICustomItemRenderModel)
-			return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
-		return model.getQuads(null, facing, rand);
+		try
+		{
+			if (model instanceof ICustomItemRenderModel)
+				return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
+			return model.getQuads(null, facing, rand);
+		}
+		catch (RuntimeException exception)
+		{
+			if (model != null)
+			{
+				Log.error("Invalid model {} by stack {}, failed to get facing at {}.", exception, model, stack, facing);
+			}
+			else
+			{
+				Log.error("No model present by {}!", stack);
+			}
+			return ImmutableList.of();
+		}
 	}
 	
 	public static void renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
 	{
 		if (stack == null) return;
 		Item item = stack.getItem();
-		if (!(item instanceof IIP_CustomOverlayInGui) || !((IIP_CustomOverlayInGui) item).renderCustomItemOverlayIntoGUI(render, fr, stack, xPosition, yPosition, text))
+		try
 		{
-			render.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, text);
+			if (!(item instanceof IIP_CustomOverlayInGui) || !((IIP_CustomOverlayInGui) item).renderCustomItemOverlayIntoGUI(render, fr, stack, xPosition, yPosition, text))
+			{
+				render.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, text);
+			}
+		}
+		catch (RuntimeException exception)
+		{
+			Log.error("Failed to render item overlay into GUI. Item : {}, ItemRender : {}, FontRenderer : {}", exception, stack, render, fr);
 		}
 	}
 }

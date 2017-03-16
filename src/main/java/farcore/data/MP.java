@@ -36,6 +36,10 @@ public class MP
 	public static final IProperty<PropertyTool> property_tool = () -> null;
 	public static final IProperty<PropertyOre> property_ore = () -> new PropertyOre();
 	public static final IProperty<PropertyWood> property_wood = () -> PropertyTree.VOID;
+	/**
+	 * Only the casting helper.
+	 */
+	public static final IProperty<PropertyTree> property_tree = (IProperty) property_wood;
 	public static final IProperty<PropertyBlockable> property_soil = () -> null;
 	public static final IProperty<RockBehavior> property_rock = () -> null;
 	public static final IProperty<ICrop> property_crop = () -> ICrop.VOID;

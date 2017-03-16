@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Far Core Block Model Loader, provide more flexible
+ * Nebula Block Model Loader, provide more flexible
  * model loader for creator, make more convenient model
  * file writing rules for resource pack maker.<p>
  * @author ueyudiud

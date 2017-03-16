@@ -24,6 +24,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -183,9 +185,21 @@ public final class TileEntities
 	
 	public static <T extends TileEntity & IInventory> void dropItemStacks(T tile)
 	{
+		dropItemStacks(tile.getWorld(), tile.getPos(), tile);
+	}
+	
+	public static void dropItemStacks(World world, BlockPos pos, IInventory inventory)
+	{
 		List<ItemStack> list = new ArrayList<>();
-		for (int i = 0; i < tile.getSizeInventory(); list.add(tile.removeStackFromSlot(i)), ++i);
-		Worlds.spawnDropsInWorld(tile.getWorld(), tile.getPos(), list);
+		for (int i = 0; i < inventory.getSizeInventory(); list.add(inventory.removeStackFromSlot(i)), ++i);
+		Worlds.spawnDropsInWorld(world, pos, list);
+	}
+	
+	public static void dropItemStacks(World world, BlockPos pos, IBasicInventory inventory)
+	{
+		List<ItemStack> list = new ArrayList<>();
+		for (int i = 0; i < inventory.getSizeInventory(); list.add(inventory.removeStackFromSlot(i)), ++i);
+		Worlds.spawnDropsInWorld(world, pos, list);
 	}
 	
 	public static void damageTool(IBasicInventory inventory, int index, float amount,

@@ -69,7 +69,7 @@ public class EnumToolType
 	 */
 	public String ore()
 	{
-		return this.name;
+		return this.dictName;
 	}
 	
 	/**

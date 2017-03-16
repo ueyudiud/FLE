@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -29,7 +28,6 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBanner;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
@@ -89,18 +87,10 @@ public enum NebulaItemModelLoader implements ICustomModelLoader
 	 */
 	public static final String PARTICLE = "particle";
 	/**
-	 * The default color (RGBa) in model quad.<br>
-	 */
-	public static final int NORMAL_COLOR = 0xFFFFFFFF;
-	/**
 	 * The normal texture key get function, return default key as result.<br>
 	 * The target model layer is suggested only contain single texture.
 	 */
 	public static final SubmetaGetter NORMAL_FUNCTION = stack -> NORMAL;
-	/**
-	 * The normal color get function used to get color multiple, it will return default color.
-	 */
-	public static final ToIntFunction<ItemStack> NORMAL_MULTIPLIER = stack -> NORMAL_COLOR;
 	/**
 	 * The cached access loaded item map (Item load by FarCoreItemModelLoader -> ResourceLocation of model)).
 	 */

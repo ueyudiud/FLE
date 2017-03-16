@@ -98,7 +98,8 @@ implements ITB_BlockActived, ITP_Drops
 		if (this.cache != null)
 		{
 			IWorldPropProvider provider = WorldPropHandler.getWorldProperty(this.world);
-			float rain = provider.getHumidity(this);
+			float rain = Math.min(0.0F, provider.getHumidity(this));
+			rain += 1.0F;
 			if (isRaining())
 			{
 				rain *= 5.0F;

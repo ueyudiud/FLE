@@ -14,15 +14,16 @@ import static farcore.data.M.oak_black;
 import static farcore.data.M.spruce;
 import static farcore.data.M.willow;
 
-import farcore.lib.tree.instance.TreeAcacia;
-import farcore.lib.tree.instance.TreeAspen;
-import farcore.lib.tree.instance.TreeBirch;
-import farcore.lib.tree.instance.TreeCeiba;
-import farcore.lib.tree.instance.TreeMorus;
-import farcore.lib.tree.instance.TreeOak;
-import farcore.lib.tree.instance.TreeOakBlack;
-import farcore.lib.tree.instance.TreeSpruce;
-import farcore.lib.tree.instance.TreeWillow;
+import farcore.lib.tree.Tree;
+import fle.core.tree.TreeAcacia;
+import fle.core.tree.TreeAspen;
+import fle.core.tree.TreeBirch;
+import fle.core.tree.TreeCeiba;
+import fle.core.tree.TreeMorus;
+import fle.core.tree.TreeOak;
+import fle.core.tree.TreeOakBlack;
+import fle.core.tree.TreeSpruce;
+import fle.core.tree.TreeWillow;
 
 /**
  * @author ueyudiud
@@ -31,14 +32,15 @@ public class Trees
 {
 	public static void init()
 	{
-		oak			.setTree(new TreeOak().setMaterial(oak));
-		spruce		.setTree(new TreeSpruce().setMaterial(spruce));
-		birch		.setTree(new TreeBirch().setMaterial(birch));
-		ceiba		.setTree(new TreeCeiba().setMaterial(ceiba));
-		acacia		.setTree(new TreeAcacia().setMaterial(acacia));
-		oak_black	.setTree(new TreeOakBlack().setMaterial(oak_black));
-		aspen		.setTree(new TreeAspen().setMaterial(aspen));
-		morus		.setTree(new TreeMorus().setMaterial(morus));
-		willow		.setTree(new TreeWillow().setMaterial(willow));
+		Tree tree;
+		oak			.setTree(new TreeOak().setMaterial(oak).setDefFamily());
+		oak_black	.setTree(new TreeOakBlack().setMaterial(oak_black).setDefFamily());
+		spruce		.setTree(new TreeSpruce().setMaterial(spruce).setDefFamily());
+		birch		.setTree(new TreeBirch().setMaterial(birch).setDefFamily());
+		ceiba		.setTree(new TreeCeiba().setMaterial(ceiba).setDefFamily());
+		acacia		.setTree(new TreeAcacia().setMaterial(acacia).setDefFamily());
+		aspen		.setTree(new TreeAspen().setMaterial(aspen).setDefFamily());
+		morus		.setTree(new TreeMorus().setMaterial(morus).setDefFamily());
+		willow		.setTree(new TreeWillow().setMaterial(willow).setDefFamily());
 	}
 }

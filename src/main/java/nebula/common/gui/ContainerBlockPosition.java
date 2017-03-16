@@ -118,4 +118,16 @@ public class ContainerBlockPosition extends ContainerBase implements IInventoryC
 			Worlds.spawnDropInWorld(this.opener, stack);
 		}
 	}
+	
+	protected void dropOrGivePlayerPlayerItems(IBasicInventory inventory)
+	{
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		{
+			ItemStack stack = inventory.removeStackFromSlot(i);
+			if (!this.opener.inventory.addItemStackToInventory(stack))
+			{
+				Worlds.spawnDropInWorld(this.opener, stack);
+			}
+		}
+	}
 }

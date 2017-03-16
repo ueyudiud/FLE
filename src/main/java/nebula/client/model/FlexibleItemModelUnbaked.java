@@ -102,8 +102,7 @@ public class FlexibleItemModelUnbaked implements ModelBase
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
-		Optional<TRSRTransformation> optional = state.apply(Optional.absent());
-		TRSRTransformation transformation = optional.isPresent() ? optional.get() : TRSRTransformation.identity();
+		TRSRTransformation transformation = L.get(state.apply(Optional.absent()), TRSRTransformation.identity());
 		java.util.function.Function<ItemStack, List<BakedQuad>>[] layers1 = new java.util.function.Function[this.layers.length];
 		for(int i = 0; i < this.layers.length; ++i)
 		{
@@ -147,19 +146,13 @@ public class FlexibleItemModelUnbaked implements ModelBase
 			if(cache.allowedVariants != null)
 			{
 				ImmutableList.Builder<String> builder = ImmutableList.builder();
-				for(String variant : cache.allowedVariants)
-				{
-					builder.addAll(set.buildVariantMap(variant).keySet());
-				}
+				cache.allowedVariants.forEach(variant->builder.addAll(set.buildVariantMap(variant).keySet()));
 				this.allowedVariants = builder.build();
 			}
 			if(cache.convertsAllowTextures != null)
 			{
 				ImmutableList.Builder<String> builder = ImmutableList.builder();
-				for(String variant : cache.convertsAllowTextures)
-				{
-					builder.addAll(set.buildVariantMap(variant).keySet());
-				}
+				cache.convertsAllowTextures.forEach(variant->builder.addAll(set.buildVariantMap(variant).keySet()));
 				this.convertsAllowTextures = builder.build();
 			}
 			this.variantApplier = cache.variantApplier;
@@ -177,11 +170,11 @@ public class FlexibleItemModelUnbaked implements ModelBase
 		{
 			this.layer = 1;
 			this.zOffset = 0.5F;
-			this.baseColor = NebulaItemModelLoader.NORMAL_COLOR;
+			this.baseColor = ColorMultiplier.NORMAL_COLOR;
 			this.allowedVariants = ImmutableList.of(NebulaItemModelLoader.NORMAL);
 			this.convertsAllowTextures = ImmutableList.of();
 			this.variantApplier = NebulaItemModelLoader.NORMAL_FUNCTION;
-			this.colorMultiplier = NebulaItemModelLoader.NORMAL_MULTIPLIER;
+			this.colorMultiplier = ColorMultiplier.NORMAL_MULTIPLIER;
 		}
 		
 		@Override

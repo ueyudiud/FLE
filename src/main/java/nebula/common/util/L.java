@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
@@ -393,6 +394,16 @@ public class L
 		if(collection == null || collection.isEmpty()) return false;
 		for(T target : collection) if(checker.isTrue(target)) return true;
 		return false;
+	}
+	
+	public static <T> T get(Optional<T> optional, T def)
+	{
+		return optional.isPresent() ? optional.get() : def;
+	}
+	
+	public static <T> T get(com.google.common.base.Optional<T> optional, T def)
+	{
+		return optional.isPresent() ? optional.get() : def;
 	}
 	
 	public static <T> T get(Collection<? extends T> collection, Judgable<T> judgable)

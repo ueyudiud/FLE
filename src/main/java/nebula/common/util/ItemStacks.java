@@ -332,4 +332,17 @@ public final class ItemStacks
 	{
 		return A.transform(stacks, ItemStack.class, COPY_ITEMSTACK);
 	}
+	
+	public static void copyItemStackWithOutNBT(ItemStack src, ItemStack target)
+	{
+		target.setItem(src.getItem());
+		target.setItemDamage(src.getItemDamage());
+	}
+	
+	public static void copyItemStackWithNBT(ItemStack src, ItemStack target)
+	{
+		int size = target.stackSize;
+		target.readFromNBT(src.serializeNBT());
+		target.stackSize = size;
+	}
 }

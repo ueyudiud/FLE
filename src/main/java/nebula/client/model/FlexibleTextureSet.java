@@ -59,6 +59,11 @@ public class FlexibleTextureSet
 		STORED_LOCATIONS.clear();
 	}
 	
+	public static void registerTextureSetApplier(String location, Callable<Map<String, ResourceLocation>> callable)
+	{
+		registerTextureSetApplier(new ResourceLocation(location), callable);
+	}
+	
 	public static void registerTextureSetApplier(ResourceLocation location, Callable<Map<String, ResourceLocation>> callable)
 	{
 		TEXTURE_SET_APPLIERS.put(location, callable);

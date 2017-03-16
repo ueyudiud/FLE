@@ -10,6 +10,7 @@ import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
+import farcore.lib.block.instance.BlockPlank;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.ITree;
@@ -39,6 +40,7 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 	public BlockLogArtificial logArtificial;
 	public BlockLeaves leaves;
 	public BlockLeavesCore leavesCore;
+	public BlockPlank plank;
 	
 	public final void setMaterial(Mat material)
 	{

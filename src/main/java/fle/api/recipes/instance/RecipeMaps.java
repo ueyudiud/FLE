@@ -45,6 +45,10 @@ public class RecipeMaps
 	TemplateRecipeMap.<ItemStack>builder("fle.washing.bar.grizzly")
 	.addCacheEntry("time", RW_INT)
 	.addCacheEntry("outputs", RW_UNORDERED_ITEMSTACKS).build();
+	//NAME        : fle.portable.woodwork
+	public static final
+	PortableWoodworkRecipeMap PORTABLE_WOODWORK =
+	new PortableWoodworkRecipeMap();
 	//NAME        : fle.polishing
 	//NBT ENTRY   : output(ItemStack)
 	//DISPLAYMENTS: input(AbstractStack), map(char[]), output(ItemStack)

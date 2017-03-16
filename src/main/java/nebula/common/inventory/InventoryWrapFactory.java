@@ -10,6 +10,7 @@ import nebula.common.stack.AbstractStack;
 import nebula.common.tile.IItemHandlerIO;
 import nebula.common.util.Direction;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -102,6 +103,49 @@ public final class InventoryWrapFactory
 		public ItemStack extractItem(int slot, int amount, boolean simulate) { return this.inventory.decrStackSize(slot, amount, simulate); }
 	}
 	
+	static class InventoryContainerWrapper extends InventoryBasicWrapper
+	{
+		private Container container;
+		
+		InventoryContainerWrapper(String name, Container container, IBasicInventory inventory)
+		{
+			super(name, inventory);
+			this.container = container;
+		}
+		
+		@Override
+		public void setInventorySlotContents(int index, ItemStack stack)
+		{
+			super.setInventorySlotContents(index, stack);
+			this.container.onCraftMatrixChanged(this);
+		}
+		
+		@Override
+		public ItemStack decrStackSize(int index, int count, boolean process)
+		{
+			ItemStack stack = super.decrStackSize(index, count, process);
+			if (process && stack != null)
+			{
+				this.container.onCraftMatrixChanged(this);
+			}
+			return stack;
+		}
+		
+		@Override
+		public ItemStack removeStackFromSlot(int index)
+		{
+			ItemStack stack = super.removeStackFromSlot(index);
+			this.container.onCraftMatrixChanged(this);
+			return stack;
+		}
+		
+		@Override
+		public void setField(int id, int value)
+		{
+			this.container.updateProgressBar(id, value);
+		}
+	}
+	
 	static class InventorySidedWrapper<I extends IBasicInventory & IItemHandlerIO> extends InventoryBasicWrapper implements I2
 	{
 		I inventory;
@@ -124,5 +168,15 @@ public final class InventoryWrapFactory
 	public static I1 wrap(String name, IBasicInventory inventory)
 	{
 		return inventory instanceof IItemHandlerIO ? new InventorySidedWrapper(name, inventory) : new InventoryBasicWrapper(name, inventory);
+	}
+	
+	public static I1 wrap(String name, Container container, IBasicInventory inventory)
+	{
+		return new InventoryContainerWrapper(name, container, inventory);
+	}
+	
+	public static <I extends IBasicInventory> I unwrap(IInventory inventory)
+	{
+		return inventory instanceof InventoryBasicWrapper ? (I) ((InventoryBasicWrapper) inventory).inventory : null;
 	}
 }

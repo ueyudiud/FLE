@@ -76,6 +76,17 @@ public interface IBasicInventory
 	ItemStack removeStackFromSlot(int index);
 	
 	/**
+	 * Remove all stacks from slots.
+	 */
+	default void removeAllStacks()
+	{
+		for (int i = 0; i < getSizeInventory(); ++i)
+		{
+			removeStackFromSlot(i);
+		}
+	}
+	
+	/**
 	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
 	 */
 	void setInventorySlotContents(int index, @Nullable ItemStack stack);

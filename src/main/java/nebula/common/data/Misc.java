@@ -47,7 +47,7 @@ public class Misc
 	public static final PropertyEnum<Direction> PROP_DIRECTION_HORIZONTALS = PropertyEnum.create("direction", Direction.class, Direction.DIRECTIONS_2D);
 	public static final PropertyInteger PROP_CUSTOM_DATA = Properties.create("data", 0, 16);
 	
-	public static final IAttribute PROJECTILE_DAMAGE = (new RangedAttribute((IAttribute) null, "far.projectile.damage", 0.0D, 0, Double.MAX_VALUE)).setShouldWatch(true);
+	public static final IAttribute PROJECTILE_DAMAGE = (new RangedAttribute((IAttribute) null, "nebula.projectile.damage", 0.0D, 0, Double.MAX_VALUE)).setShouldWatch(true);
 	
 	public static final Function TO_NULL = arg -> null;
 	public static final Consumer NO_ACTION = arg -> {};

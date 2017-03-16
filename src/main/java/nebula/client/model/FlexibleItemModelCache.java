@@ -224,7 +224,7 @@ public class FlexibleItemModelCache
 		List<String> allowedVariants = new ArrayList();
 		List<String> convertsAllowTextures = new ArrayList();
 		SubmetaGetter variantApplier = NebulaItemModelLoader.NORMAL_FUNCTION;
-		ToIntFunction<ItemStack> colorMultiplier = NebulaItemModelLoader.NORMAL_MULTIPLIER;
+		ToIntFunction<ItemStack> colorMultiplier = ColorMultiplier.NORMAL_MULTIPLIER;
 		
 		byte layerType = 0;
 		SubmetaGetter convertApplier = null;

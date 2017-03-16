@@ -12,7 +12,10 @@ import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -31,8 +34,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FlexibleBlockModel implements IPerspectiveAwareModel
 {
 	boolean ao;
-	TextureAtlasSprite particle;
+	private TextureAtlasSprite particle;
 	List<INebulaBakedModelPart> parts;
+	
+	public FlexibleBlockModel(boolean ao, List<INebulaBakedModelPart> parts, TextureAtlasSprite particle)
+	{
+		this.ao = ao;
+		this.parts = ImmutableList.copyOf(parts);
+		this.particle = particle == null ? Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite() : particle;
+	}
 	
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, @Nullable EnumFacing side, long rand)

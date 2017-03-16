@@ -4,13 +4,12 @@
 
 package fle.api.recipes;
 
-import java.util.Map.Entry;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
-import nebula.common.base.Ety;
 import nebula.common.stack.AbstractStack;
 import net.minecraft.item.ItemStack;
 
@@ -28,7 +27,7 @@ public class SingleInputMatch
 	/**
 	 * The effect on output.
 	 */
-	protected @Nullable Consumer<Entry<ItemStack, ItemStack>> consumer;
+	protected @Nullable BiConsumer<ItemStack, ItemStack> consumer;
 	/**
 	 * The result of input.
 	 */
@@ -38,11 +37,11 @@ public class SingleInputMatch
 	{
 		this(input, null);
 	}
-	public SingleInputMatch(AbstractStack input, Function<ItemStack, ItemStack> result)
+	public SingleInputMatch(AbstractStack input, UnaryOperator<ItemStack> result)
 	{
 		this(input, null, result);
 	}
-	public SingleInputMatch(AbstractStack input, Consumer<Entry<ItemStack, ItemStack>> consumer, Function<ItemStack, ItemStack> result)
+	public SingleInputMatch(AbstractStack input, BiConsumer<ItemStack, ItemStack> consumer, UnaryOperator<ItemStack> result)
 	{
 		this.input = input;
 		this.consumer = consumer;
@@ -58,7 +57,7 @@ public class SingleInputMatch
 	{
 		if (this.consumer != null)
 		{
-			this.consumer.accept(new Ety(input, output));
+			this.consumer.accept(input, output);
 		}
 	}
 	

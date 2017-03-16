@@ -191,8 +191,7 @@ public class ShapedFleRecipe implements IRecipe
 				for (int i = 0; i < this.width; ++i)
 				{
 					SingleInputMatch match = this.inputs[j][mirror ? this.width - i - 1 : i];
-					ItemStack stack = inv.getStackInRowAndColumn(i + offset[0], j + offset[1]);
-					match.applyOutput(stack, result);
+					match.applyOutput(ItemStack.copyItemStack(inv.getStackInRowAndColumn(i + offset[0], j + offset[1])), result);
 				}
 		}
 		return result;
@@ -223,7 +222,7 @@ public class ShapedFleRecipe implements IRecipe
 				{
 					SingleInputMatch match = this.inputs[j][mirror ? this.width - i - 1 : i];
 					ItemStack stack = inv.getStackInRowAndColumn(i + offset[0], j + offset[1]);
-					stacks[(j + offset[1]) * this.width + i + offset[0]] = match.getRemain(stack);
+					stacks[(j + offset[1]) * inv.getWidth() + i + offset[0]] = match.getRemain(ItemStack.copyItemStack(stack));
 				}
 			return stacks;
 		}
