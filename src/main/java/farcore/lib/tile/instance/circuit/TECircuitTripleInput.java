@@ -13,19 +13,19 @@ public class TECircuitTripleInput extends TECircuitCompacted
 	{
 		return side.horizontal;
 	}
-
+	
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side.getOpposite() == facing ? weakPower : 0;
+		return side.getOpposite() == this.facing ? this.power : 0;
 	}
-
+	
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side.getOpposite() == facing ? strongPower : 0;
+		return side.getOpposite() == this.facing ? this.power : 0;
 	}
-
+	
 	@Override
 	protected Facing[] getOutputFacings()
 	{

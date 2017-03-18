@@ -51,6 +51,8 @@ public class MC
 	public static final MatCondition log_cutted = new MatCondition("log_cutted", "logCutted", "Cutted Log", "%s Log").setUnsizable().setStackLimit(1).setFilter(SubTags.WOOD);
 	public static final MatCondition plankBlock = new MatCondition("plank_block", "plank", "Plank", "%s Plank").setSize(1296L).setFilter(SubTags.WOOD);
 	public static final MatCondition branch = new MatCondition("branch", "Branch", "%s Branch").setSize(864L).setFilter(SubTags.WOOD);
+	public static final MatCondition firewood = new MatCondition("firewood", "firewood", "Firewood", "%s Firewood").setSize(1296L, 324L).setFilter(SubTags.WOOD);
+	public static final MatCondition bark = new MatCondition("bark", "bark", "Bark", "%s Bark").setSize(144L, 16L).setFilter(SubTags.WOOD);
 	
 	public static final MatCondition thread = new MatCondition("thread", "Thread", "%s").setSize(36L, 36L, 2.0F).setFilter(SubTags.ROPE);
 	public static final MatCondition bundle = new MatCondition("bundle", "Bundle", "%s Bundle").setSize(144L, 36L, 0.5F).setFilter(SubTags.ROPE);

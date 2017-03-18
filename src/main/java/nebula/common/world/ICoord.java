@@ -60,6 +60,16 @@ public interface ICoord
 		return world().getBlockState(pos()).getWeakPower(world(), pos(), side);
 	}
 	
+	default int getRedstonePower(EnumFacing side, Direction offset)
+	{
+		return world().getRedstonePower(offset.offset(pos()), side);
+	}
+	
+	default int getRedstonePower(EnumFacing side, int x, int y, int z)
+	{
+		return world().getRedstonePower(pos().add(x, y, z), side);
+	}
+	
 	default int getWeakPower(EnumFacing side, Direction offset)
 	{
 		BlockPos pos = offset.offset(pos());

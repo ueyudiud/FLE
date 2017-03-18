@@ -24,6 +24,8 @@ public class Materials
 	public static final Material DIRT_GRASSY = Material.GRASS;
 	public static final Material ORE = new MaterialOre();
 	
+	public static final Material GLASS = Material.GLASS;
+	
 	public static final Material ICE = new MaterialIce();
 	
 	public static final Material WATER = Material.WATER;

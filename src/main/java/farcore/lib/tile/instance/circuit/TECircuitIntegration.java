@@ -13,36 +13,35 @@ import net.minecraft.nbt.NBTTagCompound;
 public class TECircuitIntegration extends TECircuitFrontBack
 {
 	private short integration;
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setShort("integration", integration);
+		nbt.setShort("integration", this.integration);
 		return super.writeToNBT(nbt);
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		integration = nbt.getShort("integration");
+		this.integration = nbt.getShort("integration");
 	}
 	
 	@Override
 	protected void updateServer()
 	{
 		super.updateServer();
-		if((timer & 0x1) == 0)
+		if((this.timer & 0x1) == 0)
 		{
-			int weak = getWeakPower(Facing.BACK);
-			int last = strongPower;
-			integration += weak;
-			integration *= 15;
-			integration /= 16;
-			if(last != integration / 16)
+			int power = getRedstonePower(Facing.BACK);
+			int last = this.power;
+			this.integration += power;
+			this.integration *= 16;
+			this.integration /= 17;
+			if(last != this.integration / 16)
 			{
-				setStrongPower(integration / 16);
-				setWeakPower(integration / 16);
+				setRedstonePower(this.integration / 16);
 			}
 		}
 	}

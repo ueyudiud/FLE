@@ -1,17 +1,17 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-        "transform": "forge:default-block",
-        "model": "farcore:leaves"
-    },
-    "variants": {
-        "type": {
-            "oak": { "textures": { "all": "minecraft:blocks/leaves/oak" } },
-            "spruce": { "textures": { "all": "minecraft:blocks/leaves/spruce" } },
-            "birch": { "textures": { "all": "minecraft:blocks/leaves/birch" } },
-            "ceiba": { "textures": { "all": "minecraft:blocks/leaves/ceiba" } },
-            "acacia": { "textures": { "all": "minecraft:blocks/leaves/acacia" } },
-            "oak-black": { "textures": { "all": "minecraft:blocks/leaves/oak-black" } }
-        }
-    }
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:leaves"
+	},
+	"variants": {
+		"type": {
+			"oak": { "textures": { "all": "minecraft:blocks/leaves/oak" } },
+			"spruce": { "textures": { "all": "minecraft:blocks/leaves/spruce" } },
+			"birch": { "textures": { "all": "minecraft:blocks/leaves/birch" } },
+			"ceiba": { "textures": { "all": "minecraft:blocks/leaves/ceiba" } },
+			"acacia": { "textures": { "all": "minecraft:blocks/leaves/acacia" } },
+			"oak-black": { "textures": { "all": "minecraft:blocks/leaves/oak-black" } }
+		}
+	}
 }

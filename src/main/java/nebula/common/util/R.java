@@ -5,7 +5,9 @@
 package nebula.common.util;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -172,5 +174,29 @@ public final class R
 			}
 		}
 		return null;
+	}
+	
+	public static <T> T newInstance(Constructor constructor, Object...objects)
+	{
+		try
+		{
+			return (T) constructor.newInstance(objects);
+		}
+		catch (InvocationTargetException exception)
+		{
+			Throwable throwable = exception.getTargetException();
+			if (throwable instanceof RuntimeException)
+			{
+				throw (RuntimeException) throwable;
+			}
+			else
+			{
+				throw new RuntimeException("Catch an exception during creating new instance.", throwable);
+			}
+		}
+		catch (Exception exception)
+		{
+			throw new IllegalArgumentException(exception);
+		}
 	}
 }

@@ -6,6 +6,7 @@ package farcore.lib.block.state;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.base.Optional;
@@ -22,6 +23,8 @@ import net.minecraft.block.state.IBlockState;
  */
 public class PropertyMaterial extends PropertyHelper<Mat>
 {
+	private static final Comparator<Mat> COMPARATOR = (m1, m2) -> m1.id - m2.id;
+	
 	final List<Mat> list;
 	
 	public static PropertyMaterial create(String name, Judgable<? super Mat> checker)
@@ -31,7 +34,7 @@ public class PropertyMaterial extends PropertyHelper<Mat>
 	public static PropertyMaterial create(String name, Collection<Mat> collection)
 	{
 		Mat[] materials = L.cast(collection, Mat.class);
-		Arrays.sort(materials, (m1, m2) -> m1.id-m2.id);
+		Arrays.sort(materials, COMPARATOR);
 		return new PropertyMaterial(name, ImmutableList.copyOf(materials));
 	}
 	

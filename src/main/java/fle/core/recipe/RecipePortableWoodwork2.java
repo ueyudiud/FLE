@@ -5,7 +5,9 @@
 package fle.core.recipe;
 
 import farcore.data.EnumToolTypes;
+import farcore.data.MC;
 import farcore.lib.block.instance.BlockLogArtificial;
+import farcore.lib.item.ItemMulti;
 import farcore.lib.material.prop.PropertyTree;
 import fle.api.recipes.instance.PortableWoodworkRecipeMap.PortableWoodworkRecipe;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
@@ -46,7 +48,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 				}
 				if (inventory.hasStackInSlot(1))
 				{
-					stack = inventory.getStackInSlot(0);
+					stack = inventory.getStackInSlot(1);
 					if (EnumToolTypes.AWL.match(stack) || EnumToolTypes.BIFACE.match(stack) ||
 							(stack.getItem() instanceof IPolishableItem && ((IPolishableItem) stack.getItem()).getPolishResult(stack, ' ') == 'c'))
 					{
@@ -70,7 +72,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	{
 		ItemStack stack = inventory.getStackInSlot(2);
 		PropertyTree tree = ((BlockLogArtificial) Block.getBlockFromItem(stack.getItem())).tree;
-		ItemStack[] result = {new ItemStack(tree.plank)};
+		ItemStack[] result = {new ItemStack(tree.plank), ItemMulti.createStack(tree.material(), MC.bark)};
 		return result;
 	}
 	
@@ -98,7 +100,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 		}
 		if (inventory.hasStackInSlot(1))
 		{
-			stack = inventory.getStackInSlot(0);
+			stack = inventory.getStackInSlot(1);
 			if (EnumToolTypes.AWL.match(stack) || EnumToolTypes.BIFACE.match(stack))
 			{
 				hasT2 = true;

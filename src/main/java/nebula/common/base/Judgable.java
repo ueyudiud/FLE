@@ -17,26 +17,28 @@ public interface Judgable<T> extends Predicate<T>
 	
 	static <T> Judgable<T> fromPredicate(Predicate<T> predicate) { return predicate::test; }
 	
-	static <T> Judgable<T> or(Judgable<T>...checkers) { return or(Arrays.asList(checkers)); }
+	static <T> Judgable<T> or(Predicate<T>...checkers) { return or(Arrays.asList(checkers)); }
 	
-	static <T> Judgable<T> and(Judgable<T>...checkers) { return and(Arrays.asList(checkers)); }
+	static <T> Judgable<T> and(Predicate<T>...checkers) { return and(Arrays.asList(checkers)); }
+	
+	static <R, T extends R> Judgable<R> matchAndCast(Predicate<T> predicate, Class<T> cast) { return r->cast.isInstance(r) ? predicate.test((T) r) : false; }
 	
 	/**
 	 * Uses for modifiable collection checker.
 	 * @param collection
 	 * @return
 	 */
-	static <T> Judgable<T> or(Collection<Judgable<T>> collection)
+	static <T> Judgable<T> or(Collection<? extends Predicate<T>> collection)
 	{
 		return target -> {
-			for(Judgable<T> checker : collection) if(checker.isTrue(target)) return true; return false;
+			for(Predicate<T> checker : collection) if(checker.test(target)) return true; return false;
 		};
 	}
 	
-	static <T> Judgable<T> and(Collection<Judgable<T>> collection)
+	static <T> Judgable<T> and(Collection<? extends Predicate<T>> collection)
 	{
 		return target -> {
-			for(Judgable<T> checker : collection) if(!checker.isTrue(target)) return false; return true;
+			for(Predicate<T> checker : collection) if(!checker.test(target)) return false; return true;
 		};
 	}
 	

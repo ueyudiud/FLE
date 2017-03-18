@@ -22,15 +22,16 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ConnectRedstone;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_RedstonePower;
-import nebula.common.tool.EnumToolType;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.IUpdatableTile;
 import nebula.common.tile.TESynchronization;
+import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Facing;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -123,6 +124,22 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	}
 	
 	@Override
+	public int getRedstonePower(EnumFacing side, Direction offset)
+	{
+		int power = super.getRedstonePower(side, offset);
+		if (power >= 15)
+		{
+			return power;
+		}
+		IBlockState state = getBlockState(offset);
+		if (state.getBlock() instanceof BlockRedstoneWire)
+		{
+			return Math.max(power, state.getValue(BlockRedstoneWire.POWER));
+		}
+		else return power;
+	}
+	
+	@Override
 	public abstract int getStrongPower(IBlockState state, Direction side);
 	
 	@Override
@@ -212,16 +229,10 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	
 	protected abstract Facing[] getOutputFacings();
 	
-	protected int getWeakPower(Facing offset)
+	protected int getRedstonePower(Facing offset)
 	{
 		Direction direction = offset.toDirection(this.facing);
-		return getWeakPower(direction.of(), direction);
-	}
-	
-	protected int getStrongPower(Facing offset)
-	{
-		Direction direction = offset.toDirection(this.facing);
-		return getStrongPower(direction.of(), direction);
+		return getRedstonePower(direction.getOpposite().of(), direction);
 	}
 	
 	@Override

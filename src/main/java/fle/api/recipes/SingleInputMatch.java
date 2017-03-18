@@ -11,6 +11,8 @@ import java.util.function.UnaryOperator;
 import javax.annotation.Nullable;
 
 import nebula.common.stack.AbstractStack;
+import nebula.common.tool.EnumToolType;
+import nebula.common.util.ItemStacks;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -32,6 +34,14 @@ public class SingleInputMatch
 	 * The result of input.
 	 */
 	protected @Nullable Function<ItemStack, ItemStack> result;
+	
+	public static SingleInputMatch toolUse(EnumToolType type, float use)
+	{
+		return new SingleInputMatch(type.stack(), stack-> {
+			ItemStacks.damageTool(stack, use, null, type);
+			return stack.stackSize <= 0 ? null : stack;
+		});
+	}
 	
 	public SingleInputMatch(AbstractStack input)
 	{

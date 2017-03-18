@@ -146,6 +146,8 @@ public class CommonLoader
 			new BlockSapling().setCreativeTab(CT.tabTree);
 			EnumItem.branch.set(new ItemMulti(MC.branch).setCreativeTab(CT.tabTree));
 			new ItemTreeLog().setCreativeTab(CT.tabTree);
+			new ItemMulti(MC.bark).setCreativeTab(CT.tabTree);
+			new ItemMulti(MC.firewood).setCreativeTab(CT.tabTree);
 		}
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabMaterial));
 		new ItemIngot().setCreativeTab(CT.tabMaterial);

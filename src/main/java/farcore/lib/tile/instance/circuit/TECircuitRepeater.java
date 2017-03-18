@@ -7,37 +7,35 @@ import net.minecraft.entity.player.EntityPlayer;
 public class TECircuitRepeater extends TECircuitFrontBack
 {
 	private static final int Actived = 24;
-
+	
 	@Override
 	protected void updateBody()
 	{
 		super.updateBody();
-		if(updateDelay == 0)
+		if(this.updateDelay == 0)
 		{
-			int weak = getWeakPower(Facing.BACK);
-			int strong = getStrongPower(Facing.BACK);
-			if(weak != 0 || strong != 0)
+			int power = getRedstonePower(Facing.BACK);
+			if(power != 0)
 			{
-				setStrongPower(15);
-				setWeakPower(15);
+				setRedstonePower(15);
 				enable(Actived);
 			}
 			else
 			{
-				setStrongPower(0);
-				setWeakPower(0);
+				setRedstonePower(0);
 				disable(Actived);
 			}
+			this.updateDelay = -1;
 		}
 	}
-
+	
 	@Override
 	protected void onScrewDriverUsed(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
-		mode++;
-		if(mode == 4)
+		this.mode++;
+		if(this.mode == 4)
 		{
-			mode = 0;
+			this.mode = 0;
 		}
 		syncToNearby();
 	}
@@ -45,18 +43,17 @@ public class TECircuitRepeater extends TECircuitFrontBack
 	@Override
 	protected void updateCircuit()
 	{
-		if(updateDelay > 0) return;
-		int weak = getWeakPower(Facing.BACK);
-		int strong = getStrongPower(Facing.BACK);
-		if((weak != 0 || strong != 0) != is(Actived))
+		if(this.updateDelay > 0) return;
+		int power = getRedstonePower(Facing.BACK);
+		if((power != 0) ^ is(Actived))
 		{
-			markForDelayUpdate((mode + 1) * 2);
+			markForDelayUpdate((this.mode + 1) * 2);
 		}
 	}
 	
 	@Override
 	public String getState()
 	{
-		return "t" + mode + "_" + (is(Actived) ? "on" : "off");
+		return "t" + this.mode + "_" + (is(Actived) ? "on" : "off");
 	}
 }

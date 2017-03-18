@@ -1,6 +1,0 @@
-{
-	"parent": "farcore:block/leaves",
-	"textures": {
-		"all": "farcore:blocks/leaves/morus"
-	}
-}

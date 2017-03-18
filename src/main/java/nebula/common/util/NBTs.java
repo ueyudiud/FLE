@@ -13,7 +13,9 @@ import javax.annotation.Nullable;
 import nebula.Log;
 import nebula.common.base.IRegister;
 import nebula.common.nbt.INBTCompoundReader;
+import nebula.common.nbt.INBTReader;
 import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.nbt.INBTWriter;
 import nebula.common.nbt.NBTTagCompoundEmpty;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -208,6 +210,11 @@ public final class NBTs
 		}
 	}
 	
+	public static <O> void setObj(NBTTagCompound compound, String key, O obj, INBTWriter<O, ?> writer)
+	{
+		writer.writeToNBT(obj, compound, key);
+	}
+	
 	public static byte getByteOrDefault(NBTTagCompound nbt, String key, int def)
 	{
 		return nbt.hasKey(key) ? nbt.getByte(key) : (byte) def;
@@ -361,6 +368,11 @@ public final class NBTs
 			}
 		}
 		return container;
+	}
+	
+	public static <O> O getObj(NBTTagCompound nbt, String key, INBTReader<O, ?> reader)
+	{
+		return reader.readFromNBT(nbt, key);
 	}
 	
 	public static <E, N extends NBTBase> E[] getListOrDefault(NBTTagCompound nbt, String key, Class<E> elementClass, @Nullable E[] def, Function<N, E> reader, boolean ordered)

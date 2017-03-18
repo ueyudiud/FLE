@@ -12,12 +12,12 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	
 	private boolean lastFront;
 	private boolean lastBack;
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setBoolean("flag1", lastFront);
-		nbt.setBoolean("flag2", lastBack);
+		nbt.setBoolean("flag1", this.lastFront);
+		nbt.setBoolean("flag2", this.lastBack);
 		return super.writeToNBT(nbt);
 	}
 	
@@ -25,50 +25,34 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		lastFront = nbt.getBoolean("flag1");
-		lastBack = nbt.getBoolean("flag2");
+		this.lastFront = nbt.getBoolean("flag1");
+		this.lastBack = nbt.getBoolean("flag2");
 	}
 	
 	@Override
 	protected void updateCircuit()
 	{
 		super.updateCircuit();
-		int front = Math.max(getWeakPower(Facing.FRONT), getStrongPower(Facing.FRONT));
-		int back = Math.max(getWeakPower(Facing.BACK), getStrongPower(Facing.BACK));
-		if(strongPower > 7)
+		int front = getRedstonePower(Facing.FRONT);
+		int back = getRedstonePower(Facing.BACK);
+		if(this.power > 7)
 		{
-			if(front > 0 && !lastFront)
+			if(front > 0 && !this.lastFront)
 			{
-				setWeakPower(0);
-				setStrongPower(0);
+				setRedstonePower(0);
 				disable(Actived);
 			}
 		}
 		else
 		{
-			if(back > 0 && !lastBack)
+			if(back > 0 && !this.lastBack)
 			{
-				setWeakPower(15);
-				setStrongPower(15);
+				setRedstonePower(15);
 				enable(Actived);
 			}
 		}
-		if(front != 0)
-		{
-			lastFront = true;
-		}
-		else
-		{
-			lastFront = false;
-		}
-		if(back != 0)
-		{
-			lastBack = true;
-		}
-		else
-		{
-			lastBack = false;
-		}
+		this.lastFront = front != 0;
+		this.lastBack = back != 0;
 	}
 	
 	@Override
@@ -76,27 +60,27 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	{
 		return side.horizontal;
 	}
-
+	
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side == Facing.LEFT.toDirection(facing) ? strongPower :
-			side == Facing.RIGHT.toDirection(facing) ? 15 - strongPower : 0;
+		return side == Facing.LEFT.toDirection(this.facing) ? this.power :
+			side == Facing.RIGHT.toDirection(this.facing) ? 15 - this.power : 0;
 	}
-
+	
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side == Facing.LEFT.toDirection(facing) ? weakPower :
-			side == Facing.RIGHT.toDirection(facing) ? 15 - weakPower : 0;
+		return side == Facing.LEFT.toDirection(this.facing) ? this.power :
+			side == Facing.RIGHT.toDirection(this.facing) ? 15 - this.power : 0;
 	}
-
+	
 	@Override
 	protected Facing[] getOutputFacings()
 	{
 		return OUT;
 	}
-
+	
 	@Override
 	public String getState()
 	{

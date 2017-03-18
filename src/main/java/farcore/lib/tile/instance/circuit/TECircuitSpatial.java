@@ -16,67 +16,67 @@ public class TECircuitSpatial extends TECircuitCompacted
 	
 	protected byte powerFB;
 	protected byte powerLR;
-
+	
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state)
 	{
 		return REDSTONE_SPATIAL_DIODE_AABB;
 	}
-
+	
 	@Override
 	public AxisAlignedBB getBoundBox(IBlockState state)
 	{
 		return REDSTONE_SPATIAL_DIODE_AABB;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 	{
 		return REDSTONE_SPATIAL_DIODE_AABB;
 	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		powerFB = nbt.getByte("powerfb");
-		powerLR = nbt.getByte("powerlr");
+		this.powerFB = nbt.getByte("powerfb");
+		this.powerLR = nbt.getByte("powerlr");
 	}
-
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setByte("poewrfb", powerFB);
-		nbt.setByte("powerlr", powerLR);
+		nbt.setByte("poewrfb", this.powerFB);
+		nbt.setByte("powerlr", this.powerLR);
 		return super.writeToNBT(nbt);
 	}
-
+	
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
 		return side.horizontal ?
-				(side == facing || side == facing.getOpposite() ?
-						powerFB : powerLR) : 0;
+				(side == this.facing || side == this.facing.getOpposite() ?
+						this.powerFB : this.powerLR) : 0;
 	}
 	
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
 		return side.horizontal ?
-				(side == facing || side == facing.getOpposite() ?
-						powerFB : powerLR) : 0;
+				(side == this.facing || side == this.facing.getOpposite() ?
+						this.powerFB : this.powerLR) : 0;
 	}
-
+	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, Direction side)
 	{
 		return side.horizontal;
 	}
-
+	
 	protected byte getPowerHigherThan(byte min, byte power, Facing side)
 	{
-		byte power1 = (byte) Math.max(getWeakPower(side), getStrongPower(side));
+		byte power1 = (byte) getRedstonePower(side);
 		if(power1 <= power) return power;
 		else if(power1 < min) return 0;
 		return (byte) (power1 - 1);

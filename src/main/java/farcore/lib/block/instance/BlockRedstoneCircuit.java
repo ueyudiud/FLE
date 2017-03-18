@@ -108,10 +108,10 @@ public class BlockRedstoneCircuit extends BlockTE
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
-		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Redstone Repeater");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Redstone Ticker");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(3), "Redstone RS Latch");
-		LanguageManager.registerLocal(getTranslateNameForItemStack(4), "Redstone Synchronizer");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Redstone Repeater");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Redstone Ticker");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Redstone RS Latch");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(3), "Redstone Synchronizer");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(16), "Redstone Not Door");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(17), "Redstone Or Door");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(18), "Redstone And Door");

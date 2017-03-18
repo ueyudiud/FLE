@@ -11,10 +11,8 @@ public abstract class TECircuitCompacted extends TECircuitBase
 {
 	protected static final int notifyNeighbour = 0x1000;
 	
-	protected byte lastStrongPower;
-	protected byte lastWeakPower;
-	protected byte strongPower;
-	protected byte weakPower;
+	protected byte lastPower;
+	protected byte power;
 	
 	protected int updateDelay;
 	
@@ -42,8 +40,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setShort("delay", (short) this.updateDelay);
-		nbt.setByte("strong", this.strongPower);
-		nbt.setByte("weak", this.weakPower);
+		nbt.setByte("power", this.power);
 		nbt.setByte("mode", this.mode);
 		return super.writeToNBT(nbt);
 	}
@@ -53,8 +50,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 	{
 		super.readFromNBT(nbt);
 		this.updateDelay = nbt.getShort("delay");
-		this.strongPower = nbt.getByte("strong");
-		this.weakPower = nbt.getByte("weak");
+		this.power = nbt.getByte("power");
 		this.mode = nbt.getByte("mode");
 	}
 	
@@ -71,13 +67,12 @@ public abstract class TECircuitCompacted extends TECircuitBase
 			}
 		}
 		updateBody();
-		if(this.strongPower != this.lastStrongPower || this.weakPower != this.lastWeakPower)
+		if(this.power != this.lastPower)
 		{
 			notifyNeighbors();
 			markDirty();
 		}
-		this.lastStrongPower = this.strongPower;
-		this.lastWeakPower = this.weakPower;
+		this.lastPower = this.power;
 	}
 	
 	protected void updateBody()
@@ -87,7 +82,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 	
 	protected void markForDelayUpdate(int delay)
 	{
-		if(this.updateDelay == 0)
+		if(this.updateDelay <= 0)
 		{
 			this.updateDelay = delay;
 		}
@@ -102,14 +97,9 @@ public abstract class TECircuitCompacted extends TECircuitBase
 		
 	}
 	
-	public void setStrongPower(int strongPower)
+	public void setRedstonePower(int power)
 	{
-		this.strongPower = (byte) strongPower;
-	}
-	
-	public void setWeakPower(int weakPower)
-	{
-		this.weakPower = (byte) weakPower;
+		this.power = (byte) power;
 	}
 	
 	@Override
@@ -123,8 +113,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 			{
 				notifyNeighbors();
 			}
-			this.lastStrongPower = this.strongPower;
-			this.lastWeakPower = this.weakPower;
+			this.lastPower = this.power;
 		}
 	}
 	
@@ -132,7 +121,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
 		updateCircuit();
-		if(this.updateDelay == 0 && (this.strongPower != this.lastStrongPower || this.weakPower != this.lastWeakPower))
+		if(this.updateDelay == 0 && (this.power != this.lastPower))
 		{
 			super.notifyNeighbors();
 		}

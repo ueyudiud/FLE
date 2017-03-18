@@ -7,23 +7,23 @@ import net.minecraft.block.state.IBlockState;
 public class TECircuitFrontBack extends TECircuitCompacted
 {
 	private static final Facing[] OUT = {Facing.FRONT};
-
+	
 	@Override
 	public boolean canConnectRedstone(IBlockState state, Direction side)
 	{
-		return side == facing || side == facing.getOpposite();
+		return side.axis == this.facing.axis;
 	}
 	
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side.getOpposite() == facing ? weakPower : 0;
+		return side.getOpposite() == this.facing ? this.power : 0;
 	}
 	
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side.getOpposite() == facing ? strongPower : 0;
+		return side.getOpposite() == this.facing ? this.power : 0;
 	}
 	
 	@Override

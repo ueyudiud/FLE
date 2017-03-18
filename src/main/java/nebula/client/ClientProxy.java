@@ -85,6 +85,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		default: return -1;
 		}
 	};
+	public static final IItemColor ITEM_BIOME_COLOR = (stack, index) -> BIOME_COLOR.colorMultiplier(null, null, null, index);
 	
 	private static Map<String, List<IRenderRegister>> registers = new HashMap();
 	public static Map<IBlockColor, List<Block>> blockColorMap = new HashMap();
@@ -223,7 +224,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public void registerBiomeColorMultiplier(Block... block)
 	{
 		registerColorMultiplier(BIOME_COLOR, block);
-		//		registerColorMultiplier(ColorMultiplier.ITEMBLOCK_COLOR, block);
+		registerColorMultiplier(ITEM_BIOME_COLOR, block);
 	}
 	
 	public void registerColorMultiplier(IBlockColor color, Block[] block)

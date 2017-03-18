@@ -116,7 +116,7 @@ public class ShapelessFleRecipe implements IRecipe
 				SingleInputMatch match = iterator.next();
 				if (match.match(stack))
 				{
-					match.applyOutput(stack, result);
+					match.applyOutput(stack.copy(), result);
 					iterator.remove();
 					continue label;
 				}
@@ -153,7 +153,7 @@ public class ShapelessFleRecipe implements IRecipe
 				SingleInputMatch match = iterator.next();
 				if (match.match(stack))
 				{
-					result[i] = match.getRemain(stack);
+					result[i] = match.getRemain(stack.copy());
 					iterator.remove();
 					continue label;
 				}

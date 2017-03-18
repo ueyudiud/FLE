@@ -15,36 +15,31 @@ public class TECircuitTicking extends TECircuitFrontBack
 		super.updateBody();
 		if(is(Enabled))
 		{
-			if(updateDelay == 0)
+			if(this.updateDelay == 0)
 			{
-				if(weakPower != 0)
+				if(this.power != 0)
 				{
-					setStrongPower(0);
-					setWeakPower(0);
+					setRedstonePower(0);
 					disable(Actived);
 				}
 				else
 				{
-					setStrongPower(15);
-					setWeakPower(15);
+					setRedstonePower(15);
 					enable(Actived);
 				}
-				markForDelayUpdate(4 * (1 + (mode & 0xF)));
+				markForDelayUpdate(4 * (1 + (this.mode & 0xF)));
 			}
 		}
 		else
 		{
-			setStrongPower(0);
-			setWeakPower(0);
+			setRedstonePower(0);
 		}
 	}
 	
 	@Override
 	protected void updateCircuit()
 	{
-		int weak = getWeakPower(Facing.BACK);
-		int strong = getStrongPower(Facing.BACK);
-		boolean flag = weak != 0 || strong != 0;
+		boolean flag = getRedstonePower(Facing.BACK) != 0;
 		if(flag)
 		{
 			enable(Enabled);
@@ -59,14 +54,14 @@ public class TECircuitTicking extends TECircuitFrontBack
 	@Override
 	protected void onScrewDriverUsed(EntityPlayer player, Direction side, float hitX, float hitY, float hitZ)
 	{
-		mode++;
-		if(mode == 16)
+		this.mode++;
+		if(this.mode == 16)
 		{
-			mode = 0;
+			this.mode = 0;
 		}
 		syncToNearby();
 	}
-
+	
 	@Override
 	public String getState()
 	{
