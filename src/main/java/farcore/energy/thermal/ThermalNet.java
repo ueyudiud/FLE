@@ -11,7 +11,6 @@ import farcore.data.V;
 import farcore.energy.IEnergyNet;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.util.EnumModifyFlag;
-import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import nebula.Log;
 import nebula.Nebula;
@@ -39,8 +38,8 @@ public class ThermalNet implements IEnergyNet
 	
 	public static float getWorldTemperature(World world, BlockPos pos)
 	{
-		IWorldPropProvider properties = WorldPropHandler.getWorldProperty(world);
-		return 270F + properties.getTemperature(world, pos) * 6.0F;
+		float t = WorldPropHandler.getWorldProperty(world).getTemperature(world, pos);
+		return 273F + t * 10.0F;
 	}
 	
 	public static float getEnviormentTemperature(World world, BlockPos pos)

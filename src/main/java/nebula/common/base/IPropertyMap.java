@@ -20,8 +20,14 @@ public interface IPropertyMap
 	Set<IProperty> keySet();
 	
 	@FunctionalInterface
-	interface IProperty<V>
+	interface IProperty<V> extends Appliable<V>
 	{
+		@Override
+		default V apply()
+		{
+			return defValue();
+		}
+		
 		V defValue();
 	}
 }

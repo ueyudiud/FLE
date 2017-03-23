@@ -1,5 +1,6 @@
 package fargen.core.worldgen;
 
+import fargen.core.worldgen.surface.FarSurfaceBiomeProvider;
 import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
 import nebula.common.LanguageManager;
 import net.minecraft.init.Biomes;
@@ -110,7 +111,7 @@ public class FarWorldType extends WorldType
 		case 0 :
 			if(this == DEFAULT)
 			{
-				return new BiomeProvider(world.getWorldInfo());
+				return new FarSurfaceBiomeProvider(world.getWorldInfo());
 			}
 			//				return new FarSurfaceBiomeProvider(world.getWorldInfo());
 			else if(this == FLAT)

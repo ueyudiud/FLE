@@ -5,6 +5,7 @@
 package nebula.client.light;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.google.common.collect.ImmutableSet;
 import nebula.common.NebulaConfig;
 import nebula.common.base.IntegerArray;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
@@ -46,8 +48,31 @@ public class LightFixLocal implements Runnable
 			this.z = pos.getZ();
 			this.time = System.currentTimeMillis();
 		}
+		
+		@Override
+		public int hashCode()
+		{
+			return (((this.type.ordinal() * 31 + this.world.provider.getDimension()) * 31 + this.x) * 31 + this.y) * 31 + this.z;
+		}
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			return obj == this || (!(obj instanceof LightFixLocal.$) && equals((LightFixLocal.$) obj));
+		}
+		
+		private boolean equals(LightFixLocal.$ arg)
+		{
+			return this.world.provider.getDimension() == arg.world.provider.getDimension() &&
+					this.type == arg.type &&
+					this.x == arg.x &&
+					this.y == arg.y &&
+					this.z == arg.z;
+		}
 	}
+	
 	final LinkedList<$> list = new LinkedList();
+	final Set<$> set = new HashSet<>();
 	final Map<IntegerArray, Byte> lightMap = new HashMap(65536, 1.0F);
 	private final int[] lightUpdateBlockList = new int[32768];
 	
@@ -79,9 +104,12 @@ public class LightFixLocal implements Runnable
 				{
 					wait();
 				}
-				catch(InterruptedException exception){}
+				catch(InterruptedException exception)
+				{
+					
+				}
 			}
-			long time = System.currentTimeMillis();
+			long time = MinecraftServer.getCurrentTimeMillis();
 			while(!this.list.isEmpty())
 			{
 				synchronized (this.list)
@@ -110,12 +138,17 @@ public class LightFixLocal implements Runnable
 		int i = world.provider.getDimension();
 		synchronized (this.list)
 		{
-			Iterator<$> iterator = this.list.iterator();
-			while(iterator.hasNext())
+			synchronized (this.set)
 			{
-				if(iterator.next().world == world)
+				Iterator<$> iterator = this.list.iterator();
+				$ arg;
+				while(iterator.hasNext())
 				{
-					iterator.remove();
+					if((arg = iterator.next()).world == world)
+					{
+						iterator.remove();
+						this.set.remove(arg);
+					}
 				}
 			}
 		}
@@ -134,13 +167,20 @@ public class LightFixLocal implements Runnable
 	
 	public void markLightForCheck(World world, EnumSkyBlock type, BlockPos pos)
 	{
-		synchronized (this.list)
+		$ info = new $(world, type, pos);
+		synchronized (this.set)
 		{
-			$ info = new $(world, type, pos);
-			this.list.add(info);
-			synchronized (this)
+			if (!this.set.contains(info))
 			{
-				notifyAll();
+				synchronized (this.list)
+				{
+					this.list.add(info);
+					this.set.add(info);
+					synchronized (this)
+					{
+						notifyAll();
+					}
+				}
 			}
 		}
 	}

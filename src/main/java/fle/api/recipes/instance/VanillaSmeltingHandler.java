@@ -4,13 +4,16 @@
 
 package fle.api.recipes.instance;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import fle.api.recipes.IRecipeMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * @author ueyudiud
@@ -51,8 +54,25 @@ public class VanillaSmeltingHandler implements IRecipeMap<Entry<ItemStack, ItemS
 	}
 	
 	@Override
-	public Collection<Entry<ItemStack, ItemStack>> recipes()
+	public Set<Entry<ItemStack, ItemStack>> recipes()
 	{
 		return FurnaceRecipes.instance().getSmeltingList().entrySet();
+	}
+	
+	@Override
+	public void removeRecipe(Entry<ItemStack, ItemStack> recipe)
+	{
+		FurnaceRecipes.instance().getSmeltingList().remove(recipe.getKey(), recipe.getValue());
+	}
+	
+	@Override
+	public void removeRecipeByHandler(ItemStack handler)
+	{
+		Set<ItemStack> set = new HashSet<>();
+		Map<ItemStack, ItemStack> recipes = FurnaceRecipes.instance().getSmeltingList();
+		recipes.forEach((s1, s2)-> {
+			if (OreDictionary.itemMatches(s1, handler, false)) set.add(s1);
+		});
+		set.forEach(s->recipes.remove(s));
 	}
 }

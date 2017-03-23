@@ -2,6 +2,7 @@ package fargen.core.biome;
 
 import java.util.Random;
 
+import farcore.data.EnumTempCategory;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import fargen.core.FarGen;
@@ -74,12 +75,12 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		this.canSnow = properties.canSnow;
 		this.decorator = properties.decorator;
 		this.layerGenerator = properties.layerGenerator;
-		setRegistryName(FarGen.ID, getBiomeName());
 		if(register)
 		{
+			setRegistryName(FarGen.ID, getBiomeName());
 			this.register.register(id, getBiomeName(), this);
+			GameRegistry.register(this);
 		}
-		GameRegistry.register(this);
 		if(isMutation())
 		{
 			this.baseBiome = (BiomeBase) REGISTRY.getObjectById(MUTATION_TO_BASE_ID_MAP.get(this));
@@ -130,6 +131,11 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		if(!this.canRain) return false;
 		IWorldPropProvider prop = WorldPropHandler.getWorldProperty(world);
 		return prop.getHumidity(world, pos) >= minRainHumidity;
+	}
+	
+	public boolean isOcean()
+	{
+		return this.zone.category1 == EnumTempCategory.OCEAN;
 	}
 	
 	@Override
@@ -228,6 +234,13 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		public BiomePropertiesExtended setBaseBiome(String nameIn)
 		{
 			return (BiomePropertiesExtended) super.setBaseBiome(nameIn);
+		}
+		
+		public BiomePropertiesExtended setHeight(float min, float max)
+		{
+			super.setBaseHeight((min + max) / 2F);
+			super.setHeightVariation((max - min) / 2F);
+			return this;
 		}
 	}
 }

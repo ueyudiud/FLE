@@ -287,7 +287,7 @@ public class ClassTransformer implements IClassTransformer
 					logOutput(clazzName1 + "." + node2.name, "modified", name, node2.instructions);
 					if(!success)
 					{
-						LOG.info("Injected method {} failed.", name);
+						LOG.warn("Injected method {} failed.", name);
 					}
 					else
 					{

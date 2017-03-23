@@ -31,10 +31,10 @@ public class MP
 	public static final String fallen_damage_deduction = "fallen_damage_deduction";
 	public static final String tool_attackspeed = "tool_attackspeed";
 	
-	public static final IProperty<PropertyBasic> property_basic = () -> new PropertyBasic();
-	public static final IProperty<MetalBlockBehavior> property_metal_block = () -> null;
+	public static final IProperty<PropertyBasic> property_basic = PropertyBasic::new;
 	public static final IProperty<PropertyTool> property_tool = () -> null;
-	public static final IProperty<PropertyOre> property_ore = () -> new PropertyOre();
+	public static final IProperty<MetalBlockBehavior> property_metal_block = () -> null;
+	public static final IProperty<PropertyOre> property_ore = PropertyOre::new;
 	public static final IProperty<PropertyWood> property_wood = () -> PropertyTree.VOID;
 	/**
 	 * Only the casting helper.

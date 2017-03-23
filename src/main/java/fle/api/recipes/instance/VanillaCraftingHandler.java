@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 
 import fle.api.recipes.IRecipeMap;
+import nebula.common.base.Ety;
 import nebula.common.util.L;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.crafting.CraftingManager;
@@ -57,5 +58,22 @@ public class VanillaCraftingHandler implements IRecipeMap<IRecipe, IRecipe, Entr
 	public Collection<IRecipe> recipes()
 	{
 		return CraftingManager.getInstance().getRecipeList();
+	}
+	
+	@Override
+	public void removeRecipe(IRecipe recipe)
+	{
+		CraftingManager.getInstance().getRecipeList().remove(recipe);
+	}
+	
+	public void removeRecipe(InventoryCrafting handler)
+	{
+		removeRecipeByHandler(new Ety<>(handler, null));
+	}
+	
+	@Override
+	public void removeRecipeByHandler(Entry<InventoryCrafting, World> handler)
+	{
+		CraftingManager.getInstance().getRecipeList().removeIf(r->r.matches(handler.getKey(), handler.getValue()));
 	}
 }

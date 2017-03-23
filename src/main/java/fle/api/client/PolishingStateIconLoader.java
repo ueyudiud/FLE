@@ -30,7 +30,7 @@ public class PolishingStateIconLoader implements IIconLoader
 	{
 		if (stateMap.containsKey(chr))
 		{
-			Log.warn("The state with character {} is already exist.", chr);
+			Log.warn("The state with character '{}' is already exist.", chr);
 		}
 		else
 		{

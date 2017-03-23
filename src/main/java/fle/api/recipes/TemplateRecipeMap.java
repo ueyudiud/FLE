@@ -5,7 +5,6 @@
 package fle.api.recipes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
@@ -205,8 +204,26 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	}
 	
 	@Override
-	public final Collection<TemplateRecipeMap.TemplateRecipe> recipes()
+	public Class<TemplateRecipeCache> getTargetType()
+	{
+		return TemplateRecipeCache.class;
+	}
+	
+	@Override
+	public final List<TemplateRecipeMap.TemplateRecipe> recipes()
 	{
 		return this.recipes;
+	}
+	
+	@Override
+	public void removeRecipe(TemplateRecipe recipe)
+	{
+		this.recipes.remove(recipe);
+	}
+	
+	@Override
+	public void removeRecipeByHandler(H handler)
+	{
+		this.recipes.removeIf(r->r.judgable.isTrue(handler));
 	}
 }

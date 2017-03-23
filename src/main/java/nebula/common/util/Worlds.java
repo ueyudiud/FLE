@@ -261,8 +261,11 @@ public final class Worlds
 			if(pos.getY() > 0)
 			{
 				EntityFallingBlockExtended.replaceFallingBlock(world, pos, state, height);
-				NBTTagCompound nbt;
-				tile.writeToNBT(nbt = new NBTTagCompound());
+				NBTTagCompound nbt = new NBTTagCompound();
+				if (tile != null)
+				{
+					tile.writeToNBT(nbt);
+				}
 				if(state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).onFallOnGround(world, pos, state, height, nbt))
 				{
 					

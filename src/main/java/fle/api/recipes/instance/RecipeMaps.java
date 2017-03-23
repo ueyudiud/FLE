@@ -24,6 +24,7 @@ public class RecipeMaps
 	VanillaCraftingHandler CRAFTING_VANILLA =
 	new VanillaCraftingHandler();
 	//NAME        : minecraft.smelting
+	//NBT         : (ItemStack)
 	public static final
 	VanillaSmeltingHandler SMELTING_VANILLA =
 	new VanillaSmeltingHandler();

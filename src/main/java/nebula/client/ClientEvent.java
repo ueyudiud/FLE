@@ -9,20 +9,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * For some custom render.<br>
  * Posted in {@link MinecraftForge#EVENT_BUS}
  * @author ueyudiud
  */
-@SideOnly(Side.CLIENT)
 public class ClientEvent extends Event
 {
 	public final Minecraft mc = Minecraft.getMinecraft();
 	
-	@SideOnly(Side.CLIENT)
 	public static class RenderEvent extends ClientEvent
 	{
 		protected RenderManager manager;
@@ -45,7 +41,6 @@ public class ClientEvent extends Event
 	}
 	
 	@HasResult
-	@SideOnly(Side.CLIENT)
 	public static class EntityProjectileItemRenderEvent extends RenderEvent
 	{
 		private float partialTicks;
@@ -53,6 +48,7 @@ public class ClientEvent extends Event
 		
 		public EntityProjectileItemRenderEvent(EntityProjectileItem item, RenderManager manager, float partialTicks)
 		{
+			super();
 			this.partialTicks = partialTicks;
 			this.projectileItem = item;
 			this.manager = manager;

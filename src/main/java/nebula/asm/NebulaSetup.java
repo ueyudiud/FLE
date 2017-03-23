@@ -110,7 +110,7 @@ public class NebulaSetup implements IFMLCallHook
 	/**
 	 * The ASM file version, uses to determine if it need replaced ASM files.
 	 */
-	private static final int VERSION = 4;
+	private static final int VERSION = 5;
 	
 	final JsonDeserializer<OpInformation> DESERIALIZER1 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");

@@ -33,12 +33,18 @@ public class LightFix
 	
 	public static void tickLightUpdate(World world)
 	{
-		FIX_SERVER.tickLightUpdate(world);
+		if(NebulaConfig.multiThreadLight)
+		{
+			FIX_SERVER.tickLightUpdate(world);
+		}
 	}
 	
 	public static void onWorldUnload(World world)
 	{
-		FIX_SERVER.onWorldUnload(world);
+		if(NebulaConfig.multiThreadLight)
+		{
+			FIX_SERVER.onWorldUnload(world);
+		}
 	}
 	
 	private static void markLightForCheck(World world, EnumSkyBlock type, BlockPos pos)
@@ -54,6 +60,9 @@ public class LightFix
 	
 	public static void startThread()
 	{
-		FIX_SERVER.startThread();
+		if(NebulaConfig.multiThreadLight)
+		{
+			FIX_SERVER.startThread();
+		}
 	}
 }

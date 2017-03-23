@@ -11,7 +11,7 @@ public interface IWorldPropProvider
 	{
 		return getHumidity(coord.world(), coord.pos());
 	}
-
+	
 	float getHumidity(World world, BlockPos pos);
 	
 	default float getAverageHumidity(ICoord coord)
@@ -25,7 +25,7 @@ public interface IWorldPropProvider
 	{
 		return getTemperature(coord.world(), coord.pos());
 	}
-
+	
 	float getTemperature(World world, BlockPos pos);
 	
 	default float getAverageTemperature(ICoord coord)
@@ -39,9 +39,9 @@ public interface IWorldPropProvider
 	{
 		return getSunshine(coord.world(), coord.pos());
 	}
-
+	
 	float getSunshine(World world, BlockPos pos);
-
+	
 	float getRainstrength(World world, BlockPos pos);
 	
 	float getSkylight(World world);
@@ -62,6 +62,6 @@ public interface IWorldPropProvider
 	 * @return
 	 */
 	boolean canMainFluidBlockFreeze(World world, BlockPos pos);
-
+	
 	void freezeMainFluidAt(World world, BlockPos pos);
 }

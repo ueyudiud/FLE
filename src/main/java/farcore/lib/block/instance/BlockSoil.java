@@ -371,9 +371,13 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	
 	protected boolean checkAndFall(World world, BlockPos pos, IBlockState state, Random rand, boolean checkFallToNearby)
 	{
-		if(canFallBelow(world, pos, state))
+		/**
+		 * For range checking, prevent to check unload chunk to cause update.
+		 */
+		if (!world.isAreaLoaded(pos, 8)) return false;
+		if (canFallBelow(world, pos, state))
 			return Worlds.fallBlock(world, pos, state);
-		if(checkFallToNearby)
+		if (checkFallToNearby)
 		{
 			List<EnumFacing> sides = canFallNearby(world, pos, state);
 			switch (state.getValue(COVER_TYPE).noCover)

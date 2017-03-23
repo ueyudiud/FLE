@@ -16,7 +16,6 @@ import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.block.IToolableBlock;
-import nebula.common.block.IUpdateDelayBlock;
 import nebula.common.util.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -39,7 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 public class BlockRock extends BlockSubBehavior
-implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock, IUpdateDelayBlock
+implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 {
 	public static final PropertyBool				HEATED = PropertyBool.create("heated");
 	public static final PropertyEnum<EnumRockType>	TYPE = Properties.get(EnumRockType.class);

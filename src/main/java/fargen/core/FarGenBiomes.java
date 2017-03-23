@@ -110,8 +110,8 @@ public class FarGenBiomes
 			{
 				continue;
 			}
-			river[zone.ordinal()] = new BiomeBase(121 + zone.ordinal(), BiomePropertiesExtended.newProperties("river_" + zone.name()).setClimaticZone(zone).setLayerGenerator(baseGenerator));
-			beach[zone.ordinal()] = new BiomeBase(151 + zone.ordinal(), BiomePropertiesExtended.newProperties("beach_" + zone.name()).setClimaticZone(zone).setLayerGenerator(baseGenerator));
+			river[zone.ordinal()] = new BiomeBase(121 + zone.ordinal(), BiomePropertiesExtended.newProperties("river_" + zone.name().toLowerCase()).setClimaticZone(zone).setLayerGenerator(baseGenerator));
+			beach[zone.ordinal()] = new BiomeBase(151 + zone.ordinal(), BiomePropertiesExtended.newProperties("beach_" + zone.name().toLowerCase()).setClimaticZone(zone).setLayerGenerator(baseGenerator));
 		}
 		river[ClimaticZone.ocean_frigid.ordinal()] = ocean_f;
 		river[ClimaticZone.ocean_subfrigid.ordinal()] = ocean_sf;

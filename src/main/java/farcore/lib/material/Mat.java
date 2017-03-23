@@ -403,7 +403,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.explosionResistance = resistance;
 		if(Config.createSoil)
 		{
-			new BlockSoil(this.modid, "soil." + this.name, material, this, property);
+			property.block = new BlockSoil(this.modid, "soil." + this.name, material, this, property);
 		}
 		add(SubTags.DIRT);
 		return addProperty(MP.property_soil, property);
