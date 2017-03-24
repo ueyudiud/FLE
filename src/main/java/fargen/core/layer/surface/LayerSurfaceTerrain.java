@@ -13,7 +13,7 @@ import net.minecraft.world.gen.layer.GenLayer;
 /**
  * @author ueyudiud
  */
-public class LayerSurfaceBiome extends LayerReplace
+public class LayerSurfaceTerrain extends LayerReplace
 {
 	//Terrain(fake) biomes.
 	public static final BiomeBase _deep_ocean;
@@ -28,6 +28,7 @@ public class LayerSurfaceBiome extends LayerReplace
 	public static final BiomeBase _lake;
 	public static final BiomeBase _river;
 	public static final BiomeBase _ocean;
+	public static final BiomeBase _high_plains_edge;
 	
 	public static final BiomeBase[] BIOME_TABLE;
 	
@@ -43,15 +44,17 @@ public class LayerSurfaceBiome extends LayerReplace
 		_high_plains	= new BiomeBase(7, false, BiomePropertiesExtended.newProperties("high_plains").setClimaticZone(ClimaticZone.temperate_plain).setHeight(0.4F, 0.5F));
 		_beach1			= new BiomeBase(8, false, BiomePropertiesExtended.newProperties("beach").setClimaticZone(ClimaticZone.temperate_plain).setHeight(0.01F, 0.02F));
 		_beach2			= new BiomeBase(9, false, BiomePropertiesExtended.newProperties("beach2").setClimaticZone(ClimaticZone.temperate_plain).setHeight(0.01F, 0.05F));
-		_river			= new BiomeBase(10, false, BiomePropertiesExtended.newProperties("river").setClimaticZone(ClimaticZone.temperate_plain).setHeight(-0.5F, -0.3F));
-		_lake			= new BiomeBase(11, false, BiomePropertiesExtended.newProperties("lake").setClimaticZone(ClimaticZone.temperate_plain).setHeight(-0.5F, -0.05F));
+		_river			= new BiomeBase(10, false, BiomePropertiesExtended.newProperties("river").setClimaticZone(ClimaticZone.temperate_plain).setHeight(-0.3F, -0.1F));
+		_lake			= new BiomeBase(11, false, BiomePropertiesExtended.newProperties("lake").setClimaticZone(ClimaticZone.temperate_plain).setHeight(-0.4F, -0.05F));
 		
-		BIOME_TABLE = new BiomeBase[]{_deep_ocean, _ocean, _swamp, _plains, _hills, _montain_edge, _montain, _high_plains, _beach1, _beach2, _river, _lake};
+		_high_plains_edge=new BiomeBase(12, false, BiomePropertiesExtended.newProperties("high_plains_edge").setClimaticZone(ClimaticZone.temperate_plain).setHeight(0.2F, 0.45F));
+		
+		BIOME_TABLE = new BiomeBase[]{_deep_ocean, _ocean, _swamp, _plains, _hills, _montain_edge, _montain, _high_plains, _beach1, _beach2, _river, _lake, _high_plains_edge};
 	}
 	
 	private BiomeBase[] biomes = {_plains, _high_plains, _hills, _montain};
 	
-	public LayerSurfaceBiome(long seed, GenLayer layer)
+	public LayerSurfaceTerrain(long seed, GenLayer layer)
 	{
 		super(seed, layer);
 	}
@@ -65,10 +68,5 @@ public class LayerSurfaceBiome extends LayerReplace
 			return this.biomes[nextInt(this.biomes.length)].biomeID;
 		}
 		return id;
-	}
-	
-	protected boolean isOceanic(int id)
-	{
-		return id == LayerSurfaceBiome._ocean.biomeID || id == LayerSurfaceBiome._deep_ocean.biomeID;
 	}
 }

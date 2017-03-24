@@ -61,6 +61,8 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	protected BiomeDecorator decorator;
 	protected BiomeLayerGenerator layerGenerator;
 	public BiomeBase baseBiome;
+	public final int treePerChunkBase;
+	public final int treePerChunkDiv;
 	
 	public BiomeBase(int id, BiomePropertiesExtended properties)
 	{
@@ -75,6 +77,8 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		this.canSnow = properties.canSnow;
 		this.decorator = properties.decorator;
 		this.layerGenerator = properties.layerGenerator;
+		this.treePerChunkBase = this.theBiomeDecorator.treesPerChunk = properties.treePerChunk;
+		this.treePerChunkDiv = properties.treeDivition;
 		if(register)
 		{
 			setRegistryName(FarGen.ID, getBiomeName());
@@ -178,6 +182,8 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		}
 		
 		private float temperature = 2.0F;
+		private int treePerChunk = -999;
+		private int treeDivition = 1;
 		private ClimaticZone zone = ClimaticZone.temperate_plain;
 		private BiomeLayerGenerator layerGenerator = new BLGSStandard();
 		private BiomeDecorator decorator;
@@ -240,6 +246,13 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		{
 			super.setBaseHeight((min + max) / 2F);
 			super.setHeightVariation((max - min) / 2F);
+			return this;
+		}
+		
+		public BiomePropertiesExtended setTreePerChunk(int a, int b)
+		{
+			this.treePerChunk = a;
+			this.treeDivition = b;
 			return this;
 		}
 	}

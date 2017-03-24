@@ -4,12 +4,12 @@
 
 package fargen.core.layer.surface;
 
-import static fargen.core.layer.surface.LayerSurfaceBiome._beach1;
-import static fargen.core.layer.surface.LayerSurfaceBiome._beach2;
-import static fargen.core.layer.surface.LayerSurfaceBiome._deep_ocean;
-import static fargen.core.layer.surface.LayerSurfaceBiome._montain;
-import static fargen.core.layer.surface.LayerSurfaceBiome._montain_edge;
-import static fargen.core.layer.surface.LayerSurfaceBiome._ocean;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._beach1;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._beach2;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._deep_ocean;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._montain;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._montain_edge;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._ocean;
 
 import fargen.core.layer.Layer;
 import net.minecraft.world.gen.layer.GenLayer;

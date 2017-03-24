@@ -11,10 +11,13 @@ import net.minecraft.world.gen.layer.GenLayer;
  */
 public class LayerIslandExpand extends Layer
 {
-	public LayerIslandExpand(long seed, GenLayer layer)
+	private final int expand;
+	
+	public LayerIslandExpand(long seed, GenLayer layer, int expand)
 	{
 		super(seed);
 		this.parent = layer;
+		this.expand = expand;
 	}
 	
 	@Override
@@ -38,26 +41,34 @@ public class LayerIslandExpand extends Layer
 				initChunkSeed(var12 + x, var11 + y);
 				if ((a == 0) && ((a1 != 0) || (a2 != 0) || (a3 != 0) || (a4 != 0)))
 				{
-					int chance = 1;
-					int id = 1;
-					if ((a1 != 0) && (nextInt(chance++) == 0))
-					{
-						id = a1;
-					}
-					if ((a2 != 0) && (nextInt(chance++) == 0))
-					{
-						id = a2;
-					}
-					if ((a3 != 0) && (nextInt(chance++) == 0))
-					{
-						id = a3;
-					}
-					if ((a4 != 0) && (nextInt(chance++) == 0))
-					{
-						id = a4;
-					}
 					if (nextInt(3) == 0)
 					{
+						int chance = 1;
+						int id;
+						if (this.expand == -1)
+						{
+							id = a1;
+						}
+						else
+						{
+							id = this.expand;
+							if ((a1 != 0) && (nextInt(chance++) == 0))
+							{
+								id = a1;
+							}
+						}
+						if ((a2 != 0) && (nextInt(chance++) == 0))
+						{
+							id = a2;
+						}
+						if ((a3 != 0) && (nextInt(chance++) == 0))
+						{
+							id = a3;
+						}
+						if ((a4 != 0) && (nextInt(chance++) == 0))
+						{
+							id = a4;
+						}
 						result[(var12 + var11 * w)] = id;
 					}
 					else

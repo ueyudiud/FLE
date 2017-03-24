@@ -2,7 +2,7 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.Tree;
+import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeGenAbstract;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
@@ -17,18 +17,18 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 	protected int baseHeight;
 	/** The random height of the tree */
 	protected int randHeight;
-
-	public TreeGenHuge(Tree tree, float generateCoreLeavesChance)
+	
+	public TreeGenHuge(ITree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}
-
+	
 	public void setHeight(int baseHeight, int randHeight)
 	{
 		this.baseHeight = baseHeight;
 		this.randHeight = randHeight;
 	}
-
+	
 	private boolean checkCanGrow(World world, Random rand, int x, int y, int z, int height)
 	{
 		if (y >= 1 && y + height + 1 <= 256)
@@ -40,13 +40,13 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 		else
 			return false;
 	}
-
+	
 	private boolean canHugeTreePlantAt(World world, Random rand, int x, int y, int z)
 	{
 		BlockPos pos;
 		BlockPos pos1 = new BlockPos(x, y, z);
 		IBlockState state = world.getBlockState(pos = new BlockPos(x, y - 1, z));
-
+		
 		boolean isSoil = state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, (BlockSapling) Blocks.SAPLING);
 		if (isSoil && y >= 2)
 		{
@@ -59,7 +59,7 @@ public abstract class TreeGenHuge extends TreeGenAbstract
 		else
 			return false;
 	}
-
+	
 	protected boolean matchHugeTreeGrow(World world, Random rand, int x, int y, int z, int height)
 	{
 		return checkCanGrow(world, rand, x, y, z, height) && canHugeTreePlantAt(world, rand, x, y, z);

@@ -20,14 +20,9 @@ public class LayerRiver extends LayerExpandMix
 	@Override
 	protected int getValue(int x, int y, int up, int down, int left, int right, int core)
 	{
-		core = calcWidth(core);
-		up = calcWidth(up);
-		down = calcWidth(down);
-		left = calcWidth(left);
-		right = calcWidth(right);
-		if (up == core || down == core || left == core || right == core)
+		if (up != core || down != core || left != core || right != core)
 		{
-			return LayerSurfaceBiome._river.biomeID;
+			return LayerSurfaceTerrain._river.biomeID;
 		}
 		return 0;
 	}

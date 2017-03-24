@@ -4,10 +4,10 @@
 
 package fargen.core.layer.surface;
 
-import static fargen.core.layer.surface.LayerSurfaceBiome._deep_ocean;
-import static fargen.core.layer.surface.LayerSurfaceBiome._montain;
-import static fargen.core.layer.surface.LayerSurfaceBiome._montain_edge;
-import static fargen.core.layer.surface.LayerSurfaceBiome._ocean;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._deep_ocean;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._montain;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._montain_edge;
+import static fargen.core.layer.surface.LayerSurfaceTerrain._ocean;
 
 import fargen.core.layer.abstracts.LayerReplace;
 import net.minecraft.world.gen.layer.GenLayer;
@@ -25,8 +25,8 @@ public class LayerRiverStart extends LayerReplace
 	@Override
 	protected int getValue(int x, int y, int id)
 	{
-		//		initChunkSeed(x, y);
-		return !isOceanic(id) && !isMontain(id) ? 1 : 0;
+		initChunkSeed(x, y);
+		return !isOceanic(id) && !isMontain(id) ? nextInt(5) : 0;
 	}
 	
 	protected boolean isMontain(int id)

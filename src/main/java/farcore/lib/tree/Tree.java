@@ -150,15 +150,21 @@ public abstract class Tree implements ITree
 	}
 	
 	@Override
-	public void updateLeaves(World world, BlockPos pos, Random rand)
+	public void updateLeaves(World world, BlockPos pos, Random rand, boolean checkDency)
 	{
-		if(!canLeaveGrowNearby(world, pos))
+		if (checkDency)
 		{
-			beginLeavesDency(world, pos);
-		}
-		if(shouldLeavesDency(world, pos))
-		{
-			checkDencyLeaves(world, pos, this.leavesCheckRange);
+			if (world.isAreaLoaded(pos, this.leavesCheckRange) || !V.generateState)
+			{
+				if (!canLeaveGrowNearby(world, pos))
+				{
+					beginLeavesDency(world, pos);
+				}
+				if (shouldLeavesDency(world, pos))
+				{
+					checkDencyLeaves(world, pos, this.leavesCheckRange);
+				}
+			}
 		}
 	}
 	
@@ -172,9 +178,9 @@ public abstract class Tree implements ITree
 		return world.getBlockState(pos).getValue(CHECK_DECAY);
 	}
 	
-	protected void checkDencyLeaves(World world, BlockPos pos, int maxL)
+	protected void checkDencyLeaves(World world, BlockPos pos, final int maxL)
 	{
-		int range = 2 * maxL + 1;
+		final int range = 2 * maxL + 1;
 		int[][][] checkBuffer = new int[range][range][range];
 		for(int i = -maxL; i <= maxL; ++i)
 		{
@@ -182,7 +188,7 @@ public abstract class Tree implements ITree
 			{
 				for(int k = -maxL; k <= maxL; ++k)
 				{
-					checkLeaves(maxL, world, pos, i, j, k, checkBuffer);
+					checkLeaves(maxL, maxL, world, pos, i, j, k, checkBuffer);
 				}
 			}
 		}
@@ -199,73 +205,73 @@ public abstract class Tree implements ITree
 		return block == this.blocks[2] || block == this.blocks[3];
 	}
 	
-	private void checkLeaves(int length, World world, BlockPos pos, int ofX, int ofY, int ofZ, int[][][] flags)
+	private void checkLeaves(int depth, int length, World world, BlockPos pos, int ofX, int ofY, int ofZ, int[][][] flags)
 	{
-		if(flags[length + ofX][length + ofY][length + ofZ] != 0)
+		if (flags[length + ofX][length + ofY][length + ofZ] != 0)
 			return;
-		if(!isLeaves(world, pos.add(ofX, ofY, ofZ)))
+		if (!isLeaves(world, pos.add(ofX, ofY, ofZ)))
 		{
 			flags[length + ofX][length + ofY][length + ofZ] = -1;
 			return;
 		}
 		int v = 0;
-		if(canLeaveGrowNearby(world, pos.add(ofX, ofY, ofZ)))
+		if (canLeaveGrowNearby(world, pos.add(ofX, ofY, ofZ)))
 		{
-			v = length;
+			v = depth;
 		}
 		else
 		{
 			int v1;
-			if(ofX + length >= 1 && (v1 = flags[ofX + length - 1][ofY + length    ][ofZ + length    ]) > v + 1)
+			if (ofX + length >= 1 && (v1 = flags[ofX + length - 1][ofY + length    ][ofZ + length    ]) > v + 1)
 			{
 				v = v1 - 1;
 			}
-			if(ofX < length      && (v1 = flags[ofX + length + 1][ofY + length    ][ofZ + length    ]) > v + 1)
+			if (ofX < length      && (v1 = flags[ofX + length + 1][ofY + length    ][ofZ + length    ]) > v + 1)
 			{
 				v = v1 - 1;
 			}
-			if(ofY + length >= 1 && (v1 = flags[ofX + length    ][ofY + length - 1][ofZ + length    ]) > v + 1)
+			if (ofY + length >= 1 && (v1 = flags[ofX + length    ][ofY + length - 1][ofZ + length    ]) > v + 1)
 			{
 				v = v1 - 1;
 			}
-			if(ofY < length      && (v1 = flags[ofX + length    ][ofY + length + 1][ofZ + length    ]) > v + 1)
+			if (ofY < length      && (v1 = flags[ofX + length    ][ofY + length + 1][ofZ + length    ]) > v + 1)
 			{
 				v = v1 - 1;
 			}
-			if(ofZ + length >= 1 && (v1 = flags[ofX + length    ][ofY + length    ][ofZ + length - 1]) > v + 1)
+			if (ofZ + length >= 1 && (v1 = flags[ofX + length    ][ofY + length    ][ofZ + length - 1]) > v + 1)
 			{
 				v = v1 - 1;
 			}
-			if(ofZ < length      && (v1 = flags[ofX + length    ][ofY + length    ][ofZ + length + 1]) > v + 1)
+			if (ofZ < length      && (v1 = flags[ofX + length    ][ofY + length    ][ofZ + length + 1]) > v + 1)
 			{
 				v = v1 - 1;
 			}
 		}
-		if((flags[ofX + length][ofY + length][ofZ + length] = v) > 1)
+		if ((flags[ofX + length][ofY + length][ofZ + length] = v) > 1)
 		{
-			if(ofX + length >= 1)
+			if (ofX + length >= 1)
 			{
-				checkLeaves(length, world, pos, ofX - 1, ofY, ofZ, flags);
+				checkLeaves(depth, length, world, pos, ofX - 1, ofY, ofZ, flags);
 			}
-			if(ofX < length)
+			if (ofX < length)
 			{
-				checkLeaves(length, world, pos, ofX + 1, ofY, ofZ, flags);
+				checkLeaves(depth, length, world, pos, ofX + 1, ofY, ofZ, flags);
 			}
-			if(ofY + length >= 1)
+			if (ofY + length >= 1)
 			{
-				checkLeaves(length, world, pos, ofX, ofY - 1, ofZ, flags);
+				checkLeaves(depth, length, world, pos, ofX, ofY - 1, ofZ, flags);
 			}
-			if(ofY < length)
+			if (ofY < length)
 			{
-				checkLeaves(length, world, pos, ofX, ofY + 1, ofZ, flags);
+				checkLeaves(depth, length, world, pos, ofX, ofY + 1, ofZ, flags);
 			}
-			if(ofZ + length >= 1)
+			if (ofZ + length >= 1)
 			{
-				checkLeaves(length, world, pos, ofX, ofY, ofZ - 1, flags);
+				checkLeaves(depth, length, world, pos, ofX, ofY, ofZ - 1, flags);
 			}
-			if(ofZ < length)
+			if (ofZ < length)
 			{
-				checkLeaves(length, world, pos, ofX, ofY, ofZ + 1, flags);
+				checkLeaves(depth, length, world, pos, ofX, ofY, ofZ + 1, flags);
 			}
 		}
 	}
@@ -295,13 +301,25 @@ public abstract class Tree implements ITree
 				for(int k = -length; k <= length; ++k)
 				{
 					int v = flags[i + length][j + length][k + length];
+					if (i == 0 && j == 0 && k == 0)
+					{
+						if (v == 0)
+						{
+							onLeavesDead(world, pos);
+							continue;
+						}
+						else
+						{
+							stopLeavesDency(world, pos);
+						}
+					}
 					if(v > 0)
 					{
 						stopLeavesDency(world, pos.add(i, j, k));
 					}
 					else if(v == 0)
 					{
-						onLeavesDead(world, pos.add(i, j, k));
+						beginLeavesDency(world, pos.add(i, j, k));
 					}
 				}
 			}
@@ -368,11 +386,11 @@ public abstract class Tree implements ITree
 	public ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune,
 			boolean silkTouching, ArrayList list)
 	{
-		if (L.nextInt(4) == 0)
+		if (L.nextInt(8) == 0)
 		{
 			list.add(new ItemStack(EnumItem.branch.item, 1, this.material.id));
 		}
-		if (L.nextInt(6) == 0)
+		if (L.nextInt(7) == 0)
 		{
 			list.add((this.isBroadLeaf ? LEAVES_APPLIER1 : LEAVES_APPLIER2).apply().copy());
 		}
@@ -403,6 +421,24 @@ public abstract class Tree implements ITree
 		else
 		{
 			Worlds.setBlock(world, pos, this.blocks[2], meta, state);
+		}
+	}
+	
+	@Override
+	public <T extends Block> T getBlock(BlockType type)
+	{
+		switch (type)
+		{
+		case LOG :
+			return (T) this.blocks[0];
+		case LOG_ART :
+			return (T) this.blocks[1];
+		case LEAVES :
+			return (T) this.blocks[2];
+		case LEAVES_CORE :
+			return (T) this.blocks[3];
+		default:
+			return null;
 		}
 	}
 }

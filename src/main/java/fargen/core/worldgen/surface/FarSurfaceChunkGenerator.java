@@ -9,9 +9,17 @@ import java.util.function.DoubleUnaryOperator;
 import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumBlock;
+import farcore.data.M;
+import farcore.data.MP;
+import farcore.data.V;
+import farcore.lib.tree.ITreeGenerator;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
+import fargen.api.event.TreeGenEvent;
 import fargen.core.biome.BiomeBase;
+import fle.core.tree.TreeGenClassic;
+import fle.core.tree.TreeGenJungle;
+import nebula.common.base.WeightedRandomSelector;
 import nebula.common.util.Maths;
 import nebula.common.util.noise.NoiseBase;
 import nebula.common.util.noise.NoisePerlin;
@@ -26,6 +34,7 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraftforge.common.MinecraftForge;
 
 public class FarSurfaceChunkGenerator implements IChunkGenerator
 {
@@ -40,6 +49,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private final NoiseBase noise3;
 	private final NoiseBase noise4;
 	private final NoiseBase noise5;//Stone noise.
+	private final NoiseBase noise6;//Tree noise.
 	
 	private Random random = new Random();
 	
@@ -61,38 +71,39 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		this.noise1 = new NoisePerlin(random, 6, 2.0, 1.6, 1.6);
 		this.noise2 = new NoisePerlin(random, 14, 4.0, 2.0, 2.0);
 		this.noise3 = new NoisePerlin(random, 8, 3.0, 1.8, 1.8);
-		this.noise4 = new NoisePerlin(random, 4, 1.0, 1.5, 1.8);
+		this.noise4 = new NoisePerlin(random, 6, 1.0, 1.6, 1.8);
 		this.noise5 = new NoisePerlin(random, 3, 2.5, 1.7, 1.9);
+		this.noise6 = new NoisePerlin(random, 3, 12.0, 2.5, 2.0);
 	}
 	
 	private static final byte
-	size = 2, scale = size * 2 + 1;
+	size = 3, scale = size * 2 + 1;
 	
 	private static final float[] parabolicField;
 	
 	private static final DoubleUnaryOperator randomNoiseOperator = x -> {
 		x = x * 1.5 - 0.5;
+		//[-0.5, 1.0]
 		if (x < 0)
 		{
 			x *= -0.3F;
 		}
+		//[0.0, 1.0]
 		x = x * 3.0 - 2.0;
+		//[-2.0, 1.0]
 		if (x > 0)
 		{
-			if (x > 1.0)
-			{
-				x = 1.0;
-			}
-			x *= 0.0625;
+			x *= 2.0;
 		}
 		else
 		{
-			x *= 0.1;
+			x *= 0.5;
 		}
+		//[-0.2, 0.625]
 		return x;
 	};
 	
-	private double[] initializeNoiseFieldHigh(double[] outArray, int xPos, int yPos, int zPos, int xSize, int ySize, int zSize)
+	private double[] initializeNoiseFieldHigh(double[] outArray, final int xPos, final int yPos, final int zPos, final int xSize, final int ySize, final int zSize)
 	{
 		if (outArray == null)
 		{
@@ -114,6 +125,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				float variation = 0.0F;
 				float root = 0.0F;
 				float total = 0.0F;
+				//Biome height caculate.
 				BiomeBase baseBiome = this.biomes[(x + size + (z + size) * (xSize + scale))];
 				for (int xR = -size; xR <= size; xR++)
 				{
@@ -132,15 +144,20 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				}
 				variation /= total;
 				root /= total;
-				
-				double scale = randomNoiseOperator.applyAsDouble(this.cache3[i2]);
-				double d1 = root + scale * .2;
-				d1 = 0.2 + d1 * ySize / 4.0F;
-				double d2 = 3 + variation * scale;
+				//Rescale
+				double scale = randomNoiseOperator.applyAsDouble(this.cache4[i2]);
+				double d1 = ySize * (root + 0.03125) / 4F;
+				double d2 = 1.8 + 3 * variation * scale;
+				if (d2 < 1.0F)
+				{
+					d2 = 1.0F + (d2 - 1.0F) * 0.3F;
+				}
+				//Height calculate
 				for (int y = 0; y < ySize; y++)
 				{
-					double output = Maths.lerp(this.cache1[i1], this.cache2[i1], this.cache3[i1]);
-					double off = (d1 - y) / d2;
+					//Range from [0, 1]
+					double output = Maths.lerp(this.cache1[i1], this.cache2[i1], this.cache3[i1]) * 2;
+					double off = 1.5 * (d1 - y) / d2;
 					if (off > 0.0)
 					{
 						off *= 4.0;
@@ -149,7 +166,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 					if (y > ySize - 4)
 					{
 						double var40 = (y - (ySize - 4)) / 3.0F;
-						output = output * (1.0D - var40) + -10.0D * var40;
+						output = output * (1.0D - var40) - var40;
 					}
 					outArray[i1] = output;
 					i1++;
@@ -165,44 +182,42 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private static final
 	short seaLevel = 144, arrayYHeight = 128;
 	private static final
-	double yLerp = 0.125D;
+	double yLerp = 0.125, xzLerp = 0.25;
 	
 	private void generateChunkData(ChunkPrimer primer, int chunkX, int chunkZ)
 	{
 		this.biomes = this.biomeProvider.getBiomesForGeneration(this.biomes, chunkX - size, chunkZ - size, 5 + scale, 5 + scale);
-		this.cachea = initializeNoiseFieldHigh(this.cachea, chunkX, 0, chunkZ, 5, 17, 5);
+		this.cachea = initializeNoiseFieldHigh(this.cachea, chunkX, 0, chunkZ, xzSize, ySize, xzSize);
 		for (int z = 0; z < subDivXZ; z++)
 		{
 			for (int x = 0; x < subDivXZ; x++)
 			{
 				for (int y = 0; y < subDivY; y++)
 				{
-					double noiseDL  = this.cachea[(((z + 0) * xzSize + x + 0) * ySize + y + 0)];
-					double noiseUL  = this.cachea[(((z + 1) * xzSize + x + 0) * ySize + y + 0)];
-					double noiseDR  = this.cachea[(((z + 0) * xzSize + x + 1) * ySize + y + 0)];
-					double noiseUR  = this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y + 0)];
-					double noiseDLA = (this.cachea[(((z + 0) * xzSize + x + 0) * ySize + y + 1)] - noiseDL) * yLerp;
-					double noiseULA = (this.cachea[(((z + 1) * xzSize + x + 0) * ySize + y + 1)] - noiseUL) * yLerp;
-					double noiseDRA = (this.cachea[(((z + 0) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
+					double noiseDL  =  this.cachea[(((z    ) * xzSize + x    ) * ySize + y)];
+					double noiseUL  =  this.cachea[(((z + 1) * xzSize + x    ) * ySize + y)];
+					double noiseDR  =  this.cachea[(((z    ) * xzSize + x + 1) * ySize + y)];
+					double noiseUR  =  this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y)];
+					double noiseDLA = (this.cachea[(((z    ) * xzSize + x    ) * ySize + y + 1)] - noiseDL) * yLerp;
+					double noiseULA = (this.cachea[(((z + 1) * xzSize + x    ) * ySize + y + 1)] - noiseUL) * yLerp;
+					double noiseDRA = (this.cachea[(((z    ) * xzSize + x + 1) * ySize + y + 1)] - noiseDR) * yLerp;
 					double noiseURA = (this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y + 1)] - noiseUR) * yLerp;
-					for (int var31 = 0; var31 < 8; var31++)
+					for (int y1 = 0; y1 < 8; y1++)
 					{
-						int Y = var31 | (y << 3) | 128;
-						double xLerp = 0.25D;
+						int Y = y1 | (y << 3) | 128;
 						double var34 = noiseDL;
 						double var36 = noiseUL;
-						double var38 = (noiseDR - noiseDL) * xLerp;
-						double var40 = (noiseUR - noiseUL) * xLerp;
-						for (int var42 = 0; var42 < 4; var42++)
+						double var38 = (noiseDR - noiseDL) * xzLerp;
+						double var40 = (noiseUR - noiseUL) * xzLerp;
+						for (int x1 = 0; x1 < 4; x1++)
 						{
-							int X = var42 | (x << 2);
+							int X = x1 | (x << 2);
 							
-							double zLerp = 0.25D;
-							double var49 = (var36 - var34) * zLerp;
+							double var49 = (var36 - var34) * xzLerp;
 							double var47 = var34 - var49;
-							for (int var51 = 0; var51 < 4; var51++)
+							for (int z1 = 0; z1 < 4; z1++)
 							{
-								int Z = var51 | (z << 2);
+								int Z = z1 | (z << 2);
 								
 								if ((var47 += var49) > 0.0D)
 								{
@@ -251,13 +266,8 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				float rainfall = propProvider.getAverageHumidity(this.world, pos);
 				int c = -1, f = 0;
 				int y = 255;
-				for (; y >= 0; y --)
+				for (; y >= 128; y --)
 				{
-					if (y == 0)
-					{
-						primer.setBlockState(x, y, z, AIR);
-						break;
-					}
 					IBlockState state = primer.getBlockState(x, y, z);
 					if (state == AIR)
 					{
@@ -346,6 +356,30 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 						}
 					}
 				}
+				for (; y >= 0; y --)
+				{
+					if (y == 0)
+					{
+						primer.setBlockState(x, y, z, Blocks.BEDROCK.getDefaultState());
+						break;
+					}
+					if (rockLayer[index].length == 1)
+					{
+						primer.setBlockState(x, y, z, rockLayer[index][0]);
+					}
+					else if (y >= rockLayer1 + height * 2 / 3)
+					{
+						primer.setBlockState(x, y, z, rockLayer[index][0]);
+					}
+					else if (y >= rockLayer2 + height / 3)
+					{
+						primer.setBlockState(x, y, z, rockLayer[index][1]);
+					}
+					else
+					{
+						primer.setBlockState(x, y, z, rockLayer[index][2]);
+					}
+				}
 			}
 	}
 	
@@ -357,7 +391,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		ChunkPrimer primer = new ChunkPrimer();
 		generateChunkData(primer, x << 2, z << 2);
 		
-		this.biomes = this.biomeProvider.getBiomes(this.biomes, x, z, 16, 16, true);
+		this.biomes = this.biomeProvider.getBiomes(this.biomes, x << 4, z << 4, 16, 16, true);
 		replaceChunkBlock(primer, x << 4, z << 4, this.random);
 		Chunk chunk = new Chunk(this.world, primer, x, z);
 		chunk.generateSkylightMap();
@@ -372,7 +406,90 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	@Override
 	public void populate(int x, int z)
 	{
+		this.random.setSeed(x * 341873128712L ^ z * 132897987541L);
 		
+		//Data provide.
+		Chunk chunk = this.world.getChunkFromChunkCoords(x, z);
+		MutableBlockPos pos = new MutableBlockPos(x << 4, 0, z << 4);
+		BiomeBase biome = (BiomeBase) chunk.getBiome(pos.add(16, 0, 16), this.biomeProvider);
+		IWorldPropProvider provider = WorldPropHandler.getWorldProperty(this.world);
+		float temp = provider.getAverageTemperature(this.world, pos) / 4.0F;
+		float rainfall = provider.getAverageHumidity(this.world, pos) / 4.0F;
+		
+		//MinX & MinZ coordinate.
+		final int x1 = x << 4;
+		final int z1 = z << 4;
+		
+		//Tree generation.
+		{
+			WeightedRandomSelector<ITreeGenerator> treeGenerationSelector = new WeightedRandomSelector<>();
+			addVanillaTrees(biome, this.world, x, z, this.noise6, temp, rainfall, treeGenerationSelector);
+			MinecraftForge.TERRAIN_GEN_BUS.post(new TreeGenEvent(this.world, x, z, temp, rainfall, treeGenerationSelector));
+			
+			if (treeGenerationSelector.weight() > 0 && biome.treePerChunkBase >= 0)
+			{
+				int count = (biome.treePerChunkBase + MathHelper.log2DeBruijn(treeGenerationSelector.weight()) / 4) / biome.treePerChunkDiv;
+				for (int i = 0; i < count; ++i)
+				{
+					int x2 = x1 + this.random.nextInt(16) + 8;
+					int z2 = z1 + this.random.nextInt(16) + 8;
+					int y2 = this.world.getHeight(x2, z2);
+					ITreeGenerator generator = treeGenerationSelector.next(this.random);
+					V.generateState = true;
+					if (generator.generateTreeAt(this.world, x2, y2, z2, this.random, null))
+					{
+						count --;
+					}
+					V.generateState = false;
+				}
+			}
+		}
+	}
+	
+	static final ITreeGenerator
+	CEIBA1 = new TreeGenJungle(M.ceiba.getProperty(MP.property_tree), 0.01F),
+	OAK1 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.03F),
+	OAK2 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.025F),
+	BIRCH = new TreeGenClassic(M.birch.getProperty(MP.property_tree), 0.03F);
+	
+	private static void addVanillaTrees(BiomeBase biome, World world, int x, int z, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ITreeGenerator> selector)
+	{
+		double d1, d2;
+		if (temp > 0.7F && rain > 0.7F)
+		{
+			d2 = noise.noise(x, 38274.0, z);
+			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
+			d1 *= rain > 0.8F ? 1.0F : (rain - 0.7F) * 10.0F;
+			selector.add(CEIBA1, (int) (d1 * d2 * d2 * 128));
+		}
+		if (temp > 0.4F && rain > 0.4F && rain < 0.95F)
+		{
+			d2 = noise.noise(x, 17274.0, z);
+			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.5F ? 1.0F : (temp - 0.4F) * 10.0F;
+			d1 *= rain > 0.9F ? (1.0F - rain) * 20.0F : rain > 0.5F ? 1.0F : (rain - 0.5F) * 10.0F;
+			selector.add(OAK1, (int) (d1 * d2 * d2 * 256));
+		}
+		if (temp > 0.5F && rain < 0.45F * temp)
+		{
+			d2 = noise.noise(x, 15628.0, z);
+			d1 = temp > 0.6F ? 1.0F : (temp - 0.5F) * 10.0F;
+			d1 *= rain > 0.35F * temp ? (rain - 0.35F * temp) * 10.0F / temp : 1.0F;
+			selector.add(OAK2, (int) (d1 * d2 * d2 * 96));
+		}
+		if (temp > 0.5F && rain < 0.45F * temp)
+		{
+			d2 = noise.noise(x, 15628.0, z);
+			d1 = temp > 0.6F ? 1.0F : (temp - 0.5F) * 10.0F;
+			d1 *= rain > 0.35F * temp ? (rain - 0.35F * temp) * 10.0F / temp : 1.0F;
+			selector.add(OAK2, (int) (d1 * d2 * d2 * 96));
+		}
+		if (temp < 0.9F && temp > 0.3F && rain > 0.4F && rain < 0.8F)
+		{
+			d2 = noise.noise(x, 47247.0, z);
+			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.4F ? 1.0F : (temp - 0.3F) * 10.0F;
+			d1 *= rain > 0.7F ? (1.0F - rain) * 10.0F : rain > 0.5F ? 1.0F : (rain - 0.4F) * 10.0F;
+			selector.add(BIRCH, (int) (d1 * d2 * d2 * 384));
+		}
 	}
 	
 	@Override
@@ -407,8 +524,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			for (int y = -size; y <= size; y++)
 			{
 				float parabolaHeight = 10.0F / MathHelper.sqrt(x * x + y * y + 0.2F);
-				parabolicField[(x + 2 + (y + 2) * scale)] = parabolaHeight;
+				parabolicField[(x + size + (y + size) * scale)] = parabolaHeight;
 			}
 		}
+		
+		((TreeGenJungle) CEIBA1).setHeight(34, 8);
+		((TreeGenClassic) OAK1).setHeight(4, 3);
+		((TreeGenClassic) OAK2).setHeight(1, 2);
+		((TreeGenClassic) BIRCH).setHeight(4, 3);
 	}
 }

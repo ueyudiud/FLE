@@ -2,7 +2,7 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.Tree;
+import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class TreeGenJungle extends TreeGenHuge
 {
-	public TreeGenJungle(Tree tree, float generateCoreLeavesChance)
+	public TreeGenJungle(ITree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}
@@ -19,7 +19,7 @@ public class TreeGenJungle extends TreeGenHuge
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		int l = baseHeight + L.nextInt(randHeight, random);
+		int l = this.baseHeight + L.nextInt(this.randHeight, random);
 		
 		if (!matchHugeTreeGrow(world, random, x, y, z, l))
 			return false;
@@ -131,12 +131,10 @@ public class TreeGenJungle extends TreeGenHuge
 	
 	private void growLeaves(World world, int x, int z, int y, int size, Random rand, TreeInfo info)
 	{
-		byte b0 = 2;
-		
-		for (int i1 = y - b0; i1 <= y; ++i1)
+		for (int i1 = y - 2; i1 <= y; ++i1)
 		{
 			int j1 = i1 - y;
-			generateCloudlyLeaves(world, x, i1, z, size + 1 - j1, 0, rand, info, (byte) 2);
+			generateCloudlyLeaves(world, x, i1, z, size - j1, 0, rand, info, (byte) 2);
 		}
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Random;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.lib.tile.instance.TECoreLeaves;
+import farcore.lib.tree.ITree.BlockType;
 import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -13,9 +14,9 @@ import net.minecraft.world.World;
 public abstract class TreeGenAbstract implements ITreeGenerator
 {
 	protected float generateCoreLeavesChance;
-	protected Tree tree;
+	protected ITree tree;
 	
-	public TreeGenAbstract(Tree tree, float generateCoreLeavesChance)
+	public TreeGenAbstract(ITree tree, float generateCoreLeavesChance)
 	{
 		this.tree = tree;
 		this.generateCoreLeavesChance = generateCoreLeavesChance;
@@ -92,7 +93,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	
 	protected void generateLog(World world, int x, int y, int z, int meta)
 	{
-		Worlds.setBlock(world, new BlockPos(x, y, z), this.tree.blocks[0], meta, V.generateState ? 2 : 3);
+		Worlds.setBlock(world, new BlockPos(x, y, z), this.tree.getBlock(BlockType.LOG), meta, V.generateState ? 2 : 3);
 	}
 	
 	protected void generateTreeLeaves(World world, int x, int y, int z, int meta, Random rand, TreeInfo info)
@@ -141,12 +142,12 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 			int flag = V.generateState ? 2 : 3;
 			if(rand.nextDouble() <= generateCoreLeavesChance)
 			{
-				Worlds.setBlock(world, pos, this.tree.blocks[3], meta, flag);
+				Worlds.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES_CORE), meta, flag);
 				Worlds.setTileEntity(world, pos, new TECoreLeaves(this.tree, info), !V.generateState);
 			}
 			else
 			{
-				Worlds.setBlock(world, pos, this.tree.blocks[2], meta, flag);
+				Worlds.setBlock(world, pos, this.tree.getBlock(BlockType.LEAVES), meta, flag);
 			}
 		}
 	}

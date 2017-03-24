@@ -24,4 +24,12 @@ public abstract class Layer extends GenLayer
 	{
 		return IntCache.getIntCache(u * v);
 	}
+	
+	/**
+	 * Generates a pseudo random boolean value.
+	 */
+	protected boolean nextBoolean()
+	{
+		return nextInt(2) == 0;
+	}
 }

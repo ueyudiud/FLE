@@ -18,6 +18,7 @@ import farcore.lib.tree.TreeInfo;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -118,9 +119,9 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		}
 		
 		@Override
-		public void updateLeaves(World world, BlockPos pos, Random rand)
+		public void updateLeaves(World world, BlockPos pos, Random rand, boolean check)
 		{
-			this.tree.updateLeaves(world, pos, rand);
+			this.tree.updateLeaves(world, pos, rand, check);
 		}
 		
 		@Override
@@ -197,6 +198,12 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		public GeneticMaterial createNativeGeneticMaterial()
 		{
 			return this.tree.createNativeGeneticMaterial();
+		}
+		
+		@Override
+		public <T extends Block> T getBlock(BlockType type)
+		{
+			return this.tree.getBlock(type);
 		}
 	}
 }

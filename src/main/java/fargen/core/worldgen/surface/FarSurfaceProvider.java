@@ -1,10 +1,16 @@
 package fargen.core.worldgen.surface;
 
 import fargen.core.FarGen;
+import fargen.core.biome.BiomeBase;
+import fargen.core.worldgen.FarWorldType;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -115,34 +121,38 @@ public class FarSurfaceProvider extends WorldProvider
 	@Override
 	public Biome getBiomeForCoords(BlockPos pos)
 	{
-		//		if (world.isBlockLoaded(pos))
-		//		{
-		//			if(world.getWorldType() != FarWorldType.DEFAULT &&
-		//					world.getWorldType() != FarWorldType.FLAT &&
-		//					world.getWorldType() != FarWorldType.LARGE_BIOMES)
-		//				return super.getBiomeForCoords(pos);
-		//			Chunk chunk = world.getChunkFromBlockCoords(pos);
-		//			try
-		//			{
-		//				int i = pos.getX() & 15;
-		//				int j = pos.getZ() & 15;
-		//				int id = chunk.getBiomeArray()[j << 4 | i] & 0xFF;
-		//				if(id == 255)
-		//				{
-		//					id = chunk.getBiomeArray()[j << 4 | i] = (byte) ((BiomeBase) getBiomeProvider().getBiomeGenerator(pos, BiomeBase.DEBUG)).biomeID;
-		//				}
-		//				return BiomeBase.getBiomeFromID(id);
-		//			}
-		//			catch (Throwable throwable)
-		//			{
-		//				CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting biome");
-		//				CrashReportCategory crashreportcategory = crashreport.makeCategory("Coordinates of biome request");
-		//				crashreportcategory.setDetail("Location", () -> CrashReportCategory.getCoordinateInfo(pos));
-		//				throw new ReportedException(crashreport);
-		//			}
-		//		}
-		//		else
-		//		return getBiomeProvider().getBiomeGenerator(pos, BiomeBase.DEBUG);
-		return super.getBiomeForCoords(pos);
+		if (this.world.isBlockLoaded(pos))
+		{
+			if (this.world.getWorldType() == FarWorldType.FLAT)
+			{
+				return super.getBiomeForCoords(pos);
+			}
+			if(this.world.getWorldType() != FarWorldType.DEFAULT &&
+					this.world.getWorldType() != FarWorldType.LARGE_BIOMES)
+				throw new IllegalStateException("Unknown world type : " + this.world.getWorldType().getName());
+			Chunk chunk = this.world.getChunkFromBlockCoords(pos);
+			try
+			{
+				int i = pos.getX() & 15;
+				int j = pos.getZ() & 15;
+				int id = chunk.getBiomeArray()[j << 4 | i] & 0xFF;
+				if(id == 255)
+				{
+					id = chunk.getBiomeArray()[j << 4 | i] = (byte) ((BiomeBase) getBiomeProvider().getBiome(pos, BiomeBase.DEBUG)).biomeID;
+				}
+				return BiomeBase.getBiomeFromID(id);
+			}
+			catch (Throwable throwable)
+			{
+				CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting biome");
+				CrashReportCategory crashreportcategory = crashreport.makeCategory("Coordinates of biome request");
+				crashreportcategory.setDetail("Location", () -> CrashReportCategory.getCoordinateInfo(pos));
+				throw new ReportedException(crashreport);
+			}
+		}
+		else
+		{
+			return getBiomeProvider().getBiome(pos, BiomeBase.DEBUG);
+		}
 	}
 }

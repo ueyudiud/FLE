@@ -20,11 +20,15 @@ public class LayerAddDeepOcean extends LayerExpandMix
 	@Override
 	protected int getValue(int x, int y, int up, int down, int left, int right, int core)
 	{
-		int oceanCount = 0;
-		if (up == 0) oceanCount++;
-		if (down == 0) oceanCount++;
-		if (left  == 0) oceanCount++;
-		if (right == 0) oceanCount++;
-		return (core == 0) && (oceanCount > 3) ? LayerSurfaceBiome._deep_ocean.biomeID : core;
+		if (core == 0)
+		{
+			int oceanCount = 0;
+			if (up    == 0) oceanCount++;
+			if (down  == 0) oceanCount++;
+			if (left  == 0) oceanCount++;
+			if (right == 0) oceanCount++;
+			return oceanCount > 3 ? LayerSurfaceTerrain._deep_ocean.biomeID : core;
+		}
+		return core;
 	}
 }

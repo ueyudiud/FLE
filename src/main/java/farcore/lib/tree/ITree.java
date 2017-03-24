@@ -33,11 +33,21 @@ import net.minecraft.world.World;
 @Deprecated
 public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegisteredNameable
 {
+	enum BlockType
+	{
+		LOG,
+		LOG_ART,
+		LEAVES,
+		LEAVES_CORE;
+	}
+	
 	ITree VOID = new TreeVoid();
 	
 	//	Mat material();
 	
 	void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore);
+	
+	<T extends Block> T getBlock(BlockType type);
 	
 	default IProperty[] getLogProp(boolean isArt)
 	{
@@ -93,7 +103,7 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	void updateLog(World world, BlockPos pos, Random rand, boolean isArt);
 	
-	void updateLeaves(World world, BlockPos pos, Random rand);
+	void updateLeaves(World world, BlockPos pos, Random rand, boolean checkDecay);
 	
 	void breakLog(World world, BlockPos pos, IBlockState state, boolean isArt);
 	

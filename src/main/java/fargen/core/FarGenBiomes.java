@@ -1,8 +1,9 @@
 package fargen.core;
 
+import static fargen.core.biome.BiomeBase.BiomePropertiesExtended.newProperties;
+
 import farcore.data.EnumTempCategory;
 import fargen.core.biome.BiomeBase;
-import fargen.core.biome.BiomeBase.BiomePropertiesExtended;
 import fargen.core.biome.BiomeVoid;
 import fargen.core.biome.layer.BiomeLayerGenerator;
 import fargen.core.biome.layer.surface.BLGSDesert;
@@ -54,6 +55,10 @@ public class FarGenBiomes
 	//Extended biomes
 	public static BiomeBase mushroom_island;
 	//Technical biomes
+	public static BiomeBase tropical_desert_edge;
+	public static BiomeBase temperate_desert_edge;
+	public static BiomeBase rocky_desert_edge;
+	
 	public static BiomeBase[] beach;
 	public static BiomeBase[] river;
 	
@@ -64,44 +69,51 @@ public class FarGenBiomes
 	{
 		IBlockState PODZEL = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.PODZOL);
 		BiomeLayerGenerator baseGenerator = new BLGSSimple(Blocks.GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState(), true);
-		ocean_t = new BiomeBase(0, BiomePropertiesExtended.newProperties("ocean_tropical").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_st = new BiomeBase(1, BiomePropertiesExtended.newProperties("ocean_subtropical").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_te = new BiomeBase(2, BiomePropertiesExtended.newProperties("ocean_temperate").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_sf = new BiomeBase(3, BiomePropertiesExtended.newProperties("ocean_subfrigid").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_f = new BiomeBase(4, BiomePropertiesExtended.newProperties("ocean_frigid").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_t_deep = new BiomeBase(5, BiomePropertiesExtended.newProperties("ocean_tropical_deep").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_st_deep = new BiomeBase(6, BiomePropertiesExtended.newProperties("ocean_subtropical_deep").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_te_deep = new BiomeBase(7, BiomePropertiesExtended.newProperties("ocean_temperate_deep").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_sf_deep = new BiomeBase(8, BiomePropertiesExtended.newProperties("ocean_subfrigid_deep").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_f_deep = new BiomeBase(9, BiomePropertiesExtended.newProperties("ocean_frigid_deep").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		savanna = new BiomeBase(11, BiomePropertiesExtended.newProperties("savanna").setClimaticZone(ClimaticZone.tropical_plain).setLayerGenerator(baseGenerator));
-		shrubland = new BiomeBase(12, BiomePropertiesExtended.newProperties("shrubland").setClimaticZone(ClimaticZone.subtropical_plain).setLayerGenerator(baseGenerator));
-		rockland = new BiomeBase(13, BiomePropertiesExtended.newProperties("rockland").setClimaticZone(ClimaticZone.temperate_rockland).setLayerGenerator(baseGenerator));
-		grassland = new BiomeBase(14, BiomePropertiesExtended.newProperties("grassland").setClimaticZone(ClimaticZone.temperate_plain).setLayerGenerator(baseGenerator));
-		meadow = new BiomeBase(15, BiomePropertiesExtended.newProperties("meadow").setClimaticZone(ClimaticZone.subfrigid_plain).setLayerGenerator(baseGenerator));
-		tundra = new BiomeBase(16, BiomePropertiesExtended.newProperties("tundra").setClimaticZone(ClimaticZone.frigid_plain).setLayerGenerator(new BLGSSimple(PODZEL, Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState(), true)));
-		frozen_tundra = new BiomeBase(17, BiomePropertiesExtended.newProperties("frozen_tundra").setClimaticZone(ClimaticZone.iceland).setLayerGenerator(new BLGSSimple(PODZEL, Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState(), true)));
-		tropical_desert = new BiomeBase(21, BiomePropertiesExtended.newProperties("tropical_desert").setClimaticZone(ClimaticZone.tropical_desert).setLayerGenerator(new BLGSDesert()));
-		temperate_desert = new BiomeBase(22, BiomePropertiesExtended.newProperties("temperate_desert").setClimaticZone(ClimaticZone.temperate_desert).setLayerGenerator(new BLGSDesert()));
-		rocky_desert = new BiomeBase(23, BiomePropertiesExtended.newProperties("rocky_desert").setClimaticZone(ClimaticZone.frigid_desert).setLayerGenerator(new BLGSDesert()));
-		tropical_monsoon_forest = new BiomeBase(31, BiomePropertiesExtended.newProperties("tropical_monsoon_forest").setClimaticZone(ClimaticZone.tropical_forest).setLayerGenerator(baseGenerator));
-		tropical_thorny_forest = new BiomeBase(32, BiomePropertiesExtended.newProperties("tropical_thorny_forest").setClimaticZone(ClimaticZone.tropical_monsoon).setLayerGenerator(baseGenerator));
-		subtropical_broadleaf_forest = new BiomeBase(33, BiomePropertiesExtended.newProperties("subtropical_broadleaf_forest").setClimaticZone(ClimaticZone.subtropical_monson).setLayerGenerator(baseGenerator));
-		subtropical_coniferous_forest = new BiomeBase(34, BiomePropertiesExtended.newProperties("subtropical_coniferous_forest").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(baseGenerator));
-		sclerophyll_forest = new BiomeBase(35, BiomePropertiesExtended.newProperties("sclerophyll_forest").setClimaticZone(ClimaticZone.temperate_monsoon).setLayerGenerator(baseGenerator));
-		temperate_broadleaf_forest = new BiomeBase(36, BiomePropertiesExtended.newProperties("temperate_broadleaf_forest").setClimaticZone(ClimaticZone.temperate_forest).setLayerGenerator(baseGenerator));
-		temperate_mixed_forest = new BiomeBase(37, BiomePropertiesExtended.newProperties("temperate_mixed_forest").setClimaticZone(ClimaticZone.temperate_forest).setLayerGenerator(baseGenerator));
-		boreal_forest = new BiomeBase(38, BiomePropertiesExtended.newProperties("boreal_forest").setClimaticZone(ClimaticZone.subfrigid_forest).setLayerGenerator(baseGenerator));
-		mangrove = new BiomeBase(41, BiomePropertiesExtended.newProperties("mangrove").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(baseGenerator));
-		swamp = new BiomeBase(42, BiomePropertiesExtended.newProperties("swamp").setClimaticZone(ClimaticZone.temperate_wet).setLayerGenerator(baseGenerator));
-		gigafteral_forest = new BiomeBase(51, BiomePropertiesExtended.newProperties("gigafteral_forest").setClimaticZone(ClimaticZone.tropical_rainforest).setLayerGenerator(baseGenerator));
-		tropical_rainforest = new BiomeBase(52, BiomePropertiesExtended.newProperties("tropical_rainforest").setClimaticZone(ClimaticZone.tropical_rainforest).setLayerGenerator(baseGenerator));
-		temperate_rainforest = new BiomeBase(53, BiomePropertiesExtended.newProperties("temperate_rainforest").setClimaticZone(ClimaticZone.temperate_rainforest).setLayerGenerator(baseGenerator));
-		gigafungal_forest = new BiomeBase(54, BiomePropertiesExtended.newProperties("gigafungal_forest").setClimaticZone(ClimaticZone.subfrigid_forest).setLayerGenerator(baseGenerator));
-		sequoia_forest = new BiomeBase(55, BiomePropertiesExtended.newProperties("sequoia_forest").setClimaticZone(ClimaticZone.frigid_plain).setLayerGenerator(baseGenerator));
-		glacispical_land = new BiomeBase(56, BiomePropertiesExtended.newProperties("glacispical_land").setClimaticZone(ClimaticZone.iceland).setLayerGenerator(baseGenerator));
+		ocean_t = new BiomeBase(0, newProperties("ocean_tropical").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_st = new BiomeBase(1, newProperties("ocean_subtropical").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_te = new BiomeBase(2, newProperties("ocean_temperate").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_sf = new BiomeBase(3, newProperties("ocean_subfrigid").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_f = new BiomeBase(4, newProperties("ocean_frigid").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_t_deep = new BiomeBase(5, newProperties("ocean_tropical_deep").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_st_deep = new BiomeBase(6, newProperties("ocean_subtropical_deep").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_te_deep = new BiomeBase(7, newProperties("ocean_temperate_deep").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_sf_deep = new BiomeBase(8, newProperties("ocean_subfrigid_deep").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_f_deep = new BiomeBase(9, newProperties("ocean_frigid_deep").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
 		
-		mushroom_island = new BiomeBase(101, BiomePropertiesExtended.newProperties("mushroom_island").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(new BLGSSimple(Blocks.MYCELIUM.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false)));
+		savanna = new BiomeBase(11, newProperties("savanna").setClimaticZone(ClimaticZone.tropical_plain).setLayerGenerator(baseGenerator).setTreePerChunk(3, 4));
+		shrubland = new BiomeBase(12, newProperties("shrubland").setClimaticZone(ClimaticZone.subtropical_plain).setLayerGenerator(baseGenerator).setTreePerChunk(5, 6));
+		rockland = new BiomeBase(13, newProperties("rockland").setClimaticZone(ClimaticZone.temperate_rockland).setLayerGenerator(baseGenerator));
+		grassland = new BiomeBase(14, newProperties("grassland").setClimaticZone(ClimaticZone.temperate_plain).setLayerGenerator(baseGenerator).setTreePerChunk(1, 7));
+		meadow = new BiomeBase(15, newProperties("meadow").setClimaticZone(ClimaticZone.subfrigid_plain).setLayerGenerator(baseGenerator).setTreePerChunk(1, 10));
+		tundra = new BiomeBase(16, newProperties("tundra").setClimaticZone(ClimaticZone.frigid_plain).setLayerGenerator(new BLGSSimple(PODZEL, Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState(), true)));
+		frozen_tundra = new BiomeBase(17, newProperties("frozen_tundra").setClimaticZone(ClimaticZone.iceland).setLayerGenerator(new BLGSSimple(PODZEL, Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState(), true)));
+		
+		tropical_desert = new BiomeBase(21, newProperties("tropical_desert").setClimaticZone(ClimaticZone.tropical_desert).setLayerGenerator(new BLGSDesert()));
+		temperate_desert = new BiomeBase(22, newProperties("temperate_desert").setClimaticZone(ClimaticZone.temperate_desert).setLayerGenerator(new BLGSDesert()));
+		rocky_desert = new BiomeBase(23, newProperties("rocky_desert").setClimaticZone(ClimaticZone.frigid_desert).setLayerGenerator(new BLGSDesert()));
+		tropical_desert_edge = new BiomeBase(tropical_desert.biomeID, false, newProperties("tropical_desert_edge").setClimaticZone(ClimaticZone.tropical_desert));
+		temperate_desert_edge = new BiomeBase(temperate_desert.biomeID, false, newProperties("temperate_desert_edge").setClimaticZone(ClimaticZone.temperate_desert));
+		rocky_desert_edge = new BiomeBase(rocky_desert.biomeID, false, newProperties("rocky_desert_edge").setClimaticZone(ClimaticZone.frigid_desert));
+		
+		tropical_monsoon_forest = new BiomeBase(31, newProperties("tropical_monsoon_forest").setClimaticZone(ClimaticZone.tropical_forest).setLayerGenerator(baseGenerator).setTreePerChunk(7, 2));
+		tropical_thorny_forest = new BiomeBase(32, newProperties("tropical_thorny_forest").setClimaticZone(ClimaticZone.tropical_monsoon).setLayerGenerator(baseGenerator).setTreePerChunk(2, 1));
+		subtropical_broadleaf_forest = new BiomeBase(33, newProperties("subtropical_broadleaf_forest").setClimaticZone(ClimaticZone.subtropical_monson).setLayerGenerator(baseGenerator).setTreePerChunk(3, 1));
+		subtropical_coniferous_forest = new BiomeBase(34, newProperties("subtropical_coniferous_forest").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(baseGenerator).setTreePerChunk(3, 1));
+		sclerophyll_forest = new BiomeBase(35, newProperties("sclerophyll_forest").setClimaticZone(ClimaticZone.temperate_monsoon).setLayerGenerator(baseGenerator).setTreePerChunk(6, 5));
+		temperate_broadleaf_forest = new BiomeBase(36, newProperties("temperate_broadleaf_forest").setClimaticZone(ClimaticZone.temperate_forest).setLayerGenerator(baseGenerator).setTreePerChunk(5, 2));
+		temperate_mixed_forest = new BiomeBase(37, newProperties("temperate_mixed_forest").setClimaticZone(ClimaticZone.temperate_forest).setLayerGenerator(baseGenerator).setTreePerChunk(2, 1));
+		boreal_forest = new BiomeBase(38, newProperties("boreal_forest").setClimaticZone(ClimaticZone.subfrigid_forest).setLayerGenerator(baseGenerator).setTreePerChunk(3, 2));
+		mangrove = new BiomeBase(41, newProperties("mangrove").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(baseGenerator).setTreePerChunk(8, 3));
+		swamp = new BiomeBase(42, newProperties("swamp").setClimaticZone(ClimaticZone.temperate_wet).setLayerGenerator(baseGenerator).setTreePerChunk(5, 3));
+		
+		gigafteral_forest = new BiomeBase(51, newProperties("gigafteral_forest").setClimaticZone(ClimaticZone.tropical_rainforest).setLayerGenerator(baseGenerator).setTreePerChunk(5, 1));
+		tropical_rainforest = new BiomeBase(52, newProperties("tropical_rainforest").setClimaticZone(ClimaticZone.tropical_rainforest).setLayerGenerator(baseGenerator).setTreePerChunk(5, 1));
+		temperate_rainforest = new BiomeBase(53, newProperties("temperate_rainforest").setClimaticZone(ClimaticZone.temperate_rainforest).setLayerGenerator(baseGenerator).setTreePerChunk(9, 2));
+		gigafungal_forest = new BiomeBase(54, newProperties("gigafungal_forest").setClimaticZone(ClimaticZone.subfrigid_forest).setLayerGenerator(baseGenerator).setTreePerChunk(5, 2));
+		sequoia_forest = new BiomeBase(55, newProperties("sequoia_forest").setClimaticZone(ClimaticZone.frigid_plain).setLayerGenerator(baseGenerator).setTreePerChunk(2, 1));
+		glacispical_land = new BiomeBase(56, newProperties("glacispical_land").setClimaticZone(ClimaticZone.iceland).setLayerGenerator(baseGenerator));
+		
+		mushroom_island = new BiomeBase(101, newProperties("mushroom_island").setClimaticZone(ClimaticZone.subtropical_wet).setLayerGenerator(new BLGSSimple(Blocks.MYCELIUM.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false)));
 		river = new BiomeBase[ClimaticZone.values().length];
 		beach = new BiomeBase[ClimaticZone.values().length];
 		for(ClimaticZone zone : ClimaticZone.values())
@@ -110,8 +122,8 @@ public class FarGenBiomes
 			{
 				continue;
 			}
-			river[zone.ordinal()] = new BiomeBase(121 + zone.ordinal(), BiomePropertiesExtended.newProperties("river_" + zone.name().toLowerCase()).setClimaticZone(zone).setLayerGenerator(baseGenerator));
-			beach[zone.ordinal()] = new BiomeBase(151 + zone.ordinal(), BiomePropertiesExtended.newProperties("beach_" + zone.name().toLowerCase()).setClimaticZone(zone).setLayerGenerator(baseGenerator));
+			river[zone.ordinal()] = new BiomeBase(121 + zone.ordinal(), newProperties("river_" + zone.name().toLowerCase()).setClimaticZone(zone).setLayerGenerator(baseGenerator).setTreePerChunk(zone.temperatureAverage > 0.7F ? 4 : 1, 2));
+			beach[zone.ordinal()] = new BiomeBase(151 + zone.ordinal(), newProperties("beach_" + zone.name().toLowerCase()).setClimaticZone(zone).setLayerGenerator(baseGenerator));
 		}
 		river[ClimaticZone.ocean_frigid.ordinal()] = ocean_f;
 		river[ClimaticZone.ocean_subfrigid.ordinal()] = ocean_sf;

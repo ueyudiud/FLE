@@ -22,6 +22,11 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		}
 	}
 	
+	public int weight()
+	{
+		return this.allWeight;
+	}
+	
 	public void add(T value, int weight)
 	{
 		if(this.first == null)
@@ -35,6 +40,15 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 			this.allWeight += weight;
 			this.last = this.last.next();
 		}
+	}
+	
+	/**
+	 * Clean selector target list.
+	 */
+	public void clear()
+	{
+		this.allWeight = 0;
+		this.first = this.last = null;
 	}
 	
 	@Override

@@ -37,4 +37,9 @@ public abstract class LayerExpandMix extends Layer
 	}
 	
 	protected abstract int getValue(int x, int y, int up, int down, int left, int right, int core);
+	
+	protected int getUnlessAbsent(int t, int a, int b, int c, int d, int f)
+	{
+		return a != t || b != t || c != t || d != t ? f : t;
+	}
 }

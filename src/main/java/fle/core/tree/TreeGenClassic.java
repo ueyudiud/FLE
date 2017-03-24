@@ -2,7 +2,7 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.Tree;
+import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
@@ -18,7 +18,7 @@ public class TreeGenClassic extends TreeGenAbstract
 	protected int minHeight;
 	protected int randHeight;
 	
-	public TreeGenClassic(Tree tree, float generateCoreLeavesChance)
+	public TreeGenClassic(ITree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}
@@ -32,7 +32,7 @@ public class TreeGenClassic extends TreeGenAbstract
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random rand, TreeInfo info)
 	{
-		int l = minHeight + L.nextInt(randHeight, rand);
+		int l = this.minHeight + L.nextInt(this.randHeight, rand);
 		if(!checkLogGrow(world, x, y, z, 1, 0, 1, false) ||
 				!checkLogGrow(world, x, y + 1, z, 2, l, 2, true))
 			return false;
@@ -67,7 +67,7 @@ public class TreeGenClassic extends TreeGenAbstract
 						
 						if (Math.abs(j2) != l1 || Math.abs(l2) != l1 || rand.nextInt(2) != 0 && i3 != 0)
 						{
-							generateTreeLeaves(world, i2, k1, k2, 0, generateCoreLeavesChance, rand, info);
+							generateTreeLeaves(world, i2, k1, k2, 0, this.generateCoreLeavesChance, rand, info);
 						}
 					}
 				}

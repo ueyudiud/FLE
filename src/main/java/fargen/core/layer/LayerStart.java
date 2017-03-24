@@ -24,8 +24,15 @@ public class LayerStart extends Layer
 		for (int i = 0; i < h; ++i)
 			for (int j = 0; j < w; ++j)
 			{
-				initChunkSeed(x + j, y + i);
-				result[i * w + j] = nextInt(this.rand) == 0 ? 1 : 0;
+				if ((x + j & 0xFFFFFFFD) == 0 && (y + i & 0xFFFFFFFD) == 0)
+				{
+					result[i * w + j] = 1;
+				}
+				else
+				{
+					initChunkSeed(x + j, y + i);
+					result[i * w + j] = nextInt(this.rand) == 0 ? 1 : 0;
+				}
 			}
 		return result;
 	}

@@ -9,10 +9,9 @@ import javax.annotation.Nullable;
 import fargen.core.FarGenBiomes;
 import fargen.core.biome.BiomeBase;
 import fargen.core.instance.Layers;
-import fargen.core.layer.surface.LayerSurfaceBiome;
+import fargen.core.layer.surface.LayerSurfaceTerrain;
 import fargen.core.util.DataCacheCoord;
 import nebula.Log;
-import nebula.common.util.noise.NoisePerlin;
 import nebula.common.world.IBiomeRegetter;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -31,8 +30,6 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	protected final DataCacheCoord<BiomeBase> biomeCache;
 	
 	public final FarSurfaceDataGenerator dataGenerator;
-	protected final NoisePerlin rainfall;
-	protected final NoisePerlin temperature;
 	protected final GenLayer[] layers;
 	//	protected final BiomeCache biomeCache;
 	
@@ -41,8 +38,6 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		this.biomeCache = new DataCacheCoord<>((x, z)-> getBiomes(null, x, z, 16, 16, false), 4);
 		this.dataGenerator = new FarSurfaceDataGenerator(this, info.getSeed());
 		Random random = new Random(info.getSeed() * 4837583719572921L ^ 573947459175495729L);
-		this.rainfall = new NoisePerlin(random.nextLong(), 10, 3.6, 1.9, 2.0);
-		this.temperature = new NoisePerlin(random.nextLong(), 12, 3.2, 1.9, 2.0);
 		//		this.biomeCache = new BiomeCache(this);
 		allowedBiomes.add(FarGenBiomes.boreal_forest);
 		allowedBiomes.add(FarGenBiomes.subtropical_broadleaf_forest);
@@ -87,8 +82,8 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 			listToReuse = new int[width * length];
 		}
 		
-		//		int[] aint = this.layers[1].getInts(x, z, width, length);
-		//		System.arraycopy(aint, 0, listToReuse, 0, width * length);
+		int[] aint = this.layers[1].getInts(x, z, width, length);
+		System.arraycopy(aint, 0, listToReuse, 0, width * length);
 		Arrays.fill(listToReuse, 0);
 		return listToReuse;
 	}
@@ -122,7 +117,7 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		{
 			for (int i = 0; i < width * height; ++i)
 			{
-				biomes[i] = LayerSurfaceBiome.BIOME_TABLE[aint[i]];
+				biomes[i] = LayerSurfaceTerrain.BIOME_TABLE[aint[i]];
 			}
 			
 			return (BiomeBase[]) biomes;
@@ -143,8 +138,6 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	@Override
 	public BiomeBase[] getBiomes(Biome[] listToReuse, int x, int z, int width, int length, boolean cacheFlag)
 	{
-		IntCache.resetIntCache();
-		
 		if (listToReuse == null || !(listToReuse instanceof BiomeBase[]) || listToReuse.length < width * length)
 		{
 			listToReuse = new BiomeBase[width * length];
@@ -157,12 +150,12 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		}
 		else
 		{
+			IntCache.resetIntCache();
+			
 			int[] aint = this.layers[1].getInts(x, z, width, length);
-			double[] t = this.temperature.noise(null, width, length, x, z);
-			double[] r = this.rainfall.noise(null, width, length, x, z);
 			for (int i = 0; i < width * length; ++i)
 			{
-				listToReuse[i] = this.dataGenerator.getBiome(aint[i], t[i], r[i]);
+				listToReuse[i] = BiomeBase.getBiomeFromID(aint[i] & 0xFF);
 			}
 			
 			return (BiomeBase[]) listToReuse;

@@ -50,6 +50,11 @@ public abstract class NoiseBase
 	
 	public abstract double[] noise(double[] array, int u, int v, int w, double x, double y, double z, double xScale, double yScale, double zScale);
 	
+	public double noise(double x, double y)
+	{
+		return noise(x, y, 0.0);
+	}
+	
 	public abstract double noise(double x, double y, double z);
 	
 	protected double lerp(double x, double l, double a, double b)

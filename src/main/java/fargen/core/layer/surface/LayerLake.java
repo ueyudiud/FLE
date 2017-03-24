@@ -23,13 +23,13 @@ public class LayerLake extends LayerExpandMix
 		initChunkSeed(x, y);
 		if (isOceanic(core))
 		{
-			return !isOceanic(up) && !isOceanic(down) && !isOceanic(right) && !isOceanic(left) ? LayerSurfaceBiome._lake.biomeID : core;
+			return !isOceanic(up) && !isOceanic(down) && !isOceanic(right) && !isOceanic(left) ? LayerSurfaceTerrain._lake.biomeID : core;
 		}
 		return core;
 	}
 	
 	protected boolean isOceanic(int id)
 	{
-		return id == LayerSurfaceBiome._ocean.biomeID || id == LayerSurfaceBiome._deep_ocean.biomeID;
+		return id == LayerSurfaceTerrain._ocean.biomeID || id == LayerSurfaceTerrain._deep_ocean.biomeID;
 	}
 }

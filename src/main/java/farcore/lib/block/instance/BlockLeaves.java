@@ -159,9 +159,15 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	}
 	
 	@Override
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
+	{
+		this.tree.updateLeaves(worldIn, pos, random, false);
+	}
+	
+	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		this.tree.updateLeaves(worldIn, pos, rand);
+		this.tree.updateLeaves(worldIn, pos, rand, true);
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ public class TreeCeiba extends Tree
 	
 	public TreeCeiba()
 	{
-		this.leavesCheckRange = 6;
+		this.leavesCheckRange = 5;
 	}
 	
 	@Override
