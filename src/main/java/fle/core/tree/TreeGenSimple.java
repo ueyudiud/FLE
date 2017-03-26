@@ -41,6 +41,7 @@ public class TreeGenSimple extends TreeGenAbstract
 		this.randTreeHeight = (short) randHeight;
 		return this;
 	}
+	
 	public TreeGenSimple setTreeLeavesShape(int minLeavesHeight,
 			int maxLeavesHeight, int logCheckWidth, float leavesWidth)
 	{

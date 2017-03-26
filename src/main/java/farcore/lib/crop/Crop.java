@@ -51,7 +51,7 @@ public class Crop implements ICrop, IPlantable
 	protected int growRequire = 1000;
 	
 	@Override
-	public final String getRegisteredName()
+	public String getRegisteredName()
 	{
 		return this.material.getRegisteredName();
 	}
@@ -269,7 +269,7 @@ public class Crop implements ICrop, IPlantable
 	@Override
 	public boolean canPlantAt(ICropAccess access)
 	{
-		return access.isPlantable(this, Direction.D);
+		return access.isPlantable(access, Direction.D);
 	}
 	
 	@Override

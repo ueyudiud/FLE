@@ -137,9 +137,9 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		}
 		
 		@Override
-		public void beginLeavesDency(World world, BlockPos pos)
+		public void beginLeavesDecay(World world, BlockPos pos)
 		{
-			this.tree.beginLeavesDency(world, pos);
+			this.tree.beginLeavesDecay(world, pos);
 		}
 		
 		@Override

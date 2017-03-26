@@ -1,0 +1,66 @@
+{
+	"name": "net.minecraft.client.renderer.RenderItem",
+	"modification": [
+		{
+			"name": "a|(Lbyl;ILadz;)V",
+			"labels": [
+				{
+					"type": "remove",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": -4,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lbyl;Lct;JLadz;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				},
+				{
+					"type": "remove",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": -5,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lbyl;Lct;JLadz;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

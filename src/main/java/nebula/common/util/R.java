@@ -159,9 +159,22 @@ public final class R
 		}
 	}
 	
+	public static Method getMethod(Class clazz, String name, Class...classes)
+	{
+		try
+		{
+			Method tMethod = clazz.getDeclaredMethod(name, classes);
+			return tMethod;
+		}
+		catch(Throwable e)
+		{
+			return null;
+		}
+	}
+	
 	public static Method getMethod(Class clazz, String mcpName, String obfName, Class...classes)
 	{
-		for(String str : new String[]{mcpName, obfName})
+		for(String str : new String[] {mcpName, obfName})
 		{
 			try
 			{

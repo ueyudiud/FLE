@@ -18,6 +18,8 @@ import fargen.core.layer.biome.LayerSurfaceBiomeEdge;
 import fargen.core.layer.biome.LayerSurfaceBiomeRemix;
 import fargen.core.layer.biome.LayerSurfaceBiomeStart;
 import fargen.core.layer.biome.LayerSurfaceRainfall;
+import fargen.core.layer.biome.LayerSurfaceSoilRemix;
+import fargen.core.layer.biome.LayerSurfaceSoilStart;
 import fargen.core.layer.surface.LayerAddDeepOcean;
 import fargen.core.layer.surface.LayerLake;
 import fargen.core.layer.surface.LayerRiver;
@@ -111,6 +113,13 @@ public class Layers
 		drawImage(256, layer4, "43 Smooth");
 		layer4 = new LayerZoom(374L, 3, layer4);
 		drawImage(256, layer4, "44 Biome Zoom");
+		
+		GenLayer soil = new LayerSurfaceSoilStart(501L, layer4);
+		drawImage(256, layer4, "51 Soil Start");
+		soil = new GenLayerSmooth(4017L, soil);
+		drawImage(256, layer1, "52 Soil Smooth");
+		soil = wrapZoom("s", soil, 0);
+		
 		layer4 = new LayerSurfaceBiome(513L, layer4);
 		drawImage(256, layer4, "45 Biome Mixed");
 		layer4 = new GenLayerSmooth(4017L, layer4);
@@ -144,9 +153,12 @@ public class Layers
 		drawImage(256, layer3, "16 Output");
 		
 		layer4 = new LayerSurfaceBiomeRemix(3847L, layer4, layer3);
+		soil = new LayerSurfaceSoilRemix(4819L, soil, layer3);
 		
 		GenLayer layerResult = new GenLayerVoronoiZoom(5817L, layer4);
 		drawImage(256, layer4, "17 Voronoi Zoom");
+		soil = new GenLayerVoronoiZoom(5817L, soil);
+		drawImage(256, layer4, "54 Soil Voronoi Zoom");
 		
 		GenLayer rock = new LayerRockStart(21L);
 		drawImage(256, rock, "R1 Start");
@@ -157,8 +169,9 @@ public class Layers
 		
 		layerResult.initWorldGenSeed(seed);
 		rock.initWorldGenSeed(seed);
+		soil.initWorldGenSeed(seed);
 		
-		return new GenLayer[] {layer3, layerResult, rock};
+		return new GenLayer[] {layer3, layerResult, rock, soil};
 	}
 	
 	private static final boolean DRAW_IMG = true;

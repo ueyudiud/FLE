@@ -53,7 +53,7 @@ public class LayerSurfaceBiome extends Layer
 			for (int x1 = 0; x1 < w; ++x1)
 			{
 				int id = y1 * w + x1;
-				ret[id] = getBiome(ret[id] & 0xF, ret[id] & 0xF0, ret[id] & 0xF00);
+				ret[id] = getBiome(ret[id] & 0xF, ret[id] >> 4 & 0xF, ret[id] >> 8 & 0xF);
 			}
 		return ret;
 	}

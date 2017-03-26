@@ -12,6 +12,7 @@ import net.minecraftforge.common.EnumPlantType;
 public class CropTemplate extends Crop
 {
 	public EnumPlantType type = EnumPlantType.Crop;
+	public EnumPlantType wildType = EnumPlantType.Plains;
 	private Appliable<ItemStack> drop;
 	private int dropChance;
 	private Appliable<ItemStack> dropRare;
@@ -66,10 +67,17 @@ public class CropTemplate extends Crop
 		return this;
 	}
 	
+	public CropTemplate setPlantType(EnumPlantType type, EnumPlantType wildType)
+	{
+		this.type = type;
+		this.wildType = wildType;
+		return this;
+	}
+	
 	@Override
 	public EnumPlantType getPlantType(ICropAccess access)
 	{
-		return this.type;
+		return access.isWild() ? this.wildType : this.type;
 	}
 	
 	@Override

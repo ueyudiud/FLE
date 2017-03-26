@@ -10,6 +10,7 @@ public class ToolShovel extends Tool
 	{
 		super(EnumToolTypes.SHOVEL);
 		this.speedMultiplier = speedMultiplier;
+		this.damagePerBreak = 0.25F;
 		this.damagePerAttack = 2.0F;
 	}
 	

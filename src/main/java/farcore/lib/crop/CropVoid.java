@@ -7,8 +7,13 @@ public class CropVoid extends Crop
 {
 	public CropVoid()
 	{
-		this.material = Mat.VOID;
 		this.maxStage = 1;
+	}
+	
+	@Override
+	public String getRegisteredName()
+	{
+		return Mat.VOID.name;
 	}
 	
 	@Override

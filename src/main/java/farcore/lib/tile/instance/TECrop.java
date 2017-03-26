@@ -24,6 +24,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITP_HarvestCheck;
 import nebula.common.tile.IUpdatableTile;
 import nebula.common.tile.TEAged;
 import nebula.common.util.Direction;
+import nebula.common.util.L;
 import nebula.common.util.NBTs;
 import nebula.common.util.Players;
 import nebula.common.util.Worlds;
@@ -69,6 +70,8 @@ ITB_AddHitEffects
 	{
 		this(crop, crop.createNativeGeneticMaterial());
 		this.isWild = true;
+		this.stage = this.random.nextInt(3) == 0 ? crop.getMaxStage() : L.nextInt(crop.getMaxStage() - 2, this.random) + 1;
+		this.growBuffer = L.nextInt(crop.getGrowReq(this), this.random);
 	}
 	public TECrop(ICrop crop, GeneticMaterial geneticMaterial)
 	{
@@ -182,7 +185,7 @@ ITB_AddHitEffects
 	@Override
 	public boolean canHarvestBlock(EntityPlayer player)
 	{
-		return Players.matchCurrentToolType(player, EnumToolTypes.SICKLE);
+		return this.isWild ? true : Players.matchCurrentToolType(player, EnumToolTypes.SICKLE);
 	}
 	
 	@Override
@@ -323,7 +326,8 @@ ITB_AddHitEffects
 	
 	public EnumPlantType getPlantType()
 	{
-		return this.card == null ? EnumPlantType.Crop : this.card.getPlantType(this);
+		return this.card == null ? EnumPlantType.Crop :
+			this.card.getPlantType(this);
 	}
 	
 	@Override

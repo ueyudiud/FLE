@@ -11,6 +11,7 @@ import nebula.client.model.StateMapperExt;
 import nebula.client.util.Client;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
+import nebula.common.base.ArrayListAddWithCheck;
 import nebula.common.block.BlockBase;
 import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
@@ -179,7 +180,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@Override
 	public void beginLeavesDecay(IBlockState state, World world, BlockPos pos)
 	{
-		this.tree.beginLeavesDency(world, pos);
+		this.tree.beginLeavesDecay(world, pos);
 		world.scheduleUpdate(pos, this, tickRate(world));
 	}
 	
@@ -213,7 +214,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
-		return this.tree.getLeavesDrops(world, pos, state, fortune, silkTouch, new ArrayList());
+		return this.tree.getLeavesDrops(world, pos, state, fortune, silkTouch, ArrayListAddWithCheck.requireNonnull());
 	}
 	
 	@Override

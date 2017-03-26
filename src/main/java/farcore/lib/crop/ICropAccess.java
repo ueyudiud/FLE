@@ -1,12 +1,18 @@
 package farcore.lib.crop;
 
+import farcore.data.EnumBlock;
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.IBiology;
 import farcore.lib.bio.IFamily;
 import nebula.common.world.ICoord;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
 
-public interface ICropAccess extends ICoord, IBiology
+public interface ICropAccess extends ICoord, IBiology, IPlantable
 {
 	@Override
 	default ICrop getSpecie()
@@ -50,4 +56,16 @@ public interface ICropAccess extends ICoord, IBiology
 	 * @param gm
 	 */
 	void pollinate(GeneticMaterial gm);
+	
+	@Override
+	default IBlockState getPlant(IBlockAccess world, BlockPos pos)
+	{
+		return EnumBlock.crop.block.getDefaultState();
+	}
+	
+	@Override
+	default EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
+	{
+		return crop().getPlantType(this);
+	}
 }

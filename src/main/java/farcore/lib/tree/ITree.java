@@ -103,13 +103,13 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	void updateLog(World world, BlockPos pos, Random rand, boolean isArt);
 	
-	void updateLeaves(World world, BlockPos pos, Random rand, boolean checkDecay);
+	void updateLeaves(World world, BlockPos pos, Random rand, boolean markTick);
 	
 	void breakLog(World world, BlockPos pos, IBlockState state, boolean isArt);
 	
 	void breakLeaves(World world, BlockPos pos, IBlockState state);
 	
-	void beginLeavesDency(World world, BlockPos pos);
+	void beginLeavesDecay(World world, BlockPos pos);
 	
 	boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos, float yPos,
 			float zPos, boolean isArt);
@@ -119,12 +119,6 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ);
-	
-	//	ActionResult<Float> onToolUseLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
-	//			Direction side, float hitX, float hitY, float hitZ, boolean isArt);
-	
-	//	ActionResult<Float> onToolUseLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, long useTick, BlockPos pos,
-	//			Direction side, float hitX, float hitY, float hitZ);
 	
 	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList list);
 	

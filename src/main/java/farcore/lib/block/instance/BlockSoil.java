@@ -36,6 +36,7 @@ import nebula.common.util.L;
 import nebula.common.util.Players;
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -57,6 +58,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -545,7 +547,10 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		BlockPos up = pos.up();
 		IBlockState state = world.getBlockState(up);
-		return state.getBlock().isAir(state, world, up) || !state.getBlock().isNormalCube(state, world, up);
+		return state.getBlock().isAir(state, world, up) ||
+				(!state.getBlock().isNormalCube(state, world, up) &&
+						!(state.getBlock() instanceof BlockFluidBase) &&
+						!(state.getBlock() instanceof BlockLiquid));
 	}
 	
 	@Override
@@ -643,6 +648,26 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		case Plains : return !type.isFrozen;
 		case Water : return !type.isFrozen && type.isWet;
 		default : return super.canSustainPlant(state, world, pos, direction, plantable);
+		}
+	}
+	
+	@Override
+	public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
+	{
+		if (!canBlockGrass(world, pos))
+		{
+			EnumCoverType type;
+			switch (type = state.getValue(COVER_TYPE).noCover)
+			{
+			case GRASS :
+			case TUNDRA :
+			case MYCELIUM :
+				type = EnumCoverType.NONE;
+				break;
+			default:
+				break;
+			}
+			world.setBlockState(pos, state.withProperty(COVER_TYPE, type));
 		}
 	}
 	

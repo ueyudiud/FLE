@@ -1,0 +1,42 @@
+{
+	"name": "net.minecraft.client.renderer.EntityRenderer",
+	"modification": [
+		{
+			"name": "updateRenderer|()V",
+			"labels": [
+				{
+					"type": "replace",
+					"owner": "net/minecraft/client/renderer/EntityRenderer",
+					"name": "addRainParticles",
+					"desc": "()V",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 180,
+							"owner": "net/minecraft/client/renderer/EntityRenderer",
+							"name": "random",
+							"desc": "Ljava/util/Random;"
+						},
+						{
+							"opcode": 25,
+							"var": 0
+						},
+						{
+							"opcode": 180,
+							"owner": "net/minecraft/client/renderer/EntityRenderer",
+							"name": "rainSoundCounter",
+							"desc": "I"
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderDropOnGround",
+							"desc": "(Ljava/util/Random;I)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

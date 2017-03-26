@@ -4,6 +4,7 @@
 
 package farcore.lib.tree;
 
+import static farcore.FarCore.worldGenerationFlag;
 import static net.minecraft.block.BlockLeaves.CHECK_DECAY;
 
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.data.EnumItem;
-import farcore.data.V;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.block.instance.BlockLeaves;
@@ -20,9 +20,9 @@ import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TECoreLeaves;
-import fle.loader.BlocksItems;
 import nebula.common.base.Appliable;
 import nebula.common.data.Misc;
+import nebula.common.item.ItemSubBehavior;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.A;
@@ -35,6 +35,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -43,8 +44,10 @@ import net.minecraft.world.World;
  */
 public abstract class Tree implements ITree
 {
-	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER1 = Appliable.wrapCached(()-> BlocksItems.crop.getSubItem("broadleaf"));
-	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER2 = Appliable.wrapCached(()-> BlocksItems.crop.getSubItem("coniferous"));
+	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER1 =
+			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
+	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER2 =
+			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
 	
 	protected Mat material;
 	protected FamilyTemplate<Tree, ISaplingAccess> family;
@@ -154,18 +157,26 @@ public abstract class Tree implements ITree
 	{
 		if (checkDency)
 		{
-			if (world.isAreaLoaded(pos, this.leavesCheckRange) || !V.generateState)
+			if (world.isAreaLoaded(pos, this.leavesCheckRange))
 			{
-				if (!canLeaveGrowNearby(world, pos))
-				{
-					beginLeavesDency(world, pos);
-				}
 				if (shouldLeavesDency(world, pos))
 				{
-					checkDencyLeaves(world, pos, this.leavesCheckRange);
+					checkDecayLeaves(world, pos, this.leavesCheckRange);
 				}
 			}
 		}
+		else
+		{
+			if (!canLeaveGrowNearby(world, pos))
+			{
+				beginLeavesDecay(world, pos);
+			}
+		}
+	}
+	
+	protected boolean isNaturalLog(Block block)
+	{
+		return block == this.blocks[0];
 	}
 	
 	protected boolean canLeaveGrowNearby(World world, BlockPos pos)
@@ -178,21 +189,80 @@ public abstract class Tree implements ITree
 		return world.getBlockState(pos).getValue(CHECK_DECAY);
 	}
 	
-	protected void checkDencyLeaves(World world, BlockPos pos, final int maxL)
+	protected void checkDecayLeaves(World world, BlockPos pos, final int searchRadius)
 	{
-		final int range = 2 * maxL + 1;
+		final int range = 2 * searchRadius + 1;
 		int[][][] checkBuffer = new int[range][range][range];
-		for(int i = -maxL; i <= maxL; ++i)
+		MutableBlockPos pos1 = new MutableBlockPos();
+		IBlockState state;
+		
+		final int sx = searchRadius;
+		for (int i = -sx; i <= sx; ++i)
 		{
-			for(int j = -maxL; j <= maxL; ++j)
+			final int sy = searchRadius - Math.abs(i);
+			for (int j = -sy; j <= sy; ++j)
 			{
-				for(int k = -maxL; k <= maxL; ++k)
+				final int sz = sy - Math.abs(j);
+				for (int k = -sz; k <= sz; ++k)
 				{
-					checkLeaves(maxL, maxL, world, pos, i, j, k, checkBuffer);
+					state = world.getBlockState(pos1.setPos(pos.getX() + i, pos.getY() + j, pos.getZ() + k));
+					Block block = state.getBlock();
+					checkBuffer[i + searchRadius][j + searchRadius][k + searchRadius] = isNaturalLog(block) ? 0 : !isLeaves(block) ? -1 : -2;
 				}
 			}
 		}
-		dencyLeaves(maxL, world, pos, checkBuffer);
+		
+		for (int pass = 1; pass <= searchRadius; ++pass)
+		{
+			for (int i = -sx; i <= sx; ++i)
+			{
+				final int sy = searchRadius - Math.abs(i);
+				for (int j = -sy; j <= sy; ++j)
+				{
+					final int sz = sy - Math.abs(j);
+					for (int k = -sz; k <= sz; ++k)
+					{
+						state = world.getBlockState(pos1.setPos(pos.getX() + i, pos.getY() + j, pos.getZ() + k));
+						if (checkBuffer[i + searchRadius][j + searchRadius][k + searchRadius] == pass - 1)
+						{
+							if (i + searchRadius >= 1 && checkBuffer[i + searchRadius - 1][j + searchRadius][k + searchRadius] == -2)
+							{
+								checkBuffer[i + searchRadius - 1][j + searchRadius][k + searchRadius] = pass;
+							}
+							if (i + 1 <= searchRadius && checkBuffer[i + searchRadius + 1][j + searchRadius][k + searchRadius] == -2)
+							{
+								checkBuffer[i + searchRadius + 1][j + searchRadius][k + searchRadius] = pass;
+							}
+							if (j + searchRadius >= 1 && checkBuffer[i + searchRadius][j + searchRadius - 1][k + searchRadius] == -2)
+							{
+								checkBuffer[i + searchRadius][j + searchRadius - 1][k + searchRadius] = pass;
+							}
+							if (j + 1 <= searchRadius && checkBuffer[i + searchRadius][j + searchRadius + 1][k + searchRadius] == -2)
+							{
+								checkBuffer[i + searchRadius][j + searchRadius + 1][k + searchRadius] = pass;
+							}
+							if (k + searchRadius >= 1 && checkBuffer[i + searchRadius][j + searchRadius][k + searchRadius - 1] == -2)
+							{
+								checkBuffer[i + searchRadius][j + searchRadius][k + searchRadius - 1] = pass;
+							}
+							if (k + 1 <= searchRadius && checkBuffer[i + searchRadius][j + searchRadius][k + searchRadius + 1] == -2)
+							{
+								checkBuffer[i + searchRadius][j + searchRadius][k + searchRadius + 1] = pass;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		if (checkBuffer[searchRadius][searchRadius][searchRadius] < 0)
+		{
+			onLeavesDead(world, pos);
+		}
+		else
+		{
+			stopLeavesDency(world, pos);
+		}
 	}
 	
 	protected boolean isLeaves(World world, BlockPos pos)
@@ -203,77 +273,6 @@ public abstract class Tree implements ITree
 	protected boolean isLeaves(Block block)
 	{
 		return block == this.blocks[2] || block == this.blocks[3];
-	}
-	
-	private void checkLeaves(int depth, int length, World world, BlockPos pos, int ofX, int ofY, int ofZ, int[][][] flags)
-	{
-		if (flags[length + ofX][length + ofY][length + ofZ] != 0)
-			return;
-		if (!isLeaves(world, pos.add(ofX, ofY, ofZ)))
-		{
-			flags[length + ofX][length + ofY][length + ofZ] = -1;
-			return;
-		}
-		int v = 0;
-		if (canLeaveGrowNearby(world, pos.add(ofX, ofY, ofZ)))
-		{
-			v = depth;
-		}
-		else
-		{
-			int v1;
-			if (ofX + length >= 1 && (v1 = flags[ofX + length - 1][ofY + length    ][ofZ + length    ]) > v + 1)
-			{
-				v = v1 - 1;
-			}
-			if (ofX < length      && (v1 = flags[ofX + length + 1][ofY + length    ][ofZ + length    ]) > v + 1)
-			{
-				v = v1 - 1;
-			}
-			if (ofY + length >= 1 && (v1 = flags[ofX + length    ][ofY + length - 1][ofZ + length    ]) > v + 1)
-			{
-				v = v1 - 1;
-			}
-			if (ofY < length      && (v1 = flags[ofX + length    ][ofY + length + 1][ofZ + length    ]) > v + 1)
-			{
-				v = v1 - 1;
-			}
-			if (ofZ + length >= 1 && (v1 = flags[ofX + length    ][ofY + length    ][ofZ + length - 1]) > v + 1)
-			{
-				v = v1 - 1;
-			}
-			if (ofZ < length      && (v1 = flags[ofX + length    ][ofY + length    ][ofZ + length + 1]) > v + 1)
-			{
-				v = v1 - 1;
-			}
-		}
-		if ((flags[ofX + length][ofY + length][ofZ + length] = v) > 1)
-		{
-			if (ofX + length >= 1)
-			{
-				checkLeaves(depth, length, world, pos, ofX - 1, ofY, ofZ, flags);
-			}
-			if (ofX < length)
-			{
-				checkLeaves(depth, length, world, pos, ofX + 1, ofY, ofZ, flags);
-			}
-			if (ofY + length >= 1)
-			{
-				checkLeaves(depth, length, world, pos, ofX, ofY - 1, ofZ, flags);
-			}
-			if (ofY < length)
-			{
-				checkLeaves(depth, length, world, pos, ofX, ofY + 1, ofZ, flags);
-			}
-			if (ofZ + length >= 1)
-			{
-				checkLeaves(depth, length, world, pos, ofX, ofY, ofZ - 1, flags);
-			}
-			if (ofZ < length)
-			{
-				checkLeaves(depth, length, world, pos, ofX, ofY, ofZ + 1, flags);
-			}
-		}
 	}
 	
 	protected void beginLeavesDency(int length, World world, BlockPos pos)
@@ -287,40 +286,6 @@ public abstract class Tree implements ITree
 				for(int k = -length; k <= length; ++k)
 				{
 					(state = world.getBlockState(pos2 = pos.add(i, j, k))).getBlock().beginLeavesDecay(state, world, pos2);
-				}
-			}
-		}
-	}
-	
-	private void dencyLeaves(int length, World world, BlockPos pos, int[][][] flags)
-	{
-		for(int i = -length; i <= length; ++i)
-		{
-			for(int j = -length; j <= length; ++j)
-			{
-				for(int k = -length; k <= length; ++k)
-				{
-					int v = flags[i + length][j + length][k + length];
-					if (i == 0 && j == 0 && k == 0)
-					{
-						if (v == 0)
-						{
-							onLeavesDead(world, pos);
-							continue;
-						}
-						else
-						{
-							stopLeavesDency(world, pos);
-						}
-					}
-					if(v > 0)
-					{
-						stopLeavesDency(world, pos.add(i, j, k));
-					}
-					else if(v == 0)
-					{
-						beginLeavesDency(world, pos.add(i, j, k));
-					}
 				}
 			}
 		}
@@ -345,7 +310,7 @@ public abstract class Tree implements ITree
 	}
 	
 	@Override
-	public void beginLeavesDency(World world, BlockPos pos)
+	public void beginLeavesDecay(World world, BlockPos pos)
 	{
 		Worlds.switchProp(world, pos, CHECK_DECAY, true, 2);
 	}
@@ -392,7 +357,7 @@ public abstract class Tree implements ITree
 		}
 		if (L.nextInt(7) == 0)
 		{
-			list.add((this.isBroadLeaf ? LEAVES_APPLIER1 : LEAVES_APPLIER2).apply().copy());
+			list.add(ItemStack.copyItemStack((this.isBroadLeaf ? LEAVES_APPLIER1 : LEAVES_APPLIER2).apply()));
 		}
 		return list;
 	}
@@ -412,11 +377,11 @@ public abstract class Tree implements ITree
 	protected void generateTreeLeaves(World world, BlockPos pos, int meta, float generateCoreLeavesChance, TreeInfo info)
 	{
 		meta &= 0x7;
-		int state = V.generateState ? 2 : 3;
+		int state = worldGenerationFlag ? 2 : 3;
 		if(world.rand.nextFloat() <= generateCoreLeavesChance)
 		{
 			Worlds.setBlock(world, pos, this.blocks[3], meta, state);
-			Worlds.setTileEntity(world, pos, new TECoreLeaves(this, info), !V.generateState);
+			Worlds.setTileEntity(world, pos, new TECoreLeaves(this, info), !worldGenerationFlag);
 		}
 		else
 		{

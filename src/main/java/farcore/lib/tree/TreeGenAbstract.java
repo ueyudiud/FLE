@@ -2,6 +2,7 @@ package farcore.lib.tree;
 
 import java.util.Random;
 
+import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.V;
 import farcore.lib.tile.instance.TECoreLeaves;
@@ -20,6 +21,15 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	{
 		this.tree = tree;
 		this.generateCoreLeavesChance = generateCoreLeavesChance;
+	}
+	
+	/**
+	 * Helper method.
+	 * @param minHeight
+	 * @param randHeight
+	 */
+	public void setHeight(int minHeight, int randHeight)
+	{
 	}
 	
 	protected boolean isLogReplaceable(World world, int x, int y, int z)
@@ -42,7 +52,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	protected boolean checkLeavesGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
-		if(!V.generateState && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
+		if(!FarCore.worldGenerationFlag && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
 			return false;
 		for(int i = x - l; i <= x + l; ++i)
 		{

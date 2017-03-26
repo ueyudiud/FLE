@@ -7,6 +7,7 @@ import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
 import fargen.core.FarGen;
 import fargen.core.biome.decorator.BiomeDecorator;
+import fargen.core.biome.decorator.SimpleBiomeDecorator;
 import fargen.core.biome.layer.BiomeLayerGenerator;
 import fargen.core.biome.layer.surface.BLGSStandard;
 import fargen.core.util.ClimaticZone;
@@ -58,11 +59,13 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	public int biomeID;
 	protected boolean canRain;
 	protected boolean canSnow;
-	protected BiomeDecorator decorator;
+	public BiomeDecorator decorator;
 	protected BiomeLayerGenerator layerGenerator;
 	public BiomeBase baseBiome;
 	public final int treePerChunkBase;
 	public final int treePerChunkDiv;
+	public final int cropPerChunkBase;
+	public final int cropPerChunkRand;
 	
 	public BiomeBase(int id, BiomePropertiesExtended properties)
 	{
@@ -79,6 +82,8 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		this.layerGenerator = properties.layerGenerator;
 		this.treePerChunkBase = this.theBiomeDecorator.treesPerChunk = properties.treePerChunk;
 		this.treePerChunkDiv = properties.treeDivition;
+		this.cropPerChunkBase = properties.cropPerChunkBase;
+		this.cropPerChunkRand = properties.cropPerChunkRand;
 		if(register)
 		{
 			setRegistryName(FarGen.ID, getBiomeName());
@@ -184,9 +189,11 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		private float temperature = 2.0F;
 		private int treePerChunk = -999;
 		private int treeDivition = 1;
+		private int cropPerChunkBase = 0;
+		private int cropPerChunkRand = 0;
 		private ClimaticZone zone = ClimaticZone.temperate_plain;
 		private BiomeLayerGenerator layerGenerator = new BLGSStandard();
-		private BiomeDecorator decorator;
+		private BiomeDecorator decorator = new SimpleBiomeDecorator();
 		private boolean canRain = true;
 		private boolean canSnow = false;
 		
@@ -253,6 +260,13 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		{
 			this.treePerChunk = a;
 			this.treeDivition = b;
+			return this;
+		}
+		
+		public BiomePropertiesExtended setCropPerChunk(int a, int b)
+		{
+			this.cropPerChunkBase = a;
+			this.cropPerChunkRand = b;
 			return this;
 		}
 	}

@@ -1,5 +1,7 @@
 package fargen.core.worldgen.surface;
 
+import static fargen.api.event.FarGenerationEvent.TREE;
+import static fargen.api.event.FarGenerationEvent.WILD_CROP;
 import static nebula.common.data.Misc.AIR;
 
 import java.util.List;
@@ -8,18 +10,20 @@ import java.util.function.DoubleUnaryOperator;
 
 import com.google.common.collect.ImmutableList;
 
+import farcore.FarCore;
 import farcore.data.EnumBlock;
-import farcore.data.M;
-import farcore.data.MP;
 import farcore.data.V;
+import farcore.lib.block.instance.BlockCrop;
+import farcore.lib.crop.CropAccessSimulated;
+import farcore.lib.crop.ICrop;
 import farcore.lib.tree.ITreeGenerator;
 import farcore.lib.world.IWorldPropProvider;
 import farcore.lib.world.WorldPropHandler;
+import fargen.api.event.FarGenerationEvent;
 import fargen.api.event.TreeGenEvent;
 import fargen.core.biome.BiomeBase;
-import fle.core.tree.TreeGenClassic;
-import fle.core.tree.TreeGenJungle;
 import nebula.common.base.WeightedRandomSelector;
+import nebula.common.util.L;
 import nebula.common.util.Maths;
 import nebula.common.util.noise.NoiseBase;
 import nebula.common.util.noise.NoisePerlin;
@@ -35,11 +39,18 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 
 public class FarSurfaceChunkGenerator implements IChunkGenerator
 {
 	private static final IBlockState ROCK = Blocks.STONE.getDefaultState();
 	private static final IBlockState WATER = Blocks.WATER.getDefaultState();
+	private static final IBlockState CROP = EnumBlock.crop.block.getDefaultState();
+	
+	protected void switchState(boolean flag)
+	{
+		V.generateState = FarCore.worldGenerationFlag = flag;
+	}
 	
 	private final World world;
 	private final FarSurfaceBiomeProvider biomeProvider;
@@ -49,7 +60,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private final NoiseBase noise3;
 	private final NoiseBase noise4;
 	private final NoiseBase noise5;//Stone noise.
-	private final NoiseBase noise6;//Tree noise.
+	private final NoiseBase noise6;//Plants noise.
 	
 	private Random random = new Random();
 	
@@ -249,11 +260,10 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private void replaceChunkBlock(ChunkPrimer primer, int chunkX, int chunkZ, Random random)
 	{
 		IWorldPropProvider propProvider = WorldPropHandler.getWorldProperty(this.world);
-		int x1 = chunkX << 4, z1 = chunkZ << 4;
-		this.cache5 = this.noise5.noise(this.cache5, 16, 16, (double) x1, (double) z1, 0.125, 0.125);
+		this.cache5 = this.noise5.noise(this.cache5, 16, 16, (double) chunkX, (double) chunkZ, 0.125, 0.125);
 		
-		IBlockState[][] rockLayer = this.biomeProvider.dataGenerator.getRockLayer(chunkX, chunkZ);
-		IBlockState[][] coverLayer = this.biomeProvider.dataGenerator.getCoverLayer(chunkX, chunkZ);
+		IBlockState[][] rockLayer = this.biomeProvider.dataGenerator.getRockLayer(chunkX >> 4, chunkZ >> 4);
+		IBlockState[][] coverLayer = this.biomeProvider.dataGenerator.getCoverLayer(chunkX >> 4, chunkZ >> 4);
 		MutableBlockPos pos = new MutableBlockPos();
 		for (int x = 0; x < 16; ++x)
 			for (int z = 0; z < 16; ++z)
@@ -262,7 +272,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				BiomeBase biome = this.biomes[index];
 				final int height = 5 + MathHelper.ceil(12.0 * this.cache5[index]);
 				boolean hasWind = false;
-				float temp = propProvider.getAverageTemperature(this.world, pos.setPos(x1 | x, 0, z1 | z));
+				float temp = propProvider.getAverageTemperature(this.world, pos.setPos(chunkX | x, 0, chunkZ | z));
 				float rainfall = propProvider.getAverageHumidity(this.world, pos);
 				int c = -1, f = 0;
 				int y = 255;
@@ -413,7 +423,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		MutableBlockPos pos = new MutableBlockPos(x << 4, 0, z << 4);
 		BiomeBase biome = (BiomeBase) chunk.getBiome(pos.add(16, 0, 16), this.biomeProvider);
 		IWorldPropProvider provider = WorldPropHandler.getWorldProperty(this.world);
-		float temp = provider.getAverageTemperature(this.world, pos) / 4.0F;
+		float temp = (provider.getAverageTemperature(this.world, pos) + 5.0F) / 9.0F;
 		float rainfall = provider.getAverageHumidity(this.world, pos) / 4.0F;
 		
 		//MinX & MinZ coordinate.
@@ -421,9 +431,10 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		final int z1 = z << 4;
 		
 		//Tree generation.
+		if (!MinecraftForge.TERRAIN_GEN_BUS.post(new FarGenerationEvent(TREE, this.world, x, z, this)))
 		{
 			WeightedRandomSelector<ITreeGenerator> treeGenerationSelector = new WeightedRandomSelector<>();
-			addVanillaTrees(biome, this.world, x, z, this.noise6, temp, rainfall, treeGenerationSelector);
+			FarSurfaceDataGenerator.addVanillaTrees(biome, this.world, x, z, this.noise6, temp, rainfall, treeGenerationSelector);
 			MinecraftForge.TERRAIN_GEN_BUS.post(new TreeGenEvent(this.world, x, z, temp, rainfall, treeGenerationSelector));
 			
 			if (treeGenerationSelector.weight() > 0 && biome.treePerChunkBase >= 0)
@@ -435,61 +446,51 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 					int z2 = z1 + this.random.nextInt(16) + 8;
 					int y2 = this.world.getHeight(x2, z2);
 					ITreeGenerator generator = treeGenerationSelector.next(this.random);
-					V.generateState = true;
+					switchState(true);
 					if (generator.generateTreeAt(this.world, x2, y2, z2, this.random, null))
 					{
 						count --;
 					}
-					V.generateState = false;
+					switchState(false);
 				}
 			}
 		}
-	}
-	
-	static final ITreeGenerator
-	CEIBA1 = new TreeGenJungle(M.ceiba.getProperty(MP.property_tree), 0.01F),
-	OAK1 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.03F),
-	OAK2 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.025F),
-	BIRCH = new TreeGenClassic(M.birch.getProperty(MP.property_tree), 0.03F);
-	
-	private static void addVanillaTrees(BiomeBase biome, World world, int x, int z, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ITreeGenerator> selector)
-	{
-		double d1, d2;
-		if (temp > 0.7F && rain > 0.7F)
+		
+		//Wild Crop generation.
+		if (!MinecraftForge.TERRAIN_GEN_BUS.post(new FarGenerationEvent(WILD_CROP, this.world, x, z, this)))
 		{
-			d2 = noise.noise(x, 38274.0, z);
-			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
-			d1 *= rain > 0.8F ? 1.0F : (rain - 0.7F) * 10.0F;
-			selector.add(CEIBA1, (int) (d1 * d2 * d2 * 128));
+			WeightedRandomSelector<ICrop> cropGenerationSelector = new WeightedRandomSelector<>();
+			FarSurfaceDataGenerator.addVanillaCrops(x, z, this.random, this.noise6, temp, rainfall, cropGenerationSelector);
+			
+			if (cropGenerationSelector.weight() > 0 && biome.cropPerChunkBase > 0)
+			{
+				switchState(true);
+				int count = biome.cropPerChunkBase + L.nextInt(biome.cropPerChunkRand, this.random) + MathHelper.log2DeBruijn(cropGenerationSelector.weight());
+				ICrop crop = cropGenerationSelector.next(this.random);
+				
+				if (crop != null)
+					for (int i = 0; i < count; ++i)
+					{
+						int x2 = x1 + this.random.nextInt(16);
+						int z2 = z1 + this.random.nextInt(16);
+						int y2 = this.world.getHeight(x2, z2);
+						pos.setPos(x2, y2, z2);
+						if (crop.canPlantAt(new CropAccessSimulated(this.world, pos, crop, null, true)))
+						{
+							BlockCrop.CROP_THREAD.set(crop);
+							this.world.setBlockState(pos, CROP);
+						}
+					}
+				switchState(false);
+			}
 		}
-		if (temp > 0.4F && rain > 0.4F && rain < 0.95F)
+		
+		MinecraftForge.TERRAIN_GEN_BUS.post(new DecorateBiomeEvent.Pre(this.world, this.random, pos));
+		if (biome.decorator != null)
 		{
-			d2 = noise.noise(x, 17274.0, z);
-			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.5F ? 1.0F : (temp - 0.4F) * 10.0F;
-			d1 *= rain > 0.9F ? (1.0F - rain) * 20.0F : rain > 0.5F ? 1.0F : (rain - 0.5F) * 10.0F;
-			selector.add(OAK1, (int) (d1 * d2 * d2 * 256));
+			biome.decorator.decorate(this.world, this.random, pos);
 		}
-		if (temp > 0.5F && rain < 0.45F * temp)
-		{
-			d2 = noise.noise(x, 15628.0, z);
-			d1 = temp > 0.6F ? 1.0F : (temp - 0.5F) * 10.0F;
-			d1 *= rain > 0.35F * temp ? (rain - 0.35F * temp) * 10.0F / temp : 1.0F;
-			selector.add(OAK2, (int) (d1 * d2 * d2 * 96));
-		}
-		if (temp > 0.5F && rain < 0.45F * temp)
-		{
-			d2 = noise.noise(x, 15628.0, z);
-			d1 = temp > 0.6F ? 1.0F : (temp - 0.5F) * 10.0F;
-			d1 *= rain > 0.35F * temp ? (rain - 0.35F * temp) * 10.0F / temp : 1.0F;
-			selector.add(OAK2, (int) (d1 * d2 * d2 * 96));
-		}
-		if (temp < 0.9F && temp > 0.3F && rain > 0.4F && rain < 0.8F)
-		{
-			d2 = noise.noise(x, 47247.0, z);
-			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.4F ? 1.0F : (temp - 0.3F) * 10.0F;
-			d1 *= rain > 0.7F ? (1.0F - rain) * 10.0F : rain > 0.5F ? 1.0F : (rain - 0.4F) * 10.0F;
-			selector.add(BIRCH, (int) (d1 * d2 * d2 * 384));
-		}
+		MinecraftForge.TERRAIN_GEN_BUS.post(new DecorateBiomeEvent.Post(this.world, this.random, pos));
 	}
 	
 	@Override
@@ -527,10 +528,5 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				parabolicField[(x + size + (y + size) * scale)] = parabolaHeight;
 			}
 		}
-		
-		((TreeGenJungle) CEIBA1).setHeight(34, 8);
-		((TreeGenClassic) OAK1).setHeight(4, 3);
-		((TreeGenClassic) OAK2).setHeight(1, 2);
-		((TreeGenClassic) BIRCH).setHeight(4, 3);
 	}
 }

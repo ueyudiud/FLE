@@ -26,7 +26,7 @@ import net.minecraft.world.storage.WorldInfo;
 
 public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRegetter
 {
-	/** The biome list. */
+	/** The biome cache. */
 	protected final DataCacheCoord<BiomeBase> biomeCache;
 	
 	public final FarSurfaceDataGenerator dataGenerator;
@@ -172,15 +172,15 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 		int i = x - radius >> 2; int j = z - radius >> 2; int k = x + radius >> 2; int l = z + radius >> 2;
 		int i1 = k - i + 1;
 		int j1 = l - j + 1;
-		//		int[] aint = this.layers.biomeLayer1.getInts(i, j, i1, j1);
+		int[] aint = this.layers[1].getInts(i, j, i1, j1);
 		try
 		{
-			//			for (int k1 = 0; k1 < i1 * j1; ++k1)
-			//			{
-			//				Biome biome = BiomeBase.getBiomeFromID(aint[k1] & 0xFF);
-			//				if (!allowed.contains(biome))
-			//					return false;
-			//			}
+			for (int k1 = 0; k1 < i1 * j1; ++k1)
+			{
+				Biome biome = BiomeBase.getBiomeFromID(aint[k1] & 0xFF);
+				if (!allowed.contains(biome))
+					return false;
+			}
 			return true;
 		}
 		catch (Throwable throwable)
@@ -236,5 +236,6 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	public void cleanupCache()
 	{
 		this.biomeCache.clean();
+		this.dataGenerator.cleanCache();
 	}
 }

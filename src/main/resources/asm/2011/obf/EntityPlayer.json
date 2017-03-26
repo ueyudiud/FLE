@@ -1,0 +1,39 @@
+{
+	"name": "net.minecraft.entity.player.EntityPlayer",
+	"modification": [
+		{
+			"name": "<init>|(Laid;Lcom/mojang/authlib/GameProfile;)V",
+			"labels": [
+				{
+					"type": "replace",
+					"owner": "abb",
+					"name": "<init>",
+					"desc": "()V",
+					"off": -2,
+					"nodes": [
+						{
+							"opcode": 187,
+							"desc": "nebula/common/foodstat/FoodStatExt"
+						}
+					]
+				},
+				{
+					"type": "replace",
+					"owner": "abb",
+					"name": "<init>",
+					"desc": "()V",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 183,
+							"owner": "nebula/common/foodstat/FoodStatExt",
+							"name": "<init>",
+							"desc": "()V",
+							"itf" : false
+						}
+					]
+				}
+			]
+		}
+	]
+}

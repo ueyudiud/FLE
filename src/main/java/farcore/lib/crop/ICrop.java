@@ -35,6 +35,6 @@ public interface ICrop extends IRegisteredNameable, ISpecie<ICropAccess>
 	
 	default EnumPlantType getPlantType(ICropAccess access)
 	{
-		return EnumPlantType.Crop;
+		return access.isWild() ? EnumPlantType.Plains : EnumPlantType.Crop;
 	}
 }

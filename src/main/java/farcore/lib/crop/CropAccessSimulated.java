@@ -15,13 +15,19 @@ public class CropAccessSimulated implements ICropAccess
 	BlockPos pos;
 	ICrop crop;
 	GeneticMaterial dna;
+	boolean isWild;
 	
 	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, GeneticMaterial dna)
+	{
+		this(world, pos, crop, dna, false);
+	}
+	public CropAccessSimulated(World world, BlockPos pos, ICrop crop, GeneticMaterial dna, boolean isWild)
 	{
 		this.world = world;
 		this.pos = pos;
 		this.crop = crop;
 		this.dna = dna;
+		this.isWild = isWild;
 	}
 	
 	@Override
@@ -71,7 +77,7 @@ public class CropAccessSimulated implements ICropAccess
 	@Override
 	public boolean isWild()
 	{
-		return false;
+		return this.isWild;
 	}
 	
 	@Override

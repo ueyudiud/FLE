@@ -12,6 +12,7 @@ import nebula.Log;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
+import nebula.common.base.ArrayListAddWithCheck;
 import nebula.common.tool.ToolHooks;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
@@ -284,7 +285,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)
 	{
-		List<ItemStack> ret = new ArrayList<>();
+		List<ItemStack> ret = ArrayListAddWithCheck.requireNonnull();
 		
 		if(silkTouch)
 		{

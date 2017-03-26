@@ -2,7 +2,7 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.Tree;
+import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.Direction;
@@ -20,7 +20,7 @@ public class TreeGenAcacia extends TreeGenAbstract
 	protected int randHeightHlf2;
 	protected int baseHeight;
 	
-	public TreeGenAcacia(Tree tree, float generateCoreLeavesChance)
+	public TreeGenAcacia(ITree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
 	}

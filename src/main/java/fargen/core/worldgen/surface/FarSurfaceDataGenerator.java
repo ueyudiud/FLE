@@ -4,94 +4,190 @@
 
 package fargen.core.worldgen.surface;
 
-import static fargen.core.FarGenBiomes.beach;
-import static fargen.core.FarGenBiomes.boreal_forest;
-import static fargen.core.FarGenBiomes.frozen_tundra;
-import static fargen.core.FarGenBiomes.gigafteral_forest;
-import static fargen.core.FarGenBiomes.gigafungal_forest;
-import static fargen.core.FarGenBiomes.glacispical_land;
-import static fargen.core.FarGenBiomes.grassland;
-import static fargen.core.FarGenBiomes.mangrove;
-import static fargen.core.FarGenBiomes.meadow;
-import static fargen.core.FarGenBiomes.ocean_f;
-import static fargen.core.FarGenBiomes.ocean_f_deep;
-import static fargen.core.FarGenBiomes.ocean_sf;
-import static fargen.core.FarGenBiomes.ocean_sf_deep;
-import static fargen.core.FarGenBiomes.ocean_st;
-import static fargen.core.FarGenBiomes.ocean_st_deep;
-import static fargen.core.FarGenBiomes.ocean_t;
-import static fargen.core.FarGenBiomes.ocean_t_deep;
-import static fargen.core.FarGenBiomes.ocean_te;
-import static fargen.core.FarGenBiomes.ocean_te_deep;
-import static fargen.core.FarGenBiomes.river;
-import static fargen.core.FarGenBiomes.rockland;
-import static fargen.core.FarGenBiomes.rocky_desert;
-import static fargen.core.FarGenBiomes.savanna;
-import static fargen.core.FarGenBiomes.sclerophyll_forest;
-import static fargen.core.FarGenBiomes.sequoia_forest;
-import static fargen.core.FarGenBiomes.shrubland;
-import static fargen.core.FarGenBiomes.subtropical_broadleaf_forest;
-import static fargen.core.FarGenBiomes.subtropical_coniferous_forest;
-import static fargen.core.FarGenBiomes.swamp;
-import static fargen.core.FarGenBiomes.temperate_broadleaf_forest;
-import static fargen.core.FarGenBiomes.temperate_desert;
-import static fargen.core.FarGenBiomes.temperate_mixed_forest;
-import static fargen.core.FarGenBiomes.temperate_rainforest;
-import static fargen.core.FarGenBiomes.tropical_desert;
-import static fargen.core.FarGenBiomes.tropical_monsoon_forest;
-import static fargen.core.FarGenBiomes.tropical_rainforest;
-import static fargen.core.FarGenBiomes.tropical_thorny_forest;
-import static fargen.core.FarGenBiomes.tundra;
+import java.util.Random;
 
 import farcore.data.M;
 import farcore.data.MP;
 import farcore.lib.block.instance.BlockSoil;
 import farcore.lib.block.instance.BlockSoil.EnumCoverType;
+import farcore.lib.crop.ICrop;
+import farcore.lib.material.Mat;
 import farcore.lib.tree.ITreeGenerator;
+import farcore.lib.tree.TreeGenAbstract;
 import fargen.core.biome.BiomeBase;
-import fargen.core.util.DataCache;
 import fargen.core.util.DataCacheCoord;
-import nebula.common.base.Selector;
+import fle.core.tree.TreeGenAcacia;
+import fle.core.tree.TreeGenClassic;
+import fle.core.tree.TreeGenJungle;
+import fle.core.tree.TreeGenPine;
+import fle.core.tree.TreeGenShrub;
+import nebula.common.base.WeightedRandomSelector;
 import nebula.common.util.A;
+import nebula.common.util.noise.NoiseBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
 /**
  * @author ueyudiud
  */
 public class FarSurfaceDataGenerator
 {
-	static final IBlockState
-	DIRT = M.latosol.getProperty(MP.property_soil).block.getDefaultState(),
-	GRASS = DIRT.withProperty(BlockSoil.COVER_TYPE, BlockSoil.EnumCoverType.GRASS),
-	GRAVEL = Blocks.GRAVEL.getDefaultState(),
-	ROCK = M.stone.getProperty(MP.property_rock).block.getDefaultState();
-	static final ITreeGenerator
-	TREE_GENERATOR1 = M.oak.getProperty(MP.property_tree);
+	static final TreeGenAbstract
+	CEIBA1 = new TreeGenJungle(M.ceiba.getProperty(MP.property_tree), 0.01F),
+	OAK1 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.03F),
+	OAK2 = new TreeGenShrub(M.oak.getProperty(MP.property_tree), 0.025F),
+	BIRCH = new TreeGenClassic(M.birch.getProperty(MP.property_tree), 0.03F),
+	ACACIA = new TreeGenAcacia(M.acacia.getProperty(MP.property_tree), 0.03F),
+	SPRUCE1 = new TreeGenPine(M.spruce.getProperty(MP.property_tree), 0.03F);
 	
-	static final
-	IBlockState[] STATES1 = {GRASS, DIRT, GRAVEL},
-	STATES2 = {ROCK};
+	static void addVanillaTrees(BiomeBase biome, World world, int x, int z, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ITreeGenerator> selector)
+	{
+		double d1, d2;
+		if (temp > 0.7F && rain > 0.7F)
+		{
+			d2 = noise.noise(x, 38274.0, z);
+			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
+			d1 *= rain > 0.8F ? 1.0F : (rain - 0.7F) * 10.0F;
+			selector.add(CEIBA1, (int) (d1 * d2 * d2 * 128));
+		}
+		if (temp > 0.4F && rain > 0.4F && rain < 0.95F)
+		{
+			d2 = noise.noise(x, 17274.0, z);
+			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.5F ? 1.0F : (temp - 0.4F) * 10.0F;
+			d1 *= rain > 0.9F ? (1.0F - rain) * 20.0F : rain > 0.5F ? 1.0F : (rain - 0.5F) * 10.0F;
+			selector.add(OAK1, (int) (d1 * d2 * d2 * 256));
+		}
+		if (temp > 0.5F && rain < 0.45F * temp)
+		{
+			d2 = noise.noise(x, 15628.0, z);
+			d1 = temp > 0.6F ? 1.0F : (temp - 0.5F) * 10.0F;
+			d1 *= rain > 0.35F * temp ? (rain - 0.35F * temp) * 10.0F / temp : 1.0F;
+			selector.add(OAK2, (int) (d1 * d2 * d2 * 96));
+		}
+		if (temp > 0.7F && rain > 0.05F && rain < 0.45F)
+		{
+			d2 = noise.noise(x, 23841.0, z);
+			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
+			d1 *= rain < 0.15F ? (rain - 0.05F) * 10.0F : rain > 0.35F ? (0.45F - rain) * 10.0F : 1.0F;
+			selector.add(ACACIA, (int) (d1 * d2 * d2 * 384));
+		}
+		if (temp < 0.9F && temp > 0.3F && rain > 0.4F && rain < 0.8F)
+		{
+			d2 = noise.noise(x, 47247.0, z);
+			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.4F ? 1.0F : (temp - 0.3F) * 10.0F;
+			d1 *= rain > 0.7F ? (1.0F - rain) * 10.0F : rain > 0.5F ? 1.0F : (rain - 0.4F) * 10.0F;
+			selector.add(BIRCH, (int) (d1 * d2 * d2 * 192));
+		}
+		if (temp < 0.3F && temp > -0.4F && rain > 0.5F)
+		{
+			d2 = noise.noise(x, 47247.0, z);
+			d1 = temp > 0.2F ? (0.3F - temp) * 10.0F : temp > -0.3F ? 1.0F : (temp + 0.3F) * 10.0F;
+			d1 *= rain > 0.7F ? 1.0F : (rain - 0.5F) * 5.0F;
+			selector.add(SPRUCE1, (int) (d1 * d2 * d2 * 64));
+		}
+	}
+	
+	static final ICrop
+	WHEAT = Mat.material("wheat").getProperty(MP.property_crop),
+	SOYBEAN = Mat.material("soybean").getProperty(MP.property_crop),
+	POTATO = Mat.material("potato").getProperty(MP.property_crop),
+	SWEET_POTATO = Mat.material("sweet_potato").getProperty(MP.property_crop),
+	REED = Mat.material("reed").getProperty(MP.property_crop),
+	WILD_CABBAGE = Mat.material("wild_cabbage").getProperty(MP.property_crop);
+	
+	static void addVanillaCrops(int x, int z, Random rand, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ICrop> selector)
+	{
+		if (rand.nextInt(31) == 0)
+		{
+			int weight;
+			weight = c(16, x, z, 29371.0, noise, temp, 0.8F, 0.7F, rain, 1.4F, 1.2F);
+			if (weight > 0)
+			{
+				selector.add(WHEAT, weight);
+			}
+			weight = c(24, x, z, 26382.0, noise, temp, 0.6F, 1.2F, rain, 0.9F, 1.5F);
+			if (weight > 0)
+			{
+				selector.add(SOYBEAN, weight);
+			}
+			weight = c(16, x, z, 183723.0, noise, temp, 0.4F, 1.7F, rain, 0.7F, 1.4F);
+			if (weight > 0)
+			{
+				selector.add(POTATO, weight);
+			}
+			weight = c(16, x, z, 183723.0, noise, temp, 0.4F, 1.7F, rain, 0.7F, 1.4F);
+			if (weight > 0)
+			{
+				selector.add(POTATO, weight);
+			}
+			weight = c(16, x, z, 174837.0, noise, temp, 0.5F, 1.6F, rain, 0.7F, 1.4F);
+			if (weight > 0)
+			{
+				selector.add(SWEET_POTATO, weight);
+			}
+			if (rain > 0.7F && temp > 0.64F)
+			{
+				weight = c(64, x, z, 164834.0, noise, temp, 0.9F, 0.4F, rain, 1.0F, 0.9F);
+				if (weight > 0)
+				{
+					selector.add(REED, weight);
+				}
+			}
+			weight = c(12, x, z, 164837.0, noise, temp, 0.8F, 1.2F, rain, 0.6F, 0.9F);
+			if (weight > 0)
+			{
+				selector.add(WILD_CABBAGE, weight);
+			}
+		}
+	}
+	
+	private static int c(int baseMultiplier, int x, int z, final double yNoise, NoiseBase noise,
+			float temp, final float tempArange, final float tempSigma,
+			float rain, final float rainArange, final float rainSigma)
+	{
+		double result = baseMultiplier * noise.noise(x, yNoise, z);
+		temp -= tempArange;
+		result *= tempSigma / (tempSigma + temp * temp);
+		rain -= rainArange;
+		result *= rainSigma / (rainSigma + rain * rain);
+		return (int) result;
+	}
+	
+	private static IBlockState[] getSoilLayer(int id)
+	{
+		switch (id)
+		{
+		case Byte.MAX_VALUE : return SOIL_DEFAULT;
+		default : return SOIL_LIST[id];
+		}
+	}
+	
+	static final IBlockState
+	ROCK = M.stone.getProperty(MP.property_rock).block.getDefaultState(),
+	SOIL_DEFAULT[] = {Blocks.GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState()},
+	STATES2[] = {ROCK},
+	SOIL_LIST[][];
 	
 	private final FarSurfaceBiomeProvider biomeProvider;
 	
 	private DataCacheCoord<IBlockState[]> rockDataCache;
-	private DataCache<Selector<ITreeGenerator>> treeDataCache;
 	private DataCacheCoord<IBlockState[]> topDataCache;
 	
 	public FarSurfaceDataGenerator(FarSurfaceBiomeProvider provider, long seed)
 	{
 		this.biomeProvider = provider;
-		this.rockDataCache = new DataCacheCoord<>((x, z)-> A.createArray(256, STATES2), 2);
-		this.treeDataCache = new DataCache<>((x, z)-> Selector.single(TREE_GENERATOR1));
-		this.topDataCache = new DataCacheCoord<>((x, z)-> A.createArray(256, STATES1), 2);
+		this.rockDataCache = new DataCacheCoord<>((x, z)-> A.createArray(256, STATES2), 4);
+		this.topDataCache = new DataCacheCoord<>((x, z)-> A.transform(
+				provider.layers[3].getInts(x << 4, z << 4, 16, 16),
+				IBlockState[].class, FarSurfaceDataGenerator::getSoilLayer), 4);
 	}
 	
-	public Selector<ITreeGenerator> getTreeGenerator(int x, int z)
+	void cleanCache()
 	{
-		return this.treeDataCache.get(x, z);
+		this.rockDataCache.clean();
+		this.topDataCache.clean();
 	}
 	
 	public IBlockState[][] getCoverLayer(int x, int z)
@@ -136,76 +232,27 @@ public class FarSurfaceDataGenerator
 		return state;
 	}
 	
-	
-	public BiomeBase getBiome(int index, double temperature, double rainfall)
+	static
 	{
-		switch (index)
+		final Mat[] soils = {M.latosol, M.latoaluminosol, M.ruboloam, M.ruboaluminoloam, M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol, M.rubosol};
+		SOIL_LIST = new IBlockState[soils.length][];
+		
+		final IBlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
+		
+		for (int i = 0; i < soils.length; ++i)
 		{
-		case 0 ://deep ocean
-			return temperature > 0.8F ? ocean_t_deep :
-				temperature > 0.6F ? ocean_st_deep :
-					temperature > 0.4F ? ocean_te_deep :
-						temperature > 0.2F ? ocean_sf_deep :
-							ocean_f_deep;
-		case 1 ://ocean
-			return temperature > 0.8F ? ocean_t :
-				temperature > 0.6F ? ocean_st :
-					temperature > 0.4F ? ocean_te :
-						temperature > 0.2F ? ocean_sf :
-							ocean_f;
-		case 8://beach
-		case 9://gravel beach
-			return beach[MathHelper.ceil(4.99999 * (1.0F - temperature))];
-		case 10://river
-			return river[MathHelper.ceil(4.99999 * (1.0F - temperature))];
-		default:
-			return
-					temperature > 0.875F ? (rainfall < 0.1F ? tropical_desert :
-						rainfall < 0.4F ? savanna :
-							rainfall < 0.6F ? tropical_thorny_forest :
-								rainfall < 0.8F ? tropical_monsoon_forest :
-									tropical_rainforest)
-							: temperature > 0.75F ? (rainfall < 0.2F ? tropical_desert :
-								rainfall < 0.4F ? savanna :
-									rainfall < 0.55F ? subtropical_coniferous_forest :
-										rainfall < 0.7F ? subtropical_broadleaf_forest :
-											rainfall < 0.8F ? mangrove :
-												gigafteral_forest)
-									: temperature > 0.625F ? (rainfall < 0.2F ? temperate_desert :
-										rainfall < 0.4F ? shrubland :
-											rainfall < 0.55F ? subtropical_coniferous_forest :
-												rainfall < 0.7F ? subtropical_broadleaf_forest :
-													rainfall < 0.8F ? mangrove :
-														temperate_rainforest)
-											: temperature > 0.5F ? (rainfall < 0.2F ? temperate_desert :
-												rainfall < 0.35F ? shrubland :
-													rainfall < 0.45F ? sclerophyll_forest :
-														rainfall < 0.65F ? temperate_broadleaf_forest :
-															rainfall < 0.85F ? swamp :
-																gigafungal_forest)
-													: temperature > 0.375F ? (rainfall < 0.2F ? temperate_desert :
-														rainfall < 0.25F ? rockland :
-															rainfall < 0.35F ? grassland :
-																rainfall < 0.45F ? sclerophyll_forest :
-																	rainfall < 0.55F ? temperate_broadleaf_forest :
-																		rainfall < 0.65F ? temperate_mixed_forest :
-																			rainfall < 0.85F ? swamp :
-																				gigafungal_forest)
-															: temperature > 0.25F ?
-																	(rainfall < 0.2F ? rocky_desert :
-																		rainfall < 0.5F ? grassland :
-																			rainfall < 0.7F ? boreal_forest :
-																				sequoia_forest)
-																	: temperature > 0.125F ?
-																			(rainfall < 0.2F ? rocky_desert :
-																				rainfall < 0.5F ? meadow :
-																					rainfall < 0.7F ? boreal_forest :
-																						rainfall < 0.9F ? sequoia_forest :
-																							glacispical_land)
-																			: (rainfall < 0.2F ? rocky_desert :
-																				rainfall < 0.5F ? tundra :
-																					rainfall < 0.7F ? frozen_tundra :
-																						glacispical_land);
+			IBlockState soil = soils[i].getProperty(MP.property_soil).block.getDefaultState();
+			SOIL_LIST[i] = new IBlockState[] {
+					soil.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.GRASS),
+					soil.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.NONE),
+					GRAVEL
+			};
 		}
+		
+		CEIBA1.setHeight(32, 10);
+		OAK1.setHeight(4, 3);
+		ACACIA.setHeight(5, 7);
+		BIRCH.setHeight(4, 3);
+		SPRUCE1.setHeight(7, 5);
 	}
 }

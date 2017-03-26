@@ -3,6 +3,7 @@ package farcore.lib.tile.instance;
 import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumBlock;
+import farcore.data.V;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
@@ -63,6 +64,9 @@ public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 	@Override
 	public void onBlockBreak(IBlockState state)
 	{
-		Worlds.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material())));
+		if (!V.generateState)
+		{
+			Worlds.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material())));
+		}
 	}
 }

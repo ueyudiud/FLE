@@ -4,6 +4,8 @@
 
 package nebula.common.base;
 
+import static nebula.common.base.Judgable.NOT_NULL;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -15,7 +17,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 {
 	public static <E> ArrayList<E> requireNonnull()
 	{
-		return new ArrayListAddWithCheck<>(Judgable.NOT_NULL);
+		return new ArrayListAddWithCheck<>(NOT_NULL);
 	}
 	
 	Predicate<E> checker;
@@ -53,12 +55,12 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	@Override
 	public boolean addAll(Collection<? extends E> c)
 	{
-		throw new UnsupportedOperationException();
+		return super.addAll(new ArrayListArgument<E>(c.stream().filter(this.checker).toArray()));
 	}
 	
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c)
 	{
-		throw new UnsupportedOperationException();
+		return super.addAll(index, new ArrayListArgument<E>(c.stream().filter(this.checker).toArray()));
 	}
 }

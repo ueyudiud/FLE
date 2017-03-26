@@ -3,12 +3,13 @@ package nebula.common.util;
 import java.util.Collection;
 import java.util.HashSet;
 
+import nebula.common.base.IRegister;
 import nebula.common.base.Judgable;
 import nebula.common.base.Register;
 
 public final class SubTag implements Judgable<ISubTagContainer>
 {
-	public static final Register<SubTag> TAGS = new Register();
+	public static final IRegister<SubTag> TAGS = new Register<>();
 	
 	public static void addTagsTo(SubTag[] tags, ISubTagContainer...containers)
 	{
@@ -21,10 +22,12 @@ public final class SubTag implements Judgable<ISubTagContainer>
 	
 	public static SubTag getNewSubTag(String name)
 	{
-		for (SubTag tSubTag : TAGS)
-			if (tSubTag.name.equals(name))
-				return tSubTag;
-		return new SubTag(name);
+		SubTag tag = TAGS.get(name);
+		if (tag == null)
+		{
+			tag = new SubTag(name);
+		}
+		return tag;
 	}
 	
 	private final String name;

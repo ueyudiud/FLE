@@ -16,7 +16,8 @@
 			"aterosol":        { "textures": { "all": "farcore:blocks/soil/aterosol" } },
 			"podzol":          { "textures": { "all": "farcore:blocks/soil/podzol" } },
 			"pheosol":         { "textures": { "all": "farcore:blocks/soil/pheosol" } },
-			"aterocalcosol":   { "textures": { "all": "farcore:blocks/soil/aterocalcosol" } }
+			"aterocalcosol":   { "textures": { "all": "farcore:blocks/soil/aterocalcosol" } },
+			"rubosol":		   { "textures": { "all": "farcore:blocks/soil/rubosol" } }
 		},
 		"cover": {
 			"none": { 

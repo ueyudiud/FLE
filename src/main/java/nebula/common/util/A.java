@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntToLongFunction;
 import java.util.function.IntUnaryOperator;
@@ -183,6 +184,20 @@ public final class A
 	 * @return
 	 */
 	public static <K, T> T[] transform(K[] array, Class<T> elementClass, Function<? super K, ? extends T> function)
+	{
+		T[] result = ObjectArrays.newArray(elementClass, array.length);
+		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
+		return result;
+	}
+	
+	/**
+	 * Transform key array to target array.
+	 * @param array
+	 * @param elementClass
+	 * @param function Transform function.
+	 * @return
+	 */
+	public static <T> T[] transform(int[] array, Class<T> elementClass, IntFunction<? extends T> function)
 	{
 		T[] result = ObjectArrays.newArray(elementClass, array.length);
 		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);

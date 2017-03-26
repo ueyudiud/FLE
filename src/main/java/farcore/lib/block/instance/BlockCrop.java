@@ -130,7 +130,14 @@ public class BlockCrop extends BlockSingleTE implements IPlantable
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof TECrop)
 		{
-			state = state.withProperty(PROP_CROP_TYPE, ((TECrop) tile).getStateName());
+			try
+			{
+				state = state.withProperty(PROP_CROP_TYPE, ((TECrop) tile).getStateName());
+			}
+			catch (Exception exception)//If client out of synch, the crop type might lost, use default instead.
+			{
+				return state;
+			}
 		}
 		return super.getActualState(state, worldIn, pos);
 	}
