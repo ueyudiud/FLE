@@ -19,7 +19,6 @@ import nebula.client.util.Renders;
 import nebula.common.data.Misc;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,9 +27,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientLoader extends CommonLoader
 {
 	@Override
-	public void init(FMLPreInitializationEvent event, Configuration config)
+	public void init(FMLPreInitializationEvent event)
 	{
-		super.init(event, config);
+		super.init(event);
 		
 		MinecraftForge.EVENT_BUS.register(new FleClientHandler());
 		NebulaTextureHandler.addIconLoader(new PolishingStateIconLoader());

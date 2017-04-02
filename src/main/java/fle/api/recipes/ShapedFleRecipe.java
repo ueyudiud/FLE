@@ -4,18 +4,16 @@
 
 package fle.api.recipes;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ObjectArrays;
 
+import nebula.common.base.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
 import nebula.common.stack.OreStack;
-import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
@@ -75,47 +73,28 @@ public class ShapedFleRecipe implements IRecipe
 				throw new RuntimeException();
 			this.output = output;
 			int i = 0;
-			if (inputs[i] instanceof Boolean)
-			{
-				this.enableMirror = (Boolean) inputs[i ++];
-			}
+			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
+			this.enableMirror = helper.readOrSkip(false);
+			
 			char[][] map;
-			if (inputs[i] instanceof String[])
+			String[] table = helper.readArrayOrCompact(String.class);
+			
+			if (table.length == 0)
+				throw new RuntimeException();
+			
+			this.height = table.length;
+			this.width = table[0].length();
+			map = new char[this.height][];
+			for (int j = 0; j < table.length; ++j)
 			{
-				String[] table = (String[]) inputs[i ++];
-				this.height = table.length;
-				this.width = table[0].length();
-				map = new char[this.height][];
-				for (int j = 0; j < table.length; ++j)
-				{
-					map[j] = table[j].toCharArray();
-					if (map[j].length != this.width)
-						throw new RuntimeException();
-				}
+				map[j] = table[j].toCharArray();
+				if (map[j].length != this.width)
+					throw new RuntimeException();
 			}
-			else if (inputs[i] instanceof String)
-			{
-				this.width = ((String) inputs[i]).length();
-				List<char[]> list = new ArrayList<>();
-				do
-				{
-					char[] array = ((String) inputs[i]).toCharArray();
-					if (array.length != this.width)
-						throw new RuntimeException();
-					list.add(array);
-				}
-				while(inputs[++i] instanceof String);
-				this.height = i;
-				map = L.cast(list, char[].class);
-			}
-			else throw new RuntimeException();
+			
 			Map<Character, SingleInputMatch> matchs = new HashMap<>();
-			for (; i < inputs.length; i += 2)
-			{
-				char chr = (Character) inputs[i];
-				Object object = inputs[i + 1];
-				matchs.put(chr, castAsInputMatch(object));
-			}
+			helper.readToEnd((Character chr, Object obj)-> matchs.put(chr, castAsInputMatch(obj)));
+			
 			this.inputs = new SingleInputMatch[this.height][this.width];
 			for (i = 0; i < this.height; ++i)
 				for (int j = 0; j < this.width; ++j)

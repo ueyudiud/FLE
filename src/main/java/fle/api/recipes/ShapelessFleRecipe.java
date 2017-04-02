@@ -4,8 +4,6 @@
 
 package fle.api.recipes;
 
-import static fle.api.recipes.ShapedFleRecipe.castAsInputMatch;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -13,6 +11,7 @@ import java.util.List;
 
 import com.google.common.collect.ObjectArrays;
 
+import nebula.common.base.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,21 +40,11 @@ public class ShapelessFleRecipe implements IRecipe
 				throw new RuntimeException();
 			this.output = output;
 			this.inputs = new ArrayList<>();
-			for (int i = 0; i < inputs.length; ++i)
-			{
-				SingleInputMatch match = castAsInputMatch(inputs[i]);
-				if (i + 1 < inputs.length && inputs[i + 1] instanceof Integer)
-				{
-					int a = (Integer) inputs[i + 1];
-					
-					for (int j = 0; j < a; this.inputs.add(match), ++j);
-					++i;
-				}
-				else
-				{
-					this.inputs.add(match);
-				}
-			}
+			ObjArrayParseHelper helper = ObjArrayParseHelper.create(inputs);
+			
+			helper.readStackToEnd(ShapedFleRecipe::castAsInputMatch, stack-> {
+				for (int j = 0; j < stack.size; this.inputs.add(stack.element), ++j);
+			});
 		}
 		catch (Exception exception)
 		{

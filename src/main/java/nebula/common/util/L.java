@@ -47,6 +47,11 @@ public class L
 	 */
 	public static final double SQRT_DIV2 = 0.707106781186;
 	
+	public static <X> X throwWhenGet(RuntimeException t)
+	{
+		throw t;
+	}
+	
 	/**
 	 * Count enabled bit size.
 	 * @param value

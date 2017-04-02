@@ -267,4 +267,16 @@ public final class A
 		Arrays.fill(array, value);
 		return array;
 	}
+	
+	public static <E> E[] sublist(E[] array, int off)
+	{
+		return sublist(array, off, array.length - off);
+	}
+	
+	public static <E> E[] sublist(E[] array, int off, int len)
+	{
+		E[] a1 = (E[]) Array.newInstance(array.getClass().getComponentType(), len);
+		System.arraycopy(array, off, a1, 0, len);
+		return a1;
+	}
 }
