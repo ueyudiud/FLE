@@ -9,18 +9,21 @@ import farcore.lib.plant.IPlant;
 import nebula.client.util.IRenderRegister;
 import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
+import nebula.common.block.IBlockStayabilityCheck;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
-public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDataBlock
+public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDataBlock, IBlockStayabilityCheck
 {
 	public static BlockPlant create(String modid, String name, IPlant plant)
 	{
@@ -94,5 +97,11 @@ public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDa
 	public BlockRenderLayer getBlockLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
+	}
+	
+	@Override
+	public boolean canBlockStayAt(World world, BlockPos pos, IBlockState state)
+	{
+		return this.plant.canBlockStay(this, state, world, pos);
 	}
 }

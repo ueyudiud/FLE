@@ -116,8 +116,8 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		FROZEN("frozen"),
 		GRASS("grass"),
 		TUNDRA("tundra"),
-		TUNDRA_FROZEN("tundra_frozen"),
 		MYCELIUM("mycelium"),
+		TUNDRA_FROZEN("tundra_frozen"),
 		WATER("water"),
 		GRASS_WATER("grass_water"),
 		TUNDRA_WATER("tundra_water"),
@@ -373,10 +373,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	
 	protected boolean checkAndFall(World world, BlockPos pos, IBlockState state, Random rand, boolean checkFallToNearby)
 	{
-		/**
-		 * For range checking, prevent to check unload chunk to cause update.
-		 */
-		if (!world.isAreaLoaded(pos, 8)) return false;
 		if (canFallBelow(world, pos, state))
 			return Worlds.fallBlock(world, pos, state);
 		if (checkFallToNearby)

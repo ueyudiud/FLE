@@ -55,6 +55,12 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 	}
 	
 	@Override
+	public Block block()
+	{
+		return this.block;
+	}
+	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{

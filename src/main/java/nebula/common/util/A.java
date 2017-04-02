@@ -6,6 +6,7 @@ package nebula.common.util;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -14,13 +15,13 @@ import java.util.function.IntToLongFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongPredicate;
 import java.util.function.ObjIntConsumer;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ObjectArrays;
-
-import nebula.common.base.Judgable;
+import com.google.common.reflect.TypeToken;
 
 /**
  * @author ueyudiud
@@ -45,15 +46,25 @@ public final class A
 	/**
 	 * Copy array elements to a new array with selected length.
 	 * The result array type is same to old array type.
-	 * @param array
-	 * @param len
+	 * @param array The old array.
+	 * @param len The new array length.
+	 * @param <T> The type of array.
 	 * @return
 	 */
-	public static <T> T[] copyToLength(T[] array, int len)
+	public static <T> T[] copyToLength(@Nullable T[] array, int len)
 	{
-		T[] result = (T[]) Array.newInstance(array.getClass().getComponentType(), len);
-		System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
-		return result;
+		if (array != null)
+		{
+			T[] result = ObjectArrays.newArray(array, len);
+			System.arraycopy(array, 0, result, 0, Math.min(len, array.length));
+			return result;
+		}
+		else
+		{
+			@SuppressWarnings("unchecked")
+			T[] result = (T[]) ObjectArrays.newArray(new TypeToken<T>(){}.getRawType(), len);
+			return result;
+		}
 	}
 	
 	/**
@@ -62,8 +73,9 @@ public final class A
 	 * @param iterable
 	 * @param consumer
 	 */
-	public static <E> void executeAll(E[] iterable, Consumer<E> consumer)
+	public static <E> void executeAll(@Nonnull E[] iterable, @Nonnull Consumer<E> consumer)
 	{
+		Objects.requireNonNull(consumer);
 		for(E element : iterable) consumer.accept(element);
 	}
 	
@@ -73,8 +85,9 @@ public final class A
 	 * @param iterable
 	 * @param consumer
 	 */
-	public static <E> void executeAll(E[] iterable, ObjIntConsumer<E> consumer)
+	public static <E> void executeAll(@Nonnull E[] iterable, @Nonnull ObjIntConsumer<E> consumer)
 	{
+		Objects.requireNonNull(consumer);
 		for(int i = 0; i < iterable.length; ++i) consumer.accept(iterable[i], i);
 	}
 	
@@ -85,7 +98,7 @@ public final class A
 	 * @param arg The matched argument.
 	 * @return
 	 */
-	public static <E> boolean contain(E[] list, @Nullable E arg)
+	public static <E> boolean contain(@Nonnull E[] list, @Nullable E arg)
 	{
 		for(E element : list) if(L.equal(element, arg)) return true;
 		return false;
@@ -104,14 +117,15 @@ public final class A
 	}
 	
 	/**
-	 * Match is target
+	 * Check all elements can be matched.
 	 * @param list
 	 * @param checker
+	 * @param <E> The type of element.
 	 * @return
 	 */
-	public static <E> boolean and(E[] list, Judgable<E> checker)
+	public static <E> boolean and(E[] list, Predicate<? super E> checker)
 	{
-		for(E element : list) if (!checker.isTrue(element)) return false;
+		for(E element : list) if (!checker.test(element)) return false;
 		return true;
 	}
 	
@@ -127,9 +141,9 @@ public final class A
 		return true;
 	}
 	
-	public static <E> boolean or(E[] list, Judgable<E> checker)
+	public static <E> boolean or(E[] list, Predicate<? super E> checker)
 	{
-		for(E element : list) if (checker.isTrue(element)) return true;
+		for(E element : list) if (checker.test(element)) return true;
 		return false;
 	}
 	
@@ -170,7 +184,7 @@ public final class A
 	 * @param arg The matching target.
 	 * @return The index of element, -1 means no element matched.
 	 */
-	public static <E> int indexOf(E[] list, E arg)
+	public static <E> int indexOfFirst(E[] list, E arg)
 	{
 		for(int i = 0; i < list.length; ++i) if(L.equal(list[i], arg)) return i;
 		return -1;

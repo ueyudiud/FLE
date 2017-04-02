@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 /**
  * @author ueyudiud
  */
-abstract class OpLabel
+public abstract class OpLabel
 {
 	int off;
 	int len;

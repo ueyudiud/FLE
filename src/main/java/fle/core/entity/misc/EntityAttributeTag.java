@@ -4,36 +4,39 @@
 
 package fle.core.entity.misc;
 
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author ueyudiud
  */
 public class EntityAttributeTag
 {
-	public static float getFloat(Configuration configuration, String tag, String value, float defValue, float minValue, float maxValue)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	public static @interface Attribute
 	{
-		Property property = configuration.get(tag, value, defValue);
-		property.setMinValue(minValue);
-		property.setMaxValue(maxValue);
-		property.setComment(null);
-		return (float) property.getDouble();
+		float health();
+		
+		float followRange() default 0.0F;
+		
+		float speed();
+		
+		float attack();
+		
+		float armor();
 	}
 	
-	public final float maxHealth;
-	public final float followRange;
-	public final float movementSpeed;
-	public final float attackDamage;
-	public final float armor;
+	public float maxHealth;
+	public float followRange;
+	public float movementSpeed;
+	public float attackDamage;
+	public float armor;
 	
-	public EntityAttributeTag(Configuration configuration, String tag, String category, float maxHealth, float followRange, float movementSpeed, float attackDamage, float armor)
+	public EntityAttributeTag()
 	{
-		this.maxHealth = getFloat(configuration, category, tag + "MaxHealth", maxHealth, 0, 1024);
-		this.followRange = getFloat(configuration, category, tag + "FollowRange", followRange, 0, 2048);
-		this.movementSpeed = getFloat(configuration, category, tag + "MovementSpeed", movementSpeed, 0, 1024);
-		this.attackDamage = getFloat(configuration, category, tag + "AttackDamage", attackDamage, 0, 2048);
-		this.armor = getFloat(configuration, category, tag + "Armor", armor, 0, 30);
 	}
 	
 	public EntityAttributeTag(float maxHealth, float followRange, float movementSpeed, float attackDamage, float armor)

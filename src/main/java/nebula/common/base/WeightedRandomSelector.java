@@ -14,7 +14,7 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	public WeightedRandomSelector()
 	{
 	}
-	public WeightedRandomSelector(Stack<T>[] stacks)
+	public WeightedRandomSelector(Stack<T>...stacks)
 	{
 		for(Stack<T> stack : stacks)
 		{
@@ -55,7 +55,7 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	public T next(Random random)
 	{
 		if(this.first == null || this.allWeight == 0) return null;
-		int i = random.nextInt(this.allWeight);
+		int i = random.nextInt(this.allWeight) - this.first.value().value;
 		INode<IntegerEntry<T>> node = this.first;
 		while(i > 0 && //The weight is still more than random number
 				node.hasNext())//Or it has no node any more.

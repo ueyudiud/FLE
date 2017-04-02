@@ -23,8 +23,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockStateContainerExt extends BlockStateContainer
 {
+	/** The a block state container capacity. */
 	protected static final int BLOCK_COUNT = 4096;
 	
+	/** The bit size to send need. */
 	protected int bits;
 	
 	public BlockStateContainerExt()

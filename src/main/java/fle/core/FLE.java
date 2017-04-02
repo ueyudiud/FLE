@@ -4,7 +4,6 @@ import farcore.FarCoreRegistry;
 import fle.core.common.CommonLoader;
 import fle.loader.MaterialRegister;
 import nebula.common.util.ModCompator;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -46,10 +45,7 @@ public class FLE
 		modMetadata.credits = "ueyudiud";
 		modMetadata.version = FLEVersion.isSnapshotVersion() ? VERSION : VERSION + "-pre" + FLEVersion.SNAPSHOT_VERSION;
 		compator = ModCompator.newCompactor();
-		Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
-		configuration.load();
-		loader.init(event, configuration);
-		configuration.save();
+		loader.init(event);
 		compator.addCompatible("fg", "fargen.compact.fle.SubCompact");
 	}
 	

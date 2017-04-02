@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
@@ -94,7 +95,7 @@ public class L
 	 * @param value
 	 * @return
 	 */
-	public static int unsignedToInt(byte value)
+	public static int toUnsignedInt(byte value)
 	{
 		return (value & 0xFF);
 	}
@@ -107,7 +108,7 @@ public class L
 	 */
 	public static int minusUbyte(byte v1, byte v2)
 	{
-		return unsignedToInt(v1) - unsignedToInt(v2);
+		return toUnsignedInt(v1) - toUnsignedInt(v2);
 	}
 	
 	/**
@@ -202,7 +203,7 @@ public class L
 	 * @param clazz The result array class type.
 	 * @return
 	 */
-	public static <T> T[] cast(Collection<? extends T> collection, Class<T> clazz)
+	public static <T> T[] cast(@Nonnull Collection<? extends T> collection, @Nonnull Class<T> clazz)
 	{
 		T[] ret = (T[]) Array.newInstance(clazz, collection.size());
 		return collection.toArray(ret);
@@ -225,12 +226,12 @@ public class L
 	 * @param collection
 	 * @param function
 	 */
-	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, Function<? super K, ? extends V> function)
+	public static <K, V> void putAll(@Nonnull Map<K, V> map, @Nonnull Collection<? extends K> collection, @Nonnull Function<? super K, ? extends V> function)
 	{
 		collection.forEach(k->map.put(k, function.apply(k)));
 	}
 	
-	public static <K, V> void putAll(Map<K, V> map, Collection<? extends K> collection, V constant)
+	public static <K, V> void putAll(@Nonnull Map<K, V> map, @Nonnull Collection<? extends K> collection, @Nullable V constant)
 	{
 		collection.forEach(k->map.put(k, constant));
 	}
@@ -254,7 +255,7 @@ public class L
 	 * @param values
 	 * @see com.google.common.collect.Multimap
 	 */
-	public static <K, V> void put(Map<K, List<V>> map, K key, V...values)
+	public static <K, V> void put(@Nonnull Map<K, List<V>> map, @Nullable K key, V...values)
 	{
 		switch (values.length)
 		{
@@ -273,7 +274,7 @@ public class L
 	 * @param values
 	 * @see com.google.common.collect.Multimap#putAll(com.google.common.collect.Multimap)
 	 */
-	public static <K, V> void put(Map<K, List<V>> map, K key, Collection<? extends V> values)
+	public static <K, V> void put(@Nonnull Map<K, List<V>> map, @Nullable K key, Collection<? extends V> values)
 	{
 		List<V> list = map.get(key);
 		if(list == null)
@@ -294,7 +295,7 @@ public class L
 	 * @return
 	 * @see com.google.common.collect.Multimap#remove(Object, Object)
 	 */
-	public static <K, V> boolean remove(Map<K, List<V>> map, K key, V value)
+	public static <K, V> boolean remove(@Nonnull Map<K, List<V>> map, @Nullable K key, @Nullable V value)
 	{
 		List<V> list = map.get(key);
 		return list != null ? list.remove(value) : false;
@@ -308,7 +309,7 @@ public class L
 	 * @return
 	 * @see com.google.common.collect.Multimap#containsEntry(Object, Object)
 	 */
-	public static <K, V> boolean contain(Map<K, List<V>> map, K key, V value)
+	public static <K, V> boolean contain(@Nonnull Map<K, List<V>> map, @Nullable K key, @Nullable V value)
 	{
 		return map.containsKey(key) && map.get(key).contains(value);
 	}
@@ -445,9 +446,7 @@ public class L
 	
 	public static char random(Random random, char...list)
 	{
-		return list == null || list.length == 0 ? null :
-			list.length == 1 ? list[0] :
-				list[random.nextInt(list.length)];
+		return list == null || list.length == 0 ? null : list[list.length == 1 ? 0 : random.nextInt(list.length)];
 	}
 	
 	/**
@@ -458,9 +457,7 @@ public class L
 	 */
 	public static <T> T random(@Nullable T[] list, Random random)
 	{
-		return list == null || list.length == 0 ? null :
-			list.length == 1 ? list[0] :
-				list[random.nextInt(list.length)];
+		return list == null || list.length == 0 ? null : list[list.length == 1 ? 0 : random.nextInt(list.length)];
 	}
 	
 	public static <T> T random(Collection<T> collection, Random random)
@@ -480,9 +477,7 @@ public class L
 	
 	public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
 	{
-		return arg1 == arg2 ? true :
-			(arg1 == null ^ arg2 == null) ? false :
-				arg1.equals(arg2);
+		return arg1 == arg2 ? true : (arg1 == null ^ arg2 == null) ? false : arg1.equals(arg2);
 	}
 	
 	/**
@@ -546,6 +541,23 @@ public class L
 	public static int range(int m1, int m2, int target)
 	{
 		int v;
+		return target > (v = Math.max(m1, m2)) ? v :
+			target < (v = Math.min(m1, m2)) ? v : target;
+	}
+	
+	/**
+	 * Get long integer ranged in a and b (include a and b).<p>
+	 * If number is out of bound, return minimum number if value is
+	 * lower than minimum number or return max number if value is
+	 * higher than max number.
+	 * @param m1 The first max or minimum number.
+	 * @param m2 The second max or minimum number.
+	 * @param target The ranged number.
+	 * @return
+	 */
+	public static long range(long m1, long m2, long target)
+	{
+		long v;
 		return target > (v = Math.max(m1, m2)) ? v :
 			target < (v = Math.min(m1, m2)) ? v : target;
 	}

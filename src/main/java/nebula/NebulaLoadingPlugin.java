@@ -9,7 +9,7 @@ import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-@IFMLLoadingPlugin.TransformerExclusions({"nebula", "nebula.asm"})
+@IFMLLoadingPlugin.TransformerExclusions({"nebula", "nebula.asm", "nebula.asm.cm", "nebula.asm.keyword"})
 public class NebulaLoadingPlugin implements IFMLLoadingPlugin
 {
 	public static boolean loadedData;

@@ -98,7 +98,7 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	{
 		if (player == null || !player.capabilities.isCreativeMode)
 		{
-			stack.stackSize--;
+			stack.stackSize --;
 		}
 	}
 }

@@ -195,6 +195,10 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	{
 		entityIn.motionX *= 0.8;
 		entityIn.motionZ *= 0.8;
+		if (entityIn instanceof EntityPlayer)
+		{
+			((EntityPlayer) entityIn).setSprinting(false);
+		}
 	}
 	
 	@Override

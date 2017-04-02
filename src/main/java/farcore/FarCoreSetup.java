@@ -4,7 +4,6 @@
 
 package farcore;
 
-import java.io.File;
 import java.util.Map;
 
 import farcore.data.Config;
@@ -14,9 +13,9 @@ import farcore.lib.oredict.OreDictExt;
 import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
 import nebula.Log;
+import nebula.common.config.NebulaConfiguration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -80,19 +79,8 @@ public class FarCoreSetup
 		/**
 		 * Loading non-resource-file from Minecraft running path.
 		 */
-		try
-		{
-			Log.info("Loading configuration.");
-			File file = event.getSuggestedConfigurationFile();
-			Configuration configuration = new Configuration(file);
-			configuration.load();
-			Config.load(configuration);
-			configuration.save();
-		}
-		catch(Exception exception)
-		{
-			Log.warn("Fail to load configuration.", exception);
-		}
+		Log.info("Loading configuration.");
+		NebulaConfiguration.loadStaticConfig(Config.class);
 		FarCoreSetup.proxy.load(event);
 	}
 	

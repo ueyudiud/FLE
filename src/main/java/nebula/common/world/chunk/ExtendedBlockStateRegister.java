@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.Function;
-
-import org.apache.logging.log4j.Level;
 
 import nebula.Log;
 import nebula.common.base.IntegerMap;
@@ -34,9 +31,9 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author ueyudiud
  */
-public enum ExtendedBlockStateRegister
+public enum ExtendedBlockStateRegister implements Runnable
 {
-	INSTANCE;
+	SERVER;
 	
 	static final List<IBlockState> TO_STATE_LIST = new ArrayList(1024);
 	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap(4096) {
@@ -46,10 +43,6 @@ public enum ExtendedBlockStateRegister
 			return Objects.toString(object).hashCode();
 		}
 	};
-	
-	static final Function<Object, String> INFO_FUNCTION = L.withCastIn(
-			objects -> " # " + ((Block) objects[0]).getRegistryName().toString() + ":" + ((Integer) objects[1]).toString(),
-			Object[].class);
 	
 	public static int getStateData(IBlockState state)
 	{
@@ -194,23 +187,62 @@ public enum ExtendedBlockStateRegister
 		}
 	}
 	
-	public void buildStateMap()
+	private static volatile Thread thread = null;
+	
+	public static void buildAndSyncStateMap()
+	{
+		if (thread != null && thread.isAlive())
+		{
+			try
+			{
+				Log.info("Wating last building state map end.");
+				thread.join();
+			}
+			catch (InterruptedException exception)
+			{
+				exception.printStackTrace();
+			}
+		}
+		(thread = new Thread(SERVER, "State Map Thread")).start();
+	}
+	
+	@Override
+	public void run()
+	{
+		switch (this)
+		{
+		case SERVER :
+			buildStateMap();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	void buildStateMap()
 	{
 		TO_ID_MAP.clear();
 		TO_STATE_LIST.clear();
 		Log.reset();
+		
 		for(Block block : Block.REGISTRY)
 		{
-			if(block instanceof IExtendedDataBlock)
+			try
 			{
-				((IExtendedDataBlock) block).registerStateToRegister(this);
+				if(block instanceof IExtendedDataBlock)
+				{
+					((IExtendedDataBlock) block).registerStateToRegister(this);
+				}
+				else
+				{
+					registerDefaultBlockStateMap(block);
+				}
 			}
-			else
+			catch (Exception exception)
 			{
-				registerDefaultBlockStateMap(block);
+				throw new RuntimeException("Illegal block state registy action. Block : " + block, exception);
 			}
 		}
-		Log.logCachedInformations(Level.DEBUG, INFO_FUNCTION, "Some invalid state detected.");
 	}
 	
 	void registerDefaultBlockStateMap(Block block)
@@ -236,7 +268,7 @@ public enum ExtendedBlockStateRegister
 				}
 				catch (RuntimeException exception)
 				{
-					Log.cache(new Object[]{block, i});
+					;
 				}
 			}
 			Map<IBlockState, List<IBlockState>> stateMap = new HashMap();

@@ -465,22 +465,26 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			if (cropGenerationSelector.weight() > 0 && biome.cropPerChunkBase > 0)
 			{
 				switchState(true);
-				int count = biome.cropPerChunkBase + L.nextInt(biome.cropPerChunkRand, this.random) + MathHelper.log2DeBruijn(cropGenerationSelector.weight());
-				ICrop crop = cropGenerationSelector.next(this.random);
-				
-				if (crop != null)
-					for (int i = 0; i < count; ++i)
+				int count = 1 + biome.cropPerChunkBase + L.nextInt(biome.cropPerChunkRand, this.random) + MathHelper.log2DeBruijn(cropGenerationSelector.weight());
+				ICrop crop;
+				do
+				{
+					crop = cropGenerationSelector.next(this.random);
+					count--;
+				}
+				while((crop == null || crop == ICrop.VOID) && count > 0);
+				for (int i = 0; i < count; ++i)
+				{
+					int x2 = x1 + this.random.nextInt(16);
+					int z2 = z1 + this.random.nextInt(16);
+					int y2 = this.world.getHeight(x2, z2);
+					pos.setPos(x2, y2, z2);
+					if (crop.canPlantAt(new CropAccessSimulated(this.world, pos, crop, null, true)))
 					{
-						int x2 = x1 + this.random.nextInt(16);
-						int z2 = z1 + this.random.nextInt(16);
-						int y2 = this.world.getHeight(x2, z2);
-						pos.setPos(x2, y2, z2);
-						if (crop.canPlantAt(new CropAccessSimulated(this.world, pos, crop, null, true)))
-						{
-							BlockCrop.CROP_THREAD.set(crop);
-							this.world.setBlockState(pos, CROP);
-						}
+						BlockCrop.CROP_THREAD.set(crop);
+						this.world.setBlockState(pos, CROP);
 					}
+				}
 				switchState(false);
 			}
 		}

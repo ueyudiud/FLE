@@ -96,7 +96,7 @@ public class Crop implements ICrop, IPlantable
 		int off = MathHelper.ceil(gm.generation * gm.generation * Math.exp(- (float) gm.generation / 5.0F));
 		int[] datas = A.createIntArray(gm.nativeValues.length, i-> {
 			int val = gm.nativeValues[i];
-			val += random.nextInt(off) - random.nextInt(off);
+			val += L.nextInt(off, random) - L.nextInt(off, random);
 			return L.range(0, 256, val);
 		});
 		return new GeneticMaterial(this.family.getRegisteredName(), gm.generation + 1, coders, datas);

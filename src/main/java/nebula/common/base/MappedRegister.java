@@ -92,60 +92,60 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public boolean contain(int id)
 	{
-		return A.indexOf(this.pointToID, id) != -1;
+		return A.indexOfFirst(this.pointToID, id) != -1;
 	}
 	
 	@Override
 	public boolean contain(String name)
 	{
-		return A.indexOf(this.pointToNames, name) != -1;
+		return A.indexOfFirst(this.pointToNames, name) != -1;
 	}
 	
 	@Override
 	public boolean contain(T arg)
 	{
-		return A.indexOf(this.pointToTargets, arg) != -1;
+		return A.indexOfFirst(this.pointToTargets, arg) != -1;
 	}
 	
 	@Override
 	public int id(T arg)
 	{
-		int id = A.indexOf(this.pointToTargets, arg);
+		int id = A.indexOfFirst(this.pointToTargets, arg);
 		return id == -1 ? -1 : this.pointToID[id];
 	}
 	
 	@Override
 	public int id(String name)
 	{
-		int id = A.indexOf(this.pointToNames, name);
+		int id = A.indexOfFirst(this.pointToNames, name);
 		return id == -1 ? -1 : this.pointToID[id];
 	}
 	
 	@Override
 	public String name(T arg)
 	{
-		int id = A.indexOf(this.pointToTargets, arg);
+		int id = A.indexOfFirst(this.pointToTargets, arg);
 		return id == -1 ? null : this.pointToNames[id];
 	}
 	
 	@Override
 	public String name(int id0)
 	{
-		int id = A.indexOf(this.pointToID, id0);
+		int id = A.indexOfFirst(this.pointToID, id0);
 		return id == -1 ? null : this.pointToNames[id];
 	}
 	
 	@Override
 	public T get(String name)
 	{
-		int id = A.indexOf(this.pointToNames, name);
+		int id = A.indexOfFirst(this.pointToNames, name);
 		return (T) (id == -1 ? null : this.pointToTargets[id]);
 	}
 	
 	@Override
 	public T get(int id0)
 	{
-		int id = A.indexOf(this.pointToID, id0);
+		int id = A.indexOfFirst(this.pointToID, id0);
 		return (T) (id == -1 ? null : this.pointToTargets[id]);
 	}
 	
@@ -181,7 +181,7 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public T remove(String name)
 	{
-		int id = A.indexOf(this.pointToNames, name);
+		int id = A.indexOfFirst(this.pointToNames, name);
 		if(id == -1) return null;
 		Object obj = this.pointToTargets[id];
 		remove(id);
@@ -191,7 +191,7 @@ public class MappedRegister<T> implements IRegister<T>
 	@Override
 	public String remove(T arg)
 	{
-		int id = A.indexOf(this.pointToTargets, arg);
+		int id = A.indexOfFirst(this.pointToTargets, arg);
 		if(id == -1) return null;
 		String name = this.pointToNames[id];
 		remove(id);

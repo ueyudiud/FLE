@@ -22,9 +22,11 @@ import net.minecraftforge.common.IPlantable;
 public interface IPlant<B extends BlockPlant> extends
 IMetaExtHandler, IBlockBehavior<B>, IPlantable
 {
-	AxisAlignedBB BUSH_AABB = new AxisAlignedBB(0.3, 0.0, 0.3, 0.7, 0.7, 0.7);
+	AxisAlignedBB BUSH_AABB = new AxisAlignedBB(0.125, 0.0, 0.125, 0.875, 0.75, 0.875);
 	
 	Mat material();
+	
+	Block block();
 	
 	@Override
 	default AxisAlignedBB getBoundingBox(B block, IBlockState state, IBlockAccess world, BlockPos pos)
@@ -128,8 +130,8 @@ IMetaExtHandler, IBlockBehavior<B>, IPlantable
 	@Override
 	default void onEntityCollidedWithBlock(B block, IBlockState state, World world, BlockPos pos, Entity entity)
 	{
-		entity.motionX *= 0.9F;
-		entity.motionZ *= 0.9F;
+		entity.motionX *= 0.9375F;
+		entity.motionZ *= 0.9375F;
 	}
 	
 	@Override

@@ -4,77 +4,100 @@
 
 package fle.loader;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
+import fle.core.FLE;
 import fle.core.entity.misc.EntityAttributeTag;
-import nebula.common.base.IntegerMap;
+import nebula.common.config.Config;
+import nebula.common.config.ConfigProperty;
+import nebula.common.config.NebulaConfiguration;
+import nebula.common.config.TypeAdapter;
 import nebula.common.util.L;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.common.config.Property.Type;
 
 /**
  * @author ueyudiud
  */
+@Config(FLE.MODID)
 public class FLEConfig
 {
-	private static final IntegerMap<String> intValueMap = new IntegerMap<>();
-	private static final Map<String, EntityAttributeTag> entityAttributesMap = new HashMap<>();
+	private static final Function<Field, EntityAttributeTag>
+	DEFAULT_TAG_APPLIER = field-> {
+		EntityAttributeTag.Attribute attribute = field.getAnnotation(EntityAttributeTag.Attribute.class);
+		return new EntityAttributeTag(attribute.health(), attribute.followRange(), attribute.speed(), attribute.attack(), attribute.armor());
+	};
+	private static final TypeAdapter<EntityAttributeTag>
+	ADAPTER = (arg, field, config, category, name, defValue, comments) -> {
+		ConfigCategory cat = config.getCategory(category == null ? name : category + "\\." + name);
+		EntityAttributeTag.Attribute attribute = field.getAnnotation(EntityAttributeTag.Attribute.class);
+		EntityAttributeTag tag = new EntityAttributeTag();
+		Property property;
+		cat.setComment(comments);
+		if (!Float.isNaN(attribute.health()))
+		{
+			property = cat.computeIfAbsent("health", key->
+			new Property(key, Float.toString(attribute.health()), Type.DOUBLE));
+			property.setDefaultValue(attribute.health());
+			property.setMaxValue(1024.0);
+			property.setMinValue(0.0);
+			tag.maxHealth = L.range(0.0F, 1024.0F, (float) property.getDouble());
+		}
+		if (!Float.isNaN(attribute.followRange()))
+		{
+			property = cat.computeIfAbsent("followRange", key->
+			new Property(key, Float.toString(attribute.followRange()), Type.DOUBLE));
+			property.setDefaultValue(attribute.followRange());
+			property.setMaxValue(2048.0);
+			property.setMinValue(0.0);
+			tag.followRange = L.range(0.0F, 2048.0F, (float) property.getDouble());
+		}
+		if (!Float.isNaN(attribute.speed()))
+		{
+			property = cat.computeIfAbsent("speed", key->
+			new Property(key, Float.toString(attribute.speed()), Type.DOUBLE));
+			property.setDefaultValue(attribute.speed());
+			property.setMaxValue(1024.0);
+			property.setMinValue(0.0);
+			tag.movementSpeed = L.range(0.0F, 1024.0F, (float) property.getDouble());
+		}
+		if (!Float.isNaN(attribute.attack()))
+		{
+			property = cat.computeIfAbsent("attack", key->
+			new Property(key, Float.toString(attribute.attack()), Type.DOUBLE));
+			property.setDefaultValue(attribute.attack());
+			property.setMaxValue(1024.0);
+			property.setMinValue(0.0);
+			tag.attackDamage = L.range(0.0F, 1024.0F, (float) property.getDouble());
+		}
+		if (!Float.isNaN(attribute.armor()))
+		{
+			property = cat.computeIfAbsent("armor", key->
+			new Property(key, Float.toString(attribute.armor()), Type.DOUBLE));
+			property.setDefaultValue(attribute.armor());
+			property.setMaxValue(30.0);
+			property.setMinValue(0.0);
+			tag.armor = L.range(0.0F, 30.0F, (float) property.getDouble());
+		}
+		field.set(arg, tag);
+	};
 	
+	@ConfigProperty(category = "client", name = "enableAllToolHeadCreativeTabs", defValue = "true")
 	public static boolean createAllToolCreativeTabs;
+	@EntityAttributeTag.Attribute(health = 200.0F, followRange = 40.0F, speed = 0.24F, attack = 4.0F, armor = 5.0F)
+	public static EntityAttributeTag zombie;
+	@EntityAttributeTag.Attribute(health = 200.0F, followRange = 20.0F, speed = 0.25F, attack = 4.0F, armor = 5.0F)
+	public static EntityAttributeTag seleton;
+	@EntityAttributeTag.Attribute(health = 160.0F, followRange = 20.0F, speed = 0.3F, attack = 3.0F, armor = 0.0F)
+	public static EntityAttributeTag spider;
+	@EntityAttributeTag.Attribute(health = 200.0F, followRange = 20.0F, speed = 0.25F, attack = 3.0F, armor = 0.0F)
+	public static EntityAttributeTag creeper;
 	
-	public static void init(Configuration config)
+	public static void init()
 	{
-		createAllToolCreativeTabs = config.getBoolean("enableAllToolHeadCreativeTabs", "client", true, "");
-		setValue(config, "Zombie", 200.0F, 40.0F, 0.24F, 4.0F, 5.0F);
-		setValue(config, "Skeleton", 200.0F, 20.0F, 0.25F, 4.0F, 5.0F);
-		setValue(config, "Spider", 160.0F, 20.0F, 0.3F, 3.0F, 0.0F);
-		setValue(config, "Creeper", 200.0F, 20.0F, 0.25F, 3.0F, 0.0F);
-	}
-	
-	public static void setValue(Configuration configuration, String name, float maxHealth, float followRange, float movementSpeed, float attackDamage, float armor)
-	{
-		entityAttributesMap.put(name, new EntityAttributeTag(configuration, name, "Entities", maxHealth, followRange, movementSpeed, attackDamage, armor));
-	}
-	
-	public static void setValue(Configuration configuration, String tag, String value, int defValue, int minValue, int maxValue, @Nullable String comment)
-	{
-		Property property = configuration.get(tag, value, defValue);
-		if (comment != null)
-		{
-			property.setComment(String.format("%s(%d~%d)", comment, minValue, maxValue));
-		}
-		property.setMinValue(minValue);
-		property.setMaxValue(maxValue);
-		intValueMap.put(tag + "." + value, L.range(minValue, maxValue, property.getInt()));
-	}
-	
-	public static void setValue(Configuration configuration, String tag, String value, float defValue, float minValue, float maxValue, @Nullable String comment)
-	{
-		Property property = configuration.get(tag, value, defValue);
-		if (comment != null)
-		{
-			property.setComment(String.format("%s(%d~%d)", comment, minValue, maxValue));
-		}
-		property.setMinValue(minValue);
-		property.setMaxValue(maxValue);
-		intValueMap.put(tag + "." + value, Float.floatToIntBits(L.range(minValue, maxValue, property.getInt())));
-	}
-	
-	public static EntityAttributeTag getEntityAttributeTag(String name)
-	{
-		return entityAttributesMap.get(name);
-	}
-	
-	public static int getIntValue(String tag, String value)
-	{
-		return intValueMap.get(tag + "." + value);
-	}
-	
-	public static float getFloatValue(String tag, String value)
-	{
-		return Float.intBitsToFloat(intValueMap.get(tag + "." + value));
+		NebulaConfiguration.registerTypeAdapter(EntityAttributeTag.class, ADAPTER, DEFAULT_TAG_APPLIER);
+		NebulaConfiguration.loadStaticConfig(FLEConfig.class);
 	}
 }

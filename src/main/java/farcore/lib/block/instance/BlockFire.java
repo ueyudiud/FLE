@@ -35,6 +35,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -102,7 +103,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	{
 		super.registerRender();
 		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "fire", (IProperty) null, STATE, SMOLDER, SPREAD_PREFERENCE);
-		ModelLoader.setCustomModelResourceLocation(this.item, 0, mapper.getModelResourceLocation(getDefaultState().withProperty(UPPER, true)));
+		ModelLoader.setCustomModelResourceLocation(this.item, 0, new ModelResourceLocation(FarCore.ID + ":fire", "inventory"));
 		ModelLoader.setCustomStateMapper(this, mapper);
 	}
 	
@@ -526,7 +527,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			{
 				for (int j = 0; j < 2; ++j)
 				{
-					double d3 = pos.getX() + rand.nextDouble() * 0.10000000149011612D;
+					double d3 = pos.getX() + rand.nextDouble() * 0.1;
 					double d8 = pos.getY() + rand.nextDouble();
 					double d13 = pos.getZ() + rand.nextDouble();
 					worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d3, d8, d13, 0.0D, 0.0D, 0.0D, new int[0]);
@@ -537,7 +538,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			{
 				for (int k = 0; k < 2; ++k)
 				{
-					double d4 = pos.getX() + 1 - rand.nextDouble() * 0.10000000149011612D;
+					double d4 = pos.getX() + 1 - rand.nextDouble() * 0.1;
 					double d9 = pos.getY() + rand.nextDouble();
 					double d14 = pos.getZ() + rand.nextDouble();
 					worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d4, d9, d14, 0.0D, 0.0D, 0.0D, new int[0]);
@@ -550,7 +551,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				{
 					double d5 = pos.getX() + rand.nextDouble();
 					double d10 = pos.getY() + rand.nextDouble();
-					double d15 = pos.getZ() + rand.nextDouble() * 0.10000000149011612D;
+					double d15 = pos.getZ() + rand.nextDouble() * 0.1;
 					worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d5, d10, d15, 0.0D, 0.0D, 0.0D, new int[0]);
 				}
 			}
@@ -561,7 +562,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				{
 					double d6 = pos.getX() + rand.nextDouble();
 					double d11 = pos.getY() + rand.nextDouble();
-					double d16 = pos.getZ() + 1 - rand.nextDouble() * 0.10000000149011612D;
+					double d16 = pos.getZ() + 1 - rand.nextDouble() * 0.1;
 					worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d6, d11, d16, 0.0D, 0.0D, 0.0D, new int[0]);
 				}
 			}
@@ -571,7 +572,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				for (int j1 = 0; j1 < 2; ++j1)
 				{
 					double d7 = pos.getX() + rand.nextDouble();
-					double d12 = pos.getY() + 1 - rand.nextDouble() * 0.10000000149011612D;
+					double d12 = pos.getY() + 1 - rand.nextDouble() * 0.1;
 					double d17 = pos.getZ() + rand.nextDouble();
 					worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d7, d12, d17, 0.0D, 0.0D, 0.0D, new int[0]);
 				}

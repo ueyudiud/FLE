@@ -6,13 +6,19 @@ package fargen.core.biome.decorator;
 
 import java.util.Random;
 
+import farcore.data.M;
+import farcore.data.MP;
 import nebula.common.base.Selector;
-import net.minecraft.block.BlockTallGrass.EnumType;
+import nebula.common.base.Stack;
+import nebula.common.base.WeightedRandomSelector;
+import nebula.common.world.gen.WorldGenRandPlant;
+import net.minecraft.block.BlockTallGrass;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
 /**
@@ -20,7 +26,15 @@ import net.minecraftforge.event.terraingen.TerrainGen;
  */
 public class SimpleBiomeDecorator extends BiomeDecorator
 {
-	private static final Selector<WorldGenerator> GRASS_GENERATOR = Selector.single(new WorldGenTallGrass(EnumType.GRASS));
+	private static final Selector<WorldGenerator> GRASS_GENERATOR;
+	
+	static
+	{
+		Selector<IBlockState> selector = new WeightedRandomSelector<>(
+				new Stack<>(Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS), 880),
+				new Stack<>(M.bristlegrass.getProperty(MP.property_plant).block().getDefaultState(), 120));
+		GRASS_GENERATOR = Selector.single(new WorldGenRandPlant(132, selector));
+	}
 	
 	public int grassPerChunk = 1;
 	public Selector<WorldGenerator> grassGenerator = GRASS_GENERATOR;
@@ -30,13 +44,13 @@ public class SimpleBiomeDecorator extends BiomeDecorator
 	{
 		int pass, xOff, yOff, zOff, x, y, z;
 		
-		if(TerrainGen.decorate(world, rand, pos, DecorateBiomeEvent.Decorate.EventType.GRASS))
+		if(TerrainGen.decorate(world, rand, pos, Decorate.EventType.GRASS))
 		{
 			for (pass = 0; pass < this.grassPerChunk; ++pass)
 			{
 				xOff = rand.nextInt(16) + 8;
 				zOff = rand.nextInt(16) + 8;
-				y = world.getHeight(pos.getX() + xOff, pos.getZ() + zOff) * 2;
+				y = 128 + (world.getHeight(pos.getX() + xOff, pos.getZ() + zOff) - 128) * 2;
 				
 				if (y > 0)
 				{

@@ -29,6 +29,7 @@ import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaPlayerHandler;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.block.BlockBase;
+import nebula.common.config.NebulaConfiguration;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.ItemBase;
@@ -48,7 +49,6 @@ import nebula.common.network.packet.PacketTEAsk;
 import nebula.common.network.packet.PacketTESAsk;
 import nebula.common.network.packet.PacketTESync;
 import nebula.common.util.Game;
-import nebula.common.util.NBTs;
 import nebula.common.world.chunk.BlockStateContainerExt;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.Block;
@@ -71,7 +71,6 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -197,10 +196,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		try
 		{
 			this.lang = new LanguageManager(new File(Game.getMCFile(), "lang"));
-			Configuration configuration = new Configuration(event.getSuggestedConfigurationFile());
-			configuration.load();
-			NebulaConfig.init(configuration);
-			configuration.save();
+			NebulaConfiguration.loadStaticConfig(NebulaConfig.class);
 		}
 		catch (Exception exception)
 		{
@@ -263,7 +259,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Subscribe
 	public void mappingChanged(FMLModIdMappingEvent evt)
 	{
-		ExtendedBlockStateRegister.INSTANCE.buildStateMap();
+		ExtendedBlockStateRegister.buildAndSyncStateMap();
 	}
 	
 	@Override
@@ -303,7 +299,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 			ExtendedBlockStorage storage = new ExtendedBlockStorage(i1 << 4, flag);
 			if(flag1)
 			{
-				int[] stores = NBTs.getIntArrayOrDefault(compound2, "BlockStates", null);
+				int[] stores = compound2.getIntArray("BlockStates");
 				((BlockStateContainerExt) storage.getData()).setDataFromNBT(stores);
 			}
 			else
@@ -354,8 +350,9 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 			if (extendedblockstorage != Chunk.NULL_BLOCK_STORAGE)
 			{
 				NBTTagCompound compound2 = new NBTTagCompound();
-				compound2.setByte("Y", (byte)(extendedblockstorage.getYLocation() >> 4 & 255));
-				compound2.setIntArray("BlockStates", ((BlockStateContainerExt) extendedblockstorage.getData()).getDatasToNBT());
+				compound2.setByte("Y", (byte)(extendedblockstorage.getYLocation() >> 4 & 0xFF));
+				int[] data = ((BlockStateContainerExt) extendedblockstorage.getData()).getDatasToNBT();
+				compound2.setIntArray("BlockStates", data);
 				compound2.setByteArray("BlockLight", extendedblockstorage.getBlocklightArray().getData());
 				
 				if (flag)

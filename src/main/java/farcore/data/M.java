@@ -11,7 +11,9 @@ import farcore.lib.block.behavior.RockBehaviorFlammable;
 import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MaterialBuilder;
+import farcore.lib.plant.PlantBristlegrass;
 import farcore.lib.plant.PlantDandelion;
+import farcore.lib.plant.PlantHalogrootBush;
 import nebula.Log;
 
 /**
@@ -87,6 +89,7 @@ public class M
 	
 	public static final Mat dandelion		= new Mat(9301, FarCore.ID, "dandelion", "Dandelion", "Dandelion");
 	public static final Mat bristlegrass	= new Mat(9302, FarCore.ID, "bristlegrass", "Bristlegrass", "Bristlegrass");
+	public static final Mat halogroot_bush	= new Mat(9303, FarCore.ID, "halogroot_bush", "HalogrootBush", "Halogroot Bush");
 	//Ores
 	public static final Mat native_copper	= new Mat(10001, FarCore.ID, "nativeCopper", "NativeCopper", "Native Copper").setChemicalFormula("Cu").setRGBa(0xFF834CFF).setOreProperty(7, 8.0F, 9.0F);
 	public static final Mat malachite		= new Mat(10002, FarCore.ID, "malachite", "Malachite", "Malachite").setChemicalFormula("Cu(OH)2·CuCO3").setRGBa(0x30CE88FF).setOreProperty(8, 8.8F, 9.0F);
@@ -133,7 +136,9 @@ public class M
 		
 		MC.axe_rock.addToWhiteList(quartz);
 		
-		dandelion	.setPlant(new PlantDandelion());
+		dandelion		.setPlant(new PlantDandelion());
+		bristlegrass	.setPlant(new PlantBristlegrass());
+		halogroot_bush	.setPlant(new PlantHalogrootBush());
 		
 		bituminous_coal	.setRock( 4, 2.5F,  7.7F, new RockBehaviorFlammable<>(bituminous_coal));
 		lignite			.setRock( 3, 2.2F,  6.4F, new RockBehaviorFlammable<>(lignite));

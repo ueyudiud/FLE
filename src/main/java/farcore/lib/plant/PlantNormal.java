@@ -9,6 +9,7 @@ import java.util.Random;
 import farcore.lib.block.instance.BlockPlant;
 import farcore.lib.material.Mat;
 import nebula.common.util.Worlds;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -29,6 +30,12 @@ public abstract class PlantNormal implements IPlant<BlockPlant>
 	{
 		this.material = material;
 		this.block = createBlock(material);
+	}
+	
+	@Override
+	public final Block block()
+	{
+		return this.block;
 	}
 	
 	protected BlockPlant createBlock(Mat material)

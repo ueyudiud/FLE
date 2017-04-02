@@ -93,7 +93,7 @@ public class FarSurfaceDataGenerator
 	WHEAT = Mat.material("wheat").getProperty(MP.property_crop),
 	SOYBEAN = Mat.material("soybean").getProperty(MP.property_crop),
 	POTATO = Mat.material("potato").getProperty(MP.property_crop),
-	SWEET_POTATO = Mat.material("sweet_potato").getProperty(MP.property_crop),
+	SWEET_POTATO = Mat.material("sweetpotato").getProperty(MP.property_crop),
 	REED = Mat.material("reed").getProperty(MP.property_crop),
 	WILD_CABBAGE = Mat.material("wild_cabbage").getProperty(MP.property_crop);
 	
@@ -111,11 +111,6 @@ public class FarSurfaceDataGenerator
 			if (weight > 0)
 			{
 				selector.add(SOYBEAN, weight);
-			}
-			weight = c(16, x, z, 183723.0, noise, temp, 0.4F, 1.7F, rain, 0.7F, 1.4F);
-			if (weight > 0)
-			{
-				selector.add(POTATO, weight);
 			}
 			weight = c(16, x, z, 183723.0, noise, temp, 0.4F, 1.7F, rain, 0.7F, 1.4F);
 			if (weight > 0)

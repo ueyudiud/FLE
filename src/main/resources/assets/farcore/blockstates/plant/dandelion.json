@@ -2,14 +2,14 @@
 	"forge_marker": 1,
 	"defaults": {
 		"transform": "forge:default-block",
-		"model": "farcore:crop/cross"
+		"model": "farcore:cross"
 	},
 	"variants": {
 		"age": {
-			"0": { "textures": { "crop": "farcore:blocks/plants/dandelion_1" } },
-			"1": { "textures": { "crop": "farcore:blocks/plants/dandelion_2" } },
-			"2": { "textures": { "crop": "farcore:blocks/plants/dandelion_3" } },
-			"3": { "textures": { "crop": "farcore:blocks/plants/dandelion_4" } }
+			"0": { "textures": { "all": "farcore:blocks/plants/dandelion_1" } },
+			"1": { "textures": { "all": "farcore:blocks/plants/dandelion_2" } },
+			"2": { "textures": { "all": "farcore:blocks/plants/dandelion_3" } },
+			"3": { "textures": { "all": "farcore:blocks/plants/dandelion_4" } }
 		}
 	}
 }

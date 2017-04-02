@@ -8,6 +8,7 @@ import nebula.Nebula;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
 import nebula.common.network.packet.PacketBlockData;
 import nebula.common.util.Sides;
+import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -37,7 +38,10 @@ public class NebulaPlayerHandler
 	{
 		if(Sides.isServer())
 		{
-			Nebula.network.sendLargeToPlayer(new PacketBlockData(), event.player);
+			synchronized (ExtendedBlockStateRegister.SERVER)
+			{
+				Nebula.network.sendLargeToPlayer(new PacketBlockData(), event.player);
+			}
 		}
 	}
 }

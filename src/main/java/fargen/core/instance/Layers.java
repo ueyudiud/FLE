@@ -174,7 +174,7 @@ public class Layers
 		return new GenLayer[] {layer3, layerResult, rock, soil};
 	}
 	
-	private static final boolean DRAW_IMG = true;
+	private static final boolean DRAW_IMG = false;
 	
 	public static void drawImage(int size, GenLayer genlayer, String name)
 	{

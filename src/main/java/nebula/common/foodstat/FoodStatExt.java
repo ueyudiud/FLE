@@ -128,14 +128,14 @@ public class FoodStatExt extends FoodStats
 		this.prevFoodLevel = (int) this.foodLevel;
 		this.prevWaterLevel = (int) this.waterLevel;
 		updateStat(player);
-		if(this.prevDim != dim)
+		if(this.prevDim != dim || this.worldTimer < 0)
 		{
 			this.prevDim = dim;
-			time = player.world.getWorldTime() + 1L;
+			this.worldTimer = player.world.getWorldTime() + 1L;
 		}
 		else if(time >= this.worldTimer)
 		{
-			this.worldTimer += 20L;
+			this.worldTimer += 100L;
 			++this.foodTimer;
 			updateHeal(player, difficulty, flag);
 		}
@@ -181,43 +181,43 @@ public class FoodStatExt extends FoodStats
 			switch ((int) this.foodLevel)
 			{
 			case 20 :
-				if(this.foodSaturationLevel > 0.0F)
+				if (this.foodSaturationLevel > 0.0F)
 				{
 					float f = Math.min(this.foodSaturationLevel, 4.0F);
 					player.heal(f / 4.0F);
 					addExhaustion(f);
 				}
 			case 19 :
-				if(this.foodTimer >= 5)
+				if (this.foodTimer >= 5)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
 					this.foodTimer = 0;
-					break;
 				}
+				break;
 			case 18 :
 			case 17 :
 			case 16 :
-				if(this.foodTimer >= 12)
+				if (this.foodTimer >= 12)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
 					this.foodTimer = 0;
-					break;
 				}
+				break;
 			case 15 :
 			case 14 :
 			case 13 :
 			case 12 :
 			case 11 :
 			case 10 :
-				if(this.foodTimer >= 30)
+				if (this.foodTimer >= 30)
 				{
 					player.heal(1.0F);
 					addExhaustion(1.0F);
 					this.foodTimer = 0;
-					break;
 				}
+				break;
 			default : break;
 			}
 		}
