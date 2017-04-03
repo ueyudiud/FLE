@@ -142,7 +142,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public String getTranslateNameForItemStack(int metadata)
 	{
-		return getUnlocalizedName() + "@" + metadata;
+		return getUnlocalizedName() + "@" + metadata + ".name";
 	}
 	
 	@Override
@@ -401,7 +401,6 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public final void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			ItemStack stack)
 	{
-		// TODO Auto-generated method stub
 		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 	}
 	

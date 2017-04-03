@@ -4,6 +4,8 @@ import nebula.common.util.Direction;
 import nebula.common.util.Facing;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitRSLatch extends TECircuitCompacted
 {
@@ -32,7 +34,6 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	@Override
 	protected void updateCircuit()
 	{
-		super.updateCircuit();
 		int front = getRedstonePower(Facing.FRONT);
 		int back = getRedstonePower(Facing.BACK);
 		if(this.power > 7)
@@ -53,6 +54,7 @@ public class TECircuitRSLatch extends TECircuitCompacted
 		}
 		this.lastFront = front != 0;
 		this.lastBack = back != 0;
+		markForDelayUpdate(1);
 	}
 	
 	@Override
@@ -64,15 +66,15 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	@Override
 	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return side == Facing.LEFT.toDirection(this.facing) ? this.power :
-			side == Facing.RIGHT.toDirection(this.facing) ? 15 - this.power : 0;
+		return side == Facing.LEFT.toDirection(this.facing) ? this.power ^ 15 :
+			side == Facing.RIGHT.toDirection(this.facing) ? this.power : 0;
 	}
 	
 	@Override
 	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return side == Facing.LEFT.toDirection(this.facing) ? this.power :
-			side == Facing.RIGHT.toDirection(this.facing) ? 15 - this.power : 0;
+		return side == Facing.LEFT.toDirection(this.facing) ? this.power ^ 15 :
+			side == Facing.RIGHT.toDirection(this.facing) ? this.power : 0;
 	}
 	
 	@Override
@@ -85,5 +87,16 @@ public class TECircuitRSLatch extends TECircuitCompacted
 	public String getState()
 	{
 		return (is(Actived) ? "on" : "off");
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getChannelRedSignalHardness(int i)
+	{
+		return i == 0 ? getRedstonePower(Facing.BACK) :
+			i == 1 ? getRedstonePower(Facing.FRONT) :
+				i == 2 ? this.power :
+					i == 3 ? this.power ^ 15 :
+						0;
 	}
 }

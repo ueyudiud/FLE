@@ -1,6 +1,8 @@
 package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Facing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitNot extends TECircuitFrontBack
 {
@@ -19,5 +21,14 @@ public class TECircuitNot extends TECircuitFrontBack
 	public String getState()
 	{
 		return optional(Actived, "on", "off");
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getChannelRedSignalHardness(int i)
+	{
+		return i == 0 ? getRedstonePower(Facing.BACK) :
+			i == 1 ? this.power :
+				0;
 	}
 }

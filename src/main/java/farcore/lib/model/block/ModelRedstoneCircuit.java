@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -191,6 +192,10 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			String mixed = customData.get("mixed");
 			ResourceLocation location = new ResourceLocation(mixed.substring(1, mixed.length() - 1));
 			parent0 = ModelLoaderRegistry.getModelOrMissing(new ResourceLocation(location.getResourceDomain() + ":block/" + location.getResourcePath()));
+			if (parent0 == ModelLoaderRegistry.getMissingModel())
+			{
+				parent0 = ModelLoaderRegistry.getModelOrMissing(new ModelResourceLocation(location, "normal"));
+			}
 		}
 		else
 		{

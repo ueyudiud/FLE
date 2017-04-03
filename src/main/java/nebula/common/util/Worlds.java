@@ -465,6 +465,11 @@ public final class Worlds
 	
 	private static Method isChunkLoaded;
 	
+	public static boolean isRedstoneChecking()
+	{
+		return !Blocks.REDSTONE_WIRE.canProvidePower(null);
+	}
+	
 	public static boolean isChunkLoaded(World world, int x, int z, boolean allowEmpty)
 	{
 		if(isChunkLoaded == null)

@@ -16,6 +16,7 @@ import com.google.gson.JsonParseException;
 import nebula.client.model.part.INebulaModelPart;
 import nebula.client.model.part.NebulaModelPartDecoder;
 import nebula.common.util.Jsons;
+import net.minecraft.client.renderer.texture.TextureMap;
 
 /**
  * @author ueyudiud
@@ -42,7 +43,7 @@ public class FlexibleBlockModelCache
 			if (object.has("textures"))
 			{
 				Map<String, String> map = Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString);
-				cache.particleLocation = map.getOrDefault("particle", null);
+				cache.particleLocation = map.getOrDefault("particle", TextureMap.LOCATION_MISSING_TEXTURE.toString());
 				if (cache.particleLocation.charAt(0) == '#')
 				{
 					cache.particleLocation = map.getOrDefault(cache.particleLocation.substring(1), cache.particleLocation);

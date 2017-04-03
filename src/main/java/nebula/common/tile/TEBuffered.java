@@ -90,10 +90,10 @@ public class TEBuffered extends TEUpdatable implements IUpdatableTile
 	{
 		if(this.timer == Long.MIN_VALUE)
 		{
-			this.timer = this.world.getTotalWorldTime();
+			this.timer = this.world.getWorldTime();
 		}
 		updateEntity2();
-		this.lastActived = this.world.getTotalWorldTime();
+		this.lastActived = this.world.getWorldTime();
 	}
 	
 	protected void updateEntity2()

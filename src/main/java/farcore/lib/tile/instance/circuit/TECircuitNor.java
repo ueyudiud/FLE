@@ -1,6 +1,8 @@
 package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Facing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitNor extends TECircuitTripleInput
 {
@@ -21,5 +23,16 @@ public class TECircuitNor extends TECircuitTripleInput
 	public String getState()
 	{
 		return optional(Left, "e", "d") + optional(Back, "e", "d") + optional(Right, "e", "d");
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getChannelRedSignalHardness(int i)
+	{
+		return i == 0 ? getRedstonePower(Facing.BACK) :
+			i == 1 ? getRedstonePower(Facing.LEFT) :
+				i == 2 ? getRedstonePower(Facing.RIGHT) :
+					i == 3 ? this.power :
+						0;
 	}
 }

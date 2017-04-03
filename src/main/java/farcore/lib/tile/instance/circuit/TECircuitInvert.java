@@ -1,23 +1,20 @@
 package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Facing;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 
 public class TECircuitInvert extends TECircuitSpatial
 {
 	@Override
-	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
+	protected void updateCircuit()
 	{
 		byte power = 0;
-		power = getPowerHigherThan(powerFB, power, Facing.FRONT);
-		power = getPowerHigherThan(powerFB, power, Facing.BACK);
-		powerFB = power;
+		power = getPowerHigherThan(this.powerFB, power, Facing.FRONT);
+		power = getPowerHigherThan(this.powerFB, power, Facing.BACK);
+		this.powerFB = power;
 		boolean flag = power > 0;
 		power = 0;
-		power = getPowerHigherThan(powerLR, power, Facing.LEFT);
-		power = getPowerHigherThan(powerLR, power, Facing.RIGHT);
-		powerLR = !flag ? 15 : power;
-		notifyNeighbors();
+		power = getPowerHigherThan(this.powerLR, power, Facing.LEFT);
+		power = getPowerHigherThan(this.powerLR, power, Facing.RIGHT);
+		this.powerLR = !flag ? 15 : power;
 	}
 }

@@ -101,7 +101,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	{
 		super.readFromDescription1(nbt);
 		this.material = NBTs.getValueByIDOrDefault(nbt, "m", Mat.materials(), this.material);
-		this.facing = NBTs.getValueByByteOrDefault(nbt, "f", Direction.DIRECTIONS_2D, this.facing);
+		this.facing = NBTs.getEnumOrDefault(nbt, "f", this.facing);
 	}
 	
 	@Override
@@ -109,7 +109,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	{
 		super.writeToDescription(nbt);
 		nbt.setString("m", this.material.name);
-		this.facing.writeToNBT(nbt, "f", Direction.T_2D_NONNULL);
+		NBTs.setEnum(nbt, "f", this.facing);
 	}
 	
 	@Override
@@ -290,6 +290,12 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 	public String getState()
 	{
 		return "_";
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public int getChannelRedSignalHardness(int i)
+	{
+		return 0;
 	}
 	
 	@Override

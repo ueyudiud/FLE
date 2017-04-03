@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -87,6 +88,10 @@ public class NebulaModelPartDecoder implements JsonDeserializer<INebulaModelPart
 				{
 					Map<String, String> map = Jsons.getAsMap(json1.getAsJsonObject(), JsonElement::getAsString);
 					part = ((INebulaRetexturableModelPart) part).retexture(map);
+				}
+				else if (json1.isJsonPrimitive())//"all" texture key if only a primitive.
+				{
+					part = ((INebulaRetexturableModelPart) part).retexture(ImmutableMap.of("all", json1.getAsString()));
 				}
 				else throw new JsonParseException("Unknown retexture collction.");
 			}

@@ -59,6 +59,14 @@ public class PackedVerticalCube implements INebulaRetexturableModelPart
 		{
 			result.setUVLock(parent.uvLock);
 		}
+		if (object.has("tint"))
+		{
+			result.setTint(object.get("tint").getAsInt());
+		}
+		else
+		{
+			result.setTint(parent.tint);
+		}
 		boolean flag = object.has("face");
 		if (object.has("pos"))
 		{
@@ -220,6 +228,8 @@ public class PackedVerticalCube implements INebulaRetexturableModelPart
 	//	boolean renderTwoFace;
 	boolean uvLock;
 	
+	int tint = -1;
+	
 	int rotateX = 0;
 	int rotateY = 0;
 	
@@ -301,6 +311,11 @@ public class PackedVerticalCube implements INebulaRetexturableModelPart
 	public void setUVLock(boolean uvLock)
 	{
 		this.uvLock = uvLock;
+	}
+	
+	public void setTint(int tint)
+	{
+		this.tint = tint;
 	}
 	
 	//	public void setRenderTwoFace(boolean renderTwoFace)
@@ -444,6 +459,7 @@ public class PackedVerticalCube implements INebulaRetexturableModelPart
 	{
 		Matrix4f matrix = rotation.getMatrix();
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
+		builder.setQuadTint(this.tint);
 		for(float[] coord : coords)
 		{
 			Point3f point = new Point3f(coord);

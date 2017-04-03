@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
+import farcore.FarCoreRegistry;
 import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.lib.material.Mat;
@@ -33,6 +34,7 @@ import farcore.lib.tile.instance.circuit.TECircuitXor;
 import farcore.lib.tile.instance.circuit.TESensorLight;
 import nebula.Nebula;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.model.NebulaBlockModelLoader;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.base.IRegister;
@@ -43,6 +45,7 @@ import nebula.common.data.Misc;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import nebula.common.util.Direction;
 import nebula.common.util.ItemStacks;
+import nebula.common.util.Maths;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -56,6 +59,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -87,7 +91,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		builder1.put("imples", Arrays.asList("ldd", "lde", "led", "lee", "rdd", "rde", "red", "ree"));
 		builder1.put("integration", Arrays.asList("_"));
 		builder1.put("cross", Arrays.asList("_"));
-		builder1.put("invert", Arrays.asList("_"));
+		builder1.put("invert", Arrays.asList("de", "ed", "ee"));
 		builder1.put("sensor_light", Arrays.asList("_"));
 		ALLOWED_STATES = builder1.build();
 		HashSet<String> set = new HashSet();
@@ -135,6 +139,17 @@ public class BlockRedstoneCircuit extends BlockTE
 		{
 			ModelLoader.setCustomModelResourceLocation(this.item, tag.id(), new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), "inventory"));
 		}
+		FarCoreRegistry.registerColorMultiplier(this, (state, worldIn, pos, tintIndex)-> {
+			if (tintIndex < 0) return -1;
+			if (worldIn != null && pos != null)
+			{
+				int hardness = (int) Maths.lerp(0x40, 0xFF, ((TECircuitBase) worldIn.getTileEntity(pos)).getChannelRedSignalHardness(tintIndex) / 15.0F);
+				return hardness << 16;
+			}
+			return 0xFF0000;
+		});
+		FarCoreRegistry.registerColorMultiplier(this.item, (stack, tintIndex)-> tintIndex < 0 ? -1 : 0x400000);
+		NebulaBlockModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/cross_base"));
 	}
 	
 	public static ItemStack createItemStack(int meta, Mat material)

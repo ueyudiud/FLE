@@ -1,22 +1,34 @@
 package farcore.lib.tile.instance.circuit;
 
+import nebula.common.util.Direction;
 import nebula.common.util.Facing;
+import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 
 public class TECircuitCross extends TECircuitSpatial
 {
 	@Override
-	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
+	protected void updateCircuit()
 	{
 		byte power = 0;
-		power = getPowerHigherThan(powerFB, power, Facing.FRONT);
-		power = getPowerHigherThan(powerFB, power, Facing.BACK);
-		powerFB = power;
+		power = getPowerHigherThan(this.powerFB, power, Facing.FRONT);
+		power = getPowerHigherThan(this.powerFB, power, Facing.BACK);
+		this.powerFB = power;
 		power = 0;
-		power = getPowerHigherThan(powerLR, power, Facing.LEFT);
-		power = getPowerHigherThan(powerLR, power, Facing.RIGHT);
-		powerLR = power;
-		notifyNeighbors();
+		power = getPowerHigherThan(this.powerLR, power, Facing.LEFT);
+		power = getPowerHigherThan(this.powerLR, power, Facing.RIGHT);
+		this.powerLR = power;
+	}
+	
+	@Override
+	public int getWeakPower(IBlockState state, Direction side)
+	{
+		return Worlds.isRedstoneChecking() ? 0 : super.getWeakPower(state, side);
+	}
+	
+	@Override
+	public int getStrongPower(IBlockState state, Direction side)
+	{
+		return Worlds.isRedstoneChecking() ? 0 : super.getStrongPower(state, side);
 	}
 }

@@ -32,13 +32,13 @@ public class TECircuitIntegration extends TECircuitFrontBack
 	protected void updateServer()
 	{
 		super.updateServer();
-		if((this.timer & 0x1) == 0)
+		if((this.world.getWorldTime() & 0x1) == 0)
 		{
 			int power = getRedstonePower(Facing.BACK);
 			int last = this.power;
-			this.integration += power;
-			this.integration *= 16;
-			this.integration /= 17;
+			int i = this.integration + power;
+			i = i * 16 / 17;
+			this.integration = (short) i;
 			if(last != this.integration / 16)
 			{
 				setRedstonePower(this.integration / 16);

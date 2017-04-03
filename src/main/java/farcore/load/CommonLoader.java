@@ -36,7 +36,6 @@ import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreCapabilitiesHandler;
 import farcore.handler.FarCoreEnergyHandler;
-import farcore.handler.FarCoreSynchronizationHandler;
 import farcore.instances.TemperatureHandler;
 import farcore.lib.block.instance.BlockCarvedRock;
 import farcore.lib.block.instance.BlockCrop;
@@ -103,7 +102,6 @@ public class CommonLoader
 				() -> Config.createRock ? BlockRedstoneCircuit.createItemStack(1, M.stone) : new ItemStack(Items.COMPARATOR));
 		//Register common handler.
 		bar.step("Register Game Handlers");
-		registerForgeEventListener(new FarCoreSynchronizationHandler());
 		registerForgeEventListener(FarCoreEnergyHandler.getHandler());
 		registerForgeEventListener(new FarCoreCapabilitiesHandler());
 		//Register energy nets.

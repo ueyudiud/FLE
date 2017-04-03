@@ -30,9 +30,9 @@ public class Properties
 	 */
 	public static <E extends Enum<E> & IStringSerializable> PropertyEnum<E> get(Class<E> enumClass)
 	{
-		if(PROPERTIES.containsKey(enumClass)) return (PropertyEnum<E>) PROPERTIES.get(enumClass);
+		if (PROPERTIES.containsKey(enumClass)) return (PropertyEnum<E>) PROPERTIES.get(enumClass);
 		EnumStateName name = enumClass.getAnnotation(EnumStateName.class);
-		if(name == null) throw new IllegalArgumentException("The enum class does not contain a state name, check if a EnumStateName annotation is presented!");
+		if (name == null) throw new IllegalArgumentException("The enum class does not contain a state name, check if a EnumStateName annotation is presented!");
 		PropertyEnum<E> property = PropertyEnum.create(name.value(), enumClass);
 		PROPERTIES.put(enumClass, property);
 		return property;

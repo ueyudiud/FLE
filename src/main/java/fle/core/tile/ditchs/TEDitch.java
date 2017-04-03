@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import farcore.handler.FarCoreSynchronizationHandler;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.IDebugableTile;
 import fle.api.ditch.DitchBlockHandler;
 import fle.api.ditch.DitchFactory;
 import fle.api.tile.IDitchTile;
 import nebula.client.util.Client;
+import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
@@ -223,7 +223,7 @@ IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects
 		Arrays.fill(this.flowAmount, 0);
 		if(!FluidStacks.areFluidStacksEqual(stack, this.tank.getFluid()))
 		{
-			FarCoreSynchronizationHandler.markTileEntityForUpdate(this, 0);
+			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
 		}
 	}
 	

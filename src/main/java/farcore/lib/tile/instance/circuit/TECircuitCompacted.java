@@ -1,5 +1,10 @@
 package farcore.lib.tile.instance.circuit;
 
+import java.io.IOException;
+
+import nebula.common.NebulaSynchronizationHandler;
+import nebula.common.network.PacketBufferExt;
+import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -7,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class TECircuitCompacted extends TECircuitBase
+public abstract class TECircuitCompacted extends TECircuitBase implements INetworkedSyncTile
 {
 	protected static final int notifyNeighbour = 0x1000;
 	
@@ -17,6 +22,32 @@ public abstract class TECircuitCompacted extends TECircuitBase
 	protected int updateDelay;
 	
 	protected byte mode = 0x0;
+	
+	@Override
+	public void writeNetworkData(int type, PacketBufferExt buf) throws IOException
+	{
+		switch (type)
+		{
+		case 0 :
+			buf.writeByte(this.power);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	public void readNetworkData(int type, PacketBufferExt buf) throws IOException
+	{
+		switch (0)
+		{
+		case 0 :
+			this.power = buf.readByte();
+			break;
+		default:
+			break;
+		}
+	}
 	
 	@Override
 	public void writeToDescription(NBTTagCompound nbt)
@@ -29,7 +60,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 	public void readFromDescription1(NBTTagCompound nbt)
 	{
 		super.readFromDescription1(nbt);
-		if(nbt.hasKey("mo"))
+		if (nbt.hasKey("mo"))
 		{
 			this.mode = nbt.getByte("mo");
 			markBlockRenderUpdate();
@@ -121,6 +152,7 @@ public abstract class TECircuitCompacted extends TECircuitBase
 	public void causeUpdate(BlockPos pos, IBlockState state, boolean tileUpdate)
 	{
 		updateCircuit();
+		NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
 		if(this.updateDelay == 0 && (this.power != this.lastPower))
 		{
 			super.notifyNeighbors();

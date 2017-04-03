@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package farcore.handler;
+package nebula.common;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 /**
  * @author ueyudiud
  */
-public class FarCoreSynchronizationHandler
+public class NebulaSynchronizationHandler
 {
 	private static final Map<Integer, Map<Integer, Map<ChunkPos, List<BlockPos>>>> SYNC_NETWORK_MAP = new HashMap();
 	

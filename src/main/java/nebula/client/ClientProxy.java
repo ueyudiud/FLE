@@ -134,8 +134,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	@Override
 	public String getLocale()
 	{
-		return Minecraft.getMinecraft().getLanguageManager()
-				.getCurrentLanguage().getLanguageCode();
+		return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
 	}
 	
 	@Override

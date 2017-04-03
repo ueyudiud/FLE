@@ -51,7 +51,7 @@ public class ColorMultiplier
 	{
 		if(tintIndex != 0) return 0xFFFFFFFF;
 		BlockSoil.EnumCoverType type = state.getValue(BlockSoil.COVER_TYPE);
-		switch (type)
+		switch (type.getNoCover())
 		{
 		case GRASS : return worldIn == null || pos == null ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : worldIn.getBiome(pos).getGrassColorAtPos(pos);
 		default : return 0xFFFFFFFF;
@@ -62,7 +62,7 @@ public class ColorMultiplier
 	{
 		if(tintIndex != 0) return 0xFFFFFFFF;
 		BlockSoil.EnumCoverType type = BlockSoil.EnumCoverType.VALUES[stack.getItemDamage()];
-		switch (type)
+		switch (type.getNoCover())
 		{
 		case GRASS : return ColorizerGrass.getGrassColor(0.7F, 0.7F);
 		default : return 0xFFFFFFFF;

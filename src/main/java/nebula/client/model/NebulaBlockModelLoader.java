@@ -19,6 +19,7 @@ import nebula.Log;
 import nebula.client.model.part.INebulaModelPart;
 import nebula.client.model.part.NebulaModelPartDecoder;
 import nebula.common.util.IO;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -54,6 +55,10 @@ public enum NebulaBlockModelLoader implements ICustomModelLoader
 			.registerTypeAdapter(FlexibleBlockModelCache.class, FlexibleBlockModelCache.DESERIALIZER)
 			.create();
 	
+	public static void registerModel(ResourceLocation location)
+	{
+		registerModel(location, location);
+	}
 	public static void registerModel(ResourceLocation location, ResourceLocation location1)
 	{
 		ACCEPT_LOCATION.put(location, new ResourceLocation(location1.getResourceDomain(), "models/block1/" + location1.getResourcePath() + ".json"));
@@ -99,12 +104,20 @@ public enum NebulaBlockModelLoader implements ICustomModelLoader
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
+		if (modelLocation instanceof ModelResourceLocation)
+		{
+			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
+		}
 		return this.map.containsKey(modelLocation);
 	}
 	
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
+		if (modelLocation instanceof ModelResourceLocation)
+		{
+			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
+		}
 		return new FlexibleBlockModelUnbaked(this.map.get(modelLocation));
 	}
 }

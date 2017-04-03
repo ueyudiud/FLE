@@ -34,6 +34,8 @@ import nebula.common.block.ISmartFallableBlock;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.util.L;
 import nebula.common.util.Players;
+import nebula.common.util.Properties;
+import nebula.common.util.Properties.EnumStateName;
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -110,6 +112,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		return result;
 	}
 	
+	@EnumStateName("cover")
 	public static enum EnumCoverType implements IStringSerializable
 	{
 		NONE("none"),
@@ -190,7 +193,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 	}
 	
-	public static final PropertyEnum<EnumCoverType> COVER_TYPE = PropertyEnum.create("cover", EnumCoverType.class);
+	public static final PropertyEnum<EnumCoverType> COVER_TYPE = Properties.get(EnumCoverType.class);
 	
 	public BlockSoil(String modid, String name, Material materialIn, Mat mat, PropertyBlockable soil)
 	{

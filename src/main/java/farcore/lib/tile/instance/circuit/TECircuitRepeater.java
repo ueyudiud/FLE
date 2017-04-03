@@ -3,6 +3,8 @@ package farcore.lib.tile.instance.circuit;
 import nebula.common.util.Direction;
 import nebula.common.util.Facing;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitRepeater extends TECircuitFrontBack
 {
@@ -55,5 +57,12 @@ public class TECircuitRepeater extends TECircuitFrontBack
 	public String getState()
 	{
 		return "t" + this.mode + "_" + (is(Actived) ? "on" : "off");
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getChannelRedSignalHardness(int i)
+	{
+		return this.power;
 	}
 }

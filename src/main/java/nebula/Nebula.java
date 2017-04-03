@@ -27,6 +27,7 @@ import nebula.common.NebulaConfig;
 import nebula.common.NebulaItemHandler;
 import nebula.common.NebulaKeyHandler;
 import nebula.common.NebulaPlayerHandler;
+import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.block.BlockBase;
 import nebula.common.config.NebulaConfiguration;
@@ -101,7 +102,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String MODID = "nebula";
 	public static final String NAME = "Nebula";
-	public static final String VERSION = "0.8";
+	public static final String VERSION = "0.9";
 	
 	public static final String INNER_RENDER = "nebula_inner";
 	
@@ -208,6 +209,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		MinecraftForge.EVENT_BUS.register(new NebulaPlayerHandler());
 		MinecraftForge.EVENT_BUS.register(new NebulaWorldHandler());
 		MinecraftForge.EVENT_BUS.register(new NebulaItemHandler());
+		MinecraftForge.EVENT_BUS.register(new NebulaSynchronizationHandler());
 		
 		if(NebulaConfig.displayFluidInTab)
 		{
