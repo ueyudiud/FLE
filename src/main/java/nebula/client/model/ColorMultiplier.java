@@ -30,9 +30,9 @@ public class ColorMultiplier
 	 */
 	public static final ToIntFunction<ItemStack> NORMAL_MULTIPLIER = stack->NORMAL_COLOR;
 	
-	private static final Map<ResourceLocation, ToIntFunction<ItemStack>> BUILTIN_COLOR_MULTIPLIERS = new HashMap();
+	private static final Map<ResourceLocation, ToIntFunction<ItemStack>> BUILTIN_COLOR_MULTIPLIERS = new HashMap<>();
 	
-	public static final Map<ResourceLocation, ToIntFunction<ItemStack>> STORED_FUNCTION = new HashMap();
+	public static final Map<ResourceLocation, ToIntFunction<ItemStack>> STORED_FUNCTION = new HashMap<>();
 	
 	static void cleanCache()
 	{

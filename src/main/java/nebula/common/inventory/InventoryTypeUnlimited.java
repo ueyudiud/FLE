@@ -87,7 +87,7 @@ public class InventoryTypeUnlimited implements IBasicInventory
 	}
 	
 	@Override
-	public ItemStack getStackInSlot(int index)
+	public ItemStack getStack(int index)
 	{
 		return this.stacks == null || index >= this.slots ? null : Iterators.get(this.stacks.iterator(), index);
 	}

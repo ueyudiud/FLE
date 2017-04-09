@@ -49,7 +49,7 @@ public class FlexibleItemModel implements IPerspectiveAwareModel, ICustomItemRen
 	public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 	{
 		if(facing != null) return ImmutableList.of();
-		List<BakedQuad> list = new ArrayList();
+		List<BakedQuad> list = new ArrayList<>();
 		try
 		{
 			for(Function<ItemStack, List<BakedQuad>> layer : this.layers)

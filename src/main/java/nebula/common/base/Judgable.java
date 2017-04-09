@@ -2,6 +2,7 @@ package nebula.common.base;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -12,8 +13,8 @@ public interface Judgable<T> extends Predicate<T>
 {
 	Judgable TRUE     = arg -> true;
 	Judgable FALSE    = arg -> false;
-	Judgable NOT_NULL = arg -> arg != null;
-	Judgable NULL     = arg -> arg == null;
+	Judgable NOT_NULL = Objects::nonNull;
+	Judgable NULL     = Objects::isNull;
 	
 	static <T> Judgable<T> fromPredicate(Predicate<T> predicate) { return predicate::test; }
 	

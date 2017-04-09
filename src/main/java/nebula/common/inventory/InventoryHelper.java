@@ -53,7 +53,7 @@ public class InventoryHelper
 			return type != MATCH_STACK_CONTAIN && type != MATCH_STACK_CONTAIN_WITHOUTNBT;
 		int max, size;
 		int limit = inventory.getInventoryStackLimit();
-		ItemStack stack = inventory.getStackInSlot(index);
+		ItemStack stack = inventory.getStack(index);
 		switch (type)
 		{
 		case MATCH_STACK_SAME :
@@ -100,9 +100,9 @@ public class InventoryHelper
 			}
 			else
 			{
-				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)));
+				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
 				stack.stackSize -= result;
-				inventory.getStackInSlot(index).stackSize += result;
+				inventory.getStack(index).stackSize += result;
 				return stack.stackSize <= 0 ? null : stack;
 			}
 		}
@@ -112,7 +112,7 @@ public class InventoryHelper
 	public static ItemStack decrStack(IBasicInventory inventory, int index, boolean onlyFullyExtract, int maxCount, boolean process)
 	{
 		if (maxCount == 0) return null;
-		ItemStack stack = inventory.getStackInSlot(index);
+		ItemStack stack = inventory.getStack(index);
 		if (stack != null)
 		{
 			if (!process)
@@ -151,7 +151,7 @@ public class InventoryHelper
 				return matchStack(MATCH_STACK_FULLY_INSERT, inventory, index, stack) ? stack.stackSize : 0;
 			else
 				return !inventory.hasStackInSlot(index) ? Math.min(stack.stackSize, inventory.getInventoryStackLimit()) :
-					ItemStacks.isItemAndTagEqual(inventory.getStackInSlot(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)))) : 0;
+					ItemStacks.isItemAndTagEqual(inventory.getStack(index), stack) ? Math.min(stack.stackSize, Math.min(inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStack(index)))) : 0;
 		}
 		else
 		{
@@ -171,14 +171,14 @@ public class InventoryHelper
 				}
 				return result;
 			}
-			else if(ItemStacks.isItemAndTagEqual(inventory.getStackInSlot(index), stack))
+			else if(ItemStacks.isItemAndTagEqual(inventory.getStack(index), stack))
 			{
-				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStackInSlot(index)));
+				result = L.min(stack.stackSize, inventory.getInventoryStackLimit(), getAllowedInsertSize(inventory.getStack(index)));
 				if(affectOnSourceStack)
 				{
 					stack.stackSize -= result;
 				}
-				inventory.getStackInSlot(index).stackSize += result;
+				inventory.getStack(index).stackSize += result;
 				return result;
 			}
 			else return 0;
@@ -189,7 +189,7 @@ public class InventoryHelper
 	{
 		if (inventory.hasStackInSlot(in))
 		{
-			ItemStack stack = inventory.getStackInSlot(in);
+			ItemStack stack = inventory.getStack(in);
 			IntegerEntry<ItemStack> entry;
 			if (in == out)
 			{
@@ -236,7 +236,7 @@ public class InventoryHelper
 	{
 		if (inventory.hasStackInSlot(in))
 		{
-			ItemStack stack = inventory.getStackInSlot(in);
+			ItemStack stack = inventory.getStack(in);
 			Entry<ItemStack, FluidStack> entry;
 			if (in == out)
 			{

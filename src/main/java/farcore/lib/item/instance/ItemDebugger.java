@@ -83,7 +83,7 @@ public class ItemDebugger extends ItemBase
 				{
 					((IToolableTile) tile).onToolClick(player, EnumToolTypes.SCREW_DRIVER, stack, Direction.of(side), hitX, hitY, hitZ);
 				}
-				List<String> list = new ArrayList();
+				List<String> list = new ArrayList<>();
 				//This information is added in F3 information, so should I remove these information display?
 				list.add("================World Info==================");
 				list.add("Block Type : " + block.getClass().getSimpleName());

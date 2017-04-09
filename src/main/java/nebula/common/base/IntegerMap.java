@@ -55,7 +55,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 				}
 			}
 		}
-		return putUnchecked(new IntegerEntry(target, value));
+		return putUnchecked(new IntegerEntry<>(target, value));
 	}
 	
 	private Integer putUnchecked(IntegerEntry<T> entry)

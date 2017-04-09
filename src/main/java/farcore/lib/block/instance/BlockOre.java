@@ -68,7 +68,7 @@ public class BlockOre extends BlockSingleTE
 		}
 	}
 	
-	public static final ThreadLocal<Object[]> ORE_ELEMENT_THREAD = new ThreadLocal();
+	public static final ThreadLocal<Object[]> ORE_ELEMENT_THREAD = new ThreadLocal<>();
 	
 	public BlockOre()
 	{
@@ -166,7 +166,7 @@ public class BlockOre extends BlockSingleTE
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		//		for(EnumOreAmount amount : EnumOreAmount.values())
 		{
@@ -175,7 +175,7 @@ public class BlockOre extends BlockSingleTE
 			{
 				//				for(Mat rock : Mat.filt(SubTag.ROCK))
 				{
-					list.add(((ItemOre) itemIn).createItemStack(1, ore, amount, M.stone, EnumRockType.resource));
+					list.add(((ItemOre) item).createItemStack(1, ore, amount, M.stone, EnumRockType.resource));
 				}
 			}
 		}

@@ -27,7 +27,7 @@ public interface INode<T> extends Iterable<T>
 	 */
 	static <T> INode<T> telomereNode(INode<T> node)
 	{
-		return new TelomereNode(node);
+		return new TelomereNode<>(node);
 	}
 	
 	/**

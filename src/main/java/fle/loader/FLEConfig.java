@@ -89,7 +89,7 @@ public class FLEConfig
 	@EntityAttributeTag.Attribute(health = 200.0F, followRange = 40.0F, speed = 0.24F, attack = 4.0F, armor = 5.0F)
 	public static EntityAttributeTag zombie;
 	@EntityAttributeTag.Attribute(health = 200.0F, followRange = 20.0F, speed = 0.25F, attack = 4.0F, armor = 5.0F)
-	public static EntityAttributeTag seleton;
+	public static EntityAttributeTag skeleton;
 	@EntityAttributeTag.Attribute(health = 160.0F, followRange = 20.0F, speed = 0.3F, attack = 3.0F, armor = 0.0F)
 	public static EntityAttributeTag spider;
 	@EntityAttributeTag.Attribute(health = 200.0F, followRange = 20.0F, speed = 0.25F, attack = 3.0F, armor = 0.0F)

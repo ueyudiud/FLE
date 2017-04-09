@@ -48,7 +48,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockBase extends Block implements IRegisteredNameable, IRenderRegister
 {
-	private static List<BlockBase> list = new ArrayList();
+	private static List<BlockBase> list = new ArrayList<>();
 	
 	/**
 	 * Called when all others object(fluids, blocks, configurations, materials, etc)
@@ -64,7 +64,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		list = null;
 	}
 	
-	private final ThreadLocal<TileEntity> thread1 = new ThreadLocal();
+	private final ThreadLocal<TileEntity> thread1 = new ThreadLocal<>();
 	
 	public final String blockName;
 	protected final Item item;
@@ -168,6 +168,27 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState();
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public final void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	{
+		List<ItemStack> list1 = ArrayListAddWithCheck.requireNonnull();
+		addSubBlocks(itemIn, tab, list1);
+		for (ItemStack stack : list1)
+		{
+			if (stack.getItem() == null)
+			{
+				throw new RuntimeException();
+			}
+		}
+		list.addAll(list1);
+	}
+	
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
+	{
+		
 	}
 	
 	@Override
@@ -393,7 +414,9 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public IBlockState getBlockPlaceState(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
-		return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, this.item.getMetadata(stackIn), placer);
+		@SuppressWarnings("deprecation")
+		IBlockState state = super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, this.item.getMetadata(stackIn), placer);
+		return state;
 	}
 	
 	@Override

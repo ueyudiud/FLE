@@ -49,12 +49,12 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	<T extends Block> T getBlock(BlockType type);
 	
-	default IProperty[] getLogProp(boolean isArt)
+	default IProperty<?>[] getLogProp(boolean isArt)
 	{
 		return new IProperty[0];
 	}
 	
-	default IProperty[] getLeavesProp()
+	default IProperty<?>[] getLeavesProp()
 	{
 		return new IProperty[]{net.minecraft.block.BlockLeaves.CHECK_DECAY};
 	}
@@ -120,10 +120,10 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ);
 	
-	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList list);
+	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList<ItemStack> list);
 	
 	ArrayList<ItemStack> getLeavesDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune,
-			boolean silkTouching, ArrayList list);
+			boolean silkTouching, ArrayList<ItemStack> list);
 	
 	int onSaplingUpdate(ISaplingAccess access);
 	

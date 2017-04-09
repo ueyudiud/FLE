@@ -23,7 +23,7 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	{
 		if (inventory.hasStackInSlot(2))
 		{
-			ItemStack stack = inventory.getStackInSlot(2);
+			ItemStack stack = inventory.getStack(2);
 			if(stack.getItem() instanceof ItemTreeLog)
 			{
 				int length = ItemTreeLog.getLogSize(stack);
@@ -32,7 +32,7 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 				if (inventory.hasStackInSlot(1)) return false;
 				if (inventory.hasStackInSlot(0))
 				{
-					stack = inventory.getStackInSlot(0);
+					stack = inventory.getStack(0);
 					if (EnumToolTypes.AXE.match(stack) || EnumToolTypes.BOW_SAW.match(stack) || EnumToolTypes.ADZ.match(stack))
 					{
 						return true;
@@ -46,14 +46,14 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	@Override
 	public int[] getIntScaleRange(IBasicInventory inventory)
 	{
-		int length = ItemTreeLog.getLogSize(inventory.getStackInSlot(2));
+		int length = ItemTreeLog.getLogSize(inventory.getStack(2));
 		return new int[] {1, length / 2};
 	}
 	
 	@Override
 	public ItemStack[] getOutputs(IBasicInventory inventory, int value)
 	{
-		ItemStack stack = inventory.getStackInSlot(2);
+		ItemStack stack = inventory.getStack(2);
 		ItemStack[] result = new ItemStack[2];
 		PropertyTree tree = ItemTreeLog.getMaterial(stack).getProperty(MP.property_tree);
 		int length = ItemTreeLog.getLogSize(stack);
@@ -81,8 +81,8 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	@Override
 	public void onOutput(IBasicInventory inventory, int value)
 	{
-		ItemStacks.damageTool(inventory.getStackInSlot(0), 1.0F, null, null);
-		if (inventory.getStackInSlot(0).stackSize <= 0)
+		ItemStacks.damageTool(inventory.getStack(0), 1.0F, null, null);
+		if (inventory.getStack(0).stackSize <= 0)
 		{
 			inventory.removeStackFromSlot(0);
 		}
@@ -92,7 +92,7 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	@Override
 	public int[] getDisplayNumbers(IBasicInventory inventory, int value)
 	{
-		int length = ItemTreeLog.getLogSize(inventory.getStackInSlot(2));
+		int length = ItemTreeLog.getLogSize(inventory.getStack(2));
 		return new int[]{value, length - value};
 	}
 }

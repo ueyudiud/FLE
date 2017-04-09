@@ -5,7 +5,6 @@ import java.util.Random;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
-import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -69,7 +68,6 @@ public class TreeGenJungle extends TreeGenHuge
 				//                            this.setBlockAndNotifyAdequately(world, x, y + l2, z - 1, Blocks.vine, 1);
 				//                        }
 				//                    }
-				Block block;
 				
 				if (l2 < l - 1)
 				{

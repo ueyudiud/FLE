@@ -23,7 +23,7 @@ public class EnergyHandler
 		DOUBLE;
 	}
 	
-	private static final Register<Energy> REGISTER = new Register();
+	private static final Register<Energy> REGISTER = new Register<>();
 	
 	public static final Energy STANDARD_DOUBLE;
 	public static final Energy STANDARD_LONG;

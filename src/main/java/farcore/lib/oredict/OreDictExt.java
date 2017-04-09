@@ -23,7 +23,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class OreDictExt
@@ -32,11 +31,11 @@ public class OreDictExt
 	private static final List<String>									ID_TO_NAME = new ArrayList<>();
 	private static final Map<String, Integer>							NAME_TO_ID = new HashMap<>(128);
 	private static final List<
-	Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>>>FUNCTION_MAP = new ArrayList();
+	Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>>>FUNCTION_MAP = new ArrayList<>();
 	private static final Map<Long, List<Integer>>						STACK_TO_IDS = new HashMap<>();
-	private static final List<Entry<List<ItemStack>, List<ItemStack>>>	ID_TO_STACK = new ArrayList();
+	private static final List<Entry<List<ItemStack>, List<ItemStack>>>	ID_TO_STACK = new ArrayList<>();
 	private static final Function<ItemStack, Long>						STACK_SERIALIZER = stack ->
-	stack == null ? INVALID_STACK_ID : (long) GameData.getItemRegistry().getId(stack.getItem().getRegistryName()) << 32 | stack.getItemDamage();
+	stack == null ? INVALID_STACK_ID : (long) Item.REGISTRY.getIDForObject(stack.getItem()) << 32 | stack.getItemDamage();
 	
 	private static final OreDictExt INSTANCE = new OreDictExt();
 	
@@ -240,9 +239,9 @@ public class OreDictExt
 			id = ID_TO_NAME.size();
 			ID_TO_NAME.add(name);
 			NAME_TO_ID.put(name, id);
-			List<ItemStack> stacks = new ArrayList();
-			ID_TO_STACK.add(new Ety(stacks, Collections.unmodifiableList(stacks)));
-			FUNCTION_MAP.add(new HashMap());
+			List<ItemStack> stacks = new ArrayList<>();
+			ID_TO_STACK.add(new Ety<>(stacks, Collections.unmodifiableList(stacks)));
+			FUNCTION_MAP.add(new HashMap<>());
 		}
 		return id.intValue();
 	}
@@ -256,7 +255,7 @@ public class OreDictExt
 			id = ID_TO_NAME.size();
 			ID_TO_NAME.add(name);
 			NAME_TO_ID.put(name, id);
-			ID_TO_STACK.add(new Ety(stacks, Collections.unmodifiableList(stacks)));
+			ID_TO_STACK.add(new Ety<>(stacks, Collections.unmodifiableList(stacks)));
 		}
 		return id.intValue();
 	}
@@ -272,7 +271,7 @@ public class OreDictExt
 	{
 		if(name == null || item == null) return;
 		int oreID = getOreID(name);
-		int itemID = GameData.getItemRegistry().getId(item.getRegistryName());
+		int itemID = Item.REGISTRY.getIDForObject(item);
 		if(itemID == -1) throw new RuntimeException("An invalid registeration has a raw item id!");
 		long stackID = (long) itemID << 32 | WILDCARD_VALUE_LONG;
 		registerOreFunction(name, item, Judgable.TRUE);
@@ -297,7 +296,7 @@ public class OreDictExt
 		List<Integer> list = STACK_TO_IDS.get(stackID);
 		if(list == null)
 		{
-			STACK_TO_IDS.put(stackID, list = new ArrayList());
+			STACK_TO_IDS.put(stackID, list = new ArrayList<>());
 		}
 		list.add(oreID);
 	}
@@ -321,8 +320,8 @@ public class OreDictExt
 		List<Judgable<ItemStack>> list;
 		if(!map.containsKey(item))
 		{
-			list = new ArrayList();
-			map.put(item, new Ety(Judgable.or(list), list));
+			list = new ArrayList<>();
+			map.put(item, new Ety<>(Judgable.or(list), list));
 		}
 		else list = map.get(item).getValue();
 		list.add(function);
@@ -370,7 +369,7 @@ public class OreDictExt
 	public static List<String> getOreNames(ItemStack stack, boolean useCache)
 	{
 		if(stack == null) throw new IllegalArgumentException("The stack can not be null!");
-		List<String> list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		if(useCache)
 		{
 			long stackID = STACK_SERIALIZER.apply(stack);

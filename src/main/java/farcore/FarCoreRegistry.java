@@ -52,11 +52,11 @@ public class FarCoreRegistry
 	/**
 	 * The material registers.
 	 */
-	public static final List<IMaterialRegister> MATERIAL_REGISTERS = new ArrayList();
+	public static final List<IMaterialRegister> MATERIAL_REGISTERS = new ArrayList<>();
 	/**
 	 * The world generate replacer during world generating.
 	 */
-	public static final List<IWorldGenerateReplacer> WORLD_GENERATE_REPLACERS = new ArrayList();
+	public static final List<IWorldGenerateReplacer> WORLD_GENERATE_REPLACERS = new ArrayList<>();
 	
 	public static void addMaterialRegister(IMaterialRegister register)
 	{
@@ -92,7 +92,9 @@ public class FarCoreRegistry
 		try
 		{
 			ParameterizedType type = (ParameterizedType) tesrClass.getGenericSuperclass();
-			ClientRegistry.bindTileEntitySpecialRenderer((Class<T>) type.getActualTypeArguments()[0], tesrClass.newInstance());
+			@SuppressWarnings("unchecked")
+			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
+			ClientRegistry.bindTileEntitySpecialRenderer(clazz, tesrClass.newInstance());
 		}
 		catch(Exception exception)
 		{

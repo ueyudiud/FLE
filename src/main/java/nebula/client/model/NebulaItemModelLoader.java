@@ -94,8 +94,8 @@ public enum NebulaItemModelLoader implements ICustomModelLoader
 	/**
 	 * The cached access loaded item map (Item load by FarCoreItemModelLoader -> ResourceLocation of model)).
 	 */
-	private static final Map<Item, ResourceLocation> ACCEPT_ITEMS = new HashMap();
-	private static final Map<ResourceLocation, Item> MODELLOCATION_TO_ITEM = new HashMap();
+	private static final Map<Item, ResourceLocation> ACCEPT_ITEMS = new HashMap<>();
+	private static final Map<ResourceLocation, Item> MODELLOCATION_TO_ITEM = new HashMap<>();
 	private static Map<Item, FlexibleItemModelCache> cache;
 	
 	private static IResourceManager manager;
@@ -143,23 +143,23 @@ public enum NebulaItemModelLoader implements ICustomModelLoader
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
-		this.manager = resourceManager;
-		this.cache = new HashMap();
+		manager = resourceManager;
+		cache = new HashMap<>();
 		Log.info("Nebula Item Model Loader start model loading.");
 		Log.info("Clean caches.");
 		FlexibleItemSubmetaGetterLoader.cleanCache();
 		ColorMultiplier.cleanCache();
 		FlexibleTextureSet.cleanCache();
-		ProgressBar bar = ProgressManager.push("Loading Nebula Item Model", this.ACCEPT_ITEMS.size());
+		ProgressBar bar = ProgressManager.push("Loading Nebula Item Model", ACCEPT_ITEMS.size());
 		ItemColors colors = Minecraft.getMinecraft().getItemColors();
-		for(Entry<Item, ResourceLocation> entry : this.ACCEPT_ITEMS.entrySet())
+		for(Entry<Item, ResourceLocation> entry : ACCEPT_ITEMS.entrySet())
 		{
 			try
 			{
 				bar.step(entry.getValue().toString());
 				byte[] code = IO.copyResource(resourceManager, entry.getValue());
 				FlexibleItemModelCache cache = GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(code)), FlexibleItemModelCache.class);
-				this.cache.put(entry.getKey(), cache);
+				NebulaItemModelLoader.cache.put(entry.getKey(), cache);
 				if(colors != null)
 				{
 					IItemColor color = ColorMultiplier.createColorMultiplier(cache);
@@ -206,9 +206,7 @@ public enum NebulaItemModelLoader implements ICustomModelLoader
 		Item item = MODELLOCATION_TO_ITEM.get(modelLocation);
 		if (item == null)//If item is null, it means the loader of location shoudn't be this loader.
 			throw new RuntimeException(String.format("The model location {%s} is not belong to FarCoreItemModelLoader. There must be some wrong of other model loader.", modelLocation));
-		FlexibleItemModelCache c = cache.remove(item);
-		if (cache.isEmpty()) cache = null;
-		return new FlexibleItemModelUnbaked(item, c);
+		return new FlexibleItemModelUnbaked(item, cache.get(item));
 	}
 	
 	static

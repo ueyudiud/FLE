@@ -221,8 +221,8 @@ public class FlexibleItemModelCache
 		int index;
 		float zOffset = 0.5F;
 		int baseColor = 0xFFFFFFFF;
-		List<String> allowedVariants = new ArrayList();
-		List<String> convertsAllowTextures = new ArrayList();
+		List<String> allowedVariants = new ArrayList<>();
+		List<String> convertsAllowTextures = new ArrayList<>();
 		SubmetaGetter variantApplier = NebulaItemModelLoader.NORMAL_FUNCTION;
 		ToIntFunction<ItemStack> colorMultiplier = ColorMultiplier.NORMAL_MULTIPLIER;
 		

@@ -208,7 +208,7 @@ public class FlexibleItemModelUnbaked implements ModelBase
 			switch (this.layerType)
 			{
 			case 0 :
-				Map<String, List<BakedQuad>> map = new HashMap();
+				Map<String, List<BakedQuad>> map = new HashMap<>();
 				Collection<String> variants = this.allowedVariants != null ? this.allowedVariants : FlexibleItemModelUnbaked.this.textures.keySet();
 				for(String variant : variants)
 				{
@@ -219,7 +219,7 @@ public class FlexibleItemModelUnbaked implements ModelBase
 				}
 				return this.variantApplier.andThen(L.toFunction(ImmutableMap.copyOf(map), ImmutableList.of()));
 			case 1 :
-				map = new HashMap();
+				map = new HashMap<>();
 				variants = this.allowedVariants != null ? this.allowedVariants : FlexibleItemModelUnbaked.this.textures.keySet();
 				for(String variant : variants)
 				{
@@ -233,7 +233,7 @@ public class FlexibleItemModelUnbaked implements ModelBase
 				if(this.convertsAllowTextures.size() == 1)
 				{
 					TextureAtlasSprite convert = bakedTextureGetter.apply(FlexibleItemModelUnbaked.this.textures.getOrDefault(this.convertsAllowTextures.get(0), new ResourceLocation(this.convertsAllowTextures.get(0))));
-					map = new HashMap();
+					map = new HashMap<>();
 					variants = this.allowedVariants != null ? this.allowedVariants : FlexibleItemModelUnbaked.this.textures.keySet();
 					for(String variant : variants)
 					{

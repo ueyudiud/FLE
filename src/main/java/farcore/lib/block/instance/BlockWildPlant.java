@@ -22,7 +22,7 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 {
 	public static BlockWildPlant create(Mat material)
 	{
-		IPlant plant = material.getProperty(MP.property_plant);
+		IPlant<?> plant = material.getProperty(MP.property_plant);
 		return new BlockWildPlant(material.name)
 		{
 			@Override
@@ -51,7 +51,7 @@ public class BlockWildPlant extends BlockBase implements IPlantable
 		};
 	}
 	
-	private IPlant plant;
+	private IPlant<?> plant;
 	
 	protected BlockWildPlant(String name)
 	{

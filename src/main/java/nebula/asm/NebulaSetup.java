@@ -76,6 +76,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -110,7 +111,7 @@ public class NebulaSetup implements IFMLCallHook
 	/**
 	 * The ASM file version, uses to determine if it need replaced ASM files.
 	 */
-	private static final int VERSION = 5;
+	private static final int VERSION = 6;
 	
 	final JsonDeserializer<OpInformation> DESERIALIZER1 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
@@ -124,6 +125,12 @@ public class NebulaSetup implements IFMLCallHook
 			}
 			else
 			{
+				if (object.has("values"))
+				{
+					JsonArray array = object.getAsJsonArray("values");
+					for (JsonElement json1 : array)
+						context.deserialize(json1, Function.class);
+				}
 				JsonArray array = object.getAsJsonArray("modification");
 				for (JsonElement json1 : array)
 				{
@@ -351,6 +358,7 @@ public class NebulaSetup implements IFMLCallHook
 		}
 		return object;
 	};
+	
 	private final Gson gson = new GsonBuilder()
 			.registerTypeAdapter(OpInformation.class, this.DESERIALIZER1)
 			.registerTypeAdapter(OpLabel.class, this.DESERIALIZER2)

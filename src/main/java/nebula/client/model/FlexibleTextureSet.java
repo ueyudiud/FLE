@@ -31,11 +31,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FlexibleTextureSet
 {
-	public static final Map<ResourceLocation, Callable<Map<String, ResourceLocation>>> TEXTURE_SET_APPLIERS = new HashMap();
+	public static final Map<ResourceLocation, Callable<Map<String, ResourceLocation>>> TEXTURE_SET_APPLIERS = new HashMap<>();
 	
 	private static final Map<String, ResourceLocation> MISSING_TEXTURE_MAP = ImmutableMap.of(NebulaItemModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE);
 	
-	private static final Map<ResourceLocation, Map<String, ResourceLocation>> STORED_LOCATIONS = new HashMap();
+	private static final Map<ResourceLocation, Map<String, ResourceLocation>> STORED_LOCATIONS = new HashMap<>();
 	
 	static final JsonDeserializer<FlexibleTextureSet> DESERIALIZER = (json, typeOfT, context) ->
 	{
@@ -94,7 +94,7 @@ public class FlexibleTextureSet
 		throw new IllegalStateException("The resource manager is not loading resources!");
 	}
 	
-	Map<String, TextureValue> textureSet = new HashMap();
+	Map<String, TextureValue> textureSet = new HashMap<>();
 	
 	public void putTexture(String key, String value)
 	{
@@ -195,10 +195,10 @@ public class FlexibleTextureSet
 		String key;
 		Map<String, ResourceLocation> locations;
 		
-		TextureValueSet(String key)
-		{
-			this.key = key;
-		}
+		//		TextureValueSet(String key)
+		//		{
+		//			this.key = key;
+		//		}
 		TextureValueSet(Map<String, ResourceLocation> locations)
 		{
 			this.locations = locations;

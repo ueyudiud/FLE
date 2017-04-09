@@ -54,7 +54,7 @@ public class FleEntityHandler
 		{
 			EntityFLESkeleton replace = new EntityFLESkeleton(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			setAttributes(replace, FLEConfig.seleton);
+			setAttributes(replace, FLEConfig.skeleton);
 			event.setCanceled(true);
 		}
 		else if(clazz == EntitySpider.class)

@@ -12,7 +12,7 @@ public class Log
 {
 	private static Logger logLogger = LogManager.getLogger("Nebula Log");
 	
-	private static List<Object> cache = new ArrayList();
+	private static List<Object> cache = new ArrayList<>();
 	
 	public static void catching(Throwable throwable)
 	{

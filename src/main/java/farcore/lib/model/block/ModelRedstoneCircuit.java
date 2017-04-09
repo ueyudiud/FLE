@@ -39,7 +39,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -94,7 +93,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	 * It might takes too much memory to build quad, so I tried cached those quads.
 	 * @author ueyudiud
 	 */
-	private static final Map<ResourceLocation, Map<Mat, Map<EnumFacing, List<BakedQuad>>>> bakedQuads = new HashMap();
+	private static final Map<ResourceLocation, Map<Mat, Map<EnumFacing, List<BakedQuad>>>> bakedQuads = new HashMap<>();
 	
 	private IModel parent;
 	private ResourceLocation layer;
@@ -112,7 +111,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		List<ResourceLocation> locations = new ArrayList();
+		List<ResourceLocation> locations = new ArrayList<>();
 		locations.add(this.layer);
 		if(this.parent != null)
 		{
@@ -194,7 +193,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			parent0 = ModelLoaderRegistry.getModelOrMissing(new ResourceLocation(location.getResourceDomain() + ":block/" + location.getResourcePath()));
 			if (parent0 == ModelLoaderRegistry.getMissingModel())
 			{
-				parent0 = ModelLoaderRegistry.getModelOrMissing(new ModelResourceLocation(location, "normal"));
+				parent0 = ModelLoaderRegistry.getModelOrMissing(location);
 			}
 		}
 		else
@@ -230,11 +229,11 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			List<BakedQuad> list;
 			if(map != null)
 			{
-				list = new ArrayList(map.getOrDefault(EnumFacing.NORTH, ImmutableList.of()));
+				list = new ArrayList<>(map.getOrDefault(EnumFacing.NORTH, ImmutableList.of()));
 			}
 			else
 			{
-				list = new ArrayList();
+				list = new ArrayList<>();
 			}
 			if(this.model != null)
 			{
@@ -249,16 +248,18 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			if(side != null) return ImmutableList.of();
 			if(state instanceof BlockStateTileEntityWapper)
 			{
-				BlockStateTileEntityWapper<TECircuitBase> wapper = (BlockStateTileEntityWapper) state;
+				@SuppressWarnings("unchecked")
+				BlockStateTileEntityWapper<? extends TECircuitBase> wapper =
+				(BlockStateTileEntityWapper<? extends TECircuitBase>) state;
 				Map<EnumFacing, List<BakedQuad>> map = this.quads.get(wapper.tile.material);
 				List<BakedQuad> list;
 				if(map != null)
 				{
-					list = new ArrayList(map.getOrDefault(wapper.tile.facing.of(), ImmutableList.of()));
+					list = new ArrayList<>(map.getOrDefault(wapper.tile.facing.of(), ImmutableList.of()));
 				}
 				else
 				{
-					list = new ArrayList();
+					list = new ArrayList<>();
 				}
 				if(this.model != null)
 				{

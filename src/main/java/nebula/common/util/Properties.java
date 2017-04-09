@@ -21,7 +21,7 @@ import net.minecraft.util.IStringSerializable;
  */
 public class Properties
 {
-	private static final Map<Class<?>, PropertyEnum<?>> PROPERTIES = new HashMap();
+	private static final Map<Class<?>, PropertyEnum<?>> PROPERTIES = new HashMap<>();
 	
 	/**
 	 * Get a enumeration property.

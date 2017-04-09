@@ -1,12 +1,7 @@
-
-// For those who want the bleeding edge
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
@@ -20,26 +15,23 @@ file "build.properties" withReader {
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-/*
-// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
-}
-*/
 version = "${config.fle.version}"
 group= "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "${config.fle.name}"
 
-sourceCompatibility = 8
-targetCompatibility = 8
+sourceCompatibility = targetCompatibility = "8" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "8"
+}
 
 tasks.withType(JavaCompile) {  
     options.encoding = "UTF-8"  
 }
 
 minecraft {
-    version = "${config.minecraft.version}"
+    version = "1.10.2-12.18.3.2185"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -51,15 +43,7 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
-configurations {
-    provided
-    embedded
-    compile.extendsFrom provided, embedded
-}
-
 dependencies {
-	provided "mezz.jei:jei_${minecraft.version}:${config.jei.version}"
-
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"

@@ -159,7 +159,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		Log.info("Nebula start check java version...");
 		try
 		{
-			Function function = arg -> null;
+			((Function<?, ?>) arg -> null).apply(null);
 		}
 		catch(Exception exception)
 		{
@@ -290,7 +290,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		boolean flag1 = compound.getBoolean("Marker");
 		
 		NBTTagList list = compound.getTagList("Sections", 10);
-		int k = 16;
+		//		int k = 16;
 		ExtendedBlockStorage[] aextendedblockstorage = new ExtendedBlockStorage[16];
 		boolean flag = !worldIn.provider.hasNoSky();
 		

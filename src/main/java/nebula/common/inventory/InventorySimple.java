@@ -46,7 +46,7 @@ public class InventorySimple implements IBasicInventory
 	}
 	
 	@Override
-	public ItemStack getStackInSlot(int index)
+	public ItemStack getStack(int index)
 	{
 		return this.stacks[index];
 	}

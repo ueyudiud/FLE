@@ -78,7 +78,7 @@ public interface IEnergyNet
 	final class Impl implements IEnergyNet
 	{
 		final LocalEnergyNetProvider provider;
-		final HashMap<Integer, LocalEnergyNet> nets = new HashMap();
+		final HashMap<Integer, LocalEnergyNet> nets = new HashMap<>();
 		
 		public Impl(LocalEnergyNetProvider provider)
 		{
@@ -177,7 +177,7 @@ public interface IEnergyNet
 	
 	interface LocalEnergyNetProvider
 	{
-		LocalEnergyNet createEnergyNet(World world);
+		LocalEnergyNet<?> createEnergyNet(World world);
 		
 		/**
 		 * Get specific world belong for tile, return null when tie is not belong this tile

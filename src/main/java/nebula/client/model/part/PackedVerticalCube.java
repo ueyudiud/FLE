@@ -379,7 +379,7 @@ public class PackedVerticalCube implements INebulaRetexturableModelPart
 		TextureAtlasSprite icon;
 		float[][] coords;
 		ModelRotation rotation = ModelRotation.getModelRotation((this.rotateX & 0x3) * 90, (this.rotateY & 0x3) * 90);
-		ArrayList<BakedQuad> list = new ArrayList();
+		ArrayList<BakedQuad> list = new ArrayList<>();
 		if((this.renderFlag & 0x1) != 0 && this.location[0] != null)
 		{
 			icon = textureGetter.apply(this.location[0]);
@@ -460,6 +460,8 @@ public class PackedVerticalCube implements INebulaRetexturableModelPart
 		Matrix4f matrix = rotation.getMatrix();
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setQuadTint(this.tint);
+		builder.setQuadOrientation(transformation.rotate(face.of()));
+		builder.setTexture(icon);
 		for(float[] coord : coords)
 		{
 			Point3f point = new Point3f(coord);

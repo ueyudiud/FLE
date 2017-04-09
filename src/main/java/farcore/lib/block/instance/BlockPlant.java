@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDataBlock, IBlockStayabilityCheck
 {
-	public static BlockPlant create(String modid, String name, IPlant plant)
+	public static BlockPlant create(String modid, String name, IPlant<?> plant)
 	{
 		return new BlockPlant(modid, name, plant)
 		{
@@ -63,13 +63,13 @@ public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDa
 	
 	private final IPlant plant;
 	
-	protected BlockPlant(String name, IPlant plant)
+	protected BlockPlant(String name, IPlant<?> plant)
 	{
 		super(name, Materials.PLANT);
 		setTickRandomly(true);
 		this.plant = plant;
 	}
-	protected BlockPlant(String modid, String name, IPlant plant)
+	protected BlockPlant(String modid, String name, IPlant<?> plant)
 	{
 		super(modid, name, Materials.PLANT);
 		setTickRandomly(true);
@@ -77,7 +77,7 @@ public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDa
 	}
 	
 	@Override
-	protected IBlockBehavior getBehavior(IBlockState state)
+	protected IBlockBehavior<?> getBehavior(IBlockState state)
 	{
 		return this.plant;
 	}

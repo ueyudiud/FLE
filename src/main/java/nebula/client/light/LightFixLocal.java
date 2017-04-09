@@ -27,9 +27,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LightFixLocal implements Runnable
 {
-	private static final int cacheSize = 64;
-	private static final int[][] caches = new int[cacheSize][];
-	
 	static class $
 	{
 		World world;
@@ -71,9 +68,9 @@ public class LightFixLocal implements Runnable
 		}
 	}
 	
-	final LinkedList<$> list = new LinkedList();
+	final LinkedList<$> list = new LinkedList<>();
 	final Set<$> set = new HashSet<>();
-	final Map<IntegerArray, Byte> lightMap = new HashMap(65536, 1.0F);
+	final Map<IntegerArray, Byte> lightMap = new HashMap<>(65536, 1.0F);
 	private final int[] lightUpdateBlockList = new int[32768];
 	
 	$ checking;
@@ -120,7 +117,6 @@ public class LightFixLocal implements Runnable
 				{
 					continue;
 				}
-				boolean flag = true;
 				try
 				{
 					check0(this.checking);
@@ -222,7 +218,6 @@ public class LightFixLocal implements Runnable
 				int j2 = (l1 >> 6 & 63) - 32;
 				int k2 = (l1 >> 12 & 63) - 32;
 				int l2 = l1 >> 18 & 15;
-				BlockPos blockpos = new BlockPos(i2 + i1, j2 + j1, k2 + k1);
 				int i3 = getLight(i2, j2, k2);
 				if (i3 == l2)
 				{

@@ -30,10 +30,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MaterialTextureLoader implements IIconLoader
 {
-	private static final Map<String, MTFBuilder> SPECIAL_MATERIAL_LOCATION = new HashMap();
-	private static final Map<String, List<String>> VARIANTS = new HashMap();
+	private static final Map<String, MTFBuilder> SPECIAL_MATERIAL_LOCATION = new HashMap<>();
+	private static final Map<String, List<String>> VARIANTS = new HashMap<>();
 	
-	private static final Map<String, TextureAtlasSprite> ICONS = new HashMap();
+	private static final Map<String, TextureAtlasSprite> ICONS = new HashMap<>();
 	
 	public static void addIconset(MatCondition condition, String...variant)
 	{
@@ -125,7 +125,7 @@ public class MaterialTextureLoader implements IIconLoader
 		private MatCondition condition;
 		private String variant;
 		private Function<Mat, ResourceLocation> parent;
-		private Map<Mat, ResourceLocation> map = new HashMap();
+		private Map<Mat, ResourceLocation> map = new HashMap<>();
 		
 		MTFBuilder(MatCondition condition, String variant)
 		{

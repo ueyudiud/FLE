@@ -84,11 +84,11 @@ public class BlockDitch extends BlockSingleTE
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for(Mat material : Mat.filt(DitchBlockHandler.HANDLER, true))
 		{
-			list.add(new ItemStack(itemIn, 1, material.id));
+			list.add(new ItemStack(item, 1, material.id));
 		}
 	}
 	

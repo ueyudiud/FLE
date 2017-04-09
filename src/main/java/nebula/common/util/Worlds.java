@@ -78,7 +78,6 @@ public final class Worlds
 			Block block = state.getBlock();
 			block.breakBlock(world, pos, state);
 			Nebula.network.sendToNearBy(new PacketBreakBlock(world, pos), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
-			TileEntity tile = world.getTileEntity(pos);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 5);
 			if(harvestBlock)
 			{
@@ -95,7 +94,7 @@ public final class Worlds
 		{
 			if(createEntry)
 			{
-				map.put(dim, list = new ArrayList());
+				map.put(dim, list = new ArrayList<>());
 				return list;
 			}
 			return ImmutableList.of();

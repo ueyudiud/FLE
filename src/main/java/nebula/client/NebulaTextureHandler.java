@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class NebulaTextureHandler implements IIconRegister
 {
-	private static final List<IIconLoader> LIST = new ArrayList();
+	private static final List<IIconLoader> LIST = new ArrayList<>();
 	
 	public static void addIconLoader(IIconLoader loader)
 	{

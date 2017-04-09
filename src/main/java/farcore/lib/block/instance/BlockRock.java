@@ -63,7 +63,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	//	}
 	
 	@Override
-	protected IBlockBehavior getBehavior(IBlockState state)
+	protected IBlockBehavior<?> getBehavior(IBlockState state)
 	{
 		return this.behavior;
 	}
@@ -124,11 +124,11 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		if(tab == CT.tabTerria)
 		{
-			list.add(new ItemStack(itemIn));
+			list.add(new ItemStack(item));
 		}
 		else
 		{
@@ -136,7 +136,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 			{
 				if(type.displayInTab)
 				{
-					list.add(new ItemStack(this, 1, type.ordinal()));
+					list.add(new ItemStack(item, 1, type.ordinal()));
 				}
 			}
 		}

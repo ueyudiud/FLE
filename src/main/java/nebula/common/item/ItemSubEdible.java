@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 {
-	protected final Map<Integer, IFoodStat> foodstats = new HashMap();
+	protected final Map<Integer, IFoodStat> foodstats = new HashMap<>();
 	
 	protected ItemSubEdible(String name)
 	{
@@ -61,9 +61,9 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 		if(isEdible(itemStackIn, playerIn))
 		{
 			playerIn.setActiveHand(hand);
-			return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 		}
-		return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+		return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
 	}
 	
 	@Override

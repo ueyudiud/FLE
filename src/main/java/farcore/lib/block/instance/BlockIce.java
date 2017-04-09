@@ -12,8 +12,6 @@ import farcore.data.EnumBlock;
 import farcore.data.Materials;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
-import farcore.lib.world.IWorldPropProvider;
-import farcore.lib.world.WorldPropHandler;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
 import nebula.common.block.IHitByFallenBehaviorBlock;
@@ -67,7 +65,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	@Override
 	public String getTranslateNameForItemStack(int metadata)
 	{
-		return getUnlocalizedName();
+		return getUnlocalizedName() + ".name";
 	}
 	
 	@Override
@@ -103,7 +101,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	{
 		if(Config.enableWaterFreezeAndIceMeltTempCheck)
 		{
-			IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
+			//			IWorldPropProvider properties = WorldPropHandler.getWorldProperty(worldIn);
 			if(!worldIn.isRemote && ThermalNet.getTemperature(worldIn, pos, true) > V.WATER_FREEZE_POINT_F && random.nextInt(3) == 0)
 			{
 				turnIntoWater(worldIn, pos, state, true);
@@ -124,7 +122,7 @@ public class BlockIce extends BlockBase implements IHitByFallenBehaviorBlock
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
-		return silkTouch ? ImmutableList.of(new ItemStack(this, 1)) : new ArrayList();
+		return silkTouch ? ImmutableList.of(new ItemStack(this, 1)) : new ArrayList<>();
 	}
 	
 	@Override

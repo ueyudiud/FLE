@@ -81,7 +81,7 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	
 	protected final PropertyTE createTEProperty()
 	{
-		IRegister<Class<? extends TileEntity>> map = new Register();
+		IRegister<Class<? extends TileEntity>> map = new Register<>();
 		this.registerTE = registerTileEntities(map);
 		return this.property_TE = PropertyTE.create("tile", map);
 	}
@@ -136,12 +136,11 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(TETag tag : this.property_TE.getAllowedValues())
+		for (TETag tag : this.property_TE.getAllowedValues())
 		{
-			list.add(new ItemStack(itemIn, 1, tag.id()));
+			list.add(new ItemStack(item, 1, tag.id()));
 		}
 	}
 	
@@ -157,7 +156,7 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	{
 		if(tile instanceof ITP_Drops)
 			return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
-		List<ItemStack> list = new ArrayList();
+		List<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(this, 1, this.property_TE.getMetaFromState(state)));
 		return list;
 	}

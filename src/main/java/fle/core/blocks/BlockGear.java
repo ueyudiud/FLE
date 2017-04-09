@@ -42,12 +42,12 @@ public class BlockGear extends BlockSingleTE
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		final Mat[] materials = {M.oak, M.stone};
 		for (GearSize size : GearSize.values())
 		{
-			ItemStack stack = new ItemStack(itemIn, 1, size.ordinal());
+			ItemStack stack = new ItemStack(item, 1, size.ordinal());
 			for (Mat material : materials)
 			{
 				Mat.setMaterialToStack(stack, "material", material);

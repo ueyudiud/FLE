@@ -14,7 +14,6 @@ import static farcore.data.M.oak_black;
 import static farcore.data.M.spruce;
 import static farcore.data.M.willow;
 
-import farcore.lib.tree.Tree;
 import fle.core.tree.TreeAcacia;
 import fle.core.tree.TreeAspen;
 import fle.core.tree.TreeBirch;
@@ -32,7 +31,6 @@ public class Trees
 {
 	public static void init()
 	{
-		Tree tree;
 		oak			.setTree(new TreeOak().setMaterial(oak).setDefFamily());
 		oak_black	.setTree(new TreeOakBlack().setMaterial(oak_black).setDefFamily());
 		spruce		.setTree(new TreeSpruce().setMaterial(spruce).setDefFamily());

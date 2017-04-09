@@ -56,7 +56,7 @@ public class Ety<K, V> implements Entry<K, V>
 	{
 		if(obj == this) return true;
 		else if(!(obj instanceof Entry)) return false;
-		else return L.equal(this.key, ((Entry) obj).getKey());
+		else return L.equal(this.key, ((Entry<?, ?>) obj).getKey());
 	}
 	
 	@Override

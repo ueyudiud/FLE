@@ -23,12 +23,12 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	
 	private volatile boolean isUpdating = false;
 	
-	private final Map<BlockPos, IKineticHandler> map = new HashMap();
-	private final Map<IntegerArray, KineticPackage> cachedSend = new HashMap();
-	private final List<IntegerArray> cachedSended = new ArrayList();
+	private final Map<BlockPos, IKineticHandler> map = new HashMap<>();
+	private final Map<IntegerArray, KineticPackage> cachedSend = new HashMap<>();
+	private final List<IntegerArray> cachedSended = new ArrayList<>();
 	private IKineticHandler cachedTile;
 	private BlockPos cachedPos = BlockPos.ORIGIN;
-	private final Map<IKineticHandler, EnumModifyFlag> cachedChangedTile = new HashMap();
+	private final Map<IKineticHandler, EnumModifyFlag> cachedChangedTile = new HashMap<>();
 	
 	public KineticNet(World world)
 	{
@@ -98,7 +98,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 			}
 			this.cachedTile = null;
 			//Send kinetic energy to other tile.
-			Map<IntegerArray, KineticPackage> sends = new HashMap();
+			Map<IntegerArray, KineticPackage> sends = new HashMap<>();
 			Direction direction;
 			do
 			{
@@ -225,7 +225,7 @@ public class KineticNet extends IEnergyNet.LocalEnergyNet<IKineticHandler> imple
 	}
 	
 	@Override
-	public LocalEnergyNet createEnergyNet(World world)
+	public LocalEnergyNet<?> createEnergyNet(World world)
 	{
 		return new KineticNet(world);
 	}

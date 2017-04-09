@@ -236,7 +236,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@Override
 	public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
 	{
-		List<ItemStack> stacks = new ArrayList();
+		List<ItemStack> stacks = new ArrayList<>();
 		stacks.add(getSilkTouchDrop(world.getBlockState(pos)));
 		return stacks;
 	}

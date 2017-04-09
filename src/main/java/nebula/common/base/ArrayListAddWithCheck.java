@@ -15,18 +15,20 @@ import java.util.function.Predicate;
  */
 public class ArrayListAddWithCheck<E> extends ArrayList<E>
 {
+	private static final long serialVersionUID = -5656965564696895076L;
+	
 	public static <E> ArrayList<E> requireNonnull()
 	{
 		return new ArrayListAddWithCheck<>(NOT_NULL);
 	}
 	
-	Predicate<E> checker;
+	Predicate<? super E> checker;
 	
-	public ArrayListAddWithCheck(Predicate<E> checker)
+	public ArrayListAddWithCheck(Predicate<? super E> checker)
 	{
 		this.checker = checker;
 	}
-	public ArrayListAddWithCheck(Predicate<E> checker, int initicalCapacity)
+	public ArrayListAddWithCheck(Predicate<? super E> checker, int initicalCapacity)
 	{
 		super(initicalCapacity);
 		this.checker = checker;

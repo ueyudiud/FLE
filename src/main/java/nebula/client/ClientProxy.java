@@ -54,7 +54,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -74,7 +73,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public static final IBlockColor BIOME_COLOR = (state, worldIn, pos, tintIndex) ->
 	{
 		boolean flag = worldIn == null || pos == null;
-		Biome biome = flag ? null : worldIn.getBiome(pos);
+		//		Biome biome = flag ? null : worldIn.getBiome(pos);
 		switch(tintIndex)
 		{
 		case 0 : return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) :
@@ -87,10 +86,10 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	};
 	public static final IItemColor ITEM_BIOME_COLOR = (stack, index) -> BIOME_COLOR.colorMultiplier(null, null, null, index);
 	
-	private static Map<String, List<IRenderRegister>> registers = new HashMap();
-	public static Map<IBlockColor, List<Block>> blockColorMap = new HashMap();
-	public static Map<IItemColor, List<Item>> itemColorMap = new HashMap();
-	public static List<Block> buildInRender = new ArrayList();
+	private static Map<String, List<IRenderRegister>> registers = new HashMap<>();
+	public static Map<IBlockColor, List<Block>> blockColorMap = new HashMap<>();
+	public static Map<IItemColor, List<Item>> itemColorMap = new HashMap<>();
+	public static List<Block> buildInRender = new ArrayList<>();
 	
 	public ClientProxy()
 	{
@@ -201,7 +200,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	
 	@Override
 	public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
-			IProperty...properties)
+			IProperty<?>...properties)
 	{
 		StateMapperExt mapper = new StateMapperExt(modid, path, splitFile ? property : null, properties);
 		registerCompactModel(mapper, block, property);

@@ -13,11 +13,11 @@ public interface IPropertyMap
 	
 	void clear();
 	
-	boolean contain(IProperty property);
+	boolean contain(IProperty<?> property);
 	
-	Set<Entry<IProperty, Object>> entrySet();
+	Set<Entry<IProperty<?>, ?>> entrySet();
 	
-	Set<IProperty> keySet();
+	Set<IProperty<?>> keySet();
 	
 	@FunctionalInterface
 	interface IProperty<V> extends Appliable<V>

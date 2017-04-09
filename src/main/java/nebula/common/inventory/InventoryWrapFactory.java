@@ -84,7 +84,8 @@ public final class InventoryWrapFactory
 		public int getFieldCount() { return 0; }
 		public void clear() { }
 		public int getSizeInventory() { return this.inventory.getSizeInventory(); }
-		public @Nullable ItemStack getStackInSlot(int index) { return this.inventory.getStackInSlot(index); }
+		public @Nullable ItemStack getStackInSlot(int index) { return this.inventory.getStack(index); }
+		public @Nullable ItemStack getStack(int index) { return this.inventory.getStack(index); }
 		public int insertStack(int index, ItemStack resource, boolean process) { return this.inventory.insertStack(index, resource, process); }
 		public ItemStack decrStackSize(int index, int count) { return decrStackSize(index, count, true); }
 		public @Nullable ItemStack decrStackSize(int index, int count, boolean process) { return this.inventory.decrStackSize(index, count, process); }

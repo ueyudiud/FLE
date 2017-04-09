@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockOilLamp extends BlockTE
 {
 	public static final AxisAlignedBB AABB_OIL_LAMP = new AxisAlignedBB(0.3125F, 0.0F, 0.3125F, 0.6875F, 0.25F, 0.6875F);
-
+	
 	public BlockOilLamp()
 	{
 		super(FLE.MODID, "oil.lamp", Material.ROCK);
@@ -37,20 +37,20 @@ public class BlockOilLamp extends BlockTE
 	{
 		return EnumItem.tool.item;
 	}
-
+	
 	@Override
 	protected IBlockState initDefaultState(IBlockState state)
 	{
-		return state.withProperty(property_TE, property_TE.parseValue("oillamp").get());
+		return state.withProperty(this.property_TE, this.property_TE.parseValue("oillamp").get());
 	}
-
+	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
 		register.register("oillamp", TEOilLamp.class);
 		return true;
 	}
-
+	
 	@Override
 	public boolean canBreakBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
@@ -62,26 +62,26 @@ public class BlockOilLamp extends BlockTE
 	{
 		return true;
 	}
-
+	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		return AABB_OIL_LAMP;
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		super.getSubBlocks(itemIn, tab, list);
+		super.getSubBlocks(item, tab, list);
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()

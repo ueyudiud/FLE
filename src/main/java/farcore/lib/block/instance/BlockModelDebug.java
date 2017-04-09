@@ -109,7 +109,7 @@ public class BlockModelDebug extends BlockBase
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 		{
-			List<BakedQuad> quads = new ArrayList();
+			List<BakedQuad> quads = new ArrayList<>();
 			((INebulaBakedModelPart.WrapedBakedModelPart) this.part).putQuads(quads);
 			return quads;
 		}

@@ -29,7 +29,7 @@ import net.minecraft.world.WorldType;
 
 public class ThermalNet implements IEnergyNet
 {
-	private static final List<IWorldThermalHandler> worldCHandlers = new ArrayList();
+	private static final List<IWorldThermalHandler> worldCHandlers = new ArrayList<>();
 	
 	public static void registerWorldThermalHandler(IWorldThermalHandler handler)
 	{
@@ -44,7 +44,6 @@ public class ThermalNet implements IEnergyNet
 	
 	public static float getEnviormentTemperature(World world, BlockPos pos)
 	{
-		ChunkPos pos2 = new ChunkPos(pos);
 		float base = getWorldTemperature(world, pos);
 		IThermalHandlerBox box = instance.getNet(world, false).getBoxAtPos(pos);
 		if(box != null)
@@ -172,7 +171,7 @@ public class ThermalNet implements IEnergyNet
 	
 	public static final ThermalNet instance = new ThermalNet();
 	
-	private Map<Integer, Local> netMap = new HashMap();
+	private Map<Integer, Local> netMap = new HashMap<>();
 	
 	@Override
 	public void update(World world)
@@ -271,13 +270,13 @@ public class ThermalNet implements IEnergyNet
 		
 		private World world;
 		
-		private final Map<BlockPos, IThermalHandler> map = new HashMap();
-		private final Map<ChunkPos, List<IThermalHandlerBox>> map2 = new HashMap();
-		private final List<IThermalHandler> cachedList = new ArrayList();
-		private final List<IThermalHandlerBox> cacheBoxList = new ArrayList();
+		private final Map<BlockPos, IThermalHandler> map = new HashMap<>();
+		private final Map<ChunkPos, List<IThermalHandlerBox>> map2 = new HashMap<>();
+		private final List<IThermalHandler> cachedList = new ArrayList<>();
+		private final List<IThermalHandlerBox> cacheBoxList = new ArrayList<>();
 		private BlockPos cachedPos = BlockPos.ORIGIN;
-		private final Map<BlockPos, EnumModifyFlag> cachedChangedTile = new HashMap();
-		private final Map<IThermalHandlerBox, EnumModifyFlag> cacheChangedBoxList = new HashMap();
+		private final Map<BlockPos, EnumModifyFlag> cachedChangedTile = new HashMap<>();
+		private final Map<IThermalHandlerBox, EnumModifyFlag> cacheChangedBoxList = new HashMap<>();
 		
 		public Local(World world)
 		{

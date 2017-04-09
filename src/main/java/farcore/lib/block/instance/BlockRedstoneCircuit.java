@@ -94,7 +94,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		builder1.put("invert", Arrays.asList("de", "ed", "ee"));
 		builder1.put("sensor_light", Arrays.asList("_"));
 		ALLOWED_STATES = builder1.build();
-		HashSet<String> set = new HashSet();
+		HashSet<String> set = new HashSet<>();
 		for(List<String> list : ALLOWED_STATES.values())
 		{
 			set.addAll(list);
@@ -123,6 +123,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		LanguageManager.registerLocal(getTranslateNameForItemStack(20), "Redstone Nand Door");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(21), "Redstone Nor Door");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(22), "Redstone Imples Door");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(24), "Redstone Integrator");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(32), "Redstone Crosser");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(33), "Redstone Invert");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(64), "Redstone Light Sensor");
@@ -150,6 +151,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		});
 		FarCoreRegistry.registerColorMultiplier(this.item, (stack, tintIndex)-> tintIndex < 0 ? -1 : 0x400000);
 		NebulaBlockModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/cross_base"));
+		NebulaBlockModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/integrator_base"));
 	}
 	
 	public static ItemStack createItemStack(int meta, Mat material)
@@ -216,11 +218,17 @@ public class BlockRedstoneCircuit extends BlockTE
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		for(TETag tag : this.property_TE.getAllowedValues())
+		ItemStack stack = new ItemStack(item, 1);
+		NBTTagCompound nbt;
+		stack.setTagCompound(nbt = new NBTTagCompound());
+		nbt.setString("material", M.stone.name);
+		for (TETag tag : this.property_TE.getAllowedValues())
 		{
-			list.add(createItemStack(tag.id(), M.stone));
+			stack = stack.copy();
+			stack.setItemDamage(tag.id());
+			list.add(stack);
 		}
 	}
 	

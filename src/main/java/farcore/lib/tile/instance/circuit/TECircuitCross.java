@@ -2,7 +2,6 @@ package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Direction;
 import nebula.common.util.Facing;
-import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
 
 public class TECircuitCross extends TECircuitSpatial
@@ -21,14 +20,14 @@ public class TECircuitCross extends TECircuitSpatial
 	}
 	
 	@Override
-	public int getWeakPower(IBlockState state, Direction side)
+	public int getStrongPower(IBlockState state, Direction side)
 	{
-		return Worlds.isRedstoneChecking() ? 0 : super.getWeakPower(state, side);
+		return this.circuitRedsignalMarker ? 0 : super.getStrongPower(state, side);
 	}
 	
 	@Override
-	public int getStrongPower(IBlockState state, Direction side)
+	public int getWeakPower(IBlockState state, Direction side)
 	{
-		return Worlds.isRedstoneChecking() ? 0 : super.getStrongPower(state, side);
+		return this.circuitRedsignalMarker ? 0 : super.getWeakPower(state, side);
 	}
 }

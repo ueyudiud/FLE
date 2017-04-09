@@ -66,7 +66,7 @@ public class FlexibleBlockModelUnbaked implements ModelBase
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
 		TRSRTransformation transformation = L.get(state.apply(Optional.absent()), TRSRTransformation.identity());
-		List<INebulaBakedModelPart> list = new ArrayList();
+		List<INebulaBakedModelPart> list = new ArrayList<>();
 		java.util.function.Function<String, TextureAtlasSprite> function1 = s -> bakedTextureGetter.apply(new ResourceLocation(s));
 		list.addAll(Lists.transform(this.parts, part -> part.bake(transformation, format, function1)));
 		return new FlexibleBlockModel(this.ao, list, bakedTextureGetter.apply(this.particle));

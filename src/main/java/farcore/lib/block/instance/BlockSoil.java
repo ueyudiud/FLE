@@ -299,11 +299,11 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for(int i = 0; i < 5; ++i)
 		{
-			list.add(new ItemStack(this, 1, i));
+			list.add(new ItemStack(item, 1, i));
 		}
 	}
 	

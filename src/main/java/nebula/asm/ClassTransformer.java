@@ -58,7 +58,7 @@ public class ClassTransformer implements IClassTransformer
 	static PrintStream keyOutputStream;
 	public static final Logger LOG = LogManager.getLogger("Nebula ASM");
 	
-	static final Map<String, OpInformation> informations = new HashMap();
+	static final Map<String, OpInformation> informations = new HashMap<>();
 	
 	private static void outputInit()
 	{
@@ -245,7 +245,6 @@ public class ClassTransformer implements IClassTransformer
 		return new OpInformation(name);
 	}
 	
-	private boolean putedReplacements = false;
 	private int numInsertions = 0;
 	
 	@Override
@@ -259,7 +258,7 @@ public class ClassTransformer implements IClassTransformer
 			keyOutputStream.println(name + "=" + transformedName);
 		}
 		OpInformation information;
-		if((information = informations.get(transformedName)) != null)
+		if((information = informations.remove(transformedName)) != null)
 			return modifyClass(transformedName, information, basicClass);
 		return basicClass;
 	}
@@ -274,7 +273,7 @@ public class ClassTransformer implements IClassTransformer
 			ClassNode node = new ClassNode();
 			ClassReader reader = new ClassReader(basicClass);
 			reader.accept(node, 0);
-			List<String> methods = new ArrayList();
+			List<String> methods = new ArrayList<>();
 			for(MethodNode node2 : node.methods)
 			{
 				String name = node2.name + "|" + node2.desc;
@@ -314,7 +313,7 @@ public class ClassTransformer implements IClassTransformer
 	
 	private boolean modifyMethodNode(InsnList instructions, List<OpLabel> list)
 	{
-		list = new ArrayList(list);
+		list = new ArrayList<>(list);
 		OpLabel info = null;
 		if(!list.isEmpty())
 		{
@@ -348,85 +347,5 @@ public class ClassTransformer implements IClassTransformer
 			}
 		}
 		return list.isEmpty();
-	}
-	
-	/**
-	 * I don't know what happen, this might is a bug, I can not replace some of nodes.
-	 * So I use array list instead insnlist to cached insn nodes.
-	 * @param methodInsn
-	 * @param anchor
-	 * @param input
-	 */
-	private void performAnchorOperation(InsnList methodInsn, int anchor, OpLabel input)
-	{
-		AbstractInsnNode current = methodInsn.get(anchor + input.off + this.numInsertions);
-		AbstractInsnNode current1;
-		AbstractInsnNode node;
-		if (input.nodes != null && input.nodes.size() > 0 && (input.nodes.get(0) instanceof JumpInsnNode))
-		{
-			input.nodes.set(0, new JumpInsnNode(input.nodes.get(0).getOpcode(), (LabelNode) current.getPrevious()));
-		}
-		switch (input.type)
-		{
-		case INSERT :
-			Iterator<AbstractInsnNode> itr = input.nodes.iterator();
-			this.numInsertions += input.nodes.size();
-			do
-			{
-				node = itr.next();
-				itr.remove();
-				methodInsn.insert(current, node);
-				current = node;
-			}
-			while(itr.hasNext());
-			break;
-		case INSERT_BEFORE :
-			itr = input.nodes.iterator();
-			this.numInsertions += input.nodes.size();
-			node = itr.next();
-			methodInsn.insertBefore(current, node);
-			current = node;
-			while(itr.hasNext())
-			{
-				node = itr.next();
-				methodInsn.insert(current, node);
-				current = node;
-			}
-			break;
-		case REPLACE :
-			itr = input.nodes.iterator();
-			this.numInsertions += input.nodes.size() - 1;
-			if ((current instanceof JumpInsnNode) && (input.nodes.get(0) instanceof JumpInsnNode))
-			{
-				((JumpInsnNode) input.nodes.get(0)).label = ((JumpInsnNode) current).label;
-			}
-			current1 = current;
-			do
-			{
-				node = itr.next();
-				itr.remove();
-				methodInsn.insert(current1, node);
-				current1 = node;
-			}
-			while(itr.hasNext());
-			methodInsn.remove(current);
-			break;
-		case REMOVE :
-			int i = input.len;
-			while(i > 0)
-			{
-				current = methodInsn.get(anchor + input.off + this.numInsertions);
-				methodInsn.remove(current);
-				--i;
-			}
-			this.numInsertions -= input.len;
-			break;
-		case SWITCH :
-			current1 = methodInsn.get(anchor + input.off + this.numInsertions + input.len);
-			methodInsn.insert(current, current1);
-			current1 = methodInsn.get(anchor + input.off + this.numInsertions + input.len);
-			methodInsn.insert(current1, current);
-			break;
-		}
 	}
 }

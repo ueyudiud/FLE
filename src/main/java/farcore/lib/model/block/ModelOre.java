@@ -67,7 +67,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICustomItemModelSelector
 {
 	private static final String DEFAULT_MODEL_LOCATE = FarCore.ID + ":block/ore";
-	private static final List<ResourceLocation> LOAD_TARGETS = new ArrayList();
+	private static final List<ResourceLocation> LOAD_TARGETS = new ArrayList<>();
 	private static final ResourceLocation ITEM_PARENT_LOCATION = new ResourceLocation("minecraft", "block/block");
 	private static final ResourceLocation LOCATION = new ResourceLocation(FarCore.ID, "blockstates/ore");
 	private static final ModelResourceLocation MODEL_RESOURCE_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":ore", null);
@@ -130,14 +130,14 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	@SideOnly(Side.CLIENT)
 	static class OreRenderConfig
 	{
-		Map<String, String> renderTypes = new HashMap();
-		Map<String, ResourceLocation> sourceMap = new HashMap();
-		Map<String, ResourceLocation> modelMap = new HashMap();
+		Map<String, String> renderTypes = new HashMap<>();
+		Map<String, ResourceLocation> sourceMap = new HashMap<>();
+		Map<String, ResourceLocation> modelMap = new HashMap<>();
 	}
 	
-	private Map<String, String> renderTypes = new HashMap();
-	private Map<String, ResourceLocation> sourceMap = new HashMap();
-	private Map<String, ResourceLocation> models = new HashMap();
+	private Map<String, String> renderTypes = new HashMap<>();
+	private Map<String, ResourceLocation> sourceMap = new HashMap<>();
+	private Map<String, ResourceLocation> models = new HashMap<>();
 	
 	private ModelOre(){ }
 	
@@ -263,7 +263,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	public IBakedModel bake(IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
-		Map<String, IModel> models = new HashMap();
+		Map<String, IModel> models = new HashMap<>();
 		ImmutableMap.Builder<String, IBakedModel> typeBuilder = ImmutableMap.builder();
 		for(Mat material : Mat.materials())
 		{
@@ -333,7 +333,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 		{
 			IModel parent = ModelLoaderRegistry.getModelOrMissing(ITEM_PARENT_LOCATION);
-			Map<String, IModel> models = new HashMap();
+			Map<String, IModel> models = new HashMap<>();
 			ImmutableMap.Builder<String, IBakedModel> typeBuilder = ImmutableMap.builder();
 			for(Mat material : Mat.materials())
 			{
@@ -416,7 +416,6 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 	
 	private static class BakedModelOre implements ICustomItemRenderModel, BakedModelBase
 	{
-		Map<String, TextureAtlasSprite> icons;
 		Map<String, IBakedModel> models;
 		
 		BakedModelOre(Map<String, IBakedModel> models, VertexFormat format)

@@ -45,7 +45,6 @@ public class FarCore
 	{
 		if(Nebula.debug)
 		{
-			RuntimeException exception1 = new RuntimeException(exception);
 			exception.setStackTrace(new StackTraceElement[0]);
 			throw new RuntimeException(exception);
 		}

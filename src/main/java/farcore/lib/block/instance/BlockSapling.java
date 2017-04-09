@@ -89,7 +89,7 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for(Mat material : Mat.filt(SubTags.TREE))
 		{

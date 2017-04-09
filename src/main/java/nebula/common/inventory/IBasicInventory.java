@@ -40,14 +40,14 @@ public interface IBasicInventory
 	 */
 	default boolean hasStackInSlot(int index)
 	{
-		return getStackInSlot(index) != null;
+		return getStack(index) != null;
 	}
 	
 	/**
 	 * Returns the stack in the given slot.
 	 */
 	@Nullable
-	ItemStack getStackInSlot(int index);
+	ItemStack getStack(int index);
 	
 	/**
 	 * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
@@ -61,7 +61,7 @@ public interface IBasicInventory
 	@Nullable
 	default ItemStack decrStackSize(int index, AbstractStack stack)
 	{
-		return decrStackSize(index, stack.size(getStackInSlot(index)));
+		return decrStackSize(index, stack.size(getStack(index)));
 	}
 	
 	int insertStack(int index, ItemStack resource, boolean process);

@@ -27,9 +27,9 @@ public class LanguageManager
 	/** The default locale of manager. */
 	public static final String ENGLISH = "en_US";
 	/** Load from language file. */
-	private static final Map<String, Map<String, String>> MAP1 = new HashMap();
+	private static final Map<String, Map<String, String>> MAP1 = new HashMap<>();
 	/** Load from code. */
-	private static final Map<String, String> MAP2 = new HashMap();
+	private static final Map<String, String> MAP2 = new HashMap<>();
 	private static final FileFilter FILTER = file -> file.getName().endsWith(".lang");
 	private static boolean loadFile = false;
 	
@@ -171,7 +171,7 @@ public class LanguageManager
 				Log.info("Loading " + name + " language file.");
 				name = name.substring(0, ".lang".length());
 				int keyCount = 0;
-				Map<String, String> map = new HashMap();
+				Map<String, String> map = new HashMap<>();
 				try
 				{
 					reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -237,7 +237,6 @@ public class LanguageManager
 		Log.info("Start to write localized file.");
 		int keyCount = 0;
 		BufferedWriter writer = null;
-		BufferedReader reader = null;
 		try
 		{
 			File file = new File(this.file, ENGLISH + ".lang");

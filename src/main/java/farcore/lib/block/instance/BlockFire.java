@@ -102,7 +102,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "fire", (IProperty) null, STATE, SMOLDER, SPREAD_PREFERENCE);
+		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "fire", (IProperty<?>) null, STATE, SMOLDER, SPREAD_PREFERENCE);
 		ModelLoader.setCustomModelResourceLocation(this.item, 0, new ModelResourceLocation(FarCore.ID + ":fire", "inventory"));
 		ModelLoader.setCustomStateMapper(this, mapper);
 	}
@@ -147,7 +147,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	@Override
 	public String getTranslateNameForItemStack(int metadata)
 	{
-		return getUnlocalizedName();
+		return getUnlocalizedName() + ".name";
 	}
 	
 	@Override
@@ -190,7 +190,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
-		return new ArrayList();
+		return new ArrayList<>();
 	}
 	
 	@Override
@@ -406,7 +406,6 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 										chance /= 2;
 									}
 									BlockPos pos2 = pos.add(i, j, k);
-									IBlockState state2;
 									if(info.isCustomed(i, j, k) &&
 											((IThermalCustomBehaviorBlock) (state = worldIn.getBlockState(pos2)).getBlock()).onBurn(worldIn, pos2, 1000F / chance, U))
 									{

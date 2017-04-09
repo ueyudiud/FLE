@@ -183,9 +183,9 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		if(isEdible(itemStackIn, playerIn))
 		{
 			playerIn.setActiveHand(hand);
-			return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 		}
-		return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+		return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
 	}
 	
 	@Override

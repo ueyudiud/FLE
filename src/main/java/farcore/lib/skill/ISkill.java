@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public interface ISkill extends IRegisteredNameable
 {
-	Register<SkillAbstract> REGISTER = new Register();
+	Register<SkillAbstract> REGISTER = new Register<>();
 	
 	static SkillAbstract getSkill(String name)
 	{

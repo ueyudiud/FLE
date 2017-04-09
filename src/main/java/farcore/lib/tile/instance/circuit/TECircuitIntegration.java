@@ -6,6 +6,8 @@ package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Facing;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -44,5 +46,14 @@ public class TECircuitIntegration extends TECircuitFrontBack
 				setRedstonePower(this.integration / 16);
 			}
 		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getChannelRedSignalHardness(int i)
+	{
+		return i == 0 ? this.power :
+			i == 1 ? getRedstonePower(Facing.BACK) :
+				0;
 	}
 }

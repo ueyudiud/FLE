@@ -21,7 +21,7 @@ public enum OrderModelLoader implements ICustomModelLoader
 {
 	INSTANCE;
 	
-	private static final Map<ResourceLocation, IModel> MODEL_MAP = new HashMap();
+	private static final Map<ResourceLocation, IModel> MODEL_MAP = new HashMap<>();
 	
 	public static <V> void putModel(IForgeRegistryEntry<V> value, IModel model)
 	{

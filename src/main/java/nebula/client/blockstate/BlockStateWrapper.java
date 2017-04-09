@@ -113,6 +113,7 @@ public abstract class BlockStateWrapper implements IExtendedBlockState
 	}
 	
 	@Override
+	@Deprecated
 	public int getLightOpacity()
 	{
 		return this.state.getLightOpacity();
@@ -125,6 +126,7 @@ public abstract class BlockStateWrapper implements IExtendedBlockState
 	}
 	
 	@Override
+	@Deprecated
 	public int getLightValue()
 	{
 		return this.state.getLightValue();
@@ -305,6 +307,7 @@ public abstract class BlockStateWrapper implements IExtendedBlockState
 	}
 	
 	@Override
+	@Deprecated
 	public boolean isFullyOpaque()
 	{
 		return this.state.isFullyOpaque();

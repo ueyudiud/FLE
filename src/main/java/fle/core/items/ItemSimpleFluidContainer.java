@@ -71,7 +71,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	
 	@SideOnly(Side.CLIENT)
 	private IProgressBarStyle style;
-	private Map<Integer, FluidContainerProperty> propertyMap = new HashMap();
+	private Map<Integer, FluidContainerProperty> propertyMap = new HashMap<>();
 	
 	public ItemSimpleFluidContainer()
 	{

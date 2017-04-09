@@ -40,12 +40,13 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 			Appliable<?> cache;
 			if (appliable instanceof Appliable)
 			{
-				cache = Appliable.wrapCached((Appliable) appliable);
+				cache = Appliable.wrapCached((Appliable<?>) appliable);
 			}
 			else if (appliable instanceof Function)
 			{
+				@SuppressWarnings("unchecked")
 				final Function<S, ?> function = (Function<S, ?>) appliable;
-				cache = new AppliableCached()
+				cache = new AppliableCached<Object>()
 				{
 					@Override
 					protected Object apply$()
@@ -70,6 +71,7 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
 		return hasCapability(capability, facing) ? (T) this.map.get(capability).apply() : null;

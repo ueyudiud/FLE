@@ -6,7 +6,6 @@ import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -58,13 +57,10 @@ public class TreeGenSimple extends TreeGenAbstract
 	{
 		int r = this.randTreeHeight == 0 ? 0 : random.nextInt(this.randTreeHeight);
 		int l = this.minTreeHeight + r;
-		boolean flag = true;
 		
 		if (y >= 1 && y + l + 1 <= 256)
 		{
 			byte b0 = (byte) this.checkRange;
-			int k1;
-			Block block;
 			
 			if (!checkLogGrow(world, x, y, z, this.logCheckWidth, l + 1, this.logCheckWidth, false))
 				return false;
@@ -77,8 +73,6 @@ public class TreeGenSimple extends TreeGenAbstract
 						y < 256 - l - 1)
 				{
 					state.getBlock().onPlantGrow(state, world, pos, pos.up());
-					int l1;
-					int l2;
 					int k;
 					int ch;
 					float dis;

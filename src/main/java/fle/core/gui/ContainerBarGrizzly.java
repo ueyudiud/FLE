@@ -75,7 +75,7 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 		{
 			if (this.cache == null)
 			{
-				this.cache = RecipeMaps.WASHING_BARGRIZZLY.findRecipe(this.inventory.getStackInSlot(0));
+				this.cache = RecipeMaps.WASHING_BARGRIZZLY.findRecipe(this.inventory.getStack(0));
 				if (this.cache != null)
 				{
 					this.inventory.decrStackSize(0, this.cache.<AbstractStack>get1(0));
@@ -85,7 +85,7 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 			}
 			else if (this.cache != null && this.currentValue[1] > 100)
 			{
-				if (this.inventory.hasStackInSlot(1) && EnumToolTypes.BAR_GRIZZLY.toolMatch(this.inventory.getStackInSlot(1)))
+				if (this.inventory.hasStackInSlot(1) && EnumToolTypes.BAR_GRIZZLY.toolMatch(this.inventory.getStack(1)))
 				{
 					if (this.currentValue[0] < this.currentValue[2])
 					{

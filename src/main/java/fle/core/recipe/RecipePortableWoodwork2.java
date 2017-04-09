@@ -26,7 +26,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	{
 		if (inventory.hasStackInSlot(2))
 		{
-			ItemStack stack = inventory.getStackInSlot(2);
+			ItemStack stack = inventory.getStack(2);
 			Block block = Block.getBlockFromItem(stack.getItem());
 			if(block instanceof BlockLogArtificial)
 			{
@@ -36,7 +36,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 				hasT3 = false;
 				if (inventory.hasStackInSlot(0))
 				{
-					stack = inventory.getStackInSlot(0);
+					stack = inventory.getStack(0);
 					if (EnumToolTypes.AXE.match(stack) || EnumToolTypes.BOW_SAW.match(stack))
 					{
 						hasT1 = true;
@@ -48,7 +48,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 				}
 				if (inventory.hasStackInSlot(1))
 				{
-					stack = inventory.getStackInSlot(1);
+					stack = inventory.getStack(1);
 					if (EnumToolTypes.AWL.match(stack) || EnumToolTypes.BIFACE.match(stack) ||
 							(stack.getItem() instanceof IPolishableItem && ((IPolishableItem) stack.getItem()).getPolishResult(stack, ' ') == 'c'))
 					{
@@ -70,7 +70,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	@Override
 	public ItemStack[] getOutputs(IBasicInventory inventory, int value)
 	{
-		ItemStack stack = inventory.getStackInSlot(2);
+		ItemStack stack = inventory.getStack(2);
 		PropertyTree tree = ((BlockLogArtificial) Block.getBlockFromItem(stack.getItem())).tree;
 		ItemStack[] result = {new ItemStack(tree.plank), ItemMulti.createStack(tree.material(), MC.bark)};
 		return result;
@@ -87,7 +87,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 		flag = false;
 		if (inventory.hasStackInSlot(0))
 		{
-			stack = inventory.getStackInSlot(0);
+			stack = inventory.getStack(0);
 			if (EnumToolTypes.AXE.match(stack) || EnumToolTypes.BOW_SAW.match(stack))
 			{
 				hasT1 = true;
@@ -100,7 +100,7 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 		}
 		if (inventory.hasStackInSlot(1))
 		{
-			stack = inventory.getStackInSlot(1);
+			stack = inventory.getStack(1);
 			if (EnumToolTypes.AWL.match(stack) || EnumToolTypes.BIFACE.match(stack))
 			{
 				hasT2 = true;
@@ -112,22 +112,22 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 		}
 		if (hasT1 && hasT2)
 		{
-			ItemStacks.damageTool(inventory.getStackInSlot(0), 0.25F, null, null);
-			if (inventory.getStackInSlot(0).stackSize <= 0)
+			ItemStacks.damageTool(inventory.getStack(0), 0.25F, null, null);
+			if (inventory.getStack(0).stackSize <= 0)
 			{
 				inventory.removeStackFromSlot(0);
 			}
 			if (!flag)
 			{
-				ItemStacks.damageTool(inventory.getStackInSlot(1), 0.1F, null, null);
-				if (inventory.getStackInSlot(1).stackSize <= 0)
+				ItemStacks.damageTool(inventory.getStack(1), 0.1F, null, null);
+				if (inventory.getStack(1).stackSize <= 0)
 				{
 					inventory.removeStackFromSlot(1);
 				}
 			}
 			else
 			{
-				stack = inventory.getStackInSlot(1);
+				stack = inventory.getStack(1);
 				((IPolishableItem) stack.getItem()).onPolished(null, stack);
 				if (stack.stackSize <= 0)
 				{
@@ -137,8 +137,8 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 		}
 		else if (hasT3)
 		{
-			ItemStacks.damageTool(inventory.getStackInSlot(0), 0.4F, null, null);
-			if (inventory.getStackInSlot(0).stackSize <= 0)
+			ItemStacks.damageTool(inventory.getStack(0), 0.4F, null, null);
+			if (inventory.getStack(0).stackSize <= 0)
 			{
 				inventory.removeStackFromSlot(0);
 			}

@@ -20,7 +20,7 @@ import nebula.common.util.L;
 class OpInformation
 {
 	final String mcpname;
-	Map<String, List<OpLabel>> modifies = new HashMap();
+	Map<String, List<OpLabel>> modifies = new HashMap<>();
 	String cacheName;
 	List<OpLabel> label;
 	int line = -1;
@@ -28,7 +28,7 @@ class OpInformation
 	int length = 1;
 	List<AbstractInsnNode> cacheList;
 	@Deprecated
-	Map<Label, int[]> labelLocate = new HashMap();
+	Map<Label, int[]> labelLocate = new HashMap<>();
 	
 	OpInformation(String name)
 	{
@@ -59,7 +59,7 @@ class OpInformation
 	{
 		if(this.cacheList == null)
 		{
-			this.cacheList = new ArrayList();
+			this.cacheList = new ArrayList<>();
 		}
 		for(AbstractInsnNode node : nodes)
 		{
@@ -72,7 +72,7 @@ class OpInformation
 	{
 		if(this.label == null)
 		{
-			this.label = new ArrayList();
+			this.label = new ArrayList<>();
 		}
 		this.label.add(new OpLabel.OpLabelLineNumber(this.line, this.off, this.length, type, this.cacheList));
 		this.line = -1;

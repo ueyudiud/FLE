@@ -343,7 +343,7 @@ implements ITileEntityProvider
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof ITP_BoundingBox)
 		{
-			List<AxisAlignedBB> list = new ArrayList();
+			List<AxisAlignedBB> list = new ArrayList<>();
 			((ITP_BoundingBox) tile).addCollisionBoxToList(state, entityBox, list, entityIn);
 			for(AxisAlignedBB aabb : list)
 			{
@@ -413,7 +413,7 @@ implements ITileEntityProvider
 	{
 		if(tile instanceof ITP_Drops)
 			return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
-		List<ItemStack> list = new ArrayList();
+		List<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(this, 1, getMetaFromState(state)));
 		return list;
 	}

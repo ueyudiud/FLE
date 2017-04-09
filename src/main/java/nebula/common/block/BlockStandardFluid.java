@@ -125,7 +125,6 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		boolean changed = false;
 		int level = state.getValue(getLevelProperty()) + 1;
 		int prelevel = level;
 		level = tryToFlowVerticallyInto(worldIn, pos, level);

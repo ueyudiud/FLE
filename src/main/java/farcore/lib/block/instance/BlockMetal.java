@@ -74,7 +74,7 @@ public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 	}
 	
 	@Override
-	protected IBlockBehavior getBehavior(IBlockState state)
+	protected IBlockBehavior<?> getBehavior(IBlockState state)
 	{
 		return state.getValue(METALS).getProperty(MP.property_metal_block);
 	}
@@ -101,11 +101,11 @@ public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		for (int i = 0; i < METALS.getAllowedValues().size(); ++i)
 		{
-			list.add(new ItemStack(itemIn, 1, i));
+			list.add(new ItemStack(item, 1, i));
 		}
 	}
 }

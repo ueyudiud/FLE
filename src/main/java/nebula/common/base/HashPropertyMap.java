@@ -4,21 +4,22 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class HashPropertyMap implements IPropertyMap
+public
+class HashPropertyMap implements IPropertyMap
 {
-	private HashMap<IProperty, Object> map;
+	private transient HashMap<IProperty<?>, Object> map;
 	
 	public HashPropertyMap()
 	{
-		this.map = new HashMap();
+		this.map = new HashMap<>();
 	}
 	public HashPropertyMap(int initialCapacity)
 	{
-		this.map = new HashMap(initialCapacity);
+		this.map = new HashMap<>(initialCapacity);
 	}
 	public HashPropertyMap(int initialCapacity, float loadFactor)
 	{
-		this.map = new HashMap(initialCapacity, loadFactor);
+		this.map = new HashMap<>(initialCapacity, loadFactor);
 	}
 	
 	@Override
@@ -45,19 +46,19 @@ public class HashPropertyMap implements IPropertyMap
 	}
 	
 	@Override
-	public boolean contain(IProperty property)
+	public boolean contain(IProperty<?> property)
 	{
 		return this.map.containsKey(property);
 	}
 	
 	@Override
-	public Set<Entry<IProperty, Object>> entrySet()
+	public Set<Entry<IProperty<?>, ?>> entrySet()
 	{
-		return this.map.entrySet();
+		return (Set) this.map.entrySet();
 	}
 	
 	@Override
-	public Set<IProperty> keySet()
+	public Set<IProperty<?>> keySet()
 	{
 		return this.map.keySet();
 	}

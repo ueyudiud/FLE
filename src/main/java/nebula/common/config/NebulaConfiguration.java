@@ -61,7 +61,6 @@ public final class NebulaConfiguration
 		if (!configClass.isAnnotationPresent(Config.class))
 			throw new IllegalArgumentException("The cache type should has @Config annotation.");
 		Config configA = configClass.getAnnotation(Config.class);
-		String name = configA.value();
 		Configuration config = new Configuration(new File(Game.getMCFile(), "config/" + configA.value() + ".cfg"));
 		config.load();
 		
@@ -86,9 +85,12 @@ public final class NebulaConfiguration
 			int modifier = field.getModifiers();
 			if ((modifier & Modifier.FINAL) != 0) continue;//Skip final value.
 			if (flag ^ (modifier & Modifier.STATIC) != 0) continue;
-			TypeAdapter adapter = TYPE_ADAPTER_MAP.get(field.getType());
+			@SuppressWarnings("unchecked")
+			TypeAdapter<? super Object> adapter = (TypeAdapter<? super Object>) TYPE_ADAPTER_MAP.get(field.getType());
 			if (adapter == null)
-				throw new IllegalArgumentException("Can not found type adapter for " + field.getType().getName() + ".");
+			{
+				adapter = ADAPTER_ANY;
+			}
 			String category;
 			String name;
 			String defValue = DEFAULT_VALUE_APPLIER.getOrDefault(field.getType(), DEF_VALUE_FUNCTION).apply(field).toString();
@@ -116,8 +118,10 @@ public final class NebulaConfiguration
 		if (field.isAnnotationPresent(Config.class))
 		{
 			Config c = field.getAnnotation(Config.class);
-			field.set(arg, loadConfig(field.getType()));
+			field.set(arg, loadConfig(c.value(), field.getType()));
+			return;
 		}
+		throw new IllegalArgumentException("Can not found type adapter for " + field.getType().getName() + ".");
 	};
 	
 	private static final TypeAdapter<Integer> ADAPTER_INT = (arg, field, config, category, name, defValue, comments) -> {

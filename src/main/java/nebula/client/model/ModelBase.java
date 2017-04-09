@@ -43,7 +43,7 @@ public interface ModelBase extends IModel
 	default ResourceLocation getRealLocationFromPathOrDefault(String key, ImmutableMap<String, String> map, ResourceLocation def)
 	{
 		String key1 = key;
-		List<String> currents = new ArrayList();
+		List<String> currents = new ArrayList<>();
 		do
 		{
 			key1 = map.get(key1);
@@ -107,7 +107,7 @@ public interface ModelBase extends IModel
 		@Override
 		public IModel retexture(ImmutableMap<String, String> textures)
 		{
-			Map<String, String> map = new HashMap(this.textures);
+			Map<String, String> map = new HashMap<>(this.textures);
 			map.putAll(textures);
 			if(!(parent instanceof IRetexturableModel))
 				return new RetextureWrapperModel(parent, ImmutableMap.copyOf(map));

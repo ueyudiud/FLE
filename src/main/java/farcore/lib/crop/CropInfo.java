@@ -21,7 +21,7 @@ public class CropInfo
 	public int vitality;
 	public int saving;
 	
-	public IntegerMap<String> map = new IntegerMap();
+	public IntegerMap<String> map = new IntegerMap<>();
 	
 	public GeneticMaterial gamete = null;
 	

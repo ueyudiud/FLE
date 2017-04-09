@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableMap;
 public class ScriptBuilder
 {
 	private ScriptEngine engine;
-	private ImmutableList.Builder<IScriptObjectDecoder> decoders = ImmutableList.builder();
-	private ImmutableList.Builder<IScriptObjectEncoder> encoders = ImmutableList.builder();
+	private ImmutableList.Builder<IScriptObjectDecoder<?>> decoders = ImmutableList.builder();
+	private ImmutableList.Builder<IScriptObjectEncoder<?>> encoders = ImmutableList.builder();
 	private ImmutableMap.Builder<String, Object> globleValues = ImmutableMap.builder();
 	private ByteArrayOutputStream functions = new ByteArrayOutputStream();
 	
@@ -64,11 +64,11 @@ public class ScriptBuilder
 		{
 			if(object instanceof IScriptObjectDecoder)
 			{
-				this.decoders.add((IScriptObjectDecoder) object);
+				this.decoders.add((IScriptObjectDecoder<?>) object);
 			}
 			if(object instanceof IScriptObjectEncoder)
 			{
-				this.encoders.add((IScriptObjectEncoder) object);
+				this.encoders.add((IScriptObjectEncoder<?>) object);
 			}
 		}
 		return this;

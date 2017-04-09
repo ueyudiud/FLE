@@ -140,6 +140,7 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 		if(isServer())
 		{
 			updateCircuit();
+			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
 			if(this.updateDelay == 0)
 			{
 				notifyNeighbors();

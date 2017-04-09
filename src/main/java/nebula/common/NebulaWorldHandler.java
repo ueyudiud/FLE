@@ -49,9 +49,6 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class NebulaWorldHandler
 {
-	private static final int CHUNK_LENGTH = 16 * 256 * 16;
-	private static final int[] CACHE = new int[CHUNK_LENGTH];
-	
 	private static class NotifyEntry
 	{
 		int x;
@@ -91,14 +88,14 @@ public class NebulaWorldHandler
 		}
 	}
 	
-	private static final Map<Class<? extends IObjectInWorld>, String> OBJECTS_TO_ID = new HashMap();
-	private static final Map<String, Class<? extends IObjectInWorld>> ID_TO_OBJECTS = new HashMap();
+	private static final Map<Class<? extends IObjectInWorld>, String> OBJECTS_TO_ID = new HashMap<>();
+	private static final Map<String, Class<? extends IObjectInWorld>> ID_TO_OBJECTS = new HashMap<>();
 	
 	private static final String key = "objsinw";
-	private static Map<Integer, List<IObjectInWorld>> objects = new HashMap();
-	private static Map<Integer, List<NotifyEntry>> updatePos = new HashMap();
+	private static Map<Integer, List<IObjectInWorld>> objects = new HashMap<>();
+	private static Map<Integer, List<NotifyEntry>> updatePos = new HashMap<>();
 	
-	private static Map<Integer, List<IObjectInWorld>> unlistedObjects = new HashMap();
+	private static Map<Integer, List<IObjectInWorld>> unlistedObjects = new HashMap<>();
 	
 	public static void registerObject(String id, Class<? extends IObjectInWorld> clazz)
 	{
@@ -113,7 +110,7 @@ public class NebulaWorldHandler
 	public static List<IObjectInWorld> getObjectInRange(World world, double x, double y, double z, double range)
 	{
 		double sq = range * range;
-		List<IObjectInWorld> list = new ArrayList();
+		List<IObjectInWorld> list = new ArrayList<>();
 		for(IObjectInWorld obj : Worlds.getListFromWorldDimention(objects, world, false))
 		{
 			double[] p = obj.position();
@@ -184,7 +181,7 @@ public class NebulaWorldHandler
 		int z1 = event.getChunk().zPosition << 4;
 		int x2 = x1 + 16;
 		int z2 = z1 + 16;
-		List<IObjectInWorld> removed = new ArrayList();
+		List<IObjectInWorld> removed = new ArrayList<>();
 		if(objects.containsKey(dim = event.getWorld().provider.getDimension()))
 		{
 			for(IObjectInWorld obj : objects.get(dim))
@@ -272,7 +269,7 @@ public class NebulaWorldHandler
 		int dim = world.provider.getDimension();
 		if(objects.containsKey(dim) || unlistedObjects.containsKey(dim))
 		{
-			List<IObjectInWorld> saves = new ArrayList();
+			List<IObjectInWorld> saves = new ArrayList<>();
 			int x1 = chunk.xPosition << 4;
 			int z1 = chunk.zPosition << 4;
 			int x2 = x1 + 16;
@@ -302,7 +299,7 @@ public class NebulaWorldHandler
 			unlistedObjects.clear();
 			if(!saves.isEmpty())
 			{
-				Map<String, List<NBTBase>> map = new HashMap();
+				Map<String, List<NBTBase>> map = new HashMap<>();
 				for(IObjectInWorld obj : saves)
 				{
 					if(!OBJECTS_TO_ID.containsKey(obj.getClass()))
@@ -400,7 +397,7 @@ public class NebulaWorldHandler
 			event.setCanceled(true);
 			if(this.notifyFlag)
 			{
-				Set<NotifyEntry> set = new HashSet(event.getNotifiedSides().size());
+				Set<NotifyEntry> set = new HashSet<>(event.getNotifiedSides().size());
 				for(EnumFacing facing : event.getNotifiedSides())
 				{
 					set.add(new NotifyEntry(event.getState(), event.getPos(), facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ()));
@@ -412,7 +409,7 @@ public class NebulaWorldHandler
 			IUpdateDelayBlock block = (IUpdateDelayBlock) event.getState().getBlock();
 			int range = block.getCheckRange(event.getState());
 			int r1 = 2 * range + 1;
-			Set<NotifyEntry> set = new HashSet(r1*r1*r1);
+			Set<NotifyEntry> set = new HashSet<>(r1*r1*r1);
 			BlockPos pos = event.getPos();
 			if(!event.getWorld().isAreaLoaded(pos, range))
 				return;

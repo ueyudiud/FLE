@@ -19,11 +19,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class UnlocalizedList
 {
 	List<String> list;
-	List<String> postList = new ArrayList();
+	List<String> postList = new ArrayList<>();
 	
 	public UnlocalizedList()
 	{
-		this(new ArrayList());
+		this(new ArrayList<>());
 	}
 	public UnlocalizedList(List<String> list)
 	{

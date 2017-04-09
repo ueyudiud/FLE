@@ -50,7 +50,7 @@ public class FamilyTemplate<T extends ISpecie<H>, H extends IBiology> implements
 		}
 		else
 		{
-			this.judgables.addLast(new Ety(judgable, specie));
+			this.judgables.addLast(new Ety<>(judgable, specie));
 		}
 		return this;
 	}

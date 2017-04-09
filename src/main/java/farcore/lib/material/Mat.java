@@ -52,9 +52,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
-	private static final Register<Mat> REGISTER = new Register(32768);
+	private static final Register<Mat> REGISTER = new Register<>(32768);
 	
-	private static final Map<Judgable<? super Mat>, List<Mat>> MATERIALS_CACHE = new HashMap();
+	private static final Map<Judgable<? super Mat>, List<Mat>> MATERIALS_CACHE = new HashMap<>();
 	
 	/**
 	 * Default material, will not register in to list.
@@ -172,8 +172,8 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	private IPropertyMap propertyMap = new HashPropertyMap();
 	//Reused now.
-	private IntegerMap<String> properties = new IntegerMap();
-	private Set<SubTag> subTags = new HashSet();
+	private IntegerMap<String> properties = new IntegerMap<>();
+	private Set<SubTag> subTags = new HashSet<>();
 	
 	public Mat(int id, String name, String oreDict, String localized)
 	{

@@ -2,6 +2,49 @@
 	"name": "net.minecraft.client.renderer.RenderItem",
 	"modification": [
 		{
+			"name":"a|(Lbdl;Ladz;IILjava/lang/String;)V",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 407,
+					"off": 1,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 0
+						},
+						{
+							"opcode": 25,
+							"var": 1
+						},
+						{
+							"opcode": 25,
+							"var": 2
+						},
+						{
+							"opcode": 21,
+							"var": 3
+						},
+						{
+							"opcode": 21,
+							"var": 4
+						},
+						{
+							"opcode": 25,
+							"var": 5
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderCustomItemOverlayIntoGUI",
+							"desc": "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)Ladz;",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "a|(Lbyl;ILadz;)V",
 			"labels": [
 				{

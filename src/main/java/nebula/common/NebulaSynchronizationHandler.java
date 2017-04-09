@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
  */
 public class NebulaSynchronizationHandler
 {
-	private static final Map<Integer, Map<Integer, Map<ChunkPos, List<BlockPos>>>> SYNC_NETWORK_MAP = new HashMap();
+	private static final Map<Integer, Map<Integer, Map<ChunkPos, List<BlockPos>>>> SYNC_NETWORK_MAP = new HashMap<>();
 	
 	public static void markTileEntityForUpdate(INetworkedSyncTile tile, int type)
 	{

@@ -46,13 +46,13 @@ public class FarCoreCapabilitiesHandler
 		}
 		
 		@Override
+		@SuppressWarnings("unchecked")
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 		{
 			return !hasCapability(capability, facing) ? null : (T) castCapability(capability, facing);
 		}
 		
-		@SuppressWarnings("unchecked")
-		private Object castCapability(Capability capability, EnumFacing facing)
+		private Object castCapability(Capability<?> capability, EnumFacing facing)
 		{
 			if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return new IFluidHandler.FluidHandlerWrapper(this.tile, Direction.of(facing));
 			return null;

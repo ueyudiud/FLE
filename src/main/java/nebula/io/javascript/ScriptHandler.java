@@ -22,10 +22,10 @@ import nebula.Log;
 public class ScriptHandler implements IScriptHandler
 {
 	private final ScriptEngine engine;
-	private final Collection<IScriptObjectDecoder> decoders;
-	private final Collection<IScriptObjectEncoder> encoders;
+	private final Collection<IScriptObjectDecoder<?>> decoders;
+	private final Collection<IScriptObjectEncoder<?>> encoders;
 	
-	ScriptHandler(ScriptEngine engine, Collection<IScriptObjectEncoder> encoders, Collection<IScriptObjectDecoder> decoders, Map<String, Object> globleValues, byte[] values)
+	ScriptHandler(ScriptEngine engine, Collection<IScriptObjectEncoder<?>> encoders, Collection<IScriptObjectDecoder<?>> decoders, Map<String, Object> globleValues, byte[] values)
 	{
 		this.engine = engine;
 		this.encoders = encoders;
@@ -92,7 +92,7 @@ public class ScriptHandler implements IScriptHandler
 	{
 		IScriptObjectEncoder encoder = null;
 		Class<?> type = value.getClass();
-		for(IScriptObjectEncoder coder : this.encoders)
+		for(IScriptObjectEncoder<?> coder : this.encoders)
 		{
 			if(coder.access(type))
 			{
@@ -110,8 +110,8 @@ public class ScriptHandler implements IScriptHandler
 	@Override
 	public Object decode(Object value, Type type) throws ScriptException
 	{
-		IScriptObjectDecoder decoder = null;
-		for(IScriptObjectDecoder coder : this.decoders)
+		IScriptObjectDecoder<?> decoder = null;
+		for(IScriptObjectDecoder<?> coder : this.decoders)
 		{
 			if(coder.access(type))
 			{

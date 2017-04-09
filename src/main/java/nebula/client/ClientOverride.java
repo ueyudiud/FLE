@@ -46,7 +46,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientOverride
 {
-	public static final List<IWorldRender> RENDERS = new ArrayList();
+	public static final List<IWorldRender> RENDERS = new ArrayList<>();
 	private static int rainSoundCounter;
 	
 	public static void renderDropOnGround(Random random, int rendererUpdateCount)
@@ -71,7 +71,7 @@ public class ClientOverride
 		{
 			random.setSeed(rendererUpdateCount * 312987231L);
 			BlockPos blockpos = new BlockPos(entity);
-			int i = 10;
+			//			int i = 10;
 			double d0 = 0.0D;
 			double d1 = 0.0D;
 			double d2 = 0.0D;
@@ -144,7 +144,7 @@ public class ClientOverride
 		try
 		{
 			if (model instanceof ICustomItemRenderModel)
-				return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
+				return ((ICustomItemRenderModel) model).getQuads(stack.copy(), facing, rand);
 			return model.getQuads(null, facing, rand);
 		}
 		catch (RuntimeException exception)
@@ -161,20 +161,25 @@ public class ClientOverride
 		}
 	}
 	
-	public static void renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
+	public static ItemStack renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
 	{
-		if (stack == null) return;
+		if (stack == null) return null;
 		Item item = stack.getItem();
+		if (item == null)
+		{
+			Log.error("The rendering item is missing. ItemRender : {}, FontRenderer : {}", new RuntimeException(), render, fr);
+			return null;
+		}
 		try
 		{
-			if (!(item instanceof IIP_CustomOverlayInGui) || !((IIP_CustomOverlayInGui) item).renderCustomItemOverlayIntoGUI(render, fr, stack, xPosition, yPosition, text))
-			{
-				render.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, text);
-			}
+			return item instanceof IIP_CustomOverlayInGui &&
+					((IIP_CustomOverlayInGui) item).renderCustomItemOverlayIntoGUI(render, fr, stack, xPosition, yPosition, text) ?
+							null : stack;
 		}
 		catch (RuntimeException exception)
 		{
 			Log.error("Failed to render item overlay into GUI. Item : {}, ItemRender : {}, FontRenderer : {}", exception, stack, render, fr);
+			return null;
 		}
 	}
 }

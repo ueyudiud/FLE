@@ -33,13 +33,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockCrop extends BlockSingleTE implements IPlantable
 {
-	public static final ThreadLocal<ICrop> CROP_THREAD = new ThreadLocal();
-	public static final ThreadLocal<ItemStack> ITEM_THREAD = new ThreadLocal();
+	public static final ThreadLocal<ICrop> CROP_THREAD = new ThreadLocal<>();
+	public static final ThreadLocal<ItemStack> ITEM_THREAD = new ThreadLocal<>();
 	public static final PropertyString PROP_CROP_TYPE;
 	
 	static
 	{
-		List<String> list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		for(Mat material : Mat.filt(SubTags.CROP))
 		{
 			ICrop crop = material.getProperty(MP.property_crop);

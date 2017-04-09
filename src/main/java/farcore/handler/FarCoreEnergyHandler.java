@@ -29,7 +29,7 @@ public class FarCoreEnergyHandler implements IEventExceptionHandler
 	 * The bus handle energy net updating and handler in net refreshing.
 	 */
 	public static final EventBus BUS = new EventBus(HANDLER);
-	private static final List<IEnergyNet> energyNets = new ArrayList();
+	private static final List<IEnergyNet> energyNets = new ArrayList<>();
 	
 	static
 	{

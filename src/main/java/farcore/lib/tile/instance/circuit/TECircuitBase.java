@@ -56,6 +56,8 @@ ITB_BlockPlacedBy, IToolableTile, ITB_BlockDestroyedByPlayer, IUpdatableTile,
 ITP_Drops, ITP_BoundingBox, ITP_BlockHardness,
 ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 {
+	protected volatile boolean circuitRedsignalMarker = false;
+	
 	protected static final ActionResult<Float> SCREW_DRIVER_DAMAGE = new ActionResult<>(EnumActionResult.SUCCESS, 0.2F);
 	protected static final AxisAlignedBB REDSTONE_DIODE_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
 	

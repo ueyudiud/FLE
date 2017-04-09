@@ -26,8 +26,8 @@ public class NebulaModelPartDecoder implements JsonDeserializer<INebulaModelPart
 {
 	public static final NebulaModelPartDecoder INSTANCE = new NebulaModelPartDecoder();
 	
-	private static final Map<ResourceLocation, IModelPartLoader> LOCATION_TO_LOADER_MAP = new HashMap();
-	private static final Map<Class<? extends INebulaModelPart>, IModelPartLoader> CLASS_TO_LOADER_MAP = new HashMap();
+	private static final Map<ResourceLocation, IModelPartLoader<?>> LOCATION_TO_LOADER_MAP = new HashMap<>();
+	private static final Map<Class<? extends INebulaModelPart>, IModelPartLoader<?>> CLASS_TO_LOADER_MAP = new HashMap<>();
 	
 	static
 	{
@@ -35,7 +35,7 @@ public class NebulaModelPartDecoder implements JsonDeserializer<INebulaModelPart
 		registerDeserializer(new ResourceLocation("nebula", "verticalcube"), PackedVerticalCube.class, PackedVerticalCube.LOADER);
 	}
 	
-	public static void registerDeserializer(ResourceLocation location, Class<? extends INebulaModelPart> targetClass, IModelPartLoader loader)
+	public static void registerDeserializer(ResourceLocation location, Class<? extends INebulaModelPart> targetClass, IModelPartLoader<?> loader)
 	{
 		LOCATION_TO_LOADER_MAP.put(location, loader);
 		CLASS_TO_LOADER_MAP.put(targetClass, loader);

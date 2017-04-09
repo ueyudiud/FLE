@@ -114,10 +114,10 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 			if(is(HasWick) && !is(Burning))
 			{
 				change(Burning);
-				return new ActionResult(EnumActionResult.SUCCESS, 0.2F);
+				return new ActionResult<>(EnumActionResult.SUCCESS, 0.2F);
 			}
 			else
-				return new ActionResult(EnumActionResult.FAIL, 0F);
+				return new ActionResult<>(EnumActionResult.FAIL, 0F);
 		}
 		return IToolableTile.DEFAULT_RESULT;
 	}

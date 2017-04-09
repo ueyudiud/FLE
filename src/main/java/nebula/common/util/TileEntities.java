@@ -137,13 +137,13 @@ public final class TileEntities
 	
 	public static void insertStack(AbstractStack stack, IBasicInventory inventory, int idx)
 	{
-		if(inventory.getStackInSlot(idx) == null)
+		if(inventory.getStack(idx) == null)
 		{
 			inventory.setInventorySlotContents(idx, stack.instance());
 		}
 		else
 		{
-			ItemStack stack2 = inventory.getStackInSlot(idx);
+			ItemStack stack2 = inventory.getStack(idx);
 			stack2.stackSize += stack.size(stack2);
 		}
 	}
@@ -205,7 +205,7 @@ public final class TileEntities
 	public static void damageTool(IBasicInventory inventory, int index, float amount,
 			EntityPlayer user, EnumToolType type)
 	{
-		ItemStack stack = inventory.getStackInSlot(index);
+		ItemStack stack = inventory.getStack(index);
 		if (stack == null) return;
 		ItemStacks.damageTool(stack, amount, user, type);
 		if (stack.stackSize <= 0)
