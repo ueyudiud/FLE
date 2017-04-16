@@ -42,7 +42,7 @@ public class StateMapperCircuit implements IStateMapper
 				{
 					IBlockState state3 = state2.withProperty(BlockRedstoneCircuit.CUSTOM_VALUE, substate).withProperty(Misc.PROP_DIRECTION_HORIZONTALS, facing);
 					Map<IProperty<?>, Comparable<?>> map = new HashMap(state3.getProperties());
-					String key = StateMapperExt.removeAndGetName(property, map);
+					StateMapperExt.removeAndGetName(property, map);
 					builder.put(state3, new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), StateMapperExt.getPropertyKey(map)));
 				}
 			}
