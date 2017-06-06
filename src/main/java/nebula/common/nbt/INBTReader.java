@@ -21,6 +21,7 @@ public interface INBTReader<T, N extends NBTBase>
 	 * @param key
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	default @Nullable T readFromNBT(NBTTagCompound nbt, String key)
 	{
 		return nbt.hasKey(key) ? readFromNBT((N) nbt.getTag(key)) : null;
@@ -37,7 +38,6 @@ public interface INBTReader<T, N extends NBTBase>
 		readFromNBT1((N) nbt.getTag(key));
 	}
 	
-	@SuppressWarnings("unchecked")
 	default void readFromNBT1(N nbt)
 	{
 		throw new UnsupportedOperationException();

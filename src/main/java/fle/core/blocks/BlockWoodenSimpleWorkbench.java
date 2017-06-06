@@ -7,10 +7,10 @@ package fle.core.blocks;
 import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.tile.wooden.workbench.TEWoodenPolishTable;
-import nebula.client.ClientProxy;
+import nebula.base.IRegister;
 import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
-import nebula.common.base.IRegister;
 import nebula.common.block.BlockTE;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,6 +47,6 @@ public class BlockWoodenSimpleWorkbench extends BlockTE
 	public void registerRender()
 	{
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "simple_workbench", this.property_TE);
-		ClientProxy.registerCompactModel(mapper, this, this.property_TE);
+		Renders.registerCompactModel(mapper, this, this.property_TE);
 	}
 }

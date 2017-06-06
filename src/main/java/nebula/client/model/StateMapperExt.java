@@ -28,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
-public class StateMapperExt extends StateMapperBase
+public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 {
 	private static final Comparator<IProperty<?>> PROPERTY_COMPARATOR = (property1, property2) -> property1.getName().compareTo(property2.getName());
 	

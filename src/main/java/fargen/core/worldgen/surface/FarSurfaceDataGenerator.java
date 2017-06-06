@@ -21,7 +21,7 @@ import fle.core.tree.TreeGenClassic;
 import fle.core.tree.TreeGenJungle;
 import fle.core.tree.TreeGenPine;
 import fle.core.tree.TreeGenShrub;
-import nebula.common.base.WeightedRandomSelector;
+import nebula.base.WeightedRandomSelector;
 import nebula.common.util.A;
 import nebula.common.util.noise.NoiseBase;
 import net.minecraft.block.Block;
@@ -165,7 +165,7 @@ public class FarSurfaceDataGenerator
 	STATES2[] = {ROCK},
 	SOIL_LIST[][];
 	
-	private final FarSurfaceBiomeProvider biomeProvider;
+	protected final FarSurfaceBiomeProvider biomeProvider;
 	
 	private DataCacheCoord<IBlockState[]> rockDataCache;
 	private DataCacheCoord<IBlockState[]> topDataCache;

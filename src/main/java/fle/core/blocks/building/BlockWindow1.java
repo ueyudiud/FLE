@@ -10,7 +10,7 @@ import farcore.data.SubTags;
 import farcore.lib.block.state.PropertyMaterial;
 import farcore.lib.material.Mat;
 import fle.core.FLE;
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import nebula.common.block.BlockBase;
 import nebula.common.data.Misc;
 import nebula.common.util.ISubTagContainer;

@@ -7,7 +7,7 @@ package fle.core.entity.ai;
 import java.util.List;
 
 import farcore.lib.entity.animal.IAnimalAccess;
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;

@@ -13,7 +13,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.MessageToMessageCodec;
-import nebula.common.base.Register;
+import nebula.base.Register;
 import nebula.common.network.packet.PacketLarge;
 import nebula.common.util.Players;
 import nebula.common.util.Sides;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @ChannelHandler.Sharable
 public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 {
-	static final Register<Network> register = new Register();
+	static final Register<Network> register = new Register<>();
 	
 	public static Network network(String name)
 	{
@@ -66,7 +66,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	private final EnumMap<Side, FMLEmbeddedChannel> channel;
 	private final String channelName;
-	private Register<Class<? extends IPacket>> packetTypes = new Register(256);
+	private Register<Class<? extends IPacket>> packetTypes = new Register<>(256);
 	private int id = 0;
 	
 	protected Network(String name)

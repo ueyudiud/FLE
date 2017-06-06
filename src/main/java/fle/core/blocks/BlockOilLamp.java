@@ -6,7 +6,7 @@ import java.util.Random;
 import farcore.data.EnumItem;
 import fle.core.FLE;
 import fle.core.tile.tools.TEOilLamp;
-import nebula.common.base.IRegister;
+import nebula.base.IRegister;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

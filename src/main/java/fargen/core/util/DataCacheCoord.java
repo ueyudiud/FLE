@@ -4,7 +4,7 @@
 
 package fargen.core.util;
 
-import nebula.common.base.BiIntToObjFunction;
+import nebula.base.function.BiIntToObjFunction;
 
 /**
  * @author ueyudiud

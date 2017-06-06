@@ -125,17 +125,17 @@ public final class ModelQuadBuilder
 	
 	public void putCubeQuads(ImmutableList.Builder<BakedQuad> executable, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 	{
-		putCubeQuads(quad -> executable.add(quad), minX, minY, minZ, maxX, maxY, maxZ);
+		putCubeQuads(executable::add, minX, minY, minZ, maxX, maxY, maxZ);
 	}
 	
 	public void putCubeQuads(Collection<BakedQuad> executable, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 	{
-		putCubeQuads(quad -> executable.add(quad), minX, minY, minZ, maxX, maxY, maxZ);
+		putCubeQuads(executable::add, minX, minY, minZ, maxX, maxY, maxZ);
 	}
 	
 	public List<BakedQuad> bakeCube()
 	{
-		List<BakedQuad> list = new ArrayList();
+		List<BakedQuad> list = new ArrayList<>();
 		putCubeQuads(quad -> list.add(quad), this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
 		return list;
 	}
@@ -292,7 +292,6 @@ public final class ModelQuadBuilder
 	{
 		return this.format;
 	}
-	
 	
 	public void resetOption()
 	{

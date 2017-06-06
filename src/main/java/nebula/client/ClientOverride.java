@@ -151,7 +151,8 @@ public class ClientOverride
 		{
 			if (model != null)
 			{
-				Log.error("Invalid model {} by stack {}, failed to get facing at {}.", exception, model, stack, facing);
+				Log.error("Invalid model {} by stack {}, failed to get facing at {}.", new Object[]{model, stack, facing});
+				Log.catching(exception);
 			}
 			else
 			{

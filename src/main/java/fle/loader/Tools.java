@@ -34,7 +34,7 @@ import fle.core.items.tool.ToolShovel;
 import fle.core.items.tool.ToolSickle;
 import fle.core.items.tool.ToolSpear;
 import fle.core.items.tool.ToolWhetstone;
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import nebula.common.item.IBehavior;
 import nebula.common.tool.EnumToolType;
 

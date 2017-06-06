@@ -7,10 +7,10 @@ package fle.core.blocks;
 import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.tile.wooden.TEDryingTable;
-import nebula.client.ClientProxy;
+import nebula.base.IRegister;
 import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
-import nebula.common.base.IRegister;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -49,7 +49,7 @@ public class BlockWoodenMiscMachine extends BlockTE
 	public void registerRender()
 	{
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
-		ClientProxy.registerCompactModel(mapper, this, this.property_TE);
+		Renders.registerCompactModel(mapper, this, this.property_TE);
 		registerCustomBlockRender(mapper, 0, "misc_machine/drying_table");
 	}
 	

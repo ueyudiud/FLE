@@ -10,9 +10,7 @@ import farcore.data.EnumItem;
 import farcore.data.MC;
 import fle.core.FLE;
 import fle.loader.Crops;
-import nebula.client.model.FlexibleItemSubmetaGetterLoader;
-import nebula.client.model.FlexibleTextureSet;
-import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.foodstat.EnumNutrition;
 import nebula.common.item.FoodStatBase;
 import nebula.common.item.IBehavior;
@@ -91,8 +89,8 @@ public class ItemSubCropRelated extends ItemSubEdible
 	public void registerRender()
 	{
 		super.registerRender();
-		NebulaItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/crop_related"));
-		FlexibleTextureSet.registerTextureSetApplier(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/crop_related/" + key)));
-		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
+		NebulaModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/crop_related"));
+		NebulaModelLoader.registerTextureSet(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/crop_related/" + key)));
+		NebulaModelLoader.registerItemMetaGenerator(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
 	}
 }

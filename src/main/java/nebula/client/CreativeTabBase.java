@@ -1,10 +1,10 @@
 package nebula.client;
 
 import nebula.Log;
+import nebula.base.function.Appliable;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
-import nebula.common.base.Appliable;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;

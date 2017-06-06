@@ -9,8 +9,8 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
 
-import nebula.common.base.Appliable;
-import nebula.common.base.Appliable.AppliableCached;
+import nebula.base.function.Appliable;
+import nebula.base.function.Appliable.AppliableCached;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;

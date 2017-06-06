@@ -58,7 +58,7 @@ public class ModelFluidBlock
 	@SideOnly(Side.CLIENT)
 	public static enum Selector implements ICustomItemModelSelector, IStateMapper
 	{
-		instance;
+		INSTANCE;
 		
 		@Override
 		public ModelResourceLocation getModelLocation(ItemStack stack)

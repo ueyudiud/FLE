@@ -12,6 +12,7 @@ import fargen.core.instance.Layers;
 import fargen.core.layer.surface.LayerSurfaceTerrain;
 import fargen.core.util.DataCacheCoord;
 import nebula.Log;
+import nebula.common.util.L;
 import nebula.common.world.IBiomeRegetter;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -37,7 +38,6 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	{
 		this.biomeCache = new DataCacheCoord<>((x, z)-> getBiomes(null, x, z, 16, 16, false), 4);
 		this.dataGenerator = new FarSurfaceDataGenerator(this, info.getSeed());
-		Random random = new Random(info.getSeed() * 4837583719572921L ^ 573947459175495729L);
 		//		this.biomeCache = new BiomeCache(this);
 		allowedBiomes.add(FarGenBiomes.boreal_forest);
 		allowedBiomes.add(FarGenBiomes.subtropical_broadleaf_forest);
@@ -201,33 +201,22 @@ public class FarSurfaceBiomeProvider extends BiomeProvider implements IBiomeRege
 	public BlockPos findBiomePosition(int x, int z, int range, List<Biome> biomes, Random random)
 	{
 		IntCache.resetIntCache();
-		int i = x - range >> 2;	int j = z - range >> 2;
-		int k = x + range >> 2;
-		int l = z + range >> 2;
-		int i1 = k - i + 1;
-		int j1 = l - j + 1;
-		//		int[] aint = this.layers.biomeLayer1.getInts(i, j, i1, j1);
-		BlockPos blockpos = null;
-		int k1 = 0;
-		
-		for (int l1 = 0; l1 < i1 * j1; ++l1)
+		int r = (range >> 2);
+		int[] aint = this.layers[1].getInts(x - r, z - r, 1 + (range >> 1), 1 + (range >> 1));
+		int k1 = 1;
+		BlockPos pos = null;
+		for (int i = 0; i < r * r; ++i)
 		{
-			int i2 = i + l1 % i1 << 2;
-			int j2 = j + l1 / i1 << 2;
-			//			Biome biome = BiomeBase.getBiomeFromID(aint[l1] & 0xFF);
-			
-			//			if (biomes.contains(biome) && (blockpos == null || random.nextInt(k1 + 1) == 0))
+			if (biomes.contains(getBiome(aint[i], null)) && L.nextInt(k1, random) == 0)
 			{
-				blockpos = new BlockPos(i2, 0, j2);
-				++k1;
+				pos = new BlockPos(x + i % r, 0, z + i / r);
 			}
 		}
-		
-		return blockpos;
+		return pos;
 	}
 	
 	@Override
-	public Biome getBiome(int saveID, BlockPos pos)
+	public Biome getBiome(int saveID, @Nullable BlockPos pos)
 	{
 		return BiomeBase.getBiomeFromID(saveID);
 	}

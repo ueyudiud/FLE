@@ -18,7 +18,7 @@ import farcore.lib.crop.ICropAccess;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyEdible;
 import fle.core.FLE;
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 
 /**
  * @author ueyudiud

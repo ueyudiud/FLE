@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import nebula.common.base.Ety;
-import nebula.common.base.IntegerEntry;
+import nebula.base.Ety;
+import nebula.base.IntegerEntry;
 import nebula.common.tile.IFluidHandlerIO;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;

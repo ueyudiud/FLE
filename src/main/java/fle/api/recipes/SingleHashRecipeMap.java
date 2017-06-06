@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nebula.common.base.INode;
-import nebula.common.base.Node;
+import nebula.base.INode;
+import nebula.base.Node;
 
 /**
  * @author ueyudiud

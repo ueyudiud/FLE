@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Random;
 
 import nebula.Log;
+import nebula.base.ArrayListAddWithCheck;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
-import nebula.common.base.ArrayListAddWithCheck;
 import nebula.common.tool.ToolHooks;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;

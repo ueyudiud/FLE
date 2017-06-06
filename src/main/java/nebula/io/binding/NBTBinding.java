@@ -13,7 +13,7 @@ import javax.script.Bindings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 
-import nebula.common.base.Ety;
+import nebula.base.Ety;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByteArray;

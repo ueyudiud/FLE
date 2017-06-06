@@ -25,17 +25,9 @@ public class Log
 			logger().catching(throwable);
 		}
 	}
-	public static void error(String message, Throwable throwable, Object...formats)
-	{
-		logger().error(message, throwable, formats);
-	}
 	public static void error(String message, Object...formats)
 	{
 		logger().error(message, formats);
-	}
-	public static void warn(String message, Throwable throwable, Object...formats)
-	{
-		logger().warn(message, throwable, formats);
 	}
 	public static void warn(String message, Object...formats)
 	{

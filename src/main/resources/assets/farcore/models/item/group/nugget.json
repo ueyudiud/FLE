@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/nugget",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/nugget",
+			"meta": "farcore:material"
+		}
+	]
 }

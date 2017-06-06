@@ -2,7 +2,7 @@ package nebula.common.inventory;
 
 import javax.annotation.Nullable;
 
-import nebula.common.base.Appliable;
+import nebula.base.function.Appliable;
 import nebula.common.stack.AbstractStack;
 import net.minecraft.item.ItemStack;
 

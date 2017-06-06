@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import nebula.Log;
-import nebula.common.base.IntegerMap;
+import nebula.base.IntegerMap;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
 import nebula.common.network.PacketBufferExt;
@@ -35,8 +35,8 @@ public enum ExtendedBlockStateRegister implements Runnable
 {
 	SERVER;
 	
-	static final List<IBlockState> TO_STATE_LIST = new ArrayList(1024);
-	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap(4096) {
+	static final List<IBlockState> TO_STATE_LIST = new ArrayList<>(1024);
+	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap<IBlockState>(4096) {
 		@Override
 		protected int hashcode(Object object)
 		{
@@ -132,8 +132,8 @@ public enum ExtendedBlockStateRegister implements Runnable
 		TO_STATE_LIST.clear();
 		TO_ID_MAP.clear();
 		int len = input.readInt();
-		List<String> list = new ArrayList();
-		Map<Integer, Integer> intMap = new HashMap();
+		List<String> list = new ArrayList<>();
+		Map<Integer, Integer> intMap = new HashMap<>();
 		for(int i = 0; i < len; ++i)
 		{
 			String key = input.readString(999);
@@ -271,7 +271,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 					;
 				}
 			}
-			Map<IBlockState, List<IBlockState>> stateMap = new HashMap();
+			Map<IBlockState, List<IBlockState>> stateMap = new HashMap<>();
 			boolean flag = false;
 			for (IBlockState state1 : container.getValidStates())
 			{
@@ -304,7 +304,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 		else
 		{
-			List<IProperty> list = new ArrayList(block.getBlockState().getProperties());
+			List<IProperty> list = new ArrayList<>(block.getBlockState().getProperties());
 			list.removeAll(Arrays.asList(properties));
 			IProperty[] properties2 = L.cast(list, IProperty.class);
 			forEach1(0, properties, properties2, block.getDefaultState());
@@ -315,7 +315,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	{
 		if(id == properties1.length)
 		{
-			List<IBlockState> list = new ArrayList();
+			List<IBlockState> list = new ArrayList<>();
 			forEach2(0, properties2, state, list);
 			registerStateMap(state, list);
 			return;

@@ -8,10 +8,10 @@ import farcore.instances.MaterialTextureLoader;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.model.block.ModelPartRedstoneCircuitPlate;
 import nebula.client.NebulaTextureHandler;
-import nebula.client.model.ColorMultiplier;
-import nebula.client.model.FlexibleItemSubmetaGetterLoader;
-import nebula.client.model.FlexibleTextureSet;
+import nebula.client.model.flexible.NebulaModelDeserializer;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.FontMap;
 import nebula.client.render.FontRenderExtend;
 import net.minecraft.util.ResourceLocation;
@@ -33,11 +33,13 @@ public class ClientLoader extends CommonLoader
 		
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
 		//Register model loaders, state mappers and item model selectors.
-		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
+		NebulaModelDeserializer.registerBlockDeserializer("farcore:circuitplate", ModelPartRedstoneCircuitPlate.DESERIALIZER);
+		
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
 		
 		for(MatCondition condition : MatCondition.register)
 		{
-			FlexibleTextureSet.registerTextureSetApplier(new ResourceLocation(FarCore.ID, "group/" + condition.name), () ->
+			NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "group/" + condition.name), () ->
 			{
 				ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
 				for (Mat material : Mat.filt(condition))
@@ -47,6 +49,6 @@ public class ClientLoader extends CommonLoader
 				return builder.build();
 			});
 		}
-		ColorMultiplier.registerColorMultiplier(new ResourceLocation(FarCore.ID, "material"), stack -> ItemMulti.getMaterial(stack).RGB);
+		NebulaModelLoader.registerItemColorMultiplier(new ResourceLocation(FarCore.ID, "material"), stack -> ItemMulti.getMaterial(stack).RGB);
 	}
 }

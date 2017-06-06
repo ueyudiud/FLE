@@ -3,10 +3,10 @@ package nebula.common.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import nebula.client.model.NebulaBlockModelLoader;
+import nebula.base.IRegister;
+import nebula.base.Register;
 import nebula.client.model.StateMapperExt;
-import nebula.common.base.IRegister;
-import nebula.common.base.Register;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.block.property.PropertyTE;
 import nebula.common.block.property.PropertyTE.TETag;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
@@ -72,7 +72,7 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	@SideOnly(Side.CLIENT)
 	protected void registerCustomBlockRender(StateMapperExt map, int meta, String location)
 	{
-		NebulaBlockModelLoader.registerModel(map.getModelResourceLocation(this.property_TE.withProperty(getDefaultState(), meta)), new ResourceLocation(getRegistryName().getResourceDomain(), location));
+		NebulaModelLoader.registerModel(this, map, this.property_TE.withProperty(getDefaultState(), meta), new ResourceLocation(getRegistryName().getResourceDomain(), location));
 	}
 	
 	public PropertyTE property_TE;

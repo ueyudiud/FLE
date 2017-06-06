@@ -16,9 +16,9 @@ import farcore.lib.material.Mat;
 import farcore.lib.world.CalendarHandler;
 import farcore.lib.world.ICalendar;
 import farcore.lib.world.ICalendarWithMonth;
-import nebula.client.ClientProxy;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.IRenderRegister;
+import nebula.client.util.Renders;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.Properties;
 import nebula.common.util.Worlds;
@@ -64,7 +64,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		ClientProxy.registerCompactModel(new StateMapperExt(FarCore.ID, "plant/dandelion", null, PROGRESS), this.block, AGE);
+		Renders.registerCompactModel(new StateMapperExt(FarCore.ID, "plant/dandelion", null, PROGRESS), this.block, AGE);
 	}
 	
 	@Override

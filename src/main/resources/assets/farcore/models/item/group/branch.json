@@ -1,4 +1,6 @@
 {
-    "textures": "[farcore:group/branch",
-    "layers": "~farcore:material"
+	"layer": {
+		"texture": "[farcore:group/branch",
+		"meta": "farcore:material"
+	}
 }

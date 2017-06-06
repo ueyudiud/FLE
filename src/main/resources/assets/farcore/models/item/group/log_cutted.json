@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/log_cutted",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/log_cutted",
+			"meta": "farcore:material"
+		}
+	]
 }

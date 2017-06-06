@@ -3,9 +3,9 @@ package nebula.common.util;
 import java.util.Collection;
 import java.util.HashSet;
 
-import nebula.common.base.IRegister;
-import nebula.common.base.Judgable;
-import nebula.common.base.Register;
+import nebula.base.IRegister;
+import nebula.base.Judgable;
+import nebula.base.Register;
 
 public final class SubTag implements Judgable<ISubTagContainer>
 {

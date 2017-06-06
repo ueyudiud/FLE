@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.material.Mat;
-import nebula.common.base.Appliable;
+import nebula.base.function.Appliable;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;

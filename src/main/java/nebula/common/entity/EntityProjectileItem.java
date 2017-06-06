@@ -45,10 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityProjectileItem extends Entity implements IThrowableEntity, IProjectile, IDescribable
 {
 	private static final Predicate<Entity> ARROW_TARGETS =
-			Predicates.and(new Predicate[] {
-					EntitySelectors.NOT_SPECTATING,
-					EntitySelectors.IS_ALIVE,
-					entity -> ((Entity) entity).canBeCollidedWith()});
+			Predicates.<Entity>and(EntitySelectors.NOT_SPECTATING, EntitySelectors.IS_ALIVE, Entity::canBeCollidedWith);
 	public boolean inGround = false;
 	private int tickInGround;
 	private int tickInAir;
@@ -59,7 +56,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	public int age;
 	public ItemStack currentItem;
 	public EntityLivingBase shooter;
-	private List<EntityPlayer> list = new ArrayList();
+	private List<EntityPlayer> list = new ArrayList<>();
 	
 	public EntityProjectileItem(World worldIn)
 	{
@@ -341,13 +338,11 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 			this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
 			this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
 			float f1 = 0.99F;
-			float f2 = 0.05F;
 			
 			if (isInWater())
 			{
 				for (int i = 0; i < 4; ++i)
 				{
-					float f3 = 0.25F;
 					this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
 				}
 				

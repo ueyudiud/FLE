@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import nebula.common.base.BiIntToObjFunction;
+import nebula.base.function.BiIntToObjFunction;
 import net.minecraft.server.MinecraftServer;
 
 /**

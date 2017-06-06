@@ -34,10 +34,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSubBehavior extends ItemBase
 {
-	protected final Map<Integer, String> nameMap = new HashMap();
-	protected final Map<String, Integer> idMap = new HashMap();
-	private final Map<Integer, IItemCapabilityProvider> providers = new HashMap();
-	private final Map<Integer, List<IBehavior>> behaviors = new HashMap();
+	protected final Map<Integer, String> nameMap = new HashMap<>();
+	protected final Map<String, Integer> idMap = new HashMap<>();
+	private final Map<Integer, IItemCapabilityProvider> providers = new HashMap<>();
+	private final Map<Integer, List<IBehavior>> behaviors = new HashMap<>();
 	
 	protected ItemSubBehavior(String name)
 	{

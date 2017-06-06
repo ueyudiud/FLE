@@ -11,8 +11,8 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
-import nebula.common.base.Ety;
-import nebula.common.base.Judgable;
+import nebula.base.Ety;
+import nebula.base.Judgable;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.block.Block;

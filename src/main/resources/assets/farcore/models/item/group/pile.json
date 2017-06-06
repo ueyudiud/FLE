@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/pile",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/pile",
+			"meta": "farcore:material"
+		}
+	]
 }

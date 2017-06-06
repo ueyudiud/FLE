@@ -1,6 +1,6 @@
 package farcore.lib.skill;
 
-import nebula.common.base.Register;
+import nebula.base.Register;
 import nebula.common.util.IRegisteredNameable;
 import net.minecraft.entity.player.EntityPlayer;
 

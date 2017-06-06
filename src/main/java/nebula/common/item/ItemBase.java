@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBase extends Item implements IRegisteredNameable, IRenderRegister
 {
-	private static List<ItemBase> list = new ArrayList();
+	private static List<ItemBase> list = new ArrayList<>();
 	
 	/**
 	 * Called when all others object(fluids, blocks, configurations, materials, etc)

@@ -11,7 +11,7 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import nebula.Log;
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.util.L;
 import net.minecraft.nbt.NBTTagCompound;

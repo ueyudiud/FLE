@@ -7,7 +7,7 @@ package nebula.common.data;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import nebula.common.base.Appliable;
+import nebula.base.function.Appliable;
 import nebula.common.util.Direction;
 import nebula.common.util.Properties;
 import net.minecraft.block.properties.PropertyBool;

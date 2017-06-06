@@ -16,15 +16,15 @@ import com.google.common.collect.Lists;
 
 import nebula.Log;
 import nebula.client.model.ModelFluidBlock;
-import nebula.client.model.NebulaBlockModelLoader;
-import nebula.client.model.NebulaItemModelLoader;
 import nebula.client.model.OrderModelLoader;
 import nebula.client.model.StateMapperExt;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.Colormap.ColormapFactory;
 import nebula.client.render.RenderFallingBlockExt;
 import nebula.client.render.RenderProjectileItem;
 import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
+import nebula.client.util.Renders;
 import nebula.common.CommonProxy;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.entity.EntityProjectileItem;
@@ -35,7 +35,6 @@ import nebula.common.util.Game;
 import nebula.common.util.Sides;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -102,10 +101,8 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	{
 		//Register color map loader.
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
-		//The base item model loader.
-		ModelLoaderRegistry.registerLoader(NebulaItemModelLoader.INSTANCE);
-		//The base block model loader.
-		ModelLoaderRegistry.registerLoader(NebulaBlockModelLoader.INSTANCE);
+		//The base model loader.
+		ModelLoaderRegistry.registerLoader(NebulaModelLoader.INSTANCE);
 		//The custom block model loaders.
 		ModelLoaderRegistry.registerLoader(ModelFluidBlock.Loader.INSTANCE);
 		ModelLoaderRegistry.registerLoader(OrderModelLoader.INSTANCE);
@@ -148,35 +145,6 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		return Minecraft.getMinecraft().mcDataDir;
 	}
 	
-	public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, int metaCount)
-	{
-		Item item = Item.getItemFromBlock(block);
-		for (int i = 0; i < metaCount; ++i)
-		{
-			ModelLoader.setCustomModelResourceLocation(item, i, mapper.getModelResourceLocation(block.getStateFromMeta(i)));
-		}
-		ModelLoader.setCustomStateMapper(block, mapper);
-	}
-	
-	public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, IProperty<T> property)
-	{
-		Item item = Item.getItemFromBlock(block);
-		IBlockState state = block.getDefaultState();
-		if(property != null)
-		{
-			for (T value : property.getAllowedValues())
-			{
-				IBlockState state2 = state.withProperty(property, value);
-				ModelLoader.setCustomModelResourceLocation(item, block.getMetaFromState(state2), mapper.getModelResourceLocation(state2));
-			}
-		}
-		else
-		{
-			ModelLoader.setCustomModelResourceLocation(item, 0, mapper.getModelResourceLocation(state));
-		}
-		ModelLoader.setCustomStateMapper(block, mapper);
-	}
-	
 	public void addRenderRegisterListener(IRenderRegister register)
 	{
 		if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
@@ -198,12 +166,16 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		}
 	}
 	
+	/**
+	 * Deprecated now, use Renders method directly.
+	 */
 	@Override
+	@Deprecated
 	public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
 			IProperty<?>...properties)
 	{
 		StateMapperExt mapper = new StateMapperExt(modid, path, splitFile ? property : null, properties);
-		registerCompactModel(mapper, block, property);
+		Renders.registerCompactModel(mapper, block, property);
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.instance.RecipeAdder;
 import fle.core.items.ItemToolFar;
 import fle.loader.BlocksItems;
-import nebula.common.base.Ety;
+import nebula.base.Ety;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
 import nebula.common.util.L;

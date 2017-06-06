@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
 import fle.api.recipes.instance.interfaces.IPolishRecipeHandler;
-import nebula.common.base.Ety;
+import nebula.base.Ety;
 import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
 import nebula.common.util.L;

@@ -1,19 +1,12 @@
 {
-    "textures": {
-		"rock": "[farcore:group/chip",
-		"override": "farcore:items/group/ore_chip/override"
-	},
 	"layers": [ 
 		{
-			"include": "#rock",
-			"submeta": { 
-				"prefix": "rock",
-				"parent": "#farcore:group/ore_chip/rock"
-			}
+			"texture": "[farcore:group/chip",
+			"meta": "farcore:group/ore_chip/rock"
 		}, 
 		{
-			"include": "#override",
-			"renderFull3D": false,
+			"type": "flat",
+			"texture": "farcore:items/group/ore_chip/override",
 			"colorMultiplier": "farcore:material"
 		}
 	]

@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
@@ -27,7 +28,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Table;
 
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
@@ -92,7 +93,7 @@ public class L
 	public static boolean similar(double a, double b)
 	{
 		a -= b;
-		return a > -1E-5 && a < 1E-5;
+		return a > -1E-10 && a < 1E-10;
 	}
 	
 	/**
@@ -168,6 +169,12 @@ public class L
 	public static short cast(@Nullable Short short1)
 	{
 		return short1 == null ? 0 : short1.shortValue();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <C> C castAny(Object arg)
+	{
+		return (C) arg;
 	}
 	
 	/**
@@ -378,12 +385,11 @@ public class L
 	/**
 	 * Cast a map as a function, the code is like this.<p>
 	 * <code>
-	 * T defaultResult;
-	 * T apply(K key) {<br>
-	 *  return map.getOrDefault(key, defaultResult);<br>
-	 * }<br>
-	 * </code>
-	 * @param map
+	 * T defaultResult;<br>
+	 * T apply(K key) = map.getOrDefault(key, defaultResult);
+	 * </code><p>
+	 * Uses when there are only limited elements in function.
+	 * @param map The function mapping.
 	 * @param defaultValue The default result of function, it will return when key element does not contain in map.
 	 * @return
 	 * @see java.util.Map#getOrDefault(Object, Object)
@@ -400,16 +406,6 @@ public class L
 		if(collection == null || collection.isEmpty()) return false;
 		for(T target : collection) if(checker.isTrue(target)) return true;
 		return false;
-	}
-	
-	public static <T> T get(Optional<T> optional, T def)
-	{
-		return optional.isPresent() ? optional.get() : def;
-	}
-	
-	public static <T> T get(com.google.common.base.Optional<T> optional, T def)
-	{
-		return optional.isPresent() ? optional.get() : def;
 	}
 	
 	public static <T> T get(Collection<? extends T> collection, Judgable<T> judgable)
@@ -688,5 +684,22 @@ public class L
 	public static <K, M, T> Function<K, T> withCastOut(Function<K, M> function, Class<T> clazz)
 	{
 		return resource -> (T) function.apply(resource);
+	}
+	
+	/**
+	 * Collect elements from iterator.
+	 * @param iterable The iterator provider.
+	 * @param func The transform function.
+	 * @return
+	 */
+	@SuppressWarnings("hiding")
+	public static <R, T> Set<R> collect(Iterable<? extends T> iterable, BiConsumer<T, Collection<R>> consumer)
+	{
+		Set<R> set = new HashSet<>();
+		for (T t : iterable)
+		{
+			consumer.accept(t, set);
+		}
+		return set;
 	}
 }

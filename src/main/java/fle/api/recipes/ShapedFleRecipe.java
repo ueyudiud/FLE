@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.google.common.collect.ObjectArrays;
 
-import nebula.common.base.ObjArrayParseHelper;
+import nebula.base.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
 import nebula.common.stack.OreStack;

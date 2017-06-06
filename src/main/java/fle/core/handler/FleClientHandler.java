@@ -5,8 +5,7 @@ import org.lwjgl.opengl.GL11;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import fle.core.FLE;
-import nebula.client.ClientEvent;
-import nebula.client.ClientEvent.EntityProjectileItemRenderEvent;
+import nebula.client.EntityProjectileItemRenderEvent;
 import nebula.client.render.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -23,7 +22,7 @@ public class FleClientHandler
 	private static final ResourceLocation LOCATION_SPEAR_ROCKY = new ResourceLocation(FLE.MODID, "textures/entity/spear.rocky.png");
 	
 	@SubscribeEvent
-	public void onProjectileItemRender(ClientEvent.EntityProjectileItemRenderEvent event)
+	public void onProjectileItemRender(EntityProjectileItemRenderEvent event)
 	{
 		Item item = event.getStack().getItem();
 		if(item instanceof ItemTool)
