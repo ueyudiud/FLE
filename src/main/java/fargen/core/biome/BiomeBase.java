@@ -11,7 +11,7 @@ import fargen.core.biome.decorator.SimpleBiomeDecorator;
 import fargen.core.biome.layer.BiomeLayerGenerator;
 import fargen.core.biome.layer.surface.BLGSStandard;
 import fargen.core.util.ClimaticZone;
-import nebula.common.base.Register;
+import nebula.base.Register;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.world.IBiomeExtended;
 import net.minecraft.client.Minecraft;

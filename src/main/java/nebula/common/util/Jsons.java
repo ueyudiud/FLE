@@ -9,12 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.google.common.collect.ObjectArrays;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+
+import nebula.base.function.SequenceFunction;
 
 /**
  * @author ueyudiud
@@ -22,6 +26,11 @@ import com.google.gson.JsonParseException;
 public final class Jsons
 {
 	private Jsons() {}
+	
+	public static String getOrDefault(JsonObject object, String key, String def)
+	{
+		return object.has(key) ? object.get(key).getAsString() : def;
+	}
 	
 	public static int getOrDefault(JsonObject object, String key, int def) throws JsonParseException
 	{
@@ -108,19 +117,24 @@ public final class Jsons
 		try
 		{
 			JsonArray array = object.getAsJsonArray(key);
-			if(length < 0 || array.size() < length)
-				throw new JsonParseException("The array size should be " + length + ", got " + array.size());
-			float[] ret = new float[array.size()];
-			for(int i = 0; i < array.size(); ++i)
-			{
-				ret[i] = array.get(i).getAsFloat();
-			}
-			return ret;
+			return getFloatArray(array, length);
 		}
 		catch (UnsupportedOperationException | ClassCastException exception)
 		{
 			throw new JsonParseException(String.format("The key '%s' is not an array.", key));
 		}
+	}
+	
+	public static float[] getFloatArray(JsonArray array, int length) throws JsonParseException
+	{
+		if(length < 0 || array.size() < length)
+			throw new JsonParseException("The array size should be " + length + ", got " + array.size());
+		float[] ret = new float[array.size()];
+		for(int i = 0; i < array.size(); ++i)
+		{
+			ret[i] = array.get(i).getAsFloat();
+		}
+		return ret;
 	}
 	
 	public static double[] getDoubleArray(JsonObject object, String key, int length) throws JsonParseException
@@ -143,6 +157,24 @@ public final class Jsons
 		}
 	}
 	
+	public static <T> T[] getArray(JsonArray array, int len, Class<T> clazz, Function<JsonElement, T> function) throws JsonParseException
+	{
+		if (len >= 0 && array.size() != len)
+		{
+			throw new JsonParseException("The array length should be " + len + ", got " + array.size() + ".");
+		}
+		if (len < 0)
+		{
+			return L.cast(getAsList(array, function), clazz);
+		}
+		else
+		{
+			T[] a = ObjectArrays.newArray(clazz, len);
+			A.fill(a, i->function.apply(array.get(i)));
+			return a;
+		}
+	}
+	
 	public static <E> Map<String, E> getAsMap(JsonObject object, Function<JsonElement, E> function)
 	{
 		Map<String, E> map = new HashMap<>();
@@ -154,6 +186,13 @@ public final class Jsons
 	{
 		List<E> list = new ArrayList<>();
 		for (JsonElement element : array) list.add(function.apply(element));
+		return list;
+	}
+	
+	public static <E> List<E> getAsList(JsonArray array, SequenceFunction<JsonElement, E> function)
+	{
+		List<E> list = new ArrayList<>();
+		function.andThen((Consumer<E>) list::add).accept(array);
 		return list;
 	}
 }

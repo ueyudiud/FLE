@@ -23,7 +23,6 @@ implements ISynchronizableTile
 	protected long state;
 	private long lastState;
 	
-	private boolean markChanged;
 	private boolean initialized = false;
 	public NBTSynclizedCompound nbt = new NBTSynclizedCompound();
 	
@@ -39,7 +38,7 @@ implements ISynchronizableTile
 	 * 128 for mark dirty (mark this tile entity ant chunk is required save).
 	 */
 	public long syncState = 0L;
-	private List<EntityPlayer> syncAskedPlayer = new ArrayList();
+	private List<EntityPlayer> syncAskedPlayer = new ArrayList<>();
 	
 	public TESynchronization()
 	{

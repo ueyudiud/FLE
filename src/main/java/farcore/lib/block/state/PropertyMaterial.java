@@ -13,7 +13,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 import farcore.lib.material.Mat;
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import nebula.common.util.L;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;

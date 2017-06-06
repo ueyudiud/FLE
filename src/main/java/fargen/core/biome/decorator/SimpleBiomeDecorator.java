@@ -8,9 +8,9 @@ import java.util.Random;
 
 import farcore.data.M;
 import farcore.data.MP;
-import nebula.common.base.Selector;
-import nebula.common.base.Stack;
-import nebula.common.base.WeightedRandomSelector;
+import nebula.base.Stack;
+import nebula.base.WeightedRandomSelector;
+import nebula.base.function.Selector;
 import nebula.common.world.gen.WorldGenRandPlant;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.state.IBlockState;

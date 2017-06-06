@@ -38,8 +38,8 @@ public interface IAnimalFamily<E extends Entity & IAnimalAccess> extends IFamily
 		public Impl(String name)
 		{
 			this.name = name;
-			TypeToken<E> typeToken = new TypeToken<E>(getClass()){};
-			Class<? super E> entityClass = typeToken.getRawType();
+			TypeToken<? extends Impl> typeToken = TypeToken.of(getClass());
+			Class<? super E> entityClass = (Class<? super E>) typeToken.getRawType();
 			try
 			{
 				nativeAnimalConstructor = entityClass.getConstructor(World.class, IAnimalSpecie.class);

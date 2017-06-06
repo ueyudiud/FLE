@@ -50,6 +50,7 @@ public class CommonProxy implements IGuiHandler
 		return null;
 	}
 	
+	@Deprecated
 	public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
 			IProperty<?>...properties)
 	{

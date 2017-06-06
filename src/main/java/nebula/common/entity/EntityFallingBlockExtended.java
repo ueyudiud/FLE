@@ -255,7 +255,7 @@ public class EntityFallingBlockExtended extends Entity
 		
 		if (i > 0)
 		{
-			ArrayList<Entity> arraylist = new ArrayList(this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox()));
+			ArrayList<Entity> arraylist = new ArrayList<>(this.world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox()));
 			
 			float amount;
 			for(Entity entity : arraylist)

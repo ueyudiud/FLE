@@ -30,7 +30,6 @@ import farcore.data.MC;
 import farcore.data.MP;
 import farcore.data.Potions;
 import farcore.energy.IEnergyNet;
-import farcore.energy.kinetic.BlockKineticDebug;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
@@ -42,7 +41,6 @@ import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
 import farcore.lib.block.instance.BlockIce;
 import farcore.lib.block.instance.BlockMetal;
-import farcore.lib.block.instance.BlockModelDebug;
 import farcore.lib.block.instance.BlockOre;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.block.instance.BlockSapling;
@@ -123,8 +121,6 @@ public class CommonLoader
 		bar.step("Add Items");
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		EnumItem.display_fluid.set(Item.REGISTRY.getObject(new ResourceLocation("nebula", "display.fluid")));
-		new BlockKineticDebug();
-		new BlockModelDebug();
 		if(Config.createRock)
 		{
 			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);

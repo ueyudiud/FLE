@@ -5,7 +5,7 @@
 package fargen.api.event;
 
 import farcore.lib.tree.ITreeGenerator;
-import nebula.common.base.WeightedRandomSelector;
+import nebula.base.WeightedRandomSelector;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event;
 

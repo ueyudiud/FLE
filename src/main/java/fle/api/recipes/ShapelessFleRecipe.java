@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.google.common.collect.ObjectArrays;
 
-import nebula.common.base.ObjArrayParseHelper;
+import nebula.base.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
 import net.minecraft.entity.player.EntityPlayer;

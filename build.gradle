@@ -7,21 +7,15 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
-
-file "build.properties" withReader {
-    def prop = new Properties()
-    prop.load(it)
-    ext.config = new ConfigSlurper().parse prop
-}
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-version = "${config.fle.version}"
-group= "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${config.fle.name}"
 
-sourceCompatibility = targetCompatibility = "8" // Need this here so eclipse task generates correctly.
+version = "1.0"
+group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "modid"
+
+sourceCompatibility = targetCompatibility = "8" // Java 8 required.
 compileJava {
     sourceCompatibility = targetCompatibility = "8"
 }
@@ -31,14 +25,10 @@ tasks.withType(JavaCompile) {
 }
 
 minecraft {
-    version = "1.10.2-12.18.3.2185"
+    version = "1.10.2-12.18.3.2272"
     runDir = "run"
     
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
+    // run in stable MCP, it may cause may mods can not run with main mod in mcp environment.
     mappings = "stable_29"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
@@ -65,16 +55,6 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-}
-
-repositories {
-	maven {
-		url "http://dvs1.progwml6.com/files/maven"
-	}
-//	maven {
-//		name = "ic2"
-//		url = "http://maven.ic2.player.to/"
-//	}
 }
 
 processResources
@@ -111,7 +91,7 @@ task deobfJar(type: Jar) {
 task coreJar(type: Jar, dependsOn: 'jar') {
     classifier = 'core'
     from (sourceSets.main.output) {
-        exclude "**/debug/**"
+        exclude "**/debug/**" //Some debug texting, needn't present in obf jar.
         include "**/farcore/**"
     }
 }
@@ -119,7 +99,7 @@ task coreJar(type: Jar, dependsOn: 'jar') {
 jar {
     exclude "**/debug/**"
     manifest {
-        attributes 'FMLCorePlugin': 'nebula.NebulaLoadingPlugin',
+        attributes 'FMLCorePlugin': 'nebula.NebulaLoadingPlugin', // NebulaLoadingPlugin defaulty path.
         'FMLCorePluginContainsFMLMod': 'true'
     }
 }

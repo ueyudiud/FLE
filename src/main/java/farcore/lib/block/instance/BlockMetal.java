@@ -15,8 +15,8 @@ import farcore.data.Materials;
 import farcore.data.SubTags;
 import farcore.lib.block.state.PropertyMaterial;
 import farcore.lib.material.Mat;
-import nebula.client.ClientProxy;
 import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
@@ -64,7 +64,7 @@ public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		ClientProxy.registerCompactModel(new StateMapperExt(FarCore.ID, "metalblock", METALS), this, METALS);
+		Renders.registerCompactModel(new StateMapperExt(FarCore.ID, "metalblock", METALS), this, METALS);
 	}
 	
 	@Override

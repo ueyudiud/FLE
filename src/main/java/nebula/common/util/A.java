@@ -4,7 +4,6 @@
 
 package nebula.common.util;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -62,7 +61,9 @@ public final class A
 		else
 		{
 			@SuppressWarnings("unchecked")
-			T[] result = (T[]) ObjectArrays.newArray(new TypeToken<T>(){}.getRawType(), len);
+			T[] result = (T[]) ObjectArrays.newArray(new TypeToken<T>() {
+				private static final long serialVersionUID = 8964692193893392799L;
+			}.getRawType(), len);
 			return result;
 		}
 	}
@@ -178,6 +179,12 @@ public final class A
 		}
 	}
 	
+	public static <E> E[] fill(E[] array, IntFunction<E> function)
+	{
+		for (int i = 0; i < array.length; array[i] = function.apply(i), ++i);
+		return array;
+	}
+	
 	/**
 	 * Get first matched element index in list.
 	 * @param list
@@ -205,6 +212,19 @@ public final class A
 	}
 	
 	/**
+	 * Transform key array to object array.
+	 * @param array
+	 * @param function Transform function.
+	 * @return
+	 */
+	public static <K> Object[] transform(K[] array, Function<? super K, ?> function)
+	{
+		Object[] result = new Object[array.length];
+		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
+		return result;
+	}
+	
+	/**
 	 * Transform key array to target array.
 	 * @param array
 	 * @param elementClass
@@ -216,6 +236,11 @@ public final class A
 		T[] result = ObjectArrays.newArray(elementClass, array.length);
 		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
 		return result;
+	}
+	
+	public static int[] rangeIntArray(int to)
+	{
+		return rangeIntArray(0, to);
 	}
 	
 	/**
@@ -263,9 +288,16 @@ public final class A
 	
 	public static <E> E[] createArray(int length, @Nonnull E value)
 	{
-		E[] array = (E[]) Array.newInstance(value.getClass(), length);
+		E[] array = ObjectArrays.newArray((Class<E>) value.getClass(), length);
 		Arrays.fill(array, value);
 		return array;
+	}
+	
+	public static char[] sublist(char[] array, int start, int end)
+	{
+		char[] a1 = new char[end - start];
+		System.arraycopy(array, start, a1, 0, end - start);
+		return a1;
 	}
 	
 	public static <E> E[] sublist(E[] array, int off)
@@ -275,8 +307,14 @@ public final class A
 	
 	public static <E> E[] sublist(E[] array, int off, int len)
 	{
-		E[] a1 = (E[]) Array.newInstance(array.getClass().getComponentType(), len);
+		E[] a1 = ObjectArrays.newArray(array, len);
 		System.arraycopy(array, off, a1, 0, len);
 		return a1;
+	}
+	
+	public static <T> T[] allNonNull(T[] array)
+	{
+		for (Object arg : array) if (arg == null) throw new NullPointerException();
+		return array;
 	}
 }

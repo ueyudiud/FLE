@@ -2,8 +2,8 @@ package farcore.lib.crop;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.GeneticMaterial.GenticMaterialFactory;
-import nebula.common.base.IntegerEntry;
-import nebula.common.base.IntegerMap;
+import nebula.base.IntegerEntry;
+import nebula.base.IntegerMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;

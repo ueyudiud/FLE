@@ -4,7 +4,7 @@
 
 package fle.api.ditch;
 
-import nebula.common.base.IPropertyMap;
+import nebula.base.IPropertyMap;
 
 /**
  * @author ueyudiud

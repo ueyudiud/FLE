@@ -12,7 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 public class SkillAbstract implements ISkill
 {
 	private final String name;
-	private final int id;
+	public final int id;
 	private float expIncrease;
 	private float expBase;
 	private float maxLevel;

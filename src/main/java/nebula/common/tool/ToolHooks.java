@@ -36,9 +36,9 @@ import net.minecraftforge.common.ForgeHooks;
 
 public class ToolHooks
 {
-	private static final Map<Material, List<EnumToolType>> breakableToolMap = new HashMap();
-	private static final Map<Material, List<EnumToolType>> efficiencyToolMap = new HashMap();
-	private static final Map<Material, List<EnumToolType>> harvestableToolMap = new HashMap();
+	private static final Map<Material, List<EnumToolType>> breakableToolMap = new HashMap<>();
+	private static final Map<Material, List<EnumToolType>> efficiencyToolMap = new HashMap<>();
+	private static final Map<Material, List<EnumToolType>> harvestableToolMap = new HashMap<>();
 	
 	static
 	{

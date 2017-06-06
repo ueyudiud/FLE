@@ -5,7 +5,7 @@
 package farcore.data;
 
 import farcore.lib.material.MatCondition;
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.SubTag;
 

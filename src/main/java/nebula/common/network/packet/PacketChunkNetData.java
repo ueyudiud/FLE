@@ -18,7 +18,6 @@ import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.INetworkedSyncTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.Chunk.EnumCreateEntityType;
 
@@ -49,7 +48,7 @@ public class PacketChunkNetData extends PacketChunkCoord
 	{
 		try
 		{
-			this.datas = new HashMap(this.pos.size(), 1.00F);
+			this.datas = new HashMap<>(this.pos.size(), 1.00F);
 			ByteBuf buf;
 			for(BlockPos pos : this.pos)
 			{
@@ -90,7 +89,7 @@ public class PacketChunkNetData extends PacketChunkCoord
 	{
 		super.decode(input);
 		this.mark = input.readShort();
-		this.datas = new HashMap();
+		this.datas = new HashMap<>();
 		int len = (input.readShort() & 0xFFFF);
 		for(int i = 0; i < len; ++i)
 		{
@@ -104,11 +103,10 @@ public class PacketChunkNetData extends PacketChunkCoord
 	@Override
 	public IPacket process(Network network) throws IOException
 	{
-		World world = world();
-		Chunk chunk = world.getChunkFromChunkCoords(this.x, this.z);
+		Chunk chunk = world().getChunkFromChunkCoords(this.x, this.z);
 		for(Entry<BlockPos, byte[]> entry : this.datas.entrySet())
 		{
-			TileEntity tile = world.getTileEntity(entry.getKey());
+			TileEntity tile = chunk.getTileEntity(entry.getKey(), EnumCreateEntityType.CHECK);
 			if(tile instanceof INetworkedSyncTile)
 			{
 				((INetworkedSyncTile) tile).readNetworkData(this.mark, new PacketBufferExt(Unpooled.wrappedBuffer(entry.getValue())));

@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/seed",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/seed",
+			"meta": "farcore:material"
+		}
+	]
 }

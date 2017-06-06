@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/bark",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/bark",
+			"meta": "farcore:material"
+		}
+	]
 }

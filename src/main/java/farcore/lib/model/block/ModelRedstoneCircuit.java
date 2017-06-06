@@ -26,11 +26,12 @@ import nebula.Log;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.ICustomItemRenderModel;
 import nebula.client.model.INebulaCustomModelLoader;
-import nebula.client.model.ItemTextureHelper;
 import nebula.client.model.ModelBase;
 import nebula.client.model.ModelHelper;
+import nebula.client.model.flexible.ModelModifierByCoordTransformer;
+import nebula.client.model.flexible.NebulaModelLoader;
+import nebula.client.util.BakedQuadBuilder;
 import nebula.common.util.L;
-import nebula.common.util.Maths;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -54,6 +55,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
+@Deprecated
 public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IModelCustomData
 {
 	private static final float PLATE_HEIGHT = .125F;
@@ -162,11 +164,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 			}
 			bakedQuads.put(this.layer, map = builder2.build());
 		}
-		IBakedModel model = null;
-		if(this.parent != null)
-		{
-			model = this.parent.bake(state, format, bakedTextureGetter);
-		}
+		IBakedModel model = this.parent != null ? this.parent.bake(state, format, bakedTextureGetter) : null;
 		return new BakedRedstoneCiruitModel(map, model);
 	}
 	
@@ -190,10 +188,10 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		{
 			String mixed = customData.get("mixed");
 			ResourceLocation location = new ResourceLocation(mixed.substring(1, mixed.length() - 1));
-			parent0 = ModelLoaderRegistry.getModelOrMissing(new ResourceLocation(location.getResourceDomain() + ":block/" + location.getResourcePath()));
+			parent0 = NebulaModelLoader.getModel(new ResourceLocation(location.getResourceDomain() + ":block/" + location.getResourcePath()));
 			if (parent0 == ModelLoaderRegistry.getMissingModel())
 			{
-				parent0 = ModelLoaderRegistry.getModelOrMissing(location);
+				parent0 = NebulaModelLoader.getModel(location);
 			}
 		}
 		else
@@ -320,7 +318,10 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 		int u = texture.getIconWidth();
 		int v = texture.getIconHeight();
 		byte[] height = new byte[u * v];
-		ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
+		ImmutableList.Builder<BakedQuad> builder2 = ImmutableList.builder();
+		BakedQuadBuilder builder = new BakedQuadBuilder(format,
+				new ModelModifierByCoordTransformer(transformation.or(TRSRTransformation.identity()), null), builder2::add);
+		builder.switchTextureScale();
 		int[] pixels = layer.getFrameTextureData(0)[0];//Only provide first frame for height.
 		for(int v1 = 0; v1 < v; v1++)
 		{
@@ -347,77 +348,68 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 					float maxZ = (float) (v1 + 1) / (float) v;
 					float minY;
 					float maxY = (L.toUnsignedInt(height[idx]) + 1) * PLATE_HEIGHT / 256F;
-					float minU, maxU, minV, maxV;
 					if(u1 == 0 || L.minusUbyte(height[idx - 1], height[idx]) > 0)
 					{
 						minY = u1 == 0 ? 0 : value(height[idx - 1]) * PLATE_HEIGHT / 256F;
-						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minZ);
-						maxU = Maths.lerp(texture.getMinU(), texture.getMaxU(), maxZ);
-						minV = Maths.lerp(texture.getMinV(), texture.getMaxV(), minY);
-						maxV = Maths.lerp(texture.getMinV(), texture.getMaxV(), maxY);
-						builder.add(ItemTextureHelper.buildBlockQuad(format, transformation, u1 == 0 ? EnumFacing.WEST : null, EnumFacing.WEST, texture, -1,
-								minX, minY, minZ, minU, minV,
-								minX, minY, maxZ, maxU, minV,
-								minX, maxY, maxZ, maxU, maxV,
-								minX, maxY, minZ, minU, maxV));
+						builder.startQuad(u1 == 0 ? EnumFacing.WEST : null, -1, texture);
+						builder.normal(-1, 0, 0);//WEST
+						builder.pos(minX, minY, minZ, minZ, minY);
+						builder.pos(minX, minY, maxZ, maxZ, minY);
+						builder.pos(minX, maxY, maxZ, maxZ, maxY);
+						builder.pos(minX, maxY, minZ, minZ, maxY);
+						builder.endQuad();
 					}
 					if(u1 == u - 1 || L.minusUbyte(height[idx + 1], height[idx]) > 0)
 					{
 						minY = u1 == u - 1 ? 0 : value(height[idx + 1]) * PLATE_HEIGHT / 256F;
-						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minZ);
-						maxU = Maths.lerp(texture.getMinU(), texture.getMaxU(), maxZ);
-						minV = Maths.lerp(texture.getMinV(), texture.getMaxV(), minY);
-						maxV = Maths.lerp(texture.getMinV(), texture.getMaxV(), maxY);
-						builder.add(ItemTextureHelper.buildBlockQuad(format, transformation, u1 == u - 1 ? EnumFacing.EAST : null, EnumFacing.EAST, texture, -1,
-								maxX, minY, maxZ, minU, minV,
-								maxX, minY, minZ, maxU, minV,
-								maxX, maxY, minZ, maxU, maxV,
-								maxX, maxY, maxZ, minU, maxV));
+						builder.startQuad(u1 == u-1 ? EnumFacing.EAST : null, -1, texture);
+						builder.normal(1, 0, 0);//EAST
+						builder.pos(maxX, minY, maxZ, minZ, minY);
+						builder.pos(maxX, minY, minZ, maxZ, minY);
+						builder.pos(maxX, maxY, minZ, maxZ, maxY);
+						builder.pos(maxX, maxY, maxZ, minZ, maxY);
+						builder.endQuad();
 					}
 					if(v1 == 0 || L.minusUbyte(height[idx - u], height[idx]) > 0)
 					{
 						minY = v1 == 0 ? 0 : value(height[idx - u]) * PLATE_HEIGHT / 256F;
-						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minX);
-						maxU = Maths.lerp(texture.getMinU(), texture.getMaxU(), maxX);
-						minV = Maths.lerp(texture.getMinV(), texture.getMaxV(), minY);
-						maxV = Maths.lerp(texture.getMinV(), texture.getMaxV(), maxY);
-						builder.add(ItemTextureHelper.buildBlockQuad(format, transformation, v1 == 0 ? EnumFacing.NORTH : null, EnumFacing.NORTH, texture, -1,
-								minX, minY, minZ, minU, minV,
-								minX, maxY, minZ, minU, maxV,
-								maxX, maxY, minZ, maxU, maxV,
-								maxX, minY, minZ, maxU, minV));
+						builder.startQuad(v1 == 0 ? EnumFacing.NORTH : null, -1, texture);
+						builder.normal(0, 0, -1);//NORTH
+						builder.pos(minX, minY, minZ, minX, minY);
+						builder.pos(minX, maxY, minZ, minX, maxY);
+						builder.pos(maxX, maxY, minZ, maxX, maxY);
+						builder.pos(maxX, minY, minZ, maxX, minY);
+						builder.endQuad();
 					}
 					if(v1 == v - 1 || L.minusUbyte(height[idx + u], height[idx]) > 0)
 					{
 						minY = v1 == v - 1 ? 0 : value(height[idx + u]) * PLATE_HEIGHT / 256F;
-						minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minX);
-						maxU = Maths.lerp(texture.getMinU(), texture.getMaxU(), maxX);
-						minV = Maths.lerp(texture.getMinV(), texture.getMaxV(), minY);
-						maxV = Maths.lerp(texture.getMinV(), texture.getMaxV(), maxY);
-						builder.add(ItemTextureHelper.buildBlockQuad(format, transformation, v1 == v - 1 ? EnumFacing.SOUTH : null, EnumFacing.SOUTH, texture, -1,
-								maxX, minY, maxZ, minU, minV,
-								maxX, maxY, maxZ, minU, maxV,
-								minX, maxY, maxZ, maxU, maxV,
-								minX, minY, maxZ, maxU, minV));
+						builder.startQuad(v1 == v - 1 ? EnumFacing.SOUTH : null, -1, texture);
+						builder.normal(0, 0, 1);//SOUTH
+						builder.pos(maxX, minY, maxZ, minX, minY);
+						builder.pos(maxX, maxY, maxZ, minX, maxY);
+						builder.pos(minX, maxY, maxZ, maxX, maxY);
+						builder.pos(minX, minY, maxZ, maxX, minY);
+						builder.endQuad();
 					}
-					minU = Maths.lerp(texture.getMinU(), texture.getMaxU(), minX);
-					maxU = Maths.lerp(texture.getMinU(), texture.getMaxU(), maxX);
-					minV = Maths.lerp(texture.getMinV(), texture.getMaxV(), minZ);
-					maxV = Maths.lerp(texture.getMinV(), texture.getMaxV(), maxZ);
-					builder.add(ItemTextureHelper.buildBlockQuad(format, transformation, null, EnumFacing.UP, texture, -1,
-							minX, maxY, maxZ, minU, maxV,
-							maxX, maxY, maxZ, maxU, maxV,
-							maxX, maxY, minZ, maxU, minV,
-							minX, maxY, minZ, minU, minV));
+					builder.startQuad(null, -1, texture);
+					builder.normal(0, 1, 0);//UP
+					builder.pos(minX, maxY, maxZ, minX, maxZ);
+					builder.pos(maxX, maxY, maxZ, maxX, maxZ);
+					builder.pos(maxX, maxY, minZ, maxX, minZ);
+					builder.pos(minX, maxY, minZ, minX, minZ);
+					builder.endQuad();
 				}
 			}
-			builder.add(ItemTextureHelper.buildQuad(format, ItemTextureHelper.get(transformation), EnumFacing.DOWN, texture, -1,
-					0, 0, 0, texture.getMinU(), texture.getMaxV(),
-					1, 0, 0, texture.getMaxU(), texture.getMaxV(),
-					1, 0, 1, texture.getMaxU(), texture.getMinV(),
-					0, 0, 1, texture.getMinU(), texture.getMinV()));
+			builder.startQuad(null, -1, texture);
+			builder.normal(0, -1, 0);//DOWN
+			builder.pos(0, 0, 0, 0, 1);
+			builder.pos(1, 0, 0, 1, 1);
+			builder.pos(1, 0, 1, 1, 0);
+			builder.pos(0, 0, 1, 0, 0);
+			builder.endQuad();
 		}
-		return builder.build();
+		return builder2.build();
 	}
 	
 	private static int value(byte value)

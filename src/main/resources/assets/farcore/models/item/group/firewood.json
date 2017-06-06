@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/firewood",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/firewood",
+			"meta": "farcore:material"
+		}
+	]
 }

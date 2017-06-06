@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import nebula.Nebula;
-import nebula.common.base.Node;
+import nebula.base.Node;
 import nebula.common.fluid.FluidStackExt;
 import nebula.common.network.packet.PacketFluidUpdateAll;
 import nebula.common.network.packet.PacketFluidUpdateSingle;
@@ -146,16 +146,16 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		}
 	}
 	
-	private static final byte START    = 0x0;
-	private static final byte ADD_SLOT = 0x1;
-	private static final byte END      = 0x2;
-	
-	private static final byte EVENLY_SPLIT     = 0x0;
-	private static final byte ONE_ITEM_BY_SLOT = 0x1;
-	private static final byte NOT_USED         = 0x2;
-	
-	private static final byte TOTAL_PICK = 0x0;
-	private static final byte SPLIT_PICK = 0x1;
+	//	private static final byte START    = 0x0;
+	//	private static final byte ADD_SLOT = 0x1;
+	//	private static final byte END      = 0x2;
+	//
+	//	private static final byte EVENLY_SPLIT     = 0x0;
+	//	private static final byte ONE_ITEM_BY_SLOT = 0x1;
+	//	private static final byte NOT_USED         = 0x2;
+	//
+	//	private static final byte TOTAL_PICK = 0x0;
+	//	private static final byte SPLIT_PICK = 0x1;
 	
 	protected TL locationPlayer;
 	protected TL locationBag;
@@ -164,9 +164,9 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	protected boolean isClosed;
 	
 	protected EntityPlayer opener;
-	protected List<TL> transferLocates = new ArrayList();
-	protected List<FluidSlot> fluidSlots = new ArrayList();
-	private List<FluidStack> lastFluidStacks = new ArrayList();
+	protected List<TL> transferLocates = new ArrayList<>();
+	protected List<FluidSlot> fluidSlots = new ArrayList<>();
+	private List<FluidStack> lastFluidStacks = new ArrayList<>();
 	
 	public ContainerBase(EntityPlayer player)
 	{

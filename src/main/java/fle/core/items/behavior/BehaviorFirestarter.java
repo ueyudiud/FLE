@@ -11,7 +11,7 @@ import farcore.data.EnumToolTypes;
 import farcore.lib.block.instance.BlockFire;
 import fle.api.recipes.instance.FlamableItems;
 import nebula.Log;
-import nebula.common.base.IntegerMap;
+import nebula.base.IntegerMap;
 import nebula.common.item.ITool;
 import nebula.common.util.Worlds;
 import net.minecraft.entity.EntityLivingBase;

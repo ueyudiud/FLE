@@ -4,7 +4,7 @@
 
 package nebula.common.block.property;
 
-import nebula.common.base.IRegister;
+import nebula.base.IRegister;
 import net.minecraft.block.state.IBlockState;
 
 /**
@@ -14,7 +14,7 @@ public class PropertyRegister<V> extends PropertyString
 {
 	public static <V> PropertyRegister<V> create(String name, IRegister<V> register)
 	{
-		return new PropertyRegister(name, register);
+		return new PropertyRegister<>(name, register);
 	}
 	
 	final IRegister<V> register;

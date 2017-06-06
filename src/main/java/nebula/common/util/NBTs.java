@@ -11,7 +11,7 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import nebula.Log;
-import nebula.common.base.IRegister;
+import nebula.base.IRegister;
 import nebula.common.nbt.INBTCompoundReader;
 import nebula.common.nbt.INBTReader;
 import nebula.common.nbt.INBTReaderAndWritter;

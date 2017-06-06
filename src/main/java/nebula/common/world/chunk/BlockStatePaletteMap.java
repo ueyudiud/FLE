@@ -23,7 +23,7 @@ public class BlockStatePaletteMap implements IBlockStatePalette
 	public BlockStatePaletteMap(int bitCount, BlockStateContainerExt resizer)
 	{
 		this.bitCount = bitCount;
-		this.map = new IntIdentityHashBiMap(1 << bitCount);
+		this.map = new IntIdentityHashBiMap<>(1 << bitCount);
 		this.resizer = resizer;
 	}
 	

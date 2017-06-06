@@ -13,8 +13,8 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import nebula.base.IntegerArray;
 import nebula.common.NebulaConfig;
-import nebula.common.base.IntegerArray;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;

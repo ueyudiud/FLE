@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
-import nebula.common.base.IRegister;
-import nebula.common.base.Register;
+import nebula.base.IRegister;
+import nebula.base.Register;
 import nebula.common.block.property.PropertyTE.TETag;
 import net.minecraft.block.properties.PropertyHelper;
 import net.minecraft.block.state.IBlockState;
@@ -18,7 +18,7 @@ public class PropertyTE extends PropertyHelper<TETag>
 {
 	public static PropertyTE create(String name, IRegister<Class<? extends TileEntity>> list)
 	{
-		IRegister<TETag> register = new Register(list.size());
+		IRegister<TETag> register = new Register<>(list.size());
 		ImmutableMap.Builder<Class<? extends TileEntity>, String> builder = ImmutableMap.builder();
 		TETag def = null;
 		for(String tag : list.names())

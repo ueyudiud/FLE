@@ -21,7 +21,7 @@ import javax.script.SimpleBindings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import nebula.common.base.Ety;
+import nebula.base.Ety;
 import nebula.common.util.L;
 
 /**

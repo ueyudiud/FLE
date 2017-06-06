@@ -18,7 +18,7 @@ import nebula.Log;
 import nebula.client.ClientProxy;
 import nebula.client.NebulaTextureHandler;
 import nebula.client.model.ICustomItemModelSelector;
-import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.Colormap;
 import nebula.client.render.IIconLoader;
 import nebula.client.util.Renders;
@@ -221,7 +221,7 @@ public class FarCoreRegistry
 	@SideOnly(Side.CLIENT)
 	public static void registerItemModel(Item item, ResourceLocation location)
 	{
-		NebulaItemModelLoader.registerModel(item, location);
+		NebulaModelLoader.registerModel(item, location);
 	}
 	
 	@SideOnly(Side.CLIENT)

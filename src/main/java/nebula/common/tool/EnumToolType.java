@@ -10,8 +10,8 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import nebula.common.base.IRegister;
-import nebula.common.base.Register;
+import nebula.base.IRegister;
+import nebula.base.Register;
 import nebula.common.stack.OreStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,7 +24,7 @@ import net.minecraft.item.ItemStack;
  */
 public class EnumToolType
 {
-	public static final IRegister<EnumToolType> REGISTER = new Register();
+	public static final IRegister<EnumToolType> REGISTER = new Register<>();
 	public static final EnumToolType HAND = new EnumToolType("hand", "Hand");//The player hand current, do not register tool with this.
 	
 	public static final EnumToolType

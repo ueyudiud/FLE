@@ -33,11 +33,12 @@ import farcore.lib.tile.instance.circuit.TECircuitTicking;
 import farcore.lib.tile.instance.circuit.TECircuitXor;
 import farcore.lib.tile.instance.circuit.TESensorLight;
 import nebula.Nebula;
+import nebula.base.IRegister;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
-import nebula.client.model.NebulaBlockModelLoader;
+import nebula.client.model.flexible.NebulaModelDeserializer;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
-import nebula.common.base.IRegister;
 import nebula.common.block.BlockTE;
 import nebula.common.block.property.PropertyString;
 import nebula.common.block.property.PropertyTE.TETag;
@@ -150,8 +151,14 @@ public class BlockRedstoneCircuit extends BlockTE
 			return 0xFF0000;
 		});
 		FarCoreRegistry.registerColorMultiplier(this.item, (stack, tintIndex)-> tintIndex < 0 ? -1 : 0x400000);
-		NebulaBlockModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/cross_base"));
-		NebulaBlockModelLoader.registerModel(new ResourceLocation(FarCore.ID, "circuit/integrator_base"));
+		NebulaModelLoader.registerModel(
+				new ResourceLocation(FarCore.ID, "circuit/cross_base"),
+				new ResourceLocation(FarCore.ID, "models/block1/circuit/cross_base.json"),
+				NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(
+				new ResourceLocation(FarCore.ID, "circuit/integrator_base"),
+				new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_base.json"),
+				NebulaModelDeserializer.BLOCK);
 	}
 	
 	public static ItemStack createItemStack(int meta, Mat material)

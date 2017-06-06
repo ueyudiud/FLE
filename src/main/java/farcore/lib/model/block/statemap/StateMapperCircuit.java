@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
+import nebula.client.model.IStateMapperExt;
 import nebula.client.model.StateMapperExt;
 import nebula.common.block.property.PropertyTE;
 import nebula.common.block.property.PropertyTE.TETag;
@@ -16,12 +17,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class StateMapperCircuit implements IStateMapper
+public class StateMapperCircuit implements IStateMapperExt
 {
 	@Override
 	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
@@ -42,11 +42,19 @@ public class StateMapperCircuit implements IStateMapper
 				{
 					IBlockState state3 = state2.withProperty(BlockRedstoneCircuit.CUSTOM_VALUE, substate).withProperty(Misc.PROP_DIRECTION_HORIZONTALS, facing);
 					Map<IProperty<?>, Comparable<?>> map = new HashMap(state3.getProperties());
-					String key = StateMapperExt.removeAndGetName(property, map);
+					StateMapperExt.removeAndGetName(property, map);
 					builder.put(state3, new ModelResourceLocation(FarCore.ID + ":circuit/" + tag.name(), StateMapperExt.getPropertyKey(map)));
 				}
 			}
 		}
 		return builder.build();
+	}
+	
+	@Override
+	public ModelResourceLocation getModelResourceLocation(IBlockState state)
+	{
+		PropertyTE property = ((BlockRedstoneCircuit) state.getBlock()).property_TE;
+		Map<IProperty<?>, Comparable<?>> map = new HashMap<>(state.getProperties());
+		return new ModelResourceLocation(FarCore.ID + ":circuit/" + StateMapperExt.removeAndGetName(property, map), StateMapperExt.getPropertyKey(map));
 	}
 }

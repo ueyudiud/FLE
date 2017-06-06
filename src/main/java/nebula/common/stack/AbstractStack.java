@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import nebula.common.base.Judgable;
+import nebula.base.Judgable;
 import net.minecraft.item.ItemStack;
 
 /**

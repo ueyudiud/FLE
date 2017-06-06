@@ -21,7 +21,7 @@ import net.minecraft.nbt.NBTTagString;
 
 public class NBTSynclizedCompound extends NBTTagCompound
 {
-	private Map<String, NBTBase> tagMap = new HashMap();
+	private Map<String, NBTBase> tagMap = new HashMap<>();
 	private boolean update;
 	private NBTTagCompound nbt;
 	
@@ -34,19 +34,19 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	public NBTSynclizedCompound copy()
 	{
 		NBTSynclizedCompound compound = new NBTSynclizedCompound();
-		compound.tagMap.putAll(tagMap);
+		compound.tagMap.putAll(this.tagMap);
 		return compound;
 	}
 	
 	private void mark()
 	{
-		update = true;
+		this.update = true;
 	}
 	
 	public void reset()
 	{
-		update = false;
-		nbt = new NBTTagCompound();
+		this.update = false;
+		this.nbt = new NBTTagCompound();
 	}
 	
 	@Override
@@ -54,20 +54,20 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		if(hasKey(name))
 		{
-			tagMap.remove(name);
+			this.tagMap.remove(name);
 		}
 	}
 	
 	@Override
 	public boolean hasNoTags()
 	{
-		return tagMap.isEmpty();
+		return this.tagMap.isEmpty();
 	}
 	
 	@Override
 	public boolean hasKey(String name)
 	{
-		return tagMap.get(name) != null;
+		return this.tagMap.get(name) != null;
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 		try
 		{
 			NBTBase nbt;
-			return (nbt = tagMap.get(name)) != null ?
+			return (nbt = this.tagMap.get(name)) != null ?
 					value == 99 || nbt.getId() == value : false;
 		}
 		catch(Exception exception)
@@ -89,7 +89,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	@Override
 	public NBTBase getTag(String name)
 	{
-		return tagMap.get(name);
+		return this.tagMap.get(name);
 	}
 	
 	@Override
@@ -97,8 +97,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? NBTTagCompoundEmpty.INSTANCE :
-				(NBTTagCompound) tagMap.get(name);
+			return !this.tagMap.containsKey(name) ? NBTTagCompoundEmpty.INSTANCE :
+				(NBTTagCompound) this.tagMap.get(name);
 		}
 		catch(Exception exception)
 		{
@@ -125,8 +125,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? false :
-				((NBTPrimitive) tagMap.get(name)).getByte() != 0;
+			return !this.tagMap.containsKey(name) ? false :
+				((NBTPrimitive) this.tagMap.get(name)).getByte() != 0;
 		}
 		catch(Exception exception)
 		{
@@ -139,8 +139,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? 0 :
-				((NBTPrimitive) tagMap.get(name)).getByte();
+			return !this.tagMap.containsKey(name) ? 0 :
+				((NBTPrimitive) this.tagMap.get(name)).getByte();
 		}
 		catch(Exception exception)
 		{
@@ -153,8 +153,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? 0 :
-				((NBTPrimitive) tagMap.get(name)).getShort();
+			return !this.tagMap.containsKey(name) ? 0 :
+				((NBTPrimitive) this.tagMap.get(name)).getShort();
 		}
 		catch(Exception exception)
 		{
@@ -167,8 +167,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? 0 :
-				((NBTPrimitive) tagMap.get(name)).getInt();
+			return !this.tagMap.containsKey(name) ? 0 :
+				((NBTPrimitive) this.tagMap.get(name)).getInt();
 		}
 		catch(Exception exception)
 		{
@@ -181,8 +181,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? 0 :
-				((NBTPrimitive) tagMap.get(name)).getLong();
+			return !this.tagMap.containsKey(name) ? 0 :
+				((NBTPrimitive) this.tagMap.get(name)).getLong();
 		}
 		catch(Exception exception)
 		{
@@ -195,8 +195,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? 0 :
-				((NBTPrimitive) tagMap.get(name)).getFloat();
+			return !this.tagMap.containsKey(name) ? 0 :
+				((NBTPrimitive) this.tagMap.get(name)).getFloat();
 		}
 		catch(Exception exception)
 		{
@@ -209,8 +209,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? 0 :
-				((NBTPrimitive) tagMap.get(name)).getDouble();
+			return !this.tagMap.containsKey(name) ? 0 :
+				((NBTPrimitive) this.tagMap.get(name)).getDouble();
 		}
 		catch(Exception exception)
 		{
@@ -223,8 +223,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? "" :
-				((NBTTagString) tagMap.get(name)).getString();
+			return !this.tagMap.containsKey(name) ? "" :
+				((NBTTagString) this.tagMap.get(name)).getString();
 		}
 		catch(Exception exception)
 		{
@@ -237,8 +237,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? new byte[0] :
-				((NBTTagByteArray) tagMap.get(name)).getByteArray();
+			return !this.tagMap.containsKey(name) ? new byte[0] :
+				((NBTTagByteArray) this.tagMap.get(name)).getByteArray();
 		}
 		catch(Exception exception)
 		{
@@ -251,8 +251,8 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	{
 		try
 		{
-			return !tagMap.containsKey(name) ? new int[0] :
-				((NBTTagIntArray) tagMap.get(name)).getIntArray();
+			return !this.tagMap.containsKey(name) ? new int[0] :
+				((NBTTagIntArray) this.tagMap.get(name)).getIntArray();
 		}
 		catch(Exception exception)
 		{
@@ -267,17 +267,17 @@ public class NBTSynclizedCompound extends NBTTagCompound
 		{
 			if(hasKey(name))
 			{
-				if(!tag.equals(tagMap.get(name)))
+				if(!tag.equals(this.tagMap.get(name)))
 				{
-					tagMap.put(name, tag);
-					nbt.setTag(name, tag);
+					this.tagMap.put(name, tag);
+					this.nbt.setTag(name, tag);
 					mark();
 				}
 			}
 			else
 			{
-				tagMap.put(name, tag);
-				nbt.setTag(name, tag);
+				this.tagMap.put(name, tag);
+				this.nbt.setTag(name, tag);
 				mark();
 			}
 		}
@@ -360,7 +360,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	public NBTTagCompound asCompound()
 	{
 		NBTTagCompound ret = new NBTTagCompound();
-		for(Entry<String, NBTBase> entry : tagMap.entrySet())
+		for(Entry<String, NBTBase> entry : this.tagMap.entrySet())
 		{
 			ret.setTag(entry.getKey(), entry.getValue().copy());
 		}
@@ -369,12 +369,12 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	
 	public boolean isChanged()
 	{
-		return update;
+		return this.update;
 	}
 	
 	public NBTTagCompound getChanged(boolean reset)
 	{
-		NBTTagCompound ret = nbt;
+		NBTTagCompound ret = this.nbt;
 		if(reset)
 		{
 			reset();
@@ -384,7 +384,7 @@ public class NBTSynclizedCompound extends NBTTagCompound
 	
 	public void clear()
 	{
-		tagMap.clear();
+		this.tagMap.clear();
 		reset();
 	}
 }

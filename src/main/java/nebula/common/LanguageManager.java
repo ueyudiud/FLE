@@ -161,64 +161,42 @@ public class LanguageManager
 		if (!this.file.canRead())
 			return;
 		MAP1.clear();
-		BufferedReader reader = null;
 		Log.info("Start read localized file.");
-		try
+		for(File file : this.file.listFiles(FILTER))
 		{
-			for(File file : this.file.listFiles(FILTER))
+			String name = file.getName();
+			Log.info("Loading " + name + " language file.");
+			name = name.substring(0, ".lang".length());
+			int keyCount = 0;
+			Map<String, String> map = new HashMap<>();
+			
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file))))
 			{
-				String name = file.getName();
-				Log.info("Loading " + name + " language file.");
-				name = name.substring(0, ".lang".length());
-				int keyCount = 0;
-				Map<String, String> map = new HashMap<>();
-				try
+				String line;
+				while((line = reader.readLine()) != null)
 				{
-					reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-					String line;
-					while((line = reader.readLine()) != null)
+					if(line.length() == 0)
 					{
-						if(line.length() == 0)
-						{
-							continue;
-						}
-						int idx = line.indexOf('=');
-						if(idx == -1) throw new RuntimeException();
-						map.put(line.substring(0, idx).trim(), line.substring(idx + 1));
-						++keyCount;
+						continue;
 					}
-					MAP1.put(name, map);
-					Log.info("Wrote " + keyCount + " keys to language manager.");
+					int idx = line.indexOf('=');
+					if(idx == -1) throw new RuntimeException();
+					map.put(line.substring(0, idx).trim(), line.substring(idx + 1));
+					++keyCount;
 				}
-				catch(RuntimeException exception)
-				{
-					Log.warn("Invalid language file " + file.getName(), exception);
-				}
-				catch(IOException exception)
-				{
-					Log.warn("Fail to load language file " + file.getName(), exception);
-				}
-				finally
-				{
-					try
-					{
-						if(reader != null)
-						{
-							reader.close();
-						}
-					}
-					catch (Exception exception2)
-					{
-						exception2.printStackTrace();
-					}
-				}
+				MAP1.put(name, map);
+				Log.info("Wrote " + keyCount + " keys to language manager.");
 			}
-			loadFile = true;
+			catch(RuntimeException exception)
+			{
+				Log.warn("Invalid language file " + file.getName(), exception);
+			}
+			catch(IOException exception)
+			{
+				Log.warn("Fail to load language file " + file.getName(), exception);
+			}
 		}
-		catch(Exception exception)
-		{
-			Log.warn("Fail to read language file.", exception);
-		}
+		loadFile = true;
 	}
 	
 	public void write()
@@ -236,17 +214,15 @@ public class LanguageManager
 		}
 		Log.info("Start to write localized file.");
 		int keyCount = 0;
-		BufferedWriter writer = null;
 		try
 		{
 			File file = new File(this.file, ENGLISH + ".lang");
-			try
+			if(!file.exists())
 			{
-				if(!file.exists())
-				{
-					file.createNewFile();
-				}
-				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true)));
+				file.createNewFile();
+			}
+			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true))))
+			{
 				Map<String, String> map = MAP1.getOrDefault(ENGLISH, ImmutableMap.of());
 				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);//Use sorted map for easier to search translated word.
 				for(Entry<String, String> entry : sortedMap.entrySet())
@@ -259,20 +235,6 @@ public class LanguageManager
 			catch(IOException exception)
 			{
 				Log.warn("Fail to save language file.", exception);
-			}
-			finally
-			{
-				if(writer != null)
-				{
-					try
-					{
-						writer.close();
-					}
-					catch(IOException exception2)
-					{
-						Log.warn("Fail to close language file.", exception2);
-					}
-				}
 			}
 		}
 		catch(Exception exception)

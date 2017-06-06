@@ -16,6 +16,8 @@ public interface INBTReaderAndWritter<T, N extends NBTBase> extends INBTReader<T
 {
 	default Class<? super T> getTargetType()
 	{
-		return new TypeToken<T>(getClass()){}.getRawType();
+		return new TypeToken<T>(getClass()) {
+			private static final long serialVersionUID = -7802993399663477135L;
+		}.getRawType();
 	}
 }

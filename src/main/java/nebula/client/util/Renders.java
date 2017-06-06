@@ -10,6 +10,7 @@ import nebula.client.model.ICustomItemModelSelector;
 import nebula.client.model.StateMapperExt;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -30,7 +31,7 @@ public class Renders
 		Nebula.proxy.registerRender(object);
 	}
 	
-	public static void registerCompactModel(Block block, boolean splitFile, String modid, String path, IProperty property, IProperty...properties)
+	public static void registerCompactModel(Block block, boolean splitFile, String modid, String path, IProperty<?> property, IProperty<?>...properties)
 	{
 		Nebula.proxy.registerCompactModel(splitFile, block, modid, path, property, properties);
 	}
@@ -63,13 +64,32 @@ public class Renders
 		nebula.client.ClientProxy.registerBuildInModel(block);
 	}
 	
-	public static void registerCompactModel(StateMapperExt mapper, Block block, IProperty<?> property)
+	public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, IProperty<T> property)
 	{
-		((ClientProxy) Nebula.proxy).registerCompactModel(mapper, block, property);
+		Item item = Item.getItemFromBlock(block);
+		IBlockState state = block.getDefaultState();
+		if(property != null)
+		{
+			for (T value : property.getAllowedValues())
+			{
+				IBlockState state2 = state.withProperty(property, value);
+				ModelLoader.setCustomModelResourceLocation(item, block.getMetaFromState(state2), mapper.getModelResourceLocation(state2));
+			}
+		}
+		else
+		{
+			ModelLoader.setCustomModelResourceLocation(item, 0, mapper.getModelResourceLocation(state));
+		}
+		ModelLoader.setCustomStateMapper(block, mapper);
 	}
 	
-	public static void registerCompactModel(StateMapperExt mapper, Block block, int size)
+	public static void registerCompactModel(StateMapperExt mapper, Block block, int metaCount)
 	{
-		((ClientProxy) Nebula.proxy).registerCompactModel(mapper, block, size);
+		Item item = Item.getItemFromBlock(block);
+		for (int i = 0; i < metaCount; ++i)
+		{
+			ModelLoader.setCustomModelResourceLocation(item, i, mapper.getModelResourceLocation(block.getStateFromMeta(i)));
+		}
+		ModelLoader.setCustomStateMapper(block, mapper);
 	}
 }

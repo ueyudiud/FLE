@@ -1,4 +1,8 @@
 {
-    "textures": "[fle:misc_resource",
-    "layers": "~fle:misc_resource"
+    "layers": [
+		{ 
+			"texture": "[fle:misc_resource",
+			"meta": "fle:misc_resource"
+		}
+	]
 }

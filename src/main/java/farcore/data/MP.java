@@ -15,7 +15,7 @@ import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
-import nebula.common.base.IPropertyMap.IProperty;
+import nebula.base.IPropertyMap.IProperty;
 
 /**
  * Material properties.

@@ -259,6 +259,7 @@ public class CoordTransformer implements Cloneable
 		return tuple;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <V extends Tuple3d> V transform(V tuple)
 	{
 		return (V) buildMatrix().apply(tuple);

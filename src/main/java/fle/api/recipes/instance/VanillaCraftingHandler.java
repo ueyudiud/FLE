@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 
 import fle.api.recipes.IRecipeMap;
-import nebula.common.base.Ety;
+import nebula.base.Ety;
 import nebula.common.util.L;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.crafting.CraftingManager;

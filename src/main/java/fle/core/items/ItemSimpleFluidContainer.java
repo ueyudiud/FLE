@@ -15,10 +15,7 @@ import com.google.common.collect.Maps;
 import farcore.data.EnumFluid;
 import farcore.util.Localization;
 import fle.core.FLE;
-import nebula.client.model.ColorMultiplier;
-import nebula.client.model.FlexibleItemSubmetaGetterLoader;
-import nebula.client.model.FlexibleTextureSet;
-import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.IProgressBarStyle;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
@@ -98,15 +95,15 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	public void registerRender()
 	{
 		super.registerRender();
-		NebulaItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "fluidcontainer"));
-		FlexibleTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/bottom"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key)));
-		FlexibleTextureSet.registerTextureSetApplier(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key + "_overlay")));
-		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
-		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(new ResourceLocation(FLE.MODID, "fluidcontainer_getfluid"), stack -> {
+		NebulaModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "fluidcontainer"));
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FLE.MODID, "fluidcontainer/bottom"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key)));
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key + "_overlay")));
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FLE.MODID, "fluidcontainer_getfluid"), stack -> {
 			NBTTagCompound nbt = ItemStacks.getSubOrSetupNBT(stack, "tank", false);
 			return nbt.hasKey("FluidName") ? "fluid:" + nbt.getString("FluidName") : "empty";
 		});
-		ColorMultiplier.registerColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
+		NebulaModelLoader.registerItemColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
 		this.style = new IProgressBarStyle()
 		{
 			@Override

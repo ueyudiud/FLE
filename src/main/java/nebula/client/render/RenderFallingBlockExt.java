@@ -24,12 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 {
 	@SideOnly(Side.CLIENT)
-	public static enum Factory implements IRenderFactory
+	public static enum Factory implements IRenderFactory<EntityFallingBlockExtended>
 	{
 		instance;
-
+		
 		@Override
-		public Render createRenderFor(RenderManager manager)
+		public Render<EntityFallingBlockExtended> createRenderFor(RenderManager manager)
 		{
 			return new RenderFallingBlockExt(manager);
 		}
@@ -39,7 +39,7 @@ public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 	public RenderFallingBlockExt(RenderManager renderManager)
 	{
 		super(renderManager);
-		shadowSize = 0.5F;
+		this.shadowSize = 0.5F;
 	}
 	
 	@Override
@@ -49,11 +49,11 @@ public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 		if (entity.getBlock() != null)
 		{
 			IBlockState iblockstate = entity.getBlock();
-
+			
 			if (iblockstate.getRenderType() == EnumBlockRenderType.MODEL)
 			{
 				World world = entity.world;
-
+				
 				if (iblockstate != world.getBlockState(new BlockPos(entity)) && iblockstate.getRenderType() != EnumBlockRenderType.INVISIBLE)
 				{
 					bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -61,13 +61,13 @@ public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 					GlStateManager.disableLighting();
 					Tessellator tessellator = Tessellator.getInstance();
 					VertexBuffer vertexbuffer = tessellator.getBuffer();
-
-					if (renderOutlines)
+					
+					if (this.renderOutlines)
 					{
 						GlStateManager.enableColorMaterial();
 						GlStateManager.enableOutlineMode(getTeamColor(entity));
 					}
-
+					
 					vertexbuffer.begin(7, DefaultVertexFormats.BLOCK);
 					BlockPos blockpos = new BlockPos(entity.posX, entity.getEntityBoundingBox().maxY, entity.posZ);
 					GlStateManager.translate((float)(x - blockpos.getX() - 0.5D), (float)(y - blockpos.getY()), (float)(z - blockpos.getZ() - 0.5D));
@@ -79,13 +79,13 @@ public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 					}
 					blockrendererdispatcher.getBlockModelRenderer().renderModel(world, blockrendererdispatcher.getModelForState(iblockstate), iblockstate, blockpos, vertexbuffer, false, MathHelper.getPositionRandom(origin));
 					tessellator.draw();
-
-					if (renderOutlines)
+					
+					if (this.renderOutlines)
 					{
 						GlStateManager.disableOutlineMode();
 						GlStateManager.disableColorMaterial();
 					}
-
+					
 					GlStateManager.enableLighting();
 					GlStateManager.popMatrix();
 					super.doRender(entity, x, y, z, entityYaw, partialTicks);
@@ -93,7 +93,7 @@ public class RenderFallingBlockExt extends Render<EntityFallingBlockExtended>
 			}
 		}
 	}
-
+	
 	@Override
 	protected ResourceLocation getEntityTexture(EntityFallingBlockExtended entity)
 	{

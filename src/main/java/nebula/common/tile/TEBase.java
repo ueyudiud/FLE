@@ -316,7 +316,7 @@ public class TEBase extends TileEntity implements IModifiableCoord
 		int level = this.world.getLightFor(type, this.pos);
 		if(this.lightLevel != level)
 		{
-			Worlds.checkLight(this.world, this.pos);
+			this.world.checkLight(this.pos);
 			this.lightLevel = level;
 		}
 	}

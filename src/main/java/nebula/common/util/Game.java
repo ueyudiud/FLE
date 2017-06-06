@@ -170,7 +170,7 @@ public final class Game
 	@SideOnly(Side.CLIENT)
 	public static void registerFluid(BlockFluidBase block)
 	{
-		Renders.registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.instance);
-		ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.instance);
+		Renders.registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.INSTANCE);
+		ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.INSTANCE);
 	}
 }

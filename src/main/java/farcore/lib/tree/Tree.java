@@ -20,7 +20,7 @@ import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.material.Mat;
 import farcore.lib.tile.instance.TECoreLeaves;
-import nebula.common.base.Appliable;
+import nebula.base.function.Appliable;
 import nebula.common.data.Misc;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.tile.IToolableTile;

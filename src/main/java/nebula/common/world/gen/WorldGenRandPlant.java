@@ -6,7 +6,7 @@ package nebula.common.world.gen;
 
 import java.util.Random;
 
-import nebula.common.base.Selector;
+import nebula.base.function.Selector;
 import nebula.common.block.IBlockStayabilityCheck;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;

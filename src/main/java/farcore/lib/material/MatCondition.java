@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import farcore.lib.item.ItemMulti;
+import nebula.base.Judgable;
+import nebula.base.Register;
 import nebula.common.LanguageManager;
-import nebula.common.base.Judgable;
-import nebula.common.base.Register;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.OreDict;
 import net.minecraft.block.Block;

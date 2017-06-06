@@ -8,8 +8,8 @@ import java.util.Iterator;
 
 import com.google.common.collect.Iterators;
 
-import nebula.common.base.INode;
-import nebula.common.base.Node;
+import nebula.base.INode;
+import nebula.base.Node;
 import nebula.common.util.ItemStacks;
 import net.minecraft.item.ItemStack;
 

@@ -11,7 +11,7 @@ import farcore.util.Localization;
 import fle.core.FLE;
 import fle.loader.FLEConfig;
 import nebula.client.CreativeTabBase;
-import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public class ItemToolHead extends ItemMulti
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		NebulaItemModelLoader.registerModel(this, new ResourceLocation(this.modid, "tool_head/" + this.condition.name.replaceAll("_", ".")));
+		NebulaModelLoader.registerModel(this, new ResourceLocation(this.modid, "tool_head/" + this.condition.name.replaceAll("_", ".")));
 	}
 	
 	@Override

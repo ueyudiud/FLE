@@ -41,22 +41,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  * @see farcore.FarCore
  */
-@Mod(
-		modid = FarCore.ID,
-		/*
-		 * The version of Far Core not always refresh.
-		 * Now Far Core is main update continent. Please
-		 * use FLE version to compact your Far Core modification
-		 * is needed update.
-		 */
-		version = "1.1b",
-		name = "Far Core",
-		dependencies = "required-after:nebula")
+@Mod(modid = FarCore.ID, version = FarCoreSetup.VERSION, name = "Far Core", dependencies = "required-after:nebula")
 public class FarCoreSetup
 {
 	/**
-	 * The sided proxy of far core.
+	 * The version of Far Core not always refresh.
+	 * Now Far Core is main update continent. Please
+	 * use FLE version to compact your Far Core modification
+	 * is needed update.
 	 */
+	public static final String VERSION = "1.1c";
+	
+	/** The sided proxy of far core. */
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static Proxy proxy;
 	

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
-import nebula.client.ClientEvent;
+import nebula.client.EntityProjectileItemRenderEvent;
 import nebula.common.entity.EntityProjectileItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,12 +27,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderProjectileItem extends Render<EntityProjectileItem>
 {
 	@SideOnly(Side.CLIENT)
-	public static enum Factory implements IRenderFactory
+	public static enum Factory implements IRenderFactory<EntityProjectileItem>
 	{
 		instance;
 		
 		@Override
-		public Render createRenderFor(RenderManager manager)
+		public Render<EntityProjectileItem> createRenderFor(RenderManager manager)
 		{
 			return new RenderProjectileItem(manager);
 		}
@@ -41,11 +41,11 @@ public class RenderProjectileItem extends Render<EntityProjectileItem>
 	private Minecraft minecraft = Minecraft.getMinecraft();
 	private final Random random = new Random();
 	private RenderItem render;
-
+	
 	protected RenderProjectileItem(RenderManager renderManager)
 	{
 		super(renderManager);
-		render = minecraft.getRenderItem();
+		this.render = this.minecraft.getRenderItem();
 	}
 	
 	@Override
@@ -60,8 +60,8 @@ public class RenderProjectileItem extends Render<EntityProjectileItem>
 			GL11.glTranslated(x, y, z);
 			GL11.glScalef(.5F, .5F, .5F);
 			GlStateManager.disableLighting();
-
-			ClientEvent.EntityProjectileItemRenderEvent event = new ClientEvent.EntityProjectileItemRenderEvent(entity, renderManager, partialTicks);
+			
+			EntityProjectileItemRenderEvent event = new EntityProjectileItemRenderEvent(entity, this.renderManager, partialTicks);
 			
 			MinecraftForge.EVENT_BUS.post(event);
 			
@@ -72,24 +72,24 @@ public class RenderProjectileItem extends Render<EntityProjectileItem>
 				EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ, stack.copy());
 				item.getEntityItem().stackSize = 1;
 				item.hoverStart = 1.0F;
-
-				if (!render.shouldRenderItemIn3D(stack))
+				
+				if (!this.render.shouldRenderItemIn3D(stack))
 				{
 					GL11.glRotatef(180F, 0, 1, 0);
 				}
-
+				
 				GlStateManager.pushAttrib();
 				RenderHelper.enableStandardItemLighting();
-				render.renderItem(stack, TransformType.FIXED);
+				this.render.renderItem(stack, TransformType.FIXED);
 				RenderHelper.disableStandardItemLighting();
 				GlStateManager.popAttrib();
 			}
-
+			
 			GlStateManager.enableLighting();
 			GL11.glPopMatrix();
 		}
 	}
-
+	
 	@Override
 	protected ResourceLocation getEntityTexture(EntityProjectileItem entity)
 	{

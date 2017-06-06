@@ -1,0 +1,28 @@
+{
+	"name": "net.minecraftforge.client.model.ModelLoader",
+	"modification": [
+		{
+			"name": "onRegisterAllBlocks|(Lbou;)V",
+			"labels": [
+				{
+					"type": "insert",
+					"line": 1080,
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 0
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientProxy",
+							"name": "onRegisterAllBlocks",
+							"desc": "(Lbou;)V",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

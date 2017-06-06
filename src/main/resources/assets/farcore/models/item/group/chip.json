@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/chip",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/chip",
+			"meta": "farcore:material"
+		}
+	]
 }

@@ -292,9 +292,9 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		BlockPos pos1;
 		IBlockState state1;
-		if(world.isSideSolid(pos1 = pos.offset(facing), facing.getOpposite(), true)) return false;
+		if(Worlds.isSideSolid(world, pos1 = pos.offset(facing), facing.getOpposite(), true)) return false;
 		return (state1 = world.getBlockState(pos1.down())).getBlock() instanceof BlockSoil ?
-				state.getValue(COVER_TYPE).noCover == state.getValue(COVER_TYPE).noCover : false;
+				state.getValue(COVER_TYPE).noCover == state1.getValue(COVER_TYPE).noCover : false;
 	}
 	
 	@Override

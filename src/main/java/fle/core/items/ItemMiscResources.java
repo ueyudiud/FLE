@@ -11,9 +11,7 @@ import farcore.data.M;
 import farcore.data.MC;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.core.FLE;
-import nebula.client.model.FlexibleItemSubmetaGetterLoader;
-import nebula.client.model.FlexibleTextureSet;
-import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.item.ItemSubBehavior;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -66,9 +64,9 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	public void registerRender()
 	{
 		super.registerRender();
-		NebulaItemModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/misc_resource"));
-		FlexibleTextureSet.registerTextureSetApplier(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/misc_resource/" + key)));
-		FlexibleItemSubmetaGetterLoader.registerSubmetaGetter(getRegistryName(), stack -> this.nameMap.get(getBaseDamage(stack)));
+		NebulaModelLoader.registerModel(this, new ResourceLocation(FLE.MODID, "group/misc_resource"));
+		NebulaModelLoader.registerItemMetaGenerator(getRegistryName(), stack->this.nameMap.get(getBaseDamage(stack)));
+		NebulaModelLoader.registerTextureSet(getRegistryName(), () -> Maps.asMap(this.idMap.keySet(), key -> new ResourceLocation(FLE.MODID, "items/group/misc_resource/" + key)));
 	}
 	
 	@Override

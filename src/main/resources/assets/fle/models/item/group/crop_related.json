@@ -1,4 +1,8 @@
 {
-    "textures": "[fle:crop_related",
-    "layers": "~fle:crop_related"
+    "layers": [
+		{
+			"texture": "[fle:crop_related",
+			"meta": "fle:crop_related"
+		}
+	]
 }

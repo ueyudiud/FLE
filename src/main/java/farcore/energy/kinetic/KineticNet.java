@@ -11,7 +11,7 @@ import farcore.energy.IEnergyNet.LocalEnergyNet;
 import farcore.lib.util.EnumModifyFlag;
 import nebula.Log;
 import nebula.Nebula;
-import nebula.common.base.IntegerArray;
+import nebula.base.IntegerArray;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import net.minecraft.util.math.BlockPos;

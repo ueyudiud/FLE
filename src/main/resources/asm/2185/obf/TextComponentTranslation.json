@@ -1,0 +1,26 @@
+{
+	"name": "net.minecraft.util.text.TextComponentTranslation",
+	"modification": [
+		{
+			"name": "g|()V",
+			"labels": [
+				{
+					"type": "replace",
+					"owner": "dl",
+					"name": "a",
+					"desc": "(Ljava/lang/String;)Ljava/lang/String;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 184,
+							"owner": "nebula/common/LanguageManager",
+							"name": "translateToLocalOfText",
+							"desc": "(Ljava/lang/String;)Ljava/lang/String;",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,4 +1,8 @@
 {
-    "textures": "[farcore:group/fragment",
-    "layers": "~farcore:material"
+	"layers": [
+		{
+			"texture": "[farcore:group/fragment",
+			"meta": "farcore:material"
+		}
+	]
 }

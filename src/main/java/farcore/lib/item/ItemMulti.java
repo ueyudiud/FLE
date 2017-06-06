@@ -5,7 +5,7 @@ import java.util.List;
 import farcore.FarCore;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
-import nebula.client.model.NebulaItemModelLoader;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.enviornment.EnviornmentEntity;
@@ -107,7 +107,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	public void registerRender()
 	{
 		super.registerRender();
-		NebulaItemModelLoader.registerModel(this, new ResourceLocation(this.modid, "group/" + this.condition.name));
+		NebulaModelLoader.registerModel(this, new ResourceLocation(this.modid, "group/" + this.condition.name));
 	}
 	
 	@Override

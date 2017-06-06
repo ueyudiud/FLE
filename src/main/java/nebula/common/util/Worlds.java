@@ -14,9 +14,7 @@ import java.util.Random;
 import com.google.common.collect.ImmutableList;
 
 import nebula.Nebula;
-import nebula.client.light.ThreadLight;
 import nebula.common.CommonOverride;
-import nebula.common.NebulaConfig;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.network.packet.PacketBreakBlock;
@@ -58,6 +56,27 @@ public final class Worlds
 			{1, 0, 3, 2}};
 	
 	private Worlds() {}
+	
+	/**
+	 * I don't know why some mod can be crashed on this method, use this instead.
+	 * @param world
+	 * @param pos
+	 * @param side
+	 * @param def
+	 * @return
+	 */
+	public static boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side, boolean def)
+	{
+		try
+		{
+			return world.isSideSolid(pos, side, def);
+		}
+		catch (Exception exception)
+		{
+			IBlockState state = world.getBlockState(pos);
+			return state.isSideSolid(world, pos, side);
+		}
+	}
 	
 	public static boolean isAirOrReplacable(IBlockAccess world, BlockPos pos)
 	{
@@ -137,20 +156,6 @@ public final class Worlds
 					(b2 && b4) ? (!b3 ? 3 : 2) : -1)) == -1 ?
 							Direction.OPPISITE[side] :
 								rotateFix[side / 2][id];
-	}
-	
-	public static void checkLight(World world, BlockPos pos)
-	{
-		if(NebulaConfig.multiThreadLight)
-		{
-			new Thread(new ThreadLight(world, pos)).run();
-		}
-		else
-		{
-			world.theProfiler.startSection("checkLight");
-			world.checkLight(pos);
-			world.theProfiler.endSection();
-		}
 	}
 	
 	public static void spawnDropInWorld(World world, BlockPos pos, ItemStack drop)

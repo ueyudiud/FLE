@@ -2,7 +2,7 @@ package farcore.lib.world.gen;
 
 import farcore.lib.tree.ITreeGenerator;
 import farcore.lib.tree.TreeInfo;
-import nebula.common.base.Selector;
+import nebula.base.function.Selector;
 
 public class FarWorldGenTree extends FarWorldGenerator
 {

@@ -5,19 +5,17 @@ import java.util.BitSet;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.vecmath.Vector4f;
+import javax.vecmath.Point3f;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import nebula.client.util.Client;
+import nebula.client.util.IModelModifier;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,7 +36,7 @@ public class ItemTextureHelper
 		zNeg = (8.0F - zLevel) / 16F;
 	}
 	
-	private static void setColor(int color)
+	public static void setColor(int color)
 	{
 		red   = ((color >> 24) & 0xFF) / 255F;
 		green = ((color >> 16) & 0xFF) / 255F;
@@ -46,15 +44,22 @@ public class ItemTextureHelper
 		alpha = ( color        & 0xFF) / 255F;
 	}
 	
-	public static ImmutableList<BakedQuad> getQuadsForSprite(int tint, TextureAtlasSprite sprite, VertexFormat format, TRSRTransformation transform, int color)
+	public static void setColor(float r, float g, float b, float a)
 	{
-		return getQuadsForSprite(tint, sprite, format, transform, 0.5F, color);
+		red   = r;
+		green = g;
+		blue  = b;
+		alpha = a;
 	}
 	
-	public static ImmutableList<BakedQuad> getQuadsForSprite(int tint, TextureAtlasSprite sprite, VertexFormat format, TRSRTransformation transform, float zLevel, int color)
+	public static ImmutableList<BakedQuad> getQuadsForSprite(int tint, TextureAtlasSprite sprite, VertexFormat format, IModelModifier transform)
+	{
+		return getQuadsForSprite(tint, sprite, format, transform, 0.5F);
+	}
+	
+	public static ImmutableList<BakedQuad> getQuadsForSprite(int tint, TextureAtlasSprite sprite, VertexFormat format, IModelModifier transform, float zLevel)
 	{
 		setZLevel(zLevel);
-		setColor(color);
 		
 		ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
 		
@@ -129,7 +134,7 @@ public class ItemTextureHelper
 		return (pixels[u + (vMax - 1 - v) * uMax] >> 24 & 0xFF) == 0;
 	}
 	
-	private static void addSideQuad(ImmutableList.Builder<BakedQuad> builder, BitSet faces, VertexFormat format, TRSRTransformation transform, EnumFacing side, int tint, TextureAtlasSprite sprite, int uMax, int vMax, int u, int v)
+	private static void addSideQuad(ImmutableList.Builder<BakedQuad> builder, BitSet faces, VertexFormat format, IModelModifier transform, EnumFacing side, int tint, TextureAtlasSprite sprite, int uMax, int vMax, int u, int v)
 	{
 		int si = side.ordinal();
 		if(si > 4)
@@ -144,7 +149,7 @@ public class ItemTextureHelper
 		}
 	}
 	
-	private static BakedQuad buildSideQuad(VertexFormat format, TRSRTransformation transform, EnumFacing side, int tint, TextureAtlasSprite sprite, int u, int v)
+	private static BakedQuad buildSideQuad(VertexFormat format, IModelModifier transform, EnumFacing side, int tint, TextureAtlasSprite sprite, int u, int v)
 	{
 		final float eps0 = 30e-5f;
 		final float eps1 = 45e-5f;
@@ -224,7 +229,7 @@ public class ItemTextureHelper
 	}
 	
 	public static final BakedQuad buildQuad(
-			VertexFormat format, TRSRTransformation transform, EnumFacing side, TextureAtlasSprite sprite, int tint,
+			VertexFormat format, IModelModifier transform, EnumFacing side, TextureAtlasSprite sprite, int tint,
 			float x0, float y0, float z0, float u0, float v0,
 			float x1, float y1, float z1, float u1, float v1,
 			float x2, float y2, float z2, float u2, float v2,
@@ -242,52 +247,39 @@ public class ItemTextureHelper
 	}
 	
 	public static final BakedQuad buildBlockQuad(
-			VertexFormat format, Optional<TRSRTransformation> transform, @Nullable EnumFacing side, EnumFacing normal, TextureAtlasSprite sprite, int tint,
+			VertexFormat format,IModelModifier transform, @Nullable EnumFacing side, EnumFacing normal, TextureAtlasSprite sprite, int tint,
 			float x0, float y0, float z0, float u0, float v0,
 			float x1, float y1, float z1, float u1, float v1,
 			float x2, float y2, float z2, float u2, float v2,
 			float x3, float y3, float z3, float u3, float v3)
 	{
-		TRSRTransformation transformation = transform.isPresent() ? transform.get() : TRSRTransformation.identity();
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 		builder.setQuadTint(tint);
 		builder.setQuadOrientation(side);
 		builder.setTexture(sprite);
-		putVertex(builder, format, transformation, normal, x0, y0, z0, u0, v0);
-		putVertex(builder, format, transformation, normal, x1, y1, z1, u1, v1);
-		putVertex(builder, format, transformation, normal, x2, y2, z2, u2, v2);
-		putVertex(builder, format, transformation, normal, x3, y3, z3, u3, v3);
+		putVertex(builder, format, transform, normal, x0, y0, z0, u0, v0);
+		putVertex(builder, format, transform, normal, x1, y1, z1, u1, v1);
+		putVertex(builder, format, transform, normal, x2, y2, z2, u2, v2);
+		putVertex(builder, format, transform, normal, x3, y3, z3, u3, v3);
 		return builder.build();
 	}
 	
-	private static void putVertex(UnpackedBakedQuad.Builder builder, VertexFormat format, TRSRTransformation transform, EnumFacing side, float x, float y, float z, float u, float v)
+	private static void putVertex(UnpackedBakedQuad.Builder builder, VertexFormat format, IModelModifier transform, EnumFacing side, float x, float y, float z, float u, float v)
 	{
-		Vector4f vec = new Vector4f();
+		Point3f point = new Point3f();
+		point.x = x;
+		point.y = y;
+		point.z = z;
+		transform.transform(point);
 		for(int e = 0; e < format.getElementCount(); e++)
 		{
 			switch(format.getElement(e).getUsage())
 			{
-			case POSITION:
-				if(transform != TRSRTransformation.identity())
-				{
-					vec.x = x;
-					vec.y = y;
-					vec.z = z;
-					vec.w = 1;
-					transform.getMatrix().transform(vec);
-					builder.put(e, vec.x, vec.y, vec.z, vec.w);
-				}
-				else
-				{
-					builder.put(e, x, y, z, 1);
-				}
-				break;
-			case COLOR:
-				builder.put(e, red, green, blue, alpha);
-				break;
+			case POSITION: builder.put(e, point.x, point.y, point.z, 1); break;
+			case COLOR: builder.put(e, red, green, blue, alpha); break;
 			case UV: if(format.getElement(e).getIndex() == 0)
 			{
-				builder.put(e, u, v, 0f, 1f);
+				builder.put(e, u, v, 0, 1);
 				break;
 			}
 			case NORMAL:
@@ -312,12 +304,12 @@ public class ItemTextureHelper
 	 * @param template The input texture to convert
 	 * @param sprite   The texture whose UVs shall be used   @return The generated quads.
 	 */
-	public static List<UnpackedBakedQuad> convertTexture(VertexFormat format, TRSRTransformation transform, TextureAtlasSprite template, TextureAtlasSprite sprite, float z, EnumFacing facing, int tint, int color)
+	public static List<UnpackedBakedQuad> convertTexture(VertexFormat format, IModelModifier transform, TextureAtlasSprite template, TextureAtlasSprite sprite, float z, EnumFacing facing, int tint)
 	{
 		ItemTextureHelper.tint = tint;
 		
-		List<UnpackedBakedQuad> horizontal = convertTextureHorizontal(format, transform, template, sprite, z, facing, color);
-		List<UnpackedBakedQuad> vertical = convertTextureVertical(format, transform, template, sprite, z, facing, color);
+		List<UnpackedBakedQuad> horizontal = convertTextureHorizontal(format, transform, template, sprite, z, facing);
+		List<UnpackedBakedQuad> vertical = convertTextureVertical(format, transform, template, sprite, z, facing);
 		
 		return horizontal.size() >= vertical.size() ? horizontal : vertical;
 	}
@@ -326,7 +318,7 @@ public class ItemTextureHelper
 	 * Scans a texture and converts it into a list of horizontal strips stacked on top of each other.
 	 * The height of the strips is as big as possible.
 	 */
-	public static List<UnpackedBakedQuad> convertTextureHorizontal(VertexFormat format, TRSRTransformation transform, TextureAtlasSprite template, TextureAtlasSprite sprite, float z, EnumFacing facing, int color)
+	public static List<UnpackedBakedQuad> convertTextureHorizontal(VertexFormat format, IModelModifier transform, TextureAtlasSprite template, TextureAtlasSprite sprite, float z, EnumFacing facing)
 	{
 		int w = template.getIconWidth();
 		int h = template.getIconHeight();
@@ -380,7 +372,7 @@ public class ItemTextureHelper
 							y * hScale,
 							x * wScale,
 							endY * hScale,
-							z, sprite, facing, color));
+							z, sprite, facing, -1));
 					
 					// update Y if all the rows match. no need to rescan
 					if (endY - y > 1)
@@ -400,7 +392,7 @@ public class ItemTextureHelper
 	 * Scans a texture and converts it into a list of vertical strips stacked next to each other from left to right.
 	 * The width of the strips is as big as possible.
 	 */
-	public static List<UnpackedBakedQuad> convertTextureVertical(VertexFormat format, TRSRTransformation transform, TextureAtlasSprite template, TextureAtlasSprite sprite, float z, EnumFacing facing, int color)
+	public static List<UnpackedBakedQuad> convertTextureVertical(VertexFormat format, IModelModifier transform, TextureAtlasSprite template, TextureAtlasSprite sprite, float z, EnumFacing facing)
 	{
 		int w = template.getIconWidth();
 		int h = template.getIconHeight();
@@ -454,7 +446,7 @@ public class ItemTextureHelper
 							start * hScale,
 							endX * wScale,
 							y * hScale,
-							z, sprite, facing, Client.mulColor(color, pixel)));//Blind convert color.
+							z, sprite, facing, pixel));//Blind convert color.
 					
 					// update X if all the columns match. no need to rescan
 					if (endX - x > 1)
@@ -476,25 +468,19 @@ public class ItemTextureHelper
 		return (color >> 24 & 255) > 0;
 	}
 	
-	public static List<BakedQuad> getSurfaceQuadsForSprite(int tint, VertexFormat format, TRSRTransformation transform, float z, TextureAtlasSprite sprite, int color)
+	public static List<BakedQuad> getSurfaceQuadsForSprite(int tint, VertexFormat format, IModelModifier transform, float z, TextureAtlasSprite sprite)
 	{
 		setZLevel(z);
 		return ImmutableList.of(
-				genQuad(format, transform, 0, 0, 16, 16, zNeg, sprite, EnumFacing.NORTH, tint, color),
-				genQuad(format, transform, 0, 0, 16, 16, zPos, sprite, EnumFacing.SOUTH, tint, color));
-	}
-	
-	public static UnpackedBakedQuad genQuad(VertexFormat format, TRSRTransformation transform, float x1, float y1, float x2, float y2, float z, TextureAtlasSprite sprite, EnumFacing facing, int tint, int color)
-	{
-		ItemTextureHelper.tint = tint;
-		return genQuad(format, transform, x1, y1, x2, y2, z, sprite, facing, color);
+				genQuad(format, transform, 0, 0, 16, 16, zNeg, sprite, EnumFacing.NORTH, tint),
+				genQuad(format, transform, 0, 0, 16, 16, zPos, sprite, EnumFacing.SOUTH, tint));
 	}
 	
 	/**
 	 * Generates a Front/Back quad for an itemmodel. Therefore only supports facing NORTH and SOUTH.
 	 * Coordinates are [0,16] to match the usual coordinates used in TextureAtlasSprites
 	 */
-	public static UnpackedBakedQuad genQuad(VertexFormat format, TRSRTransformation transform, float x1, float y1, float x2, float y2, float z, TextureAtlasSprite sprite, EnumFacing facing, int color)
+	public static UnpackedBakedQuad genQuad(VertexFormat format, IModelModifier transform, float x1, float y1, float x2, float y2, float z, TextureAtlasSprite sprite, EnumFacing facing, int color)
 	{
 		float u1 = sprite.getInterpolatedU(x1);
 		float v1 = sprite.getInterpolatedV(y1);
@@ -510,12 +496,12 @@ public class ItemTextureHelper
 		y1 = 1f - y2;
 		y2 = 1f - tmp;
 		
-		return putQuad(format, transform, facing, sprite, color, x1, y1, x2, y2, z, u1, v1, u2, v2);
+		return putQuad(format, transform, facing, sprite, x1, y1, x2, y2, z, u1, v1, u2, v2, color);
 	}
 	
-	private static UnpackedBakedQuad putQuad(VertexFormat format, TRSRTransformation transform, EnumFacing side, TextureAtlasSprite sprite, int color,
+	private static UnpackedBakedQuad putQuad(VertexFormat format, IModelModifier transform, EnumFacing side, TextureAtlasSprite sprite,
 			float x1, float y1, float x2, float y2, float z,
-			float u1, float v1, float u2, float v2)
+			float u1, float v1, float u2, float v2, int color)
 	{
 		side = side.getOpposite();
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
@@ -529,7 +515,8 @@ public class ItemTextureHelper
 			putVertex(builder, format, transform, side, x2, y1, z, u2, v2, color);
 			putVertex(builder, format, transform, side, x2, y2, z, u2, v1, color);
 			putVertex(builder, format, transform, side, x1, y2, z, u1, v1, color);
-		} else
+		}
+		else
 		{
 			putVertex(builder, format, transform, side, x1, y1, z, u1, v2, color);
 			putVertex(builder, format, transform, side, x1, y2, z, u1, v1, color);
@@ -539,35 +526,24 @@ public class ItemTextureHelper
 		return builder.build();
 	}
 	
-	private static void putVertex(UnpackedBakedQuad.Builder builder, VertexFormat format, TRSRTransformation transform, EnumFacing side,
+	private static void putVertex(UnpackedBakedQuad.Builder builder, VertexFormat format, IModelModifier transform, EnumFacing side,
 			float x, float y, float z, float u, float v, int color)
 	{
-		Vector4f vec = new Vector4f();
+		Point3f point = new Point3f();
+		point.x = x;
+		point.y = y;
+		point.z = z;
+		transform.transform(point);
 		for (int e = 0; e < format.getElementCount(); e++)
 		{
 			switch (format.getElement(e).getUsage())
 			{
-			case POSITION:
-				if (transform == TRSRTransformation.identity())
-				{
-					builder.put(e, x, y, z, 1);
-				}
-				// only apply the transform if it's not identity
-				else
-				{
-					vec.x = x;
-					vec.y = y;
-					vec.z = z;
-					vec.w = 1;
-					transform.getMatrix().transform(vec);
-					builder.put(e, vec.x, vec.y, vec.z, vec.w);
-				}
-				break;
+			case POSITION: builder.put(e, point.x, point.y, point.z, 1); break;
 			case COLOR:
-				float a = ((color >> 24) & 0xFF) / 255f; // alpha
-				float r = ((color >> 16) & 0xFF) / 255f; // red
-				float g = ((color >> 8) & 0xFF) / 255f; // green
-				float b = ((color >> 0) & 0xFF) / 255f; // blue
+				float a = alpha * ((color >> 24) & 0xFF) / 255f; // alpha
+				float r = red * ((color >> 16) & 0xFF) / 255f; // red
+				float g = green * ((color >> 8) & 0xFF) / 255f; // green
+				float b = blue * ((color >> 0) & 0xFF) / 255f; // blue
 				builder.put(e, r, g, b, a);
 				break;
 			case UV:
@@ -584,10 +560,5 @@ public class ItemTextureHelper
 				break;
 			}
 		}
-	}
-	
-	public static TRSRTransformation get(Optional<TRSRTransformation> optional)
-	{
-		return optional.isPresent() ? optional.get() : TRSRTransformation.identity();
 	}
 }

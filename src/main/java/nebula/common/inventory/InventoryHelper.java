@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import nebula.common.base.Appliable;
-import nebula.common.base.ArrayListAddWithCheck;
-import nebula.common.base.IntegerEntry;
+import nebula.base.ArrayListAddWithCheck;
+import nebula.base.IntegerEntry;
+import nebula.base.function.Appliable;
 import nebula.common.fluid.container.FluidContainerHandler;
 import nebula.common.fluid.container.IItemFluidContainer;
 import nebula.common.fluid.container.IItemFluidContainerV1;
