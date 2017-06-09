@@ -36,7 +36,7 @@
 						{
 							"opcode": 184,
 							"owner": "nebula/client/ClientOverride",
-							"name": "renderCustomItemOverlayIntoGUI",
+							"name": "renderItemOverlay",
 							"desc": "(Lnet/minecraft/client/renderer/RenderItem;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)Lnet/minecraft/item/ItemStack;",
 							"itf": false
 						}

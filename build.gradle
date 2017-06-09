@@ -11,9 +11,9 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
 
-version = "1.0"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+version = "3.00.08-pre4"
+group= "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "FarLandEra"
 
 sourceCompatibility = targetCompatibility = "8" // Java 8 required.
 compileJava {
@@ -86,6 +86,13 @@ task deobfJar(type: Jar) {
         //attributes 'FMLCorePlugin': 'WhateverLoaderClass'
         //attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
+}
+
+task nebula(type: Jar, dependsOn: 'jar') {
+	classifier = 'nebula'
+	from (sourceSets.main.output) {
+		include "**/nebula/**"
+	}
 }
 
 task coreJar(type: Jar, dependsOn: 'jar') {

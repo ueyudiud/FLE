@@ -26,7 +26,7 @@ import nebula.client.model.flexible.INebulaDirectResourcesModelPart;
 import nebula.client.model.flexible.IRetexturableNebulaModelPart;
 import nebula.client.model.flexible.ModelModifierByCoordTransformer;
 import nebula.client.util.BakedQuadBuilder;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.common.util.L;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -90,7 +90,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 	}
 	
 	@Override
-	public BakedModelPartRedstoneCircuitPlate bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public BakedModelPartRedstoneCircuitPlate bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		TextureAtlasSprite iconDef = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();

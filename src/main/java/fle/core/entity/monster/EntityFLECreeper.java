@@ -6,7 +6,6 @@ package fle.core.entity.monster;
 
 import farcore.data.EnumPhysicalDamageType;
 import farcore.lib.entity.IEntityDamageEffect;
-import fle.core.entity.ai.EntityAICreeperSwellByLight;
 import fle.core.pathfinding.PathNavigateGroundExt;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.pathfinding.PathNavigate;
@@ -27,7 +26,7 @@ public class EntityFLECreeper extends EntityCreeper implements IEntityDamageEffe
 	protected void initEntityAI()
 	{
 		super.initEntityAI();
-		this.tasks.addTask(3, new EntityAICreeperSwellByLight(this));
+		//		this.tasks.addTask(3, new EntityAICreeperSwellByLight(this));
 	}
 	
 	@Override

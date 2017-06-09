@@ -16,6 +16,7 @@ public class EntityAICreeperSwellByLight extends EntityAIBase
 {
 	/** The creeper that is swelling. */
 	EntityCreeper swellingCreeper;
+	BlockPos target;
 	
 	public EntityAICreeperSwellByLight(EntityCreeper entitycreeperIn)
 	{
@@ -36,7 +37,7 @@ public class EntityAICreeperSwellByLight extends EntityAIBase
 	private boolean checkLight()
 	{
 		int light = this.swellingCreeper.world.getLightFor(EnumSkyBlock.BLOCK, new BlockPos(this.swellingCreeper));
-		return light >= 7;
+		return light >= 10;
 	}
 	
 	/**

@@ -126,7 +126,7 @@ public class L
 	 */
 	public static int index8i(int x, int y, int z)
 	{
-		return z << 4 | y << 2 | x;
+		return (x & 0x3) << 4 | (y & 0x3) << 2 | (z & 0x3);
 	}
 	
 	/**
@@ -138,7 +138,19 @@ public class L
 	 */
 	public static int index12i(int x, int y, int z)
 	{
-		return z << 8 | y << 4 | x;
+		return (x & 0xF) << 8 | (y & 0xF) << 4 | (z & 0xF);
+	}
+	
+	/**
+	 * Combine byte data.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	public static int index24i(int x, int y, int z)
+	{
+		return (x & 0xFF) << 16 | (y & 0xFF) << 8 | (z & 0xFF);
 	}
 	
 	/**
@@ -626,6 +638,18 @@ public class L
 	 * @return
 	 */
 	public static boolean inRange(double max, double min, double target)
+	{
+		return target <= max && target >= min;
+	}
+	
+	/**
+	 * Match is number in range(Include left and right bound).
+	 * @param max
+	 * @param min
+	 * @param target
+	 * @return
+	 */
+	public static boolean inRange(float max, float min, float target)
 	{
 		return target <= max && target >= min;
 	}

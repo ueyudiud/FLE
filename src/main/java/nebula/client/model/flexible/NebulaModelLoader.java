@@ -27,8 +27,9 @@ import nebula.Log;
 import nebula.base.Ety;
 import nebula.client.model.IStateMapperExt;
 import nebula.client.model.flexible.NebulaModelDeserializer.Transform;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.common.data.Misc;
+import nebula.common.item.ItemFluidDisplay;
 import nebula.common.util.IO;
 import nebula.common.util.Jsons;
 import net.minecraft.block.Block;
@@ -48,6 +49,10 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -90,7 +95,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	/**
 	 * The missing no icon, it always return when NebulaModelLoader can not find icon handler by resource location.
 	 */
-	public static final IIconHandler ICON_HANDLER_MISSING = new MissingnoIconHandler();
+	public static final IIconCollection ICON_HANDLER_MISSING = new MissingnoIconHandler();
 	
 	private static final Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> MODEL_PROVIDERS = new HashMap<>();
 	private static final Map<ResourceLocation, JsonDeserializer<? extends IModel>> MODEL_DESERIALIZERS = new HashMap<>();
@@ -134,6 +139,11 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	private static final Function<Object, String> ERROR_REPORT_FUNCTION = object ->
 	object instanceof ResourceLocation ? String.format("File not found : %s/%s", ((ResourceLocation) object).getResourceDomain(), ((ResourceLocation) object).getResourcePath()) : "";
 	
+	/**
+	 * Register model deserializer.
+	 * @param location
+	 * @param deserializer
+	 */
 	public static void registerDeserializer(ResourceLocation location, JsonDeserializer<? extends IModel> deserializer)
 	{
 		MODEL_DESERIALIZERS.put(location, deserializer);
@@ -164,7 +174,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	{
 		if (block != null)
 			LOCATION_TO_ITEM_MAP.put(location, Item.getItemFromBlock(block));//Is it needed split block and item map?
-		registerModel(mapper.getModelResourceLocation(state), new ResourceLocation(location.getResourceDomain(), "models/block1/" + location.getResourcePath() + ".json"), NebulaModelDeserializer.BLOCK);
+		registerModel(mapper.getLocationFromState(state), new ResourceLocation(location.getResourceDomain(), "models/block1/" + location.getResourcePath() + ".json"), NebulaModelDeserializer.BLOCK);
 	}
 	
 	public static void registerModel(
@@ -295,6 +305,11 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		else return this.models.containsKey(modelLocation);
 	}
 	
+	/**
+	 * Get meta applier.
+	 * @param location
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")//It is safe.
 	public static Function<ItemStack, String> loadItemMetaGenerator(String location)
 	{
@@ -306,7 +321,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 * @param location
 	 * @return
 	 */
-	public static IIconHandler loadIconHandler(String location)
+	public static IIconCollection loadIconHandler(String location)
 	{
 		//TODO
 		if (location.charAt(0) == '[')
@@ -325,6 +340,15 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		return BUILTIN_ITEM_COLORMULTIPLIER.getOrDefault(new ResourceLocation(location), (ToIntFunction<ItemStack>) NORMAL_MULTIPLIER);
 	}
 	
+	/**
+	 * Get texture set, which is used for {@link IIconCollection}.<p>
+	 * The loader will find resources at {@code "[domain]:models/textureset/[path]"}.
+	 * The file is format as {@code key=value}, and use {@code #} to mark a line of annotation.<p>
+	 * The loader will find in inner resources supplier when not found any mapping in resources,
+	 * and will throw an exception of file not found when no textures set found.
+	 * @param location
+	 * @return
+	 */
 	public static Map<String, ResourceLocation> getTextureSet(ResourceLocation location)
 	{
 		return INSTANCE.cacheLocations.computeIfAbsent(location, INSTANCE::loadTextureSet);
@@ -333,7 +357,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	private Map<String, ResourceLocation> loadTextureSet(ResourceLocation location)
 	{
 		ResourceLocation location2 = location;
-		location = new ResourceLocation(location.getResourceDomain(), "model/textureset/" + location.getResourcePath() + ".txt");
+		location = new ResourceLocation(location.getResourceDomain(), "models/textureset/" + location.getResourcePath() + ".txt");
 		BufferedReader reader;
 		try
 		{
@@ -405,5 +429,25 @@ public enum NebulaModelLoader implements ICustomModelLoader
 			throw new RuntimeException(
 					String.format("The model location \"%s\" is not belong to NebulaModelLoader. There must be some wrong of other model loader.", modelLocation));
 		return model;
+	}
+	
+	static
+	{
+		registerItemMetaGenerator(new ResourceLocation("forge", "contain_fluid"), stack ->
+		{
+			FluidStack stack1 = FluidUtil.getFluidContained(stack);
+			return stack1 == null ? "empty" : stack1.getFluid().getName();
+		});
+		registerItemMetaGenerator(new ResourceLocation("nebula", "display_fluid"),
+				stack->ItemFluidDisplay.getFluid(stack).getName());
+		
+		registerTextureSet(new ResourceLocation("forge", "fluid"), ()-> {
+			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
+			for (Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet())
+			{
+				builder.put(entry.getKey(), entry.getValue().getStill());
+			}
+			return builder.build();
+		});
 	}
 }

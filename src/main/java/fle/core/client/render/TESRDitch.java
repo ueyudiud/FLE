@@ -14,6 +14,7 @@ import nebula.client.render.TESRBase;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.util.Direction;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -38,6 +39,7 @@ public class TESRDitch extends TESRBase<TEDitch>
 	{
 		GL11.glPushMatrix();
 		GlStateManager.disableLighting();
+		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glTranslated(x, y, z);
 		GlStateManager.enableBlend();
 		float height0 = tile.getFlowHeight();

@@ -5,6 +5,7 @@
 package nebula.base;
 
 import java.util.AbstractList;
+import java.util.Collection;
 
 import nebula.common.util.A;
 
@@ -46,6 +47,18 @@ class ArrayListArgument<E> extends AbstractList<E>
 			throw new ArrayIndexOutOfBoundsException(index);
 		}
 		return (E) this.array[index];
+	}
+	
+	@Override
+	public boolean addAll(Collection<? extends E> c)
+	{
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public boolean remove(Object o)
+	{
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override

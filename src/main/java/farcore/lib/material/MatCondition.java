@@ -10,6 +10,7 @@ import nebula.base.Register;
 import nebula.common.LanguageManager;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.OreDict;
+import nebula.common.util.Strings;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -192,7 +193,12 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public String getLocal(Mat material)
 	{
-		return String.format(this.withOreLocalName, material.localName);
+		return getLocal(material.localName);
+	}
+	
+	public String getLocal(String local)
+	{
+		return Strings.replace(this.withOreLocalName, '%', local);
 	}
 	
 	public String translateToLocal(String ore)

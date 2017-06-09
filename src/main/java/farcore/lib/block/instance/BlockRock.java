@@ -85,10 +85,10 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		StateMapperExt mapper = new StateMapperExt(this.material.modid, "rock/" + this.material.name, null, HEATED);
 		ModelLoader.setCustomStateMapper(this, mapper);
 		ModelLoader.setCustomMeshDefinition(this.item,
-				stack -> mapper.getModelResourceLocation(getStateFromMeta(stack.getItemDamage())));
+				stack -> mapper.getLocationFromState(getStateFromMeta(stack.getItemDamage())));
 		for (EnumRockType type : EnumRockType.values())
 		{
-			ModelLoader.registerItemVariants(this.item, mapper.getModelResourceLocation(getDefaultState().withProperty(TYPE, type)));
+			ModelLoader.registerItemVariants(this.item, mapper.getLocationFromState(getDefaultState().withProperty(TYPE, type)));
 		}
 	}
 	

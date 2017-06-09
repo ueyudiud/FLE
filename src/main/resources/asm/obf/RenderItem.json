@@ -36,7 +36,7 @@
 						{
 							"opcode": 184,
 							"owner": "nebula/client/ClientOverride",
-							"name": "renderCustomItemOverlayIntoGUI",
+							"name": "renderItemOverlay",
 							"desc": "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)Ladz;",
 							"itf": false
 						}

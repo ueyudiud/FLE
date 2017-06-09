@@ -5,11 +5,11 @@ import static nebula.common.util.Direction.N;
 import static nebula.common.util.Direction.S;
 import static nebula.common.util.Direction.U;
 import static nebula.common.util.Direction.W;
+import static nebula.common.util.Maths.lerp;
 
 import java.util.Arrays;
 
 import nebula.common.util.Direction;
-import nebula.common.util.Maths;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,17 +42,20 @@ public class BrightnessUtil
 		
 		BrightnessSideInformation(Direction u, Direction v)
 		{
-			directionUX = u.x;
-			directionUY = u.y;
-			directionUZ = u.z;
-			directionVX = v.x;
-			directionVY = v.y;
-			directionVZ = v.z;
+			this.directionUX = u.x;
+			this.directionUY = u.y;
+			this.directionUZ = u.z;
+			this.directionVX = v.x;
+			this.directionVY = v.y;
+			this.directionVZ = v.z;
 		}
 	}
-
+	
+	private static final int[][] INDEXS1 = {{1, 0, -1}, {3, -1, 0}, {5, 1, 0}, {7, 0, 1}};
+	private static final int[][] INDEXS = {{4, 5, 7, 8, 1, 1}, {4, 5, 1, 2, 1, -1}, {4, 3, 1, 0, -1, -1}, {4, 3, 7, 6, -1, 1}};
+	
 	private static BrightnessUtil util;
-
+	
 	public static BrightnessUtil instance()
 	{
 		if(util == null)
@@ -63,19 +66,81 @@ public class BrightnessUtil
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private static int blend4Brightness(int c1, int c2, int c3, int c)
+	private static int blend4Brightness(int c, int c1, int c2, int c3)
 	{
+		if(c  == 0) c  = Math.max(c1, c2) & 0xFF0000 | Math.max(c1 & 0xFF, c2 & 0xFF);
+		if(c1 == 0) c1 = Math.max(0, c - 0x10000) & 0xFF0000 | Math.max(0, (c & 0xFF) - 1);
+		if(c2 == 0) c2 = Math.max(0, c - 0x10000) & 0xFF0000 | Math.max(0, (c & 0xFF) - 1);
 		return (c1 + c2 + c3 + c) >> 2 & 0x00FF00FF;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	private static int blend2Brightness(int c1, int c2)
 	{
 		return (c1 + c2) >> 1 & 0x00FF00FF;
 	}
-
+	
 	public int[] brightness = new int[4];
 	public float[] color = new float[4];
+	
+	public void caculateBrightness(
+			float aoNN, float aoON, float aoPN,
+			float aoNO, float aoOO, float aoPO,
+			float aoNP, float aoOP, float aoPP,
+			
+			float oNN, float oON, float oPN,
+			float oNO, float oOO, float oPO,
+			float oNP, float oOP, float oPP,
+			
+			int bNN, int bON, int bPN,
+			int bNO, int bOO, int bPO,
+			int bNP, int bOP, int bPP)
+	{
+		if(!Minecraft.isAmbientOcclusionEnabled())
+		{
+			Arrays.fill(this.brightness, bOO);
+			Arrays.fill(this.color, aoOO);
+			return;
+		}
+		else
+		{
+			if(oOO == 1F)
+			{
+				Arrays.fill(this.brightness, bOO);
+				Arrays.fill(this.color, aoOO);
+				return;
+			}
+			float[] os = {
+					oNN, oON, oPN,
+					oNO, oOO, oPO,
+					oNP, oOP, oPP
+			};
+			int[] bs = {
+					bNN, bON, bPN,
+					bNO, bOO, bPO,
+					bNP, bOP, bPP
+			};
+			float[] aos = {
+					aoNN, aoON, aoPN,
+					aoNO, aoOO, aoPO,
+					aoNP, aoOP, aoPP
+			};
+			
+			for (int[] is : INDEXS)
+			{
+				if (os[is[1]] == 1F && os[is[2]] == 1F)
+				{
+					aos[is[3]] = (aos[is[1]] + aos[is[2]]) / 2F;
+					bs[is[3]] = blend2Brightness(bs[is[1]], bs[is[2]]);
+				}
+				else
+				{
+					aos[is[3]] = (lerp(aos[is[3]], aos[is[1]], os[is[1]]) + lerp(aos[is[3]], aos[is[2]], os[is[2]])) * .5F;
+				}
+			}
+			caculateBrightness(aos, bs);
+		}
+	}
 	
 	/**
 	 * Calculate brightness of target coord.<br>
@@ -92,88 +157,78 @@ public class BrightnessUtil
 	{
 		if(!Minecraft.isAmbientOcclusionEnabled())
 		{
-			Arrays.fill(brightness, provider.getBrightness(x + direction.x, y + direction.y, z + direction.z));
-			Arrays.fill(color, provider.getAmbientOcclusionLightValue(x + direction.x, y + direction.y, z + direction.z));
+			Arrays.fill(this.brightness, provider.getBrightness(x + direction.x, y + direction.y, z + direction.z));
+			Arrays.fill(this.color, provider.getAmbientOcclusionLightValue(x + direction.x, y + direction.y, z + direction.z));
 			return;
 		}
-		BrightnessSideInformation i = BrightnessSideInformation.information(direction);
-		x += direction.x;
-		y += direction.y;
-		z += direction.z;
-		float o = provider.getOpaqueness(x, y, z);
-		int b = provider.getBrightness(x, y, z);
-		float ao = provider.getAmbientOcclusionLightValue(x, y, z);
-		if(o == 1F)
-		{
-			Arrays.fill(brightness, b);
-			Arrays.fill(color, ao);
-			return;
-		}
-		int bPO = provider.getBrightness(x + i.directionUX, y + i.directionUY, z + i.directionUZ);
-		int bNO = provider.getBrightness(x - i.directionUX, y - i.directionUY, z - i.directionUZ);
-		int bOP = provider.getBrightness(x + i.directionVX, y + i.directionVY, z + i.directionVZ);
-		int bON = provider.getBrightness(x - i.directionVX, y - i.directionVY, z - i.directionVZ);
-		float oPO = provider.getOpaqueness(x + i.directionUX, y + i.directionUY, z + i.directionUZ);
-		float oNO = provider.getOpaqueness(x - i.directionUX, y - i.directionUY, z - i.directionUZ);
-		float oOP = provider.getOpaqueness(x + i.directionVX, y + i.directionVY, z + i.directionVZ);
-		float oON = provider.getOpaqueness(x - i.directionVX, y - i.directionVY, z - i.directionVZ);
-		float aoPO = provider.getAmbientOcclusionLightValue(x + i.directionUX, y + i.directionUY, z + i.directionUZ);
-		float aoNO = provider.getAmbientOcclusionLightValue(x - i.directionUX, y - i.directionUY, z - i.directionUZ);
-		float aoOP = provider.getAmbientOcclusionLightValue(x + i.directionVX, y + i.directionVY, z + i.directionVZ);
-		float aoON = provider.getAmbientOcclusionLightValue(x - i.directionVX, y - i.directionVY, z - i.directionVZ);
-		float aoPP, aoPN, aoNP, aoNN;
-		int bPP, bPN, bNP, bNN;
-		if(oPO == 1F && oOP == 1F)
-		{
-			aoPP = (aoNO + aoOP) / 2F;
-			bPP = blend2Brightness(bPO, bOP);
-		}
 		else
 		{
-			aoPP = provider.getAmbientOcclusionLightValue(x + i.directionUX + i.directionVX, y + i.directionUY + i.directionVY, z + i.directionUZ + i.directionVZ);
-			aoPP = (Maths.lerp(aoPP, aoPO, oPO) + Maths.lerp(aoPP, aoOP, oOP)) / 2F;
-			bPP = provider.getBrightness(x + i.directionUX + i.directionVX, y + i.directionUY + i.directionVY, z + i.directionUZ + i.directionVZ);
+			BrightnessSideInformation i = BrightnessSideInformation.information(direction);
+			x += direction.x;
+			y += direction.y;
+			z += direction.z;
+			float o = provider.getOpaqueness(x, y, z);
+			int b = provider.getBrightness(x, y, z);
+			float ao = provider.getAmbientOcclusionLightValue(x, y, z);
+			if(o == 1F)
+			{
+				Arrays.fill(this.brightness, b);
+				Arrays.fill(this.color, ao);
+				return;
+			}
+			float[] os = new float[9];
+			int[] bs = new int[9];
+			float[] aos = new float[9];
+			
+			os [4] = o;
+			bs [4] = b;
+			aos[4] = ao;
+			
+			for (int[] is : INDEXS1)
+			{
+				os[is[0]] = provider.getOpaqueness(
+						x + i.directionUX * is[1] + i.directionVX * is[2],
+						y + i.directionUY * is[1] + i.directionVY * is[2],
+						z + i.directionUZ * is[1] + i.directionVZ * is[2]);
+				bs[is[0]] = provider.getBrightness(
+						x + i.directionUX * is[1] + i.directionVX * is[2],
+						y + i.directionUY * is[1] + i.directionVY * is[2],
+						z + i.directionUZ * is[1] + i.directionVZ * is[2]);
+				aos[is[0]] = provider.getAmbientOcclusionLightValue(
+						x + i.directionUX * is[1] + i.directionVX * is[2],
+						y + i.directionUY * is[1] + i.directionVY * is[2],
+						z + i.directionUZ * is[1] + i.directionVZ * is[2]);
+			}
+			for (int[] is : INDEXS)
+			{
+				if (os[is[1]] == 1F && os[is[2]] == 1F)
+				{
+					aos[is[3]] = (aos[is[1]] + aos[is[2]]) / 2F;
+					bs[is[3]] = blend2Brightness(bs[is[1]], bs[is[2]]);
+				}
+				else
+				{
+					aos[is[3]] = provider.getAmbientOcclusionLightValue(
+							x + i.directionUX * is[4] + i.directionVX * is[5],
+							y + i.directionUY * is[4] + i.directionVY * is[5],
+							z + i.directionUZ * is[4] + i.directionVZ * is[5]);
+					aos[is[3]] = (lerp(aos[is[3]], aos[is[1]], os[is[1]]) + lerp(aos[is[3]], aos[is[2]], os[is[2]])) / 2F;
+					bs[is[3]] = provider.getBrightness(
+							x + i.directionUX * is[4] + i.directionVX * is[5],
+							y + i.directionUY * is[4] + i.directionVY * is[5],
+							z + i.directionUZ * is[4] + i.directionVZ * is[5]);
+				}
+			}
+			caculateBrightness(aos, bs);
 		}
-		if(oPO == 1F && oON == 1F)
+	}
+	
+	private void caculateBrightness(float[] aos, int[] bs)
+	{
+		for (int I = 0; I < 4; ++I)
 		{
-			aoPN = (aoPO + aoON) / 2F;
-			bPN = blend2Brightness(bPO, bON);
+			this.color[I] = (aos[INDEXS[I][0]] + aos[INDEXS[I][1]] + aos[INDEXS[I][2]] + aos[INDEXS[I][3]]) / 4F;
+			this.brightness[I] = blend4Brightness(bs[INDEXS[I][0]], bs[INDEXS[I][1]], bs[INDEXS[I][2]], bs[INDEXS[I][3]]);
 		}
-		else
-		{
-			aoPN = provider.getAmbientOcclusionLightValue(x + i.directionUX - i.directionVX, y + i.directionUY - i.directionVY, z + i.directionUZ - i.directionVZ);
-			aoPN = (Maths.lerp(aoPN, aoPO, oPO) + Maths.lerp(aoPN, aoON, oON)) / 2F;
-			bPN = provider.getBrightness(x + i.directionUX - i.directionVX, y + i.directionUY - i.directionVY, z + i.directionUZ - i.directionVZ);
-		}
-		if(oNO == 1F && oON == 1F)
-		{
-			aoNN = (aoNO + aoON) / 2F;
-			bNN = blend2Brightness(bNO, bON);
-		}
-		else
-		{
-			aoNN = provider.getAmbientOcclusionLightValue(x - i.directionUX - i.directionVX, y - i.directionUY - i.directionVY, z - i.directionUZ - i.directionVZ);
-			aoNN = (Maths.lerp(aoNN, aoNO, oNO) + Maths.lerp(aoNN, aoON, oON)) / 2F;
-			bNN = provider.getBrightness(x - i.directionUX - i.directionVX, y - i.directionUY - i.directionVY, z - i.directionUZ - i.directionVZ);
-		}
-		if(oNO == 1F && oOP == 1F)
-		{
-			aoNP = (aoNO + aoOP) / 2F;
-			bNP = blend2Brightness(bNO, bOP);
-		}
-		else
-		{
-			aoNP = provider.getAmbientOcclusionLightValue(x - i.directionUX + i.directionVX, y - i.directionUY + i.directionVY, z - i.directionUZ + i.directionVZ);
-			aoNP = (Maths.lerp(aoNP, aoNO, oNO) + Maths.lerp(aoNP, aoOP, oOP)) / 2F;
-			bNP = provider.getBrightness(x - i.directionUX + i.directionVX, y - i.directionUY + i.directionVY, z - i.directionUZ + i.directionVZ);
-		}
-		color[0] = (aoOP + aoPP + aoPO + ao) / 4F;
-		color[1] = (aoPO + aoPN + aoON + ao) / 4F;
-		color[2] = (aoON + aoNN + aoNO + ao) / 4F;
-		color[3] = (aoNO + aoNP + aoOP + ao) / 4F;
-		brightness[0] = blend4Brightness(bOP, bPP, bPO, b);
-		brightness[1] = blend4Brightness(bPO, bPN, bON, b);
-		brightness[2] = blend4Brightness(bON, bNN, bNO, b);
-		brightness[3] = blend4Brightness(bNO, bNP, bOP, b);
 	}
 }

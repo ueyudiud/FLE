@@ -31,8 +31,8 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	private static final float X_LIGHT_MULTIPLER = 0.6F;
 	private static final float Z_LIGHT_MULTIPLER = 0.8F;
 	
-	private static final int[] X = { 0, 0, 1, 1 };
-	private static final int[] Z = { 0, 1, 1, 0 };
+	//	private static final int[] X = { 0, 0, 1, 1 };
+	//	private static final int[] Z = { 0, 1, 1, 0 };
 	
 	protected boolean renderUp = true;
 	protected boolean renderDown = true;
@@ -42,6 +42,7 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	protected boolean renderWest = true;
 	protected boolean enableColor = true;
 	protected boolean diffuseLight = true;
+	protected boolean flip = false;
 	protected RenderHelper helper = RenderHelper.instance;
 	protected float red = 1.0F;
 	protected float green = 1.0F;
@@ -87,6 +88,15 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 		colorV(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 	
+	protected void colorRGB(int rgb)
+	{
+		colorV(
+				(rgb >> 16 & 0xFF) / 255.0F,
+				(rgb >>  8 & 0xFF) / 255.0F,
+				(rgb       & 0xFF) / 255.0F,
+				1.0F);
+	}
+	
 	protected void colorV(float r, float g, float b, float a)
 	{
 		this.red = r;
@@ -122,11 +132,14 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 				u2 = getU(icon, (float) xMax);
 				v1 = getV(icon, (float) zMin);
 				v2 = getV(icon, (float) zMax);
-				this.helper.face(this.red, this.green, this.blue, this.alpha,
+				this.helper
+				.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR)
+				.face(this.red, this.green, this.blue, this.alpha,
 						xMin, y1, zMin, u1, v1,
 						xMin, y2, zMax, u1, v2,
 						xMax, y3, zMax, u2, v2,
-						xMax, y4, zMin, u2, v1).draw();
+						xMax, y4, zMin, u2, v1)
+				.draw();
 			}
 			//FIXME
 			//			else
@@ -167,6 +180,7 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	{
 		float u1, u2;
 		float v1, v2;
+		this.helper.setIcon(null);
 		if(this.renderUp)
 		{
 			u1 = getU(icon, (float) x1);
@@ -282,53 +296,78 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 			double x2, double y2, double z2,
 			TextureAtlasSprite icon)
 	{
+		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 		if(this.renderUp)
 		{
-			this.helper.face(icon,
+			face(icon,
 					x2, y2, z2, (float) x2, (float) z2,
 					x2, y2, z1, (float) x2, (float) z1,
 					x1, y2, z1, (float) x1, (float) z1,
-					x1, y2, z2, (float) x1, (float) z2).draw();
+					x1, y2, z2, (float) x1, (float) z2,
+					0, 1, 0);
 		}
 		if(this.renderDown)
 		{
-			this.helper.face(icon,
+			face(icon,
 					x2, y1, z1, (float) x2, 1F - (float) z1,
 					x2, y1, z2, (float) x2, 1F - (float) z2,
 					x1, y1, z2, (float) x1, 1F - (float) z2,
-					x1, y1, z1, (float) x1, 1F - (float) z1).draw();
+					x1, y1, z1, (float) x1, 1F - (float) z1,
+					0, -1, 0);
 		}
 		if(this.renderSouth)
 		{
-			this.helper.face(icon,
+			face(icon,
 					x1, y2, z2, (float) x1, 1F - (float) y2,
 					x1, y1, z2, (float) x1, 1F - (float) y1,
 					x2, y1, z2, (float) x2, 1F - (float) y1,
-					x2, y2, z2, (float) x2, 1F - (float) y2).draw();
+					x2, y2, z2, (float) x2, 1F - (float) y2,
+					0, 0, 1);
 		}
 		if(this.renderNorth)
 		{
-			this.helper.face(icon,
+			face(icon,
 					x2, y2, z1, 1F - (float) x2, 1F - (float) y2,
 					x2, y1, z1, 1F - (float) x2, 1F - (float) y1,
 					x1, y1, z1, 1F - (float) x1, 1F - (float) y1,
-					x1, y2, z1, 1F - (float) x1, 1F - (float) y2).draw();
+					x1, y2, z1, 1F - (float) x1, 1F - (float) y2,
+					0, 0, -1);
 		}
 		if(this.renderEast)
 		{
-			this.helper.face(icon,
+			face(icon,
 					x2, y2, z2, 1F - (float) z2, 1F - (float) y2,
 					x2, y1, z2, 1F - (float) z2, 1F - (float) y1,
 					x2, y1, z1, 1F - (float) z1, 1F - (float) y1,
-					x2, y2, z1, 1F - (float) z1, 1F - (float) y2).draw();
+					x2, y2, z1, 1F - (float) z1, 1F - (float) y2,
+					1, 0, 0);
 		}
 		if(this.renderWest)
 		{
-			this.helper.face(icon,
+			face(icon,
 					x1, y2, z1, (float) z1, 1F - (float) y2,
 					x1, y1, z1, (float) z1, 1F - (float) y1,
 					x1, y1, z2, (float) z2, 1F - (float) y1,
-					x1, y2, z2, (float) z2, 1F - (float) y2).draw();
+					x1, y2, z2, (float) z2, 1F - (float) y2,
+					-1, 0, 0);
+		}
+		this.helper.draw();
+	}
+	
+	private void face(TextureAtlasSprite icon,
+			double x1, double y1, double z1, float u1, float v1,
+			double x2, double y2, double z2, float u2, float v2,
+			double x3, double y3, double z3, float u3, float v3,
+			double x4, double y4, double z4, float u4, float v4,
+			float nx, float ny, float nz)
+	{
+		if (!this.flip)
+		{
+			this.helper.face(icon, x1, y1, z1, u1, v1, x2, y2, z2, u2, v2, x3, y3, z3, u3, v3, x4, y4, z4, u4, v4, nx, ny, nz);
+		}
+		else
+		{
+			this.helper.face(icon, x1, y1, z1, u1, v1, x4, y4, z4, u4, v4, x3, y3, z3, u3, v3, x2, y2, z2, u2, v2, -nx, -ny, -nz);
 		}
 	}
 	
@@ -344,10 +383,10 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 			BrightnessUtil util)
 	{
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
-		this.helper.vertex(x1, y1, z1, u1, v1, util.brightness[0], this.red * util.color[0] * this.ao, this.green * util.color[0] * this.ao, this.blue * util.color[0] * this.ao, this.alpha);
-		this.helper.vertex(x1, y2, z2, u2, v2, util.brightness[1], this.red * util.color[1] * this.ao, this.green * util.color[1] * this.ao, this.blue * util.color[1] * this.ao, this.alpha);
-		this.helper.vertex(x3, y3, z3, u3, v3, util.brightness[2], this.red * util.color[2] * this.ao, this.green * util.color[2] * this.ao, this.blue * util.color[2] * this.ao, this.alpha);
-		this.helper.vertex(x4, y4, z4, u4, v4, util.brightness[3], this.red * util.color[3] * this.ao, this.green * util.color[3] * this.ao, this.blue * util.color[3] * this.ao, this.alpha);
+		this.helper.vertex_ptlc(x1, y1, z1, u1, v1, util.brightness[0], this.red * util.color[0] * this.ao, this.green * util.color[0] * this.ao, this.blue * util.color[0] * this.ao, this.alpha);
+		this.helper.vertex_ptlc(x1, y2, z2, u2, v2, util.brightness[1], this.red * util.color[1] * this.ao, this.green * util.color[1] * this.ao, this.blue * util.color[1] * this.ao, this.alpha);
+		this.helper.vertex_ptlc(x3, y3, z3, u3, v3, util.brightness[2], this.red * util.color[2] * this.ao, this.green * util.color[2] * this.ao, this.blue * util.color[2] * this.ao, this.alpha);
+		this.helper.vertex_ptlc(x4, y4, z4, u4, v4, util.brightness[3], this.red * util.color[3] * this.ao, this.green * util.color[3] * this.ao, this.blue * util.color[3] * this.ao, this.alpha);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		this.helper.draw();
 		GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -359,14 +398,9 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 			double vOfX, double vOfY, double vOfZ,
 			double u1, double v1, double u2, double v2)
 	{
-		if(this.enableColor)
-		{
-			this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-		}
-		else
-		{
-			this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		}
+		this.helper.begin(GL11.GL_QUADS, this.enableColor ?
+				DefaultVertexFormats.POSITION_TEX_COLOR :
+					DefaultVertexFormats.POSITION_TEX);
 		double d0 = u1;
 		double d1 = v1;
 		double d2 = u2;
@@ -383,14 +417,30 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 		double d14 = y + uOfY;
 		double d15 = y + uOfY + vOfY;
 		double d16 = y + vOfY;
-		this.helper.vertex(d5, d13, d9, d2, d1);
-		this.helper.vertex(d6, d14, d10, d2, d3);
-		this.helper.vertex(d7, d15, d11, d0, d3);
-		this.helper.vertex(d8, d16, d12, d0, d1);
-		this.helper.vertex(d8, d16, d12, d0, d1);
-		this.helper.vertex(d7, d15, d11, d0, d3);
-		this.helper.vertex(d6, d14, d10, d2, d3);
-		this.helper.vertex(d5, d13, d9, d2, d1);
+		if (this.enableColor)
+		{
+			this.helper
+			.vertex_ptc(d5, d13, d9, d2, d1, this.red, this.green, this.blue, this.alpha)
+			.vertex_ptc(d6, d14, d10, d2, d3, this.red, this.green, this.blue, this.alpha)
+			.vertex_ptc(d7, d15, d11, d0, d3, this.red, this.green, this.blue, this.alpha)
+			.vertex_ptc(d8, d16, d12, d0, d1, this.red, this.green, this.blue, this.alpha)
+			.vertex_ptc(d8, d16, d12, d0, d1, this.red, this.green, this.blue, this.alpha)
+			.vertex_ptc(d7, d15, d11, d0, d3, this.red, this.green, this.blue, this.alpha)
+			.vertex_ptc(d6, d14, d10, d2, d3, this.red, this.green, this.blue, this.alpha)
+			.vertex_ptc(d5, d13, d9, d2, d1, this.red, this.green, this.blue, this.alpha);
+		}
+		else
+		{
+			this.helper
+			.vertex_pt(d5, d13, d9, d2, d1)
+			.vertex_pt(d6, d14, d10, d2, d3)
+			.vertex_pt(d7, d15, d11, d0, d3)
+			.vertex_pt(d8, d16, d12, d0, d1)
+			.vertex_pt(d8, d16, d12, d0, d1)
+			.vertex_pt(d7, d15, d11, d0, d3)
+			.vertex_pt(d6, d14, d10, d2, d3)
+			.vertex_pt(d5, d13, d9, d2, d1);
+		}
 		this.helper.draw();
 	}
 	

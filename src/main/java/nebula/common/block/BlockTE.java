@@ -77,6 +77,11 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	
 	public PropertyTE property_TE;
 	
+	/**
+	 * Add tile entities to register.
+	 * @param register
+	 * @return Return true for all registered tile entity will in to tile entity map.
+	 */
 	protected abstract boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register);
 	
 	protected final PropertyTE createTEProperty()
@@ -151,13 +156,19 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	}
 	
 	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return this.property_TE.getMetaFromState(state);
+	}
+	
+	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
 		if(tile instanceof ITP_Drops)
 			return ((ITP_Drops) tile).getDrops(state, fortune, silkTouch);
 		List<ItemStack> list = new ArrayList<>();
-		list.add(new ItemStack(this, 1, this.property_TE.getMetaFromState(state)));
+		list.add(new ItemStack(this, 1, damageDropped(state)));
 		return list;
 	}
 	

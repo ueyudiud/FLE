@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 import nebula.client.model.flexible.INebulaBakedModelPart.BakedModelPart;
 import nebula.client.util.BakedQuadBuilder;
 import nebula.client.util.CoordTransformer;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.client.util.IModelModifier;
 import nebula.client.util.MultiQuadBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -45,7 +45,7 @@ public class ModelPartQuad implements INebulaModelPart
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		IModelModifier modifier = new ModelModifierByCoordTransformer(transformation, this.transformer);

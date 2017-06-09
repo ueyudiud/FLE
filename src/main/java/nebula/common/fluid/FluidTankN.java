@@ -4,12 +4,14 @@
 
 package nebula.common.fluid;
 
+import java.io.IOException;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
+import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.IFluidHandlerIO;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;
@@ -275,5 +277,22 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 		{
 			this.stack = FluidStacks.copy(stack);
 		}
+	}
+	
+	public String getInformation()
+	{
+		return "Tank: " + (this.stack == null ? "Empty" : this.stack.getUnlocalizedName() + " " + this.stack.amount + "/" + this.capacity + " L");
+	}
+	
+	public void writeToPacket(PacketBufferExt buf) throws IOException
+	{
+		buf.writeFluidStack(this.stack);
+		buf.writeFloat(this.temperature);
+	}
+	
+	public void readFromPacket(PacketBufferExt buf) throws IOException
+	{
+		this.stack = buf.readFluidStack();
+		this.temperature = buf.readFloat();
 	}
 }

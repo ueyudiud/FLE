@@ -83,9 +83,11 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	
 	/**
 	 * The map will create a instance ModelResourceLocation for selected block state.
+	 * @param state The state for location.
+	 * @return The mapping location.
 	 */
 	@Override
-	public ModelResourceLocation getModelResourceLocation(IBlockState state)
+	public ModelResourceLocation getLocationFromState(IBlockState state)
 	{
 		Map<IProperty<?>, Comparable<?>> map = new HashMap(state.getProperties());
 		
@@ -95,6 +97,17 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 		
 		ModelResourceLocation location = new ModelResourceLocation(path, getPropertyKey(map));
 		return location;
+	}
+	
+	/**
+	 * For it was start as {@link #getLocationFromState} and this method is not exist.
+	 * But it is reported that game crashed on obf environment without this method, so
+	 * I split two method.
+	 */
+	@Override
+	protected final ModelResourceLocation getModelResourceLocation(IBlockState state)
+	{
+		return getLocationFromState(state);
 	}
 	
 	/**

@@ -36,6 +36,8 @@ public class ClientLoader extends CommonLoader
 		NebulaModelDeserializer.registerBlockDeserializer("farcore:circuitplate", ModelPartRedstoneCircuitPlate.DESERIALIZER);
 		
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material"), stack -> "material:" + ItemMulti.getMaterial(stack).name);
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "material.sub"), stack ->
+		"material:" + ItemMulti.getMaterial(stack).name + "." + ItemMulti.getSubMeta(stack));
 		
 		for(MatCondition condition : MatCondition.register)
 		{

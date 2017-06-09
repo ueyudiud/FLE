@@ -1,10 +1,11 @@
 package nebula.common.enviornment;
 
+import nebula.base.IPropertyMap.IProperty;
 import nebula.common.world.ICoord;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EnviornmentBlockPos implements IEnvironment, ICoord
+public class EnviornmentBlockPos implements IEnvironment
 {
 	World world;
 	BlockPos pos;
@@ -26,12 +27,6 @@ public class EnviornmentBlockPos implements IEnvironment, ICoord
 	}
 	
 	@Override
-	public ICoord coord()
-	{
-		return this;
-	}
-	
-	@Override
 	public float biomeTemperature()
 	{
 		return this.world.getBiome(this.pos).getFloatTemperature(this.pos);
@@ -47,5 +42,11 @@ public class EnviornmentBlockPos implements IEnvironment, ICoord
 	public BlockPos pos()
 	{
 		return this.pos;
+	}
+	
+	@Override
+	public <T> T getValue(IProperty<T> property)
+	{
+		return null;
 	}
 }

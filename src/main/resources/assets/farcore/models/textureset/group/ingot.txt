@@ -1,0 +1,4 @@
+material:copper.0=farcore:items/group/ingot/copper
+material:copper.1=farcore:items/group/ingot/copper_rust1
+material:copper.2=farcore:items/group/ingot/copper_rust2
+material:copper.3=farcore:items/group/ingot/copper_rust3

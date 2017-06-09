@@ -67,9 +67,11 @@ public final class R
 				{
 					tField = clazz.getField(str);
 				}
-				if(isFinal)
+				if(isFinal)//Remove final modifier.
 				{
-					modifiersField.setInt(tField, tField.getModifiers() & 0xFFFFFFEF);
+					modifiersField.setInt(tField, tField.getModifiers() &
+							0xFFFFFFEF//~Modifier.FINAL
+							);
 				}
 				if(tField != null)
 				{

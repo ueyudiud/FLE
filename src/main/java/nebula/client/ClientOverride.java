@@ -39,7 +39,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * The overridden method in Minecraft.
+ * The overridden method in Minecraft.<p>
+ * All are internal methods, do not use.
  * @author ueyudiud
  *
  */
@@ -162,13 +163,13 @@ public class ClientOverride
 		}
 	}
 	
-	public static ItemStack renderCustomItemOverlayIntoGUI(RenderItem render, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
+	public static ItemStack renderItemOverlay(RenderItem render, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
 	{
 		if (stack == null) return null;
 		Item item = stack.getItem();
 		if (item == null)
 		{
-			Log.error("The rendering item is missing. ItemRender : {}, FontRenderer : {}", new RuntimeException(), render, fr);
+			Log.error("The rendering item is missing. ItemRender : {}, FontRenderer : {}", render, fr);
 			return null;
 		}
 		try
@@ -179,7 +180,8 @@ public class ClientOverride
 		}
 		catch (RuntimeException exception)
 		{
-			Log.error("Failed to render item overlay into GUI. Item : {}, ItemRender : {}, FontRenderer : {}", exception, stack, render, fr);
+			Log.error("Failed to render item overlay into GUI. Item : {}, ItemRender : {}, FontRenderer : {}", stack, render, fr);
+			Log.catching(exception);
 			return null;
 		}
 	}

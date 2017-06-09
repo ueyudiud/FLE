@@ -62,4 +62,14 @@ public class RecipeMaps
 	public static final
 	TemplateRecipeMap<ItemStack> DRYING =
 	TemplateRecipeMap.<ItemStack>builder("fle.dring").addCacheEntry("duration", RW_INT).addCacheEntry("multiplier", RW_FLOAT).addCacheEntry("output", RW_ITEMSTACK).build();
+	//NAME        : fle.dirt.mixture.input
+	//DISPLAYMENTS: input(AbstractStack), output(List<MWCStack>)
+	public static final
+	MaterialPoolInputRecipeHandler DIRT_MIXTURE_INPUT =
+	new MaterialPoolInputRecipeHandler("fle.dirt.mixture.input");
+	//NAME        : fle.dirt.mixture.output
+	//DISPLAYMENTS: input(AbstractStack), output(List<MWCStack>)
+	public static final
+	MaterialPoolOutputRecipeHandler DIRT_MIXTURE_OUTPUT =
+	new MaterialPoolOutputRecipeHandler("fle.dirt.mixture.output");
 }

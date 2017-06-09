@@ -72,7 +72,7 @@ public class WeaponHelper
 			}
 			if(materialProperty != null)
 			{
-				baseMultiple += materialProperty.entityAttackDamageMultiple(stack, material, entity);
+				baseMultiple += materialProperty.entityAttackDamageMultiple(stack, material, entity, "head");
 			}
 			if (entity instanceof IEntityDamageEffect)
 			{

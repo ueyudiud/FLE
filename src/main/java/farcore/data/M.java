@@ -11,6 +11,7 @@ import farcore.lib.block.behavior.RockBehaviorFlammable;
 import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MaterialBuilder;
+import farcore.lib.material.behavior.metal.MatBehaviorCopper;
 import farcore.lib.plant.PlantBristlegrass;
 import farcore.lib.plant.PlantDandelion;
 import farcore.lib.plant.PlantHalogrootBush;
@@ -127,6 +128,8 @@ public class M
 	
 	static
 	{
+		copper.itemProp = new MatBehaviorCopper();
+		
 		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow);
 		SubTags.ROPE.addTo(vine, ramie_dry, rattan, ivy);
 		SubTags.VINES.addTo(vine, rattan, ivy);

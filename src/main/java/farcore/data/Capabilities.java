@@ -4,6 +4,12 @@
 
 package farcore.data;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+
 public class Capabilities
 {
 	//Pre-pre initialization
@@ -14,4 +20,8 @@ public class Capabilities
 	
 	//	@CapabilityInject(IItemHandlerIO.class)
 	//	public static Capability<IItemHandlerIO> ITEM_HANDLER_IO;
+	
+	public static final Capability<IItemHandler> CAPABILITY_ITEM = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+	
+	public static final Capability<IFluidHandler> CAPABILITY_FLUID = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 }

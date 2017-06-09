@@ -36,9 +36,4 @@ public interface INBTWriter<T, N extends NBTBase>
 	}
 	
 	N writeToNBT(T target);
-	
-	default N apply(T target)
-	{
-		return writeToNBT(target);
-	}
 }

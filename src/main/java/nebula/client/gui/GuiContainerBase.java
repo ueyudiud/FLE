@@ -260,7 +260,7 @@ public abstract class GuiContainerBase extends GuiContainer
 		this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
 		if (renderOverlay)
 		{
-			ClientOverride.renderCustomItemOverlayIntoGUI(this.itemRender, font, stack, x, y, altText);
+			ClientOverride.renderItemOverlay(this.itemRender, font, stack, x, y, altText);
 		}
 		this.zLevel = oldZ;
 		this.itemRender.zLevel = 0.0F;

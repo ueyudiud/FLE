@@ -48,6 +48,16 @@ public final class Strings
 		return string.trim();
 	}
 	
+	public static String replace(String source, char replacement, String insert)
+	{
+		int i = source.indexOf(replacement);
+		if (i == -1) return source;
+		return new StringBuilder(source.length() + insert.length() - 1)
+				.append(source, 0, i)
+				.append(insert)
+				.append(source, i + 1, source.length() - i).toString();
+	}
+	
 	public static String validateProperty(@Nullable String string)
 	{
 		if(string == null) return "";
@@ -70,9 +80,9 @@ public final class Strings
 	{
 		String s = validate(name);
 		if(s.length() == 0) return "";
-		char[] array = s.toCharArray();
-		array[0] = Character.toUpperCase(array[0]);
-		return new String(array);
+		return new StringBuilder(s.length())
+				.append(Character.toUpperCase(name.charAt(0)))
+				.append(s, 1, s.length() - 1).toString();
 	}
 	
 	/**
@@ -160,13 +170,13 @@ public final class Strings
 	 */
 	public static String toOrdinalNumber(int value)
 	{
-		if(value < 0)
-			return Integer.toString(value);
+		if(value <= 0)
+			return toOrdinalNumber((long) value & 0xFFFFFFFF);
 		int i1 = Maths.mod(value, 100);
 		if(i1 <= 20 && i1 > 3)
 			return value + "th";
-		int i2 = Maths.mod(i1, 10);
-		switch(i2)
+		int i2 = i1 % 10;
+		switch (i2)
 		{
 		case 1 : return value + "st";
 		case 2 : return value + "nd";
@@ -178,12 +188,12 @@ public final class Strings
 	public static String toOrdinalNumber(long value)
 	{
 		if(value < 0)
-			return Long.toString(value);
+			throw new IllegalArgumentException("Negative ordinal number: " + value);
 		int i1 = (int) Maths.mod(value, 100L);
 		if(i1 <= 20 && i1 > 3)
 			return value + "th";
-		int i2 = Maths.mod(i1, 10);
-		switch(i2)
+		int i2 = i1 % 10;
+		switch (i2)
 		{
 		case 1 : return value + "st";
 		case 2 : return value + "nd";

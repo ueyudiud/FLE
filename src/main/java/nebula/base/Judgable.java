@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 
 import nebula.common.util.L;
 
-@SuppressWarnings("unchecked")
 @FunctionalInterface
 public interface Judgable<T> extends Predicate<T>
 {

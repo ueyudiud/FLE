@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import nebula.client.model.flexible.INebulaBakedModelPart.BakedModelPart;
 import nebula.client.util.BakedQuadBuilder;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.client.util.MultiQuadBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -37,7 +37,7 @@ public class ModelPartItemLayerFlat extends ModelPartItemLayer
 	private static final float NEG = 7.5F / 16F;
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		MultiQuadBuilder builder = new MultiQuadBuilder(format, null);

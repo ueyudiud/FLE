@@ -9,13 +9,13 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * @author ueyudiud
  */
-public class SimpleIconHandler implements IIconHandler
+public class SimpleIconHandler implements IIconCollection
 {
 	final String key;
 	final ResourceLocation location;
@@ -33,7 +33,7 @@ public class SimpleIconHandler implements IIconHandler
 	}
 	
 	@Override
-	public IIconHandler retexture(Map<String, String> map)
+	public IIconCollection retexture(Map<String, String> map)
 	{
 		return map.containsKey(this.key) ? new SimpleIconHandler(this.key, new ResourceLocation(map.get(this.key))) : this;//No retexture will allowed.
 	}

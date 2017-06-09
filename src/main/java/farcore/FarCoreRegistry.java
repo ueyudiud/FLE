@@ -99,7 +99,8 @@ public class FarCoreRegistry
 		catch(Exception exception)
 		{
 			/**
-			 * I think no one like to register an invalid class.
+			 * I think no one like to register an invalid class,
+			 * but it shouldn't be crash for game still can run without a renderer.
 			 */
 			Log.catching(exception);
 		}

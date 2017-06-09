@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +24,7 @@ public interface INebulaModelPart
 	Collection<String> getResources();
 	
 	INebulaBakedModelPart bake(VertexFormat format,
-			Function<String, IIconHandler> iconHandlerGetter,
+			Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,
 			TRSRTransformation transformation);
 }

@@ -12,14 +12,14 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * @author ueyudiud
  */
-public class TemplateIconHandler implements IIconHandler
+public class TemplateIconHandler implements IIconCollection
 {
 	final Map<String, ResourceLocation> textures;
 	Map<String, String> retextures;
@@ -67,7 +67,7 @@ public class TemplateIconHandler implements IIconHandler
 	}
 	
 	@Override
-	public IIconHandler retexture(Map<String, String> map)
+	public IIconCollection retexture(Map<String, String> map)
 	{
 		return new TemplateIconHandler(this, map);
 	}

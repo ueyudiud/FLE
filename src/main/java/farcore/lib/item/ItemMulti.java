@@ -39,6 +39,14 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			return Mat.VOID;
 	}
 	
+	public static int getSubMeta(ItemStack stack)
+	{
+		if(stack != null && stack.getItem() instanceof ItemMulti)
+			return ((ItemMulti) stack.getItem()).getStackMetaOffset(stack);
+		else
+			return 0;
+	}
+	
 	public static ItemStack createStack(Mat material, MatCondition condition)
 	{
 		return createStack(material, condition, 1);
@@ -94,7 +102,22 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 		for(Mat material : Mat.filt(this.condition))
 		{
 			ItemStack templete = new ItemStack(this, 1, material.id);
-			LanguageManager.registerLocal(getTranslateName(templete), this.condition.getLocal(material));
+			if (material.itemProp != null)
+			{
+				for (int i = 0; i < material.itemProp.getOffsetMetaCount(); ++i)
+				{
+					ItemStack s1 = templete.copy();
+					material.itemProp.setInstanceFromMeta(s1, i, material, this.condition);
+					LanguageManager.registerLocal(getTranslateName(s1),
+							this.condition.getLocal(material.itemProp.getReplacedLocalName(i, material)));
+				}
+			}
+			else
+			{
+				LanguageManager.registerLocal(
+						getTranslateName(templete),//If there will any replaced exist.
+						this.condition.getLocal(material));
+			}
 			if (this.registerToOreDict)
 			{
 				this.condition.registerOre(material, templete);
@@ -116,7 +139,18 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	{
 		for(Mat material : Mat.filt(this.condition))
 		{
-			subItems.add(new ItemStack(itemIn, 1, material.id));
+			ItemStack stack = new ItemStack(itemIn, 1, material.id);
+			if (material.itemProp != null)
+			{
+				for (int i = 0; i < material.itemProp.getOffsetMetaCount(); ++i)
+				{
+					ItemStack stack2 = stack.copy();
+					material.itemProp.setInstanceFromMeta(stack2, i, material, this.condition);
+					subItems.add(stack2);
+				}
+			}
+			else
+				subItems.add(stack);
 		}
 	}
 	
@@ -133,7 +167,6 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		ItemStack stack2 = stack;
 		if(!entityIn.world.isRemote)
 		{
 			stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityIn), stack);

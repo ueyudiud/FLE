@@ -75,13 +75,13 @@ public class ItemDebugger extends ItemBase
 				Block block = state.getBlock();
 				if(block instanceof IToolableBlock)
 				{
-					((IToolableBlock) block).onToolClick(player, EnumToolTypes.SCREW_DRIVER, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
+					((IToolableBlock) block).onToolClick(player, EnumToolTypes.CHISEL, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
 				}
 				block.randomTick(world, pos, state, itemRand);
 				TileEntity tile = world.getTileEntity(pos);
 				if(tile instanceof IToolableTile)
 				{
-					((IToolableTile) tile).onToolClick(player, EnumToolTypes.SCREW_DRIVER, stack, Direction.of(side), hitX, hitY, hitZ);
+					((IToolableTile) tile).onToolClick(player, EnumToolTypes.CHISEL, stack, Direction.of(side), hitX, hitY, hitZ);
 				}
 				List<String> list = new ArrayList<>();
 				//This information is added in F3 information, so should I remove these information display?

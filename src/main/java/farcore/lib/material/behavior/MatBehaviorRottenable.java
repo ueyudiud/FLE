@@ -25,6 +25,24 @@ public class MatBehaviorRottenable implements IItemMatProp
 	private static final int ROTTEN = 1;
 	
 	@Override
+	public int getOffsetMetaCount()
+	{
+		return 2;
+	}
+	
+	@Override
+	public String getReplacedLocalName(int metaOffset, Mat material)
+	{
+		switch (metaOffset)
+		{
+		case ROTTEN:
+			return "Rotten " + material.localName;
+		default:
+			return material.localName;
+		}
+	}
+	
+	@Override
 	public void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition,
 			String saveTag)
 	{
@@ -54,7 +72,7 @@ public class MatBehaviorRottenable implements IItemMatProp
 		{
 			int progress = nbt.getInteger("progress");
 			int max = material.getProperty("quality_period");
-			float temperature = ThermalNet.getTemperature(environment.coord()) - material.getProperty("rotten_temperature");
+			float temperature = ThermalNet.getTemperature(environment) - material.getProperty("rotten_temperature");
 			int speed = (int) (Math.exp(- temperature * temperature) * condition.specificArea);
 			if(speed > 0)
 			{
@@ -90,7 +108,7 @@ public class MatBehaviorRottenable implements IItemMatProp
 	}
 	
 	@Override
-	public float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target)
+	public float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target, String saveTag)
 	{
 		return 1.0F;
 	}

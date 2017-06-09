@@ -9,13 +9,14 @@ import java.util.Map;
 import net.minecraft.util.ResourceLocation;
 
 /**
+ * The texture supplier.
  * @author ueyudiud
  */
-public interface IIconHandler
+public interface IIconCollection
 {
 	Collection<ResourceLocation> resources();
 	
-	IIconHandler retexture(Map<String, String> map);
+	IIconCollection retexture(Map<String, String> map);
 	
 	Map<String, ResourceLocation> build();
 }

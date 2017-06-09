@@ -141,7 +141,7 @@ public class GuiIconButton extends GuiButton
 				this.renderItem.renderItemIntoGUI(this.itemStack, this.xPosition + 2, this.yPosition + 1);
 				if (this.drawQuantity)
 				{
-					ClientOverride.renderCustomItemOverlayIntoGUI(this.renderItem, Client.getFontRender(), this.itemStack, this.xPosition + 2, this.yPosition + 1, null);
+					ClientOverride.renderItemOverlay(this.renderItem, Client.getFontRender(), this.itemStack, this.xPosition + 2, this.yPosition + 1, null);
 				}
 			}
 		}

@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 
 import nebula.Log;
 import nebula.client.model.ModelBase;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -68,7 +68,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		this.gui3D = gui3D;
 	}
 	
-	private Map<String, IIconHandler> resources;
+	private Map<String, IIconCollection> resources;
 	private Collection<ResourceLocation> textures;
 	
 	@Override
@@ -93,7 +93,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		});
 		this.resources = new HashMap<>();
 		keys.forEach(key-> {
-			IIconHandler handler = getIconHandler(key);
+			IIconCollection handler = getIconHandler(key);
 			this.textures.addAll(handler.resources());
 			this.resources.put(key, handler);
 		});
@@ -108,12 +108,12 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		return this.textures;
 	}
 	
-	public IIconHandler getIconHandler(String key)
+	public IIconCollection getIconHandler(String key)
 	{
 		return $getIconHandler(key, new ArrayList<>());
 	}
 	
-	private IIconHandler $getIconHandler(String key, List<String> keys)
+	private IIconCollection $getIconHandler(String key, List<String> keys)
 	{
 		if (key.charAt(0) == '#')
 		{
@@ -146,7 +146,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		ImmutableList.Builder<INebulaBakedModelPart> builder = ImmutableList.builder();
 		this.parts.forEach(part->builder.add(
 				part.bake(format, L.toFunction(this.resources, NebulaModelLoader.ICON_HANDLER_MISSING), bakedTextureGetter::apply, transformation)));
-		IIconHandler particleSource = getIconHandler("#particle");
+		IIconCollection particleSource = getIconHandler("#particle");
 		TextureAtlasSprite particle = bakedTextureGetter.apply(particleSource.build().getOrDefault(NebulaModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE));
 		return new FlexibleBakedModel(this.transforms, builder.build(), particle,
 				this.gui3D, this.itemDataGen, this.blockDataGen, this.itemLoadingData, this.blockLoadingData);

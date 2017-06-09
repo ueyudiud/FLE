@@ -1,8 +1,6 @@
 {
-	"layers": [
-		{
-			"texture": "[farcore:group/ingot",
-			"meta": "farcore:material"
-		}
-	]
+	"layer": {
+		"texture": "[farcore:group/ingot",
+		"meta": "farcore:material.sub"
+	}
 }

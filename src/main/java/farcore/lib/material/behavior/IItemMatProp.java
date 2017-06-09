@@ -13,6 +13,10 @@ public interface IItemMatProp
 {
 	String DEFAULT_SAVE_TAG = "matprop";
 	
+	int getOffsetMetaCount();
+	
+	String getReplacedLocalName(int metaOffset, Mat material);
+	
 	default void setInstanceFromMeta(ItemStack stack, int metaOffset, Mat material, MatCondition condition)
 	{
 		setInstanceFromMeta(stack, metaOffset, material, condition, DEFAULT_SAVE_TAG);
@@ -60,5 +64,5 @@ public interface IItemMatProp
 	 * @param target
 	 * @return
 	 */
-	float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target);
+	float entityAttackDamageMultiple(ItemStack stack, Mat material, Entity target, String saveTag);
 }

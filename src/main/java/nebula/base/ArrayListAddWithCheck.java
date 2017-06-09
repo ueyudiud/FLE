@@ -8,6 +8,7 @@ import static nebula.base.Judgable.NOT_NULL;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -17,13 +18,17 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 {
 	private static final long serialVersionUID = -5656965564696895076L;
 	
-	@SuppressWarnings("unchecked")
+	public static <E> List<E> argument(Object[] array)
+	{
+		return new ArrayListArgument(array);
+	}
+	
 	public static <E> ArrayList<E> requireNonnull()
 	{
 		return new ArrayListAddWithCheck<>(NOT_NULL);
 	}
 	
-	Predicate<? super E> checker;
+	transient Predicate<? super E> checker;
 	
 	public ArrayListAddWithCheck(Predicate<? super E> checker)
 	{
@@ -58,7 +63,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	@Override
 	public boolean addAll(Collection<? extends E> c)
 	{
-		return super.addAll(new ArrayListArgument<E>(c.stream().filter(this.checker).toArray()));
+		return super.addAll(argument(c.stream().filter(this.checker).toArray()));
 	}
 	
 	@Override

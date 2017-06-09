@@ -51,7 +51,7 @@ public class StateMapperCircuit implements IStateMapperExt
 	}
 	
 	@Override
-	public ModelResourceLocation getModelResourceLocation(IBlockState state)
+	public ModelResourceLocation getLocationFromState(IBlockState state)
 	{
 		PropertyTE property = ((BlockRedstoneCircuit) state.getBlock()).property_TE;
 		Map<IProperty<?>, Comparable<?>> map = new HashMap<>(state.getProperties());

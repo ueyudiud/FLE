@@ -35,11 +35,12 @@ import farcore.lib.plant.IPlant;
 import farcore.lib.tree.ITree;
 import nebula.base.HashPropertyMap;
 import nebula.base.IPropertyMap;
+import nebula.base.IPropertyMap.IProperty;
 import nebula.base.IntegerMap;
 import nebula.base.Judgable;
 import nebula.base.Register;
-import nebula.base.IPropertyMap.IProperty;
 import nebula.common.LanguageManager;
+import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
@@ -49,6 +50,7 @@ import nebula.io.javascript.ScriptLoad;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
@@ -60,6 +62,21 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 * Default material, will not register in to list.
 	 */
 	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID).setWood(0.0F, 0.0F, 0.0F).setTree(ITree.VOID);
+	
+	public static final INBTReaderAndWritter<Mat, NBTTagString> WITH_NULL_RW = new INBTReaderAndWritter<Mat, NBTTagString>()
+	{
+		@Override
+		public Mat readFromNBT(NBTTagString nbt)
+		{
+			return REGISTER.get(nbt.getString());
+		}
+		
+		@Override
+		public NBTTagString writeToNBT(Mat target)
+		{
+			return new NBTTagString(target.name);
+		}
+	};
 	
 	private static void onDataChanged()
 	{

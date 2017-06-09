@@ -73,12 +73,12 @@ public class Renders
 			for (T value : property.getAllowedValues())
 			{
 				IBlockState state2 = state.withProperty(property, value);
-				ModelLoader.setCustomModelResourceLocation(item, block.getMetaFromState(state2), mapper.getModelResourceLocation(state2));
+				ModelLoader.setCustomModelResourceLocation(item, block.getMetaFromState(state2), mapper.getLocationFromState(state2));
 			}
 		}
 		else
 		{
-			ModelLoader.setCustomModelResourceLocation(item, 0, mapper.getModelResourceLocation(state));
+			ModelLoader.setCustomModelResourceLocation(item, 0, mapper.getLocationFromState(state));
 		}
 		ModelLoader.setCustomStateMapper(block, mapper);
 	}
@@ -88,7 +88,7 @@ public class Renders
 		Item item = Item.getItemFromBlock(block);
 		for (int i = 0; i < metaCount; ++i)
 		{
-			ModelLoader.setCustomModelResourceLocation(item, i, mapper.getModelResourceLocation(block.getStateFromMeta(i)));
+			ModelLoader.setCustomModelResourceLocation(item, i, mapper.getLocationFromState(block.getStateFromMeta(i)));
 		}
 		ModelLoader.setCustomStateMapper(block, mapper);
 	}

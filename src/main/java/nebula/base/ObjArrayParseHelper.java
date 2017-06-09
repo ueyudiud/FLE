@@ -36,7 +36,7 @@ public class ObjArrayParseHelper
 		return new ObjArrayParseHelper(objects);
 	}
 	
-	ObjArrayParseHelper(Object[] array)
+	private ObjArrayParseHelper(Object[] array)
 	{
 		this.array = array;
 	}
@@ -257,5 +257,11 @@ public class ObjArrayParseHelper
 	public void reset()
 	{
 		this.off = 0;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return Arrays.toString(this.array);
 	}
 }

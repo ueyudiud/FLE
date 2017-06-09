@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import nebula.Log;
+import nebula.Nebula;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.NebulaConfig;
@@ -39,6 +40,8 @@ public class ItemFluidDisplay extends ItemBase
 	{
 		super.registerRender();
 		NebulaModelLoader.registerModel(this, new ResourceLocation("nebula", "fluid"));
+		NebulaModelLoader.registerItemMetaGenerator(
+				new ResourceLocation(Nebula.MODID, "display_fluid"), stack->getFluid(stack).getName());
 	}
 	
 	public static Fluid getFluid(ItemStack stack)

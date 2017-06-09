@@ -4,6 +4,7 @@
 
 package nebula.common.util;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import nebula.common.block.ISmartFluidBlock;
@@ -48,21 +49,26 @@ public final class FluidStacks
 		return stack.getFluid().isGaseous(stack);
 	}
 	
-	public static int getTemperature(FluidStack stack, int def)
+	public static int getTemperature(@Nullable FluidStack stack, int def)
 	{
 		return stack instanceof FluidStackExt ?
 				((FluidStackExt) stack).getTemperature() :
 					stack != null ? stack.getFluid().getTemperature(stack) : def;
 	}
 	
-	public static int getColor(FluidStack stack)
+	public static int getColor(@Nonnull FluidStack stack)
 	{
 		return stack.getFluid().getColor(stack);
 	}
 	
-	public static int getViscosity(FluidStack stack)
+	public static int getViscosity(@Nonnull FluidStack stack)
 	{
 		return stack.getFluid().getViscosity(stack);
+	}
+	
+	public static int getLuminosity(@Nullable FluidStack stack, int def)
+	{
+		return stack == null ? def : stack.getFluid().getLuminosity(stack);
 	}
 	
 	public static FluidStack fillFluidFromWorld(World world, @Nullable RayTraceResult result, int maxFill, @Nullable Fluid requiredFluid, boolean doFill)

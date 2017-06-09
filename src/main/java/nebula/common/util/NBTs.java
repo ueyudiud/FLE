@@ -136,15 +136,15 @@ public final class NBTs
 	
 	public static void setNumber(NBTTagCompound nbt, String key, long number)
 	{
-		if((byte) number == number)
+		if(number <= Byte.MAX_VALUE)
 		{
 			nbt.setByte(key, (byte) number);
 		}
-		else if((short) number == number)
+		else if(number <= Short.MAX_VALUE)
 		{
 			nbt.setShort(key, (short) number);
 		}
-		else if((int) number == number)
+		else if(number <= Integer.MAX_VALUE)
 		{
 			nbt.setInteger(key, (int) number);
 		}

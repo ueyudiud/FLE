@@ -14,7 +14,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.common.util.L;
 import nebula.common.util.Strings;
 import net.minecraft.block.properties.IProperty;
@@ -64,7 +64,7 @@ public class ModelPartFromModel implements IRetexturableNebulaModelPart, INebula
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		Optional<TRSRTransformation> optional = Optional.fromNullable(transformation);

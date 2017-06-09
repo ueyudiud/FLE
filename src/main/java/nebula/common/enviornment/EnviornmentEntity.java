@@ -1,11 +1,11 @@
 package nebula.common.enviornment;
 
-import nebula.common.world.ICoord;
+import nebula.base.IPropertyMap.IProperty;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EnviornmentEntity implements IEnvironment, ICoord
+public class EnviornmentEntity implements IEnvironment
 {
 	Entity entity;
 	
@@ -18,12 +18,6 @@ public class EnviornmentEntity implements IEnvironment, ICoord
 	public long worldTime()
 	{
 		return this.entity.world.getWorldTime();
-	}
-	
-	@Override
-	public ICoord coord()
-	{
-		return this;
 	}
 	
 	@Override
@@ -42,5 +36,11 @@ public class EnviornmentEntity implements IEnvironment, ICoord
 	public BlockPos pos()
 	{
 		return this.entity.getPosition();
+	}
+	
+	@Override
+	public <T> T getValue(IProperty<T> property)
+	{
+		return null;
 	}
 }

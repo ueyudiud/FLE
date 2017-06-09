@@ -22,7 +22,7 @@ import com.google.gson.JsonParseException;
 import nebula.base.ArrayListAddWithCheck;
 import nebula.client.util.BakedQuadBuilder;
 import nebula.client.util.CoordTransformer;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.client.util.IModelModifier;
 import nebula.common.util.A;
 import nebula.common.util.Direction;
@@ -173,7 +173,7 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		IModelModifier modifier = new ModelModifierByCoordTransformer(transformation, this.transformer);

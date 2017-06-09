@@ -355,8 +355,8 @@ public final class Worlds
 	
 	public static boolean isAir(IBlockAccess world, BlockPos pos)
 	{
-		IBlockState state = world.getBlockState(pos);
-		return state.getBlock().isAir(state, world, pos);
+		IBlockState state;
+		return (state = world.getBlockState(pos)).getBlock().isAir(state, world, pos);
 	}
 	
 	public static boolean isAirNearby(World world, BlockPos pos, boolean ignoreUnloadChunk)

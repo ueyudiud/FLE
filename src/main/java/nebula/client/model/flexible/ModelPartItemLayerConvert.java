@@ -5,7 +5,7 @@ package nebula.client.model.flexible;
 
 import java.util.function.Function;
 
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelPartItemLayerConvert extends ModelPartItemLayer
 {
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		//TODO

@@ -184,7 +184,7 @@ public class CommonLoader
 		ToolHooks.addEfficiencyTool(ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
 		ToolHooks.addHarvestableTool(ICE, true, EnumToolTypes.CHISEL);
 		//Register languages.
-		bar.step("Register localize file");
+		bar.step("Register localized file");
 		registerLocal("info.debug.date", "Date : ");
 		registerLocal("info.log.length", "Legnth : %d");
 		registerLocal("info.slab.place", "Place slab in sneaking can let slab only has up or down facing.");

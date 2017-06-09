@@ -29,7 +29,7 @@ import com.google.gson.JsonParseException;
 import nebula.base.INode;
 import nebula.base.IntegerMap;
 import nebula.base.Node;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import nebula.common.util.Jsons;
 import nebula.common.util.L;
 import nebula.common.util.Strings;
@@ -143,7 +143,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		IntegerMap<Map<String, String>> map = new IntegerMap<>(this.function.size(), 1.0F);

@@ -68,7 +68,7 @@ public class MultiQuadBuilder implements Consumer<BakedQuad>
 	
 	public Map<String, List<BakedQuad>> bake(
 			com.google.common.base.Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,
-			IIconHandler handler)
+			IIconCollection handler)
 	{
 		Map<String, ResourceLocation> map = handler.build();
 		List<BakedQuad> bakedQuads = this.quadBuilder.build();

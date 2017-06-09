@@ -47,7 +47,7 @@ public class Stack<E>
 	@Override
 	public String toString()
 	{
-		return "(" + this.element + ")x" + this.size;
+		return new StringBuilder().append('(').append(this.element).append(")x").append(this.size).toString();
 	}
 	
 	@Override

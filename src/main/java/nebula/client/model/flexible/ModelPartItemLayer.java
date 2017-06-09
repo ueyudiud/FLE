@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 import nebula.client.model.flexible.INebulaBakedModelPart.BakedModelPart;
-import nebula.client.util.IIconHandler;
+import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -37,7 +37,7 @@ public class ModelPartItemLayer implements INebulaModelPart
 	}
 	
 	@Override
-	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconHandler> iconHandlerGetter,
+	public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
 		return new BakedModelPart(Maps.transformValues(iconHandlerGetter.apply(this.icon).build(), location->

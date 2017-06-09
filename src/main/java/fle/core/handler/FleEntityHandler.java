@@ -6,6 +6,7 @@ import farcore.data.Potions;
 import fle.core.entity.misc.EntityAttributeTag;
 import fle.core.entity.monster.EntityFLECreeper;
 import fle.core.entity.monster.EntityFLESkeleton;
+import fle.core.entity.monster.EntityFLESlime;
 import fle.core.entity.monster.EntityFLESpider;
 import fle.core.entity.monster.EntityFLEZombie;
 import fle.loader.FLEConfig;
@@ -20,8 +21,12 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -69,6 +74,12 @@ public class FleEntityHandler
 			EntityFLECreeper replace = new EntityFLECreeper(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
 			setAttributes(replace, FLEConfig.creeper);
+			event.setCanceled(true);
+		}
+		else if (clazz == EntitySlime.class)
+		{
+			EntityFLESlime replace = new EntityFLESlime(event.getWorld());
+			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
 			event.setCanceled(true);
 		}
 	}
@@ -145,7 +156,10 @@ public class FleEntityHandler
 		if (event.getEntityLiving().world.isRemote)
 			return;
 		EntityLivingBase entity = event.getEntityLiving();
-		float a = event.getDistance();//For motion is distance caculation.
+		if (!(entity instanceof EntityPlayer) && !(entity instanceof EntityAnimal) ||
+				(entity instanceof EntityChicken))
+			return;
+		float a = event.getDistance();//For motion is distance calculation.
 		a *= event.getDamageMultiplier();
 		PotionEffect effect = entity.getActivePotionEffect(MobEffects.JUMP_BOOST);
 		a -= effect == null ? 2.5F : (effect.getAmplifier() + 3.5F);
