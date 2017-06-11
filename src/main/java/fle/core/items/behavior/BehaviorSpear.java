@@ -12,6 +12,7 @@ import nebula.common.item.BehaviorBase;
 import nebula.common.item.IProjectileItem;
 import nebula.common.item.ITool;
 import nebula.common.util.Direction;
+import nebula.common.util.Entities;
 import nebula.common.util.Worlds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,7 +23,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -50,9 +50,8 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft)
 	{
-		float f = (stack.getMaxItemUseDuration() - timeLeft);
-		f /= 20F;
-		f = (f * f + f * 3.5F) / 3F;
+		float f = (stack.getMaxItemUseDuration() - timeLeft) / 20F;
+		f = f * (f + 3.5F) / 3F;
 		if(f < 0.2F) return;
 		if(f > 1.0F)
 		{
@@ -64,18 +63,19 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 		{
 			stack1 = stack.copy();
 			stack1.stackSize = 1;
+		}
+		else
+		{
+			stack1 = stack.splitStack(1);
 			if(!world.isRemote)
 			{
 				KS.HURLING.using((EntityPlayer) entity, 1.0F);
 			}
 		}
-		else
-		{
-			stack1 = stack.splitStack(1);
-		}
 		if(!world.isRemote)
 		{
-			float inaccuracy = !(entity instanceof EntityPlayer) ? 1.0F : 6F / (1F + KS.SHOOTING.level((EntityPlayer) entity));
+			float inaccuracy = !(entity instanceof EntityPlayer) ? 1.0F :
+				3F / (1F + KS.SHOOTING.level((EntityPlayer) entity) * 0.4F);
 			EntityProjectileItem entity1 = new EntityProjectileItem(world, entity, f * 1.0F, stack1, inaccuracy);
 			world.spawnEntity(entity1);
 		}
@@ -111,7 +111,7 @@ public class BehaviorSpear extends BehaviorBase implements IProjectileItem
 		if(target instanceof EntityLivingBase)
 		{
 			EntityLivingBase entity1 = (EntityLivingBase) target;
-			float damage = MathHelper.sqrt(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
+			float damage = (float) Entities.velocity(entity);
 			float speed = damage;
 			Mat material = ItemTool.getMaterial(entity.currentItem, "head");
 			if(material != null)

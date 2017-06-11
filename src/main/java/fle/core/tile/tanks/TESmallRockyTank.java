@@ -40,8 +40,6 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -51,11 +49,9 @@ implements IFluidHandler, ITP_BlockHardness, ITP_ExplosionResistance,
 ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetworkedSyncTile
 {
 	private Mat material = M.stone;
-	private FluidTankN tank = new FluidTankN(4000);
+	private FluidTankN tank = new FluidTankN(4000).enableTemperature();
 	
-	{
-		this.tank.enableTemperature();
-	}
+	private byte light;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -89,6 +85,13 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 	}
 	
 	@Override
+	public void writeToClientInitalization(NBTTagCompound nbt)
+	{
+		super.writeToClientInitalization(nbt);
+		this.tank.writeToNBT(nbt, "t");
+	}
+	
+	@Override
 	public void writeNetworkData(int type, PacketBufferExt buf) throws IOException
 	{
 		switch (type)
@@ -106,6 +109,14 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 		case 1 :
 			this.tank.readFromPacket(buf); break;
 		}
+	}
+	
+	@Override
+	protected void initClient(NBTTagCompound nbt)
+	{
+		super.initClient(nbt);
+		this.tank.readFromNBT(nbt, "t");
+		markBlockRenderUpdate();
 	}
 	
 	@Override
@@ -169,10 +180,8 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 			return;
 		}
 		super.updateServer();
+		this.tank.update(this);
 	}
-	
-	@SideOnly(Side.CLIENT)
-	private byte light;
 	
 	@Override
 	protected void updateClient()
@@ -228,7 +237,7 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 		{
 			int amt = this.tank.fill(resource, process);
 			if (amt > 0 && process)
-				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
+				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
 			return amt;
 		}
 		return 0;
@@ -241,7 +250,7 @@ ITB_BlockPlacedBy, ITP_Drops, ITP_SideSolid, ITP_Light, IDebugableTile, INetwork
 		{
 			FluidStack stack = this.tank.drain(maxAmount, process);
 			if (stack != null && process)
-				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
+				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 1);
 			return stack;
 		}
 		return null;

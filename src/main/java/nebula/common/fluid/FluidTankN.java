@@ -16,6 +16,7 @@ import nebula.common.tile.IFluidHandlerIO;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;
 import nebula.common.util.NBTs;
+import nebula.common.world.ICoord;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -176,6 +177,14 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	public FluidTankInfo getInfo()
 	{
 		return new FluidTankInfo(this);
+	}
+	
+	public void update(ICoord coord)
+	{
+		//		if (this.stack != null)
+		//		{
+		//			;
+		//		}
 	}
 	
 	@Override

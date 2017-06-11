@@ -24,6 +24,20 @@ public abstract class TECircuitCompacted extends TECircuitBase implements INetwo
 	protected byte mode = 0x0;
 	
 	@Override
+	public void writeToClientInitalization(NBTTagCompound nbt)
+	{
+		super.writeToClientInitalization(nbt);
+		nbt.setByte("p", this.power);
+	}
+	
+	@Override
+	protected void initClient(NBTTagCompound nbt)
+	{
+		super.initClient(nbt);
+		this.power = nbt.getByte("p");
+	}
+	
+	@Override
 	public void writeNetworkData(int type, PacketBufferExt buf) throws IOException
 	{
 		switch (type)

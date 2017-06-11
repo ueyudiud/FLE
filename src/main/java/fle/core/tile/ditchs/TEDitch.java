@@ -175,9 +175,17 @@ IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects
 	}
 	
 	@Override
+	public void writeToClientInitalization(NBTTagCompound nbt)
+	{
+		super.writeToClientInitalization(nbt);
+		this.tank.writeToNBT(nbt, "t");
+	}
+	
+	@Override
 	protected void initClient(NBTTagCompound nbt)
 	{
 		super.initClient(nbt);
+		this.tank.readFromNBT(nbt, "t");
 		markBlockRenderUpdate();
 	}
 	

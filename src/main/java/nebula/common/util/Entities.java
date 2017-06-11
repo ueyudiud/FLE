@@ -16,14 +16,14 @@ public final class Entities
 {
 	private Entities() {}
 	
-	public static double movementSpeedSq(Entity entity)
+	public static double velocitySq(Entity entity)
 	{
 		return entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ;
 	}
 	
-	public static double movementSpeed(Entity entity)
+	public static double velocity(Entity entity)
 	{
-		return Math.sqrt(movementSpeedSq(entity));
+		return Math.sqrt(velocitySq(entity));
 	}
 	
 	public static <E extends Enum<E>> DataParameter<E> createKey(Class<? extends Entity> entityClass, Class<E> enumClass)

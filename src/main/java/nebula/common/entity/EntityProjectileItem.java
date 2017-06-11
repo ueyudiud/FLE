@@ -97,7 +97,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this.shooter = shooter;
 		setLocationAndAngles(shooter.posX, shooter.posY + shooter.getEyeHeight(), shooter.posZ, shooter.rotationYaw, shooter.rotationPitch);
 		this.posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
-		this.posY -= 0.10000000149011612D;
+		this.posY -= 0.1;
 		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 		setPosition(this.posX, this.posY, this.posZ);
 		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI);

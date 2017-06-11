@@ -33,7 +33,12 @@ public class NebulaSynchronizationHandler
 	
 	public static void markTileEntityForUpdate(INetworkedSyncTile tile, int type)
 	{
-		L.put(L.getOrPut(L.getOrPut(SYNC_NETWORK_MAP, tile.getDimension()), type), new ChunkPos(tile.pos()), tile.pos());
+		markTileEntityForUpdate(tile.getDimension(), new ChunkPos(tile.pos()), tile.pos(), type);
+	}
+	
+	private static void markTileEntityForUpdate(int dim, ChunkPos pos, BlockPos pos1, int type)
+	{
+		L.put(L.getOrPut(L.getOrPut(SYNC_NETWORK_MAP, dim), type), pos, pos1);
 	}
 	
 	@SubscribeEvent

@@ -168,8 +168,14 @@ implements ISynchronizableTile
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToDescription(nbt);
+		writeToClientInitalization(nbt);
 		nbt.merge(super.getUpdateTag());
 		return nbt;
+	}
+	
+	public void writeToClientInitalization(NBTTagCompound nbt)
+	{
+		
 	}
 	
 	@Override
