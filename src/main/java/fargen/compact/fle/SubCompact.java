@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package fargen.compact.fle;
 
 import fargen.core.FarGen;
@@ -7,6 +11,10 @@ import nebula.common.util.ModCompator.ICompatible;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 
+/**
+ * The sub compact of FLE.
+ * @author ueyudiud
+ */
 public class SubCompact implements ICompatible
 {
 	@Override

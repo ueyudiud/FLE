@@ -1,4 +1,10 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.material;
+
+import static farcore.data.V.MATERIAL_SIZE;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,6 +47,7 @@ import nebula.base.Judgable;
 import nebula.base.Register;
 import nebula.common.LanguageManager;
 import nebula.common.nbt.INBTReaderAndWritter;
+import nebula.common.util.A;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
@@ -52,16 +59,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 
+/**
+ * Materials of all elements in game.
+ * @author ueyudiud
+ */
 public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Mat>
 {
-	private static final Register<Mat> REGISTER = new Register<>(32768);
+	private static final Register<Mat> REGISTER = new Register<>(MATERIAL_SIZE);
 	
 	private static final Map<Judgable<? super Mat>, List<Mat>> MATERIALS_CACHE = new HashMap<>();
 	
 	/**
-	 * Default material, will not register in to list.
+	 * Default material, will not register in to list.<p>
+	 * The default result when fail to search material from list.
 	 */
-	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void").setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0).setHandable(1.0F).setCrop(ICrop.VOID).setWood(0.0F, 0.0F, 0.0F).setTree(ITree.VOID);
+	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void")
+			.setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0)
+			.setHandable(1.0F)
+			.setCrop(ICrop.VOID)
+			.setWood(0.0F, 0.0F, 0.0F)
+			.setTree(ITree.VOID);
 	
 	public static final INBTReaderAndWritter<Mat, NBTTagString> WITH_NULL_RW = new INBTReaderAndWritter<Mat, NBTTagString>()
 	{
@@ -482,8 +499,15 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	@Override
 	public void add(SubTag... tags)
 	{
+		A.executeAll(tags, tag->tag.addContainerToList(this));
 		this.subTags.addAll(Arrays.asList(tags));
 		onDataChanged();
+	}
+	
+	@Override
+	public boolean remove(SubTag tag)
+	{
+		return this.subTags.remove(tag);
 	}
 	
 	@Override

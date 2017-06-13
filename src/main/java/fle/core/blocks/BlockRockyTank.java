@@ -9,9 +9,13 @@ import farcore.FarCoreRegistry;
 import farcore.data.Materials;
 import farcore.data.SubTags;
 import farcore.lib.material.Mat;
+import fle.core.client.model.ModelSmallRockyTank;
 import fle.core.client.render.TESRSmallRockyTank;
 import fle.core.tile.tanks.TESmallRockyTank;
 import nebula.base.IRegister;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
+import nebula.client.model.OrderModelLoader;
+import nebula.client.util.Client;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
@@ -19,7 +23,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -45,6 +52,8 @@ public class BlockRockyTank extends BlockTE
 	public void registerRender()
 	{
 		super.registerRender();
+		OrderModelLoader.putModel(this, new ModelSmallRockyTank());
+		Client.registerModel(this.item, getRegisteredName(), "normal");
 		FarCoreRegistry.registerTESR(TESRSmallRockyTank.class);
 	}
 	
@@ -68,6 +77,13 @@ public class BlockRockyTank extends BlockTE
 	}
 	
 	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+		return BlockStateTileEntityWapper.wrap(tile, state);
+	}
+	
+	@Override
 	public boolean isFullBlock(IBlockState state)
 	{
 		return false;
@@ -82,6 +98,13 @@ public class BlockRockyTank extends BlockTE
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+		return EnumBlockRenderType.MODEL;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT;
 	}
 }

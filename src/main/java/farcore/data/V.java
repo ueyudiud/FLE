@@ -36,4 +36,6 @@ public class V
 	public static final double sq2d = 1.4142135623730951D;
 	/** sqrt(2 * π) float value */
 	public static final double sqrt2π = 2.5066282746310007D;
+	
+	public static final int MATERIAL_SIZE = 32768;
 }

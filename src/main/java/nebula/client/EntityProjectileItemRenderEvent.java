@@ -18,6 +18,12 @@ public class EntityProjectileItemRenderEvent extends RenderEvent
 	private float partialTicks;
 	private EntityProjectileItem projectileItem;
 	
+	/**
+	 * Internal constructor, for registeration uses.
+	 */
+	public EntityProjectileItemRenderEvent()
+	{
+	}
 	public EntityProjectileItemRenderEvent(EntityProjectileItem item, RenderManager manager, float partialTicks)
 	{
 		super();

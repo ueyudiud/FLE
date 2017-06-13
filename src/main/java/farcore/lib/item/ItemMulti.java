@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.item;
 
 import java.util.List;
@@ -28,6 +32,7 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	/**
 	 * General method for multiple item, use to get material from stack.
 	 * Return VOID material if stack is invalid.
+	 * @see farcore.lib.material.Mat
 	 * @param stack
 	 * @return
 	 */
@@ -39,6 +44,12 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 			return Mat.VOID;
 	}
 	
+	/**
+	 * Get sub meta from stack.
+	 * @param stack The stack should be predicated that {@code stack.getItem() instanceof ItemMulti == true}.
+	 * @return The sub meta of stack.
+	 * @see nebula.common.item.ItemBase#getStackMetaOffset
+	 */
 	public static int getSubMeta(ItemStack stack)
 	{
 		if(stack != null && stack.getItem() instanceof ItemMulti)

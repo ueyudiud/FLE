@@ -15,16 +15,17 @@ import farcore.data.M;
 import farcore.lib.material.Mat;
 import fle.api.ditch.DitchBlockHandler;
 import fle.core.client.model.ModelDitch;
+import fle.core.client.render.TESRDitch;
 import fle.core.tile.ditchs.TEDitch;
 import nebula.client.CreativeTabBase;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.OrderModelLoader;
+import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSingleTE;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -35,7 +36,6 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -67,8 +67,10 @@ public class BlockDitch extends BlockSingleTE
 	{
 		super.registerRender();
 		OrderModelLoader.putModel(this, new ModelDitch());
-		ModelResourceLocation location = new ModelResourceLocation(getRegistryName(), "normal");
-		ModelLoader.setCustomMeshDefinition(this.item, stack -> location);
+		Client.registerModel(this.item, getRegisteredName(), "normal");
+		FarCoreRegistry.registerTESR(TESRDitch.class);
+		
+		//		ModelLoader.setCustomStateMapper(BlocksItems.ditch, new StateMapperExt(FLE.MODID, "ditch", null, Misc.PROPS_SIDE_HORIZONTALS));
 	}
 	
 	@Override

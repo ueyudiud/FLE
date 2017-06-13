@@ -49,6 +49,7 @@ public final class ModelQuadBuilder
 	private float alpha = 1.0F;
 	public int tidx = -1;
 	private TextureAtlasSprite icon;
+	@SuppressWarnings("unused")
 	private EnumFacing facing;
 	private boolean applyDiffuseLighting = true;
 	public boolean renderXNeg = true;
@@ -136,7 +137,7 @@ public final class ModelQuadBuilder
 	public List<BakedQuad> bakeCube()
 	{
 		List<BakedQuad> list = new ArrayList<>();
-		putCubeQuads(quad -> list.add(quad), this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
+		putCubeQuads(list::add, this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
 		return list;
 	}
 	
@@ -233,6 +234,7 @@ public final class ModelQuadBuilder
 				1F - this.maxX, 1F - this.maxY, 1F - this.minX, 1F - this.minY);
 	}
 	
+	@SuppressWarnings("unused")
 	private void putVertex(UnpackedBakedQuad.Builder builder, VertexFormat format, float x, float y, float z, float u, float v, Direction face, boolean oppisite)
 	{
 		putVertex(builder, format, x, y, z, u, v, face.x, face.y, face.z, oppisite);

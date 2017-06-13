@@ -13,18 +13,17 @@ import nebula.Log;
  */
 public class ModCompator
 {
+	/**
+	 * Give a default mod compactor for loading mod.
+	 * @return
+	 */
 	public static ModCompator newCompactor()
 	{
 		return newCompactor(Game.getActiveModID());
 	}
 	public static ModCompator newCompactor(String value)
 	{
-		ModCompator compator = COMPATORS.get(value);
-		if(compator == null)
-		{
-			COMPATORS.put(value, compator = new ModCompator(value));
-		}
-		return compator;
+		return COMPATORS.computeIfAbsent(value, ModCompator::new);
 	}
 	
 	private static final Map<String, ModCompator> COMPATORS = new HashMap();
@@ -72,7 +71,7 @@ public class ModCompator
 	@Override
 	public String toString()
 	{
-		return getClass().toString() + "|" + this.modid;
+		return getClass().getName() + "|" + this.modid;
 	}
 	
 	@FunctionalInterface

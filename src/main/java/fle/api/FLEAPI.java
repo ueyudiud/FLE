@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package fle.api;
 
 import nebula.client.CreativeTabBase;
@@ -8,6 +12,6 @@ public class FLEAPI
 	public static int voidDimID;
 	
 	public static CreativeTabBase tabSimpleMachinery;
-
+	
 	public static final ResourceLocation BUTTON_LOCATION = new ResourceLocation("fle", "textures/gui/button.png");
 }

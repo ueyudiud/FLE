@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.entity;
 
 import java.util.ArrayList;
@@ -26,12 +30,17 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The improved falling block.
+ * @author ueyudiud
+ * @see net.minecraft.entity.item.EntityFallingBlock
+ */
 public class EntityFallingBlockExtended extends Entity
 {
 	public static boolean canFallAt(World world, BlockPos pos, IBlockState target)
 	{
 		if(pos.getY() < 0) return true;
-		pos = pos.add(0, -1, 0);
+		pos = pos.down();
 		IBlockState state = world.getBlockState(pos);
 		if(state.getBlock() instanceof IHitByFallenBehaviorBlock)
 			return !((IHitByFallenBehaviorBlock) state.getBlock()).isPermeatableBy(world, pos, state, target);
@@ -59,9 +68,7 @@ public class EntityFallingBlockExtended extends Entity
 	public static final DataParameter<IBlockState> STATE = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_STATE);
 	public static final DataParameter<BlockPos> ORGIN = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_POS);
 	
-	private static final DefaultFallableHandler INSTANCE = new DefaultFallableHandler();
-	
-	private static final class DefaultFallableHandler implements ISmartFallableBlock
+	private static final ISmartFallableBlock INSTANCE = new ISmartFallableBlock()
 	{
 		public void onStartFalling(World world, BlockPos pos) { }
 		
@@ -72,7 +79,7 @@ public class EntityFallingBlockExtended extends Entity
 		public boolean onDropFallenAsItem(World world, BlockPos pos, IBlockState state, NBTTagCompound tileNBT) { return false; }
 		
 		public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target) { return 2.0F; }
-	}
+	};
 	
 	public boolean shouldDropItem = true;
 	

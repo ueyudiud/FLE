@@ -7,6 +7,11 @@ import nebula.base.IRegister;
 import nebula.base.Judgable;
 import nebula.base.Register;
 
+/**
+ * The sub tag, use to mark a item for tags.
+ * @author ueyudiud
+ *
+ */
 public final class SubTag implements Judgable<ISubTagContainer>
 {
 	public static final IRegister<SubTag> TAGS = new Register<>();

@@ -185,8 +185,19 @@ public class Client
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, variant));
 	}
 	
+	public static void registerModel(Item item, String location, String variant)
+	{
+		final ModelResourceLocation l = new ModelResourceLocation(location, variant);
+		ModelLoader.setCustomMeshDefinition(item, s->l);
+		ModelLoader.registerItemVariants(item, l);
+	}
+	
 	private static FontRenderExtend render;
 	
+	/**
+	 * Get default font render provided by nebula.
+	 * @return
+	 */
 	public static FontRenderer getFontRender()
 	{
 		if(render == null)

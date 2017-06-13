@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.item;
 
 import java.util.ArrayList;
@@ -17,6 +21,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Base item type provider by Nebula.<p>
+ * Contains some useful method for application.
+ * @author ueyudiud
+ *
+ */
 public class ItemBase extends Item implements IRegisteredNameable, IRenderRegister
 {
 	private static List<ItemBase> list = new ArrayList<>();
@@ -27,11 +37,12 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	 */
 	public static void post()
 	{
-		Log.info("Nebula reloading items...");
+		Log.info("Reloading items...");
 		for(ItemBase item : list)
 		{
 			item.postInitalizedItems();
 		}
+		Log.info("Reloaded {} items.", list.size());
 		list = null;
 	}
 	
@@ -73,17 +84,28 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		
 	}
 	
+	/**
+	 * Called when item are all already initialized.<p>
+	 * For get some extra data which requires lazy loading.
+	 */
 	public void postInitalizedItems()
 	{
 		
 	}
 	
+	/**
+	 * Already set in constructor, this method is useless.
+	 */
 	@Override
+	@Deprecated
 	public final Item setUnlocalizedName(String unlocalizedName)
 	{
 		return this;
 	}
 	
+	/**
+	 * Get base unlocalized name for item stack.
+	 */
 	@Override
 	public final String getUnlocalizedName()
 	{
@@ -103,6 +125,9 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		return getUnlocalizedName(stack) + ".name";
 	}
 	
+	/**
+	 * Get display name for item stack.
+	 */
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
 	{
@@ -151,17 +176,33 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		return 0;
 	}
 	
+	/**
+	 * Get base meta given by meta from item stack.
+	 * @param stack
+	 * @return
+	 * @see net.minecraft.item.Item#getDamage(ItemStack)
+	 */
 	public int getBaseDamage(ItemStack stack)
 	{
 		return super.getDamage(stack);
 	}
 	
+	/**
+	 * Get real damage of item stack, which is combined
+	 * offset meta and base meta.
+	 */
 	@Override
 	public int getDamage(ItemStack stack)
 	{
-		return (getStackMetaOffset(stack) << 15) | super.getDamage(stack);
+		return getStackMetaOffset(stack) << 15 | super.getDamage(stack);
 	}
 	
+	/**
+	 * Get nebula overridden font render to render item name and tooltips,
+	 * which contains custom letter rendering.
+	 * @return
+	 * @see nebula.client.util.Client#getFontRender()
+	 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	public FontRenderer getFontRenderer(ItemStack stack)

@@ -19,6 +19,7 @@ import net.minecraft.init.Blocks;
  */
 public enum EnumBlock
 {
+	//Far Core
 	crop,
 	sapling,
 	water,
@@ -27,7 +28,9 @@ public enum EnumBlock
 	ore,
 	carved_rock,
 	circuit,
-	metalblock;
+	metalblock,
+	//FLE
+	dirt_mixture;
 	
 	static
 	{

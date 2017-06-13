@@ -78,12 +78,10 @@ public class ModelDitch extends CompactModel
 		this.qb.setBound(fEN, fSN, fEN, fEP, fSN, fEP);
 		builder.add(this.qb.bakeYNegFace());
 		CoordTransformer transformer = this.qb.getTransformer();
-		boolean flag = false;
 		this.qb.resetOption();
 		switch (connectState & 0x03)//Z pos
 		{
 		case 0x02:
-			flag = true;
 			transformer.setTransform(0.0, 0.0, 1.0);
 			this.qb.renderYPos = this.qb.renderZNeg = this.qb.renderZPos = false;
 			this.qb.putCubeQuads(builder, fEN, fSN, fMin, fEP, fW, fWN);
@@ -118,11 +116,9 @@ public class ModelDitch extends CompactModel
 			break;
 		}
 		this.qb.resetOption();
-		flag = false;
 		switch (connectState & 0x0C)//X neg
 		{
 		case 0x08:
-			flag = true;
 			transformer.setTransform(-1.0, 0.0, 0.0);
 			this.qb.renderYPos = this.qb.renderXNeg = this.qb.renderXPos = false;
 			this.qb.putCubeQuads(builder, fWP, fSN, fEN, fMax, fW, fEP);
@@ -158,11 +154,9 @@ public class ModelDitch extends CompactModel
 			break;
 		}
 		this.qb.resetOption();
-		flag = false;
 		switch (connectState & 0x30)//Z neg
 		{
 		case 0x20:
-			flag = true;
 			transformer.setTransform(0.0, 0.0, -1.0);
 			this.qb.renderYPos = this.qb.renderZNeg = this.qb.renderZPos = false;
 			this.qb.putCubeQuads(builder, fEN, fSN, fWP, fEP, fW, fMax);
@@ -197,11 +191,9 @@ public class ModelDitch extends CompactModel
 			break;
 		}
 		this.qb.resetOption();
-		flag = false;
 		switch (connectState & 0xC0)//X pos
 		{
 		case 0x80:
-			flag = true;
 			transformer.setTransform(1.0, 0.0, 0.0);
 			this.qb.renderYPos = this.qb.renderXNeg = this.qb.renderXPos = false;
 			this.qb.putCubeQuads(builder, fMin, fSN, fEN, fWN, fW, fEP);
@@ -237,11 +229,5 @@ public class ModelDitch extends CompactModel
 			break;
 		}
 		return builder.build();
-	}
-	
-	@Override
-	public boolean isGui3d()
-	{
-		return true;
 	}
 }

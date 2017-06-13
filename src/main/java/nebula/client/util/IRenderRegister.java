@@ -11,6 +11,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public interface IRenderRegister
 {
+	/**
+	 * Register rendering object.
+	 */
 	@SideOnly(Side.CLIENT)
 	void registerRender();
 }

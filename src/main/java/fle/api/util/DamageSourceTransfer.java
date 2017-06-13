@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package fle.api.util;
 
 import net.minecraft.util.DamageSource;

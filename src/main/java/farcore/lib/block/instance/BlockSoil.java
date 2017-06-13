@@ -67,7 +67,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * This provide the ground related block, which is fallable.
  * @author ueyudiud
- *
  */
 public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 {

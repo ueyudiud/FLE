@@ -41,20 +41,21 @@ public enum OrderModelLoader implements ICustomModelLoader
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		if(modelLocation instanceof ModelResourceLocation)
-		{
-			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
-		}
-		return MODEL_MAP.containsKey(modelLocation);
+		return MODEL_MAP.containsKey(removeVariant(modelLocation));
 	}
 	
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
-		if(modelLocation instanceof ModelResourceLocation)
+		return MODEL_MAP.get(removeVariant(modelLocation));
+	}
+	
+	private ResourceLocation removeVariant(ResourceLocation location)
+	{
+		if (location instanceof ModelResourceLocation)
 		{
-			modelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
+			return new ResourceLocation(location.getResourceDomain(), location.getResourcePath());
 		}
-		return MODEL_MAP.get(modelLocation);
+		return location;
 	}
 }

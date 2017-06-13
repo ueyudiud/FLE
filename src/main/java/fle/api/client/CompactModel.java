@@ -64,4 +64,16 @@ public abstract class CompactModel implements ModelBase, BakedModelBase, IPerspe
 	{
 		return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, this.transformMap, cameraTransformType);
 	}
+	
+	@Override
+	public boolean isAmbientOcclusion()
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean isGui3d()
+	{
+		return true;
+	}
 }
