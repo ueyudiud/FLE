@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 
 import nebula.common.util.Direction;
+import nebula.common.world.ICoord;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -46,17 +48,32 @@ public interface ITilePropertiesAndBehavior
 		float getExplosionResistance(Entity exploder, Explosion explosion);
 	}
 	
-	public static interface ITP_BoundingBox
+	public static interface ITP_BoundingBox extends ICoord
 	{
 		AxisAlignedBB getBoundBox(IBlockState state);
 		
-		AxisAlignedBB getCollisionBoundingBox(IBlockState state);
+		default AxisAlignedBB getCollisionBoundingBox(IBlockState state)
+		{
+			return getBoundBox(state);
+		}
 		
-		void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox,
-				List<AxisAlignedBB> collidingBoxes, Entity entity);
+		default void addCollisionBoxToList(IBlockState state, AxisAlignedBB entityBox,
+				List<AxisAlignedBB> collidingBoxes, Entity entity)
+		{
+			AxisAlignedBB axisAlignedBB = getCollisionBoundingBox(state);
+			if (axisAlignedBB != Block.NULL_AABB)
+			{
+				axisAlignedBB = axisAlignedBB.offset(pos());
+				if (axisAlignedBB.intersectsWith(entityBox))
+					collidingBoxes.add(axisAlignedBB);
+			}
+		}
 		
 		@SideOnly(Side.CLIENT)
-		AxisAlignedBB getSelectedBoundingBox(IBlockState state);
+		default AxisAlignedBB getSelectedBoundingBox(IBlockState state)
+		{
+			return getBoundBox(state).offset(pos());
+		}
 	}
 	
 	public static interface ITP_ComparatorInputOverride

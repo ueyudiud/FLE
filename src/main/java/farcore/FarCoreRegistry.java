@@ -87,6 +87,15 @@ public class FarCoreRegistry
 	 * Register tile entity special render.
 	 * @param tesrClass
 	 */
+	public static <T extends TileEntity> void registerTESR(Class<T> tileEntityClass, TileEntitySpecialRenderer<? super T> renderer)
+	{
+		ClientRegistry.bindTileEntitySpecialRenderer(tileEntityClass, renderer);
+	}
+	
+	/**
+	 * Register tile entity special render.
+	 * @param tesrClass
+	 */
 	public static <T extends TileEntity> void registerTESR(Class<? extends TileEntitySpecialRenderer<T>> tesrClass)
 	{
 		try
@@ -94,7 +103,7 @@ public class FarCoreRegistry
 			ParameterizedType type = (ParameterizedType) tesrClass.getGenericSuperclass();
 			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
-			ClientRegistry.bindTileEntitySpecialRenderer(clazz, tesrClass.newInstance());
+			registerTESR(clazz, tesrClass.newInstance());
 		}
 		catch(Exception exception)
 		{
@@ -104,6 +113,11 @@ public class FarCoreRegistry
 			 */
 			Log.catching(exception);
 		}
+	}
+	
+	public static void registerBuiltInModelBlock(Block block)
+	{
+		ClientProxy.registerBuildInModel(block);
 	}
 	
 	/**

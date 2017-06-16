@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import fle.api.FLEAPI;
 import fle.api.client.PolishingStateIconLoader;
 import fle.core.FLE;
-import fle.core.gui.wooden.workbench.ContainerPolishTable;
+import fle.core.common.gui.wooden.workbench.ContainerPolishTable;
 import fle.core.tile.wooden.workbench.TEWoodenPolishTable;
 import nebula.client.gui.GuiContainerTileInventory;
 import nebula.client.gui.GuiIconButton;

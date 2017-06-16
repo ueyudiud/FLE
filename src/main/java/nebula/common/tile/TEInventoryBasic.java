@@ -22,7 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.util.Constants.NBT;
 
 /**
  * @author ueyudiud
@@ -31,7 +30,6 @@ public class TEInventoryBasic extends TESynchronization
 implements IBasicInventory, IInventory, ITB_BreakBlock
 {
 	protected final ItemStack[] stacks;
-	protected String customName;
 	
 	public TEInventoryBasic(int size)
 	{
@@ -48,10 +46,6 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	{
 		super.writeToNBT(compound);
 		NBTs.setList(compound, "items", this.stacks, NBTLSs.ITEMSTACK_WRITER, true);
-		if (this.customName != null)
-		{
-			compound.setString("customName", this.customName);
-		}
 		return compound;
 	}
 	
@@ -60,10 +54,6 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	{
 		super.readFromNBT(compound);
 		NBTs.insertToList(compound, "items", this.stacks, NBTLSs.ITEMSTACK_READER, true);
-		if (compound.hasKey("customName", NBT.TAG_STRING))
-		{
-			this.customName = compound.getString("customName");
-		}
 	}
 	
 	@Override

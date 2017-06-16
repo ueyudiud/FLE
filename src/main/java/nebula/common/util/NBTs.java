@@ -6,9 +6,13 @@ package nebula.common.util;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
 
 import nebula.Log;
 import nebula.base.IRegister;
@@ -303,7 +307,7 @@ public final class NBTs
 		return nbt.hasKey(key, NBT.TAG_COMPOUND) ? FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag(key)) : def;
 	}
 	
-	public static <E extends Enum<? extends E>> E getEnumOrDefault(NBTTagCompound nbt, String key, E def)
+	public static <E extends Enum<? extends E>> E getEnumOrDefault(NBTTagCompound nbt, String key, @Nonnull E def)
 	{
 		try
 		{
@@ -315,7 +319,7 @@ public final class NBTs
 		}
 	}
 	
-	public static <E> E getValueByByteOrDefault(NBTTagCompound nbt, String key, E[] values, E def)
+	public static <E> E getValueByByteOrDefault(NBTTagCompound nbt, String key, E[] values, @Nonnull E def)
 	{
 		try
 		{
@@ -353,7 +357,7 @@ public final class NBTs
 			for(int i = 0; i < list.tagCount(); ++i)
 			{
 				NBTTagCompound nbt1 = list.getCompoundTagAt(i);
-				short id = nbt1.getShort("num");
+				short id = nbt1.getShort("idx");
 				if(id >= container.length)
 					throw new IndexOutOfBoundsException();
 				try
@@ -373,6 +377,31 @@ public final class NBTs
 	public static <O> O getObj(NBTTagCompound nbt, String key, INBTReader<O, ?> reader)
 	{
 		return reader.readFromNBT(nbt, key);
+	}
+	
+	public static <E, N extends NBTBase> List<E> getUnorderedListFromOrdered(NBTTagCompound nbt, String key, Function<N, E> reader)
+	{
+		if(nbt.hasKey(key, NBT.TAG_LIST))
+		{
+			NBTTagList list = (NBTTagList) nbt.getTag(key);
+			ImmutableList.Builder<E> builder = ImmutableList.builder();
+			for(int i = 0; i < list.tagCount(); ++i)
+			{
+				NBTTagCompound nbt1 = list.getCompoundTagAt(i);
+				try
+				{
+					E e = reader.apply((N) nbt1.getTag("element"));
+					if (e != null)
+						builder.add(e);
+				}
+				catch (Exception exception)
+				{
+					Log.catchingIfDebug(exception);
+				}
+			}
+			return builder.build();
+		}
+		return ImmutableList.of();
 	}
 	
 	public static <E, N extends NBTBase> E[] getListOrDefault(NBTTagCompound nbt, String key, Class<E> elementClass, @Nullable E[] def, Function<N, E> reader, boolean ordered)

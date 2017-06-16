@@ -13,7 +13,7 @@ import fle.api.recipes.instance.PolishRecipe;
 import fle.api.recipes.instance.interfaces.IPolishRecipeHandler;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.core.client.gui.wooden.workbench.GuiPolishTable;
-import fle.core.gui.wooden.workbench.ContainerPolishTable;
+import fle.core.common.gui.wooden.workbench.ContainerPolishTable;
 import nebula.common.tile.IGuiTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;

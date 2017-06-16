@@ -13,6 +13,64 @@ public final class Maths
 {
 	private Maths() {}
 	
+	/**
+	 * Returns the largest {@code int} value is less
+	 * than or equal to the argument.
+	 * @param f a {@code float} value.
+	 * @return a floor {@code int} value.
+	 * @throws NumberFormatException if argument is illegal, too big or too small in integer range.
+	 */
+	public static int floori(float f) throws NumberFormatException
+	{
+		int v = Float.floatToRawIntBits(f);
+		int e = ((v & 0x7f800000) >> 23) - 127;
+		
+		if (e < 0)
+			return (v & 0x80000000) == 0 || (v & 0x007fffff) == 0 ? 0 : -1;
+		else if (e == 127)
+			throw new NumberFormatException("NaN or inf got.");
+		else if (e >= 31)
+			throw new NumberFormatException("Out of range.");
+		else
+		{
+			e -= 23;
+			int x = 0x00800000 | (v & 0x007fffff);
+			if (e > 0) x <<= e; else if (e < 0) x >>= -e;
+			return (v & 0x80000000) == 0 ? x :
+				(v & (1 << e) - 1) == 0 ? -x :
+					-x-1;
+		}
+	}
+	
+	/**
+	 * Returns the largest {@code long} value is less
+	 * than or equal to the argument.
+	 * @param f a {@code float} value.
+	 * @return a floor {@code long} value.
+	 * @throws NumberFormatException if argument is illegal, too big or too small in long range.
+	 */
+	public static long floorl(float f)
+	{
+		int v = Float.floatToRawIntBits(f);
+		int e = ((v & 0x7f800000) >> 23) - 127;
+		
+		if (e < 0)
+			return (v & 0x80000000) == 0 || (v & 0x007fffff) == 0 ? 0 : -1;
+		else if (e == 127)
+			throw new NumberFormatException("NaN or inf got.");
+		else if (e >= 63)
+			throw new NumberFormatException("Out of range.");
+		else
+		{
+			e -= 23;
+			long x = 0x00800000 | (v & 0x007fffff);
+			if (e > 0) x <<= e; else if (e < 0) x >>= -e;
+			return (v & 0x80000000) == 0 ? x :
+				(v & (1 << e) - 1) == 0 ? -x :
+					-x-1;
+		}
+	}
+	
 	public static double[][] gaussianL(int size, double sigma)
 	{
 		int size1 = size * 2 + 1;
@@ -63,24 +121,52 @@ public final class Maths
 		return ret;
 	}
 	
-	public static double mod(double a, double b)
+	/**
+	 * Returns the floor modulus of the {@code double} arguments.<p>
+	 * The value of result will always be positive.
+	 * @param a
+	 * @param b
+	 * @return a non-negative {@code double} value.
+	 */
+	public static strictfp double mod(double a, double b)
 	{
 		double v;
 		return (v = a % b) >= 0 ? v : v + b;
 	}
 	
-	public static float mod(float a, float b)
+	/**
+	 * Returns the floor modulus of the {@code float} arguments.<p>
+	 * The value of result will always be positive.
+	 * @param a
+	 * @param b
+	 * @return a non-negative {@code float} value.
+	 */
+	public static strictfp float mod(float a, float b)
 	{
 		float v;
 		return (v = a % b) >= 0 ? v : v + b;
 	}
 	
+	/**
+	 * Returns the floor modulus of the {@code int} arguments.<p>
+	 * The value of result will always be positive.
+	 * @param a
+	 * @param b
+	 * @return a non-negative {@code int} value.
+	 */
 	public static int mod(int a, int b)
 	{
 		int v;
 		return (v = a % b) >= 0 ? v : v + b;
 	}
 	
+	/**
+	 * Returns the floor modulus of the {@code long} arguments.<p>
+	 * The value of result will always be positive.
+	 * @param a
+	 * @param b
+	 * @return a non-negative {@code long} value.
+	 */
 	public static long mod(long a, long b)
 	{
 		long v;
@@ -111,11 +197,27 @@ public final class Maths
 		return sum(doubles) / doubles.length;
 	}
 	
+	/**
+	 * Take linear interpolation between two {@code float} value, and
+	 * use a value to measure the point.
+	 * @param a the first value.
+	 * @param b the second value.
+	 * @param x a {@code float} value which is predicated between 0.0 to 1.0.
+	 * @return
+	 */
 	public static float lerp(float a, float b, float x)
 	{
 		return a + (b - a) * x;
 	}
 	
+	/**
+	 * Take linear interpolation between two {@code double} value, and
+	 * use a value to measure the point.
+	 * @param a the first value.
+	 * @param b the second value.
+	 * @param x a {@code double} value which is predicated between 0.0 to 1.0.
+	 * @return
+	 */
 	public static double lerp(double a, double b, double x)
 	{
 		return a + (b - a) * x;
@@ -126,6 +228,12 @@ public final class Maths
 		return MathHelper.fastInvSqrt(a);
 	}
 	
+	/**
+	 * Get the GCD of two {@code int} value.
+	 * @param a
+	 * @param b
+	 * @return GCD
+	 */
 	public static int commonDiv(int a, int b)
 	{
 		if(b > a)

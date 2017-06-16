@@ -194,6 +194,7 @@ implements ISynchronizableTile
 	@Override
 	protected final void updateEntity2()
 	{
+		updateGeneral();
 		if(isServer())
 		{
 			updateServer();
@@ -204,6 +205,11 @@ implements ISynchronizableTile
 			updateClient();
 			updateClientStates();
 		}
+	}
+	
+	protected void updateGeneral()
+	{
+		
 	}
 	
 	protected void updateServerStates()

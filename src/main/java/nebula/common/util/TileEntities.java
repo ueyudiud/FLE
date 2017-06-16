@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import nebula.base.ArrayListAddWithCheck;
 import nebula.common.inventory.IBasicInventory;
 import nebula.common.item.ITool;
 import nebula.common.stack.AbstractStack;
@@ -190,7 +191,7 @@ public final class TileEntities
 	
 	public static void dropItemStacks(World world, BlockPos pos, IInventory inventory)
 	{
-		List<ItemStack> list = new ArrayList<>();
+		List<ItemStack> list = ArrayListAddWithCheck.requireNonnull();
 		for (int i = 0; i < inventory.getSizeInventory(); list.add(inventory.removeStackFromSlot(i)), ++i);
 		Worlds.spawnDropsInWorld(world, pos, list);
 	}

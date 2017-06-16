@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "fle:items/chest_small_rattan"
+    }
+}

@@ -20,6 +20,11 @@ public abstract class ContainerTileInventory<T extends TileEntity & IInventory> 
 		this.lastTileFieldValues = new int[tile.getFieldCount()];
 	}
 	
+	public T getTileEntity()
+	{
+		return this.tile;
+	}
+	
 	@Override
 	public void addListener(IContainerListener listener)
 	{
@@ -57,5 +62,15 @@ public abstract class ContainerTileInventory<T extends TileEntity & IInventory> 
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
 		return this.tile.isUsableByPlayer(playerIn);
+	}
+	
+	@Override
+	public void onContainerClosed(EntityPlayer playerIn)
+	{
+		if (!this.isClosed)
+		{
+			this.tile.closeInventory(playerIn);
+		}
+		super.onContainerClosed(playerIn);
 	}
 }

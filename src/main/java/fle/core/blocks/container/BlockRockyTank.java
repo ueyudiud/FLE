@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package fle.core.blocks;
+package fle.core.blocks.container;
 
 import java.util.List;
 

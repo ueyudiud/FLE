@@ -82,7 +82,7 @@ public final class Strings
 		if(s.length() == 0) return "";
 		return new StringBuilder(s.length())
 				.append(Character.toUpperCase(name.charAt(0)))
-				.append(s, 1, s.length() - 1).toString();
+				.append(s, 1, s.length()).toString();
 	}
 	
 	/**

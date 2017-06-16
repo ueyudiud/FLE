@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package fle.core.gui;
+package fle.core.common.gui;
 
 import static net.minecraft.inventory.EntityEquipmentSlot.CHEST;
 import static net.minecraft.inventory.EntityEquipmentSlot.FEET;

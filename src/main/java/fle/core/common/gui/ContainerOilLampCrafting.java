@@ -1,4 +1,4 @@
-package fle.core.gui;
+package fle.core.common.gui;
 
 import nebula.common.gui.ContainerBlockPosition;
 import nebula.common.gui.SlotBase;

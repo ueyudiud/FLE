@@ -122,7 +122,7 @@ public class L
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @return
+	 * @return the combined data.
 	 */
 	public static int index8i(int x, int y, int z)
 	{
@@ -134,7 +134,7 @@ public class L
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @return
+	 * @return the combined data.
 	 */
 	public static int index12i(int x, int y, int z)
 	{
@@ -146,7 +146,7 @@ public class L
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @return
+	 * @return the combined data.
 	 */
 	public static int index24i(int x, int y, int z)
 	{
@@ -154,9 +154,11 @@ public class L
 	}
 	
 	/**
-	 * Cast double value.
+	 * Cast {@link java.lang.Double} value to {@code double}
+	 * value safety.<p>
+	 * If argument is {@code null}, the result will be 0.
 	 * @param d
-	 * @return
+	 * @return casted value.
 	 */
 	public static double cast(@Nullable Double d)
 	{
@@ -164,33 +166,55 @@ public class L
 	}
 	
 	/**
-	 * Cast float value.
-	 * @param f
-	 * @return
+	 * Cast {@link java.lang.Float} value to {@code float}
+	 * value safety.<p>
+	 * If argument is {@code null}, the result will be 0.
+	 * @param d
+	 * @return casted value.
 	 */
 	public static float cast(@Nullable Float f)
 	{
 		return f == null ? 0 : f.floatValue();
 	}
 	
+	/**
+	 * Cast {@link java.lang.Integer} value to {@code int}
+	 * value safety.<p>
+	 * If argument is {@code null}, the result will be 0.
+	 * @param d
+	 * @return casted value.
+	 */
 	public static int cast(@Nullable Integer integer)
 	{
 		return integer == null ? 0 : integer.intValue();
 	}
 	
+	/**
+	 * Cast {@link java.lang.Short} value to {@code short}
+	 * value safety.<p>
+	 * If argument is {@code null}, the result will be 0.
+	 * @param d
+	 * @return casted value.
+	 */
 	public static short cast(@Nullable Short short1)
 	{
 		return short1 == null ? 0 : short1.shortValue();
 	}
 	
+	/**
+	 * Cast object to any type, use to casting wildcard.
+	 * @param <C> a cast type.
+	 * @param arg a casting argument.
+	 * @return the casted value (Just the argument input).
+	 */
 	@SuppressWarnings("unchecked")
-	public static <C> C castAny(Object arg)
+	public static <C> C castAny(@Nullable Object arg)
 	{
 		return (C) arg;
 	}
 	
 	/**
-	 * Cast value as ubyte to int.
+	 * Cast value as {@code unsigned byte} to {@code int}.
 	 * @param val
 	 * @return
 	 */
@@ -201,7 +225,7 @@ public class L
 	
 	/**
 	 * Get default random number generator.
-	 * @return
+	 * @return random number generator.
 	 */
 	public static Random random()
 	{
@@ -210,12 +234,19 @@ public class L
 	
 	/**
 	 * Exit game.
+	 * @see net.minecraftforge.fml.common.FMLCommonHandler#exitJava(int, boolean)
 	 */
 	public static void exit()
 	{
 		exit(0, false);
 	}
 	
+	/**
+	 * Exit game with exit code.
+	 * @param code
+	 * @param hardExit
+	 * @see net.minecraftforge.fml.common.FMLCommonHandler#exitJava(int, boolean)
+	 */
 	public static void exit(int code, boolean hardExit)
 	{
 		FMLCommonHandler.instance().exitJava(code, hardExit);
@@ -274,7 +305,9 @@ public class L
 	
 	/**
 	 * Put numerous values into fake Multimap.
-	 * @param map
+	 * @param <K> key type.
+	 * @param <V> value type.
+	 * @param map a fake multimap.
 	 * @param key
 	 * @param values
 	 * @see com.google.common.collect.Multimap
@@ -293,7 +326,9 @@ public class L
 	
 	/**
 	 * Put all values in collection into fake Multimap
-	 * @param map
+	 * @param <K> key type.
+	 * @param <V> value type.
+	 * @param map a fake multimap.
 	 * @param key
 	 * @param values
 	 * @see com.google.common.collect.Multimap#putAll(com.google.common.collect.Multimap)
@@ -313,7 +348,9 @@ public class L
 	
 	/**
 	 * Remove single value from fake Multimap
-	 * @param map
+	 * @param <K> key type.
+	 * @param <V> value type.
+	 * @param map a fake multimap.
 	 * @param key
 	 * @param value
 	 * @return
@@ -327,9 +364,11 @@ public class L
 	
 	/**
 	 * Check is value belong the set of the key mapped by fake Multimap
-	 * @param map
-	 * @param key
-	 * @param value
+	 * @param <K> key type.
+	 * @param <V> value type.
+	 * @param map a fake multimap.
+	 * @param key key.
+	 * @param value value in values collection.
 	 * @return
 	 * @see com.google.common.collect.Multimap#containsEntry(Object, Object)
 	 */
@@ -342,10 +381,11 @@ public class L
 	
 	/**
 	 * Put a value into two-layer map.
-	 * @param map
-	 * @param key
-	 * @param value1
-	 * @param value2
+	 * @param map two-layer map.
+	 * @param key first key of map.
+	 * @param value1 second key of map (The key in value map of first map).
+	 * @param value2 value of map (The value in value map of first map).
+	 * @see com.google.common.collect.Table#put(Object, Object, Object)
 	 */
 	public static <K, V1, V2> void put(Map<K, Map<V1, V2>> map, K key, V1 value1, V2 value2)
 	{
@@ -361,10 +401,11 @@ public class L
 	}
 	
 	/**
-	 * Get a map from two-layer value map or create a new HashMap.
-	 * @param map
-	 * @param key
-	 * @return
+	 * Get a map from two-layer value map or create a new {@link java.util.HashMap}.
+	 * @param map two-layer map.
+	 * @param key first key of map.
+	 * @return the value map of first key,
+	 * a new hashmap will be put if not present entry with key.
 	 */
 	public static <K, K1, V1> Map<K1, V1> getOrPut(Map<K, Map<K1, V1>> map, K key)
 	{
@@ -447,7 +488,8 @@ public class L
 	}
 	
 	/**
-	 * Select an element in list randomly.
+	 * Select an element in list randomly.<p>
+	 * All elements has same chance to be select.
 	 * @param random The select random generator.
 	 * @param list
 	 * @return
@@ -457,13 +499,9 @@ public class L
 		return random(list, random);
 	}
 	
-	public static char random(Random random, char...list)
-	{
-		return list == null || list.length == 0 ? null : list[list.length == 1 ? 0 : random.nextInt(list.length)];
-	}
-	
 	/**
-	 * Select element randomly.
+	 * Select element randomly.<p>
+	 * All elements has same chance to be select.
 	 * @param list
 	 * @param random
 	 * @return Return random element in list, if list length is 0, return null as result.
@@ -473,10 +511,18 @@ public class L
 		return list == null || list.length == 0 ? null : list[list.length == 1 ? 0 : random.nextInt(list.length)];
 	}
 	
+	/**
+	 * Select element randomly.<p>
+	 * All elements has same chance to be select.
+	 * @param collection
+	 * @param random
+	 * @return Return random element in collection, if list length is 0, return null as result.
+	 */
 	public static <T> T random(Collection<T> collection, Random random)
 	{
 		if(collection instanceof List)
-			return (T) ((List) collection).get(random.nextInt(((List) collection).size()));
+			return ((List<?>) collection).size() == 0 ? null :
+				(T) ((List) collection).get(random.nextInt(((List) collection).size()));
 		else
 		{
 			switch (collection.size())
@@ -488,15 +534,25 @@ public class L
 		}
 	}
 	
+	/**
+	 * Match two element.<p>
+	 * Return {@code true} if two argument are equal. Different from
+	 * {@link java.util.Objects#equals(Object, Object)}, the argument input
+	 * that method will be non-null.
+	 * @param arg1
+	 * @param arg2
+	 * @return
+	 * @see java.util.Objects#equals(Object, Object)
+	 */
 	public static boolean equal(@Nullable Object arg1, @Nullable Object arg2)
 	{
 		return arg1 == arg2 ? true : (arg1 == null ^ arg2 == null) ? false : arg1.equals(arg2);
 	}
 	
 	/**
-	 * Get minimum values from integer array.
-	 * @param values
-	 * @return
+	 * Get minimum values from {@code int} array.
+	 * @param values a int array.
+	 * @return if array length is 0, the result will be {@link Integer#MAX_VALUE}
 	 */
 	public static int min(int...values)
 	{
@@ -506,9 +562,9 @@ public class L
 	}
 	
 	/**
-	 * Get minimum values from float array.
-	 * @param values
-	 * @return
+	 * Get minimum values from {@code float} array.
+	 * @param values a int array.
+	 * @return if array length is 0, the result will be {@link Float#MAX_VALUE}
 	 */
 	public static float min(float...values)
 	{
@@ -518,9 +574,9 @@ public class L
 	}
 	
 	/**
-	 * Get max values from integer array.
-	 * @param values
-	 * @return
+	 * Get max values from {@code int} array.
+	 * @param values a int array.
+	 * @return if array length is 0, the result will be {@link Integer#MIN_VALUE}
 	 */
 	public static int max(int...values)
 	{
@@ -530,9 +586,9 @@ public class L
 	}
 	
 	/**
-	 * Get max values from float array.
-	 * @param values
-	 * @return
+	 * Get max values from {@code float} array.
+	 * @param values a float array.
+	 * @return if array length is 0, the result will be {@link Float#MIN_VALUE}
 	 */
 	public static float max(float...values)
 	{
@@ -542,13 +598,13 @@ public class L
 	}
 	
 	/**
-	 * Get integer ranged in a and b (include a and b).<p>
+	 * Get {@code int} ranged in a and b (include a and b).<p>
 	 * If number is out of bound, return minimum number if value is
 	 * lower than minimum number or return max number if value is
 	 * higher than max number.
-	 * @param m1 The first max or minimum number.
-	 * @param m2 The second max or minimum number.
-	 * @param target The ranged number.
+	 * @param m1 the first max or minimum number.
+	 * @param m2 the second max or minimum number.
+	 * @param target the ranged number.
 	 * @return
 	 */
 	public static int range(int m1, int m2, int target)
@@ -559,13 +615,13 @@ public class L
 	}
 	
 	/**
-	 * Get long integer ranged in a and b (include a and b).<p>
+	 * Get {@code long} value ranged in a and b (include a and b).<p>
 	 * If number is out of bound, return minimum number if value is
 	 * lower than minimum number or return max number if value is
 	 * higher than max number.
-	 * @param m1 The first max or minimum number.
-	 * @param m2 The second max or minimum number.
-	 * @param target The ranged number.
+	 * @param m1 the first max or minimum number.
+	 * @param m2 the second max or minimum number.
+	 * @param target the ranged number.
 	 * @return
 	 */
 	public static long range(long m1, long m2, long target)
@@ -576,13 +632,13 @@ public class L
 	}
 	
 	/**
-	 * Get float ranged in a and b (include a and b).<p>
+	 * Get {@code float} ranged in a and b (include a and b).<p>
 	 * If number is out of bound, return minimum number if value is
 	 * lower than minimum number or return max number if value is
 	 * higher than max number.
-	 * @param m1 The first max or minimum number.
-	 * @param m2 The second max or minimum number.
-	 * @param target The ranged number.
+	 * @param m1 the first max or minimum number.
+	 * @param m2 the second max or minimum number.
+	 * @param target the ranged number.
 	 * @return
 	 */
 	public static float range(float m1, float m2, float target)
@@ -593,13 +649,13 @@ public class L
 	}
 	
 	/**
-	 * Get double ranged in a and b (include a and b).<p>
+	 * Get {@code double} ranged in a and b (include a and b).<p>
 	 * If number is out of bound, return minimum number if value is
 	 * lower than minimum number or return max number if value is
 	 * higher than max number.
-	 * @param m1 The first max or minimum number.
-	 * @param m2 The second max or minimum number.
-	 * @param target The ranged number.
+	 * @param m1 the first max or minimum number.
+	 * @param m2 the second max or minimum number.
+	 * @param target the ranged number.
 	 * @return
 	 */
 	public static double range(double m1, double m2, double target)
@@ -610,31 +666,37 @@ public class L
 	}
 	
 	/**
-	 * Consume a ranged number from 0 to selected length (exclude right bound).<p>
-	 * @param len
-	 * @param consumer
+	 * Accept a ranged number from 0 to selected length (exclude right bound).<p>
+	 * @param len length to stop (exclude itself).
+	 * @param consumer to accept value.
 	 */
 	public static void consume(int len, IntConsumer consumer)
 	{
-		for (int i = 0; i < len; consumer.accept(i++));
+		consume(0, len, consumer);
 	}
 	
 	/**
 	 * Consume a ranged number from a to b (exclude right bound and include left bound).<p>
-	 * @param start
-	 * @param end
-	 * @param consumer
+	 * The start value should be more than end value.
+	 * @param start value in start (include itself).
+	 * @param end value in end (exclude itself).
+	 * @param consumer to accept value.
+	 * @throws IllegalArgumentException if start is less than end.
 	 */
 	public static void consume(int start, int end, IntConsumer consumer)
 	{
+		if (start > end)
+			throw new IllegalArgumentException(start + " to " + end + " does not contain any number.");
 		for (int i = start; i < end; consumer.accept(i++));
 	}
 	
 	/**
-	 * Match is number in range(Include left and right bound).
-	 * @param max
-	 * @param min
-	 * @param target
+	 * Match is number in range(Include left and right bound).<p>
+	 * Return {@code true} if target is less equal than max value
+	 * and great equal than minimum value.
+	 * @param max a max {@code double} value.
+	 * @param min a minimum {@code double} value.
+	 * @param target value to be check.
 	 * @return
 	 */
 	public static boolean inRange(double max, double min, double target)
@@ -643,10 +705,12 @@ public class L
 	}
 	
 	/**
-	 * Match is number in range(Include left and right bound).
-	 * @param max
-	 * @param min
-	 * @param target
+	 * Match is number in range(Include left and right bound).<p>
+	 * Return {@code true} if target is less equal than max value
+	 * and great equal than minimum value.
+	 * @param max a max {@code float} value.
+	 * @param min a minimum {@code float} value.
+	 * @param target value to be check.
 	 * @return
 	 */
 	public static boolean inRange(float max, float min, float target)
@@ -655,9 +719,10 @@ public class L
 	}
 	
 	/**
-	 * Generate a random number by general random number generator.
-	 * @param bound
-	 * @return
+	 * Generate a random {@code int} value by general random number generator.<p>
+	 * If bound is zero or one, it will always return 0 as result.
+	 * @param bound the max value (exclude itself) can be return.
+	 * @return the random number.
 	 * @see java.util.Random#nextInt(int)
 	 */
 	public static int nextInt(int bound)
@@ -666,10 +731,12 @@ public class L
 	}
 	
 	/**
-	 * 
-	 * @param bound
-	 * @param rand
-	 * @return
+	 * Generate a random {@code int} value by specific random number generator.<p>
+	 * If bound is zero or one, it will always return 0 as result.
+	 * @param bound the max value (exclude itself) can be return.
+	 * @param rand a random number generator.
+	 * @return the random number.
+	 * @see java.util.Random#nextInt(int)
 	 */
 	public static int nextInt(int bound, Random rand)
 	{
@@ -682,6 +749,15 @@ public class L
 		}
 	}
 	
+	/**
+	 * Get value or return default value from table.
+	 * @param table
+	 * @param rowKey
+	 * @param columnKey
+	 * @param defaultValue
+	 * @see com.google.common.collect.Table#get(Object, Object)
+	 * @return
+	 */
 	@SuppressWarnings("hiding")
 	public static <R, C, V> V getOrDefault(Table<R, C, V> table, R rowKey,
 			C columnKey, V defaultValue)
@@ -689,23 +765,39 @@ public class L
 		return table.contains(rowKey, columnKey) ? table.get(rowKey, columnKey) : defaultValue;
 	}
 	
+	/**
+	 * Wrap collection as a {@link java.util.ArrayList} for mutable,
+	 * or return argument directly if it is instance of {@link java.util.ArrayList}.
+	 * @param col a collection.
+	 * @return
+	 */
 	public static <E> ArrayList<E> castToArrayListOrWrap(Collection<?> col)
 	{
 		return col instanceof ArrayList ? (ArrayList<E>) col : new ArrayList(col);
 	}
 	
-	public static int indexOf(int[] list, int arg)
-	{
-		for(int i = 0; i < list.length; ++i) if(list[i] == arg) return i;
-		return -1;
-	}
-	
-	public static <S, K, T> Function<S, T> withCastIn(Function<K, T> function, Class<K> clazz)
+	/**
+	 * Cast wildcard type to specific type.
+	 * @param <S> transformed function input type.
+	 * @param <K> function in argument input type.
+	 * @param <T> function output type.
+	 * @param function
+	 * @return
+	 */
+	public static <S, K, T> Function<S, T> withCastIn(Function<K, T> function)
 	{
 		return resource -> function.apply((K) resource);
 	}
 	
-	public static <K, M, T> Function<K, T> withCastOut(Function<K, M> function, Class<T> clazz)
+	/**
+	 * Cast wildcard type to specific type.
+	 * @param <K> function input type.
+	 * @param <M> function in argument output type.
+	 * @param <T> transformed function output type.
+	 * @param function
+	 * @return
+	 */
+	public static <K, M, T> Function<K, T> withCastOut(Function<K, M> function)
 	{
 		return resource -> (T) function.apply(resource);
 	}

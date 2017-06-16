@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  * and a string id for each element.<p>
  * @author ueyudiud
  *
- * @param <T> The element type in regiser.
+ * @param <p> The element type in regiser.
  */
 public interface IRegister<T> extends Iterable<T>
 {

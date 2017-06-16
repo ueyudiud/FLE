@@ -3,7 +3,7 @@ package fle.core.tile.tools;
 import farcore.data.EnumToolTypes;
 import farcore.lib.material.Mat;
 import fle.core.client.gui.GuiOilLampCrafting;
-import fle.core.gui.ContainerOilLampCrafting;
+import fle.core.common.gui.ContainerOilLampCrafting;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Containerable;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
 import nebula.common.tile.IToolableTile;

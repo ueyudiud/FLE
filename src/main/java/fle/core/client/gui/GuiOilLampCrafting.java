@@ -1,7 +1,7 @@
 package fle.core.client.gui;
 
 import fle.core.FLE;
-import fle.core.gui.ContainerOilLampCrafting;
+import fle.core.common.gui.ContainerOilLampCrafting;
 import nebula.client.gui.GuiContainerBase;
 import nebula.common.world.ICoord;
 import net.minecraft.entity.player.EntityPlayer;

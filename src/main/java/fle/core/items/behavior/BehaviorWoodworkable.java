@@ -6,7 +6,7 @@ package fle.core.items.behavior;
 
 import farcore.data.Materials;
 import fle.core.client.gui.GuiWoodworkPortable;
-import fle.core.gui.ContainerWoodworkPortable;
+import fle.core.common.gui.ContainerWoodworkPortable;
 import nebula.Nebula;
 import nebula.common.item.BehaviorBase;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;

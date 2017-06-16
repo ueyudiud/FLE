@@ -9,9 +9,10 @@ import fle.core.blocks.BlockDirtMixture;
 import fle.core.blocks.BlockDitch;
 import fle.core.blocks.BlockGear;
 import fle.core.blocks.BlockPottery;
-import fle.core.blocks.BlockRockyTank;
 import fle.core.blocks.BlockWoodenMiscMachine;
 import fle.core.blocks.BlockWoodenSimpleWorkbench;
+import fle.core.blocks.container.BlockChest;
+import fle.core.blocks.container.BlockRockyTank;
 import fle.core.items.ItemMiscResources;
 import fle.core.items.ItemSimpleFluidContainer;
 import fle.core.items.ItemSubCropRelated;
@@ -34,6 +35,7 @@ public class BlocksItems
 	public static Block pottery;
 	public static Block dirt_mixture;
 	public static Block rocky_tank;
+	public static Block chest;
 	
 	public static void registerItemsAndBlocks()
 	{
@@ -54,6 +56,7 @@ public class BlocksItems
 		pottery = new BlockPottery().setCreativeTab(CT.tabMachine);
 		dirt_mixture = new BlockDirtMixture().setCreativeTab(CT.tabMachine);
 		rocky_tank = new BlockRockyTank().setCreativeTab(CT.tabMachine);
+		chest = new BlockChest().setCreativeTab(CT.tabMachine);
 	}
 	
 	public static void setBlocksItemsProperties()

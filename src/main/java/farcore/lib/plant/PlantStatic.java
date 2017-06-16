@@ -35,7 +35,7 @@ public class PlantStatic extends PlantNormal implements IRenderRegister
 	public void registerRender()
 	{
 		ModelLoader.setCustomStateMapper(this.block, block-> ImmutableMap.of(block.getDefaultState(), new ModelResourceLocation(this.material.modid + ":plant/" + this.material.name, "normal")));
-		Client.registerModel(this.block, 0, this.material.modid + ":plant/" + this.material.name, "inventory");
+		Client.registerModel(this.block, 0, this.material.modid, "plant/" + this.material.name);
 	}
 	
 	@Override

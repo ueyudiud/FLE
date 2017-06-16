@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package fle.core.gui.wooden.workbench;
+package fle.core.common.gui.wooden.workbench;
 
 import fle.api.recipes.instance.PolishRecipe;
 import fle.core.tile.wooden.workbench.TEWoodenPolishTable;

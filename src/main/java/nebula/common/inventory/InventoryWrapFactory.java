@@ -9,16 +9,23 @@ import javax.annotation.Nullable;
 import nebula.common.stack.AbstractStack;
 import nebula.common.tile.IItemHandlerIO;
 import nebula.common.util.Direction;
+import nebula.common.util.ItemStacks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.items.IItemHandler;
 
 /**
+ * The inventory wrapper, uses to wrap inventory (item container).<p>
+ * <code>
+ * IItemHandler handler = InventoryWrapFactory.wrap("yourinventoryname", inventory);
+ * </code><p>
+ * For you needn't take case about each side for a new handler.
  * @author ueyudiud
  */
 public final class InventoryWrapFactory
@@ -150,11 +157,30 @@ public final class InventoryWrapFactory
 	static class InventorySidedWrapper<I extends IBasicInventory & IItemHandlerIO> extends InventoryBasicWrapper implements I2
 	{
 		I inventory;
+		Direction direction;
 		
-		InventorySidedWrapper(String name, I inventory)
+		InventorySidedWrapper(String name, I inventory, EnumFacing facing)
 		{
 			super(name, inventory);
 			this.inventory = inventory;
+			this.direction = Direction.of(facing);
+		}
+		
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
+		{
+			int size = insertItem(stack, this.direction, simulate);
+			if (size > 0)
+			{
+				return size == stack.stackSize ? null : ItemStacks.sizeOf(stack, stack.stackSize - size);
+			}
+			else return stack;
+		}
+		
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate)
+		{
+			return extractItem(amount, this.direction, simulate);
 		}
 		
 		public boolean canExtractItem(Direction to) { return this.inventory.canExtractItem(to); }
@@ -168,7 +194,14 @@ public final class InventoryWrapFactory
 	
 	public static I1 wrap(String name, IBasicInventory inventory)
 	{
-		return inventory instanceof IItemHandlerIO ? new InventorySidedWrapper(name, inventory) : new InventoryBasicWrapper(name, inventory);
+		return 	wrap(name, inventory, null);
+	}
+	
+	public static I1 wrap(String name, IBasicInventory inventory, @Nullable EnumFacing facing)
+	{
+		return inventory instanceof IItemHandlerIO ?
+				new InventorySidedWrapper(name, inventory, facing) :
+					new InventoryBasicWrapper(name, inventory);
 	}
 	
 	public static I1 wrap(String name, Container container, IBasicInventory inventory)

@@ -10,7 +10,7 @@ import java.util.List;
 
 import farcore.data.Materials;
 import fle.core.client.gui.GuiBarGrizzly;
-import fle.core.gui.ContainerBarGrizzly;
+import fle.core.common.gui.ContainerBarGrizzly;
 import nebula.Nebula;
 import nebula.common.LanguageManager;
 import nebula.common.item.BehaviorBase;

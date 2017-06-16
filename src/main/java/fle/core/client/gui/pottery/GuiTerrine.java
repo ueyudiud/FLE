@@ -5,7 +5,7 @@
 package fle.core.client.gui.pottery;
 
 import fle.core.FLE;
-import fle.core.gui.pottery.ContainerTerrine;
+import fle.core.common.gui.pottery.ContainerTerrine;
 import fle.core.tile.pottery.TETerrine;
 import nebula.client.gui.GuiContainerTileInventory;
 import net.minecraft.entity.player.EntityPlayer;

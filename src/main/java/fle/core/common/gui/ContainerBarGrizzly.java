@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package fle.core.gui;
+package fle.core.common.gui;
 
 import farcore.data.EnumToolTypes;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;

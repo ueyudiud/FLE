@@ -47,7 +47,7 @@ public class TESRDirtMixture extends TESRBase<TEDirtMixture>
 			double d1 = te.getGroundPercentage();
 			if (d1 > 1E-2F)
 			{
-				colorRGB(te.getGroundRGB());
+				colori(te.getGroundRGB());
 				GL11.glColor4f(this.red, this.green, this.blue, 1.0F);
 				renderCube(0, 0, 0, 1, d1, 1, this.dirt);
 			}

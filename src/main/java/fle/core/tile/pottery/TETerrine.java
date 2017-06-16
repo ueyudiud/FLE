@@ -8,7 +8,7 @@ import static nebula.common.inventory.InventoryHelper.FD_DRAIN;
 import static nebula.common.inventory.InventoryHelper.FD_FILL_ONLYFULL;
 
 import fle.core.client.gui.pottery.GuiTerrine;
-import fle.core.gui.pottery.ContainerTerrine;
+import fle.core.common.gui.pottery.ContainerTerrine;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.inventory.InventoryHelper;
 import nebula.common.tile.IGuiTile;

@@ -4,8 +4,36 @@ import nebula.Log;
 import nebula.Nebula;
 import net.minecraft.util.ITickable;
 
-public class TEUpdatable extends TELockable implements ITickable
+public class TEUpdatable extends TECustomName implements ITickable
 {
+	/**
+	 * Use call for delaying task.
+	 * @author ueyudiud
+	 *
+	 */
+	protected class TimeMarker
+	{
+		final int duration;
+		final Runnable runnable;
+		
+		public TimeMarker(int duration, Runnable runnable)
+		{
+			this.duration = duration;
+			this.runnable = runnable;
+		}
+		
+		int delay;
+		
+		public void onUpdate()
+		{
+			if (this.delay++ >= this.duration)
+			{
+				this.delay = 0;
+				this.runnable.run();
+			}
+		}
+	}
+	
 	@Override
 	public void update()
 	{

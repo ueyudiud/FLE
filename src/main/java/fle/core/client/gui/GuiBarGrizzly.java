@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import farcore.data.Keys;
 import fle.core.FLE;
-import fle.core.gui.ContainerBarGrizzly;
+import fle.core.common.gui.ContainerBarGrizzly;
 import nebula.client.gui.GuiContainerBase;
 import nebula.common.LanguageManager;
 import net.minecraft.entity.player.EntityPlayer;

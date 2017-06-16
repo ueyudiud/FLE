@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package fle.core.gui.pottery;
+package fle.core.common.gui.pottery;
 
 import fle.core.tile.pottery.TETerrine;
 import nebula.common.gui.ContainerBase;

@@ -7,7 +7,7 @@ package fle.core.client.gui;
 import java.io.IOException;
 
 import fle.core.FLE;
-import fle.core.gui.ContainerWoodworkPortable;
+import fle.core.common.gui.ContainerWoodworkPortable;
 import nebula.client.gui.GuiContainerBase;
 import nebula.client.gui.GuiIconButton;
 import nebula.client.gui.GuiIconButton.ButtonSize;

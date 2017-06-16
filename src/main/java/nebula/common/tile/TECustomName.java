@@ -5,7 +5,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
-public class TELockable extends TEBase
+public class TECustomName extends TEBase
 {
 	public String customName;
 

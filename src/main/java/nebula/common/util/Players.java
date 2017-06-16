@@ -131,4 +131,9 @@ public final class Players
 			player.dropItem(stack, false);
 		}
 	}
+	
+	public static boolean isOp(EntityPlayer player)
+	{
+		return player.canUseCommand(3, "");
+	}
 }

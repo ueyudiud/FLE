@@ -186,12 +186,24 @@ public final class A
 	}
 	
 	/**
+	 * Get first equally {@code int} value position.
+	 * @param list
+	 * @param arg
+	 * @return
+	 */
+	public static int indexOf(int[] list, int arg)
+	{
+		for(int i = 0; i < list.length; ++i) if(list[i] == arg) return i;
+		return -1;
+	}
+	
+	/**
 	 * Get first matched element index in list.
 	 * @param list
 	 * @param arg The matching target.
 	 * @return The index of element, -1 means no element matched.
 	 */
-	public static <E> int indexOfFirst(E[] list, E arg)
+	public static int indexOfFirst(Object[] list, Object arg)
 	{
 		for(int i = 0; i < list.length; ++i) if(L.equal(list[i], arg)) return i;
 		return -1;
@@ -250,9 +262,9 @@ public final class A
 	 * Arrays.toString(rangeIntArray(1, 3));
 	 * </code>
 	 * and the result is {@code [1, 2]}
-	 * @param from
-	 * @param to
-	 * @return
+	 * @param from start value (include itself)
+	 * @param to end value (exclude itself)
+	 * @return the int array.
 	 */
 	public static int[] rangeIntArray(int from, int to)
 	{
@@ -268,17 +280,24 @@ public final class A
 	 * Arrays.toString(createIntArray(3, i->i*i));
 	 * </code>
 	 * and the result is {@code [0, 1, 4]}
-	 * @param from
-	 * @param to
+	 * @param length the length array.
+	 * @param operator the function to provide int value.
 	 * @return
 	 */
-	public static int[] createIntArray(int length, IntUnaryOperator function)
+	public static int[] createIntArray(int length, IntUnaryOperator operator)
 	{
 		int[] result = new int[length];
-		for (int i = 0; i < length; result[i] = function.applyAsInt(i), ++i);
+		for (int i = 0; i < length; result[i] = operator.applyAsInt(i), ++i);
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param length
+	 * @param function
+	 * @return
+	 * @see #createIntArray(int, IntUnaryOperator)
+	 */
 	public static long[] createLongArray(int length, IntToLongFunction function)
 	{
 		long[] result = new long[length];
@@ -286,9 +305,17 @@ public final class A
 		return result;
 	}
 	
+	/**
+	 * Create a new array fill with single element.<p>
+	 * The argument should not be null for this method use value to predicated
+	 * type of array.
+	 * @param length the length of array.
+	 * @param value the value filling the array.
+	 * @return the filled array.
+	 */
 	public static <E> E[] createArray(int length, @Nonnull E value)
 	{
-		E[] array = ObjectArrays.newArray((Class<E>) value.getClass(), length);
+		E[] array = (E[]) ObjectArrays.newArray(value.getClass(), length);
 		Arrays.fill(array, value);
 		return array;
 	}
@@ -305,6 +332,13 @@ public final class A
 		return sublist(array, off, array.length - off);
 	}
 	
+	/**
+	 * Create a sub list from argument list.
+	 * @param array
+	 * @param off
+	 * @param len
+	 * @return
+	 */
 	public static <E> E[] sublist(E[] array, int off, int len)
 	{
 		E[] a1 = ObjectArrays.newArray(array, len);

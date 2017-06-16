@@ -175,14 +175,14 @@ public class Client
 		return Blocks.LEAVES.getBlockLayer() == BlockRenderLayer.CUTOUT_MIPPED;
 	}
 	
-	public static void registerModel(Block block, int meta, String location, String variant)
+	public static void registerModel(Block block, int meta, String domain, String path)
 	{
-		registerModel(Item.getItemFromBlock(block), meta, location, variant);
+		registerModel(Item.getItemFromBlock(block), meta, domain, path);
 	}
 	
-	public static void registerModel(Item item, int meta, String location, String variant)
+	public static void registerModel(Item item, int meta, String domain, String path)
 	{
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, variant));
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(domain + ":" + path, "inventory"));
 	}
 	
 	public static void registerModel(Item item, String location, String variant)

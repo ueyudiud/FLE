@@ -48,7 +48,7 @@ public class BlockPottery extends BlockTE
 	public void registerRender()
 	{
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "pottery", this.property_TE);
-		Client.registerModel(this.item, 0, FLE.MODID + ":pottery/terrine", "inventory");
+		Client.registerModel(this.item, 0, FLE.MODID, "pottery/terrine");
 		ModelLoader.setCustomStateMapper(this, mapper);
 		registerCustomBlockRender(mapper, 0, "pottery/terrine");
 	}

@@ -5,6 +5,7 @@
 package nebula.base;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -30,6 +32,21 @@ public class ObjArrayParseHelper
 	private int off;
 	/** The object array. */
 	private Object[] array;
+	
+	public static <K, V> Map<K, V> newImmutableMap(Object...objects)
+	{
+		return create(objects).toMap();
+	}
+	
+	public static <E> List<E> newImmutableList(E...objects)
+	{
+		return create(objects).toList();
+	}
+	
+	public static <E> ArrayList<E> newArrayList(E...objects)
+	{
+		return create(objects).toArrayList();
+	}
 	
 	public static ObjArrayParseHelper create(Object...objects)
 	{
@@ -228,7 +245,12 @@ public class ObjArrayParseHelper
 	
 	public <E> List<E> toList()
 	{
-		return (List<E>) Arrays.asList(remainArray());
+		return (List<E>) ImmutableList.copyOf(remainArray());
+	}
+	
+	public <E> ArrayList<E> toArrayList()
+	{
+		return new ArrayList<>(new ArrayListArgument<>(remainArray()));
 	}
 	
 	public <E> Set<E> toSet()
