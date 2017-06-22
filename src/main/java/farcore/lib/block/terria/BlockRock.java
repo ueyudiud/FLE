@@ -2,12 +2,13 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package farcore.lib.block.instance;
+package farcore.lib.block.terria;
 
 import java.util.List;
 
 import farcore.data.CT;
 import farcore.data.EnumRockType;
+import farcore.data.MC;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.material.Mat;
 import nebula.client.model.StateMapperExt;
@@ -74,7 +75,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 		super.postInitalizedBlocks();
 		for (EnumRockType type : EnumRockType.values())
 		{
-			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), type.local, this.material.localName);
+			LanguageManager.registerLocal(getTranslateNameForItemStack(type.ordinal()), type.local, MC.stone.getLocal(this.material));
 		}
 	}
 	

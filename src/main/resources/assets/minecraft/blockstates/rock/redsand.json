@@ -1,0 +1,61 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"rocktype": {
+			"resource": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "minecraft:blocks/rock/redsand/chiseled"
+				}
+			}
+		}
+	}
+}

@@ -4,6 +4,8 @@
 
 package farcore.data;
 
+import static nebula.base.IPropertyMap.IProperty.to;
+
 import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.crop.ICrop;
@@ -32,17 +34,18 @@ public class MP
 	public static final String tool_attackspeed = "tool_attackspeed";
 	
 	public static final IProperty<PropertyBasic> property_basic = PropertyBasic::new;
-	public static final IProperty<PropertyTool> property_tool = () -> null;
-	public static final IProperty<MetalBlockBehavior> property_metal_block = () -> null;
-	public static final IProperty<PropertyOre> property_ore = PropertyOre::new;
+	public static final IProperty<PropertyTool> property_tool = to();
+	public static final IProperty<MetalBlockBehavior> property_metal_block = to();
+	public static final IProperty<PropertyOre> property_ore = to();
 	public static final IProperty<PropertyWood> property_wood = () -> PropertyTree.VOID;
 	/**
 	 * Only the casting helper.
 	 */
 	public static final IProperty<PropertyTree> property_tree = (IProperty) property_wood;
-	public static final IProperty<PropertyBlockable> property_soil = () -> null;
-	public static final IProperty<RockBehavior> property_rock = () -> null;
+	public static final IProperty<PropertyBlockable> property_soil = to();
+	public static final IProperty<PropertyBlockable> property_sand = to();
+	public static final IProperty<RockBehavior> property_rock = to();
 	public static final IProperty<ICrop> property_crop = () -> ICrop.VOID;
-	public static final IProperty<IPlant> property_plant = () -> null;
-	public static final IProperty<PropertyEdible> property_edible = () -> null;
+	public static final IProperty<IPlant> property_plant = to();
+	public static final IProperty<PropertyEdible> property_edible = to();
 }

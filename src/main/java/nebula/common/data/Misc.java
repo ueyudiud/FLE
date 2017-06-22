@@ -19,6 +19,7 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
 
 /**
@@ -30,6 +31,8 @@ public class Misc
 {
 	public static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	public static final Item ITEM_AIR = Item.getItemFromBlock(Blocks.AIR);
+	
+	public static final AxisAlignedBB[] AABB_LAYER;
 	
 	public static final int BUCKET_CAPACITY = Fluid.BUCKET_VOLUME;
 	
@@ -64,5 +67,14 @@ public class Misc
 	public static <T, R> Function<T, R> anyTo(R result)
 	{
 		return target->result;
+	}
+	
+	static
+	{
+		AABB_LAYER = new AxisAlignedBB[16];
+		for (int i = 0; i < 16; ++i)
+		{
+			AABB_LAYER[i] = new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, (i + 1) / 16.0F, 1.0F);
+		}
 	}
 }

@@ -18,4 +18,11 @@ public class PropertyBlockable<B extends Block>
 	public float explosionResistance;
 	
 	public B block;
+	
+	public PropertyBlockable(Mat material, int harvestLevel, float hardness, float explosionResistance)
+	{
+		this.material = material;
+		this.hardness = hardness;
+		this.explosionResistance = explosionResistance;
+	}
 }

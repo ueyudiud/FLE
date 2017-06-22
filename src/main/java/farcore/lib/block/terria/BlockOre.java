@@ -1,4 +1,8 @@
-package farcore.lib.block.instance;
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
+package farcore.lib.block.terria;
 
 import java.util.List;
 
@@ -9,6 +13,7 @@ import farcore.data.EnumRockType;
 import farcore.data.M;
 import farcore.data.Materials;
 import farcore.data.SubTags;
+import farcore.lib.block.instance.ItemOre;
 import farcore.lib.material.Mat;
 import farcore.lib.model.block.ModelOre;
 import farcore.lib.tile.instance.TEOre;

@@ -22,37 +22,37 @@ public interface IFoodStat
 			stack.stackSize--;
 			return stack;
 		}
-
+		
 		@Override
 		public boolean isWolfEdible(ItemStack stack)
 		{
 			return false;
 		}
-
+		
 		@Override
 		public boolean isEdible(ItemStack stack, EntityPlayer player)
 		{
 			return false;
 		}
-
+		
 		@Override
 		public boolean isDrink(ItemStack stack)
 		{
 			return false;
 		}
-
+		
 		@Override
 		public float getSaturation(ItemStack stack)
 		{
 			return 0;
 		}
-
+		
 		@Override
 		public float[] getNutritionAmount(ItemStack stack)
 		{
 			return null;
 		}
-
+		
 		@Override
 		public float getFoodAmount(ItemStack stack)
 		{
@@ -64,14 +64,14 @@ public interface IFoodStat
 		{
 			return 0;
 		}
-
+		
 		@Override
 		public int getEatDuration(ItemStack stack)
 		{
 			return 0;
 		}
 	};
-
+	
 	@Nullable float[] getNutritionAmount(ItemStack stack);
 	
 	float getFoodAmount(ItemStack stack);
@@ -79,11 +79,11 @@ public interface IFoodStat
 	float getSaturation(ItemStack stack);
 	
 	float getDrinkAmount(ItemStack stack);
-
+	
 	boolean isEdible(ItemStack stack, EntityPlayer player);
 	
 	boolean isWolfEdible(ItemStack stack);
-
+	
 	boolean isDrink(ItemStack stack);
 	
 	int getEatDuration(ItemStack stack);

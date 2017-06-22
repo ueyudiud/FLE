@@ -41,7 +41,6 @@ import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
 import farcore.lib.block.instance.BlockIce;
 import farcore.lib.block.instance.BlockMetal;
-import farcore.lib.block.instance.BlockOre;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.block.instance.BlockSapling;
 import farcore.lib.block.instance.BlockWater;
@@ -126,7 +125,7 @@ public class CommonLoader
 			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
 			new ItemStoneFragment().setCreativeTab(CT.tabResourceItem);
 			new ItemOreChip().setCreativeTab(CT.tabResourceItem);
-			new BlockOre().setCreativeTab(CT.tabTerria);
+			new farcore.lib.block.terria.BlockOre().setCreativeTab(CT.tabTerria);
 			new BlockCarvedRock();
 			new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
 		}

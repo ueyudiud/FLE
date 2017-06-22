@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 
 public abstract class PropertyTree extends PropertyWood implements ITree, IRegisteredNameable
 {
-	public static final PropertyTree VOID = new PropertyTree.PropertyTreeWrapper(ITree.VOID);
+	public static final PropertyTree VOID = new PropertyTree.PropertyTreeWrapper(new PropertyWood(Mat.VOID, -1, 0.0F, 0.0F, 0.0F, 0.0F), ITree.VOID);
 	
 	static
 	{
@@ -42,6 +42,12 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 	public BlockLeaves leaves;
 	public BlockLeavesCore leavesCore;
 	public BlockPlank plank;
+	
+	public PropertyTree(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent,
+			float burnHeat)
+	{
+		super(material, harvestLevel, hardness, explosionResistance, ashcontent, burnHeat);
+	}
 	
 	public final void setMaterial(Mat material)
 	{
@@ -75,8 +81,10 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 	{
 		private ITree tree;
 		
-		public PropertyTreeWrapper(ITree tree)
+		public PropertyTreeWrapper(PropertyWood property, ITree tree)
 		{
+			super(property.material, property.harvestLevel,
+					property.hardness, property.explosionResistance, property.ashcontent, property.burnHeat);
 			this.tree = tree;
 		}
 		

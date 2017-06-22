@@ -273,10 +273,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		List<IRenderRegister> reg = registers.remove(Game.getActiveModID());
 		if(reg != null)
 		{
-			for(IRenderRegister register : reg)
-			{
-				register.registerRender();
-			}
+			reg.forEach(IRenderRegister::registerRender);
 		}
 	}
 	

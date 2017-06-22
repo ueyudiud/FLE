@@ -1,11 +1,14 @@
-package nebula.base;
+package nebula.base.function;
 
 import java.util.Iterator;
 import java.util.Random;
 
 import com.google.common.collect.Iterators;
 
-import nebula.base.function.Selector;
+import nebula.base.INode;
+import nebula.base.IntegerEntry;
+import nebula.base.Node;
+import nebula.base.Stack;
 
 public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Selector<T>
 {
@@ -57,15 +60,15 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	public T next(Random random)
 	{
 		if(this.first == null || this.allWeight == 0) return null;
-		int i = random.nextInt(this.allWeight) - this.first.value().value;
+		int i = random.nextInt(this.allWeight) - this.first.value().getValue();
 		INode<IntegerEntry<T>> node = this.first;
 		while(i > 0 && //The weight is still more than random number
 				node.hasNext())//Or it has no node any more.
 		{
-			i -= node.value().value;
+			i -= node.value().getValue();
 			node = node.next();
 		}
-		return node.value().key;
+		return node.value().getKey();
 	}
 	
 	@Override

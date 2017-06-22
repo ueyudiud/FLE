@@ -22,7 +22,7 @@ import net.minecraftforge.common.config.Property.Type;
  * @author ueyudiud
  */
 @Config(FLE.MODID)
-public class FLEConfig
+public class Configs
 {
 	private static final Function<Field, EntityAttributeTag>
 	DEFAULT_TAG_APPLIER = field-> {
@@ -98,6 +98,6 @@ public class FLEConfig
 	public static void init()
 	{
 		NebulaConfiguration.registerTypeAdapter(EntityAttributeTag.class, ADAPTER, DEFAULT_TAG_APPLIER);
-		NebulaConfiguration.loadStaticConfig(FLEConfig.class);
+		NebulaConfiguration.loadStaticConfig(Configs.class);
 	}
 }

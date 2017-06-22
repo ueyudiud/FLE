@@ -2,7 +2,7 @@ package fargen.core.biome.layer;
 
 import java.util.Random;
 
-import farcore.lib.block.instance.BlockRock;
+import farcore.lib.block.terria.BlockRock;
 import fargen.core.biome.BiomeBase;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;

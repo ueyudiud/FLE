@@ -16,6 +16,7 @@ public class Materials
 {
 	public static final Material AIR = Material.AIR;
 	public static final Material ROCK = Material.ROCK;
+	public static final Material SAND = Material.SAND;
 	public static final Material METALIC = Material.IRON;
 	public static final Material LOG = new MaterialLog();
 	public static final Material WOOD = Material.WOOD;

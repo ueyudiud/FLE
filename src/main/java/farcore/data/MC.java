@@ -41,7 +41,7 @@ public class MC
 	public static final MatCondition fragment = new MatCondition("fragment", "Fragment", "% Fragment").setSize(864L, 864L, 1.5F).setFilter(SubTags.ROCK);
 	public static final MatCondition sapling = new MatCondition("sapling", "Sapling", "% Sapling").setSize(640L, 512L, 25.0F).setFilter(SubTags.WOOD);
 	
-	public static final MatCondition pile = new MatCondition("pile", "Pile", "% Pile").setSize(576L, 16L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE));
+	public static final MatCondition pile = new MatCondition("pile", "Pile", "% Pile").setSize(576L, 16L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
 	
 	public static final MatCondition block = new MatCondition("block", "Block", "% Block").setSize(1296L, 1296L, 0.1F).setFilter(SubTags.METAL);
 	public static final MatCondition ingot = new MatCondition("ingot", "Ingot", "% Ingot").setSize(144L, 144L, 1.0F).setFilter(SubTags.METAL);

@@ -1,10 +1,9 @@
 package nebula.base;
 
 import java.util.Map.Entry;
+import java.util.Set;
 
 import nebula.base.function.Appliable;
-
-import java.util.Set;
 
 public interface IPropertyMap
 {
@@ -25,6 +24,35 @@ public interface IPropertyMap
 	@FunctionalInterface
 	interface IProperty<V> extends Appliable<V>
 	{
+		static <V> IProperty<V> to()
+		{
+			return new ToNull();
+		}
+		
+		class ToNull implements IProperty
+		{
+			@Override
+			public Object defValue()
+			{
+				return null;
+			}
+			
+		}
+		
+		static <V> IProperty<V> to(Class<? extends V> constructor)
+		{
+			return ()-> {
+				try
+				{
+					return constructor.newInstance();
+				}
+				catch (Exception exception)
+				{
+					throw new InternalError(exception);
+				}
+			};
+		}
+		
 		@Override
 		default V apply()
 		{

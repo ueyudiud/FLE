@@ -1,11 +1,14 @@
 package farcore.lib.material;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import farcore.lib.item.ItemMulti;
 import nebula.base.Judgable;
+import nebula.base.ObjArrayParseHelper;
 import nebula.base.Register;
 import nebula.common.LanguageManager;
 import nebula.common.util.ISubTagContainer;
@@ -39,8 +42,10 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	public ItemMulti instance;
 	
 	public Judgable<ISubTagContainer> filter = Judgable.FALSE;
-	public Set<Mat> blacklist = new HashSet<>();
-	public Set<Mat> whitelist = new HashSet<>();
+	public final Set<Mat> blacklist = new HashSet<>();
+	public final Set<Mat> whitelist = new HashSet<>();
+	
+	public final Map<Mat, String> unnormalNames = new HashMap<>();
 	
 	public MatCondition(String prefix, String localName, String withOreLocalName)
 	{
@@ -60,6 +65,18 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	public MatCondition setFilter(Judgable<ISubTagContainer> filter)
 	{
 		this.filter = filter;
+		return this;
+	}
+	
+	public MatCondition setName(Mat material, String name)
+	{
+		this.unnormalNames.put(material, name);
+		return this;
+	}
+	
+	public MatCondition setNames(Object...objects)
+	{
+		this.unnormalNames.putAll(ObjArrayParseHelper.newImmutableMap(objects));
 		return this;
 	}
 	
@@ -193,7 +210,8 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public String getLocal(Mat material)
 	{
-		return getLocal(material.localName);
+		String t = this.unnormalNames.get(material);
+		return t != null ? t : getLocal(material.localName);
 	}
 	
 	public String getLocal(String local)

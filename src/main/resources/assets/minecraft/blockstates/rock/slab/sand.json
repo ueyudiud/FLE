@@ -1,0 +1,108 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"uvlock": true
+	},
+	"variants": {
+		"type": {
+			"resource": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "minecraft:blocks/rock/sand/chiseled"
+				}
+			}
+		},
+		"facing": {
+			"down": {
+				"model": "farcore:slab",
+				"x": 0,
+				"y": 0
+			},
+			"up": {
+				"model": "farcore:slab",
+				"x": 180,
+				"y": 0
+			},
+			"north": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 0
+			},
+			"south": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 180
+			},
+			"west": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 90
+			},
+			"east": {
+				"model": "farcore:slab",
+				"x": 90,
+				"y": 270
+			},
+			"d_ud": {
+				"model": "farcore:slab_double",
+				"x": 0,
+				"y": 0
+			},
+			"d_ns": {
+				"model": "farcore:slab_double",
+				"x": 90,
+				"y": 0
+			},
+			"d_we": {
+				"model": "farcore:slab_double",
+				"x": 90,
+				"y": 90
+			}
+		}
+	}
+}

@@ -9,7 +9,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.util.Localization;
 import fle.core.FLE;
-import fle.loader.FLEConfig;
+import fle.loader.Configs;
 import nebula.client.CreativeTabBase;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
@@ -27,7 +27,7 @@ public class ItemToolHead extends ItemMulti
 	public ItemToolHead(MatCondition mc)
 	{
 		super(FLE.MODID, mc);
-		if (FLEConfig.createAllToolCreativeTabs)
+		if (Configs.createAllToolCreativeTabs)
 		{
 			setCreativeTab(new CreativeTabBase(mc.name, mc.localName, () -> new ItemStack(this, 1, 0)));
 		}

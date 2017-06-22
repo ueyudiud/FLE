@@ -72,7 +72,8 @@ public class EntityFallingBlockExtended extends Entity
 	{
 		public void onStartFalling(World world, BlockPos pos) { }
 		
-		public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state) { return !canFallAt(world, pos, state); }
+		public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state) { return !canFallAt(world, pos, state) &&
+				world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, (Entity)null, (ItemStack)null); }
 		
 		public boolean onFallOnGround(World world, BlockPos pos, IBlockState state, int height, NBTTagCompound tileNBT) { return false; }
 		
@@ -215,8 +216,7 @@ public class EntityFallingBlockExtended extends Entity
 					setDead();
 					
 					label:
-						if (this.world.canBlockBePlaced(this.state.getBlock(), pos, true, EnumFacing.UP, (Entity)null, (ItemStack)null) &&
-								this.fallable.canFallingBlockStay(this.world, pos, this.state))
+						if (this.fallable.canFallingBlockStay(this.world, pos, this.state))
 						{
 							if(this.fallable.onFallOnGround(this.world, pos, this.state, this.startY - pos.getY(), this.nbt))
 							{

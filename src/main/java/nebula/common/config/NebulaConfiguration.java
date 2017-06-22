@@ -23,7 +23,9 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.config.Property.Type;
 
 /**
+ * The configuration handler, use to load configuration from file.<p>
  * @author ueyudiud
+ * @see nebula.common.config.Config
  */
 public final class NebulaConfiguration
 {

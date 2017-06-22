@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.base;
 
 import java.util.Arrays;
@@ -5,17 +9,25 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.IntUnaryOperator;
 
 import com.google.common.collect.Iterators;
 
 import nebula.common.util.L;
 import nebula.common.util.Maths;
 
+/**
+ * 
+ * @author ueyudiud
+ *
+ * @param <T>
+ */
 public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 {
 	private final float loadFactor;
 	private int size;
-	private INode<IntegerEntry<T>>[] entries;
+	private int sum;
+	transient INode<IntegerEntry<T>>[] entries;
 	
 	protected int hashcode(Object object)
 	{
@@ -104,6 +116,9 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		return this.size;
 	}
 	
+	/**
+	 * @return <tt>true</tt> if this map contains no key-value mappings
+	 */
 	public boolean isEmpty()
 	{
 		return size() == 0;
@@ -128,6 +143,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	public int put(T key, int value)
 	{
 		Integer old = putChecked(key, value);
+		this.sum += value;
 		if(old == null)
 		{
 			++this.size;
@@ -135,6 +151,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		}
 		else
 		{
+			this.sum -= old;
 			return old;
 		}
 	}
@@ -151,8 +168,9 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		{
 			this.entries[id] = node.next();
 		}
-		node.remove();
-		return node.value().value;
+		int v = node.remove().value;
+		this.sum -= v;
+		return v;
 	}
 	
 	public int remove(Object key)
@@ -174,7 +192,6 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 			while (node0.hasNext());
 			return 0;
 		}
-		
 	}
 	
 	public void clear()
@@ -192,6 +209,22 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	public Iterator<IntegerEntry<T>> iterator()
 	{
 		return new IntegerMapItr();
+	}
+	
+	public int getSum()
+	{
+		return this.sum;
+	}
+	
+	public void transformAll(IntUnaryOperator operator)
+	{
+		this.sum = 0;
+		for (IntegerEntry<T> entry : this)
+		{
+			int t = operator.applyAsInt(entry.value);
+			this.sum += t;
+			entry.setValue(t);
+		}
 	}
 	
 	class IntegerMapItr implements Iterator<IntegerEntry<T>>
@@ -243,7 +276,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 			{
 				this.currentNode = null;
 			}
-			old.remove();
+			IntegerMap.this.sum -= old.remove().value;
 			IntegerMap.this.size--;
 			this.modified = true;
 		}

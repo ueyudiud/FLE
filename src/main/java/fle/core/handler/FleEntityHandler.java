@@ -9,7 +9,7 @@ import fle.core.entity.monster.EntityFLESkeleton;
 import fle.core.entity.monster.EntityFLESlime;
 import fle.core.entity.monster.EntityFLESpider;
 import fle.core.entity.monster.EntityFLEZombie;
-import fle.loader.FLEConfig;
+import fle.loader.Configs;
 import nebula.Log;
 import nebula.common.util.R;
 import net.minecraft.block.SoundType;
@@ -52,28 +52,28 @@ public class FleEntityHandler
 		{
 			EntityFLEZombie replace = new EntityFLEZombie(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			setAttributes(replace, FLEConfig.zombie);
+			setAttributes(replace, Configs.zombie);
 			event.setCanceled(true);
 		}
 		else if(clazz == EntitySkeleton.class)
 		{
 			EntityFLESkeleton replace = new EntityFLESkeleton(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			setAttributes(replace, FLEConfig.skeleton);
+			setAttributes(replace, Configs.skeleton);
 			event.setCanceled(true);
 		}
 		else if(clazz == EntitySpider.class)
 		{
 			EntityFLESpider replace = new EntityFLESpider(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			setAttributes(replace, FLEConfig.spider);
+			setAttributes(replace, Configs.spider);
 			event.setCanceled(true);
 		}
 		else if(clazz == EntityCreeper.class)
 		{
 			EntityFLECreeper replace = new EntityFLECreeper(event.getWorld());
 			replaceEntitySpawn(event.getWorld(), replace, event.getEntity());
-			setAttributes(replace, FLEConfig.creeper);
+			setAttributes(replace, Configs.creeper);
 			event.setCanceled(true);
 		}
 		else if (clazz == EntitySlime.class)

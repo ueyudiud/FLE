@@ -4,8 +4,8 @@
 
 package farcore.lib.block.behavior;
 
-import static farcore.lib.block.instance.BlockRock.HEATED;
-import static farcore.lib.block.instance.BlockRock.TYPE;
+import static farcore.lib.block.terria.BlockRock.HEATED;
+import static farcore.lib.block.terria.BlockRock.TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
-import farcore.lib.block.instance.BlockRock;
+import farcore.lib.block.terria.BlockRock;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.tile.instance.TECustomCarvedStone;
@@ -48,9 +48,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> implements IBlockBehavior<B>
 {
-	public RockBehavior(Mat material)
+	public RockBehavior(Mat material, int harvestLevel, float hardness, float explosionResistance)
 	{
-		this.material = material;
+		super(material, harvestLevel, hardness, explosionResistance);
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ package farcore.lib.block.behavior;
 
 import farcore.data.EnumToolTypes;
 import farcore.lib.block.instance.BlockMetal;
+import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import nebula.common.block.IBlockBehavior;
 import net.minecraft.block.state.IBlockState;
@@ -19,6 +20,11 @@ import net.minecraft.world.World;
  */
 public class MetalBlockBehavior<B extends BlockMetal> extends PropertyBlockable<B> implements IBlockBehavior<B>
 {
+	public MetalBlockBehavior(Mat material, int harvestLevel, float hardness, float explosionResistance)
+	{
+		super(material, harvestLevel, hardness, explosionResistance);
+	}
+	
 	@Override
 	public float getBlockHardness(B block, IBlockState state, World world, BlockPos pos)
 	{

@@ -7,6 +7,7 @@ package nebula.base.function;
 import java.util.Random;
 import java.util.function.Function;
 
+import nebula.base.IntegerMap;
 import nebula.common.util.L;
 
 /**
@@ -34,6 +35,11 @@ public interface Selector<E> extends Function<Random, E>
 	static <E> Selector<E> single(E element)
 	{
 		return random -> element;
+	}
+	
+	static <E> Selector<E> of(IntegerMap<? extends E> map)
+	{
+		return new IntMapSelector<>(map);
 	}
 	
 	static <E> Selector<E> list(E...elements)

@@ -1,0 +1,30 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"layer": {
+			"1": { "model": "farcore:layer/1" },
+			"2": { "model": "farcore:layer/2" },
+			"3": { "model": "farcore:layer/3" },
+			"4": { "model": "farcore:layer/4" },
+			"5": { "model": "farcore:layer/5" },
+			"6": { "model": "farcore:layer/6" },
+			"7": { "model": "farcore:layer/7" },
+			"8": { "model": "farcore:layer/8" },
+			"9": { "model": "farcore:layer/9" },
+			"10": { "model": "farcore:layer/10" },
+			"11": { "model": "farcore:layer/11" },
+			"12": { "model": "farcore:layer/12" },
+			"13": { "model": "farcore:layer/13" },
+			"14": { "model": "farcore:layer/14" },
+			"15": { "model": "farcore:layer/15" },
+			"16": { "model": "farcore:layer/16" }
+		},
+		"type": {
+			"sand":            { "textures": { "all": "minecraft:blocks/sand/sand" } },
+			"redsand":         { "textures": { "all": "minecraft:blocks/sand/redsand" } }
+		}
+	}
+}

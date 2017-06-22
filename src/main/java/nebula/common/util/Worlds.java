@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 
 import nebula.Nebula;
@@ -126,6 +128,14 @@ public final class Worlds
 		return fixSide(side.ordinal(), hitX, hitY, hitZ);
 	}
 	
+	/**
+	 * Fixed 6 direction side of facing, for change to another face when that face is not exposed.
+	 * @param side
+	 * @param hitX
+	 * @param hitY
+	 * @param hitZ
+	 * @return
+	 */
 	public static int fixSide(int side, float hitX, float hitY, float hitZ)
 	{
 		float u, v;
@@ -174,7 +184,14 @@ public final class Worlds
 		world.spawnEntity(entityitem);
 	}
 	
-	public static void spawnDropsInWorld(World world, BlockPos pos, List<ItemStack> drops)
+	/**
+	 * Spawn a list of items in the world.<p>
+	 * It usually called when block is broke.
+	 * @param world the world.
+	 * @param pos the spawn position.
+	 * @param drops the drops item stacks.
+	 */
+	public static void spawnDropsInWorld(World world, BlockPos pos, @Nullable List<ItemStack> drops)
 	{
 		if(world.isRemote ||
 				world.getWorldType() == WorldType.DEBUG_WORLD ||
@@ -201,12 +218,15 @@ public final class Worlds
 		spawnDropsInWorld(coord, Arrays.asList(drop));
 	}
 	
+	/**
+	 * @see #spawnDropsInWorld(World, BlockPos, List)
+	 */
 	public static void spawnDropsInWorld(ICoord coord, List<ItemStack> drop)
 	{
 		spawnDropsInWorld(coord.world(), coord.pos(), drop);
 	}
 	
-	public static void spawnDropInWorld(EntityPlayer player, ItemStack drop)
+	public static void spawnDropInWorld(EntityPlayer player, @Nullable ItemStack drop)
 	{
 		if(drop == null || drop.stackSize == 0 || player.world.isRemote) return;
 		player.dropItem(drop, false);
@@ -221,6 +241,12 @@ public final class Worlds
 		}
 	}
 	
+	/**
+	 * Check can block stay and fall block.
+	 * @param world the world.
+	 * @param pos the checking position.
+	 * @return return <tt>true</tt> when falling is matched and happened.
+	 */
 	public static boolean checkAndFallBlock(World world, BlockPos pos)
 	{
 		if(world.isRemote) return false;
@@ -232,11 +258,40 @@ public final class Worlds
 		return false;
 	}
 	
+	/**
+	 * Fall block with starting at located position.
+	 * @param world the falling block generated world.
+	 * @param pos the located position.
+	 * @param state the block state.
+	 * @return return <tt>true</tt> when falling action is success happen,
+	 * or the side is client or falling block not generate successfully otherwise.
+	 * @see Worlds#fallBlock(World, BlockPos, BlockPos, IBlockState)
+	 */
 	public static boolean fallBlock(World world, BlockPos pos, IBlockState state)
 	{
 		return fallBlock(world, pos, pos, state);
 	}
 	
+	/**
+	 * Generate a falling block at drop position, and the source is from start position,
+	 * a helper method to create falling block (such behavior like vanilla sand).<p>
+	 * The source block will be removed after falling action is started, and a new
+	 * {@link nebula.common.entity.EntityFallingBlockExtended} will be spawn in the world if
+	 * option of falling block instantly is disabled and the chunk of handling falling action is loaded,
+	 * or try to falling instantly.<p>
+	 * If the block is instance of {@link nebula.common.block.ISmartFallableBlock}.
+	 * The method will be called after entity spawning.<p>
+	 * 
+	 * @param world the world.
+	 * @param pos the block at this position will be remove to air.
+	 * @param dropPos the falling entity block starting position, it usually same to start position.
+	 * @param state the falling block state.
+	 * @return return <tt>true</tt> when falling action is success happen,
+	 * or the side is client or falling block not generate successfully otherwise.
+	 * @see net.minecraft.block.BlockFalling
+	 * @see nebula.common.block.ISmartFallableBlock
+	 * @see nebula.common.entity.EntityFallingBlockExtended
+	 */
 	public static boolean fallBlock(World world, BlockPos pos, BlockPos dropPos, IBlockState state)
 	{
 		if(!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
@@ -289,7 +344,12 @@ public final class Worlds
 		}
 	}
 	
-	public static World world(int dimID)
+	/**
+	 * Get world from dimension id.
+	 * @param dimID the dimension id of world.
+	 * @return the current world with dimension id, or <tt>null</tt> if world not found.
+	 */
+	public static @Nullable World world(int dimID)
 	{
 		return Nebula.proxy.worldInstance(dimID);
 	}

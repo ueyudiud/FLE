@@ -4,6 +4,8 @@
 
 package farcore.data;
 
+import static nebula.common.util.SubTag.getNewSubTag;
+
 import nebula.common.util.SubTag;
 
 /**
@@ -11,30 +13,28 @@ import nebula.common.util.SubTag;
  */
 public class SubTags
 {
-	public static final SubTag FLINT = SubTag.getNewSubTag("FLINT");
-	public static final SubTag METAL = SubTag.getNewSubTag("METAL");
-	public static final SubTag WOOD = SubTag.getNewSubTag("WOOD");
-	public static final SubTag DIRT = SubTag.getNewSubTag("DIRT");
-	public static final SubTag SAND = SubTag.getNewSubTag("SAND");
-	public static final SubTag ROCK = SubTag.getNewSubTag("ROCK");
-	public static final SubTag TOOL = SubTag.getNewSubTag("TOOL");
-	public static final SubTag HANDLE = SubTag.getNewSubTag("HANDLE");
-	public static final SubTag CROP = SubTag.getNewSubTag("SEED");
-	public static final SubTag PLANT = SubTag.getNewSubTag("PLANT");
-	public static final SubTag TREE = SubTag.getNewSubTag("TREE");
-	public static final SubTag ROPE = SubTag.getNewSubTag("ROPE");
-	public static final SubTag VINES = SubTag.getNewSubTag("VINES");
-	public static final SubTag HERB = SubTag.getNewSubTag("HERB");
-	public static final SubTag ORE = SubTag.getNewSubTag("ORE");
-	public static final SubTag ORE_SIMPLE = SubTag.getNewSubTag("ORE_SIMPLE");
-	public static final SubTag ORE_GEM = SubTag.getNewSubTag("ORE_GEM");
-	public static final SubTag ORE_NOBLE = SubTag.getNewSubTag("ORE_NOBLE");
-	public static final SubTag ORE_SALT = SubTag.getNewSubTag("ORE_SALT");
-	public static final SubTag ORE_ROCKY = SubTag.getNewSubTag("ORE_ROCKY");
-	public static final SubTag FIRE_RESISTANCE = SubTag.getNewSubTag("FIRE_RESISTANCE");
-	/**
-	 * To check block is fire source.
-	 */
-	public static final SubTag FIRE_SOURCE = SubTag.getNewSubTag("FIRE_SOURCE");
-	public static final SubTag PILEABLE = SubTag.getNewSubTag("PILEABLE");
+	public static final SubTag FLINT	= getNewSubTag("FLINT");
+	public static final SubTag METAL	= getNewSubTag("METAL");
+	public static final SubTag WOOD		= getNewSubTag("WOOD");
+	public static final SubTag DIRT		= getNewSubTag("DIRT");
+	public static final SubTag SAND		= getNewSubTag("SAND");
+	public static final SubTag ROCK		= getNewSubTag("ROCK");
+	public static final SubTag TOOL		= getNewSubTag("TOOL");
+	public static final SubTag HANDLE	= getNewSubTag("HANDLE");
+	public static final SubTag CROP		= getNewSubTag("SEED");
+	public static final SubTag PLANT	= getNewSubTag("PLANT");
+	public static final SubTag TREE		= getNewSubTag("TREE");
+	public static final SubTag ROPE		= getNewSubTag("ROPE");
+	public static final SubTag VINES	= getNewSubTag("VINES");
+	public static final SubTag HERB		= getNewSubTag("HERB");
+	public static final SubTag ORE		= getNewSubTag("ORE");
+	public static final SubTag PILEABLE	= getNewSubTag("PILEABLE");
+	public static final SubTag ORE_SIMPLE	= getNewSubTag("ORE_SIMPLE");
+	public static final SubTag ORE_GEM		= getNewSubTag("ORE_GEM");
+	public static final SubTag ORE_NOBLE	= getNewSubTag("ORE_NOBLE");
+	public static final SubTag ORE_SALT		= getNewSubTag("ORE_SALT");
+	public static final SubTag ORE_ROCKY	= getNewSubTag("ORE_ROCKY");
+	public static final SubTag FIRE_RESISTANCE	= getNewSubTag("FIRE_RESISTANCE");
+	/** To check block is fire source. */
+	public static final SubTag FIRE_SOURCE		= getNewSubTag("FIRE_SOURCE");
 }

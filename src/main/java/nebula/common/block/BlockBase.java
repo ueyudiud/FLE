@@ -310,11 +310,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		
 		if(silkTouch)
 		{
-			ItemStack stack = getSilkTouchDrop(state);
-			if(stack != null)
-			{
-				ret.add(stack);
-			}
+			ret.add(getSilkTouchDrop(state));
 		}
 		else
 		{

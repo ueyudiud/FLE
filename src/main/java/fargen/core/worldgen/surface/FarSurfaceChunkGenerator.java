@@ -22,7 +22,7 @@ import farcore.lib.world.WorldPropHandler;
 import fargen.api.event.FarGenerationEvent;
 import fargen.api.event.TreeGenEvent;
 import fargen.core.biome.BiomeBase;
-import nebula.base.WeightedRandomSelector;
+import nebula.base.function.WeightedRandomSelector;
 import nebula.common.util.L;
 import nebula.common.util.Maths;
 import nebula.common.util.noise.NoiseBase;

@@ -17,6 +17,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 
 import nebula.base.function.SequenceFunction;
 
@@ -194,5 +195,53 @@ public final class Jsons
 		List<E> list = new ArrayList<>();
 		function.andThen((Consumer<E>) list::add).accept(array);
 		return list;
+	}
+	
+	public static JsonArray toJsonArray(byte[] array)
+	{
+		JsonArray result = new JsonArray();
+		for (byte value : array) result.add(new JsonPrimitive(value));
+		return result;
+	}
+	
+	public static JsonArray toJsonArray(int[] array)
+	{
+		JsonArray result = new JsonArray();
+		for (int value : array) result.add(new JsonPrimitive(value));
+		return result;
+	}
+	
+	public static JsonArray toJsonArray(char[] array)
+	{
+		JsonArray result = new JsonArray();
+		for (char value : array) result.add(new JsonPrimitive(value));
+		return result;
+	}
+	
+	public static JsonArray toJsonArray(float[] array)
+	{
+		return toJsonArray(array, 0, array.length);
+	}
+	
+	public static JsonArray toJsonArray(float[] array, int start, int end)
+	{
+		JsonArray result = new JsonArray();
+		float value;
+		for (int i = start; i < end; value = array[i++], result.add(new JsonPrimitive(value)));
+		return result;
+	}
+	
+	public static JsonArray toJsonArray(double[] array)
+	{
+		JsonArray result = new JsonArray();
+		for (double value : array) result.add(new JsonPrimitive(value));
+		return result;
+	}
+	
+	public static JsonArray toJsonArray(String[] array)
+	{
+		JsonArray result = new JsonArray();
+		for (String value : array) result.add(new JsonPrimitive(value));
+		return result;
 	}
 }

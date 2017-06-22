@@ -1004,6 +1004,10 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	@Override
 	public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
 	{
+		if (!world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, (Entity)null, (ItemStack)null))
+		{
+			return false;
+		}
 		try
 		{
 			return getBehavior(state).canFallingBlockStay(this, state, world, pos);

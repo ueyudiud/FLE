@@ -2,6 +2,7 @@ package farcore.lib.material.prop;
 
 import java.util.Random;
 
+import farcore.lib.material.Mat;
 import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.tile.instance.TEOre;
 import nebula.common.tile.IToolableTile;
@@ -21,6 +22,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PropertyOre extends PropertyBlockable implements IOreProperty
 {
+	public PropertyOre(Mat material, int harvestLevel, float hardness, float explosionResistance)
+	{
+		super(material, harvestLevel, hardness, explosionResistance);
+	}
+	
 	@Override
 	public void updateTick(TEOre ore, Random rand)
 	{
@@ -83,8 +89,9 @@ public class PropertyOre extends PropertyBlockable implements IOreProperty
 	{
 		IOreProperty oreProperty;
 		
-		public PropertyOreWrapper(IOreProperty oreProperty)
+		public PropertyOreWrapper(Mat material, int harvestLevel, float hardness, float explosionResistance, IOreProperty oreProperty)
 		{
+			super(material, harvestLevel, hardness, explosionResistance);
 			this.oreProperty = oreProperty;
 		}
 		

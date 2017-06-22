@@ -26,8 +26,9 @@ import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.block.instance.BlockPlank;
-import farcore.lib.block.instance.BlockRock;
-import farcore.lib.block.instance.BlockSoil;
+import farcore.lib.block.terria.BlockRock;
+import farcore.lib.block.terria.BlockSand;
+import farcore.lib.block.terria.BlockSoil;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.behavior.IItemMatProp;
 import farcore.lib.material.ore.IOreProperty;
@@ -46,6 +47,7 @@ import nebula.base.IntegerMap;
 import nebula.base.Judgable;
 import nebula.base.Register;
 import nebula.common.LanguageManager;
+import nebula.common.block.IBlockBehavior;
 import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.util.A;
 import nebula.common.util.Game;
@@ -55,6 +57,7 @@ import nebula.common.util.ItemStacks;
 import nebula.common.util.SubTag;
 import nebula.io.javascript.ScriptLoad;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Bootstrap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
@@ -73,12 +76,9 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 * Default material, will not register in to list.<p>
 	 * The default result when fail to search material from list.
 	 */
-	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void")
-			.setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0)
-			.setHandable(1.0F)
-			.setCrop(ICrop.VOID)
-			.setWood(0.0F, 0.0F, 0.0F)
-			.setTree(ITree.VOID);
+	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void");
+	
+	private static boolean initalizeFlag = false;
 	
 	public static final INBTReaderAndWritter<Mat, NBTTagString> WITH_NULL_RW = new INBTReaderAndWritter<Mat, NBTTagString>()
 	{
@@ -102,7 +102,19 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	static
 	{
-		VOID.addProperty(MP.property_wood, PropertyTree.VOID);
+		if (Bootstrap.isRegistered())
+		{
+			VOID
+			.setToolable(0, 1, 1.0F, 0.0F, 1.0F, 1.0F, 0)
+			.setHandable(1.0F)
+			.addProperty(MP.property_crop, ICrop.VOID)
+			.addProperty(MP.property_wood, PropertyTree.VOID);
+		}
+		/**
+		 * For debugging use, generate model file, export material properties, etc.<p>
+		 * The game will not initialize so it need prevent using class needed initialized.
+		 */
+		else System.out.println("The material may be in debug enviorment, skip VOID property registeration.");
 	}
 	
 	public static Register<Mat> materials()
@@ -308,9 +320,21 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		return addProperty(MP.property_basic, property);
 	}
 	
+	public Mat setToolProp(int maxUses, int harvestLevel, float hardness, float brittleness, float damageToEntity, float attackSpeedMutiple)
+	{
+		add(SubTags.TOOL);
+		this.toolMaxUse = maxUses;
+		this.toolHarvestLevel = harvestLevel;
+		this.toolHardness = hardness;
+		this.toolBrittleness = brittleness;
+		this.toolDamageToEntity = damageToEntity;
+		addProperty(MP.tool_attackspeed, attackSpeedMutiple);
+		return this;
+	}
+	
 	public Mat setMetalic(int harvestLevel, float hardness, float resistance)
 	{
-		MetalBlockBehavior behavior = new MetalBlockBehavior<>();
+		MetalBlockBehavior behavior = new MetalBlockBehavior<>(this, harvestLevel, hardness, resistance);
 		behavior.explosionResistance = resistance;
 		behavior.hardness = hardness;
 		behavior.harvestLevel = harvestLevel;
@@ -356,7 +380,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		PropertyOre property;
 		if(oreProperty == IOreProperty.PROPERTY)
 		{
-			property = new PropertyOre();
+			property = new PropertyOre(this, harvestLevel, hardness, resistance);
 		}
 		else if(oreProperty instanceof PropertyOre)
 		{
@@ -364,24 +388,19 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		}
 		else
 		{
-			property = new PropertyOre.PropertyOreWrapper(oreProperty);
+			property = new PropertyOre.PropertyOreWrapper(this, harvestLevel, hardness, resistance, oreProperty);
 		}
-		property.material = this;
-		property.harvestLevel = harvestLevel;
-		property.hardness = hardness;
-		property.explosionResistance = resistance;
 		add(SubTags.ORE, type);
 		return addProperty(MP.property_ore, property);
 	}
 	
 	public Mat setWood(float woodHardness, float ashcontent, float woodBurnHeat)
 	{
-		PropertyWood property = new PropertyWood();
-		property.hardness = 1.5F + woodHardness / 4F;
-		property.explosionResistance = 0.4F + woodHardness / 8F;
-		property.harvestLevel = 1;
-		property.ashcontent = ashcontent;
-		property.burnHeat = woodBurnHeat;
+		PropertyWood property = new PropertyWood(this, 1,
+				1.5F + woodHardness / 4F,
+				0.4F + woodHardness / 8F,
+				ashcontent,
+				woodBurnHeat);
 		addProperty(MP.fallen_damage_deduction, (int) (1000 / (woodHardness + 1)));
 		addProperty(MP.flammability, 50);
 		addProperty(MP.fire_encouragement, 4);
@@ -406,7 +425,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setTree(ITree tree, boolean createBlock)
 	{
 		PropertyWood property0 = this.propertyMap.get(MP.property_wood);
-		PropertyTree property = new PropertyTree.PropertyTreeWrapper(tree);
+		PropertyTree property = new PropertyTree.PropertyTreeWrapper(property0, tree);
 		property.ashcontent = property0.ashcontent;
 		property.burnHeat = property0.burnHeat;
 		property.explosionResistance = property0.explosionResistance;
@@ -430,11 +449,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	
 	public Mat setSoil(float hardness, float resistance, Material material)
 	{
-		PropertyBlockable property = new PropertyBlockable();
-		property.material = this;
-		property.harvestLevel = -1;//It seems no soil need use tool to harvest.
-		property.hardness = hardness;
-		property.explosionResistance = resistance;
+		PropertyBlockable property = new PropertyBlockable(
+				this,
+				-1,//It seems no soil need use tool to harvest.
+				hardness,
+				resistance);
 		if(Config.createSoil)
 		{
 			property.block = new BlockSoil(this.modid, "soil." + this.name, material, this, property);
@@ -443,18 +462,26 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		return addProperty(MP.property_soil, property);
 	}
 	
-	public Mat setRock(int harvestLevel, float hardness, float resistance, RockBehavior behavior)
+	public Mat setSand(float hardness, float resistance)
 	{
-		behavior.harvestLevel = harvestLevel;
-		behavior.hardness = hardness;
-		behavior.explosionResistance = resistance;
+		PropertyBlockable property = new PropertyBlockable<>(this, 1, hardness, resistance);
+		property.block = new BlockSand(this.modid, "sand." + this.name, this, property);
+		addProperty(MP.property_sand, property);
+		property = new RockBehavior(this, 3, hardness * 5, resistance * 3);
+		property.block = new BlockRock(this, (IBlockBehavior<BlockRock>) property);
+		add(SubTags.SAND, SubTags.ROCK);
+		return addProperty(MP.property_rock, (RockBehavior<?>) property);
+	}
+	
+	public Mat setRock(RockBehavior behavior)
+	{
 		behavior.block = new BlockRock(this, behavior);
 		add(SubTags.ROCK);
 		return addProperty(MP.property_rock, behavior);
 	}
 	public Mat setRock(int harvestLevel, float hardness, float resistance)
 	{
-		return setRock(harvestLevel, hardness, resistance, new RockBehavior(this));
+		return setRock(new RockBehavior(this, harvestLevel, hardness, resistance));
 	}
 	
 	public Mat setCrop(ICrop crop)

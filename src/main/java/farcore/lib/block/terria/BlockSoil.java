@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package farcore.lib.block.instance;
+package farcore.lib.block.terria;
 
 import static nebula.common.data.Misc.PROP_EAST;
 import static nebula.common.data.Misc.PROP_NORTH;

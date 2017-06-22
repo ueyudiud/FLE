@@ -4,7 +4,7 @@ import fle.core.handler.FleEntityHandler;
 import fle.core.tile.ditchs.DefaultDitchFactory;
 import fle.loader.BlocksItems;
 import fle.loader.Entities;
-import fle.loader.FLEConfig;
+import fle.loader.Configs;
 import fle.loader.Materials;
 import fle.loader.Recipes;
 import fle.loader.Tools;
@@ -16,7 +16,7 @@ public class CommonLoader
 {
 	public void init(FMLPreInitializationEvent event)
 	{
-		FLEConfig.init();
+		Configs.init();
 		new DefaultDitchFactory();
 		Materials.preinit();
 		BlocksItems.registerItemsAndBlocks();

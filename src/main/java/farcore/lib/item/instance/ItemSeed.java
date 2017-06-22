@@ -177,6 +177,12 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	}
 	
 	@Override
+	public int getMaxItemUseDuration(ItemStack stack)
+	{
+		return getEatDuration(stack);
+	}
+	
+	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
 	{

@@ -8,7 +8,7 @@ import farcore.data.MC;
 import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.block.behavior.RockBehavior;
-import farcore.lib.block.instance.BlockRock;
+import farcore.lib.block.terria.BlockRock;
 import farcore.lib.entity.IEntityDamageEffect;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;

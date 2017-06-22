@@ -6,7 +6,7 @@ package farcore.lib.block.behavior;
 
 import java.util.Random;
 
-import farcore.lib.block.instance.BlockRock;
+import farcore.lib.block.terria.BlockRock;
 import farcore.lib.material.Mat;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
@@ -20,9 +20,9 @@ import net.minecraft.world.World;
  */
 public class RockBehaviorFlammable<B extends BlockRock> extends RockBehavior<B>
 {
-	public RockBehaviorFlammable(Mat material)
+	public RockBehaviorFlammable(Mat material, int harvestLevel, float hardness, float explosionResistance)
 	{
-		super(material);
+		super(material, harvestLevel, hardness, explosionResistance);
 	}
 	
 	@Override
