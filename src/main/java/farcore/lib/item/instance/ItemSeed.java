@@ -24,6 +24,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -150,6 +151,12 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 	{
 		PropertyEdible property = getMaterialFromItem(stack).getProperty(MP.property_edible);
 		return property == null ? null : property.waterLevel;
+	}
+	
+	@Override
+	public EnumAction getItemUseAction(ItemStack stack)
+	{
+		return isDrink(stack) ? EnumAction.DRINK : EnumAction.EAT;
 	}
 	
 	@Override
