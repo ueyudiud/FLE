@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.load;
 
 import com.google.common.collect.ImmutableMap;
@@ -19,6 +23,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * @author ueyudiud
+ */
 @SideOnly(Side.CLIENT)
 public class ClientLoader extends CommonLoader
 {

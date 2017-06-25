@@ -1,0 +1,16 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "fle:crop/lattice"
+	},
+	"variants": {
+		"state": {
+			"1": { "textures": { "crop": "fle:blocks/crop/rutabaga/1" } },
+			"2": { "textures": { "crop": "fle:blocks/crop/rutabaga/2" } },
+			"3": { "textures": { "crop": "fle:blocks/crop/rutabaga/3" } },
+			"4": { "textures": { "crop": "fle:blocks/crop/rutabaga/4" } },
+			"5": { "textures": { "crop": "fle:blocks/crop/rutabaga/5" } }
+		}
+	}
+}

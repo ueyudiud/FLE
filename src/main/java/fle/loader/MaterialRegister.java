@@ -4,17 +4,15 @@
 
 package fle.loader;
 
-import farcore.lib.material.IMaterialRegister;
-
 /**
  * @author ueyudiud
  */
-public enum MaterialRegister implements IMaterialRegister
+public enum MaterialRegister implements Runnable
 {
 	INSTANCE;
 	
 	@Override
-	public void registerMaterials()
+	public void run()
 	{
 		Crops.init();
 		Trees.init();

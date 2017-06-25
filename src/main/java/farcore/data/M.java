@@ -8,7 +8,6 @@ import static farcore.FarCoreRegistry.MATERIAL_REGISTERS;
 
 import farcore.FarCore;
 import farcore.lib.block.behavior.RockBehaviorFlammable;
-import farcore.lib.material.IMaterialRegister;
 import farcore.lib.material.Mat;
 import farcore.lib.material.behavior.metal.MatBehaviorCopper;
 import farcore.lib.plant.PlantBristlegrass;
@@ -167,15 +166,16 @@ public class M
 	
 	public static void init()
 	{
-		for(IMaterialRegister register : MATERIAL_REGISTERS)
+		for(Runnable register : MATERIAL_REGISTERS)
 		{
 			try
 			{
-				register.registerMaterials();
+				register.run();
 			}
 			catch (Exception exception)
 			{
-				Log.warn("Caught an exception during {} is registering materials.", exception, register.toString());
+				Log.catching(exception);
+				Log.warn("Caught an exception during {} is registering materials.", register.toString());
 			}
 		}
 	}

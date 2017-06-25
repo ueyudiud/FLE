@@ -13,8 +13,8 @@ public class TEUpdatable extends TECustomName implements ITickable
 	 */
 	protected class TimeMarker
 	{
-		final int duration;
-		final Runnable runnable;
+		public final int duration;
+		private final Runnable runnable;
 		
 		public TimeMarker(int duration, Runnable runnable)
 		{
@@ -22,7 +22,12 @@ public class TEUpdatable extends TECustomName implements ITickable
 			this.runnable = runnable;
 		}
 		
-		int delay;
+		private int delay;
+		
+		public int getDelay()
+		{
+			return this.delay;
+		}
 		
 		public void onUpdate()
 		{

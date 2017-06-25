@@ -37,7 +37,7 @@ public class BlockCarvedRock extends BlockSingleTE
 	public void registerRender()
 	{
 		super.registerRender();
-		FarCoreRegistry.setBuildinModel(this);
+		FarCoreRegistry.registerBuiltInModelBlock(this);
 		Game.registerItemModel(this.item, 0, FarCore.ID, "rock.stone.resource");
 		ClientRegistry.bindTileEntitySpecialRenderer(TECustomCarvedStone.class, new TESRCarvedRock());
 	}

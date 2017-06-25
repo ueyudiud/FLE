@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.command;
 
 import farcore.lib.world.CalendarHandler;
@@ -7,6 +11,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
+/**
+ * @author ueyudiud
+ */
 public class CommandDate extends CommandBase
 {
 	@Override

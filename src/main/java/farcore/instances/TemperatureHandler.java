@@ -2,11 +2,13 @@ package farcore.instances;
 
 import farcore.energy.thermal.IWorldThermalHandler;
 import nebula.common.block.BlockStandardFluid;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
+import net.minecraftforge.fluids.FluidRegistry;
 
 public class TemperatureHandler implements IWorldThermalHandler
 {
@@ -32,8 +34,12 @@ public class TemperatureHandler implements IWorldThermalHandler
 	public float getTemperature(World world, BlockPos pos, float baseTemp)
 	{
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() instanceof BlockFluidBase)
+		if (state.getBlock() instanceof BlockFluidBase)
 			return Math.max(((BlockFluidBase) state.getBlock()).getFluid().getTemperature(world, pos), baseTemp);
+		if (state.getBlock() instanceof BlockLiquid)
+		{
+			return state.getMaterial() == Material.WATER ? baseTemp * 0.95F : FluidRegistry.LAVA.getTemperature();
+		}
 		return -1;
 	}
 }

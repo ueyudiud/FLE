@@ -47,6 +47,11 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 		}
 	}
 	
+	public boolean isEmpty()
+	{
+		return this.allWeight == 0;
+	}
+	
 	/**
 	 * Clean selector target list.
 	 */

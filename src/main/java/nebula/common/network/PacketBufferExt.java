@@ -62,4 +62,20 @@ public class PacketBufferExt extends PacketBuffer
 			writeCompoundTag(stack.tag);
 		}
 	}
+	
+	public void readFixedIntArray(int[] array) throws IOException
+	{
+		for (int i = 0; i < array.length; ++i)
+		{
+			array[i] = readInt();
+		}
+	}
+	
+	public void writeFixedIntArray(int[] array) throws IOException
+	{
+		for (int element : array)
+		{
+			writeInt(element);
+		}
+	}
 }

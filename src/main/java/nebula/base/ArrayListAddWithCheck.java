@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 /**
  * @author ueyudiud
  */
@@ -41,7 +43,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	}
 	
 	@Override
-	public boolean add(E e)
+	public boolean add(@Nullable E e)
 	{
 		if (this.checker.test(e))
 		{
@@ -51,7 +53,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	}
 	
 	@Override
-	public void add(int index, E element)
+	public void add(int index, @Nullable E element)
 	{
 		if (this.checker.test(element))
 		{
@@ -61,14 +63,14 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	}
 	
 	@Override
-	public boolean addAll(Collection<? extends E> c)
+	public boolean addAll(@Nullable Collection<? extends E> c)
 	{
-		return super.addAll(argument(c.stream().filter(this.checker).toArray()));
+		return c == null ? false : super.addAll(argument(c.stream().filter(this.checker).toArray()));
 	}
 	
 	@Override
-	public boolean addAll(int index, Collection<? extends E> c)
+	public boolean addAll(int index, @Nullable Collection<? extends E> c)
 	{
-		return super.addAll(index, new ArrayListArgument<E>(c.stream().filter(this.checker).toArray()));
+		return c == null ? false : super.addAll(index, new ArrayListArgument<E>(c.stream().filter(this.checker).toArray()));
 	}
 }

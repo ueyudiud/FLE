@@ -1,5 +1,7 @@
 package farcore.energy.thermal;
 
+import static nebula.common.util.Direction.DIRECTIONS_3D;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -104,7 +106,7 @@ public class ThermalNet implements IEnergyNet
 			double tempD = temp;
 			tempD *= 6;
 			int c = 6;
-			for(Direction direction : Direction.DIRECTIONS_3D)
+			for(Direction direction : DIRECTIONS_3D)
 			{
 				BlockPos pos2 = direction.offset(pos);
 				tempD += getTemperature(world, pos2, false);
@@ -121,7 +123,7 @@ public class ThermalNet implements IEnergyNet
 		double temp = getTemperature(world, pos, false);
 		double delta = 0;
 		int c = 0;
-		for(Direction direction : Direction.DIRECTIONS_3D)
+		for(Direction direction : DIRECTIONS_3D)
 		{
 			delta += Math.abs(temp - getTemperature(world, direction.offset(pos), false));
 			c++;
@@ -374,15 +376,15 @@ public class ThermalNet implements IEnergyNet
 			try
 			{
 				//Cached current.
-				double[] current = new double[Direction.DIRECTIONS_3D.length];
+				double[] current = new double[DIRECTIONS_3D.length];
 				//Update tile.
 				for(IThermalHandler tile : this.map.values())
 				{
 					Arrays.fill(current, 0);
 					//Get cache current from each direction.
-					for(int i = 0; i < Direction.DIRECTIONS_3D.length; ++i)
+					for(int i = 0; i < DIRECTIONS_3D.length; ++i)
 					{
-						Direction direction = Direction.DIRECTIONS_3D[i];
+						Direction direction = DIRECTIONS_3D[i];
 						if(tile.canConnectTo(direction))
 						{
 							this.cachedPos = direction.offset(tile.pos());
@@ -441,7 +443,7 @@ public class ThermalNet implements IEnergyNet
 					//Send cached energy.
 					for(int i = 0; i < current.length; ++i)
 					{
-						tile.onHeatChange(Direction.DIRECTIONS_3D[i], -current[i]);
+						tile.onHeatChange(DIRECTIONS_3D[i], -current[i]);
 					}
 					this.cachedList.add(tile);
 				}
@@ -478,7 +480,7 @@ public class ThermalNet implements IEnergyNet
 							this.map.put(handler.pos(), handler);
 						}
 						break;
-					case mark :
+					default ://case mark :
 						break;
 					}
 				}
@@ -508,7 +510,7 @@ public class ThermalNet implements IEnergyNet
 							L.remove(this.map2, pos, entry.getKey());
 						}
 						break;
-					case mark :
+					default ://case mark :
 						break;
 					}
 				}

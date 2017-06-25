@@ -12,7 +12,6 @@ import farcore.energy.IEnergyNet;
 import farcore.energy.thermal.IWorldThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
-import farcore.lib.material.IMaterialRegister;
 import farcore.lib.world.IWorldGenerateReplacer;
 import nebula.Log;
 import nebula.client.ClientProxy;
@@ -45,20 +44,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Here provide most of registration for FarCore and Minecraft.
  * @author ueyudiud
- *
  */
 public class FarCoreRegistry
 {
-	/**
-	 * The material registers.
-	 */
-	public static final List<IMaterialRegister> MATERIAL_REGISTERS = new ArrayList<>();
-	/**
-	 * The world generate replacer during world generating.
-	 */
+	/** The material registers. */
+	public static final List<Runnable> MATERIAL_REGISTERS = new ArrayList<>();
+	
+	/** The world generate replacer during world generating. */
 	public static final List<IWorldGenerateReplacer> WORLD_GENERATE_REPLACERS = new ArrayList<>();
 	
-	public static void addMaterialRegister(IMaterialRegister register)
+	/**
+	 * Add material register.<p>
+	 * The material should initalized before block, items, etc. For loading material,
+	 * a material register is needed.<p>
+	 * Call this method before {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent}.
+	 * @param register the material register.
+	 */
+	public static void addMaterialRegister(Runnable register)
 	{
 		MATERIAL_REGISTERS.add(register);
 	}
@@ -77,6 +79,7 @@ public class FarCoreRegistry
 	 * Register tile to map.
 	 * @param id The save name of tile entity.
 	 * @param tileEntityClass The tile entity class.
+	 * @see net.minecraft.tileentity.TileEntity#addMapping(Class, String)
 	 */
 	public static void registerTileEntity(String id, Class<? extends TileEntity> tileEntityClass)
 	{
@@ -85,7 +88,10 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register tile entity special render.
-	 * @param tesrClass
+	 * @param <T> the tile entity type.
+	 * @param tileEntityClass the tile entity class.
+	 * @param renderer the tile entity renderer.
+	 * @see net.minecraftforge.fml.client.registry.ClientRegistry#bindTileEntitySpecialRenderer(Class, TileEntitySpecialRenderer)
 	 */
 	public static <T extends TileEntity> void registerTESR(Class<T> tileEntityClass, TileEntitySpecialRenderer<? super T> renderer)
 	{
@@ -94,7 +100,9 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register tile entity special render.
-	 * @param tesrClass
+	 * @param <T> the tile entity type.
+	 * @param tesrClass the tile entity special renderer.
+	 * @see net.minecraftforge.fml.client.registry.ClientRegistry#bindTileEntitySpecialRenderer(Class, TileEntitySpecialRenderer)
 	 */
 	public static <T extends TileEntity> void registerTESR(Class<? extends TileEntitySpecialRenderer<T>> tesrClass)
 	{
@@ -115,6 +123,12 @@ public class FarCoreRegistry
 		}
 	}
 	
+	/**
+	 * Mark block render by built-in model(TESR), which will not
+	 * tried to load model in file.
+	 * @param block the marked block.
+	 * @see net.minecraft.client.renderer.BlockModelShapes#registerBuiltInBlocks(Block...)
+	 */
 	public static void registerBuiltInModelBlock(Block block)
 	{
 		ClientProxy.registerBuildInModel(block);
@@ -122,7 +136,8 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register event listener to minecraft forge event bus.
-	 * @param object
+	 * @param listener the listener.
+	 * @see net.minecraftforge.common.MinecraftForge#EVENT_BUS
 	 */
 	public static void registerEventListenerToMF(Object listener)
 	{
@@ -131,7 +146,8 @@ public class FarCoreRegistry
 	
 	/**
 	 * Added new energy net(Which handle in whole world).
-	 * @param net
+	 * @param net the energy net.
+	 * @see farcore.handler.FarCoreEnergyHandler#addNet(IEnergyNet)
 	 */
 	public static void registerEnergyNet(IEnergyNet net)
 	{
@@ -219,6 +235,12 @@ public class FarCoreRegistry
 		NebulaKeyHandler.register(id, keycode, modid);
 	}
 	
+	/**
+	 * Register a key for client side with current mod container.<br>
+	 * @param id The name of key.
+	 * @param keycode The key code, see Keyboard to get key.
+	 * @see org.lwjgl.input.Keyboard
+	 */
 	public static void registerKey(String id, int keycode)
 	{
 		NebulaKeyHandler.register(id, keycode);
@@ -269,16 +291,6 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Register an model need't use model by resource pack.
-	 * @param block
-	 */
-	@SideOnly(Side.CLIENT)
-	public static void setBuildinModel(Block block)
-	{
-		ClientProxy.registerBuildInModel(block);
-	}
-	
-	/**
 	 * Get a color map (2D coordinated RGB value), loaded from selected path.
 	 * @param location The location of color map.
 	 * @return The color map, it will be reload when resources reloading,
@@ -292,7 +304,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Added icon loader, for loading icon during resource manager reloaded.
-	 * @param loader
+	 * @param loader the icon loader.
 	 */
 	@SideOnly(Side.CLIENT)
 	public static void addIconLoader(IIconLoader loader)

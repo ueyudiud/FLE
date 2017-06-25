@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.load;
 
 import static farcore.data.Materials.ICE;
@@ -43,6 +47,7 @@ import farcore.lib.block.instance.BlockIce;
 import farcore.lib.block.instance.BlockMetal;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.block.instance.BlockSapling;
+import farcore.lib.block.instance.BlockScreen;
 import farcore.lib.block.instance.BlockWater;
 import farcore.lib.command.CommandSkill;
 import farcore.lib.fluid.FluidWater;
@@ -74,6 +79,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 
+/**
+ * @author ueyudiud
+ */
 public class CommonLoader
 {
 	public void preload()
@@ -153,6 +161,7 @@ public class CommonLoader
 		}
 		new BlockFire();
 		new BlockMetal();
+		new BlockScreen();
 		//Register tile entities.
 		bar.step("Register Tile Entities");
 		registerTileEntity(TECrop.class, "farcore.crop");

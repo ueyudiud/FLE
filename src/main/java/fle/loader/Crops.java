@@ -36,6 +36,7 @@ public class Crops
 		millet		.setCrop((crop1 = new CropTemplate(millet, 7, 900)).setFamily(family1).setMultiplicationProp(3, 6, 2).setDrop(()-> crop.getSubItem("millet"), 2));
 		family1.addJudgable(Judgable.or(explicit(1), explicit(2), explicit(3), explicit(4)), crop1);
 		soybean		.setCrop((crop1 = new CropTemplate(soybean, 6, 1600)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(5, 5, 2).setDrop(()-> crop.getSubItem("soybean_pod"), 2));
+		rutabaga	.setCrop((crop1 = new CropTemplate(rutabaga, 5, 1900)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(4, 5, 2).setDrop(()-> crop.getSubItem("rutabaga"), 1));
 		potato		.setCrop((crop1 = new CropTemplate(potato, 6, 1300)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(-1, 0, 0).setSeedMul(2));
 		sweet_potato.setCrop((crop1 = new CropTemplate(sweet_potato, 5, 1500)).setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(-1, 0, 0).setSeedMul(2));
 		reed	.setCrop((crop1 = new CropTemplate(reed, 5, 1400))	.setFamily(new FamilyTemplate<>(crop1)).setMultiplicationProp(-1, 0, 0).setSeedMul(3));
@@ -75,4 +76,5 @@ public class Crops
 	public static final Mat brussels_sprouts= new Mat(9012, FLE.MODID, "brussels_sprouts", "BrusselsSprouts", "Brussels Sprouts");
 	public static final Mat cauliflower		= new Mat(9013, FLE.MODID, "cauliflower", "Cauliflower", "Cauliflower");
 	public static final Mat purple_cabbage	= new Mat(9014, FLE.MODID, "purple_cabbage", "PurpleCabbage", "Purple Cabbage");
+	public static final Mat rutabaga		= new Mat(9015, FLE.MODID, "rutabaga", "Rutabaga", "Rutabaga");
 }

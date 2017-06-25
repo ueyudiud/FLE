@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package fle.core.handler;
 
 import org.lwjgl.opengl.GL11;
@@ -16,6 +20,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * 
+ * @author ueyudiud
+ */
 @SideOnly(Side.CLIENT)
 public class FleClientHandler
 {
