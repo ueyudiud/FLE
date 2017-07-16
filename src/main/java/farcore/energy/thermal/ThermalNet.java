@@ -17,6 +17,7 @@ import nebula.Nebula;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
+import nebula.common.util.Maths;
 import nebula.common.util.Worlds;
 import nebula.common.world.ICoord;
 import nebula.common.world.IObjectInWorld;
@@ -403,7 +404,7 @@ public class ThermalNet implements IEnergyNet
 									temp2 = getEnviormentTemperature(this.world, tile1.pos()) + tile1.getTemperatureDifference(direction.getOpposite());
 									if(!L.similar(temp, temp2))//Ignore small temperature difference.
 									{
-										tile1.onHeatChange(direction.getOpposite(), current[i] = (temp - temp2) * Math.sqrt(tc1 * tc2));
+										tile1.onHeatChange(direction.getOpposite(), current[i] = (temp - temp2) * Maths.log_average(tc1, tc2));
 									}
 								}
 								else
@@ -412,7 +413,7 @@ public class ThermalNet implements IEnergyNet
 									temp2 = getTemperature(this.world, this.cachedPos, false);
 									if(!L.similar(temp, temp2))//Ignore small temperature difference.
 									{
-										double v = (temp - temp2) * Math.sqrt(tc1 * tc2);
+										double v = (temp - temp2) * Maths.log_average(tc1, tc2);
 										current[i] = v;
 										if(v != 0)
 										{

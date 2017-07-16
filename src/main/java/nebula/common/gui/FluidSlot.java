@@ -22,6 +22,7 @@ public class FluidSlot
 	public int u;
 	public int v;
 	public int slotNumber;
+	public boolean renderHorizontal;
 	
 	public FluidSlot(FluidTankN tank, int x, int y, int u, int v)
 	{
@@ -30,6 +31,12 @@ public class FluidSlot
 		this.y = y;
 		this.u = u;
 		this.v = v;
+	}
+	
+	public FluidSlot setRenderHorizontal()
+	{
+		this.renderHorizontal = true;
+		return this;
 	}
 	
 	public FluidSlot setNoRender()
@@ -84,7 +91,7 @@ public class FluidSlot
 	{
 		if(this.shouldRender)
 		{
-			gui.drawFluid(this.x, this.y, this.tank.getInfo(), this.u, this.v);
+			gui.drawFluid(this.x, this.y, this.tank.getInfo(), this.u, this.v, this.renderHorizontal);
 		}
 	}
 	

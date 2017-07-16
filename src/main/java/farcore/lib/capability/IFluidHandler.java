@@ -7,6 +7,8 @@ package farcore.lib.capability;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 
 import nebula.common.fluid.FluidTankN;
@@ -14,6 +16,7 @@ import nebula.common.util.A;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -37,7 +40,7 @@ public interface IFluidHandler
 	
 	FluidStack drain(Direction direction, int maxAmount, boolean process);
 	
-	SidedFluidIOProperty getProperty(Direction direction);
+	@Nullable SidedFluidIOProperty getProperty(Direction direction);
 	
 	default boolean shouldProviedeFluidIOFrom(Direction direction) { return true; }
 	
@@ -215,6 +218,11 @@ public interface IFluidHandler
 		Direction direction;
 		IFluidHandler handler;
 		IFluidTankProperties[] properties;
+		
+		public FluidHandlerWrapper(TileEntity tile, EnumFacing direction)
+		{
+			this(tile, Direction.of(direction));
+		}
 		
 		public FluidHandlerWrapper(TileEntity tile, Direction direction)
 		{

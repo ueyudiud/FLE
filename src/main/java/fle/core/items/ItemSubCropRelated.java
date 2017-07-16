@@ -66,6 +66,7 @@ public class ItemSubCropRelated extends ItemSubEdible
 		addSubItem(1008, "purple_cabbage", "Purple Cabbage", new FoodStatBase(2.0F, 0.0F, 3.0F).setNutrition(EnumNutrition.VEGETABLE, 5.0F));
 		addSubItem(1009, "soybean_pod", "Soybean Pod", new FoodStatBase(2.0F, 0.5F, 1.0F).setNutrition(EnumNutrition.VEGETABLE, 1.0F).setNutrition(EnumNutrition.PROTEIN, 2.0F));
 		addSubItem(1010, "brussels_sprouts", "Brussels Sprouts", new FoodStatBase(2.0F, 0.0F, 2.0F).setNutrition(EnumNutrition.VEGETABLE, 4.0F));
+		addSubItem(2001, "plant_waste", "Plant Waste", NFS);
 	}
 	
 	public void addSubItem(int id, String name, String localName, IFoodStat stat, IBehavior... behaviors)

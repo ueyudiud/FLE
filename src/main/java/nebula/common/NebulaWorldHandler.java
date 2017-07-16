@@ -16,7 +16,6 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 
 import nebula.Log;
-import nebula.client.light.LightFix;
 import nebula.common.block.IUpdateDelayBlock;
 import nebula.common.util.Worlds;
 import nebula.common.world.IObjectInWorld;
@@ -155,7 +154,6 @@ public class NebulaWorldHandler
 	public void onUnload(WorldEvent.Unload event)
 	{
 		//Remove all calculation of light.
-		LightFix.onWorldUnload(event.getWorld());
 		int dim;
 		List<IObjectInWorld> list = objects.remove(dim = event.getWorld().provider.getDimension());
 		if(list != null)

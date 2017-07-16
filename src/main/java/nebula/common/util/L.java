@@ -44,10 +44,16 @@ public class L
 	private static final Random RNG = new Random();
 	
 	/**
-	 * sqrt(2) / 2 value, used in some calculation.
+	 * <tt>sqrt(2)</tt>, used in some calculation.
 	 */
-	public static final double SQRT_DIV2 = 0.707106781186;
+	public static final double SQRT2 = 1.4142135623730951;
 	
+	/**
+	 * Throw an exception.
+	 * @param <X> the fake result type.
+	 * @param t the exception.
+	 * @throws java.lang.RuntimeException
+	 */
 	public static <X> X throwWhenGet(RuntimeException t)
 	{
 		throw t;
@@ -56,7 +62,7 @@ public class L
 	/**
 	 * Count enabled bit size.
 	 * @param value
-	 * @return
+	 * @return size of enabled bit size, <tt>0x29</tt> will return <tt>3</tt> for example.
 	 */
 	public static int bitCounts(byte value)
 	{
@@ -64,19 +70,15 @@ public class L
 		while (value != 0)
 		{
 			if((value & 0x1) != 0)
-			{
 				++c;
-			}
 			value >>= 1;
 		}
 		return c;
 	}
 	
 	/**
-	 * Is two value similar.
-	 * @param a
-	 * @param b
-	 * @return
+	 * Return <tt>true</tt> if two value are similar.<br>
+	 * Use <tt>|a-b|<1.0^10-5</tt> to check.
 	 */
 	public static boolean similar(float a, float b)
 	{
@@ -85,10 +87,8 @@ public class L
 	}
 	
 	/**
-	 * Is two value similar.
-	 * @param a
-	 * @param b
-	 * @return
+	 * Return <tt>true</tt> if two value are similar.<br>
+	 * Use <tt>|a-b|<1.0^10-10</tt> to check.
 	 */
 	public static boolean similar(double a, double b)
 	{
@@ -99,9 +99,9 @@ public class L
 	/**
 	 * Cast value as ubyte (range from 0~255).
 	 * @param value
-	 * @return
+	 * @return the unsigned int value.
 	 */
-	public static int toUnsignedInt(byte value)
+	public static int uint(byte value)
 	{
 		return (value & 0xFF);
 	}
@@ -114,14 +114,14 @@ public class L
 	 */
 	public static int minusUbyte(byte v1, byte v2)
 	{
-		return toUnsignedInt(v1) - toUnsignedInt(v2);
+		return uint(v1) - uint(v2);
 	}
 	
 	/**
 	 * Combine quarter byte data.
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x first value.
+	 * @param y second value.
+	 * @param z third value.
 	 * @return the combined data.
 	 */
 	public static int index8i(int x, int y, int z)
@@ -131,9 +131,9 @@ public class L
 	
 	/**
 	 * Combine half byte data.
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x first value.
+	 * @param y second value.
+	 * @param z third value.
 	 * @return the combined data.
 	 */
 	public static int index12i(int x, int y, int z)
@@ -143,9 +143,9 @@ public class L
 	
 	/**
 	 * Combine byte data.
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x first value.
+	 * @param y second value.
+	 * @param z third value.
 	 * @return the combined data.
 	 */
 	public static int index24i(int x, int y, int z)
@@ -154,9 +154,9 @@ public class L
 	}
 	
 	/**
-	 * Cast {@link java.lang.Double} value to {@code double}
+	 * Cast {@link java.lang.Double} value to <tt>double</tt>
 	 * value safety.<p>
-	 * If argument is {@code null}, the result will be 0.
+	 * If argument is <tt>null</tt>, the result will be 0.
 	 * @param d
 	 * @return casted value.
 	 */
@@ -166,9 +166,9 @@ public class L
 	}
 	
 	/**
-	 * Cast {@link java.lang.Float} value to {@code float}
+	 * Cast {@link java.lang.Float} value to <tt>float</tt>
 	 * value safety.<p>
-	 * If argument is {@code null}, the result will be 0.
+	 * If argument is <tt>null</tt>, the result will be 0.
 	 * @param d
 	 * @return casted value.
 	 */
@@ -178,27 +178,27 @@ public class L
 	}
 	
 	/**
-	 * Cast {@link java.lang.Integer} value to {@code int}
+	 * Cast {@link java.lang.Integer} value to <tt>int</tt>
 	 * value safety.<p>
-	 * If argument is {@code null}, the result will be 0.
-	 * @param d
+	 * If argument is <tt>null</tt>, the result will be 0.
+	 * @param i
 	 * @return casted value.
 	 */
-	public static int cast(@Nullable Integer integer)
+	public static int cast(@Nullable Integer i)
 	{
-		return integer == null ? 0 : integer.intValue();
+		return i == null ? 0 : i.intValue();
 	}
 	
 	/**
-	 * Cast {@link java.lang.Short} value to {@code short}
+	 * Cast {@link java.lang.Short} value to <tt>short</tt>
 	 * value safety.<p>
-	 * If argument is {@code null}, the result will be 0.
-	 * @param d
+	 * If argument is <tt>null</tt>, the result will be 0.
+	 * @param s
 	 * @return casted value.
 	 */
-	public static short cast(@Nullable Short short1)
+	public static short cast(@Nullable Short s)
 	{
-		return short1 == null ? 0 : short1.shortValue();
+		return s == null ? 0 : s.shortValue();
 	}
 	
 	/**
@@ -214,9 +214,9 @@ public class L
 	}
 	
 	/**
-	 * Cast value as {@code unsigned byte} to {@code int}.
+	 * Cast value as <tt>unsigned byte</tt> to <tt>int</tt>.
 	 * @param val
-	 * @return
+	 * @return the unsigned byte value.
 	 */
 	public static int castPositive(byte val)
 	{

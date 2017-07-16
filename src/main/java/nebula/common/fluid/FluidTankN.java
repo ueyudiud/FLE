@@ -138,6 +138,16 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 		return drain(suggested.amount, !simulate);
 	}
 	
+	public boolean insertFluid(FluidStack stack, boolean simulate)
+	{
+		if (fill(stack, false) == stack.amount)
+		{
+			fill(stack, true);
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public int insertFluid(FluidStack stack, Direction from, boolean simulate)
 	{

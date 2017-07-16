@@ -50,7 +50,7 @@ public class RecipeCraftingTool
 		addGeneralToolRecipe("axe.rock", new BaseStack(MC.axe_rock.instance));
 	}
 	
-	private static final List<Entry<AbstractStack, Mat>> LIST  = new ArrayList<>();
+	private static final List<Entry<AbstractStack, Mat>> LIST = new ArrayList<>();
 	private static final BiConsumer<ItemStack, ItemStack> CONSUMER1 = (input, output) -> {
 		Mat material = ItemMulti.getMaterial(input);
 		ItemTool.setMaterialToItem(output, "head", material);

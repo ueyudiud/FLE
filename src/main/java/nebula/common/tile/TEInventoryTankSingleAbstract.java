@@ -4,6 +4,9 @@
 
 package nebula.common.tile;
 
+import javax.annotation.Nullable;
+
+import farcore.lib.capability.IFluidHandler;
 import nebula.common.fluid.FluidStackExt;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.util.Direction;
@@ -13,7 +16,8 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @author ueyudiud
  */
-public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic implements IFluidHandlerIO
+public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic
+implements IFluidHandlerIO, IFluidHandler
 {
 	protected boolean syncTankState = true;
 	
@@ -23,6 +27,49 @@ public abstract class TEInventoryTankSingleAbstract extends TEInventoryBasic imp
 	}
 	
 	protected abstract FluidTankN tank();
+	
+	protected boolean canAccessWithTank(Direction direction)
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean canFill(Direction direction, FluidStack stack)
+	{
+		return canAccessWithTank(direction) && tank().canExtractFluidWithType(direction, stack);
+	}
+	
+	@Override
+	public boolean canDrain(Direction direction, @Nullable FluidStack stack)
+	{
+		return canAccessWithTank(direction) && tank().canInsertFluid(direction, stack);
+	}
+	
+	@Override
+	public int fill(Direction direction, FluidStack resource, boolean process)
+	{
+		if (canFill(direction, resource))
+		{
+			return tank().fill(resource, process);
+		}
+		return 0;
+	}
+	
+	@Override
+	public FluidStack drain(Direction direction, int maxAmount, boolean process)
+	{
+		if (canDrain(direction, null))
+		{
+			return tank().drain(maxAmount, process);
+		}
+		return null;
+	}
+	
+	@Override
+	public SidedFluidIOProperty getProperty(Direction direction)
+	{
+		return canAccessWithTank(direction) ? new SidedFluidIOTankNPropertyWrapper(tank()) : null;
+	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)

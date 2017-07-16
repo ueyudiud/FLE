@@ -4,7 +4,7 @@
 
 package nebula.client.util;
 
-import static nebula.common.util.L.SQRT_DIV2;
+import static nebula.common.util.L.SQRT2;
 
 import java.util.function.Function;
 
@@ -23,7 +23,7 @@ import net.minecraft.util.math.Vec3i;
  */
 public class CoordTransformer implements Cloneable
 {
-	static final double[][] MODEL_ROTATION_VAL = {{1, 0}, {SQRT_DIV2, SQRT_DIV2}, {0, 1}, {-SQRT_DIV2, SQRT_DIV2}, {-1, 0}};
+	static final double[][] MODEL_ROTATION_VAL = {{1, 0}, {SQRT2/2, SQRT2/2}, {0, 1}, {-SQRT2/2, SQRT2/2}, {-1, 0}};
 	
 	double[] oppisite, rotation, scale, transform;
 	boolean changed;

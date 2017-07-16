@@ -116,6 +116,7 @@ public class ShapedFleRecipe implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn)
 	{
+		//The player argument get.
 		EntityPlayer player = ForgeHooks.getCraftingPlayer();
 		if (this.forcePlayerContain && player == null)
 			return false;
@@ -125,6 +126,11 @@ public class ShapedFleRecipe implements IRecipe
 		return getOffset(inv) != null;
 	}
 	
+	/**
+	 * Checking could player crafting this recipe.
+	 * @parm world the crafting world.
+	 * @parm player the crafting player.
+	 */
 	protected boolean matchPlayerCondition(World world, EntityPlayer player)
 	{
 		return true;

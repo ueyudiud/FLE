@@ -8,15 +8,14 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
+import farcore.data.Capabilities;
 import nebula.base.Ety;
 import nebula.base.IntegerEntry;
 import nebula.common.tile.IFluidHandlerIO;
 import nebula.common.util.Direction;
 import nebula.common.util.FluidStacks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
@@ -24,8 +23,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  */
 public class FluidContainerHandler
 {
-	static final Capability<IFluidHandler> CAPABILITY = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
-	
 	public static @Nullable Entry<ItemStack, FluidStack> drainContainerToIO(ItemStack stack, int maxDrain, IFluidHandlerIO io, Direction from, boolean fullyDrain, boolean simulate)
 	{
 		FluidStack stack1;
@@ -65,9 +62,9 @@ public class FluidContainerHandler
 				}
 			}
 		}
-		if (stack.hasCapability(CAPABILITY, null))
+		if (stack.hasCapability(Capabilities.CAPABILITY_FLUID, null))
 		{
-			IFluidHandler handler = stack.getCapability(CAPABILITY, null);
+			IFluidHandler handler = stack.getCapability(Capabilities.CAPABILITY_FLUID, null);
 			FluidStack stack2 = handler.drain(Integer.MAX_VALUE, true);
 			if (stack2 != null && io.canInsertFluid(from, stack2))
 			{
@@ -128,9 +125,9 @@ public class FluidContainerHandler
 				}
 			}
 		}
-		if (stack.hasCapability(CAPABILITY, null))
+		if (stack.hasCapability(Capabilities.CAPABILITY_FLUID, null))
 		{
-			IFluidHandler handler = stack.getCapability(CAPABILITY, null);
+			IFluidHandler handler = stack.getCapability(Capabilities.CAPABILITY_FLUID, null);
 			int amount = handler.fill(resource, true);
 			if (amount > 0)
 			{

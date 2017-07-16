@@ -5,6 +5,7 @@
 package fle.api.recipes.instance;
 
 import static nebula.common.data.NBTLSs.RW_FLOAT;
+import static nebula.common.data.NBTLSs.RW_FLUIDSTACK;
 import static nebula.common.data.NBTLSs.RW_INT;
 import static nebula.common.data.NBTLSs.RW_ITEMSTACK;
 import static nebula.common.data.NBTLSs.RW_UNORDERED_ITEMSTACKS;
@@ -46,6 +47,15 @@ public class RecipeMaps
 	TemplateRecipeMap.<ItemStack>builder("fle.washing.bar.grizzly")
 	.addCacheEntry("time", RW_INT)
 	.addCacheEntry("outputs", RW_UNORDERED_ITEMSTACKS).build();
+	//NAME        : fle.oil.mill.lever
+	//NBT ENTRY   : time(int), output1(ItemStack), output2(FluidStack)
+	//DISPLAYMENTS: input(AbstractStack), duration(int), output1(ItemStack), output1Chances(int[]), output2(FluidStack), output2Range(long)
+	public static final
+	TemplateRecipeMap<ItemStack> LEVER_OIL_MILL =
+	TemplateRecipeMap.<ItemStack>builder("fle.oil.mill.lever")
+	.addCacheEntry("time", RW_INT)
+	.addCacheEntry("output1", RW_ITEMSTACK)
+	.addCacheEntry("output2", RW_FLUIDSTACK).build();
 	//NAME        : fle.portable.woodwork
 	public static final
 	PortableWoodworkRecipeMap PORTABLE_WOODWORK =

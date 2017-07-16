@@ -347,7 +347,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 					float minZ = (float) v1 / (float) v;
 					float maxZ = (float) (v1 + 1) / (float) v;
 					float minY;
-					float maxY = (L.toUnsignedInt(height[idx]) + 1) * PLATE_HEIGHT / 256F;
+					float maxY = (L.uint(height[idx]) + 1) * PLATE_HEIGHT / 256F;
 					if(u1 == 0 || L.minusUbyte(height[idx - 1], height[idx]) > 0)
 					{
 						minY = u1 == 0 ? 0 : value(height[idx - 1]) * PLATE_HEIGHT / 256F;
@@ -414,6 +414,6 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	
 	private static int value(byte value)
 	{
-		return value == 0 ? 0 : L.toUnsignedInt(value) + 1;
+		return value == 0 ? 0 : L.uint(value) + 1;
 	}
 }

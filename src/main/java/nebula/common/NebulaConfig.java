@@ -21,8 +21,7 @@ public class NebulaConfig
 	@ConfigComment("Enable this option will needed driking water to be alive.")
 	public static boolean enableWaterStat;
 	//Client
-	@ConfigProperty(category = "client", defValue = "false")
-	@ConfigComment("The light checking takes lots of time, enable this option to decrease the effect of light checking (But may use more memory).")
+	@Deprecated
 	public static boolean multiThreadLight;
 	@ConfigProperty(category = "client", defValue = "true")
 	@ConfigComment("Disable this option will let quad data be caculated during rendering, this will release some memory, but take more time to rendering.")
