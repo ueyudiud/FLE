@@ -9,6 +9,7 @@ import nebula.common.gui.ContainerTileInventory;
 import nebula.common.gui.FluidSlot;
 import nebula.common.gui.IGuiActionListener;
 import nebula.common.gui.SlotBase;
+import nebula.common.gui.SlotOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -22,7 +23,7 @@ public class ContainerLeverOilMill extends ContainerTileInventory<TELeverOilMill
 		super(tile, player);
 		int id = this.inventorySlots.size();
 		addSlotToContainer(new SlotBase(tile, 0, 61, 21));
-		addSlotToContainer(new SlotBase(tile, 1, 98, 21));
+		addSlotToContainer(new SlotOutput(tile, 1, 98, 21));
 		addSlotToContainer(new FluidSlot(tile.tank, 60, 56, 20, 8).setRenderHorizontal());
 		TL
 		input = new TL(id)

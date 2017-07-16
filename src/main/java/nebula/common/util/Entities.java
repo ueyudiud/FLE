@@ -8,6 +8,7 @@ import nebula.common.data.DataSerializers;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * @author ueyudiud
@@ -15,6 +16,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 public final class Entities
 {
 	private Entities() {}
+	
+	public static double distanceSq(Entity entity, BlockPos pos)
+	{
+		return entity.getDistanceSqToCenter(pos);
+	}
 	
 	public static double velocitySq(Entity entity)
 	{

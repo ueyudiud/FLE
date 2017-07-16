@@ -14,6 +14,8 @@ import java.util.IllegalFormatException;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
 
@@ -26,13 +28,19 @@ public class LanguageManager
 {
 	/** The default locale of manager. */
 	public static final String ENGLISH = "en_US";
-	/** Load from language file. */
+	/** Localization map loaded from language file. */
 	private static final Map<String, Map<String, String>> MAP1 = new HashMap<>();
-	/** Load from code. */
+	/** Localization map loaded from byte code. */
 	private static final Map<String, String> MAP2 = new HashMap<>();
 	private static final FileFilter FILTER = file -> file.getName().endsWith(".lang");
+	/** Marker of reloading translation map from file. */
 	private static boolean loadFile = false;
 	
+	/**
+	 * Register tooltips (List of localize string) to localization map.
+	 * @param unlocalized the unlocalize string.
+	 * @param localized the localized strings.
+	 */
 	public static void registerTooltip(String unlocalized, String...localized)
 	{
 		if (localized.length == 1)
@@ -61,6 +69,12 @@ public class LanguageManager
 		}
 	}
 	
+	/**
+	 * Register localize string to localized manager,
+	 * for <tt>unlocalized=localized</tt> entry.
+	 * @param unlocalized the unlocalize string.
+	 * @param localized the localized string.
+	 */
 	public static void registerLocal(String unlocalized, String localized)
 	{
 		if(!MAP1.getOrDefault(ENGLISH, ImmutableMap.of()).containsKey(unlocalized))
@@ -70,6 +84,19 @@ public class LanguageManager
 		MAP2.put(unlocalized, localized);
 	}
 	
+	/**
+	 * Localized string and format it.<p>
+	 * The localize manager will find localized source given by Nebula translation map first,
+	 * or find from I18n if failed fingding. The <tt>en_US</tt> will be used when unlocalized
+	 * string does not exist in translation map.<p>
+	 * The format action will only taken when translating is succeed.<p>
+	 * If exception is caught in formating. The result will be <tt>"Translation Error"</tt>.
+	 * @param unlocalized the unlocalized string.
+	 * @param objects the format element,
+	 * use {@link java.lang.String#format(String, Object...)} to format locazlied string.
+	 * @return the formated localized string, or unlocalized string direct if nothing found.
+	 * @see #translateToLocalWithIgnoreUnmapping(String, Object...)
+	 */
 	public static String translateToLocal(String unlocalized, Object...objects)
 	{
 		String locale = Strings.locale();
@@ -116,7 +143,19 @@ public class LanguageManager
 		return translate == null ? unlocalized : translate;
 	}
 	
-	public static String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
+	/**
+	 * Localized string and format unsafty.<p>
+	 * The localize manager will find localized source given by Nebula translation map first,
+	 * or find from I18n if failed fingding. The <tt>en_US</tt> will be used when unlocalized
+	 * string does not exist in translation map.<p>
+	 * The format action will only taken when translating is succeed.<p>
+	 * @param unlocalized the unlocalized string.
+	 * @param objects the format element,
+	 * use {@link java.lang.String#format(String, Object...)} to format locazlied string.
+	 * @return the formated localized string, or <tt>null</tt> if nothing found.
+	 * @see #translateToLocal(String, Object...)
+	 */
+	public static @Nullable String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
 	{
 		String locale = Strings.locale();
 		String translate;
@@ -143,6 +182,7 @@ public class LanguageManager
 		}
 	}
 	
+	//Internal part start, do not use any method.
 	private File file;
 	
 	public LanguageManager(File file)
@@ -243,4 +283,5 @@ public class LanguageManager
 		}
 		Log.info("Wrote " + keyCount + " keys to file.");
 	}
+	//Internal part end.
 }

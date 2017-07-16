@@ -9,10 +9,12 @@ import farcore.lib.tile.abstracts.TEScreenLineChart;
 import nebula.client.render.ITESRScreenRender;
 import nebula.client.render.TESRBase;
 import nebula.common.util.Direction;
+import nebula.common.util.Entities;
 import nebula.common.util.Maths;
 import nebula.common.util.Players;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,7 +37,7 @@ public class TESRScreenLineChart extends TESRBase<TEScreenLineChart> implements 
 			GlStateManager.disableLighting();
 			GlStateManager.disableTexture2D();
 			GlStateManager.enableBlend();
-			renderScreen(chart, 1, 1, partialTicks);
+			renderScreen(chart, 2.0F * (0.01F + (float) MathHelper.fastInvSqrt(Entities.distanceSq(Players.player(), chart.pos()))), 1, 1, partialTicks);
 			GlStateManager.disableBlend();
 			GlStateManager.enableTexture2D();
 			GlStateManager.enableLighting();
@@ -44,14 +46,14 @@ public class TESRScreenLineChart extends TESRBase<TEScreenLineChart> implements 
 	}
 	
 	@Override
-	public void renderScreen(TEScreenLineChart chart, double width, double height, float partialTicks)
+	public void renderScreen(TEScreenLineChart chart, float lineScale, double width, double height, float partialTicks)
 	{
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GL11.glScaled(width, height, 1);
 		
-		GL11.glLineWidth(1.0F);
+		GL11.glLineWidth(lineScale);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.helper.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 		for (int i = 1; i < 4; ++i)
@@ -60,13 +62,13 @@ public class TESRScreenLineChart extends TESRBase<TEScreenLineChart> implements 
 		}
 		this.helper.draw();
 		
-		GL11.glLineWidth(2.0F);
+		GL11.glLineWidth(2.0F * lineScale);
 		this.helper.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 		this.helper.vertex_p(0.0, 0.0, 0.0).vertex_p(1.0, 0.0, 0.0);
 		this.helper.vertex_p(1.0, 0.0, 0.0).vertex_p(1.0, 1.0, 0.0);
 		this.helper.draw();
 		
-		GL11.glLineWidth(1.0F);
+		GL11.glLineWidth(lineScale);
 		GL11.glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
 		this.helper.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
 		int[] heights = chart.getLineHeight();

@@ -26,6 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -142,6 +143,7 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory
 		super.updateClient();
 		if (this.energy > 0)
 		{
+			this.energy--;
 			this.angle++;
 			if (this.angle >= 100)
 			{
@@ -225,9 +227,9 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public double getRotationAngle()
+	public float getRotationAngle()
 	{
-		return - Math.cos(this.angle * Math.PI / 50);
+		return - MathHelper.cos((float) (this.angle * Math.PI / 50));
 	}
 	
 	@Override

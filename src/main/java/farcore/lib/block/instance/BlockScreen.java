@@ -53,7 +53,7 @@ public class BlockScreen extends BlockTE
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
 		register.register(0, "temperature", TEScreenTemperature.class);
-		return false;
+		return true;
 	}
 	
 	@Override

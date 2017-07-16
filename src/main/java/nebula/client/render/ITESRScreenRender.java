@@ -15,5 +15,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public interface ITESRScreenRender<T extends TileEntity>
 {
-	void renderScreen(T tile, double width, double height, float partialTicks);
+	/**
+	 * Render screen to world.<p>
+	 * The (0, 0, 0) postion is at left down side of screen.
+	 * @param tile the render tile enenty.
+	 * @param lineScale the line scale, for consider with viewer distance and screen display style.
+	 * @param width width of screen
+	 * @param height height of screen.
+	 * @param partialTicks the render partial ticks.
+	 */
+	void renderScreen(T tile, float lineScale, double width, double height, float partialTicks);
 }
