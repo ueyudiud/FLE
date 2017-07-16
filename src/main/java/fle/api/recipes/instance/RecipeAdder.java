@@ -7,6 +7,7 @@ package fle.api.recipes.instance;
 import static fle.api.recipes.instance.RecipeMaps.DIRT_MIXTURE_INPUT;
 import static fle.api.recipes.instance.RecipeMaps.DIRT_MIXTURE_OUTPUT;
 import static fle.api.recipes.instance.RecipeMaps.DRYING;
+import static fle.api.recipes.instance.RecipeMaps.LEVER_OIL_MILL;
 import static fle.api.recipes.instance.RecipeMaps.WASHING_BARGRIZZLY;
 import static nebula.common.data.Misc.anyTo;
 import static nebula.common.util.ItemStacks.COPY_ITEMSTACK;
@@ -24,10 +25,13 @@ import fle.api.recipes.ShapelessFleRecipe;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
 import nebula.base.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
+import nebula.common.util.FluidStacks;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * @author ueyudiud
@@ -68,6 +72,17 @@ public final class RecipeAdder
 				.setData(input, duration, rainfall, output.copy()));
 	}
 	
+	public static void addLeverOilMillRecipe(AbstractStack input, int duration, ItemStack output1, int outputChance, Fluid output2, int minOutput, int maxOutput)
+	{
+		addLeverOilMillRecipe(input, duration, output1, new int[]{outputChance}, new FluidStack(output2, 0), minOutput, maxOutput);
+	}
+	
+	public static void addLeverOilMillRecipe(AbstractStack input, int duration, ItemStack output1, int[] outputChance, FluidStack output2, int minOutput, int maxOutput)
+	{
+		LEVER_OIL_MILL.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), asChanceOutput(output1, outputChance), asRandomOutput(output2, minOutput, maxOutput))
+				.setData(input, duration, output1, output2, outputChance, (long) maxOutput << 32 | minOutput));
+	}
+	
 	public static void addDirtMixtureInputRecipe(AbstractStack input, Object...objects)
 	{
 		DIRT_MIXTURE_INPUT.addRecipe(input, objects);
@@ -88,10 +103,8 @@ public final class RecipeAdder
 			if (stacks.getAmount() < size)
 				return null;
 			for (Range<Mat> range : list)
-			{
 				if (!range.inRange(stacks.getContain(range.element)))
 					return null;
-			}
 			return ItemStacks.sizeOf(output, (int) (stacks.getAmount() * output.stackSize / size));
 		});
 	}
@@ -122,6 +135,25 @@ public final class RecipeAdder
 			};
 		}
 		return result;
+	}
+	
+	private static <E> Function<E, ItemStack> asChanceOutput(ItemStack stack, int[] chances)
+	{
+		final ItemStack s = stack.copy();
+		return any-> {
+			int size = 0;
+			for (int i : chances) if (L.nextInt(10000) < i) ++size;
+			return ItemStacks.sizeOf(s, size * s.stackSize);
+		};
+	}
+	
+	private static <E> Function<E, FluidStack> asRandomOutput(FluidStack stack, int min, int max)
+	{
+		final FluidStack s = stack.copy();
+		final int l = max - min;
+		return l == 0 ? anyTo(s) : any-> {
+			return FluidStacks.sizeOf(s, min + L.nextInt(l));
+		};
 	}
 	
 	private static class Range<E>

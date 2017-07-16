@@ -4,9 +4,14 @@
 
 package fle.core.blocks;
 
+import static farcore.FarCoreRegistry.registerTESR;
+
 import farcore.data.Materials;
 import fle.core.FLE;
+import fle.core.client.render.TESRDryingTable;
+import fle.core.client.render.TESRLeverOilMill;
 import fle.core.tile.wooden.TEDryingTable;
+import fle.core.tile.wooden.TELeverOilMill;
 import nebula.base.IRegister;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
@@ -33,14 +38,17 @@ public class BlockWoodenMiscMachine extends BlockTE
 	{
 		super.postInitalizedBlocks();
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Drying Table");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Lever Oil Mill");
 		
 		LanguageManager.registerLocal("inventory.drying.table", "Drying Table");
+		LanguageManager.registerLocal("inventory.lever.oil.mill", "Lever Oil Mill");
 	}
 	
 	@Override
 	protected boolean registerTileEntities(IRegister<Class<? extends TileEntity>> register)
 	{
 		register.register(0, "drying_table", TEDryingTable.class);
+		register.register(1, "lever_oil_mill", TELeverOilMill.class);
 		return true;
 	}
 	
@@ -48,9 +56,13 @@ public class BlockWoodenMiscMachine extends BlockTE
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
+		registerTESR(TESRDryingTable.class);
+		registerTESR(TESRLeverOilMill.class);
+		
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
 		Renders.registerCompactModel(mapper, this, this.property_TE);
 		registerCustomBlockRender(mapper, 0, "misc_machine/drying_table");
+		registerCustomBlockRender(mapper, 1, "misc_machine/lever_oil_mill");
 	}
 	
 	@Override

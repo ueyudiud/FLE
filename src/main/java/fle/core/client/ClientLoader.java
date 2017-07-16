@@ -5,7 +5,6 @@ import farcore.data.ColorMultiplier;
 import farcore.data.EnumItem;
 import fle.api.client.PolishingStateIconLoader;
 import fle.core.client.render.TESRDirtMixture;
-import fle.core.client.render.TESRDryingTable;
 import fle.core.common.CommonLoader;
 import fle.core.handler.FleClientHandler;
 import fle.loader.Entities;
@@ -35,7 +34,6 @@ public class ClientLoader extends CommonLoader
 		
 		Entities.clientInit();
 		Recipes.addRenderStates();
-		FarCoreRegistry.registerTESR(TESRDryingTable.class);
 		FarCoreRegistry.registerTESR(TESRDirtMixture.class);
 	}
 }

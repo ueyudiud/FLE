@@ -6,6 +6,7 @@ package nebula.common.data;
 
 import java.util.function.Function;
 
+import nebula.common.fluid.FluidStackExt;
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.nbt.INBTReaderAndWritter;
 import nebula.common.util.ItemStacks;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * @author ueyudiud
@@ -38,6 +40,25 @@ public class NBTLSs
 		public Class<ItemStack> getTargetType()
 		{
 			return ItemStack.class;
+		}
+	};
+	public static final INBTCompoundReaderAndWritter<FluidStack> RW_FLUIDSTACK = new INBTCompoundReaderAndWritter<FluidStack>()
+	{
+		@Override
+		public FluidStack readFromNBT(NBTTagCompound nbt)
+		{
+			return FluidStackExt.loadFluidStackFromNBT(nbt);
+		}
+		
+		@Override
+		public void writeToNBT(FluidStack target, NBTTagCompound nbt)
+		{
+			target.writeToNBT(nbt);
+		}
+		
+		public Class<FluidStack> getTargetType()
+		{
+			return FluidStack.class;
 		}
 	};
 	public static final INBTReaderAndWritter<ItemStack[], NBTTagList> RW_UNORDERED_ITEMSTACKS = NBTs.wrapAsUnorderedArrayWriterAndReader(RW_ITEMSTACK);

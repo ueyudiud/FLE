@@ -1,0 +1,34 @@
+{
+	"name": "net.minecraft.world.chunk.Chunk",
+	"modification": [
+		{
+			"name": "a|(Lcm;Laiu;)Laiq;",
+			"labels": [
+				{
+					"type": "replace",
+					"owner": "aiq",
+					"name": "b",
+					"desc": "(I)Laiq;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 1
+						},
+						{
+							"opcode": 25,
+							"var": 2
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/common/CommonOverride",
+							"name": "regetBiome",
+							"desc": "(ILcm;Laiu;)Laiq;",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

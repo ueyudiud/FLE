@@ -1,0 +1,109 @@
+{
+	"name": "net.minecraft.client.renderer.RenderItem",
+	"modification": [
+		{
+			"name":"renderItemOverlayIntoGUI|(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 407,
+					"off": 1,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 0
+						},
+						{
+							"opcode": 25,
+							"var": 1
+						},
+						{
+							"opcode": 25,
+							"var": 2
+						},
+						{
+							"opcode": 21,
+							"var": 3
+						},
+						{
+							"opcode": 21,
+							"var": 4
+						},
+						{
+							"opcode": 25,
+							"var": 5
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemOverlay",
+							"desc": "(Lnet/minecraft/client/renderer/RenderItem;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)Lnet/minecraft/item/ItemStack;",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "renderModel|(Lnet/minecraft/client/renderer/block/model/IBakedModel;ILnet/minecraft/item/ItemStack;)V",
+			"labels": [
+				{
+					"type": "remove",
+					"owner": "net/minecraft/client/renderer/block/model/IBakedModel",
+					"name": "getQuads",
+					"desc": "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/EnumFacing;J)Ljava/util/List;",
+					"off": -4,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"owner": "net/minecraft/client/renderer/block/model/IBakedModel",
+					"name": "getQuads",
+					"desc": "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/EnumFacing;J)Ljava/util/List;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				},
+				{
+					"type": "remove",
+					"owner": "net/minecraft/client/renderer/block/model/IBakedModel",
+					"name": "getQuads",
+					"desc": "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/EnumFacing;J)Ljava/util/List;",
+					"off": -5,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"owner": "net/minecraft/client/renderer/block/model/IBakedModel",
+					"name": "getQuads",
+					"desc": "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/EnumFacing;J)Ljava/util/List;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/util/EnumFacing;JLnet/minecraft/item/ItemStack;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

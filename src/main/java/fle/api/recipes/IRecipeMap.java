@@ -19,28 +19,30 @@ public interface IRecipeMap<R, C, H> extends INBTCompoundReaderAndWritter<C>, IR
 {
 	/**
 	 * Add a recipe to recipe map.
-	 * @param recipe
-	 * @return Return true if the recipe is adding success.
+	 * @param recipe the recipe.
+	 * @return return true if the recipe is adding success.
 	 */
 	boolean addRecipe(R recipe);
 	
 	/**
 	 * Find recipe by crafting handler, it stored by
 	 * a cache, null means no recipe matched.
-	 * @param handler
-	 * @return
+	 * @param handler the crafting handler.
+	 * @return the recipe.
 	 */
 	@Nullable C findRecipe(H handler);
 	
 	/**
-	 * Get all recipes.
-	 * @return
+	 * Get all recipes.<p>
+	 * Use this method to remove recipe is not suggested,
+	 * use {@link #removeRecipe(Object)} instead.
+	 * @return the recipe collection.
 	 */
 	Collection<R> recipes();
 	
 	/**
-	 * Remove recipe.
-	 * @param recipe
+	 * Remove recipe from recipe map.
+	 * @param recipe the recipe to remove.
 	 */
 	default void removeRecipe(R recipe)
 	{

@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
+public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 {
 	protected static final Vector2f STILL = new Vector2f(0.0F, 0.0F);
 	
@@ -50,6 +50,10 @@ public class TESRBase<T extends TileEntity> extends TileEntitySpecialRenderer<T>
 	protected float alpha = 1.0F;
 	protected RenderEntityItem renderEntityItem;
 	protected EntityItem entityItem;
+	
+	@Override
+	public abstract void renderTileEntityAt(T tile, double x, double y, double z,
+			float partialTicks, int destroyStage);
 	
 	protected TextureAtlasSprite getTexture(IBlockState state)
 	{

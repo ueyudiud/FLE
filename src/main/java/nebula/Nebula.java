@@ -20,7 +20,6 @@ import com.google.common.eventbus.Subscribe;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import nebula.client.CreativeTabBase;
-import nebula.client.light.LightFix;
 import nebula.common.CommonProxy;
 import nebula.common.LanguageManager;
 import nebula.common.NebulaConfig;
@@ -62,7 +61,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -102,7 +100,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String MODID = "nebula";
 	public static final String NAME = "Nebula";
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "1.2";
 	
 	public static final String INNER_RENDER = "nebula_inner";
 	
@@ -142,6 +140,12 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	}
 	
 	@Override
+	public Nebula getMod()
+	{
+		return this;
+	}
+	
+	@Override
 	public boolean registerBus(EventBus bus, LoadController controller)
 	{
 		bus.register(this);
@@ -152,9 +156,11 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public void check(FMLFingerprintViolationEvent event)
 	{
 		/**
-		 * The Far Core mod used Java8. There are method
+		 * The Nebula and its child mod use Java8. There are method
 		 * is added in Java8, so it is checked by a type
 		 * exist since Java8.
+		 * This checking will be removed when forge
+		 * using Java8 for compile.
 		 */
 		Log.info("Nebula start check java version...");
 		try
@@ -164,18 +170,6 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		catch(Exception exception)
 		{
 			throw new RuntimeException("Java version is out of date, please use java 8 to launch.", exception);
-		}
-		/**
-		 * Coded checking.
-		 */
-		Log.info("Nebula checking mod version...");
-		try
-		{
-			new BlockPos(1, 2, 3).add(0, 0, 0);
-		}
-		catch(Exception exception)
-		{
-			throw new RuntimeException("You may download dev version, please check your mod version and use default version.", exception);
 		}
 		/**
 		 * Checking forge version.
@@ -251,11 +245,6 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public void load(FMLLoadCompleteEvent event)
 	{
 		this.lang.write();
-		//Start light thread.
-		if(NebulaConfig.multiThreadLight)
-		{
-			LightFix.startThread();
-		}
 	}
 	
 	@Subscribe

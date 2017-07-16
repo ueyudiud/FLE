@@ -1,0 +1,109 @@
+{
+	"name": "net.minecraft.client.renderer.RenderItem",
+	"modification": [
+		{
+			"name":"a|(Lbdl;Ladz;IILjava/lang/String;)V",
+			"labels": [
+				{
+					"type": "replace",
+					"line": 407,
+					"off": 1,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 0
+						},
+						{
+							"opcode": 25,
+							"var": 1
+						},
+						{
+							"opcode": 25,
+							"var": 2
+						},
+						{
+							"opcode": 21,
+							"var": 3
+						},
+						{
+							"opcode": 21,
+							"var": 4
+						},
+						{
+							"opcode": 25,
+							"var": 5
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemOverlay",
+							"desc": "(Lbsu;Lbdl;Ladz;IILjava/lang/String;)Ladz;",
+							"itf": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "a|(Lbyl;ILadz;)V",
+			"labels": [
+				{
+					"type": "remove",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": -4,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lbyl;Lct;JLadz;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				},
+				{
+					"type": "remove",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": -5,
+					"len": 2
+				},
+				{
+					"type": "replace",
+					"owner": "byl",
+					"name": "a",
+					"desc": "(Lars;Lct;J)Ljava/util/List;",
+					"off": 0,
+					"nodes": [
+						{
+							"opcode": 25,
+							"var": 3
+						},
+						{
+							"opcode": 184,
+							"owner": "nebula/client/ClientOverride",
+							"name": "renderItemModel",
+							"desc": "(Lbyl;Lct;JLadz;)Ljava/util/List;",
+							"itf": false
+						}
+					]
+				}
+			]
+		}
+	]
+}

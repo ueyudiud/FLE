@@ -40,6 +40,7 @@ public class BlockPottery extends BlockTE
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Terrine");
 		LanguageManager.registerLocal("inventory.terrine", "Terrine");
 	}
 	

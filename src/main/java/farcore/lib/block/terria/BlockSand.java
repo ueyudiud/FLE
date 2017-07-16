@@ -27,6 +27,7 @@ import nebula.common.block.IHitByFallenBehaviorBlock;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.data.Misc;
 import nebula.common.entity.EntityFallingBlockExtended;
+import nebula.common.util.OreDict;
 import nebula.common.util.Players;
 import nebula.common.util.Properties;
 import nebula.common.util.Worlds;
@@ -35,9 +36,11 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -78,16 +81,9 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	protected static @Nullable IntegerMap<EnumFacing> canFallNearby(World world, BlockPos pos, IBlockState state)
 	{
 		IntegerMap<EnumFacing> result = new IntegerMap<>(6);
-		BlockPos pos2;
-		boolean flag = false;
 		for (EnumFacing facing : EnumFacing.HORIZONTALS)
-		{
-			pos2 = pos.offset(facing);
-			int i = calculateHeight(world, pos2, state);
-			result.put(facing, i);
-			if (i > 0) flag = true;
-		}
-		return flag ? result : null;
+			result.put(facing, calculateHeight(world, pos.offset(facing), state));
+		return result;
 	}
 	
 	private static int calculateHeight(World world, BlockPos pos, IBlockState state)
@@ -126,6 +122,8 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	public void postInitalizedBlocks()
 	{
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), MC.block.getLocal(this.material));
+		OreDict.registerValid("sand", new ItemStack(this.item, 1, 0));
+		OreDict.registerValid("sand" + this.material.oreDictName, new ItemStack(this.item, 1, 0));
 	}
 	
 	@Override
@@ -207,7 +205,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		else
 		{
 			IntegerMap<EnumFacing> map = canFallNearby(world, pos, state);
-			if (map != null)
+			if (!map.isEmpty())
 			{
 				final int j = state.getValue(LAYER) - 4;
 				map.transformAll(i->i < j ? j - i : 0);
@@ -349,6 +347,12 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
 	{
 		return BlockSoil.canFallBelow(world, pos, state) || !canFallNearby(world, pos, state).isEmpty();
+	}
+	
+	@Override
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
+	{
+		list.add(new ItemStack(item, 1, 0));
 	}
 	
 	@Override
