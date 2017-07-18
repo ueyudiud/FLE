@@ -113,7 +113,7 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	
 	public boolean canExtractFluidWithType(Direction to, FluidStack stack)
 	{
-		return this.stack.isFluidEqual(stack) && canExtractFluid(to);
+		return (this.stack == null || this.stack.isFluidEqual(stack)) && canExtractFluid(to);
 	}
 	
 	@Override

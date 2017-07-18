@@ -4,6 +4,7 @@ import java.util.Random;
 
 import nebula.Nebula;
 import nebula.common.block.BlockTE;
+import nebula.common.inventory.InventoryHelper;
 import nebula.common.network.IPacket;
 import nebula.common.util.Direction;
 import nebula.common.util.Sides;
@@ -14,9 +15,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
@@ -24,6 +27,11 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 /**
  * Base tile entity type.
@@ -429,5 +437,93 @@ public class TEBase extends TileEntity implements IModifiableCoord
 			regetBlockState();
 		}
 		return this.state.getBlock().getMetaFromState(this.state);
+	}
+	
+	public int sendItemStackTo(ItemStack stack, Direction side, boolean fullStackTransfer, boolean dropToWorld, boolean process)
+	{
+		if (dropToWorld && Worlds.isItemDropable(this.world, this.pos.offset(side.of()), side.getOpposite()))
+		{
+			if (process)
+			{
+				Worlds.spawnDropInWorld(this.world, this.pos, side, stack);
+			}
+			return stack.stackSize;
+		}
+		TileEntity tile = getTE(side);
+		if (tile == null)
+		{
+			return 0;
+		}
+		else
+		{
+			if (tile instanceof IItemHandlerIO)
+			{
+				IItemHandlerIO handler = (IItemHandlerIO) tile;
+				if (handler.canInsertItem(side.getOpposite(), stack))
+				{
+					int size = handler.insertItem(stack, side.getOpposite(), true);
+					if (fullStackTransfer ? stack.stackSize == size : size > 0)
+					{
+						return process ? handler.insertItem(stack, side.getOpposite(), false) : size;
+					}
+				}
+				return 0;
+			}
+			else if (tile instanceof ISidedInventory)
+			{
+				ISidedInventory handler = (ISidedInventory) tile;
+				EnumFacing facing = side.getOpposite().of();
+				int[] slots = handler.getSlotsForFace(facing);
+				for (int i : slots)
+				{
+					if (handler.canInsertItem(i, stack, facing))
+					{
+						int size = InventoryHelper.insertStacks(handler, i, stack, false);
+						if (fullStackTransfer ? size == stack.stackSize : size > 0)
+						{
+							return InventoryHelper.insertStacks(handler, i, stack, true);
+						}
+					}
+				}
+				return 0;
+			}
+			else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite().of()))
+			{
+				IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite().of());
+				for (int i = 0; i < handler.getSlots(); ++i)
+				{
+					ItemStack remain = handler.insertItem(i, stack, true);
+					if (fullStackTransfer ? remain == null : remain.stackSize < stack.stackSize)
+					{
+						if (process)
+							handler.insertItem(i, stack, false);
+						return stack.stackSize - remain.stackSize;
+					}
+				}
+				return 0;
+			}
+			return 0;
+		}
+	}
+	
+	public int sendFluidStackTo(FluidStack stack, Direction side, boolean process)
+	{
+		TileEntity tile = getTE(side);
+		if (tile == null) return 0;
+		if (tile instanceof IFluidHandlerIO)
+		{
+			IFluidHandlerIO handler = (IFluidHandlerIO) tile;
+			if (handler.canInsertFluid(side.getOpposite(), stack))
+			{
+				return handler.insertFluid(stack, side.getOpposite(), process);
+			}
+			return 0;
+		}
+		else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of()))
+		{
+			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().of());
+			return handler.fill(stack, process);
+		}
+		return 0;
 	}
 }

@@ -296,6 +296,11 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 	}
 	
+	/**
+	 * Register allowed state with all these properties cycled.
+	 * @param block
+	 * @param properties
+	 */
 	public void registerStates(Block block, IProperty<?>...properties)
 	{
 		if(properties.length == 0)
@@ -322,12 +327,8 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 		IProperty property = properties1[id];
 		IBlockState state2 = state;
-		do
-		{
-			forEach1(id + 1, properties1, properties2, state2);
-			state2 = state2.cycleProperty(property);
-		}
-		while(state2 != state);
+		do forEach1(id + 1, properties1, properties2, state2);
+		while((state2 = state2.cycleProperty(property)) != state);
 	}
 	
 	void forEach2(int id, IProperty<?>[] properties, IBlockState state, List<IBlockState> list)
@@ -339,12 +340,8 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 		IProperty property = properties[id];
 		IBlockState state2 = state;
-		do
-		{
-			forEach2(id + 1, properties, state2, list);
-			state2 = state2.cycleProperty(property);
-		}
-		while(state2 != state);
+		do forEach2(id + 1, properties, state2, list);
+		while((state2 = state2.cycleProperty(property)) != state);
 	}
 	
 	public void registerState(IBlockState state)

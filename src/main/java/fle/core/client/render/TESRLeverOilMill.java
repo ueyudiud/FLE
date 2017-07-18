@@ -41,6 +41,7 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
 		GlStateManager.disableLighting();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		float angle = tile.getRotationAngle();
 		//Render lever.

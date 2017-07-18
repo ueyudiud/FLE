@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * The extended block state map, included vanilla state map abilities.<br>
  * Also can make custom variant key for block for sub blocks.
  * @author ueyudiud
- *
+ * @see net.minecraft.client.renderer.block.statemap.StateMapperBase
  */
 @SideOnly(Side.CLIENT)
 public class StateMapperExt extends StateMapperBase implements IStateMapperExt

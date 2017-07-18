@@ -4,6 +4,8 @@
 
 package nebula.client.util;
 
+import javax.annotation.Nullable;
+
 import nebula.Nebula;
 import nebula.client.ClientProxy;
 import nebula.client.model.ICustomItemModelSelector;
@@ -64,7 +66,14 @@ public class Renders
 		nebula.client.ClientProxy.registerBuildInModel(block);
 	}
 	
-	public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, IProperty<T> property)
+	/**
+	 * Register sub model by a mapper and property to split.
+	 * @param <T> the type of property.
+	 * @param mapper the model mapper.
+	 * @param block the block formapper.
+	 * @param property thesplit property, or <tt>null</tt> for only one variant exist.
+	 */
+	public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, @Nullable IProperty<T> property)
 	{
 		Item item = Item.getItemFromBlock(block);
 		IBlockState state = block.getDefaultState();

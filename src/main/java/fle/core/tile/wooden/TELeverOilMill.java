@@ -5,15 +5,22 @@ package fle.core.tile.wooden;
 
 import static fle.api.recipes.instance.RecipeMaps.LEVER_OIL_MILL;
 
+import java.io.IOException;
+
 import farcore.data.Capabilities;
+import farcore.data.Keys;
 import farcore.lib.capability.IFluidHandler;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
 import fle.core.client.gui.wooden.GuiLeverOilMill;
 import fle.core.common.gui.wooden.ContainerLeverOilMill;
+import nebula.common.NebulaKeyHandler;
+import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.inventory.InventoryWrapFactory;
+import nebula.common.network.PacketBufferExt;
 import nebula.common.stack.AbstractStack;
 import nebula.common.tile.IGuiTile;
+import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.TEInventoryTankSingleAbstract;
 import nebula.common.util.Direction;
@@ -36,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 public class TELeverOilMill extends TEInventoryTankSingleAbstract
-implements ITB_BlockActived, IGuiTile, ISidedInventory
+implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
 {
 	private static final int[] IN = {0}, OUT = {1};
 	
@@ -135,6 +142,11 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory
 		{
 			--this.energy;
 		}
+		int drain = 1000;
+		for (int i = 0; i < 4 && drain > 0; ++i)
+		{
+			drain -= sendFluidTo(drain, Direction.DIRECTIONS_2D[i], true);
+		}
 	}
 	
 	@Override
@@ -158,10 +170,30 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory
 	{
 		if (isServer())
 		{
-			openGUI(player, 0);
-			syncToPlayer(player);
+			if (NebulaKeyHandler.get(player, Keys.ROTATE))
+			{
+				onRotateMill(player);
+				NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
+			}
+			else
+			{
+				openGUI(player, 0);
+				syncToPlayer(player);
+			}
 		}
 		return EnumActionResult.SUCCESS;
+	}
+	
+	@Override
+	public void writeNetworkData(int type, PacketBufferExt buf) throws IOException
+	{
+		buf.writeInt(this.energy);
+	}
+	
+	@Override
+	public void readNetworkData(int type, PacketBufferExt buf) throws IOException
+	{
+		this.energy = buf.readInt();
 	}
 	
 	public void onRotateMill(EntityPlayer player)

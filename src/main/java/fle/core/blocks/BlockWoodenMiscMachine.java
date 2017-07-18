@@ -14,7 +14,6 @@ import fle.core.tile.wooden.TEDryingTable;
 import fle.core.tile.wooden.TELeverOilMill;
 import nebula.base.IRegister;
 import nebula.client.model.StateMapperExt;
-import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
@@ -60,7 +59,7 @@ public class BlockWoodenMiscMachine extends BlockTE
 		registerTESR(TESRLeverOilMill.class);
 		
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
-		Renders.registerCompactModel(mapper, this, this.property_TE);
+		registerRenderMapper(mapper);
 		registerCustomBlockRender(mapper, 0, "misc_machine/drying_table");
 		registerCustomBlockRender(mapper, 1, "misc_machine/lever_oil_mill");
 	}

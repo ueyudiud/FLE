@@ -25,11 +25,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The block with multi tile entity.
+ * @author ueyudiud
+ * @see net.minecraft.tileentity.TileEntity
+ */
 public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBlock
 {
+	/** Mark for tile entity auto-register when {@link #postInitalizedBlocks()}. */
 	private boolean registerTE;
 	
 	public BlockTE(String name, Material materialIn)
@@ -49,6 +56,10 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 		super(modid, name, blockMaterialIn, blockMapColorIn);
 	}
 	
+	/**
+	 * Register all allowed states to register.
+	 * @parm register the state register.
+	 */
 	@Override
 	public void registerStateToRegister(ExtendedBlockStateRegister register)
 	{
@@ -69,12 +80,35 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 		}
 	}
 	
+	/**
+	 * Register model mapper with item and block to model manager.<p>
+	 * Similar to method in <tt>Renders.registerCompactModel</tt>,
+	 * but to prevent wrong data cause game crashed, this block can not
+	 * split block meta by {@link #getMetaFromState(IBlockState)}, so
+	 * the block is needed this internal method to register render mapper.
+	 * @param mapper
+	 * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt, net.minecraft.block.Block, net.minecraft.block.properties.IProperty)
+	 */
+	@SideOnly(Side.CLIENT)
+	protected void registerRenderMapper(StateMapperExt mapper)
+	{
+		final IBlockState state = getDefaultState();
+		IBlockState state2 = state;
+		do ModelLoader.setCustomModelResourceLocation(this.item, this.property_TE.getMetaFromState(state2),
+				mapper.getLocationFromState(state2));
+		while ((state2 = state2.cycleProperty(this.property_TE)) != state);
+		ModelLoader.setCustomStateMapper(this, mapper);
+	}
+	
 	@SideOnly(Side.CLIENT)
 	protected void registerCustomBlockRender(StateMapperExt map, int meta, String location)
 	{
 		NebulaModelLoader.registerModel(this, map, this.property_TE.withProperty(getDefaultState(), meta), new ResourceLocation(getRegistryName().getResourceDomain(), location));
 	}
 	
+	/**
+	 * The property of tile entity type.
+	 */
 	public PropertyTE property_TE;
 	
 	/**

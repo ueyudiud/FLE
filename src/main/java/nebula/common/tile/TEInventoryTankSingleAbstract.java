@@ -148,4 +148,13 @@ implements IFluidHandlerIO, IFluidHandler
 		}
 		return amt;
 	}
+	
+	protected int sendFluidTo(int maxAmount, Direction direction, boolean process)
+	{
+		FluidStack stack = tank().drain(maxAmount, false);
+		if (stack == null) return 0;
+		int amt = sendFluidStackTo(stack, direction, process);
+		if (process) tank().drain(amt, true);
+		return amt;
+	}
 }

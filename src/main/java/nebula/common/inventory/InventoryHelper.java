@@ -20,6 +20,7 @@ import nebula.common.util.ItemStacks;
 import nebula.common.util.L;
 import nebula.common.util.Players;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -486,5 +487,25 @@ public class InventoryHelper
 		{
 			return list.isEmpty();
 		}
+	}
+	
+	public static int insertStacks(IInventory inventory, int i, ItemStack stack, boolean process)
+	{
+		if (inventory.getStackInSlot(i) == null)
+		{
+			stack = ItemStacks.copyNomoreThan(stack, inventory.getInventoryStackLimit());
+			if (process)
+				inventory.setInventorySlotContents(i, stack);
+			return stack.stackSize;
+		}
+		else if (ItemStacks.isItemAndTagEqual(stack, inventory.getStackInSlot(i)))
+		{
+			ItemStack stack2 = inventory.getStackInSlot(i);
+			int size = Math.min(stack.stackSize, inventory.getInventoryStackLimit() - stack2.stackSize);
+			if (process)
+				stack2.stackSize += size;
+			return size;
+		}
+		else return 0;
 	}
 }

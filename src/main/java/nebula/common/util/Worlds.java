@@ -24,6 +24,7 @@ import nebula.common.world.ICoord;
 import nebula.common.world.IObjectInWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -46,6 +47,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fluids.BlockFluidBase;
 
 /**
  * @author ueyudiud
@@ -180,6 +182,25 @@ public final class Worlds
 		double d1 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
 		double d2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
 		EntityItem entityitem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, drop.copy());
+		entityitem.setPickupDelay(10);
+		world.spawnEntity(entityitem);
+	}
+	
+	public static void spawnDropInWorld(World world, BlockPos pos, Direction direction, ItemStack drop)
+	{
+		if(world.isRemote ||
+				//Debug world can drop item will crash the game...
+				world.getWorldType() == WorldType.DEBUG_WORLD ||
+				drop == null)
+			return;
+		float f = 0.7F;
+		double d0 = world.rand.nextFloat() * f + (1.0F - f) * 0.1D + (direction.x + 1.0F) / 2.0F;
+		double d1 = world.rand.nextFloat() * f + (1.0F - f) * 0.1D + (direction.y + 1.0F) / 2.0F;
+		double d2 = world.rand.nextFloat() * f + (1.0F - f) * 0.1D + (direction.z + 1.0F) / 2.0F;
+		EntityItem entityitem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, drop.copy());
+		entityitem.motionX = entityitem.motionX / 5.0 + direction.x * 0.5;
+		entityitem.motionY = entityitem.motionY / 5.0 + direction.y * 0.5;
+		entityitem.motionZ = entityitem.motionZ / 5.0 + direction.z * 0.5;
 		entityitem.setPickupDelay(10);
 		world.spawnEntity(entityitem);
 	}
@@ -559,5 +580,23 @@ public final class Worlds
 				yCoord + (random.nextFloat() - random.nextFloat()) * randScale,
 				zCoord + (random.nextFloat() - random.nextFloat()) * randScale,
 				motionX, motionY, motionZ, datas);
+	}
+	
+	/**
+	 * Check if item can drop at position.
+	 * @param world
+	 * @param pos
+	 * @param side
+	 * @return
+	 */
+	public static boolean isItemDropable(World world, BlockPos pos, @Nullable Direction side)
+	{
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock().isAir(state, world, pos))
+			return true;
+		return state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase ||
+				(!state.isFullCube() &&
+						(side == null || !state.isSideSolid(world, pos, side.of())) &&
+						state.getCollisionBoundingBox(world, pos) == Block.NULL_AABB);
 	}
 }
