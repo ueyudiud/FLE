@@ -6,41 +6,47 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import nebula.common.util.A;
 import nebula.common.util.L;
 
 @FunctionalInterface
 public interface Judgable<T> extends Predicate<T>
 {
+	@SuppressWarnings("rawtypes")
 	Judgable TRUE     = arg -> true;
+	@SuppressWarnings("rawtypes")
 	Judgable FALSE    = arg -> false;
+	@SuppressWarnings("rawtypes")
 	Judgable NOT_NULL = Objects::nonNull;
+	@SuppressWarnings("rawtypes")
 	Judgable NULL     = Objects::isNull;
 	
-	static <T> Judgable<T> fromPredicate(Predicate<T> predicate) { return predicate::test; }
+	static <T> Judgable<T> fromPredicate(Predicate<? super T> predicate) { return predicate::test; }
 	
-	static <T> Judgable<T> or(Predicate<T>...checkers) { return or(Arrays.asList(checkers)); }
+	static <T> Judgable<T> or(Predicate<? super T>...checkers) { return t->A.or(checkers, j->j.test(t)); }
 	
-	static <T> Judgable<T> and(Predicate<T>...checkers) { return and(Arrays.asList(checkers)); }
+	static <T> Judgable<T> and(Predicate<? super T>...checkers) { return t->A.and(checkers, j->j.test(t)); }
 	
-	static <R, T extends R> Judgable<R> matchAndCast(Predicate<T> predicate, Class<T> cast) { return r->cast.isInstance(r) ? predicate.test((T) r) : false; }
+	static <R, T extends R> Judgable<R> matchAndCast(Predicate<? super T> predicate, Class<T> cast) { return r->cast.isInstance(r) ? predicate.test((T) r) : false; }
 	
 	/**
 	 * Uses for modifiable collection checker.
 	 * @param collection
 	 * @return
 	 */
-	static <T> Judgable<T> or(Collection<? extends Predicate<T>> collection)
+	static <T> Judgable<T> or(Collection<? extends Predicate<? super T>> collection)
 	{
-		return target -> {
-			for(Predicate<T> checker : collection) if(checker.test(target)) return true; return false;
-		};
+		return target -> { for(Predicate<? super T> checker : collection) if(checker.test(target)) return true; return false; };
 	}
 	
-	static <T> Judgable<T> and(Collection<? extends Predicate<T>> collection)
+	/**
+	 * Uses for modifiable collection checker.
+	 * @param collection
+	 * @return
+	 */
+	static <T> Judgable<T> and(Collection<? extends Predicate<? super T>> collection)
 	{
-		return target -> {
-			for(Predicate<T> checker : collection) if(!checker.test(target)) return false; return true;
-		};
+		return target -> { for(Predicate<? super T> checker : collection) if(!checker.test(target)) return false; return true; };
 	}
 	
 	@Override
@@ -50,6 +56,18 @@ public interface Judgable<T> extends Predicate<T>
 	}
 	
 	boolean isTrue(T target);
+	
+	@Override
+	default Predicate<T> or(Predicate<? super T> other)
+	{
+		return or(this, other);
+	}
+	
+	@Override
+	default Predicate<T> and(Predicate<? super T> other)
+	{
+		return and(this, other);
+	}
 	
 	default <K> Judgable<K> from(Function<K, T> function)
 	{

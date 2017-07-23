@@ -4,6 +4,8 @@
 
 package nebula.common.util;
 
+import java.util.function.UnaryOperator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,6 +34,8 @@ import net.minecraftforge.fluids.IFluidBlock;
  */
 public final class FluidStacks
 {
+	public static final UnaryOperator<FluidStack> COPY_FLUIDSTACK = FluidStacks::copy;
+	
 	private FluidStacks() {}
 	
 	public static @Nullable Fluid getFluid(@Nullable FluidStack stack)

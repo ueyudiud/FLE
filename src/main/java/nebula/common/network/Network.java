@@ -292,7 +292,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendLargeToAll(IPacket packet)
 	{
-		sendLarge(packet, this.LARGE_TO_ALL);
+		sendLarge(packet, this:: sendLargeToAll);
 	}
 	
 	public void sendLarge(IPacket packet, Consumer<PacketLarge> pachetExecutor)
@@ -341,6 +341,4 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 		packet.handler(handler);
 		return packet.process(this);
 	}
-	
-	private final Consumer<PacketLarge> LARGE_TO_ALL = this::sendLargeToAll;
 }

@@ -13,6 +13,7 @@ import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.model.block.ModelPartRedstoneCircuitPlate;
+import farcore.lib.solid.SolidTextureLoader;
 import nebula.client.NebulaTextureHandler;
 import nebula.client.model.flexible.NebulaModelDeserializer;
 import nebula.client.model.flexible.NebulaModelLoader;
@@ -37,7 +38,9 @@ public class ClientLoader extends CommonLoader
 		MinecraftForge.EVENT_BUS.register(new FarCoreGuiHandler());
 		
 		NebulaTextureHandler.addIconLoader(new MaterialTextureLoader());
+		SolidTextureLoader.init();
 		
+		/** For uses this font map provided all Greek character. */
 		FontRenderExtend.addFontMap(new FontMap(new ResourceLocation(FarCore.ID, "textures/font/greeks.png"), "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω"));
 		//Register model loaders, state mappers and item model selectors.
 		NebulaModelDeserializer.registerBlockDeserializer("farcore:circuitplate", ModelPartRedstoneCircuitPlate.DESERIALIZER);

@@ -7,26 +7,7 @@
 	},
 	"layers": [
 		{
-			"include": "#bottom",
-			"submeta": {
-				"prefix": "bottom",
-				"parent": "#fle:fluidcontainer"
-			}
-		},
-		{
-			"include": {
-				"converts": [ "#convert" ],
-				"textures": [ "#fluid", "#empty" ]
-			},
-			"convert": {
-				"prefix": "convert",
-				"parent": "#fle:fluidcontainer"
-			},
-			"submeta": {
-				"prefix": "fluid",
-				"parent": "#fle:fluidcontainer_getfluid"
-			},
-			"colorMultiplier": "fle:fluidcontainer/fluidcolor"
+			"texture": "#bottom"
 		}
 	]
 }

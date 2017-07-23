@@ -3,13 +3,17 @@
  */
 package nebula.base;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * @author ueyudiud
  */
-public class Cache<E>
+public
+class Cache<E> implements Serializable
 {
+	private static final long serialVersionUID = -3454337834646888382L;
+	
 	E element;
 	
 	public Cache()

@@ -143,7 +143,7 @@ ITB_BlockActived, IGuiTile
 	}
 	
 	@Override
-	public ItemStack decrStackSize(int index, int count, boolean process)
+	public ItemStack decrStack(int index, int count, boolean process)
 	{
 		if (index == 1)
 		{
@@ -155,7 +155,7 @@ ITB_BlockActived, IGuiTile
 			}
 			return stack;
 		}
-		return super.decrStackSize(index, count, process);
+		return super.decrStack(index, count, process);
 	}
 	
 	@Override

@@ -33,7 +33,7 @@ public class GuiLeverOilMill extends GuiContainerTileInventory<TELeverOilMill>
 	protected void drawOther(int mouseX, int mouseY)
 	{
 		super.drawOther(mouseX, mouseY);
-		int pow = this.tile.getField(1);
+		int pow = this.tile.getField(2);
 		if (pow > 0)
 		{
 			drawTexturedModalRect(this.guiLeft + 35, this.guiTop + 60, 176, 24, 11, 11);

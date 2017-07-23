@@ -104,15 +104,15 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	
 	public static class TemplateRecipe<H>
 	{
-		Judgable<H> judgable;
-		Function<H, ?>[] dataProvider;
+		Judgable<? super H> judgable;
+		Function<? super H, ?>[] dataProvider;
 		Object[] customDisplayData;
 		
-		public TemplateRecipe(Judgable<H>[] judgables, Function<H, ?>...dataProviders)
+		public TemplateRecipe(Judgable<? super H>[] judgables, Function<? super H, ?>...dataProviders)
 		{
 			this(Judgable.and(judgables), dataProviders);
 		}
-		public TemplateRecipe(Judgable<H> judgable, Function<H, ?>...dataProviders)
+		public TemplateRecipe(Judgable<? super H> judgable, Function<? super H, ?>...dataProviders)
 		{
 			this.judgable = judgable;
 			this.dataProvider = dataProviders;

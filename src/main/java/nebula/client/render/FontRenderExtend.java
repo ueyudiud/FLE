@@ -25,7 +25,7 @@ public class FontRenderExtend extends FontRenderer
 	
 	/**
 	 * Put custom font map to font render.
-	 * @param map
+	 * @param map the font map.
 	 */
 	public static void addFontMap(IFontMap map)
 	{

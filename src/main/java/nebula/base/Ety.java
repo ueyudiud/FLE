@@ -12,7 +12,8 @@ import nebula.io.javascript.ScriptLoad;
  * @param <K>
  * @param <V>
  */
-public class Ety<K, V> implements Entry<K, V>
+public
+class Ety<K, V> implements Entry<K, V>
 {
 	@ScriptLoad
 	public final K key;

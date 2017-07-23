@@ -185,7 +185,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	
 	/**
 	 * Mark this model should loaded by NebulaModelLoader.
-	 * @param location The model loader predicated
+	 * @param location the model loader predicated
 	 * @param location2
 	 * @param deserializer
 	 */
@@ -196,12 +196,22 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		MODEL_PROVIDERS.put(location, new Ety<>(location2, deserializer));
 	}
 	
+	/**
+	 * Register item meta generator.
+	 * @param location the registry name of generator.
+	 * @param function the meta generator.
+	 */
 	public static void registerItemMetaGenerator(ResourceLocation location,
 			Function<ItemStack, String> function)
 	{
 		ITEM_META_GENERATOR.put(location, function);
 	}
 	
+	/**
+	 * Register block meta generator.
+	 * @param location the registry name of generator.
+	 * @param function the meta generator.
+	 */
 	public static void registerBlockMetaGenerator(ResourceLocation location,
 			Function<IBlockState, String> function)
 	{

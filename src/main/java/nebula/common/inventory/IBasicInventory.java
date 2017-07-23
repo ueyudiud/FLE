@@ -1,5 +1,6 @@
 package nebula.common.inventory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import nebula.base.function.Appliable;
@@ -51,23 +52,68 @@ public interface IBasicInventory
 	
 	/**
 	 * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
+	 * @see #decrStack(int, int, boolean)
 	 */
 	@Nullable
 	default ItemStack decrStackSize(int index, int count)
 	{
-		return decrStackSize(index, count, true);
+		return decrStack(index, count, true);
 	}
 	
 	@Nullable
-	default ItemStack decrStackSize(int index, AbstractStack stack)
+	default ItemStack decrStackSize(int index, @Nonnull AbstractStack stack)
 	{
 		return decrStackSize(index, stack.size(getStack(index)));
 	}
 	
-	int insertStack(int index, ItemStack resource, boolean process);
+	/**
+	 * The <tt>insert</tt> action, try to add item stack fully to inventory.<p>
+	 * The resource will be input into inventory only if :
+	 * <li>
+	 * The slot is empty or the item and tag from stack in slot is equal to resource.
+	 * <li>
+	 * The new stack size in slot is no greater than the size get from
+	 * {@link #getInventoryStackLimit()}.
+	 * </li><p>
+	 * If input stack is <tt>null</tt>, the method will return <tt>true</tt>.
+	 * @param index the slot index.
+	 * @param resource the input stack.
+	 * @param process should inventory changed after action, if input is <tt>false</tt>
+	 * the inventory will only give a simulate result.
+	 * @return return <tt>true</tt> when all can be insert into inventory.
+	 */
+	default boolean insertStack(int index, @Nullable ItemStack resource, boolean process)
+	{
+		if (resource == null) return true;
+		if (incrStack(index, resource, false) == resource.stackSize)
+		{
+			if (process)
+				incrStack(index, resource, true);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * The <tt>increase</tt> action, try to add item stack to inventory.<p>
+	 * The resource will be input into inventory only if :
+	 * <li>
+	 * The slot is empty or the item and tag from stack in slot is equal to resource.
+	 * <li>
+	 * The current stack size in slot is less than the size get from
+	 * {@link #getInventoryStackLimit()}.
+	 * </li><p>
+	 * If input stack is <tt>null</tt>, the method will return <tt>0</tt>.
+	 * @param index the slot index.
+	 * @param resource the input stack.
+	 * @param process should inventory changed after action, if input is <tt>false</tt>
+	 * the inventory will only give a simulate result.
+	 * @return the insert stack size.
+	 */
+	int incrStack(int index, @Nullable ItemStack resource, boolean process);
 	
 	@Nullable
-	ItemStack decrStackSize(int index, int count, boolean process);
+	ItemStack decrStack(int index, int count, boolean process);
 	
 	/**
 	 * Removes a stack from the given slot and returns it.

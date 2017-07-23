@@ -168,8 +168,8 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	/**
 	 * The offset meta given by item nbt. Use to divide
 	 * the sub item of each material.
-	 * @param stack
-	 * @return
+	 * @param stack the stack.
+	 * @return the offset meta of stack.
 	 */
 	public int getStackMetaOffset(ItemStack stack)
 	{

@@ -15,6 +15,7 @@ import fle.loader.recipe.RecipeMachines;
 import fle.loader.recipe.RecipeOilMill;
 import fle.loader.recipe.RecipePolish;
 import fle.loader.recipe.RecipeResource1;
+import fle.loader.recipe.RecipeStoneMill;
 import fle.loader.recipe.RecipeWashingBarGrizzly;
 import nebula.common.stack.BaseStack;
 import net.minecraft.init.Items;
@@ -39,6 +40,7 @@ public class Recipes
 		RecipeMachines.init();
 		RecipeDirtMixture.init();
 		RecipeOilMill.init();
+		RecipeStoneMill.init();
 		
 		RecipeSorter.register("fle.shaped", ShapedFleRecipe.class, Category.SHAPED, "after:minecraft:shaped before:forge:shapedore before:minecraft:shapeless");
 		RecipeSorter.register("fle.shapeless", ShapelessFleRecipe.class, Category.SHAPELESS, "after:minecraft:shapeless before:forge:shapelessore");

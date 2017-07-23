@@ -10,15 +10,24 @@ import java.util.List;
 import com.google.common.reflect.TypeToken;
 
 import nebula.base.ArrayListAddWithCheck;
+import nebula.common.util.NBTs;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 
 /**
+ * The writer and reader.
  * @author ueyudiud
  * @param <T> The reading and writing target type.
+ * @see nebula.common.nbt.INBTReader
+ * @see nebula.common.nbt.INBTWriter
  */
 public interface INBTReaderAndWritter<T, N extends NBTBase> extends INBTReader<T, N>, INBTWriter<T, N>
 {
+	/**
+	 * Get type of object reader and writter handled, if this method do not has any implementation,
+	 * the type will get by reflection.
+	 * @return the target type.
+	 */
 	default Class<? super T> getTargetType()
 	{
 		return new TypeToken<T>(getClass())
@@ -27,6 +36,18 @@ public interface INBTReaderAndWritter<T, N extends NBTBase> extends INBTReader<T
 		}.getRawType();
 	}
 	
+	/**
+	 * @see nebula.common.util.NBTs#wrapAsUnorderedArrayWriterAndReader(INBTReaderAndWritter)
+	 */
+	default INBTReaderAndWritter<T[], NBTTagList> getArrayReaderAndWriter()
+	{
+		return NBTs.wrapAsUnorderedArrayWriterAndReader(this);
+	}
+	
+	/**
+	 * Create a RAW of list contain object in type this RAW handling.
+	 * @return
+	 */
 	default INBTReaderAndWritter<List<T>, NBTTagList> getListReaderAndWriter()
 	{
 		return new INBTReaderAndWritter<List<T>, NBTTagList>()

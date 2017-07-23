@@ -1,6 +1,9 @@
 package farcore.lib.solid;
 
+import nebula.client.render.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
 import net.minecraftforge.fml.common.registry.RegistryDelegate;
@@ -11,9 +14,11 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 {
 	public static final ResourceLocation SOILDS = new ResourceLocation("farcore:soild");
 	
+	public static final IForgeRegistry<SolidAbstract> REGISTRY;
+	
 	static
 	{
-		PersistentRegistryManager.createRegistry(SOILDS, SolidAbstract.class, new ResourceLocation("farcore", "void"), 0, 32768, true, null, null, null);
+		REGISTRY = PersistentRegistryManager.createRegistry(SOILDS, SolidAbstract.class, new ResourceLocation("farcore", "void"), 0, 32768, true, null, null, null);
 	}
 	
 	public final RegistryDelegate<SolidAbstract> delegate = PersistentRegistryManager.makeDelegate(this, SolidAbstract.class);
@@ -56,14 +61,25 @@ public abstract class SolidAbstract implements IForgeRegistryEntry<SolidAbstract
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ResourceLocation getIcon()
+	public void registerIcon(IIconRegister register)
+	{
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public ResourceLocation getTextureName()
 	{
 		return new ResourceLocation(getRegistryName().getResourceDomain(), "solids/" + getRegistryName().getResourcePath());
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ResourceLocation getIcon(SolidStack stack)
+	public TextureAtlasSprite getIcon()
 	{
-		return getIcon(stack);
+		return null;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public TextureAtlasSprite getIcon(SolidStack stack)
+	{
+		return getIcon();
 	}
 }

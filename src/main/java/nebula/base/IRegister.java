@@ -9,9 +9,11 @@ import javax.annotation.Nullable;
 /**
  * Register type, contain a register list with a integer id
  * and a string id for each element.<p>
+ * This target collection is implements {@link java.lang.Iterable},
+ * for you can use it in for-each loop directly.
  * @author ueyudiud
- *
- * @param <p> The element type in regiser.
+ * @param <T> the element type in regiser.
+ * @see java.lang.Iterable
  */
 public interface IRegister<T> extends Iterable<T>
 {
@@ -45,15 +47,27 @@ public interface IRegister<T> extends Iterable<T>
 	 */
 	int id(String name);
 	
+	/**
+	 * Get name of element.
+	 * @param arg the element.
+	 * @return the name.
+	 */
 	String name(T arg);
 	
+	/**
+	 * Get name of element from id.
+	 * @param id
+	 * @return
+	 * @see #name(Object)
+	 */
 	String name(int id);
 	
 	/**
 	 * Get element with select name, if it is not present, give bake default one.
 	 * @param name
-	 * @param def
-	 * @return
+	 * @param def the default element return.
+	 * @return the element with name registered, or <tt>def</tt> when no element with name found.
+	 * @see #get(String)
 	 */
 	default T get(String name, @Nullable T def)
 	{
@@ -61,6 +75,12 @@ public interface IRegister<T> extends Iterable<T>
 		return (target = get(name)) != null ? target : def;
 	}
 	
+	/**
+	 * Get element with select name.
+	 * @param name the name of element.
+	 * @return the element with name registered, or <tt>null</tt> if no element with name found.
+	 */
+	@Nullable
 	T get(String name);
 	
 	default T get(int id, @Nullable T def)
@@ -105,27 +125,7 @@ public interface IRegister<T> extends Iterable<T>
 	
 	/**
 	 * Give the element size of register.
-	 * @return
+	 * @return the size
 	 */
 	int size();
-	
-	/**
-	 * May not use any more.
-	 */
-	//	/**
-	//	 * Arrange and remove empty slot,
-	//	 * give all element new id by name.
-	//	 */
-	//	@Deprecated
-	//	void arrange();
-	//
-	//	/**
-	//	 * Arrange elements, the first is
-	//	 * strings name contains, and
-	//	 * move other not contain in this
-	//	 * element to other id.
-	//	 * @param list The name serialized list.
-	//	 */
-	//	@Deprecated
-	//	void arrange(String...list);
 }

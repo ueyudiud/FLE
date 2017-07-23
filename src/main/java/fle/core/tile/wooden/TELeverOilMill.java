@@ -10,7 +10,9 @@ import java.io.IOException;
 import farcore.data.Capabilities;
 import farcore.data.Keys;
 import farcore.lib.capability.IFluidHandler;
+import fle.api.recipes.IRecipeMap;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipeCache;
+import fle.api.tile.TEITSRecipe;
 import fle.core.client.gui.wooden.GuiLeverOilMill;
 import fle.core.common.gui.wooden.ContainerLeverOilMill;
 import nebula.common.NebulaKeyHandler;
@@ -22,14 +24,13 @@ import nebula.common.stack.AbstractStack;
 import nebula.common.tile.IGuiTile;
 import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
-import nebula.common.tile.TEInventoryTankSingleAbstract;
+import nebula.common.util.A;
 import nebula.common.util.Direction;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -42,17 +43,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class TELeverOilMill extends TEInventoryTankSingleAbstract
+public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>>
 implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
 {
-	private static final int[] IN = {0}, OUT = {1};
+	private static final int[] IN = A.rangeIntArray(0, 1), OUT = A.rangeIntArray(1, 2);
 	
 	public final FluidTankN tank = new FluidTankN(4000);
 	protected int energy;
-	protected int progress;
-	protected int maxProgress;
 	protected int angle;
-	protected TemplateRecipeCache<ItemStack> cache;
 	
 	public TELeverOilMill()
 	{
@@ -78,27 +76,6 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound compound)
-	{
-		super.readFromNBT(compound);
-		this.cache = LEVER_OIL_MILL.readFromNBT(compound, "recipe");
-		if (this.cache != null)
-		{
-			this.maxProgress = this.cache.get(0);
-			this.progress = compound.getInteger("progress");
-		}
-	}
-	
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound)
-	{
-		super.writeToNBT(compound);
-		LEVER_OIL_MILL.writeToNBT(this.cache, compound, "recipe");
-		compound.setInteger("progress", this.progress);
-		return compound;
-	}
-	
-	@Override
 	public String getName()
 	{
 		return "inventory.lever.oil.mill";
@@ -111,33 +88,48 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
 	}
 	
 	@Override
+	protected ItemStack getRecipeInputHandler()
+	{
+		return this.stacks[0];
+	}
+	
+	@Override
+	protected IRecipeMap<?, TemplateRecipeCache<ItemStack>, ItemStack> getRecipeMap()
+	{
+		return LEVER_OIL_MILL;
+	}
+	
+	@Override
+	protected void onRecipeInput()
+	{
+		decrStackSize(0, this.cache.<AbstractStack>get1(0));
+		this.recipeMaxTick = this.cache.get(0);
+	}
+	
+	@Override
+	protected int getPower()
+	{
+		return this.energy >= 80 ? 1 : 0;
+	}
+	
+	@Override
+	protected boolean onRecipeOutput()
+	{
+		if (insertStack(0, this.cache.get(1), false) &&
+				//this.tank.insertFluid(this.cache.<FluidStack>get(2), true)
+				this.tank.insertFluid(this.cache.<FluidStack>get(2), false))
+		{
+			//this.tank.insertFluid(this.cache.<FluidStack>get(2), false);
+			incrStack(1, this.cache.get(1), true);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	protected void updateServer()
 	{
 		super.updateServer();
-		if (this.cache == null && this.stacks[0] != null)
-		{
-			this.cache = LEVER_OIL_MILL.findRecipe(this.stacks[0]);
-			if (this.cache != null)
-			{
-				decrStackSize(0, this.cache.<AbstractStack>get1(0));
-				this.maxProgress = this.cache.get(0);
-			}
-		}
-		if (this.cache != null && this.energy > 80)
-		{
-			if (this.progress++ >= this.cache.<Integer>get(0))
-			{
-				this.progress = this.cache.get(0);
-				if (insertStack(0, this.cache.<ItemStack>get(1), false) == this.cache.<ItemStack>get(1).stackSize &&
-						this.tank.insertFluid(this.cache.<FluidStack>get(2), true))
-				{
-					insertStack(1, this.cache.get(1), true);
-					this.tank.insertFluid(this.cache.get(2), false);
-					this.cache = null;
-					this.progress = 0;
-				}
-			}
-		}
 		if (this.energy > 0)
 		{
 			--this.energy;
@@ -216,9 +208,7 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
 	{
 		switch (id)
 		{
-		case 0 : return this.progress;
-		case 1 : return this.energy;
-		case 2 : return this.maxProgress;
+		case 2 : return this.energy;
 		default: return super.getField(id);
 		}
 	}
@@ -228,21 +218,19 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
 	{
 		switch (id)
 		{
-		case 0 : this.progress = value; break;
-		case 1 : this.energy = value; break;
-		case 2 : this.maxProgress = value; break;
+		case 2 : this.energy = value; break;
 		default: super.setField(id, value); break;
 		}
 	}
 	
 	public int getMaxProgress()
 	{
-		return this.maxProgress;
+		return this.recipeMaxTick;
 	}
 	
 	public int getProgress()
 	{
-		return this.progress;
+		return this.recipeTick;
 	}
 	
 	@Override

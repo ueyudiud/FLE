@@ -52,7 +52,7 @@ public class ModCompator
 		}
 	}
 	
-	public void call(String phase)
+	public final void call(String phase)
 	{
 		for(Entry<String, ICompatible> entry : this.compatibles.entrySet())
 		{

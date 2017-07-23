@@ -93,9 +93,9 @@ public final class InventoryWrapFactory
 		public int getSizeInventory() { return this.inventory.getSizeInventory(); }
 		public @Nullable ItemStack getStackInSlot(int index) { return this.inventory.getStack(index); }
 		public @Nullable ItemStack getStack(int index) { return this.inventory.getStack(index); }
-		public int insertStack(int index, ItemStack resource, boolean process) { return this.inventory.insertStack(index, resource, process); }
-		public ItemStack decrStackSize(int index, int count) { return decrStackSize(index, count, true); }
-		public @Nullable ItemStack decrStackSize(int index, int count, boolean process) { return this.inventory.decrStackSize(index, count, process); }
+		public int incrStack(int index, ItemStack resource, boolean process) { return this.inventory.incrStack(index, resource, process); }
+		public ItemStack decrStackSize(int index, int count) { return decrStack(index, count, true); }
+		public @Nullable ItemStack decrStack(int index, int count, boolean process) { return this.inventory.decrStack(index, count, process); }
 		public @Nullable ItemStack removeStackFromSlot(int index) { return this.inventory.removeStackFromSlot(index); }
 		public void setInventorySlotContents(int index, @Nullable ItemStack stack) { this.inventory.setInventorySlotContents(index, stack); }
 		public int getInventoryStackLimit() { return this.inventory.getInventoryStackLimit(); }
@@ -104,11 +104,11 @@ public final class InventoryWrapFactory
 		{
 			if (!this.inventory.isItemValidForSlot(slot, stack) || stack == null) return stack;
 			stack = stack.copy();
-			int size = this.inventory.insertStack(slot, stack, simulate);
+			int size = this.inventory.incrStack(slot, stack, simulate);
 			stack.stackSize -= size;
 			return stack;
 		}
-		public ItemStack extractItem(int slot, int amount, boolean simulate) { return this.inventory.decrStackSize(slot, amount, simulate); }
+		public ItemStack extractItem(int slot, int amount, boolean simulate) { return this.inventory.decrStack(slot, amount, simulate); }
 	}
 	
 	static class InventoryContainerWrapper extends InventoryBasicWrapper
@@ -129,9 +129,9 @@ public final class InventoryWrapFactory
 		}
 		
 		@Override
-		public ItemStack decrStackSize(int index, int count, boolean process)
+		public ItemStack decrStack(int index, int count, boolean process)
 		{
-			ItemStack stack = super.decrStackSize(index, count, process);
+			ItemStack stack = super.decrStack(index, count, process);
 			if (process && stack != null)
 			{
 				this.container.onCraftMatrixChanged(this);

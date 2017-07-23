@@ -257,11 +257,8 @@ public final class A
 	
 	/**
 	 * Create a array with ranged number.<p>
-	 * Examples :
-	 * <code>
-	 * Arrays.toString(rangeIntArray(1, 3));
-	 * </code>
-	 * and the result is {@code [1, 2]}
+	 * For examples : the result of <tt>rangeIntArray(1, 3)</tt>
+	 * is <tt>[1, 2]</tt>
 	 * @param from start value (include itself)
 	 * @param to end value (exclude itself)
 	 * @return the int array.
@@ -276,13 +273,11 @@ public final class A
 	/**
 	 * Create a array with selected generator.<p>
 	 * Examples :
-	 * <code>
-	 * Arrays.toString(createIntArray(3, i->i*i));
-	 * </code>
-	 * and the result is {@code [0, 1, 4]}
-	 * @param length the length array.
-	 * @param operator the function to provide int value.
-	 * @return
+	 * <code>createIntArray(3, i->i*i)</code>
+	 * and the result is <tt>[0, 1, 4]</tt>
+	 * @param length the length of array.
+	 * @param operator the function to provide <tt>int</tt> value.
+	 * @return the array.
 	 */
 	public static int[] createIntArray(int length, IntUnaryOperator operator)
 	{
@@ -292,10 +287,10 @@ public final class A
 	}
 	
 	/**
-	 * 
-	 * @param length
-	 * @param function
-	 * @return
+	 * Create a array with selected generator.
+	 * @param length the length of array.
+	 * @param function the function to provider <tt>long</tt> value
+	 * @return the array.
 	 * @see #createIntArray(int, IntUnaryOperator)
 	 */
 	public static long[] createLongArray(int length, IntToLongFunction function)
@@ -327,26 +322,43 @@ public final class A
 		return a1;
 	}
 	
-	public static <E> E[] sublist(E[] array, int off)
+	/**
+	 * Get sub list of array.
+	 * @param array the source array.
+	 * @param off the sublist start pos(include itself).
+	 * @return the sub array with element start at <tt>off</tt> position in source array and
+	 * include all element after.
+	 * @see #sublist(Object[], int, int)
+	 */
+	public static <E> E[] sublist(@Nonnull E[] array, int off)
 	{
 		return sublist(array, off, array.length - off);
 	}
 	
 	/**
 	 * Create a sub list from argument list.
-	 * @param array
-	 * @param off
-	 * @param len
-	 * @return
+	 * @param array the source of array.
+	 * @param off the sublist start pos(include itself).
+	 * @param len the length of array.
+	 * @return the sub array with element start at <tt>off</tt> position in source array and
+	 * end at <tt>off + len</tt> postion in source array.
+	 * @throws java.lang.IndexOutOfBoundsException when copy length is out of array bound.
 	 */
-	public static <E> E[] sublist(E[] array, int off, int len)
+	public static <E> E[] sublist(@Nonnull E[] array, int off, int len)
 	{
 		E[] a1 = ObjectArrays.newArray(array, len);
 		System.arraycopy(array, off, a1, 0, len);
 		return a1;
 	}
 	
-	public static <T> T[] allNonNull(T[] array)
+	/**
+	 * Return if all elements are non-null.
+	 * @param <T> type of elements.
+	 * @param array the elements.
+	 * @return the elements.
+	 * @throws java.lang.NullPointerException if any element in array is null.
+	 */
+	public static <T> T[] allNonNull(@Nonnull T[] array)
 	{
 		for (Object arg : array) if (arg == null) throw new NullPointerException();
 		return array;

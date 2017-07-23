@@ -138,11 +138,21 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 		return drain(suggested.amount, !simulate);
 	}
 	
-	public boolean insertFluid(FluidStack stack, boolean simulate)
+	/**
+	 * Take <tt>insert</tt> action, means stack will be filled only source stack can fully
+	 * insert into tank.
+	 * @param stack the source stack.
+	 * @param simulate do tank stack not changed in <tt>insert</tt> action, if do this,
+	 * the tank will only give similate result.
+	 * @return return <tt>true</tt> if stack fully insert into tank.
+	 */
+	public boolean insertFluid(@Nullable FluidStack stack, boolean simulate)
 	{
+		if (stack == null) return true;
 		if (fill(stack, false) == stack.amount)
 		{
-			fill(stack, true);
+			if (!simulate)
+				fill(stack, true);
 			return true;
 		}
 		return false;
@@ -198,9 +208,9 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 	}
 	
 	@Override
-	public int fill(FluidStack resource, boolean doFill)
+	public int fill(@Nullable FluidStack resource, boolean doFill)
 	{
-		if (!canInsertFluid(Direction.Q, resource)) return 0;
+		if (resource == null) return 0;
 		if (this.stack == null)
 		{
 			int amount = Math.min(resource.amount, this.capacity);
@@ -236,17 +246,15 @@ public class FluidTankN implements IFluidTank, IFluidHandlerIO, INBTCompoundRead
 		}
 	}
 	
-	public FluidStackExt drain(FluidStack target, boolean doDrain)
+	public @Nullable FluidStackExt drain(FluidStack target, boolean doDrain)
 	{
 		if (target instanceof FluidStackExt)
-		{
 			target = ((FluidStackExt) target).toSimple();
-		}
-		return hasFluid() && this.stack.isFluidEqual(target) ? drain(target.amount, doDrain) : null;
+		return hasFluid() && target.isFluidEqual(this.stack) ? drain(target.amount, doDrain) : null;
 	}
 	
 	@Override
-	public FluidStackExt drain(int maxDrain, boolean doDrain)
+	public @Nullable FluidStackExt drain(int maxDrain, boolean doDrain)
 	{
 		if (this.stack == null) return null;
 		int amt = Math.min(this.stack.amount, maxDrain);

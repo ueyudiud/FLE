@@ -73,9 +73,6 @@ public class PacketBufferExt extends PacketBuffer
 	
 	public void writeFixedIntArray(int[] array) throws IOException
 	{
-		for (int element : array)
-		{
-			writeInt(element);
-		}
+		for (int element : array) { writeInt(element); }
 	}
 }

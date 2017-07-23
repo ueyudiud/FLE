@@ -148,7 +148,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	}
 	
 	@Override
-	public int insertStack(int index, ItemStack resource, boolean process)
+	public int incrStack(int index, ItemStack resource, boolean process)
 	{
 		int size = InventoryHelper.incrStack(this, index, false, resource, process, false);
 		if (size != 0 && process)
@@ -159,7 +159,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	}
 	
 	@Override
-	public ItemStack decrStackSize(int index, int count, boolean process)
+	public ItemStack decrStack(int index, int count, boolean process)
 	{
 		ItemStack result = ItemStacks.copyNomoreThan(this.stacks[index], count);
 		if (result != null)
@@ -200,7 +200,7 @@ implements IBasicInventory, IInventory, ITB_BreakBlock
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
-		return decrStackSize(index, count, true);
+		return decrStack(index, count, true);
 	}
 	
 	@Override

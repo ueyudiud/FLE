@@ -46,8 +46,8 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	
 	/**
 	 * Get sub meta from stack.
-	 * @param stack The stack should be predicated that {@code stack.getItem() instanceof ItemMulti == true}.
-	 * @return The sub meta of stack.
+	 * @param stack the stack should be predicated that {@code stack.getItem() instanceof ItemMulti == true}.
+	 * @return the sub meta of stack.
 	 * @see nebula.common.item.ItemBase#getStackMetaOffset
 	 */
 	public static int getSubMeta(ItemStack stack)

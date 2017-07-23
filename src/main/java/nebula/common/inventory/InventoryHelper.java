@@ -221,7 +221,7 @@ public class InventoryHelper
 				entry = FluidContainerHandler.fillContainerFromIO(stack1, maxFill, io, Direction.Q, true);
 				if (entry != null)
 				{
-					if (inventory.insertStack(out, entry.getKey(), true) != 0)
+					if (inventory.incrStack(out, entry.getKey(), true) != 0)
 					{
 						stack1 = inventory.decrStackSize(in, 1);
 						FluidContainerHandler.fillContainerFromIO(stack1, maxFill, io, Direction.Q, false);
@@ -257,7 +257,7 @@ public class InventoryHelper
 				entry = FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, true);
 				if (entry != null)
 				{
-					if (inventory.insertStack(out, entry.getKey(), true) > 0)
+					if (inventory.incrStack(out, entry.getKey(), true) > 0)
 					{
 						stack = inventory.decrStackSize(in, 1);
 						FluidContainerHandler.drainContainerToIO(stack, maxDrain, io, Direction.Q, onlyFullyDrain, false);

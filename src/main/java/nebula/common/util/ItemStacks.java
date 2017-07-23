@@ -7,7 +7,7 @@ package nebula.common.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ import net.minecraftforge.oredict.OreDictionary;
  */
 public final class ItemStacks
 {
-	public static final Function<ItemStack, ItemStack> COPY_ITEMSTACK = ItemStack::copyItemStack;
+	public static final UnaryOperator<ItemStack> COPY_ITEMSTACK = ItemStack::copyItemStack;
 	
 	private ItemStacks() {}
 	

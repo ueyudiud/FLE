@@ -16,17 +16,17 @@ public class ArrayIterator<E> implements ListIterator<E>
 	{
 		this.list = list;
 	}
-
+	
 	@Override
 	public boolean hasNext()
 	{
-		return list != null && pos < list.length;
+		return this.list != null && this.pos < this.list.length;
 	}
-
+	
 	@Override
 	public E next()
 	{
-		return list[pos++];
+		return this.list[this.pos++];
 	}
 	
 	@Override
@@ -38,44 +38,44 @@ public class ArrayIterator<E> implements ListIterator<E>
 	@Override
 	public E previous()
 	{
-		return list[--pos];
+		return this.list[--this.pos];
 	}
-
+	
 	public void reset()
 	{
-		pos = 0;
+		this.pos = 0;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return Arrays.toString(list);
+		return Arrays.toString(this.list);
 	}
-
+	
 	@Override
 	public int nextIndex()
 	{
-		return pos + 1;
+		return this.pos + 1;
 	}
-
+	
 	@Override
 	public int previousIndex()
 	{
-		return pos - 1;
+		return this.pos - 1;
 	}
-
+	
 	@Override
 	public void remove()
 	{
-		list[pos - 1] = null;
+		this.list[this.pos - 1] = null;
 	}
-
+	
 	@Override
 	public void set(E e)
 	{
-		list[pos - 1] = e;
+		this.list[this.pos - 1] = e;
 	}
-
+	
 	@Override
 	public void add(E e)
 	{
