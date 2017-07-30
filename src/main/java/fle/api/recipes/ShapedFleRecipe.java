@@ -24,7 +24,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
 /**
+ * The shaped recipe type.
+ * A more usable recipe template for crafting table.<p>
  * @author ueyudiud
+ * @see net.minecraftforge.oredict.ShapedOreRecipe
  */
 public class ShapedFleRecipe implements IRecipe
 {

@@ -259,7 +259,6 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	@Override
 	public boolean isSideSolid(Direction side)
 	{
-		int i, j, k;
 		switch (side)
 		{
 		case U : return (~this.carvedState & Y_LAYER[3]) == 0;

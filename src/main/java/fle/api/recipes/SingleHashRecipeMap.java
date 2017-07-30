@@ -14,7 +14,11 @@ import nebula.base.INode;
 import nebula.base.Node;
 
 /**
+ * A recipe map template, use hash to
+ * save and find recipe.
  * @author ueyudiud
+ * @see fle.api.recipes.IRecipeMap
+ * @see java.lang.Object#hashCode()
  */
 public abstract class SingleHashRecipeMap<R, O, H> implements IRecipeMap<R, O, H>
 {

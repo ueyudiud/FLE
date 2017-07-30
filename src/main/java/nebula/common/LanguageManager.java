@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common;
 
 import java.io.BufferedReader;
@@ -210,7 +214,7 @@ public class LanguageManager
 			int keyCount = 0;
 			Map<String, String> map = new HashMap<>();
 			
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file))))
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
 			{
 				String line;
 				while((line = reader.readLine()) != null)
@@ -261,7 +265,7 @@ public class LanguageManager
 			{
 				file.createNewFile();
 			}
-			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true))))
+			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
 			{
 				Map<String, String> map = MAP1.getOrDefault(ENGLISH, ImmutableMap.of());
 				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);//Use sorted map for easier to search translated word.

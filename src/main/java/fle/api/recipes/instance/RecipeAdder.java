@@ -42,7 +42,10 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
+ * All recipe registeration helper method are here.<p>
+ * 
  * @author ueyudiud
+ * @see fle.api.recipes.instance.RecipeMaps
  */
 public final class RecipeAdder
 {
