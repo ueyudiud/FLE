@@ -130,7 +130,7 @@ class OpInformation
 	
 	private OpInformation merge(OpInformation information)
 	{
-		ClassTransformer.LOG.warn("Same class " + this.mcpname +
+		NebulaASMLogHelper.LOG.warn("Same class " + this.mcpname +
 				" type modification detected, this may cause modification "
 				+ "failed, please change them if necessary.");
 		information.modifies.forEach((key, labels) -> L.put(this.modifies, key, labels));

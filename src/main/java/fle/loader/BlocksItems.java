@@ -48,7 +48,7 @@ public class BlocksItems
 		
 		tool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.tabTool);
 		fluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.tabTool);
-		miscResources = new ItemMiscResources();
+		miscResources = (ItemMiscResources) new ItemMiscResources().setCreativeTab(CT.tabResourceItem);
 		ditch = new BlockDitch();
 		gear = new BlockGear();
 		simple_wooden_workbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.tabMachine);

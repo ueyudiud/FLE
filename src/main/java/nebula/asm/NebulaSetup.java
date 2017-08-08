@@ -111,7 +111,7 @@ public class NebulaSetup implements IFMLCallHook
 	/**
 	 * The ASM file version, uses to determine if it need replaced ASM files.
 	 */
-	private static final int VERSION = 7;
+	private static final int VERSION = 8;
 	
 	final JsonDeserializer<OpInformation> DESERIALIZER1 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
@@ -121,7 +121,7 @@ public class NebulaSetup implements IFMLCallHook
 		{
 			if (!object.has("modification"))
 			{
-				ClassTransformer.LOG.warn("No modification of " + information.mcpname + " detected.");
+				NebulaASMLogHelper.LOG.warn("No modification of " + information.mcpname + " detected.");
 			}
 			else
 			{
@@ -201,10 +201,13 @@ public class NebulaSetup implements IFMLCallHook
 			int count = Jsons.getOrDefault(object, "count", 1);//Each prefer first for replacement.
 			label = new OpLabel.OpLabelMethodAsTag(count, owner, name, desc, off, len, type, nodes);
 		}
-		else
+		else switch (Jsons.getOrDefault(object, "marker", -1))
 		{
+		case 1 : label = new OpLabel.OpLabelBegining(off, len, type, nodes); break;
+		default:
 			int line = Jsons.getOrDefault(object, "line", 0);
 			label = new OpLabel.OpLabelLineNumber(line, off, len, type, nodes);
+			break;
 		}
 		return label;
 	};
@@ -214,6 +217,10 @@ public class NebulaSetup implements IFMLCallHook
 		if (src instanceof OpLabel.OpLabelLineNumber)
 		{
 			object.addProperty("line", ((OpLabel.OpLabelLineNumber) src).line);
+		}
+		else if (src instanceof OpLabel.OpLabelBegining)
+		{
+			object.addProperty("marker", 1);
 		}
 		else
 		{
@@ -375,11 +382,11 @@ public class NebulaSetup implements IFMLCallHook
 	{
 		try
 		{
-			ClassTransformer.LOG.info("Searching modifications at {}", file.getCanonicalPath());
+			NebulaASMLogHelper.LOG.info("Searching modifications at {}", file.getCanonicalPath());
 		}
 		catch (IOException exception)
 		{
-			ClassTransformer.LOG.warn("Unknown fil path.");
+			NebulaASMLogHelper.LOG.warn("Unknown fil path.");
 		}
 		try
 		{
@@ -389,21 +396,21 @@ public class NebulaSetup implements IFMLCallHook
 				{
 					OpInformation information = this.gson.fromJson(new BufferedReader(new FileReader(file2)), OpInformation.class);
 					information.put();
-					ClassTransformer.LOG.info("Loaded {} modifications.", information.mcpname);
+					NebulaASMLogHelper.LOG.info("Loaded {} modifications.", information.mcpname);
 				}
 				catch (RuntimeException exception)
 				{
-					ClassTransformer.LOG.error("Fail to parse OperationInformation at " + file2.getPath(), exception);
+					NebulaASMLogHelper.LOG.error("Fail to parse OperationInformation at " + file2.getPath(), exception);
 				}
 				catch (IOException exception)
 				{
-					ClassTransformer.LOG.error("Fail to load OperationInformation", exception);
+					NebulaASMLogHelper.LOG.error("Fail to load OperationInformation", exception);
 				}
 			}
 		}
 		catch (RuntimeException exception)
 		{
-			ClassTransformer.LOG.error("Failed to searching ASM files.", exception);
+			NebulaASMLogHelper.LOG.error("Failed to searching ASM files.", exception);
 		}
 	}
 	
@@ -422,7 +429,7 @@ public class NebulaSetup implements IFMLCallHook
 			}
 			catch (Exception exception)
 			{
-				ClassTransformer.LOG.error("Fail to add version file.", exception);
+				NebulaASMLogHelper.LOG.error("Fail to add version file.", exception);
 			}
 			finally
 			{
@@ -454,7 +461,7 @@ public class NebulaSetup implements IFMLCallHook
 			}
 			catch (Exception exception)
 			{
-				ClassTransformer.LOG.error("Fail to check version file.", exception);
+				NebulaASMLogHelper.LOG.error("Fail to check version file.", exception);
 			}
 		}
 		return true;
@@ -490,7 +497,7 @@ public class NebulaSetup implements IFMLCallHook
 					String targetLocation = "asm/" + n + "/";
 					if (jarFile.getEntry(targetLocation) == null)
 					{
-						ClassTransformer.LOG.warn("Asm file does not exist or invalid!");
+						NebulaASMLogHelper.LOG.warn("Asm file does not exist or invalid!");
 					}
 					else
 					{
@@ -500,13 +507,10 @@ public class NebulaSetup implements IFMLCallHook
 							JarEntry entry = enumeration.nextElement();
 							if (!entry.isDirectory())
 							{
-								if (entry.getName().startsWith(targetLocation))
+								if (entry.getName().startsWith("asm/"))
 								{
-									if (entry != null)
-									{
-										ClassTransformer.LOG.info("Copy asm data from :" + entry.getName());
-										FileUtils.copyInputStreamToFile(jarFile.getInputStream(entry), new File(destination, entry.getName().substring(targetLocation.length())));
-									}
+									NebulaASMLogHelper.LOG.info("Copy asm data from :" + entry.getName());
+									FileUtils.copyInputStreamToFile(jarFile.getInputStream(entry), new File(destination, entry.getName().substring(targetLocation.length())));
 								}
 							}
 						}
@@ -522,11 +526,11 @@ public class NebulaSetup implements IFMLCallHook
 					File[] files = new File(file, "asm").listFiles((dir, name) -> name.equals(n));
 					if (files == null || files.length != 1)
 					{
-						ClassTransformer.LOG.warn("Asm file does not exist or invalid!");
+						NebulaASMLogHelper.LOG.warn("Asm file does not exist or invalid!");
 					}
 					else
 					{
-						ClassTransformer.LOG.info("Copy asm data from :" + files[0].getPath());
+						NebulaASMLogHelper.LOG.info("Copy asm data from :" + files[0].getPath());
 						FileUtils.copyDirectory(files[0], destination);
 					}
 				}

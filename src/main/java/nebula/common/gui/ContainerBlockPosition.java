@@ -21,8 +21,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ContainerBlockPosition extends ContainerBase implements IInventoryChangedListener
 {
-	protected World world;
-	protected BlockPos pos;
+	public final World world;
+	public final BlockPos pos;
 	private IBlockState state;
 	private int[] lastCurrentValue;
 	protected int[] currentValue;

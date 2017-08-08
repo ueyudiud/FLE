@@ -67,7 +67,9 @@ public class Renders
 	}
 	
 	/**
-	 * Register sub model by a mapper and property to split.
+	 * Register sub model by a mapper and property to split.<p>
+	 * This method will register both item model and block model,
+	 * they use same block model location.<p>
 	 * @param <T> the type of property.
 	 * @param mapper the model mapper.
 	 * @param block the block formapper.

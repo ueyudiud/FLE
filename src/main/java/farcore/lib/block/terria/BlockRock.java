@@ -12,6 +12,7 @@ import farcore.data.MC;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.material.Mat;
 import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
@@ -31,7 +32,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -83,14 +83,8 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		StateMapperExt mapper = new StateMapperExt(this.material.modid, "rock/" + this.material.name, null, HEATED);
-		ModelLoader.setCustomStateMapper(this, mapper);
-		ModelLoader.setCustomMeshDefinition(this.item,
-				stack -> mapper.getLocationFromState(getStateFromMeta(stack.getItemDamage())));
-		for (EnumRockType type : EnumRockType.values())
-		{
-			ModelLoader.registerItemVariants(this.item, mapper.getLocationFromState(getDefaultState().withProperty(TYPE, type)));
-		}
+		Renders.registerCompactModel(new StateMapperExt(this.material.modid, "rock/" + this.material.name, null, HEATED),
+				this, TYPE);
 	}
 	
 	@Override

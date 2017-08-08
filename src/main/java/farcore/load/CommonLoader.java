@@ -22,7 +22,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.FarCore;
 import farcore.data.CT;
-import farcore.data.Config;
 import farcore.data.EnumFluid;
 import farcore.data.EnumItem;
 import farcore.data.EnumPhysicalDamageType;
@@ -88,15 +87,16 @@ public class CommonLoader
 	{
 		ProgressBar bar = push("Far Core Preload", 9);
 		bar.step("Add Creative Tabs");
-		CT.tabCropAndWildPlants = new CreativeTabBase("farcore.crop.plants", "Far Crop And Wild Plant", () -> new ItemStack(Items.WHEAT));
+		CT.tabCropAndWildPlants = new CreativeTabBase("farcore.crop.plants", "Far Crop And Wild Plant",
+				() -> new ItemStack(Items.WHEAT));
 		CT.tabTree = new CreativeTabBase("farcore.tree", "Far Tree",
-				() -> Config.createLog ? new ItemStack(M.oak.getProperty(MP.property_wood).block) : new ItemStack(Blocks.LOG));
+				() -> new ItemStack(M.oak.getProperty(MP.property_wood).block));
 		CT.tabTerria = new CreativeTabBase("farcore.terria", "Far Terria",
-				() -> Config.createRock ? new ItemStack(M.peridotite.getProperty(MP.property_rock).block) : new ItemStack(Blocks.STONE));
+				() -> new ItemStack(M.peridotite.getProperty(MP.property_rock).block));
 		CT.tabBuilding = new CreativeTabBase("farcore.building", "Far Building Blocks",
-				() -> Config.createRock ? new ItemStack(M.marble.getProperty(MP.property_rock).block, 1, EnumRockType.brick.ordinal()) : new ItemStack(Blocks.STONEBRICK));
+				() -> new ItemStack(M.marble.getProperty(MP.property_rock).block, 1, EnumRockType.brick.ordinal()));
 		CT.tabResourceItem = new CreativeTabBase("farcore.resource.item", "Far Resource Item",
-				() -> Config.createRock ? new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id) : new ItemStack(Items.GOLD_INGOT));
+				() -> new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id));
 		CT.tabMachine = new CreativeTabBase("farcore.machine", "Far Machine",
 				() -> new ItemStack(Blocks.CRAFTING_TABLE));
 		CT.tabMaterial = new CreativeTabBase("farcore.material", "Far Material",
@@ -104,7 +104,7 @@ public class CommonLoader
 		CT.tabTool = new CreativeTabBase("farcore.tool", "Far Tool",
 				() -> new ItemStack(EnumItem.debug.item));
 		CT.tabRedstone = new CreativeTabBase("farcore.redstone", "Far Redstone",
-				() -> Config.createRock ? BlockRedstoneCircuit.createItemStack(1, M.stone) : new ItemStack(Items.COMPARATOR));
+				() -> BlockRedstoneCircuit.createItemStack(1, M.stone));
 		//Register common handler.
 		bar.step("Register Game Handlers");
 		registerForgeEventListener(FarCoreEnergyHandler.getHandler());
@@ -128,37 +128,28 @@ public class CommonLoader
 		bar.step("Add Items");
 		new ItemDebugger().setCreativeTab(CT.tabTool);
 		EnumItem.display_fluid.set(Item.REGISTRY.getObject(new ResourceLocation("nebula", "display.fluid")));
-		if(Config.createRock)
-		{
-			new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
-			new ItemStoneFragment().setCreativeTab(CT.tabResourceItem);
-			new ItemOreChip().setCreativeTab(CT.tabResourceItem);
-			new farcore.lib.block.terria.BlockOre().setCreativeTab(CT.tabTerria);
-			new BlockCarvedRock();
-			new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
-		}
-		if(Config.createCrop)
-		{
-			new ItemSeed().setCreativeTab(CT.tabCropAndWildPlants);
-			new BlockCrop();
-		}
-		if(Config.createLog)
-		{
-			new BlockSapling().setCreativeTab(CT.tabTree);
-			EnumItem.branch.set(new ItemMulti(MC.branch).setCreativeTab(CT.tabTree));
-			new ItemTreeLog().setCreativeTab(CT.tabTree);
-			new ItemMulti(MC.bark).setCreativeTab(CT.tabTree);
-			new ItemMulti(MC.firewood).setCreativeTab(CT.tabTree);
-		}
+		new ItemStoneChip().setCreativeTab(CT.tabResourceItem);
+		new ItemStoneFragment().setCreativeTab(CT.tabResourceItem);
+		new ItemOreChip().setCreativeTab(CT.tabResourceItem);
+		new farcore.lib.block.terria.BlockOre().setCreativeTab(CT.tabTerria);
+		new BlockCarvedRock();
+		new BlockRedstoneCircuit().setCreativeTab(CT.tabRedstone);
+		new ItemSeed().setCreativeTab(CT.tabCropAndWildPlants);
+		new BlockCrop();
+		new BlockSapling().setCreativeTab(CT.tabTree);
+		EnumItem.branch.set(new ItemMulti(MC.branch).setCreativeTab(CT.tabTree));
+		new ItemTreeLog().setCreativeTab(CT.tabTree);
+		new ItemMulti(MC.bark).setCreativeTab(CT.tabTree);
+		new ItemMulti(MC.firewood).setCreativeTab(CT.tabTree);
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.tabMaterial));
 		new ItemIngot().setCreativeTab(CT.tabMaterial);
 		new ItemMulti(MC.pile).setCreativeTab(CT.tabMaterial);
-		if(Config.replaceWater)
-		{
-			EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
-			new BlockWater((FluidBase) EnumFluid.water.fluid);
-			new BlockIce().setCreativeTab(CT.tabTerria);
-		}
+		new ItemMulti(MC.brick).setCreativeTab(CT.tabBuilding);
+		new ItemMulti(MC.roofshingle).setCreativeTab(CT.tabBuilding);
+		new ItemMulti(MC.rooftile).setCreativeTab(CT.tabBuilding);
+		EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
+		new BlockWater((FluidBase) EnumFluid.water.fluid);
+		new BlockIce().setCreativeTab(CT.tabTerria);
 		new BlockFire();
 		new BlockMetal();
 		new BlockScreen();

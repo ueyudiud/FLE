@@ -11,6 +11,11 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class PacketAbstract implements IPacket
 {
+	public static interface Encoder
+	{
+		void encode(PacketBufferExt output) throws IOException;
+	}
+	
 	protected Side side;
 	protected INetHandler handler;
 	

@@ -7,6 +7,7 @@ package nebula.common.network;
 import java.io.IOException;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import nebula.common.fluid.FluidStackExt;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.Fluid;
@@ -18,6 +19,10 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public class PacketBufferExt extends PacketBuffer
 {
+	public PacketBufferExt(byte[] datas)
+	{
+		super(Unpooled.wrappedBuffer(datas));
+	}
 	public PacketBufferExt(ByteBuf wrapped)
 	{
 		super(wrapped);

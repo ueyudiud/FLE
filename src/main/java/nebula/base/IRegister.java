@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
  * @author ueyudiud
  * @param <T> the element type in regiser.
  * @see java.lang.Iterable
+ * @see nebula.base.Register
  */
 public interface IRegister<T> extends Iterable<T>
 {

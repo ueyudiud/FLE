@@ -8,6 +8,10 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
+import farcore.data.MP;
+import farcore.data.SubTags;
+import farcore.lib.item.ItemMulti;
+import farcore.lib.material.Mat;
 import fle.api.FLEAPI;
 import fle.api.client.PolishingStateIconLoader;
 import fle.core.FLE;
@@ -16,9 +20,14 @@ import fle.core.tile.wooden.workbench.TEWoodenPolishTable;
 import nebula.client.gui.GuiContainerTileInventory;
 import nebula.client.gui.GuiIconButton;
 import nebula.client.gui.GuiIconButton.ButtonSize;
+import net.minecraft.block.Block;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,7 +50,24 @@ public class GuiPolishTable extends GuiContainerTileInventory<TEWoodenPolishTabl
 	public void initGui()
 	{
 		super.initGui();
-		addButton(new GuiIconButton(0, this.guiLeft + 102, this.guiTop + 18, ButtonSize.Standard, FLEAPI.BUTTON_LOCATION, 48, 0, this.itemRender));
+		addButton(new GuiIconButton(0, this.guiLeft + 102, this.guiTop + 18, ButtonSize.Standard, FLEAPI.BUTTON_LOCATION, 48, 0, this.itemRender)
+		{
+			@Override
+			public void playPressSound(SoundHandler soundHandlerIn)
+			{
+				ItemStack stack = GuiPolishTable.this.tile.getPolishingInput();
+				Mat material = ItemMulti.getMaterial(stack);
+				if (material != Mat.VOID && SubTags.ROCK.isTrue(material))
+				{
+					Block block = material.getProperty(MP.property_rock).block;
+					soundHandlerIn.playSound(PositionedSoundRecord.getMusicRecord(block.getSoundType().getBreakSound()));
+				}
+				else
+				{
+					soundHandlerIn.playSound(PositionedSoundRecord.getMusicRecord(SoundEvents.BLOCK_STONE_BREAK));
+				}
+			}
+		});
 	}
 	
 	@Override

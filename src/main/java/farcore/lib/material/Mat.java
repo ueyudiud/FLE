@@ -16,7 +16,6 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
-import farcore.data.Config;
 import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.block.behavior.MetalBlockBehavior;
@@ -55,7 +54,6 @@ import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.SubTag;
-import nebula.io.javascript.ScriptLoad;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.item.ItemStack;
@@ -175,13 +173,10 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		else return MATERIALS_CACHE.get(filter);
 	}
 	
-	@ScriptLoad
 	public final String modid;
-	@ScriptLoad
 	public final String name;
 	public final String oreDictName;
 	public final String localName;
-	@ScriptLoad
 	public final short id;
 	/**
 	 * Some material is variant of other material,
@@ -191,7 +186,6 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public String chemicalFormula;
 	public String customDisplayInformation;
 	public short[] RGBa = {255, 255, 255, 255};
-	@ScriptLoad
 	public int RGB = 0xFFFFFF;
 	//Multi item configuration.
 	public IItemMatProp itemProp;
@@ -432,7 +426,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		property.hardness = property0.hardness;
 		property.harvestLevel = property0.harvestLevel;
 		add(SubTags.TREE);
-		if(createBlock && Config.createLog)
+		if(createBlock)
 		{
 			BlockLogNatural logNatural = BlockLogNatural.create(this, property);
 			BlockLogArtificial logArtificial = BlockLogArtificial.create(this, property);
@@ -454,10 +448,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 				-1,//It seems no soil need use tool to harvest.
 				hardness,
 				resistance);
-		if(Config.createSoil)
-		{
-			property.block = new BlockSoil(this.modid, "soil." + this.name, material, this, property);
-		}
+		property.block = new BlockSoil(this.modid, "soil." + this.name, material, this, property);
 		add(SubTags.DIRT);
 		return addProperty(MP.property_soil, property);
 	}

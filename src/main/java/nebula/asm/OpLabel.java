@@ -158,4 +158,18 @@ public abstract class OpLabel
 			return false;
 		}
 	}
+	
+	static class OpLabelBegining extends OpLabel
+	{
+		OpLabelBegining(int off, int len, OpType type, List<AbstractInsnNode> nodes)
+		{
+			super(off, len, type, nodes);
+		}
+		
+		@Override
+		boolean matchNode(AbstractInsnNode node)
+		{
+			return true;
+		}
+	}
 }

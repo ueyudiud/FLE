@@ -108,6 +108,16 @@ public abstract class GuiContainerBase extends GuiContainer
 		return this.mc.gameSettings.touchscreen;
 	}
 	
+	/**
+	 * Check is key press down.
+	 * This method will be used only if {@link net.minecraft.client.gui.GuiScreen#allowUserInput} is enabled.<p>
+	 * The key checking is using for {{@link #keyTyped(char, int)} method to use, checking
+	 * the key registered at {@link nebula.common.NebulaKeyHandler} is pressed down.
+	 * @param key the key register name.
+	 * @param keycode the typed keycode.
+	 * @see nebula.common.NebulaKeyHandler
+	 * @return is key pressed down.
+	 */
 	protected boolean matchKey(String key, int keycode)
 	{
 		return NebulaKeyHandler.getBinding(key).getKeyCode() == keycode;
@@ -186,11 +196,23 @@ public abstract class GuiContainerBase extends GuiContainer
 		this.mc.renderEngine.bindTexture(location);
 	}
 	
+	/**
+	 * @see #drawFluid(int, int, FluidTankInfo, int, int, boolean)
+	 */
 	public void drawFluid(int x, int y, FluidTankInfo tank, int width, int height)
 	{
 		drawFluid(x, y, tank, width, height, false);
 	}
 	
+	/**
+	 * Draw fluid icon to GUI.
+	 * @param x the start x position.
+	 * @param y the start y position.
+	 * @param info the render tank information.
+	 * @param width the rendering width.
+	 * @param height the rendering height.
+	 * @param lay <tt>true</tt> for rendering fluid from left to right, and from down to up else.
+	 */
 	public void drawFluid(int x, int y, FluidTankInfo info, int width, int height, boolean lay)
 	{
 		if(info.fluid == null) return;
@@ -216,6 +238,16 @@ public abstract class GuiContainerBase extends GuiContainer
 		}
 	}
 	
+	/**
+	 * Draw repeated icon to GUI.
+	 * @param icon the rendering icon.
+	 * @param x the start x position.
+	 * @param y the start y position.
+	 * @param width the rendering width.
+	 * @param height the rendering height.
+	 * @param z the z level.
+	 * @param color the rendering color.
+	 */
 	protected void drawRepeated(TextureAtlasSprite icon, double x, double y, double width, double height, double z, int color)
 	{
 		double iconWidthStep = (icon.getMaxU() - icon.getMinU()) / 16.0;
@@ -249,6 +281,15 @@ public abstract class GuiContainerBase extends GuiContainer
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
 	
+	/**
+	 * Draw item stack to GUI.
+	 * @param stack the rendered stack.
+	 * @param x the start x position.
+	 * @param y the start y position.
+	 * @param renderOverlay should renderer render the overlay to GUI.
+	 * @param altText the alt text.
+	 * @param zLevel the z level.
+	 */
 	protected void drawItemStack(ItemStack stack, int x, int y, boolean renderOverlay, String altText, float zLevel)
 	{
 		GlStateManager.translate(0.0F, 0.0F, 32.0F);
@@ -266,6 +307,17 @@ public abstract class GuiContainerBase extends GuiContainer
 		this.itemRender.zLevel = 0.0F;
 	}
 	
+	/**
+	 * Draw a progress bar from up to down.
+	 * @param x
+	 * @param y
+	 * @param u
+	 * @param v
+	 * @param w
+	 * @param h
+	 * @param p the progress current.
+	 * @param mp the max progress.
+	 */
 	protected void drawProgressScaleUTD(int x, int y, int u, int v, int w, int h, int p, int mp)
 	{
 		int scale = (int) ((float) p / (float) mp * h);
@@ -277,6 +329,17 @@ public abstract class GuiContainerBase extends GuiContainer
 		drawTexturedModalRect(x, y, u, v, w, scale);
 	}
 	
+	/**
+	 * Draw a progress bar from down to up.
+	 * @param x
+	 * @param y
+	 * @param u
+	 * @param v
+	 * @param w
+	 * @param h
+	 * @param p the progress current.
+	 * @param mp the max progress.
+	 */
 	protected void drawProgressScaleDTU(int x, int y, int u, int v, int w, int h, int p, int mp)
 	{
 		int scale = (int) ((float) p / (float) mp * h);
@@ -288,6 +351,17 @@ public abstract class GuiContainerBase extends GuiContainer
 		drawTexturedModalRect(x, y + h - scale, u, v + h - scale, w, scale);
 	}
 	
+	/**
+	 * Draw a progress bar from left to right.
+	 * @param x
+	 * @param y
+	 * @param u
+	 * @param v
+	 * @param w
+	 * @param h
+	 * @param p the progress current.
+	 * @param mp the max progress.
+	 */
 	protected void drawProgressScaleLTR(int x, int y, int u, int v, int w, int h, int p, int mp)
 	{
 		int scale = (int) ((float) p / (float) mp * w);
@@ -299,6 +373,17 @@ public abstract class GuiContainerBase extends GuiContainer
 		drawTexturedModalRect(x, y, u, v, scale, h);
 	}
 	
+	/**
+	 * Draw a progress bar from right to left.
+	 * @param x
+	 * @param y
+	 * @param u
+	 * @param v
+	 * @param w
+	 * @param h
+	 * @param p the progress current.
+	 * @param mp the max progress.
+	 */
 	protected void drawProgressScaleRTL(int x, int y, int u, int v, int w, int h, int p, int mp)
 	{
 		int scale = (int) ((float) p / (float) mp * w);

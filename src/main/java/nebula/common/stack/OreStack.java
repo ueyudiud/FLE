@@ -12,14 +12,13 @@ public class OreStack implements AbstractStack
 {
 	public static AbstractStack sizeOf(OreStack stack, int size)
 	{
-		return size <= 0 ? null : new OreStack(stack.oreName, size, stack.useContainer);
+		return size <= 0 ? null : new OreStack(stack.oreName, size);
 	}
 	
 	private ImmutableList<ItemStack> list;
-	private String oreName;
+	public final String oreName;
 	private List<ItemStack> ore;
-	private int size;
-	private boolean useContainer;
+	public final int size;
 	
 	public OreStack(String ore)
 	{
@@ -27,14 +26,15 @@ public class OreStack implements AbstractStack
 	}
 	public OreStack(String ore, int size)
 	{
-		this(ore, size, false);
-	}
-	public OreStack(String ore, int size, boolean useContainer)
-	{
 		this.oreName = ore;
 		this.ore = OreDictionary.getOres(ore);
 		this.size = size;
-		this.useContainer = useContainer;
+	}
+	
+	@Deprecated
+	public OreStack(String ore, int size, boolean useContainer)
+	{
+		this(ore, size);
 	}
 	
 	@Override

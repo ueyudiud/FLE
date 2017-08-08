@@ -12,7 +12,6 @@ import net.minecraft.potion.Potion;
 /**
  * Potion type.
  * @author ueyudiud
- *
  */
 public class Potions
 {

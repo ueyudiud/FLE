@@ -12,7 +12,6 @@ import nebula.common.util.SubTag;
 /**
  * Material condition set.
  * @author ueyudiud
- *
  */
 public class MC
 {
@@ -58,6 +57,10 @@ public class MC
 	public static final MatCondition bundle = new MatCondition("bundle", "Bundle", "% Bundle").setSize(144L, 36L, 0.5F).setFilter(SubTags.ROPE);
 	
 	public static final MatCondition crop = new MatCondition("crop", "Crop", "%").setUnsizable().setFilter(SubTags.CROP);
+	
+	public static final MatCondition brick = new MatCondition("brick", "Brick", "% Brick").setSize(144L, 72L).setFilter(SubTags.BRICK);
+	public static final MatCondition roofshingle = new MatCondition("roofshingle", "Roof Shingle", "% Roof Shingle").setSize(144L, 72L).setFilter(SubTags.BRICK);
+	public static final MatCondition rooftile = new MatCondition("rooftile", "Roof Tile", "% Roof Tile").setSize(144L, 72L).setFilter(SubTags.BRICK);
 	
 	public static final MatCondition tie = new MatCondition("tie", "Tie", "% Tie").setSize(36L, 18L, 3.0F).setFilter(SubTags.ROPE);
 	public static final MatCondition handle = new MatCondition("handle", "Handle", "% Handle").setSize(72L, 72L, 1.5F).setFilter(SubTags.HANDLE);

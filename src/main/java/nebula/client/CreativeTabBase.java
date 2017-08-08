@@ -18,6 +18,10 @@ public class CreativeTabBase extends CreativeTabs implements IRenderRegister
 	private final Appliable<ItemStack> appliable;
 	private ItemStack stack;
 	
+	public CreativeTabBase(String lable, String localName, ItemStack stack)
+	{
+		this(lable, localName, Appliable.to(stack));
+	}
 	public CreativeTabBase(String lable, String localName, Appliable<ItemStack> appliable)
 	{
 		super(lable);
@@ -59,6 +63,6 @@ public class CreativeTabBase extends CreativeTabs implements IRenderRegister
 				Log.error("The creative tab is missing a stack for display, use fire instead.");
 			}
 		}
-		return this.stack;
+		return this.stack.copy();
 	}
 }

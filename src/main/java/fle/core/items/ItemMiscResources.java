@@ -4,6 +4,8 @@
 
 package fle.core.items;
 
+import java.util.List;
+
 import com.google.common.collect.Maps;
 
 import farcore.data.EnumItem;
@@ -11,18 +13,25 @@ import farcore.data.M;
 import farcore.data.MC;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.core.FLE;
+import fle.core.items.behavior.BehaviorResearchItems1;
 import nebula.client.model.flexible.NebulaModelLoader;
+import nebula.common.item.IBehavior;
+import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
 import nebula.common.item.ItemSubBehavior;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
-public class ItemMiscResources extends ItemSubBehavior implements IPolishableItem
+public class ItemMiscResources extends ItemSubBehavior implements IPolishableItem, IIP_Containerable
 {
 	public ItemMiscResources()
 	{
@@ -48,6 +57,8 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		
 		addSubItem(2001, "ramie_rope", "Ramie Rope", null);
 		addSubItem(2002, "ramie_rope_bundle", "Ramie Rope Bundle", null);
+		
+		addSubItem(3001, "researchitem1", "Research Item", null, new BehaviorResearchItems1());
 	}
 	
 	@Override
@@ -98,5 +109,30 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		{
 			stack.stackSize --;
 		}
+	}
+	
+	@Override
+	public Container openContainer(World world, BlockPos pos, EntityPlayer player, ItemStack stack)
+	{
+		List<IBehavior> behaviors = getBehavior(stack);
+		for (IBehavior behavior : behaviors)
+		{
+			if (behavior instanceof IIP_Containerable)
+				return ((IIP_Containerable) behavior).openContainer(world, pos, player, stack);
+		}
+		return null;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiContainer openGui(World world, BlockPos pos, EntityPlayer player, ItemStack stack)
+	{
+		List<IBehavior> behaviors = getBehavior(stack);
+		for (IBehavior behavior : behaviors)
+		{
+			if (behavior instanceof IIP_Containerable)
+				return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
+		}
+		return null;
 	}
 }

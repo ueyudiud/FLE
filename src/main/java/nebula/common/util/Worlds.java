@@ -71,15 +71,10 @@ public final class Worlds
 	 */
 	public static boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side, boolean def)
 	{
-		try
-		{
-			return world.isSideSolid(pos, side, def);
-		}
-		catch (Exception exception)
-		{
-			IBlockState state = world.getBlockState(pos);
-			return state.isSideSolid(world, pos, side);
-		}
+		if (pos.getY() >= 256 || pos.getY() < 0)
+			return def;
+		IBlockState state = world.getBlockState(pos);
+		return state.isSideSolid(world, pos, side);
 	}
 	
 	public static boolean isAirOrReplacable(IBlockAccess world, BlockPos pos)

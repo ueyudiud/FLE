@@ -21,22 +21,16 @@ public class Config
 	@ConfigProperty(category = "render", defValue ="false")
 	@ConfigComment("(WIP config) Split brightness when caculating brightness.")
 	public static boolean splitBrightnessOfSmallBlock;
-	
+	@Deprecated
 	public static final boolean useJavascriptInResource = true;
 	@ConfigProperty(category = "block", defValue = "false")
 	@ConfigComment("(WIP config) Break natural log block with a new thread to check range, this is proved will let server out of sych! Do not suggested to use.")
 	public static boolean breakTreeMultiThread;
 	
-	//These general option is for modder.
-	//If want to use Far Core mod but do not want added in these type of block/item.
-	@ConfigProperty(category = "general", defValue = "true")
-	public static boolean createRock;
-	@ConfigProperty(category = "general", defValue = "true")
-	public static boolean createLog;
-	@ConfigProperty(category = "general", defValue = "true")
-	public static boolean createCrop;
-	@ConfigProperty(category = "general", defValue = "true")
-	public static boolean createSoil;
-	@ConfigProperty(category = "general", defValue = "true")
-	public static boolean replaceWater;
+	//The useful lib are already move to Nebula mod, so you needn't use FarCore if you only want use helper.
+	//	public static boolean createRock;
+	//	public static boolean createLog;
+	//	public static boolean createCrop;
+	//	public static boolean createSoil;
+	//	public static boolean replaceWater;
 }

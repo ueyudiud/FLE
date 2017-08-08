@@ -11,7 +11,10 @@ import fle.core.FLE;
 import fle.core.common.gui.ContainerBarGrizzly;
 import nebula.client.gui.GuiContainerBase;
 import nebula.common.LanguageManager;
+import nebula.common.util.L;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -55,6 +58,17 @@ public class GuiBarGrizzly extends GuiContainerBase
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		this.fontRendererObj.drawString(this.container.getOpener().inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 0x404040);
+	}
+	
+	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		if (((ContainerBarGrizzly) this.container).getProgress() > 0 && L.nextInt(4) == 0)
+		{
+			this.mc.getSoundHandler().playSound(
+					PositionedSoundRecord.getMusicRecord(SoundEvents.BLOCK_WATER_AMBIENT));
+		}
 	}
 	
 	@Override

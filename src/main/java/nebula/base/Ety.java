@@ -3,7 +3,6 @@ package nebula.base;
 import java.util.Map.Entry;
 
 import nebula.common.util.L;
-import nebula.io.javascript.ScriptLoad;
 
 /**
  * Nebula entry instance.
@@ -15,9 +14,7 @@ import nebula.io.javascript.ScriptLoad;
 public
 class Ety<K, V> implements Entry<K, V>
 {
-	@ScriptLoad
 	public final K key;
-	@ScriptLoad
 	public V value;
 	
 	public Ety(K key, V value)

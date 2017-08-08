@@ -5,6 +5,8 @@
 package farcore.data;
 
 import static farcore.FarCoreRegistry.MATERIAL_REGISTERS;
+import static farcore.data.MC.brick;
+import static farcore.data.MC.brickBlock;
 
 import farcore.FarCore;
 import farcore.lib.block.behavior.RockBehaviorFlammable;
@@ -135,6 +137,11 @@ public class M
 	public static final Mat native_silver	= new Mat(10031, FarCore.ID, "nativeSilver", "NativeSilver", "Native Silver").setChemicalFormula("Ag").setRGBa(0xEBE9E8FF).setOreProperty(13, 11.2F, 12.9F, SubTags.ORE_NOBLE);
 	public static final Mat native_gold		= new Mat(10032, FarCore.ID, "nativeGold", "NativeGold", "Native Gold").setChemicalFormula("Au").setRGBa(0xF7B32AFF).setOreProperty(5, 6.8F, 8.3F, SubTags.ORE_NOBLE);
 	public static final Mat electrum		= new Mat(10033, FarCore.ID, "electrum", "Electrum", "Electrum").setChemicalFormula("?").setRGBa(0xE4B258FF).setOreProperty(11, 8.2F, 9.2F, SubTags.ORE_NOBLE);
+	//Building resources
+	public static final Mat adobe			= new Mat(11001, FarCore.ID, "adobe", "Adobe", "Adobe").setRGBa(0xABA798FF);
+	public static final Mat argil			= new Mat(11002, FarCore.ID, "argil", "Argil", "Argil").setRGBa(0xCBC0BCFF);
+	public static final Mat redbrick		= new Mat(11003, FarCore.ID, "redbrick", "RedBrick", "Red Brick").setRGBa(0xB75A40FF);
+	public static final Mat greybrick		= new Mat(11004, FarCore.ID, "greybrick", "GreyBrick", "Grey Brick").setRGBa(0xB8CAC7FF);
 	
 	static
 	{
@@ -153,6 +160,7 @@ public class M
 		SubTags.HERB.addTo(dandelion);
 		SubTags.FLINT.addTo(flint, obsidian, quartz);
 		SubTags.PILEABLE.addTo(gravel);
+		SubTags.BRICK.addTo(redbrick, greybrick, argil, adobe);
 		
 		MC.axe_rock.addToWhiteList(quartz);
 		
@@ -162,6 +170,9 @@ public class M
 		
 		bituminous_coal	.setRock(new RockBehaviorFlammable<>(bituminous_coal, 4, 2.5F,  7.7F));
 		lignite			.setRock(new RockBehaviorFlammable<>(lignite		, 3, 2.2F,  6.4F));
+		
+		brick.setNames(redbrick, "Red Brick", greybrick, "Grey Brick");
+		brickBlock.setNames(redbrick, "Red Brick", greybrick, "Grey Brick");
 	}
 	
 	public static void init()

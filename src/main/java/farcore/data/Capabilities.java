@@ -10,6 +10,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * All capabilities may used in mod were collected here.
+ * @author ueyudiud
+ */
 public class Capabilities
 {
 	//Pre-pre initialization
