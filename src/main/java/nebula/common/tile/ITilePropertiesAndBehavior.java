@@ -72,7 +72,7 @@ public interface ITilePropertiesAndBehavior
 		@SideOnly(Side.CLIENT)
 		default AxisAlignedBB getSelectedBoundingBox(IBlockState state)
 		{
-			return getBoundBox(state).offset(pos());
+			return getBoundBox(state);//.offset(pos());
 		}
 	}
 	

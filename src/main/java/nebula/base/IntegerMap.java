@@ -17,10 +17,10 @@ import nebula.common.util.L;
 import nebula.common.util.Maths;
 
 /**
- * 
+ * The <tt>int</tt> value map.
  * @author ueyudiud
- *
  * @param <T>
+ * @see java.util.Map
  */
 public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 {
@@ -102,15 +102,27 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		if(this.entries[i] == null) return null;
 		else
 		{
-			for(IntegerEntry<T> entry : this.entries[i])
+			try
 			{
-				if(Objects.equals(key, entry.key))
-					return entry;
+				for(IntegerEntry<T> entry : this.entries[i])
+				{
+					if(Objects.equals(key, entry.key))
+						return entry;
+				}
+			}
+			catch (ClassCastException e)
+			{
+				return null;
 			}
 		}
 		return null;
 	}
 	
+	/**
+	 * Return the number of key-value mappings in this <tt>int</tt> value map.
+	 * @return the number of key-value mappings in this map.
+	 * @see java.util.Map#size()
+	 */
 	public int size()
 	{
 		return this.size;
@@ -127,6 +139,12 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	public boolean containsKey(Object key)
 	{
 		return getEntry(key) != null;
+	}
+	
+	public boolean contains(Object key, int value)
+	{
+		IntegerEntry<?> entry;
+		return (entry = getEntry(key)) != null && entry.value == value;
 	}
 	
 	public int get(Object key)
@@ -214,6 +232,41 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	public int getSum()
 	{
 		return this.sum;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hashcode = 0;
+		for (IntegerEntry<T> entry : this)
+			hashcode += entry.hashCode();
+		return hashcode;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == this) return true;
+		
+		if (!(obj instanceof IntegerMap<?>)) return false;
+		
+		IntegerMap<?> map = (IntegerMap<?>) obj;
+		
+		if (map.size() != this.size) return false;
+		
+		try
+		{
+			for (IntegerEntry<?> entry : this)
+			{
+				if (!map.contains(entry.key, entry.value))
+					return false;
+			}
+		}
+		catch (ClassCastException | NullPointerException e)
+		{
+			return false;
+		}
+		return true;
 	}
 	
 	public void transformAll(IntUnaryOperator operator)

@@ -13,6 +13,7 @@ import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -37,6 +38,9 @@ implements IGuiTile, ITP_BoundingBox
 		
 		final EnumSlotsSize size;
 		public final String name;
+		
+		@SideOnly(Side.CLIENT)
+		public TextureAtlasSprite icon;
 		
 		ChestType(int x, int y, String name)
 		{

@@ -22,6 +22,7 @@ import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddDestroyEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_AddHitEffects;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import nebula.common.tile.IUpdatableTile;
 import nebula.common.tile.TESynchronization;
 import nebula.common.util.Direction;
@@ -52,11 +53,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TEDitch extends TESynchronization
 implements IDitchTile, IUpdatableTile, ITB_BlockPlacedBy, ITP_BlockHardness,
-IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects
+IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects,
+ITP_BoundingBox
 {
-	private static final AxisAlignedBB AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F);
+	private static final AxisAlignedBB
+	AABB_DITCH_RENDER_RANGE = new AxisAlignedBB(-1F, -1F, -1F, 2F, 2F, 2F),
+	AABB_DITCH_BOUNDS[];
 	
 	private static final int[] Connect = {0x0, 0x1, 0x2, 0x3};
+	
+	static
+	{
+		AABB_DITCH_BOUNDS = new AxisAlignedBB[16];
+		float x1, x2, z1, z2, y1 = 0.1875F, y2 = 0.5F;
+		for (int i = 0; i < 16; ++i)
+		{
+			z2 = (i & 0x1) != 0 ? 1.0F : 0.6875F;
+			x1 = (i & 0x2) != 0 ? 0.0F : 0.3125F;
+			z1 = (i & 0x4) != 0 ? 0.0F : 0.3125F;
+			x2 = (i & 0x8) != 0 ? 1.0F : 0.6875F;
+			AABB_DITCH_BOUNDS[i] = new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
+		}
+	}
 	
 	private int[]
 			flowBuffer = new int[4],
@@ -103,6 +121,16 @@ IDebugableTile, INetworkedSyncTile, ITB_AddDestroyEffects, ITB_AddHitEffects
 	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player)
 	{
 		return player.getDigSpeed(state, this.pos) / getBlockHardness(state) / 30F;
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundBox(IBlockState state)
+	{
+		byte i = 0;
+		for (Direction direction : Direction.DIRECTIONS_2D)
+			if (canLink(direction, getTE(direction)))
+				i |= direction.flag1;
+		return AABB_DITCH_BOUNDS[i];
 	}
 	
 	@Override

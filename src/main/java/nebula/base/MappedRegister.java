@@ -202,6 +202,45 @@ public class MappedRegister<T> implements IRegister<T>
 		return this.size;
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		int hash = 0;
+		for (int i = 0; i < this.size; ++i)
+		{
+			hash += this.pointToID[i] ^ this.pointToNames[i].hashCode() ^ Objects.hashCode(this.pointToTargets[i]);
+		}
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == this) return true;
+		if (!(obj instanceof IRegister<?>)) return false;
+		
+		IRegister<?> register = (IRegister<?>) obj;
+		if (register.size() != this.size) return false;
+		
+		try
+		{
+			int count = 0;
+			for (int i = 0; i < this.pointToID.length && count < this.size; ++i)
+			{
+				if (this.pointToID[i] == null) continue;
+				if (!this.pointToNames[i].equals(register.name(this.pointToID[i])) ||
+						!Objects.equals(this.pointToTargets[i], register.get(this.pointToID[i])))
+					return false;
+				++count;
+			}
+			return true;
+		}
+		catch (ClassCastException exception)
+		{
+			return false;
+		}
+	}
+	
 	class MappedRegisterNameSet extends AbstractSet<String>
 	{
 		@Override

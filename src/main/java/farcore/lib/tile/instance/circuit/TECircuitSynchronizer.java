@@ -1,12 +1,14 @@
 package farcore.lib.tile.instance.circuit;
 
 import nebula.common.util.Facing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TECircuitSynchronizer extends TECircuitTripleInput
 {
-	private static final int right_input = 8;
-	private static final int left_input = 9;
-	private static final int reseted = 10;
+	private static final int right_input = 0x8;
+	private static final int left_input = 0x9;
+	private static final int reseted = 0xA;
 	
 	@Override
 	protected void updateBody()
@@ -50,5 +52,22 @@ public class TECircuitSynchronizer extends TECircuitTripleInput
 			setRedstonePower(15);
 			markForDelayUpdate(4);
 		}
+	}
+	
+	@Override
+	public String getState()
+	{
+		return this.power != 0 ? "on" : "off";
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getChannelRedSignalHardness(int i)
+	{
+		return i == 0 ? getRedstonePower(Facing.BACK) :
+			i == 1 ? getRedstonePower(Facing.LEFT) :
+				i == 2 ? getRedstonePower(Facing.RIGHT) :
+					i == 3 ? this.power :
+						0;
 	}
 }

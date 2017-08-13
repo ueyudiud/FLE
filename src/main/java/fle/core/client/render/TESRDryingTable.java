@@ -19,7 +19,7 @@ public class TESRDryingTable extends TESRBase<TEDryingTable>
 	@Override
 	public void renderTileEntityAt(TEDryingTable te, double x, double y, double z, float partialTicks, int destroyStage)
 	{
-		if (te.getStack() != null)
+		if (te != null && te.getStack() != null)
 		{
 			ItemStack stack = te.getStack().copy();
 			stack.stackSize = 1;

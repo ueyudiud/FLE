@@ -43,10 +43,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.Chunk.EnumCreateEntityType;
 import net.minecraftforge.fluids.BlockFluidBase;
 
 /**
@@ -483,6 +485,34 @@ public final class Worlds
 						world.canBlockSeeSky(pos.east()) ||
 						world.canBlockSeeSky(pos.west()))) :
 							false;
+	}
+	
+	public static TileEntity getTileEntity(IBlockAccess world, BlockPos pos, boolean update)
+	{
+		if (world instanceof World)
+			return getTileEntity((World) world, pos, update);
+		else if (world instanceof ChunkCache)
+		{
+			return ((ChunkCache) world).getTileEntity(pos, update ? EnumCreateEntityType.IMMEDIATE : EnumCreateEntityType.CHECK);
+		}
+		return null;
+	}
+	
+	public static TileEntity getTileEntity(World world, BlockPos pos, boolean update)
+	{
+		if (update)
+		{
+			return world.getTileEntity(pos);
+		}
+		else
+		{
+			Chunk chunk = world.getChunkFromBlockCoords(pos);
+			if (chunk != null)
+			{
+				return chunk.getTileEntity(pos, EnumCreateEntityType.CHECK);
+			}
+			return null;
+		}
 	}
 	
 	public static TileEntity setTileEntity(World world, BlockPos pos, TileEntity tile, boolean update)

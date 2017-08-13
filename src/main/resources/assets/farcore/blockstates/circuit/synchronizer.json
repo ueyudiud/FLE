@@ -1,0 +1,36 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/synchronizer" 
+		}
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/synchronizer"
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/synchronizer/off"
+			}
+		},
+		"value": {
+			"on": { 
+				"custom": { "mixed": "farcore:circuit/synchronizer/on" }
+			},
+			"off": { 
+				"custom": { "mixed": "farcore:circuit/synchronizer/off" }
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

@@ -107,7 +107,9 @@ public enum Direction implements IStringSerializable
 	public final int boundX;
 	public final int boundY;
 	public final int boundZ;
+	/** The direction flag for <tt>long</tt> state marker, this is normal directions flag. */
 	public final int flag;
+	/** The direction flag for <tt>long</tt> state marker, this is horizontal directions flag. */
 	public final int flag1;
 	public final char chr;
 	public final boolean horizontal;

@@ -49,7 +49,7 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 		JsonObject object = json.getAsJsonObject();
 		ModelPartVerticalCube part = new ModelPartVerticalCube();
 		part.tint = Jsons.getOrDefault(object, "tint", -1);
-		boolean flag = object.has("face");
+		boolean flag = object.has("face") || object.has("faces");
 		if (object.has("pos"))
 		{
 			JsonElement element1 = object.get("pos");
@@ -61,26 +61,68 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 				part.xyzPos = array;
 				part.fullCube = false;
 				part.normalizeUVPos();
+				if (flag)
+					part.renderFlag = 0;
 				for (int i = 0; i < 6; array[i++] /= 16.0F);
 			}
 		}
+		else if (object.has("from")/* && object.has("to") */)//Minecraft loader.
+		{
+			float[] array1 = Jsons.getFloatArray(object, "from", 3);
+			float[] array2 = Jsons.getFloatArray(object, "to", 3);
+			part.xyzPos = new float[]{array1[0], array1[1], array1[2], array2[0], array1[1], array2[2]};
+			part.fullCube = false;
+			part.normalizeUVPos();
+			if (flag)
+				part.renderFlag = 0;
+			for (int i = 0; i < 6; part.xyzPos[i++] /= 16.0F);
+		}
 		if (flag)
 		{
-			JsonArray array = object.getAsJsonArray("face");
-			for (JsonElement element : array)
+			if (object.has("face"))
 			{
-				loadFaceData(part, element);
+				JsonArray array = object.getAsJsonArray("face");
+				for (JsonElement element : array)
+				{
+					loadFaceData(part, element);
+				}
+			}
+			else
+			{
+				JsonObject object1 = object.getAsJsonObject("faces");
+				for (Entry<String, JsonElement> entry : object1.entrySet())
+				{
+					loadFaceData(part, EnumFacing.byName(entry.getKey()), entry.getValue());
+				}
 			}
 		}
 		return part;
 	};
+	
+	static void loadFaceData(ModelPartVerticalCube cube, EnumFacing facing, JsonElement json) throws JsonParseException
+	{
+		if (!json.isJsonObject()) throw new JsonParseException("The face data should be json object.");
+		JsonObject object = json.getAsJsonObject();
+		
+		int side = facing.getIndex();
+		cube.renderFlag |= 1 << side;
+		String location = object.get("texture").getAsString();
+		if (object.has("uv"))
+		{
+			float[] uv = Jsons.getFloatArray(object, "uv", 4);
+			cube.uvPos[side] = uv;
+		}
+		cube.icons[side] = location;
+	}
 	
 	static void loadFaceData(ModelPartVerticalCube cube, JsonElement json) throws JsonParseException
 	{
 		if (!json.isJsonObject()) throw new JsonParseException("The face data should be json object.");
 		JsonObject object = json.getAsJsonObject();
 		
-		int side = Direction.valueOf(object.get("side").getAsString()).ordinal();
+		Direction direction = Direction.valueOf(object.get("side").getAsString());
+		int side = direction.ordinal();
+		cube.renderFlag |= direction.flag;
 		String location = object.get("texture").getAsString();
 		if (object.has("uv"))
 		{

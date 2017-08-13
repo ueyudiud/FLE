@@ -8,6 +8,7 @@ import static farcore.FarCoreRegistry.registerTESR;
 
 import farcore.data.Materials;
 import fle.core.FLE;
+import fle.core.client.render.ItemRenderWithTESR;
 import fle.core.client.render.TESRDryingTable;
 import fle.core.client.render.TESRLeverOilMill;
 import fle.core.client.render.TESRStoneMill;
@@ -15,6 +16,7 @@ import fle.core.tile.wooden.TEDryingTable;
 import fle.core.tile.wooden.TELeverOilMill;
 import fle.core.tile.wooden.TEStoneMill;
 import nebula.base.IRegister;
+import nebula.client.NebulaRenderHandler;
 import nebula.client.model.StateMapperExt;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;
@@ -60,9 +62,11 @@ public class BlockWoodenMiscMachine extends BlockTE
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
+		NebulaRenderHandler.registerRender(this.item, ItemRenderWithTESR.INSTANCE);
+		
 		registerTESR(TESRDryingTable.class);
-		registerTESR(TESRLeverOilMill.class);
-		registerTESR(TESRStoneMill.class);
+		registerTESR(TESRLeverOilMill.class, this.item, 1);
+		registerTESR(TESRStoneMill.class, this.item , 2);
 		
 		StateMapperExt mapper = new StateMapperExt(FLE.MODID, "misc_machine", this.property_TE);
 		registerRenderMapper(mapper);

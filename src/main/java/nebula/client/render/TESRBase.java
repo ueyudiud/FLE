@@ -184,6 +184,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 		float u1, u2;
 		float v1, v2;
 		this.helper.setIcon(null);
+		this.helper.setIconCoordScale(1.0F);
 		if(this.renderUp)
 		{
 			u1 = getU(icon, (float) x1);
@@ -381,6 +382,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			double x2, double y2, double z2,
 			TextureAtlasSprite[] icons)
 	{
+		this.helper.setIconCoordScale(1.0F);
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 		if(this.renderDown)	renderYNeg(x1, y1, z1, x2, y2, z2, icons[0]);
 		if(this.renderUp)	renderYPos(x1, y1, z1, x2, y2, z2, icons[1]);
@@ -396,6 +398,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 			double x2, double y2, double z2,
 			TextureAtlasSprite icon)
 	{
+		this.helper.setIconCoordScale(1.0F);
 		this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 		if(this.renderUp) renderYPos(x1, y1, z1, x2, y2, z2, icon);
 		if(this.renderDown) renderYNeg(x1, y1, z1, x2, y2, z2, icon);

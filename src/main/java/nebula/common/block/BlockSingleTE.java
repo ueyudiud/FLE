@@ -115,7 +115,7 @@ implements ITileEntityProvider
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player,
 			boolean willHarvest)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		boolean flag = super.removedByPlayer(state, world, pos, player, willHarvest);
 		if(flag && (tile instanceof ITB_BlockDestroyedByPlayer))
 		{
@@ -134,7 +134,7 @@ implements ITileEntityProvider
 	{
 		RayTraceResult result = Worlds.rayTrace(worldIn, playerIn, false);
 		if(result == null) return;
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_BlockClicked)
 		{
 			((ITB_BlockClicked) tile).onBlockClicked(playerIn, Direction.of(result.sideHit), (float) result.hitVec.xCoord, (float) result.hitVec.yCoord, (float) result.hitVec.zCoord);
@@ -144,7 +144,7 @@ implements ITileEntityProvider
 	@Override
 	public void onBlockExploded(World world, BlockPos pos, Explosion explosion)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		if(tile instanceof ITB_BlockExploded)
 		{
 			((ITB_BlockExploded) tile).onBlockExploded(explosion);
@@ -155,7 +155,7 @@ implements ITileEntityProvider
 	protected boolean onBlockHarvest(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player,
 			boolean silkHarvest)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_BlockHarvest)
 			return ((ITB_BlockHarvest) tile).onBlockHarvest(state, player, silkHarvest);
 		return false;
@@ -164,7 +164,7 @@ implements ITileEntityProvider
 	@Override
 	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_BlockHarvested)
 		{
 			((ITB_BlockHarvested) tile).onBlockHarvested(state, player);
@@ -175,7 +175,7 @@ implements ITileEntityProvider
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			EnumFacing facing, ItemStack stack)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_BlockPlacedBy)
 		{
 			((ITB_BlockPlacedBy) tile).onBlockPlacedBy(state, placer, Direction.of(facing), stack);
@@ -185,7 +185,7 @@ implements ITileEntityProvider
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_EntityCollidedWithBlock)
 		{
 			((ITB_EntityCollidedWithBlock) tile).onEntityCollidedWithBlock(state, entityIn);
@@ -195,7 +195,7 @@ implements ITileEntityProvider
 	@Override
 	public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_EntityWalk)
 		{
 			((ITB_EntityWalk) tile).onEntityWalk(entityIn);
@@ -205,7 +205,7 @@ implements ITileEntityProvider
 	@Override
 	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_EntityFallenUpon)
 		{
 			((ITB_EntityFallenUpon) tile).onEntityFallenUpon(entityIn, fallDistance);
@@ -236,7 +236,7 @@ implements ITileEntityProvider
 	@Override
 	public void onPlantGrow(IBlockState state, World world, BlockPos pos, BlockPos source)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		if(tile instanceof ITB_PlantGrow)
 		{
 			((ITB_PlantGrow) tile).onPlantGrow(state, source);
@@ -247,7 +247,7 @@ implements ITileEntityProvider
 	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		if(tile instanceof ITB_AddDestroyEffects)
 			return ((ITB_AddDestroyEffects) tile).addDestroyEffects(manager);
 		return super.addDestroyEffects(world, pos, manager);
@@ -319,18 +319,18 @@ implements ITileEntityProvider
 	}
 	
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		TileEntity tile = source.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		if(tile instanceof ITP_BoundingBox)
 			return ((ITP_BoundingBox) tile).getBoundBox(state);
-		return super.getBoundingBox(state, source, pos);
+		return super.getBoundingBox(state, world, pos);
 	}
 	
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITP_BoundingBox)
 			return ((ITP_BoundingBox) tile).getCollisionBoundingBox(blockState);
 		return super.getCollisionBoundingBox(blockState, worldIn, pos);
@@ -340,7 +340,7 @@ implements ITileEntityProvider
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox,
 			List<AxisAlignedBB> collidingBoxes, Entity entityIn)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITP_BoundingBox)
 		{
 			List<AxisAlignedBB> list = new ArrayList<>();
@@ -356,7 +356,7 @@ implements ITileEntityProvider
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITP_ComparatorInputOverride)
 			return ((ITP_ComparatorInputOverride) tile).getComparatorInputOverride(blockState);
 		return super.getComparatorInputOverride(blockState, worldIn, pos);
@@ -365,7 +365,7 @@ implements ITileEntityProvider
 	@Override
 	public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITP_BlockHardness)
 			return ((ITP_BlockHardness) tile).getBlockHardness(blockState);
 		return this.blockHardness;
@@ -374,7 +374,7 @@ implements ITileEntityProvider
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		if(tile instanceof ITP_ExplosionResistance)
 			return ((ITP_ExplosionResistance) tile).getExplosionResistance(exploder, explosion);
 		return this.blockResistance;
@@ -383,7 +383,7 @@ implements ITileEntityProvider
 	@Override
 	public float getEnchantPowerBonus(World world, BlockPos pos)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		if(tile instanceof ITP_EnchantPowerBonus)
 			return ((ITP_EnchantPowerBonus) tile).getEnchantPowerBonus();
 		return super.getEnchantPowerBonus(world, pos);
@@ -421,9 +421,9 @@ implements ITileEntityProvider
 	@Override
 	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		//		TileEntity tile = world.getTileEntity(pos);
-		//		if(tile instanceof ITP_Light)
-		//			return ((ITP_Light) tile).getLightOpacity(state);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
+		if(tile instanceof ITP_Light)
+			return ((ITP_Light) tile).getLightOpacity(state);
 		return super.getLightOpacity(state, world, pos);
 		//The Minecraft will create a Tile Entity BEFORE add Tile Entity and create without data, to prevent this happen, I will disable this property.
 	}
@@ -440,7 +440,7 @@ implements ITileEntityProvider
 	@Override
 	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITP_BlockHardness)
 			return ((ITP_BlockHardness) tile).getPlayerRelativeBlockHardness(state, player);
 		return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);
@@ -450,7 +450,7 @@ implements ITileEntityProvider
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITP_BoundingBox)
 			return ((ITP_BoundingBox) tile).getSelectedBoundingBox(state).offset(pos);
 		return super.getSelectedBoundingBox(state, worldIn, pos);
@@ -486,7 +486,7 @@ implements ITileEntityProvider
 	@Override
 	public void fillWithRain(World worldIn, BlockPos pos)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_FillWithRain)
 		{
 			((ITB_FillWithRain) tile).fillWithRain();
@@ -514,7 +514,7 @@ implements ITileEntityProvider
 	@Override
 	public boolean isFireSource(World world, BlockPos pos, EnumFacing side)
 	{
-		TileEntity tile = world.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(world, pos, false);
 		if(tile instanceof ITP_FireSource)
 			return ((ITP_FireSource) tile).isFireSource(Direction.of(side));
 		return super.isFireSource(world, pos, side);
@@ -549,7 +549,7 @@ implements ITileEntityProvider
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_BlockActived)
 		{
 			EnumActionResult result = ((ITB_BlockActived) tile).onBlockActivated(playerIn, hand, heldItem, Direction.of(side), hitX, hitY, hitZ);
@@ -561,7 +561,7 @@ implements ITileEntityProvider
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_BreakBlock)
 		{
 			((ITB_BreakBlock) tile).onBlockBreak(state);
@@ -583,7 +583,7 @@ implements ITileEntityProvider
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof IUpdatableTile)
 		{
 			((IUpdatableTile) tile).causeUpdate(pos, worldIn.getBlockState(pos), false);
@@ -594,7 +594,7 @@ implements ITileEntityProvider
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_DisplayUpdate)
 		{
 			((ITB_DisplayUpdate) tile).randomDisplayTick(stateIn, rand);
@@ -604,7 +604,7 @@ implements ITileEntityProvider
 	@Override
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_Update)
 		{
 			((ITB_Update) tile).onUpdateTick(state, random, true);
@@ -614,7 +614,7 @@ implements ITileEntityProvider
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		TileEntity tile = worldIn.getTileEntity(pos);
+		TileEntity tile = Worlds.getTileEntity(worldIn, pos, false);
 		if(tile instanceof ITB_Update)
 		{
 			((ITB_Update) tile).onUpdateTick(state, rand, false);

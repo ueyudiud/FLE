@@ -40,6 +40,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -197,9 +198,33 @@ public class BlockChest extends BlockTE
 	
 	@Override
 	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager)
+	{
+		switch (this.property_TE.getMetaFromState(state))
+		{
+		case 0 :
+			Client.addBlockHitEffect(world, world.rand, state, target.sideHit, target.getBlockPos(),
+					manager, ((TEChest1) world.getTileEntity(target.getBlockPos())).getChestType().icon);
+			break;
+		default:
+			break;
+		}
+		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
 	{
-		//TODO
+		IBlockState state = world.getBlockState(pos);
+		switch (this.property_TE.getMetaFromState(state))
+		{
+		case 0 :
+			Client.addBlockDestroyEffects(world, pos, state, manager, ((TEChest1) world.getTileEntity(pos)).getChestType().icon);
+			break;
+		default:
+			break;
+		}
 		return true;
 	}
 }

@@ -1,0 +1,39 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farinner:redstone_circuit",
+		"textures": { 
+			"layer": "farcore:blocks/circuits/invert" 
+		}
+	},
+	"variants": {
+		"inventory": {
+			"transform": "forge:default-block",
+			"model": "farinner:redstone_circuit",
+			"textures": { 
+				"layer": "farcore:blocks/circuits/invert"
+			},
+			"custom": { 
+				"mixed": "farcore:circuit/invert/d"
+			}
+		},
+		"value": {
+			"de": { 
+				"custom": { "mixed": "farcore:circuit/invert/d" }
+			},
+			"ed": { 
+				"custom": { "mixed": "farcore:circuit/invert/e" }
+			},
+			"ee": { 
+				"custom": { "mixed": "farcore:circuit/invert/e" }
+			}
+		},
+		"direction": {
+			"n": { "y":   0 },
+			"e": { "y":  90 },
+			"s": { "y": 180 },
+			"w": { "y": 270 }
+		}
+	}
+}

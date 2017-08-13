@@ -49,7 +49,8 @@ public class TESRStoneMill extends TESRBase<TEStoneMill>
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-			GL11.glRotatef(tile.getRotationAngle(), 0, -1, 0);
+			if (tile != null)
+				GL11.glRotatef(tile.getRotationAngle(), 0, -1, 0);
 			GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 			
 			this.helper.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);

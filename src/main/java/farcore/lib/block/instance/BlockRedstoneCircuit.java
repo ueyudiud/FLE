@@ -82,7 +82,7 @@ public class BlockRedstoneCircuit extends BlockTE
 		builder1.put("repeater", Arrays.asList("t0_on", "t0_off", "t1_on", "t1_off", "t2_on", "t2_off", "t3_on", "t3_off", "t4_on", "t4_off"));
 		builder1.put("ticking", Arrays.asList("on_a", "on_b", "off"));
 		builder1.put("rslatch", Arrays.asList("on", "off"));
-		builder1.put("synchronizer", Arrays.asList("_"));
+		builder1.put("synchronizer", Arrays.asList("on", "off"));
 		builder1.put("not", Arrays.asList("on", "off"));
 		builder1.put("or", Arrays.asList("ddd", "dde", "ded", "edd", "dee", "ede", "eed", "eee"));
 		builder1.put("and", Arrays.asList("ddd", "dde", "ded", "edd", "dee", "ede", "eed", "eee"));
@@ -158,6 +158,14 @@ public class BlockRedstoneCircuit extends BlockTE
 		NebulaModelLoader.registerModel(
 				new ResourceLocation(FarCore.ID, "circuit/integrator_base"),
 				new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_base.json"),
+				NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(
+				new ResourceLocation(FarCore.ID, "circuit/invert/d"),
+				new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_d.json"),
+				NebulaModelDeserializer.BLOCK);
+		NebulaModelLoader.registerModel(
+				new ResourceLocation(FarCore.ID, "circuit/invert_e"),
+				new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_e.json"),
 				NebulaModelDeserializer.BLOCK);
 	}
 	

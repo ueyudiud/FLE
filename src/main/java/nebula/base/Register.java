@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import nebula.common.util.A;
@@ -532,6 +533,45 @@ public class Register<T> implements IRegister<T>
 		public void clear()
 		{
 			throw new UnsupportedOperationException();
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hash = 0;
+		for (int i = 0; i < this.names.length; ++i)
+		{
+			if (this.names[i] != null)
+				hash += i ^ this.names[i].hashCode() ^ Objects.hashCode(this.targets[i]);
+		}
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == this) return true;
+		if (!(obj instanceof IRegister<?>)) return false;
+		
+		IRegister<?> register = (IRegister<?>) obj;
+		if (register.size() != this.size) return false;
+		
+		try
+		{
+			for (int i = 0; i < this.names.length; ++i)
+			{
+				if (this.names[i] != null)
+				{
+					if (!this.names[i].equals(register.name(i)) || !Objects.equals(this.targets[i], register.get(i)))
+						return false;
+				}
+			}
+			return true;
+		}
+		catch (ClassCastException exception)
+		{
+			return false;
 		}
 	}
 	

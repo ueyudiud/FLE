@@ -34,6 +34,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderModel, IPerspectiveAwareModel
 {
 	private final boolean gui3d;
+	private final boolean builtIn;
 	private final INebulaBakedModelPart[] parts;
 	private final TextureAtlasSprite particle;
 	private final Function<ItemStack, String>[] itemDataGen;
@@ -43,12 +44,13 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	private final ImmutableMap<TransformType, TRSRTransformation> transforms;
 	
 	public FlexibleBakedModel(ImmutableMap<TransformType, TRSRTransformation> transforms, ImmutableList<INebulaBakedModelPart> parts,
-			TextureAtlasSprite particle, boolean gui3d,
+			TextureAtlasSprite particle, boolean gui3d, boolean builtIn,
 			Function<ItemStack, String>[] itemDataGen, Function<IBlockState, String>[] blockDataGen,
 			int[] itemLoadingData, int[] blockLoadingData)
 	{
 		this.transforms = transforms;
 		this.gui3d = gui3d;
+		this.builtIn = builtIn;
 		this.parts = L.cast(parts, INebulaBakedModelPart.class);
 		this.particle = particle;
 		this.itemDataGen = itemDataGen;
@@ -93,6 +95,12 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	public boolean isGui3d()
 	{
 		return this.gui3d;
+	}
+	
+	@Override
+	public boolean isBuiltInRenderer()
+	{
+		return this.builtIn;
 	}
 	
 	@Override

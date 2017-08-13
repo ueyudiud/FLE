@@ -129,7 +129,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			
 			FlexibleModel model = new FlexibleModel(NebulaModelLoader.INSTANCE.currentItem,
 					deserializeOrDefault(object, context, ModelHelper.ITEM_STANDARD_TRANSFORMS),
-					parts.build(), false);
+					parts.build(), false, false);
 			if (flag.get())
 				model.itemColors = functions;
 			model.itemLoadingData = poses;
@@ -175,7 +175,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			});
 			FlexibleModel model = new FlexibleModel(NebulaModelLoader.INSTANCE.currentItem,
 					deserializeOrDefault(object, context, ModelHelper.BLOCK_STANDARD_TRANSFORMS),
-					parts, Jsons.getOrDefault(object, "gui3D", true));
+					parts, Jsons.getOrDefault(object, "gui3D", true), Jsons.getOrDefault(object, "builtIn", false));
 			if (flag1.get())
 			{
 				model.itemDataGen = func1;

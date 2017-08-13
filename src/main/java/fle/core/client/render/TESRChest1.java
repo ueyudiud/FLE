@@ -44,6 +44,7 @@ public class TESRChest1 extends TESRChest<TEChest1> implements IIconLoader
 			this.icons[i][5] = register.registerIcon(FLE.MODID, "blocks/iconset/chest/small_" + type + "_back");
 			this.icons[i][6] = register.registerIcon(FLE.MODID, "blocks/iconset/chest/small_" + type + "_midi");
 			this.icons[i][7] = register.registerIcon(FLE.MODID, "blocks/iconset/chest/small_" + type + "_midii");
+			TEChest1.ChestType.values()[i].icon = register.registerIcon(FLE.MODID, "blocks/iconset/" + type);
 		}
 	}
 	

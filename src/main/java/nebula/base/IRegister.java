@@ -110,18 +110,31 @@ public interface IRegister<T> extends Iterable<T>
 		return get(name) != null;
 	}
 	
+	/**
+	 * Return <tt>true</tt> if this register contain
+	 * the argument.
+	 * @param arg
+	 * @return
+	 */
 	default boolean contain(@Nonnull T arg)
 	{
 		return name(arg) != null;
 	}
 	
+	/**
+	 * Remove an element from register by name.
+	 * @param name the name of element.
+	 * @return the removed element value.
+	 */
+	@Nullable
 	T remove(String name);
 	
 	/**
 	 * Remove an element from register.
-	 * @param arg The remove element.
-	 * @return The element registered name.
+	 * @param arg the remove element.
+	 * @return the element registered name.
 	 */
+	@Nullable
 	String remove(T arg);
 	
 	/**
@@ -129,4 +142,15 @@ public interface IRegister<T> extends Iterable<T>
 	 * @return the size
 	 */
 	int size();
+	
+	/**
+	 * Return the hashcode of register.
+	 * For all value registered in entry, the hashcode
+	 * is sum of <tt>id ^ name.hashcode() ^ hashCode(value)</tt>
+	 * @return the hashcode of register.
+	 * @see Object#hashCode()
+	 */
+	int hashCode();
+	
+	boolean equals(Object obj);
 }

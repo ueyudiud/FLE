@@ -49,8 +49,8 @@ public class GuiResearchGraph extends GuiContainerBase
 		{
 			if (i == this.instance.clickingNode)
 			{
-				pos[i][0] = mouseX - (this.guiLeft + 18 - 1);
-				pos[i][1] = mouseY - (this.guiTop + 8 - 1);
+				pos[i][0] = mouseX - (this.guiLeft + 19 - 1);
+				pos[i][1] = mouseY - (this.guiTop + 5 - 1);
 			}
 			else
 			{
@@ -64,7 +64,7 @@ public class GuiResearchGraph extends GuiContainerBase
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
 		GL11.glPushMatrix();
-		GL11.glTranslatef(this.guiLeft + 18 - 1, this.guiTop + 8 - 1, 0);
+		GL11.glTranslatef(this.guiLeft + 19 - 1, this.guiTop + 5 - 1, 0);
 		GL11.glColor4f(1.0F, 1.0F, 0.0F, 1.0F);
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer buffer = tessellator.getBuffer();

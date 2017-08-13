@@ -1,0 +1,53 @@
+{
+	"ambientocclusion": false,
+	"textures": { 
+		"chip_off": "farcore:blocks/circuits/chip",
+		"torch_off": "blocks/redstone_torch_off",
+		"wire": "farcore:blocks/circuits/wire"
+	},
+	"elements": [
+		{
+			"from": [ 6, 1, 6 ],
+			"to": [ 10, 2, 10 ],
+			"faces": {
+				"up": { "uv": [ 6, 6, 10, 10 ], "texture": "#chip_off" },
+				"north": { "uv": [ 6, 5, 10, 6 ], "texture": "#chip_off" },
+				"south": { "uv": [ 6, 10, 10, 11 ], "texture": "#chip_off" },
+				"west": { "uv": [ 6, 5, 10, 6 ], "texture": "#chip_off" },
+				"east": { "uv": [ 6, 10, 10, 11 ], "texture": "#chip_off" }
+			}
+		},
+		{
+			"from": [ 1, 1.001, 7 ],
+			"to": [ 6, 1.001, 9 ],
+			"faces": { 
+				"up": { "uv": [ 1, 7, 6, 9 ], "texture": "#wire", "tintindex": 2 }
+			}
+		},
+		{
+			"from": [ 10, 1.001, 7 ],
+			"to": [ 15, 1.001, 9 ],
+			"faces": { 
+				"up": { "uv": [ 10, 7, 15, 9 ], "texture": "#wire", "tintindex": 1 }
+			}
+		},
+		{
+			"from": [ 7, 1.001, 10 ],
+			"to": [ 9, 1.001, 15 ],
+			"faces": { 
+				"up": { "uv": [ 7, 10, 9, 15 ], "texture": "#wire", "tintindex": 0 }
+			}
+		},
+		{   
+			"from": [ 7, 1, 1 ],
+			"to": [ 9, 7, 3 ],
+			"faces": {
+				"up":    { "uv": [ 7,  6, 9,  8 ], "texture": "#torch_off" },
+				"north": { "uv": [ 7,  6, 9, 12 ], "texture": "#torch_off" },
+				"south": { "uv": [ 7,  6, 9, 12 ], "texture": "#torch_off" },
+				"west":  { "uv": [ 7,  6, 9, 12 ], "texture": "#torch_off" },
+				"east":  { "uv": [ 7,  6, 9, 12 ], "texture": "#torch_off" }
+			}
+		}
+	]
+}
