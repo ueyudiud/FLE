@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 import nebula.Log;
 import nebula.client.model.ICustomItemRenderModel;
+import nebula.client.render.IItemCustomRender;
 import nebula.client.render.IWorldRender;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import net.minecraft.block.material.Material;
@@ -35,6 +36,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -49,6 +51,18 @@ public class ClientOverride
 {
 	public static final List<IWorldRender> RENDERS = new ArrayList<>();
 	private static int rainSoundCounter;
+	
+	public static void renderSpecialItem(ItemStack stack)
+	{
+		IItemCustomRender render = NebulaRenderHandler.INSTNACE.getRender(stack);
+		if (render != null)
+		{
+			NebulaRenderHandler.itemRenderingFlag = true;
+			render.renderItemStack(stack);
+			NebulaRenderHandler.itemRenderingFlag = false;
+		}
+		else ForgeHooksClient.renderTileItem(stack.getItem(), stack.getItemDamage());
+	}
 	
 	public static void renderDropOnGround(Random random, int rendererUpdateCount)
 	{

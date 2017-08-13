@@ -17,7 +17,8 @@ import java.util.function.LongFunction;
  * @author ueyudiud
  */
 @FunctionalInterface
-public interface BiIntToObjFunction<R>
+public
+interface BiIntToObjFunction<R>
 {
 	/**
 	 * Create a new function that return a constant value.

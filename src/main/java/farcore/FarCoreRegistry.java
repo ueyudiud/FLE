@@ -35,6 +35,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -112,6 +113,43 @@ public class FarCoreRegistry
 			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
 			registerTESR(clazz, tesrClass.newInstance());
+		}
+		catch(Exception exception)
+		{
+			/**
+			 * I think no one like to register an invalid class,
+			 * but it shouldn't be crash for game still can run without a renderer.
+			 */
+			Log.catching(exception);
+		}
+	}
+	
+	/**
+	 * Register tile entity special render with item special renderer.
+	 * @param <T> the tile entity type.
+	 * @param tileEntityClass the tile entity class.
+	 * @param renderer the tile entity renderer.
+	 * @param item the rendering override item.
+	 * @param meta the rendering meta.
+	 * @see #registerTESR(Class, TileEntitySpecialRenderer)
+	 */
+	public static <T extends TileEntity> void registerTESR(Class<T> tileEntityClass, TileEntitySpecialRenderer<? super T> renderer, Item item, int meta)
+	{
+		ClientRegistry.bindTileEntitySpecialRenderer(tileEntityClass, renderer);
+		ForgeHooksClient.registerTESRItemStack(item, meta, tileEntityClass);
+	}
+	
+	/**
+	 * @see #registerTESR(Class, TileEntitySpecialRenderer, Item, int)
+	 */
+	public static <T extends TileEntity> void registerTESR(Class<? extends TileEntitySpecialRenderer<T>> tesrClass, Item item, int meta)
+	{
+		try
+		{
+			ParameterizedType type = (ParameterizedType) tesrClass.getGenericSuperclass();
+			@SuppressWarnings("unchecked")
+			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
+			registerTESR(clazz, tesrClass.newInstance(), item, meta);
 		}
 		catch(Exception exception)
 		{
