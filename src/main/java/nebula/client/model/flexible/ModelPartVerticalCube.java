@@ -63,19 +63,17 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 				part.normalizeUVPos();
 				if (flag)
 					part.renderFlag = 0;
-				for (int i = 0; i < 6; array[i++] /= 16.0F);
 			}
 		}
 		else if (object.has("from")/* && object.has("to") */)//Minecraft loader.
 		{
 			float[] array1 = Jsons.getFloatArray(object, "from", 3);
 			float[] array2 = Jsons.getFloatArray(object, "to", 3);
-			part.xyzPos = new float[]{array1[0], array1[1], array1[2], array2[0], array1[1], array2[2]};
+			part.xyzPos = new float[]{array1[0], array1[1], array1[2], array2[0], array2[1], array2[2]};
 			part.fullCube = false;
 			part.normalizeUVPos();
 			if (flag)
 				part.renderFlag = 0;
-			for (int i = 0; i < 6; part.xyzPos[i++] /= 16.0F);
 		}
 		if (flag)
 		{
@@ -132,7 +130,7 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 		cube.icons[side] = location;
 	}
 	
-	float[] xyzPos = {0, 0, 0, 1, 1, 1};
+	float[] xyzPos = {0, 0, 0, 16, 16, 16};
 	float[][] uvPos = {
 			{0, 0, 16, 16},
 			{0, 0, 16, 16},
@@ -157,34 +155,36 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 	
 	private void normalizeUVPos()
 	{
-		this.uvPos[0][0] = this.xyzPos[0]; this.uvPos[0][1] = this.xyzPos[5]; this.uvPos[0][2] = this.xyzPos[3]; this.uvPos[0][3] = this.xyzPos[2];
+		this.uvPos[0][0] = this.xyzPos[0]; this.uvPos[0][1] = 16.0F - this.xyzPos[5]; this.uvPos[0][2] = this.xyzPos[3]; this.uvPos[0][3] = 16.0F - this.xyzPos[2];
 		this.uvPos[1][0] = this.xyzPos[0]; this.uvPos[1][1] = this.xyzPos[2]; this.uvPos[1][2] = this.xyzPos[3]; this.uvPos[1][3] = this.xyzPos[5];
-		this.uvPos[2][0] = this.xyzPos[3]; this.uvPos[2][1] = this.xyzPos[4]; this.uvPos[2][2] = this.xyzPos[0]; this.uvPos[2][3] = this.xyzPos[1];
-		this.uvPos[3][0] = this.xyzPos[0]; this.uvPos[3][1] = this.xyzPos[4]; this.uvPos[3][2] = this.xyzPos[3]; this.uvPos[3][3] = this.xyzPos[1];
-		this.uvPos[4][0] = this.xyzPos[5]; this.uvPos[4][1] = this.xyzPos[4]; this.uvPos[4][2] = this.xyzPos[2]; this.uvPos[4][3] = this.xyzPos[1];
-		this.uvPos[5][0] = this.xyzPos[2]; this.uvPos[5][1] = this.xyzPos[4]; this.uvPos[5][2] = this.xyzPos[5]; this.uvPos[5][3] = this.xyzPos[1];
+		this.uvPos[2][0] = 16.0F - this.xyzPos[3]; this.uvPos[2][1] = 16.0F - this.xyzPos[4]; this.uvPos[2][2] = 16.0F - this.xyzPos[0]; this.uvPos[2][3] = 16.0F - this.xyzPos[1];
+		this.uvPos[3][0] = this.xyzPos[0]; this.uvPos[3][1] = 16.0F - this.xyzPos[4]; this.uvPos[3][2] = this.xyzPos[3]; this.uvPos[3][3] = 16.0F - this.xyzPos[1];
+		this.uvPos[4][0] = this.xyzPos[5]; this.uvPos[4][1] = 16.0F - this.xyzPos[4]; this.uvPos[4][2] = this.xyzPos[2]; this.uvPos[4][3] = 16.0F - this.xyzPos[1];
+		this.uvPos[5][0] = 16.0F - this.xyzPos[2]; this.uvPos[5][1] = 16.0F - this.xyzPos[4]; this.uvPos[5][2] = 16.0F - this.xyzPos[5]; this.uvPos[5][3] = 16.0F - this.xyzPos[1];
 	}
 	
 	@Override
 	public Collection<String> getResources()
 	{
-		return Arrays.asList(this.icons);
+		List<String> list = ArrayListAddWithCheck.requireNonnull();
+		list.addAll(ArrayListAddWithCheck.argument(this.icons));
+		return list;
 	}
 	
 	private float[][][] datas()
 	{
 		return new float[][][]{
 			{
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[1][0], this.uvPos[1][1]},
-				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[1][0], this.uvPos[1][3]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[1][2], this.uvPos[1][3]},
-				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[1][2], this.uvPos[1][1]}
+				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][0], this.uvPos[0][1]},
+				{this.xyzPos[0], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][0], this.uvPos[0][3]},
+				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[2], this.uvPos[0][2], this.uvPos[0][3]},
+				{this.xyzPos[3], this.xyzPos[1], this.xyzPos[5], this.uvPos[0][2], this.uvPos[0][1]}
 			},
 			{
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[0][0], this.uvPos[0][1]},
-				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[0][0], this.uvPos[0][3]},
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[0][2], this.uvPos[0][3]},
-				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[0][2], this.uvPos[0][1]}
+				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][0], this.uvPos[1][1]},
+				{this.xyzPos[0], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][0], this.uvPos[1][3]},
+				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[5], this.uvPos[1][2], this.uvPos[1][3]},
+				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[1][2], this.uvPos[1][1]}
 			},
 			{
 				{this.xyzPos[3], this.xyzPos[4], this.xyzPos[2], this.uvPos[2][0], this.uvPos[2][1]},
@@ -237,7 +237,7 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 				builder.normal(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ());
 				builder.color(this.red, this.green, this.blue, this.alpha);
 				for (float[] array : datas[i])
-					builder.pos(array[0], array[1], array[2], array[3], array[4]);
+					builder.pos(array[0] / 16.0F, array[1] / 16.0F, array[2] / 16.0F, array[3], array[4]);
 				builder.endQuad();
 			}
 		}

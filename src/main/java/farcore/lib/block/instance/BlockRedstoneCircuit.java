@@ -161,11 +161,11 @@ public class BlockRedstoneCircuit extends BlockTE
 				NebulaModelDeserializer.BLOCK);
 		NebulaModelLoader.registerModel(
 				new ResourceLocation(FarCore.ID, "circuit/invert/d"),
-				new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_d.json"),
+				new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_d.json"),
 				NebulaModelDeserializer.BLOCK);
 		NebulaModelLoader.registerModel(
-				new ResourceLocation(FarCore.ID, "circuit/invert_e"),
-				new ResourceLocation(FarCore.ID, "models/block1/circuit/integrator_e.json"),
+				new ResourceLocation(FarCore.ID, "circuit/invert/e"),
+				new ResourceLocation(FarCore.ID, "models/block1/circuit/invert_e.json"),
 				NebulaModelDeserializer.BLOCK);
 	}
 	

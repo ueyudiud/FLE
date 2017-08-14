@@ -46,7 +46,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 	new ModelPartRedstoneCircuitPlate();
 	
 	private ResourceLocation layer;
-	private String texture;//Defaulty for all rocks.
+	private String texture;//Default for all rocks.
 	
 	private float plateHeight = .125F;
 	

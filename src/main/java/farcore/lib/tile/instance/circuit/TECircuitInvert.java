@@ -17,4 +17,10 @@ public class TECircuitInvert extends TECircuitSpatial
 		power = getPowerHigherThan(this.powerLR, power, Facing.RIGHT);
 		this.powerLR = !flag ? 15 : power;
 	}
+	
+	@Override
+	public String getState()
+	{
+		return (this.powerFB > 0 ? "e" : "d") + (this.powerLR > 0 ? "e" : "d");
+	}
 }

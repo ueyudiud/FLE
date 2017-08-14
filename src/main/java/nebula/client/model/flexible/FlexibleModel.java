@@ -83,24 +83,33 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	
 	public void loadResources()
 	{
-		Set<String> keys = new HashSet<>();
-		keys.add("#particle");
-		this.textures = new HashSet<>();
-		this.parts.forEach(part-> {
-			keys.addAll(part.getResources());
-			if (part instanceof INebulaDirectResourcesModelPart)
-			{
-				this.textures.addAll(((INebulaDirectResourcesModelPart) part).getDirectResources());
-			}
-		});
-		this.resources = new HashMap<>();
-		keys.forEach(key-> {
-			IIconCollection handler = getIconHandler(key);
-			this.textures.addAll(handler.resources());
-			this.resources.put(key, handler);
-		});
-		this.textures = ImmutableList.copyOf(this.textures);
-		this.resources = ImmutableMap.copyOf(this.resources);
+		try
+		{
+			Set<String> keys = new HashSet<>();
+			keys.add("#particle");
+			this.textures = new HashSet<>();
+			this.parts.forEach(part-> {
+				keys.addAll(part.getResources());
+				if (part instanceof INebulaDirectResourcesModelPart)
+				{
+					this.textures.addAll(((INebulaDirectResourcesModelPart) part).getDirectResources());
+				}
+			});
+			this.resources = new HashMap<>();
+			keys.forEach(key-> {
+				IIconCollection handler = getIconHandler(key);
+				this.textures.addAll(handler.resources());
+				this.resources.put(key, handler);
+			});
+			this.textures = ImmutableList.copyOf(this.textures);
+			this.resources = ImmutableMap.copyOf(this.resources);
+		}
+		catch (Exception exception)
+		{
+			this.textures = ImmutableList.of();
+			this.resources = ImmutableMap.of();
+			Log.warn("Wrong model textures data got. item: {}, parts: {}", this.item, this.parts);
+		}
 	}
 	
 	@Override
@@ -112,7 +121,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	
 	public IIconCollection getIconHandler(String key)
 	{
-		return $getIconHandler(key, new ArrayList<>());
+		return key == null ? NebulaModelLoader.ICON_HANDLER_MISSING : $getIconHandler(key, new ArrayList<>());
 	}
 	
 	private IIconCollection $getIconHandler(String key, List<String> keys)
