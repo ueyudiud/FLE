@@ -236,7 +236,6 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		}
 	};
 	
-	
 	static class Transform
 	{
 		Map<TransformType, TRSRTransformation> map = new EnumMap<>(TransformType.class);

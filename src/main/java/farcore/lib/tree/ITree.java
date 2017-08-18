@@ -12,10 +12,10 @@ import farcore.lib.block.instance.BlockLogNatural;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;
+import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,23 +41,13 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 		LEAVES_CORE;
 	}
 	
-	ITree VOID = new TreeVoid();
+	Tree VOID = new TreeVoid();
 	
 	//	Mat material();
 	
 	void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves, BlockLeavesCore leavesCore);
 	
 	<T extends Block> T getBlock(BlockType type);
-	
-	default IProperty<?>[] getLogProp(boolean isArt)
-	{
-		return new IProperty[0];
-	}
-	
-	default IProperty<?>[] getLeavesProp()
-	{
-		return new IProperty[]{net.minecraft.block.BlockLeaves.CHECK_DECAY};
-	}
 	
 	boolean tickLogUpdate();
 	
@@ -68,7 +58,7 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	default IBlockState getLogState(Block block, int meta, boolean isArt)
 	{
-		return block.getDefaultState().withProperty(BlockLog.LOG_AXIS, EnumAxis.values()[meta]);
+		return block.getDefaultState().withProperty(BlockLog.LOG_AXIS, EnumAxis.values()[meta & 0x3]);
 	}
 	
 	default IBlockState initLogState(boolean isArt, IBlockState state)
@@ -128,4 +118,9 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	int onSaplingUpdate(ISaplingAccess access);
 	
 	int getGrowAge(ISaplingAccess access);
+	
+	default void registerLogExtData(Block block, boolean isArt, ExtendedBlockStateRegister register)
+	{
+		register.registerStates(block, BlockLog.LOG_AXIS);
+	}
 }

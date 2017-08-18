@@ -7,8 +7,8 @@ package farcore.lib.block.instance;
 import farcore.data.CT;
 import farcore.data.MC;
 import farcore.lib.block.BlockMaterial;
-import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
+import farcore.lib.tree.Tree;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
@@ -57,12 +57,12 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	
 	public final BlockPlankSlab[] slabGroup;
 	
-	public BlockPlank(Mat material, PropertyWood property)
+	public BlockPlank(Tree tree)
 	{
-		super(material.modid, "plank." + material.name, Material.WOOD, material, property);
-		this.slabGroup = makeSlabs(this.blockName, material.localName + " Plank");
+		super(tree.material.modid, "plank." + tree.material.name, Material.WOOD, tree.material, tree);
+		this.slabGroup = makeSlabs(this.blockName, this.material.localName + " Plank");
 		setSoundType(SoundType.WOOD);
-		setCreativeTab(CT.tabTree);
+		setCreativeTab(CT.TREE);
 	}
 	
 	@Override

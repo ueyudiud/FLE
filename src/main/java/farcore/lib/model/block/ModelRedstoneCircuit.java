@@ -55,6 +55,11 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
+/**
+ * Will be removed later.
+ * The redstone circuit model part instead.
+ * @author ueyudiud
+ */
 @Deprecated
 public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IModelCustomData
 {

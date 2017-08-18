@@ -7,11 +7,14 @@ import java.util.Collection;
 import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * The texture supplier.
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public interface IIconCollection
 {
 	Collection<ResourceLocation> resources();

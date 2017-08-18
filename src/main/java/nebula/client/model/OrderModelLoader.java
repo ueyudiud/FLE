@@ -15,6 +15,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
 /**
+ * For model which is load without resource reloading.
  * @author ueyudiud
  */
 public enum OrderModelLoader implements ICustomModelLoader

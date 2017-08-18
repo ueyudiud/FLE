@@ -8,7 +8,7 @@ import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.item.ItemMulti;
-import farcore.lib.material.prop.PropertyTree;
+import farcore.lib.tree.Tree;
 import fle.api.recipes.instance.PortableWoodworkRecipeMap.PortableWoodworkRecipe;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
 import nebula.common.inventory.IBasicInventory;
@@ -71,8 +71,8 @@ public class RecipePortableWoodwork2 implements PortableWoodworkRecipe
 	public ItemStack[] getOutputs(IBasicInventory inventory, int value)
 	{
 		ItemStack stack = inventory.getStack(2);
-		PropertyTree tree = ((BlockLogArtificial) Block.getBlockFromItem(stack.getItem())).tree;
-		ItemStack[] result = {new ItemStack(tree.plank), ItemMulti.createStack(tree.material(), MC.bark)};
+		Tree tree = ((BlockLogArtificial) Block.getBlockFromItem(stack.getItem())).tree;
+		ItemStack[] result = {new ItemStack(tree.plank), ItemMulti.createStack(tree.material, MC.bark)};
 		return result;
 	}
 	

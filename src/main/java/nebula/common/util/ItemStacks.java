@@ -221,12 +221,16 @@ public final class ItemStacks
 		if(state.getBlock() instanceof IToolableBlock)
 		{
 			IToolableBlock block = (IToolableBlock) state.getBlock();
-			for(EnumToolType tool : toolTypes)
+			for(EnumToolType toolType : toolTypes)
 			{
-				ActionResult<Float> result = block.onToolClick(player, tool, stack, world, pos, direction, hitX, hitY, hitZ);
+				ActionResult<Float> result = block.onToolClick(player, toolType, stack, world, pos, direction, hitX, hitY, hitZ);
 				if(result.getType() != EnumActionResult.PASS)
 				{
-					((ITool) stack.getItem()).onToolUse(player, stack, tool, L.cast(result.getResult()));
+					if (stack.getItem() instanceof ITool)
+					{
+						ITool tool = (ITool) stack.getItem();
+						tool.onToolUse(player, stack, toolType, L.cast(result.getResult()));
+					}
 					return result.getType();
 				}
 			}

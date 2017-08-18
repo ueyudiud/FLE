@@ -11,10 +11,13 @@ import com.google.common.collect.ImmutableMap;
 
 import nebula.client.util.IIconCollection;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class SimpleIconHandler implements IIconCollection
 {
 	final String key;

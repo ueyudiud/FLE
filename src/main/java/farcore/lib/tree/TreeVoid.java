@@ -9,7 +9,7 @@ public class TreeVoid extends Tree
 {
 	public TreeVoid()
 	{
-		this.material = Mat.VOID;
+		super(Mat.VOID, -1, 0.0F, 0.0F, 0.0F, 0.0F);
 	}
 	
 	@Override

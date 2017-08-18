@@ -200,7 +200,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		setTickRandomly(true);
 		this.uneffectiveSpeedMultiplier = 1F / 150F;
 		this.effectiveSpeedMultiplier = 1F / 20F;
-		setCreativeTab(CT.tabTerria);
+		setCreativeTab(CT.TERRIA);
 	}
 	
 	public BlockSoil(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn, Mat mat, PropertyBlockable soil)
@@ -209,7 +209,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		setTickRandomly(true);
 		this.uneffectiveSpeedMultiplier = 150F;
 		this.effectiveSpeedMultiplier = 20F;
-		setCreativeTab(CT.tabTerria);
+		setCreativeTab(CT.TERRIA);
 	}
 	
 	@Override

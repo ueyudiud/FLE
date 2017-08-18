@@ -14,12 +14,12 @@ public interface ISaplingAccess extends IModifiableCoord, IBiology
 	}
 	
 	@Override
-	default ITree getSpecie()
+	default Tree getSpecie()
 	{
 		return tree();
 	}
 	
-	ITree tree();
+	Tree tree();
 	
 	TreeInfo info();
 	

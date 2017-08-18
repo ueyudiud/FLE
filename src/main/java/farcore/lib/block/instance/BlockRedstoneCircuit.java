@@ -14,6 +14,7 @@ import farcore.FarCoreRegistry;
 import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.lib.material.Mat;
+import farcore.lib.model.block.ModelPartRedstoneCircuitPlate;
 import farcore.lib.model.block.ModelRedstoneCircuit;
 import farcore.lib.model.block.statemap.StateMapperCircuit;
 import farcore.lib.tile.instance.circuit.TECircuitAnd;
@@ -136,6 +137,7 @@ public class BlockRedstoneCircuit extends BlockTE
 	{
 		super.registerRender();
 		ModelLoaderRegistry.registerLoader(ModelRedstoneCircuit.RedstoneCircuitModelLoader.INSTANCE);
+		NebulaModelDeserializer.registerBlockDeserializer("farcore:circuit.plate", ModelPartRedstoneCircuitPlate.DESERIALIZER);
 		ModelLoader.setCustomStateMapper(this, new StateMapperCircuit());
 		for(TETag tag : this.property_TE.getAllowedValues())
 		{

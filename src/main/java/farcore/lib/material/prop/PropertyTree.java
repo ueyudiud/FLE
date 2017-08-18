@@ -14,11 +14,14 @@ import farcore.lib.block.instance.BlockPlank;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.ITree;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;
+import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,13 +32,6 @@ import net.minecraft.world.World;
 
 public abstract class PropertyTree extends PropertyWood implements ITree, IRegisteredNameable
 {
-	public static final PropertyTree VOID = new PropertyTree.PropertyTreeWrapper(new PropertyWood(Mat.VOID, -1, 0.0F, 0.0F, 0.0F, 0.0F), ITree.VOID);
-	
-	static
-	{
-		VOID.setMaterial(Mat.VOID);
-	}
-	
 	private Mat material;
 	public BlockLogNatural logNatural;
 	public BlockLogArtificial logArtificial;
@@ -77,14 +73,13 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		this.leavesCore = leavesCore;
 	}
 	
-	public static class PropertyTreeWrapper extends PropertyTree
+	public static class PropertyTreeWrapper extends Tree
 	{
 		private ITree tree;
 		
 		public PropertyTreeWrapper(PropertyWood property, ITree tree)
 		{
-			super(property.material, property.harvestLevel,
-					property.hardness, property.explosionResistance, property.ashcontent, property.burnHeat);
+			super(property.material, property.harvestLevel, property.hardness, property.explosionResistance, property.ashcontent, property.burnHeat);
 			this.tree = tree;
 		}
 		
@@ -212,6 +207,54 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		public <T extends Block> T getBlock(BlockType type)
 		{
 			return this.tree.getBlock(type);
+		}
+		
+		@Override
+		public boolean generateTreeAt(World world, BlockPos pos, Random random, TreeInfo info)
+		{
+			return this.tree.generateTreeAt(world, pos, random, info);
+		}
+		
+		@Override
+		public int getLeavesMeta(IBlockState state)
+		{
+			return this.tree.getLeavesMeta(state);
+		}
+		
+		@Override
+		public IBlockState getLeavesState(Block block, int meta)
+		{
+			return this.tree.getLeavesState(block, meta);
+		}
+		
+		@Override
+		public int getLogMeta(IBlockState state, boolean isArt)
+		{
+			return this.tree.getLogMeta(state, isArt);
+		}
+		
+		@Override
+		public IBlockState getLogState(Block block, int meta, boolean isArt)
+		{
+			return this.tree.getLogState(block, meta, isArt);
+		}
+		
+		@Override
+		public BlockStateContainer createLeavesStateContainer(Block block)
+		{
+			return this.tree.createLeavesStateContainer(block);
+		}
+		
+		@Override
+		public BlockStateContainer createLogStateContainer(Block block, boolean isArt)
+		{
+			return this.tree.createLogStateContainer(block, isArt);
+		}
+		
+		@Override
+		public void registerLogExtData(Block block, boolean isArt, ExtendedBlockStateRegister register)
+		{
+			this.tree.registerLogExtData(block, isArt, register);
 		}
 	}
 }

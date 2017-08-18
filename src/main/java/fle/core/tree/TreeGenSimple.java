@@ -2,7 +2,7 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.Tree;
+import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeGenAbstract;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
@@ -28,7 +28,7 @@ public class TreeGenSimple extends TreeGenAbstract
 	private float leavesWidth;
 	private short checkRange;
 	
-	public TreeGenSimple(Tree tree, float generateCoreLeavesChance, boolean leavesConnect)
+	public TreeGenSimple(ITree tree, float generateCoreLeavesChance, boolean leavesConnect)
 	{
 		super(tree, generateCoreLeavesChance);
 		this.leavesConnect = leavesConnect;

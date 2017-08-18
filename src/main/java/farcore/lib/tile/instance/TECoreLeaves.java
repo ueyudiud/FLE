@@ -66,7 +66,7 @@ public class TECoreLeaves extends TEStatic implements ITB_BreakBlock
 	{
 		if (!V.generateState)
 		{
-			Worlds.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material())));
+			Worlds.spawnDropsInWorld(this, ImmutableList.of(provideSapling(((BlockLeavesCore) state.getBlock()).tree.material)));
 		}
 	}
 }

@@ -115,7 +115,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		this.effectiveSpeedMultiplier = 1F / 15F;
 		setSoundType(SoundType.SAND);
 		setTickRandomly(true);
-		setCreativeTab(CT.tabTerria);
+		setCreativeTab(CT.TERRIA);
 	}
 	
 	@Override

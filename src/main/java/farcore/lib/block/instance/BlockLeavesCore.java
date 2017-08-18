@@ -1,8 +1,7 @@
 package farcore.lib.block.instance;
 
-import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.tile.instance.TECoreLeaves;
+import farcore.lib.tree.Tree;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BreakBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.BlockStateContainer;
@@ -19,9 +18,9 @@ import net.minecraft.world.World;
  */
 public class BlockLeavesCore extends BlockLeaves implements ITileEntityProvider
 {
-	public static BlockLeavesCore create(BlockLeaves leaves, Mat material, PropertyTree $tree)
+	public static BlockLeavesCore create(BlockLeaves leaves, Tree $tree)
 	{
-		return new BlockLeavesCore(material, $tree, leaves)
+		return new BlockLeavesCore($tree, leaves)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
@@ -45,9 +44,9 @@ public class BlockLeavesCore extends BlockLeaves implements ITileEntityProvider
 	
 	private BlockLeaves leaves;
 	
-	protected BlockLeavesCore(Mat material, PropertyTree tree, BlockLeaves leaves)
+	protected BlockLeavesCore(Tree tree, BlockLeaves leaves)
 	{
-		super("leaves.core." + material.name, tree, material.localName + " Leaves");
+		super("leaves.core." + tree.material.name, tree, tree.material.localName + " Leaves");
 		setCreativeTab(null);
 		this.leaves = leaves;
 	}

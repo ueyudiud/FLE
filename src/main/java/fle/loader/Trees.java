@@ -8,6 +8,7 @@ import static farcore.data.M.acacia;
 import static farcore.data.M.aspen;
 import static farcore.data.M.birch;
 import static farcore.data.M.ceiba;
+import static farcore.data.M.lacquer;
 import static farcore.data.M.morus;
 import static farcore.data.M.oak;
 import static farcore.data.M.oak_black;
@@ -18,6 +19,7 @@ import fle.core.tree.TreeAcacia;
 import fle.core.tree.TreeAspen;
 import fle.core.tree.TreeBirch;
 import fle.core.tree.TreeCeiba;
+import fle.core.tree.TreeLacquer;
 import fle.core.tree.TreeMorus;
 import fle.core.tree.TreeOak;
 import fle.core.tree.TreeOakBlack;
@@ -40,5 +42,6 @@ public class Trees
 		aspen		.setTree(new TreeAspen().setMaterial(aspen).setDefFamily());
 		morus		.setTree(new TreeMorus().setMaterial(morus).setDefFamily());
 		willow		.setTree(new TreeWillow().setMaterial(willow).setDefFamily());
+		lacquer		.setTree(new TreeLacquer(lacquer).setDefFamily());
 	}
 }

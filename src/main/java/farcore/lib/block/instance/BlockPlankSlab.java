@@ -56,7 +56,7 @@ public class BlockPlankSlab extends BlockSlab
 		setHardness(id == EnumPlankState.BROKE.ordinal() ? this.property.hardness * 0.06F : this.property.hardness * 0.6F);
 		setResistance(id == EnumPlankState.BROKE.ordinal() ? 0F : this.property.explosionResistance * 0.4F);
 		setSoundType(SoundType.WOOD);
-		setCreativeTab(CT.tabTree);
+		setCreativeTab(CT.TREE);
 	}
 	
 	@Override

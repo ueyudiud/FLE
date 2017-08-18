@@ -13,7 +13,7 @@ import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyTree;
+import farcore.lib.material.prop.PropertyWood;
 import fle.api.recipes.instance.RecipeMaps;
 import fle.core.recipe.RecipePortableWoodwork1;
 import fle.core.recipe.RecipePortableWoodwork2;
@@ -30,9 +30,9 @@ public class RecipeResource1
 		addShapelessRecipe(BlocksItems.miscResources.getSubItem("ramie_rope_bundle"), BlocksItems.miscResources.getSubItem("ramie_rope"), 4);
 		addShapelessRecipe(BlocksItems.miscResources.getSubItem("ramie_rope", 4), BlocksItems.miscResources.getSubItem("ramie_rope_bundle"));
 		
-		for (PropertyTree tree : Mat.filtAndGet(SubTags.TREE, MP.property_tree))
+		for (PropertyWood tree : Mat.filtAndGet(SubTags.WOOD, MP.property_wood))
 		{
-			addShapelessRecipe(ItemMulti.createStack(tree.material(), MC.firewood, 2), MC.log.getOreName(tree.material()), toolUse(EnumToolTypes.AXE, tree.hardness / 20.0F + 0.25F));
+			addShapelessRecipe(ItemMulti.createStack(tree.material, MC.firewood, 2), MC.log.getOreName(tree.material), toolUse(EnumToolTypes.AXE, tree.hardness / 20.0F + 0.25F));
 		}
 		
 		RecipeMaps.PORTABLE_WOODWORK.addRecipe(new RecipePortableWoodwork1());

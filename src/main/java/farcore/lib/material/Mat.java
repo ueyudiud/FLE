@@ -39,6 +39,7 @@ import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
 import farcore.lib.tree.ITree;
+import farcore.lib.tree.Tree;
 import nebula.base.HashPropertyMap;
 import nebula.base.IPropertyMap;
 import nebula.base.IPropertyMap.IProperty;
@@ -403,6 +404,12 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		return addProperty(MP.property_wood, property);
 	}
 	
+	public Mat setTree(Tree tree)
+	{
+		return setTree(tree, true);
+	}
+	
+	@Deprecated
 	public Mat setTree(ITree tree)
 	{
 		return setTree(tree, true);
@@ -416,29 +423,33 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 * in VOID material in FarCore.
 	 * @return
 	 */
+	public Mat setTree(Tree tree, boolean createBlock)
+	{
+		add(SubTags.TREE, SubTags.WOOD);
+		tree.material = this;
+		if (createBlock)
+		{
+			BlockLogNatural logNatural = BlockLogNatural.create(tree);
+			BlockLogArtificial logArtificial = BlockLogArtificial.create(tree);
+			BlockLeaves leaves = BlockLeaves.create(tree);
+			BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, tree);
+			BlockPlank plank = new BlockPlank(tree);
+			tree.block = logArtificial;
+			tree.plank = plank;
+			tree.initInfo(logNatural, logArtificial, leaves, coreLeaves);
+		}
+		addProperty(MP.fallen_damage_deduction, (int) (1000 / (tree.hardness * 4 - 5)));
+		addProperty(MP.flammability, 50);
+		addProperty(MP.fire_encouragement, 4);
+		addProperty(MP.fire_spread_speed, 25);
+		addProperty(MP.property_wood, tree);
+		return addProperty(MP.property_tree, tree);
+	}
+	
+	@Deprecated
 	public Mat setTree(ITree tree, boolean createBlock)
 	{
-		PropertyWood property0 = this.propertyMap.get(MP.property_wood);
-		PropertyTree property = new PropertyTree.PropertyTreeWrapper(property0, tree);
-		property.ashcontent = property0.ashcontent;
-		property.burnHeat = property0.burnHeat;
-		property.explosionResistance = property0.explosionResistance;
-		property.hardness = property0.hardness;
-		property.harvestLevel = property0.harvestLevel;
-		add(SubTags.TREE);
-		if(createBlock)
-		{
-			BlockLogNatural logNatural = BlockLogNatural.create(this, property);
-			BlockLogArtificial logArtificial = BlockLogArtificial.create(this, property);
-			BlockLeaves leaves = BlockLeaves.create(this, property);
-			BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, this, property);
-			BlockPlank plank = new BlockPlank(this, property);
-			property.block = logArtificial;
-			property.plank = plank;
-			property.initInfo(logNatural, logArtificial, leaves, coreLeaves);
-		}
-		property.setMaterial(this);
-		return addProperty(MP.property_wood, property);//Override old property.
+		return setTree(new PropertyTree.PropertyTreeWrapper(getProperty(MP.property_wood), tree), createBlock);
 	}
 	
 	public Mat setSoil(float hardness, float resistance, Material material)

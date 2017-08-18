@@ -2,11 +2,11 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.Tree;
+import farcore.lib.tree.TreeOld;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeOak extends Tree
+public class TreeOak extends TreeOld
 {
 	private final TreeGenClassic generator1 = new TreeGenClassic(this, 0.04F);
 	private final TreeGenBig generator2 = new TreeGenBig(this, 0.02F);

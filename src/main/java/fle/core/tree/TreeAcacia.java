@@ -2,11 +2,11 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.Tree;
+import farcore.lib.tree.TreeOld;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeAcacia extends Tree
+public class TreeAcacia extends TreeOld
 {
 	private final TreeGenAcacia generator1 = new TreeGenAcacia(this, 0.022F);
 	

@@ -52,7 +52,9 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 	
 	public ModelPartRedstoneCircuitPlate()
 	{
-		textures = null;//Clean cache.
+		//Clean cache.
+		textures = null;
+		bakedQuads.clear();
 	}
 	ModelPartRedstoneCircuitPlate(ResourceLocation layer)
 	{

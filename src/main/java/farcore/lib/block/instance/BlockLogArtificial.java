@@ -4,13 +4,13 @@ import java.util.Random;
 
 import farcore.data.CT;
 import farcore.data.MC;
-import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyTree;
+import farcore.lib.tree.Tree;
 import nebula.common.LanguageManager;
 import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.OreDict;
+import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -24,11 +24,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockLogArtificial extends BlockLog implements IToolableBlock
+public abstract class BlockLogArtificial extends BlockLog implements IToolableBlock
 {
-	public static BlockLogArtificial create(Mat material, PropertyTree $tree)
+	public static BlockLogArtificial create(Tree $tree)
 	{
-		return new BlockLogArtificial(material, $tree)
+		return new BlockLogArtificial($tree)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
@@ -37,15 +37,21 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 			}
 			
 			@Override
-			public int getMetaFromState(IBlockState state)
+			public int getDataFromState(IBlockState state)
 			{
 				return $tree.getLogMeta(state, true);
 			}
 			
 			@Override
-			public IBlockState getStateFromMeta(int meta)
+			public IBlockState getStateFromData(int meta)
 			{
 				return $tree.getLogState(this, meta, true);
+			}
+			
+			@Override
+			public void registerStateToRegister(ExtendedBlockStateRegister register)
+			{
+				$tree.registerLogExtData(this, true, register);
 			}
 			
 			@Override
@@ -56,11 +62,10 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 		};
 	}
 	
-	protected BlockLogArtificial(Mat material, PropertyTree tree)
+	protected BlockLogArtificial(Tree tree)
 	{
-		super("log.artifical." + material.name, material, tree);
-		setCreativeTab(CT.tabTree);
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), material.localName + " Log");
+		super("log.artifical." + tree.material.name, tree);
+		setCreativeTab(CT.TREE);
 		if(tree.tickLogUpdate())
 		{
 			setTickRandomly(true);
@@ -71,8 +76,9 @@ public class BlockLogArtificial extends BlockLog implements IToolableBlock
 	public void postInitalizedBlocks()
 	{
 		super.postInitalizedBlocks();
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), this.tree.material.localName + " Log");
 		OreDict.registerValid("logWood", this);
-		MC.log.registerOre(this.tree.material(), this);
+		MC.log.registerOre(this.tree.material, this);
 	}
 	
 	@Override

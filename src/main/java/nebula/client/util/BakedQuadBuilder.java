@@ -166,11 +166,12 @@ public class BakedQuadBuilder
 			switch(this.format.getElement(e).getUsage())
 			{
 			case POSITION : this.builder.put(e, this.px, this.py, this.pz); break;
-			case UV : if(this.format.getElement(e).getIndex() == 0)
-				this.builder.put(e, this.tu, this.tv, 0, 1);
-			else
-				this.builder.put(e);
-			break;
+			case UV :
+				if(this.format.getElement(e).getIndex() == 0)
+					this.builder.put(e, this.tu, this.tv, 0, 1);
+				else
+					this.builder.put(e);
+				break;
 			case NORMAL : this.builder.put(e, this.nx, this.ny, this.nz); break;
 			case COLOR : this.builder.put(e, this.cr, this.cg, this.cb, this.ca); break;
 			default: this.builder.put(e); break;

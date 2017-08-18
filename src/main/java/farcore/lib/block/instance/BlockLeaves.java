@@ -6,7 +6,7 @@ import java.util.Random;
 
 import farcore.data.CT;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyTree;
+import farcore.lib.tree.Tree;
 import nebula.base.ArrayListAddWithCheck;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Client;
@@ -42,9 +42,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 {
-	public static BlockLeaves create(Mat material, PropertyTree $tree)
+	public static BlockLeaves create(Tree $tree)
 	{
-		return new BlockLeaves(material, $tree)
+		return new BlockLeaves($tree)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
@@ -72,19 +72,19 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 		};
 	}
 	
-	public PropertyTree tree;
+	public Tree tree;
 	
-	BlockLeaves(Mat material, PropertyTree tree)
+	BlockLeaves(Tree tree)
 	{
-		this("leaves." + material.name, tree, material.localName + " Leaves");
+		this("leaves." + tree.material.name, tree, tree.material.localName + " Leaves");
 	}
-	protected BlockLeaves(String name, PropertyTree tree, String localName)
+	protected BlockLeaves(String name, Tree tree, String localName)
 	{
 		super(name, Material.LEAVES);
 		this.tree = tree;
 		setHardness(0.5F);
 		setResistance(0.02F);
-		setCreativeTab(CT.tabTree);
+		setCreativeTab(CT.TREE);
 		setLightOpacity(1);
 		setSoundType(SoundType.PLANT);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), localName);
@@ -101,7 +101,7 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		Mat material = this.tree.material();
+		Mat material = this.tree.material;
 		StateMapperExt mapper = new StateMapperExt(material.modid, "leaves", null, net.minecraft.block.BlockLeaves.CHECK_DECAY);
 		mapper.setVariants("type", material.name);
 		Renders.registerCompactModel(mapper, this, null);

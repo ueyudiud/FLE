@@ -40,6 +40,8 @@ public class EnumToolTypes
 	
 	SHOVEL = EnumToolType.SHOVEL,
 	
+	KNIFE = new EnumToolType("knife", "Knife"),
+	
 	SAW = new EnumToolType("saw", "Saw"),
 	BOW_SAW = new EnumToolType("bow_saw", "BowSaw"),
 	

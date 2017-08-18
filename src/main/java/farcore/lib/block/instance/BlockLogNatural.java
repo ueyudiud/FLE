@@ -3,8 +3,7 @@ package farcore.lib.block.instance;
 import java.util.Random;
 
 import farcore.data.Config;
-import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyTree;
+import farcore.lib.tree.Tree;
 import farcore.util.runnable.BreakTree;
 import nebula.Log;
 import nebula.common.LanguageManager;
@@ -12,6 +11,7 @@ import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
+import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,11 +25,11 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockLogNatural extends BlockLog implements IToolableBlock
+public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 {
-	public static BlockLogNatural create(Mat material, PropertyTree $tree)
+	public static BlockLogNatural create(Tree $tree)
 	{
-		return new BlockLogNatural(material, $tree)
+		return new BlockLogNatural($tree)
 		{
 			@Override
 			protected BlockStateContainer createBlockState()
@@ -38,15 +38,21 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 			}
 			
 			@Override
-			public int getMetaFromState(IBlockState state)
+			public int getDataFromState(IBlockState state)
 			{
 				return $tree.getLogMeta(state, false);
 			}
 			
 			@Override
-			public IBlockState getStateFromMeta(int meta)
+			public IBlockState getStateFromData(int meta)
 			{
 				return $tree.getLogState(this, meta, false);
+			}
+			
+			@Override
+			public void registerStateToRegister(ExtendedBlockStateRegister register)
+			{
+				$tree.registerLogExtData(this, false, register);
 			}
 			
 			@Override
@@ -57,10 +63,10 @@ public class BlockLogNatural extends BlockLog implements IToolableBlock
 		};
 	}
 	
-	protected BlockLogNatural(Mat material, PropertyTree tree)
+	protected BlockLogNatural(Tree tree)
 	{
-		super("log.natural." + material.name, material, tree);
-		LanguageManager.registerLocal(getTranslateNameForItemStack(0), material.localName + " Log");
+		super("log.natural." + tree.material.name, tree);
+		LanguageManager.registerLocal(getTranslateNameForItemStack(0), tree.material.localName + " Log");
 		if(tree.tickLogUpdate())
 		{
 			setTickRandomly(true);

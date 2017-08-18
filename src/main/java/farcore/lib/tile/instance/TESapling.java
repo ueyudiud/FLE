@@ -10,6 +10,8 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.tree.ISaplingAccess;
+import farcore.lib.tree.ITree;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import nebula.client.util.Client;
 import nebula.common.data.Misc;
@@ -37,7 +39,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 {
 	private float age;
 	public TreeInfo info;
-	public PropertyTree tree = PropertyTree.VOID;
+	public Tree tree = Tree.VOID;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
@@ -52,14 +54,14 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	public void writeToDescription(NBTTagCompound nbt)
 	{
 		super.writeToDescription(nbt);
-		nbt.setShort("t", this.tree.material().id);
+		nbt.setShort("t", this.tree.material.id);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.tree = (PropertyTree) Mat.getMaterialByNameOrDefault(nbt, "tree", Mat.VOID).getProperty(MP.property_wood);
+		this.tree = Mat.getMaterialByNameOrDefault(nbt, "tree", Mat.VOID).getProperty(MP.property_tree);
 		this.age = nbt.getFloat("age");
 	}
 	
@@ -69,7 +71,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 		super.readFromDescription1(nbt);
 		if(nbt.hasKey("t"))
 		{
-			this.tree = (PropertyTree) Mat.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_wood);
+			this.tree = Mat.getMaterialByIDOrDefault(nbt, "t", M.oak).getProperty(MP.property_tree);
 			markBlockRenderUpdate();
 		}
 	}
@@ -77,8 +79,8 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	@Override
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
-		this.tree = (PropertyTree) Mat.material(stack.getItemDamage()).getProperty(MP.property_wood);
-		if (this.tree == PropertyTree.VOID)
+		this.tree = Mat.material(stack.getItemDamage()).getProperty(MP.property_tree);
+		if (this.tree == ITree.VOID)
 		{
 			removeBlock();
 		}
@@ -137,7 +139,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	}
 	
 	@Override
-	public PropertyTree tree()
+	public Tree tree()
 	{
 		return this.tree;
 	}

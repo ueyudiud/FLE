@@ -44,19 +44,19 @@ public class BlocksItems
 			Mat.setMaterialToStack(stack, "material", M.oak);
 			return stack;
 		});
-		crop = (ItemSubCropRelated) new ItemSubCropRelated().setCreativeTab(CT.tabCropAndWildPlants);
+		crop = (ItemSubCropRelated) new ItemSubCropRelated().setCreativeTab(CT.CROP_AND_WILD_PLANTS);
 		
-		tool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.tabTool);
-		fluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.tabTool);
-		miscResources = (ItemMiscResources) new ItemMiscResources().setCreativeTab(CT.tabResourceItem);
+		tool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.TOOL);
+		fluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.TOOL);
+		miscResources = (ItemMiscResources) new ItemMiscResources().setCreativeTab(CT.RESOURCE_ITEM);
 		ditch = new BlockDitch();
 		gear = new BlockGear();
-		simple_wooden_workbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.tabMachine);
-		misc_wooden_machine = new BlockWoodenMiscMachine().setCreativeTab(CT.tabMachine);
-		pottery = new BlockPottery().setCreativeTab(CT.tabMachine);
-		dirt_mixture = new BlockDirtMixture().setCreativeTab(CT.tabMachine);
-		rocky_tank = new BlockRockyTank().setCreativeTab(CT.tabMachine);
-		chest = new BlockChest().setCreativeTab(CT.tabMachine);
+		simple_wooden_workbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.MACHINE);
+		misc_wooden_machine = new BlockWoodenMiscMachine().setCreativeTab(CT.MACHINE);
+		pottery = new BlockPottery().setCreativeTab(CT.MACHINE);
+		dirt_mixture = new BlockDirtMixture().setCreativeTab(CT.MACHINE);
+		rocky_tank = new BlockRockyTank().setCreativeTab(CT.MACHINE);
+		chest = new BlockChest().setCreativeTab(CT.MACHINE);
 	}
 	
 	public static void setBlocksItemsProperties()

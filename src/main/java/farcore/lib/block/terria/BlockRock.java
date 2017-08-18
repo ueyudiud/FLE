@@ -114,14 +114,14 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	@Override
 	public CreativeTabs[] getCreativeTabs()
 	{
-		return new CreativeTabs[]{CT.tabBuilding, CT.tabTerria};
+		return new CreativeTabs[]{CT.BUILDING, CT.TERRIA};
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		if(tab == CT.tabTerria)
+		if(tab == CT.TERRIA)
 		{
 			list.add(new ItemStack(item));
 		}

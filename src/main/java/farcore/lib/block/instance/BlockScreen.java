@@ -32,7 +32,7 @@ public class BlockScreen extends BlockTE
 	public BlockScreen()
 	{
 		super("screen", METALIC);
-		setCreativeTab(CT.tabMachine);
+		setCreativeTab(CT.MACHINE);
 	}
 	
 	@Override

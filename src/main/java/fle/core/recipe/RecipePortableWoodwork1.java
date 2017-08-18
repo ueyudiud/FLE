@@ -7,10 +7,11 @@ package fle.core.recipe;
 import farcore.data.EnumToolTypes;
 import farcore.data.MP;
 import farcore.lib.item.instance.ItemTreeLog;
-import farcore.lib.material.prop.PropertyTree;
+import farcore.lib.material.prop.PropertyWood;
 import fle.api.recipes.instance.PortableWoodworkRecipeMap.PortableWoodworkRecipe;
 import nebula.common.inventory.IBasicInventory;
 import nebula.common.util.ItemStacks;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -55,16 +56,17 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 	{
 		ItemStack stack = inventory.getStack(2);
 		ItemStack[] result = new ItemStack[2];
-		PropertyTree tree = ItemTreeLog.getMaterial(stack).getProperty(MP.property_tree);
+		PropertyWood tree = ItemTreeLog.getMaterial(stack).getProperty(MP.property_wood);
 		int length = ItemTreeLog.getLogSize(stack);
+		Block log = tree.block;
 		if (length == 2)
 		{
-			result[0] = new ItemStack(tree.logArtificial);
-			result[1] = new ItemStack(tree.logArtificial);
+			result[0] = new ItemStack(log);
+			result[1] = new ItemStack(log);
 		}
 		else if (value == 1)
 		{
-			result[0] = new ItemStack(tree.logArtificial);
+			result[0] = new ItemStack(log);
 			result[1] = stack.copy();
 			ItemTreeLog.setLogSize(result[1], length - 1);
 		}

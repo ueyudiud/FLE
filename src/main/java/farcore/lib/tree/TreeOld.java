@@ -1,9 +1,12 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
+
 package farcore.lib.tree;
 
 import static farcore.FarCore.worldGenerationFlag;
+import static farcore.lib.tree.Tree.LEAVES_APPLIER1;
+import static farcore.lib.tree.Tree.LEAVES_APPLIER2;
 import static net.minecraft.block.BlockLeaves.CHECK_DECAY;
 
 import java.util.ArrayList;
@@ -13,17 +16,13 @@ import java.util.Random;
 import farcore.data.EnumItem;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
-import farcore.lib.bio.IFamily;
 import farcore.lib.block.instance.BlockLeaves;
 import farcore.lib.block.instance.BlockLeavesCore;
 import farcore.lib.block.instance.BlockLogArtificial;
 import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tile.instance.TECoreLeaves;
-import nebula.base.function.Appliable;
 import nebula.common.data.Misc;
-import nebula.common.item.ItemSubBehavior;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.A;
@@ -43,38 +42,30 @@ import net.minecraft.world.World;
 /**
  * @author ueyudiud
  */
-public abstract class Tree extends PropertyWood implements ITree
+public abstract class TreeOld implements ITree
 {
-	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER1 =
-			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
-	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER2 =
-			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
-	
-	protected FamilyTemplate<Tree, ISaplingAccess> family;
+	protected Mat material;
+	protected FamilyTemplate<TreeOld, ISaplingAccess> family;
 	//logNative logArtifical leaves leavesCore
-	private Block[] blocks;
+	public Block[] blocks;
 	protected long[] nativeTreeValue = Misc.LONGS_EMPTY;
 	protected int[] nativeTreeDatas = Misc.INTS_EMPTY;
 	protected int leavesCheckRange = 4;
 	protected boolean isBroadLeaf = true;
 	
-	public Tree(Mat material, float hardness, float ashcontent, float burnHeat)
+	public TreeOld setMaterial(Mat material)
 	{
-		super(material, 1, 1.5F + hardness / 4F, 0.4F + hardness / 8F, ashcontent, burnHeat);
-	}
-	public Tree(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent,
-			float burnHeat)
-	{
-		super(material, harvestLevel, hardness, explosionResistance, ashcontent, burnHeat);
+		this.material = material;
+		return this;
 	}
 	
-	public Tree setDefFamily()
+	public TreeOld setDefFamily()
 	{
 		this.family = new FamilyTemplate<>(this);
 		return this;
 	}
 	
-	public Tree setFamily(FamilyTemplate<Tree, ISaplingAccess> family)
+	public TreeOld setFamily(FamilyTemplate<TreeOld, ISaplingAccess> family)
 	{
 		this.family = family;
 		family.addSpecies(this);
@@ -88,7 +79,7 @@ public abstract class Tree extends PropertyWood implements ITree
 	}
 	
 	@Override
-	public IFamily<ISaplingAccess> getFamily()
+	public FamilyTemplate<TreeOld, ISaplingAccess> getFamily()
 	{
 		return this.family;
 	}

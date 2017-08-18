@@ -1,0 +1,157 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+package fle.core.tree;
+
+import java.util.Random;
+
+import farcore.data.EnumToolTypes;
+import farcore.lib.block.instance.BlockLeaves;
+import farcore.lib.block.instance.BlockLeavesCore;
+import farcore.lib.block.instance.BlockLogArtificial;
+import farcore.lib.block.instance.BlockLogNatural;
+import farcore.lib.material.Mat;
+import farcore.lib.tree.Tree;
+import farcore.lib.tree.TreeInfo;
+import nebula.common.tool.EnumToolType;
+import nebula.common.util.Direction;
+import nebula.common.util.Properties;
+import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockLog.EnumAxis;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+/**
+ * @author ueyudiud
+ */
+public class TreeLacquer extends Tree
+{
+	final static IProperty<Integer> COLLECTING = Properties.create("collecting", 0, 8);
+	
+	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.05F, false);
+	
+	public TreeLacquer(Mat material)
+	{
+		super(material, 1.8F, 1.0F, 20.0F);
+		this.generator1.setTreeLeavesShape(4, 13, 2, 3.51F);
+		this.leavesCheckRange = 6;
+	}
+	
+	@Override
+	public void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves,
+			BlockLeavesCore leavesCore)
+	{
+		super.initInfo(logNatural, logArtificial, leaves, leavesCore);
+		logNatural.setModelPathName("lacquer");
+	}
+	
+	@Override
+	public BlockStateContainer createLogStateContainer(Block block, boolean isArt)
+	{
+		return isArt ? new BlockStateContainer(block, BlockLog.LOG_AXIS) : new BlockStateContainer(block, COLLECTING, BlockLog.LOG_AXIS);
+	}
+	
+	@Override
+	public void registerLogExtData(Block block, boolean isArt, ExtendedBlockStateRegister register)
+	{
+		if (isArt)
+			super.registerLogExtData(block, true, register);
+		else
+			register.registerStates(block, COLLECTING, BlockLog.LOG_AXIS);
+	}
+	
+	@Override
+	public void updateLog(World world, BlockPos pos, Random rand, boolean isArt)
+	{
+		if (!isArt)
+		{
+			IBlockState state = world.getBlockState(pos);
+			int c, c1;
+			switch (c1 = c = state.getValue(COLLECTING))
+			{
+			case 0 : return;
+			case 1 :
+			case 2 :
+			case 3 :
+				if (rand.nextInt(4) == 0)
+				{
+					c++;
+					//TODO Try fill lacquer
+				}
+			case 4 :
+			case 5 :
+			case 6 :
+				if (rand.nextInt(3) == 0)
+				{
+					c++;
+				}
+			case 7 :
+				if (rand.nextInt(8) == 0)
+					c = 0;
+			}
+			if (c != c1)
+			{
+				world.setBlockState(pos, state.withProperty(COLLECTING, c));
+			}
+		}
+		super.updateLog(world, pos, rand, isArt);
+	}
+	
+	@Override
+	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world,
+			BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
+	{
+		if (!isArt)
+		{
+			if (tool == EnumToolTypes.BIFACE || tool == EnumToolTypes.KNIFE)
+			{
+				IBlockState state = world.getBlockState(pos);
+				if (state.getValue(COLLECTING) == 0)
+				{
+					world.setBlockState(pos, state.withProperty(COLLECTING, 1));
+				}
+			}
+			return new ActionResult<>(EnumActionResult.SUCCESS, 0.25F);
+		}
+		return super.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, isArt);
+	}
+	
+	@Override
+	public int getLogMeta(IBlockState state, boolean isArt)
+	{
+		return isArt ? super.getLogMeta(state, isArt) :
+			state.getValue(COLLECTING) << 2 | state.getValue(BlockLog.LOG_AXIS).ordinal();
+	}
+	
+	@Override
+	public IBlockState getLogState(Block block, int meta, boolean isArt)
+	{
+		return isArt ? super.getLogState(block, meta, isArt) :
+			block.getDefaultState()
+			.withProperty(BlockLog.LOG_AXIS, EnumAxis.values()[meta & 0x3])
+			.withProperty(COLLECTING, (meta << 2) & 0x7);
+	}
+	
+	@Override
+	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
+	{
+		if(info != null)
+		{
+			this.generator1.setTreeLogShape(6 + info.height / 4, 2 + info.height / 3);
+		}
+		else
+		{
+			this.generator1.setTreeLogShape(6, 3);
+		}
+		return this.generator1.generateTreeAt(world, x, y, z, random, info);
+	}
+}

@@ -43,7 +43,7 @@ public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 	public BlockMetal()
 	{
 		super(FarCore.ID, "metalblock", Materials.METALIC);
-		setCreativeTab(CT.tabMaterial);
+		setCreativeTab(CT.MATERIAL);
 		EnumBlock.metalblock.set(this);
 	}
 	
