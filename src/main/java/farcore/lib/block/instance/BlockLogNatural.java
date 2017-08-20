@@ -24,6 +24,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 {
@@ -71,6 +73,13 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 		{
 			setTickRandomly(true);
 		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		this.tree.registerRender();
 	}
 	
 	@Override

@@ -72,8 +72,8 @@ public class Renders
 	 * they use same block model location.<p>
 	 * @param <T> the type of property.
 	 * @param mapper the model mapper.
-	 * @param block the block formapper.
-	 * @param property thesplit property, or <tt>null</tt> for only one variant exist.
+	 * @param block the block for mapper.
+	 * @param property the split property, or <tt>null</tt> for only one variant exist.
 	 */
 	public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, @Nullable IProperty<T> property)
 	{

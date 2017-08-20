@@ -1,0 +1,29 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_ft",
+		"textures": {
+			"top": "fle:blocks/logs/lacquer_top",
+			"side": "fle:blocks/logs/lacquer_side"
+		}
+	},
+	"variants": {
+		"axis": {
+			"none": {       "y": 0  },
+			"x": { "x": 90, "y": 90 },
+			"y": { "x": 0 , "y": 0  },
+			"z": { "x": 90, "y": 0  }
+		},
+		"collecting": {
+			"0": {	"textures": { "front": "fle:blocks/logs/lacquer_side"   } },
+			"1": {	"textures": { "front": "fle:blocks/logs/lacquer_side_r" } },
+			"2": {	"textures": { "front": "fle:blocks/logs/lacquer_side_r" } },
+			"3": {	"textures": { "front": "fle:blocks/logs/lacquer_side_r" } },
+			"4": {	"textures": { "front": "fle:blocks/logs/lacquer_side_e" } },
+			"5": {	"textures": { "front": "fle:blocks/logs/lacquer_side_e" } },
+			"6": {	"textures": { "front": "fle:blocks/logs/lacquer_side_e" } },
+			"7": {	"textures": { "front": "fle:blocks/logs/lacquer_side_e" } }
+		}
+	}
+}

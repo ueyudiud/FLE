@@ -6,15 +6,15 @@ package fle.core.tree;
 import java.util.Random;
 
 import farcore.data.EnumToolTypes;
-import farcore.lib.block.instance.BlockLeaves;
-import farcore.lib.block.instance.BlockLeavesCore;
-import farcore.lib.block.instance.BlockLogArtificial;
-import farcore.lib.block.instance.BlockLogNatural;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
+import nebula.client.model.StateMapperExt;
+import nebula.client.util.Renders;
+import nebula.common.data.Misc;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
+import nebula.common.util.Game;
 import nebula.common.util.Properties;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.Block;
@@ -29,35 +29,47 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
 public class TreeLacquer extends Tree
 {
-	final static IProperty<Integer> COLLECTING = Properties.create("collecting", 0, 8);
+	final static IProperty<Integer> COLLECTING = Properties.create("collecting", 0, 7);
+	final static IProperty<Direction> COL_FACING = Misc.PROP_DIRECTION_HORIZONTALS;
 	
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.05F, false);
 	
 	public TreeLacquer(Mat material)
 	{
 		super(material, 1.8F, 1.0F, 20.0F);
-		this.generator1.setTreeLeavesShape(4, 13, 2, 3.51F);
+		this.generator1.setTreeLeavesShape(4, 13, 2, 2.5F);
 		this.leavesCheckRange = 6;
 	}
 	
 	@Override
-	public void initInfo(BlockLogNatural logNatural, BlockLogArtificial logArtificial, BlockLeaves leaves,
-			BlockLeavesCore leavesCore)
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
 	{
-		super.initInfo(logNatural, logArtificial, leaves, leavesCore);
-		logNatural.setModelPathName("lacquer");
+		StateMapperExt mapper = new StateMapperExt(this.material.modid, "log/" + this.material.name + "_n", COL_FACING);
+		Renders.registerCompactModel(mapper, this.blocks[0], null);
+		mapper = new StateMapperExt(this.material.modid, "log/" + this.material.name, null);
+		mapper.setVariants("type", this.material.name);
+		Renders.registerCompactModel(mapper, this.blocks[1], null);
+		mapper = new StateMapperExt(this.material.modid, "leaves", null, net.minecraft.block.BlockLeaves.CHECK_DECAY);
+		mapper.setVariants("type", this.material.name);
+		Renders.registerCompactModel(mapper, this.blocks[2], null);
+		Renders.registerCompactModel(mapper, this.blocks[3], null);
+		Game.registerBiomeColorMultiplier(this.blocks[2]);
+		Game.registerBiomeColorMultiplier(this.blocks[3]);
 	}
 	
 	@Override
 	public BlockStateContainer createLogStateContainer(Block block, boolean isArt)
 	{
-		return isArt ? new BlockStateContainer(block, BlockLog.LOG_AXIS) : new BlockStateContainer(block, COLLECTING, BlockLog.LOG_AXIS);
+		return isArt ? new BlockStateContainer(block, BlockLog.LOG_AXIS) : new BlockStateContainer(block, COL_FACING, COLLECTING, BlockLog.LOG_AXIS);
 	}
 	
 	@Override
@@ -66,7 +78,7 @@ public class TreeLacquer extends Tree
 		if (isArt)
 			super.registerLogExtData(block, true, register);
 		else
-			register.registerStates(block, COLLECTING, BlockLog.LOG_AXIS);
+			register.registerStates(block, COL_FACING, COLLECTING, BlockLog.LOG_AXIS);
 	}
 	
 	@Override
@@ -117,10 +129,10 @@ public class TreeLacquer extends Tree
 				IBlockState state = world.getBlockState(pos);
 				if (state.getValue(COLLECTING) == 0)
 				{
-					world.setBlockState(pos, state.withProperty(COLLECTING, 1));
+					world.setBlockState(pos, state.withProperty(COLLECTING, 1).withProperty(COL_FACING, side));
+					return new ActionResult<>(EnumActionResult.SUCCESS, 0.25F);
 				}
 			}
-			return new ActionResult<>(EnumActionResult.SUCCESS, 0.25F);
 		}
 		return super.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, isArt);
 	}
@@ -129,7 +141,7 @@ public class TreeLacquer extends Tree
 	public int getLogMeta(IBlockState state, boolean isArt)
 	{
 		return isArt ? super.getLogMeta(state, isArt) :
-			state.getValue(COLLECTING) << 2 | state.getValue(BlockLog.LOG_AXIS).ordinal();
+			state.getValue(COL_FACING).horizontalOrdinal << 5 | state.getValue(COLLECTING) << 2 | state.getValue(BlockLog.LOG_AXIS).ordinal();
 	}
 	
 	@Override
@@ -138,7 +150,8 @@ public class TreeLacquer extends Tree
 		return isArt ? super.getLogState(block, meta, isArt) :
 			block.getDefaultState()
 			.withProperty(BlockLog.LOG_AXIS, EnumAxis.values()[meta & 0x3])
-			.withProperty(COLLECTING, (meta << 2) & 0x7);
+			.withProperty(COLLECTING, (meta >> 2) & 0x7)
+			.withProperty(COL_FACING, Direction.DIRECTIONS_2D[(meta >> 5) & 0x3]);
 	}
 	
 	@Override

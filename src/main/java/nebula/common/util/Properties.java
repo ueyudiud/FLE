@@ -38,6 +38,14 @@ public class Properties
 		return property;
 	}
 	
+	/**
+	 * Create a {@link Integer} property, from min (include) value to max (include) value.
+	 * @param name the name of property.
+	 * @param min the minimum value.
+	 * @param max the max value.
+	 * @return the property.
+	 * @see net.minecraft.block.properties.PropertyInteger
+	 */
 	public static PropertyInteger create(String name, int min, int max)
 	{
 		return PropertyInteger.create(name, min, max);

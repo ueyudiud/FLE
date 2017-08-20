@@ -22,12 +22,16 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tile.instance.TECoreLeaves;
 import nebula.base.function.Appliable;
+import nebula.client.model.StateMapperExt;
+import nebula.client.util.IRenderRegister;
+import nebula.client.util.Renders;
 import nebula.common.data.Misc;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.A;
 import nebula.common.util.Direction;
+import nebula.common.util.Game;
 import nebula.common.util.L;
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
@@ -39,11 +43,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
-public abstract class Tree extends PropertyWood implements ITree
+public abstract class Tree extends PropertyWood implements ITree, IRenderRegister
 {
 	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER1 =
 			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
@@ -51,8 +57,8 @@ public abstract class Tree extends PropertyWood implements ITree
 			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
 	
 	protected FamilyTemplate<Tree, ISaplingAccess> family;
-	//logNative logArtifical leaves leavesCore
-	private Block[] blocks;
+	/** logNative logArtifical leaves leavesCore */
+	protected Block[] blocks;
 	protected long[] nativeTreeValue = Misc.LONGS_EMPTY;
 	protected int[] nativeTreeDatas = Misc.INTS_EMPTY;
 	protected int leavesCheckRange = 4;
@@ -66,6 +72,22 @@ public abstract class Tree extends PropertyWood implements ITree
 			float burnHeat)
 	{
 		super(material, harvestLevel, hardness, explosionResistance, ashcontent, burnHeat);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		StateMapperExt mapper = new StateMapperExt(this.material.modid, "log", null);
+		mapper.setVariants("type", this.material.name);
+		Renders.registerCompactModel(mapper, this.blocks[0], null);
+		Renders.registerCompactModel(mapper, this.blocks[1], null);
+		mapper = new StateMapperExt(this.material.modid, "leaves", null, net.minecraft.block.BlockLeaves.CHECK_DECAY);
+		mapper.setVariants("type", this.material.name);
+		Renders.registerCompactModel(mapper, this.blocks[2], null);
+		Renders.registerCompactModel(mapper, this.blocks[3], null);
+		Game.registerBiomeColorMultiplier(this.blocks[2]);
+		Game.registerBiomeColorMultiplier(this.blocks[3]);
 	}
 	
 	public Tree setDefFamily()

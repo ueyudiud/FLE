@@ -4,7 +4,8 @@
 		"transform": "forge:default-block",
 		"model": "farcore:base_oneaxis",
 		"textures": {
-			"top": "fle:blocks/logs/lacquer_top"
+			"top": "fle:blocks/logs/lacquer_top",
+			"side": "fle:blocks/logs/lacquer_side"
 		}
 	},
 	"variants": {
@@ -13,16 +14,6 @@
 			"x": { "x": 90, "y": 90 },
 			"y": { "x": 0 , "y": 0  },
 			"z": { "x": 90, "y": 0  }
-		},
-		"collecting": {
-			"0": {	"textures": { "side": "farcore:blocks/logs/lacquer_side",   } },
-			"1": {	"textures": { "side": "farcore:blocks/logs/lacquer_side_r", } },
-			"2": {	"textures": { "side": "farcore:blocks/logs/lacquer_side_r", } },
-			"3": {	"textures": { "side": "farcore:blocks/logs/lacquer_side_r", } },
-			"4": {	"textures": { "side": "farcore:blocks/logs/lacquer_side_e", } },
-			"5": {	"textures": { "side": "farcore:blocks/logs/lacquer_side_e", } },
-			"6": {	"textures": { "side": "farcore:blocks/logs/lacquer_side_e", } },
-			"7": {	"textures": { "side": "farcore:blocks/logs/lacquer_side_e", } }
 		}
 	}
 }

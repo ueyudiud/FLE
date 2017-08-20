@@ -31,7 +31,7 @@ public class FLEVersion
 	 * The sub version of modification.<br>
 	 * Update when fixed bug each time.
 	 */
-	public static final int SUB_VERSION = 112;
+	public static final int SUB_VERSION = 12;
 	/**
 	 * The snapshot version.<br>
 	 * The snapshot version is between two main version.

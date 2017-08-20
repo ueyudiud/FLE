@@ -182,8 +182,6 @@ public class CommonLoader
 		registerLocal(EnumPhysicalDamageType.SMASH.getTranslation(), ChatFormatting.GOLD + "Smash");
 		registerLocal(EnumPhysicalDamageType.CUT.getTranslation(), ChatFormatting.GOLD + "Cut");
 		registerLocal(EnumPhysicalDamageType.HIT.getTranslation(), ChatFormatting.GOLD + "Hit");
-		//		//Setup network.
-		//		bar.step("Setup network handler");
 		NebulaKeyHandler.register(Keys.ROTATE, KEY_R, FarCore.ID);
 		NebulaKeyHandler.register(Keys.PLACE, KEY_P, FarCore.ID);
 		pop(bar);

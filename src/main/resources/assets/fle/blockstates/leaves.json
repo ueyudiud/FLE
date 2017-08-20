@@ -6,7 +6,7 @@
 	},
 	"variants": {
 		"type": {
-			"aspen": { "textures": { "all": "fle:blocks/leaves/lacquer" } }
+			"lacquer": { "textures": { "all": "fle:blocks/leaves/lacquer" } }
 		}
 	}
 }

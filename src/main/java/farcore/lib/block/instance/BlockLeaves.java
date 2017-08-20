@@ -5,18 +5,14 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.data.CT;
-import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
 import nebula.base.ArrayListAddWithCheck;
-import nebula.client.model.StateMapperExt;
 import nebula.client.util.Client;
-import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
 import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
-import nebula.common.util.Game;
 import nebula.common.util.OreDict;
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
@@ -95,17 +91,6 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	{
 		super.postInitalizedBlocks();
 		OreDict.registerValid("leaves", this);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerRender()
-	{
-		Mat material = this.tree.material;
-		StateMapperExt mapper = new StateMapperExt(material.modid, "leaves", null, net.minecraft.block.BlockLeaves.CHECK_DECAY);
-		mapper.setVariants("type", material.name);
-		Renders.registerCompactModel(mapper, this, null);
-		Game.registerBiomeColorMultiplier(this);
 	}
 	
 	@Override
