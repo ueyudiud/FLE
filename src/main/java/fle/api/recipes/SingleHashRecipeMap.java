@@ -18,7 +18,7 @@ import nebula.base.Node;
  * save and find recipe.
  * @author ueyudiud
  * @see fle.api.recipes.IRecipeMap
- * @see java.lang.Object#hashCode()
+ * @see Object#hashCode()
  */
 public abstract class SingleHashRecipeMap<R, O, H> implements IRecipeMap<R, O, H>
 {

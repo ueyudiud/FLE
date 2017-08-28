@@ -11,7 +11,9 @@ import nebula.common.util.Direction;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
+ * Use to drain or fill fluid from player.
  * @author ueyudiud
+ * @see nebula.common.inventory.InventoryHelper#drainOrFillTank(IFluidHandlerIO, net.minecraft.entity.player.EntityPlayer, net.minecraft.util.EnumHand, Direction, net.minecraft.item.ItemStack, byte)
  */
 public interface IFluidHandlerIO
 {

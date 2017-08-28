@@ -104,6 +104,7 @@ ITP_ExplosionResistance, ITB_AddDestroyEffects, ITB_AddHitEffects
 		super.readFromDescription1(nbt);
 		this.material = NBTs.getValueByIDOrDefault(nbt, "m", Mat.materials(), this.material);
 		this.facing = NBTs.getEnumOrDefault(nbt, "f", this.facing);
+		markBlockRenderUpdate();
 	}
 	
 	@Override

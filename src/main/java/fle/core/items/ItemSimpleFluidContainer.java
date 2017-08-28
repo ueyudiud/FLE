@@ -12,9 +12,12 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 
+import farcore.data.Capabilities;
 import farcore.data.EnumFluid;
 import farcore.util.Localization;
 import fle.core.FLE;
+import fle.core.items.behavior.BehaviorBlockableTool;
+import fle.loader.IBF;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.IProgressBarStyle;
 import nebula.client.util.Client;
@@ -33,11 +36,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -66,6 +73,13 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		}
 	}
 	
+	public static ItemStack createItemStack(String name, FluidStack stack)
+	{
+		ItemStack stack2 = IBF.fluidContainer.getSubItem(name);
+		setFluid(stack2, stack);
+		return stack2;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	private IProgressBarStyle style;
 	private Map<Integer, FluidContainerProperty> propertyMap = new HashMap<>();
@@ -80,13 +94,28 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	protected void init()
 	{
 		addSubItem(1, "barrel", "Barrel", new FluidContainerProperty(1000, 256, true, true));
-		addSubItem(2, "bowl_wooden", "Wooden Bowl", new FluidContainerProperty(250, 128, true, false));
+		addSubItem(2, "bowl_wooden", "Wooden Bowl", new FluidContainerProperty(250, 128, true, false), new BehaviorBlockableTool(1));
 	}
 	
 	public void addSubItem(int id, String name, String localName, FluidContainerProperty property,
 			IBehavior... behaviors)
 	{
-		super.addSubItem(id, name, localName, null, behaviors);
+		super.addSubItem(id, name, localName, (stack, nbt) -> new ICapabilityProvider()
+		{
+			private IFluidHandler handler = createFluidHandlerWrapper(stack);
+			
+			@Override
+			public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+			{
+				return capability == Capabilities.CAPABILITY_FLUID && facing == null;
+			}
+			
+			@Override
+			public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+			{
+				return hasCapability(capability, facing) ? Capabilities.CAPABILITY_FLUID.cast(this.handler) : null;
+			}
+		}, behaviors);
 		this.propertyMap.put(id, property);
 	}
 	
@@ -101,7 +130,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FLE.MODID, "fluidcontainer_getfluid"), stack -> {
 			NBTTagCompound nbt = ItemStacks.getSubOrSetupNBT(stack, "tank", false);
-			return nbt.hasKey("FluidName") ? "fluid:" + nbt.getString("FluidName") : "empty";
+			return nbt.hasKey("FluidName") ? nbt.getString("FluidName") : "empty";
 		});
 		NebulaModelLoader.registerItemColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
 		this.style = new IProgressBarStyle()
@@ -185,33 +214,33 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		return result;
 	}
 	
-	protected FluidStack getFluid(ItemStack stack)
+	public static FluidStack getFluid(ItemStack stack)
 	{
 		return stack.hasTagCompound() ? FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tank")) : null;
 	}
 	
-	protected int getCustomDamage(ItemStack stack)
+	public static int getCustomDamage(ItemStack stack)
 	{
 		return ItemStacks.getOrSetupNBT(stack, false).getInteger("damage");
 	}
 	
-	protected int getMaxCustomDamage(ItemStack stack)
+	public int getMaxCustomDamage(ItemStack stack)
 	{
 		return this.propertyMap.get(getBaseDamage(stack)).durbility;
 	}
 	
-	protected void setCustomDamage(ItemStack stack, int damage)
+	public static void setCustomDamage(ItemStack stack, int damage)
 	{
 		NBTs.setRemovableNumber(ItemStacks.getOrSetupNBT(stack, true), "damage", damage);
 	}
 	
-	protected int getFluidAmount(ItemStack stack)
+	public static int getFluidAmount(ItemStack stack)
 	{
 		FluidStack fluid = getFluid(stack);
 		return fluid == null ? 0 : fluid.amount;
 	}
 	
-	protected void setFluid(ItemStack stack, @Nullable FluidStack contain)
+	public static void setFluid(ItemStack stack, @Nullable FluidStack contain)
 	{
 		if(contain == null || contain.amount == 0)
 		{
@@ -221,6 +250,12 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		{
 			contain.writeToNBT(ItemStacks.getSubOrSetupNBT(stack, "tank", true));
 		}
+	}
+	
+	@Override
+	public void setFluidInContainer(ItemStack stack, FluidStack fluid)
+	{
+		setFluid(stack, fluid);
 	}
 	
 	@Override

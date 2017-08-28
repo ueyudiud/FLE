@@ -7,7 +7,7 @@ package fle.loader;
 import static farcore.data.M.bristlegrass;
 import static farcore.lib.bio.GMPredicate.explicit;
 import static farcore.lib.bio.GMPredicate.implicit;
-import static fle.loader.BlocksItems.crop;
+import static fle.loader.IBF.crop;
 
 import farcore.data.M;
 import farcore.data.MP;

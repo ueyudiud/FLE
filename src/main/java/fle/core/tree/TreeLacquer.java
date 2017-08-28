@@ -9,6 +9,8 @@ import farcore.data.EnumToolTypes;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
+import fle.api.tile.ILogProductionCollector;
+import fle.loader.IBF;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.data.Misc;
@@ -25,10 +27,12 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -56,7 +60,6 @@ public class TreeLacquer extends Tree
 		StateMapperExt mapper = new StateMapperExt(this.material.modid, "log/" + this.material.name + "_n", COL_FACING);
 		Renders.registerCompactModel(mapper, this.blocks[0], null);
 		mapper = new StateMapperExt(this.material.modid, "log/" + this.material.name, null);
-		mapper.setVariants("type", this.material.name);
 		Renders.registerCompactModel(mapper, this.blocks[1], null);
 		mapper = new StateMapperExt(this.material.modid, "leaves", null, net.minecraft.block.BlockLeaves.CHECK_DECAY);
 		mapper.setVariants("type", this.material.name);
@@ -82,6 +85,12 @@ public class TreeLacquer extends Tree
 	}
 	
 	@Override
+	public boolean tickLogUpdate()
+	{
+		return true;
+	}
+	
+	@Override
 	public void updateLog(World world, BlockPos pos, Random rand, boolean isArt)
 	{
 		if (!isArt)
@@ -94,11 +103,11 @@ public class TreeLacquer extends Tree
 			case 1 :
 			case 2 :
 			case 3 :
-				if (rand.nextInt(4) == 0)
-				{
-					c++;
-					//TODO Try fill lacquer
-				}
+			{
+				c++;
+				tryFillLacquer(world, pos, state);
+			}
+			break;
 			case 4 :
 			case 5 :
 			case 6 :
@@ -106,6 +115,7 @@ public class TreeLacquer extends Tree
 				{
 					c++;
 				}
+				break;
 			case 7 :
 				if (rand.nextInt(8) == 0)
 					c = 0;
@@ -116,6 +126,17 @@ public class TreeLacquer extends Tree
 			}
 		}
 		super.updateLog(world, pos, rand, isArt);
+	}
+	
+	private void tryFillLacquer(World world, BlockPos pos, IBlockState state)
+	{
+		Direction direction = state.getValue(COL_FACING);
+		TileEntity tile = world.getTileEntity(direction.offset(pos));
+		if (tile instanceof ILogProductionCollector)
+		{
+			ILogProductionCollector collector = (ILogProductionCollector) tile;
+			collector.collectLogProductFrom(direction.getOpposite(), new FluidStack(IBF.lacquer, 75));
+		}
 	}
 	
 	@Override

@@ -10,7 +10,7 @@ import farcore.data.SubTags;
 import farcore.lib.entity.IEntityDamageEffect;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
-import fle.loader.BlocksItems;
+import fle.loader.IBF;
 import nebula.common.util.L;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntityZombie;
@@ -46,7 +46,7 @@ public class EntityFLEZombie extends EntityZombie implements IEntityDamageEffect
 		IEntityLivingData data = super.onInitialSpawn(difficulty, livingdata);
 		if (getHeldItemMainhand() == null && getRNG().nextInt(4) == 0)
 		{
-			ItemStack stack = new ItemStack(BlocksItems.tool, 1, 4);
+			ItemStack stack = new ItemStack(IBF.tool, 1, 4);
 			ItemTool.setMaterialToItem(stack, "head", L.random(Mat.filt(MC.hard_hammer_flint), getRNG()));
 			ItemTool.setMaterialToItem(stack, "tie", L.random(Mat.filt(SubTags.ROPE), getRNG()));
 			ItemTool.setMaterialToItem(stack, "handle", L.random(Mat.filt(SubTags.HANDLE), getRNG()));

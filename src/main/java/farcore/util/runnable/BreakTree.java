@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import farcore.data.EnumItem;
 import farcore.data.V;
-import farcore.lib.block.instance.BlockLogNatural;
+import farcore.lib.block.wood.BlockLogNatural;
 import farcore.lib.item.instance.ItemTreeLog;
 import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;

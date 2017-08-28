@@ -45,4 +45,5 @@ public class MP
 	public static final IProperty<ICrop> property_crop = () -> ICrop.VOID;
 	public static final IProperty<IPlant> property_plant = to();
 	public static final IProperty<PropertyEdible> property_edible = to();
+	public static final IProperty<PropertyBlockable> property_brick = to();
 }

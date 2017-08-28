@@ -1,0 +1,113 @@
+{
+	"part": [
+		{
+			"pos": [ 6, 0, 6, 10, 16, 10 ],
+			"faces": {
+				"west": { "texture": "#pside" },
+				"east": { "texture": "#pside" },
+				"south":{ "texture": "#pside" },
+				"north":{ "texture": "#pside" }
+			}
+		},
+		{
+			"pos": [ 6, 0, 6, 8, 16, 8 ],
+			"faces": {
+				"up"  : { "texture": "#ptop", "uv": [ 0, 0, 2, 2 ] },
+				"down": { "texture": "#ptop", "uv": [ 0, 16, 2, 14 ] }
+			}
+		},
+		{
+			"pos": [ 8, 0, 6, 10, 16, 8 ],
+			"faces": {
+				"up"  : { "texture": "#ptop", "uv": [ 14, 0, 16, 2 ] },
+				"down": { "texture": "#ptop", "uv": [ 14, 15, 16, 14 ] }
+			}
+		},
+		{
+			"pos": [ 6, 0, 8, 8, 16, 10 ],
+			"faces": {
+				"up"  : { "texture": "#ptop", "uv": [ 0, 14, 2, 16 ] },
+				"down": { "texture": "#ptop", "uv": [ 0, 2, 2, 0 ] }
+			}
+		},
+		{
+			"pos": [ 8, 0, 8, 10, 16, 10 ],
+			"faces": {
+				"up"  : { "texture": "#ptop", "uv": [ 14, 14, 16, 16 ] },
+				"down": { "texture": "#ptop", "uv": [ 14, 2, 16, 0 ] }
+			}
+		},
+		{
+			"type": "multi",
+			"default": {
+				"y": 0,
+				"part": "farcore:fence_rail"
+			},
+			"variants": {
+				"south": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "south=%s",
+				"formats": [ "south" ],
+				"default": [ "false" ]
+			}
+		},
+		{
+			"type": "multi",
+			"default": {
+				"y": 180,
+				"part": "farcore:fence_rail"
+			},
+			"variants": {
+				"north": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "north=%s",
+				"formats": [ "north" ],
+				"default": [ "false" ]
+			}
+		},
+		{
+			"type": "multi",
+			"default": {
+				"y": 90,
+				"part": "farcore:fence_rail"
+			},
+			"variants": {
+				"west": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "west=%s",
+				"formats": [ "west" ],
+				"default": [ "false" ]
+			}
+		},
+		{
+			"type": "multi",
+			"default": {
+				"y": 270,
+				"part": "farcore:fence_rail"
+			},
+			"variants": {
+				"east": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "east=%s",
+				"formats": [ "east" ],
+				"default": [ "false" ]
+			}
+		}
+	]
+}

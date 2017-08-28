@@ -187,6 +187,7 @@ public class TemplateRecipeMap<H> implements IRecipeMap<TemplateRecipeMap.Templa
 	{
 		if (recipe.dataProvider.length != this.handlers.length)
 		{
+			Log.error("Wrong recipe data format, get {}.", new Object[]{recipe.dataProvider});
 			return false;
 		}
 		this.recipes.add(recipe);

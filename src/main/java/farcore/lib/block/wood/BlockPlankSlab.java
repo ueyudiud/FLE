@@ -2,11 +2,11 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
 import farcore.data.CT;
 import farcore.lib.block.BlockSlab;
-import farcore.lib.block.instance.BlockPlank.EnumPlankState;
+import farcore.lib.block.wood.BlockPlank.EnumPlankState;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
 import nebula.client.model.StateMapperExt;

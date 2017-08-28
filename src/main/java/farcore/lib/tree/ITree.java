@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.lib.bio.ISpecie;
-import farcore.lib.block.instance.BlockLeaves;
-import farcore.lib.block.instance.BlockLeavesCore;
-import farcore.lib.block.instance.BlockLogArtificial;
-import farcore.lib.block.instance.BlockLogNatural;
+import farcore.lib.block.wood.BlockLeaves;
+import farcore.lib.block.wood.BlockLeavesCore;
+import farcore.lib.block.wood.BlockLogArtificial;
+import farcore.lib.block.wood.BlockLogNatural;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;

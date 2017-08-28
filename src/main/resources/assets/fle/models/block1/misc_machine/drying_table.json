@@ -1,6 +1,6 @@
 {
 	"textures": {
-		"wood": "fle:blocks/machine/alpha/drying_table",
+		"wood": "fle:blocks/iconset/wooden",
 		"particle": "#wood"
 	},
 	"part": [

@@ -14,7 +14,7 @@ import nebula.common.util.IRegisteredNameable;
 /**
  * The recipe maps are recipe collection, you can register, remove recipe
  * by recipe map.<p>
- * For more detial of recipe registeration and data store, see {@link fle.api.recipes.instance.RecipeMaps}.
+ * For more detail of recipe registration and data store, see {@link fle.api.recipes.instance.RecipeMaps}.
  * @author ueyudiud
  * @see fle.api.recipes.instance.RecipeMaps
  */

@@ -20,14 +20,16 @@ import farcore.data.MP;
 import farcore.data.SubTags;
 import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
-import farcore.lib.block.instance.BlockLeaves;
-import farcore.lib.block.instance.BlockLeavesCore;
-import farcore.lib.block.instance.BlockLogArtificial;
-import farcore.lib.block.instance.BlockLogNatural;
-import farcore.lib.block.instance.BlockPlank;
+import farcore.lib.block.instance.BlockBrick;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.block.terria.BlockSand;
 import farcore.lib.block.terria.BlockSoil;
+import farcore.lib.block.wood.BlockLeaves;
+import farcore.lib.block.wood.BlockLeavesCore;
+import farcore.lib.block.wood.BlockLogArtificial;
+import farcore.lib.block.wood.BlockLogNatural;
+import farcore.lib.block.wood.BlockPlank;
+import farcore.lib.block.wood.BlockWoodenFence;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.behavior.IItemMatProp;
 import farcore.lib.material.ore.IOreProperty;
@@ -76,8 +78,6 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 * The default result when fail to search material from list.
 	 */
 	public static final Mat VOID = new Mat(-1, false, "", "void", "Void", "Void");
-	
-	private static boolean initalizeFlag = false;
 	
 	public static final INBTReaderAndWritter<Mat, NBTTagString> WITH_NULL_RW = new INBTReaderAndWritter<Mat, NBTTagString>()
 	{
@@ -396,6 +396,8 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 				0.4F + woodHardness / 8F,
 				ashcontent,
 				woodBurnHeat);
+		property.plank = new BlockPlank(property);
+		new BlockWoodenFence(property);
 		addProperty(MP.fallen_damage_deduction, (int) (1000 / (woodHardness + 1)));
 		addProperty(MP.flammability, 50);
 		addProperty(MP.fire_encouragement, 4);
@@ -433,9 +435,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			BlockLogArtificial logArtificial = BlockLogArtificial.create(tree);
 			BlockLeaves leaves = BlockLeaves.create(tree);
 			BlockLeavesCore coreLeaves = BlockLeavesCore.create(leaves, tree);
-			BlockPlank plank = new BlockPlank(tree);
 			tree.block = logArtificial;
-			tree.plank = plank;
 			tree.initInfo(logNatural, logArtificial, leaves, coreLeaves);
 		}
 		addProperty(MP.fallen_damage_deduction, (int) (1000 / (tree.hardness * 4 - 5)));
@@ -450,6 +450,14 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setTree(ITree tree, boolean createBlock)
 	{
 		return setTree(new PropertyTree.PropertyTreeWrapper(getProperty(MP.property_wood), tree), createBlock);
+	}
+	
+	public Mat setBrick(int harvestLevel, float hardness, float resistance)
+	{
+		PropertyBlockable<BlockBrick> property = new PropertyBlockable<>(this, harvestLevel, hardness, resistance);
+		property.block = new BlockBrick(this.modid, "brick." + this.name, this, property);
+		add(SubTags.BRICK);
+		return addProperty(MP.property_brick, property);
 	}
 	
 	public Mat setSoil(float hardness, float resistance, Material material)

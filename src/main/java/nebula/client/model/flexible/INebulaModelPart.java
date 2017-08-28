@@ -19,6 +19,22 @@ import net.minecraftforge.common.model.TRSRTransformation;
  */
 public interface INebulaModelPart
 {
+	static INebulaModelPart VOID = new INebulaModelPart()
+	{
+		@Override
+		public Collection<String> getResources()
+		{
+			return ImmutableList.of();
+		}
+		
+		@Override
+		public INebulaBakedModelPart bake(VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
+				Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
+		{
+			return (f, k)->ImmutableList.of();
+		}
+	};
+	
 	default Collection<ResourceLocation> getDependencies() { return ImmutableList.of(); }
 	
 	Collection<String> getResources();

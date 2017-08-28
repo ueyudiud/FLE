@@ -1,4 +1,4 @@
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
 import farcore.data.EnumToolTypes;
 import farcore.data.Materials;

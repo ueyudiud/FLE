@@ -6,7 +6,7 @@ package fle.core.recipe;
 
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
-import farcore.lib.block.instance.BlockLogArtificial;
+import farcore.lib.block.wood.BlockLogArtificial;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.tree.Tree;
 import fle.api.recipes.instance.PortableWoodworkRecipeMap.PortableWoodworkRecipe;

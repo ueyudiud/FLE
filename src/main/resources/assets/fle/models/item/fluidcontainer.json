@@ -1,13 +1,23 @@
 {
 	"textures": {
-		"bottom": "[fle:fluidcontainer/bottom",
-		"fluid": "[forge:fluid",
-		"empty": "farcore:items/void",
 		"convert": "[fle:fluidcontainer/convert"
 	},
 	"layers": [
 		{
-			"texture": "#bottom"
+			"texture": "[fle:fluidcontainer/bottom",
+			"meta": "fle:fluidcontainer"
+		},
+		{
+			"texture": "[fle:fluidcontainer_fluid",
+			"type": "convert",
+			"meta": {
+				"key": "%s,%s",
+				"formats": [
+					"fle:fluidcontainer_getfluid",
+					"fle:fluidcontainer"
+				]
+			},
+			"colorMultiplier": "fle:fluidcontainer_getfluid"
 		}
 	]
 }

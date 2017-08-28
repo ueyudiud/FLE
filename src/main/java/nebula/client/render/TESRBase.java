@@ -1,5 +1,6 @@
 package nebula.client.render;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
 
 import org.lwjgl.opengl.GL11;
@@ -121,7 +122,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 	protected void renderFluidFace(
 			double xMin, double zMin, double xMax, double zMax,
 			double y1, double y2, double y3, double y4,
-			FluidStack stack, Vector2f flow)
+			FluidStack stack, @Nullable Vector2f flow)
 	{
 		if(stack != null)
 		{

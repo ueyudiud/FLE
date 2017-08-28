@@ -108,10 +108,16 @@ public interface IFluidHandler
 	class SidedFluidIOTankNPropertyWrapper implements SidedFluidIOProperty
 	{
 		FluidTankN tank;
+		Direction direction;
 		
 		public SidedFluidIOTankNPropertyWrapper(FluidTankN tank)
 		{
+			this(tank, Direction.Q);
+		}
+		public SidedFluidIOTankNPropertyWrapper(FluidTankN tank, Direction direction)
+		{
 			this.tank = tank;
+			this.direction = direction;
 		}
 		
 		@Override
@@ -129,13 +135,13 @@ public interface IFluidHandler
 		@Override
 		public boolean canFill()
 		{
-			return tank.canInsertFluid(Direction.Q, null) && tank.isFull();
+			return tank.canInsertFluid(direction, null) && tank.isFull();
 		}
 		
 		@Override
 		public boolean canDrain()
 		{
-			return tank.canExtractFluid(Direction.Q) && tank.hasFluid();
+			return tank.canExtractFluid(direction) && tank.hasFluid();
 		}
 		
 		@Override
@@ -147,7 +153,7 @@ public interface IFluidHandler
 		@Override
 		public boolean canDrain(FluidStack stack)
 		{
-			return tank.canExtractFluidWithType(Direction.Q, stack) && tank.hasFluid();
+			return tank.canExtractFluidWithType(direction, stack) && tank.hasFluid();
 		}
 	}
 	

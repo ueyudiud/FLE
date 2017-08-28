@@ -90,7 +90,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 					layer.zOffset = Jsons.getOrDefault(object2, "zOffset", 0.5F);
 					if (object2.has("meta"))
 					{
-						Function<ItemStack, String> function = NebulaModelLoader.loadItemMetaGenerator(object2.get("meta").getAsString());
+						Function<ItemStack, String> function = context.deserialize(object2.get("meta"), SubmetaLoader.ItemSubmetaGetter.class);
 						poses[i] = datas.indexOf(function);
 						if (function != NebulaModelLoader.NORMAL_METAGENERATOR && poses[i] == -1)
 						{
@@ -113,6 +113,9 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 					case "flat" :
 						layer = new ModelPartItemLayerFlat(layer);
 						break;
+					case "convert":
+						layer = new ModelPartItemLayerConvert(layer, Jsons.getOrDefault(object2, "convert", "#convert"));
+						break;
 					default:
 						break;
 					}
@@ -130,6 +133,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			FlexibleModel model = new FlexibleModel(NebulaModelLoader.INSTANCE.currentItem,
 					deserializeOrDefault(object, context, ModelHelper.ITEM_STANDARD_TRANSFORMS),
 					parts.build(), false, false);
+			
 			if (flag.get())
 				model.itemColors = functions;
 			model.itemLoadingData = poses;
@@ -156,7 +160,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			Function<IBlockState, String>[] func2 = new Function[array.size()];
 			List<INebulaModelPart> parts = Jsons.getAsList(array, (i, j)->
 			{
-				INebulaModelPart part = BLOCK_MODEL_PART_DESERIALIZERS.deserialize(j, INebulaModelPart.class, context);
+				INebulaModelPart part = deserialize(j, context);
 				if (j.isJsonObject())
 				{
 					JsonObject obj = j.getAsJsonObject();
@@ -165,11 +169,13 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 						flag1.set(true);
 						func1[i] = context.deserialize(obj.get("itemmeta"), SubmetaLoader.ItemSubmetaGetter.class);
 					}
+					else func1[i] = (Function<ItemStack, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
 					if (obj.has("blockmeta"))
 					{
 						flag2.set(true);
 						func2[i] = context.deserialize(obj.get("blockmeta"), SubmetaLoader.BlockSubmetaGetter.class);
 					}
+					else func2[i] = (Function<IBlockState, String>) NebulaModelLoader.NORMAL_METAGENERATOR;
 				}
 				return part;
 			});
@@ -191,7 +197,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 				Map<String, String> retextures = Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString);
 				return model.retexture(ImmutableMap.copyOf(retextures));
 			}
-			return model;
+			else return model;
 		}
 	},
 	VANILLA_ITEM("minecraft", "item/generated")
@@ -270,12 +276,18 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 	
 	public static INebulaModelPart deserialize(JsonElement json, JsonDeserializationContext context)
 	{
+		if (json.isJsonPrimitive())
+		{
+			return NebulaModelLoader.getModelPart(json.getAsString());
+		}
 		return BLOCK_MODEL_PART_DESERIALIZERS.deserialize(json, INebulaModelPart.class, context);
 	}
 	
 	static
 	{
+		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("void", (j,t,c)->INebulaModelPart.VOID);
 		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("nebula:cube", ModelPartVerticalCube.LOADER);
+		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("nebula:quad", ModelPartQuad.LOADER);
 		BLOCK_MODEL_PART_DESERIALIZERS.addDeserializer("multi", ModelPartCol.LOADER);
 	}
 	
@@ -297,5 +309,6 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		NebulaModelLoader.registerDeserializer(new ResourceLocation(modid, path), this);
 	}
 	
+	/* Unused, override in each deserializer. */
 	public IModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) { return null; }
 }

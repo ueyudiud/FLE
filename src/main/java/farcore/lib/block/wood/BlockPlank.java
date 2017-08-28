@@ -2,13 +2,12 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
 import farcore.data.CT;
 import farcore.data.MC;
 import farcore.lib.block.BlockMaterial;
 import farcore.lib.material.prop.PropertyWood;
-import farcore.lib.tree.Tree;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
@@ -57,7 +56,7 @@ public class BlockPlank extends BlockMaterial<PropertyWood>
 	
 	public final BlockPlankSlab[] slabGroup;
 	
-	public BlockPlank(Tree tree)
+	public BlockPlank(PropertyWood tree)
 	{
 		super(tree.material.modid, "plank." + tree.material.name, Material.WOOD, tree.material, tree);
 		this.slabGroup = makeSlabs(this.blockName, this.material.localName + " Plank");

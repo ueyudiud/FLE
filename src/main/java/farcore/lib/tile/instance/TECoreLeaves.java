@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumBlock;
 import farcore.data.V;
-import farcore.lib.block.instance.BlockLeavesCore;
+import farcore.lib.block.wood.BlockLeavesCore;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;

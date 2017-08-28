@@ -4,6 +4,7 @@
 
 package farcore;
 
+import nebula.Log;
 import nebula.Nebula;
 
 /**
@@ -47,6 +48,10 @@ public class FarCore
 		{
 			exception.setStackTrace(new StackTraceElement[0]);
 			throw new RuntimeException(exception);
+		}
+		else
+		{
+			Log.catching(exception);
 		}
 	}
 }

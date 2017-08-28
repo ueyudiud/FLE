@@ -1,0 +1,5 @@
+#For most general fluid, use built-in forge fluid texture set.
+@include forge:fluid
+
+#If fluid container is empty, it may needed a empty texture.
+empty=farcore:items/void

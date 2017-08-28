@@ -3,6 +3,7 @@
  */
 package farcore.lib.block.instance;
 
+import farcore.data.CT;
 import farcore.data.MC;
 import farcore.data.Materials;
 import farcore.lib.block.BlockMaterial;
@@ -46,6 +47,7 @@ public class BlockBrick extends BlockMaterial<PropertyBlockable>
 	public BlockBrick(String modid, String name, Mat mat, PropertyBlockable property)
 	{
 		super(modid, name, Materials.POTTERY, mat, property);
+		setCreativeTab(CT.BUILDING);
 	}
 	
 	@Override

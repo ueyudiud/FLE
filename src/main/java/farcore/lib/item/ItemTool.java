@@ -27,7 +27,6 @@ import nebula.common.item.ItemSubBehavior;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Game;
 import nebula.common.util.ItemStacks;
-import nebula.common.util.Sides;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -74,7 +73,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		return ItemStacks.getOrSetupNBT(stack, false).getCompoundTag("durability").getFloat("damage");
 	}
 	
-	public static int getDefaultMaxDurability(ToolProp prop, ItemStack stack)
+	public int getDefaultMaxDurability(ToolProp prop, ItemStack stack)
 	{
 		//		if(prop.hasHandle)
 		//		{
@@ -89,17 +88,17 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public static int getMaxDurability(ItemStack stack)
 	{
 		ToolProp prop = ((ItemTool) stack.getItem()).toolPropMap.get(((ItemTool) stack.getItem()).getBaseDamage(stack));
-		NBTTagCompound tag = stack.getSubCompound("durability", true);
-		if(!tag.hasKey("maxDurability"))
-		{
-			if(Sides.isServer() || !Sides.isSimulating())
-			{
-				tag.setInteger("maxDurability", (int) (prop.stat.getMaxDurabilityMultiplier() * getDefaultMaxDurability(prop, stack)));
-			}
-			else
-				return getDefaultMaxDurability(prop, stack);
-		}
-		return tag.getInteger("maxDurability");
+		//		NBTTagCompound tag = stack.getSubCompound("durability", true);
+		//		if(!tag.hasKey("maxDurability"))
+		//		{
+		//			if(Sides.isServer() || !Sides.isSimulating())
+		//			{
+		//				tag.setInteger("maxDurability", (int) (prop.stat.getMaxDurabilityMultiplier() * ((ItemTool) stack.getItem()).getDefaultMaxDurability(prop, stack)));
+		//			}
+		//			else
+		return ((ItemTool) stack.getItem()).getDefaultMaxDurability(prop, stack);
+		//		}
+		//		return tag.getInteger("maxDurability");
 	}
 	
 	public static float getDurability(ItemStack stack)

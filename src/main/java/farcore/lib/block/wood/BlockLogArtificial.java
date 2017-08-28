@@ -1,4 +1,4 @@
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
 import java.util.Random;
 
@@ -106,9 +106,9 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 	}
 	
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
-		this.tree.updateLog(worldIn, pos, rand, true);
+		this.tree.updateLog(worldIn, pos, random, true);
 	}
 	
 	@Override

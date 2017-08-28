@@ -1,0 +1,28 @@
+{
+	"textures": {
+		"all": "fle:blocks/iconset/wooden",
+		"particle": "#all"
+	},
+	"part": [
+		{
+			"pos": [ 4, 1, 5, 5, 4, 11 ],
+			"textures": { "all": "#all" }
+		},
+		{
+			"pos": [ 11, 1, 5, 12, 4, 11 ],
+			"textures": { "all": "#all" }
+		},
+		{
+			"pos": [ 5, 1, 4, 11, 4, 5 ],
+			"textures": { "all": "#all" }
+		},
+		{
+			"pos": [ 5, 1, 11, 11, 4, 12 ],
+			"textures": { "all": "#all" }
+		},
+		{
+			"pos": [ 5, 0, 5, 11, 1, 11 ],
+			"textures": { "all": "#all" }
+		}
+	]
+}

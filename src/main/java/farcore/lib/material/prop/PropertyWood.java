@@ -1,6 +1,6 @@
 package farcore.lib.material.prop;
 
-import farcore.lib.block.instance.BlockPlank;
+import farcore.lib.block.wood.BlockPlank;
 import farcore.lib.material.Mat;
 
 public class PropertyWood extends PropertyBlockable

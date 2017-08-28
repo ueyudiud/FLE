@@ -19,7 +19,7 @@ public class ModelPartCollection
 	
 	private ModelPartCollection(Map<String, INebulaModelPart> variants)
 	{
-		variants = ImmutableMap.copyOf(variants);
+		this.variants = ImmutableMap.copyOf(variants);
 	}
 	
 	public INebulaModelPart getModelPart(String key)

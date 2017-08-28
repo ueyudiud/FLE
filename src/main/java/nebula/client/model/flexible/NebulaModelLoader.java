@@ -5,10 +5,17 @@ package nebula.client.model.flexible;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -16,6 +23,8 @@ import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.Level;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -32,6 +41,7 @@ import nebula.common.data.Misc;
 import nebula.common.item.ItemFluidDisplay;
 import nebula.common.util.IO;
 import nebula.common.util.Jsons;
+import nebula.common.util.Strings;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -186,8 +196,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	/**
 	 * Mark this model should loaded by NebulaModelLoader.
 	 * @param location the model loader predicated
-	 * @param location2
-	 * @param deserializer
+	 * @param location2 the real loading location.
+	 * @param deserializer the used deserializer to load resource.
 	 */
 	public static void registerModel(
 			ResourceLocation location, ResourceLocation location2,
@@ -233,6 +243,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		BUILTIN_TEXTURESET.put(location, map);
 	}
 	
+	private PrintStream stream;
+	
 	public IResourceManager manager;
 	public ResourceLocation currentLocation;
 	public Item currentItem;
@@ -246,9 +258,10 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
-		Log.info("Nebula Model Loader start model loading.");
+		initPrintStream();
+		this.stream.println("Nebula Model Loader start model loading.");
 		this.manager = manager;
-		Log.info("Clean caches.");
+		this.stream.println("Clean caches.");
 		this.models = new HashMap<>();
 		this.cacheLocations = new HashMap<>();
 		this.parts = new HashMap<>();
@@ -285,8 +298,50 @@ public enum NebulaModelLoader implements ICustomModelLoader
 			}
 		}
 		ProgressManager.pop(bar);
-		Log.logCachedInformations(ERROR_REPORT_FUNCTION, "Catching exceptions during loading models.");
-		Log.info("Nebula Model Loader finished model loading.");
+		Log.logCachedInformations(this.stream, Level.WARN, ERROR_REPORT_FUNCTION, "Catching exceptions during loading models.");
+		this.stream.println("Nebula Model Loader finished model loading.");
+	}
+	
+	private void initPrintStream()
+	{
+		if (this.stream != null) return;
+		try
+		{
+			File file = new File(Minecraft.getMinecraft().mcDataDir, "logs\\nebula_model.log");
+			if (file.exists())
+			{
+				File file1 = new File(Minecraft.getMinecraft().mcDataDir, "logs\\nebula_model_last.log");
+				file1.delete();
+				file.renameTo(file1);
+				file.delete();
+			}
+			else
+			{
+				file.createNewFile();
+			}
+			this.stream = new PrintStream(new FileOutputStream(file))
+			{
+				private final DateFormat format = new SimpleDateFormat("[HH:mm:ss]");
+				
+				@Override
+				public void print(String s)
+				{
+					super.print(this.format.format(new Date()) + s);
+				}
+				
+				@Override
+				protected void finalize() throws Throwable
+				{
+					close();
+				}
+			};
+		}
+		catch (IOException e)
+		{
+			Log.catching(e);
+			Log.warn("Fail to create custom print stream, use system version instead.");
+			this.stream = System.out;
+		}
 	}
 	
 	@SubscribeEvent
@@ -361,7 +416,38 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 */
 	public static Map<String, ResourceLocation> getTextureSet(ResourceLocation location)
 	{
-		return INSTANCE.cacheLocations.computeIfAbsent(location, INSTANCE::loadTextureSet);
+		try
+		{
+			return INSTANCE.cacheLocations.computeIfAbsent(location, INSTANCE::loadTextureSet$);
+		}
+		catch (Exception exception)
+		{
+			Log.catching(exception);
+			return ImmutableMap.of();
+		}
+	}
+	
+	private final LinkedList<ResourceLocation> loadingTextureSets = new LinkedList<>();
+	
+	private Map<String, ResourceLocation> loadTextureSet$(ResourceLocation location)
+	{
+		if (this.loadingTextureSets.contains(location))
+			throw new InternalError();
+		this.loadingTextureSets.addLast(location);
+		Map<String, ResourceLocation> result;
+		try
+		{
+			result = loadTextureSet(location);
+		}
+		catch (Exception e)
+		{
+			throw e;
+		}
+		finally
+		{
+			this.loadingTextureSets.removeLast();
+		}
+		return result;
 	}
 	
 	private Map<String, ResourceLocation> loadTextureSet(ResourceLocation location)
@@ -373,17 +459,48 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		{
 			reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(IO.copyResource(this.manager, location))));
 			String key;
-			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
+			Map<String, ResourceLocation> builder = new HashMap<>();
+			int line = 0;
 			while ((key = reader.readLine()) != null)
 			{
+				++line;
 				if (key.length() == 0 || key.charAt(0) == '#')//For annotate.
 					continue;
-				int idx;
-				if ((idx = key.indexOf('=')) == -1)
-					throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
-				builder.put(key.substring(0, idx), new ResourceLocation(key.substring(idx + 1)));
+				if (key.charAt(0) == '@')
+				{
+					String[] values = Strings.split(key, ' ');
+					switch (values[0])
+					{
+					case "@include" :
+						if (values.length != 2)
+							throw new IllegalArgumentException("Invalid @include uses. file: " + location + " line: " + line);
+						try
+						{
+							builder.putAll(getTextureSet(new ResourceLocation(values[1])));
+						}
+						catch (InternalError e)
+						{
+							throw new IllegalArgumentException("Looped loading. file: " + location + " line: " + line + " target: " + values[1]);
+						}
+						break;
+					case "@remove" :
+						if (values.length != 2)
+							throw new IllegalArgumentException("Invalid @remove uses. file: " + location + " line: " + line);
+						builder.remove(values[1]);
+						break;
+					default :
+						throw new IllegalArgumentException("Unknown operation, got: " + values[0] + ". file: " + location + " line: " + line);
+					}
+				}
+				else
+				{
+					int idx;
+					if ((idx = key.indexOf('=')) == -1)
+						throw new RuntimeException("\"" + key + "\" is missing a '=' for key pair.");
+					builder.put(key.substring(0, idx), new ResourceLocation(key.substring(idx + 1)));
+				}
 			}
-			return builder.build();
+			return ImmutableMap.copyOf(builder);
 		}
 		catch (IOException e)
 		{

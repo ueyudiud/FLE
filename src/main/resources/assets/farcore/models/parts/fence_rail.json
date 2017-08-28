@@ -1,0 +1,11 @@
+{
+	"normal": {
+		"type": "multi",
+		"variant": {
+			"parts": [
+				{ "pos": [ 7, 3, 10, 9,  5, 16 ], "textures": { "all": "#side" } },
+				{ "pos": [ 7, 9, 10, 9, 11, 16 ], "textures": { "all": "#side" } }
+			]
+		}
+	}
+}

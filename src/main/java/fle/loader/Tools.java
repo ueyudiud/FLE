@@ -77,20 +77,20 @@ public class Tools
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle,
 			List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
-		return BlocksItems.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, toolTypes, behaviors);
+		return IBF.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, toolTypes, behaviors);
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle,
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior... behaviors)
 	{
-		return BlocksItems.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, behaviors);
+		return IBF.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, behaviors);
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle,
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
-		return BlocksItems.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, toolTypes, behaviors);
+		return IBF.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, toolTypes, behaviors);
 	}
 }

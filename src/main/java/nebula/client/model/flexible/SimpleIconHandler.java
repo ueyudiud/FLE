@@ -30,6 +30,12 @@ public class SimpleIconHandler implements IIconCollection
 	}
 	
 	@Override
+	public int size()
+	{
+		return 1;
+	}
+	
+	@Override
 	public Collection<ResourceLocation> resources()
 	{
 		return ImmutableList.of(this.location);

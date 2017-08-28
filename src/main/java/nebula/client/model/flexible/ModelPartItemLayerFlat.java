@@ -44,16 +44,16 @@ public class ModelPartItemLayerFlat extends ModelPartItemLayer
 		BakedQuadBuilder builder1 = builder.getBuilder();
 		builder.setTIndex(this.index);
 		builder1.startQuad(EnumFacing.NORTH);
-		builder1.pos(0, 0, NEG, 0 , 16);
-		builder1.pos(0, 1, NEG, 0 , 0);
-		builder1.pos(1, 1, NEG, 16, 0);
-		builder1.pos(1, 0, NEG, 16, 16);
+		builder1.pos(0, 0, NEG - 1E-3F * this.index, 0 , 16);
+		builder1.pos(0, 1, NEG - 1E-3F * this.index, 0 , 0);
+		builder1.pos(1, 1, NEG - 1E-3F * this.index, 16, 0);
+		builder1.pos(1, 0, NEG - 1E-3F * this.index, 16, 16);
 		builder1.endQuad();
 		builder1.startQuad(EnumFacing.SOUTH);
-		builder1.pos(0, 0, POS, 0 , 16);
-		builder1.pos(1, 0, POS, 16, 16);
-		builder1.pos(1, 1, POS, 16, 0);
-		builder1.pos(0, 1, POS, 0 , 0);
+		builder1.pos(0, 0, POS + 1E-3F * this.index, 0 , 16);
+		builder1.pos(1, 0, POS + 1E-3F * this.index, 16, 16);
+		builder1.pos(1, 1, POS + 1E-3F * this.index, 16, 0);
+		builder1.pos(0, 1, POS + 1E-3F * this.index, 0 , 0);
 		builder1.endQuad();
 		return new BakedModelPart(builder.bake(bakedTextureGetter::apply, iconHandlerGetter.apply(this.icon)));
 	}

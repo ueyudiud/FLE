@@ -383,11 +383,11 @@ public class InventoryHelper
 							io.insertFluid(stack2, direction, false);
 							if (stack.stackSize > 1)
 							{
-								Players.giveOrDrop(player, container.drain(stack));
+								Players.giveOrDrop(player, container.drain(stack, false));
 							}
 							else
 							{
-								player.setHeldItem(hand, container.drain(stack));
+								player.setHeldItem(hand, container.drain(stack, true));
 							}
 							return true;
 						}

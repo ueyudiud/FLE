@@ -3,6 +3,11 @@ package nebula.base;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
+
+import nebula.common.util.L;
 
 public class Node<T> implements INode<T>
 {
@@ -11,7 +16,7 @@ public class Node<T> implements INode<T>
 	 * @param target
 	 * @return
 	 */
-	public static <T> Node<T> first(T target)
+	public static <T> Node<T> first(@Nullable T target)
 	{
 		return new Node<>(target);
 	}
@@ -52,6 +57,13 @@ public class Node<T> implements INode<T>
 		}
 	}
 	
+	/**
+	 * Create a new node chain.<p>
+	 * Return the first node of node chain.
+	 * @param iterable the object to provide iterator.
+	 * @return the first node.
+	 * @see #chain(Iterator)
+	 */
 	public static <T> Node<T> chain(Iterable<T> iterable)
 	{
 		if (iterable instanceof List &&
@@ -65,6 +77,12 @@ public class Node<T> implements INode<T>
 		}
 	}
 	
+	/**
+	 * Create a new node chain.<p>
+	 * Return the first node of node chain.
+	 * @param iterator the iterator to provider node chain.
+	 * @return the first node.
+	 */
 	public static <T> Node<T> chain(Iterator<T> iterator)
 	{
 		if (!iterator.hasNext()) return null;
@@ -171,5 +189,65 @@ public class Node<T> implements INode<T>
 		}
 		this.next = this.last = null;
 		return this.target;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hash = Objects.hashCode(this.target);
+		
+		Node<T>
+		
+		node = this;
+		while (node.hasLast())
+		{
+			node = node.last();
+			hash *= 31;
+			hash += Objects.hashCode(node.target);
+		}
+		
+		hash *= 31;
+		node = this;
+		while (node.hasNext())
+		{
+			node = node.next();
+			hash *= 31;
+			hash += Objects.hashCode(node.target);
+		}
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == this) return true;
+		if (!(obj instanceof INode<?>)) return false;
+		
+		INode<?> node = (INode<?>) obj;
+		if (!L.equal(value(), node.value())) return false;
+		
+		INode<?>
+		
+		node1 = this, node2 = node;
+		while (node1.hasLast() || node2.hasLast())
+		{
+			if (node1.hasLast() != node2.hasLast() ||
+					!L.equal(
+							(node1 = node1.last()).value(),
+							(node2 = node2.last()).value()))
+				return false;
+		}
+		
+		node1 = this; node2 = node;
+		while (node1.hasNext() || node2.hasNext())
+		{
+			if (node1.hasNext() != node2.hasNext() ||
+					!L.equal(
+							(node1 = node1.next()).value(),
+							(node2 = node2.next()).value()))
+				return false;
+		}
+		
+		return true;
 	}
 }

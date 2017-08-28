@@ -77,14 +77,6 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public BlockFire()
 	{
 		super("fire", Materials.FIRE);
-		setDefaultState(getDefaultState().withProperty(STATE, 0)
-				.withProperty(NORTH, false)
-				.withProperty(EAST, false)
-				.withProperty(SOUTH, false)
-				.withProperty(WEST, false)
-				.withProperty(UPPER, false)
-				.withProperty(SMOLDER, false)
-				.withProperty(SPREAD_PREFERENCE, SpreadDir.unknown));
 		setTickRandomly(true);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Fire");
 		EnumBlock.fire.set(this);
@@ -142,6 +134,19 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public void registerStateToRegister(ExtendedBlockStateRegister register)
 	{
 		register.registerStates(this, STATE, SMOLDER);
+	}
+	
+	@Override
+	protected IBlockState initDefaultState(IBlockState state)
+	{
+		return super.initDefaultState(state).withProperty(STATE, 0)
+				.withProperty(NORTH, false)
+				.withProperty(EAST, false)
+				.withProperty(SOUTH, false)
+				.withProperty(WEST, false)
+				.withProperty(UPPER, false)
+				.withProperty(SMOLDER, false)
+				.withProperty(SPREAD_PREFERENCE, SpreadDir.unknown);
 	}
 	
 	@Override

@@ -1,0 +1,53 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:fence_base"
+	},
+	"variants": {
+		"type": {
+			"oak": { 
+				"textures": { 
+					"ptop": "minecraft:blocks/logs/oak_top",
+					"pside": "minecraft:blocks/logs/oak_side",
+					"side": "minecraft:blocks/planks/oak" 
+				}
+			},
+			"spruce": { 
+				"textures": { 
+					"ptop": "minecraft:blocks/logs/spruce_top",
+					"pside": "minecraft:blocks/logs/spruce_side",
+					"side": "minecraft:blocks/planks/spruce" 
+				}
+			},
+			"birch": { 
+				"textures": { 
+					"ptop": "minecraft:blocks/logs/birch_top",
+					"pside": "minecraft:blocks/logs/birch_side",
+					"side": "minecraft:blocks/planks/birch" 
+				}
+			},
+			"ceiba": { 
+				"textures": { 
+					"ptop": "minecraft:blocks/logs/ceiba_top",
+					"pside": "minecraft:blocks/logs/ceiba_side",
+					"side": "minecraft:blocks/planks/ceiba" 
+				}
+			},
+			"acacia": { 
+				"textures": { 
+					"ptop": "minecraft:blocks/logs/acacia_top",
+					"pside": "minecraft:blocks/logs/acacia_side",
+					"side": "minecraft:blocks/planks/acacia" 
+				}
+			},
+			"oak-black": { 
+				"textures": { 
+					"ptop": "minecraft:blocks/logs/oak-black_top",
+					"pside": "minecraft:blocks/logs/oak-black_side",
+					"side": "minecraft:blocks/planks/oak-black" 
+				}
+			}
+		}
+	}
+}

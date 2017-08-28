@@ -6,11 +6,11 @@ import java.util.Random;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.IFamily;
-import farcore.lib.block.instance.BlockLeaves;
-import farcore.lib.block.instance.BlockLeavesCore;
-import farcore.lib.block.instance.BlockLogArtificial;
-import farcore.lib.block.instance.BlockLogNatural;
-import farcore.lib.block.instance.BlockPlank;
+import farcore.lib.block.wood.BlockLeaves;
+import farcore.lib.block.wood.BlockLeavesCore;
+import farcore.lib.block.wood.BlockLogArtificial;
+import farcore.lib.block.wood.BlockLogNatural;
+import farcore.lib.block.wood.BlockPlank;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.ITree;

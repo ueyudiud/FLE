@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
 /**
- * The shapless recipe type.
+ * The shapeless recipe type.
  * A more usable recipe template for crafting table.<p>
  * @author ueyudiud
  * @see net.minecraftforge.oredict.ShapelessOreRecipe

@@ -4,6 +4,7 @@
 
 package farcore.data;
 
+import nebula.common.fluid.FluidStackExt;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -25,5 +26,10 @@ public enum EnumFluid
 	public void setFluid(Fluid fluid)
 	{
 		this.fluid = fluid;
+	}
+	
+	public FluidStackExt stack(int amount, int temp)
+	{
+		return new FluidStackExt(this.fluid, amount, temp, null);
 	}
 }

@@ -19,12 +19,15 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import farcore.FarCore;
 import nebula.Log;
 import nebula.client.model.ModelBase;
 import nebula.client.util.IIconCollection;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -150,18 +153,26 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	 * @param state Unused.
 	 */
 	@Override
-	public FlexibleBakedModel bake(@Nullable IModelState state, VertexFormat format,
+	public IBakedModel bake(@Nullable IModelState state, VertexFormat format,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
-		TRSRTransformation transformation = state.apply(Optional.absent()).or(TRSRTransformation.identity());
-		ImmutableList.Builder<INebulaBakedModelPart> builder = ImmutableList.builder();
-		this.parts.forEach(part->builder.add(
-				part.bake(format, L.toFunction(this.resources, NebulaModelLoader.ICON_HANDLER_MISSING), bakedTextureGetter::apply, transformation)));
-		IIconCollection particleSource = getIconHandler("#particle");
-		TextureAtlasSprite particle = bakedTextureGetter.apply(particleSource.build().getOrDefault(NebulaModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE));
-		return new FlexibleBakedModel(this.transforms, builder.build(), particle,
-				this.gui3D, this.builtIn, this.itemDataGen, this.blockDataGen,
-				this.itemLoadingData, this.blockLoadingData);
+		try
+		{
+			TRSRTransformation transformation = state.apply(Optional.absent()).or(TRSRTransformation.identity());
+			ImmutableList.Builder<INebulaBakedModelPart> builder = ImmutableList.builder();
+			this.parts.forEach(part->builder.add(
+					part.bake(format, L.toFunction(this.resources, NebulaModelLoader.ICON_HANDLER_MISSING), bakedTextureGetter::apply, transformation)));
+			IIconCollection particleSource = getIconHandler("#particle");
+			TextureAtlasSprite particle = bakedTextureGetter.apply(particleSource.build().getOrDefault(NebulaModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE));
+			return new FlexibleBakedModel(this.transforms, builder.build(), particle,
+					this.gui3D, this.builtIn, this.itemDataGen, this.blockDataGen,
+					this.itemLoadingData, this.blockLoadingData);
+		}
+		catch (Exception exception)
+		{
+			FarCore.catching(exception);
+			return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelManager().getMissingModel();
+		}
 	}
 	
 	@Override
@@ -173,6 +184,12 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 			builder.putAll(this.retextures);
 		builder.putAll(textures);
 		FlexibleModel model = new FlexibleModel(this.item, this.transforms, this.parts, this.gui3D, this.builtIn);
+		model.blockColors = this.blockColors;
+		model.itemColors = this.itemColors;
+		model.blockDataGen = this.blockDataGen;
+		model.itemDataGen = this.itemDataGen;
+		model.blockLoadingData = this.blockLoadingData;
+		model.itemLoadingData = this.itemLoadingData;
 		model.retextures = ImmutableMap.copyOf(builder);
 		return model;
 	}

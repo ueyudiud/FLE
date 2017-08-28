@@ -15,9 +15,7 @@ import com.google.gson.JsonParseException;
 import nebula.common.util.A;
 import nebula.common.util.Jsons;
 import nebula.common.util.L;
-import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
@@ -36,14 +34,10 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 			if (json.isJsonObject())
 			{
 				JsonObject object = json.getAsJsonObject();
-				Block block = Block.getBlockFromName(object.get("source").getAsString());
-				if (block == null)
-					throw new JsonParseException("No source of json found, got: " + object.get("source"));
-				BlockStateContainer container = block.getBlockState();
 				String key = object.get("key").getAsString();
-				IProperty<?>[] formats = A.allNonNull(Jsons.getArray(object.getAsJsonArray("formats"), -1, L.castAny(IProperty.class),
-						j-> L.castAny(container.getProperty(j.getAsString()))));
-				return new BlockSubmetaGetter(key, formats);
+				return new BlockSubmetaGetter(key,
+						A.allNonNull(Jsons.getArray(object.getAsJsonArray("formats"), -1, String.class, JsonElement::getAsString)),
+						A.allNonNull(Jsons.getArray(object.getAsJsonArray("default"), -1, String.class, JsonElement::getAsString)));
 			}
 			else throw new JsonParseException("Unknown json type, got: " + json.getClass());
 		}
@@ -67,28 +61,31 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 	};
 	
 	@Override
-	public Function<?, String> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-			throws JsonParseException
-	{
-		return null;
-	}
+	public Function<?, String> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException { return null; }
 	
 	static class BlockSubmetaGetter implements Function<IBlockState, String>
 	{
 		String key;
-		IProperty<?>[] formats;
+		String[] formats;
+		String[] def;
 		
-		BlockSubmetaGetter(String key, IProperty<?>[] formats)
+		BlockSubmetaGetter(String key, String[] formats, String[] def)
 		{
+			if (formats.length != def.length)
+				throw new IllegalArgumentException("The formats and default values length are not same.");
 			this.key = key;
 			this.formats = formats;
+			this.def = def;
 		}
 		
 		@Override
 		public String apply(IBlockState state)
 		{
-			return String.format(this.key, A.transform(this.formats,
-					p->p.getName(L.castAny(state.getValue(p)))));
+			return state == null ? String.format(this.key, (Object[]) this.def) : String.format(this.key, A.transform(this.formats, p-> {
+				IProperty<?> property = state.getBlock().getBlockState().getProperty(p);
+				if (property == null) return "missing";
+				return property.getName(L.castAny(state.getValue(property)));
+			}));
 		}
 	}
 	

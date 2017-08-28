@@ -8,16 +8,13 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.FarCore;
 import farcore.data.EnumItem;
-import farcore.data.EnumToolTypes;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.tile.IDebugableTile;
 import nebula.Log;
 import nebula.Nebula;
 import nebula.common.LanguageManager;
-import nebula.common.block.IToolableBlock;
 import nebula.common.item.ItemBase;
-import nebula.common.tile.IToolableTile;
 import nebula.common.util.Direction;
 import nebula.common.util.Game;
 import net.minecraft.block.Block;
@@ -73,16 +70,16 @@ public class ItemDebugger extends ItemBase
 				}
 				IBlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();
-				if(block instanceof IToolableBlock)
-				{
-					((IToolableBlock) block).onToolClick(player, EnumToolTypes.CHISEL, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
-				}
-				block.randomTick(world, pos, state, itemRand);
 				TileEntity tile = world.getTileEntity(pos);
-				if(tile instanceof IToolableTile)
-				{
-					((IToolableTile) tile).onToolClick(player, EnumToolTypes.CHISEL, stack, Direction.of(side), hitX, hitY, hitZ);
-				}
+				//				if(block instanceof IToolableBlock)
+				//				{
+				//					((IToolableBlock) block).onToolClick(player, EnumToolTypes.CHISEL, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
+				//				}
+				//				block.randomTick(world, pos, state, itemRand);
+				//				if(tile instanceof IToolableTile)
+				//				{
+				//					((IToolableTile) tile).onToolClick(player, EnumToolTypes.CHISEL, stack, Direction.of(side), hitX, hitY, hitZ);
+				//				}
 				List<String> list = new ArrayList<>();
 				//This information is added in F3 information, so should I remove these information display?
 				list.add("================World Info==================");

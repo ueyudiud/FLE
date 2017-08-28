@@ -1,4 +1,4 @@
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
 import java.util.ArrayList;
 import java.util.List;

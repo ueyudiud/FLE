@@ -11,7 +11,7 @@ import farcore.lib.item.ItemMulti;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import fle.api.recipes.instance.PolishRecipe;
-import fle.loader.BlocksItems;
+import fle.loader.IBF;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.OreStack;
 import net.minecraft.init.Items;
@@ -27,12 +27,12 @@ public class RecipePolish
 		String ore = MC.fragment.getOreName(M.flint);
 		PolishRecipe.addPolishLevel(new OreStack(ore), 7);
 		PolishRecipe.addPolishRecipe(new OreStack(ore), "c c      ", new ItemStack(Items.FLINT));
-		PolishRecipe.addPolishRecipe(new OreStack(ore), " c ccc c ", BlocksItems.miscResources.getSubItem("flint_small", 4));
+		PolishRecipe.addPolishRecipe(new OreStack(ore), " c ccc c ", IBF.miscResources.getSubItem("flint_small", 4));
 		addFlintRecipe(new OreStack(ore), M.flint);
 		ore = MC.fragment.getOreName(M.quartz);
 		PolishRecipe.addPolishLevel(new OreStack(ore), 10);
 		addFlintRecipe(new OreStack(ore), M.quartz);
-		PolishRecipe.addPolishRecipe(new OreStack(ore), "c c   c c", BlocksItems.miscResources.getSubItem("quartz_chip"));
+		PolishRecipe.addPolishRecipe(new OreStack(ore), "c c   c c", IBF.miscResources.getSubItem("quartz_chip"));
 		addFlintRecipe(new OreStack(MC.chip_rock.getOreName(M.obsidian)), M.obsidian);
 		for (Mat material : Mat.filt(MC.ROCKY))
 		{
@@ -44,7 +44,7 @@ public class RecipePolish
 	
 	private static void addFlintRecipe(AbstractStack input, Mat material)
 	{
-		ItemStack stack1 = BlocksItems.tool.getSubItem("awl");
+		ItemStack stack1 = IBF.tool.getSubItem("awl");
 		ItemTool.setMaterialToItem(stack1, "head", material);
 		PolishRecipe.addPolishRecipe(input, "   c cc c", stack1);
 		stack1 = ItemMulti.createStack(material, MC.hard_hammer_flint);
@@ -109,7 +109,7 @@ public class RecipePolish
 			PolishRecipe.addPolishRecipe(input, "  pcc ccc", stack1);
 			PolishRecipe.addPolishRecipe(input, "p   ccccc", stack1);
 		}
-		stack1 = BlocksItems.tool.getSubItem("whetstone");
+		stack1 = IBF.tool.getSubItem("whetstone");
 		ItemTool.setMaterialToItem(stack1, "head", material);
 		PolishRecipe.addPolishRecipe(input, "ppp   ppp", stack1);
 		PolishRecipe.addPolishRecipe(input, "ppp   ppp", stack1);

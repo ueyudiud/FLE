@@ -10,7 +10,7 @@ import farcore.data.Materials;
 import farcore.data.SubTags;
 import farcore.lib.material.Mat;
 import fle.core.client.model.ModelSmallRockyTank;
-import fle.core.client.render.TESRSmallRockyTank;
+import fle.core.client.render.TESRFluidFase;
 import fle.core.tile.tanks.TESmallRockyTank;
 import nebula.base.IRegister;
 import nebula.client.blockstate.BlockStateTileEntityWapper;
@@ -54,7 +54,7 @@ public class BlockRockyTank extends BlockTE
 		super.registerRender();
 		OrderModelLoader.putModel(this, new ModelSmallRockyTank());
 		Client.registerModel(this.item, getRegisteredName(), "normal");
-		FarCoreRegistry.registerTESR(TESRSmallRockyTank.class);
+		FarCoreRegistry.registerTESR(TESmallRockyTank.class, new TESRFluidFase<TESmallRockyTank>(0.25F, 0.25F, 0.25F, 0.75F, 0.9375F, 0.75F, t->t.getFluidTank().getInfo()));
 	}
 	
 	@Override

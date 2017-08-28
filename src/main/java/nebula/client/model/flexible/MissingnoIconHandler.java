@@ -21,6 +21,12 @@ class MissingnoIconHandler implements IIconCollection
 	private static final ImmutableMap<String, ResourceLocation> BUILD = ImmutableMap.of(NebulaModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE);
 	
 	@Override
+	public int size()
+	{
+		return 0;
+	}
+	
+	@Override
 	public Collection<ResourceLocation> resources()
 	{
 		return ImmutableList.of();

@@ -17,6 +17,8 @@ import net.minecraft.util.EnumFacing;
  */
 public interface INebulaBakedModelPart
 {
+	static INebulaBakedModelPart EMPTY = new BakedModelPart(ImmutableMap.of());
+	
 	List<BakedQuad> getQuads(EnumFacing facing, String key);
 	
 	class BakedModelPart implements INebulaBakedModelPart

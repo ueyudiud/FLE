@@ -13,9 +13,12 @@ import farcore.lib.material.MatCondition;
 import farcore.lib.skill.SkillAbstract;
 import fle.api.item.behavior.IPolishableBehavior;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
+import fle.api.util.ToolPropertiesModificater;
+import fle.api.util.ToolPropertiesModificater.Property;
 import fle.core.FLE;
 import nebula.base.Judgable;
 import nebula.client.util.Client;
+import nebula.client.util.UnlocalizedList;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
@@ -24,6 +27,7 @@ import nebula.common.item.IProjectileItem;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.OreDict;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderItem;
@@ -80,6 +84,32 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	}
 	
 	@Override
+	public int getDefaultMaxDurability(ToolProp prop, ItemStack stack)
+	{
+		return (int) new ToolPropertiesModificater(stack).applyModification(getMaterial(stack, "head").toolMaxUse, Property.DURABILITY);
+	}
+	
+	@Override
+	public int getHarvestLevel(ItemStack stack, String toolClass)
+	{
+		int lv = super.getHarvestLevel(stack, toolClass);
+		return lv < 0 ? lv : (int) new ToolPropertiesModificater(stack).applyModification(lv, Property.HARVEST_LEVEL);
+	}
+	
+	@Override
+	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	{
+		return new ToolPropertiesModificater(stack).applyModification(super.getStrVsBlock(stack, state), Property.MINING_SPEED);
+	}
+	
+	@Override
+	public int getToolLevel(ItemStack stack, EnumToolType type)
+	{
+		int lv = super.getToolLevel(stack, type);
+		return lv < 0 ? lv : (int) new ToolPropertiesModificater(stack).applyModification(lv, Property.HARVEST_LEVEL);
+	}
+	
+	@Override
 	public void onBlockHarvested(ItemStack stack, HarvestDropsEvent event)
 	{
 		if(event.getHarvester() != null)
@@ -106,6 +136,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	protected float getPlayerRelatedAttackDamage(ToolProp prop, ItemStack stack, EntityPlayer player, float baseAttack,
 			float attackSpeed, int cooldown, boolean isAttackerFalling)
 	{
+		baseAttack = new ToolPropertiesModificater(stack).applyModification(baseAttack, Property.ATTACK_DAMAGE);
 		int lv = prop.skillAttack.level(player);
 		cooldown += lv * 5;
 		if(lv > 1)
@@ -238,5 +269,15 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 				return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
 			}
 		return null;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
+			boolean advanced)
+	{
+		super.addInformation(stack, playerIn, unlocalizedList, advanced);
+		ToolPropertiesModificater modificater = new ToolPropertiesModificater(stack);
+		modificater.getDisplayInformation(unlocalizedList);
 	}
 }

@@ -1,4 +1,4 @@
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
 import java.util.Random;
 
@@ -95,30 +95,40 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	}
 	
 	@Override
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
+	{
+		updateTick(worldIn, pos, state, random);
+		state = worldIn.getBlockState(pos);
+		if (state.getBlock() == this)
+		{
+			this.tree.updateLog(worldIn, pos, random, false);
+		}
+	}
+	
+	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
-		this.tree.updateLog(worldIn, pos, rand, false);
 		label:
 		{
-			if(!worldIn.isRemote)
+		if(!worldIn.isRemote)
+		{
+			if(worldIn.isSideSolid(pos.down(), EnumFacing.UP))
 			{
-				if(worldIn.isSideSolid(pos.down(), EnumFacing.UP))
-				{
-					break label;
-				}
-				for (int h = -1; h <= 1; h++)
-				{
-					for (int g = -1; g <= 1; g++)
-					{
-						for (int f = -1; f <= 1; f++)
-							if ((h | g | f) != 0 && isLog(worldIn, pos.add(h, g, f)))
-							{
-								break label;
-							}
-					}
-				}
-				worldIn.setBlockToAir(pos);
+				break label;
 			}
+			for (int h = -1; h <= 1; h++)
+			{
+				for (int g = -1; g <= 1; g++)
+				{
+					for (int f = -1; f <= 1; f++)
+						if ((h | g | f) != 0 && isLog(worldIn, pos.add(h, g, f)))
+						{
+							break label;
+						}
+				}
+			}
+			worldIn.setBlockToAir(pos);
+		}
 		}
 	}
 	

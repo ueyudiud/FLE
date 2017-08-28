@@ -1,30 +1,31 @@
 package fle.core.tile.tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import farcore.data.EnumToolTypes;
 import farcore.lib.material.Mat;
-import fle.core.client.gui.GuiOilLampCrafting;
-import fle.core.common.gui.ContainerOilLampCrafting;
-import nebula.common.tile.ITilePropertiesAndBehavior.ITB_Containerable;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Light;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tile.TESynchronization;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class TEOilLamp extends TESynchronization
-implements ITP_Light, IToolableTile, ITB_Containerable
+implements ITP_Light, IToolableTile, ITP_BoundingBox, ITP_Drops
 {
+	public static final AxisAlignedBB AABB_OIL_LAMP = new AxisAlignedBB(0.3125F, 0.0F, 0.3125F, 0.6875F, 0.25F, 0.6875F);
+	
 	public static final byte HasWick = 0x10;
 	public static final byte Burning = 0x11;
 	public static final byte HasSmoke = 0x12;
@@ -37,6 +38,12 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 	
 	public TEOilLamp()
 	{
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundBox(IBlockState state)
+	{
+		return AABB_OIL_LAMP;
 	}
 	
 	@Override
@@ -123,15 +130,8 @@ implements ITP_Light, IToolableTile, ITB_Containerable
 	}
 	
 	@Override
-	public Container openContainer(int id, EntityPlayer player)
+	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
-		return new ContainerOilLampCrafting(player, this);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiContainer openGui(int id, EntityPlayer player)
-	{
-		return new GuiOilLampCrafting(player, this);
+		return new ArrayList<>();
 	}
 }

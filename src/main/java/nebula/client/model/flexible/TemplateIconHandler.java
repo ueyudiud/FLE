@@ -61,6 +61,12 @@ public class TemplateIconHandler implements IIconCollection
 	}
 	
 	@Override
+	public int size()
+	{
+		return this.textures.size();
+	}
+	
+	@Override
 	public Collection<ResourceLocation> resources()
 	{
 		return this.textures.values();

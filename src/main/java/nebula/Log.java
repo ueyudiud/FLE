@@ -1,5 +1,6 @@
 package nebula;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -101,6 +102,53 @@ public class Log
 				else
 				{
 					info(object.toString());
+				}
+			}
+		}
+		reset();
+	}
+	public static void logCachedInformations(PrintStream stream, Level level, Function<Object, String> function, String...informations)
+	{
+		synchronized (cache)
+		{
+			if(!cache.isEmpty())
+			{
+				for(String value : informations)
+				{
+					stream.println(value);
+				}
+				for(Object object : cache)
+				{
+					if(object instanceof Throwable)
+					{
+						((Throwable) object).printStackTrace(stream);
+					}
+					else
+					{
+						stream.println("[" + level.name() + "]" + function.apply(object));
+					}
+				}
+			}
+		}
+		reset();
+	}
+	public static void logCachedExceptions(PrintStream stream, String...informations)
+	{
+		for(String value : informations)
+		{
+			stream.println("# " + value);
+		}
+		synchronized (cache)
+		{
+			for(Object object : cache)
+			{
+				if(object instanceof Throwable)
+				{
+					((Throwable) object).printStackTrace(stream);
+				}
+				else
+				{
+					stream.println(object.toString());
 				}
 			}
 		}

@@ -1,7 +1,9 @@
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.SubTags;
 import farcore.lib.material.Mat;
@@ -37,7 +39,7 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	
 	public BlockSapling()
 	{
-		super("farcore", "sapling", Material.PLANTS);
+		super(FarCore.ID, "sapling", Material.PLANTS);
 		setHardness(.4F);
 		EnumBlock.sapling.set(this);
 	}
@@ -85,6 +87,13 @@ public class BlockSapling extends BlockSingleTE implements IPlantable
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
 	{
 		return SAPLING_AABB.offset(pos);
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
+			boolean silkTouch)
+	{
+		return new ArrayList<>();
 	}
 	
 	@Override

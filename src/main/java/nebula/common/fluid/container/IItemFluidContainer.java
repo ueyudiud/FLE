@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * @author ueyudiud
@@ -38,6 +40,12 @@ public abstract interface IItemFluidContainer
 		public boolean canFill(ItemStack stack, @Nullable FluidStack resource)
 		{
 			return false;
+		}
+		
+		@Override
+		public IFluidHandler createFluidHandlerWrapper(ItemStack stack)
+		{
+			return new FluidTank(0);
 		}
 	};
 	
@@ -78,4 +86,6 @@ public abstract interface IItemFluidContainer
 	{
 		return (IItemFluidContainerV2) this;
 	}
+	
+	IFluidHandler createFluidHandlerWrapper(ItemStack stack);
 }

@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package farcore.lib.block.instance;
+package farcore.lib.block.wood;
 
 import farcore.lib.block.BlockStairV1;
 import net.minecraft.block.material.Material;

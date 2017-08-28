@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 
 import com.google.common.base.Optional;
@@ -30,6 +32,7 @@ import nebula.base.INode;
 import nebula.base.IntegerMap;
 import nebula.base.Node;
 import nebula.client.util.IIconCollection;
+import nebula.common.util.A;
 import nebula.common.util.Jsons;
 import nebula.common.util.L;
 import nebula.common.util.Strings;
@@ -48,12 +51,18 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 {
 	static final JsonDeserializer<ModelPartCol> LOADER = (json, typeOfT, context)-> {
 		JsonObject object = json.getAsJsonObject();
-		Variant def = loadVariant(object.get("default"), context);
-		Map<String, Map<String, Variant>> map =
-				Jsons.getAsMap(object.getAsJsonObject("variants"),
-						j->Jsons.getAsMap(j.getAsJsonObject(), j1->loadVariant(j1, context)));
-		
-		return new ModelPartCol(compose(map, def));
+		if (object.has("variants"))
+		{
+			Variant def = object.has("default") ? loadVariant(object.get("default"), context) : defaultVariant();
+			Map<String, Map<String, Variant>> map =
+					Jsons.getAsMap(object.getAsJsonObject("variants"),
+							j->Jsons.getAsMap(j.getAsJsonObject(), j1->loadVariant(j1, context)));
+			return new ModelPartCol(compose(map, def), def);
+		}
+		else
+		{
+			return new ModelPartCol(ImmutableMap.of(), loadVariant(object.get("variant"), context));
+		}
 	};
 	
 	private static Map<Map<String, String>, Variant> compose(Map<String, Map<String, Variant>> map, Variant def)
@@ -81,11 +90,19 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 			{
 				base1.put(key, e.getKey());
 				Variant variant2 = new Variant();
-				variant2.x = variant.x.or(e.getValue().x);
-				variant2.y = variant.y.or(e.getValue().y);
-				put(next, base1, variant, states);
+				variant2.or(e.getValue(), variant);
+				put(next, base1, variant2, states);
 			}
 		}
+	}
+	
+	private static Variant defaultVariant()
+	{
+		Variant variant = new Variant();
+		variant.enable = Optional.absent();
+		variant.parts = Optional.absent();
+		variant.x = variant.y = Optional.absent();
+		return variant;
 	}
 	
 	private static Variant loadVariant(JsonElement json, JsonDeserializationContext context) throws JsonParseException
@@ -109,6 +126,14 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 		Optional<Boolean> enable;
 		Optional<List<INebulaModelPart>> parts;
 		
+		void or(Variant base, Variant def)
+		{
+			this.x = base.x.or(def.x);
+			this.y = base.y.or(def.y);
+			this.enable = base.enable.or(def.enable);
+			this.parts = base.parts.or(def.parts);
+		}
+		
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -122,24 +147,30 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 	}
 	
 	Map<Map<String, String>, Variant> function;
+	Variant def;
 	
-	public ModelPartCol(Map<Map<String, String>, Variant> function)
+	public ModelPartCol(Map<Map<String, String>, Variant> function, Variant def)
 	{
 		this.function = function;
+		this.def = def;
 	}
 	
 	@Override
 	public Collection<ResourceLocation> getDependencies()
 	{
-		return L.collect(this.function.values(),
+		Set<ResourceLocation> set = L.collect(this.function.values(),
 				(l, c)->c.addAll(L.collect(l.parts.get(), (p, c1)->c1.addAll(p.getDependencies()))));
+		set.addAll(L.collect(this.def.parts.or(ImmutableList.of()), (p, c)->c.addAll(p.getDependencies())));
+		return set;
 	}
 	
 	@Override
 	public Collection<String> getResources()
 	{
-		return L.collect(this.function.values(),
+		Set<String> set = L.collect(this.function.values(),
 				(l, c)->c.addAll(L.collect(l.parts.get(), (p, c1)->c1.addAll(p.getResources()))));
+		set.addAll(L.collect(this.def.parts.or(ImmutableList.of()), (p, c)->c.addAll(p.getResources())));
+		return set;
 	}
 	
 	@Override
@@ -158,10 +189,10 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 			}
 		}
 		
-		List<INebulaBakedModelPart>[] parts = new List[list.size()];
+		List<INebulaBakedModelPart>[] parts = new List[list.size() + 1];
 		for (int i = 0; i < parts.length; ++i)
 		{
-			Variant state = list.get(i);
+			Variant state = i < list.size() ? list.get(i) : this.def;
 			if (state.enable.or(true))
 			{
 				TRSRTransformation t = ModelRotation
@@ -184,7 +215,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 				parts[i] = ImmutableList.of();//No part elements.
 			}
 		}
-		return new BakedModelPart(parts, map);
+		return new BakedModelPart(A.copyToLength(parts, list.size()), parts[list.size()], map);
 	}
 	
 	@Override
@@ -199,7 +230,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 					p instanceof IRetexturableNebulaModelPart ?
 							((IRetexturableNebulaModelPart) p).retexture(retexture) : p));
 					return v1;
-				})));
+				})), this.def);
 	}
 	
 	@Override
@@ -216,10 +247,13 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 	{
 		final IntegerMap<Map<String, String>> map;
 		final List<INebulaBakedModelPart>[] parts;
+		@Nullable
+		final List<INebulaBakedModelPart> defaultPart;
 		
-		BakedModelPart(List<INebulaBakedModelPart>[] parts, IntegerMap<Map<String, String>> map)
+		BakedModelPart(List<INebulaBakedModelPart>[] parts, List<INebulaBakedModelPart> defaultPart, IntegerMap<Map<String, String>> map)
 		{
 			this.parts = parts;
+			this.defaultPart = defaultPart;
 			this.map = map;
 		}
 		
@@ -227,8 +261,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 		public List<BakedQuad> getQuads(EnumFacing facing, String key)
 		{
 			int id = this.map.getOrDefault(parse(key), -1);
-			return id == -1 ? ImmutableList.of() :
-				new ArrayList(L.collect(this.parts[id], (p, c)-> c.addAll(p.getQuads(facing, key))));
+			return new ArrayList<>(L.collect(id == -1 ? this.defaultPart : this.parts[id], (p, c)-> c.addAll(p.getQuads(facing, key))));
 		}
 		
 		private static Map<String, String> parse(String key)

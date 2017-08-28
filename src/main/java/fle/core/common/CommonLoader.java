@@ -6,9 +6,10 @@ package fle.core.common;
 
 import fle.core.handler.FleEntityHandler;
 import fle.core.tile.ditchs.DefaultDitchFactory;
-import fle.loader.BlocksItems;
+import fle.loader.IBF;
 import fle.loader.Configs;
 import fle.loader.Entities;
+import fle.loader.Lang;
 import fle.loader.Materials;
 import fle.loader.Recipes;
 import fle.loader.Tools;
@@ -27,9 +28,9 @@ public class CommonLoader
 		Configs.init();
 		new DefaultDitchFactory();
 		Materials.preinit();
-		BlocksItems.registerItemsAndBlocks();
+		IBF.registerItemsAndBlocks();
 		Tools.initalizeTools();
-		BlocksItems.setBlocksItemsProperties();
+		IBF.setBlocksItemsProperties();
 		MinecraftForge.EVENT_BUS.register(new FleEntityHandler());
 		Entities.commonInit();
 	}
@@ -37,5 +38,6 @@ public class CommonLoader
 	public void init(FMLInitializationEvent event)
 	{
 		Recipes.init();
+		Lang.init();
 	}
 }

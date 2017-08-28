@@ -14,6 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import farcore.FarCore;
 import nebula.client.model.BakedModelBase;
 import nebula.client.model.ICustomItemRenderModel;
 import nebula.common.util.A;
@@ -63,32 +64,48 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 	{
 		if (this.itemDataGen == null) return getQuads((IBlockState) null, facing, rand);
-		Object[] datas = A.transform(this.itemDataGen, f->f.apply(stack));
-		List<BakedQuad> quads = new ArrayList<>();
-		for (int i = 0; i < this.parts.length; ++i)
+		try
 		{
-			quads.addAll(this.parts[i].getQuads(facing, this.itemLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.itemLoadingData[i]]));
+			Object[] datas = A.transform(this.itemDataGen, f->f.apply(stack));
+			List<BakedQuad> quads = new ArrayList<>();
+			for (int i = 0; i < this.parts.length; ++i)
+			{
+				quads.addAll(this.parts[i].getQuads(facing, this.itemLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.itemLoadingData[i]]));
+			}
+			return quads;
 		}
-		return quads;
+		catch (Exception exception)
+		{
+			FarCore.catching(exception);
+			return ImmutableList.of();
+		}
 	}
 	
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 	{
-		List<BakedQuad> quads = new ArrayList<>();
-		if (this.blockDataGen == null)
+		try
 		{
-			A.executeAll(this.parts, part->quads.addAll(part.getQuads(side, NebulaModelLoader.NORMAL)));
-		}
-		else
-		{
-			Object[] datas = A.transform(this.blockDataGen, f->f.apply(state));
-			for (int i = 0; i < this.parts.length; ++i)
+			List<BakedQuad> quads = new ArrayList<>();
+			if (this.blockDataGen == null)
 			{
-				quads.addAll(this.parts[i].getQuads(side, this.blockLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.blockLoadingData[i]]));
+				A.executeAll(this.parts, part->quads.addAll(part.getQuads(side, NebulaModelLoader.NORMAL)));
 			}
+			else
+			{
+				Object[] datas = A.transform(this.blockDataGen, f->f.apply(state));
+				for (int i = 0; i < this.parts.length; ++i)
+				{
+					quads.addAll(this.parts[i].getQuads(side, this.blockLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.blockLoadingData[i]]));
+				}
+			}
+			return quads;
 		}
-		return quads;
+		catch (Exception exception)
+		{
+			FarCore.catching(exception);
+			return ImmutableList.of();
+		}
 	}
 	
 	@Override

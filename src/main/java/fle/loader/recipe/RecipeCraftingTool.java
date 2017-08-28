@@ -17,7 +17,7 @@ import farcore.lib.material.Mat;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.instance.RecipeAdder;
 import fle.core.items.ItemToolFar;
-import fle.loader.BlocksItems;
+import fle.loader.IBF;
 import nebula.base.Ety;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
@@ -33,12 +33,12 @@ public class RecipeCraftingTool
 	public static void init()
 	{
 		LIST.add(new Ety<>(new BaseStack(Items.STRING), M.spider_silk));
-		LIST.add(new Ety<>(new BaseStack(BlocksItems.miscResources.getSubItem("vine_rope")), M.vine));
-		LIST.add(new Ety<>(new BaseStack(BlocksItems.miscResources.getSubItem("ramie_rope")), M.ramie_dry));
+		LIST.add(new Ety<>(new BaseStack(IBF.miscResources.getSubItem("vine_rope")), M.vine));
+		LIST.add(new Ety<>(new BaseStack(IBF.miscResources.getSubItem("ramie_rope")), M.ramie_dry));
 		
-		addSpecialToolRecipe1("adz.rock", M.flint, BlocksItems.miscResources.getSubItem("flint_sharp"), TIE_MATCH1, "branch");
-		addSpecialToolRecipe1("adz.rock", M.quartz, BlocksItems.miscResources.getSubItem("quartz_chip"), TIE_MATCH1, "branch");
-		addSpecialToolRecipe1("biface", M.flint, BlocksItems.miscResources.getSubItem("flint_sharp"), BlocksItems.miscResources.getSubItem("flint_small"));
+		addSpecialToolRecipe1("adz.rock", M.flint, IBF.miscResources.getSubItem("flint_sharp"), TIE_MATCH1, "branch");
+		addSpecialToolRecipe1("adz.rock", M.quartz, IBF.miscResources.getSubItem("quartz_chip"), TIE_MATCH1, "branch");
+		addSpecialToolRecipe1("biface", M.flint, IBF.miscResources.getSubItem("flint_sharp"), IBF.miscResources.getSubItem("flint_small"));
 		addSpecialToolRecipe1("biface", M.obsidian, ItemMulti.createStack(M.obsidian, MC.chip_rock), ItemMulti.createStack(M.obsidian, MC.chip_rock));
 		
 		addGeneralToolRecipe("hammer.hard.flint", new BaseStack(MC.hard_hammer_flint.instance));
@@ -86,14 +86,14 @@ public class RecipeCraftingTool
 	
 	private static void addSpecialToolRecipe1(String key, Mat head, Object...inputs)
 	{
-		ItemStack output = BlocksItems.tool.getSubItem(key);
+		ItemStack output = IBF.tool.getSubItem(key);
 		ItemToolFar.setMaterialToItem(output, "head", head);
 		RecipeAdder.addShapelessRecipe(output, inputs);
 	}
 	
 	private static void addGeneralToolRecipe(String key, AbstractStack input)
 	{
-		RecipeAdder.addShapelessRecipe(BlocksItems.tool.getSubItem(key),
+		RecipeAdder.addShapelessRecipe(IBF.tool.getSubItem(key),
 				new SingleInputMatch(input, CONSUMER1, null), TIE_MATCH1, "stickWood");
 	}
 }

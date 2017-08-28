@@ -17,7 +17,7 @@ import farcore.lib.material.prop.PropertyWood;
 import fle.api.recipes.instance.RecipeMaps;
 import fle.core.recipe.RecipePortableWoodwork1;
 import fle.core.recipe.RecipePortableWoodwork2;
-import fle.loader.BlocksItems;
+import fle.loader.IBF;
 
 /**
  * @author ueyudiud
@@ -26,9 +26,9 @@ public class RecipeResource1
 {
 	public static void init()
 	{
-		addShapelessRecipe(BlocksItems.miscResources.getSubItem("ramie_rope"), BlocksItems.miscResources.getSubItem("dry_ramie_fiber"), 4);
-		addShapelessRecipe(BlocksItems.miscResources.getSubItem("ramie_rope_bundle"), BlocksItems.miscResources.getSubItem("ramie_rope"), 4);
-		addShapelessRecipe(BlocksItems.miscResources.getSubItem("ramie_rope", 4), BlocksItems.miscResources.getSubItem("ramie_rope_bundle"));
+		addShapelessRecipe(IBF.miscResources.getSubItem("ramie_rope"), IBF.miscResources.getSubItem("dry_ramie_fiber"), 4);
+		addShapelessRecipe(IBF.miscResources.getSubItem("ramie_rope_bundle"), IBF.miscResources.getSubItem("ramie_rope"), 4);
+		addShapelessRecipe(IBF.miscResources.getSubItem("ramie_rope", 4), IBF.miscResources.getSubItem("ramie_rope_bundle"));
 		
 		for (PropertyWood tree : Mat.filtAndGet(SubTags.WOOD, MP.property_wood))
 		{
