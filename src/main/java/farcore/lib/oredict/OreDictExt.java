@@ -34,7 +34,7 @@ public class OreDictExt
 	Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>>>FUNCTION_MAP = new ArrayList<>();
 	private static final Map<Long, List<Integer>>						STACK_TO_IDS = new HashMap<>();
 	private static final List<Entry<List<ItemStack>, List<ItemStack>>>	ID_TO_STACK = new ArrayList<>();
-	private static final Function<ItemStack, Long>						STACK_SERIALIZER = stack ->
+	public static final Function<ItemStack, Long>						STACK_SERIALIZER = stack ->
 	stack == null ? INVALID_STACK_ID : (long) Item.REGISTRY.getIDForObject(stack.getItem()) << 32 | stack.getItemDamage();
 	
 	private static final OreDictExt INSTANCE = new OreDictExt();

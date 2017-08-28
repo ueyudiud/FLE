@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.base;
 
 import java.util.Arrays;
@@ -12,12 +16,16 @@ import nebula.common.util.L;
 @FunctionalInterface
 public interface Judgable<T> extends Predicate<T>
 {
+	/** The OTB function always return <tt>true</tt>. */
 	@SuppressWarnings("rawtypes")
 	Judgable TRUE     = arg -> true;
+	/** The OTB function always return <tt>false</tt>. */
 	@SuppressWarnings("rawtypes")
 	Judgable FALSE    = arg -> false;
+	/** The OTB function to check if input are NON-NULL. */
 	@SuppressWarnings("rawtypes")
 	Judgable NOT_NULL = Objects::nonNull;
+	/** The OTB function to check if input are NULL. */
 	@SuppressWarnings("rawtypes")
 	Judgable NULL     = Objects::isNull;
 	

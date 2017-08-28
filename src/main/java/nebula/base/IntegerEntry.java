@@ -1,7 +1,16 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.base;
 
 import java.util.Objects;
 
+/**
+ * 
+ * @author ueyudiud
+ * @param <K> the type of key.
+ */
 public class IntegerEntry<K>
 {
 	K key;

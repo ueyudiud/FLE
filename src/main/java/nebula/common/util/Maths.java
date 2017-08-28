@@ -234,7 +234,7 @@ public final class Maths
 	 * @param b
 	 * @return GCD
 	 */
-	public static int commonDiv(int a, int b)
+	public static int gcd(int a, int b)
 	{
 		if(b > a)
 		{
@@ -252,18 +252,18 @@ public final class Maths
 		return a;
 	}
 	
-	public static int commonDiv(int...is)
+	public static int gcd(int...is)
 	{
 		switch (is.length)
 		{
 		case 0 : return 1;
 		case 1 : return is[0];
-		case 2 : return commonDiv(is[0], is[1]);
+		case 2 : return gcd(is[0], is[1]);
 		default:
 			int a = is[0];
 			for(int i = 1; i < is.length; ++i)
 			{
-				a = commonDiv(a, is[i]);
+				a = gcd(a, is[i]);
 			}
 			return a;
 		}

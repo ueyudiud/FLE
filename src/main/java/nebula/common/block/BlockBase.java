@@ -188,7 +188,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
-		
+		list.add(new ItemStack(item));
 	}
 	
 	@Override

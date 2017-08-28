@@ -97,6 +97,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	
 	private IntegerEntry<T> getEntry(Object key)
 	{
+		if (this.entries.length == 0) return null;
 		int hashcode = hashcode(key);
 		int i = Maths.mod(hashcode, this.entries.length);
 		if(this.entries[i] == null) return null;

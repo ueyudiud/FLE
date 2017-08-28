@@ -56,7 +56,7 @@ public class FluidContainerHandler
 							{
 								io.insertFluid(stack1, from, false);
 							}
-							return new Ety<>(container.drain(stack), stack1);
+							return new Ety<>(container.drain(stack, !simulate), stack1);
 						}
 					}
 				}

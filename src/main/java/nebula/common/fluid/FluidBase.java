@@ -1,6 +1,7 @@
 package nebula.common.fluid;
 
 import nebula.common.LanguageManager;
+import nebula.common.util.Game;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -10,7 +11,13 @@ public class FluidBase extends Fluid
 {
 	public float fireAttackDamage;
 	public float thermalConductivity = 2.4E-2F;
-
+	
+	public FluidBase(String fluidName, String localName)
+	{
+		this(fluidName, localName,
+				new ResourceLocation(Game.getActiveModID(), "fluids/" + fluidName),
+				new ResourceLocation(Game.getActiveModID(), "fluids/" + fluidName + "_flowing"));
+	}
 	public FluidBase(String fluidName, String localName, ResourceLocation still, ResourceLocation flowing)
 	{
 		super(fluidName, still, flowing);
@@ -37,7 +44,7 @@ public class FluidBase extends Fluid
 		this.thermalConductivity = thermalConductivity;
 		return this;
 	}
-
+	
 	public FluidBase setFireAttackDamage(float fireAttackDamage)
 	{
 		this.fireAttackDamage = fireAttackDamage;

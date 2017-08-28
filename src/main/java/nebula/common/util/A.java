@@ -45,10 +45,11 @@ public final class A
 	/**
 	 * Copy array elements to a new array with selected length.
 	 * The result array type is same to old array type.
-	 * @param array The old array.
-	 * @param len The new array length.
-	 * @param <T> The type of array.
-	 * @return
+	 * @param array the old array, if it is <tt>null</tt> it will only use to mark a type.
+	 * @param len the new array length.
+	 * @param <T> the type of array.
+	 * @return if array is <tt>null</tt>, return a new array or
+	 *         return a copy otherwise.
 	 */
 	public static <T> T[] copyToLength(@Nullable T[] array, int len)
 	{

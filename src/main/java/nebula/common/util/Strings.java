@@ -219,6 +219,7 @@ public final class Strings
 	
 	public static String getDecimalNumber(double value, int digit)
 	{
-		return Double.toString((double) ((long) (value * OFFSET[digit])) / (double) OFFSET[digit]);
+		long v1 = (long) (value * OFFSET[digit]);
+		return (v1 / OFFSET[digit]) + "." + (v1 % OFFSET[digit]);
 	}
 }

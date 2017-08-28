@@ -820,7 +820,7 @@ public class L
 	 * Collect elements from iterator.
 	 * @param iterable The iterator provider.
 	 * @param func The transform function.
-	 * @return
+	 * @return the {@link java.util.HashSet} collected elements.
 	 */
 	@SuppressWarnings("hiding")
 	public static <R, T> Set<R> collect(Iterable<? extends T> iterable, BiConsumer<T, Collection<R>> consumer)

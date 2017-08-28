@@ -8,13 +8,15 @@ import nebula.common.util.L;
  * Nebula entry instance.
  * @author ueyudiud
  *
- * @param <K>
- * @param <V>
+ * @param <K> the <tt>key</tt> type.
+ * @param <V> the <tt>value</tt> type.
  */
 public
 class Ety<K, V> implements Entry<K, V>
 {
+	/** The key object. */
 	public final K key;
+	/** The value object. */
 	public V value;
 	
 	public Ety(K key, V value)
@@ -60,6 +62,6 @@ class Ety<K, V> implements Entry<K, V>
 	@Override
 	public String toString()
 	{
-		return "K=" + this.key + ",V=" + this.value;
+		return new StringBuilder().append(this.key).append('=').append(this.value).toString();
 	}
 }

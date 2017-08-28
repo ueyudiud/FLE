@@ -478,7 +478,7 @@ public final class Worlds
 	public static boolean isCatchingRain(World world, BlockPos pos, boolean checkNeayby)
 	{
 		return world.isRaining() ?
-				(world.canBlockSeeSky(pos) && CommonOverride.isRainingAtBiome(world.getBiome(pos), world, pos)) ||
+				(world.canBlockSeeSky(pos.up()) && CommonOverride.isRainingAtBiome(world.getBiome(pos), world, pos)) ||
 				(checkNeayby && (
 						world.canBlockSeeSky(pos.north()) ||
 						world.canBlockSeeSky(pos.south()) ||
