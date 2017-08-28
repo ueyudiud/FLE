@@ -40,7 +40,6 @@ import farcore.lib.material.prop.PropertyTool;
 import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.plant.IPlant;
-import farcore.lib.tree.ITree;
 import farcore.lib.tree.Tree;
 import nebula.base.HashPropertyMap;
 import nebula.base.IPropertyMap;
@@ -411,12 +410,6 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		return setTree(tree, true);
 	}
 	
-	@Deprecated
-	public Mat setTree(ITree tree)
-	{
-		return setTree(tree, true);
-	}
-	
 	/**
 	 * Set tree information of material.
 	 * @param tree The tree information.
@@ -444,12 +437,6 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 		addProperty(MP.fire_spread_speed, 25);
 		addProperty(MP.property_wood, tree);
 		return addProperty(MP.property_tree, tree);
-	}
-	
-	@Deprecated
-	public Mat setTree(ITree tree, boolean createBlock)
-	{
-		return setTree(new PropertyTree.PropertyTreeWrapper(getProperty(MP.property_wood), tree), createBlock);
 	}
 	
 	public Mat setBrick(int harvestLevel, float hardness, float resistance)

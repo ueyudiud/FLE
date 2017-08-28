@@ -2,16 +2,18 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeOld;
+import farcore.lib.material.Mat;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeSpruce extends TreeOld
+public class TreeSpruce extends Tree
 {
 	private final TreeGenClassic generator1 = new TreeGenClassic(this, 0.05F);
 	
-	public TreeSpruce()
+	public TreeSpruce(Mat material)
 	{
+		super(material);
 		this.isBroadLeaf = false;
 	}
 	

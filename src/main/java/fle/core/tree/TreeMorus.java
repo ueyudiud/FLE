@@ -2,16 +2,18 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeOld;
+import farcore.lib.material.Mat;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeMorus extends TreeOld
+public class TreeMorus extends Tree
 {
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.08F, false);
 	
-	public TreeMorus()
+	public TreeMorus(Mat material)
 	{
+		super(material);
 		this.generator1.setTreeLeavesShape(2, 5, 1, 3.2F);
 	}
 	

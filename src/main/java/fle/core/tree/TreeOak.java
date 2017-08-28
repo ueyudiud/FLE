@@ -2,14 +2,20 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeOld;
+import farcore.lib.material.Mat;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeOak extends TreeOld
+public class TreeOak extends Tree
 {
 	private final TreeGenClassic generator1 = new TreeGenClassic(this, 0.04F);
 	private final TreeGenBig generator2 = new TreeGenBig(this, 0.02F);
+	
+	public TreeOak(Mat material)
+	{
+		super(material);
+	}
 	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)

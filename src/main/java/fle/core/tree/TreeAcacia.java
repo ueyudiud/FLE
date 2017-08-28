@@ -2,13 +2,19 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeOld;
+import farcore.lib.material.Mat;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeAcacia extends TreeOld
+public class TreeAcacia extends Tree
 {
 	private final TreeGenAcacia generator1 = new TreeGenAcacia(this, 0.022F);
+	
+	public TreeAcacia(Mat material)
+	{
+		super(material);
+	}
 	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)

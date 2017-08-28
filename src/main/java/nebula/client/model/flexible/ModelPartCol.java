@@ -57,11 +57,11 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 			Map<String, Map<String, Variant>> map =
 					Jsons.getAsMap(object.getAsJsonObject("variants"),
 							j->Jsons.getAsMap(j.getAsJsonObject(), j1->loadVariant(j1, context)));
-			return new ModelPartCol(compose(map, def), def);
+			return new ModelPartCol(compose(map, def), def, Jsons.getOrDefault(object, "extendData", false));
 		}
 		else
 		{
-			return new ModelPartCol(ImmutableMap.of(), loadVariant(object.get("variant"), context));
+			return new ModelPartCol(ImmutableMap.of(), loadVariant(object.get("variant"), context), Jsons.getOrDefault(object, "extendData", false));
 		}
 	};
 	
@@ -76,14 +76,13 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 	private static void put(INode<Entry<String, Map<String, Variant>>> node, Map<String, String> base,
 			Variant variant, Map<Map<String, String>, Variant> states)
 	{
-		if (!node.hasNext())
+		if (node == null)
 		{
 			states.put(ImmutableMap.copyOf(base), variant);
 			return;
 		}
 		else
 		{
-			INode<Entry<String, Map<String, Variant>>> next = node.next();
 			String key = node.value().getKey();
 			Map<String, String> base1 = new HashMap<>(base);
 			for (Entry<String, Variant> e : node.value().getValue().entrySet())
@@ -91,7 +90,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 				base1.put(key, e.getKey());
 				Variant variant2 = new Variant();
 				variant2.or(e.getValue(), variant);
-				put(next, base1, variant2, states);
+				put(node.next(), base1, variant2, states);
 			}
 		}
 	}
@@ -148,11 +147,13 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 	
 	Map<Map<String, String>, Variant> function;
 	Variant def;
+	boolean extendData;
 	
-	public ModelPartCol(Map<Map<String, String>, Variant> function, Variant def)
+	public ModelPartCol(Map<Map<String, String>, Variant> function, Variant def, boolean extendData)
 	{
 		this.function = function;
 		this.def = def;
+		this.extendData = extendData;
 	}
 	
 	@Override
@@ -187,6 +188,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 				idx = list.size();
 				list.add(entry.getValue());
 			}
+			map.put(entry.getKey(), idx);
 		}
 		
 		List<INebulaBakedModelPart>[] parts = new List[list.size() + 1];
@@ -215,7 +217,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 				parts[i] = ImmutableList.of();//No part elements.
 			}
 		}
-		return new BakedModelPart(A.copyToLength(parts, list.size()), parts[list.size()], map);
+		return new BakedModelPart(A.copyToLength(parts, list.size()), parts[list.size()], map, this.extendData);
 	}
 	
 	@Override
@@ -230,7 +232,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 					p instanceof IRetexturableNebulaModelPart ?
 							((IRetexturableNebulaModelPart) p).retexture(retexture) : p));
 					return v1;
-				})), this.def);
+				})), this.def, this.extendData);
 	}
 	
 	@Override
@@ -249,19 +251,21 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 		final List<INebulaBakedModelPart>[] parts;
 		@Nullable
 		final List<INebulaBakedModelPart> defaultPart;
+		final boolean extendData;
 		
-		BakedModelPart(List<INebulaBakedModelPart>[] parts, List<INebulaBakedModelPart> defaultPart, IntegerMap<Map<String, String>> map)
+		BakedModelPart(List<INebulaBakedModelPart>[] parts, List<INebulaBakedModelPart> defaultPart, IntegerMap<Map<String, String>> map, boolean extendData)
 		{
 			this.parts = parts;
 			this.defaultPart = defaultPart;
 			this.map = map;
+			this.extendData = extendData;
 		}
 		
 		@Override
 		public List<BakedQuad> getQuads(EnumFacing facing, String key)
 		{
 			int id = this.map.getOrDefault(parse(key), -1);
-			return new ArrayList<>(L.collect(id == -1 ? this.defaultPart : this.parts[id], (p, c)-> c.addAll(p.getQuads(facing, key))));
+			return new ArrayList<>(L.collect(id == -1 ? this.defaultPart : this.parts[id], (p, c)-> c.addAll(p.getQuads(facing, this.extendData ? key : NebulaModelLoader.NORMAL))));
 		}
 		
 		private static Map<String, String> parse(String key)
@@ -270,6 +274,7 @@ public class ModelPartCol implements INebulaDirectResourcesModelPart, IRetextura
 			Map<String, String> map = new HashMap<>();
 			for (String v : split)
 			{
+				if (v.length() == 0) continue;
 				String v1 = v.trim();
 				int i = v1.indexOf('=');
 				map.put(v1.substring(0, i), v1.substring(i + 1));

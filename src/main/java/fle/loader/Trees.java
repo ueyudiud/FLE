@@ -33,15 +33,15 @@ public class Trees
 {
 	public static void init()
 	{
-		oak			.setTree(new TreeOak().setMaterial(oak).setDefFamily());
-		oak_black	.setTree(new TreeOakBlack().setMaterial(oak_black).setDefFamily());
-		spruce		.setTree(new TreeSpruce().setMaterial(spruce).setDefFamily());
-		birch		.setTree(new TreeBirch().setMaterial(birch).setDefFamily());
-		ceiba		.setTree(new TreeCeiba().setMaterial(ceiba).setDefFamily());
-		acacia		.setTree(new TreeAcacia().setMaterial(acacia).setDefFamily());
-		aspen		.setTree(new TreeAspen().setMaterial(aspen).setDefFamily());
-		morus		.setTree(new TreeMorus().setMaterial(morus).setDefFamily());
-		willow		.setTree(new TreeWillow().setMaterial(willow).setDefFamily());
+		oak			.setTree(new TreeOak(oak).setDefFamily());
+		oak_black	.setTree(new TreeOakBlack(oak_black).setDefFamily());
+		spruce		.setTree(new TreeSpruce(spruce).setDefFamily());
+		birch		.setTree(new TreeBirch(birch).setDefFamily());
+		ceiba		.setTree(new TreeCeiba(ceiba).setDefFamily());
+		acacia		.setTree(new TreeAcacia(acacia).setDefFamily());
+		aspen		.setTree(new TreeAspen(aspen).setDefFamily());
+		morus		.setTree(new TreeMorus(morus).setDefFamily());
+		willow		.setTree(new TreeWillow(willow).setDefFamily());
 		lacquer		.setTree(new TreeLacquer(lacquer).setDefFamily());
 	}
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.data.EnumItem;
+import farcore.data.MP;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.bio.IFamily;
@@ -64,9 +65,13 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	protected int leavesCheckRange = 4;
 	protected boolean isBroadLeaf = true;
 	
-	public Tree(Mat material, float hardness, float ashcontent, float burnHeat)
+	public Tree(Mat material)
 	{
-		super(material, 1, 1.5F + hardness / 4F, 0.4F + hardness / 8F, ashcontent, burnHeat);
+		this(material.getProperty(MP.property_wood));
+	}
+	private Tree(PropertyWood property)
+	{
+		super(property.material, 1, property.hardness, property.explosionResistance, property.ashcontent, property.burnHeat);
 	}
 	public Tree(Mat material, int harvestLevel, float hardness, float explosionResistance, float ashcontent,
 			float burnHeat)

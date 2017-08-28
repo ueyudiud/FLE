@@ -2,16 +2,18 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeOld;
+import farcore.lib.material.Mat;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeAspen extends TreeOld
+public class TreeAspen extends Tree
 {
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.09F, false);
 	
-	public TreeAspen()
+	public TreeAspen(Mat material)
 	{
+		super(material);
 		this.generator1.setTreeLeavesShape(5, 8, 1, 1.8F);
 	}
 	

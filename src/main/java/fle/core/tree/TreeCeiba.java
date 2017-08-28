@@ -2,17 +2,19 @@ package fle.core.tree;
 
 import java.util.Random;
 
+import farcore.lib.material.Mat;
 import farcore.lib.tree.ISaplingAccess;
-import farcore.lib.tree.TreeOld;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeCeiba extends TreeOld
+public class TreeCeiba extends Tree
 {
 	private final TreeGenJungle generator1 = new TreeGenJungle(this, 1.2E-2F);
 	
-	public TreeCeiba()
+	public TreeCeiba(Mat material)
 	{
+		super(material);
 		this.leavesCheckRange = 5;
 	}
 	

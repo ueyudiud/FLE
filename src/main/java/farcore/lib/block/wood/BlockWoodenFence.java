@@ -137,6 +137,15 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 		return false;
 	}
 	
+	/**
+	 * For opacity light checking, most of structure are not opaque.
+	 */
+	@Override
+	public int getLightOpacity(IBlockState state)
+	{
+		return 1;
+	}
+	
 	@Override
 	public boolean isNormalCube(IBlockState state)
 	{
@@ -172,35 +181,40 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		EnumFacing side1 = EnumFacing.VALUES[Worlds.fixSide(side, hitX, 0.5F, hitZ)];
-		IProperty<Boolean> property = PROPS_SIDE_HORIZONTALS[side1.getHorizontalIndex()];
-		boolean flag = state.getValue(property);
-		if (!flag)
+		if (side.getHorizontalIndex() != -1)
 		{
-			if (canConnectTo(worldIn, pos, side1))
+			EnumFacing side1 = EnumFacing.VALUES[Worlds.fixSide(side, hitX, 0.5F, hitZ)];
+			IProperty<Boolean> property = PROPS_SIDE_HORIZONTALS[side1.getHorizontalIndex()];
+			boolean flag = state.getValue(property);
+			if (!flag)
 			{
-				IBlockState state2 = worldIn.getBlockState(pos.offset(side1));
-				if (state2.getBlock() instanceof BlockWoodenFence)
+				if (canConnectTo(worldIn, pos, side1))
 				{
-					if (new BaseStack(Items.STICK, 2).contain(heldItem))
+					IBlockState state2 = worldIn.getBlockState(pos.offset(side1));
+					if (state2.getBlock() instanceof BlockWoodenFence)
+					{
+						if (new BaseStack(Items.STICK, 2).contain(heldItem))
+						{
+							if (!worldIn.isRemote)
+							{
+								if (!playerIn.capabilities.isCreativeMode)
+									heldItem.stackSize -= 2;
+								worldIn.setBlockState(pos, state.withProperty(property, true));
+								worldIn.setBlockState(pos.offset(side1), state2.withProperty(PROPS_SIDE_HORIZONTALS[side1.getOpposite().getHorizontalIndex()], true));
+							}
+							return true;
+						}
+					}
+					else if (new BaseStack(Items.STICK, 1).contain(heldItem))
 					{
 						if (!worldIn.isRemote)
 						{
-							heldItem.stackSize -= 2;
+							if (!playerIn.capabilities.isCreativeMode)
+								heldItem.stackSize --;
 							worldIn.setBlockState(pos, state.withProperty(property, true));
-							worldIn.setBlockState(pos.offset(side1), state.withProperty(PROPS_SIDE_HORIZONTALS[side1.getOpposite().getHorizontalIndex()], true));
 						}
 						return true;
 					}
-				}
-				else if (new BaseStack(Items.STICK, 1).contain(heldItem))
-				{
-					if (!worldIn.isRemote)
-					{
-						heldItem.stackSize --;
-						worldIn.setBlockState(pos, state.withProperty(property, true));
-					}
-					return true;
 				}
 			}
 		}

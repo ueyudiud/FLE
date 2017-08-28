@@ -2,16 +2,18 @@ package fle.core.tree;
 
 import java.util.Random;
 
-import farcore.lib.tree.TreeOld;
+import farcore.lib.material.Mat;
+import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import net.minecraft.world.World;
 
-public class TreeWillow extends TreeOld
+public class TreeWillow extends Tree
 {
 	private final TreeGenSimple generator1 = new TreeGenSimple(this, 0.08F, true);
 	
-	public TreeWillow()
+	public TreeWillow(Mat material)
 	{
+		super(material);
 		this.generator1.setTreeLeavesShape(1, 6, 2, 3.6F);
 		this.leavesCheckRange = 5;
 	}

@@ -48,7 +48,7 @@ public class TreeLacquer extends Tree
 	
 	public TreeLacquer(Mat material)
 	{
-		super(material, 1.8F, 1.0F, 20.0F);
+		super(material);
 		this.generator1.setTreeLeavesShape(4, 13, 2, 2.5F);
 		this.leavesCheckRange = 6;
 	}
