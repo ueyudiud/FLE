@@ -94,6 +94,14 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerRender()
+	{
+		super.registerRender();
+		//		tree.registerRender();
+	}
+	
+	@Override
 	public String getTranslateNameForItemStack(int metadata)
 	{
 		return getUnlocalizedName();

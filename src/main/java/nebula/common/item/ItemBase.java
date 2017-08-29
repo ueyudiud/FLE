@@ -155,6 +155,12 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 		list.list();//Build list.
 	}
 	
+	/**
+	 * Get stack information when ItemStack tip rendering on HUD.
+	 * @param stack the item stack.
+	 * @param unlocalizedList added information to here, this list provide some helper method to localize tips.
+	 * @param advanced <tt>true</tt> means information will be displayed in more information mode. (F3+H to switch mode).
+	 */
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)

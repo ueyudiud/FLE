@@ -30,6 +30,15 @@ public class ModelPartItemLayer implements INebulaModelPart
 	float zOffset;
 	String icon;
 	
+	public ModelPartItemLayer(int index, String icon)
+	{
+		this.index = index;
+		this.icon = icon;
+	}
+	public ModelPartItemLayer()
+	{
+	}
+	
 	@Override
 	public Collection<String> getResources()
 	{

@@ -15,6 +15,12 @@ public class Log
 	
 	private static List<Object> cache = new ArrayList<>();
 	
+	/**
+	 * Catching an <tt>Throwable</tt>.
+	 * @param throwable the catching throwable object.
+	 * @throws RuntimeException if in debugging mode.
+	 * @see nebula.Nebula#debug
+	 */
 	public static void catching(Throwable throwable)
 	{
 		if(Nebula.debug)

@@ -44,6 +44,10 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Will be removed soon, use FlexibleModel instead.
+ * @author ueyudiud
+ */
 @Deprecated
 @SideOnly(Side.CLIENT)
 public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSelector, IStateMapper, IModel

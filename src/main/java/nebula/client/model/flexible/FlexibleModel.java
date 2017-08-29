@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableMap;
 import farcore.FarCore;
 import nebula.Log;
 import nebula.client.model.ModelBase;
+import nebula.client.model.ModelHelper;
 import nebula.client.util.IIconCollection;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
@@ -62,6 +63,19 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	ToIntFunction<IBlockState>[] blockColors;
 	
 	private Map<String, String> retextures;
+	
+	/**
+	 * Item layer model constructor.
+	 * @param location
+	 */
+	public FlexibleModel(String collection)
+	{
+		this.item = null;
+		this.transforms = ModelHelper.ITEM_STANDARD_TRANSFORMS;
+		this.parts = ImmutableList.of(new ModelPartItemLayer(0, collection));
+		this.gui3D = false;
+		this.builtIn = false;
+	}
 	
 	public FlexibleModel(Item item, ImmutableMap<TransformType, TRSRTransformation> transforms,
 			List<INebulaModelPart> parts, boolean gui3D, boolean builtIn)

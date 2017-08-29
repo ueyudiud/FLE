@@ -6,13 +6,12 @@ package nebula.client.model;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import nebula.client.model.flexible.FlexibleModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ItemLayerModel;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,14 +22,31 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelHelper
 {
+	/**
+	 * The standard item transformation map, use to transform model.
+	 * @see net.minecraftforge.client.model.IPerspectiveAwareModel.MapWrapper#handlePerspective(net.minecraft.client.renderer.block.model.IBakedModel, ImmutableMap, TransformType)
+	 */
 	public static final ImmutableMap<TransformType, TRSRTransformation> ITEM_STANDARD_TRANSFORMS;
+	/**
+	 * The standard block-like-item transformation map, use to transform model.
+	 * @see net.minecraftforge.client.model.IPerspectiveAwareModel.MapWrapper#handlePerspective(net.minecraft.client.renderer.block.model.IBakedModel, ImmutableMap, TransformType)
+	 */
 	public static final ImmutableMap<TransformType, TRSRTransformation> BLOCK_STANDARD_TRANSFORMS;
 	
+	/**
+	 * Create a item model with single layer.
+	 * @param resource
+	 * @return
+	 */
 	public static IModel makeItemModel(ResourceLocation resource)
 	{
-		return new ItemLayerModel(ImmutableList.of(resource));
+		return new FlexibleModel(resource.toString());
 	}
 	
+	/**
+	 * Create a TRSRTransformation with data.
+	 * @return
+	 */
 	public static TRSRTransformation transformation(
 			float translationX, float translationY, float translationZ,
 			float leftRotX, float leftRotY, float leftRotZ, float leftRotW,

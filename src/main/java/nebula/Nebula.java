@@ -103,19 +103,26 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public static final String NAME = "Nebula";
 	public static final String VERSION = "1.3";
 	
+	/**
+	 * The built-in render id, for prevent has location collide when
+	 * naming resource path.<p>
+	 * Most of Nebula built-in model use this location.
+	 */
+	@Deprecated
 	public static final String INNER_RENDER = "nebula_inner";
 	
 	@Instance(MODID)
 	public static Nebula instance;
 	/**
 	 * The debug mode flag, enable to switch to
-	 * debug mode.<br>
+	 * debug mode.<p>
 	 * The debug mode will give more information
-	 * of game.<br>
+	 * of game, and exception will be always throw
+	 * instead of log to file.<p>
 	 */
 	public static boolean debug = false;
 	/**
-	 * The network instance of nebula mod.
+	 * The network instance of nebula modification.
 	 */
 	public static Network network;
 	

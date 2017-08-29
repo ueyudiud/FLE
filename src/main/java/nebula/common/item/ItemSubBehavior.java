@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.item;
 
 import java.util.HashMap;
@@ -32,11 +36,26 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * A item collection with different function items contain.<p>
+ * For each sub item, use number id-string id pair to distinguish and searching
+ * item.<p>
+ * @author ueyudiud
+ * @see #addSubItem(int, String, String, IItemCapabilityProvider, IBehavior...)
+ */
 public class ItemSubBehavior extends ItemBase
 {
+	/** The number ID to name map. */
 	protected final Map<Integer, String> nameMap = new HashMap<>();
+	/** The name to number ID map. */
 	protected final Map<String, Integer> idMap = new HashMap<>();
 	private final Map<Integer, IItemCapabilityProvider> providers = new HashMap<>();
+	/**
+	 * The map contain behaviors of sub items.
+	 * Use {@link #getBehavior(ItemStack)} to get behaviors.<p>
+	 * Do not get this field for it may remove in the feature, because it is
+	 * number ID mapping.
+	 */
 	private final Map<Integer, List<IBehavior>> behaviors = new HashMap<>();
 	
 	protected ItemSubBehavior(String name)
@@ -51,7 +70,15 @@ public class ItemSubBehavior extends ItemBase
 		this.hasSubtypes = true;
 	}
 	
-	public void addSubItem(int id, String name, String localName, @Nullable IItemCapabilityProvider provider, IBehavior...behaviors)
+	/**
+	 * Add a sub item to item collection.
+	 * @param id the number id of item.
+	 * @param name the string id of item.
+	 * @param localName the localize name for item in English(US). If input is <tt>null</tt>, the initializer will not register local name.
+	 * @param provider the item capability provider. See {@link #initCapabilities(ItemStack, NBTTagCompound)}
+	 * @param behaviors the behaviors list of sub item.
+	 */
+	public void addSubItem(int id, String name, @Nullable String localName, @Nullable IItemCapabilityProvider provider, IBehavior...behaviors)
 	{
 		if(this.idMap.containsKey(id) || this.idMap.containsValue(name))
 			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
@@ -71,11 +98,22 @@ public class ItemSubBehavior extends ItemBase
 		}
 	}
 	
+	/**
+	 * Get sub item by name with 1 stack size.
+	 * @param name the name of sub item
+	 * @see #getSubItem(String, int)
+	 */
 	public final ItemStack getSubItem(String name)
 	{
 		return getSubItem(name, 1);
 	}
 	
+	/**
+	 * Get sub item by name.
+	 * @param name the name of sub item.
+	 * @param size the stack size.
+	 * @return the stack created, or <tt>null</tt> if no sub item with this name.
+	 */
 	public ItemStack getSubItem(String name, int size)
 	{
 		Integer value = this.idMap.get(name);
@@ -87,6 +125,13 @@ public class ItemSubBehavior extends ItemBase
 		return this.behaviors.getOrDefault(getDamage(stack), IBehavior.NONE);
 	}
 	
+	/**
+	 * Use to checking whether ItemStack has valid data. It is not suggested
+	 * to using argument if <tt>false</tt> is returned.
+	 * @param stack the stack to check.
+	 * @return <tt>true</tt> for item is usable, and it is not suggested
+	 *         to using input stack if <tt>false</tt> is returned.
+	 */
 	protected boolean isItemUsable(ItemStack stack)
 	{
 		return true;
@@ -413,7 +458,11 @@ public class ItemSubBehavior extends ItemBase
 	
 	/**
 	 * The ** forge, the meta data is initialized after capabilities initialized! These
-	 * cause I can only make provider with lazy loading.
+	 * cause I can only make provider with lazy loading.<p>
+	 * The item capability to provide a holder to contain extra data during the life of ItemStack,
+	 * and it needed to be initialize BEFORE item stack being used.<p>
+	 * @see net.minecraftforge.common.capabilities.ICapabilityProvider
+	 * @see net.minecraft.item.Item#initCapabilities(ItemStack, NBTTagCompound)
 	 */
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
@@ -449,9 +498,6 @@ public class ItemSubBehavior extends ItemBase
 		};
 	}
 	
-	/**
-	 * @param advanced Is information being display in more information mode. (F3+H to switch mode).
-	 */
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
@@ -459,6 +505,7 @@ public class ItemSubBehavior extends ItemBase
 	{
 		if(!isItemUsable(stack))
 		{
+			//To show this item may has broken data, it is suggested player do not use this item in game.
 			unlocalizedList.add("info.invalid");
 			return;
 		}
@@ -492,6 +539,13 @@ public class ItemSubBehavior extends ItemBase
 		}
 	}
 	
+	/**
+	 * For each sub item should display on creative tab, for iterating helper in
+	 * {@link #getSubItems(Item, CreativeTabs, List)} and called this method with each
+	 * sub item id.
+	 * @param meta the adding meta.
+	 * @param subItems the sub items list, added sub item here.
+	 */
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{

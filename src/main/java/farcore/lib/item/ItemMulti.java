@@ -27,6 +27,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Material provided, multi-generated item type.
+ * Used in many items with similar function and different properties.
+ * @author ueyudiud
+ * @see nebula.common.item.ItemSubBehavior
+ */
 public class ItemMulti extends ItemBase implements IUpdatableItem
 {
 	/**
