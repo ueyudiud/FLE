@@ -233,7 +233,7 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 		IBlockState state = getDefaultState();
 		for (int i = 0; i < 4; ++i)
 		{
-			if ((meta & (1 << i)) != 0)
+			if ((meta & (1 << I[i])) != 0)
 			{
 				state = state.withProperty(PROPS_SIDE_HORIZONTALS[I[i]], true);
 			}
