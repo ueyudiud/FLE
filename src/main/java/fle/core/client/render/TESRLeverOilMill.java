@@ -9,7 +9,6 @@ import fle.core.FLE;
 import fle.core.tile.wooden.TELeverOilMill;
 import nebula.client.NebulaTextureHandler;
 import nebula.client.render.TESRBase;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.math.MathHelper;
@@ -40,7 +39,6 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
-		GlStateManager.disableLighting();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		float angle = tile == null ? -1 : tile.getRotationAngle();
@@ -52,7 +50,6 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 			GL11.glScalef(1.0F, 1.5F, 1.0F);
 			GL11.glTranslatef(0.0F, -0.375F, 0.0F);
 			renderCube(0, 0, 0, 0.0625, 1, 0.0625, this.handle);
-			GlStateManager.disableBlend();
 			GL11.glPopMatrix();
 		}
 		{
@@ -62,7 +59,6 @@ public class TESRLeverOilMill extends TESRBase<TELeverOilMill>
 			renderCube(0, 0F, 0, 0.5F, 0.25F, 0.5F, this.rock);
 			GL11.glPopMatrix();
 		}
-		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}
 }

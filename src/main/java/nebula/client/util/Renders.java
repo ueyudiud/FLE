@@ -13,9 +13,12 @@ import nebula.client.model.StateMapperExt;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
@@ -94,6 +97,12 @@ public class Renders
 		ModelLoader.setCustomStateMapper(block, mapper);
 	}
 	
+	/**
+	 * Register model mapping with each meta of block.
+	 * @param mapper the model mapper.
+	 * @param block the block to register.
+	 * @param metaCount the meta count.
+	 */
 	public static void registerCompactModel(StateMapperExt mapper, Block block, int metaCount)
 	{
 		Item item = Item.getItemFromBlock(block);
@@ -102,5 +111,19 @@ public class Renders
 			ModelLoader.setCustomModelResourceLocation(item, i, mapper.getLocationFromState(block.getStateFromMeta(i)));
 		}
 		ModelLoader.setCustomStateMapper(block, mapper);
+	}
+	
+	private static final float TEX_PIX_SCALE = 0.00390625F;
+	
+	public static void drawTexturedModalRect(int x, int y, int u, int v, int w, int h, float zLevel)
+	{
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vertexbuffer.pos(x + 0, y + h, zLevel).tex((u + 0) * TEX_PIX_SCALE, (v + h) * TEX_PIX_SCALE).endVertex();
+		vertexbuffer.pos(x + w, y + h, zLevel).tex((u + w) * TEX_PIX_SCALE, (v + h) * TEX_PIX_SCALE).endVertex();
+		vertexbuffer.pos(x + w, y + 0, zLevel).tex((u + w) * TEX_PIX_SCALE, (v + 0) * TEX_PIX_SCALE).endVertex();
+		vertexbuffer.pos(x + 0, y + 0, zLevel).tex((u + 0) * TEX_PIX_SCALE, (v + 0) * TEX_PIX_SCALE).endVertex();
+		tessellator.draw();
 	}
 }

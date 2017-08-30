@@ -12,10 +12,11 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
 
 /**
- * This event is only handle food stat change,
- * the itemstack change to handle in other event.
- * Posted in {@link MinecraftForge#EVENT_BUS}
+ * This event is only handle food stat changing in
+ * eaten, to change ItemStack is <i>not</i> suggested.<p>
+ * This event posted in {@link MinecraftForge#EVENT_BUS}.
  * @author ueyudiud
+ * @see nebula.common.foodstat.FoodStatExt
  */
 @Cancelable
 @HasResult

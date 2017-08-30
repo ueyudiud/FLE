@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.client.model;
 
 import java.util.Collection;
@@ -26,6 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Also can make custom variant key for block for sub blocks.
  * @author ueyudiud
  * @see net.minecraft.client.renderer.block.statemap.StateMapperBase
+ * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt, net.minecraft.block.Block, int)
+ * @see nebula.client.util.Renders#registerCompactModel(StateMapperExt, net.minecraft.block.Block, IProperty)
  */
 @SideOnly(Side.CLIENT)
 public class StateMapperExt extends StateMapperBase implements IStateMapperExt
@@ -59,6 +65,7 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 		this.ignore = ImmutableList.copyOf(properties);
 	}
 	
+	/** Now it is only an internal method, use to create a fake property.  */
 	public void markVariantProperty()
 	{
 		markVariantProperty(createFakeProperty(this.variantsKey, this.variantsValue));
@@ -155,6 +162,11 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 		};
 	}
 	
+	/**
+	 * Get key name of properties mapping.
+	 * @param values the properties map.
+	 * @return the key name.
+	 */
 	public static String getPropertyKey(Map<IProperty<?>, Comparable<?>> values)
 	{
 		if(!(values instanceof ImmutableSortedMap))
@@ -179,11 +191,13 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 		return builder.toString();
 	}
 	
+	/** Helper method. */
 	public static <T extends Comparable<T>> String removeAndGetName(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
 	{
 		return property.getName(removeAndGetValue(property, map));
 	}
 	
+	/** Helper method. */
 	public static <T extends Comparable<T>> T removeAndGetValue(IProperty<T> property, Map<IProperty<?>, Comparable<?>> map)
 	{
 		return (T) map.remove(property);

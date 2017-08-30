@@ -18,9 +18,8 @@ import farcore.lib.plant.PlantHalogrootBush;
 import nebula.Log;
 
 /**
- * Materials.
+ * Material list.
  * @author ueyudiud
- *
  */
 public class M
 {

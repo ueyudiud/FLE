@@ -20,6 +20,9 @@ public class NebulaConfig
 	@ConfigProperty(category = "common", defValue = "true")
 	@ConfigComment("Enable this option will needed driking water to be alive.")
 	public static boolean enableWaterStat;
+	@ConfigProperty(category = "common", defValue = "true")
+	@ConfigComment("The in-game GUI will be changed if enable this option.")
+	public static boolean overrideIngameStat;
 	//Client
 	@Deprecated
 	public static boolean multiThreadLight;

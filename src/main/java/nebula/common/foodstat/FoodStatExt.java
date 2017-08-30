@@ -75,6 +75,11 @@ public class FoodStatExt extends FoodStats
 		this.waterLevel = Math.min(this.waterLevel + amount, MAX_WATER_LEVEL);
 	}
 	
+	/**
+	 * Do not use this method if you are making mod with using this food stat.
+	 * This method is only take the compatibility of other mod foods.
+	 * @param foodItem unused, for method will get Item by {@link net.minecraft.item.ItemStack#getItem()}.
+	 */
 	@Override
 	public void addStats(@Nullable ItemFood foodItem, ItemStack stack)
 	{
@@ -95,6 +100,7 @@ public class FoodStatExt extends FoodStats
 		{
 			addFoodStats((IFoodStat) item, stack);
 		}
+		//else? How can I sure is player is eating food if there isn't any known class related with food...
 	}
 	
 	private void addFoodStats(IFoodStat stat, ItemStack stack)

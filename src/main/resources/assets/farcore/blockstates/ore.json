@@ -5,7 +5,7 @@
 		"cuprite": "simple",
 		"azurite": "simple",
 		
-		"annotation": "This is only some model instance, the Far Core provide default model when it is not contain here, you can replace other model here."
+		"_annotation_": "This is only some model instance, the Far Core provide default model when it is not contain here, you can replace other model here."
 	},
 	"textures": {
 		"nativeCopper@pure": "farcore:blocks/ore/pure/native_copper",

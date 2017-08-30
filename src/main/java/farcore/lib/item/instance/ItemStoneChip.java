@@ -130,7 +130,10 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 		{
 			float inaccuracy = !(entityLiving instanceof EntityPlayer) ? 1.0F : 3F / (1F + KS.SHOOTING.level((EntityPlayer) entityLiving));
 			EntityProjectileItem entity = new EntityProjectileItem(worldIn, entityLiving, f * 3.0F, stack1, inaccuracy);
-			worldIn.spawnEntity(entity);
+			if (worldIn.spawnEntity(entity) && entityLiving instanceof EntityPlayer)
+			{
+				((EntityPlayer) entityLiving).addExhaustion(0.05F);
+			}
 		}
 	}
 	
@@ -169,7 +172,7 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 				if(entity.shooter instanceof EntityPlayer)
 				{
 					damage *= 1 + KS.HURLING.level((EntityPlayer) entity.shooter) * 0.05F;
-					entity1.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) entity.shooter), damage);
+					entity1.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) entity.shooter).setProjectile(), damage);
 				}
 				else
 				{

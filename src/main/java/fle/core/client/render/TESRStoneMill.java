@@ -12,7 +12,6 @@ import fle.core.FLE;
 import fle.core.tile.wooden.TEStoneMill;
 import nebula.client.NebulaTextureHandler;
 import nebula.client.render.TESRBase;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -42,7 +41,6 @@ public class TESRStoneMill extends TESRBase<TEStoneMill>
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x, (float)y, (float)z);
-		GlStateManager.disableLighting();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		//Render stone mill.
@@ -64,10 +62,8 @@ public class TESRStoneMill extends TESRBase<TEStoneMill>
 			
 			renderCube(0.875, 0.625, 0.5, 1.0, 0.6875, 0.5625, MaterialTextureLoader.getIcon(M.oak, MC.plankBlock));
 			
-			GlStateManager.disableBlend();
 			GL11.glPopMatrix();
 		}
-		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}
 }
