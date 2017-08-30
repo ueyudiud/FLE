@@ -1,0 +1,18 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:fence_base"
+	},
+	"variants": {
+		"type": {
+			"lacquer": { 
+				"textures": { 
+					"ptop": "fle:blocks/logs/lacquer_top",
+					"pside": "fle:blocks/logs/lacquer_side",
+					"side": "fle:blocks/planks/lacquer" 
+				}
+			}
+		}
+	}
+}

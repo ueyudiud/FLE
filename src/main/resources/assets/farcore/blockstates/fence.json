@@ -1,0 +1,32 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:fence_base"
+	},
+	"variants": {
+		"type": {
+			"aspen": { 
+				"textures": { 
+					"ptop": "farcore:blocks/logs/aspen_top",
+					"pside": "farcore:blocks/logs/aspen_side",
+					"side": "farcore:blocks/planks/aspen" 
+				}
+			},
+			"morus": { 
+				"textures": { 
+					"ptop": "farcore:blocks/logs/morus_top",
+					"pside": "farcore:blocks/logs/morus_side",
+					"side": "farcore:blocks/planks/morus" 
+				}
+			},
+			"willow": { 
+				"textures": { 
+					"ptop": "farcore:blocks/logs/willow_top",
+					"pside": "farcore:blocks/logs/willow_side",
+					"side": "farcore:blocks/planks/willow" 
+				}
+			}
+		}
+	}
+}
