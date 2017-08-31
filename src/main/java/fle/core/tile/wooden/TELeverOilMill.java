@@ -24,9 +24,13 @@ import nebula.common.stack.AbstractStack;
 import nebula.common.tile.IGuiTile;
 import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.util.A;
 import nebula.common.util.Direction;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
@@ -35,6 +39,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.Explosion;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -44,7 +49,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 public class TELeverOilMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>>
-implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
+implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile,
+ITP_BlockHardness, ITP_ExplosionResistance
 {
 	private static final int[] IN = A.rangeIntArray(0, 1), OUT = A.rangeIntArray(1, 2);
 	
@@ -55,6 +61,18 @@ implements ITB_BlockActived, IGuiTile, ISidedInventory, INetworkedSyncTile
 	public TELeverOilMill()
 	{
 		super(2);
+	}
+	
+	@Override
+	public float getBlockHardness(IBlockState state)
+	{
+		return 2.0F;
+	}
+	
+	@Override
+	public float getExplosionResistance(Entity exploder, Explosion explosion)
+	{
+		return 4.0F;
 	}
 	
 	@Override

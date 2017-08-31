@@ -104,6 +104,7 @@ public final class NebulaRenderHandler implements IIconLoader
 				if (ForgeHooks.getTotalArmorValue(player) == 0)
 				{
 					//If level is 0, the GUI should not left a rendering position to armor, but vanilla rendering did.
+					//I don't know is this is a BUG or just a feature.
 					left_height -= 10;
 				}
 			}
@@ -150,8 +151,8 @@ public final class NebulaRenderHandler implements IIconLoader
 				Renders.drawTexturedModalRect(x, y, 9, 9, 9, 9, 0);//Half water icon.
 		}
 		
-		mc.renderEngine.bindTexture(GuiIngameForge.ICONS);
-		GlStateManager.disableBlend();
+		mc.renderEngine.bindTexture(GuiIngameForge.ICONS);//Bind back to vanilla texture.
+		GlStateManager.disableBlend();//GUI need disable blend.
 		
 		mc.mcProfiler.endSection();
 	}

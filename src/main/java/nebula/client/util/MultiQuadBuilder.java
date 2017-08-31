@@ -14,7 +14,6 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BakedQuadRetextured;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
@@ -35,12 +34,13 @@ public class MultiQuadBuilder implements Consumer<BakedQuad>
 	}
 	public MultiQuadBuilder(VertexFormat format, IModelModifier modifier, final boolean flag)
 	{
+		final TextureAtlasSprite defIcon = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 		this.builder = new BakedQuadBuilder(format, modifier, this)
 		{
 			@Override
 			public void startQuad(EnumFacing facing)
 			{
-				startQuad(facing, MultiQuadBuilder.this.tindex, Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite());
+				startQuad(facing, MultiQuadBuilder.this.tindex, defIcon);
 				if (flag)
 				{
 					normal(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ());
@@ -76,7 +76,7 @@ public class MultiQuadBuilder implements Consumer<BakedQuad>
 				Maps.<String, ResourceLocation, List<BakedQuad>>transformValues(map,
 						(com.google.common.base.Function<ResourceLocation, List<BakedQuad>>) loc-> {
 							TextureAtlasSprite icon = bakedTextureGetter.apply(loc);
-							return ImmutableList.copyOf(Lists.transform(bakedQuads, quad->new BakedQuadRetextured(quad, icon)));
+							return ImmutableList.copyOf(Lists.transform(bakedQuads, quad->new BakedQuadRetex(quad, icon)));
 						});
 		return ImmutableMap.copyOf(map2);
 	}

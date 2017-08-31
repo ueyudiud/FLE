@@ -20,14 +20,19 @@ import nebula.common.network.PacketBufferExt;
 import nebula.common.tile.IGuiTile;
 import nebula.common.tile.INetworkedSyncTile;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BlockHardness;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITP_ExplosionResistance;
 import nebula.common.util.Direction;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,7 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 public class TEStoneMill extends TEITSRecipe<ItemStack, TemplateRecipeCache<ItemStack>>
-implements ITB_BlockActived, IGuiTile, INetworkedSyncTile
+implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, ITP_ExplosionResistance
 {
 	private SolidTank tank1 = new SolidTank(1000);
 	public FluidTankN tank2 = new FluidTankN(4000);
@@ -67,6 +72,18 @@ implements ITB_BlockActived, IGuiTile, INetworkedSyncTile
 	public String getName()
 	{
 		return "inventory.stone.mill";
+	}
+	
+	@Override
+	public float getBlockHardness(IBlockState state)
+	{
+		return 2.0F;
+	}
+	
+	@Override
+	public float getExplosionResistance(Entity exploder, Explosion explosion)
+	{
+		return 4.0F;
 	}
 	
 	@Override

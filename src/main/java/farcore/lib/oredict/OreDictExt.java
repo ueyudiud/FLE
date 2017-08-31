@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.oredict;
 
 import java.util.ArrayList;
@@ -25,8 +29,28 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
+/**
+ * The extended ore dictionary (E-OD).<p>
+ * For more compatibility for ore, without instance required,
+ * you can use NBT to predicate is item is a ore.<p>
+ * All base ore list in {@link net.minecraftforge.oredict.OreDictionary},
+ * will be register into here, so you can also use this dictionary
+ * to find vanilla ore item with out find in forge dictionary
+ * one more time.<p>
+ * Like forge dictionary, this one use name-id-stackPredicator pair
+ * to store ore list. The {@link #ID_TO_NAME}, {@link #NAME_TO_ID},
+ * takes uses of id<->name logic, the {@link #STACK_TO_IDS}, {@link #ID_TO_STACK}
+ * takes uses to find instance stack of each ore name (Which can be
+ * use to display on crafting recipe, etc).<p>
+ * To matching ItemStack by E-OD, please use {@link #oreMatchs(ItemStack, String)}
+ * to get result directly instead of get list of stack instance to
+ * match.
+ * @author ueyudiud
+ * @see net.minecraftforge.oredict.OreDictionary
+ */
 public class OreDictExt
 {
+	/** The id of 'stack is invalid', only for internal use. */
 	private static final long											INVALID_STACK_ID = 0x0000000000000001L;
 	private static final List<String>									ID_TO_NAME = new ArrayList<>();
 	private static final Map<String, Integer>							NAME_TO_ID = new HashMap<>(128);
@@ -41,9 +65,7 @@ public class OreDictExt
 	
 	public static final ImmutableList<ItemStack> EMPTY_LIST = ImmutableList.of();
 	
-	/**
-	 * The far core use back -1 for general meta value.
-	 */
+	/** The Nebula use back -1 for general meta value, for some item has extra meta load from NBT by {@link nebula.common.item.ItemBase#getStackMetaOffset(ItemStack)}} */
 	public static final int WILDCARD_VALUE = -1;
 	private static final long WILDCARD_VALUE_LONG = 0xFFFFFFFFL;
 	
@@ -246,6 +268,13 @@ public class OreDictExt
 		return id.intValue();
 	}
 	
+	/**
+	 * This method might be useless because I forget how to this method use...
+	 * @param name
+	 * @param function
+	 * @param stacks
+	 * @return
+	 */
 	@Deprecated
 	private static int setOreIDWithSuggestedList(String name, Judgable<ItemStack> function, List<ItemStack> stacks)
 	{

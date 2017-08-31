@@ -21,6 +21,7 @@ import com.google.gson.JsonParseException;
 
 import nebula.base.ArrayListAddWithCheck;
 import nebula.client.util.BakedQuadBuilder;
+import nebula.client.util.BakedQuadRetex;
 import nebula.client.util.CoordTransformer;
 import nebula.client.util.IIconCollection;
 import nebula.client.util.IModelModifier;
@@ -29,7 +30,6 @@ import nebula.common.util.Direction;
 import nebula.common.util.Jsons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BakedQuadRetextured;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
@@ -228,7 +228,7 @@ public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Clon
 					quad-> {
 						quadMaps[i0] = ImmutableMap.copyOf(
 								Maps.transformValues(iconHandlerGetter.apply(this.icons[i0]).build(),
-										loc->new BakedQuadRetextured(quad, bakedTextureGetter.apply(loc))));
+										loc->new BakedQuadRetex(quad, bakedTextureGetter.apply(loc))));
 					});
 			if ((this.renderFlag & (1 << i)) != 0 && this.icons[i] != null)
 			{

@@ -178,6 +178,12 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 	}
 	
 	@Override
+	public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return true;
+	}
+	
+	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
@@ -282,6 +288,12 @@ public class BlockWoodenFence extends BlockMaterial<PropertyWood>
 		}
 		if (i > 0)
 			Worlds.spawnDropInWorld(worldIn, pos, new ItemStack(Items.STICK, i));
+	}
+	
+	@Override
+	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
+	{
+		return true;
 	}
 	
 	static
