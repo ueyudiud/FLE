@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.item;
 
 import java.util.List;
@@ -26,6 +30,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * A item to let fluid display as item.<p>
+ * You can generate fluid block in world by use this
+ * item in world, or find fluid data in game.
+ * @author ueyudiud
+ */
 public class ItemFluidDisplay extends ItemBase
 {
 	public ItemFluidDisplay()

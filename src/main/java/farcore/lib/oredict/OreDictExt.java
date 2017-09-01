@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableList;
 
 import nebula.base.Ety;
@@ -65,10 +67,11 @@ public class OreDictExt
 	
 	public static final ImmutableList<ItemStack> EMPTY_LIST = ImmutableList.of();
 	
-	/** The Nebula use back -1 for general meta value, for some item has extra meta load from NBT by {@link nebula.common.item.ItemBase#getStackMetaOffset(ItemStack)}} */
+	/** The Far Core use back -1 for general meta value, for some item has extra meta load from NBT by {@link nebula.common.item.ItemBase#getStackMetaOffset(ItemStack)}} */
 	public static final int WILDCARD_VALUE = -1;
 	private static final long WILDCARD_VALUE_LONG = 0xFFFFFFFFL;
 	
+	/** Internal method, do not use. */
 	public static void init()
 	{
 		MinecraftForge.EVENT_BUS.register(INSTANCE);
@@ -77,7 +80,7 @@ public class OreDictExt
 	
 	/**
 	 * OD will called before Event Bus begin to listen ore register
-	 * event. It needed to add in again.
+	 * event. So the vanilla ore needed add to EOD again.
 	 */
 	private static void registerVanillaOres()
 	{
@@ -137,7 +140,7 @@ public class OreDictExt
 		registerOre("dustRedstone",   Items.REDSTONE);
 		registerOre("dustGlowstone",  Items.GLOWSTONE_DUST);
 		registerOre("gemLapis",       new ItemStack(Items.DYE, 1, 4));
-		registerOre("gemNetherStar",  Items.NETHER_STAR);//Far core added.
+		registerOre("gemNetherStar",  Items.NETHER_STAR);//Far Core added.
 		
 		// storage blocks
 		registerOre("blockGold",      Blocks.GOLD_BLOCK);
@@ -157,19 +160,19 @@ public class OreDictExt
 		registerOre("sugarcane",      Items.REEDS);
 		registerOre("blockCactus",    Blocks.CACTUS);
 		
-		registerOre("seedWheat",      Items.WHEAT_SEEDS);//Far core added.
-		registerOre("seedPotato",     Items.POTATO);//Far core added.
-		registerOre("seedCarrot",     Items.CARROT);//Far core added.
-		registerOre("seedMelon",      Items.MELON_SEEDS);//Far core added.
-		registerOre("seedPumpkin",    Items.PUMPKIN_SEEDS);//Far core added.
-		registerOre("seedNetherWart", Items.NETHER_WART);//Far core added.
+		registerOre("seedWheat",      Items.WHEAT_SEEDS);//Far Core added.
+		registerOre("seedPotato",     Items.POTATO);//Far Core added.
+		registerOre("seedCarrot",     Items.CARROT);//Far Core added.
+		registerOre("seedMelon",      Items.MELON_SEEDS);//Far Core added.
+		registerOre("seedPumpkin",    Items.PUMPKIN_SEEDS);//Far Core added.
+		registerOre("seedNetherWart", Items.NETHER_WART);//Far Core added.
 		
 		// misc materials
 		registerOre("dye",            new ItemStack(Items.DYE, 1, WILDCARD_VALUE));
 		registerOre("paper",          new ItemStack(Items.PAPER));
-		registerOre("book",           new ItemStack(Items.BOOK));//Far core added.
-		registerOre("book",           new ItemStack(Items.ENCHANTED_BOOK));//Far core added.
-		registerOre("book",           new ItemStack(Items.WRITTEN_BOOK));//Far core added.
+		registerOre("book",           new ItemStack(Items.BOOK));//Far Core added.
+		registerOre("book",           new ItemStack(Items.ENCHANTED_BOOK));//Far Core added.
+		registerOre("book",           new ItemStack(Items.WRITTEN_BOOK));//Far Core added.
 		
 		// mob drops
 		registerOre("slimeball",      Items.SLIME_BALL);
@@ -207,9 +210,9 @@ public class OreDictExt
 		registerOre("sand",           Blocks.SAND);
 		registerOre("sandstone",      Blocks.SANDSTONE);
 		registerOre("sandstone",      Blocks.RED_SANDSTONE);
-		registerOre("clay",           Blocks.CLAY);//Far core added.
-		registerOre("clayHardened",   Blocks.HARDENED_CLAY);//Far core added.
-		registerOre("clayHardened",   Blocks.STAINED_HARDENED_CLAY);//Far core added.
+		registerOre("clay",           Blocks.CLAY);//Far Core added.
+		registerOre("clayHardened",   Blocks.HARDENED_CLAY);//Far Core added.
+		registerOre("clayHardened",   Blocks.STAINED_HARDENED_CLAY);//Far Core added.
 		registerOre("netherrack",     Blocks.NETHERRACK);
 		registerOre("obsidian",       Blocks.OBSIDIAN);
 		registerOre("glowstone",      Blocks.GLOWSTONE);
@@ -249,11 +252,11 @@ public class OreDictExt
 			registerOre("dye"          + dyes[i], new ItemStack(Items.DYE, 1, i));
 			registerOre("blockGlass"   + dyes[i], new ItemStack(Blocks.STAINED_GLASS, 1, 15 - i));
 			registerOre("paneGlass"    + dyes[i], new ItemStack(Blocks.STAINED_GLASS_PANE, 1, 15 - i));
-			registerOre("clayHardened" + dyes[i], new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, 15 - i));//Far core added.
+			registerOre("clayHardened" + dyes[i], new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, 15 - i));//Far Core added.
 		}
 	}
 	
-	public static int getOreID(String name)
+	private static int getOreID(String name)
 	{
 		Integer id = NAME_TO_ID.get(name);
 		if(id == null)
@@ -269,33 +272,26 @@ public class OreDictExt
 	}
 	
 	/**
-	 * This method might be useless because I forget how to this method use...
-	 * @param name
-	 * @param function
-	 * @param stacks
-	 * @return
+	 * Register block to EOD.
+	 * @see #registerOre(String, Item)
 	 */
-	@Deprecated
-	private static int setOreIDWithSuggestedList(String name, Judgable<ItemStack> function, List<ItemStack> stacks)
-	{
-		Integer id = NAME_TO_ID.get(name);
-		if(id == null)
-		{
-			id = ID_TO_NAME.size();
-			ID_TO_NAME.add(name);
-			NAME_TO_ID.put(name, id);
-			ID_TO_STACK.add(new Ety<>(stacks, Collections.unmodifiableList(stacks)));
-		}
-		return id.intValue();
-	}
-	
-	public static String getOreName(int id)
-	{
-		return (id >= 0 && id < ID_TO_NAME.size()) ? ID_TO_NAME.get(id) : null;
-	}
-	
 	public static void registerOre(String name, Block block)           { registerOre(name, Item.getItemFromBlock(block)); }
+	/**
+	 * Register block with meta to EOD.
+	 * @see #registerOre(String, Item, int)
+	 */
 	public static void registerOre(String name, Block block, int meta) { registerOre(name, Item.getItemFromBlock(block), meta); }
+	/**
+	 * Register item to EOD.<p>
+	 * Added item by EOD will not change OD list.<p>
+	 * Register ore by this method will provider an instance
+	 * display item stack to display list and a default any-meta
+	 * <tt>ItemStack=>boolean</tt> predicate will be register
+	 * to EOD.
+	 * will be applied to ore list.
+	 * @param name the name of ore.
+	 * @param item the register item.
+	 */
 	public static void registerOre(String name, Item item)
 	{
 		if(name == null || item == null) return;
@@ -307,7 +303,26 @@ public class OreDictExt
 		registerIDToStackObject(oreID, new ItemStack(item));
 		registerStackToIDObject(oreID, stackID);
 	}
+	/**
+	 * Register item with specific meta to EOD.<p>
+	 * Added item by EOD will not change OD list.<p>
+	 * Register ore by this method will provider an instance
+	 * display item stack to display list and a specific
+	 * <tt>ItemStack=>boolean</tt> predicate which is:
+	 * <code>stack->stack.getItemDamage()==meta</code> will be
+	 * register to EOD.
+	 * @param name the name of ore.
+	 * @param item the register item.
+	 * @param meta the specific meta.
+	 * @see #registerOreFunction(String, Item, Judgable, ItemStack...)
+	 */
 	public static void registerOre(String name, Item item, int meta)   { registerOre(name, ItemStacks.stack(item, meta)); }
+	/**
+	 * Register a ore by item and meta from stack.
+	 * @param name the name of ore.
+	 * @param stack the source to get item and meta.
+	 * @see #registerOre(String, Item, int)
+	 */
 	public static void registerOre(String name, ItemStack stack)
 	{
 		if(name == null || stack == null) return;
@@ -330,17 +345,31 @@ public class OreDictExt
 		list.add(oreID);
 	}
 	
+	/** @see #registerOreFunction(String, Item, Judgable, ItemStack[]) */
 	public static void registerOreFunction(String name, Item item, Judgable<ItemStack> function, Collection<ItemStack> instances) { registerOreFunction(name, item, function, L.cast(instances, ItemStack.class)); }
 	
 	/**
-	 * Registers a ore function into the dictionary.
-	 * Also registers all instances of function provide into instance list.
-	 * @param name
-	 * @param item The detect item.
-	 * @param function
-	 * @param instances
+	 * Registers a ore function into the dictionary.<p>
+	 * Also registers all instances of function provide into instance list.<p>
+	 * The stack will <i>not</i> take any effect to match an ore. It is only can
+	 * be display or show what may can be use in this recipe, input a stack can
+	 * not let <tt>function.isTrue(stack)</tt> return <tt>true</tt> is allowed,
+	 * but taking sure the player can know what's the meaning of your instances
+	 * in this ore key (Example: for some recipe may use fluid, you may use
+	 * {@link nebula.common.item.ItemFluidDisplay}, it can not get in survival
+	 * mode, but you can use it to let crafter know it means you want to use
+	 * this fluid in recipe).
+	 * @param name the name of ore.
+	 * @param item the detect item.
+	 * @param function the <tt>ItemStack=>boolean</tt> logic to predicate whether
+	 *        a ItemStack can be as a ore.
+	 * @param instances some instances of ore, use to display in recipe or ore
+	 *        transfer list, also can not register any instances, and there may
+	 *        no display item stack will be show instead (I'm sure not any one will
+	 *        be happy to find this when searching recipe.).
+	 * @see #registerOre(String, Item, int)
 	 */
-	public static void registerOreFunction(String name, Item item, Judgable<ItemStack> function, ItemStack...instances)
+	public static void registerOreFunction(String name, Item item, @Nonnull Judgable<ItemStack> function, ItemStack...instances)
 	{
 		if(name == null || function == null) return;
 		int oreID = getOreID(name);
@@ -367,6 +396,12 @@ public class OreDictExt
 		return ID_TO_STACK.size() > id ? ID_TO_STACK.get(id).getValue() : EMPTY_LIST;
 	}
 	
+	/**
+	 * Get ores allowance.<p>
+	 * The result list is <i>unmodifiable</i>.
+	 * @param name the name of ore.
+	 * @return the list of ores.
+	 */
 	public static List<ItemStack> getOres(String name)
 	{
 		return getOres(getOreID(name));
@@ -374,8 +409,11 @@ public class OreDictExt
 	
 	/**
 	 * Get ores allowance.
-	 * @param name The name of ore.
-	 * @param alwaysCreateEntry Should ore dictionary create a new tag for name not contain.
+	 * @param name the name of ore.
+	 * @param alwaysCreateEntry <tt>true</tt> for E-OD will always create
+	 *                          a new tag to store list if ore with this
+	 *                          name is not exist. The list in E-OD
+	 *                          will be returned if <tt>true</tt> is inputed.
 	 * @return
 	 */
 	public static List<ItemStack> getOres(String name, boolean alwaysCreateEntry)
@@ -383,6 +421,11 @@ public class OreDictExt
 		return alwaysCreateEntry || NAME_TO_ID.get(name) != null ? getOres(getOreID(name)) : EMPTY_LIST;
 	}
 	
+	/**
+	 * Get all ore names this stack applied, will only check the instance
+	 * registered to E-OD and return result.
+	 * @see #getOreNames(ItemStack, boolean)
+	 */
 	public static List<String> getOreNames(ItemStack stack)
 	{
 		return getOreNames(stack, true);
@@ -390,10 +433,10 @@ public class OreDictExt
 	
 	/**
 	 * Get all ore names this stack applied.<br>
-	 * @param stack The ore.
-	 * @param useCache If this stack has special nbt, might not save in cache,
-	 * use false to check all ore names again.
-	 * @return
+	 * @param stack the stack to find ore.
+	 * @param useCache if this stack has special NBT, might not save in cache,
+	 *                 use <tt>false</tt> to check all ore names again.
+	 * @return the ore name list.
 	 */
 	public static List<String> getOreNames(ItemStack stack, boolean useCache)
 	{
@@ -431,6 +474,12 @@ public class OreDictExt
 		return list;
 	}
 	
+	/**
+	 * Match stack has this ore name.
+	 * @param stack
+	 * @param oreName
+	 * @return
+	 */
 	public static boolean oreMatchs(ItemStack stack, String oreName)
 	{
 		Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>> map;
@@ -443,6 +492,7 @@ public class OreDictExt
 	
 	private OreDictExt(){ }
 	
+	/** Internal method, register ore registered in OD to E-OD. */
 	@SubscribeEvent
 	public void onOreRegistered(OreDictionary.OreRegisterEvent event)
 	{
