@@ -202,4 +202,17 @@ public final class FluidStacks
 		(stack2 = stack.copy()).amount = amount;
 		return stack2;
 	}
+	
+	/**
+	 * Check is <code>resource</code> stack contains <code>target</code>
+	 * stack.
+	 * @param resource the resource stack, if the <code>null</code> is input,
+	 *        <code>false</code> will be return.
+	 * @param target the target stack.
+	 * @see net.minecraftforge.fluids.FluidStack#containsFluid(FluidStack)
+	 */
+	public static boolean containFluid(@Nullable FluidStack resource, @Nullable FluidStack target)
+	{
+		return resource != null && resource.containsFluid(target);
+	}
 }

@@ -18,6 +18,9 @@ public class V
 	public static boolean removeErroredTile = false;
 	public static int treeScanRange = 6;
 	
+	public static float airHeatConductivity = 0.3F;
+	public static float airHeatCapacity = 4300F;
+	
 	//Constant values.
 	
 	public static final int WATER_FREEZE_POINT_I = 273;

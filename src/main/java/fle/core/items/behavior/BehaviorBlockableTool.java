@@ -5,6 +5,7 @@ package fle.core.items.behavior;
 
 import fle.core.blocks.BlockTools;
 import fle.loader.IBF;
+import nebula.client.util.UnlocalizedList;
 import nebula.common.item.BehaviorBase;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.util.Direction;
@@ -21,6 +22,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -86,5 +89,13 @@ public class BehaviorBlockableTool extends BehaviorBase
 		}
 		
 		return true;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer player, UnlocalizedList list, boolean advanced)
+	{
+		super.addInformation(stack, player, list, advanced);
+		list.add("info.blockable.tool.place");
 	}
 }

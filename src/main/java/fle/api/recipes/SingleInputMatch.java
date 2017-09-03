@@ -10,6 +10,7 @@ import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
+import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.ItemStacks;
@@ -69,6 +70,16 @@ public class SingleInputMatch
 		{
 			this.consumer.accept(input, output);
 		}
+	}
+	
+	public Function<ItemStack, ItemStack> toOutputTransferFunction(final ItemStack output)
+	{
+		if (output == null || this.consumer == null) return Misc.<ItemStack, ItemStack>anyTo(output).andThen(ItemStacks.COPY_ITEMSTACK);
+		return input-> {
+			ItemStack result = output.copy();
+			this.consumer.accept(input, result);
+			return result;
+		};
 	}
 	
 	public ItemStack getRemain(ItemStack input)

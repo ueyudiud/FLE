@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 /**
  * Handle energy net and object update.
  * @author ueyudiud
- *
  */
 public class FarCoreEnergyHandler implements IEventExceptionHandler
 {

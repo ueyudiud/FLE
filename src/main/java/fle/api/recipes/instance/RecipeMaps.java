@@ -10,17 +10,21 @@ import static nebula.common.data.NBTLSs.RW_INT;
 import static nebula.common.data.NBTLSs.RW_ITEMSTACK;
 import static nebula.common.data.NBTLSs.RW_UNORDERED_ITEMSTACKS;
 
+import java.util.Map.Entry;
+
 import farcore.lib.solid.SolidStack;
 import fle.api.recipes.TemplateRecipeMap;
 import fle.api.recipes.instance.interfaces.ICraftingRecipeHandler;
 import fle.api.recipes.instance.interfaces.IPolishRecipeHandler;
+import fle.api.recipes.instance.interfaces.IRecipeInput;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * The all recipe maps used by FLE.<p>
  * 
  * For uses of recipe map see {@link fle.api.recipes.IRecipeMap}, to
- * register fle recipes, you can register it here but it is not suggested
+ * register FLE recipes, you can register it here but it is not suggested
  * unless you want to achieve some special function. <b>For most of normal
  * recipe, you can register them in {@link fle.api.recipes.instance.RecipeAdder}.</b><p>
  * 
@@ -128,4 +132,22 @@ public class RecipeMaps
 	public static final
 	MaterialPoolOutputRecipeHandler DIRT_MIXTURE_OUTPUT =
 	new MaterialPoolOutputRecipeHandler("fle.dirt.mixture.output");
+	//NAME        : fle.ceramic.pot.add.to.mix
+	//NBT ENTRY   : used(int), output(FluidStack)
+	//DISPLAYMENTS: input1(SolidStack), input2(FluidStack), output(FluidStack)
+	public static final
+	TemplateRecipeMap<Entry<SolidStack, FluidStack>> CERAMICPOT_ADD_TO_MIX =
+	TemplateRecipeMap.<Entry<SolidStack, FluidStack>>builder("fle.ceramic.pot.add.to.mix").addCacheEntry("used", RW_INT).addCacheEntry("output", RW_FLUIDSTACK).build();
+	//NAME        : fle.ceramic.pot.base
+	//INPUT TAGS  : input1(ItemStack), input2(FluidStack), input3(ItemStack)
+	//NBT ENTRY   : temp(int), duration(int), output1(ItemStack), output2(ItemStack)
+	//DISPLAYMENTS: input1(AbstractStack), input2(FluidStack), tool(SingleInputMatch), minTemperature(int), duration(int), output(ItemStack)
+	public static final String
+	TAG_CERAMICPOT_BASE_INPUT1 = "fle.ceramic.pot.base.input1",
+	TAG_CERAMICPOT_BASE_INPUT2 = "fle.ceramic.pot.base.input2",
+	TAG_CERAMICPOT_BASE_INPUT3 = "fle.ceramic.pot.base.input3";
+	public static final
+	TemplateRecipeMap<IRecipeInput> CERAMICPOT_BASE =
+	TemplateRecipeMap.<IRecipeInput>builder("fle.ceramic.pot.base")
+	.addCacheEntry("temp", RW_INT).addCacheEntry("duration", RW_INT).addCacheEntry("output1", RW_ITEMSTACK).addCacheEntry("output2", RW_ITEMSTACK).build();
 }

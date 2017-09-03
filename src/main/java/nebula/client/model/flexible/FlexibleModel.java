@@ -107,10 +107,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 			this.textures = new HashSet<>();
 			this.parts.forEach(part-> {
 				keys.addAll(part.getResources());
-				if (part instanceof INebulaDirectResourcesModelPart)
-				{
-					this.textures.addAll(((INebulaDirectResourcesModelPart) part).getDirectResources());
-				}
+				this.textures.addAll(part.getDirectResources());
 			});
 			this.resources = new HashMap<>();
 			keys.forEach(key-> {
@@ -143,8 +140,9 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	
 	private IIconCollection $getIconHandler(String key, List<String> keys)
 	{
-		if (key.charAt(0) == '#')
+		switch (key.charAt(0))
 		{
+		case '#' :
 			key = key.substring(1);
 			if (keys.contains(key))
 			{
@@ -155,9 +153,9 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 			if (this.retextures == null || !this.retextures.containsKey(key))
 				return NebulaModelLoader.ICON_HANDLER_MISSING;
 			return $getIconHandler(this.retextures.get(key), keys);
-		}
-		else
-		{
+		case '{' :
+			return TemplateIconHandler.fromJson(key);
+		default :
 			return NebulaModelLoader.loadIconHandler(key);
 		}
 	}

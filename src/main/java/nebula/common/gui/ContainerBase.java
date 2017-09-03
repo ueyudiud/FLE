@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import nebula.Nebula;
 import nebula.base.Node;
 import nebula.common.fluid.FluidStackExt;
+import nebula.common.fluid.container.IItemFluidContainer;
 import nebula.common.network.packet.PacketFluidUpdateAll;
 import nebula.common.network.packet.PacketFluidUpdateSingle;
 import nebula.common.util.ItemStacks;
@@ -21,6 +22,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public abstract class ContainerBase extends Container implements IGuiActionListener
 {
@@ -456,7 +458,6 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	/**
 	 * The transfer location, use for shift click transfer items.
 	 * @author ueyudiud
-	 *
 	 */
 	public class TL
 	{
@@ -524,6 +525,21 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		{
 			return !isItemValid(itemstack) ? false :
 				ContainerBase.this.mergeItemStack(itemstack, this.startId, this.endId, this.reverseDirection);
+		}
+	}
+	
+	public class TLFluidContainerOnly extends TL
+	{
+		public TLFluidContainerOnly(int id)
+		{
+			super(id);
+		}
+		
+		@Override
+		public boolean isItemValid(ItemStack stack)
+		{
+			return stack.getItem() instanceof IItemFluidContainer ||
+					stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 		}
 	}
 }

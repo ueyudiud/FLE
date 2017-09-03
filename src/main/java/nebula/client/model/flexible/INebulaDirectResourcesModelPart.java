@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author ueyudiud
  */
+@Deprecated
 public interface INebulaDirectResourcesModelPart extends INebulaModelPart
 {
 	Collection<ResourceLocation> getDirectResources();

@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * @author ueyudiud
  */
+@Deprecated
 public interface IRetexturableNebulaModelPart extends INebulaModelPart
 {
 	INebulaModelPart retexture(Map<String, String> retexture);

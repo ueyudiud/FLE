@@ -35,6 +35,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.client.model.ItemLayerModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
@@ -101,7 +102,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 					else poses[i] = -1;
 					if (object2.has("colorMultiplier"))
 					{
-						flag.set(true); //TODO
+						flag.set(true);
 						functions[i] = NebulaModelLoader.loadItemColorMultiplier(object2.get("colorMultiplier").getAsString());
 					}
 					else
@@ -139,12 +140,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			model.itemLoadingData = poses;
 			model.itemDataGen = L.cast(datas, Function.class);
 			
-			if (object.has("textures"))
-			{
-				Map<String, String> retextures = Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString);
-				return model.retexture(ImmutableMap.copyOf(retextures));
-			}
-			else return model;
+			return (FlexibleModel) loadRetexture(model, object);
 		}
 	},
 	BLOCK(Nebula.MODID, "block")
@@ -192,12 +188,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 				model.blockDataGen = func2;
 				model.blockLoadingData = A.rangeIntArray(func2.length);
 			}
-			if (object.has("textures"))
-			{
-				Map<String, String> retextures = Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString);
-				return model.retexture(ImmutableMap.copyOf(retextures));
-			}
-			else return model;
+			return (FlexibleModel) loadRetexture(model, object);
 		}
 	},
 	VANILLA_ITEM("minecraft", "item/generated")
@@ -206,8 +197,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		public IModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 		{
 			JsonObject object = json.getAsJsonObject();
-			return ItemLayerModel.INSTANCE.retexture(
-					ImmutableMap.copyOf(Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString)));
+			return loadRetexture(ItemLayerModel.INSTANCE, object);
 		}
 	},
 	VANILLA("minecraft", "generated")
@@ -281,6 +271,16 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 			return NebulaModelLoader.getModelPart(json.getAsString());
 		}
 		return BLOCK_MODEL_PART_DESERIALIZERS.deserialize(json, INebulaModelPart.class, context);
+	}
+	
+	protected IModel loadRetexture(IRetexturableModel model, JsonObject object)
+	{
+		if (object.has("textures"))
+		{
+			return model.retexture(ImmutableMap.copyOf(Jsons.getAsMap(object.getAsJsonObject("textures"),
+					json->json.isJsonObject() ? json.toString() : json.getAsString())));
+		}
+		return model;
 	}
 	
 	static

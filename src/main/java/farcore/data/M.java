@@ -30,12 +30,12 @@ public class M
 	public static final Mat rain_water			= new Mat(404 , FarCore.ID , "rain_water"			, "RainWater"			, "Rain Water"			);
 	public static final Mat muddy_water			= new Mat(405 , FarCore.ID , "muddy_water"			, "MuddyWater"			, "Muddy Water"			);
 	//Metal
-	public static final Mat copper				= new Mat(1001, FarCore.ID , "copper"				, "Copper"				, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E6F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).setMetalic(12, 4.0F, 8.0F);
+	public static final Mat copper				= new Mat(1001, FarCore.ID , "copper"				, "Copper"				, "Copper"				).setRGBa(0xFF7656FF).setToolProp( 140, 14, 4.5F, 0.0F, 10.0F, -0.8F).setGeneralProp(3.45E4F, 401, 620, 4830, Float.MAX_VALUE, 16.78E-9F, 0.8F).setMetalic(12, 4.0F, 8.0F);
 	//Mob Resources
 	public static final Mat spider_silk			= new Mat(6001, FarCore.ID , "spider_silk"			, "SpiderSilk"			, "Spider's Silk"		).setRGBa(0xFAFAFAFF);
 	//Rocks
-	public static final Mat stone 				= new Mat(7001, "minecraft", "stone"				, "Stone"				, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F,  4.0F, -0.5F).setRock( 4, 1.5F,  8.0F);
-	public static final Mat compact_stone		= new Mat(7002, FarCore.ID , "compactstone"			, "CompactStone"		, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F,  4.0F, -0.5F).setRock( 5, 2.0F, 12.0F);
+	public static final Mat stone 				= new Mat(7001, "minecraft", "stone"				, "Stone"				, "Stone"				).setRGBa(0x626262FF).setToolProp(  16,  5, 1.2F, 0.8F,  4.0F, -0.5F).setRock( 4, 1.5F,  8.0F).setGeneralProp(6.48E4F, 2.4F, 372, 628, 5.0F, 1.8E6F, 2.5F);
+	public static final Mat compact_stone		= new Mat(7002, FarCore.ID , "compactstone"			, "CompactStone"		, "Compact Stone"		).setRGBa(0x686868FF).setToolProp(  22,  6, 1.8F, 0.8F,  4.0F, -0.5F).setRock( 5, 2.0F, 12.0F).setGeneralProp(7.18E4F, 3.1F, 372, 674, 6.0F, 1.7E6F, 2.8F);
 	public static final Mat andesite			= new Mat(7003, FarCore.ID , "andesite"				, "Andesite"			, "Andesite"			).setRGBa(0x616162FF).setToolProp(  32,  8, 2.3F, 0.8F,  6.0F, -0.5F).setRock( 7, 4.9F, 16.6F);
 	public static final Mat basalt				= new Mat(7004, FarCore.ID , "basalt"				, "Basalt"				, "Basalt"				).setRGBa(0x3A3A3AFF).setToolProp(  38,  8, 2.5F, 0.8F,  4.8F, -0.5F).setRock( 7, 5.3F, 18.3F);
 	public static final Mat diorite				= new Mat(7005, FarCore.ID , "diorite"				, "Diorite"				, "Diorite"				).setRGBa(0xC9C9CDFF).setToolProp(  42, 10, 2.7F, 0.8F,  5.6F, -0.6F).setRock( 9, 6.5F, 23.3F);
@@ -139,7 +139,7 @@ public class M
 	public static final Mat electrum		= new Mat(10033, FarCore.ID, "electrum", "Electrum", "Electrum").setChemicalFormula("?").setRGBa(0xE4B258FF).setOreProperty(11, 8.2F, 9.2F, SubTags.ORE_NOBLE);
 	//Building resources
 	public static final Mat adobe			= new Mat(11001, FarCore.ID, "adobe", "Adobe", "Adobe").setRGBa(0xABA798FF).setBrick(1, 3.0F, 4.0F);
-	public static final Mat argil			= new Mat(11002, FarCore.ID, "argil", "Argil", "Argil").setRGBa(0xCBC0BCFF).setBrick(3, 4.5F, 7.0F);
+	public static final Mat argil			= new Mat(11002, FarCore.ID, "argil", "Argil", "Argil").setRGBa(0xCBC0BCFF).setBrick(3, 4.5F, 7.0F).setGeneralProp(5.47E4F, 14F, 283, 36, 4.7F, 1E8F, 8.4F);
 	public static final Mat redbrick		= new Mat(11003, FarCore.ID, "redbrick", "RedBrick", "Red Brick").setRGBa(0xB75A40FF).setBrick(4, 4.0F, 8.5F);
 	public static final Mat greybrick		= new Mat(11004, FarCore.ID, "greybrick", "GreyBrick", "Grey Brick").setRGBa(0xB8CAC7FF).setBrick(4, 4.0F, 8.5F);
 	

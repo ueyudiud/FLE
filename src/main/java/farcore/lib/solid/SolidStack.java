@@ -136,4 +136,9 @@ public class SolidStack
 	{
 		return new SolidStack(this);
 	}
+	
+	public boolean containsStack(SolidStack stack)
+	{
+		return stack == null || (isSoildEqual(stack) && this.amount >= stack.amount);
+	}
 }

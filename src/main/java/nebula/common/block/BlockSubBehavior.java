@@ -1035,12 +1035,25 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public double getThermalConduct(World world, BlockPos pos)
+	public double getThermalConduct(World world, BlockPos pos, IBlockState state)
 	{
 		try
 		{
-			IBlockState state = world.getBlockState(pos);
 			return getBehavior(state).getThermalConduct(this, state, world, pos);
+		}
+		catch (Exception exception)
+		{
+			Log.catchingIfDebug(exception);
+			return 0;
+		}
+	}
+	
+	@Override
+	public double getHeatCapacity(World world, BlockPos pos, IBlockState state)
+	{
+		try
+		{
+			return getBehavior(state).getHeatCapacity(this, state, world, pos);
 		}
 		catch (Exception exception)
 		{

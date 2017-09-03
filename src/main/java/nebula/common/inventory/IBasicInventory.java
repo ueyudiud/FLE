@@ -70,16 +70,24 @@ public interface IBasicInventory
 	 * The <tt>insert</tt> action, try to add item stack fully to inventory.<p>
 	 * The resource will be input into inventory only if :
 	 * <li>
-	 * The slot is empty or the item and tag from stack in slot is equal to resource.
+	 * The slot is empty or the item and tag from stack in slot is equal to
+	 * resource.
 	 * <li>
 	 * The new stack size in slot is no greater than the size get from
 	 * {@link #getInventoryStackLimit()}.
 	 * </li><p>
 	 * If input stack is <tt>null</tt>, the method will return <tt>true</tt>.
+	 * To be convince, using <br>
+	 * <code>if (insertStack(idx, stack, true)) { other code... }</code><br>
+	 * instead of<br>
+	 * <code>if (insertStack(idx, stack, false)) { insertStack(idx, stack, true); other code... }</code><br>
+	 * is allowed, for the checking codes is already contains in this method,
+	 * if <tt>false</tt> is returned, the <tt>insert</tt> action will not
+	 * process.
 	 * @param index the slot index.
 	 * @param resource the input stack.
 	 * @param process should inventory changed after action, if input is <tt>false</tt>
-	 * the inventory will only give a simulate result.
+	 *        the inventory will only give a simulate result.
 	 * @return return <tt>true</tt> when all can be insert into inventory.
 	 */
 	default boolean insertStack(int index, @Nullable ItemStack resource, boolean process)
@@ -156,13 +164,13 @@ public interface IBasicInventory
 		return true;
 	}
 	
-	default <T> T insertAllStacks(ItemStack[] stacks, Appliable<T> consumer)
+	default <T> T insertAllStacks(ItemStack[] stacks, Appliable<T> appliable)
 	{
-		return insertAllStacks(stacks, 0, getSizeInventory(), consumer);
+		return insertAllStacks(stacks, 0, getSizeInventory(), appliable);
 	}
 	
-	default <T> T insertAllStacks(ItemStack[] stacks, int from, int to, Appliable<T> consumer)
+	default <T> T insertAllStacks(ItemStack[] stacks, int from, int to, Appliable<T> appliable)
 	{
-		return InventoryHelper.insertAllStacks(this, from, to, stacks, consumer);
+		return InventoryHelper.insertAllStacks(this, from, to, stacks, appliable);
 	}
 }

@@ -151,16 +151,52 @@ public class ThermalNet implements IEnergyNet
 		return V.k0;
 	}
 	
+	/**
+	 * Called when can not found an block or tile to get heat capacity.
+	 * @param world
+	 * @param pos
+	 * @param state
+	 * @return
+	 */
+	public static float getBaseHeatCapacity(World world, BlockPos pos, IBlockState state)
+	{
+		float a;
+		for(IWorldThermalHandler handler : worldCHandlers)
+		{
+			if((a = handler.getHeatCapacity(world, pos, state)) >= 0)
+				return a;
+		}
+		return Float.MAX_VALUE;
+	}
+	
 	public static double getThermalConductivity(World world, BlockPos pos, Direction direction)
 	{
 		IBlockState state;
 		TileEntity tile;
+		double value = -1;
+		
+		if ((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
+			value = ((IThermalHandler) tile).getThermalConductivity(direction);
+		state = world.getBlockState(pos);
+		if (value < 0 && state.getBlock() instanceof IThermalCustomBehaviorBlock)
+			value = ((IThermalCustomBehaviorBlock) state.getBlock()).getThermalConduct(world, pos, state);
+		
+		return value > 0 ? value : getBaseThermalConductivity(world, pos, state.getActualState(world, pos));
+	}
+	
+	public static double getHeatCapacity(World world, BlockPos pos, Direction direction)
+	{
+		IBlockState state;
+		TileEntity tile;
+		double value = -1;
+		
 		if((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
-			return ((IThermalHandler) tile).getThermalConductivity(direction);
-		if((state = world.getBlockState(pos)).getBlock() instanceof IThermalCustomBehaviorBlock)
-			return ((IThermalCustomBehaviorBlock) state.getBlock()).getThermalConduct(world, pos);
-		state = state.getActualState(world, pos);
-		return getBaseThermalConductivity(world, pos, state);
+			value = ((IThermalHandler) tile).getHeatCapacity(direction);
+		state = world.getBlockState(pos);
+		if(value < 0 && state.getBlock() instanceof IThermalCustomBehaviorBlock)
+			value = ((IThermalCustomBehaviorBlock) state.getBlock()).getHeatCapacity(world, pos, state);
+		
+		return value > 0 ? value : getBaseHeatCapacity(world, pos, state.getActualState(world, pos));
 	}
 	
 	public static void sendHeatToBlock(World world, BlockPos pos, Direction direction, double amount)
@@ -265,6 +301,13 @@ public class ThermalNet implements IEnergyNet
 		return this.netMap.get(world.provider.getDimension());
 	}
 	
+	public static long caculateCurrent(double k1, double k2, double c1, double c2, float t1, float t2)
+	{
+		double k = Maths.log_average(k1, k2);
+		double c = (c1 * c2)/(c1 + c2);
+		return Math.round(c * (t2-t1) * Math.expm1(-k/c));
+	}
+
 	private static class Local
 	{
 		private static final Local instance = new Local(null);
@@ -377,7 +420,7 @@ public class ThermalNet implements IEnergyNet
 			try
 			{
 				//Cached current.
-				double[] current = new double[DIRECTIONS_3D.length];
+				long[] current = new long[DIRECTIONS_3D.length];
 				//Update tile.
 				for(IThermalHandler tile : this.map.values())
 				{
@@ -390,6 +433,7 @@ public class ThermalNet implements IEnergyNet
 						{
 							this.cachedPos = direction.offset(tile.pos());
 							double tc1 = tile.getThermalConductivity(direction);
+							double c = tile.getHeatCapacity(direction);
 							float temp = getEnviormentTemperature(this.world, tile.pos()) + tile.getTemperatureDifference(direction);
 							double tc2;
 							float temp2;
@@ -406,7 +450,7 @@ public class ThermalNet implements IEnergyNet
 									temp2 = getEnviormentTemperature(this.world, tile1.pos()) + tile1.getTemperatureDifference(direction.getOpposite());
 									if(!L.similar(temp, temp2))//Ignore small temperature difference.
 									{
-										tile1.onHeatChange(direction.getOpposite(), current[i] = (temp - temp2) * Maths.log_average(tc1, tc2));
+										tile1.onHeatChange(direction.getOpposite(), current[i] = ThermalNet.caculateCurrent(tc1, tc2, c, tile1.getHeatCapacity(direction.getOpposite()), temp, temp2));
 									}
 								}
 								else
@@ -415,18 +459,17 @@ public class ThermalNet implements IEnergyNet
 									temp2 = getTemperature(this.world, this.cachedPos, false);
 									if(!L.similar(temp, temp2))//Ignore small temperature difference.
 									{
-										double v = (temp - temp2) * Maths.log_average(tc1, tc2);
-										current[i] = v;
-										if(v != 0)
+										current[i] = ThermalNet.caculateCurrent(tc1, tc2, c, getHeatCapacity(this.world, this.cachedPos, direction.getOpposite()), temp, temp2);
+										if(current[i] != 0)
 										{
 											IThermalHandlerBox box = getBoxAtPos(this.cachedPos);
-											if(box != null && box.onHeatChange(tile.pos(), this.cachedPos, direction.getOpposite(), v))
+											if(box != null && box.onHeatChange(tile.pos(), this.cachedPos, direction.getOpposite(), current[i]))
 											{
 												;
 											}
 											else
 											{
-												sendHeatToBlock(this.world, this.cachedPos, direction.getOpposite(), v);
+												sendHeatToBlock(this.world, this.cachedPos, direction.getOpposite(), current[i]);
 											}
 										}
 									}

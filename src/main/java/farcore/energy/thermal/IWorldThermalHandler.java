@@ -13,5 +13,7 @@ public interface IWorldThermalHandler
 {
 	float getThermalConductivity(World world, BlockPos pos, IBlockState state);
 	
+	float getHeatCapacity(World world, BlockPos pos, IBlockState state);
+	
 	float getTemperature(World world, BlockPos pos, float baseTemp);
 }

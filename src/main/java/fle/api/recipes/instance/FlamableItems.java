@@ -37,7 +37,7 @@ public class FlamableItems
 	
 	public static boolean isFlamable(ItemStack stack)
 	{
-		return L.contain(LIST, check -> check.stack.similar(stack));
+		return L.contain(LIST, check->check.stack.similar(stack));
 	}
 	
 	public static boolean isSmoder(ItemStack stack, float temperature)

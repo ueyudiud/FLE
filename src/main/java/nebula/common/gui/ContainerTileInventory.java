@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,11 +10,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * The container class include a tile entity implemented
+ * <code>Inventory</code>.<p>
+ * @author ueyudiud
+ *
+ * @param <T> the tile entity type.
+ */
 public abstract class ContainerTileInventory<T extends TileEntity & IInventory> extends ContainerBase
 {
 	public T tile;
 	protected final int[] lastTileFieldValues;
 	
+	/**
+	 * Include opener slots and auto generated fields cache.
+	 * @param tile
+	 * @param player
+	 */
 	public ContainerTileInventory(T tile, EntityPlayer player)
 	{
 		super(player);

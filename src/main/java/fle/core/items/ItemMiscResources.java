@@ -13,6 +13,7 @@ import farcore.data.M;
 import farcore.data.MC;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.core.FLE;
+import fle.core.items.behavior.BehaviorBlockableTool;
 import fle.core.items.behavior.BehaviorResearchItems1;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.item.IBehavior;
@@ -54,11 +55,18 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		addSubItem(1003, "hay", "Hay", null);
 		addSubItem(1004, "dry_broadleaf", "Dried Broadleaf", null);
 		addSubItem(1005, "dry_coniferous", "Dried Coniferous", null);
+		addSubItem(1006, "tinder", "Tinder", null);
 		
 		addSubItem(2001, "ramie_rope", "Ramie Rope", null);
 		addSubItem(2002, "ramie_rope_bundle", "Ramie Rope Bundle", null);
+		addSubItem(2003, "crushed_bone", "Crushed Bone", null);
+		addSubItem(2004, "defatted_crushed_bone", "Defatted Crushed Bone", null);
 		
 		addSubItem(3001, "researchitem1", "Research Item", null, new BehaviorResearchItems1());
+		
+		addSubItem(4001, "wooden_brick_mold", "Brick Mold", null);
+		addSubItem(4002, "filled_wooden_brick_mold", "Brick Mold", null, new BehaviorBlockableTool(2));
+		addSubItem(4003, "dried_filled_wooden_brick_mold", "Brick Mold", null);
 	}
 	
 	@Override

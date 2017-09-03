@@ -28,60 +28,60 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	public BlockMaterial(String modid, String name, Material materialIn, Mat mat, P property)
 	{
 		super(modid, name, materialIn);
-		material = mat;
-		basic = material.getProperty(MP.property_basic);
+		this.material = mat;
+		this.basic = this.material.getProperty(MP.property_basic);
 		this.property = property;
 	}
 	public BlockMaterial(String modid, String name, Material blockMaterialIn, MapColor blockMapColorIn, Mat mat, P property)
 	{
 		super(modid, name, blockMaterialIn, blockMapColorIn);
-		material = mat;
-		basic = material.getProperty(MP.property_basic);
+		this.material = mat;
+		this.basic = this.material.getProperty(MP.property_basic);
 		this.property = property;
 	}
 	
 	@Override
 	public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
 	{
-		return property.hardness;
+		return this.property.hardness;
 	}
 	
 	@Override
 	public float getExplosionResistance(Entity exploder)
 	{
-		return property.explosionResistance;
+		return this.property.explosionResistance;
 	}
-
+	
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
 		return getExplosionResistance(exploder);
 	}
-
+	
 	@Override
 	public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return material.getProperty(MP.fire_spread_speed);
+		return this.material.getProperty(MP.fire_spread_speed);
 	}
 	
 	@Override
 	public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
-		return material.getProperty(MP.flammability);
+		return this.material.getProperty(MP.flammability);
 	}
-
+	
 	@Override
 	public int getLightOpacity(IBlockState state)
 	{
-		return material.RGBa[3];
+		return this.material.RGBa[3];
 	}
-
+	
 	@Override
 	public int getLightValue(IBlockState state)
 	{
-		return material.getProperty(MP.light_value);
+		return this.material.getProperty(MP.light_value);
 	}
-
+	
 	@Override
 	public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
@@ -91,15 +91,15 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	@Override
 	public boolean isFireSource(World world, BlockPos pos, EnumFacing side)
 	{
-		return material.contain(SubTags.FIRE_SOURCE);
+		return this.material.contain(SubTags.FIRE_SOURCE);
 	}
-
+	
 	@Override
 	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
 	{
 		return false;
 	}
-
+	
 	@Override
 	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
@@ -107,26 +107,32 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	}
 	
 	@Override
-	public double getThermalConduct(World world, BlockPos pos)
+	public double getThermalConduct(World world, BlockPos pos, IBlockState state)
 	{
-		return basic.thermalConduct;
+		return this.basic.thermalConduct;
 	}
-
+	
+	@Override
+	public double getHeatCapacity(World world, BlockPos pos, IBlockState state)
+	{
+		return this.basic.heatCap;
+	}
+	
 	@Override
 	public int getFireEncouragement(World world, BlockPos pos)
 	{
-		return material.getProperty(MP.fire_encouragement);
+		return this.material.getProperty(MP.fire_encouragement);
 	}
-
+	
 	@Override
 	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
 	{
-		entityIn.fall(fallDistance, 1F - material.getProperty(MP.fallen_damage_deduction) / 10000F);
+		entityIn.fall(fallDistance, 1F - this.material.getProperty(MP.fallen_damage_deduction) / 10000F);
 	}
 	
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
-		return property.harvestLevel;
+		return this.property.harvestLevel;
 	}
 }

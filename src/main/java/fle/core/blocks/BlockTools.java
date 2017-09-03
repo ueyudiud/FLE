@@ -8,10 +8,13 @@ import farcore.data.EnumItem;
 import farcore.data.Materials;
 import fle.core.FLE;
 import fle.core.client.render.TESRFluidFase;
+import fle.core.tile.tools.TEAdobeDrying;
 import fle.core.tile.tools.TEOilLamp;
 import fle.core.tile.tools.TEWoodenBowl;
 import nebula.base.IRegister;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.StateMapperExt;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
@@ -40,6 +44,7 @@ public class BlockTools extends BlockTE
 		super.postInitalizedBlocks();
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Oillamp");
 		LanguageManager.registerLocal(getTranslateNameForItemStack(1), "Wooden Bowl");
+		LanguageManager.registerLocal(getTranslateNameForItemStack(2), "Brick Mold");
 	}
 	
 	@Override
@@ -51,6 +56,10 @@ public class BlockTools extends BlockTE
 		
 		registerCustomBlockRender(map, 0, "tool/oillamp");
 		registerCustomBlockRender(map, 1, "tool/wooden_bowl");
+		registerCustomBlockRender(map, 2, "tool/wooden_brick_mold");//FIXME
+		
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FLE.MODID, "tool/brick_mold/duration"), state->
+		Integer.toString(BlockStateTileEntityWapper.<TEAdobeDrying>unwrap(state).duration));
 		
 		FarCoreRegistry.registerTESR(TEWoodenBowl.class, new TESRFluidFase<TEWoodenBowl>(0.3125F, 0.0625F, 0.3125F, 0.6875F, 0.25F, 0.6875F, t->t.getTank().getInfo()));
 	}
@@ -66,6 +75,7 @@ public class BlockTools extends BlockTE
 	{
 		register.register(0, "oillamp", TEOilLamp.class);
 		register.register(1, "woodenbowl", TEWoodenBowl.class);
+		register.register(2, "wooden_brick_mold", TEAdobeDrying.class);
 		return true;
 	}
 	

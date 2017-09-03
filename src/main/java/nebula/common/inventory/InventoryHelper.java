@@ -41,7 +41,11 @@ public class InventoryHelper
 	FD_FILL_SIMPLE = 0x1,
 	FD_FILL_ONLYFULL = 0x2,
 	FD_FILL_ANY = 0x3,
-	FD_DRAIN = 0x8;
+	FD_DRAIN = 0x8,
+	
+	FD_FILL_ANY_DRAIN = FD_FILL_ANY | FD_DRAIN,
+	FD_FILL_ONLYFULL_DRAIN = FD_FILL_ONLYFULL | FD_DRAIN,
+	FD_FILL_SIMPLE_DRAIN = FD_FILL_SIMPLE | FD_DRAIN;
 	
 	public static ItemStack removeStack(ItemStack[] stacks, int index)
 	{

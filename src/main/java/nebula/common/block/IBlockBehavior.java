@@ -406,4 +406,9 @@ public interface IBlockBehavior<B>
 	{
 		return false;
 	}
+	
+	default double getHeatCapacity(BlockSubBehavior blockSubBehavior, IBlockState state, World world, BlockPos pos)
+	{
+		return -1F;
+	}
 }

@@ -54,12 +54,15 @@ public interface IThermalCustomBehaviorBlock
 	 * Get conduct heat speed. Negative value means this
 	 * block is not a normal block (Such as ender door).
 	 * @param world
+	 * @param state
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @return
 	 */
-	double getThermalConduct(World world, BlockPos pos);
+	double getThermalConduct(World world, BlockPos pos, IBlockState state);
+	
+	double getHeatCapacity(World world, BlockPos pos, IBlockState state);
 	
 	/**
 	 * Get encouragement of hardness of fire burning.<br>
@@ -82,6 +85,6 @@ public interface IThermalCustomBehaviorBlock
 	
 	default void onHeatChanged(World world, BlockPos pos, Direction direction, double amount)
 	{
-
+		
 	}
 }

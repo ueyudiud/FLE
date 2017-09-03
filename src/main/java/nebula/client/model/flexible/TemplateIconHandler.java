@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 
 import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -23,6 +24,11 @@ public class TemplateIconHandler implements IIconCollection
 {
 	final Map<String, ResourceLocation> textures;
 	Map<String, String> retextures;
+	
+	public static TemplateIconHandler fromJson(String json)
+	{
+		return new TemplateIconHandler(Maps.transformValues(new Gson().<Map<String, String>>fromJson(json, Map.class), s->new ResourceLocation(s)));
+	}
 	
 	public TemplateIconHandler(Map<String, ResourceLocation> textures)
 	{

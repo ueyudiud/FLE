@@ -30,7 +30,7 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 				throws JsonParseException
 		{
 			if (json.isJsonPrimitive())
-				return (Function<IBlockState, String>) NebulaModelLoader.NORMAL_METAGENERATOR;//TODO
+				return NebulaModelLoader.loadBlockMetaGenerator(json.getAsString());
 			if (json.isJsonObject())
 			{
 				JsonObject object = json.getAsJsonObject();

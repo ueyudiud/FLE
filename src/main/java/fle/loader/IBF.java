@@ -13,6 +13,7 @@ import fle.core.blocks.BlockDirtMixture;
 import fle.core.blocks.BlockDitch;
 import fle.core.blocks.BlockGear;
 import fle.core.blocks.BlockPottery;
+import fle.core.blocks.BlockRockySimpleMachine;
 import fle.core.blocks.BlockTools;
 import fle.core.blocks.BlockWoodenMiscMachine;
 import fle.core.blocks.BlockWoodenSimpleWorkbench;
@@ -51,6 +52,7 @@ public class IBF
 		gear = new BlockGear();
 		simple_wooden_workbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.MACHINE);
 		misc_wooden_machine = new BlockWoodenMiscMachine().setCreativeTab(CT.MACHINE);
+		simple_rocky_machine = new BlockRockySimpleMachine().setCreativeTab(CT.MACHINE);
 		pottery = new BlockPottery().setCreativeTab(CT.MACHINE);
 		dirt_mixture = new BlockDirtMixture().setCreativeTab(CT.MACHINE);
 		rocky_tank = new BlockRockyTank().setCreativeTab(CT.MACHINE);
@@ -73,6 +75,7 @@ public class IBF
 	public static Block gear;
 	public static Block simple_wooden_workbench;
 	public static Block misc_wooden_machine;
+	public static Block simple_rocky_machine;
 	public static Block pottery;
 	public static Block dirt_mixture;
 	public static Block rocky_tank;

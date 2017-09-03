@@ -7,11 +7,16 @@ public class BlockStateTileEntityWapper<T extends TileEntity> extends BlockState
 {
 	public static <T extends TileEntity> BlockStateTileEntityWapper<T> wrap(T tile, IBlockState state)
 	{
-		return new BlockStateTileEntityWapper<T>(tile, state);
+		return new BlockStateTileEntityWapper<>(tile, state);
+	}
+	
+	public static <T extends TileEntity> T unwrap(IBlockState state)
+	{
+		return state instanceof BlockStateTileEntityWapper ? (T) ((BlockStateTileEntityWapper<?>) state).tile : null;
 	}
 	
 	public final T tile;
-
+	
 	protected BlockStateTileEntityWapper(T tile, IBlockState state)
 	{
 		super(state);
@@ -21,6 +26,6 @@ public class BlockStateTileEntityWapper<T extends TileEntity> extends BlockState
 	@Override
 	protected BlockStateTileEntityWapper<T> wrapState(IBlockState state)
 	{
-		return new BlockStateTileEntityWapper<T>(tile, state);
+		return new BlockStateTileEntityWapper<>(this.tile, state);
 	}
 }

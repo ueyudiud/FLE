@@ -74,7 +74,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * make more convenient model
  * file writing rules for resource pack maker.<p>
  * @author ueyudiud
- * @version 0.3
+ * @version 0.4
  */
 public enum NebulaModelLoader implements ICustomModelLoader
 {
@@ -379,6 +379,17 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	public static Function<ItemStack, String> loadItemMetaGenerator(String location)
 	{
 		return ITEM_META_GENERATOR.getOrDefault(new ResourceLocation(location), (Function<ItemStack, String>) NORMAL_METAGENERATOR);
+	}
+	
+	/**
+	 * Get meta applier.
+	 * @param location
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")//It is safe.
+	public static Function<IBlockState, String> loadBlockMetaGenerator(String location)
+	{
+		return BLOCK_META_GENERATOR.getOrDefault(new ResourceLocation(location), (Function<IBlockState, String>) NORMAL_METAGENERATOR);
 	}
 	
 	/**

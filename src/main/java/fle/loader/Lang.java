@@ -23,5 +23,7 @@ public class Lang
 		LanguageManager.registerLocal(ToolPropertiesModificater.Property.MINING_SPEED.getTranslateName(), "MS");
 		LanguageManager.registerLocal(ToolPropertiesModificater.Property.SPECIAL.getTranslateName(), "");
 		LanguageManager.registerLocal(ToolPropertiesModificater.Property.UNKNOWN.getTranslateName(), "???");
+		
+		LanguageManager.registerLocal("info.blockable.tool.place", "Right click ground to place on the top.");
 	}
 }

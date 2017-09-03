@@ -5,6 +5,7 @@ import java.util.List;
 
 import nebula.base.IRegister;
 import nebula.base.Register;
+import nebula.client.blockstate.BlockStateTileEntityWapper;
 import nebula.client.model.StateMapperExt;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.block.property.PropertyTE;
@@ -166,6 +167,12 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
 		return this.property_TE.withProperty(state, worldIn.getTileEntity(pos));
+	}
+	
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return BlockStateTileEntityWapper.wrap(world.getTileEntity(pos), super.getExtendedState(state, world, pos));
 	}
 	
 	@Override

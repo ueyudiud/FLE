@@ -18,6 +18,7 @@ import fle.api.recipes.instance.RecipeMaps;
 import fle.core.recipe.RecipePortableWoodwork1;
 import fle.core.recipe.RecipePortableWoodwork2;
 import fle.loader.IBF;
+import net.minecraft.init.Items;
 
 /**
  * @author ueyudiud
@@ -29,6 +30,8 @@ public class RecipeResource1
 		addShapelessRecipe(IBF.miscResources.getSubItem("ramie_rope"), IBF.miscResources.getSubItem("dry_ramie_fiber"), 4);
 		addShapelessRecipe(IBF.miscResources.getSubItem("ramie_rope_bundle"), IBF.miscResources.getSubItem("ramie_rope"), 4);
 		addShapelessRecipe(IBF.miscResources.getSubItem("ramie_rope", 4), IBF.miscResources.getSubItem("ramie_rope_bundle"));
+		addShapelessRecipe(IBF.miscResources.getSubItem("crushed_bone"), Items.BONE, toolUse(EnumToolTypes.HAMMER_DIGABLE, 0.2F));
+		addShapelessRecipe(IBF.miscResources.getSubItem("tinder"), IBF.miscResources.getSubItem("dry_broadleaf"), 3, toolUse(EnumToolTypes.FIRESTARTER, 0.5F));
 		
 		for (PropertyWood tree : Mat.filtAndGet(SubTags.WOOD, MP.property_wood))
 		{

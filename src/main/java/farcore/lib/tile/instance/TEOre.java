@@ -79,7 +79,7 @@ ITP_Drops, IToolableTile
 	public EnumOreAmount amount = EnumOreAmount.normal;
 	public Mat rock = STONE;
 	public EnumRockType rockType = EnumRockType.resource;
-	public double heat;
+	public long heat;
 	
 	public TEOre(Mat ore, EnumOreAmount amount, Mat rock, EnumRockType type)
 	{
@@ -133,7 +133,7 @@ ITP_Drops, IToolableTile
 		this.amount = EnumOreAmount.values()[compound.getByte("amount")];
 		this.rock = Mat.material(compound.getString("rock"), STONE);
 		this.rockType = EnumRockType.values()[compound.getByte("type")];
-		this.heat = compound.getDouble("heat");
+		this.heat = compound.getLong("heat");
 	}
 	
 	@Override
@@ -143,7 +143,7 @@ ITP_Drops, IToolableTile
 		compound.setByte("amount", (byte) this.amount.ordinal());
 		compound.setString("rock", this.rock.name);
 		compound.setByte("type", (byte) this.rockType.ordinal());
-		compound.setDouble("heat", this.heat);
+		compound.setLong("heat", this.heat);
 		return super.writeToNBT(compound);
 	}
 	
@@ -396,7 +396,13 @@ ITP_Drops, IToolableTile
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return (float) (this.heat / this.ore.getProperty(MP.property_basic).thermalConduct);
+		return (float) (this.heat / this.ore.getProperty(MP.property_basic).heatCap);
+	}
+	
+	@Override
+	public double getHeatCapacity(Direction direction)
+	{
+		return this.ore.getProperty(MP.property_basic).heatCap;
 	}
 	
 	@Override
@@ -406,7 +412,7 @@ ITP_Drops, IToolableTile
 	}
 	
 	@Override
-	public void onHeatChange(Direction direction, double value)
+	public void onHeatChange(Direction direction, long value)
 	{
 		this.heat += value;
 	}

@@ -100,7 +100,7 @@ implements IFluidHandlerIO, IFluidHandler
 	{
 		if (this.syncTankState)
 		{
-			tank().readFromNBT1(this.nbt, "t");
+			tank().writeToNBT(this.nbt, "t");
 		}
 	}
 	

@@ -461,7 +461,8 @@ public class L
 		return false;
 	}
 	
-	public static <T> T get(Collection<? extends T> collection, Judgable<T> judgable)
+	@Nullable
+	public static <T> T get(@Nullable Collection<? extends T> collection, @Nonnull Judgable<T> judgable)
 	{
 		if (collection == null || collection.isEmpty()) return null;
 		for (T target : collection) if (judgable.isTrue(target)) return target;

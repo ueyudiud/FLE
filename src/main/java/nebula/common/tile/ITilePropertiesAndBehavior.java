@@ -270,7 +270,7 @@ public interface ITilePropertiesAndBehavior
 		
 		boolean onBurningTick(Random rand, Direction fireSourceDir, IBlockState fireState);
 		
-		void onHeatChange(Direction direction, double amount);
+		void onHeatChange(Direction direction, long amount);
 	}
 	
 	public static interface ITB_AddDestroyEffects

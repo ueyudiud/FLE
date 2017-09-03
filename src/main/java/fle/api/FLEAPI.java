@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class FLEAPI
 {
+	public static final String API_MOD_ID = "fle";
+	
 	public static int voidDimID;
 	
 	public static CreativeTabBase tabSimpleMachinery;

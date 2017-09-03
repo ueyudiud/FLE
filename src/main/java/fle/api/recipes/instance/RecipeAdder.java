@@ -5,18 +5,25 @@
 package fle.api.recipes.instance;
 
 import static farcore.lib.solid.SolidStack.COPY_SOLIDSTACK;
+import static fle.api.recipes.instance.RecipeMaps.CERAMICPOT_ADD_TO_MIX;
+import static fle.api.recipes.instance.RecipeMaps.CERAMICPOT_BASE;
 import static fle.api.recipes.instance.RecipeMaps.DIRT_MIXTURE_INPUT;
 import static fle.api.recipes.instance.RecipeMaps.DIRT_MIXTURE_OUTPUT;
 import static fle.api.recipes.instance.RecipeMaps.DRYING;
 import static fle.api.recipes.instance.RecipeMaps.LEVER_OIL_MILL;
 import static fle.api.recipes.instance.RecipeMaps.STONE_MILL;
+import static fle.api.recipes.instance.RecipeMaps.TAG_CERAMICPOT_BASE_INPUT1;
+import static fle.api.recipes.instance.RecipeMaps.TAG_CERAMICPOT_BASE_INPUT2;
+import static fle.api.recipes.instance.RecipeMaps.TAG_CERAMICPOT_BASE_INPUT3;
 import static fle.api.recipes.instance.RecipeMaps.WASHING_BARGRIZZLY;
 import static nebula.common.data.Misc.anyTo;
 import static nebula.common.util.FluidStacks.COPY_FLUIDSTACK;
 import static nebula.common.util.ItemStacks.COPY_ITEMSTACK;
+import static net.minecraft.item.ItemStack.copyItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -29,7 +36,9 @@ import farcore.lib.material.Mat;
 import farcore.lib.solid.SolidStack;
 import fle.api.recipes.ShapedFleRecipe;
 import fle.api.recipes.ShapelessFleRecipe;
+import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
+import fle.api.recipes.instance.interfaces.IRecipeInput;
 import nebula.base.ObjArrayParseHelper;
 import nebula.common.data.Misc;
 import nebula.common.stack.AbstractStack;
@@ -98,7 +107,7 @@ public final class RecipeAdder
 	public static void addLeverOilMillRecipe(AbstractStack input, int duration, @Nullable ItemStack output1, int[] outputChance, @Nullable FluidStack output2, int minOutput, int maxOutput)
 	{
 		LEVER_OIL_MILL.addRecipe(new TemplateRecipe<>(input.containCheck(), anyTo(duration), asChanceOutput(output1, outputChance), asRandomOutput(output2, minOutput, maxOutput))
-				.setData(input, duration, ItemStack.copyItemStack(output1), FluidStacks.copy(output2), outputChance, (long) maxOutput << 32 | minOutput));
+				.setData(input, duration, copyItemStack(output1), FluidStacks.copy(output2), outputChance, (long) maxOutput << 32 | minOutput));
 	}
 	
 	public static void addDirtMixtureInputRecipe(AbstractStack input, Object...objects)
@@ -125,6 +134,30 @@ public final class RecipeAdder
 					return null;
 			return ItemStacks.sizeOf(output, (int) (stacks.getAmount() * output.stackSize / size));
 		});
+	}
+	
+	public static void addBoilingPotRecipe(@Nonnull AbstractStack input1, @Nonnull FluidStack input2, @Nullable SingleInputMatch input3,
+			int minTemp, int duration, @Nullable ItemStack output1, @Nullable ItemStack output2)
+	{
+		final SingleInputMatch input3i = input3 == null ? SingleInputMatch.EMPTY : input3;
+		CERAMICPOT_BASE.addRecipe(new TemplateRecipe<IRecipeInput>(handler->
+		input1.contain(handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1)) &&
+		FluidStacks.containFluid(handler.<FluidStack>getRecipeInput(TAG_CERAMICPOT_BASE_INPUT2), input2) &&
+		input3i.match(handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT3)),
+		anyTo(minTemp), anyTo(duration),
+		anyTo(output1).andThen(COPY_ITEMSTACK),
+		input3i.toOutputTransferFunction(output2).compose(handler->handler.getRecipeInput(TAG_CERAMICPOT_BASE_INPUT1)))
+				.setData(input1, FluidStacks.copy(input2), input3i, minTemp, duration, copyItemStack(output1), copyItemStack(output2)));
+	}
+	
+	public static void addSolidItemMixToPotRecipe(@Nonnull SolidStack input1, @Nonnull FluidStack input2, @Nonnull FluidStack output)
+	{
+		Function<Entry<SolidStack, FluidStack>, Integer> function = e->e.getValue().amount / input2.amount;
+		CERAMICPOT_ADD_TO_MIX.addRecipe(new TemplateRecipe<>(e->
+		input1.isSoildEqual(e.getKey()) &&
+		input2.isFluidEqual(e.getValue()) &&
+		e.getKey().amount / input1.amount >= e.getValue().amount / input2.amount,
+		function.andThen(i->i*input1.amount), function.andThen(i->FluidStacks.sizeOf(output, i*output.amount))));
 	}
 	
 	private static <E> Function<E, ItemStack[]> asShapelessChanceOutput(ItemStack[] list, int[][] chances)

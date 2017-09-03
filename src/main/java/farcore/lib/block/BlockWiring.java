@@ -17,7 +17,6 @@ import net.minecraft.world.World;
  * This class provide some functional method for
  * modder.
  * @author ueyudiud
- *
  */
 public abstract class BlockWiring extends BlockSingleTE //The wiring block will use only single tile entity.
 {
@@ -30,13 +29,13 @@ public abstract class BlockWiring extends BlockSingleTE //The wiring block will 
 	{
 		super(modid, name, materialIn);
 	}
-
+	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, Misc.PROPS_SIDE);
 	}
-
+	
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
@@ -54,7 +53,7 @@ public abstract class BlockWiring extends BlockSingleTE //The wiring block will 
 		}
 		return state;
 	}
-
+	
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
@@ -66,7 +65,7 @@ public abstract class BlockWiring extends BlockSingleTE //The wiring block will 
 	{
 		return getDefaultState();
 	}
-
+	
 	@Override
 	public abstract TEWiring createNewTileEntity(World worldIn, int meta);
 }
