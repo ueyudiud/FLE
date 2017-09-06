@@ -9,6 +9,7 @@ sudo: false
 
 # Caching Gradle
 before_cache:
+  - echo "Cleanin cache."
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
   directories:
@@ -16,5 +17,5 @@ cache:
     - $HOME/.gradle/wrapper/
     #- $HOME/.cache/pip
 script:
-  #- ./gradlew setupCIWorkspace
+  - ./gradlew setupCIWorkspace
   - ./gradlew build
