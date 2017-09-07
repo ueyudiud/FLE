@@ -6,7 +6,6 @@ package nebula.common.data;
 
 import static net.minecraft.network.datasync.DataSerializers.registerSerializer;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class DataSerializers
 		}
 		
 		@Override
-		public Short read(PacketBuffer buf) throws IOException
+		public Short read(PacketBuffer buf)
 		{
 			return buf.readShort();
 		}
@@ -60,7 +59,7 @@ public class DataSerializers
 		}
 		
 		@Override
-		public IBlockState read(PacketBuffer buf) throws IOException
+		public IBlockState read(PacketBuffer buf)
 		{
 			return ExtendedBlockStateRegister.getCachedState(buf.readInt());
 		}
@@ -84,7 +83,7 @@ public class DataSerializers
 			}
 			
 			@Override
-			public E read(PacketBuffer buf) throws IOException
+			public E read(PacketBuffer buf)
 			{
 				return buf.readEnumValue(enumClass);
 			}
