@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.GameSettings;
@@ -44,6 +45,7 @@ public class FontRenderExtend extends FontRenderer
 			boolean unicode)
 	{
 		super(gameSettingsIn, location, textureManagerIn, unicode);
+		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 	}
 	
 	@Override
@@ -89,25 +91,21 @@ public class FontRenderExtend extends FontRenderer
 	@Override
 	protected float renderDefaultChar(int ch, boolean italic)
 	{
-		if(!Minecraft.getMinecraft().fontRendererObj.getUnicodeFlag())
+		boolean flag = Minecraft.getMinecraft().fontRendererObj.getUnicodeFlag();
+		if (!flag)
 		{
 			char chr = MC_CODE_LIST.charAt(ch);
 			for(IFontMap map : FONT_MAPS)
 				if(map.shouldRender(chr))
 					return map.renderCharacter(chr, italic, this);
+			return super.renderDefaultChar(chr, italic);
 		}
-		return super.renderDefaultChar(ch, italic);
+		else return super.renderUnicodeChar(MC_CODE_LIST.charAt(ch), italic);
 	}
 	
 	@Override
 	protected float renderUnicodeChar(char ch, boolean italic)
 	{
-		if(!Minecraft.getMinecraft().fontRendererObj.getUnicodeFlag())
-		{
-			for(IFontMap map : FONT_MAPS)
-				if(map.shouldRender(ch))
-					return map.renderCharacter(ch, italic, this);
-		}
 		return super.renderUnicodeChar(ch, italic);
 	}
 	

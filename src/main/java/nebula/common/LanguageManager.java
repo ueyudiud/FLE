@@ -28,6 +28,11 @@ import nebula.common.util.Strings;
 import net.minecraft.client.resources.I18n;
 import scala.actors.threadpool.Arrays;
 
+/**
+ * Language manager type.
+ * @author ueyudiud
+ *
+ */
 public class LanguageManager
 {
 	/** The default locale of manager. */
@@ -41,8 +46,8 @@ public class LanguageManager
 	private static boolean loadFile = false;
 	
 	/**
-	 * Register tooltips (List of localize string) to localization map.
-	 * @param unlocalized the unlocalize string.
+	 * Register tool tips (List of localize string) to localization map.
+	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized strings.
 	 */
 	public static void registerTooltip(String unlocalized, String...localized)
@@ -76,7 +81,7 @@ public class LanguageManager
 	/**
 	 * Register localize string to localized manager,
 	 * for <tt>unlocalized=localized</tt> entry.
-	 * @param unlocalized the unlocalize string.
+	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized string.
 	 */
 	public static void registerLocal(String unlocalized, String localized)
@@ -91,13 +96,13 @@ public class LanguageManager
 	/**
 	 * Localized string and format it.<p>
 	 * The localize manager will find localized source given by Nebula translation map first,
-	 * or find from I18n if failed fingding. The <tt>en_US</tt> will be used when unlocalized
+	 * or find from I18n if failed finding. The <tt>en_US</tt> will be used when unlocalized
 	 * string does not exist in translation map.<p>
 	 * The format action will only taken when translating is succeed.<p>
 	 * If exception is caught in formating. The result will be <tt>"Translation Error"</tt>.
 	 * @param unlocalized the unlocalized string.
 	 * @param objects the format element,
-	 * use {@link java.lang.String#format(String, Object...)} to format locazlied string.
+	 * use {@link java.lang.String#format(String, Object...)} to format localized string.
 	 * @return the formated localized string, or unlocalized string direct if nothing found.
 	 * @see #translateToLocalWithIgnoreUnmapping(String, Object...)
 	 */
@@ -105,11 +110,11 @@ public class LanguageManager
 	{
 		String locale = Strings.locale();
 		String translate;
-		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
+		if (MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
 		{
 			translate = MAP1.get(locale).get(unlocalized);
 		}
-		else if(MAP2.containsKey(unlocalized))
+		else if (MAP2.containsKey(unlocalized))
 		{
 			translate = MAP2.get(unlocalized);
 		}
@@ -148,14 +153,14 @@ public class LanguageManager
 	}
 	
 	/**
-	 * Localized string and format unsafty.<p>
+	 * Localized string and format unsafely.<p>
 	 * The localize manager will find localized source given by Nebula translation map first,
-	 * or find from I18n if failed fingding. The <tt>en_US</tt> will be used when unlocalized
+	 * or find from I18n if failed finding. The <tt>en_US</tt> will be used when unlocalized
 	 * string does not exist in translation map.<p>
 	 * The format action will only taken when translating is succeed.<p>
 	 * @param unlocalized the unlocalized string.
 	 * @param objects the format element,
-	 * use {@link java.lang.String#format(String, Object...)} to format locazlied string.
+	 * use {@link java.lang.String#format(String, Object...)} to format localized string.
 	 * @return the formated localized string, or <tt>null</tt> if nothing found.
 	 * @see #translateToLocal(String, Object...)
 	 */
@@ -205,7 +210,7 @@ public class LanguageManager
 		if (!this.file.canRead())
 			return;
 		MAP1.clear();
-		Log.info("Start read localized file.");
+		Log.info("Start read localized file at " + this.file.getAbsolutePath());
 		for(File file : this.file.listFiles(FILTER))
 		{
 			String name = file.getName();
