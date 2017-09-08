@@ -10,6 +10,7 @@ import nebula.common.world.ICoord;
  * The thermal handler.
  * Implements by tile entity.
  * @author ueyudiud
+ * @see farcore.energy.thermal.ThermalNet
  */
 public interface IThermalHandler extends ICoord
 {

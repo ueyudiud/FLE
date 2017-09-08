@@ -301,13 +301,15 @@ public class ThermalNet implements IEnergyNet
 		return this.netMap.get(world.provider.getDimension());
 	}
 	
-	public static long caculateCurrent(double k1, double k2, double c1, double c2, float t1, float t2)
+	public static long caculateCurrent(double k1, double k2,
+			double c1, double c2, float t1, float t2)
 	{
 		double k = Maths.log_average(k1, k2);
-		double c = (c1 * c2)/(c1 + c2);
-		return Math.round(c * (t2-t1) * Math.expm1(-k/c));
+		//		double c = (c1 * c2)/(c1 + c2);
+		//		return Math.round(c*(t2-t1)*Math.expm1(-k/c));
+		return Math.round(k*(t1-t2));
 	}
-
+	
 	private static class Local
 	{
 		private static final Local instance = new Local(null);
@@ -450,7 +452,8 @@ public class ThermalNet implements IEnergyNet
 									temp2 = getEnviormentTemperature(this.world, tile1.pos()) + tile1.getTemperatureDifference(direction.getOpposite());
 									if(!L.similar(temp, temp2))//Ignore small temperature difference.
 									{
-										tile1.onHeatChange(direction.getOpposite(), current[i] = ThermalNet.caculateCurrent(tc1, tc2, c, tile1.getHeatCapacity(direction.getOpposite()), temp, temp2));
+										tile1.onHeatChange(direction.getOpposite(), current[i] = ThermalNet.caculateCurrent(tc1, tc2,
+												c, tile1.getHeatCapacity(direction.getOpposite()), temp, temp2));
 									}
 								}
 								else
