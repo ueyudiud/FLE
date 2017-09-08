@@ -150,7 +150,7 @@ public class BlockChest extends BlockTE
 	}
 	
 	@Override
-	public boolean canProvidePower(IBlockState state)
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}

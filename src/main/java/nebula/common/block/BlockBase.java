@@ -301,7 +301,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public final List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		return getDrops(world, pos, state, world.getTileEntity(pos), fortune, false);
+		return L.castToArrayListOrWrap(getDrops(world, pos, state, world.getTileEntity(pos), fortune, false));
 	}
 	
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune, boolean silkTouch)

@@ -52,6 +52,7 @@ import farcore.lib.item.ItemMulti;
 import farcore.lib.item.instance.ItemDebugger;
 import farcore.lib.item.instance.ItemIngot;
 import farcore.lib.item.instance.ItemOreChip;
+import farcore.lib.item.instance.ItemPile;
 import farcore.lib.item.instance.ItemSeed;
 import farcore.lib.item.instance.ItemStoneChip;
 import farcore.lib.item.instance.ItemStoneFragment;
@@ -118,7 +119,7 @@ public class CommonLoader
 		new ItemMulti(MC.firewood).setCreativeTab(CT.TREE);
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.MATERIAL));
 		new ItemIngot().setCreativeTab(CT.MATERIAL);
-		new ItemMulti(MC.pile).setCreativeTab(CT.MATERIAL);
+		new ItemPile().setCreativeTab(CT.MATERIAL);
 		new ItemMulti(MC.brick).setCreativeTab(CT.BUILDING);
 		new ItemMulti(MC.roofshingle).setCreativeTab(CT.BUILDING);
 		new ItemMulti(MC.rooftile).setCreativeTab(CT.BUILDING);

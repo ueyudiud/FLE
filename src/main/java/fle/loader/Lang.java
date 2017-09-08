@@ -25,5 +25,10 @@ public class Lang
 		LanguageManager.registerLocal(ToolPropertiesModificater.Property.UNKNOWN.getTranslateName(), "???");
 		
 		LanguageManager.registerLocal("info.blockable.tool.place", "Right click ground to place on the top.");
+		
+		LanguageManager.registerLocal("info.adobe.drying.wet", "It seems wet because of rain.");
+		LanguageManager.registerLocal("info.adobe.drying.notdried", "It isn't dry yet.");
+		LanguageManager.registerLocal("info.adobe.drying.quitedried", "It is quite dry now.");
+		LanguageManager.registerLocal("info.adobe.drying.dried", "It is dry.");
 	}
 }

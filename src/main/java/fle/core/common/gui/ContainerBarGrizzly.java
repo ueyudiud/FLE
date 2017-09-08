@@ -115,7 +115,7 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 	public void onContainerClosed(EntityPlayer playerIn)
 	{
 		super.onContainerClosed(playerIn);
-		dropPlayerItems(this.inventory);
+		dropOrGivePlayerPlayerItems(this.inventory);
 	}
 	
 	@Override

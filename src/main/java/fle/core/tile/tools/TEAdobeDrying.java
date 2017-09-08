@@ -7,6 +7,7 @@ import java.util.List;
 
 import fle.loader.IBF;
 import nebula.base.ObjArrayParseHelper;
+import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_BoundingBox;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
@@ -16,17 +17,21 @@ import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * @author ueyudiud
  */
 public class TEAdobeDrying extends TEAged
-implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops
+implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
 {
-	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.3125F, 0.0F, 0.125F, 0.6875F, 0.375F, 0.875F);
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.25F, 0.0F, 0.125F, 0.75F, 0.375F, 0.875F);
 	
 	public int duration;
 	int wetness;
@@ -87,6 +92,32 @@ implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops
 		this.duration = compound.getInteger("duration");
 		this.wetness = compound.getInteger("wetness");
 		syncToNearby();
+	}
+	
+	@Override
+	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
+			float hitX, float hitY, float hitZ)
+	{
+		if (isServer())
+		{
+			if (this.wetness > 0)
+			{
+				player.sendMessage(new TextComponentTranslation("info.adobe.drying.wet"));
+			}
+			else if (this.duration < 5)
+			{
+				player.sendMessage(new TextComponentTranslation("info.adobe.drying.notdried"));
+			}
+			else if (this.duration < 10)
+			{
+				player.sendMessage(new TextComponentTranslation("info.adobe.drying.quitedried"));
+			}
+			else
+			{
+				player.sendMessage(new TextComponentTranslation("info.adobe.drying.dried"));
+			}
+		}
+		return EnumActionResult.SUCCESS;
 	}
 	
 	@Override

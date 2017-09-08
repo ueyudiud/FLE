@@ -35,16 +35,20 @@ public abstract class TESRChest<T extends TEChest> extends TESRBase<T>
 	@Override
 	public void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage)
 	{
+		GlStateManager.enableDepth();
+		GlStateManager.depthFunc(GL11.GL_LEQUAL);
+		GlStateManager.depthMask(true);
+		
 		GL11.glPushMatrix();
 		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		//Render chest body.
 		GL11.glTranslated(x + .5F, y, z + .5F);
 		GL11.glRotatef(te.facing.getHorizontalAngle(), 0, -1, 0);
-		GL11.glTranslatef(-.5F, 0, -.5F);
-		//Render chest body.
+		GL11.glTranslatef(-.5F, 0, -.5F);;
 		renderChestBody(te);
-		//			renderCube(this.minX, this.minY, this.minZ, this.maxX, this.midY, this.maxZ, sprites);
 		
 		//Render chest top.
 		GL11.glPushMatrix();
@@ -52,10 +56,9 @@ public abstract class TESRChest<T extends TEChest> extends TESRBase<T>
 		GL11.glRotatef(Maths.lerp(te.prevLidAngle, te.lidAngle, partialTicks) * 60.0F, 1, 0, 0);
 		GL11.glTranslatef(0, -this.midY, -this.maxZ);
 		renderChestTop(te);
-		//			renderCube(this.minX, this.minY, this.minZ, this.maxX, this.midY, this.maxZ, sprites);
+		
 		GL11.glPopMatrix();
 		
-		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}

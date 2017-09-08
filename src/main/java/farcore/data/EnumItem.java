@@ -17,6 +17,7 @@ public enum EnumItem
 	debug,
 	display_fluid,
 	stone_chip,
+	pile,
 	ore_chip,
 	seed,
 	stone_fragment,

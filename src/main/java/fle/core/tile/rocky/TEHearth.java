@@ -7,9 +7,9 @@ import farcore.data.EnumToolTypes;
 import farcore.data.M;
 import farcore.data.V;
 import farcore.energy.thermal.IThermalHandler;
-import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
+import fle.api.energy.thermal.ThermalEnergyHelper;
 import fle.api.mat.StackContainer;
 import fle.api.recipes.instance.FuelHandler;
 import fle.api.tile.IBellowsAccepter;
@@ -38,8 +38,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	private int burningPower;
 	private int normalBurningPower;
 	private long fuelValue;
-	private long internalEnergy;
-	private long fuelEnergy;
+	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, 1.3E-4F, 1.0F, 30.0F, 3.6E-3F);
 	
 	public TEHearth()
 	{
@@ -51,8 +50,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 		compound.setInteger("power1", this.burningPower);
 		compound.setInteger("power2", this.normalBurningPower);
 		compound.setLong("fuelValue", this.fuelValue);
-		compound.setLong("energy", this.internalEnergy);
-		compound.setLong("energy1", this.fuelEnergy);
+		this.helper.writeToNBT(this.nbt, "thermal");
 		return super.writeToNBT(compound);
 	}
 	
@@ -63,8 +61,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 		this.burningPower = compound.getInteger("power1");
 		this.normalBurningPower = compound.getInteger("power2");
 		this.fuelValue = compound.getLong("fuelValue");
-		this.internalEnergy = compound.getLong("energy");
-		this.fuelEnergy = compound.getLong("energy1");
+		this.helper.readFromNBT(compound, "thermal");
 	}
 	
 	@Override
@@ -129,6 +126,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	protected void updateServer()
 	{
 		super.updateServer();
+		
 		if (is(IsBurining))
 		{
 			if (this.fuelValue == 0)
@@ -139,7 +137,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 			{
 				long i = Math.min(this.fuelValue, this.burningPower);
 				this.fuelValue -= i;
-				this.fuelEnergy += i * 0.8F;
+				this.helper.addInternalEnergy(i);
 				if (this.burningPower > this.normalBurningPower)
 				{
 					this.burningPower -= (this.burningPower - this.normalBurningPower + 1) / 2;
@@ -150,10 +148,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 				}
 			}
 		}
-		long amt = ThermalNet.caculateCurrent(V.airHeatConductivity, M.stone.thermalConductivity,
-				V.airHeatCapacity, M.stone.heatCapacity, getTemperatureDifference(Direction.U), getTemperatureDifference(Direction.Q));
-		this.internalEnergy += amt;
-		this.fuelEnergy -= amt;
+		this.helper.recaculateTemperature(this.world, this.pos);
 	}
 	
 	private void tryBuringItem()
@@ -166,10 +161,12 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 				decrStackSize(0, key.fuel);
 				this.fuelValue = key.fuelValue;
 				this.normalBurningPower = key.normalPower;
+				this.helper.setBaseMaxTemperature(500.0F);
 				return;
 			}
 		}
 		disable(IsBurining);
+		this.helper.setBaseMaxTemperature(0.0F);
 	}
 	
 	@Override
@@ -193,14 +190,13 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return direction == Direction.U ?
-				this.fuelEnergy / V.airHeatCapacity : (float) (this.internalEnergy / M.stone.heatCapacity);
+		return this.helper.getTemperature();
 	}
 	
 	@Override
 	public double getHeatCapacity(Direction direction)
 	{
-		return direction == Direction.U ? V.airHeatCapacity : M.stone.heatCapacity;
+		return this.helper.getHeatCapacity();
 	}
 	
 	@Override
@@ -212,9 +208,6 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
-		if (direction == Direction.U)
-			this.fuelEnergy += value;
-		else
-			this.internalEnergy += value;
+		this.helper.addInternalEnergy(value);
 	}
 }

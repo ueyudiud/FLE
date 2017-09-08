@@ -273,4 +273,14 @@ public final class Maths
 	{
 		return L.similar(a, b) ? a : a == 0 || b == 0 ? 0 : (a - b) / (Math.log(a) - Math.log(b));
 	}
+	
+	public static float sq(float f)
+	{
+		return f * f;
+	}
+	
+	public static double sq(double d)
+	{
+		return d * d;
+	}
 }

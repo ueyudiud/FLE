@@ -23,9 +23,11 @@ import farcore.data.MP;
 import farcore.data.V;
 import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.BlockMaterial;
+import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.world.WorldPropHandler;
+import nebula.base.ObjArrayParseHelper;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
@@ -51,6 +53,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -422,6 +425,13 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		{
 			updateBase(worldIn, pos, state, rand);
 		}
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
+			boolean silkTouch)
+	{
+		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.pile, 6 + RANDOM.nextInt(3)));
 	}
 	
 	protected void spreadCoverPlant(World world, BlockPos pos, IBlockState state, Random rand)

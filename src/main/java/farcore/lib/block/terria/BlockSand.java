@@ -3,7 +3,6 @@
  */
 package farcore.lib.block.terria;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -19,6 +18,7 @@ import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import nebula.base.IntegerMap;
+import nebula.base.ObjArrayParseHelper;
 import nebula.base.function.Selector;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
@@ -219,6 +219,13 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		}
 	}
 	
+	public static int fillBlockWith(World world, BlockPos pos, IBlockState state, int amount)
+	{
+		int t = Math.min(16 - state.getValue(LAYER), amount);
+		world.setBlockState(pos, state.withProperty(LAYER, state.getValue(LAYER) + t));
+		return amount - t;
+	}
+	
 	protected boolean fallBlockAt(World world, BlockPos source, BlockPos pos, IBlockState state)
 	{
 		IBlockState state1;
@@ -237,17 +244,11 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		state1 = world.getBlockState(pos.down());
 		if (state1.getBlock() == this)
 		{
-			int c = state.getValue(LAYER);
-			int t = Math.min(16 - state1.getValue(LAYER), c);
-			if (c > t)
-			{
-				world.setBlockState(source, state.withProperty(LAYER, c - t));
-			}
+			int i = fillBlockWith(world, pos, state1, state.getValue(LAYER));
+			if (i > 0)
+				world.setBlockState(source, state.withProperty(LAYER, i));
 			else
-			{
 				world.setBlockToAir(source);
-			}
-			world.setBlockState(pos.down(), state1.withProperty(LAYER, state1.getValue(LAYER) + t));
 			return true;
 		}
 		else
@@ -338,9 +339,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, TileEntity tile, int fortune,
 			boolean silkTouch)
 	{
-		ArrayList<ItemStack> list = new ArrayList<>();
-		list.add(ItemMulti.createStack(this.material, MC.pile));
-		return list;
+		return ObjArrayParseHelper.newArrayList(ItemMulti.createStack(this.material, MC.pile));
 	}
 	
 	@Override

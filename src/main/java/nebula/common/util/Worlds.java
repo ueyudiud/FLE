@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
@@ -25,6 +26,7 @@ import nebula.common.world.IObjectInWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -33,11 +35,15 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -85,6 +91,81 @@ public final class Worlds
 		return state.getBlock().isAir(state, world, pos) || state.getBlock().isReplaceable(world, pos);
 	}
 	
+	/**
+	 * Try place block on the ground.
+	 * This method is simulated to method in {@link net.minecraft.item.ItemBlock#onItemUse(ItemStack, EntityPlayer, World, BlockPos, EnumHand, EnumFacing, float, float, float)}.<p>
+	 * If player ray trace block position can not is not <tt>replaceable</tt>,
+	 * the position will offset by <code>facing</code>.
+	 * This method include following actions:
+	 * <li>
+	 * Check player can be edit and can be replaced, if <code>false</code> is
+	 * return, the remain action will be canceled.
+	 * <li>
+	 * Set block state into world, if <code>false</code> is return, the remain
+	 * action will be canceled.
+	 * <li>
+	 * Reload TileEntity NBT from ItemStack, and display placed block sound.
+	 * </li>
+	 * @param world the world.
+	 * @param pos the position try to place first, usually is player ray trace
+	 *            position, if block is not <tt>replaceable</tt> will try to
+	 *            offset position to check.
+	 * @param facing the collide facing
+	 * @param player the player.
+	 * @param stack the used item stack, not force to ItemBlock.
+	 * @param placedState the state try to placing.
+	 * @param hasTile <code>true</code> will enable tile NBT replacing after block
+	 *                added to world.
+	 * @return <code>FAIL</code> if check failed, <code>PASS</code> if action is not
+	 *         finished, and <code>SUCCESS</code> if action is finished.
+	 */
+	public static EnumActionResult checkAndPlaceBlockAt(World world, BlockPos pos, @Nonnull EnumFacing facing, @Nonnull EntityPlayer player, ItemStack stack,
+			@Nonnull IBlockState placedState, boolean hasTile)
+	{
+		IBlockState state1 = world.getBlockState(pos);
+		if (!state1.getBlock().isReplaceable(world, pos))
+		{
+			state1 = world.getBlockState(pos = pos.offset(facing));
+		}
+		
+		if (player.canPlayerEdit(pos, facing, stack) &&
+				placedState.getBlock().canReplace(world, pos, facing, stack))
+		{
+			if (!world.setBlockState(pos, placedState)) return EnumActionResult.PASS;
+			
+			IBlockState state2 = world.getBlockState(pos);
+			if (state2.getBlock() == placedState.getBlock())
+			{
+				if (hasTile)
+				{
+					ItemBlock.setTileEntityNBT(world, player, pos, stack);
+				}
+				placedState.getBlock().onBlockPlacedBy(world, pos, state2, player, stack);
+				SoundType soundtype = state2.getBlock().getSoundType(state2, world, pos, player);
+				world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+			}
+			return EnumActionResult.SUCCESS;
+		}
+		return EnumActionResult.FAIL;
+	}
+	
+	/**
+	 * Try break block without player damage.<p>
+	 * This method include following actions:<li>
+	 * Remove block by set block to air (For player damaged block, called
+	 * {@link net.minecraft.block.Block#removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)} instead),
+	 * and called <code>breakBlock</code> method.
+	 * <li>
+	 * Send a packet to client side and take broken particle rendering.
+	 * <li>
+	 * If <tt>harestBlock</tt> is enabled, called <code>dropBlockAsItem</code>
+	 * method from harvested block.
+	 * </li>
+	 * @param world
+	 * @param pos
+	 * @param harvestBlock
+	 * @see net.minecraft.block.Block#breakBlock(World, BlockPos, IBlockState)
+	 */
 	public static void breakBlockWithoutSource(World world, BlockPos pos, boolean harvestBlock)
 	{
 		if(!world.isRemote) //This method have not effect in client world, it will send a packet to client.
