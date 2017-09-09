@@ -23,5 +23,5 @@ public interface IThermalHandlerBox extends IWorldSubContainer
 	 * @param value
 	 * @return Return true to prevent vanilla heat check.
 	 */
-	boolean onHeatChange(BlockPos source, BlockPos target, Direction sourceDir, double value);
+	boolean onHeatChange(BlockPos source, BlockPos target, Direction sourceDir, long value);
 }

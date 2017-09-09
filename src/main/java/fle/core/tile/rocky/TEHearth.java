@@ -5,8 +5,8 @@ package fle.core.tile.rocky;
 
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
-import farcore.data.V;
 import farcore.energy.thermal.IThermalHandler;
+import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import fle.api.energy.thermal.ThermalEnergyHelper;
@@ -38,7 +38,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	private int burningPower;
 	private int normalBurningPower;
 	private long fuelValue;
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, 1.3E-4F, 1.0F, 30.0F, 3.6E-3F);
+	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.stone.heatCapacity, 30.0F, 3.6E-3F);
 	
 	public TEHearth()
 	{
@@ -156,12 +156,12 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 		FuelHandler.FuelKey key = FuelHandler.getFuel(this.stack);
 		if (key != null)
 		{
-			//			if (ThermalNet.getTemperature(this.world, this.pos, false) >= key.flameTemperature)
+			if (ThermalNet.getRealHandlerTemperature(this, Direction.Q) >= key.flameTemperature)
 			{
 				decrStackSize(0, key.fuel);
 				this.fuelValue = key.fuelValue;
 				this.normalBurningPower = key.normalPower;
-				this.helper.setBaseMaxTemperature(500.0F);
+				this.helper.setBaseMaxTemperature(key.normalTemperature);
 				return;
 			}
 		}
@@ -194,15 +194,9 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	}
 	
 	@Override
-	public double getHeatCapacity(Direction direction)
-	{
-		return this.helper.getHeatCapacity();
-	}
-	
-	@Override
 	public double getThermalConductivity(Direction direction)
 	{
-		return direction == Direction.U ? V.airHeatConductivity : M.stone.thermalConductivity;
+		return M.stone.thermalConductivity;
 	}
 	
 	@Override

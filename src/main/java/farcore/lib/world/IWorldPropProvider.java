@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.world;
 
 import nebula.common.world.ICoord;
@@ -5,6 +9,13 @@ import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * The world property provider,
+ * use to get temperature, humidity, etc properties
+ * for world.
+ * @author ueyudiud
+ * @see farcore.lib.world.WorldPropHandler
+ */
 public interface IWorldPropProvider
 {
 	default float getHumidity(ICoord coord)
@@ -26,6 +37,12 @@ public interface IWorldPropProvider
 		return getTemperature(coord.world(), coord.pos());
 	}
 	
+	/**
+	 * Get temperature of local place.
+	 * @param world the world.
+	 * @param pos the position.
+	 * @return
+	 */
 	float getTemperature(World world, BlockPos pos);
 	
 	default float getAverageTemperature(ICoord coord)
@@ -33,6 +50,13 @@ public interface IWorldPropProvider
 		return getAverageTemperature(coord.world(), coord.pos());
 	}
 	
+	/**
+	 * Get average temperature in a cycle of
+	 * weather changing.
+	 * @param world the world.
+	 * @param pos the position.
+	 * @return
+	 */
 	float getAverageTemperature(World world, BlockPos pos);
 	
 	default float getSunshine(ICoord coord)

@@ -13,6 +13,7 @@ import fargen.core.biome.layer.surface.BLGSStandard;
 import fargen.core.util.ClimaticZone;
 import nebula.base.Register;
 import nebula.common.util.IRegisteredNameable;
+import nebula.common.util.L;
 import nebula.common.world.IBiomeExtended;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -112,8 +113,8 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	{
 		World world = Minecraft.getMinecraft().world;
 		IWorldPropProvider prop = WorldPropHandler.getWorldProperty(world);
-		float temperature = nebula.common.util.L.range(0.0F, 1.0F, prop.getTemperature(world, pos) * .3F);
-		float humidity = nebula.common.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
+		float temperature = L.range(0.0F, 1.0F, (prop.getTemperature(world, pos) - 263.15F) / (317.15F - 263.15F));
+		float humidity = L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
 		return ColorizerGrass.getGrassColor(temperature, humidity);
 	}
 	
@@ -123,8 +124,8 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	{
 		World world = Minecraft.getMinecraft().world;
 		IWorldPropProvider prop = WorldPropHandler.getWorldProperty(world);
-		float temperature = nebula.common.util.L.range(0.0F, 1.0F, prop.getTemperature(world, pos) * .3F);
-		float humidity = nebula.common.util.L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
+		float temperature = L.range(0.0F, 1.0F, (prop.getTemperature(world, pos) - 263.15F) / (317.15F - 263.15F));
+		float humidity = L.range(0.0F, 1.0F, prop.getHumidity(world, pos) * .3F);
 		return ColorizerFoliage.getFoliageColor(temperature, humidity);
 	}
 	

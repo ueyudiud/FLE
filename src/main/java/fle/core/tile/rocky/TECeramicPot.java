@@ -44,7 +44,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 {
 	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, 3.8E-5F, 13.3F, 1.05F, 4.8E-3F);
+	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.argil.heatCapacity, 100F, 4.8E-3F);
 	
 	public TECeramicPot()
 	{
@@ -180,12 +180,6 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	public float getTemperatureDifference(Direction direction)
 	{
 		return this.helper.getTemperature();
-	}
-	
-	@Override
-	public double getHeatCapacity(Direction direction)
-	{
-		return this.helper.getHeatCapacity();
 	}
 	
 	@Override

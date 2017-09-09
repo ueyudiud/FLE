@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package fargen.core.world;
 
 import farcore.data.EnumBlock;
@@ -24,7 +28,8 @@ import net.minecraft.world.biome.Biome;
  */
 public class WorldPropSurface implements IWorldPropProvider
 {
-	public static final ICalendarWithMonth calendar = CalendarHandler.OVERWORLD;
+	private static final ICalendarWithMonth CALENDAR = CalendarHandler.OVERWORLD;
+	
 	private final NoiseBase offsetNoise = new NoisePerlin(0L, 8, 76, 1.2, 3.0);
 	private final NoiseBase temperatureUndulateNoise = new NoisePerlin(0L, 3, 31.0, 1.6, 2.2);
 	private final NoiseBase rainfallUndulateNoise = new NoisePerlin(0L, 3, 31.0, 1.4, 2.2);
@@ -57,23 +62,20 @@ public class WorldPropSurface implements IWorldPropProvider
 		setData(world);
 		float hor = (float) world.provider.getHorizon();
 		double offset = this.offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
-		double l = offset + calendar.dProgressInYear(world.getWorldTime()) * 12D;
-		int a = (int) l;
-		int b = (a + 1) % 12;
+		double l = offset + CALENDAR.dProgressInYear(world.getWorldTime()) * 12D;
+		int a = (int) l, b = (a + 1) % 12;
 		float d = (float) (l - a);
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
+		int x = pos.getX(), y = pos.getY(), z = pos.getZ();
 		PooledMutableBlockPos pos2 = PooledMutableBlockPos.retain();
 		int c = 0;
 		float tempTotal = 0F;
-		for(int i = -3; i <= 3; ++i)
+		for (int i = -3; i <= 3; ++i)
 		{
-			for(int j = -3; j <= 3; ++j)
+			for (int j = -3; j <= 3; ++j)
 			{
 				pos2.setPos(x + i, y, z + j);
 				float t = getTemperatureLocal(world, pos2, a, b, d);
-				if(!Float.isNaN(t))
+				if (!Float.isNaN(t))
 				{
 					tempTotal += t;
 					++c;
@@ -83,7 +85,9 @@ public class WorldPropSurface implements IWorldPropProvider
 		if (c == 0) return 0;
 		float undulate = (float) this.temperatureUndulateNoise.noise(x, 0, z) * 0.06F - 0.03F;
 		float result = tempTotal / c + undulate;
-		return y > 128 + hor / 2 ? Maths.lerp(result, -5.0F, (y - 128 - hor / 2) / 512) : result;
+		if (y > 128 + hor / 2)
+			result = Maths.lerp(result, -5.0F, (y - 128 - hor / 2) / 512);
+		return result * 10.0F + 10.0F + V.WATER_FREEZE_POINT_F;
 	}
 	
 	@Override
@@ -103,7 +107,9 @@ public class WorldPropSurface implements IWorldPropProvider
 		{
 			result = biome.getTemperature();
 		}
-		return pos.getY() > 128 + hor / 2 ? Maths.lerp(result, -5.0F, (pos.getY() - 128 - hor / 2) / 512) : result;
+		if (pos.getY() > 128 + hor / 2)
+			result = Maths.lerp(result, -5.0F, (pos.getY() - 128 - hor / 2) / 512);
+		return result * 10.0F + 10.0F + V.WATER_FREEZE_POINT_F;
 	}
 	
 	@Override
@@ -111,7 +117,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	{
 		setData(world);
 		double offset = this.offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
-		double l = offset + calendar.dProgressInYear(world.getWorldTime()) * 12D;
+		double l = offset + CALENDAR.dProgressInYear(world.getWorldTime()) * 12D;
 		int a = (int) l;
 		int b = (a + 1) % 12;
 		float d = (float) (l - a);
@@ -159,7 +165,7 @@ public class WorldPropSurface implements IWorldPropProvider
 	{
 		setData(world);
 		double offset = this.offsetNoise.noise(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
-		double l = offset + calendar.dProgressInYear(world.getWorldTime()) * 12D;
+		double l = offset + CALENDAR.dProgressInYear(world.getWorldTime()) * 12D;
 		int a = (int) l;
 		int b = (a + 1) % 12;
 		float d = (float) (l - a);

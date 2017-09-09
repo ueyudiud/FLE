@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.energy.thermal;
 
 import static nebula.common.util.Direction.DIRECTIONS_3D;
@@ -8,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.google.common.collect.ImmutableList;
 
 import farcore.data.V;
 import farcore.energy.IEnergyNet;
@@ -39,24 +45,38 @@ public class ThermalNet implements IEnergyNet
 		worldCHandlers.add(handler);
 	}
 	
+	/**
+	 * Get base world temperature affected by biomes, terrain.
+	 * @param world the world.
+	 * @param pos the position.
+	 * @return the temperature
+	 */
 	public static float getWorldTemperature(World world, BlockPos pos)
 	{
-		float t = WorldPropHandler.getWorldProperty(world).getTemperature(world, pos);
-		return 273F + t * 10.0F;
+		return WorldPropHandler.getWorldProperty(world).getTemperature(world, pos);
 	}
 	
-	public static float getEnviormentTemperature(World world, BlockPos pos)
+	/**
+	 * Get environment temperature affected by world handler and
+	 * thermal object in world.
+	 * @param world the world.
+	 * @param pos the position.
+	 * @return the temperature.
+	 * @see #getWorldTemperature(World, BlockPos)
+	 * @see farcore.energy.thermal.IThermalObjectInWorld
+	 */
+	public static float getEnvironmentTemperature(World world, BlockPos pos)
 	{
 		float base = getWorldTemperature(world, pos);
-		IThermalHandlerBox box = instance.getNet(world, false).getBoxAtPos(pos);
-		if(box != null)
+		IThermalHandlerBox box = INSTANCE.getNet(world, false).getBoxAtPos(pos);
+		if (box != null)
 		{
 			base = box.getTemperature(pos);
 		}
 		float affected = 0;
-		for(IObjectInWorld obj : NebulaWorldHandler.getObjectInRange(world, pos, 24))
+		for (IObjectInWorld obj : NebulaWorldHandler.getObjectInRange(world, pos, 24))
 		{
-			if(obj instanceof IThermalObjectInWorld)
+			if (obj instanceof IThermalObjectInWorld)
 			{
 				affected += ((IThermalObjectInWorld) obj).getDetTemp(Worlds.distanceSqTo(obj, pos), base);
 			}
@@ -64,15 +84,19 @@ public class ThermalNet implements IEnergyNet
 		return base + affected;
 	}
 	
+	/**
+	 * Get temperature from thermal handler directly.
+	 * @param handler the thermal handler.
+	 * @param direction the temperature of facing offset to check.
+	 * @return the temperature.
+	 */
 	public static float getRealHandlerTemperature(IThermalHandler handler, Direction direction)
 	{
-		float temp1 = getEnviormentTemperature(handler.world(), handler.pos());
+		float temp1 = getEnvironmentTemperature(handler.world(), handler.pos());
 		float temp2 = handler.getTemperatureDifference(direction);
-		if(temp2 == Float.POSITIVE_INFINITY)
-			return Float.MAX_VALUE;
-		else if(temp2 == Float.NEGATIVE_INFINITY)
-			return 0;
-		return Float.isNaN(temp2) ? temp1 : temp1 + temp2;
+		return temp2 == Float.POSITIVE_INFINITY ? Float.MAX_VALUE :
+			temp2 == Float.NEGATIVE_INFINITY ? 0 :
+				Float.isNaN(temp2) ? temp1 : temp1 + temp2;
 	}
 	
 	public static float getTemperature(ICoord coord)
@@ -86,51 +110,45 @@ public class ThermalNet implements IEnergyNet
 			return getWorldTemperature(world, pos);
 		float temp;
 		TileEntity tile;
-		if((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
+		if ((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
 		{
 			temp = getRealHandlerTemperature((IThermalHandler) tile, Direction.Q);
 		}
 		else
 		{
-			temp = getEnviormentTemperature(world, pos);
+			temp = getEnvironmentTemperature(world, pos);
+			float v;
 			for(IWorldThermalHandler handler : worldCHandlers)
 			{
-				float v;
 				if((v = handler.getTemperature(world, pos, temp)) >= 0)
 				{
 					temp = v;
 				}
 			}
 		}
-		if(withNearby)
+		if (!withNearby)
+			return temp;
+		temp *= 6;
+		int c = 6;
+		for(Direction direction : DIRECTIONS_3D)
 		{
-			double tempD = temp;
-			tempD *= 6;
-			int c = 6;
-			for(Direction direction : DIRECTIONS_3D)
-			{
-				BlockPos pos2 = direction.offset(pos);
-				tempD += getTemperature(world, pos2, false);
-				++c;
-			}
-			tempD /= c;
-			return (float) tempD;
+			BlockPos pos2 = direction.offset(pos);
+			temp += getTemperature(world, pos2, false);
+			++c;
 		}
+		temp /= c;
 		return temp;
 	}
 	
 	public static float getTempDifference(World world, BlockPos pos)
 	{
-		double temp = getTemperature(world, pos, false);
-		double delta = 0;
-		int c = 0;
-		for(Direction direction : DIRECTIONS_3D)
+		float temp = getTemperature(world, pos, false);
+		float delta = 0;
+		for (Direction direction : DIRECTIONS_3D)
 		{
 			delta += Math.abs(temp - getTemperature(world, direction.offset(pos), false));
-			c++;
 		}
-		delta /= c;
-		return (float) delta;
+		return delta / DIRECTIONS_3D.length;
 	}
 	
 	/**
@@ -184,20 +202,20 @@ public class ThermalNet implements IEnergyNet
 		return value > 0 ? value : getBaseThermalConductivity(world, pos, state.getActualState(world, pos));
 	}
 	
-	public static double getHeatCapacity(World world, BlockPos pos, Direction direction)
-	{
-		IBlockState state;
-		TileEntity tile;
-		double value = -1;
-		
-		if((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
-			value = ((IThermalHandler) tile).getHeatCapacity(direction);
-		state = world.getBlockState(pos);
-		if(value < 0 && state.getBlock() instanceof IThermalCustomBehaviorBlock)
-			value = ((IThermalCustomBehaviorBlock) state.getBlock()).getHeatCapacity(world, pos, state);
-		
-		return value > 0 ? value : getBaseHeatCapacity(world, pos, state.getActualState(world, pos));
-	}
+	//	public static double getHeatCapacity(World world, BlockPos pos, Direction direction)
+	//	{
+	//		IBlockState state;
+	//		TileEntity tile;
+	//		double value = -1;
+	//
+	//		if((tile = world.getTileEntity(pos)) instanceof IThermalHandler)
+	//			value = ((IThermalHandler) tile).getHeatCapacity(direction);
+	//		state = world.getBlockState(pos);
+	//		if(value < 0 && state.getBlock() instanceof IThermalCustomBehaviorBlock)
+	//			value = ((IThermalCustomBehaviorBlock) state.getBlock()).getHeatCapacity(world, pos, state);
+	//
+	//		return value > 0 ? value : getBaseHeatCapacity(world, pos, state.getActualState(world, pos));
+	//	}
 	
 	public static void sendHeatToBlock(World world, BlockPos pos, Direction direction, double amount)
 	{
@@ -208,7 +226,7 @@ public class ThermalNet implements IEnergyNet
 		}
 	}
 	
-	public static final ThermalNet instance = new ThermalNet();
+	public static final ThermalNet INSTANCE = new ThermalNet();
 	
 	private Map<Integer, Local> netMap = new HashMap<>();
 	
@@ -301,15 +319,6 @@ public class ThermalNet implements IEnergyNet
 		return this.netMap.get(world.provider.getDimension());
 	}
 	
-	public static long caculateCurrent(double k1, double k2,
-			double c1, double c2, float t1, float t2)
-	{
-		double k = Maths.log_average(k1, k2);
-		//		double c = (c1 * c2)/(c1 + c2);
-		//		return Math.round(c*(t2-t1)*Math.expm1(-k/c));
-		return Math.round(k*(t1-t2));
-	}
-	
 	private static class Local
 	{
 		private static final Local instance = new Local(null);
@@ -321,7 +330,6 @@ public class ThermalNet implements IEnergyNet
 		private final Map<BlockPos, IThermalHandler> map = new HashMap<>();
 		private final Map<ChunkPos, List<IThermalHandlerBox>> map2 = new HashMap<>();
 		private final List<IThermalHandler> cachedList = new ArrayList<>();
-		private final List<IThermalHandlerBox> cacheBoxList = new ArrayList<>();
 		private BlockPos cachedPos = BlockPos.ORIGIN;
 		private final Map<BlockPos, EnumModifyFlag> cachedChangedTile = new HashMap<>();
 		private final Map<IThermalHandlerBox, EnumModifyFlag> cacheChangedBoxList = new HashMap<>();
@@ -413,7 +421,8 @@ public class ThermalNet implements IEnergyNet
 		
 		public void updateNet()
 		{
-			if(this.world == null || this.world.isRemote || this.world.getWorldType() == WorldType.DEBUG_WORLD) return;
+			if(this.world == null || this.world.isRemote ||
+					this.world.getWorldType() == WorldType.DEBUG_WORLD) return;
 			//Initialize cache.
 			this.cachedList.clear();
 			//Switch update flag to true, to prevent remove element in map when iterating.
@@ -427,71 +436,9 @@ public class ThermalNet implements IEnergyNet
 				for(IThermalHandler tile : this.map.values())
 				{
 					Arrays.fill(current, 0);
-					//Get cache current from each direction.
-					for(int i = 0; i < DIRECTIONS_3D.length; ++i)
-					{
-						Direction direction = DIRECTIONS_3D[i];
-						if(tile.canConnectTo(direction))
-						{
-							this.cachedPos = direction.offset(tile.pos());
-							double tc1 = tile.getThermalConductivity(direction);
-							double c = tile.getHeatCapacity(direction);
-							float temp = getEnviormentTemperature(this.world, tile.pos()) + tile.getTemperatureDifference(direction);
-							double tc2;
-							float temp2;
-							try
-							{
-								if(this.map.containsKey(this.cachedPos))
-								{
-									IThermalHandler tile1 = this.map.get(this.cachedPos);
-									if(!tile1.canConnectTo(direction.getOpposite()) || this.cachedList.contains(tile1))
-									{
-										continue;
-									}
-									tc2 = tile1.getThermalConductivity(direction.getOpposite());
-									temp2 = getEnviormentTemperature(this.world, tile1.pos()) + tile1.getTemperatureDifference(direction.getOpposite());
-									if(!L.similar(temp, temp2))//Ignore small temperature difference.
-									{
-										tile1.onHeatChange(direction.getOpposite(), current[i] = ThermalNet.caculateCurrent(tc1, tc2,
-												c, tile1.getHeatCapacity(direction.getOpposite()), temp, temp2));
-									}
-								}
-								else
-								{
-									tc2 = getThermalConductivity(this.world, this.cachedPos, direction.getOpposite());
-									temp2 = getTemperature(this.world, this.cachedPos, false);
-									if(!L.similar(temp, temp2))//Ignore small temperature difference.
-									{
-										current[i] = ThermalNet.caculateCurrent(tc1, tc2, c, getHeatCapacity(this.world, this.cachedPos, direction.getOpposite()), temp, temp2);
-										if(current[i] != 0)
-										{
-											IThermalHandlerBox box = getBoxAtPos(this.cachedPos);
-											if(box != null && box.onHeatChange(tile.pos(), this.cachedPos, direction.getOpposite(), current[i]))
-											{
-												;
-											}
-											else
-											{
-												sendHeatToBlock(this.world, this.cachedPos, direction.getOpposite(), current[i]);
-											}
-										}
-									}
-								}
-							}
-							catch(Exception exception)
-							{
-								if(Nebula.debug)
-								{
-									Log.error("Catching an exception during emmit thermal energy.", exception);
-								}
-							}
-						}
-					}
+					updateTileInNet(tile, current);
 					//Send cached energy.
-					for(int i = 0; i < current.length; ++i)
-					{
-						tile.onHeatChange(DIRECTIONS_3D[i], -current[i]);
-					}
+					tile.onHeatChange(current);
 					this.cachedList.add(tile);
 				}
 			}
@@ -506,80 +453,129 @@ public class ThermalNet implements IEnergyNet
 			}
 			if(updated)
 			{
-				for(Entry<BlockPos, EnumModifyFlag> entry : this.cachedChangedTile.entrySet())
-				{
-					switch (entry.getValue())
-					{
-					case add :
-						TileEntity tile = this.world.getTileEntity(entry.getKey());
-						if(tile instanceof IThermalHandler)
-						{
-							this.map.put(entry.getKey(), (IThermalHandler) tile);
-						}
-						break;
-					case remove :
-						this.map.remove(entry.getKey());
-						break;
-					case reload :
-						IThermalHandler handler = this.map.remove(entry.getKey());
-						if(handler != null)
-						{
-							this.map.put(handler.pos(), handler);
-						}
-						break;
-					default ://case mark :
-						break;
-					}
-				}
-				for(Entry<IThermalHandlerBox, EnumModifyFlag> entry : this.cacheChangedBoxList.entrySet())
-				{
-					switch (entry.getValue())
-					{
-					case add :
-						for(ChunkPos pos : entry.getKey().chunks())
-						{
-							L.put(this.map2, pos, entry.getKey());
-						}
-						break;
-					case remove :
-						for(ChunkPos pos : entry.getKey().chunks())
-						{
-							L.remove(this.map2, pos, entry.getKey());
-						}
-						break;
-					case reload :
-						for(ChunkPos pos : entry.getKey().chunks())
-						{
-							L.put(this.map2, pos, entry.getKey());
-						}
-						for(ChunkPos pos : entry.getKey().chunks())
-						{
-							L.remove(this.map2, pos, entry.getKey());
-						}
-						break;
-					default ://case mark :
-						break;
-					}
-				}
+				updateMarkedTile();
 				this.isUpdating = false;
 				this.cachedList.clear();
-				this.cachedChangedTile.clear();
-				this.cacheChangedBoxList.clear();
+			}
+		}
+		
+		private void updateMarkedTile()
+		{
+			for(Entry<BlockPos, EnumModifyFlag> entry : this.cachedChangedTile.entrySet())
+			{
+				switch (entry.getValue())
+				{
+				case add :
+					TileEntity tile = this.world.getTileEntity(entry.getKey());
+					if(tile instanceof IThermalHandler)
+					{
+						this.map.put(entry.getKey(), (IThermalHandler) tile);
+					}
+					break;
+				case remove :
+					this.map.remove(entry.getKey());
+					break;
+				case reload :
+					IThermalHandler handler = this.map.remove(entry.getKey());
+					if(handler != null)
+					{
+						this.map.put(handler.pos(), handler);
+					}
+					break;
+				default ://case mark :
+					break;
+				}
+			}
+			for(Entry<IThermalHandlerBox, EnumModifyFlag> entry : this.cacheChangedBoxList.entrySet())
+			{
+				switch (entry.getValue())
+				{
+				case add :
+					for(ChunkPos pos : entry.getKey().chunks())
+					{
+						L.put(this.map2, pos, entry.getKey());
+					}
+					break;
+				case remove :
+					for(ChunkPos pos : entry.getKey().chunks())
+					{
+						L.remove(this.map2, pos, entry.getKey());
+					}
+					break;
+				case reload :
+					for(ChunkPos pos : entry.getKey().chunks())
+					{
+						L.put(this.map2, pos, entry.getKey());
+					}
+					for(ChunkPos pos : entry.getKey().chunks())
+					{
+						L.remove(this.map2, pos, entry.getKey());
+					}
+					break;
+				default ://case mark :
+					break;
+				}
+			}
+			this.cachedChangedTile.clear();
+			this.cacheChangedBoxList.clear();
+		}
+		
+		private void updateTileInNet(IThermalHandler handler, long[] current)
+		{
+			//Get cache current from each direction.
+			for (int i = 0; i < DIRECTIONS_3D.length; ++i)
+			{
+				Direction direction = DIRECTIONS_3D[i];
+				if (handler.canConnectTo(direction))
+				{
+					this.cachedPos = direction.offset(handler.pos());
+					float T1 = getRealHandlerTemperature(handler, direction), T2;
+					double
+					k1 = handler.getThermalConductivity(direction),
+					k2 = getThermalConductivity(this.world, this.cachedPos, direction.getOpposite());
+					try
+					{
+						if (this.map.containsKey(this.cachedPos))
+						{
+							IThermalHandler tile1 = this.map.get(this.cachedPos);
+							if (!tile1.canConnectTo(direction.getOpposite()) ||
+									this.cachedList.contains(tile1))//To check if this current is already calculated.
+								continue;
+							T2 = getRealHandlerTemperature(tile1, direction.getOpposite());
+							if (!L.similar(T1, T2))//Ignore small temperature difference.
+								tile1.onHeatChange(direction.getOpposite(), -(current[i] =
+								(long) (Maths.log_average(k1, k2) * (T2 - T1))));
+						}
+						else
+						{
+							T2 = getTemperature(this.world, this.cachedPos, false);
+							if (!L.similar(T1, T2))//Ignore small temperature difference.
+							{
+								current[i] = (long) (Maths.log_average(k1, k2) * (T2 - T1));
+								if (current[i] != 0)
+								{
+									IThermalHandlerBox box = getBoxAtPos(this.cachedPos);
+									if (box == null || !box.onHeatChange(handler.pos(), this.cachedPos, direction.getOpposite(), -current[i]))
+										sendHeatToBlock(this.world, this.cachedPos, direction.getOpposite(), -current[i]);
+								}
+							}
+						}
+					}
+					catch(Exception exception)
+					{
+						if(Nebula.debug)
+						{
+							Log.error("Catching an exception during emmit thermal energy.", exception);
+						}
+					}
+				}
 			}
 		}
 		
 		public IThermalHandlerBox getBoxAtPos(BlockPos pos)
 		{
-			ChunkPos pos2 = new ChunkPos(pos);
-			if(this.map2.containsKey(pos2))
-			{
-				for(IThermalHandlerBox box : this.map2.get(pos2))
-				{
-					if(box.containPosition(pos))
-						return box;
-				}
-			}
-			return null;
+			return L.get(this.map2.getOrDefault(new ChunkPos(pos), ImmutableList.of()),
+					box-> box.containPosition(pos));
 		}
 	}
 }

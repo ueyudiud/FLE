@@ -3,12 +3,10 @@
  */
 package fle.api.energy.thermal;
 
-import farcore.energy.thermal.ThermalNet;
 import nebula.common.nbt.INBTCompoundReaderAndWritter;
 import nebula.common.util.Maths;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /**
@@ -21,18 +19,30 @@ public class ThermalEnergyHelper implements INBTCompoundReaderAndWritter<Thermal
 	long E;
 	
 	float baseMaxTemp;
-	float tempOffsetMultiplier;
-	float tempOffsetScale;
+	float heatCapacity;
 	float tempLimit;
 	float tempChangeSpeed;
 	
-	public ThermalEnergyHelper(float Tbm, float Mto, float Sot, float Tl, float vT)
+	public ThermalEnergyHelper()
 	{
-		this.baseMaxTemp = Tbm;
-		this.tempOffsetMultiplier = Mto;
-		this.tempOffsetScale = Sot;
-		this.tempLimit = Tl;
-		setTemperatureChangeSpeed(vT);
+	}
+	
+	public ThermalEnergyHelper(double Tbm, double c, double Tl, double vT)
+	{
+		setProperties(Tbm, c, Tl, vT);
+	}
+	
+	public final void setProperties(double Tbm, double c, double Tl, double vT)
+	{
+		this.baseMaxTemp = (float) Tbm;
+		setHeatCapacity((float) c);
+		this.tempLimit = (float) Tl;
+		setTemperatureChangeSpeed((float) vT);
+	}
+	
+	public void setHeatCapacity(float heatCapacity)
+	{
+		this.heatCapacity = heatCapacity;
 	}
 	
 	@Override
@@ -77,23 +87,18 @@ public class ThermalEnergyHelper implements INBTCompoundReaderAndWritter<Thermal
 	
 	public float getTemperature()
 	{
-		return this.T + 3 * this.tempOffsetScale * (float) Math.cbrt(this.E / (1 + this.tempOffsetMultiplier * this.T * this.T));
+		return this.T + (float) Maths.asinh(this.E / this.tempLimit) * this.tempLimit / this.heatCapacity;
 	}
 	
 	public void recaculateTemperature(World world, BlockPos pos)
 	{
-		recaculateTemperature(ThermalNet.getEnviormentTemperature(world, pos));
+		recaculateTemperature(0F);
 	}
 	
 	public void recaculateTemperature(float localTemp)
 	{
-		this.Tmax = MathHelper.sqrt(this.baseMaxTemp * this.baseMaxTemp + Maths.sq(localTemp / this.tempLimit));
+		this.Tmax = this.baseMaxTemp;
 		this.T += (this.Tmax - this.T) * this.tempChangeSpeed;
-	}
-	
-	public float getHeatCapacity()
-	{
-		return (float) Math.cbrt(this.E * this.E * (1 + this.tempOffsetMultiplier * this.T * this.T)) / this.tempOffsetScale;
 	}
 	
 	public long getInternalEnergy()
