@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.material.Mat;
-import nebula.base.function.Appliable;
+import nebula.base.function.Applicable;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
@@ -13,9 +13,9 @@ public class CropTemplate extends Crop
 {
 	public EnumPlantType type = EnumPlantType.Crop;
 	public EnumPlantType wildType = EnumPlantType.Plains;
-	private Appliable<ItemStack> drop;
+	private Applicable<ItemStack> drop;
 	private int dropChance;
-	private Appliable<ItemStack> dropRare;
+	private Applicable<ItemStack> dropRare;
 	private int grain = 1;
 	private int seed = 1;
 	
@@ -39,12 +39,12 @@ public class CropTemplate extends Crop
 		return this;
 	}
 	
-	public CropTemplate setDrop(Appliable<ItemStack> appliable, int grain)
+	public CropTemplate setDrop(Applicable<ItemStack> appliable, int grain)
 	{
 		return setDrop(appliable, grain, 0, null);
 	}
 	
-	public CropTemplate setDrop(Appliable<ItemStack> appliable1, int grain, int chance, Appliable<ItemStack> appliable2)
+	public CropTemplate setDrop(Applicable<ItemStack> appliable1, int grain, int chance, Applicable<ItemStack> appliable2)
 	{
 		this.drop = appliable1;
 		this.grain = grain;

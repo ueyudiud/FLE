@@ -32,6 +32,6 @@ public class RecipeDirtMixture
 					material, 0.99F, 1.0F);
 		}
 		addDirtMixtureOutputRangedRecipe(new ItemStack(Items.CLAY_BALL, 2), MC.pile.size,
-				M.latosol, 0.45F, 0.55F, M.latoaluminosol, 0.45F, 0.55F);
+				M.latrosol, 0.45F, 0.55F, M.latroaluminosol, 0.45F, 0.55F);
 	}
 }

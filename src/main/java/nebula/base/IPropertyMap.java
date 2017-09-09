@@ -3,7 +3,7 @@ package nebula.base;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import nebula.base.function.Appliable;
+import nebula.base.function.Applicable;
 
 public interface IPropertyMap
 {
@@ -22,7 +22,7 @@ public interface IPropertyMap
 	Set<IProperty<?>> keySet();
 	
 	@FunctionalInterface
-	interface IProperty<V> extends Appliable<V>
+	interface IProperty<V> extends Applicable<V>
 	{
 		static <V> IProperty<V> to()
 		{

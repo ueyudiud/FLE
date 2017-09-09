@@ -97,7 +97,7 @@ public class ModelRedstoneCircuit implements ModelBase, IRetexturableModel, IMod
 	
 	/**
 	 * For game was always crashing when I debugging.<br>
-	 * It might takes too much memory to build quad, so I tried cached those quads.
+	 * It might takes too much memory to build quad, so I tried cached those quad.
 	 * @author ueyudiud
 	 */
 	private static final Map<ResourceLocation, Map<Mat, Map<EnumFacing, List<BakedQuad>>>> bakedQuads = new HashMap<>();

@@ -3,7 +3,7 @@ package nebula.common.inventory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import nebula.base.function.Appliable;
+import nebula.base.function.Applicable;
 import nebula.common.stack.AbstractStack;
 import net.minecraft.item.ItemStack;
 
@@ -164,12 +164,12 @@ public interface IBasicInventory
 		return true;
 	}
 	
-	default <T> T insertAllStacks(ItemStack[] stacks, Appliable<T> appliable)
+	default <T> T insertAllStacks(ItemStack[] stacks, Applicable<T> appliable)
 	{
 		return insertAllStacks(stacks, 0, getSizeInventory(), appliable);
 	}
 	
-	default <T> T insertAllStacks(ItemStack[] stacks, int from, int to, Appliable<T> appliable)
+	default <T> T insertAllStacks(ItemStack[] stacks, int from, int to, Applicable<T> appliable)
 	{
 		return InventoryHelper.insertAllStacks(this, from, to, stacks, appliable);
 	}

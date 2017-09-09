@@ -1,0 +1,50 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"shape": {
+			"0":  { "model": "farcore:stone_chip/0" },
+			"1":  { "model": "farcore:stone_chip/1" },
+			"2":  { "model": "farcore:stone_chip/2" },
+			"3":  { "model": "farcore:stone_chip/3" },
+			"4":  { "model": "farcore:stone_chip/4" },
+			"5":  { "model": "farcore:stone_chip/5" },
+			"6":  { "model": "farcore:stone_chip/6" },
+			"7":  { "model": "farcore:stone_chip/7" },
+			"8":  { "model": "farcore:stone_chip/8" },
+			"9":  { "model": "farcore:stone_chip/9" },
+			"10": { "model": "farcore:stone_chip/10" },
+			"11": { "model": "farcore:stone_chip/11" },
+			"12": { "model": "farcore:stone_chip/12" },
+			"13": { "model": "farcore:stone_chip/13" },
+			"14": { "model": "farcore:stone_chip/14" },
+			"15": { "model": "farcore:stone_chip/15" }
+		},
+		"material": {
+			"compactstone":    { "textures": { "all": "farcore:blocks/rock/compactstone/resource" } },
+			"andesite":        { "textures": { "all": "farcore:blocks/rock/andesite/resource" } },
+			"basalt":          { "textures": { "all": "farcore:blocks/rock/basalt/resource" } },
+			"diorite":         { "textures": { "all": "farcore:blocks/rock/diorite/resource" } },
+			"gabbro":          { "textures": { "all": "farcore:blocks/rock/gabbro/resource" } },
+			"granite":         { "textures": { "all": "farcore:blocks/rock/granite/resource" } },
+			"kimberlite":      { "textures": { "all": "farcore:blocks/rock/kimberlite/resource" } },
+			"limestone":       { "textures": { "all": "farcore:blocks/rock/limestone/resource" } },
+			"marble":          { "textures": { "all": "farcore:blocks/rock/marble/resource" } },
+			"obsidian":        { "textures": { "all": "farcore:blocks/rock/obsidian/resource" } },
+			"peridotite":      { "textures": { "all": "farcore:blocks/rock/peridotite/resource" } },
+			"rhyolite":        { "textures": { "all": "farcore:blocks/rock/rhyolite/resource" } },
+			"granite_p":       { "textures": { "all": "farcore:blocks/rock/granite_p/resource" } },
+			"bituminous_coal": { "textures": { "all": "farcore:blocks/rock/bituminous_coal/resource" } },
+			"lignite":         { "textures": { "all": "farcore:blocks/rock/lignite/resource" } },
+			"travertine":      { "textures": { "all": "farcore:blocks/rock/travertine/resource" } },
+			"chalk":           { "textures": { "all": "farcore:blocks/rock/chalk/resource" } },
+			"chert":           { "textures": { "all": "farcore:blocks/rock/chert/resource" } },
+			"conglomerate":    { "textures": { "all": "farcore:blocks/rock/conglomerate/resource" } },
+			"dolostone":       { "textures": { "all": "farcore:blocks/rock/dolostone/resource" } },
+			"oil_shale":       { "textures": { "all": "farcore:blocks/rock/oil_shale/resource" } },
+			"shale":           { "textures": { "all": "farcore:blocks/rock/shale/resource" } }
+		}
+	}
+}

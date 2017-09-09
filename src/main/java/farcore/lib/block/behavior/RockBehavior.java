@@ -26,6 +26,7 @@ import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Worlds;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -48,6 +49,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> implements IBlockBehavior<B>
 {
+	public Block stonechip;
+	
 	public RockBehavior(Mat material, int harvestLevel, float hardness, float explosionResistance)
 	{
 		super(material, harvestLevel, hardness, explosionResistance);

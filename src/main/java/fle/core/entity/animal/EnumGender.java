@@ -5,6 +5,7 @@
 package fle.core.entity.animal;
 
 /**
+ * The gender of biology.
  * @author ueyudiud
  */
 public enum EnumGender

@@ -9,8 +9,8 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
 
-import nebula.base.function.Appliable;
-import nebula.base.function.Appliable.AppliableCached;
+import nebula.base.function.Applicable;
+import nebula.base.function.Applicable.AppliableCached;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -22,7 +22,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 public class CapabilityCompactor<S> implements ICapabilityProvider
 {
 	private final S source;
-	private Map<Capability<?>, Appliable<?>> map;
+	private Map<Capability<?>, Applicable<?>> map;
 	
 	public CapabilityCompactor(S source, Object...appliers)
 	{
@@ -32,15 +32,15 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 			this.map = ImmutableMap.of();
 			return;
 		}
-		ImmutableMap.Builder<Capability<?>, Appliable<?>> builder = ImmutableMap.builder();
+		ImmutableMap.Builder<Capability<?>, Applicable<?>> builder = ImmutableMap.builder();
 		for (int i = 0; i < appliers.length; i += 2)
 		{
 			Capability<?> capability = (Capability<?>) appliers[i];
 			Object appliable = appliers[i + 1];
-			Appliable<?> cache;
-			if (appliable instanceof Appliable)
+			Applicable<?> cache;
+			if (appliable instanceof Applicable)
 			{
-				cache = Appliable.wrapCached((Appliable<?>) appliable);
+				cache = Applicable.wrapCached((Applicable<?>) appliable);
 			}
 			else if (appliable instanceof Function)
 			{
@@ -57,7 +57,7 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 			}
 			else
 			{
-				cache = Appliable.to(appliable);
+				cache = Applicable.to(appliable);
 			}
 			builder.put(capability, cache);
 		}

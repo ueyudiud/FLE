@@ -6,6 +6,7 @@ package nebula.common.util;
 
 import java.text.DecimalFormat;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import nebula.Nebula;
@@ -33,6 +34,11 @@ public final class Strings
 	
 	private Strings() {}
 	
+	/**
+	 * Get locale string.
+	 * @return the locale.
+	 * @see net.minecraftforge.fml.common.FMLCommonHandler#getCurrentLanguage()
+	 */
 	public static String locale()
 	{
 		return FMLCommonHandler.instance().getCurrentLanguage();
@@ -43,12 +49,29 @@ public final class Strings
 		return Nebula.proxy.translateToLocalByI18n(unlocal, parameters);
 	}
 	
+	/**
+	 * Return a string <tt>NONNULL</tt>.
+	 * If argument is <code>null</code>, <code>""</code> will be return.
+	 * @param string the validated string.
+	 * @return the non-null string.
+	 */
+	@Nonnull
 	public static String validate(@Nullable String string)
 	{
 		if(string == null) return "";
 		return string.trim();
 	}
 	
+	/**
+	 * Replace a specific character (only the first one) to insert string.<p>
+	 * If <tt>replacement</tt> is not exist, will return <tt>source</tt> directly.<p>
+	 * Example: <code>replace("foo $", '$', "bar")</code> will return <code>"foo bar"</code>.
+	 * @param source the source string.
+	 * @param replacement the character to mark for replace.
+	 * @param insert the insert string.
+	 * @return the replaced string, if <tt>replacement</tt> not exist, return <tt>source</tt>
+	 *         directly.
+	 */
 	public static String replace(String source, char replacement, String insert)
 	{
 		int i = source.indexOf(replacement);
@@ -77,6 +100,12 @@ public final class Strings
 		return newString.trim();
 	}
 	
+	/**
+	 * Upper case first character. If argument is <code>null</code>, <code>""</code>
+	 * will be return.
+	 * @param name
+	 * @return Upper cased string.
+	 */
 	public static String upcaseFirst(@Nullable String name)
 	{
 		String s = validate(name);
@@ -186,6 +215,11 @@ public final class Strings
 		}
 	}
 	
+	/**
+	 * Format a value to ordinal number.
+	 * @param value
+	 * @return
+	 */
 	public static String toOrdinalNumber(long value)
 	{
 		if(value < 0)

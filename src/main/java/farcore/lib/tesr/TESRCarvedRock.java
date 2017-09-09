@@ -23,23 +23,22 @@ public class TESRCarvedRock extends TESRBase<TECustomCarvedStone>
 			int destroyStage)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x, (float)y, (float)z);
+		GL11.glTranslatef((float) x, (float) y, (float) z);
 		TextureAtlasSprite icon = tile.getIcon();
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.disableLighting();
-		int count = 0;
-		for(int i = 0; i < 4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			for(int j = 0; j < 4; ++j)
+			for (int j = 0; j < 4; ++j)
 			{
-				for(int k = 0; k < 4; ++k)
+				for (int k = 0; k < 4; ++k)
 				{
-					float x1 = 0.25F * i;
-					float y1 = 0.25F * j;
-					float z1 = 0.25F * k;
-					float x2 = 0.25F * (i + 1);
-					float y2 = 0.25F * (j + 1);
-					float z2 = 0.25F * (k + 1);
+					float x1 = off * i;
+					float y1 = off * j;
+					float z1 = off * k;
+					float x2 = off * (i + 1);
+					float y2 = off * (j + 1);
+					float z2 = off * (k + 1);
 					this.renderNorth = tile.shouldSideRender(i, j, k, Direction.N);
 					this.renderSouth = tile.shouldSideRender(i, j, k, Direction.S);
 					this.renderWest  = tile.shouldSideRender(i, j, k, Direction.W);

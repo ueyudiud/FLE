@@ -7,7 +7,6 @@ package nebula.common;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,9 +34,9 @@ import net.minecraftforge.fml.common.LoaderState;
 import scala.actors.threadpool.Arrays;
 
 /**
- * Language manager type.
+ * Language manager use to localized string to
+ * display.
  * @author ueyudiud
- *
  */
 public class LanguageManager implements IResourceManagerReloadListener
 {
@@ -47,7 +46,6 @@ public class LanguageManager implements IResourceManagerReloadListener
 	private static final Map<String, String> MAP1 = new HashMap<>();
 	/** Localization map loaded from byte code. */
 	private static final Map<String, String> MAP2 = new HashMap<>();
-	private static final FileFilter FILTER = file -> file.getName().endsWith(".lang");
 	
 	/**
 	 * Register tool tips (List of localize string) to localization map.
@@ -69,6 +67,14 @@ public class LanguageManager implements IResourceManagerReloadListener
 		}
 	}
 	
+	/**
+	 * Register localize string with string format.
+	 * @param unlocalized the unlocalized string.
+	 * @param localized the localized string.
+	 * @param formats the formats to string.
+	 * @see String#format(String, Object...)
+	 * @see #registerLocal(String, String)
+	 */
 	public static void registerLocal(String unlocalized, String localized, Object...formats)
 	{
 		try
@@ -188,7 +194,7 @@ public class LanguageManager implements IResourceManagerReloadListener
 		}
 	}
 	
-	//Internal part start, do not use any method.
+	//Internal part start, do not use these method.
 	private File file;
 	
 	public LanguageManager(File file)

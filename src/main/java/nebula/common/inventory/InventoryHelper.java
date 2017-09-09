@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import nebula.base.ArrayListAddWithCheck;
 import nebula.base.IntegerEntry;
-import nebula.base.function.Appliable;
+import nebula.base.function.Applicable;
 import nebula.common.fluid.container.FluidContainerHandler;
 import nebula.common.fluid.container.IItemFluidContainer;
 import nebula.common.fluid.container.IItemFluidContainerV1;
@@ -417,7 +417,7 @@ public class InventoryHelper
 	 * @param appliable The result applier.
 	 * @return The result apply by appliable.
 	 */
-	public static <T> T insertAllStacks(IBasicInventory inventory, int from, int to, ItemStack[] stacks, @Nullable Appliable<T> appliable)
+	public static <T> T insertAllStacks(IBasicInventory inventory, int from, int to, ItemStack[] stacks, @Nullable Applicable<T> appliable)
 	{
 		if (insertAllStacks(inventory, from, to, stacks, false))
 		{

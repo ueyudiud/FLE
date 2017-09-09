@@ -63,6 +63,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Deprecated
 @SideOnly(Side.CLIENT)
 public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICustomItemModelSelector
 {

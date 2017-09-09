@@ -48,11 +48,11 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	
 	/**
 	 * Create a new extended block state map.
-	 * @param modid The mod belong.
-	 * @param path The state file path.
-	 * @param property1 The file split property, use this property value name as file name, no property
-	 * means state mapper don't split file.
-	 * @param properties The ignore properties, those properties will not present in model state.
+	 * @param modid the mod belong.
+	 * @param path the state file path.
+	 * @param property1 the file split property, use this property value name as file name, no property
+	 *                  means state mapper don't split file.
+	 * @param properties the ignore properties, those properties will not present in model state.
 	 */
 	public StateMapperExt(String modid, String path, @Nullable IProperty property1, IProperty...properties)
 	{
@@ -79,8 +79,8 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	/**
 	 * The block may is a sub block in a block group (But for different id), set
 	 * the variant entry for each block to identify them.
-	 * @param key The property name.
-	 * @param value The state mapper variant name.
+	 * @param key the property name.
+	 * @param value the state mapper variant name.
 	 */
 	public void setVariants(String key, String value)
 	{
@@ -90,8 +90,8 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 	
 	/**
 	 * The map will create a instance ModelResourceLocation for selected block state.
-	 * @param state The state for location.
-	 * @return The mapping location.
+	 * @param state the state for location.
+	 * @return the mapping location.
 	 */
 	@Override
 	public ModelResourceLocation getLocationFromState(IBlockState state)

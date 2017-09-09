@@ -88,8 +88,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Nebula, is a Minecraft modification provide more useful
- * library for mod, also changed some game rule for more
- * compact to other mods.
+ * library for other modification, also changed some game rule
+ * for more compact to other mods.
  * 
  * @author ueyudiud
  */
@@ -113,6 +113,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	@Instance(MODID)
 	public static Nebula instance;
+	
 	/**
 	 * The debug mode flag, enable to switch to
 	 * debug mode.<p>
@@ -121,11 +122,15 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	 * instead of log to file.<p>
 	 */
 	public static boolean debug = false;
+	
 	/**
 	 * The network instance of nebula modification.
 	 */
 	public static Network network;
 	
+	/**
+	 * The mod proxy.
+	 */
 	@SidedProxy(serverSide = "nebula.common.CommonProxy", clientSide = "nebula.client.ClientProxy")
 	public static CommonProxy proxy;
 	

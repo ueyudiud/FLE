@@ -206,7 +206,7 @@ IUpdatableTile
 				total += stack.size;
 			}
 		}
-		if (total == 0) return M.latosol.RGB;
+		if (total == 0) return M.latrosol.RGB;
 		return L.index24i((int) (r / total), (int) (g / total), (int) (b / total));
 	}
 	
