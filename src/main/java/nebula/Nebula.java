@@ -205,7 +205,6 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		{
 			throw exception;
 		}
-		this.lang.read();
 		
 		MinecraftForge.EVENT_BUS.register(new NebulaKeyHandler());
 		MinecraftForge.EVENT_BUS.register(new NebulaPlayerHandler());

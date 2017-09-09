@@ -35,11 +35,6 @@ public class CommonProxy implements IGuiHandler
 		
 	}
 	
-	public String getLocale()
-	{
-		return LanguageManager.ENGLISH;
-	}
-	
 	public File fileDir()
 	{
 		return new File(".");

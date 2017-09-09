@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import javax.annotation.Nullable;
 
 import nebula.Nebula;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * @author ueyudiud
@@ -34,7 +35,7 @@ public final class Strings
 	
 	public static String locale()
 	{
-		return Nebula.proxy.getLocale();
+		return FMLCommonHandler.instance().getCurrentLanguage();
 	}
 	
 	public static String translateByI18n(String unlocal, Object...parameters)
