@@ -87,7 +87,7 @@ public class CommonLoader
 		registerForgeEventListener(new FarCoreCapabilitiesHandler());
 		//Register energy nets.
 		bar.step("Add Energy Nets");
-		addNet(ThermalNet.instance);
+		addNet(ThermalNet.INSTANCE);
 		addNet(new IEnergyNet.Impl(KineticNet.instance));
 		//Register world objects.
 		bar.step("Register World Objects");

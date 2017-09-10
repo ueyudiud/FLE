@@ -400,12 +400,6 @@ ITP_Drops, IToolableTile
 	}
 	
 	@Override
-	public double getHeatCapacity(Direction direction)
-	{
-		return this.ore.getProperty(MP.property_basic).heatCap;
-	}
-	
-	@Override
 	public double getThermalConductivity(Direction direction)
 	{
 		return this.ore.getProperty(MP.property_basic).thermalConduct * 0.3F + this.rock.getProperty(MP.property_basic).thermalConduct * 0.7F;

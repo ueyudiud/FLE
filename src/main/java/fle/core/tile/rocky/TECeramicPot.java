@@ -43,6 +43,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 {
 	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
+  private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.argil.heatCapacity, 100F, 4.8E-3F);
 	
 	public TECeramicPot()
 	{
@@ -125,7 +126,7 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		if (isServer())
+		if (isServer() && hand == EnumHand.MAIN_HAND)
 		{
 			openGUI(player, 0);
 			return EnumActionResult.SUCCESS;
@@ -177,15 +178,9 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	}
 	
 	@Override
-	public double getHeatCapacity(Direction direction)
-	{
-		return 1000;
-	}
-	
-	@Override
 	public double getThermalConductivity(Direction direction)
 	{
-		int multiplier = getTE(direction) instanceof IThermalHandler ? 4 : 1;
+		int multiplier = getTE(direction) instanceof IThermalHandler ? 10 : 1;
 		return M.argil.thermalConductivity * multiplier;
 	}
 	

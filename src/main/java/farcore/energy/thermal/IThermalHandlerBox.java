@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.energy.thermal;
 
 import farcore.lib.world.IWorldSubContainer;
@@ -23,5 +27,5 @@ public interface IThermalHandlerBox extends IWorldSubContainer
 	 * @param value
 	 * @return Return true to prevent vanilla heat check.
 	 */
-	boolean onHeatChange(BlockPos source, BlockPos target, Direction sourceDir, double value);
+	boolean onHeatChange(BlockPos source, BlockPos target, Direction sourceDir, long value);
 }

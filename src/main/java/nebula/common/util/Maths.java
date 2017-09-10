@@ -285,6 +285,17 @@ public final class Maths
 		return d * d;
 	}
 	
+	/**
+	 * Return the inverse hyperbolic sine of a <code>double</code> value.<p>
+	 * The result is equal to <code>ln(d+sqrt(d*d+1))</code>.
+	 * @param d a value.
+	 * @return the area of hyperbolic sine value.
+	 */
+	public static double asinh(double d)
+	{
+		return Math.log(d+Math.sqrt(d*d+1));
+  }
+  
 	public static long getCoordinateRandom(BlockPos pos)
 	{
 		return getCoordinateRandom(pos.getX(), pos.getY(), pos.getZ());

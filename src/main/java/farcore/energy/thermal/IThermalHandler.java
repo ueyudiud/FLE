@@ -1,6 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
+
 package farcore.energy.thermal;
 
 import nebula.common.util.Direction;
@@ -10,6 +11,7 @@ import nebula.common.world.ICoord;
  * The thermal handler.
  * Implements by tile entity.
  * @author ueyudiud
+ * @see farcore.energy.thermal.ThermalNet
  */
 public interface IThermalHandler extends ICoord
 {
@@ -38,7 +40,7 @@ public interface IThermalHandler extends ICoord
 	 * @param direction
 	 * @return
 	 */
-	double getHeatCapacity(Direction direction);
+	//	double getHeatCapacity(Direction direction);
 	
 	/**
 	 * An basic constant of heat conduct. Called by thermal net.<br>
@@ -54,6 +56,18 @@ public interface IThermalHandler extends ICoord
 	 * @return the thermal conductivity.
 	 */
 	double getThermalConductivity(Direction direction);
+	
+	/**
+	 * Heat change helper method.
+	 * @param values the changes heat from each direction.
+	 */
+	default void onHeatChange(long[] values)
+	{
+		for (Direction direction : Direction.DIRECTIONS_3D)
+		{
+			onHeatChange(direction, values[direction.ordinal()]);
+		}
+	}
 	
 	/**
 	 * Called when heat changed at this tile.

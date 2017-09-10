@@ -152,7 +152,7 @@ implements INetworkedSyncTile, IIDOpenableTile, ITP_Drops, ITB_BlockActived, ITB
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		if (!this.world.isRemote)
+		if (isServer() && hand == EnumHand.MAIN_HAND)
 		{
 			if (this.hasLock && this.lockID != IIDOpenableTile.EMPTY_UUID && !Players.isOp(player))
 			{

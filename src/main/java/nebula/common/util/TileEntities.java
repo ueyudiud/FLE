@@ -42,11 +42,11 @@ public final class TileEntities
 	public static boolean onTileActivatedGeneral(EntityPlayer playerIn, EnumHand hand, ItemStack heldItem,
 			Direction facing, float hitX, float hitY, float hitZ, TileEntity tile)
 	{
-		if(tile == null) return false;
-		if(tile instanceof TEBase && !((TEBase) tile).isInitialized())
+		if (tile == null) return false;
+		if (tile instanceof TEBase && !((TEBase) tile).isInitialized())
 			return false;
 		EnumFacing facing2 = facing.of();
-		if(heldItem != null && heldItem.getItem() instanceof ITool &&
+		if (heldItem != null && heldItem.getItem() instanceof ITool &&
 				tile instanceof IToolableTile)
 		{
 			ITool tool = (ITool) heldItem.getItem();
@@ -60,9 +60,9 @@ public final class TileEntities
 				}
 			}
 		}
-		if(tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2))
+		if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2))
 		{
-			if(heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
+			if (heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
 			{
 				IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing2);
 				IFluidHandler handler2 = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
@@ -91,7 +91,7 @@ public final class TileEntities
 				}
 			}
 		}
-		if(tile instanceof IItemHandlerIO)
+		if (tile instanceof IItemHandlerIO)
 		{
 			IItemHandlerIO handler = (IItemHandlerIO) tile;
 			ActionResult<ItemStack> result = handler.onPlayerTryUseIO(heldItem, playerIn, facing, hitX, hitY, hitZ, true);
