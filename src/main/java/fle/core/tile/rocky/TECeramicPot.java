@@ -44,7 +44,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 {
 	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
-
+	
 	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.argil.heatCapacity, 100F, 4.8E-3F);
 	
 	public TECeramicPot()
@@ -69,13 +69,16 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-		return super.writeToNBT(compound);
+		super.writeToNBT(compound);
+		this.helper.writeToNBT(compound, "energy");
+		return compound;
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
+		this.helper.readFromNBT(compound, "energy");
 	}
 	
 	@Override
@@ -128,7 +131,7 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		if (isServer())
+		if (tileGUICheck(hand))
 		{
 			openGUI(player, 0);
 			return EnumActionResult.SUCCESS;
@@ -176,7 +179,7 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return 0;
+		return this.helper.getTemperature();
 	}
 	
 	@Override
@@ -189,7 +192,7 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
-		;
+		this.helper.addInternalEnergy(value);
 	}
 	
 	@Override

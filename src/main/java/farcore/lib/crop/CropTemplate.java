@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.material.Mat;
 import nebula.base.function.Applicable;
+import nebula.common.LanguageManager;
 import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
@@ -19,11 +20,12 @@ public class CropTemplate extends Crop
 	private int grain = 1;
 	private int seed = 1;
 	
-	public CropTemplate(Mat material, int maxStage, int growRequire)
+	public CropTemplate(Mat material, String localName, int maxStage, int growRequire)
 	{
 		this.material = material;
 		this.maxStage = maxStage;
 		this.growRequire = growRequire;
+		LanguageManager.registerLocal("crop." + material.name + ".name", localName);
 	}
 	
 	public CropTemplate setFamily(FamilyTemplate<Crop, ICropAccess> family)

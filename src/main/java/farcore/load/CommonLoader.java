@@ -120,9 +120,9 @@ public class CommonLoader
 		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.MATERIAL));
 		new ItemIngot().setCreativeTab(CT.MATERIAL);
 		new ItemPile().setCreativeTab(CT.MATERIAL);
-		new ItemMulti(MC.brick).setCreativeTab(CT.BUILDING);
-		new ItemMulti(MC.roofshingle).setCreativeTab(CT.BUILDING);
-		new ItemMulti(MC.rooftile).setCreativeTab(CT.BUILDING);
+		new ItemMulti(MC.brick).setCreativeTab(CT.RESOURCE_ITEM);
+		new ItemMulti(MC.roofshingle).setCreativeTab(CT.RESOURCE_ITEM);
+		new ItemMulti(MC.rooftile).setCreativeTab(CT.RESOURCE_ITEM);
 		EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
 		new BlockWater((FluidBase) EnumFluid.water.fluid);
 		new BlockIce().setCreativeTab(CT.TERRIA);

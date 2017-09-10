@@ -69,6 +69,11 @@ public class ThermalEnergyHelper implements INBTCompoundReaderAndWritter<Thermal
 		this.T = t;
 	}
 	
+	public void setTemperatureNotLessThan(float t)
+	{
+		this.T = Math.max(this.T, t);
+	}
+	
 	public void setBaseMaxTemperature(float baseMaxTemp)
 	{
 		this.baseMaxTemp = baseMaxTemp;

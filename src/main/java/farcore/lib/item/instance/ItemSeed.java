@@ -119,7 +119,7 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		unlocalizedList.add("info.crop.type", getMaterialFromItem(stack).getProperty(MP.property_crop).getLocalName(geneticMaterial));
 		unlocalizedList.add("info.crop.generation", geneticMaterial.generation + 1);
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
-		if(playerIn.capabilities.isCreativeMode)
+		if (playerIn.capabilities.isCreativeMode)
 		{
 			Localization.addFoodStatInformation(getMaterialFromItem(stack).getProperty(MP.property_edible), stack, unlocalizedList);
 		}

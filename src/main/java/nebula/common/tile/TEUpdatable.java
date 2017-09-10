@@ -29,11 +29,16 @@ public class TEUpdatable extends TECustomName implements ITickable
 			return this.delay;
 		}
 		
+		public void resetDelay()
+		{
+			this.delay = 0;
+		}
+		
 		public void onUpdate()
 		{
 			if (this.delay++ >= this.duration)
 			{
-				this.delay = 0;
+				resetDelay();
 				this.runnable.run();
 			}
 		}

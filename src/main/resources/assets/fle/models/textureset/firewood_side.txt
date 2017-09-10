@@ -1,0 +1,4 @@
+#For normal firewood.
+@include fle:firewood/side_base
+
+charcoal=fle:blocks/firewood/charcoal_side

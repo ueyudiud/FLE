@@ -75,7 +75,7 @@ implements ITP_BlockHardness, ITP_HarvestCheck, ITP_ExplosionResistance, ITB_Blo
 		}
 		else
 		{
-			if (isServer())
+			if (tileGUICheck(hand))
 			{
 				openGUI(player, 0);
 			}

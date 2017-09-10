@@ -178,7 +178,7 @@ ITP_BlockHardness, ITP_ExplosionResistance
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		if (isServer() && hand == EnumHand.MAIN_HAND)
+		if (tileGUICheck(hand))
 		{
 			if (NebulaKeyHandler.get(player, Keys.ROTATE))
 			{

@@ -71,11 +71,11 @@ public class Register<T> implements IRegister<T>
 	
 	private void freePoint(int id)
 	{
-		if(contain(id))
+		if (contain(id))
 			throw new IllegalArgumentException("The id " + id + " has already registed with " + this.targets[id] + "!");
-		if(id >= this.names.length)
+		if (id >= this.names.length)
 		{
-			extraList((int) (id * (1 + this.factor)));
+			extraList((int) (id * (1 + this.factor) + 1));
 		}
 	}
 	
@@ -118,7 +118,7 @@ public class Register<T> implements IRegister<T>
 	
 	private void reg(int id, String name, T arg)
 	{
-		if(contain(name))
+		if (contain(name))
 			throw new IllegalArgumentException("The name " + name + " has already registed!");
 		else
 		{

@@ -335,6 +335,11 @@ public class TEBase extends TileEntity implements IModifiableCoord
 			getBlockType().canPlaceBlockAt(this.world, this.pos);
 	}
 	
+	public boolean tileGUICheck(EnumHand hand)
+	{
+		return isServer() && hand == EnumHand.MAIN_HAND;
+	}
+	
 	public void openGUI(EntityPlayer player, int id)
 	{
 		openGUI(player, Nebula.MODID, id);

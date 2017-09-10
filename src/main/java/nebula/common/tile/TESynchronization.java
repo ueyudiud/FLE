@@ -299,7 +299,7 @@ implements ISynchronizableTile
 	
 	protected void onStateChanged(boolean isServerSide)
 	{
-		if(isServerSide)
+		if (isServerSide)
 		{
 			markDirty();
 			syncToNearby();

@@ -18,14 +18,17 @@ import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.Materials;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
+import nebula.base.ObjArrayParseHelper;
 import nebula.client.model.StateMapperExt;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockBase;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
 import nebula.common.util.Direction;
+import nebula.common.util.L;
 import nebula.common.util.Properties;
 import nebula.common.util.Properties.EnumStateName;
+import nebula.common.util.Worlds;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -62,6 +65,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public static final PropertyBool SOUTH = Misc.PROP_SOUTH;
 	public static final PropertyBool WEST = Misc.PROP_WEST;
 	public static final PropertyBool UPPER = Misc.PROP_UP;
+	public static final PropertyBool SPREAD_CHECK = Properties.create("spread_check");
 	public static final PropertyBool SMOLDER = Properties.create("smoldering");
 	
 	@EnumStateName("spread_preference")
@@ -80,13 +84,20 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		setTickRandomly(true);
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), "Fire");
 		EnumBlock.fire.set(this);
+		EnumBlock.fire.stateApplier = objs-> {
+			ObjArrayParseHelper helper = ObjArrayParseHelper.create(objs);
+			int level = L.range(0, 15, helper.readOrSkip(15));
+			boolean spread = helper.readOrSkip(true);
+			boolean smolder = helper.readOrSkip(true);
+			return getDefaultState().withProperty(STATE, level).withProperty(SPREAD_CHECK, spread).withProperty(SMOLDER, smolder);
+		};
 		setLightLevel(11);
 	}
 	
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, STATE, NORTH, EAST, SOUTH, WEST, UPPER, SMOLDER, SPREAD_PREFERENCE);
+		return new BlockStateContainer(this, SPREAD_CHECK, STATE, NORTH, EAST, SOUTH, WEST, UPPER, SMOLDER, SPREAD_PREFERENCE);
 	}
 	
 	@Override
@@ -94,7 +105,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "fire", (IProperty<?>) null, STATE, SMOLDER, SPREAD_PREFERENCE);
+		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "fire", (IProperty<?>) null, STATE, SMOLDER, SPREAD_PREFERENCE, SPREAD_CHECK);
 		ModelLoader.setCustomModelResourceLocation(this.item, 0, new ModelResourceLocation(FarCore.ID + ":fire", "inventory"));
 		ModelLoader.setCustomStateMapper(this, mapper);
 	}
@@ -117,6 +128,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		int i = state.getValue(STATE);
 		if (state.getValue(SMOLDER)) i |= 0x10;
 		i |= state.getValue(SPREAD_PREFERENCE).ordinal() << 5;
+		if (state.getValue(SPREAD_CHECK)) i |= 0x100;
 		return i;
 	}
 	
@@ -127,6 +139,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		state.withProperty(STATE, meta & 0xF);
 		state.withProperty(SMOLDER, (meta & 0x10) != 0);
 		state.withProperty(SPREAD_PREFERENCE, SpreadDir.values()[meta & 0xC0]);
+		state.withProperty(SPREAD_CHECK, (meta & 0x100) != 0);
 		return state;
 	}
 	
@@ -146,6 +159,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				.withProperty(WEST, false)
 				.withProperty(UPPER, false)
 				.withProperty(SMOLDER, false)
+				.withProperty(SPREAD_CHECK, true)
 				.withProperty(SPREAD_PREFERENCE, SpreadDir.unknown);
 	}
 	
@@ -218,7 +232,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	
 	public boolean canBlockStayAt(World world, BlockPos pos)
 	{
-		return nebula.common.util.Worlds.isAirNearby(world, pos, true) &&
+		return Worlds.isAirNearby(world, pos, true) &&
 				(canStayFire(world, pos.down(), EnumFacing.UP) ||
 						canStayFire(world, pos.up(), EnumFacing.DOWN) ||
 						canStayFire(world, pos.north(), EnumFacing.SOUTH) ||
@@ -229,7 +243,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	
 	private boolean canBlockBurnAt(World world, BlockPos pos)
 	{
-		boolean isCatchRain = nebula.common.util.Worlds.isCatchingRain(world, pos, true);
+		boolean isCatchRain = Worlds.isCatchingRain(world, pos, true);
 		return canBurnFire(world, pos.down(), EnumFacing.UP, isCatchRain) ||
 				canBurnFire(world, pos.up(), EnumFacing.DOWN, isCatchRain) ||
 				canBurnFire(world, pos.north(), EnumFacing.SOUTH, isCatchRain) ||
@@ -249,7 +263,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	
 	private boolean canStayFire(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return world.isSideSolid(pos, side, false);
+		return Worlds.isSideSolid(world, pos, side, false);
 	}
 	
 	@Override
@@ -267,7 +281,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			worldIn.setBlockToAir(pos);
 			return;
 		}
-		if (worldIn.getGameRules().getBoolean("doFireTick"))
+		if (state.getValue(SPREAD_CHECK) && worldIn.getGameRules().getBoolean("doFireTick"))
 		{
 			if(state.getValue(SMOLDER))
 			{
@@ -328,7 +342,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			worldIn.setBlockToAir(pos);
 			worldIn.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.2F + (rand.nextFloat() - rand.nextFloat()) * .8F, true);
 		}
-		if (worldIn.getGameRules().getBoolean("doFireTick"))
+		if (state.getValue(SPREAD_CHECK) && worldIn.getGameRules().getBoolean("doFireTick"))
 		{
 			if(!canBlockBurnAt(worldIn, pos))
 			{
@@ -482,7 +496,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
 	{
-		if(!canBlockStayAt(worldIn, pos))
+		if (!canBlockStayAt(worldIn, pos))
 		{
 			worldIn.setBlockToAir(pos);
 		}

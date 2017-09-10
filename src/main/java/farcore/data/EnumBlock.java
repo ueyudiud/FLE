@@ -23,6 +23,16 @@ public enum EnumBlock
 	crop,
 	sapling,
 	water,
+	/**
+	 * State applier arguments:
+	 * <li>
+	 * level (optional, <tt>int</tt>) - The fire burning hardness.
+	 * <li>
+	 * spread (optional, <tt>boolean</tt>) - Should fire spread to nearby blocks.
+	 * <li>
+	 * smolder (optional, <tt>boolean</tt>) - Is fire in <tt>smolder</tt> state.
+	 * </li>
+	 */
 	fire,
 	ice,
 	ore,
