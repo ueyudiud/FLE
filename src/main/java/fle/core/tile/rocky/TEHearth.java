@@ -9,6 +9,7 @@ import farcore.data.V;
 import farcore.energy.thermal.IThermalHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
+import fle.api.energy.thermal.ThermalEnergyHelper;
 import fle.api.mat.StackContainer;
 import fle.api.recipes.instance.FuelHandler;
 import fle.api.tile.IBellowsAccepter;
@@ -37,6 +38,8 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	private int burningPower;
 	private int normalBurningPower;
 	private long fuelValue;
+
+	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.stone.heatCapacity, 10.0F, 3.6E-3F);
 	
 	public TEHearth()
 	{
@@ -156,6 +159,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 				decrStackSize(0, key.fuel);
 				this.fuelValue = key.fuelValue;
 				this.normalBurningPower = key.normalPower;
+				this.helper.setBaseMaxTemperature(key.normalTemperature);
 				return;
 			}
 		}
@@ -184,12 +188,6 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	public float getTemperatureDifference(Direction direction)
 	{
 		return 0;
-	}
-	
-	@Override
-	public double getHeatCapacity(Direction direction)
-	{
-		return 1000;
 	}
 	
 	@Override

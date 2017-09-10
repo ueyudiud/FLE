@@ -21,13 +21,15 @@ public class FuelHandler
 	{
 		public final AbstractStack fuel;
 		public final float flameTemperature;
+		public final float normalTemperature;
 		public final int normalPower;
 		public final long fuelValue;
 		
-		FuelKey(AbstractStack fuel, float flameTemperature, int normalPower, long fuelValue)
+		FuelKey(AbstractStack fuel, float flameTemperature, float normalTemperature, int normalPower, long fuelValue)
 		{
 			this.fuel = fuel;
 			this.flameTemperature = flameTemperature;
+			this.normalTemperature = normalTemperature;
 			this.normalPower = normalPower;
 			this.fuelValue = fuelValue;
 		}
@@ -35,10 +37,15 @@ public class FuelHandler
 	
 	private static final List<FuelKey> FUELS = new ArrayList<>();
 	
-	public static void addFuel(AbstractStack fuel, float flameTemperature, int normalPower, long fuelValue)
+	public static void addFuel(AbstractStack fuel, float flameTemperature, float normalTemperature, int normalPower, long fuelValue)
 	{
-		FUELS.add(new FuelKey(fuel, flameTemperature, normalPower, fuelValue));
-		FlamableItems.addFlamableItem(fuel, flameTemperature, flameTemperature);
+		addFuel(fuel, flameTemperature, flameTemperature, normalTemperature, normalPower, fuelValue);
+	}
+	
+	public static void addFuel(AbstractStack fuel, float smoderTemperature, float flameTemperature, float normalTemperature, int normalPower, long fuelValue)
+	{
+		FUELS.add(new FuelKey(fuel, flameTemperature, normalTemperature, normalPower, fuelValue));
+		FlamableItems.addFlamableItem(fuel, smoderTemperature, flameTemperature);
 	}
 	
 	public static boolean isFuel(ItemStack stack)
