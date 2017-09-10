@@ -121,7 +121,7 @@ implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, IT
 	public EnumActionResult onBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, Direction side,
 			float hitX, float hitY, float hitZ)
 	{
-		if (isServer())
+		if (isServer() && hand == EnumHand.MAIN_HAND)
 		{
 			if (NebulaKeyHandler.get(player, Keys.ROTATE))
 			{

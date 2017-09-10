@@ -79,7 +79,7 @@ public class M
 	//TODO the color still needed be checked.
 	//	public static final Mat white_sand		= new Mat(7203, FarCore.ID , "white_sand"		, "WhiteSand"		, "White Sand"			).setRGBa(0xE8DCB1FF).setSand(0.8F, 1.4F);
 	//	public static final Mat salty_sand		= new Mat(7204, FarCore.ID , "salty_sand"		, "SaltySand"		, "Salty Sand"			).setRGBa(0xE8DCB1FF).setSand(0.8F, 1.2F);
-	//Misc terria
+	//Miscellaneous terria
 	public static final Mat flint			= new Mat(7601, "minecraft", "flint"			, "Flint"			, "Flint"				).setRGBa(0x2D2D2DFF).setToolProp(  10,  8, 1.1F, 1.0F,  5.0F, -0.4F);
 	public static final Mat gravel			= new Mat(7602, "minecraft", "gravel"			, "Gravel"			, "Gravel"				).setRGBa(0xAEB1BFFF);
 	public static final Mat quartz			= new Mat(7603, FarCore.ID , "quartz"			, "Quartz"			, "Quartz"				).setRGBa(0xDADBE5FF).setToolProp(  12, 11, 1.9F, 1.0F,  4.0F, -0.5F);

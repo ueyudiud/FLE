@@ -11,6 +11,7 @@ import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import fle.api.energy.thermal.ThermalEnergyHelper;
 import fle.api.mat.StackContainer;
+import fle.api.recipes.instance.FlamableItems;
 import fle.api.recipes.instance.FuelHandler;
 import fle.api.tile.IBellowsAccepter;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
@@ -38,7 +39,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	private int burningPower;
 	private int normalBurningPower;
 	private long fuelValue;
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.stone.heatCapacity, 30.0F, 3.6E-3F);
+	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.stone.heatCapacity, 10.0F, 3.6E-3F);
 	
 	public TEHearth()
 	{
@@ -87,7 +88,7 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 			if (isServer())
 			{
 				int size;
-				if (stack != null && FuelHandler.isFuel(stack) && (size = incrStack(0, stack, true)) > 0)
+				if (stack != null && FlamableItems.isFlamable(stack) && (size = incrStack(0, stack, true)) > 0)
 				{
 					if (stack.stackSize == size)
 						player.setHeldItem(hand, null);
@@ -113,9 +114,12 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	{
 		if (tool == EnumToolTypes.FIRESTARTER)
 		{
-			if (!is(IsBurining))
+			if (!is(IsBurining) &&
+					FlamableItems.isFlamable(stack, ThermalNet.getRealHandlerTemperature(this, Direction.Q)))
 			{
+				this.helper.setTemperature(200F);
 				enable(IsBurining);
+				tryBuringItem();
 				return new ActionResult<>(EnumActionResult.SUCCESS, 1.0F);
 			}
 		}
@@ -196,7 +200,8 @@ implements IBellowsAccepter, IThermalHandler, IToolableTile, ITB_BlockActived
 	@Override
 	public double getThermalConductivity(Direction direction)
 	{
-		return M.stone.thermalConductivity;
+		int mul = direction == Direction.U ? 10 : 1;
+		return M.stone.thermalConductivity * mul;
 	}
 	
 	@Override

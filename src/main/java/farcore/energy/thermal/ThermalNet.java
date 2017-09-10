@@ -16,6 +16,8 @@ import java.util.Map.Entry;
 import com.google.common.collect.ImmutableList;
 
 import farcore.data.V;
+import farcore.energy.EnergyHandler;
+import farcore.energy.EnergyHandler.Energy;
 import farcore.energy.IEnergyNet;
 import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.util.EnumModifyFlag;
@@ -229,6 +231,22 @@ public class ThermalNet implements IEnergyNet
 	public static final ThermalNet INSTANCE = new ThermalNet();
 	
 	private Map<Integer, Local> netMap = new HashMap<>();
+	
+	/**
+	 * The thermal energy net use <code>STANDARD_LANG</code>
+	 * energy formatter, for using in heat exchange, internal
+	 * energy store. Although temperature, heat capacity, some
+	 * others data use <code>float</code> or <code>double</code>
+	 * as format.<p>
+	 * This is because the heat capacity is more larger than
+	 * energy unit, it needn't use a float value to calculate
+	 * when energy transfer.
+	 */
+	@Override
+	public final Energy getEnergyFormat()
+	{
+		return EnergyHandler.STANDARD_LONG;
+	}
 	
 	@Override
 	public void update(World world)

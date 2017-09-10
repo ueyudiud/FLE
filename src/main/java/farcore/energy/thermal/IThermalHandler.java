@@ -1,6 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
+
 package farcore.energy.thermal;
 
 import nebula.common.util.Direction;

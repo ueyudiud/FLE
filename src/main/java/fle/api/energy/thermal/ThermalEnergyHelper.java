@@ -64,6 +64,11 @@ public class ThermalEnergyHelper implements INBTCompoundReaderAndWritter<Thermal
 		nbt.setFloat("tbm", this.baseMaxTemp);
 	}
 	
+	public void setTemperature(float t)
+	{
+		this.T = t;
+	}
+	
 	public void setBaseMaxTemperature(float baseMaxTemp)
 	{
 		this.baseMaxTemp = baseMaxTemp;
@@ -87,7 +92,7 @@ public class ThermalEnergyHelper implements INBTCompoundReaderAndWritter<Thermal
 	
 	public float getTemperature()
 	{
-		return this.T + (float) Maths.asinh(this.E / this.tempLimit) * this.tempLimit / this.heatCapacity;
+		return this.T + (float) (Maths.asinh(this.E / (this.tempLimit * this.heatCapacity)) * this.tempLimit);
 	}
 	
 	public void recaculateTemperature(World world, BlockPos pos)

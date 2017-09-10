@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.energy;
 
 import java.util.HashMap;
@@ -8,7 +12,7 @@ import farcore.energy.EnergyHandler.Energy;
 import net.minecraft.world.World;
 
 /**
- * The global energy net.
+ * The global energy net interface.
  * @author ueyudiud
  *
  */

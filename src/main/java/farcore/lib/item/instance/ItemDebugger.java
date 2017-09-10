@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package farcore.lib.item.instance;
 
 import java.util.ArrayList;
@@ -29,11 +33,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Debugging tool.
+ * @author ueyudiud
+ */
 public class ItemDebugger extends ItemBase
 {
 	public ItemDebugger()
@@ -71,15 +78,6 @@ public class ItemDebugger extends ItemBase
 				IBlockState state = world.getBlockState(pos);
 				Block block = state.getBlock();
 				TileEntity tile = world.getTileEntity(pos);
-				//				if(block instanceof IToolableBlock)
-				//				{
-				//					((IToolableBlock) block).onToolClick(player, EnumToolTypes.CHISEL, stack, world, pos, Direction.of(side), hitX, hitY, hitZ);
-				//				}
-				//				block.randomTick(world, pos, state, itemRand);
-				//				if(tile instanceof IToolableTile)
-				//				{
-				//					((IToolableTile) tile).onToolClick(player, EnumToolTypes.CHISEL, stack, Direction.of(side), hitX, hitY, hitZ);
-				//				}
 				List<String> list = new ArrayList<>();
 				//This information is added in F3 information, so should I remove these information display?
 				list.add("================World Info==================");
@@ -119,20 +117,15 @@ public class ItemDebugger extends ItemBase
 					Log.warn("Fail to get information from coord.", exception);
 				}
 			}
+			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.PASS;
 	}
 	
 	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
-	{
-		return true;
-	}
-	
-	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
-		if(player.isSneaking())
+		if (player.isSneaking())
 		{
 			try
 			{
