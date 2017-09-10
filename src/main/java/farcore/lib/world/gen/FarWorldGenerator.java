@@ -5,6 +5,7 @@ import java.util.Random;
 import nebula.common.world.ICoord;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 public abstract class FarWorldGenerator extends WorldGenerator implements ICoord
@@ -12,20 +13,27 @@ public abstract class FarWorldGenerator extends WorldGenerator implements ICoord
 	protected World world;
 	protected BlockPos pos;
 	protected Random rand;
-
+	protected IChunkGenerator chunkGenerator;
+	
 	@Override
-	public final boolean generate(World worldIn, Random rand, BlockPos position)
+	public boolean generate(World worldIn, Random rand, BlockPos position)
 	{
-		world = worldIn;
-		pos = position;
-		this.rand = rand;
-		pos = moveGeneratePosition();
-		return pos == null ? false : generate();
+		return generate(worldIn, rand, position, worldIn.getWorldType().getChunkGenerator(worldIn, null));
 	}
-
+	
+	public final boolean generate(World worldIn, Random rand, BlockPos position, IChunkGenerator chunkGenerator)
+	{
+		this.world = worldIn;
+		this.pos = position;
+		this.rand = rand;
+		this.pos = moveGeneratePosition();
+		this.chunkGenerator = chunkGenerator;
+		return this.pos == null ? false : generate();
+	}
+	
 	protected BlockPos moveGeneratePosition()
 	{
-		return pos;
+		return this.pos;
 	}
 	
 	protected abstract boolean generate();
@@ -33,12 +41,12 @@ public abstract class FarWorldGenerator extends WorldGenerator implements ICoord
 	@Override
 	public World world()
 	{
-		return world;
+		return this.world;
 	}
 	
 	@Override
 	public BlockPos pos()
 	{
-		return pos;
+		return this.pos;
 	}
 }

@@ -62,8 +62,8 @@ public class M
 	public static final Mat oil_shale			= new Mat(7026, FarCore.ID , "oil_shale"			, "OilShale"			, "Oil Shale"			).setRGBa(0x8E9499FF)                                                .setRock( 5, 2.8F,  6.9F);
 	public static final Mat shale				= new Mat(7027, FarCore.ID , "shale"				, "Shale"				, "Shale"				).setRGBa(0x8E9499FF)                                                .setRock( 5, 2.8F,  7.0F);
 	//Soils
-	public static final Mat latosol			= new Mat(7101, FarCore.ID , "latosol"			, "Latosol"			, "Latosol"				).setRGBa(0x652A1FFF).setSoil(0.6F, 3.0F, Materials.DIRT);
-	public static final Mat latoaluminosol	= new Mat(7102, FarCore.ID , "latoaluminosol"	, "Latoaluminosol"	, "Latoaluminosol"		).setRGBa(0x77412FFF).setSoil(0.6F, 3.0F, Materials.DIRT);
+	public static final Mat latrosol		= new Mat(7101, FarCore.ID , "latrosol"			, "Latrosol"		, "Latrosol"			).setRGBa(0x652A1FFF).setSoil(0.6F, 3.0F, Materials.DIRT);
+	public static final Mat latroaluminosol	= new Mat(7102, FarCore.ID , "latroaluminosol"	, "Latroaluminosol"	, "Latroaluminosol"		).setRGBa(0x77412FFF).setSoil(0.6F, 3.0F, Materials.DIRT);
 	public static final Mat ruboloam		= new Mat(7103, FarCore.ID , "ruboloam"			, "Ruboloam"		, "Ruboloam"			).setRGBa(0x773E22FF).setSoil(0.6F, 3.0F, Materials.DIRT);
 	public static final Mat ruboaluminoloam	= new Mat(7104, FarCore.ID , "ruboaluminoloam"	, "Ruboaluminoloam"	, "Ruboaluminoloam"		).setRGBa(0x8E5938FF).setSoil(0.6F, 3.0F, Materials.DIRT);
 	public static final Mat flavoloam		= new Mat(7105, FarCore.ID , "flavoloam"		, "Flavoloam"		, "Flavoloam"			).setRGBa(0x907451FF).setSoil(0.6F, 3.0F, Materials.DIRT);
@@ -72,7 +72,6 @@ public class M
 	public static final Mat podzol			= new Mat(7108, FarCore.ID , "podzol"			, "Podzol"			, "Podzol"				).setRGBa(0x281812FF).setSoil(0.6F, 3.0F, Materials.DIRT);
 	public static final Mat pheosol			= new Mat(7109, FarCore.ID , "pheosol"			, "Pheosol"			, "Pheosol"				).setRGBa(0x6C4626FF).setSoil(0.6F, 3.0F, Materials.DIRT);
 	public static final Mat aterocalcosol	= new Mat(7110, FarCore.ID , "aterocalcosol"	, "Aterocalcosol"	, "Aterocalcosol"		).setRGBa(0x25211EFF).setSoil(0.6F, 3.0F, Materials.DIRT);
-	public static final Mat rubosol			= new Mat(7111, FarCore.ID , "rubosol"			, "Rubosol"			, "Rubosol"				).setRGBa(0x945742FF).setSoil(0.6F, 3.0F, Materials.DIRT);
 	//Sand
 	public static final Mat sand			= new Mat(7201, "minecraft", "sand"				, "Sand"			, "Sand"				).setRGBa(0xE8DCB1FF).setSand(0.8F, 1.3F);
 	public static final Mat redsand			= new Mat(7202, "minecraft", "redsand"			, "Red Sand"		, "Red Sand"			).setRGBa(0xE8DCB1FF).setSand(0.9F, 1.3F);

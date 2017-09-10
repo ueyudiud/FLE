@@ -229,7 +229,7 @@ public class FarSurfaceDataGenerator
 	
 	static
 	{
-		final Mat[] soils = {M.latosol, M.latoaluminosol, M.ruboloam, M.ruboaluminoloam, M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol, M.rubosol};
+		final Mat[] soils = {M.latrosol, M.latroaluminosol, M.ruboloam, M.ruboaluminoloam, M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol};
 		SOIL_LIST = new IBlockState[soils.length][];
 		
 		final IBlockState GRAVEL = Blocks.GRAVEL.getDefaultState();

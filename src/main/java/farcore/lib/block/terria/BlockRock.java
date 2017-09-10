@@ -45,7 +45,7 @@ implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
 	public static final PropertyEnum<EnumRockType>	TYPE = Properties.get(EnumRockType.class);
 	
 	//	protected final BlockRockSlab slab;
-	protected final IBlockBehavior<BlockRock> behavior;
+	public final IBlockBehavior<BlockRock> behavior;
 	public final Mat material;
 	
 	public BlockRock(Mat material, IBlockBehavior<BlockRock> behavior)

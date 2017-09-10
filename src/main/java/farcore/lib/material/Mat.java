@@ -24,6 +24,7 @@ import farcore.lib.block.instance.BlockBrick;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.block.terria.BlockSand;
 import farcore.lib.block.terria.BlockSoil;
+import farcore.lib.block.terria.BlockStoneChip;
 import farcore.lib.block.wood.BlockLeaves;
 import farcore.lib.block.wood.BlockLeavesCore;
 import farcore.lib.block.wood.BlockLogArtificial;
@@ -473,6 +474,7 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public Mat setRock(RockBehavior behavior)
 	{
 		behavior.block = new BlockRock(this, behavior);
+		behavior.stonechip = new BlockStoneChip(behavior);
 		add(SubTags.ROCK);
 		return addProperty(MP.property_rock, behavior);
 	}

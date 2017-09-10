@@ -1,7 +1,7 @@
 package nebula.client;
 
 import nebula.Log;
-import nebula.base.function.Appliable;
+import nebula.base.function.Applicable;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
@@ -15,14 +15,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class CreativeTabBase extends CreativeTabs implements IRenderRegister
 {
 	private final String localName;
-	private final Appliable<ItemStack> appliable;
+	private final Applicable<ItemStack> appliable;
 	private ItemStack stack;
 	
 	public CreativeTabBase(String lable, String localName, ItemStack stack)
 	{
-		this(lable, localName, Appliable.to(stack));
+		this(lable, localName, Applicable.to(stack));
 	}
-	public CreativeTabBase(String lable, String localName, Appliable<ItemStack> appliable)
+	public CreativeTabBase(String lable, String localName, Applicable<ItemStack> appliable)
 	{
 		super(lable);
 		this.localName = localName;

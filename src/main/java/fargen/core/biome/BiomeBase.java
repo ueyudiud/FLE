@@ -34,7 +34,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	
 	public static final BiomeBase DEBUG = new BiomeBase(-1, false, BiomePropertiesExtended.newProperties("debug"));
 	
-	private static final Register<BiomeBase> register = new Register(256);
+	private static final Register<BiomeBase> REGISTER = new Register(256);
 	
 	static
 	{
@@ -48,11 +48,11 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	
 	public static BiomeBase getBiomeFromName(String name)
 	{
-		return register.get(name);
+		return REGISTER.get(name);
 	}
 	public static BiomeBase getBiomeFromID(int id)
 	{
-		BiomeBase ret = register.get(id, DEBUG);
+		BiomeBase ret = REGISTER.get(id, DEBUG);
 		return ret;
 	}
 	
@@ -88,7 +88,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		if(register)
 		{
 			setRegistryName(FarGen.ID, getBiomeName());
-			this.register.register(id, getBiomeName(), this);
+			REGISTER.register(id, getBiomeName(), this);
 			GameRegistry.register(this);
 		}
 		if(isMutation())
@@ -176,7 +176,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	{
 		if(this.decorator != null)
 		{
-			this.decorator.decorate(worldIn, rand, pos);
+			this.decorator.decorate(worldIn, rand, pos, worldIn.getWorldType().getChunkGenerator(worldIn, null));
 		}
 	}
 	

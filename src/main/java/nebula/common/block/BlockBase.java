@@ -68,6 +68,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	
 	public final String blockName;
 	protected final Item item;
+	private boolean toolRequired = true;
 	
 	protected float effectiveSpeedMultiplier = 1 / 30F;
 	protected float uneffectiveSpeedMultiplier = 1F / 100F;
@@ -111,6 +112,11 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	public void postInitalizedBlocks()
 	{
 		
+	}
+	
+	public void setToolNotRequired()
+	{
+		this.toolRequired = false;
 	}
 	
 	protected IBlockState initDefaultState(IBlockState state)
@@ -194,7 +200,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
-		return ToolHooks.isToolHarvestable(this, world, pos, player);
+		return !this.toolRequired || ToolHooks.isToolHarvestable(this, world, pos, player);
 	}
 	
 	@Override
@@ -274,12 +280,12 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	 */
 	public boolean canBreakBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
-		return ToolHooks.isToolBreakable(world.getBlockState(pos), player.getHeldItemMainhand());
+		return !this.toolRequired || ToolHooks.isToolBreakable(world.getBlockState(pos), player.getHeldItemMainhand());
 	}
 	
 	public boolean canBreakEffective(IBlockState state, EntityPlayer player, World worldIn, BlockPos pos)
 	{
-		return ToolHooks.isToolEffciency(state, player.getHeldItemMainhand());
+		return !this.toolRequired || ToolHooks.isToolEffciency(state, player.getHeldItemMainhand());
 	}
 	
 	@Override

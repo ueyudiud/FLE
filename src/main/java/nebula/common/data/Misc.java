@@ -7,7 +7,7 @@ package nebula.common.data;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import nebula.base.function.Appliable;
+import nebula.base.function.Applicable;
 import nebula.common.util.Direction;
 import nebula.common.util.Properties;
 import net.minecraft.block.properties.PropertyBool;
@@ -54,7 +54,7 @@ public class Misc
 	
 	public static final Function TO_NULL = arg -> null;
 	public static final Consumer NO_ACTION = arg -> {};
-	public static final Appliable NO_APPLY = () -> null;
+	public static final Applicable NO_APPLY = () -> null;
 	
 	public static final boolean[] BOOLS_EMPTY = new boolean[0];
 	public static final byte[] BYTES_EMPTY = new byte[0];

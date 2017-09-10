@@ -22,7 +22,7 @@ import farcore.lib.block.wood.BlockLogNatural;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tile.instance.TECoreLeaves;
-import nebula.base.function.Appliable;
+import nebula.base.function.Applicable;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.Renders;
@@ -52,10 +52,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class Tree extends PropertyWood implements ITree, IRenderRegister
 {
-	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER1 =
-			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
-	public static final Appliable.AppliableCached<ItemStack> LEAVES_APPLIER2 =
-			Appliable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
+	public static final Applicable.AppliableCached<ItemStack> LEAVES_APPLIER1 =
+			Applicable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
+	public static final Applicable.AppliableCached<ItemStack> LEAVES_APPLIER2 =
+			Applicable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
 	
 	protected FamilyTemplate<Tree, ISaplingAccess> family;
 	/** logNative logArtifical leaves leavesCore */

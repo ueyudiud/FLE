@@ -119,14 +119,7 @@ public class ClassTransformer implements IClassTransformer
 					this.numInsertions += off;
 				}
 				list.remove(0);
-				if (!list.isEmpty())
-				{
-					info = list.get(0);
-				}
-				else
-				{
-					info = null;
-				}
+				info = list.isEmpty() ? null : list.get(0);
 			}
 		}
 		return list.isEmpty();

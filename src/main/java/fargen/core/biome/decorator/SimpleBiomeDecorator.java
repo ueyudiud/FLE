@@ -8,6 +8,7 @@ import java.util.Random;
 
 import farcore.data.M;
 import farcore.data.MP;
+import fargen.core.worldgen.generator.WorldGenStoneChip;
 import nebula.base.Stack;
 import nebula.base.function.Selector;
 import nebula.base.function.WeightedRandomSelector;
@@ -17,6 +18,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate;
 import net.minecraftforge.event.terraingen.TerrainGen;
@@ -26,6 +28,8 @@ import net.minecraftforge.event.terraingen.TerrainGen;
  */
 public class SimpleBiomeDecorator extends BiomeDecorator
 {
+	private static final WorldGenStoneChip GEN_STONE_CHIP = new WorldGenStoneChip();
+	
 	private static final Selector<WorldGenerator> GRASS_GENERATOR;
 	
 	static
@@ -37,10 +41,11 @@ public class SimpleBiomeDecorator extends BiomeDecorator
 	}
 	
 	public int grassPerChunk = 1;
+	public boolean enableStoneChipGen = true;
 	public Selector<WorldGenerator> grassGenerator = GRASS_GENERATOR;
 	
 	@Override
-	public void decorate(final World world, final Random rand, final BlockPos pos)
+	public void decorate(final World world, final Random rand, final BlockPos pos, final IChunkGenerator generator)
 	{
 		int pass, xOff, yOff, zOff, x, y, z;
 		
@@ -58,5 +63,7 @@ public class SimpleBiomeDecorator extends BiomeDecorator
 				}
 			}
 		}
+		if (this.enableStoneChipGen)
+			GEN_STONE_CHIP.generate(world, rand, pos, generator);
 	}
 }

@@ -4,6 +4,7 @@ import static fargen.core.biome.BiomeBase.BiomePropertiesExtended.newProperties;
 
 import farcore.data.EnumTempCategory;
 import fargen.core.biome.BiomeBase;
+import fargen.core.biome.BiomeOcean;
 import fargen.core.biome.BiomePlain;
 import fargen.core.biome.BiomeVoid;
 import fargen.core.biome.layer.BiomeLayerGenerator;
@@ -70,16 +71,16 @@ public class FarGenBiomes
 	{
 		IBlockState PODZEL = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.PODZOL);
 		BiomeLayerGenerator baseGenerator = new BLGSSimple(Blocks.GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState(), true);
-		ocean_t = new BiomeBase(0, newProperties("ocean_tropical").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_st = new BiomeBase(1, newProperties("ocean_subtropical").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_te = new BiomeBase(2, newProperties("ocean_temperate").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_sf = new BiomeBase(3, newProperties("ocean_subfrigid").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_f = new BiomeBase(4, newProperties("ocean_frigid").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_t_deep = new BiomeBase(5, newProperties("ocean_tropical_deep").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_st_deep = new BiomeBase(6, newProperties("ocean_subtropical_deep").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_te_deep = new BiomeBase(7, newProperties("ocean_temperate_deep").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_sf_deep = new BiomeBase(8, newProperties("ocean_subfrigid_deep").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
-		ocean_f_deep = new BiomeBase(9, newProperties("ocean_frigid_deep").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_t = new BiomeOcean(0, newProperties("ocean_tropical").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_st = new BiomeOcean(1, newProperties("ocean_subtropical").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_te = new BiomeOcean(2, newProperties("ocean_temperate").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_sf = new BiomeOcean(3, newProperties("ocean_subfrigid").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_f = new BiomeOcean(4, newProperties("ocean_frigid").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_t_deep = new BiomeOcean(5, newProperties("ocean_tropical_deep").setClimaticZone(ClimaticZone.ocean_tropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_st_deep = new BiomeOcean(6, newProperties("ocean_subtropical_deep").setClimaticZone(ClimaticZone.ocean_subtropical).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_te_deep = new BiomeOcean(7, newProperties("ocean_temperate_deep").setClimaticZone(ClimaticZone.ocean_temperate).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_sf_deep = new BiomeOcean(8, newProperties("ocean_subfrigid_deep").setClimaticZone(ClimaticZone.ocean_subfrigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
+		ocean_f_deep = new BiomeOcean(9, newProperties("ocean_frigid_deep").setClimaticZone(ClimaticZone.ocean_frigid).setLayerGenerator(new BLGSSimple(Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), Blocks.GRAVEL.getDefaultState(), false)));
 		
 		savanna = new BiomePlain(11, newProperties("savanna").setClimaticZone(ClimaticZone.tropical_plain).setLayerGenerator(baseGenerator).setTreePerChunk(3, 4).setCropPerChunk(3, 2));
 		shrubland = new BiomePlain(12, newProperties("shrubland").setClimaticZone(ClimaticZone.subtropical_plain).setLayerGenerator(baseGenerator).setTreePerChunk(5, 6).setCropPerChunk(2, 1));

@@ -14,7 +14,6 @@ import farcore.energy.thermal.IThermalHandler;
 import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.solid.container.SolidContainerHelper;
-import fle.api.energy.thermal.ThermalEnergyHelper;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.TemplateRecipeMap;
 import fle.api.recipes.instance.interfaces.IRecipeInput;
@@ -44,7 +43,7 @@ public class TECeramicPot extends TEITSRecipe<IRecipeInput, TemplateRecipeMap.Te
 implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 {
 	private FluidTankN tank = new FluidTankN(2000).enableTemperature();
-	private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.argil.heatCapacity, 100F, 4.8E-3F);
+  private ThermalEnergyHelper helper = new ThermalEnergyHelper(0, M.argil.heatCapacity, 100F, 4.8E-3F);
 	
 	public TECeramicPot()
 	{
@@ -68,7 +67,6 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-		this.helper.writeToNBT(compound, "e");
 		return super.writeToNBT(compound);
 	}
 	
@@ -76,7 +74,6 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		super.readFromNBT(compound);
-		this.helper.readFromNBT(compound, "e");
 	}
 	
 	@Override
@@ -108,7 +105,6 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	{
 		if (this.cache.<Integer>get(0) <= ThermalNet.getTemperature(this))
 		{
-			this.helper.addInternalEnergy(-10000L);
 			return 1;
 		}
 		return 0;
@@ -153,7 +149,6 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 			}
 		}
 		super.updateServer();
-		this.helper.recaculateTemperature(this.world, this.pos);
 	}
 	
 	@Override
@@ -179,7 +174,7 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	@Override
 	public float getTemperatureDifference(Direction direction)
 	{
-		return this.helper.getTemperature();
+		return 0;
 	}
 	
 	@Override
@@ -192,7 +187,7 @@ implements IThermalHandler, IRecipeInput, IGuiTile, ITB_BlockActived
 	@Override
 	public void onHeatChange(Direction direction, long value)
 	{
-		this.helper.addInternalEnergy(value);
+		;
 	}
 	
 	@Override

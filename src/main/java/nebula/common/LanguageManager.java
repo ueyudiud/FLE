@@ -7,7 +7,6 @@ package nebula.common;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,24 +24,32 @@ import com.google.common.collect.ImmutableSortedMap;
 
 import nebula.Log;
 import nebula.common.util.Strings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.LoaderState;
 import scala.actors.threadpool.Arrays;
 
-public class LanguageManager
+/**
+ * Language manager use to localized string to
+ * display.
+ * @author ueyudiud
+ */
+public class LanguageManager implements IResourceManagerReloadListener
 {
 	/** The default locale of manager. */
 	public static final String ENGLISH = "en_US";
 	/** Localization map loaded from language file. */
-	private static final Map<String, Map<String, String>> MAP1 = new HashMap<>();
+	private static final Map<String, String> MAP1 = new HashMap<>();
 	/** Localization map loaded from byte code. */
 	private static final Map<String, String> MAP2 = new HashMap<>();
-	private static final FileFilter FILTER = file -> file.getName().endsWith(".lang");
-	/** Marker of reloading translation map from file. */
-	private static boolean loadFile = false;
 	
 	/**
-	 * Register tooltips (List of localize string) to localization map.
-	 * @param unlocalized the unlocalize string.
+	 * Register tool tips (List of localize string) to localization map.
+	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized strings.
 	 */
 	public static void registerTooltip(String unlocalized, String...localized)
@@ -60,6 +67,14 @@ public class LanguageManager
 		}
 	}
 	
+	/**
+	 * Register localize string with string format.
+	 * @param unlocalized the unlocalized string.
+	 * @param localized the localized string.
+	 * @param formats the formats to string.
+	 * @see String#format(String, Object...)
+	 * @see #registerLocal(String, String)
+	 */
 	public static void registerLocal(String unlocalized, String localized, Object...formats)
 	{
 		try
@@ -76,40 +91,35 @@ public class LanguageManager
 	/**
 	 * Register localize string to localized manager,
 	 * for <tt>unlocalized=localized</tt> entry.
-	 * @param unlocalized the unlocalize string.
+	 * @param unlocalized the unlocalized string.
 	 * @param localized the localized string.
 	 */
 	public static void registerLocal(String unlocalized, String localized)
 	{
-		if(!MAP1.getOrDefault(ENGLISH, ImmutableMap.of()).containsKey(unlocalized))
-		{
-			loadFile = false;
-		}
 		MAP2.put(unlocalized, localized);
 	}
 	
 	/**
 	 * Localized string and format it.<p>
 	 * The localize manager will find localized source given by Nebula translation map first,
-	 * or find from I18n if failed fingding. The <tt>en_US</tt> will be used when unlocalized
+	 * or find from I18n if failed finding. The <tt>en_US</tt> will be used when unlocalized
 	 * string does not exist in translation map.<p>
 	 * The format action will only taken when translating is succeed.<p>
 	 * If exception is caught in formating. The result will be <tt>"Translation Error"</tt>.
 	 * @param unlocalized the unlocalized string.
 	 * @param objects the format element,
-	 * use {@link java.lang.String#format(String, Object...)} to format locazlied string.
+	 * use {@link java.lang.String#format(String, Object...)} to format localized string.
 	 * @return the formated localized string, or unlocalized string direct if nothing found.
 	 * @see #translateToLocalWithIgnoreUnmapping(String, Object...)
 	 */
 	public static String translateToLocal(String unlocalized, Object...objects)
 	{
-		String locale = Strings.locale();
 		String translate;
-		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
+		if (MAP1.containsKey(unlocalized))
 		{
-			translate = MAP1.get(locale).get(unlocalized);
+			translate = MAP1.get(unlocalized);
 		}
-		else if(MAP2.containsKey(unlocalized))
+		else if (MAP2.containsKey(unlocalized))
 		{
 			translate = MAP2.get(unlocalized);
 		}
@@ -133,11 +143,10 @@ public class LanguageManager
 	 */
 	public static String translateToLocalOfText(String unlocalized)
 	{
-		String locale = Strings.locale();
 		String translate;
-		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
+		if(MAP1.containsKey(unlocalized))
 		{
-			translate = MAP1.get(locale).get(unlocalized);
+			translate = MAP1.get(unlocalized);
 		}
 		else if(MAP2.containsKey(unlocalized))
 		{
@@ -148,24 +157,23 @@ public class LanguageManager
 	}
 	
 	/**
-	 * Localized string and format unsafty.<p>
+	 * Localized string and format unsafely.<p>
 	 * The localize manager will find localized source given by Nebula translation map first,
-	 * or find from I18n if failed fingding. The <tt>en_US</tt> will be used when unlocalized
+	 * or find from I18n if failed finding. The <tt>en_US</tt> will be used when unlocalized
 	 * string does not exist in translation map.<p>
 	 * The format action will only taken when translating is succeed.<p>
 	 * @param unlocalized the unlocalized string.
 	 * @param objects the format element,
-	 * use {@link java.lang.String#format(String, Object...)} to format locazlied string.
+	 * use {@link java.lang.String#format(String, Object...)} to format localized string.
 	 * @return the formated localized string, or <tt>null</tt> if nothing found.
 	 * @see #translateToLocal(String, Object...)
 	 */
 	public static @Nullable String translateToLocalWithIgnoreUnmapping(String unlocalized, Object...objects)
 	{
-		String locale = Strings.locale();
 		String translate;
-		if(MAP1.containsKey(locale) && MAP1.get(locale).containsKey(unlocalized))
+		if(MAP1.containsKey(unlocalized))
 		{
-			translate = MAP1.get(locale).get(unlocalized);
+			translate = MAP1.get(unlocalized);
 		}
 		else if(MAP2.containsKey(unlocalized))
 		{
@@ -186,12 +194,22 @@ public class LanguageManager
 		}
 	}
 	
-	//Internal part start, do not use any method.
+	//Internal part start, do not use these method.
 	private File file;
 	
 	public LanguageManager(File file)
 	{
 		this.file = file;
+		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
+	}
+	
+	@Override
+	public void onResourceManagerReload(IResourceManager manager)
+	{
+		if (Loader.instance().hasReachedState(LoaderState.AVAILABLE))
+		{
+			read();
+		}
 	}
 	
 	public void reset()
@@ -200,58 +218,60 @@ public class LanguageManager
 		MAP1.clear();
 	}
 	
-	public void read()
+	private Map<String, String> read(String locale)
 	{
 		if (!this.file.canRead())
-			return;
-		MAP1.clear();
-		Log.info("Start read localized file.");
-		for(File file : this.file.listFiles(FILTER))
+			return ImmutableMap.of();
+		File file = new File(this.file, locale + ".lang");
+		if (!file.exists())
+			return ImmutableMap.of();
+		String name = file.getName();
+		Log.info("Loading " + name + " language file.");
+		int keyCount = 0;
+		Map<String, String> map = new HashMap<>();
+		
+		int l = 0;
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
 		{
-			String name = file.getName();
-			Log.info("Loading " + name + " language file.");
-			name = name.substring(0, ".lang".length());
-			int keyCount = 0;
-			Map<String, String> map = new HashMap<>();
-			
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")))
+			String line;
+			while((line = reader.readLine()) != null)
 			{
-				String line;
-				while((line = reader.readLine()) != null)
+				if(line.length() != 0 && line.charAt(0) != '#')
 				{
-					if(line.length() == 0)
-					{
-						continue;
-					}
 					int idx = line.indexOf('=');
 					if(idx == -1) throw new RuntimeException();
 					map.put(line.substring(0, idx).trim(), line.substring(idx + 1));
 					++keyCount;
 				}
-				MAP1.put(name, map);
-				Log.info("Wrote " + keyCount + " keys to language manager.");
+				++l;
 			}
-			catch(RuntimeException exception)
-			{
-				Log.warn("Invalid language file " + file.getName(), exception);
-			}
-			catch(IOException exception)
-			{
-				Log.warn("Fail to load language file " + file.getName(), exception);
-			}
+			Log.info("Wrote " + keyCount + " keys to language manager.");
 		}
-		loadFile = true;
+		catch(RuntimeException exception)
+		{
+			Log.warn("Invalid language file " + file.getName() + ". line: " + l, exception);
+		}
+		catch(IOException exception)
+		{
+			Log.warn("Fail to load language file " + file.getName(), exception);
+		}
+		return map;
+	}
+	
+	public void read()
+	{
+		MAP1.clear();
+		Log.info("Start read localized file at " + this.file.getAbsolutePath());
+		MAP1.putAll(read(Strings.locale()));
 	}
 	
 	public void write()
 	{
-		if(loadFile)
-			return;
-		if(!this.file.exists())
+		if (!this.file.exists())
 		{
 			this.file.mkdirs();
 		}
-		if(!this.file.canWrite())
+		if (!this.file.canWrite())
 		{
 			Log.info("Fail to write language file because can not write lang in.");
 			return;
@@ -261,13 +281,11 @@ public class LanguageManager
 		try
 		{
 			File file = new File(this.file, ENGLISH + ".lang");
-			if(!file.exists())
-			{
+			if (!file.exists())
 				file.createNewFile();
-			}
+			Map<String, String> map = read(ENGLISH);
 			try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")))
 			{
-				Map<String, String> map = MAP1.getOrDefault(ENGLISH, ImmutableMap.of());
 				ImmutableMap<String, String> sortedMap = ImmutableSortedMap.copyOf(MAP2);//Use sorted map for easier to search translated word.
 				for(Entry<String, String> entry : sortedMap.entrySet())
 					if(!map.containsKey(entry.getKey()))

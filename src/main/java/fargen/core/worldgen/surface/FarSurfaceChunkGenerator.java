@@ -262,7 +262,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		IWorldPropProvider propProvider = WorldPropHandler.getWorldProperty(this.world);
 		this.cache5 = this.noise5.noise(this.cache5, 16, 16, (double) chunkX, (double) chunkZ, 0.125, 0.125);
 		
-		IBlockState[][] rockLayer = this.biomeProvider.dataGenerator.getRockLayer(chunkX >> 4, chunkZ >> 4);
+		IBlockState[][] rockLayer = getRockLayer(chunkX >> 4, chunkZ >> 4);
 		IBlockState[][] coverLayer = this.biomeProvider.dataGenerator.getCoverLayer(chunkX >> 4, chunkZ >> 4);
 		MutableBlockPos pos = new MutableBlockPos();
 		for (int x = 0; x < 16; ++x)
@@ -492,7 +492,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		MinecraftForge.TERRAIN_GEN_BUS.post(new DecorateBiomeEvent.Pre(this.world, this.random, pos));
 		if (biome.decorator != null)
 		{
-			biome.decorator.decorate(this.world, this.random, pos);
+			biome.decorator.decorate(this.world, this.random, pos, this);
 		}
 		MinecraftForge.TERRAIN_GEN_BUS.post(new DecorateBiomeEvent.Post(this.world, this.random, pos));
 	}
@@ -519,6 +519,11 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	public void recreateStructures(Chunk chunkIn, int x, int z)
 	{
 		generateStructures(chunkIn, x, z);
+	}
+	
+	public IBlockState[][] getRockLayer(int chunkX, int chunkZ)
+	{
+		return this.biomeProvider.dataGenerator.getRockLayer(chunkX, chunkZ);
 	}
 	
 	static

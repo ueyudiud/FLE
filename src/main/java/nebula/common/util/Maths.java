@@ -4,6 +4,7 @@
 
 package nebula.common.util;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -148,8 +149,8 @@ public final class Maths
 	}
 	
 	/**
-	 * Returns the floor modulus of the {@code int} arguments.<p>
-	 * The value of result will always be positive.
+	 * Returns the floor modulus of the <code>int</code> arguments.<p>
+	 * The value of result will always be non-negative.
 	 * @param a
 	 * @param b
 	 * @return a non-negative {@code int} value.
@@ -161,8 +162,8 @@ public final class Maths
 	}
 	
 	/**
-	 * Returns the floor modulus of the {@code long} arguments.<p>
-	 * The value of result will always be positive.
+	 * Returns the floor modulus of the <code>long</code> arguments.<p>
+	 * The value of result will always be non-negative.
 	 * @param a
 	 * @param b
 	 * @return a non-negative {@code long} value.
@@ -293,5 +294,17 @@ public final class Maths
 	public static double asinh(double d)
 	{
 		return Math.log(d+Math.sqrt(d*d+1));
+  }
+  
+	public static long getCoordinateRandom(BlockPos pos)
+	{
+		return getCoordinateRandom(pos.getX(), pos.getY(), pos.getZ());
+	}
+	
+	public static long getCoordinateRandom(int x, int y, int z)
+	{
+		long i = x * 3129871 ^ z * 116129781L ^ y;
+		i = i * i * 42317861L + i * 11L;
+		return i;
 	}
 }
