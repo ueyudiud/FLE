@@ -26,6 +26,10 @@ public class Config
 	@ConfigProperty(category = "block", defValue = "false")
 	@ConfigComment("(WIP config) Break natural log block with a new thread to check range, this is proved will let server out of sych! Do not suggested to use.")
 	public static boolean breakTreeMultiThread;
+	@ConfigProperty(category = "block", defValue = "false")
+	@ConfigComment("The leaves will drop items when decaying when enable this option, But make sure you can accept lower fps beacuase large amount of dropped "
+			+ "items from tree leaves.")
+	public static boolean droppingWhenDecay;
 	
 	//The useful lib are already move to Nebula mod, so you needn't use FarCore if you only want use helper.
 	//	public static boolean createRock;

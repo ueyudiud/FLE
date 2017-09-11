@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import farcore.data.Config;
 import farcore.data.EnumItem;
 import farcore.data.MP;
 import farcore.lib.bio.FamilyTemplate;
@@ -324,7 +325,10 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	
 	protected void onLeavesDead(World world, BlockPos pos)
 	{
-		Worlds.spawnDropsInWorld(world, pos, getLeavesDrops(world, pos, world.getBlockState(pos), 0, false, new ArrayList()));
+		if (Config.droppingWhenDecay)
+		{
+			Worlds.spawnDropsInWorld(world, pos, getLeavesDrops(world, pos, world.getBlockState(pos), 0, false, new ArrayList()));
+		}
 		world.setBlockToAir(pos);
 	}
 	

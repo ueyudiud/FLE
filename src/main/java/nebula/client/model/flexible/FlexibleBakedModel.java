@@ -43,6 +43,13 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	private final int[] itemLoadingData;
 	private final int[] blockLoadingData;
 	private final ImmutableMap<TransformType, TRSRTransformation> transforms;
+	/**
+	 * The model state marked, if model has crashed during
+	 * loading quad, the model will be marked as problem model.
+	 * To prevent crashing exception filled logs, the model will
+	 * stop to bake quad until model is be reloaded.
+	 */
+	private boolean errored = false;
 	
 	public FlexibleBakedModel(ImmutableMap<TransformType, TRSRTransformation> transforms, ImmutableList<INebulaBakedModelPart> parts,
 			TextureAtlasSprite particle, boolean gui3d, boolean builtIn,
@@ -63,6 +70,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	@Override
 	public List<BakedQuad> getQuads(ItemStack stack, EnumFacing facing, long rand)
 	{
+		if (this.errored) return ImmutableList.of();
 		if (this.itemDataGen == null) return getQuads((IBlockState) null, facing, rand);
 		try
 		{
@@ -77,6 +85,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 		catch (Exception exception)
 		{
 			FarCore.catching(exception);
+			this.errored = true;
 			return ImmutableList.of();
 		}
 	}
@@ -84,6 +93,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
 	{
+		if (this.errored) return ImmutableList.of();
 		try
 		{
 			List<BakedQuad> quads = new ArrayList<>();
@@ -104,6 +114,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 		catch (Exception exception)
 		{
 			FarCore.catching(exception);
+			this.errored = true;
 			return ImmutableList.of();
 		}
 	}

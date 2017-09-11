@@ -8,6 +8,7 @@ import farcore.data.M;
 import farcore.data.MP;
 import farcore.energy.thermal.IThermalHandler;
 import farcore.energy.thermal.ThermalNet;
+import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import fle.api.energy.thermal.ThermalEnergyHelper;
 import nebula.common.tile.TESynchronization;
@@ -147,11 +148,25 @@ implements IThermalHandler
 	}
 	
 	@Override
+	protected void initServer()
+	{
+		super.initServer();
+		FarCoreEnergyHandler.onAddFromWorld(this);
+	}
+	
+	@Override
+	public void onRemoveFromLoadedWorld()
+	{
+		super.onRemoveFromLoadedWorld();
+		FarCoreEnergyHandler.onRemoveFromWorld(this);
+	}
+	
+	@Override
 	protected void updateClient()
 	{
 		if (isSmoldering())
 		{
-			for (int i = 0; i < 3; ++i)
+			if (this.random.nextInt(5) == 0)
 			{
 				double d0 = this.pos.getX() + this.random.nextDouble();
 				double d1 = this.pos.getY() + this.random.nextDouble() * 0.5D + 0.75D;
