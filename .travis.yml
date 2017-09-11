@@ -15,4 +15,14 @@ before_install:
 install:
  - ./gradlew setupCIWorkspace
 script:
- - ./gradlew check
+#- ./gradlew check
+ - ./gradlew build
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file_glob: true
+  file: build/libs/*
+  on:
+    tags: false
+    all_branches: true
