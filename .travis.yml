@@ -20,7 +20,8 @@ script:
 deploy:
   skip_cleanup: true
   provider: releases
-  api_key: "GITHUB OAUTH TOKEN"
+  api_key: 
+    secure: 0
   file_glob: true
   file: build/libs/*
   on:
