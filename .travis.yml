@@ -15,7 +15,6 @@ before_install:
 install:
  - ./gradlew setupCIWorkspace
 script:
-<<<<<<< HEAD
  - ./gradlew check
 #- ./gradlew build
 #deploy:
@@ -26,17 +25,3 @@ script:
 #  file: build/libs/*
 #  on:
 #    tags: true
-=======
-#- ./gradlew check
- - ./gradlew build
-deploy:
-  skip_cleanup: true
-  provider: releases
-  api_key: 
-    secure: 0
-  file_glob: true
-  file: build/libs/*
-  on:
-    tags: false
-    all_branches: true
->>>>>>> branch '1.10.2' of https://github.com/ueyudiud/FLE.git
