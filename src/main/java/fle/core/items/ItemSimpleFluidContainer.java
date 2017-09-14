@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.Capabilities;
 import farcore.data.EnumFluid;
@@ -22,6 +23,7 @@ import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.IProgressBarStyle;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
+import nebula.common.LanguageManager;
 import nebula.common.fluid.container.IItemFluidContainerV1;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
@@ -67,7 +69,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		public FluidContainerProperty(int capacity, int durbility, boolean enableToFill, boolean enableToDrain)
 		{
 			this.capacity = capacity;
-			this.durbility = durbility;
+			this.durbility = durbility * capacity;
 			this.enableToDrain = enableToDrain;
 			this.enableToFill = enableToFill;
 		}
@@ -95,6 +97,14 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	{
 		addSubItem(1, "barrel", "Barrel", new FluidContainerProperty(1000, 256, true, true));
 		addSubItem(2, "bowl_wooden", "Wooden Bowl", new FluidContainerProperty(250, 128, true, false), new BehaviorBlockableTool(1));
+	}
+	
+	@Override
+	public void postInitalizedItems()
+	{
+		super.postInitalizedItems();
+		LanguageManager.registerLocal("info.fluidcontainer.completely.damaged", ChatFormatting.RED +
+				"This fluid container has already damaged, you can only drain fluid from this container.");
 	}
 	
 	public void addSubItem(int id, String name, String localName, FluidContainerProperty property,
@@ -168,42 +178,43 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 			EnumHand hand)
 	{
 		ActionResult<ItemStack> result = super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
-		if(result.getType() != EnumActionResult.PASS) return result;
+		if (result.getType() != EnumActionResult.PASS) return result;
 		itemStackIn = result.getResult();
 		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(itemStackIn));
-		if(property != null)
+		if (property != null)
 		{
 			FluidStack fluid = getFluid(itemStackIn);
-			if(property.enableToDrain && !playerIn.isSneaking() && fluid != null)
+			if (property.enableToDrain && !playerIn.isSneaking() && fluid != null)
 			{
 				RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, false);
-				if(raytraceresult == null || !playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, itemStackIn)) return result;
+				if (raytraceresult == null || !playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, itemStackIn)) return result;
 				int amount = FluidStacks.drainFluidToWorld(worldIn, raytraceresult, fluid, !worldIn.isRemote);
-				if(amount > 0)
+				if (amount > 0)
 				{
 					itemStackIn = itemStackIn.copy();
-					fluid.amount -= amount;
-					setFluid(itemStackIn, fluid);
+					drain(itemStackIn, amount, true);
 					return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
 				}
 			}
-			if(property.enableToFill)
+			if (property.enableToFill && isItemUsable(itemStackIn))
 			{
 				RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, true);
-				if(raytraceresult == null ||
+				if (raytraceresult == null ||
 						!playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, itemStackIn) ||
 						!worldIn.canMineBlockBody(playerIn, raytraceresult.getBlockPos())) return result;
 				FluidStack stack = FluidStacks.fillFluidFromWorld(worldIn, raytraceresult, property.capacity - FluidStacks.getAmount(fluid), FluidStacks.getFluid(fluid), !worldIn.isRemote);
 				
-				if(stack != null)
+				if (stack != null)
 				{
 					itemStackIn = itemStackIn.copy();
-					if(fluid == null)
+					if (fluid == null)
 					{
+						stack.amount = Math.min(property.capacity, stack.amount);
 						setFluid(itemStackIn, stack);
 					}
 					else
 					{
+						stack.amount = Math.min(property.capacity - fluid.amount, stack.amount);
 						fluid.amount += stack.amount;
 						setFluid(itemStackIn, fluid);
 					}
@@ -285,9 +296,15 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	}
 	
 	@Override
+	protected boolean isItemUsable(ItemStack stack)
+	{
+		return getCustomDamage(stack) < getMaxCustomDamage(stack);
+	}
+	
+	@Override
 	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
 	{
-		if (resource == null) return 0;
+		if (resource == null || !isItemUsable(stack)) return 0;
 		FluidStack contain = getFluid(stack);
 		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(stack));
 		if (contain == null)
@@ -313,15 +330,19 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	@Override
 	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
 	{
-		if(maxDrain == 0) return null;
+		if (maxDrain == 0) return null;
 		FluidStack contain = getFluid(stack);
 		if (contain == null) return null;
 		int amount = Math.min(maxDrain, contain.amount);
-		if(doDrain)
+		if (doDrain)
 		{
 			contain.amount -= amount;
 			setFluid(stack, contain.amount == 0 ? null : contain);
-			NBTs.plusRemovableNumber(stack.getTagCompound(), "damage", 1);
+			int max = getMaxCustomDamage(stack);
+			if (NBTs.plusRemovableNumber(stack.getTagCompound(), "damage", amount, max) == max && contain.amount == 0)
+			{
+				stack.stackSize--;
+			}
 		}
 		contain.amount = amount;
 		return contain;
@@ -355,7 +376,14 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	{
 		super.addInformation(stack, playerIn, unlocalizedList, advanced);
 		Localization.addFluidInformation(getFluid(stack), unlocalizedList);
-		int max = getMaxCustomDamage(stack);
-		Localization.addDamageInformation(max - getCustomDamage(stack), max, unlocalizedList);
+		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(stack));
+		if (stack != null)
+		{
+			int damage = getCustomDamage(stack);
+			if (damage < property.durbility)
+				Localization.addDamageInformation((property.durbility - damage) / property.capacity, property.durbility / property.capacity, unlocalizedList);
+			else
+				unlocalizedList.add("info.fluidcontainer.completely.damaged");
+		}
 	}
 }

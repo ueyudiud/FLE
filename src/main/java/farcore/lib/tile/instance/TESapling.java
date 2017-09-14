@@ -80,14 +80,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, Direction facing, ItemStack stack)
 	{
 		this.tree = Mat.material(stack.getItemDamage()).getProperty(MP.property_tree);
-		if (this.tree == ITree.VOID)
-		{
-			removeBlock();
-		}
-		else
-		{
-			syncToNearby();
-		}
+		if (this.tree == ITree.VOID) removeBlock(); else syncToNearby();
 	}
 	
 	@Override

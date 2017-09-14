@@ -231,13 +231,13 @@ public class Client
 	public static void renderItemDurabilityBarInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z, int off, IProgressBarStyle barStyle)
 	{
 		double health = barStyle.getProgressScale(stack);
-		if(health < 0)
+		if (health < 0)
 			return;
-		if(health > 1)
+		if (health > 1)
 		{
 			health = 1;
 		}
-		int j = (int) Math.round(health * 13.0D);
+		int j = (int) Math.round(health * 13.0);
 		int[] color = barStyle.getProgressColor(stack, health);
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
@@ -246,9 +246,10 @@ public class Client
 		GlStateManager.disableBlend();
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertexbuffer = tessellator.getBuffer();
-		draw(vertexbuffer, x + 2, z + 15 - 2 * off, 13, 2, 0, 0, 0, 255);
-		draw(vertexbuffer, x + 2, z + 15 - 2 * off, 12, 1, color[0] / 4, color[1] / 4, color[2] / 4, 255);
-		draw(vertexbuffer, x + 2, z + 15 - 2 * off,  j, 1, color[0], color[1], color[2], 255);
+		//                                  off  * 2
+		draw(vertexbuffer, x + 2, z + 15 - (off << 1), 13, 2,        0    ,        0    ,        0    , 255);
+		draw(vertexbuffer, x + 2, z + 15 - (off << 1), 12, 1, color[0] / 4, color[1] / 4, color[2] / 4, 255);
+		draw(vertexbuffer, x + 2, z + 15 - (off << 1),  j, 1, color[0]    , color[1]    , color[2]    , 255);
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableTexture2D();
@@ -259,7 +260,8 @@ public class Client
 	public static void renderItemCooldownInGUI(RenderItem render, FontRenderer fontRenderer, ItemStack stack, int x, int z)
 	{
 		EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
-		float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
+		float f = entityplayersp == null ? 0.0F :
+			entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
 		
 		if (f > 0.0F)
 		{

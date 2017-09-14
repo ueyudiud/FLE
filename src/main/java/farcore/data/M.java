@@ -93,6 +93,7 @@ public class M
 	public static final Mat morus			= new Mat(8012, FarCore.ID , "morus"			, "Morus"			, "Morus"				)                                                                    .setWood(3.0F, 1.0F, 20.0F);
 	public static final Mat willow			= new Mat(8013, FarCore.ID , "willow"			, "Willow"			, "Willow"				)                                                                    .setWood(3.0F, 1.0F, 20.0F);
 	public static final Mat lacquer			= new Mat(8014, "fle"      , "lacquer"			, "Lacquer"			, "Lacquer"				)                                                                    .setWood(1.8F, 1.0F, 20.0F);
+	public static final Mat citrus			= new Mat(8015, "fle"      , "citrus"			, "Citrus"			, "Citrus"				)                                                                    .setWood(1.3F, 1.0F, 20.0F);
 	//Plants
 	public static final Mat vine			= new Mat(9201, FarCore.ID , "vine"				, "Vine"			, "Vine"				).setRGBa(0x867C50FF);
 	public static final Mat ivy				= new Mat(9202, FarCore.ID , "ivy"				, "Ivy"				, "Ivy"					).setRGBa(0x867C50FF);

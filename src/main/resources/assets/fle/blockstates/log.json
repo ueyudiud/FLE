@@ -1,0 +1,23 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_oneaxis"
+	},
+	"variants": {
+		"axis": {
+			"none": {               },
+			"x": { "x": 90, "y": 90 },
+			"y": { "x": 0 , "y": 0  },
+			"z": { "x": 90, "y": 0  }
+		},
+		"type": {
+			"citrus": {
+				"textures": {
+					"side": "fle:blocks/logs/citrus_side",
+					"top": "fle:blocks/logs/citrus_top"
+				}
+			}
+		}
+	}
+}

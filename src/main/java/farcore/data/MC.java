@@ -53,6 +53,8 @@ public class MC
 	public static final MatCondition firewood = new MatCondition("firewood", "firewood", "Firewood", "% Firewood").setSize(1296L, 324L).setFilter(SubTags.WOOD);
 	public static final MatCondition bark = new MatCondition("bark", "bark", "Bark", "% Bark").setSize(144L, 16L).setFilter(SubTags.WOOD);
 	
+	public static final MatCondition plank = new MatCondition("plank", "Plank", "% Plank").setSize(324L).setFilter(SubTags.WOOD);
+	
 	public static final MatCondition thread = new MatCondition("thread", "Thread", "%").setSize(36L, 36L, 2.0F).setFilter(SubTags.ROPE);
 	public static final MatCondition bundle = new MatCondition("bundle", "Bundle", "% Bundle").setSize(144L, 36L, 0.5F).setFilter(SubTags.ROPE);
 	

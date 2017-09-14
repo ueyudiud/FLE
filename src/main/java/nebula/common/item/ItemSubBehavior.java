@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
 
 import nebula.Log;
 import nebula.client.util.UnlocalizedList;
@@ -503,13 +504,13 @@ public class ItemSubBehavior extends ItemBase
 	protected void addInformation(ItemStack stack, EntityPlayer playerIn, UnlocalizedList unlocalizedList,
 			boolean advanced)
 	{
-		if(!isItemUsable(stack))
+		if (!isItemUsable(stack))
 		{
 			//To show this item may has broken data, it is suggested player do not use this item in game.
 			unlocalizedList.add("info.invalid");
 			return;
 		}
-		for(IBehavior behavior : getBehavior(stack))
+		for (IBehavior behavior : getBehavior(stack))
 		{
 			try
 			{
@@ -526,7 +527,7 @@ public class ItemSubBehavior extends ItemBase
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		for(int id : this.idMap.values())
+		for (int id : ImmutableSortedSet.copyOf(this.idMap.values()))
 		{
 			try
 			{

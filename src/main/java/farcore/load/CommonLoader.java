@@ -123,6 +123,7 @@ public class CommonLoader
 		new ItemMulti(MC.brick).setCreativeTab(CT.RESOURCE_ITEM);
 		new ItemMulti(MC.roofshingle).setCreativeTab(CT.RESOURCE_ITEM);
 		new ItemMulti(MC.rooftile).setCreativeTab(CT.RESOURCE_ITEM);
+		new ItemMulti(MC.plank).setCreativeTab(CT.TREE);
 		EnumFluid.water.setFluid(new FluidWater("pure.water", "Pure Water", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow")));
 		new BlockWater((FluidBase) EnumFluid.water.fluid);
 		new BlockIce().setCreativeTab(CT.TERRIA);

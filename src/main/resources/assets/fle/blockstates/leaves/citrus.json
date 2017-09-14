@@ -1,0 +1,16 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:leaves"
+	},
+	"variants": {
+		"fruit_stage": {
+			"0": { "textures": { "all": "fle:blocks/leaves/citrus" } },
+			"1": { "textures": { "all": "fle:blocks/leaves/citrus_f_u" } },
+			"2": { "textures": { "all": "fle:blocks/leaves/citrus_f_u" } },
+			"3": { "textures": { "all": "fle:blocks/leaves/citrus_f_u" } },
+			"4": { "textures": { "all": "fle:blocks/leaves/citrus_f" } }
+		}
+	}
+}

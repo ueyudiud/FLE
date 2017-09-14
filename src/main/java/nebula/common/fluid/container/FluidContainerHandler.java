@@ -263,7 +263,7 @@ public class FluidContainerHandler
 					int amount = container.fill(stack, resource, true);
 					if (amount > 0)
 					{
-						return new IntegerEntry<>(stack, amount);
+						return new IntegerEntry<>(ItemStacks.valid(stack), amount);
 					}
 				}
 				else if (containerRaw.isV2())

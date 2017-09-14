@@ -102,7 +102,7 @@ public class TreeGenSimple extends TreeGenAbstract
 													dis < this.leavesWidth / 1.3F ||
 													L.nextInt((int) ((3 + this.minLeavesHeight - k) * dis / 4F), random) == 0))
 									{
-										if(this.leavesConnect)
+										if (this.leavesConnect)
 										{
 											if(i1 < b0 && cache[i1 + b0 + 1][j1 + b0])
 											{

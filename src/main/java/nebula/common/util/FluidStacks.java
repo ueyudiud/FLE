@@ -135,9 +135,9 @@ public final class FluidStacks
 	
 	public static int drainFluidToWorld(World world, @Nullable RayTraceResult result, @Nullable FluidStack stack, boolean doDrain)
 	{
-		if(result == null || result.typeOfHit != RayTraceResult.Type.BLOCK) return 0;
+		if (result == null || result.typeOfHit != RayTraceResult.Type.BLOCK) return 0;
 		int amount = drainFluidToWorld(world, result.getBlockPos(), stack, doDrain);//For smart fluid block.
-		if(amount > 0) return amount;
+		if (amount > 0) return amount;
 		return drainFluidToWorld(world, result.getBlockPos().offset(result.sideHit), stack, doDrain);
 	}
 	

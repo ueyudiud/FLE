@@ -16,6 +16,7 @@ import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.instance.RecipeAdder;
+import fle.core.items.ItemSimpleFluidContainer;
 import fle.core.items.ItemToolFar;
 import fle.loader.IBF;
 import nebula.base.Ety;
@@ -48,6 +49,14 @@ public class RecipeCraftingTool
 		addGeneralToolRecipe("spear.rock", new BaseStack(MC.spear_rock.instance));
 		addGeneralToolRecipe("sickle.rock", new BaseStack(MC.sickle_rock.instance));
 		addGeneralToolRecipe("axe.rock", new BaseStack(MC.axe_rock.instance));
+		//Drain all fluids from fluid container.
+		RecipeAdder.addShapelessRecipe(new ItemStack(IBF.fluidContainer),
+				new SingleInputMatch(new BaseStack(IBF.fluidContainer), (input, output)-> {
+					output.setItemDamage(input.getItemDamage());
+					ItemSimpleFluidContainer.setCustomDamage(output,
+							Math.min(IBF.fluidContainer.getMaxCustomDamage(input) - 1,
+									ItemSimpleFluidContainer.getCustomDamage(input) + ItemSimpleFluidContainer.getFluidAmount(input)));
+				}, null));
 	}
 	
 	private static final List<Entry<AbstractStack, Mat>> LIST = new ArrayList<>();

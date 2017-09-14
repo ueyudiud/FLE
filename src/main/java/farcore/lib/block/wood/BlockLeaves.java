@@ -27,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -204,6 +205,20 @@ public class BlockLeaves extends BlockBase implements IShearable, IToolableBlock
 			double d1 = pos.getY() - 0.05D;
 			double d2 = pos.getZ() + rand.nextFloat();
 			worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+		}
+	}
+	
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		try
+		{
+			return this.tree.onLeavesRightClick(playerIn, worldIn, pos, state, Direction.of(side), hitX, hitY, hitZ, null);
+		}
+		catch (Exception e)
+		{
+			return false;
 		}
 	}
 	

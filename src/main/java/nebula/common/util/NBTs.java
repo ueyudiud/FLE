@@ -109,14 +109,30 @@ public final class NBTs
 		return nbt.getCompoundTag(tag);
 	}
 	
-	public static void plusRemovableNumber(NBTTagCompound nbt, String key, int add)
+	public static int plusRemovableNumber(NBTTagCompound nbt, String key, int add)
 	{
-		setRemovableNumber(nbt, key, nbt.getInteger(key) + add);
+		int amount = nbt.getInteger(key) + add;
+		setRemovableNumber(nbt, key, amount);
+		return amount;
+	}
+	
+	public static int plusRemovableNumber(NBTTagCompound nbt, String key, int add, int max)
+	{
+		int amount = Math.min(max, nbt.getInteger(key) + add);
+		setRemovableNumber(nbt, key, amount);
+		return amount;
+	}
+	
+	public static long plusRemovableNumber(NBTTagCompound nbt, String key, long add)
+	{
+		long amount = nbt.getLong(key) + add;
+		setRemovableNumber(nbt, key, amount);
+		return amount;
 	}
 	
 	public static void setRemovableNumber(NBTTagCompound nbt, String key, long number)
 	{
-		if(number == 0)
+		if (number == 0)
 		{
 			nbt.removeTag(key);
 		}

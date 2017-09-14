@@ -187,15 +187,29 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	@Override
 	public void updateLeaves(World world, BlockPos pos, Random rand, boolean checkDency)
 	{
+		updateAndResult(world, pos, rand, checkDency);
+	}
+	
+	/**
+	 * Doing leaves decay, return <code>true</code> if leaves is dead.
+	 * @param world
+	 * @param pos
+	 * @param rand
+	 * @param checkDency
+	 * @return
+	 */
+	protected boolean updateAndResult(World world, BlockPos pos, Random rand, boolean checkDency)
+	{
 		if (checkDency)
 		{
 			if (world.isAreaLoaded(pos, this.leavesCheckRange))
 			{
 				if (shouldLeavesDency(world, pos))
 				{
-					checkDecayLeaves(world, pos, this.leavesCheckRange);
+					return checkDecayLeaves(world, pos, this.leavesCheckRange);
 				}
 			}
+			return false;
 		}
 		else
 		{
@@ -203,6 +217,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 			{
 				beginLeavesDecay(world, pos);
 			}
+			return false;
 		}
 	}
 	
@@ -221,7 +236,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 		return world.getBlockState(pos).getValue(CHECK_DECAY);
 	}
 	
-	protected void checkDecayLeaves(World world, BlockPos pos, final int searchRadius)
+	protected boolean checkDecayLeaves(World world, BlockPos pos, final int searchRadius)
 	{
 		final int range = 2 * searchRadius + 1;
 		int[][][] checkBuffer = new int[range][range][range];
@@ -290,10 +305,12 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 		if (checkBuffer[searchRadius][searchRadius][searchRadius] < 0)
 		{
 			onLeavesDead(world, pos);
+			return true;
 		}
 		else
 		{
 			stopLeavesDency(world, pos);
+			return false;
 		}
 	}
 	

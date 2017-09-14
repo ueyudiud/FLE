@@ -41,8 +41,9 @@ public class FarCoreCapabilitiesHandler
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 		{
-			return
-					(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this.tile instanceof IFluidHandler && ((IFluidHandler) this.tile).shouldProviedeFluidIOFrom(Direction.of(facing)));
+			return (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY &&
+					this.tile instanceof IFluidHandler &&
+					((IFluidHandler) this.tile).shouldProviedeFluidIOFrom(Direction.of(facing)));
 		}
 		
 		@Override

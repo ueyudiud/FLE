@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import farcore.lib.bio.ISpecie;
 import farcore.lib.block.wood.BlockLeaves;
 import farcore.lib.block.wood.BlockLeavesCore;
 import farcore.lib.block.wood.BlockLogArtificial;
 import farcore.lib.block.wood.BlockLogNatural;
+import farcore.lib.tile.instance.TECoreLeaves;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;
@@ -103,6 +106,9 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	boolean onLogRightClick(EntityPlayer player, World world, BlockPos pos, Direction side, float xPos, float yPos,
 			float zPos, boolean isArt);
+	
+	default boolean onLeavesRightClick(EntityPlayer player, World world, BlockPos pos, IBlockState state, Direction side,
+			float xPos, float yPos, float zPos, @Nullable TECoreLeaves tile) { return false; }
 	
 	ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ, boolean isArt);

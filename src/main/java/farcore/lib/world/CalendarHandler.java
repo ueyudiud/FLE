@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.world;
 
 import java.util.HashMap;
@@ -7,6 +10,10 @@ import farcore.lib.world.instance.CalendarEmpty;
 import farcore.lib.world.instance.CalendarSurface;
 import net.minecraft.world.World;
 
+/**
+ * The calendar handler.
+ * @author ueyudiud
+ */
 public class CalendarHandler
 {
 	private static final Map<Integer, ICalendar> CALENDARS = new HashMap();
@@ -23,9 +30,9 @@ public class CalendarHandler
 		CALENDARS.put(dim, calendar);
 	}
 	
-	public static ICalendar getCalendar(World world)
+	public static <C extends ICalendar> C getCalendar(World world)
 	{
-		return CALENDARS.getOrDefault(world.provider.getDimension(), EMPTY);
+		return (C) CALENDARS.getOrDefault(world.provider.getDimension(), EMPTY);
 	}
 	
 	public static String getDateInfo(World world)

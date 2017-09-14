@@ -112,6 +112,16 @@ implements IThermalHandler
 					disable(Smoldering);
 					syncToNearby();
 				}
+				if (!is(Carbonate))
+				{
+					++this.carbonateProgress;
+					if (this.carbonateProgress == 100)
+					{
+						enable(Carbonate);
+						disable(Smoldering);
+						this.remainEnergy = 16000000L;
+					}
+				}
 			}
 		}
 		else
@@ -126,13 +136,6 @@ implements IThermalHandler
 				if (!is(Carbonate))
 				{
 					enable(Smoldering);
-					++this.carbonateProgress;
-					if (this.carbonateProgress == 100)
-					{
-						enable(Carbonate);
-						disable(Smoldering);
-						this.remainEnergy = 16000000L;
-					}
 				}
 				else
 				{
