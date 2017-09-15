@@ -76,6 +76,7 @@ public class ItemDebugger extends ItemBase
 					pos = pos.offset(side);
 				}
 				IBlockState state = world.getBlockState(pos);
+				state.getBlock().randomTick(world, pos, state, itemRand);
 				Block block = state.getBlock();
 				TileEntity tile = world.getTileEntity(pos);
 				List<String> list = new ArrayList<>();

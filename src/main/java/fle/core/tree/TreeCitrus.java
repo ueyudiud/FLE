@@ -26,14 +26,13 @@ public class TreeCitrus extends TreeWithFruitLeaves
 	public TreeCitrus(Mat material)
 	{
 		super(material);
-		this.generator.setTreeLeavesShape(2, 6, 1, 1.2F);
+		this.generator.setTreeLeavesShape(2, 5, 1, 1.8F);
 	}
 	
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		this.generator.setTreeLogShape(3, 2);
-		return this.generator.generateTreeAt(world, x, y, z, random, info);
+		return this.generator.setTreeLogShape(3, 2).generateTreeAt(world, x, y, z, random, info);
 	}
 	
 	@Override
@@ -43,7 +42,18 @@ public class TreeCitrus extends TreeWithFruitLeaves
 	}
 	
 	@Override
-	protected boolean checkDate(ICalendar calendar, World world)
+	protected boolean canGrowFruit(ICalendar calendar, World world)
+	{
+		if (calendar instanceof CalendarSurface)
+		{
+			long month = ((CalendarSurface) calendar).monthInYear(world);
+			return L.inRange(10, 6, month);
+		}
+		return false;
+	}
+	
+	@Override
+	protected boolean canMatureFruit(ICalendar calendar, World world)
 	{
 		if (calendar instanceof CalendarSurface)
 		{

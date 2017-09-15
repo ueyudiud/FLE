@@ -34,9 +34,15 @@ public class TreeGenSimple extends TreeGenAbstract
 		this.leavesConnect = leavesConnect;
 	}
 	
-	public TreeGenSimple setTreeLogShape(int minHeiht, int randHeight)
+	@Override
+	public void setHeight(int minHeight, int randHeight)
 	{
-		this.minTreeHeight = (short) minHeiht;
+		setTreeLogShape(minHeight, randHeight);
+	}
+	
+	public TreeGenSimple setTreeLogShape(int minHeight, int randHeight)
+	{
+		this.minTreeHeight = (short) minHeight;
 		this.randTreeHeight = (short) randHeight;
 		return this;
 	}

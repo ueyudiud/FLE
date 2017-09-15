@@ -77,7 +77,8 @@ public abstract class TreeWithFruitLeaves extends Tree
 		if (updateAndResult(world, pos, rand, checkDency))
 			return;
 		IBlockState state = world.getBlockState(pos);
-		if (!checkDency && checkDate(CalendarHandler.getCalendar(world), world))
+		ICalendar calendar;
+		if (!checkDency && canGrowFruit((calendar = CalendarHandler.getCalendar(world)), world))
 		{
 			int i0, i;
 			switch (i0 = i = state.getValue(FRUIT_STAGE))
@@ -96,7 +97,7 @@ public abstract class TreeWithFruitLeaves extends Tree
 				}
 				break;
 			case 3 :
-				if (rand.nextBoolean())
+				if (canMatureFruit(calendar, world) && rand.nextBoolean())
 				{
 					i ++;
 				}
@@ -147,5 +148,7 @@ public abstract class TreeWithFruitLeaves extends Tree
 	
 	protected abstract ItemStack createFruit(World world, BlockPos pos, IBlockState state);
 	
-	protected abstract boolean checkDate(ICalendar calendar, World world);
+	protected abstract boolean canGrowFruit(ICalendar calendar, World world);
+	
+	protected abstract boolean canMatureFruit(ICalendar calendar, World world);
 }

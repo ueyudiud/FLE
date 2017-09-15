@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-version = "3.00.14-pre3"
+version = "3.00.14-pre4"
 group = "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "FarLandEra"
 
