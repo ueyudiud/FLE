@@ -20,9 +20,9 @@ public class MC
 	 */
 	public static final MatCondition LATTICE = new MatCondition("lattice", "Lattice", "%s Lattice").setSize(1L).setFilter(SubTag.TRUE);
 	
-	public static final Judgable<ISubTagContainer> ROCKY;
-	public static final Judgable<ISubTagContainer> FLINTY;
-	public static final Judgable<ISubTagContainer> ROCK_OR_FLINT;
+	public static final Judgable<ISubTagContainer> ROCKY_TOOL;
+	public static final Judgable<ISubTagContainer> FLINTY_TOOL;
+	public static final Judgable<ISubTagContainer> ROCK_OR_FLINT_TOOL;
 	
 	public static final MatCondition stone = new MatCondition("stone", "Rock", "%").setSize(5184L, 5184L).setFilter(SubTags.ROCK);
 	public static final MatCondition cobble = new MatCondition("cobble", "Cobble", "% Cobble").setSize(5184L, 576L).setFilter(SubTags.ROCK);
@@ -87,19 +87,19 @@ public class MC
 	
 	static
 	{
-		ROCKY = Judgable.and(SubTags.ROCK, SubTags.TOOL);
-		FLINTY = Judgable.and(SubTags.FLINT, SubTags.TOOL);
-		ROCK_OR_FLINT = Judgable.and(Judgable.or(SubTags.FLINT, SubTags.ROCK), SubTags.TOOL);
-		shovel_rock.setFilter(ROCK_OR_FLINT);
-		spade_hoe_rock.setFilter(ROCKY);
-		spear_rock.setFilter(ROCK_OR_FLINT);
-		sickle_rock.setFilter(ROCKY);
-		decorticating_plate.setFilter(ROCKY);
-		decorticating_stick.setFilter(ROCKY);
-		whetstone.setFilter(ROCKY);
-		axe_rock.setFilter(ROCK_OR_FLINT);
-		hard_hammer_flint.setFilter(FLINTY);
-		biface.setFilter(FLINTY);
+		ROCKY_TOOL = Judgable.and(SubTags.ROCK, SubTags.TOOL);
+		FLINTY_TOOL = Judgable.and(SubTags.FLINT, SubTags.TOOL);
+		ROCK_OR_FLINT_TOOL = Judgable.and(Judgable.or(SubTags.FLINT, SubTags.ROCK), SubTags.TOOL);
+		shovel_rock.setFilter(ROCK_OR_FLINT_TOOL);
+		spade_hoe_rock.setFilter(ROCKY_TOOL);
+		spear_rock.setFilter(ROCK_OR_FLINT_TOOL);
+		sickle_rock.setFilter(ROCKY_TOOL);
+		decorticating_plate.setFilter(ROCKY_TOOL);
+		decorticating_stick.setFilter(ROCKY_TOOL);
+		whetstone.setFilter(ROCKY_TOOL);
+		axe_rock.setFilter(ROCK_OR_FLINT_TOOL);
+		hard_hammer_flint.setFilter(FLINTY_TOOL);
+		biface.setFilter(FLINTY_TOOL);
 	}
 	
 	public static void init() {}

@@ -38,7 +38,7 @@ public class TreeCitrus extends TreeWithFruitLeaves
 	@Override
 	protected ItemStack createFruit(World world, BlockPos pos, IBlockState state)
 	{
-		return IBF.crop.getSubItem("citrus");
+		return IBF.iCropRelated.getSubItem("citrus");
 	}
 	
 	@Override

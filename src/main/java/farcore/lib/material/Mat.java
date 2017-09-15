@@ -421,6 +421,15 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	 */
 	public Mat setTree(Tree tree, boolean createBlock)
 	{
+		PropertyWood old = getProperty(MP.property_wood);
+		if (old != null)
+		{
+			tree.plank = old.plank;
+			old.burnHeat = tree.burnHeat;
+			old.hardness = tree.hardness;
+			old.ashcontent = tree.ashcontent;
+			old.harvestLevel = tree.harvestLevel;
+		}
 		add(SubTags.TREE, SubTags.WOOD);
 		tree.material = this;
 		if (createBlock)

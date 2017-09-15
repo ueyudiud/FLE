@@ -5,13 +5,9 @@
 package fle.loader;
 
 import farcore.data.CT;
-import farcore.data.M;
 import farcore.lib.item.instance.ItemStoneChip;
-import farcore.lib.material.Mat;
-import fle.api.FLEAPI;
 import fle.core.blocks.BlockDirtMixture;
 import fle.core.blocks.BlockDitch;
-import fle.core.blocks.BlockGear;
 import fle.core.blocks.BlockPottery;
 import fle.core.blocks.BlockResourceMisc;
 import fle.core.blocks.BlockRockySimpleMachine;
@@ -24,11 +20,9 @@ import fle.core.items.ItemMiscResources;
 import fle.core.items.ItemSimpleFluidContainer;
 import fle.core.items.ItemSubCropRelated;
 import fle.core.items.ItemToolFar;
-import fle.core.tile.kinetic.TEGear.GearSize;
-import nebula.client.CreativeTabBase;
 import nebula.common.fluid.FluidBase;
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * 
@@ -38,30 +32,36 @@ public class IBF
 {
 	public static void registerItemsAndBlocks()
 	{
-		FLEAPI.tabSimpleMachinery = new CreativeTabBase("fle.simple.machinery", "Simple Machinery", () -> {
-			ItemStack stack = new ItemStack(gear, 1, GearSize.MID_16.ordinal());
-			Mat.setMaterialToStack(stack, "material", M.oak);
-			return stack;
-		});
-		crop = (ItemSubCropRelated) new ItemSubCropRelated().setCreativeTab(CT.CROP_AND_WILD_PLANTS);
+		iCropRelated = (ItemSubCropRelated) new ItemSubCropRelated().setCreativeTab(CT.CROP_AND_WILD_PLANTS);
 		
-		tool_block = new BlockTools();
-		tool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.TOOL);
-		fluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.TOOL);
-		miscResources = (ItemMiscResources) new ItemMiscResources().setCreativeTab(CT.RESOURCE_ITEM);
-		ditch = new BlockDitch();
-		gear = new BlockGear();
-		misc_resource = new BlockResourceMisc().setCreativeTab(CT.MACHINE);
-		simple_wooden_workbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.MACHINE);
-		misc_wooden_machine = new BlockWoodenMiscMachine().setCreativeTab(CT.MACHINE);
-		simple_rocky_machine = new BlockRockySimpleMachine().setCreativeTab(CT.MACHINE);
-		pottery = new BlockPottery().setCreativeTab(CT.MACHINE);
-		dirt_mixture = new BlockDirtMixture().setCreativeTab(CT.MACHINE);
-		rocky_tank = new BlockRockyTank().setCreativeTab(CT.MACHINE);
-		chest = new BlockChest().setCreativeTab(CT.MACHINE);
+		bTool = new BlockTools();
+		iTool = (ItemToolFar) new ItemToolFar().setCreativeTab(CT.TOOL);
+		iFluidContainer = (ItemSimpleFluidContainer) new ItemSimpleFluidContainer().setCreativeTab(CT.TOOL);
+		iResources = (ItemMiscResources) new ItemMiscResources().setCreativeTab(CT.RESOURCE_ITEM);
+		bDitch = new BlockDitch();
+		bResources = new BlockResourceMisc().setCreativeTab(CT.MACHINE);
+		bWoodenWorkbench = new BlockWoodenSimpleWorkbench().setCreativeTab(CT.MACHINE);
+		bWoodenMachine = new BlockWoodenMiscMachine().setCreativeTab(CT.MACHINE);
+		bRockyMachine = new BlockRockySimpleMachine().setCreativeTab(CT.MACHINE);
+		bPottery = new BlockPottery().setCreativeTab(CT.MACHINE);
+		bDirtMixture = new BlockDirtMixture().setCreativeTab(CT.MACHINE);
+		bRockyTank = new BlockRockyTank().setCreativeTab(CT.MACHINE);
+		bChest = new BlockChest().setCreativeTab(CT.MACHINE);
 		
-		lacquer = (FluidBase) new FluidBase("lacquer", "Lacquer").setDensity(1200).setViscosity(5000);
-		dried_lacquer = (FluidBase) new FluidBase("dried_lacquer", "Dried Lacquer").setDensity(1180).setViscosity(12000);
+		fLacquer = new FluidBase("lacquer", "Lacquer").setDensity(1200).setViscosity(5000);
+		fLacquerDried = new FluidBase("dried_lacquer", "Dried Lacquer").setDensity(1180).setViscosity(12000);
+		ResourceLocation loc = new ResourceLocation("fle", "fluids/juice");
+		fsJuice = new FluidBase[] {
+				new FluidBase("sugarcane_juice", "Sugarcane Juice", loc, loc).setColor(0xFF8D8F67).setDensity(1250),
+				new FluidBase("citrus_juice", "Citrus Juice", loc, loc).setColor(0xFFE5F35A).setDensity(1250),
+				new FluidBase("bitter_orange_juice", "Bitter Orange Juice", loc, loc).setColor(0xFFECB447).setDensity(1250),
+				new FluidBase("lemon_juice", "Lemon Juice", loc, loc).setColor(0xFFFFEB7F).setDensity(1250),
+				new FluidBase("tangerine_juice", "Tangerine Juice", loc, loc).setColor(0xFFFFA830).setDensity(1250),
+				new FluidBase("pomelo_juice", "Pomelo Juice", loc, loc).setColor(0xFFECF376).setDensity(1250),
+				new FluidBase("lime_juice", "Lime Juice", loc, loc).setColor(0xFFF69500).setDensity(1250),
+				new FluidBase("orange_juice", "Orange Juice", loc, loc).setColor(0xFFF69500).setDensity(1250),
+				new FluidBase("grapefruit_juice", "Grapefruit Juice", loc, loc).setColor(0xFFF67C00).setDensity(1250),
+		};
 	}
 	
 	public static void setBlocksItemsProperties()
@@ -69,21 +69,21 @@ public class IBF
 		ItemStoneChip.shootStoneChipExp = 0.7F;
 	}
 	
-	public static ItemToolFar tool;
-	public static ItemSimpleFluidContainer fluidContainer;
-	public static ItemMiscResources miscResources;
-	public static ItemSubCropRelated crop;
-	public static Block ditch;
-	public static Block gear;
-	public static Block simple_wooden_workbench;
-	public static Block misc_wooden_machine;
-	public static Block simple_rocky_machine;
-	public static Block pottery;
-	public static Block dirt_mixture;
-	public static Block rocky_tank;
-	public static Block chest;
-	public static Block tool_block;
-	public static Block misc_resource;
-	public static FluidBase lacquer;
-	public static FluidBase dried_lacquer;
+	public static ItemToolFar iTool;
+	public static ItemSimpleFluidContainer iFluidContainer;
+	public static ItemMiscResources iResources;
+	public static ItemSubCropRelated iCropRelated;
+	public static Block bDitch;
+	public static Block bWoodenWorkbench;
+	public static Block bWoodenMachine;
+	public static Block bRockyMachine;
+	public static Block bPottery;
+	public static Block bDirtMixture;
+	public static Block bRockyTank;
+	public static Block bChest;
+	public static Block bTool;
+	public static Block bResources;
+	public static FluidBase fLacquer;
+	public static FluidBase fLacquerDried;
+	public static FluidBase[] fsJuice;
 }

@@ -66,13 +66,13 @@ public interface Judgable<T> extends Predicate<T>
 	boolean isTrue(T target);
 	
 	@Override
-	default Predicate<T> or(Predicate<? super T> other)
+	default Judgable<T> or(Predicate<? super T> other)
 	{
 		return or(this, other);
 	}
 	
 	@Override
-	default Predicate<T> and(Predicate<? super T> other)
+	default Judgable<T> and(Predicate<? super T> other)
 	{
 		return and(this, other);
 	}
@@ -193,7 +193,7 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public String toString()
 		{
-			return "=" + check1.toString() + "^" + check2.toString();
+			return check1.toString() + "^" + check2.toString();
 		}
 		
 		@Override
@@ -233,7 +233,7 @@ public interface Judgable<T> extends Predicate<T>
 		@Override
 		public String toString()
 		{
-			return "=" + check1.toString() + "==" + check2.toString();
+			return check1.toString() + "==" + check2.toString();
 		}
 		
 		@Override

@@ -176,16 +176,19 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	public void registerOre(Mat material, Item stack)
 	{
 		OreDict.registerValid(this.orePrefix + material.oreDictName, stack);
+		OreDict.registerValid(this.orePrefix, stack);
 	}
 	
 	public void registerOre(Mat material, Block stack)
 	{
 		OreDict.registerValid(this.orePrefix + material.oreDictName, stack);
+		OreDict.registerValid(this.orePrefix, stack);
 	}
 	
 	public void registerOre(Mat material, ItemStack stack)
 	{
 		OreDict.registerValid(this.orePrefix + material.oreDictName, stack);
+		OreDict.registerValid(this.orePrefix, stack);
 	}
 	
 	public void registerOre(String prefix1, Mat material, ItemStack stack)

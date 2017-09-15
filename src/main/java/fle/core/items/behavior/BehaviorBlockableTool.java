@@ -49,13 +49,13 @@ public class BehaviorBlockableTool extends BehaviorBase
 			pos = pos.offset(facing);
 		}
 		
-		if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(IBF.tool_block, pos, false, facing, (Entity) null, stack))
+		if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(IBF.bTool, pos, false, facing, (Entity) null, stack))
 		{
-			IBlockState state = ((BlockTools) IBF.tool_block).property_TE.withProperty(IBF.tool_block.getDefaultState(), this.meta);
+			IBlockState state = ((BlockTools) IBF.bTool).property_TE.withProperty(IBF.bTool.getDefaultState(), this.meta);
 			
 			if (placeBlockAt(stack, player, world, pos, facing, hitX, hitY, hitZ, state))
 			{
-				SoundType soundtype = IBF.tool_block.getSoundType();
+				SoundType soundtype = IBF.bTool.getSoundType();
 				world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 				stack.stackSize --;
 			}
@@ -79,7 +79,7 @@ public class BehaviorBlockableTool extends BehaviorBase
 		if (!world.setBlockState(pos, newState, 3)) return false;
 		
 		IBlockState state = world.getBlockState(pos);
-		if (state.getBlock() == IBF.tool_block)
+		if (state.getBlock() == IBF.bTool)
 		{
 			TileEntity tile = world.getTileEntity(pos);
 			if (tile instanceof ITB_BlockPlacedBy)

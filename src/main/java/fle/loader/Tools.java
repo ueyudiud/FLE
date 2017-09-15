@@ -55,7 +55,7 @@ public class Tools
 		new ItemToolHead(MC.sickle_rock);
 		new ItemToolHead(MC.axe_rock);
 		
-		addTool(1, "adz.rock", "Adz", null, MC.adz_rock, new ToolAxe(EnumToolTypes.ADZ, 0.5F), true, true, SubTags.ROPE, SubTags.HANDLE, new BehaviorWoodworkable());
+		addTool(1, "adz.rock", "Adz", "Click top of a log to open woodwork table.", MC.adz_rock, new ToolAxe(EnumToolTypes.ADZ, 0.5F), true, true, SubTags.ROPE, SubTags.HANDLE, new BehaviorWoodworkable());
 		addTool(2, "hammer.hard.flint", "Hammer", null, MC.hard_hammer_flint, new ToolHardHammer(0.7F), true, true, SubTags.ROPE, SubTags.HANDLE);
 		addTool(3, "shovel.rock", "Shovel", null, MC.shovel_rock, new ToolShovel(0.9F), true, true, SubTags.ROPE, SubTags.HANDLE);
 		addTool(4, "hammer.hard.rock", "Hammer", null, MC.hard_hammer_rock, new ToolHardHammer(0.9F), true, true, SubTags.ROPE, SubTags.HANDLE, new BehaviorPolishable(EnumToolTypes.AWL, 0, 0.5F, 'c', ' '));
@@ -77,20 +77,20 @@ public class Tools
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle,
 			List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
-		return IBF.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, toolTypes, behaviors);
+		return IBF.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, toolTypes, behaviors);
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle,
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior... behaviors)
 	{
-		return IBF.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, behaviors);
+		return IBF.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, behaviors);
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle,
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes, IBehavior... behaviors)
 	{
-		return IBF.tool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, toolTypes, behaviors);
+		return IBF.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterTie, filterHandle, toolTypes, behaviors);
 	}
 }

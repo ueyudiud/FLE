@@ -7,6 +7,7 @@ package fle.core.items;
 import com.google.common.collect.Maps;
 
 import farcore.data.EnumItem;
+import farcore.data.M;
 import farcore.data.MC;
 import fle.core.FLE;
 import fle.loader.Crops;
@@ -94,6 +95,7 @@ public class ItemSubCropRelated extends ItemSubEdible
 		MC.crop.registerOre(Crops.cabbage, new ItemStack(this, 1, 1006));
 		MC.crop.registerOre(Crops.soybean, new ItemStack(this, 1, 1009));
 		MC.crop.registerOre(Crops.rutabaga, new ItemStack(this, 1, 1011));
+		MC.crop.registerOre(M.citrus, new ItemStack(this, 1, 1012));
 	}
 	
 	@Override

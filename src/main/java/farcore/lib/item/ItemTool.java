@@ -393,8 +393,9 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{
-		for (Mat material : Mat.filt(this.toolPropMap.get(meta).filterHead))
-			subItems.add(setMaterialToItem(new ItemStack(this, 1, meta), "head", material));
+		super.createSubItem(meta, subItems);
+		//		for (Mat material : Mat.filt(this.toolPropMap.get(meta).filterHead))
+		//			subItems.add(setMaterialToItem(new ItemStack(this, 1, meta), "head", material));
 	}
 	
 	@Override

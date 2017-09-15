@@ -30,12 +30,12 @@ public class RecipeDrying
 {
 	public static void init()
 	{
-		addDringRecipe(new OreStack(MC.crop.getOreName(Crops.ramie)), 250000, 10.0F, IBF.miscResources.getSubItem("dry_ramie_fiber"));
-		addDringRecipe(new BaseStack(IBF.crop.getSubItem("grass")), 150000, 10.0F, IBF.miscResources.getSubItem("hay"));
-		addDringRecipe(new BaseStack(IBF.crop.getSubItem("broadleaf")), 250000, 20.0F, IBF.miscResources.getSubItem("dry_broadleaf"));
-		addDringRecipe(new BaseStack(IBF.crop.getSubItem("coniferous")), 250000, 20.0F, IBF.miscResources.getSubItem("dry_coniferous"));
+		addDringRecipe(new OreStack(MC.crop.getOreName(Crops.ramie)), 250000, 10.0F, IBF.iResources.getSubItem("dry_ramie_fiber"));
+		addDringRecipe(new BaseStack(IBF.iCropRelated.getSubItem("grass")), 150000, 10.0F, IBF.iResources.getSubItem("hay"));
+		addDringRecipe(new BaseStack(IBF.iCropRelated.getSubItem("broadleaf")), 250000, 20.0F, IBF.iResources.getSubItem("dry_broadleaf"));
+		addDringRecipe(new BaseStack(IBF.iCropRelated.getSubItem("coniferous")), 250000, 20.0F, IBF.iResources.getSubItem("dry_coniferous"));
 		
-		addFluidContainerDryingRecipe(new FluidStack(IBF.lacquer, 15), 5000, 10.0F, new FluidStack(IBF.dried_lacquer, 10));
+		addFluidContainerDryingRecipe(new FluidStack(IBF.fLacquer, 15), 5000, 10.0F, new FluidStack(IBF.fLacquerDried, 10));
 	}
 	
 	private static void addFluidContainerDryingRecipe(FluidStack input, int durationMul, float rainfall, FluidStack output)

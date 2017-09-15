@@ -88,7 +88,7 @@ ITP_BoundingBox
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
-		ItemStack stack = IBF.fluidContainer.getSubItem("bowl_wooden");
+		ItemStack stack = IBF.iFluidContainer.getSubItem("bowl_wooden");
 		ItemSimpleFluidContainer.setFluid(stack, this.tank.getFluid());
 		ItemSimpleFluidContainer.setCustomDamage(stack, this.damage);
 		return ObjArrayParseHelper.newArrayList(stack);

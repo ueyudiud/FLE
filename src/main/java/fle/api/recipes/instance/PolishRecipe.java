@@ -44,7 +44,6 @@ public class PolishRecipe
 	
 	public static int getPolishLevel(ItemStack stack)
 	{
-		Entry<AbstractStack, Integer> entry = L.get(MAP, e->e.getKey().similar(stack));
-		return entry == null ? -1 : entry.getValue();
+		return L.cast(L.getFromEntries(MAP, e->e.similar(stack)), -1);
 	}
 }

@@ -578,6 +578,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		});
 		registerItemMetaGenerator(new ResourceLocation("nebula", "display_fluid"),
 				stack->ItemFluidDisplay.getFluid(stack).getName());
+		registerItemColorMultiplier(new ResourceLocation("nebula", "display_fluid/color"),
+				stack->ItemFluidDisplay.getFluid(stack).getColor());
 		
 		registerTextureSet(new ResourceLocation("forge", "fluid"), ()-> {
 			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();

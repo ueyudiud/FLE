@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -186,7 +187,21 @@ public class L
 	 */
 	public static int cast(@Nullable Integer i)
 	{
-		return i == null ? 0 : i.intValue();
+		return cast(i, 0);
+	}
+	
+	/**
+	 * Cast {@link java.lang.Integer} value to <tt>int</tt>
+	 * value safety.<p>
+	 * If argument is <tt>null</tt>, the result will be <tt>def</tt>.
+	 * @param i the unwrap number.
+	 * @param def the default value return when input <tt>Integer</tt> value
+	 *            is <code>null</code>.
+	 * @return casted value.
+	 */
+	public static int cast(@Nullable Integer i, int def)
+	{
+		return i == null ? def : i.intValue();
 	}
 	
 	/**
@@ -462,11 +477,37 @@ public class L
 	}
 	
 	@Nullable
-	public static <T> T get(@Nullable Collection<? extends T> collection, @Nonnull Judgable<T> judgable)
+	public static <T> T get(@Nullable Collection<? extends T> collection, @Nonnull Judgable<T> predicate)
 	{
 		if (collection == null || collection.isEmpty()) return null;
-		for (T target : collection) if (judgable.isTrue(target)) return target;
+		for (T target : collection) if (predicate.isTrue(target)) return target;
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param map
+	 * @param predicate
+	 * @return
+	 * @see #getFromEntries(Collection, Judgable)
+	 */
+	@Nullable
+	public static <K, V> V get(@Nullable Map<K, V> map, @Nonnull Judgable<K> predicate)
+	{
+		return map == null ? null : getFromEntries(map.entrySet(), predicate);
+	}
+	
+	/**
+	 * Get value of entry which of key matched by <tt>predicate</tt>.
+	 * @param collection the collection for searching.
+	 * @param predicate the predictor.
+	 * @return <code>null</code> will be return if no entry matched or collection is empty.
+	 */
+	@Nullable
+	public static <K, V> V getFromEntries(@Nullable Collection<? extends Entry<K, V>> collection, @Nonnull Judgable<K> predicate)
+	{
+		Entry<K, V> entry = get(collection, e->predicate.isTrue(e.getKey()));
+		return entry == null ? null : entry.getValue();
 	}
 	
 	public static <T> Set<T> containSet(Collection<? extends T> collection, Judgable<T> checker)

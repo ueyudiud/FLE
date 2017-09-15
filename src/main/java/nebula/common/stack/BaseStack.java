@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import nebula.common.util.ItemStacks;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -129,14 +130,9 @@ public class BaseStack implements AbstractStack
 	@Override
 	public ItemStack instance()
 	{
-		if(this.stack != null)
+		if (this.stack != null)
 		{
-			ItemStack ret = this.stack.copy();
-			if(this.isWildcardValue)
-			{
-				ret.setItemDamage(0);
-			}
-			return ret;
+			return ItemStacks.valid(this.stack);
 		}
 		return null;
 	}
@@ -144,15 +140,11 @@ public class BaseStack implements AbstractStack
 	@Override
 	public List<ItemStack> display()
 	{
-		if(this.list == null)
-			if(this.stack != null)
-			{
-				this.list = ImmutableList.of(this.stack.copy());
-			}
-			else
-			{
-				this.list = ImmutableList.of();
-			}
+		if (this.list == null)
+		{
+			this.list = this.stack != null ?
+					ImmutableList.of(this.stack.copy()) : ImmutableList.of();
+		}
 		return this.list;
 	}
 	
@@ -178,12 +170,9 @@ public class BaseStack implements AbstractStack
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(this.stack == null) return obj == EMPTY;
-		if(obj == this)
+		if ((obj == this) || (this.stack == null && obj == EMPTY))
 			return true;
-		else if(!(obj instanceof BaseStack))
-			return false;
-		BaseStack stack1 = (BaseStack) obj;
-		return ItemStack.areItemStacksEqual(this.stack, stack1.stack);
+		else if(!(obj instanceof BaseStack)) return false;
+		return ItemStack.areItemStacksEqual(this.stack, ((BaseStack) obj).stack);
 	}
 }

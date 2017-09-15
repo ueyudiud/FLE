@@ -11,6 +11,7 @@ public class FluidBase extends Fluid
 {
 	public float fireAttackDamage;
 	public float thermalConductivity = 2.4E-2F;
+	protected int color = 0xFFFFFFFF;
 	
 	public FluidBase(String fluidName, String localName)
 	{
@@ -26,6 +27,30 @@ public class FluidBase extends Fluid
 		{
 			LanguageManager.registerLocal(getTranslateName(new FluidStack(this, 1)), localName);
 		}
+	}
+	
+	public FluidBase setColor(int color)
+	{
+		this.color = color;
+		return this;
+	}
+	
+	@Override
+	public FluidBase setDensity(int density)
+	{
+		return (FluidBase) super.setDensity(density);
+	}
+	
+	@Override
+	public FluidBase setViscosity(int viscosity)
+	{
+		return (FluidBase) super.setViscosity(viscosity);
+	}
+	
+	@Override
+	public int getColor()
+	{
+		return this.color;
 	}
 	
 	protected String getTranslateName(FluidStack stack)

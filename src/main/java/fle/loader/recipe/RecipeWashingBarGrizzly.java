@@ -20,11 +20,11 @@ public class RecipeWashingBarGrizzly
 	public static void init()
 	{
 		RecipeAdder.addWashingBarGrizzlyRecipe(new OreStack(MC.pile.getOreName(M.gravel)), 100, new ItemStack[]{
-				IBF.miscResources.getSubItem("flint_fragment"),
-				IBF.miscResources.getSubItem("flint_sharp"),
-				IBF.miscResources.getSubItem("flint_small"),
+				IBF.iResources.getSubItem("flint_fragment"),
+				IBF.iResources.getSubItem("flint_sharp"),
+				IBF.iResources.getSubItem("flint_small"),
 				new ItemStack(Items.FLINT),
-				IBF.miscResources.getSubItem("quartz_chip")},
+				IBF.iResources.getSubItem("quartz_chip")},
 				new int[][]{
 			{6000, 2000, 1000},
 			{2000, 500},

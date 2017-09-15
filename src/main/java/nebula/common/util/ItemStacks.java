@@ -76,7 +76,7 @@ public final class ItemStacks
 	{
 		if(stack == null || stack.stackSize <= 0)
 			return null;
-		if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+		if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
 		{
 			stack = stack.copy();
 			stack.setItemDamage(0);

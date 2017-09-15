@@ -125,9 +125,9 @@ implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
 	{
 		if (this.duration == 10)
 		{
-			return ObjArrayParseHelper.newArrayList(IBF.miscResources.getSubItem("dried_filled_wooden_brick_mold"));
+			return ObjArrayParseHelper.newArrayList(IBF.iResources.getSubItem("dried_filled_wooden_brick_mold"));
 		}
-		ItemStack stack = IBF.miscResources.getSubItem("filled_wooden_brick_mold");
+		ItemStack stack = IBF.iResources.getSubItem("filled_wooden_brick_mold");
 		if (this.duration > 0 || this.wetness > 0)
 		{
 			NBTTagCompound compound = ItemStacks.getOrSetupNBT(stack, true);

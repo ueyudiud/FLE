@@ -22,10 +22,10 @@ public class Fuels
 	public static void init()
 	{
 		FlamableItems.addFlamableItem(new BaseStack(Items.PAPER), 60F, 200F);
-		FuelHandler.addFuel(new BaseStack(IBF.miscResources.getSubItem("dry_ramie_fiber")), 290F, 440F, 8000, 320000);
-		FuelHandler.addFuel(new BaseStack(IBF.miscResources.getSubItem("dry_broadleaf")), 300F, 440F, 8000, 160000);
-		FuelHandler.addFuel(new BaseStack(IBF.miscResources.getSubItem("dry_coniferous")), 310F, 440F, 8000, 80000);
-		FuelHandler.addFuel(new BaseStack(IBF.miscResources.getSubItem("tinder")), 250F, 480F, 10000, 300000);
+		FuelHandler.addFuel(new BaseStack(IBF.iResources.getSubItem("dry_ramie_fiber")), 290F, 440F, 8000, 320000);
+		FuelHandler.addFuel(new BaseStack(IBF.iResources.getSubItem("dry_broadleaf")), 300F, 440F, 8000, 160000);
+		FuelHandler.addFuel(new BaseStack(IBF.iResources.getSubItem("dry_coniferous")), 310F, 440F, 8000, 80000);
+		FuelHandler.addFuel(new BaseStack(IBF.iResources.getSubItem("tinder")), 250F, 480F, 10000, 300000);
 		for (PropertyWood property : Mat.filtAndGet(SubTags.WOOD, MP.property_wood))
 		{
 			FuelHandler.addFuel(new OreStack(MC.log.getOreName(property.material)), 380F, 540F, (int) (property.burnHeat * 1000), 10000000);

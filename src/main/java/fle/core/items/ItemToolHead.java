@@ -29,7 +29,7 @@ public class ItemToolHead extends ItemMulti
 		super(FLE.MODID, mc);
 		if (Configs.createAllToolCreativeTabs)
 		{
-			setCreativeTab(new CreativeTabBase(mc.name, mc.localName, () -> new ItemStack(this, 1, 0)));
+			setCreativeTab(new CreativeTabBase(mc.name, mc.localName, ()->new ItemStack(this)));
 		}
 		this.maxStackSize = 1;
 	}

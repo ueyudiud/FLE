@@ -1,6 +1,7 @@
 {
 	"layer": {
 		"texture": "[forge:fluid",
-		"meta": "nebula:display_fluid"
+		"meta": "nebula:display_fluid",
+		"colorMultiplier": "nebula:display_fluid/color"
 	}
 }

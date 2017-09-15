@@ -14,7 +14,6 @@ import com.google.common.collect.Maps;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.Capabilities;
-import farcore.data.EnumFluid;
 import farcore.util.Localization;
 import fle.core.FLE;
 import fle.core.items.behavior.BehaviorBlockableTool;
@@ -77,7 +76,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	
 	public static ItemStack createItemStack(String name, FluidStack stack)
 	{
-		ItemStack stack2 = IBF.fluidContainer.getSubItem(name);
+		ItemStack stack2 = IBF.iFluidContainer.getSubItem(name);
 		setFluid(stack2, stack);
 		return stack2;
 	}
@@ -362,11 +361,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{
-		ItemStack stack = new ItemStack(this, 1, meta);
-		FluidContainerProperty property = this.propertyMap.get(meta);
-		subItems.add(stack.copy());
-		setFluid(stack, new FluidStack(EnumFluid.water.fluid, property.capacity));
-		subItems.add(stack);
+		subItems.add(new ItemStack(this, 1, meta));
 	}
 	
 	@Override
