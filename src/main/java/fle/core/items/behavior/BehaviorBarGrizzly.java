@@ -54,9 +54,7 @@ public class BehaviorBarGrizzly extends BehaviorBase implements IIP_Containerabl
 			{
 				BlockPos pos = unchecked.removeFirst();
 				if (checked.contains(pos))
-				{
 					continue;
-				}
 				if (world.getBlockState(pos).getMaterial() == Materials.WATER)
 				{
 					++count;

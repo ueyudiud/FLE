@@ -106,7 +106,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	public static final int MAX_HEIGHT = 16;
-	public static final PropertyInteger				LAYER = Properties.create("layer", 1, MAX_HEIGHT);
+	public static final PropertyInteger LAYER = Properties.create("layer", 1, MAX_HEIGHT);
 	
 	public BlockSand(String modid, String name, Mat mat, PropertyBlockable sand)
 	{
@@ -122,8 +122,8 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	public void postInitalizedBlocks()
 	{
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), MC.block.getLocal(this.material));
-		OreDict.registerValid("sand", new ItemStack(this.item, 1, 0));
-		OreDict.registerValid("sand" + this.material.oreDictName, new ItemStack(this.item, 1, 0));
+		OreDict.registerValid("sand", new ItemStack(this.item));
+		OreDict.registerValid("sand" + this.material.oreDictName, new ItemStack(this.item));
 	}
 	
 	@Override
@@ -244,7 +244,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		state1 = world.getBlockState(pos.down());
 		if (state1.getBlock() == this)
 		{
-			int i = fillBlockWith(world, pos, state1, state.getValue(LAYER));
+			int i = fillBlockWith(world, pos.down(), state1, state.getValue(LAYER));
 			if (i > 0)
 				world.setBlockState(source, state.withProperty(LAYER, i));
 			else
@@ -395,7 +395,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	@Override
 	public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target)
 	{
-		float amt = this.material.getProperty(MP.property_tool).damageToEntity;
+		float amt = this.material.toolDamageToEntity;
 		amt *= block.getBlock().getValue(LAYER);
 		amt *= block.motionY * block.motionY;
 		amt /= 25F;
@@ -416,6 +416,18 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	@Override
+	public boolean isNormalCube(IBlockState state)
+	{
+		return isFullBlock(state);
+	}
+	
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return isFullBlock(state);
+	}
+	
+	@Override
 	public boolean isFullBlock(IBlockState state)
 	{
 		return state.getValue(LAYER) == 16;
@@ -429,7 +441,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 		case DOWN:
 			return true;
 		default:
-			return isFullBlock(base_state);
+			return base_state.isFullBlock();
 		}
 	}
 	

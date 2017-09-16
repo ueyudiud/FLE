@@ -294,7 +294,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		BlockPos pos1;
 		IBlockState state1;
-		if(Worlds.isSideSolid(world, pos1 = pos.offset(facing), facing.getOpposite(), true)) return false;
+		if (Worlds.isSideSolid(world, pos1 = pos.offset(facing), facing.getOpposite(), true)) return false;
 		return (state1 = world.getBlockState(pos1.down())).getBlock() instanceof BlockSoil ?
 				state.getValue(COVER_TYPE).noCover == state1.getValue(COVER_TYPE).noCover : false;
 	}
@@ -413,7 +413,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		if (!worldIn.isRemote)
 		{
 			state = updateBase(worldIn, pos, state, random);
-			if(state == null) return;
+			if (state == null) return;
 			spreadCoverPlant(worldIn, pos, state, random);
 		}
 	}
@@ -510,21 +510,21 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		IBlockState oldState = state;
 		boolean wet = Worlds.isBlockNearby(worldIn, pos, EnumBlock.water.block, true);
 		EnumCoverType type = state.getValue(COVER_TYPE);
-		if(type.noCover != EnumCoverType.NONE && type.noCover != EnumCoverType.FROZEN)
+		if (type.noCover != EnumCoverType.NONE && type.noCover != EnumCoverType.FROZEN)
 		{
 			if(!canBlockGrass(worldIn, pos))
 			{
 				state = state.withProperty(COVER_TYPE, type = type.noCover == EnumCoverType.TUNDRA_FROZEN ? EnumCoverType.FROZEN : EnumCoverType.NONE);
 			}
 		}
-		if(type.isFrozen)
+		if (type.isFrozen)
 		{
 			if(ThermalNet.getTemperature(worldIn, pos, true) >= V.WATER_FREEZE_POINT_F + 25 && rand.nextInt(4) == 0)
 			{
 				state = state.withProperty(COVER_TYPE, type.noFrozen);
 			}
 		}
-		else if(type.isSnow)
+		else if (type.isSnow)
 		{
 			if(ThermalNet.getTemperature(worldIn, pos, true) >= V.WATER_FREEZE_POINT_F && rand.nextInt(4) == 0)
 			{
@@ -533,18 +533,18 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		else
 		{
-			if(!type.isWet && wet)
+			if (!type.isWet && wet)
 			{
 				state = state.withProperty(COVER_TYPE, type.waterCover);
 			}
-			else if(!wet && wet && rand.nextInt(8) == 0)
+			else if (!wet && wet && rand.nextInt(8) == 0)
 			{
 				state = state.withProperty(COVER_TYPE, type.noCover);
 			}
 			wet |= type.isWet;
 		}
-		if(checkAndFall(worldIn, pos, state, rand, !wet)) return null;
-		if(oldState != state)
+		if (checkAndFall(worldIn, pos, state, rand, !wet)) return null;
+		if (oldState != state)
 		{
 			worldIn.setBlockState(pos, state, 3);
 		}

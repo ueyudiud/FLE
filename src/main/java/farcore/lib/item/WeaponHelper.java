@@ -84,7 +84,7 @@ public class WeaponHelper
 			boolean flagCritical = matchCritical(player) && (entity instanceof EntityLivingBase);
 			float speed = (float) player.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).getAttributeValue() + prop.stat.getAttackSpeed(stack, material.getPropertyF(MP.tool_attackspeed));
 			speed = L.range(0.1F, 20.0F, speed);
-			int cooldown = (int) R.getValue(EntityLivingBase.class, "ticksSinceLastSwing", "field_184617_aD", player, false);
+			int cooldown = R.getInt(EntityLivingBase.class, "ticksSinceLastSwing", "field_184617_aD", player, false);
 			
 			int fire = EnchantmentHelper.getFireAspectModifier(player);
 			
@@ -155,7 +155,7 @@ public class WeaponHelper
 					EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entity, player);
 				}
 				EnchantmentHelper.applyArthropodEnchantments(player, entity);
-				if(prop.stat.isWeapon() && prop.skillAttack != null)
+				if (prop.stat.isWeapon() && prop.skillAttack != null)
 				{
 					prop.skillAttack.using(player, 1.0F);
 				}

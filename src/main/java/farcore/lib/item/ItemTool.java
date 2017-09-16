@@ -425,12 +425,11 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		ItemStack stack2 = stack;
 		if(!entityIn.world.isRemote)
 		{
 			try
 			{
-				stack = ((IUpdatableItem) this).updateItem(null, stack);
+				stack = updateItem(null, stack);
 			}
 			catch(Exception exception)
 			{
@@ -458,7 +457,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		{
 			try
 			{
-				ItemStack stack = ((IUpdatableItem) this).updateItem(null, entityItem.getEntityItem());
+				ItemStack stack = updateItem(null, entityItem.getEntityItem());
 				if(stack == null)
 				{
 					entityItem.setDead();

@@ -146,9 +146,9 @@ public class Log
 		}
 		synchronized (cache)
 		{
-			for(Object object : cache)
+			for (Object object : cache)
 			{
-				if(object instanceof Throwable)
+				if (object instanceof Throwable)
 				{
 					((Throwable) object).printStackTrace(stream);
 				}
@@ -170,7 +170,7 @@ public class Log
 	
 	public static void catchingIfDebug(Throwable throwable)
 	{
-		if(Nebula.debug)
+		if (Nebula.debug)
 		{
 			catching(throwable);
 		}

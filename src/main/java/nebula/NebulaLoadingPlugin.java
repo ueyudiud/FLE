@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 public class NebulaLoadingPlugin implements IFMLLoadingPlugin
 {
 	public static boolean loadedData;
+	/** This is <code>true</code> in obfuscation environment. */
 	public static boolean runtimeDeobf;
 	public static File location;
 	

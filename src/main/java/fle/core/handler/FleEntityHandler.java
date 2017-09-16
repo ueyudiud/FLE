@@ -10,7 +10,6 @@ import fle.core.entity.monster.EntityFLESlime;
 import fle.core.entity.monster.EntityFLESpider;
 import fle.core.entity.monster.EntityFLEZombie;
 import fle.loader.Configs;
-import nebula.Log;
 import nebula.common.util.R;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -32,7 +31,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -150,6 +148,8 @@ public class FleEntityHandler
 		}
 	}
 	
+	private static Method getFallSound;
+	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityFall(LivingFallEvent event)
 	{
@@ -174,18 +174,7 @@ public class FleEntityHandler
 			{
 				damage = a + (a - 4F) * a / 4F;
 			}
-			SoundEvent sound;
-			try
-			{
-				Method method = R.getMethod(EntityLivingBase.class, "getFallSound", "", int.class);
-				method.setAccessible(true);
-				sound = (SoundEvent) method.invoke(entity, (int) damage);
-				entity.playSound(sound, 1.0F, 1.0F);
-			}
-			catch (Exception exception)
-			{
-				Log.catchingIfDebug(exception);
-			}
+			entity.playSound(R.invokeMethod(getFallSound, entity, (int) damage), 1.0F, 1.0F);
 			if (damage > 0)
 			{
 				entity.attackEntityFrom(DamageSource.fall, damage);
@@ -206,5 +195,9 @@ public class FleEntityHandler
 			}
 		}
 		event.setCanceled(true);
+	}
+	
+	{
+		getFallSound = R.getMethod(EntityLivingBase.class, "getFallSound", "func_184588_d", int.class);
 	}
 }
