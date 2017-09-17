@@ -3,6 +3,7 @@ package fargen.core.worldgen;
 import fargen.core.worldgen.surface.FarSurfaceBiomeProvider;
 import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
 import nebula.common.LanguageManager;
+import nebula.common.util.R;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -19,6 +20,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FarWorldType extends WorldType
 {
+	/**
+	 * The {@link net.minecraft.world.storage.WorldInfo} use <tt>"default"</tt>
+	 * as default world generator if no matched world type found, so the replaced
+	 * world type is suggested set a same name to old world type.
+	 * @see fargen.core.FarGen#load(net.minecraftforge.fml.common.event.FMLInitializationEvent)
+	 */
 	public static WorldType DEFAULT;
 	public static WorldType FLAT = WorldType.FLAT;
 	public static WorldType LARGE_BIOMES;
@@ -29,14 +36,7 @@ public class FarWorldType extends WorldType
 		WORLD_TYPES[index] = this;
 		int oldIndex = getWorldTypeID();
 		WORLD_TYPES[oldIndex] = null;
-		try
-		{
-			nebula.common.util.R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
-		}
-		catch (Exception exception)
-		{
-			exception.printStackTrace();
-		}
+		R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
 		LanguageManager.registerLocal("generator." + name, localName);
 	}
 	public FarWorldType(String name, String localName)

@@ -134,7 +134,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@SidedProxy(serverSide = "nebula.common.CommonProxy", clientSide = "nebula.client.ClientProxy")
 	public static CommonProxy proxy;
 	
-	private LanguageManager lang;
+	public LanguageManager lang;
 	
 	public static CreativeTabs tabFluids;
 	

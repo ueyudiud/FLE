@@ -453,7 +453,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
 		boolean flag = super.onEntityItemUpdate(entityItem);
-		if(!entityItem.world.isRemote)
+		if (!entityItem.world.isRemote)
 		{
 			try
 			{

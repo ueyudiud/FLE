@@ -7,14 +7,11 @@ package nebula.common.util;
 import java.io.File;
 
 import nebula.Nebula;
-import nebula.client.model.ModelFluidBlock;
-import nebula.client.util.Renders;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -58,7 +55,7 @@ public final class Game
 	/**
 	 * Get Minecraft runtime file direction, the default file position is
 	 * ./.minecraft/ in client side, and ./ in server side.
-	 * @return
+	 * @return the file.
 	 */
 	public static File getMCFile()
 	{
@@ -99,7 +96,7 @@ public final class Game
 	{
 		GameRegistry.register(block.setRegistryName(modid, name));
 		GameRegistry.register(itemBlock.setRegistryName(modid, name));
-		Nebula.proxy.registerRender(block);
+		registerClientRegister(block);
 	}
 	
 	public static void registerItem(Item item, String name)
@@ -110,7 +107,7 @@ public final class Game
 	public static void registerItem(Item item, String modid, String name)
 	{
 		GameRegistry.register(item.setRegistryName(modid, name));
-		Nebula.proxy.registerRender(item);
+		registerClientRegister(item);
 	}
 	
 	/**
@@ -164,13 +161,12 @@ public final class Game
 	}
 	
 	/**
-	 * Register fluid block.
-	 * @param block
+	 * The client and server both can use this method to
+	 * register object implements {@link nebula.client.util.IRenderRegister}.
+	 * @param arg the object may implements IRenderRegister.
 	 */
-	@SideOnly(Side.CLIENT)
-	public static void registerFluid(BlockFluidBase block)
+	public static void registerClientRegister(Object arg)
 	{
-		Renders.registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.INSTANCE);
-		ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.INSTANCE);
+		Nebula.proxy.registerClientRegister(arg);
 	}
 }

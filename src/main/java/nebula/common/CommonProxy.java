@@ -10,7 +10,6 @@ import nebula.common.item.IItemBehaviorsAndProperties;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
 import nebula.common.tile.IGuiTile;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
@@ -30,11 +29,6 @@ public class CommonProxy implements IGuiHandler
 		return DimensionManager.getWorld(id);
 	}
 	
-	public void registerRender(Object object)
-	{
-		
-	}
-	
 	public File fileDir()
 	{
 		return new File(".");
@@ -43,13 +37,6 @@ public class CommonProxy implements IGuiHandler
 	public EntityPlayer playerInstance()
 	{
 		return null;
-	}
-	
-	@Deprecated
-	public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
-			IProperty<?>...properties)
-	{
-		
 	}
 	
 	public void setModelLocate(Item item, int meta, String modid, String name, String type)
@@ -109,5 +96,10 @@ public class CommonProxy implements IGuiHandler
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
 		return null;
+	}
+	
+	public void registerClientRegister(Object arg)
+	{
+		
 	}
 }

@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import nebula.Nebula;
 import nebula.client.util.IRenderRegister;
+import nebula.client.util.Renders;
 import nebula.common.fluid.FluidBase;
 import nebula.common.fluid.FluidBlockEvent.FluidTouchBlockEvent;
 import nebula.common.util.Direction;
@@ -78,7 +79,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		Game.registerFluid(this);
+		Renders.registerFluidModel(this);
 	}
 	
 	@Override

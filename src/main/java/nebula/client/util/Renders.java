@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.client.util;
 
 import javax.annotation.Nullable;
@@ -9,6 +8,7 @@ import javax.annotation.Nullable;
 import nebula.Nebula;
 import nebula.client.ClientProxy;
 import nebula.client.model.ICustomItemModelSelector;
+import nebula.client.model.ModelFluidBlock;
 import nebula.client.model.StateMapperExt;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,14 +32,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Renders
 {
-	public static void registerClientRegister(Object object)
-	{
-		Nebula.proxy.registerRender(object);
-	}
-	
 	public static void registerCompactModel(Block block, boolean splitFile, String modid, String path, IProperty<?> property, IProperty<?>...properties)
 	{
-		Nebula.proxy.registerCompactModel(splitFile, block, modid, path, property, properties);
+		((ClientProxy) Nebula.proxy).registerCompactModel(splitFile, block, modid, path, property, properties);
 	}
 	
 	public static void registerColorMultiplier(IBlockColor color, Block...block)
@@ -51,13 +47,11 @@ public class Renders
 		((ClientProxy) Nebula.proxy).registerColorMultiplier(color, item);
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public static void registerCustomItemModelSelector(Block item, ICustomItemModelSelector selector)
 	{
 		registerCustomItemModelSelector(Item.getItemFromBlock(item), selector);
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public static void registerCustomItemModelSelector(Item item, ICustomItemModelSelector selector)
 	{
 		ModelLoader.setCustomMeshDefinition(item, selector);
@@ -125,5 +119,15 @@ public class Renders
 		vertexbuffer.pos(x + w, y + 0, zLevel).tex((u + w) * TEX_PIX_SCALE, (v + 0) * TEX_PIX_SCALE).endVertex();
 		vertexbuffer.pos(x + 0, y + 0, zLevel).tex((u + 0) * TEX_PIX_SCALE, (v + 0) * TEX_PIX_SCALE).endVertex();
 		tessellator.draw();
+	}
+	
+	/**
+	 * Register fluid block.
+	 * @param block
+	 */
+	public static void registerFluidModel(BlockFluidBase block)
+	{
+		registerCustomItemModelSelector(Item.getItemFromBlock(block), ModelFluidBlock.Selector.INSTANCE);
+		ModelLoader.setCustomStateMapper(block, ModelFluidBlock.Selector.INSTANCE);
 	}
 }

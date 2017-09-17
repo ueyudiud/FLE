@@ -65,19 +65,19 @@ public class EntityFallingBlockExtended extends Entity
 		}
 	}
 	
-	public static final DataParameter<IBlockState> STATE = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_STATE);
-	public static final DataParameter<BlockPos> ORGIN = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_POS);
+	protected static final DataParameter<IBlockState> STATE;
+	protected static final DataParameter<BlockPos> ORGIN;
+	
+	static
+	{
+		STATE = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_STATE);
+		ORGIN = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_POS);
+	}
 	
 	private static final ISmartFallableBlock INSTANCE = new ISmartFallableBlock()
 	{
-		public void onStartFalling(World world, BlockPos pos) { }
-		
 		public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state) { return !canFallAt(world, pos, state) &&
-				world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, (Entity)null, (ItemStack)null); }
-		
-		public boolean onFallOnGround(World world, BlockPos pos, IBlockState state, int height, NBTTagCompound tileNBT) { return false; }
-		
-		public boolean onDropFallenAsItem(World world, BlockPos pos, IBlockState state, NBTTagCompound tileNBT) { return false; }
+				world.canBlockBePlaced(state.getBlock(), pos, true, EnumFacing.UP, null, null); }
 		
 		public float onFallOnEntity(World world, EntityFallingBlockExtended block, Entity target) { return 2.0F; }
 	};
@@ -87,9 +87,9 @@ public class EntityFallingBlockExtended extends Entity
 	private ISmartFallableBlock fallable;
 	private IBlockState state;
 	private NBTTagCompound nbt;
-	private int startX;
+	//	private int startX;
 	private int startY;
-	private int startZ;
+	//	private int startZ;
 	private int lifeTime;
 	private boolean hitEntity;
 	
@@ -104,9 +104,9 @@ public class EntityFallingBlockExtended extends Entity
 		try
 		{
 			this.preventEntitySpawning = true;
-			this.startX = pos.getX();
+			//			this.startX = pos.getX();
 			this.startY = pos.getY();
-			this.startZ = pos.getZ();
+			//			this.startZ = pos.getZ();
 			setState(state);
 			this.dataManager.set(STATE, state);
 			this.dataManager.set(ORGIN, pos1);

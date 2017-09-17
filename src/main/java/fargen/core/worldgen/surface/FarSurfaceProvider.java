@@ -123,13 +123,10 @@ public class FarSurfaceProvider extends WorldProvider
 	{
 		if (this.world.isBlockLoaded(pos))
 		{
-			if (this.world.getWorldType() == FarWorldType.FLAT)
-			{
+			if (this.world.getWorldType() == FarWorldType.FLAT ||
+					(this.world.getWorldType() != FarWorldType.DEFAULT &&
+					this.world.getWorldType() != FarWorldType.LARGE_BIOMES))
 				return super.getBiomeForCoords(pos);
-			}
-			if(this.world.getWorldType() != FarWorldType.DEFAULT &&
-					this.world.getWorldType() != FarWorldType.LARGE_BIOMES)
-				throw new IllegalStateException("Unknown world type : " + this.world.getWorldType().getName());
 			Chunk chunk = this.world.getChunkFromBlockCoords(pos);
 			try
 			{

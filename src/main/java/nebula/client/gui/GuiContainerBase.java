@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 import nebula.Nebula;
 import nebula.client.ClientOverride;
 import nebula.client.util.Client;
-import nebula.common.NebulaKeyHandler;
+import nebula.common.KC;
 import nebula.common.gui.ContainerBase;
 import nebula.common.gui.FluidSlot;
 import nebula.common.gui.IGuiActionListener;
@@ -120,7 +120,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	 */
 	protected boolean matchKey(String key, int keycode)
 	{
-		return NebulaKeyHandler.getBinding(key).getKeyCode() == keycode;
+		return KC.getBinding(key).getKeyCode() == keycode;
 	}
 	
 	@Override

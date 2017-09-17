@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fargen.core;
 
 import farcore.lib.world.WorldPropHandler;
@@ -48,7 +51,7 @@ public class FarGen
 	
 	@SidedProxy(serverSide = "fargen.core.FarGen$Common", clientSide = "fargen.core.FarGen$Client")
 	public static Common proxy;
-
+	
 	@EventHandler
 	public void load(FMLPreInitializationEvent event)
 	{
@@ -58,13 +61,13 @@ public class FarGen
 		modMetadata.name = NAME;
 		modMetadata.credits = "ueyudiud";
 	}
-
+	
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
 		FarGenBiomes.init();
 		Log.info("Far generation start override world type.");
-		FarWorldType.DEFAULT = new FarWorldType(0, "far_default", "Far Default");
+		FarWorldType.DEFAULT = new FarWorldType(0, "default", "Far Default");
 		Log.info("Far generation overrided world type.");
 		WorldPropHandler.addWorldProperty(0, new WorldPropSurface());
 		proxy.load();

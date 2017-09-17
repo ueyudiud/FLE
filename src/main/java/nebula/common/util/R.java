@@ -97,7 +97,7 @@ public final class R
 		overrideFinalField(clazz, mcpName, obfName, null, override, isPrivate, alwaysInit);
 	}
 	
-	public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, @Nullable F override, boolean isPrivate, boolean alwaysInit) throws Exception
+	public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, @Nullable F override, boolean isPrivate, boolean alwaysInit)
 	{
 		try
 		{
@@ -109,7 +109,7 @@ public final class R
 		}
 	}
 	
-	public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, int override, boolean isPrivate, boolean alwaysInit) throws Exception
+	public static <T, F> void overrideFinalField(Class<? extends T> clazz, String mcpName, String obfName, @Nullable T target, int override, boolean isPrivate, boolean alwaysInit)
 	{
 		try
 		{

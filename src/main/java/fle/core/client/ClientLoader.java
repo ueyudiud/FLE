@@ -7,7 +7,7 @@ import fle.api.client.PolishingStateIconLoader;
 import fle.core.client.render.TESRDirtMixture;
 import fle.core.common.CommonLoader;
 import fle.core.handler.FleClientHandler;
-import fle.loader.Entities;
+import fle.loader.EntityRender;
 import fle.loader.Recipes;
 import nebula.client.ClientProxy;
 import nebula.client.NebulaTextureHandler;
@@ -32,7 +32,7 @@ public class ClientLoader extends CommonLoader
 		
 		Renders.registerColorMultiplier(ColorMultiplier.TOOL_ITEM_MATERIAL_COLOR, EnumItem.tool.item);
 		
-		Entities.clientInit();
+		EntityRender.clientInit();
 		Recipes.addRenderStates();
 		FarCoreRegistry.registerTESR(TESRDirtMixture.class);
 	}

@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.Lists;
 
 import nebula.Log;
+import nebula.Nebula;
 import nebula.client.model.ModelFluidBlock;
 import nebula.client.model.OrderModelLoader;
 import nebula.client.model.StateMapperExt;
@@ -151,7 +152,6 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		}
 	}
 	
-	@Override
 	public void registerRender(Object object)
 	{
 		if(object instanceof IRenderRegister)
@@ -163,7 +163,6 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	/**
 	 * Deprecated now, use Renders method directly.
 	 */
-	@Override
 	@Deprecated
 	public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
 			IProperty<?>...properties)
@@ -252,10 +251,13 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 						entry.getKey(), nebula.common.util.L.cast(entry.getValue(), Item.class));
 			}
 		}
-		
 		if (Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION))
 		{
 			Client.getFontRender().onResourceManagerReload(manager);
+		}
+		if (Loader.instance().hasReachedState(LoaderState.AVAILABLE))
+		{
+			Nebula.instance.lang.read();
 		}
 	}
 	
@@ -294,5 +296,11 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public void registerClientRegister(Object arg)
+	{
+		registerRender(arg);
 	}
 }

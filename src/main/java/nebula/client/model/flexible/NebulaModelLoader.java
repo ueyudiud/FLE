@@ -66,6 +66,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Nebula Model Loader
@@ -76,6 +78,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author ueyudiud
  * @version 0.4
  */
+@SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader
 {
 	INSTANCE;

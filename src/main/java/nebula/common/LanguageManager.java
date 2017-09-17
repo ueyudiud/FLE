@@ -24,13 +24,7 @@ import com.google.common.collect.ImmutableSortedMap;
 
 import nebula.Log;
 import nebula.common.util.Strings;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
 import scala.actors.threadpool.Arrays;
 
 /**
@@ -38,7 +32,7 @@ import scala.actors.threadpool.Arrays;
  * display.
  * @author ueyudiud
  */
-public class LanguageManager implements IResourceManagerReloadListener
+public class LanguageManager
 {
 	/** The default locale of manager. */
 	public static final String ENGLISH = "en_US";
@@ -200,16 +194,6 @@ public class LanguageManager implements IResourceManagerReloadListener
 	public LanguageManager(File file)
 	{
 		this.file = file;
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
-	}
-	
-	@Override
-	public void onResourceManagerReload(IResourceManager manager)
-	{
-		if (Loader.instance().hasReachedState(LoaderState.AVAILABLE))
-		{
-			read();
-		}
 	}
 	
 	public void reset()

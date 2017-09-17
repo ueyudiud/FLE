@@ -3,8 +3,8 @@ package nebula.client;
 import nebula.Log;
 import nebula.base.function.Applicable;
 import nebula.client.util.IRenderRegister;
-import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
+import nebula.common.util.Game;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -27,7 +27,7 @@ public class CreativeTabBase extends CreativeTabs implements IRenderRegister
 		super(lable);
 		this.localName = localName;
 		this.appliable = appliable;
-		Renders.registerClientRegister(this);
+		Game.registerClientRegister(this);
 	}
 	
 	@Override
