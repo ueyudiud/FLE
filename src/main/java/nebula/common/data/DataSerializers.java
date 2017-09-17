@@ -102,6 +102,7 @@ public class DataSerializers
 	static
 	{
 		MAP.put(EnumFacing.class, FACING);
+		
 		registerSerializer(SHORT);
 		registerSerializer(BLOCK_STATE);
 	}

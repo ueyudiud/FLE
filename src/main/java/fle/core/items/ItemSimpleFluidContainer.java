@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
-import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.Capabilities;
 import farcore.util.Localization;
@@ -27,6 +26,7 @@ import nebula.common.fluid.container.IItemFluidContainerV1;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import nebula.common.item.ItemSubBehavior;
+import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.FluidStacks;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.NBTs;
@@ -102,7 +102,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	public void postInitalizedItems()
 	{
 		super.postInitalizedItems();
-		LanguageManager.registerLocal("info.fluidcontainer.completely.damaged", ChatFormatting.RED +
+		LanguageManager.registerLocal("info.fluidcontainer.completely.damaged", EnumChatFormatting.RED +
 				"This fluid container has already damaged, you can only drain fluid from this container.");
 	}
 	

@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import farcore.FarCore;
 import farcore.data.EnumItem;
 import farcore.energy.thermal.ThermalNet;
@@ -20,6 +18,7 @@ import nebula.Nebula;
 import nebula.common.LanguageManager;
 import nebula.common.item.ItemBase;
 import nebula.common.util.Direction;
+import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.Game;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -88,7 +87,7 @@ public class ItemDebugger extends ItemBase
 				{
 					list.add(entry.getKey().getName() + " : " + ((IProperty) entry.getKey()).getName(entry.getValue()));
 				}
-				list.add("Temperature : " + ChatFormatting.RED + ThermalNet.getTemperature(world, pos, false) + "K");
+				list.add("Temperature : " + EnumChatFormatting.RED + ThermalNet.getTemperature(world, pos, false) + "K");
 				if(block instanceof IDebugableBlock)
 				{
 					list.add("==========BLOCK INFO==========");

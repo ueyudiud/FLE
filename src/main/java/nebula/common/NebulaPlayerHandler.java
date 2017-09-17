@@ -7,7 +7,6 @@ package nebula.common;
 import nebula.Nebula;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_DigSpeed;
 import nebula.common.network.packet.PacketBlockData;
-import nebula.common.util.Sides;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
@@ -36,7 +35,7 @@ public class NebulaPlayerHandler
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
 	{
-		if(Sides.isServer())
+		//		if (Sides.isServer())
 		{
 			synchronized (ExtendedBlockStateRegister.SERVER)
 			{

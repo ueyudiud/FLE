@@ -12,6 +12,7 @@ import fargen.core.worldgen.nether.FarNetherProvider;
 import fargen.core.worldgen.surface.FarSurfaceProvider;
 import nebula.Log;
 import nebula.client.ClientOverride;
+import nebula.common.config.NebulaConfiguration;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
@@ -60,6 +61,8 @@ public class FarGen
 		modMetadata.authorList.add("ueyudiud");
 		modMetadata.name = NAME;
 		modMetadata.credits = "ueyudiud";
+		
+		NebulaConfiguration.loadStaticConfig(FarGenConfig.class);
 	}
 	
 	@EventHandler

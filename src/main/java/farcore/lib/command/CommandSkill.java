@@ -6,9 +6,8 @@ package farcore.lib.command;
 
 import static nebula.common.LanguageManager.registerLocal;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import farcore.lib.skill.ISkill;
+import nebula.common.util.EnumChatFormatting;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -23,10 +22,10 @@ public class CommandSkill extends CommandBase
 	public static void addCommandInformations()
 	{
 		registerLocal("commands.skill.help", "/skill help");
-		registerLocal("commands.skill.help.1", "/skill help %sGet skill command info.", ChatFormatting.YELLOW.toString());
-		registerLocal("commands.skill.help.2", "/skill get [player] [skillname] %sGet player skill state.", ChatFormatting.YELLOW.toString());
-		registerLocal("commands.skill.help.3", "/skill set [player] [skillname] [lvl] %sSet player skill level, only can used by creative player or OP.", ChatFormatting.YELLOW.toString());
-		registerLocal("commands.skill.help.4", "/skill list %sGet skill list.", ChatFormatting.YELLOW.toString());
+		registerLocal("commands.skill.help.1", "/skill help %sGet skill command info.", EnumChatFormatting.YELLOW.toString());
+		registerLocal("commands.skill.help.2", "/skill get [player] [skillname] %sGet player skill state.", EnumChatFormatting.YELLOW.toString());
+		registerLocal("commands.skill.help.3", "/skill set [player] [skillname] [lvl] %sSet player skill level, only can used by creative player or OP.", EnumChatFormatting.YELLOW.toString());
+		registerLocal("commands.skill.help.4", "/skill list %sGet skill list.", EnumChatFormatting.YELLOW.toString());
 		registerLocal("commands.skill.get.player.notexist.err", "The player %s, does not exist.");
 		registerLocal("commands.skill.get.onlyusablebyplayer.err", "This command can only used by player.");
 		registerLocal("commands.skill.get.skill.notexist.err", "The skill %s, does not exist");

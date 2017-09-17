@@ -240,6 +240,7 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	{
 		Arrays.fill(this.entries, null);
 		this.size = 0;
+		this.sum = 0;
 	}
 	
 	public Set<T> keySet()

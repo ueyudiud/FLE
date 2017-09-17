@@ -1,5 +1,9 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fargen.core.worldgen;
 
+import fargen.core.FarGenConfig;
 import fargen.core.worldgen.surface.FarSurfaceBiomeProvider;
 import fargen.core.worldgen.surface.FarSurfaceChunkGenerator;
 import nebula.common.LanguageManager;
@@ -32,17 +36,20 @@ public class FarWorldType extends WorldType
 	
 	public FarWorldType(int index, String name, String localName)
 	{
-		super(name);
-		WORLD_TYPES[index] = this;
-		int oldIndex = getWorldTypeID();
-		WORLD_TYPES[oldIndex] = null;
-		R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
-		LanguageManager.registerLocal("generator." + name, localName);
+		super(FarGenConfig.hardOverride ? name : "far_" + name);
+		if (FarGenConfig.hardOverride)
+		{
+			WORLD_TYPES[index] = this;
+			int oldIndex = getWorldTypeID();
+			WORLD_TYPES[oldIndex] = null;
+			R.overrideFinalField(WorldType.class, "worldTypeId", "field_82748_f", this, index, true, false);
+		}
+		LanguageManager.registerLocal("generator." + getName(), localName);
 	}
 	public FarWorldType(String name, String localName)
 	{
-		super(name);
-		LanguageManager.registerLocal("generator." + name, localName);
+		super(FarGenConfig.hardOverride ? name : "far_" + name);
+		LanguageManager.registerLocal("generator." + getName(), localName);
 	}
 	
 	@Override

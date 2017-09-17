@@ -1,13 +1,12 @@
 package fle.core.items.tool;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import farcore.lib.util.DamageSourceEntityAttack;
 import nebula.common.tool.EnumToolType;
 import nebula.common.tool.ToolHooks;
+import nebula.common.util.EnumChatFormatting;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -128,7 +127,7 @@ public abstract class Tool implements IToolStat
 	{
 		String string = getDeathMessage(target, user);
 		return new DamageSourceEntityAttack(this.type.name,
-				new TextComponentString(string.replace("(S)", "" + ChatFormatting.GREEN + user.getName() + ChatFormatting.RESET).replace("(M)", "" + ChatFormatting.RED + target.getName() + ChatFormatting.RESET)),
+				new TextComponentString(string.replace("(S)", "" + EnumChatFormatting.GREEN + user.getName() + EnumChatFormatting.RESET).replace("(M)", "" + EnumChatFormatting.RED + target.getName() + EnumChatFormatting.RESET)),
 				user);
 	}
 	

@@ -1,8 +1,7 @@
 package farcore.lib.skill;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import nebula.common.LanguageManager;
+import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.NBTs;
 import nebula.common.util.Strings;
 import net.minecraft.entity.player.EntityPlayer;
@@ -123,15 +122,15 @@ public class SkillAbstract implements ISkill
 		{
 			float e = tag.getFloat("exp");
 			float eNeed =getExperenceNeed(level);
-			expInfo = "exp" + ChatFormatting.GREEN + Strings.getDecimalNumber(e, 1) + ChatFormatting.WHITE + "/" + Strings.getDecimalNumber(eNeed, 1);
+			expInfo = "exp" + EnumChatFormatting.GREEN + Strings.getDecimalNumber(e, 1) + EnumChatFormatting.WHITE + "/" + Strings.getDecimalNumber(eNeed, 1);
 		}
 		else
 		{
-			expInfo = ChatFormatting.GREEN + "maxlevel";
+			expInfo = EnumChatFormatting.GREEN + "maxlevel";
 		}
 		return String.format("%s%s%s lv%s%d%s/%d %s",
-				ChatFormatting.ITALIC.toString(), getLocalName(), ChatFormatting.RESET.toString(),
-				ChatFormatting.GOLD.toString(), level, ChatFormatting.WHITE.toString(), (int) this.maxLevel,
+				EnumChatFormatting.ITALIC.toString(), getLocalName(), EnumChatFormatting.RESET.toString(),
+				EnumChatFormatting.GOLD.toString(), level, EnumChatFormatting.WHITE.toString(), (int) this.maxLevel,
 				expInfo);
 	}
 }

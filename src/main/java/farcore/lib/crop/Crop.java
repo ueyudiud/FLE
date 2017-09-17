@@ -4,16 +4,15 @@
 
 package farcore.lib.crop;
 
-import static com.mojang.realmsclient.gui.ChatFormatting.GOLD;
-import static com.mojang.realmsclient.gui.ChatFormatting.GREEN;
+import static nebula.common.util.EnumChatFormatting.GOLD;
+import static nebula.common.util.EnumChatFormatting.GREEN;
+import static nebula.common.util.EnumChatFormatting.LIGHT_PURPLE;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
-
-import com.mojang.realmsclient.gui.ChatFormatting;
 
 import farcore.data.EnumBlock;
 import farcore.lib.bio.FamilyTemplate;
@@ -254,7 +253,7 @@ public class Crop implements ICrop, IPlantable
 	@Override
 	public void addInformation(ICropAccess access, List<String> list)
 	{
-		list.add("Growing Progress : " + (access.stage() == this.floweringStage ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.GREEN) +
+		list.add("Growing Progress : " + (access.stage() == this.floweringStage ? LIGHT_PURPLE : GREEN) +
 				(access.stage() < this.maxStage ?
 						(int) (access.stageBuffer() + (access.stage() - 1) * this.growRequire) + "/" + (this.maxStage - 1) * this.growRequire :
 						"Mature"));

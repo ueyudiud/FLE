@@ -17,7 +17,6 @@ import org.apache.logging.log4j.LogManager;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.mojang.realmsclient.gui.ChatFormatting;
 
 import nebula.client.CreativeTabBase;
 import nebula.common.CommonProxy;
@@ -35,6 +34,7 @@ import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.ItemBase;
 import nebula.common.item.ItemFluidDisplay;
 import nebula.common.network.Network;
+import nebula.common.network.packet.PacketBlockData;
 import nebula.common.network.packet.PacketBreakBlock;
 import nebula.common.network.packet.PacketChunkNetData;
 import nebula.common.network.packet.PacketEntity;
@@ -49,6 +49,7 @@ import nebula.common.network.packet.PacketKey;
 import nebula.common.network.packet.PacketTEAsk;
 import nebula.common.network.packet.PacketTESAsk;
 import nebula.common.network.packet.PacketTESync;
+import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.Game;
 import nebula.common.world.chunk.BlockStateContainerExt;
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
@@ -233,9 +234,9 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	{
 		ItemBase.post();
 		BlockBase.post();
-		registerLocal("info.shift.click", ChatFormatting.WHITE + "Press " + ChatFormatting.ITALIC + "<%s>" + ChatFormatting.RESET + " to get more information.");
-		registerLocal("info.food.label", ChatFormatting.RED + "Food Stat:");
-		registerLocal("info.food.display", ChatFormatting.RED + "F-%s S-%s W-%s");
+		registerLocal("info.shift.click", EnumChatFormatting.WHITE + "Press " + EnumChatFormatting.ITALIC + "<%s>" + EnumChatFormatting.RESET + " to get more information.");
+		registerLocal("info.food.label", EnumChatFormatting.RED + "Food Stat:");
+		registerLocal("info.food.display", EnumChatFormatting.RED + "F-%s S-%s W-%s");
 		NetworkRegistry.INSTANCE.registerGuiHandler(MODID, proxy);
 		network = Network.network(Nebula.MODID);
 		network.registerPacket(PacketEntity.class, Side.CLIENT);
@@ -252,6 +253,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		network.registerPacket(PacketChunkNetData.class, Side.CLIENT);
 		network.registerPacket(PacketGuiAction.class, Side.SERVER);
 		network.registerPacket(PacketGuiSyncData.class, Side.CLIENT);
+		network.registerPacket(PacketBlockData.class, Side.CLIENT);
 	}
 	
 	@Subscribe

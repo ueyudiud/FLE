@@ -35,17 +35,17 @@ import net.minecraft.util.ResourceLocation;
  */
 public enum ExtendedBlockStateRegister implements Runnable
 {
-	SERVER;
+	SERVER,
+	CLIENT;
 	
 	static final List<IBlockState> TO_STATE_LIST = new ArrayList<>(1024);
-	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap<IBlockState>(4096) {
+	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap<IBlockState>(4096, 1.0F) {
 		@Override
 		protected int hashcode(Object object)
 		{
 			return Objects.toString(object).hashCode();
 		}
 	};
-	
 	
 	public static int getStateData(IBlockState state)
 	{
@@ -99,9 +99,10 @@ public enum ExtendedBlockStateRegister implements Runnable
 	
 	public static void encode(PacketBufferExt output) throws IOException
 	{
+		waitingForBuild();
 		int length = idCapacity();
 		output.writeInt(length);
-		for(int i = 0; i < length; ++i)
+		for (int i = 0; i < length; ++i)
 		{
 			IBlockState state = TO_STATE_LIST.get(i);
 			Block block = state.getBlock();
@@ -126,7 +127,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 		int len = input.readInt();
 		List<String> list = new ArrayList<>();
 		Map<Integer, Integer> intMap = new HashMap<>();
-		for(int i = 0; i < len; ++i)
+		for (int i = 0; i < len; ++i)
 		{
 			String key = input.readString(999);
 			String[] split = key.split(":");
@@ -181,7 +182,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	
 	private static volatile Thread thread = null;
 	
-	public static void buildAndSyncStateMap()
+	private static void waitingForBuild()
 	{
 		if (thread != null && thread.isAlive())
 		{
@@ -195,6 +196,11 @@ public enum ExtendedBlockStateRegister implements Runnable
 				exception.printStackTrace();
 			}
 		}
+	}
+	
+	public static void buildAndSyncStateMap()
+	{
+		waitingForBuild();
 		(thread = new Thread(SERVER, "State Map Thread")).start();
 	}
 	
@@ -204,9 +210,10 @@ public enum ExtendedBlockStateRegister implements Runnable
 		switch (this)
 		{
 		case SERVER :
+		default:
 			buildStateMap();
 			break;
-		default:
+		case CLIENT :
 			break;
 		}
 	}
@@ -217,7 +224,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 		TO_STATE_LIST.clear();
 		Log.reset();
 		
-		for(Block block : Block.REGISTRY)
+		for (Block block : Block.REGISTRY)
 		{
 			try
 			{
@@ -240,7 +247,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	void registerDefaultBlockStateMap(Block block)
 	{
 		BlockStateContainer container = block.getBlockState();
-		if(container.getProperties().isEmpty())
+		if (container.getProperties().isEmpty())
 		{
 			registerState(block.getDefaultState());
 		}
@@ -253,7 +260,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 				try
 				{
 					state = block.getStateFromMeta(i);
-					if(!A.contain(states, state))
+					if (!A.contain(states, state))
 					{
 						states[i] = state;
 					}
@@ -274,7 +281,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 				}
 				catch (RuntimeException exception)
 				{
-					if(!flag)
+					if (!flag)
 					{
 						flag = true;
 						Log.cache(new Object[]{block, -1});
@@ -295,7 +302,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	 */
 	public void registerStates(Block block, IProperty<?>...properties)
 	{
-		if(properties.length == 0)
+		if (properties.length == 0)
 		{
 			registerStateMap(block.getDefaultState(), block.getBlockState().getValidStates());
 		}
@@ -310,7 +317,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	
 	void forEach1(int id, IProperty[] properties1, IProperty<?>[] properties2, IBlockState state)
 	{
-		if(id == properties1.length)
+		if (id == properties1.length)
 		{
 			List<IBlockState> list = new ArrayList<>();
 			forEach2(0, properties2, state, list);
@@ -345,13 +352,13 @@ public enum ExtendedBlockStateRegister implements Runnable
 	{
 		int id = TO_STATE_LIST.size();
 		TO_STATE_LIST.add(source);
-		for(IBlockState state : castable) TO_ID_MAP.put(state, id);
+		for (IBlockState state : castable) TO_ID_MAP.put(state, id);
 	}
 	
 	public void registerStateMap(IBlockState source, IBlockState...castable)
 	{
 		int id = TO_STATE_LIST.size();
 		TO_STATE_LIST.add(source);
-		for(IBlockState state : castable) TO_ID_MAP.put(state, id);
+		for (IBlockState state : castable) TO_ID_MAP.put(state, id);
 	}
 }

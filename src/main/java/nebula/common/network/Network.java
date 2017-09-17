@@ -13,6 +13,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.MessageToMessageCodec;
+import nebula.Log;
 import nebula.base.Register;
 import nebula.common.network.packet.PacketLarge;
 import nebula.common.util.Players;
@@ -185,6 +186,13 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	 */
 	private boolean needToSend(IPacket packet)
 	{
+		if (!this.packetTypes.contain(packet.getClass()))
+		{
+			Log.error("The packet {} does not exist in packet list! The packet "
+					+ "sending will be canceled, please report this bug to mod creator.",
+					packet.getClass().getCanonicalName());
+			return false;
+		}
 		return packet != null && packet.needToSend();
 	}
 	
@@ -297,7 +305,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 	
 	public void sendLarge(IPacket packet, Consumer<PacketLarge> pachetExecutor)
 	{
-		if(!needToSend(packet)) return;
+		if (!needToSend(packet)) return;
 		try
 		{
 			ByteBuf buffer = Unpooled.buffer();

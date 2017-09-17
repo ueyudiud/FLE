@@ -7,13 +7,12 @@ package nebula.common.item;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import nebula.Log;
 import nebula.Nebula;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.NebulaConfig;
+import nebula.common.util.EnumChatFormatting;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -95,15 +94,15 @@ public class ItemFluidDisplay extends ItemBase
 		int amount = stack.hasTagCompound() ? stack.getTagCompound().getInteger("amount") : 0;
 		if(fluid != null)
 		{
-			list.add(ChatFormatting.WHITE + "Name : " + fluid.getLocalizedName(new FluidStack(fluid, 1)));
+			list.add(EnumChatFormatting.WHITE + "Name : " + fluid.getLocalizedName(new FluidStack(fluid, 1)));
 		}
 		if(amount > 0)
 		{
-			list.add(ChatFormatting.BLUE + "Amount : " + amount + "L");
+			list.add(EnumChatFormatting.BLUE + "Amount : " + amount + "L");
 		}
-		list.add(ChatFormatting.RED + "Temperature : " + fluid.getTemperature() + "K");
-		list.add(ChatFormatting.GREEN + "Viscosity : " + fluid.getViscosity() + "mm/s^2");
-		list.add(ChatFormatting.YELLOW + "State : " + (fluid.isGaseous() ? "Gas" : "Liquid"));
+		list.add(EnumChatFormatting.RED + "Temperature : " + fluid.getTemperature() + "K");
+		list.add(EnumChatFormatting.GREEN + "Viscosity : " + fluid.getViscosity() + "mm/s^2");
+		list.add(EnumChatFormatting.YELLOW + "State : " + (fluid.isGaseous() ? "Gas" : "Liquid"));
 	}
 	
 	@Override

@@ -97,7 +97,7 @@ public class PacketLarge implements IPacket
 	@Override
 	public IPacket process(Network network)
 	{
-		if(!this.flag) return null;
+		if (!this.flag) return null;
 		try
 		{
 			network.processPacket(this.id, Unpooled.wrappedBuffer(largePacketCache), this.side, this.handler);

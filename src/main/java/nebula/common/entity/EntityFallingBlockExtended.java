@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.entity;
 
 import java.util.ArrayList;
@@ -177,12 +176,12 @@ public class EntityFallingBlockExtended extends Entity
 	@Override
 	public void onUpdate()
 	{
-		if(this.world.isRemote && (this.state == null || this.state == Misc.AIR))
+		if (this.world.isRemote && (this.state == null || this.state == Misc.AIR))
 		{
 			this.state = this.dataManager.get(STATE);
 			return;
 		}
-		if(this.isDead)
+		if (this.isDead)
 		{
 			;
 		}

@@ -3,11 +3,11 @@
  */
 package fle.core.blocks.container;
 
-import static com.mojang.realmsclient.gui.ChatFormatting.GRAY;
-import static com.mojang.realmsclient.gui.ChatFormatting.GREEN;
-import static com.mojang.realmsclient.gui.ChatFormatting.WHITE;
 import static farcore.FarCoreRegistry.registerBuiltInModelBlock;
 import static farcore.FarCoreRegistry.registerTESR;
+import static nebula.common.util.EnumChatFormatting.GRAY;
+import static nebula.common.util.EnumChatFormatting.GREEN;
+import static nebula.common.util.EnumChatFormatting.WHITE;
 
 import java.util.List;
 
