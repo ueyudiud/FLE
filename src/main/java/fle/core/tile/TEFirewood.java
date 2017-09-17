@@ -129,9 +129,9 @@ implements IThermalHandler
 			if (getBlockState(Direction.U).getBlock() == EnumBlock.fire.block ||
 					ThermalNet.getTemperature(this) >= 380F || //Log flame temperature
 					(getTE(Direction.N) instanceof TEFirewood && ((TEFirewood) getTE(Direction.N)).is(Burning)) ||
-					(getTE(Direction.N) instanceof TEFirewood && ((TEFirewood) getTE(Direction.S)).is(Burning)) ||
-					(getTE(Direction.N) instanceof TEFirewood && ((TEFirewood) getTE(Direction.E)).is(Burning)) ||
-					(getTE(Direction.N) instanceof TEFirewood && ((TEFirewood) getTE(Direction.W)).is(Burning)))
+					(getTE(Direction.S) instanceof TEFirewood && ((TEFirewood) getTE(Direction.S)).is(Burning)) ||
+					(getTE(Direction.E) instanceof TEFirewood && ((TEFirewood) getTE(Direction.E)).is(Burning)) ||
+					(getTE(Direction.W) instanceof TEFirewood && ((TEFirewood) getTE(Direction.W)).is(Burning)))
 			{
 				if (!is(Carbonate))
 				{

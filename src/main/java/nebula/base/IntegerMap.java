@@ -24,6 +24,12 @@ import nebula.common.util.Maths;
  */
 public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 {
+	/**
+	 * The array load factor.<p>
+	 * Use to determine how fast the array length
+	 * increase when try to expend it.<p>
+	 * The default value is <code>0.75F</code>
+	 */
 	private final float loadFactor;
 	private int size;
 	private int sum;
@@ -50,6 +56,18 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 			throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
 		this.loadFactor = loadFactor;
 		this.entries = new INode[initialCapacity];
+	}
+	
+	public IntegerMap(IntegerMap<? extends T> map)
+	{
+		this.loadFactor = 0.75F;
+		this.entries = new INode[(int) (map.size() / this.loadFactor + 1)];
+		this.sum = map.getSum();
+		this.size = map.size();
+		for (IntegerEntry<? extends T> entry : map)
+		{
+			putUnchecked(new IntegerEntry<T>(entry.key, entry.value));
+		}
 	}
 	
 	private Integer putChecked(T target, int value)
@@ -137,6 +155,11 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		return size() == 0;
 	}
 	
+	/**
+	 * Match is key exist in map.
+	 * @param key the key.
+	 * @return <code>true</code> if this map contains the key.
+	 */
 	public boolean containsKey(Object key)
 	{
 		return getEntry(key) != null;
@@ -230,6 +253,10 @@ public class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 		return new IntegerMapItr();
 	}
 	
+	/**
+	 * Get sum of all value.
+	 * @return the sum.
+	 */
 	public int getSum()
 	{
 		return this.sum;

@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 import nebula.Log;
 import nebula.base.IntegerMap;
 import nebula.common.block.IExtendedDataBlock;
@@ -44,6 +46,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 	};
 	
+	
 	public static int getStateData(IBlockState state)
 	{
 		if (state == null) state = Misc.AIR;
@@ -51,14 +54,9 @@ public enum ExtendedBlockStateRegister implements Runnable
 		int meta;
 		try
 		{
-			if (block instanceof IExtendedDataBlock)
-			{
-				meta = ((IExtendedDataBlock) block).getDataFromState(state);
-			}
-			else
-			{
-				meta = block.getMetaFromState(state);
-			}
+			meta = ((block instanceof IExtendedDataBlock) ?
+					((IExtendedDataBlock) block).getDataFromState(state) :
+						block.getMetaFromState(state));
 		}
 		catch (Exception exception)
 		{
@@ -67,21 +65,15 @@ public enum ExtendedBlockStateRegister implements Runnable
 		return Block.REGISTRY.getIDForObject(block) << 20 | meta;
 	}
 	
-	public static IBlockState getStateFromData(int data)
+	public static @Nonnull IBlockState getStateFromData(int data)
 	{
 		Block block = Block.REGISTRY.getObjectById((data >> 20) & 0xFFF);
 		if (block == null) return Misc.AIR;
 		try
 		{
-			IBlockState state;
-			if (block instanceof IExtendedDataBlock)
-			{
-				state = ((IExtendedDataBlock) block).getStateFromData(data & 0xFFFFF);
-			}
-			else
-			{
-				state = block.getStateFromMeta(data & 0xF);
-			}
+			IBlockState state = ((block instanceof IExtendedDataBlock) ?
+					((IExtendedDataBlock) block).getStateFromData(data & 0xFFFFF) :
+						block.getStateFromMeta(data & 0xF));
 			return state == null ? Misc.AIR : state;
 		}
 		catch (Exception exception)

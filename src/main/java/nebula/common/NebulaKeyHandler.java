@@ -15,11 +15,13 @@ import nebula.common.network.packet.PacketKey;
 import nebula.common.util.Game;
 import nebula.common.util.Players;
 import nebula.common.util.Sides;
+import nebula.common.util.Strings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
@@ -30,8 +32,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class NebulaKeyHandler
 {
-	@SidedProxy(serverSide = "nebula.common.NebulaKeyHandler$KB", clientSide= "nebula.common.KC")
-	static KB keyRegister;
+	@SidedProxy(serverSide = "nebula.common.NebulaKeyHandler$KeyB",
+			clientSide= "nebula.common.NebulaKeyHandler$KeyC")
+	static KeyB keyRegister;
 	
 	static IRegister<Object> keys = new Register<>();
 	private static Map<EntityPlayer, List<String>> keyMap = new HashMap<>();
@@ -70,7 +73,7 @@ public class NebulaKeyHandler
 		keyRegister.register(name, keycode, modid);
 	}
 	
-	public static class KB
+	public static class KeyB
 	{
 		Map<String, Object> keyCodeMap = new HashMap<>();
 		
@@ -78,6 +81,19 @@ public class NebulaKeyHandler
 		{
 			keys.register(name, null);
 			this.keyCodeMap.put(name, keycode);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static class KeyC extends KeyB
+	{
+		@Override
+		public void register(String name, int keycode, String modid)
+		{
+			KeyBinding binding = new KeyBinding(Strings.validate(name), keycode, modid);
+			ClientRegistry.registerKeyBinding(binding);
+			NebulaKeyHandler.keys.register(name, binding);
+			this.keyCodeMap.put(name, binding);
 		}
 	}
 	
@@ -126,5 +142,11 @@ public class NebulaKeyHandler
 				Nebula.network.sendToServer(new PacketKey(0L));
 			reset(Players.player());
 		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static KeyBinding getBinding(String name)
+	{
+		return (KeyBinding) keyRegister.keyCodeMap.get(name);
 	}
 }

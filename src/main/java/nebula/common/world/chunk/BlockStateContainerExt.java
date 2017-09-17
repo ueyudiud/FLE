@@ -124,9 +124,7 @@ public class BlockStateContainerExt extends BlockStateContainer
 	{
 		int id = 0;
 		for (int i = 0; i < 16; ++i)
-		{
 			for(int j = 0; j < 16; ++j)
-			{
 				for(int k = 0; k < 16; ++k)
 				{
 					try
@@ -139,7 +137,5 @@ public class BlockStateContainerExt extends BlockStateContainer
 					}
 					++id;
 				}
-			}
-		}
 	}
 }
