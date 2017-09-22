@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.block;
 
 import nebula.common.world.chunk.ExtendedBlockStateRegister;
@@ -19,15 +18,15 @@ public interface IExtendedDataBlock
 {
 	/**
 	 * Get 20 bit data of state.
-	 * @param state
-	 * @return
+	 * @param state the state to get meta.
+	 * @return the meta.
 	 */
 	int getDataFromState(IBlockState state);
 	
 	/**
 	 * Get state from 20 bit data(meta).
-	 * @param meta
-	 * @return
+	 * @param meta the meta of block state.
+	 * @return the block state.
 	 */
 	IBlockState getStateFromData(int meta);
 	

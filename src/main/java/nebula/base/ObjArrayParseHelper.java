@@ -266,6 +266,17 @@ public class ObjArrayParseHelper
 		return builder.build();
 	}
 	
+	/**
+	 * Format string with remain array by {@link String#format(String, Object...)}.
+	 * @param key the string to format.
+	 * @return the formatted string.
+	 * @see String#format(String, Object...)
+	 */
+	public String format(String key)
+	{
+		return String.format(key, remainArray());
+	}
+	
 	public Object[] remainArray()
 	{
 		return this.off == 0 ? this.array : A.sublist(this.array, this.off);

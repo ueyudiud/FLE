@@ -1,12 +1,21 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.tile;
+
+import java.util.Arrays;
 
 import nebula.common.util.Direction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import scala.actors.threadpool.Arrays;
 
+/**
+ * The buffered TileEntity.
+ * @author ueyudiud
+ */
 public class TEBuffered extends TEUpdatable implements IUpdatableTile
 {
 	public long timer = Long.MIN_VALUE;

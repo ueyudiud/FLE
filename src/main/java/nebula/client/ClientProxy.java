@@ -91,15 +91,13 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public static Map<IItemColor, List<Item>> itemColorMap = new HashMap<>();
 	public static List<Block> buildInRender = new ArrayList<>();
 	
-	public ClientProxy()
-	{
-		//Take this proxy into resource manager reload listener.
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
-	}
 	
 	@Override
 	public void loadClient()
 	{
+		//Take this proxy into resource manager reload listener.
+		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
+		
 		//Register color map loader.
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(ColormapFactory.INSTANCE);
 		//The base model loader.

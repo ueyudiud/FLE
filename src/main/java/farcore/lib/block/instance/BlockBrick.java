@@ -3,6 +3,8 @@
  */
 package farcore.lib.block.instance;
 
+import java.util.List;
+
 import farcore.data.CT;
 import farcore.data.MC;
 import farcore.data.Materials;
@@ -18,6 +20,9 @@ import nebula.common.util.Properties.EnumStateName;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,5 +87,13 @@ public class BlockBrick extends BlockMaterial<PropertyBlockable>
 	public IBlockState getStateFromMeta(int meta)
 	{
 		return getDefaultState().withProperty(TYPE, EnumType.VALUES[meta % EnumType.VALUES.length]);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
+	{
+		for (EnumType type : EnumType.VALUES)
+			list.add(new ItemStack(item, 1, type.ordinal()));
 	}
 }

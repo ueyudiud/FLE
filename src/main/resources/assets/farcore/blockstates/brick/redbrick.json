@@ -1,0 +1,21 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"type": {
+			"normal": {
+				"textures": {
+					"all": "farcore:blocks/bricks/redbrick/normal"
+				}
+			},
+			"eigen": {
+				"textures": {
+					"all": "farcore:blocks/bricks/redbrick/eigen"
+				}
+			}
+		}
+	}
+}

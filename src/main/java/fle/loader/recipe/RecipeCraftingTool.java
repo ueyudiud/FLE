@@ -131,6 +131,10 @@ public class RecipeCraftingTool
 		ItemTool.setMaterialToItem(output, "head", material);
 	};
 	
+	private static final SingleInputMatch HANDLE_MATCH
+	= new SingleInputMatch(new OreStack("stickWood"), (i, o)->
+	ItemToolFar.setMaterialToItem(o, "handle", M.wood), null);
+	
 	private static final SingleInputMatch TIE_MATCH1
 	= new SingleInputMatch(new AbstractStack()
 	{
@@ -169,6 +173,6 @@ public class RecipeCraftingTool
 	private static void addGeneralToolRecipe(String key, AbstractStack input)
 	{
 		RecipeAdder.addShapelessRecipe(IBF.iTool.getSubItem(key),
-				new SingleInputMatch(input, CONSUMER1, null), TIE_MATCH1, "stickWood");
+				new SingleInputMatch(input, CONSUMER1, null), TIE_MATCH1, HANDLE_MATCH);
 	}
 }

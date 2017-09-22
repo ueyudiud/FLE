@@ -1,9 +1,21 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.tile;
 
 import nebula.Log;
 import nebula.Nebula;
 import net.minecraft.util.ITickable;
 
+/**
+ * The tile entity can be update.<p>
+ * The Minecraft remove <code>updateEntity()</code> after 1.7.10,
+ * and use <code>ITickable</code> interface instead.
+ * Let your TileEntity extends this class if the TileEntity is
+ * <tt>updatable</tt>.
+ * @author ueyudiud
+ */
 public class TEUpdatable extends TECustomName implements ITickable
 {
 	/**

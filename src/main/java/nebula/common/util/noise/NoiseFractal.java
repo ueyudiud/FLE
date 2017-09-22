@@ -9,5 +9,5 @@ package nebula.common.util.noise;
  */
 public class NoiseFractal
 {
-	//???
+	//TODO
 }

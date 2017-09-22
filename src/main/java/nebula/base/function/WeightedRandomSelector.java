@@ -9,6 +9,7 @@ import nebula.base.INode;
 import nebula.base.IntegerEntry;
 import nebula.base.Node;
 import nebula.base.Stack;
+import nebula.common.util.Maths;
 
 public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Selector<T>
 {
@@ -34,7 +35,9 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	
 	public void add(T value, int weight)
 	{
-		if(this.first == null)
+		if (weight <= 0)
+			throw new IllegalArgumentException("Weight can not be " + weight);
+		if (this.first == null)
 		{
 			this.first = this.last = Node.first(new IntegerEntry(value, weight));
 			this.allWeight = weight;
@@ -64,15 +67,32 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	@Override
 	public T next(Random random)
 	{
-		if(this.first == null || this.allWeight == 0) return null;
-		int i = random.nextInt(this.allWeight) - this.first.value().getValue();
-		INode<IntegerEntry<T>> node = this.first;
-		while(i > 0 && //The weight is still more than random number
-				node.hasNext())//Or it has no node any more.
-		{
-			i -= node.value().getValue();
-			node = node.next();
-		}
+		if (this.first == null || this.allWeight == 0) return null;
+		int i = random.nextInt(this.allWeight);
+		INode<IntegerEntry<T>> node;
+		for (
+				node = this.first;
+				(i -= node.value().getValue()) >= 0 &&
+						node.hasNext();//The weight is still more than random number, or it has no node any more.
+				node = node.next());
+		return node.value().getKey();
+	}
+	
+	/**
+	 * The use specific seed for generate.
+	 * @param random the random seed.
+	 * @return
+	 */
+	public T next(int random)
+	{
+		if (this.first == null || this.allWeight == 0) return null;
+		int i = Maths.mod(random, this.allWeight);
+		INode<IntegerEntry<T>> node;
+		for (
+				node = this.first;
+				(i -= node.value().getValue()) >= 0 &&
+						node.hasNext();//The weight is still more than random number, or it has no node any more.
+				node = node.next());
 		return node.value().getKey();
 	}
 	

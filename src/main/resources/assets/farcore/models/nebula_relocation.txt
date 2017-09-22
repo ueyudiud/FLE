@@ -1,0 +1,9 @@
+#Far Core relocation models.
+#All this model can ignore blockstate file loading, this will be loading BEFORE relocation by blockstate mapping.
+
+#remapping-location,new-location,used-deserializer
+
+#Deserializer list: GENERAL, BLOCK, ITEM, VANILLA, VANILLA_ITEM
+
+#WeightRandomModel list.
+farcore:brick/greybrick#type=normal,farcore:models/block1/brick/greybrick_normal.json,BLOCK

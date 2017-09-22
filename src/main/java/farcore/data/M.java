@@ -82,6 +82,7 @@ public class M
 	public static final Mat flint			= new Mat(7601, "minecraft", "flint"			, "Flint"			, "Flint"				).setRGBa(0x2D2D2DFF).setToolProp(  10,  8, 1.1F, 1.0F,  5.0F, -0.4F);
 	public static final Mat gravel			= new Mat(7602, "minecraft", "gravel"			, "Gravel"			, "Gravel"				).setRGBa(0xAEB1BFFF);
 	public static final Mat quartz			= new Mat(7603, FarCore.ID , "quartz"			, "Quartz"			, "Quartz"				).setRGBa(0xDADBE5FF).setToolProp(  12, 11, 1.9F, 1.0F,  4.0F, -0.5F);
+	public static final Mat wood			= new Mat(7604, FarCore.ID , "wood"             , "Wood"            , "Wood"                ).setRGBa(0xA08155FF).setHandable(1.0F);
 	//Trees
 	public static final Mat oak				= new Mat(8001, "minecraft", "oak"				, "Oak"				, "Oak"					)                    .setToolProp(   7,  4, 1.2F, 0.1F,  2.0F, -0.2F).setWood(5.3F, 1.0F, 20.0F);
 	public static final Mat spruce			= new Mat(8002, "minecraft", "spruce"			, "Spruce"			, "Spruce"				)                                                                    .setWood(2.3F, 1.0F, 20.0F);

@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.io.File;
@@ -25,7 +24,7 @@ public final class Game
 	private Game() {}
 	
 	/**
-	 * Get active modid, or get minecraft as modid if no active mod container found.
+	 * Get active modid, or get Minecraft as modid if no active mod container found.
 	 * @return
 	 */
 	public static String getActiveModID()

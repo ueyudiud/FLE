@@ -6,6 +6,8 @@ package nebula.client.model.flexible;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -18,6 +20,18 @@ import net.minecraft.util.EnumFacing;
 public interface INebulaBakedModelPart
 {
 	static INebulaBakedModelPart EMPTY = new BakedModelPart(ImmutableMap.of());
+	
+	/**
+	 * Get baked quad from model part.
+	 * @param facing the facing.
+	 * @param key the variant key.
+	 * @param rand the random number, use to get random model.
+	 * @return the quad list.
+	 */
+	default List<BakedQuad> getQuads(@Nullable EnumFacing facing, String key, long rand)
+	{
+		return getQuads(facing, key);
+	}
 	
 	List<BakedQuad> getQuads(EnumFacing facing, String key);
 	

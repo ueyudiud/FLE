@@ -78,7 +78,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 			List<BakedQuad> quads = new ArrayList<>();
 			for (int i = 0; i < this.parts.length; ++i)
 			{
-				quads.addAll(this.parts[i].getQuads(facing, this.itemLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.itemLoadingData[i]]));
+				quads.addAll(this.parts[i].getQuads(facing, this.itemLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.itemLoadingData[i]], rand));
 			}
 			return quads;
 		}
@@ -99,14 +99,14 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 			List<BakedQuad> quads = new ArrayList<>();
 			if (this.blockDataGen == null)
 			{
-				A.executeAll(this.parts, part->quads.addAll(part.getQuads(side, NebulaModelLoader.NORMAL)));
+				A.executeAll(this.parts, part->quads.addAll(part.getQuads(side, NebulaModelLoader.NORMAL, rand)));
 			}
 			else
 			{
 				Object[] datas = A.transform(this.blockDataGen, f->f.apply(state));
 				for (int i = 0; i < this.parts.length; ++i)
 				{
-					quads.addAll(this.parts[i].getQuads(side, this.blockLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.blockLoadingData[i]]));
+					quads.addAll(this.parts[i].getQuads(side, this.blockLoadingData[i] == -1 ? NebulaModelLoader.NORMAL : (String) datas[this.blockLoadingData[i]], rand));
 				}
 			}
 			return quads;

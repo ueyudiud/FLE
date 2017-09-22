@@ -5,11 +5,13 @@
 package nebula.base;
 
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 /**
- * 
+ * A map entry (With value type is <tt>int</tt>).
  * @author ueyudiud
  * @param <K> the type of key.
+ * @see java.util.Map.Entry
  */
 public class IntegerEntry<K>
 {
@@ -39,6 +41,11 @@ public class IntegerEntry<K>
 		return old;
 	}
 	
+	public void transformKey(UnaryOperator<K> operator)
+	{
+		this.key = operator.apply(this.key);
+	}
+	
 	/**
 	 * Returns the hash code value for this map entry.
 	 * @return the hash code value for this map entry
@@ -64,5 +71,11 @@ public class IntegerEntry<K>
 	{
 		return obj == this || ((obj instanceof IntegerEntry<?>) &&
 				((IntegerEntry<?>) obj).key.equals(this.key) && ((IntegerEntry<?>) obj).value == this.value);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return new StringBuilder().append(this.key).append('x').append(this.value).toString();
 	}
 }

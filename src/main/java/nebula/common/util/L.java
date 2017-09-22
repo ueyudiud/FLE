@@ -865,8 +865,9 @@ public class L
 	 * @return the {@link java.util.HashSet} collected elements.
 	 */
 	@SuppressWarnings("hiding")
-	public static <R, T> Set<R> collect(Iterable<? extends T> iterable, BiConsumer<T, Collection<R>> consumer)
+	public static <R, T> Set<R> collect(@Nullable Iterable<? extends T> iterable, BiConsumer<T, Collection<R>> consumer)
 	{
+		if (iterable == null) return new HashSet<>();
 		Set<R> set = new HashSet<>();
 		for (T t : iterable)
 		{

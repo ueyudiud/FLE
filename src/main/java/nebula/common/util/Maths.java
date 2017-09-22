@@ -237,7 +237,7 @@ public final class Maths
 	 */
 	public static int gcd(int a, int b)
 	{
-		if(b > a)
+		if (b > a)
 		{
 			a ^= b;
 			b ^= a;

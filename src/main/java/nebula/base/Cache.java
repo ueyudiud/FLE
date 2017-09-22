@@ -5,6 +5,7 @@ package nebula.base;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -54,6 +55,16 @@ class Cache<E> implements Serializable
 	public E get()
 	{
 		return this.element;
+	}
+	
+	/**
+	 * Get {@link java.util.Optional} value,
+	 * which wrapped element if it is present.
+	 * @return the Optional.
+	 */
+	public Optional<E> optional()
+	{
+		return Optional.ofNullable(this.element);
 	}
 	
 	/**

@@ -270,6 +270,10 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		{
 			return NebulaModelLoader.getModelPart(json.getAsString());
 		}
+		else if (json.isJsonArray())
+		{
+			return ModelPartCol.LOADER.deserialize(json, INebulaModelPart.class, context);
+		}
 		return BLOCK_MODEL_PART_DESERIALIZERS.deserialize(json, INebulaModelPart.class, context);
 	}
 	

@@ -1,0 +1,11 @@
+{
+	"textures": {
+		"particle": "farcore:blocks/bricks/greybrick/normal1"
+	},
+	"part": [
+		[
+			{ "textures": { "all": "farcore:blocks/bricks/greybrick/normal1" } },
+			{ "textures": { "all": "farcore:blocks/bricks/greybrick/normal2" } }
+		]
+	]
+}

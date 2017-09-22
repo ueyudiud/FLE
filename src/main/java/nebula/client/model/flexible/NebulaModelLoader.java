@@ -63,6 +63,9 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.LoaderState;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -76,7 +79,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * make more convenient model
  * file writing rules for resource pack maker.<p>
  * @author ueyudiud
- * @version 0.4
+ * @version 0.5
  */
 @SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader
@@ -261,6 +264,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
+		if (!Loader.instance().hasReachedState(LoaderState.AVAILABLE)) return;
+		
 		initPrintStream();
 		this.stream.println("Nebula Model Loader start model loading.");
 		this.manager = manager;
@@ -268,10 +273,48 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		this.models = new HashMap<>();
 		this.cacheLocations = new HashMap<>();
 		this.parts = new HashMap<>();
-		ProgressBar bar = ProgressManager.push("Loading Nebula Model", MODEL_PROVIDERS.size());
+		
+		Map<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> map = new HashMap<>(MODEL_PROVIDERS);
+		this.stream.println("Load replace loading model locations from resource.");
+		for (ModContainer container : Loader.instance().getModList())
+		{
+			try
+			{
+				byte[] codes = IO.copyResource(manager, new ResourceLocation(container.getModId(), "models/nebula_relocation.txt"));
+				this.stream.println("Loading from " + container.getModId() + " replacements.");
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(codes), "UTF-8"));
+				String line;
+				int l = 0;
+				while ((line = reader.readLine()) != null)
+				{
+					if(line.length() != 0 && line.charAt(0) != '#')
+					{
+						String[] split = Strings.split(line, ',');
+						if (split.length <= 1 || split.length >= 4) throw new RuntimeException();
+						map.put(split[0].indexOf('#') != -1 ? new ModelResourceLocation(split[0].trim()) : new ResourceLocation(split[0].trim()),
+								new Ety<>(new ResourceLocation(split[1].trim()), split.length == 2 ?
+										NebulaModelDeserializer.GENERAL : NebulaModelDeserializer.valueOf(split[2].trim())));
+						++l;
+					}
+				}
+				this.stream.println("Loaded " + l + " replacements from " + container.getModId() + " resurces.");
+			}
+			catch (IOException exception)
+			{
+				continue;
+			}
+			catch (RuntimeException exception)
+			{
+				exception.printStackTrace(this.stream);
+				this.stream.println("Invalid file get. modid: " + container.getModId());
+			}
+		}
+		this.stream.println("Finshed loaded replaced location.");
+		
+		ProgressBar bar = ProgressManager.push("Loading Nebula Model", map.size());
 		BlockColors colors1 = Minecraft.getMinecraft().getBlockColors();
 		ItemColors colors2 = Minecraft.getMinecraft().getItemColors();
-		for (Entry<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> entry : MODEL_PROVIDERS.entrySet())
+		for (Entry<ResourceLocation, Entry<ResourceLocation, JsonDeserializer<? extends IModel>>> entry : map.entrySet())
 		{
 			try
 			{
@@ -297,7 +340,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 			}
 			catch (Exception exception)
 			{
-				Log.cache(new RuntimeException("Fail to load model of name \"" + entry.getKey() + "\"", exception));
+				Log.cache(new RuntimeException("Fail to load model of name \"" + entry.getKey() + "\"=>\"" + entry.getValue().getKey() + "\"", exception));
 			}
 		}
 		ProgressManager.pop(bar);
@@ -330,6 +373,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 				public void print(String s)
 				{
 					super.print(this.format.format(new Date()) + s);
+					Log.info(s);
 				}
 				
 				@Override
@@ -350,6 +394,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	@SubscribeEvent
 	public void onModelBaked(ModelBakeEvent event)
 	{
+		if (!Loader.instance().hasReachedState(LoaderState.AVAILABLE)) return;
+		
 		for (IModel model : this.models.values())
 		{
 			if (model instanceof FlexibleModel)
@@ -360,17 +406,23 @@ public enum NebulaModelLoader implements ICustomModelLoader
 		this.parts = null;
 	}
 	
+	/**
+	 * @param modelLocation the location of model.
+	 * @return <code>true</code> if the model with modelLocation is exist in NebulaModelLoader
+	 *         and <code>false</code> for otherwise.
+	 */
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		if (modelLocation instanceof ModelResourceLocation)
-		{
-			ResourceLocation location = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
-			if (this.models.containsKey(location))
-				return true;
-			return this.models.containsKey(modelLocation);//TODO
-		}
-		else return this.models.containsKey(modelLocation);
+		//		if (modelLocation instanceof ModelResourceLocation)
+		//		{
+		//			ResourceLocation location = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
+		//			if (this.models.containsKey(location))
+		//				return true;
+		//			return this.models.containsKey(modelLocation);//TODO
+		//		}
+		//		else
+		return this.models.containsKey(modelLocation);
 	}
 	
 	/**

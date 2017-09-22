@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.tool;
 
 import java.util.List;
@@ -17,16 +16,19 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * The tool type.<br>
+ * The tool type.<p>
  * For most type of tool.
  * @author ueyudiud
- *
  */
 public class EnumToolType
 {
 	public static final IRegister<EnumToolType> REGISTER = new Register<>();
+	/** The player hand. */
 	public static final EnumToolType HAND = new EnumToolType("hand", "Hand");//The player hand current, do not register tool with this.
 	
+	/**
+	 * The general 5 vanilla types of tools exist in Minecraft.
+	 */
 	public static final EnumToolType
 	AXE = new EnumToolType("axe", "Axe"),
 	PICKAXE = new EnumToolType("pickaxe", "Pickaxe"),
@@ -46,6 +48,11 @@ public class EnumToolType
 	final String dictName;
 	final OreStack stack;
 	
+	/**
+	 * Register a new tool type.
+	 * @param name the name of tool.
+	 * @param dictName the OD name.
+	 */
 	public EnumToolType(String name, String dictName)
 	{
 		REGISTER.register(name, this);
@@ -64,7 +71,9 @@ public class EnumToolType
 	}
 	
 	/**
-	 * Get ore name.
+	 * Get the OD name, it is start with
+	 * <code>"craftingTool"</code> and with
+	 * other postfix behind.
 	 * @return
 	 */
 	public String ore()
@@ -100,9 +109,10 @@ public class EnumToolType
 	}
 	
 	/**
-	 * Match is tool class.
-	 * @param tool The matched tool type.
-	 * @return
+	 * Match tool can be used in this tool tag.
+	 * @param tool the matched tool tag.
+	 * @return <code>true</code> if this tool can
+	 *         be used as this tool tag.
 	 */
 	public boolean isToolClass(String tool)
 	{

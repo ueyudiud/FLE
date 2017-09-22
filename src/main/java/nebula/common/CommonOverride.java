@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common;
 
 import nebula.common.world.IBiomeExtended;
@@ -42,5 +41,4 @@ public class CommonOverride
 			return ((IBiomeRegetter) provider).getBiome(saveID, pos);
 		return Biome.getBiome(saveID);
 	}
-	
 }

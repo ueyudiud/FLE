@@ -1,3 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
+
 package nebula.common.tile;
 
 import java.util.Random;
@@ -34,9 +38,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 /**
- * Base tile entity type.
+ * Base TileEntity, add some helper method.
  * @author ueyudiud
- *
  */
 public class TEBase extends TileEntity implements IModifiableCoord
 {

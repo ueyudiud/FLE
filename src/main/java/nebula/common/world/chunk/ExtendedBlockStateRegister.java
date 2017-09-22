@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.world.chunk;
 
 import java.io.IOException;
@@ -21,7 +20,6 @@ import nebula.base.IntegerMap;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
 import nebula.common.network.PacketBufferExt;
-import nebula.common.util.A;
 import nebula.common.util.L;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -31,12 +29,25 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 
 /**
+ * The block state register.
  * @author ueyudiud
  */
 public enum ExtendedBlockStateRegister implements Runnable
 {
 	SERVER,
 	CLIENT;
+	
+	/*
+	 * Block Data information:
+	 * The block data is number id to find each block state.<p>
+	 * 
+	 * It contains block id and meta id combine to a <code>int</code> id.<p>
+	 * 
+	 * The first 12 bits (0 to 4095) is block id, which is determined by Forge.
+	 * The last 20 bits (0 to 1048575) is meta id, which is expanded by Nebula,
+	 * but for most block, it only has 4 bits (0 to 15) to store meta, to get
+	 * more meta slots, you should let block implements IExtendedDataBlock.<p>
+	 */
 	
 	static final List<IBlockState> TO_STATE_LIST = new ArrayList<>(1024);
 	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap<IBlockState>(4096, 1.0F) {
@@ -47,6 +58,11 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 	};
 	
+	/**
+	 * Get block data (meta) by block state.
+	 * @param state the block state.
+	 * @return the data of block state.
+	 */
 	public static int getStateData(IBlockState state)
 	{
 		if (state == null) state = Misc.AIR;
@@ -65,6 +81,13 @@ public enum ExtendedBlockStateRegister implements Runnable
 		return Block.REGISTRY.getIDForObject(block) << 20 | meta;
 	}
 	
+	/**
+	 * Get block state from data (meta), if
+	 * the data is invalid <code>null</code> will
+	 * be returned.
+	 * @param data the block data.
+	 * @return the state of data.
+	 */
 	public static @Nonnull IBlockState getStateFromData(int data)
 	{
 		Block block = Block.REGISTRY.getObjectById((data >> 20) & 0xFFF);
@@ -82,21 +105,36 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 	}
 	
+	/**
+	 * Get cached block state network id.
+	 * @param state the state.
+	 * @return the cached network id.
+	 */
 	public static int getCachedID(IBlockState state)
 	{
 		return TO_ID_MAP.containsKey(state) ? TO_ID_MAP.get(state) : -1;
 	}
 	
+	/**
+	 * Get cached block state by network id.
+	 * @param id the network id.
+	 * @return the block state.
+	 */
 	public static IBlockState getCachedState(int id)
 	{
 		return id >= 0 && id < TO_STATE_LIST.size() ? TO_STATE_LIST.get(id) : Misc.AIR;
 	}
 	
+	/**
+	 * Get cached network id count.
+	 * @return the id size.
+	 */
 	public static int idCapacity()
 	{
 		return TO_STATE_LIST.size();
 	}
 	
+	//Internal method, do not use.
 	public static void encode(PacketBufferExt output) throws IOException
 	{
 		waitingForBuild();
@@ -217,6 +255,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 			break;
 		}
 	}
+	//Internal method end.
 	
 	void buildStateMap()
 	{
@@ -253,30 +292,16 @@ public enum ExtendedBlockStateRegister implements Runnable
 		}
 		else
 		{
-			IBlockState state;
 			IBlockState[] states = new IBlockState[16];
-			for (int i = 0; i < 16; ++i)//Default meta capacity is 16.
-			{
-				try
-				{
-					state = block.getStateFromMeta(i);
-					if (!A.contain(states, state))
-					{
-						states[i] = state;
-					}
-				}
-				catch (RuntimeException exception)
-				{
-					;
-				}
-			}
 			Map<IBlockState, List<IBlockState>> stateMap = new HashMap<>();
 			boolean flag = false;
 			for (IBlockState state1 : container.getValidStates())
 			{
 				try
 				{
-					int meta = block.getMetaFromState(state1);
+					int meta = block.getMetaFromState(state1) & 0xF;
+					if (states[meta] == null)
+						states[meta] = block.getStateFromMeta(meta);
 					L.put(stateMap, states[meta], state1);
 				}
 				catch (RuntimeException exception)
@@ -343,6 +368,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 		while((state2 = state2.cycleProperty(property)) != state);
 	}
 	
+	//The following methods only used when block state re-register.
 	public void registerState(IBlockState state)
 	{
 		registerStateMap(state, state);
@@ -361,4 +387,5 @@ public enum ExtendedBlockStateRegister implements Runnable
 		TO_STATE_LIST.add(source);
 		for (IBlockState state : castable) TO_ID_MAP.put(state, id);
 	}
+	//Ending
 }

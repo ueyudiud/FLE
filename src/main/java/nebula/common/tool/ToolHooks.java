@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.tool;
 
 import static nebula.common.tool.EnumToolType.AXE;
@@ -34,6 +37,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeHooks;
 
+/**
+ * Tool using checking hooks.
+ * @author ueyudiud
+ */
 public class ToolHooks
 {
 	private static final Map<Material, List<EnumToolType>> breakableToolMap = new HashMap<>();

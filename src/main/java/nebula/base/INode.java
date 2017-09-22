@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Iterators;
 
@@ -40,8 +41,8 @@ public interface INode<T> extends Iterable<T>
 	
 	/**
 	 * The iterator of node,
-	 * the iterator will get next node util there is no node next.
-	 * @return The interator.
+	 * the iterator will get next node until the <tt>hasNext()</tt> return <code>false</code>.
+	 * @return The iterator.
 	 */
 	@Override
 	default Iterator<T> iterator()
@@ -51,7 +52,7 @@ public interface INode<T> extends Iterable<T>
 	
 	/**
 	 * The value contain in node.
-	 * @return
+	 * @return the value.
 	 */
 	T value();
 	
@@ -68,10 +69,11 @@ public interface INode<T> extends Iterable<T>
 	
 	/**
 	 * Return next node.
-	 * @return the next node.
+	 * @return the next node, <code>null</code> if next node does not exist.
 	 * @see #hasNext()
 	 * @see #last()
 	 */
+	@Nullable
 	INode<T> next();
 	
 	/**
@@ -87,10 +89,11 @@ public interface INode<T> extends Iterable<T>
 	
 	/**
 	 * Return last node.
-	 * @return the last node.
+	 * @return the last node, <code>null</code> if last node does not exist.
 	 * @see #hasLast()
 	 * @see #next()
 	 */
+	@Nullable
 	INode<T> last();
 	
 	/**
