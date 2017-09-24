@@ -64,14 +64,8 @@ public class EntityFallingBlockExtended extends Entity
 		}
 	}
 	
-	protected static final DataParameter<IBlockState> STATE;
-	protected static final DataParameter<BlockPos> ORGIN;
-	
-	static
-	{
-		STATE = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_STATE);
-		ORGIN = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_POS);
-	}
+	protected static final DataParameter<IBlockState> STATE = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_STATE);
+	protected static final DataParameter<BlockPos> ORGIN = EntityDataManager.createKey(EntityFallingBlockExtended.class, DataSerializers.BLOCK_POS);
 	
 	private static final ISmartFallableBlock INSTANCE = new ISmartFallableBlock()
 	{
@@ -118,7 +112,7 @@ public class EntityFallingBlockExtended extends Entity
 			this.prevPosX = this.posX;
 			this.prevPosY = this.posY;
 			this.prevPosZ = this.posZ;
-			if(tile != null)
+			if (tile != null)
 			{
 				tile.writeToNBT(this.nbt = new NBTTagCompound());
 			}

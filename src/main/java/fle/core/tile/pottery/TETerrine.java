@@ -27,6 +27,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.Explosion;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
@@ -114,6 +116,7 @@ implements ITP_BlockHardness, ITP_HarvestCheck, ITP_ExplosionResistance, ITB_Blo
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public GuiContainer openGui(int id, EntityPlayer player)
 	{
 		return new GuiTerrine(this, player);

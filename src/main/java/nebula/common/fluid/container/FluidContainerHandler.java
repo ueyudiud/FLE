@@ -29,6 +29,22 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  */
 public class FluidContainerHandler
 {
+	public static FluidStack getContain(ItemStack stack)
+	{
+		if (stack.getItem() instanceof IItemFluidContainer)
+		{
+			IItemFluidContainer raw = (IItemFluidContainer) stack.getItem();
+			if (raw.hasFluid(stack))
+			{
+				if (raw.isV1())
+					return raw.castV1().drain(stack, Integer.MAX_VALUE, false);
+				else//if (raw.isV2())
+					return raw.castV2().getContain(stack);
+			}
+		}
+		return null;
+	}
+	
 	public static @Nullable Entry<ItemStack, FluidStack> drainContainerToIO(ItemStack stack, int maxDrain, IFluidHandlerIO io, Direction from, boolean fullyDrain, boolean simulate)
 	{
 		FluidStack stack1;
@@ -289,6 +305,39 @@ public class FluidContainerHandler
 			{
 				return new IntegerEntry<>(stack, amount);
 			}
+		}
+		return null;
+	}
+	
+	
+	public static @Nullable Entry<ItemStack, FluidStack> drainContainer(ItemStack stack, int amount)
+	{
+		if (stack.getItem() instanceof IItemFluidContainer)
+		{
+			IItemFluidContainer raw = (IItemFluidContainer) stack.getItem();
+			if (raw.hasFluid(stack))
+			{
+				if (raw.isV1())
+				{
+					stack = stack.copy();
+					FluidStack stack2 = raw.castV1().drain(stack, amount, true);
+					return new Ety(stack, stack2);
+				}
+				else//if (raw.isV2())
+				{
+					FluidStack stack2 = raw.castV2().getContain(stack);
+					stack = raw.castV2().drain(stack, true);
+					stack2.amount = Math.min(stack2.amount, amount);
+					return new Ety(ItemStacks.valid(stack), stack2);
+				}
+			}
+		}
+		if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
+		{
+			stack = stack.copy();
+			IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+			FluidStack stack2 = handler.drain(amount, true);
+			return new Ety(ItemStacks.valid(stack), stack2);
 		}
 		return null;
 	}

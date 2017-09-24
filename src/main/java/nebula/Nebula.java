@@ -29,6 +29,7 @@ import nebula.common.NebulaSynchronizationHandler;
 import nebula.common.NebulaWorldHandler;
 import nebula.common.block.BlockBase;
 import nebula.common.config.NebulaConfiguration;
+import nebula.common.data.DataSerializers;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.ItemBase;
@@ -259,6 +260,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Subscribe
 	public void load(FMLLoadCompleteEvent event)
 	{
+		DataSerializers.init();
 		this.lang.write();
 	}
 	

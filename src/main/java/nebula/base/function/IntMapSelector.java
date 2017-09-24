@@ -26,7 +26,7 @@ class IntMapSelector<E> implements Selector<E>
 		int i = random.nextInt(this.map.getSum());
 		for (IntegerEntry<? extends E> entry : this.map)
 		{
-			if (entry.getValue() - i <= 0)
+			if ((i -= entry.getValue()) < 0)
 			{
 				return entry.getKey();
 			}

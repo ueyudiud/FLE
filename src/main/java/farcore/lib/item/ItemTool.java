@@ -14,6 +14,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
 import farcore.lib.skill.ISkill;
 import farcore.util.Localization;
+import fle.loader.Configs;
 import nebula.base.Judgable;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
@@ -164,7 +165,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			IBehavior... behaviors)
 	{
 		super.addSubItem(id, name, localName, stat, behaviors);
-		if(this.modelFlag)
+		if (this.modelFlag)
 		{
 			Game.registerItemModel(this, id, this.modid, this.textureFileName + name);
 		}
@@ -180,7 +181,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		prop.customToolInformation = customToolInformation;
 		prop.toolTypes = toolTypes;
 		this.toolPropMap.put(id, prop);
-		if(customToolInformation != null)
+		if (customToolInformation != null)
 		{
 			LanguageManager.registerLocal("info.tool." + getUnlocalizedName() + "@" + id, customToolInformation);
 		}
@@ -551,6 +552,19 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	protected String getBaseTranslateInformation(ItemStack stack)
 	{
 		return "tool." + getUnlocalizedName() + "@" + getBaseDamage(stack) + ".info";
+	}
+	
+	@Override
+	public String getHighlightTip(ItemStack item, String displayName)
+	{
+		if (Configs.displayMaterialTypeOnToolName)
+		{
+			ToolProp prop = getToolProp(item);
+			Mat material = getMaterialFromItem(item, "head");
+			return material == Mat.VOID ? displayName : prop.condition.translateToLocal(material);
+		}
+		else
+			return displayName;
 	}
 	
 	@Override

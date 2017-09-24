@@ -15,6 +15,7 @@ import fle.loader.recipe.RecipeMachines;
 import fle.loader.recipe.RecipeOilMill;
 import fle.loader.recipe.RecipePolish;
 import fle.loader.recipe.RecipeResource1;
+import fle.loader.recipe.RecipeResource2;
 import fle.loader.recipe.RecipeStoneMill;
 import fle.loader.recipe.RecipeWashingBarGrizzly;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,6 +35,7 @@ public class Recipes
 		RecipeWashingBarGrizzly.init();
 		RecipeDrying.init();
 		RecipeResource1.init();
+		RecipeResource2.init();
 		RecipeMachines.init();
 		RecipeDirtMixture.init();
 		RecipeOilMill.init();

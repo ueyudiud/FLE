@@ -21,6 +21,7 @@ import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.util.L;
+import nebula.common.util.Sides;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -112,7 +113,10 @@ public enum ExtendedBlockStateRegister implements Runnable
 	 */
 	public static int getCachedID(IBlockState state)
 	{
-		return TO_ID_MAP.containsKey(state) ? TO_ID_MAP.get(state) : -1;
+		synchronized (Sides.isSimulating() ? CLIENT : SERVER)
+		{
+			return TO_ID_MAP.containsKey(state) ? TO_ID_MAP.get(state) : -1;
+		}
 	}
 	
 	/**
@@ -122,7 +126,10 @@ public enum ExtendedBlockStateRegister implements Runnable
 	 */
 	public static IBlockState getCachedState(int id)
 	{
-		return id >= 0 && id < TO_STATE_LIST.size() ? TO_STATE_LIST.get(id) : Misc.AIR;
+		synchronized (Sides.isSimulating() ? CLIENT : SERVER)
+		{
+			return id >= 0 && id < TO_STATE_LIST.size() ? TO_STATE_LIST.get(id) : Misc.AIR;
+		}
 	}
 	
 	/**
@@ -160,59 +167,62 @@ public enum ExtendedBlockStateRegister implements Runnable
 	
 	public static void decode(PacketBufferExt input) throws IOException
 	{
-		TO_STATE_LIST.clear();
-		TO_ID_MAP.clear();
-		int len = input.readInt();
-		List<String> list = new ArrayList<>();
-		Map<Integer, Integer> intMap = new HashMap<>();
-		for (int i = 0; i < len; ++i)
+		synchronized (CLIENT)
 		{
-			String key = input.readString(999);
-			String[] split = key.split(":");
-			if(split.length != 3) throw new IOException("Wrong block state key.");
-			IBlockState state;
-			try
+			TO_STATE_LIST.clear();
+			TO_ID_MAP.clear();
+			int len = input.readInt();
+			List<String> list = new ArrayList<>();
+			Map<Integer, Integer> intMap = new HashMap<>();
+			for (int i = 0; i < len; ++i)
 			{
-				ResourceLocation location = new ResourceLocation(split[0], split[1]);
-				Block block = Block.REGISTRY.getObject(location);
-				if(block == Blocks.AIR && i != 0)
-					throw new RuntimeException();
-				int meta = Integer.parseInt(split[2]);
-				if (block instanceof IExtendedDataBlock)
+				String key = input.readString(999);
+				String[] split = key.split(":");
+				if(split.length != 3) throw new IOException("Wrong block state key.");
+				IBlockState state;
+				try
 				{
-					state = ((IExtendedDataBlock) block).getStateFromData(meta);
+					ResourceLocation location = new ResourceLocation(split[0], split[1]);
+					Block block = Block.REGISTRY.getObject(location);
+					if(block == Blocks.AIR && i != 0)
+						throw new RuntimeException();
+					int meta = Integer.parseInt(split[2]);
+					if (block instanceof IExtendedDataBlock)
+					{
+						state = ((IExtendedDataBlock) block).getStateFromData(meta);
+					}
+					else
+					{
+						state = block.getStateFromMeta(meta);
+					}
 				}
-				else
+				catch (Exception exception)
 				{
-					state = block.getStateFromMeta(meta);
+					list.add(key);
+					continue;
 				}
+				TO_STATE_LIST.add(state);
+				intMap.put(getStateData(state), i);
 			}
-			catch (Exception exception)
+			for (Block block : Block.REGISTRY)
 			{
-				list.add(key);
-				continue;
-			}
-			TO_STATE_LIST.add(state);
-			intMap.put(getStateData(state), i);
-		}
-		for (Block block : Block.REGISTRY)
-		{
-			int id = Block.REGISTRY.getIDForObject(block) << 24;
-			for(IBlockState state : block.getBlockState().getValidStates())
-			{
-				int meta;
-				if(block instanceof IExtendedDataBlock)
+				int id = Block.REGISTRY.getIDForObject(block) << 24;
+				for(IBlockState state : block.getBlockState().getValidStates())
 				{
-					meta = ((IExtendedDataBlock) block).getDataFromState(state);
-				}
-				else
-				{
-					meta = block.getMetaFromState(state);
-				}
-				Integer i = intMap.get(id | meta);
-				if(i != null)
-				{
-					TO_ID_MAP.put(state, i);
+					int meta;
+					if(block instanceof IExtendedDataBlock)
+					{
+						meta = ((IExtendedDataBlock) block).getDataFromState(state);
+					}
+					else
+					{
+						meta = block.getMetaFromState(state);
+					}
+					Integer i = intMap.get(id | meta);
+					if(i != null)
+					{
+						TO_ID_MAP.put(state, i);
+					}
 				}
 			}
 		}

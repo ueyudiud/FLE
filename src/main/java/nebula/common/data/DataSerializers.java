@@ -99,7 +99,7 @@ public class DataSerializers
 		return serializer;
 	}
 	
-	static
+	public static void init()
 	{
 		MAP.put(EnumFacing.class, FACING);
 		

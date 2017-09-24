@@ -64,6 +64,8 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 		
 		addSubItem(3001, "researchitem1", "Research Item", null, new BehaviorResearchItems1());
 		
+		addSubItem(3101, "plant_ash_soap", "Plant Ash Soap", null);
+		
 		addSubItem(4001, "wooden_brick_mold", "Brick Mold", null);
 		addSubItem(4002, "filled_wooden_brick_mold", "Brick Mold", null, new BehaviorBlockableTool(2));
 		addSubItem(4003, "dried_filled_wooden_brick_mold", "Brick Mold", null);

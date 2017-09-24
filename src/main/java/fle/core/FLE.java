@@ -34,7 +34,7 @@ public class FLE
 	 * Main mod version.
 	 * @see net.minecraftforge.fml.common.Mod#version
 	 */
-	public static final String VERSION = FLEVersion.MAJOR_VERSION + "." + FLEVersion.MINOR_VERSION + "." + FLEVersion.SUB_VERSION;
+	public static final String VERSION = "@VERSION@";
 	
 	@Instance(FLE.MODID)
 	public static FLE mod;
@@ -56,7 +56,7 @@ public class FLE
 		modMetadata.authorList.add("ueyudiud");
 		modMetadata.name = NAME;
 		modMetadata.credits = "ueyudiud";
-		modMetadata.version = FLEVersion.isSnapshotVersion() ? VERSION : VERSION + "-pre" + FLEVersion.SNAPSHOT_VERSION;
+		modMetadata.version = VERSION;
 		compator = ModCompator.newCompactor();
 		loader.init(event);
 		compator.addCompatible("fg", "fargen.compact.fle.SubCompact");

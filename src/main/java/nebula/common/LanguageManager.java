@@ -123,10 +123,9 @@ public class LanguageManager
 		{
 			return translate == null ? unlocalized : String.format(translate, objects);
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
-			Log.catchingIfDebug(exception);
-			return "Translation Error";
+			return translate;
 		}
 	}
 	

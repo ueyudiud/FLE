@@ -35,8 +35,10 @@ public class WeightedRandomSelector<T> implements Iterable<IntegerEntry<T>>, Sel
 	
 	public void add(T value, int weight)
 	{
-		if (weight <= 0)
-			throw new IllegalArgumentException("Weight can not be " + weight);
+		if (weight < 0)
+			throw new IllegalArgumentException("Weight can not be negetive value. got: " + weight);
+		if (weight == 0)
+			return;
 		if (this.first == null)
 		{
 			this.first = this.last = Node.first(new IntegerEntry(value, weight));

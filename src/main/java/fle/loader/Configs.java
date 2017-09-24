@@ -7,6 +7,7 @@ package fle.loader;
 import fle.core.FLE;
 import fle.core.entity.misc.EntityAttributeTag;
 import nebula.common.config.Config;
+import nebula.common.config.ConfigComment;
 import nebula.common.config.ConfigProperty;
 import nebula.common.config.NebulaConfiguration;
 import nebula.common.util.L;
@@ -30,6 +31,10 @@ public class Configs
 	public static EntityAttributeTag spider;
 	@EntityAttributeTag.Attribute(health = 200.0F, followRange = 20.0F, speed = 0.25F, attack = 3.0F, armor = 0.0F)
 	public static EntityAttributeTag creeper;
+	
+	@ConfigProperty(category = "item", defValue = "true")
+	@ConfigComment("The material name of which tool made of will be display on name if enable this option.")
+	public static boolean displayMaterialTypeOnToolName;
 	
 	public static void init()
 	{

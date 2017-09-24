@@ -106,6 +106,7 @@ public class RecipeCraftingTool
 		addGeneralToolRecipe("spear.rock", new BaseStack(MC.spear_rock.instance));
 		addGeneralToolRecipe("sickle.rock", new BaseStack(MC.sickle_rock.instance));
 		addGeneralToolRecipe("axe.rock", new BaseStack(MC.axe_rock.instance));
+		addGeneralNoTieToolRecipe("spinning.disk", new BaseStack(MC.spinning_disk.instance));
 		//Firestarter
 		RecipeAdder.addShapedRecipe(new BaseStack(IBF.iTool.getSubItem("firestarter")), " s", "ld",
 				's', "stickWood", 'l', matchOfMaterial(new OreStack(MC.firewood.orePrefix), "head"),
@@ -174,5 +175,11 @@ public class RecipeCraftingTool
 	{
 		RecipeAdder.addShapelessRecipe(IBF.iTool.getSubItem(key),
 				new SingleInputMatch(input, CONSUMER1, null), TIE_MATCH1, HANDLE_MATCH);
+	}
+	
+	private static void addGeneralNoTieToolRecipe(String key, AbstractStack input)
+	{
+		RecipeAdder.addShapelessRecipe(IBF.iTool.getSubItem(key),
+				new SingleInputMatch(input, CONSUMER1, null), HANDLE_MATCH);
 	}
 }

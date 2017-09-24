@@ -84,6 +84,7 @@ public class MC
 	public static final MatCondition whetstone = new MatCondition("whetstone", "Whestone", "% Whetstone");
 	public static final MatCondition biface = new MatCondition("biface", "Biface", "% Biface");
 	public static final MatCondition bar_grizzly = new MatCondition("bar_grizzly", "barGrizzly", "Bar Grizzly", "% Bar Grizzly").setFilter(Judgable.and(SubTags.WOOD, SubTags.TOOL));
+	public static final MatCondition spinning_disk = new MatCondition("spinning_disk", "spinningDisk", "Spinning Disk", "% Spinning Disk").setFilter(Judgable.and(SubTags.ROCK, SubTags.TOOL));
 	
 	static
 	{

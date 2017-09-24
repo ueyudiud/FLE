@@ -208,7 +208,7 @@ public class MatCondition implements Judgable<ISubTagContainer>
 	
 	public String translateToLocal(Mat material)
 	{
-		return LanguageManager.translateToLocal(getWithOreTranslateName(), material.getLocalName());
+		return Strings.replace(LanguageManager.translateToLocal(getWithOreTranslateName()), '%', material.getLocalName());
 	}
 	
 	public String getLocal(Mat material)

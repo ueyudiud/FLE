@@ -62,6 +62,8 @@ public class IBF
 				new FluidBase("orange_juice", "Orange Juice", loc, loc).setColor(0xFFF69500).setDensity(1250),
 				new FluidBase("grapefruit_juice", "Grapefruit Juice", loc, loc).setColor(0xFFF67C00).setDensity(1250),
 		};
+		fLimeMortar = new FluidBase("lime_mortar", "Lime Mortar").setDensity(1400).setViscosity(1100);
+		fAnimalOil = new FluidBase("animal_oil", "Animal Oil").setDensity(800).setViscosity(900);
 	}
 	
 	public static void setBlocksItemsProperties()
@@ -86,4 +88,6 @@ public class IBF
 	public static FluidBase fLacquer;
 	public static FluidBase fLacquerDried;
 	public static FluidBase[] fsJuice;
+	public static FluidBase fLimeMortar;
+	public static FluidBase fAnimalOil;
 }

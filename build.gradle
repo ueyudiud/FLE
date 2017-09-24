@@ -10,9 +10,15 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-version = "3.00.14-pre9"
-group = "com.ueyudiud.fle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "FarLandEra"
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.fle.version}"
+group = "${config.fle.group}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "${config.fle.name}"
 
 sourceCompatibility = targetCompatibility = "8" // Java 8 required.
 
@@ -31,6 +37,8 @@ minecraft {
     // run in stable MCP, it may cause may mods can not run with main mod in mcp environment.
     mappings = "stable_29"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+	
+    replace "@VERSION@", "${config.fle.version}"
 }
 
 dependencies {

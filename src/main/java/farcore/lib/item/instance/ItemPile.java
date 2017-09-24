@@ -54,7 +54,7 @@ public class ItemPile extends ItemMulti
 				}
 			}
 		}
-		if (material.contain(SubTags.DIRT) && stack.stackSize < 9)
+		if (material.contain(SubTags.DIRT) && stack.stackSize >= 9)
 		{
 			property = material.getProperty(MP.property_soil);
 			if (Worlds.checkAndPlaceBlockAt(worldIn, pos, facing, playerIn, stack,

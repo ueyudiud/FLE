@@ -45,47 +45,60 @@ public class FarSurfaceDataGenerator
 	static void addVanillaTrees(BiomeBase biome, World world, int x, int z, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ITreeGenerator> selector)
 	{
 		double d1, d2;
+		int value;
 		if (temp > 0.7F && rain > 0.7F)
 		{
 			d2 = noise.noise(x, 38274.0, z);
 			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
 			d1 *= rain > 0.8F ? 1.0F : (rain - 0.7F) * 10.0F;
-			selector.add(CEIBA1, (int) (d1 * d2 * d2 * 128));
+			value = (int) (d1 * d2 * d2 * 128);
+			if (value > 0)
+				selector.add(CEIBA1, value);
 		}
 		if (temp > 0.4F && rain > 0.4F && rain < 0.95F)
 		{
 			d2 = noise.noise(x, 17274.0, z);
 			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.5F ? 1.0F : (temp - 0.4F) * 10.0F;
 			d1 *= rain > 0.9F ? (1.0F - rain) * 20.0F : rain > 0.5F ? 1.0F : (rain - 0.5F) * 10.0F;
-			selector.add(OAK1, (int) (d1 * d2 * d2 * 256));
+			value = (int) (d1 * d2 * d2 * 256);
+			if (value > 0)
+				selector.add(OAK1, value);
 		}
 		if (temp > 0.5F && rain < 0.45F * temp)
 		{
 			d2 = noise.noise(x, 15628.0, z);
 			d1 = temp > 0.6F ? 1.0F : (temp - 0.5F) * 10.0F;
 			d1 *= rain > 0.35F * temp ? (rain - 0.35F * temp) * 10.0F / temp : 1.0F;
-			selector.add(OAK2, (int) (d1 * d2 * d2 * 96));
+			value = (int) (d1 * d2 * d2 * 96);
+			if (value > 0)
+				selector.add(OAK2, value);
 		}
 		if (temp > 0.7F && rain > 0.05F && rain < 0.45F)
 		{
 			d2 = noise.noise(x, 23841.0, z);
 			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
 			d1 *= rain < 0.15F ? (rain - 0.05F) * 10.0F : rain > 0.35F ? (0.45F - rain) * 10.0F : 1.0F;
-			selector.add(ACACIA, (int) (d1 * d2 * d2 * 384));
+			value = (int) (d1 * d2 * d2 * 384);
+			if (value > 0)
+				selector.add(ACACIA, value);
 		}
 		if (temp < 0.9F && temp > 0.3F && rain > 0.4F && rain < 0.8F)
 		{
 			d2 = noise.noise(x, 47247.0, z);
 			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.4F ? 1.0F : (temp - 0.3F) * 10.0F;
 			d1 *= rain > 0.7F ? (1.0F - rain) * 10.0F : rain > 0.5F ? 1.0F : (rain - 0.4F) * 10.0F;
-			selector.add(BIRCH, (int) (d1 * d2 * d2 * 192));
+			value = (int) (d1 * d2 * d2 * 192);
+			if (value > 0)
+				selector.add(BIRCH, value);
 		}
 		if (temp < 0.3F && temp > -0.4F && rain > 0.5F)
 		{
 			d2 = noise.noise(x, 47247.0, z);
 			d1 = temp > 0.2F ? (0.3F - temp) * 10.0F : temp > -0.3F ? 1.0F : (temp + 0.3F) * 10.0F;
 			d1 *= rain > 0.7F ? 1.0F : (rain - 0.5F) * 5.0F;
-			selector.add(SPRUCE1, (int) (d1 * d2 * d2 * 64));
+			value = (int) (d1 * d2 * d2 * 64);
+			if (value > 0)
+				selector.add(SPRUCE1, value);
 		}
 	}
 	

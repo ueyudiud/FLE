@@ -33,6 +33,7 @@ import fle.core.items.tool.ToolHoe;
 import fle.core.items.tool.ToolShovel;
 import fle.core.items.tool.ToolSickle;
 import fle.core.items.tool.ToolSpear;
+import fle.core.items.tool.ToolSpinningDisk;
 import fle.core.items.tool.ToolWhetstone;
 import nebula.base.Judgable;
 import nebula.common.item.IBehavior;
@@ -54,6 +55,7 @@ public class Tools
 		new ItemToolHead(MC.spear_rock);
 		new ItemToolHead(MC.sickle_rock);
 		new ItemToolHead(MC.axe_rock);
+		new ItemToolHead(MC.spinning_disk);
 		
 		addTool(1, "adz.rock", "Adz", "Click top of a log to open woodwork table.", MC.adz_rock, new ToolAxe(EnumToolTypes.ADZ, 0.5F), true, true, SubTags.ROPE, SubTags.HANDLE, new BehaviorWoodworkable());
 		addTool(2, "hammer.hard.flint", "Hammer", null, MC.hard_hammer_flint, new ToolHardHammer(0.7F), true, true, SubTags.ROPE, SubTags.HANDLE);
@@ -70,6 +72,7 @@ public class Tools
 		addTool(13, "whetstone", "Whetstone", null, MC.whetstone, new ToolWhetstone(), false, false, null, null, new BehaviorPolishable(EnumToolTypes.WHESTONE, 4, 0.75F, 'p', ' '));
 		addTool(14, "biface", "Biface", "Multi-purpose tool", MC.biface, new ToolBiface(), false, false, null, null, ImmutableList.of(EnumToolTypes.BIFACE, EnumToolTypes.ADZ, EnumToolTypes.SICKLE), new BehaviorPolishable(EnumToolTypes.BIFACE, 2, 1.25F, 'c', ' ', 'p'));
 		addTool(15, "bar.grizzly", "Bar Grizzly", null, MC.bar_grizzly, new ToolBarGrizzly(), false, false, null, null, new BehaviorBarGrizzly());
+		addTool(16, "spinning.disk", "Spinning Disk", null, MC.spinning_disk, new ToolSpinningDisk(), false, true, null, SubTags.HANDLE);
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,

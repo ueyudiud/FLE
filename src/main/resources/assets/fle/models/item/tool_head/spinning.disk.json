@@ -1,0 +1,6 @@
+{
+	"layer": {
+		"texture": "fle:items/tool_head/spinning_disk_rock",
+		"colorMultiplier": "farcore:material"
+	}
+}
