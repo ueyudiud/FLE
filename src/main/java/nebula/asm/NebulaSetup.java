@@ -91,6 +91,7 @@ import org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -111,7 +112,7 @@ public class NebulaSetup implements IFMLCallHook
 	/**
 	 * The ASM file version, uses to determine if it need replaced ASM files.
 	 */
-	private static final int VERSION = 9;
+	private static final int VERSION = 10;
 	
 	final JsonDeserializer<OpInformation> DESERIALIZER1 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
@@ -136,14 +137,25 @@ public class NebulaSetup implements IFMLCallHook
 				{
 					JsonObject object1 = json1.getAsJsonObject();
 					String name = object1.get("name").getAsString();
-					List<OpLabel> list = new ArrayList<>();
-					for (JsonElement json2 : object1.getAsJsonArray("labels"))
+					if (object1.has("remove"))
 					{
-						list.add(context.deserialize(json2, OpLabel.class));
+						if (object1.get("remove").getAsBoolean())
+						{
+							information.modifies.put(name, ImmutableList.of());
+							continue;
+						}
 					}
-					if (!list.isEmpty())
+					
 					{
-						information.modifies.put(name, list);
+						List<OpLabel> list = new ArrayList<>();
+						for (JsonElement json2 : object1.getAsJsonArray("labels"))
+						{
+							list.add(context.deserialize(json2, OpLabel.class));
+						}
+						if (!list.isEmpty())
+						{
+							information.modifies.put(name, list);
+						}
 					}
 				}
 			}

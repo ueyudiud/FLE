@@ -35,7 +35,6 @@ import nebula.common.entity.EntityProjectileItem;
 import nebula.common.item.ItemBase;
 import nebula.common.item.ItemFluidDisplay;
 import nebula.common.network.Network;
-import nebula.common.network.packet.PacketBlockData;
 import nebula.common.network.packet.PacketBreakBlock;
 import nebula.common.network.packet.PacketChunkNetData;
 import nebula.common.network.packet.PacketEntity;
@@ -73,6 +72,8 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -99,7 +100,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class Nebula extends DummyModContainer implements WorldAccessContainer
 {
 	/** The minimum forge version far core required. */
-	public static final int MIN_FORGE = 2122;
+	public static final int MIN_FORGE = 2272;
 	
 	public static final String MODID = "nebula";
 	public static final String NAME = "Nebula";
@@ -136,7 +137,8 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@SidedProxy(serverSide = "nebula.common.CommonProxy", clientSide = "nebula.client.ClientProxy")
 	public static CommonProxy proxy;
 	
-	public LanguageManager lang;
+	private LanguageManager lang;
+	private Configuration configuration;
 	
 	public static CreativeTabs tabFluids;
 	
@@ -165,6 +167,11 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	{
 		bus.register(this);
 		return true;
+	}
+	
+	public LanguageManager getLanguageManager()
+	{
+		return this.lang;
 	}
 	
 	@Subscribe
@@ -206,7 +213,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		try
 		{
 			this.lang = new LanguageManager(new File(Game.getMCFile(), "lang"));
-			NebulaConfiguration.loadStaticConfig(NebulaConfig.class);
+			this.configuration = NebulaConfiguration.loadStaticConfig(NebulaConfig.class);
 		}
 		catch (Exception exception)
 		{
@@ -254,7 +261,6 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		network.registerPacket(PacketChunkNetData.class, Side.CLIENT);
 		network.registerPacket(PacketGuiAction.class, Side.SERVER);
 		network.registerPacket(PacketGuiSyncData.class, Side.CLIENT);
-		network.registerPacket(PacketBlockData.class, Side.CLIENT);
 	}
 	
 	@Subscribe
@@ -264,10 +270,25 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		this.lang.write();
 	}
 	
+	@Override
+	public String getGuiClassName()
+	{
+		return "nebula.client.NebulaGuiFactory";
+	}
+	
 	@Subscribe
 	public void mappingChanged(FMLModIdMappingEvent evt)
 	{
 		ExtendedBlockStateRegister.buildAndSyncStateMap();
+	}
+	
+	@Subscribe
+	public void onConfigChanged(OnConfigChangedEvent event)
+	{
+		if (event.getModID().equals(MODID))
+		{
+			NebulaConfiguration.loadStaticConfig(NebulaConfig.class, this.configuration);
+		}
 	}
 	
 	@Override

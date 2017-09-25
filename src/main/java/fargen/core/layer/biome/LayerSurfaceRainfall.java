@@ -4,6 +4,7 @@
 
 package fargen.core.layer.biome;
 
+import fargen.core.layer.DataSurface;
 import fargen.core.layer.abstracts.LayerReplace;
 import nebula.common.util.noise.NoiseBase;
 import nebula.common.util.noise.NoisePerlin;
@@ -32,6 +33,6 @@ public class LayerSurfaceRainfall extends LayerReplace
 	protected int getValue(int x, int y, int id)
 	{
 		initChunkSeed(x, y >> 1);
-		return id | (int) (this.noise.noise(x, y) * 8) << 4;
+		return id | (int) (this.noise.noise(x, y) * DataSurface.RAIN_LEVEL_SIZE) << 4;
 	}
 }

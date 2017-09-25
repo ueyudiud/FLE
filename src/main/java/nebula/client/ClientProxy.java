@@ -255,7 +255,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		}
 		if (Loader.instance().hasReachedState(LoaderState.AVAILABLE))
 		{
-			Nebula.instance.lang.read();
+			Nebula.instance.getLanguageManager().read();
 		}
 	}
 	

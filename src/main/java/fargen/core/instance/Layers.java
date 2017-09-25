@@ -111,8 +111,6 @@ public class Layers
 		drawImage(256, layer4, "42 Biome Rainfall");
 		layer4 = new GenLayerSmooth(87L, layer4);
 		drawImage(256, layer4, "43 Smooth");
-		layer4 = new LayerZoom(374L, 3, layer4);
-		drawImage(256, layer4, "44 Biome Zoom");
 		
 		GenLayer soil = new LayerSurfaceSoilStart(501L, layer4);
 		drawImage(256, layer4, "51 Soil Start");
@@ -182,7 +180,7 @@ public class Layers
 			return;
 		try
 		{
-			genlayer.initWorldGenSeed(83L);
+			genlayer.initWorldGenSeed(84L);
 			File outFile = new File(name + ".png");
 			if (outFile.exists())
 				return;

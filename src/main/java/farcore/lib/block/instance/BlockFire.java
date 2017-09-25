@@ -404,33 +404,35 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			}
 			if(range > 0)
 			{
-				for(int i = -range + off1.x; i <= range + off1.x; ++i)
+				for (int i = -range + off1.x; i <= range + off1.x; ++i)
 				{
-					for(int j = -range + off1.y; j <= range + off1.y; ++j)
+					for (int j = -range + off1.y; j <= range + off1.y; ++j)
 					{
-						for(int k = -range + off1.z; k <= range + off1.z; ++k)
+						for (int k = -range + off1.z; k <= range + off1.z; ++k)
 						{
-							if((i != 0 || j != 0 || k != 0) && rand.nextInt(flag2 ? 8 : 4) == 0)
+							if ((i != 0 || j != 0 || k != 0) && rand.nextInt(flag2 ? 8 : 4) == 0)
 							{
 								int speed;
-								if(info.canBlockStay(i, j, k) && (speed = info.getSpreadSpeed(i, j, k)) > 0)
+								if (info.canBlockStay(i, j, k) && (speed = info.getSpreadSpeed(i, j, k)) > 0)
 								{
 									chance = 100;
 									chance *= Math.cbrt(
 											(i + off1.x * .6) * (i + off1.x * .6) +
 											(j + off1.y * .6) * (j + off1.y * .6) +
 											(k + off1.z * .6) * (k + off1.z * .6));
-									if(flag1)
+									if (flag1)
 									{
 										chance /= 2;
 									}
 									BlockPos pos2 = pos.add(i, j, k);
-									if(info.isCustomed(i, j, k) &&
-											((IThermalCustomBehaviorBlock) (state = worldIn.getBlockState(pos2)).getBlock()).onBurn(worldIn, pos2, 1000F / chance, U))
+									if (info.isCustomed(i, j, k))
 									{
-										continue;
+										Block block = (state = worldIn.getBlockState(pos2)).getBlock();
+										if (block instanceof IThermalCustomBehaviorBlock &&
+												((IThermalCustomBehaviorBlock) block).onBurn(worldIn, pos2, 1000F / chance, U))
+											continue;
 									}
-									if(chance > 0 && rand.nextInt(chance) < speed)
+									if (chance > 0 && rand.nextInt(chance) < speed)
 									{
 										int l2 = Math.min(15, l + rand.nextInt(4) / 2);
 										worldIn.setBlockState(pos2, getDefaultState().withProperty(STATE, l2).withProperty(SMOLDER, false), 3);
@@ -448,7 +450,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	{
 		pos = face.offset(pos);
 		IBlockState state = worldIn.getBlockState(pos);
-		if(state.getBlock() instanceof IThermalCustomBehaviorBlock &&
+		if (state.getBlock() instanceof IThermalCustomBehaviorBlock &&
 				((IThermalCustomBehaviorBlock) state.getBlock()).onBurningTick(worldIn, pos, random, face.getOpposite(), fireState))
 			return;
 		int i = info.getFlammability(face.x, face.y, face.z, face.getOpposite());

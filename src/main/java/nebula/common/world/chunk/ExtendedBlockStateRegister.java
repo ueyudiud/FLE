@@ -3,7 +3,6 @@
  */
 package nebula.common.world.chunk;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,18 +15,16 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import nebula.Log;
+import nebula.base.Cache;
 import nebula.base.IntegerMap;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
-import nebula.common.network.PacketBufferExt;
 import nebula.common.util.L;
 import nebula.common.util.Sides;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * The block state register.
@@ -35,8 +32,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public enum ExtendedBlockStateRegister implements Runnable
 {
-	SERVER,
-	CLIENT;
+	INSTANCE;
 	
 	/*
 	 * Block Data information:
@@ -50,8 +46,9 @@ public enum ExtendedBlockStateRegister implements Runnable
 	 * more meta slots, you should let block implements IExtendedDataBlock.<p>
 	 */
 	
-	static final List<IBlockState> TO_STATE_LIST = new ArrayList<>(1024);
-	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap<IBlockState>(4096, 1.0F) {
+	static final Map<Integer, IBlockState> TO_STATE_LIST = new HashMap<>(1024);
+	static final IntegerMap<IBlockState> TO_ID_MAP = new IntegerMap<IBlockState>(4096, 1.0F)
+	{
 		@Override
 		protected int hashcode(Object object)
 		{
@@ -113,10 +110,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	 */
 	public static int getCachedID(IBlockState state)
 	{
-		synchronized (Sides.isSimulating() ? CLIENT : SERVER)
-		{
-			return TO_ID_MAP.containsKey(state) ? TO_ID_MAP.get(state) : -1;
-		}
+		return TO_ID_MAP.getOrDefault(state, -1);
 	}
 	
 	/**
@@ -126,10 +120,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	 */
 	public static IBlockState getCachedState(int id)
 	{
-		synchronized (Sides.isSimulating() ? CLIENT : SERVER)
-		{
-			return id >= 0 && id < TO_STATE_LIST.size() ? TO_STATE_LIST.get(id) : Misc.AIR;
-		}
+		return TO_STATE_LIST.getOrDefault(id, Misc.AIR);
 	}
 	
 	/**
@@ -142,92 +133,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 	}
 	
 	//Internal method, do not use.
-	public static void encode(PacketBufferExt output) throws IOException
-	{
-		waitingForBuild();
-		int length = idCapacity();
-		output.writeInt(length);
-		for (int i = 0; i < length; ++i)
-		{
-			IBlockState state = TO_STATE_LIST.get(i);
-			Block block = state.getBlock();
-			String key = block.getRegistryName().toString();
-			int meta;
-			if(block instanceof IExtendedDataBlock)
-			{
-				meta = ((IExtendedDataBlock) block).getDataFromState(state);
-			}
-			else
-			{
-				meta = block.getMetaFromState(state);
-			}
-			output.writeString(key + ":" + meta);
-		}
-	}
-	
-	public static void decode(PacketBufferExt input) throws IOException
-	{
-		synchronized (CLIENT)
-		{
-			TO_STATE_LIST.clear();
-			TO_ID_MAP.clear();
-			int len = input.readInt();
-			List<String> list = new ArrayList<>();
-			Map<Integer, Integer> intMap = new HashMap<>();
-			for (int i = 0; i < len; ++i)
-			{
-				String key = input.readString(999);
-				String[] split = key.split(":");
-				if(split.length != 3) throw new IOException("Wrong block state key.");
-				IBlockState state;
-				try
-				{
-					ResourceLocation location = new ResourceLocation(split[0], split[1]);
-					Block block = Block.REGISTRY.getObject(location);
-					if(block == Blocks.AIR && i != 0)
-						throw new RuntimeException();
-					int meta = Integer.parseInt(split[2]);
-					if (block instanceof IExtendedDataBlock)
-					{
-						state = ((IExtendedDataBlock) block).getStateFromData(meta);
-					}
-					else
-					{
-						state = block.getStateFromMeta(meta);
-					}
-				}
-				catch (Exception exception)
-				{
-					list.add(key);
-					continue;
-				}
-				TO_STATE_LIST.add(state);
-				intMap.put(getStateData(state), i);
-			}
-			for (Block block : Block.REGISTRY)
-			{
-				int id = Block.REGISTRY.getIDForObject(block) << 24;
-				for(IBlockState state : block.getBlockState().getValidStates())
-				{
-					int meta;
-					if(block instanceof IExtendedDataBlock)
-					{
-						meta = ((IExtendedDataBlock) block).getDataFromState(state);
-					}
-					else
-					{
-						meta = block.getMetaFromState(state);
-					}
-					Integer i = intMap.get(id | meta);
-					if(i != null)
-					{
-						TO_ID_MAP.put(state, i);
-					}
-				}
-			}
-		}
-	}
-	
+	public static Cache<Boolean> built = new Cache<>();
 	private static volatile Thread thread = null;
 	
 	private static void waitingForBuild()
@@ -248,43 +154,41 @@ public enum ExtendedBlockStateRegister implements Runnable
 	
 	public static void buildAndSyncStateMap()
 	{
-		waitingForBuild();
-		(thread = new Thread(SERVER, "State Map Thread")).start();
+		if ((Sides.isServer() && Sides.isSimulating()) || Sides.isClient())
+		{
+			waitingForBuild();
+			(thread = new Thread(INSTANCE, "State Map Thread")).start();
+		}
 	}
 	
 	@Override
 	public void run()
 	{
-		switch (this)
+		synchronized (built)
 		{
-		case SERVER :
-		default:
 			buildStateMap();
-			break;
-		case CLIENT :
-			break;
+			built.set(true);
 		}
 	}
-	//Internal method end.
+	
+	private int blockid;
+	private int metaid;
 	
 	void buildStateMap()
 	{
 		TO_ID_MAP.clear();
 		TO_STATE_LIST.clear();
 		Log.reset();
-		
 		for (Block block : Block.REGISTRY)
 		{
+			this.blockid = Block.REGISTRY.getIDForObject(block);
+			this.metaid = 0;
 			try
 			{
-				if(block instanceof IExtendedDataBlock)
-				{
+				if (block instanceof IExtendedDataBlock)
 					((IExtendedDataBlock) block).registerStateToRegister(this);
-				}
 				else
-				{
 					registerDefaultBlockStateMap(block);
-				}
 			}
 			catch (Exception exception)
 			{
@@ -329,6 +233,7 @@ public enum ExtendedBlockStateRegister implements Runnable
 			}
 		}
 	}
+	//Internal method end.
 	
 	/**
 	 * Register allowed state with all these properties cycled.
@@ -386,16 +291,23 @@ public enum ExtendedBlockStateRegister implements Runnable
 	
 	public void registerStateMap(IBlockState source, Collection<IBlockState> castable)
 	{
-		int id = TO_STATE_LIST.size();
-		TO_STATE_LIST.add(source);
+		int id = ensureIDSize();
+		TO_STATE_LIST.put(id, source);
 		for (IBlockState state : castable) TO_ID_MAP.put(state, id);
 	}
 	
 	public void registerStateMap(IBlockState source, IBlockState...castable)
 	{
-		int id = TO_STATE_LIST.size();
-		TO_STATE_LIST.add(source);
+		int id = ensureIDSize();
+		TO_STATE_LIST.put(id, source);
 		for (IBlockState state : castable) TO_ID_MAP.put(state, id);
+	}
+	
+	private int ensureIDSize()
+	{
+		if (((this.metaid + 1) & 0xFFF00000) != 0)
+			throw new IndexOutOfBoundsException("Too many of meta! blockid: " + this.blockid);
+		return this.blockid << 20 | this.metaid++;
 	}
 	//Ending
 }

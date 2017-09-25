@@ -6,6 +6,7 @@ package nebula.asm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
+
+import com.google.common.collect.ImmutableList;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -39,12 +42,12 @@ public class ClassTransformer implements IClassTransformer
 		if (transformedName.startsWith("com.google.gson."))
 			return basicClass;//Gson uses do not modify.
 		NebulaASMLogHelper.outputInit();
-		if(transformedName.startsWith("net.minecraft."))
+		if (transformedName.startsWith("net.minecraft."))
 		{
 			NebulaASMLogHelper.keyOutputStream.println(name + "=" + transformedName);
 		}
 		OpInformation information;
-		if((information = informations.remove(transformedName)) != null)
+		if ((information = informations.remove(transformedName)) != null)
 			return modifyClass(transformedName, information, basicClass);
 		return basicClass;
 	}
@@ -60,23 +63,35 @@ public class ClassTransformer implements IClassTransformer
 			ClassReader reader = new ClassReader(basicClass);
 			reader.accept(node, 0);
 			List<String> methods = new ArrayList<>();
-			for(MethodNode node2 : node.methods)
+			Iterator<MethodNode> nodes = node.methods.iterator();
+			while (nodes.hasNext())
 			{
+				MethodNode node2 = nodes.next();
 				String name = node2.name + "|" + node2.desc;
 				methods.add(name);
-				if(information.modifies.containsKey(name))
+				if (information.modifies.containsKey(name))
 				{
-					NebulaASMLogHelper.LOG.debug("Injecting method  {}.", name);
-					NebulaASMLogHelper.logOutput(clazzName1 + "." + node2.name, "source", name, node2.instructions);
-					boolean success = modifyMethodNode(node2.instructions, information.modifies.remove(name));
-					NebulaASMLogHelper.logOutput(clazzName1 + "." + node2.name, "modified", name, node2.instructions);
-					if (!success)
+					List<OpLabel> list = information.modifies.remove(name);
+					if (list == ImmutableList.<OpLabel>of())
 					{
-						NebulaASMLogHelper.LOG.warn("Injected method {} failed.", name);
+						nodes.remove();
+						NebulaASMLogHelper.LOG.debug("Removed method {}.", name);
+						continue;
 					}
 					else
 					{
-						NebulaASMLogHelper.LOG.debug("Injected method {} success.", name);
+						NebulaASMLogHelper.LOG.debug("Injecting method  {}.", name);
+						NebulaASMLogHelper.logOutput(clazzName1 + "." + node2.name, "source", name, node2.instructions);
+						boolean success = modifyMethodNode(node2.instructions, list);
+						NebulaASMLogHelper.logOutput(clazzName1 + "." + node2.name, "modified", name, node2.instructions);
+						if (!success)
+						{
+							NebulaASMLogHelper.LOG.warn("Injected method {} failed.", name);
+						}
+						else
+						{
+							NebulaASMLogHelper.LOG.debug("Injected method {} success.", name);
+						}
 					}
 					if (information.modifies.isEmpty()) break;
 				}

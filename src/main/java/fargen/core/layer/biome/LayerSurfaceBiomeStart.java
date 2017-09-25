@@ -4,49 +4,18 @@
 
 package fargen.core.layer.biome;
 
+import fargen.core.layer.DataSurface;
 import fargen.core.layer.Layer;
 import nebula.common.util.L;
+import nebula.common.util.noise.NoisePerlin;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * @author ueyudiud
  */
 public class LayerSurfaceBiomeStart extends Layer
 {
-	static final int DETERMINE_OPERATOR = 0x100;
-	static final int[] TEMP_ARRAY = {
-			7,								//1
-			7,								//2
-			7 | 6 << 4 | DETERMINE_OPERATOR,//3
-			6,								//4
-			6,								//5
-			6 | 5 << 4 | DETERMINE_OPERATOR,//6
-			5,								//7
-			5,								//8
-			4,								//9
-			4,								//10
-			3,								//11
-			3,								//12
-			2,								//13
-			1,								//14
-			0,								//15
-			0,								//16
-			1,								//17
-			2,								//18
-			3,								//19
-			3,								//20
-			4,								//21
-			4,								//22
-			5,								//23
-			5,								//24
-			6,								//25
-			6,								//26
-			6 | 5 << 4 | DETERMINE_OPERATOR,//27
-			6,								//28
-			6,								//29
-			7 | 6 << 4 | DETERMINE_OPERATOR,//30
-			7,								//31
-			7,								//32
-	};
+	private NoisePerlin noise = new NoisePerlin(0L, 3, 0.25F, 2.0F, 2.0F);
 	
 	public LayerSurfaceBiomeStart(long seed)
 	{
@@ -61,26 +30,23 @@ public class LayerSurfaceBiomeStart extends Layer
 			for (int j = 0; j < w; ++j)
 			{
 				initChunkSeed(x + j, y + i);
-				int temp = TEMP_ARRAY[(y + i +
-						4//The generation offset.
-						) & 0x1F];
-				if ((temp & DETERMINE_OPERATOR) != 0)
-				{
-					temp = (nextBoolean() ? temp >> 4 : temp) & 0xF;
-				}
-				temp = L.range(0, 7, temp + next());
+				int temp = temperature(x + j, y + i);
 				result[i * w + j] = temp | nextInt(16) << 8;
 			}
 		return result;
 	}
 	
-	protected int next()
+	protected int temperature(int x, int y)
 	{
-		switch (nextInt(9))
-		{
-		case 0 : return  1;
-		case 1 : return -1;
-		default: return  0;
-		}
+		float off = (float) ((y + 4 /** The generation offset. */ & 0x1F) * Math.PI / DataSurface.TEMP_RANGE_SIZE);
+		int ret = (int) ((1.0F - MathHelper.sin(off)) * DataSurface.TEMP_LEVEL_SIZE + this.noise.noise(x, y) * 0.25F) - 1;
+		return L.range(0, 7, ret);
+	}
+	
+	@Override
+	public void initWorldGenSeed(long seed)
+	{
+		super.initWorldGenSeed(seed);
+		this.noise.setSeed(seed ^ 431573952356934L);
 	}
 }

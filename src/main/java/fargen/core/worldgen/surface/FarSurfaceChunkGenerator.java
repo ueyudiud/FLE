@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fargen.core.worldgen.surface;
 
 import static fargen.api.event.FarGenerationEvent.TREE;
@@ -110,7 +113,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		{
 			x *= 0.5;
 		}
-		//[-0.2, 0.625]
+		//[-1.0, 2.0]
 		return x;
 	};
 	
@@ -160,20 +163,15 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				double d1 = ySize * (root + 0.03125) / 4F;
 				double d2 = 1.8 + 3 * variation * scale;
 				if (d2 < 1.0F)
-				{
 					d2 = 1.0F + (d2 - 1.0F) * 0.3F;
-				}
 				//Height calculate
 				for (int y = 0; y < ySize; y++)
 				{
 					//Range from [0, 1]
-					double output = Maths.lerp(this.cache1[i1], this.cache2[i1], this.cache3[i1]) * 2;
-					double off = 1.5 * (d1 - y) / d2;
+					double off = (d1 - y) / d2;
 					if (off > 0.0)
-					{
 						off *= 4.0;
-					}
-					output += off;
+					double output = off + Maths.lerp(this.cache1[i1], this.cache2[i1], this.cache3[i1]);
 					if (y > ySize - 4)
 					{
 						double var40 = (y - (ySize - 4)) / 3.0F;

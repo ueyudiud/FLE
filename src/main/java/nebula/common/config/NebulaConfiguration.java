@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import nebula.Log;
 import nebula.common.util.Game;
@@ -34,47 +33,63 @@ public final class NebulaConfiguration
 	 * @param config
 	 * @return
 	 */
-	public static @Nonnull <C> C loadConfig(@Nonnull C config)
+	public static Configuration loadConfig(@Nonnull Object config)
 	{
-		return (C) loadConfig(config, "", config.getClass());
+		return loadConfig(config, "", config.getClass());
 	}
-	public static @Nullable <C> C loadConfig(@Nonnull Class<C> configClass)
+	public static Configuration loadConfig(@Nonnull Class<?> configClass)
 	{
 		return loadConfig(null, configClass);
 	}
-	public static @Nullable <C> C loadConfig(String category, @Nonnull Class<C> configClass)
+	public static Configuration loadConfig(String category, @Nonnull Class<?> configClass)
 	{
 		try
 		{
-			return (C) loadConfig(configClass.newInstance(), Strings.validate(category), configClass);
+			return loadConfig(configClass.newInstance(), Strings.validate(category), configClass);
 		}
 		catch (Exception exception)
 		{
 			return null;
 		}
 	}
+	
 	/**
 	 * Load configuration and inject into static field.
 	 * The field should be <tt>static</tt> and <tt>public</tt>.
 	 * @param configClass
 	 */
-	public static void loadStaticConfig(Class<?> configClass)
+	public static Configuration loadStaticConfig(Class<?> configClass)
 	{
-		loadConfig(null, null, configClass);
+		return loadConfig(null, null, configClass);
 	}
 	
-	private static Object loadConfig(Object c, String category, Class<?> configClass)
+	public static void loadStaticConfig(Class<?> configClass, Configuration config)
+	{
+		loadConfig(null, null, configClass, config, false);
+	}
+	
+	private static Configuration loadConfig(Object obj, String category, Class<?> configClass)
 	{
 		if (!configClass.isAnnotationPresent(Config.class))
 			throw new IllegalArgumentException("The cache type should has @Config annotation.");
 		Config annotation = configClass.getAnnotation(Config.class);
 		Configuration config = new Configuration(new File(Game.getMCFile(), "config/" + annotation.value() + ".cfg"));
+		return loadConfig(obj, category, configClass, config, true);
+	}
+	
+	private static Configuration loadConfig(Object c, String category, Class<?> configClass, Configuration config, boolean load)
+	{
+		if (!configClass.isAnnotationPresent(Config.class))
+			throw new IllegalArgumentException("The cache type should has @Config annotation.");
 		
-		config.load();
+		if (load)
+		{
+			config.load();
+		}
 		putField(c, config, category, configClass);
 		config.save();
 		
-		return c;
+		return config;
 	}
 	
 	private static void putField(Object object, Configuration configuration, String categoryBase, Class<?> configClass)
@@ -86,14 +101,14 @@ public final class NebulaConfiguration
 			if ((modifier & Modifier.FINAL) != 0) continue;//Skip final value.
 			if (flag ^ (modifier & Modifier.STATIC) != 0) continue;
 			@SuppressWarnings("unchecked")
-			TypeAdapter<? super Object> adapter = (TypeAdapter<? super Object>) TYPE_ADAPTER_MAP.get(field.getType());
+			TypeAdapter<? super Object> adapter = (TypeAdapter<? super Object>) getAdapter(field);
 			if (adapter == null)
 			{
 				adapter = ADAPTER_ANY;
 			}
 			String category;
 			String name;
-			String defValue = DEFAULT_VALUE_APPLIER.getOrDefault(field.getType(), DEF_VALUE_FUNCTION).apply(field).toString();
+			String defValue = defaultValue(field).toString();
 			String comments;
 			if (field.isAnnotationPresent(ConfigProperty.class))
 			{
@@ -116,6 +131,16 @@ public final class NebulaConfiguration
 				Log.warn("Fail to inject configuration. category: {}, name: {}, default: {}", category, name, defValue);
 			}
 		}
+	}
+	
+	static TypeAdapter<?> getAdapter(Field field)
+	{
+		return TYPE_ADAPTER_MAP.get(field.getType());
+	}
+	
+	static Object defaultValue(Field field)
+	{
+		return DEFAULT_VALUE_APPLIER.getOrDefault(field.getType(), DEF_VALUE_FUNCTION).apply(field);
 	}
 	
 	private static final Function<Field, String> DEF_VALUE_FUNCTION = field->
@@ -212,6 +237,11 @@ public final class NebulaConfiguration
 			field.setDouble(arg, property.getDouble());
 		}
 	};
+	private static final TypeAdapter<Boolean> ADAPTER_BOOLEAN = (arg, field, config, category, name, defValue, comments) -> {
+		Property property = config.get(category, name, defValue, comments, Type.BOOLEAN);
+		property.setDefaultValue(defValue);
+		field.setBoolean(arg, property.getBoolean());
+	};
 	private static final TypeAdapter<String> ADAPTER_STRING = (arg, field, config, category, name, defValue, comments) -> {
 		Property property = config.get(category, name, defValue, comments, Type.STRING);
 		property.setDefaultValue(defValue);
@@ -219,11 +249,6 @@ public final class NebulaConfiguration
 	};
 	
 	private static final Map<Class<?>, TypeAdapter<?>> TYPE_ADAPTER_MAP = new HashMap<>();
-	private static final TypeAdapter<Boolean> ADAPTER_BOOLEAN = (arg, field, config, category, name, defValue, comments) -> {
-		Property property = config.get(category, name, defValue, comments, Type.BOOLEAN);
-		property.setDefaultValue(defValue);
-		field.setBoolean(arg, property.getBoolean());
-	};
 	
 	private static final Map<Class<?>, Function<Field, ?>> DEFAULT_VALUE_APPLIER = new HashMap<>();
 	
