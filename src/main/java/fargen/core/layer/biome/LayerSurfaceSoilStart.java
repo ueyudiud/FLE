@@ -4,6 +4,20 @@
 
 package fargen.core.layer.biome;
 
+import static farcore.data.M.aterocalcosol;
+import static farcore.data.M.aterosol;
+import static farcore.data.M.flavoloam;
+import static farcore.data.M.latroaluminosol;
+import static farcore.data.M.latrosol;
+import static farcore.data.M.peatsol;
+import static farcore.data.M.pheosol;
+import static farcore.data.M.podzol;
+import static farcore.data.M.redsand;
+import static farcore.data.M.ruboaluminoloam;
+import static farcore.data.M.ruboloam;
+import static farcore.data.M.sand;
+import static fargen.core.worldgen.surface.FarSurfaceDataGenerator.getSoilLayerIDByName;
+
 import fargen.core.layer.abstracts.LayerReplace;
 import net.minecraft.world.gen.layer.GenLayer;
 
@@ -12,18 +26,20 @@ import net.minecraft.world.gen.layer.GenLayer;
  */
 public class LayerSurfaceSoilStart extends LayerReplace
 {
-	private static final byte
-	id_latosol = 0,
-	id_latoaluminosol = 1,
-	id_ruboloam = 2,
-	id_ruboaluminoloam = 3,
-	id_flavoloam = 4,
-	id_peatsol = 5,
-	id_aterosol = 6,
-	id_podzol = 7,
-	id_pheosol = 8,
-	id_aterocalcosol = 9,
-	id_rubosol = 10,
+	private static final int
+	id_latosol = getSoilLayerIDByName(latrosol.name),
+	id_latoaluminosol = getSoilLayerIDByName(latroaluminosol.name),
+	id_ruboloam = getSoilLayerIDByName(ruboloam.name),
+	id_ruboaluminoloam = getSoilLayerIDByName(ruboaluminoloam.name),
+	id_flavoloam = getSoilLayerIDByName(flavoloam.name),
+	id_peatsol = getSoilLayerIDByName(peatsol.name),
+	id_aterosol = getSoilLayerIDByName(aterosol.name),
+	id_podzol = getSoilLayerIDByName(podzol.name),
+	id_pheosol = getSoilLayerIDByName(pheosol.name),
+	id_aterocalcosol = getSoilLayerIDByName(aterocalcosol.name),
+	id_rubosol = getSoilLayerIDByName(ruboloam.name),
+	id_sand = getSoilLayerIDByName(sand.name),
+	id_redsand = getSoilLayerIDByName(redsand.name),
 	id_unknown = Byte.MAX_VALUE;
 	
 	public LayerSurfaceSoilStart(long seed, GenLayer layer)
@@ -84,14 +100,14 @@ public class LayerSurfaceSoilStart extends LayerReplace
 									rain < 14 ? id_peatsol :
 										id_rubosol;
 		case 6 :
-			return rain < 2 ? id_unknown :
+			return rain < 2 ? id_sand :
 				rain < 6 ? id_ruboaluminoloam :
 					rain < 9 ? id_flavoloam :
 						rain < 12 ? id_ruboloam :
 							rain < 14 ? id_peatsol :
 								id_latosol;
 		case 7 :
-			return rain < 3 ? id_unknown :
+			return rain < 3 ? id_sand :
 				rain < 10 ? id_ruboaluminoloam :
 					rain < 13 ? id_rubosol :
 						id_latosol;

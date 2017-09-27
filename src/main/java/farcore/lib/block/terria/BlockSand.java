@@ -142,6 +142,12 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	@Override
+	protected IBlockState initDefaultState(IBlockState state)
+	{
+		return super.initDefaultState(state).withProperty(LAYER, MAX_HEIGHT);
+	}
+	
+	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, LAYER);

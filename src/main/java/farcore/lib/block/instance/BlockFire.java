@@ -276,7 +276,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random)
 	{
 		IBlockState newState = state;
-		if(!canBlockStayAt(worldIn, pos))
+		if (!canBlockStayAt(worldIn, pos))
 		{
 			worldIn.setBlockToAir(pos);
 			return;
@@ -293,8 +293,8 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				}
 				else
 				{
-					FireLocateInfo info = new FireLocateInfo(2, worldIn, pos);
-					if(canBlockBurnAt(worldIn, pos))
+					FireLocationInfo info = new FireLocationInfo(2, worldIn, pos);
+					if (canBlockBurnAt(worldIn, pos))
 					{
 						if (random.nextInt(3) == 0)
 						{
@@ -316,10 +316,8 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 						return;
 					}
 					newState = newState.withProperty(STATE, l);
-					if(newState != state)
-					{
-						worldIn.setBlockState(pos, newState, 2);
-					}
+					if (newState != state)
+						info.setBlockState(newState, 2);
 					worldIn.scheduleUpdate(pos, this, tickRate(worldIn));
 				}
 			}
@@ -336,11 +334,6 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		if (!canBlockStayAt(worldIn, pos))
 		{
 			worldIn.setBlockToAir(pos);
-		}
-		if (worldIn.isRaining() && worldIn.canSeeSky(pos))
-		{
-			worldIn.setBlockToAir(pos);
-			worldIn.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.2F + (rand.nextFloat() - rand.nextFloat()) * .8F, true);
 		}
 		if (state.getValue(SPREAD_CHECK) && worldIn.getGameRules().getBoolean("doFireTick"))
 		{
@@ -361,7 +354,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			}
 			int l = state.getValue(STATE);
 			int range = l < 8 ? 3 : l < 14 ? 2 : 1;
-			FireLocateInfo info = new FireLocateInfo(range + 2, worldIn, pos);
+			FireLocationInfo info = new FireLocationInfo(range + 2, worldIn, pos);
 			Direction off1 = state.getValue(SPREAD_PREFERENCE).direction;
 			boolean isFireSource =
 					info.isFireSource(0, +1, 0, 0) ||
@@ -370,16 +363,22 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 					info.isFireSource(0, 0, -1, 3) ||
 					info.isFireSource(+1, 0, 0, 4) ||
 					info.isFireSource(-1, 0, 0, 5);
-			if(!isFireSource)
+			if (!isFireSource)
 			{
-				int l1 = l + rand.nextInt(5) / 3;
-				if(l1 > 15)
+				if (Worlds.isCatchingRain(worldIn, pos, true))
 				{
 					worldIn.setBlockToAir(pos);
+					worldIn.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.2F + (rand.nextFloat() - rand.nextFloat()) * .8F, true);
+					return;
 				}
-				else if(l1 != l)
+				int l1 = l + rand.nextInt(5) / 3;
+				if (l1 > 15)
 				{
-					worldIn.setBlockState(pos, state.withProperty(STATE, l1), 2);
+					info.setToAir(pos);
+				}
+				else if (l1 != l)
+				{
+					info.setBlockState(pos, state.withProperty(STATE, l1), 2);
 				}
 			}
 			worldIn.scheduleUpdate(pos, this, tickRate(worldIn) + rand.nextInt(14));
@@ -393,7 +392,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				chance -= 50;
 			}
 			
-			if(!flag2)
+			if (!flag2)
 			{
 				tryCatchFire(info, state, worldIn, pos, chance, rand, l, W);
 				tryCatchFire(info, state, worldIn, pos, chance, rand, l, E);
@@ -402,7 +401,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				tryCatchFire(info, state, worldIn, pos, chance, rand, l, S);
 				tryCatchFire(info, state, worldIn, pos, chance, rand, l, N);
 			}
-			if(range > 0)
+			if (range > 0)
 			{
 				for (int i = -range + off1.x; i <= range + off1.x; ++i)
 				{
@@ -420,23 +419,8 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 											(i + off1.x * .6) * (i + off1.x * .6) +
 											(j + off1.y * .6) * (j + off1.y * .6) +
 											(k + off1.z * .6) * (k + off1.z * .6));
-									if (flag1)
-									{
-										chance /= 2;
-									}
-									BlockPos pos2 = pos.add(i, j, k);
-									if (info.isCustomed(i, j, k))
-									{
-										Block block = (state = worldIn.getBlockState(pos2)).getBlock();
-										if (block instanceof IThermalCustomBehaviorBlock &&
-												((IThermalCustomBehaviorBlock) block).onBurn(worldIn, pos2, 1000F / chance, U))
-											continue;
-									}
-									if (chance > 0 && rand.nextInt(chance) < speed)
-									{
-										int l2 = Math.min(15, l + rand.nextInt(4) / 2);
-										worldIn.setBlockState(pos2, getDefaultState().withProperty(STATE, l2).withProperty(SMOLDER, false), 3);
-									}
+									if (flag1) chance /= 2;
+									trySpreadFire(worldIn, pos, i, j, k, info, rand, l, chance, speed);
 								}
 							}
 						}
@@ -446,54 +430,86 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		}
 	}
 	
-	private void tryCatchFire(FireLocateInfo info, IBlockState fireState, World worldIn, BlockPos pos, int chance, Random random, int age, Direction face)
+	private void trySpreadFire(World worldIn, BlockPos pos, int i, int j, int k, FireLocationInfo info, Random rand, int level, int chance, int speed)
 	{
-		pos = face.offset(pos);
-		IBlockState state = worldIn.getBlockState(pos);
-		if (state.getBlock() instanceof IThermalCustomBehaviorBlock &&
-				((IThermalCustomBehaviorBlock) state.getBlock()).onBurningTick(worldIn, pos, random, face.getOpposite(), fireState))
-			return;
-		int i = info.getFlammability(face.x, face.y, face.z, face.getOpposite());
-		if (random.nextInt(chance) < i)
+		BlockPos pos2 = pos.add(i, j, k);
+		IBlockState state = worldIn.getBlockState(pos2);
+		if (state.getBlock().isReplaceable(worldIn, pos2))
 		{
-			if (random.nextInt(age + 10) < 5 && !worldIn.isRainingAt(pos))
+			boolean flag = false;
+			for (Direction direction : Direction.DIRECTIONS_3D)
 			{
-				int j = Math.min(15, age + random.nextInt(5) / 4);
-				worldIn.setBlockState(pos, getDefaultState().withProperty(STATE, j).withProperty(SMOLDER, false), 3);
+				if (info.isCustomed(i + direction.x, j + direction.y, k + direction.z))
+				{
+					BlockPos pos3 = direction.offset(pos2);
+					if (((IThermalCustomBehaviorBlock) worldIn.getBlockState(pos3).getBlock()).onBurn(info.setMainPos(pos3), 1000F / chance, U))
+					{
+						info.resetMainPos();
+						flag = true;
+					}
+				}
 			}
-			else
+			if (flag) return;
+			if (chance > 0 && rand.nextInt(chance) < speed)
 			{
-				state.getBlock().onBlockDestroyedByPlayer(worldIn, pos, state);
-				worldIn.setBlockToAir(pos);
+				int l2 = Math.min(15, level + rand.nextInt(4) / 2);
+				info.setBlockState(pos2, getDefaultState().withProperty(STATE, l2).withProperty(SMOLDER, false), 3);
 			}
 		}
 	}
 	
-	private float countBlockDencyInRange(World world, BlockPos pos, int range)
+	private void tryCatchFire(FireLocationInfo info, IBlockState fireState, World worldIn, BlockPos pos, int chance, Random random, int age, Direction face)
 	{
-		int count = 0;
-		int air = 0;
-		for(int i = -range; i <= range; ++i)
+		info.setMainPos(pos = face.offset(pos));
+		IBlockState state;
+		if (info.isCustomed(face.x, face.y, face.z) &&
+				((IThermalCustomBehaviorBlock) worldIn.getBlockState(pos).getBlock()).onBurningTick(info, random, face.getOpposite(), fireState))
 		{
-			for(int j = -range; j <= range; ++j)
+			info.resetMainPos();
+			return;
+		}
+		int i = info.getFlammability(face.x, face.y, face.z, face.getOpposite());
+		if (random.nextInt(chance) < i)
+		{
+			if (random.nextInt(age + 10) < 5 && !Worlds.isCatchingRain(worldIn, pos, true))
 			{
-				for(int k = -range; k <= range; ++k)
-				{
-					BlockPos pos2;
-					if(world.isAirBlock(pos2 = pos.add(i, j, k)) && canBlockStayAt(world, pos2))
-					{
-						++air;
-					}
-					else if(world.getBlockState(pos2).getBlock() == this)
-					{
-						++air;
-						++count;
-					}
-				}
+				int j = Math.min(15, age + random.nextInt(5) / 4);
+				info.setBlockState(getDefaultState().withProperty(STATE, j).withProperty(SMOLDER, false), 3);
+			}
+			else
+			{
+				(state = worldIn.getBlockState(pos)).getBlock().onBlockDestroyedByPlayer(worldIn, pos, state);
+				info.removeBlock();
 			}
 		}
-		return (float) count / (float) air;
+		info.resetMainPos();
 	}
+	
+	//	private float countBlockDencyInRange(World world, BlockPos pos, int range)
+	//	{
+	//		int count = 0;
+	//		int air = 0;
+	//		for(int i = -range; i <= range; ++i)
+	//		{
+	//			for(int j = -range; j <= range; ++j)
+	//			{
+	//				for(int k = -range; k <= range; ++k)
+	//				{
+	//					BlockPos pos2;
+	//					if(world.isAirBlock(pos2 = pos.add(i, j, k)) && canBlockStayAt(world, pos2))
+	//					{
+	//						++air;
+	//					}
+	//					else if(world.getBlockState(pos2).getBlock() == this)
+	//					{
+	//						++air;
+	//						++count;
+	//					}
+	//				}
+	//			}
+	//		}
+	//		return (float) count / (float) air;
+	//	}
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
@@ -520,7 +536,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			}
 			else
 			{
-				worldIn.scheduleUpdate(pos, this, tickRate(worldIn) + worldIn.rand.nextInt(10));
+				worldIn.scheduleUpdate(pos.toImmutable(), this, tickRate(worldIn) + worldIn.rand.nextInt(10));
 			}
 		}
 	}
@@ -635,165 +651,5 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public boolean canBeReplacedByLeaves(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return true;
-	}
-	
-	private class FireLocateInfo
-	{
-		int range;
-		World world;
-		BlockPos pos;
-		/**
-		 * The information for fire update.
-		 * The elementary list length is 13.
-		 * 0 for boolean type prop
-		 *
-		 * 1-6 for spread speed
-		 * 7-12 for flammability
-		 */
-		int[][][][] values;
-		
-		public FireLocateInfo(int range, World world, BlockPos pos)
-		{
-			this.range = range;
-			this.world = world;
-			this.pos = pos;
-			int r1 = 2 * range + 1;
-			this.values = new int[r1][r1][r1][];
-		}
-		
-		public int getSpreadSpeed(BlockPos pos)
-		{
-			return getSpreadSpeed(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ());
-		}
-		public int getSpreadSpeed(int ofX, int ofY, int ofZ)
-		{
-			int value = 0;
-			value = Math.max(value, value((byte) ofX, (byte) (ofY + 1), (byte) ofZ, (byte) 0x1));
-			value = Math.max(value, value((byte) ofX, (byte) (ofY - 1), (byte) ofZ, (byte) 0x2));
-			value = Math.max(value, value((byte) ofX, (byte) ofY, (byte) (ofZ + 1), (byte) 0x3));
-			value = Math.max(value, value((byte) ofX, (byte) ofY, (byte) (ofZ - 1), (byte) 0x4));
-			value = Math.max(value, value((byte) (ofX + 1), (byte) ofY, (byte) ofZ, (byte) 0x5));
-			value = Math.max(value, value((byte) (ofX - 1), (byte) ofY, (byte) ofZ, (byte) 0x6));
-			return value;
-		}
-		
-		public int getFlammability(BlockPos pos)
-		{
-			return getFlammability(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ());
-		}
-		public int getFlammability(int ofX, int ofY, int ofZ)
-		{
-			int value = 0;
-			value = Math.max(value, getFlammability(ofX, ofY + 1, ofZ, D));
-			value = Math.max(value, getFlammability(ofX, ofY - 1, ofZ, U));
-			value = Math.max(value, getFlammability(ofX, ofY, ofZ + 1, N));
-			value = Math.max(value, getFlammability(ofX, ofY, ofZ - 1, S));
-			value = Math.max(value, getFlammability(ofX + 1, ofY, ofZ, W));
-			value = Math.max(value, getFlammability(ofX - 1, ofY, ofZ, E));
-			return value;
-		}
-		public int getFlammability(int ofX, int ofY, int ofZ, Direction facing)
-		{
-			return value((byte) ofX, (byte) ofY, (byte) ofZ, (byte) (0x7 + facing.ordinal()));
-		}
-		
-		public boolean isAir(BlockPos pos)
-		{
-			return isAir(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ());
-		}
-		public boolean isAir(int ofX, int ofY, int ofZ)
-		{
-			return value((byte) ofX, (byte) ofY, (byte) ofZ, (byte) 0x0) == 0;
-		}
-		
-		public boolean isFire(BlockPos pos)
-		{
-			return isFire(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ());
-		}
-		public boolean isFire(int ofX, int ofY, int ofZ)
-		{
-			return value((byte) ofX, (byte) ofY, (byte) ofZ, (byte) 0x0) == 1;
-		}
-		
-		public boolean isFlammable(BlockPos pos, EnumFacing facing)
-		{
-			return isFlammable(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ(), facing.ordinal());
-		}
-		public boolean isFlammable(int ofX, int ofY, int ofZ, int facing)
-		{
-			return (value((byte) ofX, (byte) ofY, (byte) ofZ, (byte) 0x0) & (1 << (facing + 8))) != 0;
-		}
-		
-		public boolean isCustomed(BlockPos pos)
-		{
-			return isCustomed(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ());
-		}
-		public boolean isCustomed(int ofX, int ofY, int ofZ)
-		{
-			return (value((byte) ofX, (byte) ofY, (byte) ofZ, (byte) 0x0) & 0x4) != 0;
-		}
-		
-		public boolean isFireSource(BlockPos pos, EnumFacing facing)
-		{
-			return isFireSource(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ(), facing.ordinal());
-		}
-		public boolean isFireSource(int ofX, int ofY, int ofZ, int facing)
-		{
-			return (value((byte) ofX, (byte) ofY, (byte) ofZ, (byte) 0x0) & (1 << (facing + 16))) != 0;
-		}
-		
-		public boolean canBlockStay(BlockPos pos)
-		{
-			return canBlockStay(pos.getX() - this.pos.getX(), pos.getY() - this.pos.getY(), pos.getZ() - this.pos.getZ());
-		}
-		public boolean canBlockStay(int ofX, int ofY, int ofZ)
-		{
-			return
-					(value((byte) (ofX + 1), (byte) ofY, (byte) ofZ, (byte) 0x0) & 0x2) == 0 ||
-					(value((byte) (ofX - 1), (byte) ofY, (byte) ofZ, (byte) 0x0) & 0x2) == 0 ||
-					(value((byte) ofX, (byte) (ofY + 1), (byte) ofZ, (byte) 0x0) & 0x2) == 0 ||
-					(value((byte) ofX, (byte) (ofY - 1), (byte) ofZ, (byte) 0x0) & 0x2) == 0 ||
-					(value((byte) ofX, (byte) ofY, (byte) (ofZ + 1), (byte) 0x0) & 0x2) == 0 ||
-					(value((byte) ofX, (byte) ofY, (byte) (ofZ - 1), (byte) 0x0) & 0x2) == 0;
-		}
-		
-		private int value(byte i, byte j, byte k, byte type)
-		{
-			int[] list = this.values[i + this.range][j + this.range][k + this.range];
-			if (list != null)
-				return list[type];
-			this.values[i + this.range][j + this.range][k + this.range] = list = new int[13];
-			BlockPos pos1 = this.pos.add(i, j, k);
-			if(this.world.isAirBlock(pos1))
-				return 0;
-			IBlockState state = this.world.getBlockState(pos1);
-			if(state.getBlock() == BlockFire.this)
-			{
-				list[0] = 1;
-				return list[type];
-			}
-			list[0] = 2;
-			for(EnumFacing facing : EnumFacing.VALUES)
-			{
-				boolean isCatchingRaining = nebula.common.util.Worlds.isCatchingRain(this.world, pos1, true);
-				if((state.getBlock() instanceof IThermalCustomBehaviorBlock &&
-						((IThermalCustomBehaviorBlock) state.getBlock()).canFireBurnOn(this.world, pos1, facing, isCatchingRaining)) ||
-						state.getBlock().isFlammable(this.world, pos1, facing))
-				{
-					list[0] |= 1 << (8 + facing.ordinal());
-				}
-				else if(state.getBlock().isFireSource(this.world, pos1, facing))
-				{
-					list[0] |= 1 << (16 + facing.ordinal());
-				}
-				if(state.getBlock() instanceof IThermalCustomBehaviorBlock)
-				{
-					list[0] |= 0x4;
-				}
-				list[7 + facing.ordinal()] = state.getBlock().getFlammability(this.world, pos1, facing);
-				list[1 + facing.ordinal()] = state.getBlock().getFireSpreadSpeed(this.world, pos1, facing);
-			}
-			return list[type];
-		}
 	}
 }

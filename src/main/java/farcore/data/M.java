@@ -10,6 +10,7 @@ import static farcore.data.MC.brickBlock;
 
 import farcore.FarCore;
 import farcore.lib.block.behavior.RockBehaviorFlammable;
+import farcore.lib.block.behavior.RockBehaviorNetherrack;
 import farcore.lib.material.Mat;
 import farcore.lib.material.behavior.metal.MatBehaviorCopper;
 import farcore.lib.plant.PlantBristlegrass;
@@ -44,7 +45,7 @@ public class M
 	public static final Mat kimberlite			= new Mat(7008, FarCore.ID , "kimberlite"			, "Kimberlite"			, "Kimberlite"			).setRGBa(0x4D4D49FF).setToolProp(  46, 11, 3.1F, 0.8F,  7.2F, -0.6F).setRock(10, 7.8F, 31.4F);
 	public static final Mat limestone			= new Mat(7009, FarCore.ID , "limestone"			, "Lime"				, "Limestone"			).setRGBa(0xC9C9C8FF)                                                .setRock( 4, 1.3F,  5.5F);
 	public static final Mat marble				= new Mat(7010, FarCore.ID , "marble"				, "Marble"				, "Marble"				).setRGBa(0xE2E6F0FF)                                                .setRock( 6, 7.8F,  8.4F);
-	public static final Mat netherrack			= new Mat(7011, "minecraft", "netherrack"			, "Netherrack"			, "Netherrack"			).setRGBa(0x5F3636FF)                                                .setRock( 3, 1.3F,  3.8F);
+	public static final Mat netherrack			= new Mat(7011, "minecraft", "netherrack"			, "Netherrack"			, "Netherrack"			).setRGBa(0x5F3636FF)                                                ;
 	public static final Mat obsidian			= new Mat(7012, FarCore.ID , "obsidian"				, "Obsidian"			, "Obsidian"			).setRGBa(0x12121BFF).setToolProp(   8, 12, 5.2F, 2.7F, 12.0F,  0.2F).setRock(17, 9.8F,  4.2F);
 	public static final Mat peridotite			= new Mat(7013, FarCore.ID , "peridotite"			, "Peridotite"			, "Peridotite"			).setRGBa(0x717A5CFF).setToolProp(  45, 11, 3.0F, 0.8F,  8.0F, -0.6F).setRock(10, 7.7F, 30.5F);
 	public static final Mat rhyolite			= new Mat(7014, FarCore.ID , "rhyolite"				, "Rhyolite"			, "Rhyolite"			).setRGBa(0x4F535AFF).setToolProp(  39, 10, 2.6F, 0.8F,  8.0F, -0.5F).setRock( 9, 6.0F, 21.7F);
@@ -170,6 +171,7 @@ public class M
 		
 		bituminous_coal	.setRock(new RockBehaviorFlammable<>(bituminous_coal, 4, 2.5F,  7.7F));
 		lignite			.setRock(new RockBehaviorFlammable<>(lignite		, 3, 2.2F,  6.4F));
+		netherrack		.setRock(new RockBehaviorNetherrack(netherrack, 3, 1.3F, 3.8F));
 		
 		brick.setNames(redbrick, "Red Brick", greybrick, "Grey Brick");
 		brickBlock.setNames(redbrick, "Red Brick", greybrick, "Grey Brick");

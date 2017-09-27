@@ -15,6 +15,7 @@ import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.tool.ToolHooks;
 import nebula.common.util.Direction;
+import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.EnumPushReaction;
@@ -397,18 +398,13 @@ public interface IBlockBehavior<B>
 		return -1F;
 	}
 	
-	default boolean onBurn(B block, IBlockState state, World world, BlockPos pos, float burnHardness, Direction direction)
+	default boolean onBurn(B block, IBlockState state, IModifiableCoord coord, float burnHardness, Direction direction)
 	{
 		return false;
 	}
 	
-	default boolean onBurningTick(B block, IBlockState state, World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
+	default boolean onBurningTick(B block, IBlockState state, IModifiableCoord coord, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		return false;
-	}
-	
-	default double getHeatCapacity(BlockSubBehavior blockSubBehavior, IBlockState state, World world, BlockPos pos)
-	{
-		return -1F;
 	}
 }

@@ -9,6 +9,7 @@ import farcore.lib.material.prop.PropertyBasic;
 import farcore.lib.material.prop.PropertyBlockable;
 import nebula.common.block.BlockBase;
 import nebula.common.util.Direction;
+import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -95,13 +96,13 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	}
 	
 	@Override
-	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
+	public boolean onBurn(IModifiableCoord coord, float burnHardness, Direction direction)
 	{
 		return false;
 	}
 	
 	@Override
-	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
+	public boolean onBurningTick(IModifiableCoord coord, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		return false;
 	}
@@ -110,12 +111,6 @@ public class BlockMaterial<P extends PropertyBlockable> extends BlockBase implem
 	public double getThermalConduct(World world, BlockPos pos, IBlockState state)
 	{
 		return this.basic.thermalConduct;
-	}
-	
-	@Override
-	public double getHeatCapacity(World world, BlockPos pos, IBlockState state)
-	{
-		return this.basic.heatCap;
 	}
 	
 	@Override

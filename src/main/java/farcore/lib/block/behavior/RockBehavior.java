@@ -26,6 +26,7 @@ import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Worlds;
+import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -138,7 +139,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	@Override
 	public void notifyAfterTicking(B block, IBlockState state, World world, BlockPos pos, IBlockState changed)
 	{
-		if(!canBlockStayTotally(world, pos, state, world.rand))
+		if (!canBlockStayTotally(world, pos, state, world.rand))
 		{
 			Worlds.fallBlock(world, pos, state);
 		}
@@ -147,7 +148,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	@Override
 	public void updateTick(B block, IBlockState state, World world, BlockPos pos, Random random)
 	{
-		if(!canBlockStay(world, pos, state))
+		if (!canBlockStay(world, pos, state))
 		{
 			Worlds.fallBlock(world, pos, state);
 		}
@@ -192,7 +193,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(B block, IBlockState state, World world, BlockPos pos, Random random)
 	{
-		if(state.getValue(HEATED))
+		if (state.getValue(HEATED))
 		{
 			int x = pos.getX();
 			int y = pos.getY();
@@ -243,12 +244,12 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		return isFlammable(block, state, world, pos, face) ? 40 : 0;
 	}
 	
-	public boolean onBurn(B block, IBlockState state, World world, BlockPos pos, float burnHardness, Direction direction)
+	public boolean onBurn(B block, IBlockState state, IModifiableCoord coord, float burnHardness, Direction direction)
 	{
 		EnumRockType type = state.getValue(TYPE);
-		if(type.burnable)
+		if (type.burnable)
 		{
-			world.setBlockState(pos, state.withProperty(TYPE, type.burned()), 3);
+			coord.setBlockState(state.withProperty(TYPE, type.burned()), 3);
 		}
 		return false;
 	}

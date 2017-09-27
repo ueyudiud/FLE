@@ -16,7 +16,6 @@ import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 
 /**
  * @author ueyudiud
@@ -87,7 +86,6 @@ implements IThermalHandler
 	
 	private void recheckStructure()
 	{
-		MutableBlockPos pos = new MutableBlockPos();
 		if (is(Smoldering))
 		{
 			if (isAirNearby(true))
@@ -98,17 +96,8 @@ implements IThermalHandler
 			else
 			{
 				disable(Burning);
-				label:
+				if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, coord->coord.isAirBlock(Direction.Q)) > 3)
 				{
-					for (int i = -1; i <= 1; ++i)
-						for (int j = -1; j <= 1; ++j)
-							for (int k = -1; k <= 1; ++k)
-							{
-								if (i == 0 || j == 0 || k == 0) continue;
-								pos.setPos(this.pos.getX() + i, this.pos.getY() + j, this.pos.getZ() + k);
-								if (Worlds.isAir(this.world, pos))
-									break label;
-							}
 					disable(Smoldering);
 					syncToNearby();
 				}
@@ -128,10 +117,10 @@ implements IThermalHandler
 		{
 			if (getBlockState(Direction.U).getBlock() == EnumBlock.fire.block ||
 					ThermalNet.getTemperature(this) >= 380F || //Log flame temperature
-					(getTE(Direction.N) instanceof TEFirewood && ((TEFirewood) getTE(Direction.N)).is(Burning)) ||
-					(getTE(Direction.S) instanceof TEFirewood && ((TEFirewood) getTE(Direction.S)).is(Burning)) ||
-					(getTE(Direction.E) instanceof TEFirewood && ((TEFirewood) getTE(Direction.E)).is(Burning)) ||
-					(getTE(Direction.W) instanceof TEFirewood && ((TEFirewood) getTE(Direction.W)).is(Burning)))
+					(getTE(Direction.N) instanceof TEFirewood && ((TEFirewood) getTE(Direction.N)).is(Smoldering)) ||
+					(getTE(Direction.S) instanceof TEFirewood && ((TEFirewood) getTE(Direction.S)).is(Smoldering)) ||
+					(getTE(Direction.E) instanceof TEFirewood && ((TEFirewood) getTE(Direction.E)).is(Smoldering)) ||
+					(getTE(Direction.W) instanceof TEFirewood && ((TEFirewood) getTE(Direction.W)).is(Smoldering)))
 			{
 				if (!is(Carbonate))
 				{
@@ -185,10 +174,10 @@ implements IThermalHandler
 		this.recheckingStructure.onUpdate();
 		if (is(Burning))
 		{
-			long value = (long) (1000 * this.material.getProperty(MP.property_wood).burnHeat);
+			long value = Math.min(this.remainEnergy, (long) (800 * this.material.getProperty(MP.property_wood).burnHeat));
 			this.remainEnergy -= value;
 			this.helper.addInternalEnergy(value);
-			if (this.remainEnergy <= 0)
+			if (this.remainEnergy == 0)
 			{
 				removeBlock();
 				return;
@@ -215,10 +204,14 @@ implements IThermalHandler
 		this.helper.addInternalEnergy(value);
 	}
 	
-	
 	public Mat getMaterial()
 	{
 		return this.material;
+	}
+	
+	public void setFlammed()
+	{
+		enable(Smoldering);
 	}
 	
 	public boolean isBurning()

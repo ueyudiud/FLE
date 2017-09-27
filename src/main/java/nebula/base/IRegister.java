@@ -37,14 +37,14 @@ public interface IRegister<T> extends Iterable<T>
 	/**
 	 * Get element id, if element contain two element, get first id.
 	 * @param arg
-	 * @return The id of element, -1 means the element is not present in register.
+	 * @return The id of element, <code>-1</code> means the element is not present in register.
 	 */
 	int id(T arg);
 	
 	/**
 	 * Get element id from name.
 	 * @param name
-	 * @return The id of element with select name, -1 means the element is not present in register.
+	 * @return The id of element with select name, <code>-1</code> means the element is not present in register.
 	 */
 	int id(String name);
 	

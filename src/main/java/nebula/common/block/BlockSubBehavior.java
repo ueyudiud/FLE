@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.block;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.tile.IToolableTile;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
+import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -1049,26 +1049,12 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public double getHeatCapacity(World world, BlockPos pos, IBlockState state)
+	public boolean onBurn(IModifiableCoord coord, float burnHardness, Direction direction)
 	{
 		try
 		{
-			return getBehavior(state).getHeatCapacity(this, state, world, pos);
-		}
-		catch (Exception exception)
-		{
-			Log.catchingIfDebug(exception);
-			return 0;
-		}
-	}
-	
-	@Override
-	public boolean onBurn(World world, BlockPos pos, float burnHardness, Direction direction)
-	{
-		try
-		{
-			IBlockState state = world.getBlockState(pos);
-			return getBehavior(state).onBurn(this, state, world, pos, burnHardness, direction);
+			IBlockState state = coord.getBlockState();
+			return getBehavior(state).onBurn(this, state, coord, burnHardness, direction);
 		}
 		catch (Exception exception)
 		{
@@ -1078,12 +1064,12 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public boolean onBurningTick(World world, BlockPos pos, Random rand, Direction fireSourceDir, IBlockState fireState)
+	public boolean onBurningTick(IModifiableCoord coord, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		try
 		{
-			IBlockState state = world.getBlockState(pos);
-			return getBehavior(state).onBurningTick(this, state, world, pos, rand, fireSourceDir, fireState);
+			IBlockState state = coord.getBlockState();
+			return getBehavior(state).onBurningTick(this, state, coord, rand, fireSourceDir, fireState);
 		}
 		catch (Exception exception)
 		{

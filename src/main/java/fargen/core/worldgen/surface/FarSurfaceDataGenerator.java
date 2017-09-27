@@ -6,8 +6,11 @@ package fargen.core.worldgen.surface;
 
 import java.util.Random;
 
+import javax.annotation.Nonnull;
+
 import farcore.data.M;
 import farcore.data.MP;
+import farcore.lib.block.terria.BlockSand;
 import farcore.lib.block.terria.BlockSoil;
 import farcore.lib.block.terria.BlockSoil.EnumCoverType;
 import farcore.lib.crop.ICrop;
@@ -21,6 +24,8 @@ import fle.core.tree.TreeGenClassic;
 import fle.core.tree.TreeGenJungle;
 import fle.core.tree.TreeGenPine;
 import fle.core.tree.TreeGenShrub;
+import nebula.base.IRegister;
+import nebula.base.Register;
 import nebula.base.function.WeightedRandomSelector;
 import nebula.common.util.A;
 import nebula.common.util.noise.NoiseBase;
@@ -115,35 +120,35 @@ public class FarSurfaceDataGenerator
 		if (rand.nextInt(31) == 0)
 		{
 			int weight;
-			weight = c(16, x, z, 29371.0, noise, temp, 0.8F, 0.7F, rain, 1.4F, 1.2F);
+			weight = c(16, x, z, 29371.0, noise, temp, 30.0F, 8.0F, rain, 1.4F, 1.2F);
 			if (weight > 0)
 			{
 				selector.add(WHEAT, weight);
 			}
-			weight = c(24, x, z, 26382.0, noise, temp, 0.6F, 1.2F, rain, 0.9F, 1.5F);
+			weight = c(24, x, z, 26382.0, noise, temp, 25.0F, 12.0F, rain, 0.9F, 1.5F);
 			if (weight > 0)
 			{
 				selector.add(SOYBEAN, weight);
 			}
-			weight = c(16, x, z, 183723.0, noise, temp, 0.4F, 1.7F, rain, 0.7F, 1.4F);
+			weight = c(16, x, z, 183723.0, noise, temp, 22.0F, 18.0F, rain, 0.7F, 1.4F);
 			if (weight > 0)
 			{
 				selector.add(POTATO, weight);
 			}
-			weight = c(16, x, z, 174837.0, noise, temp, 0.5F, 1.6F, rain, 0.7F, 1.4F);
+			weight = c(16, x, z, 174837.0, noise, temp, 24.0F, 14.0F, rain, 0.7F, 1.4F);
 			if (weight > 0)
 			{
 				selector.add(SWEET_POTATO, weight);
 			}
 			if (rain > 0.7F && temp > 0.64F)
 			{
-				weight = c(64, x, z, 164834.0, noise, temp, 0.9F, 0.4F, rain, 1.0F, 0.9F);
+				weight = c(64, x, z, 164834.0, noise, temp, 32.0F, 6.0F, rain, 1.0F, 0.9F);
 				if (weight > 0)
 				{
 					selector.add(REED, weight);
 				}
 			}
-			weight = c(12, x, z, 164837.0, noise, temp, 0.8F, 1.2F, rain, 0.6F, 0.9F);
+			weight = c(12, x, z, 164837.0, noise, temp, 32.0F, 8.0F, rain, 0.6F, 0.9F);
 			if (weight > 0)
 			{
 				selector.add(WILD_CABBAGE, weight);
@@ -165,18 +170,25 @@ public class FarSurfaceDataGenerator
 	
 	private static IBlockState[] getSoilLayer(int id)
 	{
-		switch (id)
-		{
-		case Byte.MAX_VALUE : return SOIL_DEFAULT;
-		default : return SOIL_LIST[id];
-		}
+		return SOIL_LAYER_REGISTER.get(id, SOIL_DEFAULT);
 	}
 	
 	static final IBlockState
 	ROCK = M.stone.getProperty(MP.property_rock).block.getDefaultState(),
 	SOIL_DEFAULT[] = {Blocks.GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState()},
-	STATES2[] = {ROCK},
-	SOIL_LIST[][];
+	STATES2[] = {ROCK};
+	
+	static final IRegister<IBlockState[]> SOIL_LAYER_REGISTER = new Register<>(256);
+	
+	public static @Nonnull IBlockState[] getSoilLayerByName(String name)
+	{
+		return SOIL_LAYER_REGISTER.get(name, SOIL_DEFAULT);
+	}
+	
+	public static int getSoilLayerIDByName(String name)
+	{
+		return SOIL_LAYER_REGISTER.id(name);
+	}
 	
 	protected final FarSurfaceBiomeProvider biomeProvider;
 	
@@ -213,6 +225,11 @@ public class FarSurfaceDataGenerator
 		return state.getBlock() instanceof BlockSoil && state.getValue(BlockSoil.COVER_TYPE).getNoCover() == EnumCoverType.GRASS;
 	}
 	
+	public static boolean isSand(IBlockState state)
+	{
+		return state.getBlock() instanceof BlockSand;
+	}
+	
 	public static IBlockState getGrassStateWithTemperatureAndRainfall(IBlockState state, float temp, float rain)
 	{
 		Block block = state.getBlock();
@@ -242,19 +259,22 @@ public class FarSurfaceDataGenerator
 	
 	static
 	{
-		final Mat[] soils = {M.latrosol, M.latroaluminosol, M.ruboloam, M.ruboaluminoloam, M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol};
-		SOIL_LIST = new IBlockState[soils.length][];
-		
 		final IBlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
 		
-		for (int i = 0; i < soils.length; ++i)
+		for (Mat soil : new Mat[]{M.latrosol, M.latroaluminosol, M.ruboloam, M.ruboaluminoloam,
+				M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol})
 		{
-			IBlockState soil = soils[i].getProperty(MP.property_soil).block.getDefaultState();
-			SOIL_LIST[i] = new IBlockState[] {
-					soil.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.GRASS),
-					soil.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.NONE),
+			IBlockState state = soil.getProperty(MP.property_soil).block.getDefaultState();
+			SOIL_LAYER_REGISTER.register(soil.name, new IBlockState[] {
+					state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.GRASS),
+					state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.NONE),
 					GRAVEL
-			};
+			});
+		}
+		for (Mat sand : new Mat[]{M.sand, M.redsand})
+		{
+			IBlockState state = sand.getProperty(MP.property_sand).block.getDefaultState();
+			SOIL_LAYER_REGISTER.register(sand.name, new IBlockState[]{state, state, GRAVEL});
 		}
 		
 		CEIBA1.setHeight(32, 10);

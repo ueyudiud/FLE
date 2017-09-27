@@ -7,9 +7,11 @@ package nebula.common.util;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,6 +22,7 @@ import nebula.Nebula;
 import nebula.common.CommonOverride;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.entity.EntityFallingBlockExtended;
+import nebula.common.enviornment.EnviornmentBlockPos;
 import nebula.common.network.packet.PacketBreakBlock;
 import nebula.common.world.ICoord;
 import nebula.common.world.IObjectInWorld;
@@ -704,5 +707,95 @@ public final class Worlds
 				(!state.isFullCube() &&
 						(side == null || !state.isSideSolid(world, pos, side.of())) &&
 						state.getCollisionBoundingBox(world, pos) == Block.NULL_AABB);
+	}
+	
+	/**
+	 * Check to <tt>match</tt> a specific block state or tile entity from source block position and
+	 * check neighbour of matched block position and return true if enough block states are matched.
+	 * @param world the world.
+	 * @param pos the position to start check.
+	 * @param checkItSelf should this position be checked first or start from its neighbous first and
+	 *                    will ignore main position.
+	 * @param count how many block states matches can finished the checking task.
+	 * @param predicate the predictor to predicate if block state can be matched.
+	 * @return <code>true</code> if enough block states connect to source block position in a line matched.
+	 */
+	public static boolean checkForMatch(World world, BlockPos pos, boolean checkItSelf, int count, Predicate<ICoord> predicate)
+	{
+		List<BlockPos> list = new ArrayList<>();
+		LinkedList<BlockPos> unchecked = new LinkedList<>();
+		if (checkItSelf)
+			unchecked.add(pos);
+		else
+		{
+			list.add(pos);
+			unchecked.add(pos.up());
+			unchecked.add(pos.down());
+			unchecked.add(pos.north());
+			unchecked.add(pos.south());
+			unchecked.add(pos.east());
+			unchecked.add(pos.west());
+		}
+		list.addAll(unchecked);
+		int size = 0;
+		BlockPos pos2;
+		final int maxCheck = MathHelper.log2DeBruijn(count) * 25 + count; /* Ticking required. */
+		while (!unchecked.isEmpty() && list.size() <= maxCheck)
+		{
+			BlockPos pos1 = unchecked.removeFirst();
+			if (predicate.test(new EnviornmentBlockPos(world, pos1)))
+			{
+				if (++size == count) return true;
+				for (EnumFacing facing : EnumFacing.VALUES)
+					if (!list.contains(pos2 = pos1.offset(facing)))
+					{
+						list.add(pos2);
+						unchecked.add(pos2);
+					}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checking task, to <tt>match</tt> a specific block state or tile entity from source block position
+	 * and check neighbour of matched block position and return true if minimum first matched block state
+	 * found.
+	 * @see #checkForMatch(World, BlockPos, boolean, int, Predicate)
+	 */
+	public static int checkForMinDistance(World world, BlockPos pos, boolean checkItSelf, int max, Predicate<ICoord> predicate)
+	{
+		List<BlockPos> list = new ArrayList<>();
+		LinkedList<BlockPos> unchecked = new LinkedList<>();
+		if (checkItSelf)
+			unchecked.add(pos);
+		else
+		{
+			list.add(pos);
+			unchecked.add(pos.up());
+			unchecked.add(pos.down());
+			unchecked.add(pos.north());
+			unchecked.add(pos.south());
+			unchecked.add(pos.east());
+			unchecked.add(pos.west());
+		}
+		list.addAll(unchecked);
+		BlockPos pos2;
+		final int maxCheck = 3 * MathHelper.log2DeBruijn(max) * 25 + max * max; /* Ticking required. */
+		while (!unchecked.isEmpty() && list.size() <= maxCheck)
+		{
+			BlockPos pos1 = unchecked.removeFirst();
+			if (!predicate.test(new EnviornmentBlockPos(world, pos1)))
+			{
+				for (EnumFacing facing : EnumFacing.VALUES)
+					if (Maths.lp1Distance(pos, pos2 = pos1.offset(facing)) <= max && !list.contains(pos2))
+					{
+						unchecked.add(pos2);
+						list.add(pos2);
+					}
+			}
+			else return Maths.lp1Distance(pos, pos1);
+		}
+		return Integer.MAX_VALUE;
 	}
 }

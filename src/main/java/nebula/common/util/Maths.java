@@ -6,6 +6,7 @@ package nebula.common.util;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
 
 /**
  * @author ueyudiud
@@ -306,5 +307,11 @@ public final class Maths
 	public static double asinh(double d)
 	{
 		return Math.log(d+Math.sqrt(d*d+1));
+	}
+	
+	public static int lp1Distance(Vec3i v1, Vec3i v2)
+	{
+		return v1 == v2 ? 0 :
+			Math.abs(v1.getX() - v2.getX()) + Math.abs(v1.getY() - v2.getY()) + Math.abs(v1.getZ() - v2.getZ());
 	}
 }

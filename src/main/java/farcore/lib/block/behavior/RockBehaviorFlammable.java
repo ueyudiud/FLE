@@ -9,6 +9,7 @@ import java.util.Random;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.material.Mat;
 import nebula.common.util.Direction;
+import nebula.common.world.IModifiableCoord;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -50,16 +51,16 @@ public class RockBehaviorFlammable<B extends BlockRock> extends RockBehavior<B>
 	}
 	
 	@Override
-	public boolean onBurn(B block, IBlockState state, World world, BlockPos pos, float burnHardness,
+	public boolean onBurn(B block, IBlockState state, IModifiableCoord coord, float burnHardness,
 			Direction direction)
 	{
-		return super.onBurn(block, state, world, pos, burnHardness, direction);
+		return super.onBurn(block, state, coord, burnHardness, direction);
 	}
 	
 	@Override
-	public boolean onBurningTick(B block, IBlockState state, World world, BlockPos pos, Random rand,
+	public boolean onBurningTick(B block, IBlockState state, IModifiableCoord coord, Random rand,
 			Direction fireSourceDir, IBlockState fireState)
 	{
-		return super.onBurningTick(block, state, world, pos, rand, fireSourceDir, fireState);
+		return super.onBurningTick(block, state, coord, rand, fireSourceDir, fireState);
 	}
 }
