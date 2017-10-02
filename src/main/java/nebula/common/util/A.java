@@ -61,11 +61,9 @@ public final class A
 		}
 		else
 		{
-			@SuppressWarnings("unchecked")
-			T[] result = (T[]) ObjectArrays.newArray(new TypeToken<T>() {
+			return (T[]) ObjectArrays.newArray(new TypeToken<T>() {
 				private static final long serialVersionUID = 8964692193893392799L;
 			}.getRawType(), len);
-			return result;
 		}
 	}
 	
@@ -226,9 +224,9 @@ public final class A
 	
 	/**
 	 * Transform key array to object array.
-	 * @param array
-	 * @param function Transform function.
-	 * @return
+	 * @param array the source array.
+	 * @param function transform function.
+	 * @return the transformed array.
 	 */
 	public static <K> Object[] transform(K[] array, Function<? super K, ?> function)
 	{
@@ -363,5 +361,23 @@ public final class A
 	{
 		for (Object arg : array) if (arg == null) throw new NullPointerException();
 		return array;
+	}
+	
+	/**
+	 * Compare two array with comparable type by natural order.<p>
+	 * This method is not type safe.
+	 * @param array1 the first array.
+	 * @param array2 the last array.
+	 * @return the order result.
+	 * @see Comparable
+	 */
+	public static int compare(Object[] array1, Object[] array2)
+	{
+		int size = Math.min(array1.length, array2.length);
+		int com;
+		for (int i = 0; i < size; ++i)
+			if ((com = ((Comparable) array1[i]).compareTo(array2[i])) != 0)
+				return com;
+		return -Integer.compare(array1.length, array2.length);
 	}
 }

@@ -19,7 +19,7 @@ import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Game;
 import nebula.common.util.Properties;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -77,7 +77,7 @@ public class TreeLacquer extends Tree
 	}
 	
 	@Override
-	public void registerLogExtData(Block block, boolean isArt, ExtendedBlockStateRegister register)
+	public void registerLogExtData(Block block, boolean isArt, IBlockStateRegister register)
 	{
 		if (isArt)
 			super.registerLogExtData(block, true, register);

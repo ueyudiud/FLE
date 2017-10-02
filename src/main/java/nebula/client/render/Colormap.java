@@ -1,11 +1,15 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.render;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import nebula.Log;
-import net.minecraft.client.renderer.texture.PngSizeInfo;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -23,61 +27,63 @@ public class Colormap
 	
 	public static Colormap getColormap(String location)
 	{
-		Colormap colormap = ColormapFactory.COLORMAPS.get(location);
-		return colormap != null ? colormap : new Colormap(location);
+		return ColormapFactory.COLORMAPS.computeIfAbsent(new ResourceLocation(location), Colormap::new);
 	}
-
+	
 	private String location;
 	private int width;
 	private int height;
 	private int[] colors;
-
-	private Colormap(String location)
+	
+	private Colormap(ResourceLocation location)
 	{
-		this.location = location;
-		ColormapFactory.COLORMAPS.put(location, this);
+		this.location = location.toString();
+	}
+	
+	public ResourceLocation getLocation()
+	{
+		return new ResourceLocation(this.location);
 	}
 	
 	public int getWidth()
 	{
-		return width;
+		return this.width;
 	}
 	
 	public int getHeight()
 	{
-		return height;
+		return this.height;
 	}
 	
 	public int getColor(float u, float v)
 	{
 		if(u < 0F || u > 1F || v < 0F || v > 1F) return 0xFFFFFF;
-		return colors[(int) (width * u) + (int) (height * v) * width];
+		return this.colors[(int) (this.width * u) + (int) (this.height * v) * this.width];
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public static enum ColormapFactory implements IResourceManagerReloadListener
 	{
 		INSTANCE;
-
-		private static final Map<String, Colormap> COLORMAPS = new HashMap();
-
+		
+		private static final Map<ResourceLocation, Colormap> COLORMAPS = new HashMap();
+		
 		@Override
 		public void onResourceManagerReload(IResourceManager resourceManager)
 		{
 			Log.reset();
 			ProgressBar bar = ProgressManager.push("Far Color Map Reloading", COLORMAPS.size());
-			ResourceLocation location;
-			for(Colormap colormap : COLORMAPS.values())
+			for (Entry<ResourceLocation, Colormap> entry : COLORMAPS.entrySet())
 			{
-				location = new ResourceLocation(colormap.location);
-				bar.step(location.toString());
+				Colormap colormap = entry.getValue();
+				bar.step(entry.getKey().toString());
 				try
 				{
-					IResource resource = resourceManager.getResource(location);
-					PngSizeInfo info = PngSizeInfo.makeFromResource(resource);
-					colormap.height = info.pngHeight;
-					colormap.width = info.pngWidth;
-					colormap.colors = TextureUtil.readImageData(resourceManager, location);
+					IResource resource = resourceManager.getResource(entry.getKey());
+					BufferedImage image = TextureUtil.readBufferedImage(resource.getInputStream());
+					colormap.height = image.getHeight();
+					colormap.width = image.getWidth();
+					colormap.colors = image.getRGB(0, 0, colormap.width, colormap.height, null, 0, colormap.width);
 				}
 				catch (IOException | RuntimeException exception)
 				{

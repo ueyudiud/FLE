@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Random;
 
 import farcore.data.EnumBlock;
-import farcore.data.EnumItem;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
+import farcore.data.MC;
 import farcore.lib.block.terria.BlockRock;
+import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyBlockable;
 import farcore.lib.tile.instance.TECustomCarvedStone;
@@ -120,13 +121,13 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 				int count = rand.nextInt(4) + 3;
 				if (rand.nextBoolean())
 				{
-					ret.add(new ItemStack(EnumItem.stone_fragment.item, 1, block.material.id));
+					ret.add(ItemMulti.createStack(block.material, MC.fragment));
 					count -= 2;
 				}
-				ret.add(new ItemStack(EnumItem.stone_chip.item, count, block.material.id));
+				ret.add(ItemMulti.createStack(block.material, MC.chip_rock, count));
 				break;
 			case cobble_art:
-				ret.add(new ItemStack(EnumItem.stone_chip.item, 9, this.material.id));
+				ret.add(ItemMulti.createStack(block.material, MC.chip_rock, 9));
 				break;
 			default:
 				ret.add(new ItemStack(block, 1, type.noSilkTouchDropMeta));

@@ -45,15 +45,15 @@ public class RecipeCraftingTool
 		
 		for (Mat material : Mat.filt(MC.FLINTY_TOOL))
 		{
-			RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), "   c cc c",
+			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "   c cc c",
 					ItemTool.setMaterialToItem(IBF.iTool.getSubItem("awl"), "head", material));
-			RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), "  c ccccc",
+			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "  c ccccc",
 					ItemMulti.createStack(material, MC.axe_rock));
-			RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), "c ccccccc",
+			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "c ccccccc",
 					ItemMulti.createStack(material, MC.shovel_rock));
-			RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), "     cccc",
+			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "     cccc",
 					ItemMulti.createStack(material, MC.hard_hammer_flint));
-			RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), "cc   cc c",
+			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "cc   cc c",
 					ItemMulti.createStack(material, MC.spear_rock));
 		}
 		for (Mat material : Mat.filt(MC.ROCKY_TOOL))

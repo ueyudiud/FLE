@@ -1,10 +1,10 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import farcore.lib.block.instance.BlockRedstoneCircuit;
+import farcore.lib.item.ItemMulti;
 import nebula.client.CreativeTabBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 /**
  * Creative tabs.
  * @author ueyudiud
- *
  */
 public class CT
 {
@@ -39,11 +38,11 @@ public class CT
 		BUILDING = new CreativeTabBase("farcore.building", "Far Building Blocks",
 				() -> new ItemStack(M.marble.getProperty(MP.property_rock).block, 1, EnumRockType.brick.ordinal()));
 		RESOURCE_ITEM = new CreativeTabBase("farcore.resource.item", "Far Resource Item",
-				() -> new ItemStack(EnumItem.stone_chip.item, 1, M.peridotite.id));
+				() -> ItemMulti.createStack(M.peridotite, MC.chip_rock));
 		MACHINE = new CreativeTabBase("farcore.machine", "Far Machine",
 				() -> new ItemStack(Blocks.CRAFTING_TABLE));
 		MATERIAL = new CreativeTabBase("farcore.material", "Far Material",
-				() -> new ItemStack(EnumItem.ingot.item, 1, M.copper.id));
+				() -> ItemMulti.createStack(M.copper, MC.ingot));
 		TOOL = new CreativeTabBase("farcore.tool", "Far Tool",
 				() -> new ItemStack(EnumItem.debug.item));
 		REDSTONE = new CreativeTabBase("farcore.redstone", "Far Redstone",

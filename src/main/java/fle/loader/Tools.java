@@ -70,7 +70,7 @@ public class Tools
 		addTool(11, "decorticating.plate", "Decorticating Plate", null, MC.decorticating_plate, new ToolDecorticatingPlate(), false, false, null, null);
 		addTool(12, "decorticating.stick", "Decorticating Stick", null, MC.decorticating_stick, new ToolDecorticatingStick(), false, false, null, null);
 		addTool(13, "whetstone", "Whetstone", null, MC.whetstone, new ToolWhetstone(), false, false, null, null, new BehaviorPolishable(EnumToolTypes.WHESTONE, 4, 0.75F, 'p', ' '));
-		addTool(14, "biface", "Biface", "Multi-purpose tool", MC.biface, new ToolBiface(), false, false, null, null, ImmutableList.of(EnumToolTypes.BIFACE, EnumToolTypes.ADZ, EnumToolTypes.SICKLE), new BehaviorPolishable(EnumToolTypes.BIFACE, 2, 1.25F, 'c', ' ', 'p'));
+		addTool(14, "biface", "Biface", "Multi-purpose tool", MC.biface, new ToolBiface(), false, false, null, null, ImmutableList.of(EnumToolTypes.BIFACE, EnumToolTypes.ADZ, EnumToolTypes.SICKLE), new BehaviorPolishable(EnumToolTypes.BIFACE, 2, 1.25F, 'c', ' ', 'p'), new BehaviorWoodworkable());
 		addTool(15, "bar.grizzly", "Bar Grizzly", null, MC.bar_grizzly, new ToolBarGrizzly(), false, false, null, null, new BehaviorBarGrizzly());
 		addTool(16, "spinning.disk", "Spinning Tool", null, MC.spinning_disk, new ToolSpinningDisk(), false, true, null, SubTags.HANDLE);
 	}

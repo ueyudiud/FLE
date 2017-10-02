@@ -73,7 +73,7 @@ public final class Worlds
 	private Worlds() {}
 	
 	/**
-	 * I don't know why some mod can be crashed on this method, use this instead.
+	 * I don't know why some modification can be crashed on this method, use this instead.
 	 * @param world
 	 * @param pos
 	 * @param side
@@ -567,8 +567,7 @@ public final class Worlds
 						world.canBlockSeeSky(pos.north()) ||
 						world.canBlockSeeSky(pos.south()) ||
 						world.canBlockSeeSky(pos.east()) ||
-						world.canBlockSeeSky(pos.west()))) :
-							false;
+						world.canBlockSeeSky(pos.west()))) : false;
 	}
 	
 	public static TileEntity getTileEntity(IBlockAccess world, BlockPos pos, boolean update)
@@ -781,8 +780,7 @@ public final class Worlds
 		}
 		list.addAll(unchecked);
 		BlockPos pos2;
-		final int maxCheck = 3 * MathHelper.log2DeBruijn(max) * 25 + max * max; /* Ticking required. */
-		while (!unchecked.isEmpty() && list.size() <= maxCheck)
+		while (!unchecked.isEmpty())
 		{
 			BlockPos pos1 = unchecked.removeFirst();
 			if (!predicate.test(new EnviornmentBlockPos(world, pos1)))

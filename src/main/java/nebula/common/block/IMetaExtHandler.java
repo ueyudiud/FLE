@@ -4,7 +4,7 @@
 
 package nebula.common.block;
 
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 
 /**
@@ -12,5 +12,5 @@ import net.minecraft.block.Block;
  */
 public interface IMetaExtHandler extends IMetaHandler
 {
-	void registerStateToRegister(Block block, ExtendedBlockStateRegister register);
+	void registerStateToRegister(Block block, IBlockStateRegister register);
 }

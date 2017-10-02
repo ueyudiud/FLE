@@ -157,7 +157,7 @@ public class Crop implements ICrop, IPlantable
 		}
 		if(stage != 0)
 		{
-			float britness = access.world().getLightFromNeighborsFor(EnumSkyBlock.SKY, access.pos()) * property.getSunshine(access);
+			float britness = access.world().getLightFor(EnumSkyBlock.SKY, access.pos().up()) * property.getSunshine(access);
 			if(britness < 4F)
 			{
 				base -= (int) (4 - britness);

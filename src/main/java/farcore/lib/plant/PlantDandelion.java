@@ -22,7 +22,7 @@ import nebula.client.util.Renders;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.Properties;
 import nebula.common.util.Worlds;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -68,7 +68,7 @@ public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 	}
 	
 	@Override
-	public void registerStateToRegister(Block block, ExtendedBlockStateRegister register)
+	public void registerStateToRegister(Block block, IBlockStateRegister register)
 	{
 		register.registerStates(block, AGE);
 	}

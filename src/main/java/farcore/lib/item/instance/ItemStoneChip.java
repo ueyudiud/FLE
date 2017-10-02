@@ -1,6 +1,5 @@
 package farcore.lib.item.instance;
 
-import farcore.data.EnumItem;
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumRockType;
 import farcore.data.KS;
@@ -44,7 +43,6 @@ public class ItemStoneChip extends ItemMulti implements IProjectileItem
 	{
 		super(MC.chip_rock);
 		this.enableChemicalFormula = false;
-		EnumItem.stone_chip.set(this);
 	}
 	
 	@Override

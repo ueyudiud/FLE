@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.recipes;
 
 import java.util.Arrays;
@@ -131,8 +130,8 @@ public class ShapedFleRecipe implements IRecipe
 	
 	/**
 	 * Checking could player crafting this recipe.
-	 * @parm world the crafting world.
-	 * @parm player the crafting player.
+	 * @param world the crafting world.
+	 * @param player the crafting player.
 	 */
 	protected boolean matchPlayerCondition(World world, EntityPlayer player)
 	{
@@ -171,7 +170,7 @@ public class ShapedFleRecipe implements IRecipe
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
 		int[] offset = getOffset(inv);
-		ItemStack result = this.output.instance();
+		ItemStack result = getRecipeOutput();
 		if (offset != null)
 		{
 			boolean mirror = offset[2] == 1;
@@ -194,7 +193,7 @@ public class ShapedFleRecipe implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		return this.output.instance();
+		return this.output.instance().copy();
 	}
 	
 	@Override
@@ -214,6 +213,6 @@ public class ShapedFleRecipe implements IRecipe
 				}
 			return stacks;
 		}
-		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
+		return new ItemStack[inv.getSizeInventory()];
 	}
 }

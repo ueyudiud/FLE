@@ -1,14 +1,15 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore;
 
 import nebula.Log;
 import nebula.Nebula;
 
 /**
- * The FarCore mod.
+ * The FarCore mod, here are
+ * some basic mod field and methods.
+ * To get mod instance, see {@link FarCoreSetup}
  * @author ueyudiud
  */
 public class FarCore
@@ -37,14 +38,16 @@ public class FarCore
 	
 	/**
 	 * Catching an exception which might cause such serious bug,
-	 * the method will throw a new RuntimeException if game is in debuging
-	 * mode.
-	 * @param exception
-	 * @throws RuntimeException
+	 * the method will throw a new RuntimeException if game is in
+	 * debugging mode.
+	 * @param exception the caught exception, it will only be <tt>throw</tt>
+	 *                  when debugging mode enabled.
+	 * @throws RuntimeException if debugging mode enabled.
+	 * @see nebula.Nebula#debug
 	 */
 	public static void catching(Exception exception) throws RuntimeException
 	{
-		if(Nebula.debug)
+		if (Nebula.debug)
 		{
 			exception.setStackTrace(new StackTraceElement[0]);
 			throw new RuntimeException(exception);

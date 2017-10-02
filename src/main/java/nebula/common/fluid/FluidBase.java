@@ -12,6 +12,7 @@ public class FluidBase extends Fluid
 	public float fireAttackDamage;
 	public float thermalConductivity = 2.4E-2F;
 	protected int color = 0xFFFFFFFF;
+	protected boolean isBurning;
 	
 	public FluidBase(String fluidName, String localName)
 	{
@@ -27,6 +28,17 @@ public class FluidBase extends Fluid
 		{
 			LanguageManager.registerLocal(getTranslateName(new FluidStack(this, 1)), localName);
 		}
+	}
+	
+	public FluidBase setBurning()
+	{
+		this.isBurning = true;
+		return this;
+	}
+	
+	public boolean isBurning()
+	{
+		return this.isBurning;
 	}
 	
 	public FluidBase setColor(int color)

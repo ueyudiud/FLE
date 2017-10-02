@@ -11,7 +11,7 @@ import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.block.property.PropertyTE;
 import nebula.common.block.property.PropertyTE.TETag;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -62,7 +62,7 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	 * @parm register the state register.
 	 */
 	@Override
-	public void registerStateToRegister(ExtendedBlockStateRegister register)
+	public void registerStateToRegister(IBlockStateRegister register)
 	{
 		register.registerStates(this, this.property_TE);
 	}

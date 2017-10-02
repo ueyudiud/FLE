@@ -15,7 +15,7 @@ import farcore.lib.tile.instance.TECoreLeaves;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -125,7 +125,7 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	
 	int getGrowAge(ISaplingAccess access);
 	
-	default void registerLogExtData(Block block, boolean isArt, ExtendedBlockStateRegister register)
+	default void registerLogExtData(Block block, boolean isArt, IBlockStateRegister register)
 	{
 		register.registerStates(block, BlockLog.LOG_AXIS);
 	}

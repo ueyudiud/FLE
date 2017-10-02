@@ -11,7 +11,7 @@ import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
 import nebula.common.block.IBlockStayabilityCheck;
 import nebula.common.block.IExtendedDataBlock;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
@@ -36,7 +36,7 @@ public abstract class BlockPlant extends BlockSubBehavior implements IExtendedDa
 			}
 			
 			@Override
-			public void registerStateToRegister(ExtendedBlockStateRegister register)
+			public void registerStateToRegister(IBlockStateRegister register)
 			{
 				plant.registerStateToRegister(this, register);
 			}

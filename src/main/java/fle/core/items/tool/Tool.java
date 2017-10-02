@@ -31,7 +31,7 @@ public abstract class Tool implements IToolStat
 	protected float durabilityMultiplier = 1.0F;
 	protected float knockback = 0.0F;
 	protected float[] attackExpandBoxing = null;
-	private final EnumToolType type;
+	protected final EnumToolType type;
 	
 	protected Tool(EnumToolType type)
 	{

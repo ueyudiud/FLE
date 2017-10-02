@@ -45,7 +45,7 @@ public class FuelHandler
 	public static void addFuel(AbstractStack fuel, float smoderTemperature, float flameTemperature, float normalTemperature, int normalPower, long fuelValue)
 	{
 		FUELS.add(new FuelKey(fuel, flameTemperature, normalTemperature, normalPower, fuelValue));
-		FlamableItems.addFlamableItem(fuel, smoderTemperature, flameTemperature);
+		FlamableRecipes.addFlamableItem(fuel, smoderTemperature, flameTemperature);
 	}
 	
 	public static boolean isFuel(ItemStack stack)

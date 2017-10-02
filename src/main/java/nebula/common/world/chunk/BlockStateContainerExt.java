@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.world.chunk;
 
 import javax.annotation.Nullable;
@@ -37,7 +36,7 @@ public class BlockStateContainerExt extends BlockStateContainer
 	}
 	
 	/**
-	 * To prevent initalization, override this method.
+	 * To prevent initialization, override this method.
 	 */
 	protected void initalize()
 	{
@@ -46,7 +45,7 @@ public class BlockStateContainerExt extends BlockStateContainer
 	
 	protected void setBit(int size)
 	{
-		if(this.bits != size)
+		if (this.bits != size)
 		{
 			if(size <= 4)
 			{

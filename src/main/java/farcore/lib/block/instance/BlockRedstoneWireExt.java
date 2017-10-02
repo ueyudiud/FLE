@@ -12,7 +12,7 @@ import nebula.common.block.IExtendedDataBlock;
 import nebula.common.util.Direction;
 import nebula.common.util.Facing;
 import nebula.common.util.Properties;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.BlockRedstoneRepeater;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
@@ -97,7 +97,7 @@ public class BlockRedstoneWireExt extends BlockBase implements IExtendedDataBloc
 	}
 	
 	@Override
-	public void registerStateToRegister(ExtendedBlockStateRegister register)
+	public void registerStateToRegister(IBlockStateRegister register)
 	{
 		register.registerStates(this, BASE_SIDE, POWER, MATERIAL);
 	}

@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore;
 
 import java.lang.reflect.ParameterizedType;
@@ -56,7 +55,7 @@ public class FarCoreRegistry
 	
 	/**
 	 * Add material register.<p>
-	 * The material should initalized before block, items, etc. For loading material,
+	 * The material should initialized <b>before</b> block, items, etc has. For loading material,
 	 * a material register is needed.<p>
 	 * Call this method before {@link net.minecraftforge.fml.common.event.FMLPreInitializationEvent}.
 	 * @param register the material register.
@@ -110,7 +109,6 @@ public class FarCoreRegistry
 		try
 		{
 			ParameterizedType type = (ParameterizedType) tesrClass.getGenericSuperclass();
-			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
 			registerTESR(clazz, tesrClass.newInstance());
 		}
@@ -147,7 +145,6 @@ public class FarCoreRegistry
 		try
 		{
 			ParameterizedType type = (ParameterizedType) tesrClass.getGenericSuperclass();
-			@SuppressWarnings("unchecked")
 			Class<T> clazz = (Class<T>) type.getActualTypeArguments()[0];
 			registerTESR(clazz, tesrClass.newInstance(), item, meta);
 		}
@@ -241,9 +238,9 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Get network if it already exist, or create a new network.
-	 * @param name
-	 * @return
+	 * Get network if it already exist, or create a new network with specific name.
+	 * @param name the name of network.
+	 * @return the network instance.
 	 */
 	public static Network getNetwork(String name)
 	{
@@ -252,9 +249,9 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register a packet type to mapping.<br>
-	 * @param id The name of packet, the number id will generates automatically.
-	 * @param packetClass The type of packet.
-	 * @param sendTo Which side should packet send.
+	 * @param id the name of packet, the number id will generates automatically.
+	 * @param packetClass the type of packet.
+	 * @param sendTo which side should packet send.
 	 */
 	public static void registerNetworkPacket(String id, Class<? extends IPacket> packetClass, Side sendTo)
 	{
@@ -262,10 +259,10 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Register a key for client side.<br>
-	 * @param modid The mod register this key.
-	 * @param id The name of key.
-	 * @param keycode The key code, see Keyboard to get key.
+	 * Register a key binding.
+	 * @param modid the modid register this key.
+	 * @param id the name of key.
+	 * @param keycode the key code, see Keyboard to get key.
 	 * @see org.lwjgl.input.Keyboard
 	 */
 	public static void registerKey(String modid, String id, int keycode)
@@ -275,8 +272,8 @@ public class FarCoreRegistry
 	
 	/**
 	 * Register a key for client side with current mod container.<br>
-	 * @param id The name of key.
-	 * @param keycode The key code, see Keyboard to get key.
+	 * @param id the name of key.
+	 * @param keycode the key code, see Keyboard to get key.
 	 * @see org.lwjgl.input.Keyboard
 	 */
 	public static void registerKey(String id, int keycode)
@@ -289,8 +286,8 @@ public class FarCoreRegistry
 	 * which can make more flexible item models.
 	 * Provide custom color multiplier, auto-generated texture replacer,
 	 * etc.
-	 * @param item
-	 * @param location
+	 * @param item the item to set model.
+	 * @param location the model location.
 	 * @see farcore.lib.model.item.unused.FarCoreItemModelLoader
 	 */
 	@SideOnly(Side.CLIENT)
@@ -299,6 +296,11 @@ public class FarCoreRegistry
 		NebulaModelLoader.registerModel(item, location);
 	}
 	
+	/**
+	 * Register a Model Selector for block.
+	 * @param block
+	 * @param selector
+	 */
 	@SideOnly(Side.CLIENT)
 	public static void registerModelSelector(Block block, ICustomItemModelSelector selector)
 	{
@@ -329,10 +331,10 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Get a color map (2D coordinated RGB value), loaded from selected path.
-	 * @param location The location of color map.
-	 * @return The color map, it will be reload when resources reloading,
-	 * do not use the data in map straightly during initializing game.
+	 * Get a Color Map (2D coordinated RGB value), loaded from selected path.
+	 * @param location the resource location of color map.
+	 * @return the color map, it will be reload when resources reloading,
+	 *         do not use the data in map straightly during initializing game.
 	 */
 	@SideOnly(Side.CLIENT)
 	public static Colormap getColormap(String location)
@@ -341,7 +343,7 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Added icon loader, for loading icon during resource manager reloaded.
+	 * Added Icon Loader, for loading icon during resource manager reloaded.
 	 * @param loader the icon loader.
 	 */
 	@SideOnly(Side.CLIENT)

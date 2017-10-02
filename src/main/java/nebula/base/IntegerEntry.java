@@ -76,6 +76,6 @@ public class IntegerEntry<K>
 	@Override
 	public String toString()
 	{
-		return new StringBuilder().append(this.key).append('x').append(this.value).toString();
+		return new StringBuilder().append(this.key).append('=').append(this.value).toString();
 	}
 }

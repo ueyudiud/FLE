@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.client;
 
 import java.io.File;
@@ -249,12 +248,9 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 						entry.getKey(), nebula.common.util.L.cast(entry.getValue(), Item.class));
 			}
 		}
-		if (Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION))
-		{
-			Client.getFontRender().onResourceManagerReload(manager);
-		}
 		if (Loader.instance().hasReachedState(LoaderState.AVAILABLE))
 		{
+			Client.getFontRender().onResourceManagerReload(manager);
 			Nebula.instance.getLanguageManager().read();
 		}
 	}

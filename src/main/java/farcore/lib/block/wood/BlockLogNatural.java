@@ -11,7 +11,7 @@ import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +52,7 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 			}
 			
 			@Override
-			public void registerStateToRegister(ExtendedBlockStateRegister register)
+			public void registerStateToRegister(IBlockStateRegister register)
 			{
 				$tree.registerLogExtData(this, false, register);
 			}

@@ -12,6 +12,7 @@ import java.util.Random;
 
 import farcore.data.Config;
 import farcore.data.EnumItem;
+import farcore.data.MC;
 import farcore.data.MP;
 import farcore.lib.bio.FamilyTemplate;
 import farcore.lib.bio.GeneticMaterial;
@@ -20,6 +21,7 @@ import farcore.lib.block.wood.BlockLeaves;
 import farcore.lib.block.wood.BlockLeavesCore;
 import farcore.lib.block.wood.BlockLogArtificial;
 import farcore.lib.block.wood.BlockLogNatural;
+import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
 import farcore.lib.material.prop.PropertyWood;
 import farcore.lib.tile.instance.TECoreLeaves;
@@ -405,7 +407,7 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	{
 		if (L.nextInt(8) == 0)
 		{
-			list.add(new ItemStack(EnumItem.branch.item, 1, this.material.id));
+			list.add(ItemMulti.createStack(this.material, MC.branch));
 		}
 		if (L.nextInt(7) == 0)
 		{

@@ -7,10 +7,10 @@ import farcore.data.EnumBlock;
 import farcore.data.M;
 import farcore.data.MP;
 import farcore.energy.thermal.IThermalHandler;
-import farcore.energy.thermal.ThermalNet;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.lib.material.Mat;
 import fle.api.energy.thermal.ThermalEnergyHelper;
+import fle.api.recipes.instance.FlamableRecipes;
 import nebula.common.tile.TESynchronization;
 import nebula.common.util.Direction;
 import nebula.common.util.Worlds;
@@ -86,6 +86,12 @@ implements IThermalHandler
 	
 	private void recheckStructure()
 	{
+		if (isCatchingRain(true))
+		{
+			disable(Burning);
+			disable(Smoldering);
+			return;
+		}
 		if (is(Smoldering))
 		{
 			if (isAirNearby(true))
@@ -96,31 +102,33 @@ implements IThermalHandler
 			else
 			{
 				disable(Burning);
-				if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, coord->coord.isAirBlock(Direction.Q)) > 3)
+				if (is(Carbonate))
 				{
 					disable(Smoldering);
-					syncToNearby();
 				}
-				if (!is(Carbonate))
+				else
 				{
-					++this.carbonateProgress;
-					if (this.carbonateProgress == 100)
+					if (Worlds.checkForMinDistance(this.world, this.pos, false, 3, coord->coord.isAirBlock(Direction.Q)) > 3)
 					{
-						enable(Carbonate);
 						disable(Smoldering);
-						this.remainEnergy = 16000000L;
+						syncToNearby();
+					}
+					if (!is(Carbonate))
+					{
+						++this.carbonateProgress;
+						if (this.carbonateProgress == 100)
+						{
+							enable(Carbonate);
+							disable(Smoldering);
+							this.remainEnergy = 16000000L;
+						}
 					}
 				}
 			}
 		}
 		else
 		{
-			if (getBlockState(Direction.U).getBlock() == EnumBlock.fire.block ||
-					ThermalNet.getTemperature(this) >= 380F || //Log flame temperature
-					(getTE(Direction.N) instanceof TEFirewood && ((TEFirewood) getTE(Direction.N)).is(Smoldering)) ||
-					(getTE(Direction.S) instanceof TEFirewood && ((TEFirewood) getTE(Direction.S)).is(Smoldering)) ||
-					(getTE(Direction.E) instanceof TEFirewood && ((TEFirewood) getTE(Direction.E)).is(Smoldering)) ||
-					(getTE(Direction.W) instanceof TEFirewood && ((TEFirewood) getTE(Direction.W)).is(Smoldering)))
+			if (FlamableRecipes.isFlamable(this, 380))
 			{
 				if (!is(Carbonate))
 				{
@@ -135,7 +143,7 @@ implements IThermalHandler
 		}
 		if (is(Burning) && isAirBlock(Direction.U))
 		{
-			setBlockState(EnumBlock.fire.apply(false), 3);
+			setBlockState(Direction.U, EnumBlock.fire.apply(false), 3);
 		}
 	}
 	

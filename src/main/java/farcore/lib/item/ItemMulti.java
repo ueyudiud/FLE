@@ -70,11 +70,18 @@ public class ItemMulti extends ItemBase implements IUpdatableItem
 	}
 	public static ItemStack createStack(Mat material, MatCondition condition, int size)
 	{
-		if (condition.isBelongTo(material) && condition.instance != null)
+		if (condition.instance != null)
 		{
-			ItemStack stack = new ItemStack(condition.instance, size);
-			condition.instance.setMaterialToItem(stack, material);
-			return stack;
+			if (condition.isBelongTo(material))
+			{
+				ItemStack stack = new ItemStack(condition.instance, size);
+				condition.instance.setMaterialToItem(stack, material);
+				return stack;
+			}
+			else if (material == Mat.VOID)
+			{
+				return new ItemStack(condition.instance, size);
+			}
 		}
 		return null;
 	}

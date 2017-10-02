@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.render;
 
 import java.awt.image.BufferedImage;
@@ -11,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.GameSettings;
@@ -45,7 +47,6 @@ public class FontRenderExtend extends FontRenderer
 			boolean unicode)
 	{
 		super(gameSettingsIn, location, textureManagerIn, unicode);
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 	}
 	
 	@Override

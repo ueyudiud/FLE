@@ -19,7 +19,7 @@ import farcore.lib.tree.TreeInfo;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.IRegisteredNameable;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -252,7 +252,7 @@ public abstract class PropertyTree extends PropertyWood implements ITree, IRegis
 		}
 		
 		@Override
-		public void registerLogExtData(Block block, boolean isArt, ExtendedBlockStateRegister register)
+		public void registerLogExtData(Block block, boolean isArt, IBlockStateRegister register)
 		{
 			this.tree.registerLogExtData(block, isArt, register);
 		}

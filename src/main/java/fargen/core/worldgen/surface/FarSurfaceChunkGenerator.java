@@ -5,7 +5,6 @@ package fargen.core.worldgen.surface;
 
 import static fargen.api.event.FarGenerationEvent.TREE;
 import static fargen.api.event.FarGenerationEvent.WILD_CROP;
-import static nebula.common.data.Misc.AIR;
 
 import java.util.List;
 import java.util.Random;
@@ -25,6 +24,9 @@ import farcore.lib.world.WorldPropHandler;
 import fargen.api.event.FarGenerationEvent;
 import fargen.api.event.TreeGenEvent;
 import fargen.core.biome.BiomeBase;
+import nebula.base.HashPropertyMap;
+import nebula.base.IPropertyMap;
+import nebula.base.IPropertyMap.IProperty;
 import nebula.base.function.WeightedRandomSelector;
 import nebula.common.util.L;
 import nebula.common.util.Maths;
@@ -82,12 +84,12 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		this.world = world;
 		this.biomeProvider = (FarSurfaceBiomeProvider) world.provider.getBiomeProvider();
 		Random random = new Random(seed);
-		this.noise1 = new NoisePerlin(random, 6, 2.0, 1.6, 1.6);
-		this.noise2 = new NoisePerlin(random, 14, 4.0, 2.0, 2.0);
-		this.noise3 = new NoisePerlin(random, 8, 3.0, 1.8, 1.8);
-		this.noise4 = new NoisePerlin(random, 6, 1.0, 1.6, 1.8);
+		this.noise1 = new NoisePerlin(random, 12, 1.0, 2.0, 2.0);
+		this.noise2 = new NoisePerlin(random, 12, 1.0, 2.0, 2.0);
+		this.noise3 = new NoisePerlin(random, 6, 3.0, 1.8, 1.8);
+		this.noise4 = new NoisePerlin(random, 5, 0.3, 1.8, 1.8);
 		this.noise5 = new NoisePerlin(random, 3, 2.5, 1.7, 1.9);
-		this.noise6 = new NoisePerlin(random, 3, 12.0, 2.5, 2.0);
+		this.noise6 = new NoisePerlin(random, 3, 8.0, 2.5, 2.0);
 	}
 	
 	private static final byte
@@ -96,25 +98,23 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 	private static final float[] parabolicField;
 	
 	private static final DoubleUnaryOperator randomNoiseOperator = x -> {
+		//[0.0, 1.0]
 		x = x * 1.5 - 0.5;
 		//[-0.5, 1.0]
 		if (x < 0)
 		{
-			x *= -0.3F;
+			x *= -0.5F;
 		}
-		//[0.0, 1.0]
-		x = x * 3.0 - 2.0;
-		//[-2.0, 1.0]
+		//[-0.25, 1.0]
+		x = x * 4.0 - 2.0;
+		//[-1.0, 2.0]
 		if (x > 0)
 		{
-			x *= 2.0;
+			x *= 2;
 		}
-		else
-		{
-			x *= 0.5;
-		}
-		//[-1.0, 2.0]
-		return x;
+		//[-1.0, 4.0]
+		return (x - 1.5) * 0.2;
+		//[-0.5, 0.5]
 	};
 	
 	private double[] initializeNoiseFieldHigh(double[] outArray, final int xPos, final int yPos, final int zPos, final int xSize, final int ySize, final int zSize)
@@ -158,25 +158,19 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 				}
 				variation /= total;
 				root /= total;
-				//Rescale
-				double scale = randomNoiseOperator.applyAsDouble(this.cache4[i2]);
-				double d1 = ySize * (root + 0.03125) / 4F;
-				double d2 = 1.8 + 3 * variation * scale;
-				if (d2 < 1.0F)
-					d2 = 1.0F + (d2 - 1.0F) * 0.3F;
+				//Rescaled
+				double d1 = (ySize - 1) * (root * 0.15625 + 0.125 + 0.03125);
+				double d2 = 1.0 + variation * randomNoiseOperator.applyAsDouble(this.cache4[i2]);
+				if (d2 < 0.5F) d2 = 0.5F + (d2 - 0.5F) * 0.3F;
 				//Height calculate
-				for (int y = 0; y < ySize; y++)
+				for (int y = 1; y <= ySize; y++)
 				{
-					//Range from [0, 1]
 					double off = (d1 - y) / d2;
-					if (off > 0.0)
+					if (off >= 0.0)
 						off *= 4.0;
 					double output = off + Maths.lerp(this.cache1[i1], this.cache2[i1], this.cache3[i1]);
 					if (y > ySize - 4)
-					{
-						double var40 = (y - (ySize - 4)) / 3.0F;
-						output = output * (1.0D - var40) - var40;
-					}
+						output = Maths.lerp(output, -1.0, (ySize - y) / 3.0F);
 					outArray[i1] = output;
 					i1++;
 				}
@@ -213,7 +207,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 					double noiseURA = (this.cachea[(((z + 1) * xzSize + x + 1) * ySize + y + 1)] - noiseUR) * yLerp;
 					for (int y1 = 0; y1 < 8; y1++)
 					{
-						int Y = y1 | (y << 3) | 128;
+						int Y = y1 | (y << 3) | arrayYHeight;
 						double var34 = noiseDL;
 						double var36 = noiseUL;
 						double var38 = (noiseDR - noiseDL) * xzLerp;
@@ -252,8 +246,17 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		}
 	}
 	
-	private static final
-	short worldHeight = 256, rockLayer1 = 120, rockLayer2 = 60;
+	public static final IProperty<IBlockState[]> ROCKS = IPropertyMap.IProperty.to(FarSurfaceDataGenerator.ROCK_DEFAULT);
+	public static final IProperty<IBlockState[]> SOILS = IPropertyMap.IProperty.to(FarSurfaceDataGenerator.SOIL_DEFAULT);
+	public static final IProperty<Double> RAND_HEIGHT = IPropertyMap.IProperty.to(0.0D);
+	
+	private static IPropertyMap compact(IPropertyMap map, double randHeight, IBlockState[] rocks, IBlockState[] covers)
+	{
+		map.put(ROCKS, rocks);
+		map.put(SOILS, covers);
+		map.put(RAND_HEIGHT, randHeight);
+		return map;
+	}
 	
 	private void replaceChunkBlock(ChunkPrimer primer, int chunkX, int chunkZ, Random random)
 	{
@@ -262,132 +265,13 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		
 		IBlockState[][] rockLayer = getRockLayer(chunkX >> 4, chunkZ >> 4);
 		IBlockState[][] coverLayer = this.biomeProvider.dataGenerator.getCoverLayer(chunkX >> 4, chunkZ >> 4);
-		MutableBlockPos pos = new MutableBlockPos();
+		HashPropertyMap map = new HashPropertyMap(2, 1.0F);
 		for (int x = 0; x < 16; ++x)
 			for (int z = 0; z < 16; ++z)
 			{
 				int index = z << 4 | x;
-				BiomeBase biome = this.biomes[index];
-				final int height = 5 + MathHelper.ceil(12.0 * this.cache5[index]);
-				boolean hasWind = false;
-				float temp = propProvider.getAverageTemperature(this.world, pos.setPos(chunkX | x, 0, chunkZ | z));
-				float rainfall = propProvider.getAverageHumidity(this.world, pos);
-				int c = -1, f = 0;
-				int y = 255;
-				for (; y >= 128; y --)
-				{
-					IBlockState state = primer.getBlockState(x, y, z);
-					if (state == AIR)
-					{
-						if (y <= seaLevel)
-						{
-						}
-						else
-						{
-							c = -1;
-						}
-					}
-					else if (state == WATER)
-					{
-						if (biome.isOcean())
-						{
-						}
-						else
-						{
-							if (f == 0)
-							{
-								if (temp < 0.0F)//Ice point
-								{
-									primer.setBlockState(x, y, z, EnumBlock.ice.block.getDefaultState());
-								}
-								f = 1;
-							}
-							else
-							{
-								f ++;
-							}
-						}
-					}
-					else if (c == -1)
-					{
-						if (f <= 0)
-						{
-							state = coverLayer[index][0];
-							if (FarSurfaceDataGenerator.isGrass(state))
-							{
-								state = FarSurfaceDataGenerator.getGrassStateWithTemperatureAndRainfall(state, temp, rainfall);
-							}
-							c = height;
-						}
-						else
-						{
-							state = coverLayer[index][1];
-							state = FarSurfaceDataGenerator.getWithWaterState(state);
-							c = height;
-						}
-						primer.setBlockState(x, y, z, state);
-					}
-					else if (c > 0)
-					{
-						if (c == 1)
-						{
-							state = coverLayer[index][coverLayer[index].length > 3 ? 3 : 2];
-						}
-						else if (coverLayer[index].length > 3 && c < height / 2)
-						{
-							state = coverLayer[index][2];
-						}
-						else
-						{
-							state = coverLayer[index][1];
-						}
-						--c;
-						primer.setBlockState(x, y, z, state);
-					}
-					else
-					{
-						if (rockLayer[index].length == 1)
-						{
-							primer.setBlockState(x, y, z, rockLayer[index][0]);
-						}
-						else if (y >= rockLayer1 + height * 2 / 3)
-						{
-							primer.setBlockState(x, y, z, rockLayer[index][0]);
-						}
-						else if (y >= rockLayer2 + height / 3)
-						{
-							primer.setBlockState(x, y, z, rockLayer[index][1]);
-						}
-						else
-						{
-							primer.setBlockState(x, y, z, rockLayer[index][2]);
-						}
-					}
-				}
-				for (; y >= 0; y --)
-				{
-					if (y == 0)
-					{
-						primer.setBlockState(x, y, z, Blocks.BEDROCK.getDefaultState());
-						break;
-					}
-					if (rockLayer[index].length == 1)
-					{
-						primer.setBlockState(x, y, z, rockLayer[index][0]);
-					}
-					else if (y >= rockLayer1 + height * 2 / 3)
-					{
-						primer.setBlockState(x, y, z, rockLayer[index][0]);
-					}
-					else if (y >= rockLayer2 + height / 3)
-					{
-						primer.setBlockState(x, y, z, rockLayer[index][1]);
-					}
-					else
-					{
-						primer.setBlockState(x, y, z, rockLayer[index][2]);
-					}
-				}
+				this.biomes[index].genTerrainBlocks(this.world, random, primer, chunkX | x, chunkZ | z, propProvider, compact(map, this.cache5[index], rockLayer[index], coverLayer[index]));
+				map.clear();
 			}
 	}
 	

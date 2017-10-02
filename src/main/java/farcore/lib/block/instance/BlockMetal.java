@@ -22,7 +22,7 @@ import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -94,7 +94,7 @@ public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 	}
 	
 	@Override
-	public void registerStateToRegister(ExtendedBlockStateRegister register)
+	public void registerStateToRegister(IBlockStateRegister register)
 	{
 		register.registerStates(this, METALS, CUSTOM_DATA);
 	}

@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.network;
 
 import java.io.ByteArrayOutputStream;
@@ -82,7 +85,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 			List<Object> out) throws Exception
 	{
 		out.add(new FMLProxyPacket(new PacketBuffer(
-				msg.encode(Unpooled.buffer().writeByte(this.packetTypes.id(msg.getClass()))).copy()), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get()));
+				msg.encode(Unpooled.buffer().writeByte(this.packetTypes.id(msg.getClass())))), ctx.channel().attr(NetworkRegistry.FML_CHANNEL).get()));
 	}
 	
 	@Override
@@ -313,7 +316,7 @@ public class Network extends MessageToMessageCodec<FMLProxyPacket, IPacket>
 			byte[] data = new byte[buffer.readableBytes()];
 			buffer.readBytes(data);
 			
-			int maxSize = Short.MAX_VALUE - 5;
+			int maxSize = Short.MAX_VALUE - 6;
 			for (int offset = 0; offset < data.length; offset += maxSize)
 			{
 				ByteArrayOutputStream osRaw = new ByteArrayOutputStream();

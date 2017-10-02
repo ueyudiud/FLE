@@ -9,7 +9,7 @@ import java.util.List;
 import farcore.data.EnumBlock;
 import farcore.data.EnumToolTypes;
 import farcore.lib.block.instance.BlockFire;
-import fle.api.recipes.instance.FlamableItems;
+import fle.api.recipes.instance.FlamableRecipes;
 import nebula.Log;
 import nebula.base.IntegerMap;
 import nebula.common.item.ITool;
@@ -99,14 +99,14 @@ public class BehaviorFirestarter extends BehaviorTool
 				FirestarterCache cache = stack.getCapability(capability, null);
 				for (EntityItem item : list)
 				{
-					if (FlamableItems.isFlamable(item.getEntityItem()))
+					if (FlamableRecipes.isFlamable(item.getEntityItem()))
 					{
 						int tick = cache.map.getOrDefault(item, -1);
-						if (FlamableItems.isSmoder(item.getEntityItem(), tick))
+						if (FlamableRecipes.isSmoder(item.getEntityItem(), tick))
 						{
 							Worlds.spawnParticleWithRandomOffset(world, EnumParticleTypes.SMOKE_NORMAL, result.hitVec.xCoord, result.hitVec.yCoord, result.hitVec.zCoord, 0, 0.2F, 0, 0);
 						}
-						if (!world.isRemote && FlamableItems.isFlamable(item.getEntityItem(), tick))
+						if (!world.isRemote && FlamableRecipes.isFlamable(item.getEntityItem(), tick))
 						{
 							BlockPos pos = result.getBlockPos().offset(result.sideHit);
 							if (Worlds.isAirOrReplacable(world, pos) && ((BlockFire) EnumBlock.fire.block).canBlockStayAt(world, pos))

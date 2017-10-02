@@ -460,7 +460,7 @@ public class ModelOre implements IModel, ICustomModelLoader, IStateMapper, ICust
 		@Override
 		public boolean isAmbientOcclusion()
 		{
-			return false;
+			return true;
 		}
 		
 		@Override

@@ -9,8 +9,9 @@ import fargen.core.FarGen;
 import fargen.core.biome.decorator.BiomeDecorator;
 import fargen.core.biome.decorator.SimpleBiomeDecorator;
 import fargen.core.biome.layer.BiomeLayerGenerator;
-import fargen.core.biome.layer.surface.BLGSStandard;
+import fargen.core.biome.layer.surface.BLGSurfaceStandard;
 import fargen.core.util.ClimaticZone;
+import nebula.base.IPropertyMap;
 import nebula.base.Register;
 import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.L;
@@ -160,9 +161,9 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		return this.zone.rainAverage >= 1.6F;
 	}
 	
-	public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal, int submeta)
+	public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, IWorldPropProvider provider, IPropertyMap map)
 	{
-		this.layerGenerator.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, noiseVal, this, submeta);
+		this.layerGenerator.genTerrainBlocks(worldIn, rand, chunkPrimerIn, x, z, this, provider, map);
 	}
 	
 	@Override
@@ -174,7 +175,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 	@Override
 	public void decorate(World worldIn, Random rand, BlockPos pos)
 	{
-		if(this.decorator != null)
+		if (this.decorator != null)
 		{
 			this.decorator.decorate(worldIn, rand, pos, worldIn.getWorldType().getChunkGenerator(worldIn, null));
 		}
@@ -187,13 +188,13 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 			return new BiomePropertiesExtended(name);
 		}
 		
-		private float temperature = 2.0F;
+		//		private float temperature = 2.0F;
 		private int treePerChunk = -999;
 		private int treeDivition = 1;
 		private int cropPerChunkBase = 0;
 		private int cropPerChunkRand = 0;
 		private ClimaticZone zone = ClimaticZone.temperate_plain;
-		private BiomeLayerGenerator layerGenerator = new BLGSStandard();
+		private BiomeLayerGenerator layerGenerator = new BLGSurfaceStandard();
 		private BiomeDecorator decorator = new SimpleBiomeDecorator();
 		private boolean canRain = true;
 		private boolean canSnow = false;
@@ -234,7 +235,7 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 		@Override
 		public BiomePropertiesExtended setTemperature(float temperatureIn)
 		{
-			this.temperature = temperatureIn;
+			//			this.temperature = temperatureIn;
 			return this;
 		}
 		
@@ -250,10 +251,10 @@ public class BiomeBase extends Biome implements IRegisteredNameable, IBiomeExten
 			return (BiomePropertiesExtended) super.setBaseBiome(nameIn);
 		}
 		
-		public BiomePropertiesExtended setHeight(float min, float max)
+		public BiomePropertiesExtended setHeight(float base, float variation)
 		{
-			super.setBaseHeight((min + max) / 2F);
-			super.setHeightVariation((max - min) / 2F);
+			super.setBaseHeight(base);
+			super.setHeightVariation(variation);
 			return this;
 		}
 		

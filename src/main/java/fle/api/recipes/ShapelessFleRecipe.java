@@ -96,7 +96,7 @@ public class ShapelessFleRecipe implements IRecipe
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
-		ItemStack result = this.output.instance();
+		ItemStack result = getRecipeOutput();
 		ArrayList<SingleInputMatch> list = new ArrayList<>(this.inputs);
 		label : for (int i = 0; i < inv.getSizeInventory(); ++i)
 		{
@@ -127,7 +127,7 @@ public class ShapelessFleRecipe implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		return this.output.instance();
+		return this.output.instance().copy();
 	}
 	
 	@Override

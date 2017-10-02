@@ -218,7 +218,8 @@ public final class Maths
 	 * @param a the first value.
 	 * @param b the second value.
 	 * @param x a {@code double} value which is predicated between 0.0 to 1.0.
-	 * @return
+	 * @return if <tt>x</tt> is <tt>0.0</tt> that <tt>a</tt> predicated, and
+	 *         <tt>x</tt> is <tt>1.0</tt> that <tt>b</tt> predicated.
 	 */
 	public static double lerp(double a, double b, double x)
 	{

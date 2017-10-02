@@ -29,4 +29,7 @@ public class NebulaConfig
 	@ConfigProperty(category = "client", defValue = "true")
 	@ConfigComment("Disable this option will let quad data be caculated during rendering, this will release some memory, but take more time to rendering.")
 	public static boolean storeModelTransformedData;
+	@ConfigProperty(category = "common", defValue = "true")
+	@ConfigComment("The Nebula data loader will pre-build meta map if enable this option or get meta from block state each time.")
+	public static boolean buildStateIn;
 }

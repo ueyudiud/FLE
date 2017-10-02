@@ -38,7 +38,7 @@ public class ModCompator
 	
 	public void addCompatible(String modid, String location)
 	{
-		if(Game.isModLoaded(modid))
+		if (Game.isModLoaded(modid))
 		{
 			try
 			{

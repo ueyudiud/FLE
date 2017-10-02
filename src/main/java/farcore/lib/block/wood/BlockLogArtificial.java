@@ -3,6 +3,7 @@ package farcore.lib.block.wood;
 import java.util.Random;
 
 import farcore.data.CT;
+import farcore.data.M;
 import farcore.data.MC;
 import farcore.lib.tree.Tree;
 import nebula.common.LanguageManager;
@@ -10,7 +11,7 @@ import nebula.common.block.IToolableBlock;
 import nebula.common.tool.EnumToolType;
 import nebula.common.util.Direction;
 import nebula.common.util.OreDict;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -49,7 +50,7 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 			}
 			
 			@Override
-			public void registerStateToRegister(ExtendedBlockStateRegister register)
+			public void registerStateToRegister(IBlockStateRegister register)
 			{
 				$tree.registerLogExtData(this, true, register);
 			}
@@ -77,7 +78,7 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 	{
 		super.postInitalizedBlocks();
 		LanguageManager.registerLocal(getTranslateNameForItemStack(0), this.tree.material.localName + " Log");
-		OreDict.registerValid("logWood", this);
+		OreDict.registerValid(MC.log.getOreName(M.wood), this);
 		MC.log.registerOre(this.tree.material, this);
 	}
 	

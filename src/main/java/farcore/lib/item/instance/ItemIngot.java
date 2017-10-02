@@ -4,7 +4,6 @@
 
 package farcore.lib.item.instance;
 
-import farcore.data.EnumItem;
 import farcore.data.MC;
 import farcore.lib.item.ItemMulti;
 
@@ -16,6 +15,5 @@ public class ItemIngot extends ItemMulti
 	public ItemIngot()
 	{
 		super(MC.ingot);
-		EnumItem.ingot.set(this);
 	}
 }

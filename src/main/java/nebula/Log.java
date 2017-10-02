@@ -48,6 +48,10 @@ public class Log
 	{
 		logger().debug(message, formats);
 	}
+	public static void trace(String message, Object...formats)
+	{
+		logger().trace(message, formats);
+	}
 	public static void reset()
 	{
 		synchronized (cache)

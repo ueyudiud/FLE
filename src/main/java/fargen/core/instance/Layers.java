@@ -164,6 +164,10 @@ public class Layers
 		drawImage(256, rock, "R2 Zoom");
 		rock = new LayerRockRemappedData(39L, rock);
 		drawImage(256, rock, "R3 Mapped");
+		rock = new LayerZoom(48L, 2, rock);
+		drawImage(256, rock, "R4 Zoom");
+		rock = new GenLayerSmooth(59L, rock);
+		drawImage(256, rock, "R5 Smooth");
 		
 		layerResult.initWorldGenSeed(seed);
 		rock.initWorldGenSeed(seed);

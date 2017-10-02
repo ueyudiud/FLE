@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableMap;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -39,7 +39,7 @@ public class PlantStatic extends PlantNormal implements IRenderRegister
 	}
 	
 	@Override
-	public void registerStateToRegister(Block block, ExtendedBlockStateRegister register)
+	public void registerStateToRegister(Block block, IBlockStateRegister register)
 	{
 		register.registerState(block.getDefaultState());
 	}

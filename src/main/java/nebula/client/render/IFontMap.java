@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.render;
 
 import java.awt.image.BufferedImage;
@@ -19,7 +22,7 @@ public interface IFontMap
 	 * @return
 	 */
 	ResourceLocation getSource();
-
+	
 	/**
 	 * Make custom render.
 	 * @param chr
@@ -28,7 +31,7 @@ public interface IFontMap
 	boolean shouldRender(char chr);
 	
 	void initalizeResource(BufferedImage stream);
-
+	
 	int characterWidth(char chr);
 	
 	/**

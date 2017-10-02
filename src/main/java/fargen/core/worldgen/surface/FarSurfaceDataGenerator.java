@@ -1,15 +1,16 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fargen.core.worldgen.surface;
 
 import java.util.Random;
 
 import javax.annotation.Nonnull;
 
+import farcore.data.EnumRockType;
 import farcore.data.M;
 import farcore.data.MP;
+import farcore.lib.block.terria.BlockRock;
 import farcore.lib.block.terria.BlockSand;
 import farcore.lib.block.terria.BlockSoil;
 import farcore.lib.block.terria.BlockSoil.EnumCoverType;
@@ -117,7 +118,7 @@ public class FarSurfaceDataGenerator
 	
 	static void addVanillaCrops(int x, int z, Random rand, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ICrop> selector)
 	{
-		if (rand.nextInt(31) == 0)
+		if (WHEAT != ICrop.VOID && rand.nextInt(31) == 0)
 		{
 			int weight;
 			weight = c(16, x, z, 29371.0, noise, temp, 30.0F, 8.0F, rain, 1.4F, 1.2F);
@@ -168,6 +169,14 @@ public class FarSurfaceDataGenerator
 		return (int) result;
 	}
 	
+	private static IBlockState[] getRockLayer(int id)
+	{
+		IBlockState[] states = new IBlockState[1];
+		int i = (id & 0x3FF) % ROCK_LAYER_REGISTER.size();
+		states[0] = ROCK_LAYER_REGISTER.get(i);
+		return states;
+	}
+	
 	private static IBlockState[] getSoilLayer(int id)
 	{
 		return SOIL_LAYER_REGISTER.get(id, SOIL_DEFAULT);
@@ -176,8 +185,9 @@ public class FarSurfaceDataGenerator
 	static final IBlockState
 	ROCK = M.stone.getProperty(MP.property_rock).block.getDefaultState(),
 	SOIL_DEFAULT[] = {Blocks.GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState()},
-	STATES2[] = {ROCK};
+	ROCK_DEFAULT[] = {ROCK};
 	
+	static final IRegister<IBlockState> ROCK_LAYER_REGISTER = new Register<>();
 	static final IRegister<IBlockState[]> SOIL_LAYER_REGISTER = new Register<>(256);
 	
 	public static @Nonnull IBlockState[] getSoilLayerByName(String name)
@@ -198,7 +208,9 @@ public class FarSurfaceDataGenerator
 	public FarSurfaceDataGenerator(FarSurfaceBiomeProvider provider, long seed)
 	{
 		this.biomeProvider = provider;
-		this.rockDataCache = new DataCacheCoord<>((x, z)-> A.createArray(256, STATES2), 4);
+		this.rockDataCache = new DataCacheCoord<>((x, z)-> A.transform(
+				provider.layers[2].getInts(x << 4, z << 4, 16, 16),
+				IBlockState[].class, FarSurfaceDataGenerator::getRockLayer), 4);
 		this.topDataCache = new DataCacheCoord<>((x, z)-> A.transform(
 				provider.layers[3].getInts(x << 4, z << 4, 16, 16),
 				IBlockState[].class, FarSurfaceDataGenerator::getSoilLayer), 4);
@@ -257,9 +269,29 @@ public class FarSurfaceDataGenerator
 		return state;
 	}
 	
+	public static IBlockState getMossy(IBlockState state)
+	{
+		Block block = state.getBlock();
+		if (block == Blocks.COBBLESTONE)
+		{
+			return Blocks.MOSSY_COBBLESTONE.getDefaultState();
+		}
+		else if (block.getBlockState().getProperties().contains(BlockRock.TYPE))
+		{
+			state = state.withProperty(BlockRock.TYPE, EnumRockType.mossy);
+		}
+		return state;
+	}
+	
 	static
 	{
 		final IBlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
+		
+		for (Mat rock : new Mat[]{M.andesite, M.basalt, M.diorite, M.gabbro, M.granite, M.kimberlite,
+				M.limestone, M.marble, M.peridotite, M.rhyolite, M.graniteP})
+		{
+			ROCK_LAYER_REGISTER.register(rock.name, rock.getProperty(MP.property_rock).block.getDefaultState());
+		}
 		
 		for (Mat soil : new Mat[]{M.latrosol, M.latroaluminosol, M.ruboloam, M.ruboaluminoloam,
 				M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol})

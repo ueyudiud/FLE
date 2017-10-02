@@ -55,7 +55,7 @@ public class NoisePerlin extends NoiseBase
 	@Override
 	public NoiseBase setSeed(long seed)
 	{
-		for(int i = 0; i < this.octaves.length; this.octaves[i++].setSeed(seed + i));
+		for (int i = 0; i < this.octaves.length; this.octaves[i++].setSeed(seed + i));
 		return super.setSeed(seed);
 	}
 	

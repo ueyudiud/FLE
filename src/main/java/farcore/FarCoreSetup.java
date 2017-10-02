@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore;
 
 import java.util.Map;
@@ -14,6 +13,7 @@ import farcore.load.ClientLoader;
 import farcore.load.CommonLoader;
 import nebula.Log;
 import nebula.common.config.NebulaConfiguration;
+import nebula.common.util.ModCompator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
@@ -33,11 +33,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * The mod of far core.<br>
+ * The Far Core modification.<p>
  * Some configuration should called when
  * forge initialization step, so there should
  * has a mod to call these configuration to
- * initialize.<br>
+ * initialize.
  * @author ueyudiud
  * @see farcore.FarCore
  */
@@ -50,14 +50,17 @@ public class FarCoreSetup
 	 * use FLE version to compact your Far Core modification
 	 * is needed update.
 	 */
-	public static final String VERSION = "1.1d";
+	public static final String VERSION = "1.1e";
 	
 	/** The sided proxy of far core. */
 	@SidedProxy(serverSide = "farcore.FarCoreSetup$Proxy", clientSide = "farcore.FarCoreSetup$ClientProxy")
 	public static Proxy proxy;
 	
+	/** The mod instance. */
 	@Instance(FarCore.ID)
 	public static FarCoreSetup setup;
+	
+	private ModCompator compator;
 	
 	public FarCoreSetup()
 	{
@@ -72,9 +75,7 @@ public class FarCoreSetup
 		modMetadata.authorList.add("ueyudiud");
 		modMetadata.name = "Far Core";
 		modMetadata.credits = "ueyudiud";
-		/**
-		 * Loading non-resource-file from Minecraft running path.
-		 */
+		/** Loading non-resource-file from Minecraft running path. */
 		Log.info("Loading configuration.");
 		NebulaConfiguration.loadStaticConfig(Config.class);
 		FarCoreSetup.proxy.load(event);
@@ -84,6 +85,8 @@ public class FarCoreSetup
 	public void Load(FMLInitializationEvent event)
 	{
 		FarCoreSetup.proxy.load(event);
+		this.compator = ModCompator.newCompactor();
+		this.compator.addCompatible("fle", "farcore.load.FLECompact");
 	}
 	
 	@EventHandler
@@ -96,6 +99,7 @@ public class FarCoreSetup
 	public void complete(FMLLoadCompleteEvent event)
 	{
 		FarCoreSetup.proxy.load(event);
+		this.compator.call("complete");
 	}
 	
 	@EventHandler

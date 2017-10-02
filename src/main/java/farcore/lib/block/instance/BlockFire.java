@@ -3,7 +3,6 @@ package farcore.lib.block.instance;
 import static nebula.common.util.Direction.D;
 import static nebula.common.util.Direction.E;
 import static nebula.common.util.Direction.N;
-import static nebula.common.util.Direction.Q;
 import static nebula.common.util.Direction.S;
 import static nebula.common.util.Direction.U;
 import static nebula.common.util.Direction.W;
@@ -27,14 +26,12 @@ import nebula.common.data.Misc;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
 import nebula.common.util.Properties;
-import nebula.common.util.Properties.EnumStateName;
 import nebula.common.util.Worlds;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -46,7 +43,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -59,7 +55,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockFire extends BlockBase implements IExtendedDataBlock
 {
 	public static final PropertyInteger STATE = Properties.create("state", 0, 15);
-	public static final PropertyEnum<SpreadDir> SPREAD_PREFERENCE = Properties.get(SpreadDir.class);
 	public static final PropertyBool NORTH = Misc.PROP_NORTH;
 	public static final PropertyBool EAST = Misc.PROP_EAST;
 	public static final PropertyBool SOUTH = Misc.PROP_SOUTH;
@@ -67,16 +62,6 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public static final PropertyBool UPPER = Misc.PROP_UP;
 	public static final PropertyBool SPREAD_CHECK = Properties.create("spread_check");
 	public static final PropertyBool SMOLDER = Properties.create("smoldering");
-	
-	@EnumStateName("spread_preference")
-	public static enum SpreadDir implements IStringSerializable
-	{
-		up(U), down(D), north(N), south(S), east(E), west(W), unknown(Q);
-		Direction direction;
-		SpreadDir(Direction dir){this.direction = dir;}
-		@Override
-		public String getName(){return name();}
-	}
 	
 	public BlockFire()
 	{
@@ -97,7 +82,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, SPREAD_CHECK, STATE, NORTH, EAST, SOUTH, WEST, UPPER, SMOLDER, SPREAD_PREFERENCE);
+		return new BlockStateContainer(this, SPREAD_CHECK, STATE, NORTH, EAST, SOUTH, WEST, UPPER, SMOLDER);
 	}
 	
 	@Override
@@ -105,7 +90,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	public void registerRender()
 	{
 		super.registerRender();
-		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "fire", (IProperty<?>) null, STATE, SMOLDER, SPREAD_PREFERENCE, SPREAD_CHECK);
+		StateMapperExt mapper = new StateMapperExt(FarCore.ID, "fire", (IProperty<?>) null, STATE, SMOLDER, SPREAD_CHECK);
 		ModelLoader.setCustomModelResourceLocation(this.item, 0, new ModelResourceLocation(FarCore.ID + ":fire", "inventory"));
 		ModelLoader.setCustomStateMapper(this, mapper);
 	}
@@ -127,7 +112,6 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 	{
 		int i = state.getValue(STATE);
 		if (state.getValue(SMOLDER)) i |= 0x10;
-		i |= state.getValue(SPREAD_PREFERENCE).ordinal() << 5;
 		if (state.getValue(SPREAD_CHECK)) i |= 0x100;
 		return i;
 	}
@@ -138,13 +122,12 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 		IBlockState state = getDefaultState();
 		state.withProperty(STATE, meta & 0xF);
 		state.withProperty(SMOLDER, (meta & 0x10) != 0);
-		state.withProperty(SPREAD_PREFERENCE, SpreadDir.values()[meta & 0xC0]);
 		state.withProperty(SPREAD_CHECK, (meta & 0x100) != 0);
 		return state;
 	}
 	
 	@Override
-	public void registerStateToRegister(ExtendedBlockStateRegister register)
+	public void registerStateToRegister(IBlockStateRegister register)
 	{
 		register.registerStates(this, STATE, SMOLDER);
 	}
@@ -159,8 +142,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 				.withProperty(WEST, false)
 				.withProperty(UPPER, false)
 				.withProperty(SMOLDER, false)
-				.withProperty(SPREAD_CHECK, true)
-				.withProperty(SPREAD_PREFERENCE, SpreadDir.unknown);
+				.withProperty(SPREAD_CHECK, true);
 	}
 	
 	@Override
@@ -355,7 +337,6 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			int l = state.getValue(STATE);
 			int range = l < 8 ? 3 : l < 14 ? 2 : 1;
 			FireLocationInfo info = new FireLocationInfo(range + 2, worldIn, pos);
-			Direction off1 = state.getValue(SPREAD_PREFERENCE).direction;
 			boolean isFireSource =
 					info.isFireSource(0, +1, 0, 0) ||
 					info.isFireSource(0, -1, 0, 1) ||
@@ -403,11 +384,11 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 			}
 			if (range > 0)
 			{
-				for (int i = -range + off1.x; i <= range + off1.x; ++i)
+				for (int i = -range; i <= range; ++i)
 				{
-					for (int j = -range + off1.y; j <= range + off1.y; ++j)
+					for (int j = -range; j <= range; ++j)
 					{
-						for (int k = -range + off1.z; k <= range + off1.z; ++k)
+						for (int k = -range; k <= range; ++k)
 						{
 							if ((i != 0 || j != 0 || k != 0) && rand.nextInt(flag2 ? 8 : 4) == 0)
 							{
@@ -415,10 +396,7 @@ public class BlockFire extends BlockBase implements IExtendedDataBlock
 								if (info.canBlockStay(i, j, k) && (speed = info.getSpreadSpeed(i, j, k)) > 0)
 								{
 									chance = 100;
-									chance *= Math.cbrt(
-											(i + off1.x * .6) * (i + off1.x * .6) +
-											(j + off1.y * .6) * (j + off1.y * .6) +
-											(k + off1.z * .6) * (k + off1.z * .6));
+									chance *= Math.cbrt(i*i+j*j+k*k);
 									if (flag1) chance /= 2;
 									trySpreadFire(worldIn, pos, i, j, k, info, rand, l, chance, speed);
 								}

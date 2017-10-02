@@ -32,6 +32,7 @@ import farcore.energy.IEnergyNet;
 import farcore.energy.kinetic.KineticNet;
 import farcore.energy.thermal.HeatWave;
 import farcore.energy.thermal.ThermalNet;
+import farcore.handler.FarCoreBlockHandler;
 import farcore.handler.FarCoreCapabilitiesHandler;
 import farcore.handler.FarCoreEnergyHandler;
 import farcore.instances.TemperatureHandler;
@@ -70,6 +71,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 
 /**
@@ -84,6 +86,7 @@ public class CommonLoader
 		bar.step("Register Game Handlers");
 		registerForgeEventListener(FarCoreEnergyHandler.getHandler());
 		registerForgeEventListener(new FarCoreCapabilitiesHandler());
+		registerForgeEventListener(new FarCoreBlockHandler());
 		//Register energy nets.
 		bar.step("Add Energy Nets");
 		addNet(ThermalNet.INSTANCE);
@@ -100,7 +103,7 @@ public class CommonLoader
 		bar.step("Initalize Materials");
 		M.init();
 		//Initialize blocks & items & fluids.
-		bar.step("Add Items");
+		bar.step("Add Items and Blocks and Fluids");
 		new ItemDebugger().setCreativeTab(CT.TOOL);
 		EnumItem.display_fluid.set(Item.REGISTRY.getObject(new ResourceLocation("nebula", "display.fluid")));
 		new ItemStoneChip().setCreativeTab(CT.RESOURCE_ITEM);
@@ -112,11 +115,11 @@ public class CommonLoader
 		new ItemSeed().setCreativeTab(CT.CROP_AND_WILD_PLANTS);
 		new BlockCrop();
 		new BlockSapling().setCreativeTab(CT.TREE);
-		EnumItem.branch.set(new ItemMulti(MC.branch).setCreativeTab(CT.TREE));
+		new ItemMulti(MC.branch).setCreativeTab(CT.TREE);
 		new ItemTreeLog().setCreativeTab(CT.TREE);
 		new ItemMulti(MC.bark).setCreativeTab(CT.TREE);
 		new ItemMulti(MC.firewood).setCreativeTab(CT.TREE);
-		EnumItem.nugget.set(new ItemMulti(MC.nugget).setCreativeTab(CT.MATERIAL));
+		new ItemMulti(MC.nugget).setCreativeTab(CT.MATERIAL);
 		new ItemIngot().setCreativeTab(CT.MATERIAL);
 		new ItemPile().setCreativeTab(CT.MATERIAL);
 		new ItemMulti(MC.brick).setCreativeTab(CT.RESOURCE_ITEM);
@@ -146,10 +149,10 @@ public class CommonLoader
 	
 	public void load()
 	{
-		ProgressBar bar = push("Far Core Load", 2);
+		ProgressBar bar = push("Far Core Load", 3);
 		//Post load item and block.
 		//For register to Ore Dictionary, Tool Uses, Compatibility, etc.
-		bar.step("Post initalizing items and blocks");
+		bar.step("Post initalizing Items and Blocks");
 		ToolHooks.addEfficiencyTool(ROCK, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
 		ToolHooks.addHarvestableTool(ROCK, true, EnumToolTypes.HAMMER_DIGABLE);
 		ToolHooks.addEfficiencyTool(METALIC, EnumToolTypes.HAMMER_DIGABLE, EnumToolTypes.EXPLOSIVE, EnumToolTypes.DRILL, EnumToolTypes.LASER);
@@ -159,7 +162,7 @@ public class CommonLoader
 		ToolHooks.addEfficiencyTool(ICE, EnumToolTypes.PICKAXE, EnumToolTypes.HAMMER_DIGABLE);
 		ToolHooks.addHarvestableTool(ICE, true, EnumToolTypes.CHISEL);
 		//Register languages.
-		bar.step("Register localized file");
+		bar.step("Register Localized Entries");
 		registerLocal("info.debug.date", "Date : ");
 		registerLocal("info.log.length", "Legnth : %d");
 		registerLocal("info.slab.place", "Place slab in sneaking can let slab only has up or down facing.");
@@ -183,6 +186,7 @@ public class CommonLoader
 		registerLocal(EnumPhysicalDamageType.SMASH.getTranslation(), EnumChatFormatting.GOLD + "Smash");
 		registerLocal(EnumPhysicalDamageType.CUT.getTranslation(), EnumChatFormatting.GOLD + "Cut");
 		registerLocal(EnumPhysicalDamageType.HIT.getTranslation(), EnumChatFormatting.GOLD + "Hit");
+		bar.step("Register Key Binding");
 		NebulaKeyHandler.register(Keys.ROTATE, KEY_R, FarCore.ID);
 		NebulaKeyHandler.register(Keys.PLACE, KEY_P, FarCore.ID);
 		pop(bar);
@@ -190,19 +194,22 @@ public class CommonLoader
 	
 	public void postload()
 	{
-		//Reload material tool tips.
+		ProgressBar bar = ProgressManager.push("Far Core Post Load", 1);
+		//Reload materials.
+		bar.step("Reload Materials");
 		for(Mat material : Mat.materials())
 		{
-			if(material.customDisplayInformation != null)
+			if (material.customDisplayInformation != null)
 			{
 				registerLocal("info.material.custom." + material.name, material.customDisplayInformation);
 			}
-			if(material.chemicalFormula != null)
+			if (material.chemicalFormula != null)
 			{
 				registerLocal("info.material.chemical.formula." + material.name, material.chemicalFormula);
 			}
 		}
 		CommandSkill.addCommandInformations();
+		pop(bar);
 	}
 	
 	public void complete()

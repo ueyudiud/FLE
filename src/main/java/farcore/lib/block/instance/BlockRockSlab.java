@@ -89,7 +89,7 @@ package farcore.lib.block.instance;
 //	}
 //
 //	@Override
-//	public void registerStateToRegister(ExtendedBlockStateRegister register)
+//	public void registerStateToRegister(IBlockStateRegister register)
 //	{
 //		register.registerStates(this, MATERIAL, TYPE, HEATED, EnumSlabState.PROPERTY);
 //	}

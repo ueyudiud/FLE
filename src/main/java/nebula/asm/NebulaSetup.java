@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.asm;
 
 import static org.objectweb.asm.Opcodes.ALOAD;
@@ -517,13 +516,10 @@ public class NebulaSetup implements IFMLCallHook
 						while (enumeration.hasMoreElements())
 						{
 							JarEntry entry = enumeration.nextElement();
-							if (!entry.isDirectory())
+							if (!entry.isDirectory() && entry.getName().startsWith(targetLocation))
 							{
-								if (entry.getName().startsWith("asm/"))
-								{
-									NebulaASMLogHelper.LOG.info("Copy asm data from :" + entry.getName());
-									FileUtils.copyInputStreamToFile(jarFile.getInputStream(entry), new File(destination, entry.getName().substring(targetLocation.length())));
-								}
+								NebulaASMLogHelper.LOG.info("Copy asm data from :" + entry.getName());
+								FileUtils.copyInputStreamToFile(jarFile.getInputStream(entry), new File(destination, entry.getName().substring(targetLocation.length())));
 							}
 						}
 					}

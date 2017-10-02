@@ -18,10 +18,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class MultiQuadBuilder implements Consumer<BakedQuad>
 {
 	private final BakedQuadBuilder builder;

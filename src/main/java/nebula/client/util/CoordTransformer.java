@@ -17,10 +17,13 @@ import javax.vecmath.Tuple3f;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
+@SideOnly(Side.CLIENT)
 public class CoordTransformer implements Cloneable
 {
 	static final double[][] MODEL_ROTATION_VAL = {{1, 0}, {SQRT2/2, SQRT2/2}, {0, 1}, {-SQRT2/2, SQRT2/2}, {-1, 0}};

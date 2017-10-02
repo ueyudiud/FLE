@@ -61,11 +61,11 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	}
 	protected ItemBase(String modid, String name, String unlocalizedTooltip, String localTooltip)
 	{
-		if(list == null)
+		if (list == null)
 			throw new RuntimeException("The item has already post registered, please create new item before pre-init.");
 		this.modid = modid;
 		this.unlocalized = modid + "." + name;
-		if(unlocalizedTooltip != null)
+		if (unlocalizedTooltip != null)
 		{
 			this.unlocalizedTooltip = modid + "." + unlocalizedTooltip;
 			LanguageManager.registerLocal(modid + "." + unlocalizedTooltip, localTooltip);

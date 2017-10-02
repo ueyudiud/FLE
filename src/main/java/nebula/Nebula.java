@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula;
 
 import static nebula.common.LanguageManager.registerLocal;
@@ -18,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import io.netty.bootstrap.Bootstrap;
 import nebula.client.CreativeTabBase;
 import nebula.common.CommonProxy;
 import nebula.common.LanguageManager;
@@ -210,6 +210,8 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Subscribe
 	public void load(FMLPreInitializationEvent event)
 	{
+		//For bootstrap takes too long time to initialize...
+		new Thread(()-> { try { new Bootstrap().clone(); } catch (Throwable t) {} }, "Bootstrap Initalizer").start();
 		try
 		{
 			this.lang = new LanguageManager(new File(Game.getMCFile(), "lang"));
@@ -261,6 +263,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		network.registerPacket(PacketChunkNetData.class, Side.CLIENT);
 		network.registerPacket(PacketGuiAction.class, Side.SERVER);
 		network.registerPacket(PacketGuiSyncData.class, Side.CLIENT);
+		ExtendedBlockStateRegister.INSTANCE.buildStateMap();
 	}
 	
 	@Subscribe
@@ -270,16 +273,16 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		this.lang.write();
 	}
 	
+	@Subscribe
+	public void remap(FMLModIdMappingEvent event)
+	{
+		ExtendedBlockStateRegister.INSTANCE.remapping();
+	}
+	
 	@Override
 	public String getGuiClassName()
 	{
 		return "nebula.client.NebulaGuiFactory";
-	}
-	
-	@Subscribe
-	public void mappingChanged(FMLModIdMappingEvent evt)
-	{
-		ExtendedBlockStateRegister.buildAndSyncStateMap();
 	}
 	
 	@Subscribe

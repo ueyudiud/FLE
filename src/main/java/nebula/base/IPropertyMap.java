@@ -29,6 +29,11 @@ public interface IPropertyMap
 			return new ToNull();
 		}
 		
+		static <V> IProperty<V> to(V value)
+		{
+			return ()-> value;
+		}
+		
 		class ToNull implements IProperty
 		{
 			@Override
