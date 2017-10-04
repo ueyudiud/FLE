@@ -185,11 +185,15 @@ public class Client
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(domain + ":" + path, "inventory"));
 	}
 	
-	public static void registerModel(Item item, String location, String variant)
+	public static void registerModel(Block block, ModelResourceLocation location)
 	{
-		final ModelResourceLocation l = new ModelResourceLocation(location, variant);
-		ModelLoader.setCustomMeshDefinition(item, s->l);
-		ModelLoader.registerItemVariants(item, l);
+		registerModel(Item.getItemFromBlock(block), location);
+	}
+	
+	public static void registerModel(Item item, ModelResourceLocation location)
+	{
+		ModelLoader.setCustomMeshDefinition(item, s->location);
+		ModelLoader.registerItemVariants(item, location);
 	}
 	
 	private static FontRenderExtend render;

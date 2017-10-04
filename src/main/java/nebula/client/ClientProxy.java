@@ -17,14 +17,12 @@ import nebula.Log;
 import nebula.Nebula;
 import nebula.client.model.ModelFluidBlock;
 import nebula.client.model.OrderModelLoader;
-import nebula.client.model.StateMapperExt;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.Colormap.ColormapFactory;
 import nebula.client.render.RenderFallingBlockExt;
 import nebula.client.render.RenderProjectileItem;
 import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
-import nebula.client.util.Renders;
 import nebula.common.CommonProxy;
 import nebula.common.entity.EntityFallingBlockExtended;
 import nebula.common.entity.EntityProjectileItem;
@@ -32,9 +30,9 @@ import nebula.common.item.IItemBehaviorsAndProperties;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_Containerable;
 import nebula.common.tile.IGuiTile;
 import nebula.common.util.Game;
+import nebula.common.util.L;
 import nebula.common.util.Sides;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -73,7 +71,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	{
 		boolean flag = worldIn == null || pos == null;
 		//		Biome biome = flag ? null : worldIn.getBiome(pos);
-		switch(tintIndex)
+		switch (tintIndex)
 		{
 		case 0 : return flag ? ColorizerGrass.getGrassColor(0.7F, 0.7F) :
 			BiomeColorHelper.getGrassColorAtPos(worldIn, pos);
@@ -145,27 +143,17 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 		}
 		else if(register != null)
 		{
-			nebula.common.util.L.put(registers, Game.getActiveModID(), register);
+			L.put(registers, Game.getActiveModID(), register);
 		}
 	}
 	
+	@Override
 	public void registerRender(Object object)
 	{
 		if(object instanceof IRenderRegister)
 		{
 			addRenderRegisterListener((IRenderRegister) object);
 		}
-	}
-	
-	/**
-	 * Deprecated now, use Renders method directly.
-	 */
-	@Deprecated
-	public <T extends Comparable<T>> void registerCompactModel(boolean splitFile, Block block, String modid, String path, IProperty<T> property,
-			IProperty<?>...properties)
-	{
-		StateMapperExt mapper = new StateMapperExt(modid, path, splitFile ? property : null, properties);
-		Renders.registerCompactModel(mapper, block, property);
 	}
 	
 	@Override
@@ -189,17 +177,17 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	
 	public void registerColorMultiplier(IBlockColor color, Block[] block)
 	{
-		nebula.common.util.L.put(blockColorMap, color, block);
+		L.put(blockColorMap, color, block);
 	}
 	
 	private void registerColorMultiplier(IItemColor itemblockColor, Block[] blocks)
 	{
-		nebula.common.util.L.put(itemColorMap, itemblockColor, Lists.transform(Arrays.asList(blocks), (Block block) -> Item.getItemFromBlock(block)));
+		L.put(itemColorMap, itemblockColor, Lists.transform(Arrays.asList(blocks), (Block block) -> Item.getItemFromBlock(block)));
 	}
 	
 	public void registerColorMultiplier(IItemColor itemColor, Item[] item)
 	{
-		nebula.common.util.L.put(itemColorMap, itemColor, item);
+		L.put(itemColorMap, itemColor, item);
 	}
 	
 	@Override
@@ -219,7 +207,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	
 	public static void registerBuildInModel(Block block)
 	{
-		if(Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
+		if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
 		{
 			Log.warn("The block '" + block.getRegistryName() + "' register buildin model after initialzation, tried register it early.");
 		}
@@ -256,7 +244,7 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	}
 	
 	/**
-	 * Let client proxy called this method when FML pre-initialization.
+	 * Let client proxy called this method <b>when FML pre-initialization</b>.
 	 */
 	public static void registerRenderObject()
 	{
@@ -290,11 +278,5 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public void registerClientRegister(Object arg)
-	{
-		registerRender(arg);
 	}
 }

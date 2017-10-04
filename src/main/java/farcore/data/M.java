@@ -16,6 +16,7 @@ import farcore.lib.material.behavior.metal.MatBehaviorCopper;
 import farcore.lib.plant.PlantBristlegrass;
 import farcore.lib.plant.PlantDandelion;
 import farcore.lib.plant.PlantHalogrootBush;
+import farcore.lib.plant.PlantStatic;
 import nebula.Log;
 
 /**
@@ -62,6 +63,11 @@ public class M
 	//	public static final Mat ocherous_sandstone	= new Mat(7025, FarCore.ID , "ocherous_sandstone"	, "OcherousSandstone"	, "Ocherous Sandstone"	).setRGBa(0xAD906AFF)                                                .setRock( 3, 2.0F,  5.6F);
 	public static final Mat oil_shale			= new Mat(7026, FarCore.ID , "oil_shale"			, "OilShale"			, "Oil Shale"			).setRGBa(0x8E9499FF)                                                .setRock( 5, 2.8F,  6.9F);
 	public static final Mat shale				= new Mat(7027, FarCore.ID , "shale"				, "Shale"				, "Shale"				).setRGBa(0x8E9499FF)                                                .setRock( 5, 2.8F,  7.0F);
+	public static final Mat quartzite			= new Mat(7028, FarCore.ID , "quartzite"			, "Quartzite"			, "Quartzite"			).setRGBa(0xF6F6F6FF).setToolProp(  27, 12, 4.5F, 1.0F,  8.0F, -0.5F).setRock(11, 6.4F, 23.4F);
+	public static final Mat pumice				= new Mat(7029, FarCore.ID , "pumice"				, "Pumice"				, "Pumice"				).setRGBa(0xBDBBA7FF)                                                .setRock( 3, 1.9F,  2.7F);
+	public static final Mat radiolarite			= new Mat(7030, FarCore.ID , "radiolarite"			, "Radiolarite"			, "Radiolarite"			).setRGBa(0x968D83FF).setToolProp(  14, 10, 5.0F, 1.0F,  6.6F, -0.3F).setRock( 9, 2.5F,  4.5F);
+	public static final Mat diorite_p			= new Mat(7031, FarCore.ID , "diorite_p"			, "DioritePegmatite"	, "Diorite Pegmatite"	).setRGBa(0xBEC6C1FF).setToolProp(  44, 10, 2.7F, 0.8F,  5.6F, -0.6F).setRock( 9, 6.8F, 23.7F);
+	public static final Mat lapis_lazuli		= new Mat(7032, FarCore.ID , "lapis_lazuli"			, "LapisLazuli"			, "LapisLazuli"			).setRGBa(0x272D82FF).setToolProp(  31,  8, 2.6F, 0.8F,  6.0F, -0.5F).setRock( 9, 7.0F, 19.6F);
 	//Soils
 	public static final Mat latrosol		= new Mat(7101, FarCore.ID , "latrosol"			, "Latrosol"		, "Latrosol"			).setRGBa(0x652A1FFF).setSoil(0.6F, 3.0F, Materials.DIRT);
 	public static final Mat latroaluminosol	= new Mat(7102, FarCore.ID , "latroaluminosol"	, "Latroaluminosol"	, "Latroaluminosol"		).setRGBa(0x77412FFF).setSoil(0.6F, 3.0F, Materials.DIRT);
@@ -105,6 +111,14 @@ public class M
 	public static final Mat dandelion		= new Mat(9301, FarCore.ID, "dandelion", "Dandelion", "Dandelion");
 	public static final Mat bristlegrass	= new Mat(9302, FarCore.ID, "bristlegrass", "Bristlegrass", "Bristlegrass");
 	public static final Mat halogroot_bush	= new Mat(9303, FarCore.ID, "halogroot_bush", "HalogrootBush", "Halogroot Bush");
+	public static final Mat short_grass		= new Mat(9304, FarCore.ID, "short_grass", "ShortGrass", "Grass");
+	public static final Mat foxtail			= new Mat(9305, FarCore.ID, "foxtail", "Foxtail", "Foxtail");
+	public static final Mat goosefoots		= new Mat(9306, FarCore.ID, "goosefoots", "Goosefoots", "Goosefoots");
+	public static final Mat knotgrass		= new Mat(9307, FarCore.ID, "knotgrass", "Knotgrass", "Knotgrass");
+	public static final Mat pennycress		= new Mat(9308, FarCore.ID, "pennycress", "Pennycress", "Pennycress");
+	public static final Mat inula			= new Mat(9309, FarCore.ID, "inula", "Inula", "Inula");
+	public static final Mat poa_bluegrass	= new Mat(9310, FarCore.ID, "poa_bluegrass", "PoaBluegrass", "Poa Bluegrass");
+	
 	//Ores
 	public static final Mat native_copper	= new Mat(10001, FarCore.ID, "nativeCopper", "NativeCopper", "Native Copper").setChemicalFormula("Cu").setRGBa(0xFF834CFF).setOreProperty(7, 8.0F, 9.0F);
 	public static final Mat malachite		= new Mat(10002, FarCore.ID, "malachite", "Malachite", "Malachite").setChemicalFormula("Cu(OH)2·CuCO3").setRGBa(0x30CE88FF).setOreProperty(8, 8.8F, 9.0F);
@@ -151,12 +165,18 @@ public class M
 				sand, "Sand",
 				redsand, "Red Sand");
 		MC.stone.setNames(
-				sand, "Sandstone",
-				redsand, "Red Sandstone");
+				sand, "Brown Sandstone",
+				redsand, "Ocherous Sandstone");
+		MC.chip_rock.setNames(
+				sand, "Brown Sandstone Chip",
+				redsand, "Ocherous Sandstone Chip");
+		MC.fragment.setNames(
+				sand, "Brown Sandstone Fragment",
+				redsand, "Ocherous Sandstone Fragment");
 		
 		copper.itemProp = new MatBehaviorCopper();
 		
-		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow, lacquer);
+		SubTags.HANDLE.addTo(oak, spruce, birch, ceiba, acacia, oak_black, aspen, morus, willow, lacquer, citrus);
 		SubTags.ROPE.addTo(vine, ramie_dry, rattan, ivy);
 		SubTags.VINES.addTo(vine, rattan, ivy);
 		SubTags.HERB.addTo(dandelion);
@@ -168,18 +188,29 @@ public class M
 		dandelion		.setPlant(new PlantDandelion());
 		bristlegrass	.setPlant(new PlantBristlegrass());
 		halogroot_bush	.setPlant(new PlantHalogrootBush());
+		short_grass		.setPlant(new PlantStatic(short_grass, true));
+		foxtail			.setPlant(new PlantStatic(foxtail, true));
+		goosefoots		.setPlant(new PlantStatic(goosefoots, true));
+		knotgrass		.setPlant(new PlantStatic(knotgrass, true));
+		pennycress		.setPlant(new PlantStatic(pennycress, true));
+		inula			.setPlant(new PlantStatic(inula, true));
+		poa_bluegrass	.setPlant(new PlantStatic(poa_bluegrass, true));
 		
 		bituminous_coal	.setRock(new RockBehaviorFlammable<>(bituminous_coal, 4, 2.5F,  7.7F));
 		lignite			.setRock(new RockBehaviorFlammable<>(lignite		, 3, 2.2F,  6.4F));
 		netherrack		.setRock(new RockBehaviorNetherrack(netherrack, 3, 1.3F, 3.8F));
 		
-		brick.setNames(redbrick, "Red Brick", greybrick, "Grey Brick");
-		brickBlock.setNames(redbrick, "Red Brick", greybrick, "Grey Brick");
+		brick.setNames(
+				redbrick, "Red Brick",
+				greybrick, "Grey Brick");
+		brickBlock.setNames(
+				redbrick, "Red Brick",
+				greybrick, "Grey Brick");
 	}
 	
 	public static void init()
 	{
-		for(Runnable register : MATERIAL_REGISTERS)
+		for (Runnable register : MATERIAL_REGISTERS)
 		{
 			try
 			{

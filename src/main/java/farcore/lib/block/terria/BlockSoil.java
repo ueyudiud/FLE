@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.block.terria;
 
 import static nebula.common.data.Misc.PROP_EAST;
@@ -567,11 +566,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		if(canFallBelow(world, pos, state))
 			return false;
 		return canFallNearby(world, pos, state).size() < 2;
-	}
-	
-	@Override
-	public void onStartFalling(World world, BlockPos pos)
-	{
 	}
 	
 	@Override

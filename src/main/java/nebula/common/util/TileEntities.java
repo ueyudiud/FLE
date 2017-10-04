@@ -164,10 +164,10 @@ public final class TileEntities
 	
 	public static int tryFlowFluidInto(IFluidTank tank, @Nullable TileEntity tile, Direction source, int amount, boolean process)
 	{
-		if(tile == null) return -1;
+		if (tile == null) return -1;
 		FluidStack fill = tank.drain(amount, false);
-		if(fill == null) return -1;
-		if(tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, source.of()))
+		if (fill == null) return -1;
+		if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, source.of()))
 		{
 			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, source.of());
 			

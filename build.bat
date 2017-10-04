@@ -1,1 +1,2 @@
-gradlew build -i
+@echo off
+gradlew build -i --offline

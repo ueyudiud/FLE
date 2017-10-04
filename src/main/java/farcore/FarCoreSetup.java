@@ -177,7 +177,6 @@ public class FarCoreSetup
 		{
 			super.load(event);
 			//Register all render object.
-			//PLACED CALL THIS METHOD ONCE IN CLIENT PROXY IF YOUR MOD CREATE NEW GAMING ELEMENTS(BLOCK, ITEM, ETC).
 			nebula.client.ClientProxy.registerRenderObject();
 		}
 		

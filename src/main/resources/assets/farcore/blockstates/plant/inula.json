@@ -1,0 +1,22 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"normal": {
+			"model": "farcore:plant/flower_cross",
+			"textures": { 
+				"layer0": "farcore:blocks/plants/inula",
+				"layer1": "farcore:blocks/plants/inula_flower"
+			}
+		},
+		"inventory": {
+			"model": "item/generated",
+			"textures": { 
+				"layer0": "farcore:blocks/plants/inula",
+				"layer1": "farcore:blocks/plants/inula_flower"
+			}
+		}
+	}
+}

@@ -61,6 +61,11 @@ public class ItemSeed extends ItemMulti implements IFoodStat
 		return stack;
 	}
 	
+	public static ItemStack applyNativeSeed(int size, Mat material)
+	{
+		return applySeed(size, material, material.getProperty(MP.property_crop).createNativeGeneticMaterial());
+	}
+	
 	public static GeneticMaterial getDNAFromStack(ItemStack stack)
 	{
 		return !stack.hasTagCompound() ? null :

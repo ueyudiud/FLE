@@ -34,12 +34,17 @@ public class Renders
 {
 	public static void registerCompactModel(Block block, boolean splitFile, String modid, String path, IProperty<?> property, IProperty<?>...properties)
 	{
-		((ClientProxy) Nebula.proxy).registerCompactModel(splitFile, block, modid, path, property, properties);
+		registerCompactModel(new StateMapperExt(modid, path, splitFile ? property : null, properties), block, property);
 	}
 	
 	public static void registerColorMultiplier(IBlockColor color, Block...block)
 	{
 		((ClientProxy) Nebula.proxy).registerColorMultiplier(color, block);
+	}
+	
+	public static void registerBiomeColorMultiplier(Block...block)
+	{
+		((ClientProxy) Nebula.proxy).registerBiomeColorMultiplier(block);
 	}
 	
 	public static void registerColorMultiplier(IItemColor color, Item...item)
@@ -60,23 +65,23 @@ public class Renders
 	
 	public static void registerBuildInModel(Block block)
 	{
-		nebula.client.ClientProxy.registerBuildInModel(block);
+		ClientProxy.registerBuildInModel(block);
 	}
 	
 	/**
-	 * Register sub model by a mapper and property to split.<p>
+	 * Register sub model by a map and property to split.<p>
 	 * This method will register both item model and block model,
 	 * they use same block model location.<p>
 	 * @param <T> the type of property.
-	 * @param mapper the model mapper.
-	 * @param block the block for mapper.
+	 * @param mapper the model map.
+	 * @param block the block for map.
 	 * @param property the split property, or <tt>null</tt> for only one variant exist.
 	 */
 	public static <T extends Comparable<T>> void registerCompactModel(StateMapperExt mapper, Block block, @Nullable IProperty<T> property)
 	{
 		Item item = Item.getItemFromBlock(block);
 		IBlockState state = block.getDefaultState();
-		if(property != null)
+		if (property != null)
 		{
 			for (T value : property.getAllowedValues())
 			{
@@ -93,7 +98,7 @@ public class Renders
 	
 	/**
 	 * Register model mapping with each meta of block.
-	 * @param mapper the model mapper.
+	 * @param mapper the model map.
 	 * @param block the block to register.
 	 * @param metaCount the meta count.
 	 */
@@ -109,6 +114,16 @@ public class Renders
 	
 	private static final float TEX_PIX_SCALE = 0.00390625F;
 	
+	/**
+	 * Draw a rectangle combined texture.
+	 * @param x
+	 * @param y
+	 * @param u
+	 * @param v
+	 * @param w
+	 * @param h
+	 * @param zLevel
+	 */
 	public static void drawTexturedModalRect(int x, int y, int u, int v, int w, int h, float zLevel)
 	{
 		Tessellator tessellator = Tessellator.getInstance();

@@ -133,7 +133,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	@Override
 	public void setThrower(Entity entity)
 	{
-		if(entity instanceof EntityLivingBase)
+		if (entity instanceof EntityLivingBase)
 		{
 			this.shooter = (EntityLivingBase) entity;
 		}
@@ -184,30 +184,30 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 	@Override
 	public void onUpdate()
 	{
-		if(this.world.isRemote && this.currentItem == null)
+		if (this.world.isRemote && this.currentItem == null)
 		{
 			Nebula.network.sendToServer(new PacketEntityAsk(this));
 			return;
 		}
 		++this.age;
-		if(!this.world.isRemote)
+		if (!this.world.isRemote)
 		{
-			if(!this.inited)
+			if (!this.inited)
 			{
-				if(this.currentItem == null)
+				if (this.currentItem == null)
 				{
 					setDead();
 					return;
 				}
-				if(this.currentItem.getItem() instanceof IProjectileItem)
+				if (this.currentItem.getItem() instanceof IProjectileItem)
 				{
 					((IProjectileItem) this.currentItem.getItem()).initEntity(this);
 				}
-				if(this.inGround)
+				if (this.inGround)
 				{
 					this.inBlock = this.world.getBlockState(this.blockPos = new BlockPos(this));
 					AxisAlignedBB axisAlignedBB = this.inBlock.getCollisionBoundingBox(this.world, this.blockPos);
-					if(axisAlignedBB == null || !axisAlignedBB.offset(this.blockPos).isVecInside(new Vec3d(this.posX, this.posY, this.posZ)))
+					if (axisAlignedBB == null || !axisAlignedBB.offset(this.blockPos).isVecInside(new Vec3d(this.posX, this.posY, this.posZ)))
 					{
 						this.inGround = false;
 						this.inBlock = null;
@@ -227,15 +227,15 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 				}
 			}
 		}
-		if(this.currentItem.getItem() instanceof IProjectileItem)
+		if (this.currentItem.getItem() instanceof IProjectileItem)
 		{
 			((IProjectileItem) this.currentItem.getItem()).onEntityTick(this);
 		}
-		if(this.currentItem.getItem() instanceof IUpdatableItem)
+		if (this.currentItem.getItem() instanceof IUpdatableItem)
 		{
 			((IUpdatableItem) this.currentItem.getItem()).updateItem(new EnviornmentEntity(this), this.currentItem);
 		}
-		if(this.isDead)
+		if (this.isDead)
 			return;
 		super.onEntityUpdate();
 		if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
@@ -244,10 +244,10 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		}
 		this.blockPos = new BlockPos(this);
 		
-		if(this.inGround)
+		if (this.inGround)
 		{
 			IBlockState state = this.world.getBlockState(this.blockPos);
-			if(state != this.inBlock)
+			if (state != this.inBlock)
 			{
 				this.tickInAir = 0;
 				this.tickInGround = 0;
@@ -270,11 +270,11 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		{
 			this.tickInGround = 0;
 			++this.tickInAir;
-			if(this.tickInAir >= 20)
+			if (this.tickInAir >= 20)
 			{
 				this.attacked = false;
 			}
-			if(!this.world.isRemote)
+			if (!this.world.isRemote)
 			{
 				if(this.posY <= -32 || this.tickInAir >= 3600)
 				{
@@ -291,7 +291,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 			{
 				vec3d = new Vec3d(raytraceresult.hitVec.xCoord, raytraceresult.hitVec.yCoord, raytraceresult.hitVec.zCoord);
 			}
-			if(!this.attacked)
+			if (!this.attacked)
 			{
 				Entity entity = findEntityOnPath(vec3d1, vec3d);
 				if (entity != null)
@@ -315,7 +315,7 @@ public class EntityProjectileItem extends Entity implements IThrowableEntity, IP
 		this.posX += this.motionX;
 		this.posY += this.motionY;
 		this.posZ += this.motionZ;
-		if(!this.inGround)
+		if (!this.inGround)
 		{
 			float f4 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));

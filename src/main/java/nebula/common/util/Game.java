@@ -24,14 +24,15 @@ public final class Game
 	private Game() {}
 	
 	/**
-	 * Get active modid, or get Minecraft as modid if no active mod container found.
-	 * @return
+	 * Get active modid, or get <tt>minecraft</tt> as modid if no
+	 * active mod container found.
+	 * @return the id of active mod.
 	 */
 	public static String getActiveModID()
 	{
 		try
 		{
-			if(Loader.instance().activeModContainer() == null)
+			if (Loader.instance().activeModContainer() == null)
 				return "minecraft";
 			return Loader.instance().activeModContainer().getModId();
 		}
@@ -43,8 +44,8 @@ public final class Game
 	
 	/**
 	 * Query if we know of a mod named modname.
-	 * @param name
-	 * @return
+	 * @param name the modid.
+	 * @return return <code>true</code> if mod are loaded.
 	 */
 	public static boolean isModLoaded(String name)
 	{
@@ -52,7 +53,7 @@ public final class Game
 	}
 	
 	/**
-	 * Get Minecraft runtime file direction, the default file position is
+	 * Get Minecraft runtime file, the default file position is
 	 * ./.minecraft/ in client side, and ./ in server side.
 	 * @return the file.
 	 */
@@ -62,9 +63,9 @@ public final class Game
 	}
 	
 	/**
-	 * Register block.
-	 * @param block
-	 * @param name
+	 * Register block with name.
+	 * @param block the block.
+	 * @param name the block name.
 	 */
 	public static void registerBlock(Block block, String name)
 	{
@@ -86,10 +87,10 @@ public final class Game
 	
 	/**
 	 * Register block with modid and ItemBlock type.
-	 * @param block
-	 * @param modid
-	 * @param name
-	 * @param itemBlock
+	 * @param block the block.
+	 * @param modid the registry modid.
+	 * @param name the registry name.
+	 * @param itemBlock the item block, the item type of this block.
 	 */
 	public static void registerBlock(Block block, String modid, String name, Item itemBlock)
 	{
@@ -166,6 +167,6 @@ public final class Game
 	 */
 	public static void registerClientRegister(Object arg)
 	{
-		Nebula.proxy.registerClientRegister(arg);
+		Nebula.proxy.registerRender(arg);
 	}
 }

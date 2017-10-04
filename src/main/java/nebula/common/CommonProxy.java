@@ -98,7 +98,7 @@ public class CommonProxy implements IGuiHandler
 		return null;
 	}
 	
-	public void registerClientRegister(Object arg)
+	public void registerRender(Object arg)
 	{
 		
 	}

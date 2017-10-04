@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-
+import nebula.Log;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -58,23 +57,18 @@ public class FontRenderExtend extends FontRenderer
 	
 	private void readFontTexture()
 	{
-		IResource iresource = null;
 		BufferedImage bufferedimage;
 		
-		for(IFontMap map : FONT_MAPS)
+		for (IFontMap map : FONT_MAPS)
 		{
-			try
+			try (IResource iresource = getResource(map.getSource()))
 			{
-				iresource = getResource(map.getSource());
 				bufferedimage = TextureUtil.readBufferedImage(iresource.getInputStream());
 			}
 			catch (IOException ioexception)
 			{
-				throw new RuntimeException(ioexception);
-			}
-			finally
-			{
-				IOUtils.closeQuietly(iresource);
+				Log.catching(ioexception);
+				bufferedimage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
 			}
 			map.initalizeResource(bufferedimage);
 		}
@@ -83,8 +77,8 @@ public class FontRenderExtend extends FontRenderer
 	@Override
 	public int getCharWidth(char character)
 	{
-		for(IFontMap map : FONT_MAPS)
-			if(map.shouldRender(character))
+		for (IFontMap map : FONT_MAPS)
+			if (map.shouldRender(character))
 				return map.characterWidth(character);
 		return super.getCharWidth(character);
 	}

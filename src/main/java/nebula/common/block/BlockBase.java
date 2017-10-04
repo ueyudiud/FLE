@@ -129,6 +129,11 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		return new ItemBlockBase(this);
 	}
 	
+	public final Item getItemBlock()
+	{
+		return this.item;
+	}
+	
 	@Override
 	public String getUnlocalizedName()
 	{
@@ -154,7 +159,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 	@Override
 	public final String getRegisteredName()
 	{
-		return REGISTRY.getNameForObject(this).toString();
+		return getRegistryName().toString();
 	}
 	
 	@Override
@@ -192,6 +197,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		list.addAll(list1);
 	}
 	
+	@SideOnly(Side.CLIENT)
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		list.add(new ItemStack(item));

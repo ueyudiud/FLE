@@ -30,14 +30,27 @@ public interface IFontMap
 	 */
 	boolean shouldRender(char chr);
 	
-	void initalizeResource(BufferedImage stream);
+	/**
+	 * Initialize character property from image.<p>
+	 * The image will be 256x256 empty image if source is missing.
+	 * @param image the image.
+	 */
+	void initalizeResource(BufferedImage image);
 	
+	/**
+	 * Get the character width.
+	 * @param chr
+	 * @return
+	 */
 	int characterWidth(char chr);
 	
 	/**
-	 * Render the character.
-	 * @param chr
-	 * @return
+	 * Render the character to screen.
+	 * @param chr the character.
+	 * @param italic is character render in italic mode.
+	 * @param render the font render.
+	 * @return the character width.
+	 * @see #characterWidth(char)
 	 */
 	int renderCharacter(char chr, boolean italic, FontRenderExtend render);
 }

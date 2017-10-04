@@ -1,0 +1,61 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"rocktype": {
+			"resource": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "farcore:blocks/rock/quartzite/chiseled"
+				}
+			}
+		}
+	}
+}

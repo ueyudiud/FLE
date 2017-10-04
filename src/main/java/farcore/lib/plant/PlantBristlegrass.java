@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.plant;
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Random;
 
 import farcore.data.EnumToolTypes;
 import farcore.data.M;
-import farcore.data.MP;
 import farcore.lib.block.instance.BlockPlant;
 import farcore.lib.item.instance.ItemSeed;
 import nebula.common.util.L;
@@ -30,7 +28,7 @@ public class PlantBristlegrass extends PlantStatic
 {
 	public PlantBristlegrass()
 	{
-		super(M.bristlegrass);
+		super(M.bristlegrass, true);
 	}
 	
 	@Override
@@ -48,7 +46,7 @@ public class PlantBristlegrass extends PlantStatic
 		Random rand = world instanceof World ? ((World) world).rand : L.random();
 		if (rand.nextInt(12) == 0)
 		{
-			list.add(ItemSeed.applySeed(1, M.bristlegrass, M.bristlegrass.getProperty(MP.property_crop).createNativeGeneticMaterial()));
+			list.add(ItemSeed.applyNativeSeed(1, M.bristlegrass));
 		}
 		return list;
 	}

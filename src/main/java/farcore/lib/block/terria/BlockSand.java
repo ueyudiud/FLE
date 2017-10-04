@@ -82,7 +82,16 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	{
 		IntegerMap<EnumFacing> result = new IntegerMap<>(6);
 		for (EnumFacing facing : EnumFacing.HORIZONTALS)
-			result.put(facing, calculateHeight(world, pos.offset(facing), state));
+		{
+			BlockPos pos2;
+			IBlockState state1 = world.getBlockState(pos2 = pos.offset(facing));
+			if (state1.getBlock().isAir(state1, world, pos2) || state1.getBlock().isReplaceable(world, pos2))
+			{
+				int height = calculateHeight(world, pos2.down(), state);
+				if (height < 16)
+					result.put(facing, height);
+			}
+		}
 		return result;
 	}
 	
@@ -351,18 +360,13 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	@Override
 	public boolean canFallingBlockStay(World world, BlockPos pos, IBlockState state)
 	{
-		return BlockSoil.canFallBelow(world, pos, state) || !canFallNearby(world, pos, state).isEmpty();
+		return !BlockSoil.canFallBelow(world, pos, state);
 	}
 	
 	@Override
 	protected void addSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
 	{
 		list.add(new ItemStack(item, 1, 0));
-	}
-	
-	@Override
-	public void onStartFalling(World world, BlockPos pos)
-	{
 	}
 	
 	@Override

@@ -1020,6 +1020,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
+	@Optional.Method(modid = "farcore")
 	public int getFireEncouragement(World world, BlockPos pos)
 	{
 		try
@@ -1035,6 +1036,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
+	@Optional.Method(modid = "farcore")
 	public double getThermalConduct(World world, BlockPos pos, IBlockState state)
 	{
 		try
@@ -1049,6 +1051,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
+	@Optional.Method(modid = "farcore")
 	public boolean onBurn(IModifiableCoord coord, float burnHardness, Direction direction)
 	{
 		try
@@ -1064,6 +1067,7 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
+	@Optional.Method(modid = "farcore")
 	public boolean onBurningTick(IModifiableCoord coord, Random rand, Direction fireSourceDir, IBlockState fireState)
 	{
 		try

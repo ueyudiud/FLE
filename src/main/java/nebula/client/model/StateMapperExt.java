@@ -134,12 +134,12 @@ public class StateMapperExt extends StateMapperBase implements IStateMapperExt
 		}
 		
 		String key = this.path;
-		if(this.fileProperty != null)
+		if (this.fileProperty != null)
 		{
 			key += "/" + removeAndGetName(this.fileProperty, map);
 		}
 		
-		for(IProperty property : this.ignore)
+		for (IProperty property : this.ignore)
 		{
 			map.remove(property);
 		}

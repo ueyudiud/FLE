@@ -1,0 +1,61 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"rocktype": {
+			"resource": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "farcore:blocks/rock/pumice/chiseled"
+				}
+			}
+		}
+	}
+}

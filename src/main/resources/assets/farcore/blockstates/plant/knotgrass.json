@@ -1,0 +1,16 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"normal": {
+			"model": "farcore:plant/grass_cross",
+			"textures": { "all": "farcore:blocks/plants/knotgrass" }
+		},
+		"inventory": {
+			"model": "item/generated",
+			"textures": { "layer0": "farcore:blocks/plants/knotgrass" }
+		}
+	}
+}

@@ -26,6 +26,7 @@ import nebula.common.LanguageManager;
 import nebula.common.block.BlockSingleTE;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -67,7 +68,7 @@ public class BlockDitch extends BlockSingleTE
 	{
 		super.registerRender();
 		OrderModelLoader.putModel(this, new ModelDitch());
-		Client.registerModel(this.item, getRegisteredName(), "normal");
+		Client.registerModel(this.item, new ModelResourceLocation(getRegistryName(), "normal"));
 		FarCoreRegistry.registerTESR(TESRDitch.class);
 		
 		//		ModelLoader.setCustomStateMapper(BlocksItems.ditch, new StateMapperExt(FLE.MODID, "ditch", null, Misc.PROPS_SIDE_HORIZONTALS));

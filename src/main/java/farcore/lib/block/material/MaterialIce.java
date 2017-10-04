@@ -12,8 +12,8 @@ public class MaterialIce extends Material
 	}
 	
 	@Override
-	public boolean blocksLight()
+	public boolean isOpaque()
 	{
-		return super.blocksLight();
+		return false;
 	}
 }

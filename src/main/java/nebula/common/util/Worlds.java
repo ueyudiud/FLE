@@ -351,9 +351,9 @@ public final class Worlds
 	 */
 	public static boolean checkAndFallBlock(World world, BlockPos pos)
 	{
-		if(world.isRemote) return false;
+		if (world.isRemote) return false;
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() instanceof ISmartFallableBlock ?
+		if (state.getBlock() instanceof ISmartFallableBlock ?
 				!((ISmartFallableBlock) state.getBlock()).canFallingBlockStay(world, pos, state.getActualState(world, pos)) :
 					EntityFallingBlockExtended.canFallAt(world, pos, state))
 			return fallBlock(world, pos, state);
@@ -396,7 +396,7 @@ public final class Worlds
 	 */
 	public static boolean fallBlock(World world, BlockPos pos, BlockPos dropPos, IBlockState state)
 	{
-		if(!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
+		if (!BlockFalling.fallInstantly && world.isAreaLoaded(pos, 32))
 		{
 			world.setBlockToAir(pos);
 			return world.isRemote || world.spawnEntity(new EntityFallingBlockExtended(world, pos, dropPos, state, world.getTileEntity(pos)));
@@ -404,22 +404,22 @@ public final class Worlds
 		else
 		{
 			TileEntity tile = world.getTileEntity(pos);
-			if(tile != null)
+			if (tile != null)
 			{
 				world.removeTileEntity(pos);
 			}
 			world.setBlockToAir(pos);
-			if(state.getBlock() instanceof ISmartFallableBlock)
+			if (state.getBlock() instanceof ISmartFallableBlock)
 			{
 				((ISmartFallableBlock) state.getBlock()).onStartFalling(world, pos);
 			}
 			int height = 0;
-			while(!EntityFallingBlockExtended.canFallAt(world, pos, state))
+			while (!EntityFallingBlockExtended.canFallAt(world, pos, state))
 			{
 				pos = pos.down();
 				++height;
 			}
-			if(pos.getY() > 0)
+			if (pos.getY() > 0)
 			{
 				EntityFallingBlockExtended.replaceFallingBlock(world, pos, state, height);
 				NBTTagCompound nbt = new NBTTagCompound();
@@ -427,7 +427,7 @@ public final class Worlds
 				{
 					tile.writeToNBT(nbt);
 				}
-				if(state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).onFallOnGround(world, pos, state, height, nbt))
+				if (state.getBlock() instanceof ISmartFallableBlock && ((ISmartFallableBlock) state.getBlock()).onFallOnGround(world, pos, state, height, nbt))
 				{
 					
 				}
@@ -435,7 +435,7 @@ public final class Worlds
 				{
 					world.setBlockState(pos, state, 2);
 					TileEntity tile1 = world.getTileEntity(pos);
-					if(tile1 != null)
+					if (tile1 != null)
 					{
 						tile1.writeToNBT(nbt);
 						tile1.setPos(pos);

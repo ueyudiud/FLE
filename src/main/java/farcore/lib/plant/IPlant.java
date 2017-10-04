@@ -1,5 +1,9 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.plant;
 
+import java.util.List;
 import java.util.Random;
 
 import farcore.lib.block.instance.BlockPlant;
@@ -10,6 +14,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +24,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IPlant<B extends BlockPlant> extends
 IMetaExtHandler, IBlockBehavior<B>, IPlantable
@@ -122,9 +130,9 @@ IMetaExtHandler, IBlockBehavior<B>, IPlantable
 	}
 	
 	@Override
-	default boolean isTranslucent(B block, IBlockState state)
+	default int getLightOpacity(B block, IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return true;
+		return 0;
 	}
 	
 	@Override
@@ -151,5 +159,11 @@ IMetaExtHandler, IBlockBehavior<B>, IPlantable
 			Explosion explosion)
 	{
 		return 0.0F;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	default void addSubBlocks(Item item, List<ItemStack> list)
+	{
+		list.add(new ItemStack(item));
 	}
 }

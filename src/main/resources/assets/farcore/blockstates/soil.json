@@ -7,7 +7,7 @@
 	},
 	"variants": {
 		"type": {
-			"latosol":         { "textures": { "all": "farcore:blocks/soil/latosol" } },
+			"latrosol":        { "textures": { "all": "farcore:blocks/soil/latrosol" } },
 			"latroaluminosol": { "textures": { "all": "farcore:blocks/soil/latroaluminosol" } },
 			"ruboloam":        { "textures": { "all": "farcore:blocks/soil/ruboloam" } },
 			"ruboaluminoloam": { "textures": { "all": "farcore:blocks/soil/ruboaluminoloam" } },

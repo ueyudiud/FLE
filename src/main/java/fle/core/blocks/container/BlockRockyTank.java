@@ -19,6 +19,7 @@ import nebula.client.util.Client;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockTE;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -53,7 +54,7 @@ public class BlockRockyTank extends BlockTE
 	{
 		super.registerRender();
 		OrderModelLoader.putModel(this, new ModelSmallRockyTank());
-		Client.registerModel(this.item, getRegisteredName(), "normal");
+		Client.registerModel(this.item, new ModelResourceLocation(getRegistryName(), "normal"));
 		FarCoreRegistry.registerTESR(TESmallRockyTank.class, new TESRFluidFase<TESmallRockyTank>(0.25F, 0.25F, 0.25F, 0.75F, 0.9375F, 0.75F, t->t.getFluidTank().getInfo()));
 	}
 	

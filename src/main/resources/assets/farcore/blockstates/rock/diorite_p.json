@@ -1,0 +1,61 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:base_simple"
+	},
+	"variants": {
+		"rocktype": {
+			"resource": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/resource"
+				}
+			},
+			"cobble": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/cobble"
+				}
+			},
+			"cobble_art": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/cobble"
+				}
+			},
+			"smoothed": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/smoothed"
+				}
+			},
+			"mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/mossy"
+				}
+			},
+			"brick": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/brick"
+				}
+			},
+			"brick_crushed": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/brick_crushed"
+				}
+			},
+			"brick_mossy": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/brick_mossy"
+				}
+			},
+			"brick_compacted": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/brick_compacted"
+				}
+			},
+			"chiseled": {
+				"textures": {
+					"all": "farcore:blocks/rock/diorite_p/chiseled"
+				}
+			}
+		}
+	}
+}

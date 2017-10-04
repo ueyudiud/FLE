@@ -5,7 +5,7 @@
 	},
 	"variants": {
 		"normal": {
-			"model": "farcore:cross",
+			"model": "farcore:plant/grass_cross",
 			"textures": { "all": "farcore:blocks/plants/bristlegrass" }
 		},
 		"inventory": {

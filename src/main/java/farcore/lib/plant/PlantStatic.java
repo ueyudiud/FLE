@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.plant;
 
 import java.util.Random;
@@ -11,6 +10,8 @@ import com.google.common.collect.ImmutableMap;
 import farcore.lib.material.Mat;
 import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
+import nebula.client.util.Renders;
+import nebula.common.LanguageManager;
 import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateContainer;
@@ -25,17 +26,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PlantStatic extends PlantNormal implements IRenderRegister
 {
+	private boolean withColor;
+	
 	public PlantStatic(Mat material)
 	{
+		this(material, false);
+	}
+	public PlantStatic(Mat material, boolean withColor)
+	{
 		super(material);
+		this.withColor = withColor;
+		LanguageManager.registerLocal(this.block.getTranslateNameForItemStack(0), material.localName);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerRender()
 	{
-		ModelLoader.setCustomStateMapper(this.block, block-> ImmutableMap.of(block.getDefaultState(), new ModelResourceLocation(this.material.modid + ":plant/" + this.material.name, "normal")));
-		Client.registerModel(this.block, 0, this.material.modid, "plant/" + this.material.name);
+		ModelResourceLocation location = new ModelResourceLocation(this.material.modid + ":plant/" + this.material.name, "normal");
+		ModelLoader.setCustomStateMapper(this.block, block-> ImmutableMap.of(block.getDefaultState(), location));
+		Client.registerModel(this.block.getItemBlock(), new ModelResourceLocation(location, "inventory"));
+		if (this.withColor)
+			Renders.registerBiomeColorMultiplier(this.block);
 	}
 	
 	@Override

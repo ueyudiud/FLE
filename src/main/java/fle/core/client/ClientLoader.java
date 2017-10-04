@@ -25,7 +25,7 @@ public class ClientLoader extends CommonLoader
 	{
 		super.init(event);
 		
-		MinecraftForge.EVENT_BUS.register(new FleClientHandler());
+		MinecraftForge.EVENT_BUS.register(FleClientHandler.class);
 		NebulaTextureHandler.addIconLoader(new PolishingStateIconLoader());
 		
 		ClientProxy.registerRenderObject();

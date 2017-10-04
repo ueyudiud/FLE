@@ -236,13 +236,13 @@ ITP_BoundingBox
 				final int viscosity = FluidStacks.getViscosity(this.tank.getFluid());
 				final int speedMutiple = this.factory.getSpeedMultiple(this);
 				final int limit = this.factory.getMaxTransferLimit(this);
-				for(Direction direction : Direction.DIRECTIONS_2D)
+				for (Direction direction : Direction.DIRECTIONS_2D)
 				{
-					if(is(Connect[direction.horizontalOrdinal]))
+					if (is(Connect[direction.horizontalOrdinal]))
 					{
 						this.flowBuffer[direction.horizontalOrdinal] = Math.min(speedMutiple + this.flowBuffer[direction.horizontalOrdinal], limit << 10);
 						val = tryFillFluidInto(this.flowBuffer[direction.horizontalOrdinal], viscosity, limit, direction);
-						if(val >= 0)
+						if (val >= 0)
 						{
 							this.flowAmount[direction.horizontalOrdinal] += val;
 							this.flowBuffer[direction.horizontalOrdinal] = 0;
@@ -257,7 +257,7 @@ ITP_BoundingBox
 		}
 		System.arraycopy(this.flowAmount, 0, this.lastFlowAmount, 0, this.lastFlowAmount.length);
 		Arrays.fill(this.flowAmount, 0);
-		if(!FluidStacks.areFluidStacksEqual(stack, this.tank.getFluid()))
+		if (!FluidStacks.areFluidStacksEqual(stack, this.tank.getFluid()))
 		{
 			NebulaSynchronizationHandler.markTileEntityForUpdate(this, 0);
 		}
@@ -265,29 +265,29 @@ ITP_BoundingBox
 	
 	protected int tryFillFluidInto(int buffer, int viscosity, int limit, Direction direction)
 	{
-		if(this.tank.getFluid() == null) return 0;
+		if (this.tank.getFluid() == null) return 0;
 		
 		TileEntity tile = getTE(direction);
-		if(tile instanceof IDitchTile)
+		if (tile instanceof IDitchTile)
 		{
 			IDitchTile ditch = (IDitchTile) tile;
 			Fluid fluid = getFluidContain();
 			Fluid fluid1 = ditch.getFluidContain();
-			if(fluid != null && fluid1 != null && fluid != fluid1)
+			if (fluid != null && fluid1 != null && fluid != fluid1)
 			{
 				ditch.setLink(direction.getOpposite(), false);
 				setLink(direction, false);
 				return -1;
 			}
-			if(fluid == null)
+			if (fluid == null)
 			{
 				if(fluid1 == null) return -1;
 				fluid = fluid1;
 			}
 			float h1 = getFlowHeight();
 			float h2 = ditch.getFlowHeight();
-			if(L.similar(h1, h2)) return -1;
-			if(h1 > h2)
+			if (L.similar(h1, h2)) return -1;
+			if (h1 > h2)
 			{
 				int speed = getFlowSpeed(buffer, limit, viscosity);
 				if(speed < 1) return 0;
@@ -302,15 +302,15 @@ ITP_BoundingBox
 		{
 			int speed = getFlowSpeed(buffer, limit, viscosity);
 			int result;
-			if((result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true)) != -1)
+			if ((result = TileEntities.tryFlowFluidInto(this.tank, tile, direction.getOpposite(), speed, true)) != -1)
 			{
 				return result;
 			}
-			else if(isAirBlock(direction) && this.pos.getY() > 1)
+			else if (isAirBlock(direction) && this.pos.getY() > 1)
 			{
 				tile = getTE(direction.x, -1, direction.z);
 				speed = getFlowSpeed(buffer, limit, viscosity / 2);
-				if(tile instanceof IDitchTile)
+				if (tile instanceof IDitchTile)
 				{
 					FluidStack stack = this.tank.drain(speed, true);//Force to drain fluid.
 					return ((IDitchTile) tile).getTank().fill(stack, true);

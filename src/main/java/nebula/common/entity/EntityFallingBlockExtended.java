@@ -33,6 +33,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * The improved falling block.
  * @author ueyudiud
  * @see net.minecraft.entity.item.EntityFallingBlock
+ * @see nebula.common.block.IHitByFallenBehaviorBlock
+ * @see nebula.common.block.ISmartFallableBlock
  */
 public class EntityFallingBlockExtended extends Entity
 {
@@ -209,30 +211,38 @@ public class EntityFallingBlockExtended extends Entity
 					setDead();
 					
 					label:
-						if (this.fallable.canFallingBlockStay(this.world, pos, this.state))
+					{
+						BlockPos pos1 = pos;
+						while (pos.getY() < this.startY)
 						{
-							if(this.fallable.onFallOnGround(this.world, pos, this.state, this.startY - pos.getY(), this.nbt))
+							if (this.fallable.canFallingBlockStay(this.world, pos1, this.state))
 							{
+								if (this.fallable.onFallOnGround(this.world, pos1, this.state, this.startY - pos1.getY(), this.nbt))
+								{
+									break label;
+								}
+								replaceFallingBlock(this.world, pos, this.state, this.startY - pos1.getY());
+								this.world.setBlockState(pos1, this.state, 3);
+								if (this.nbt != null)
+								{
+									TileEntity tile = this.world.getTileEntity(pos1);
+									
+									if (tile != null)
+									{
+										tile.readFromNBT(this.nbt);
+										tile.setPos(pos1);
+										tile.markDirty();
+									}
+								}
 								break label;
 							}
-							replaceFallingBlock(this.world, pos, this.state, this.startY - pos.getY());
-							this.world.setBlockState(pos, this.state, 3);
-							if (this.nbt != null)
-							{
-								TileEntity tile = this.world.getTileEntity(pos);
-								
-								if (tile != null)
-								{
-									tile.readFromNBT(this.nbt);
-									tile.setPos(pos);
-									tile.markDirty();
-								}
-							}
+							pos1 = pos1.up();
 						}
-						else if (this.shouldDropItem && !this.fallable.onDropFallenAsItem(this.world, pos, this.state, this.nbt))
+						if (this.shouldDropItem && !this.fallable.onDropFallenAsItem(this.world, pos, this.state, this.nbt))
 						{
 							entityDropItem(new ItemStack(this.state.getBlock(), 1, this.state.getBlock().damageDropped(this.state)), 0.0F);
 						}
+					}
 				}
 				else if (this.lifeTime > 100 && !this.world.isRemote && (pos.getY() < 1 || pos.getY() > 256) || this.lifeTime > 600)
 				{
@@ -272,7 +282,7 @@ public class EntityFallingBlockExtended extends Entity
 	}
 	
 	/**
-	 * (abstract) Protected helper method to write subclass entity data to NBT.
+	 * Protected helper method to write subclass entity data to NBT.
 	 */
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt)
@@ -289,7 +299,7 @@ public class EntityFallingBlockExtended extends Entity
 	}
 	
 	/**
-	 * (abstract) Protected helper method to read subclass entity data from NBT.
+	 * Protected helper method to read subclass entity data from NBT.
 	 */
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt)

@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.block;
 
 import java.util.Random;
@@ -39,15 +38,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  *
  */
-public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlock, IRenderRegister
+public class BlockStandardFluid extends BlockFluidBase
+implements ISmartFluidBlock, IRenderRegister
 {
 	public final FluidBase fluid;
 	private final FluidStack blockValue;
 	
 	protected static Function<Object[], IBlockState> createFunctionApplier(BlockStandardFluid block)
 	{
-		return objects -> objects.length == 0 ?  block.getDefaultState() :
-			block.getDefaultState().withProperty(LEVEL, ((Number) objects[0]).intValue() + 1);
+		return objects->objects.length == 0 ?  block.getDefaultState() :
+			block.getDefaultState().withProperty(LEVEL, ((Number) objects[0]).intValue() - 1);
 	}
 	
 	public BlockStandardFluid(String registerName, FluidBase fluid, Material material)
@@ -407,14 +407,14 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	 */
 	public int displaceIfPossible(World world, BlockPos pos, BlockPos source, int level)
 	{
-		if(!world.isAreaLoaded(pos, 2))
+		if (!world.isAreaLoaded(pos, 2))
 			return -level;
-		if(world.isAirBlock(pos)) return level;
+		if (world.isAirBlock(pos)) return level;
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() == this) return level;
+		if (state.getBlock() == this) return level;
 		FluidTouchBlockEvent event = new FluidTouchBlockEvent(world, source, pos, state, this, level);
 		MinecraftForge.EVENT_BUS.post(event);
-		if(event.getResult() == Result.ALLOW)
+		if (event.getResult() == Result.ALLOW)
 		{
 			world.setBlockState(pos, event.getEndingTargetState(), 3);
 			return event.amount;
@@ -477,7 +477,7 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	@Override
 	public int getMaxRenderHeightMeta()
 	{
-		return 16;
+		return this.quantaPerBlock - 1;
 	}
 	
 	@Override
@@ -499,13 +499,13 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	@Override
 	public int fill(World world, BlockPos pos, FluidStack resource, boolean doFill)
 	{
-		if(resource == null || resource.getFluid() != this.fluid)
+		if (resource == null || resource.getFluid() != this.fluid)
 			return 0;
 		int level = getFluidLevel(world, pos);
-		if(level == -1) return 0;
+		if (level == -1) return 0;
 		int level1 = (int) (resource.amount * this.quantaPerBlockFloat / 1000F);
-		if(level1 == 0) return 0;
-		if(doFill)
+		if (level1 == 0) return 0;
+		if (doFill)
 		{
 			if(level + level1 > 16)
 			{
@@ -520,10 +520,10 @@ public class BlockStandardFluid extends BlockFluidBase implements ISmartFluidBlo
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
-		if(entityIn instanceof EntityLivingBase)
+		if (entityIn instanceof EntityLivingBase)
 		{
 			float amount;
-			if(entityIn.motionY < 0 &&
+			if (entityIn.motionY < 0 &&
 					!this.fluid.isGaseous() &&
 					(amount = (float) (this.fluid.getDensity(worldIn, pos) * -entityIn.motionY)) > 1500)
 			{

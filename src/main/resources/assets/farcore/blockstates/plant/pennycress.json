@@ -1,0 +1,22 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"normal": {
+			"model": "farcore:plant/flower_cross",
+			"textures": { 
+				"layer0": "farcore:blocks/plants/pennycress",
+				"layer1": "farcore:blocks/plants/pennycress_flower"
+			}
+		},
+		"inventory": {
+			"model": "item/generated",
+			"textures": { 
+				"layer0": "farcore:blocks/plants/pennycress",
+				"layer1": "farcore:blocks/plants/pennycress_flower"
+			}
+		}
+	}
+}
