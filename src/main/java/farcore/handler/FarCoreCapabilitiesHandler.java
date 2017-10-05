@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FarCoreCapabilitiesHandler
 {
 	@SubscribeEvent
-	public void onCapabilityWraped(AttachCapabilitiesEvent.TileEntity event)
+	public static void onCapabilityWraped(AttachCapabilitiesEvent.TileEntity event)
 	{
 		TileEntity tile = event.getTileEntity();
 		event.addCapability(new ResourceLocation(FarCore.ID, "capabilities"), new WrapperChecker(tile));

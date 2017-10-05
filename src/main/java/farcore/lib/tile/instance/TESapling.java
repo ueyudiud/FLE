@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tile.instance;
 
 import java.util.List;
@@ -7,7 +10,6 @@ import farcore.data.M;
 import farcore.data.MP;
 import farcore.lib.block.IDebugableBlock;
 import farcore.lib.material.Mat;
-import farcore.lib.material.prop.PropertyTree;
 import farcore.lib.model.block.ModelSapling;
 import farcore.lib.tree.ISaplingAccess;
 import farcore.lib.tree.ITree;
@@ -86,7 +88,7 @@ implements ISaplingAccess, IDebugableBlock, ITB_BlockPlacedBy, ITB_AddHitEffects
 	@Override
 	protected void updateServer1()
 	{
-		if(!canBlockStay() || this.tree == PropertyTree.VOID)
+		if(!canBlockStay() || this.tree == Tree.VOID)
 		{
 			removeBlock();
 			return;

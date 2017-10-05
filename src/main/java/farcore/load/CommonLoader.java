@@ -1,9 +1,9 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.load;
 
+import static farcore.FarCoreRegistry.registerEventListenerToMF;
 import static farcore.data.Materials.ICE;
 import static farcore.data.Materials.LOG;
 import static farcore.data.Materials.METALIC;
@@ -70,7 +70,6 @@ import nebula.common.util.EnumChatFormatting;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 
@@ -84,9 +83,9 @@ public class CommonLoader
 		ProgressBar bar = push("Far Core Preload", 8);
 		//Register common handler.
 		bar.step("Register Game Handlers");
-		registerForgeEventListener(FarCoreEnergyHandler.getHandler());
-		registerForgeEventListener(new FarCoreCapabilitiesHandler());
-		registerForgeEventListener(new FarCoreBlockHandler());
+		registerEventListenerToMF(FarCoreEnergyHandler.getHandler());
+		registerEventListenerToMF(FarCoreCapabilitiesHandler.class);
+		registerEventListenerToMF(FarCoreBlockHandler.class);
 		//Register energy nets.
 		bar.step("Add Energy Nets");
 		addNet(ThermalNet.INSTANCE);
@@ -214,10 +213,5 @@ public class CommonLoader
 	
 	public void complete()
 	{
-	}
-	
-	private static void registerForgeEventListener(Object object)
-	{
-		MinecraftForge.EVENT_BUS.register(object);
 	}
 }

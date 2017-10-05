@@ -66,7 +66,7 @@ public class DefaultDitchFactory implements DitchFactory
 		information.speedMultiple = speed;
 		information.maxTransferLimit = limit;
 		information.destroyTemperature = temperature;
-		material.addProperty(DITCH_INFORMATION_PROPERTY, information);
+		material.builder().addProperty(DITCH_INFORMATION_PROPERTY, information);
 		DitchBlockHandler.addMaterial(material);
 	}
 	

@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FarCoreBlockHandler
 {
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onBlockHarvestDrop(HarvestDropsEvent event)
+	public static void onBlockHarvestDrop(HarvestDropsEvent event)
 	{
 		if (event.getState().getBlock() == Blocks.GRAVEL)
 		{

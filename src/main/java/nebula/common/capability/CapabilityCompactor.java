@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.capability;
 
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.function.Function;
 import com.google.common.collect.ImmutableMap;
 
 import nebula.base.function.Applicable;
-import nebula.base.function.Applicable.AppliableCached;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -40,20 +38,12 @@ public class CapabilityCompactor<S> implements ICapabilityProvider
 			Applicable<?> cache;
 			if (appliable instanceof Applicable)
 			{
-				cache = Applicable.wrapCached((Applicable<?>) appliable);
+				cache = Applicable.asCached((Applicable<?>) appliable);
 			}
 			else if (appliable instanceof Function)
 			{
-				@SuppressWarnings("unchecked")
 				final Function<S, ?> function = (Function<S, ?>) appliable;
-				cache = new AppliableCached<Object>()
-				{
-					@Override
-					protected Object apply$()
-					{
-						return function.apply(CapabilityCompactor.this.source);
-					}
-				};
+				cache = Applicable.asCached(()-> function.apply(this.source));
 			}
 			else
 			{

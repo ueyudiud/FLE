@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.base;
 
 import java.lang.reflect.Array;
@@ -11,7 +14,7 @@ import java.util.Set;
 import nebula.common.util.A;
 
 /**
- * A register instanceof of register.
+ * A register instance of IRegister.
  * This type is not thread safe.
  * @author ueyudiud
  * @param <T> the register object type.

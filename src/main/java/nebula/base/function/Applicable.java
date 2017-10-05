@@ -1,46 +1,34 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base.function;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Represents function that can direct return a result without argument.<p>
+ * Uses for some argument which value will be initialize after method
+ * called.<p>
+ * This interface extends {@link java.util.concurrent.Callable} and
+ * {@link java.util.function.Supplier} both to improved the compatibility
+ * in some other methods casting.
  * 
- * Uses for some argument which value will be initialize after method called.
- * 
- * @param <T> The output type.
+ * @param <T> the type of result applied by {@link #apply()}.
  * 
  * @author ueyudiud
  */
 @FunctionalInterface
 public interface Applicable<T> extends Callable<T>, Supplier<T>
 {
-	abstract class AppliableCached<T> implements Applicable<T>
-	{
-		T cache;
-		
-		@Override
-		public T apply()
-		{
-			if (cache == null)
-			{
-				cache = apply$();
-			}
-			
-			return cache;
-		}
-		
-		protected abstract T apply$();
-	}
-	
 	static Applicable<?> NULL = () -> null;
 	
 	/**
@@ -48,34 +36,44 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	 * @param value the constant result.
 	 * @return the constant result applier.
 	 */
-	@SuppressWarnings("unchecked")//It is safe.
 	static <V> Applicable<V> to(V value)
 	{
 		return value == null ? (Applicable<V>) NULL : ()-> value;
 	}
 	
-	static <V> AppliableCached<V> wrapCached(Applicable<V> appliable)
+	/**
+	 * Created a cache for Applicable.<p>
+	 * The value get from {@link #apply()} will be stored and return directly
+	 * when {@link #apply()} called next time.<p>
+	 * If applicable is already the cached type, the argument will be return
+	 * directly.
+	 * @param applicable the applicable to wrap.
+	 * @return the cached Applicable.
+	 */
+	static <V> ApplicableCached<V> asCached(Supplier<? extends V> applicable)
 	{
-		if (appliable instanceof AppliableCached) return (AppliableCached<V>) appliable;
-		return new AppliableCached<V>()
-		{
-			@Override
-			protected V apply$()
-			{
-				return appliable.apply();
-			}
-		};
+		if (applicable instanceof ApplicableCached) return (ApplicableCached<V>) applicable;
+		return new ApplicableCached<>(applicable);
 	}
 	
-	static <V> Applicable<V> or(BooleanSupplier supplier, Applicable<V> a1, Applicable<V> a2)
+	static <V> Applicable<V> or(@Nonnull BooleanSupplier supplier, @Nonnull Applicable<V> a1, @Nonnull Applicable<V> a2)
 	{
 		return () -> supplier.getAsBoolean() ? a1.apply() : a2.apply();
 	}
 	
-	default <V> Applicable<V> andThen(Function<T, V> function)
+	default <V> Applicable<V> andThen(@Nonnull Function<? super T, ? extends V> function)
 	{
 		Objects.requireNonNull(function);
-		return () -> function.apply(apply());
+		return ()-> function.apply(apply());
+	}
+	
+	/**
+	 * @see java.util.Optional#ifPresent(Consumer)
+	 * @param consumer the consumer.
+	 */
+	default void consumeIfPresent(Consumer<? super T> consumer)
+	{
+		applyOptional().ifPresent(consumer);
 	}
 	
 	default <E> Function<E, T> anyTo()
@@ -90,7 +88,7 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	}
 	
 	@Override
-	default T call()
+	default T call() throws IllegalStateException
 	{
 		return apply();
 	}
@@ -101,9 +99,11 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	}
 	
 	/**
-	 * Get apply value.
-	 * @throws IllegalStateException When target is not initialize or connected to server, etc.
-	 * @return The applied value.
+	 * Get applied value, the value <i>should</i> be a constant, or want to
+	 * return a no-constant value, you can use such as {@link Selector}
+	 * instead.
+	 * @throws IllegalStateException when target is not initialize or can not provide in time, etc.
+	 * @return the applied value.
 	 */
-	T apply();
+	@Nullable T apply();
 }

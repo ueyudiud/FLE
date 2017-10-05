@@ -170,7 +170,7 @@ public class FarCoreRegistry
 	}
 	
 	/**
-	 * Register event listener to minecraft forge event bus.
+	 * Register event listener to MinecraftForge EventBus.
 	 * @param listener the listener.
 	 * @see net.minecraftforge.common.MinecraftForge#EVENT_BUS
 	 */

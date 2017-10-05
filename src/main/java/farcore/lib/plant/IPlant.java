@@ -129,6 +129,11 @@ IMetaExtHandler, IBlockBehavior<B>, IPlantable
 		return false;
 	}
 	
+	default boolean isTranslucent(B block, IBlockState state)
+	{
+		return false;
+	}
+	
 	@Override
 	default int getLightOpacity(B block, IBlockState state, IBlockAccess world, BlockPos pos)
 	{

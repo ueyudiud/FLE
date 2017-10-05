@@ -55,10 +55,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class Tree extends PropertyWood implements ITree, IRenderRegister
 {
-	public static final Applicable.AppliableCached<ItemStack> LEAVES_APPLIER1 =
-			Applicable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
-	public static final Applicable.AppliableCached<ItemStack> LEAVES_APPLIER2 =
-			Applicable.wrapCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
+	public static final Applicable<ItemStack> LEAVES_APPLIER1 =
+			Applicable.asCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("broadleaf") : null);
+	public static final Applicable<ItemStack> LEAVES_APPLIER2 =
+			Applicable.asCached(()-> EnumItem.crop_related.item != null ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("coniferous") : null);
 	
 	protected FamilyTemplate<Tree, ISaplingAccess> family;
 	/** logNative logArtifical leaves leavesCore */
