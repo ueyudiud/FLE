@@ -15,7 +15,6 @@ import java.util.Random;
 
 import farcore.data.CT;
 import farcore.data.ColorMultiplier;
-import farcore.data.EnumBlock;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
 import farcore.data.MP;
@@ -85,6 +84,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		}
 		else return state1.getMaterial().isReplaceable();
 	}
+	
 	protected static List<EnumFacing> canFallNearby(World world, BlockPos pos, IBlockState state)
 	{
 		BlockPos pos1 = pos.down();
@@ -122,10 +122,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		TUNDRA("tundra"),
 		MYCELIUM("mycelium"),
 		TUNDRA_FROZEN("tundra_frozen"),
-		WATER("water"),
-		GRASS_WATER("grass_water"),
-		TUNDRA_WATER("tundra_water"),
-		MYCELIUM_WATER("mycelium_water"),
 		SNOW("snow"),
 		FROZEN_SNOW("frozen_snow"),
 		GRASS_SNOW("grass_snow"),
@@ -137,24 +133,21 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		
 		static
 		{
-			setCover(NONE, WATER, SNOW);
-			setCover(GRASS, GRASS_WATER, GRASS_SNOW);
-			setCover(TUNDRA, TUNDRA_WATER, TUNDRA_SNOW);
-			setCover(MYCELIUM, MYCELIUM_WATER, MYCELIUM_SNOW);
-			setCover(FROZEN, FROZEN, FROZEN_SNOW);
-			setCover(TUNDRA_FROZEN, TUNDRA_FROZEN, TUNDRA_FROZEN_SNOW);
+			setCover(NONE, SNOW);
+			setCover(GRASS, GRASS_SNOW);
+			setCover(TUNDRA, TUNDRA_SNOW);
+			setCover(MYCELIUM, MYCELIUM_SNOW);
+			setCover(FROZEN, FROZEN_SNOW);
+			setCover(TUNDRA_FROZEN, TUNDRA_FROZEN_SNOW);
 			FROZEN.noFrozen = FROZEN_SNOW.noFrozen = NONE;
 			TUNDRA_FROZEN.noFrozen = TUNDRA_FROZEN_SNOW.noFrozen = TUNDRA;
-			TUNDRA_FROZEN.isWet = FROZEN.isWet = false;
 			FROZEN.isFrozen = FROZEN_SNOW.isFrozen = TUNDRA_FROZEN.isFrozen = TUNDRA_FROZEN_SNOW.isFrozen = true;
 		}
 		
-		static void setCover(EnumCoverType no, EnumCoverType water, EnumCoverType snow)
+		static void setCover(EnumCoverType no, EnumCoverType snow)
 		{
-			no.noCover    = water.noCover    = snow.noCover    = no;
-			no.waterCover = water.waterCover = snow.waterCover = water;
-			no.snowCover  = water.snowCover  = snow.snowCover  = snow;
-			water.isWet = true;
+			no.noCover    = snow.noCover    = no;
+			no.snowCover  = snow.snowCover  = snow;
 			snow.isSnow = true;
 		}
 		
@@ -163,7 +156,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		EnumCoverType noCover = this;
 		EnumCoverType waterCover = this;
 		EnumCoverType snowCover = this;
-		boolean isWet;
 		boolean isSnow;
 		boolean isFrozen;
 		
@@ -181,11 +173,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		public EnumCoverType getNoCover()
 		{
 			return this.noCover;
-		}
-		
-		public EnumCoverType getWaterCover()
-		{
-			return this.waterCover;
 		}
 		
 		public EnumCoverType getSnowCover()
@@ -234,9 +221,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		super.registerRender();
 		Renders.registerColorMultiplier(ColorMultiplier.SOIL_COLOR, this);
 		Renders.registerColorMultiplier(ColorMultiplier.ITEM_SOIL_COLOR, this.item);
-		StateMapperExt mapper = new StateMapperExt(this.material.modid, "soil", null);
-		mapper.setVariants("type", this.material.name);
-		Renders.registerCompactModel(mapper, this, 16);
+		Renders.registerCompactModel(new StateMapperExt(this.material.modid, "soil/" + this.material.name, null), this, EnumCoverType.VALUES.length);
 	}
 	
 	@Override
@@ -338,11 +323,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		EnumCoverType type = state.getValue(COVER_TYPE);
 		float hardness = super.getBlockHardness(state, worldIn, pos);
-		if(type.isFrozen)
-		{
-			hardness *= 2.4F;
-		}
-		else if(type.isWet)
+		if (type.isFrozen)
 		{
 			hardness *= 1.2F;
 		}
@@ -498,7 +479,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 					continue;
 				}
 				if(type1.isSnow) { type = type.snowCover; }
-				if(type1.isWet) { type = type.waterCover; }
 				world.setBlockState(pos2, state1.withProperty(COVER_TYPE, type), 3);
 			}
 		}
@@ -507,7 +487,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	protected IBlockState updateBase(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
 		IBlockState oldState = state;
-		boolean wet = Worlds.isBlockNearby(worldIn, pos, EnumBlock.water.block, true);
 		EnumCoverType type = state.getValue(COVER_TYPE);
 		if (type.noCover != EnumCoverType.NONE && type.noCover != EnumCoverType.FROZEN)
 		{
@@ -530,19 +509,7 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 				state = state.withProperty(COVER_TYPE, type.waterCover);
 			}
 		}
-		else
-		{
-			if (!type.isWet && wet)
-			{
-				state = state.withProperty(COVER_TYPE, type.waterCover);
-			}
-			else if (!wet && wet && rand.nextInt(8) == 0)
-			{
-				state = state.withProperty(COVER_TYPE, type.noCover);
-			}
-			wet |= type.isWet;
-		}
-		if (checkAndFall(worldIn, pos, state, rand, !wet)) return null;
+		if (checkAndFall(worldIn, pos, state, rand, true)) return null;
 		if (oldState != state)
 		{
 			worldIn.setBlockState(pos, state, 3);
@@ -595,13 +562,9 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 	{
 		float amt = 1F - this.material.getProperty(MP.fallen_damage_deduction) / 10000F;
 		EnumCoverType type = worldIn.getBlockState(pos).getValue(COVER_TYPE);
-		if(type.isWet)
+		if (type.isSnow)
 		{
-			amt *= 0.6F;
-		}
-		else if(type.isSnow)
-		{
-			amt *= 0.8F;
+			amt *= 1.2F;
 		}
 		entityIn.fall(fallDistance, amt);
 	}
@@ -613,30 +576,19 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		IBlockState state = worldIn.getBlockState(pos);
 		EnumCoverType type = state.getValue(COVER_TYPE);
 		boolean flag = worldIn.canSnowAt(pos, false);
-		if(!flag)
+		if (!flag)
 		{
-			if(worldIn.rand.nextInt(6) == 0)
+			if (worldIn.rand.nextInt(6) == 0)
 			{
 				worldIn.setBlockState(pos, state.withProperty(COVER_TYPE, type.waterCover), 3);
 			}
 		}
 		else if(flag)
 		{
-			if(worldIn.rand.nextInt(type.isWet ? 12 : 7) == 0)
+			if (worldIn.rand.nextInt(7) == 0)
 			{
 				worldIn.setBlockState(pos, state.withProperty(COVER_TYPE, type.snowCover), 3);
 			}
-		}
-	}
-	
-	@Override
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
-	{
-		super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
-		if(state.getValue(COVER_TYPE).isWet)
-		{
-			entityIn.motionX *= 0.85F;
-			entityIn.motionZ *= 0.85F;
 		}
 	}
 	
@@ -648,7 +600,6 @@ public class BlockSoil extends BlockMaterial implements ISmartFallableBlock
 		switch (plantable.getPlantType(world, pos.offset(direction)))
 		{
 		case Plains : return !type.isFrozen;
-		case Water : return !type.isFrozen && type.isWet;
 		default : return super.canSustainPlant(state, world, pos, direction, plantable);
 		}
 	}

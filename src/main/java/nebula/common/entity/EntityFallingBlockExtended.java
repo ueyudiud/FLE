@@ -210,38 +210,29 @@ public class EntityFallingBlockExtended extends Entity
 					
 					setDead();
 					
-					label:
+					if (this.fallable.canFallingBlockStay(this.world, pos, this.state))
 					{
-						BlockPos pos1 = pos;
-						while (pos.getY() < this.startY)
+						if (this.fallable.onFallOnGround(this.world, pos, this.state, this.startY - pos.getY(), this.nbt))
 						{
-							if (this.fallable.canFallingBlockStay(this.world, pos1, this.state))
+							return;
+						}
+						replaceFallingBlock(this.world, pos, this.state, this.startY - pos.getY());
+						this.world.setBlockState(pos, this.state, 3);
+						if (this.nbt != null)
+						{
+							TileEntity tile = this.world.getTileEntity(pos);
+							
+							if (tile != null)
 							{
-								if (this.fallable.onFallOnGround(this.world, pos1, this.state, this.startY - pos1.getY(), this.nbt))
-								{
-									break label;
-								}
-								replaceFallingBlock(this.world, pos, this.state, this.startY - pos1.getY());
-								this.world.setBlockState(pos1, this.state, 3);
-								if (this.nbt != null)
-								{
-									TileEntity tile = this.world.getTileEntity(pos1);
-									
-									if (tile != null)
-									{
-										tile.readFromNBT(this.nbt);
-										tile.setPos(pos1);
-										tile.markDirty();
-									}
-								}
-								break label;
+								tile.readFromNBT(this.nbt);
+								tile.setPos(pos);
+								tile.markDirty();
 							}
-							pos1 = pos1.up();
 						}
-						if (this.shouldDropItem && !this.fallable.onDropFallenAsItem(this.world, pos, this.state, this.nbt))
-						{
-							entityDropItem(new ItemStack(this.state.getBlock(), 1, this.state.getBlock().damageDropped(this.state)), 0.0F);
-						}
+					}
+					else if (this.shouldDropItem && !this.fallable.onDropFallenAsItem(this.world, pos, this.state, this.nbt))
+					{
+						entityDropItem(new ItemStack(this.state.getBlock(), 1, this.state.getBlock().damageDropped(this.state)), 0.0F);
 					}
 				}
 				else if (this.lifeTime > 100 && !this.world.isRemote && (pos.getY() < 1 || pos.getY() > 256) || this.lifeTime > 600)

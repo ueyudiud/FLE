@@ -6,7 +6,7 @@ package fle.core.entity.monster;
 
 import farcore.data.EnumPhysicalDamageType;
 import farcore.lib.entity.IEntityDamageEffect;
-import fle.core.pathfinding.PathNavigateGroundExt;
+import fle.core.entity.pathfinding.PathNavigateGroundExt;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.DamageSource;

@@ -1,9 +1,9 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
+import farcore.lib.oredict.OreStackExt;
 import nebula.common.tool.EnumToolType;
 
 /**
@@ -12,69 +12,77 @@ import nebula.common.tool.EnumToolType;
 public class EnumToolTypes
 {
 	public static final EnumToolType
-	BIFACE = new EnumToolType("biface", "Biface"),
+	BIFACE = new EnumToolTypeFC("biface", "Biface"),
 	
-	ADZ = new EnumToolType("adz", "Adz"),
-	AWL = new EnumToolType("awl", "Awl"),
-	AXE = EnumToolType.AXE,
+	ADZ = new EnumToolTypeFC("adz", "Adz"),
+	AWL = new EnumToolTypeFC("awl", "Awl"),
+	AXE = new EnumToolTypeFC("axe", "Axe"),
 	
-	HAMMER_DIGABLE = new EnumToolType("hammer_digable", "DigableHammer"),
-	HAMMER_WOODEN = new EnumToolType("wooden_hammer", "WoodenHammer"),
-	SOFT_HAMMER = new EnumToolType("soft_hammer", "SoftHammer"),
+	HAMMER_DIGABLE = new EnumToolTypeFC("hammer_digable", "DigableHammer"),
+	HAMMER_WOODEN = new EnumToolTypeFC("wooden_hammer", "WoodenHammer"),
+	SOFT_HAMMER = new EnumToolTypeFC("soft_hammer", "SoftHammer"),
 	
-	PICKAXE = EnumToolType.PICKAXE,
+	PICKAXE = new EnumToolTypeFC("pickaxe", "Pickaxe"),
 	
-	HOE = EnumToolType.HOE,
-	SPADE_HOE = new EnumToolType("spade_hoe", "SpadeHoe"),
-	SICKLE = new EnumToolType("sickle", "Sickle"),
+	HOE = new EnumToolTypeFC("hoe", "Hoe"),
+	SPADE_HOE = new EnumToolTypeFC("spade_hoe", "SpadeHoe"),
+	SICKLE = new EnumToolTypeFC("sickle", "Sickle"),
 	
-	FIRESTARTER = new EnumToolType("firestarter", "Firestarter"),
+	FIRESTARTER = new EnumToolTypeFC("firestarter", "Firestarter"),
 	
-	BAR_GRIZZLY = new EnumToolType("bar_grizzy", "BarGrizzly"),
+	BAR_GRIZZLY = new EnumToolTypeFC("bar_grizzy", "BarGrizzly"),
 	
-	WAIST_LOOM = new EnumToolType("waist_loom", "WaistLoom"),
+	WAIST_LOOM = new EnumToolTypeFC("waist_loom", "WaistLoom"),
 	
-	SPINNING_TOOL = new EnumToolType("spinning_tool", "SpinningTool"),
+	SPINNING_TOOL = new EnumToolTypeFC("spinning_tool", "SpinningTool"),
 	
-	WHESTONE = new EnumToolType("whetstone", "Whetstone"),
+	WHESTONE = new EnumToolTypeFC("whetstone", "Whetstone"),
 	
-	SHOVEL = EnumToolType.SHOVEL,
+	SHOVEL = new EnumToolTypeFC("shovel", "Shovel"),
 	
-	KNIFE = new EnumToolType("knife", "Knife"),
+	KNIFE = new EnumToolTypeFC("knife", "Knife"),
 	
-	SAW = new EnumToolType("saw", "Saw"),
-	BOW_SAW = new EnumToolType("bow_saw", "BowSaw"),
+	SAW = new EnumToolTypeFC("saw", "Saw"),
+	BOW_SAW = new EnumToolTypeFC("bow_saw", "BowSaw"),
 	
-	SPEAR = new EnumToolType("spear", "Spear"),
-	DAGGER = new EnumToolType("dagger", "Dagger"),
-	DART = new EnumToolType("dart", "Dart"),
-	SWORD = EnumToolType.SWORD,
+	SPEAR = new EnumToolTypeFC("spear", "Spear"),
+	DAGGER = new EnumToolTypeFC("dagger", "Dagger"),
+	DART = new EnumToolTypeFC("dart", "Dart"),
+	SWORD = new EnumToolTypeFC("sword", "Sword"),
 	
-	WHIP = new EnumToolType("whip", "Whip"),
+	WHIP = new EnumToolTypeFC("whip", "Whip"),
 	
-	NEEDLE = new EnumToolType("needle", "Needle"),
+	NEEDLE = new EnumToolTypeFC("needle", "Needle"),
 	
-	GAFF = new EnumToolType("gaff", "Gaff"),
+	GAFF = new EnumToolTypeFC("gaff", "Gaff"),
 	
-	DECORTICATING_PLATE = new EnumToolType("decorticating_plate", "DecorticatingPlate"),
-	DECORTICATING_STICK = new EnumToolType("decorticating_stick", "DecorticatingStick"),
+	DECORTICATING_PLATE = new EnumToolTypeFC("decorticating_plate", "DecorticatingPlate"),
+	DECORTICATING_STICK = new EnumToolTypeFC("decorticating_stick", "DecorticatingStick"),
 	
-	CHISEL = new EnumToolType("chisel", "Chisel"),
-	CHISEL_CARVE = new EnumToolType("chiselCarving", "Chisel(Carving)"),
-	CHISEL_POLISH = new EnumToolType("chiselPolish", "Chisel(Polishing)"),
+	CHISEL = new EnumToolTypeFC("chisel", "Chisel"),
+	CHISEL_CARVE = new EnumToolTypeFC("chiselCarving", "ChiselCarving"),
+	CHISEL_POLISH = new EnumToolTypeFC("chiselPolish", "ChiselPolishing"),
 	
-	EXPLOSIVE = new EnumToolType("explosive", "Explosive"),
+	EXPLOSIVE = new EnumToolTypeFC("explosive", "Explosive"),
 	
-	DRILL = new EnumToolType("drill", "Drill"),
+	DRILL = new EnumToolTypeFC("drill", "Drill"),
 	
-	LASER = new EnumToolType("laser", "Laser"),
+	LASER = new EnumToolTypeFC("laser", "Laser"),
 	
-	ROCK_CUTTER = new EnumToolType("rock_cutter", "RockCutter"),
+	ROCK_CUTTER = new EnumToolTypeFC("rock_cutter", "RockCutter"),
 	
-	MIRROR = new EnumToolType("mirror", "Mirror"),
+	MIRROR = new EnumToolTypeFC("mirror", "Mirror"),
 	
-	STOCK_POT = new EnumToolType("stock_pot", "StockPot"),
-	FRYING_PAN = new EnumToolType("frying_pan", "FryingPan"),
+	STOCK_POT = new EnumToolTypeFC("stock_pot", "StockPot"),
+	FRYING_PAN = new EnumToolTypeFC("frying_pan", "FryingPan"),
 	
-	SCREW_DRIVER = new EnumToolType("screw_driver", "ScrewDriver");
+	SCREW_DRIVER = new EnumToolTypeFC("screw_driver", "ScrewDriver");
+	
+	private static class EnumToolTypeFC extends EnumToolType
+	{
+		EnumToolTypeFC(String name, String dictName)
+		{
+			super("farcore." + name, name, "craftingTool" + dictName, new OreStackExt("craftingTool" + dictName));
+		}
+	}
 }

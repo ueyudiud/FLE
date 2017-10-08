@@ -99,7 +99,6 @@ public abstract class BLGSurfaceBase implements BiomeLayerGenerator
 				else
 				{
 					state = cover[1];
-					state = FarSurfaceDataGenerator.getWithWaterState(state);
 					c = height;
 				}
 				primer.setBlockState(x, y, z, state);

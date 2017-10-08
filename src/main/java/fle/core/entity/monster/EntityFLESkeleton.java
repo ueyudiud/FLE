@@ -5,7 +5,7 @@
 package fle.core.entity.monster;
 
 import farcore.lib.entity.IEntityDamageEffect;
-import fle.core.pathfinding.PathNavigateGroundExt;
+import fle.core.entity.pathfinding.PathNavigateGroundExt;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.pathfinding.PathNavigate;

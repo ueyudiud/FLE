@@ -1,0 +1,141 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:ground",
+		"textures": {
+			"particle": "#all",
+			"all": "farcore:blocks/soil/tundrosol"
+		}
+	},
+	"variants": {
+		"cover": {
+			"none": {
+				"textures": {
+					"overlayt": "farcore:blocks/void",
+					"overlays": "farcore:blocks/void"
+				}
+			},
+			"frozen": {
+				"textures": {
+					"overlayt": "farcore:blocks/void",
+					"overlays": "farcore:blocks/void"
+				}
+			},
+			"grass": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/grass_top",
+					"overlays": "farcore:blocks/iconsets/grass_side"
+				}
+			},
+			"tundra": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/tundra_top",
+					"overlays": "farcore:blocks/iconsets/tundra_side"
+				}
+			},
+			"tundra_frozen": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/tundra_top",
+					"overlays": "farcore:blocks/iconsets/tundra_side"
+				}
+			},
+			"mycelium": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/mycelium_top",
+					"overlays": "farcore:blocks/iconsets/mycelium_side"
+				}
+			},
+			"snow": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/snow_top",
+					"overlays": "farcore:blocks/iconsets/snow_side"
+				}
+			},
+			"frozen_snow": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/snow_top",
+					"overlays": "farcore:blocks/iconsets/snow_side"
+				}
+			},
+			"mycelium_snow": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/snow_top",
+					"overlays": "farcore:blocks/iconsets/snow_side"
+				}
+			},
+			"tundra_snow": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/snow_top",
+					"overlays": "farcore:blocks/iconsets/snow_side"
+				}
+			},
+			"tundra_frozen_snow": {
+				"textures": {
+					"overlayt": "farcore:blocks/iconsets/snow_top",
+					"overlays": "farcore:blocks/iconsets/snow_side"
+				}
+			}
+		},
+		"north": {
+			"true": {
+				"textures": {
+					"north2": "#overlayt"
+				}
+			},
+			"false": {
+				"textures": {
+					"north2": "#overlays"
+				}
+			}
+		},
+		"south": {
+			"true": {
+				"textures": {
+					"south2": "#overlayt"
+				}
+			},
+			"false": {
+				"textures": {
+					"south2": "#overlays"
+				}
+			}
+		},
+		"east": {
+			"true": {
+				"textures": {
+					"east2": "#overlayt"
+				}
+			},
+			"false": {
+				"textures": {
+					"east2": "#overlays"
+				}
+			}
+		},
+		"west": {
+			"true": {
+				"textures": {
+					"west2": "#overlayt"
+				}
+			},
+			"false": {
+				"textures": {
+					"west2": "#overlays"
+				}
+			}
+		},
+		"up": {
+			"true": {
+				"textures": {
+					"top2": "#overlayt"
+				}
+			},
+			"false": {
+				"textures": {
+					"top2": "farcore:blocks/void"
+				}
+			}
+		}
+	}
+}

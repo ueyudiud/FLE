@@ -112,7 +112,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	public float replaceDigSpeed(ItemStack stack, BreakSpeed event)
 	{
 		float speed = super.replaceDigSpeed(stack, event);
-		if(event.getEntityPlayer() != null)
+		if (event.getEntityPlayer() != null)
 		{
 			int level1 = KS.DIGGING.level(event.getEntityPlayer());
 			int level2 = getToolProp(stack).skillEfficiency.level(event.getEntityPlayer());

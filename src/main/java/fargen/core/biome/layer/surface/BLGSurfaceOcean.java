@@ -75,7 +75,6 @@ public class BLGSurfaceOcean extends BLGSurfaceBase
 				else
 				{
 					state = cover[1];
-					state = FarSurfaceDataGenerator.getWithWaterState(state);
 					c = height;
 				}
 				primer.setBlockState(x, y, z, state);

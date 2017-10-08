@@ -78,6 +78,16 @@ public class M
 	public static final Mat podzol				= new Mat(7108, FarCore.ID , "podzol"				, "Podzol"				, "Podzol"				).builder().setRGBa(0x281812FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
 	public static final Mat pheosol				= new Mat(7109, FarCore.ID , "pheosol"				, "Pheosol"				, "Pheosol"				).builder().setRGBa(0x6C4626FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
 	public static final Mat aterocalcosol		= new Mat(7110, FarCore.ID , "aterocalcosol"		, "Aterocalcosol"		, "Aterocalcosol"		).builder().setRGBa(0x25211EFF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat spaticocalcosol		= new Mat(7111, FarCore.ID , "spaticocalcosol"		, "Spaticocalcosol"		, "Spaticocalcosol"		).builder().setRGBa(0x3C3123FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat brunnocalcosol		= new Mat(7112, FarCore.ID , "brunnocalcosol"		, "Brunnocalcosol"		, "Brunnocalcosol"		).builder().setRGBa(0xAA9770FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat brunnodesertosol	= new Mat(7113, FarCore.ID , "brunnodesertosol"		, "Brunnodesertosol"	, "Brunnodesertosol"	).builder().setRGBa(0xACA495FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat cinerodesertosol	= new Mat(7114, FarCore.ID , "cinerodesertosol"		, "Cinerodesertosol"	, "Cinerodesertosol"	).builder().setRGBa(0xA3A098FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat tundrosol			= new Mat(7115, FarCore.ID , "tundrosol"			, "Tundrosol"			, "Tundrosol"			).builder().setRGBa(0x97948FFF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat moraine				= new Mat(7116, FarCore.ID , "moraine"				, "Moraine"				, "Moraine"				).builder().setRGBa(0x959391FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat flavobrunnoloam		= new Mat(7117, FarCore.ID , "flavobrunnoloam"		, "Flavobrunnoloam"		, "Flavobrunnoloam"		).builder().setRGBa(0x7C6242FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat brunnoloam			= new Mat(7118, FarCore.ID , "brunnoloam"			, "Brunnoloam"			, "Brunnoloam"			).builder().setRGBa(0x765F43FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat aterobrunnoloam		= new Mat(7119, FarCore.ID , "aterobrunnoloam"		, "Aterobrunnoloam"		, "Aterobrunnoloam"		).builder().setRGBa(0x433B30FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat palosol				= new Mat(7120, FarCore.ID , "palosol"				, "Palosol"				, "Palosol"				).builder().setRGBa(0x948863FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
 	//Sand
 	public static final Mat sand			= new Mat(7201, "minecraft", "sand"				, "Sand"			, "Sand"				).builder().setRGBa(0xE8DCB1FF).setSand(0.8F, 1.3F).build();
 	public static final Mat redsand			= new Mat(7202, "minecraft", "redsand"			, "Red Sand"		, "Red Sand"			).builder().setRGBa(0xE8DCB1FF).setSand(0.9F, 1.3F).build();
@@ -218,8 +228,10 @@ public class M
 			}
 			catch (Exception exception)
 			{
-				Log.catching(exception);
-				Log.warn("Caught an exception during {} is registering materials.", register.toString());
+				Log.warn("Caught an exception during {} is registering materials, "
+						+ "this exception might not cause by Far Core, please report "
+						+ "this execpion to creator.", register.toString());
+				throw exception;
 			}
 		}
 	}

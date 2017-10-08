@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.common.gui;
 
 import farcore.data.EnumToolTypes;
@@ -85,7 +84,7 @@ public class ContainerBarGrizzly extends ContainerBlockPosition implements ITick
 			}
 			else if (this.cache != null && this.currentValue[1] > 100)
 			{
-				if (this.inventory.hasStackInSlot(1) && EnumToolTypes.BAR_GRIZZLY.toolMatch(this.inventory.getStack(1)))
+				if (this.inventory.hasStackInSlot(1) && EnumToolTypes.BAR_GRIZZLY.match(this.inventory.getStack(1)))
 				{
 					if (this.currentValue[0] < this.currentValue[2])
 					{

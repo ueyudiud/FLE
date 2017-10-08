@@ -1,4 +1,4 @@
-package fle.core.pathfinding;
+package fle.core.entity.pathfinding;
 
 import java.util.EnumSet;
 import java.util.Set;

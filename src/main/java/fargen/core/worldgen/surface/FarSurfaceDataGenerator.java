@@ -259,16 +259,6 @@ public class FarSurfaceDataGenerator
 		return state;
 	}
 	
-	public static IBlockState getWithWaterState(IBlockState state)
-	{
-		Block block = state.getBlock();
-		if (block instanceof BlockSoil)
-		{
-			state = state.withProperty(BlockSoil.COVER_TYPE, state.getValue(BlockSoil.COVER_TYPE).getWaterCover());
-		}
-		return state;
-	}
-	
 	public static IBlockState getMossy(IBlockState state)
 	{
 		Block block = state.getBlock();
@@ -294,7 +284,10 @@ public class FarSurfaceDataGenerator
 		}
 		
 		for (Mat soil : new Mat[]{M.latrosol, M.latroaluminosol, M.ruboloam, M.ruboaluminoloam,
-				M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol})
+				M.flavoloam, M.peatsol, M.aterosol, M.podzol, M.pheosol, M.aterocalcosol,
+				M.brunnocalcosol, M.brunnodesertosol, M.cinerodesertosol, M.flavobrunnoloam,
+				M.brunnoloam, M.tundrosol, M.moraine, M.aterobrunnoloam, M.spaticocalcosol,
+				M.palosol})
 		{
 			IBlockState state = soil.getProperty(MP.property_soil).block.getDefaultState();
 			SOIL_LAYER_REGISTER.register(soil.name, new IBlockState[] {

@@ -28,7 +28,7 @@ public class PacketGuiTickUpdate extends PacketGui
 	public IPacket process(Network network)
 	{
 		ContainerBase container = container();
-		if(container instanceof ITickable)
+		if (container instanceof ITickable)
 		{
 			((ITickable) container).update();
 		}

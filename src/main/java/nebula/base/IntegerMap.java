@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.IntUnaryOperator;
+import java.util.function.ObjIntConsumer;
 
 import javax.annotation.Nonnull;
 
@@ -366,6 +367,12 @@ class IntegerMap<T> implements Iterable<IntegerEntry<T>>
 	public Iterator<IntegerEntry<T>> iterator()
 	{
 		return new IntegerMapItr();
+	}
+	
+	public void foreach(ObjIntConsumer<? super T> consumer)
+	{
+		for (IntegerEntry<? extends T> entry : this)
+			consumer.accept(entry.key, entry.value);
 	}
 	
 	/**

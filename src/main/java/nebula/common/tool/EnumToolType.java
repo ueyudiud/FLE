@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableSet;
 
 import nebula.base.IRegister;
 import nebula.base.Register;
+import nebula.common.stack.AbstractStack;
 import nebula.common.stack.OreStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -46,8 +47,15 @@ public class EnumToolType
 	public final String name;
 	Set<String> toolClass;
 	final String dictName;
-	final OreStack stack;
+	final AbstractStack stack;
 	
+	protected EnumToolType(String registeredName, String name, String dictName, AbstractStack stack)
+	{
+		REGISTER.register(registeredName, this);
+		this.name = name;
+		this.dictName = dictName;
+		this.stack = stack;
+	}
 	/**
 	 * Register a new tool type.
 	 * @param name the name of tool.
@@ -65,7 +73,7 @@ public class EnumToolType
 	 * Create standard tool stack for uses.
 	 * @return
 	 */
-	public OreStack stack()
+	public AbstractStack stack()
 	{
 		return this.stack;
 	}
@@ -93,12 +101,14 @@ public class EnumToolType
 	
 	public boolean toolMatch(ItemStack stack)
 	{
+		if (stack == null) return this == HAND;
 		Item item = stack.getItem();
 		return item.getToolClasses(stack).contains(this.name);
 	}
 	
 	public int toolLevelMatch(ItemStack stack)
 	{
+		if (stack == null) return this == HAND ? 0 : -1;
 		Item item = stack.getItem();
 		return item.getHarvestLevel(stack, this.name);
 	}

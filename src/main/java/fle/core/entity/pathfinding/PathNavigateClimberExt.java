@@ -2,21 +2,21 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package fle.core.pathfinding;
+package fle.core.entity.pathfinding;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.PathFinder;
-import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.pathfinding.PathNavigateClimber;
 import net.minecraft.world.World;
 
 /**
  * @author ueyudiud
  */
-public class PathNavigateGroundExt extends PathNavigateGround
+public class PathNavigateClimberExt extends PathNavigateClimber
 {
-	public PathNavigateGroundExt(EntityLiving entitylivingIn, World worldIn)
+	public PathNavigateClimberExt(EntityLiving entityLivingIn, World worldIn)
 	{
-		super(entitylivingIn, worldIn);
+		super(entityLivingIn, worldIn);
 	}
 	
 	@Override
