@@ -144,6 +144,8 @@ public enum ExtendedBlockStateRegister
 		for (Block block : Block.REGISTRY)
 		{
 			StateDelegate delegate = DELEGATES.get(block);
+			if (delegate == null)//For block id missing.
+				continue;
 			delegate.id = this.capacity;
 			INT_TO_DELEGATE.put(delegate.id, delegate);
 			this.capacity += delegate.capacity();

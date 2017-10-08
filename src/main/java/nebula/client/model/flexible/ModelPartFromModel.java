@@ -33,7 +33,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 /**
  * @author ueyudiud
  */
-public class ModelPartFromModel implements IRetexturableNebulaModelPart, INebulaDirectResourcesModelPart
+public class ModelPartFromModel implements INebulaModelPart
 {
 	final IModel model;
 	@Nullable

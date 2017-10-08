@@ -56,7 +56,6 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 	
 	private static final ResourceLocation PARENT_LOCATION = new ResourceLocation(FarCore.ID, "block/sapling");
 	private static final ModelResourceLocation MODEL_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "normal");
-	private static final ResourceLocation MODEL_ITEM_LOCATION = new ModelResourceLocation(FarCore.INNER_RENDER + ":sapling", "inventory");
 	
 	public static final Map<String, TextureAtlasSprite> ICON_MAP = new HashMap();
 	
@@ -81,10 +80,10 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
-		if(modelLocation == MODEL_LOCATION) return this;
+		if (modelLocation == MODEL_LOCATION) return this;
 		String path = modelLocation.getResourcePath();
 		String[] strings = path.split("/");
-		if(strings.length != 3)
+		if (strings.length != 3)
 			throw new RuntimeException("Invalid model location : " + path);
 		ResourceLocation location = new ResourceLocation(strings[1], "blocks/sapling/" + strings[2]);
 		return ModelHelper.makeItemModel(location);
@@ -93,10 +92,10 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 	@Override
 	public Collection<ResourceLocation> getTextures()
 	{
-		if(this.textures == null)
+		if (this.textures == null)
 		{
 			ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-			for(Mat material : Mat.filt(SubTags.TREE))
+			for (Mat material : Mat.filt(SubTags.TREE))
 			{
 				builder.add(new ResourceLocation(material.modid, "blocks/sapling/" + material.name));
 			}
@@ -112,7 +111,7 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 		ICON_MAP.clear();
 		IModel model = ModelLoaderRegistry.getModelOrMissing(PARENT_LOCATION);
 		ImmutableMap.Builder<String, TextureAtlasSprite> builder = ImmutableMap.builder();
-		for(Mat material : Mat.filt(SubTags.TREE))
+		for (Mat material : Mat.filt(SubTags.TREE))
 		{
 			TextureAtlasSprite icon = bakedTextureGetter.apply(new ResourceLocation(material.modid, "blocks/sapling/" + material.name));
 			builder.put(material.name, icon);
@@ -137,7 +136,7 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 	public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn)
 	{
 		ImmutableMap.Builder<IBlockState, ModelResourceLocation> map = ImmutableMap.builder();
-		for(IBlockState state : blockIn.getBlockState().getValidStates())
+		for (IBlockState state : blockIn.getBlockState().getValidStates())
 		{
 			map.put(state, MODEL_LOCATION);
 		}
@@ -148,16 +147,16 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 	public ModelResourceLocation getModelLocation(ItemStack stack)
 	{
 		Mat material = Mat.material(stack.getItemDamage());
-		return new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory");
+		return new ModelResourceLocation(FarCore.INNER_RENDER + ":saplingitem/" + material.modid + "/" + material.name, "inventory");
 	}
 	
 	@Override
 	public List<ResourceLocation> getAllowedResourceLocations(Item item)
 	{
 		ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-		for(Mat material : Mat.filt(SubTags.TREE))
+		for (Mat material : Mat.filt(SubTags.TREE))
 		{
-			builder.add(new ModelResourceLocation(new ResourceLocation(FarCore.INNER_RENDER, "saplingitem/" + material.modid + "/" + material.name), "inventory"));
+			builder.add(new ModelResourceLocation(FarCore.INNER_RENDER + ":saplingitem/" + material.modid + "/" + material.name, "inventory"));
 		}
 		return builder.build();
 	}
@@ -176,9 +175,10 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 		@Override
 		protected void replaceQuads(IBlockState state, Builder<BakedQuad> newList, List<BakedQuad> oldList)
 		{
-			if(state instanceof BlockStateTileEntityWapper && ((BlockStateTileEntityWapper) state).tile != null)
+			TESapling tile = BlockStateTileEntityWapper.unwrap(state);
+			if (tile != null)
 			{
-				TextureAtlasSprite icon = this.icons.get(((TESapling) ((BlockStateTileEntityWapper) state).tile).tree.getRegisteredName());
+				TextureAtlasSprite icon = this.icons.get(tile.tree.getRegisteredName());
 				if(icon != null)
 				{
 					apply(oldList, newList, quad -> new BakedQuadRetextured(quad, icon));
@@ -188,6 +188,12 @@ public enum ModelSapling implements INebulaCustomModelLoader, ICustomItemModelSe
 			{
 				newList.addAll(oldList);
 			}
+		}
+		
+		@Override
+		public boolean isAmbientOcclusion()
+		{
+			return false;
 		}
 		
 		@Override

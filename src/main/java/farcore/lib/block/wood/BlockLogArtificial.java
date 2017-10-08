@@ -130,10 +130,10 @@ public abstract class BlockLogArtificial extends BlockLog implements IToolableBl
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
-		return this.tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, true);
+		return this.tree.onToolClickLog(player, tool, level, stack, world, pos, side, hitX, hitY, hitZ, true);
 	}
 	
 	@Override

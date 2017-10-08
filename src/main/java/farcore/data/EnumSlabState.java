@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import java.util.function.Function;
@@ -17,7 +16,6 @@ import net.minecraft.util.IStringSerializable;
 /**
  * The slab state, used for slab.
  * @author ueyudiud
- *
  */
 @EnumStateName("facing")
 public enum EnumSlabState implements IStringSerializable

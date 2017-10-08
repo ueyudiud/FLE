@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,23 +18,23 @@ public class TEAged extends TESynchronization
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		nextUpdateTick = nbt.getLong("tickUpdate");
+		this.nextUpdateTick = nbt.getLong("tickUpdate");
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setLong("tickUpdate", nextUpdateTick);
+		nbt.setLong("tickUpdate", this.nextUpdateTick);
 		return nbt;
 	}
 	
 	@Override
 	protected void initServer()
 	{
-		if(nextUpdateTick == Long.MIN_VALUE)
+		if (this.nextUpdateTick == Long.MIN_VALUE)
 		{
-			nextUpdateTick = world.getWorldTime();
+			this.nextUpdateTick = this.world.getWorldTime();
 		}
 		super.initServer();
 	}
@@ -39,10 +42,10 @@ public class TEAged extends TESynchronization
 	@Override
 	protected void updateServer()
 	{
-		if(world != null)
-			if(world.getWorldTime() >= nextUpdateTick)
+		if(this.world != null)
+			if(this.world.getWorldTime() >= this.nextUpdateTick)
 			{
-				nextUpdateTick = getNextUpdateTick(nextUpdateTick);
+				this.nextUpdateTick = getNextUpdateTick(this.nextUpdateTick);
 				updateServer1();
 			}
 	}

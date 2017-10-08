@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.client.util;
 
 import static nebula.common.util.L.SQRT2;
@@ -184,6 +183,7 @@ public class CoordTransformer implements Cloneable
 		int x, y;
 		switch (rotation)
 		{
+		default :
 		case X0_Y0     : x = 0; y = 0; break;
 		case X0_Y90    : x = 0; y = 1; break;
 		case X0_Y180   : x = 0; y = 2; break;
@@ -200,7 +200,6 @@ public class CoordTransformer implements Cloneable
 		case X270_Y90  : x = 3; y = 1; break;
 		case X270_Y180 : x = 3; y = 2; break;
 		case X270_Y270 : x = 3; y = 3; break;
-		default : throw new IllegalArgumentException();
 		}
 		double[] ds1 = MODEL_ROTATION_VAL[x];
 		double[] ds2 = MODEL_ROTATION_VAL[y];
@@ -217,7 +216,7 @@ public class CoordTransformer implements Cloneable
 	
 	private Function<Tuple3d, Tuple3d> buildMatrix()
 	{
-		if(this.changed)
+		if (this.changed)
 		{
 			Matrix3d rotation = new Matrix3d();
 			rotation.set(new Quat4d(this.rotation));
@@ -262,7 +261,6 @@ public class CoordTransformer implements Cloneable
 		return tuple;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <V extends Tuple3d> V transform(V tuple)
 	{
 		return (V) buildMatrix().apply(tuple);
@@ -286,9 +284,7 @@ public class CoordTransformer implements Cloneable
 		Quat4d rot = new Quat4d(this.rotation);
 		Quat4d vec = new Quat4d(tuple.x, tuple.y, tuple.z, 0);
 		vec.mul(rot, vec);
-		rot.x = -rot.x;
-		rot.y = -rot.y;
-		rot.z = -rot.z;
+		rot.conjugate();
 		vec.mul(rot);
 		tuple.set(vec.x, vec.y, vec.z);
 		return tuple;

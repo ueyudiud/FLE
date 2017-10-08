@@ -1,8 +1,12 @@
 package nebula.client.gui;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import nebula.Nebula;
 import nebula.client.ClientOverride;
@@ -19,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -127,7 +132,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		if(!this.dragSplitting)
+		if (!this.dragSplitting)
 		{
 			FluidSlot slot = getFluidSlotAtPosition(mouseX, mouseY);
 			ItemStack stack = Minecraft.getMinecraft().player.inventory.getItemStack();
@@ -143,7 +148,7 @@ public abstract class GuiContainerBase extends GuiContainer
 			}
 		}
 		this.lastClickSlot = null;
-		if(isTouchingMode())
+		if (isTouchingMode())
 		{
 			for(Slot slot : this.inventorySlots.inventorySlots)
 			{
@@ -393,5 +398,112 @@ public abstract class GuiContainerBase extends GuiContainer
 			scale = h;
 		}
 		drawTexturedModalRect(x + w - scale, y, u + w - scale, v, scale, h);
+	}
+	
+	/**
+	 * Draw tool tip only if mouse hovered on specific area.
+	 * @param mouseX the mouse x position.
+	 * @param mouseY the mouse y position.
+	 * @param tooltip the tool tip.
+	 * @param x the start x pos for area.
+	 * @param y the start y pos for area.
+	 * @param u the width for area.
+	 * @param v the height for area.
+	 */
+	protected void drawAreaTooltip(int mouseX, int mouseY, String tooltip, int x, int y, int u, int v)
+	{
+		if (mouseX >= x && mouseX <= (x + u) && mouseY >= y && mouseY <= (y + v))
+		{
+			drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop, tooltip);
+		}
+	}
+	
+	/**
+	 * Draw tool tip.
+	 * @param x
+	 * @param y
+	 * @param tooltip
+	 */
+	protected void drawTooltip(int x, int y, String tooltip)
+	{
+		drawTooltip(x, y, Arrays.asList(tooltip));
+	}
+	
+	protected void drawTooltip(int x, int y, List<String> tooltip)
+	{
+		if (!tooltip.isEmpty())
+		{
+			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+			RenderHelper.disableStandardItemLighting();
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			int k = 0;
+			Iterator iterator = tooltip.iterator();
+			
+			while (iterator.hasNext())
+			{
+				String s = (String)iterator.next();
+				int l = this.fontRendererObj.getStringWidth(s);
+				
+				if (l > k)
+				{
+					k = l;
+				}
+			}
+			
+			int j2 = x + 12;
+			int k2 = y - 12;
+			int i1 = 8;
+			
+			if (tooltip.size() > 1)
+			{
+				i1 += 2 + (tooltip.size() - 1) * 10;
+			}
+			
+			if (j2 + k > this.width)
+			{
+				j2 -= 28 + k;
+			}
+			
+			if (k2 + i1 + 6 > this.height)
+			{
+				k2 = this.height - i1 - 6;
+			}
+			
+			this.zLevel = 300.0F;
+			this.itemRender.zLevel = 300.0F;
+			int j1 = -267386864;
+			drawGradientRect(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
+			drawGradientRect(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
+			drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
+			drawGradientRect(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
+			drawGradientRect(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
+			int k1 = 1347420415;
+			int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
+			drawGradientRect(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
+			drawGradientRect(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
+			drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
+			drawGradientRect(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
+			
+			for (int i2 = 0; i2 < tooltip.size(); ++i2)
+			{
+				String s1 = tooltip.get(i2);
+				this.fontRendererObj.drawStringWithShadow(s1, j2, k2, -1);
+				
+				if (i2 == 0)
+				{
+					k2 += 2;
+				}
+				
+				k2 += 10;
+			}
+			
+			this.zLevel = 0.0F;
+			this.itemRender.zLevel = 0.0F;
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			RenderHelper.enableGUIStandardItemLighting();
+			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		}
 	}
 }

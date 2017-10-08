@@ -1,7 +1,10 @@
 package nebula.common.gui;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.annotation.Nullable;
 
@@ -12,7 +15,6 @@ import nebula.common.fluid.container.IItemFluidContainer;
 import nebula.common.network.packet.PacketFluidUpdateAll;
 import nebula.common.network.packet.PacketFluidUpdateSingle;
 import nebula.common.util.ItemStacks;
-import nebula.common.util.L;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
@@ -166,7 +168,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	protected boolean isClosed;
 	
 	protected EntityPlayer opener;
-	protected List<TL> transferLocates = new ArrayList<>();
+	protected TreeMap<Integer, TL> transferLocates = new TreeMap<>(Comparator.naturalOrder());
 	protected List<FluidSlot> fluidSlots = new ArrayList<>();
 	private List<FluidStack> lastFluidStacks = new ArrayList<>();
 	
@@ -189,7 +191,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	public void addListener(IContainerListener listener)
 	{
 		super.addListener(listener);
-		if(listener instanceof EntityPlayerMP)
+		if (listener instanceof EntityPlayerMP)
 		{
 			Nebula.network.sendToPlayer(new PacketFluidUpdateAll(this), (EntityPlayerMP) listener);
 		}
@@ -259,9 +261,9 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	}
 	protected void addOutputSlotMatrix(IInventory inventory, int x, int y, int widthSlot, int heightSlot, int offSlot, int spacingU, int spacingV)
 	{
-		for(int i = 0; i < heightSlot; ++i)
+		for (int i = 0; i < heightSlot; ++i)
 		{
-			for(int j = 0; j < widthSlot; ++j)
+			for (int j = 0; j < widthSlot; ++j)
 			{
 				addSlotToContainer(new SlotOutput(inventory, offSlot + i * widthSlot + j, x + j * spacingU, y + i * spacingV));
 			}
@@ -279,7 +281,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	@Override
 	protected Slot addSlotToContainer(Slot slotIn)
 	{
-		if(!(slotIn instanceof SlotBase))
+		if (!(slotIn instanceof SlotBase))
 			throw new IllegalArgumentException("The slot must extended by SlotBase.");
 		return super.addSlotToContainer(slotIn);
 	}
@@ -346,10 +348,10 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		{
 			ItemStack itemstack1 = slot.getStack().copy();
 			itemstack = itemstack1.copy();
-			TL tl = L.get(this.transferLocates, label->label.contain(index));
-			if (tl != null)
+			Entry<Integer, TL> entry = this.transferLocates.floorEntry(index);
+			if (entry != null && entry.getValue().contain(index))
 			{
-				if(!tl.tryTransferItemStack(itemstack1))
+				if (!entry.getValue().tryTransferItemStack(itemstack1))
 					return null;
 				if (itemstack1.stackSize == itemstack.stackSize)
 				{
@@ -385,7 +387,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 				if (itemstack != null && ItemStacks.isItemAndTagEqual(stack, itemstack))
 				{
 					int maxSize = Math.min(slot.getItemStackLimit(itemstack), stack.getMaxStackSize());
-					if(itemstack.stackSize >= maxSize)
+					if (itemstack.stackSize >= maxSize)
 					{
 						if (reverseDirection) --i; else ++i;
 						continue;
@@ -436,14 +438,7 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 						flag = true;
 					}
 				}
-				if (reverseDirection)
-				{
-					--i;
-				}
-				else
-				{
-					++i;
-				}
+				if (reverseDirection) --i; else ++i;
 			}
 		}
 		return flag;
@@ -456,14 +451,14 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 	}
 	
 	/**
-	 * The transfer location, use for shift click transfer items.
+	 * The Transfer Location, use for shift click transfer items.
 	 * @author ueyudiud
 	 */
 	public class TL
 	{
 		Node<TL> transferTargets;
-		int startId;
-		int endId;
+		protected int startId;
+		protected int endId;
 		boolean reverseDirection;
 		
 		public TL(int id)
@@ -483,13 +478,13 @@ public abstract class ContainerBase extends Container implements IGuiActionListe
 		
 		public TL addToList()
 		{
-			ContainerBase.this.transferLocates.add(this);
+			ContainerBase.this.transferLocates.put(this.startId, this);
 			return this;
 		}
 		
 		public TL appendTransferLocate(TL transferLocate)
 		{
-			if(this.transferTargets == null)
+			if (this.transferTargets == null)
 			{
 				this.transferTargets = Node.first(transferLocate);
 			}

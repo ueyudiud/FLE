@@ -7,25 +7,16 @@ import static nebula.base.ObjArrayParseHelper.create;
 
 import java.util.function.Function;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableTable;
-
 import farcore.lib.block.state.PropertyFarInt;
 import nebula.common.fluid.FluidBase;
 import nebula.common.util.L;
 import nebula.common.world.chunk.IBlockStateRegister;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.IFluidBlock;
 
 /**
@@ -57,42 +48,7 @@ public class BlockStreamFluid extends BlockStandardFluid implements IExtendedDat
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new ExtendedBlockState(this, new IProperty[] { LEVEL }, FLUID_RENDER_PROPS.toArray(new IUnlistedProperty<?>[0]))
-		{
-			final class HidingFluidState extends ExtendedBlockState.ExtendedStateImplementation
-			{
-				protected HidingFluidState(Block block, ImmutableMap<IProperty<?>, Comparable<?>> properties,
-						ImmutableMap<IUnlistedProperty<?>, Optional<?>> unlistedProperties,
-						ImmutableTable<IProperty<?>, Comparable<?>, IBlockState> table)
-				{
-					super(block, properties, unlistedProperties, table);
-				}
-				
-				@Override
-				public <T extends Comparable<T>, V extends T> IBlockState withProperty(IProperty<T> property, V value)
-				{
-					return super.withProperty(checkCast(property), value);
-				}
-				
-				@Override
-				public <T extends Comparable<T>> T getValue(IProperty<T> property)
-				{
-					return super.getValue(checkCast(property));
-				}
-				
-				private <T extends Comparable<T>> IProperty<T> checkCast(IProperty<T> property)
-				{
-					return property == BlockFluidBase.LEVEL || property == BlockLiquid.LEVEL ? (IProperty<T>) LEVEL : property;
-				}
-			}
-			
-			@Override
-			protected StateImplementation createState(Block block, ImmutableMap<IProperty<?>, Comparable<?>> properties,
-					ImmutableMap<IUnlistedProperty<?>, Optional<?>> unlistedProperties)
-			{
-				return new HidingFluidState(block, properties, unlistedProperties, null);
-			}
-		};
+		return new ExtendedStreamBlockFluidState(this, new IProperty[] { LEVEL });
 	}
 	
 	@Override

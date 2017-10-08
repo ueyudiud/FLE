@@ -136,7 +136,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		compound.setString("rock", this.rock.name);
-		compound.setString("type", this.type.name());
+		NBTs.setEnum(compound, "type", this.type);
 		compound.setLong("carve", this.carvedState);
 		return super.writeToNBT(compound);
 	}
@@ -156,7 +156,7 @@ ITB_AddHitEffects, ITB_AddLandingEffects, ITB_AddDestroyEffects, ITP_HarvestChec
 	{
 		super.writeToDescription(nbt);
 		nbt.setString("r", this.rock.name);
-		nbt.setString("t", this.type.name());
+		NBTs.setEnum(nbt, "t", this.type);
 		nbt.setLong("c", this.carvedState);
 	}
 	

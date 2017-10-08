@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.ditch;
 
 import farcore.lib.material.Mat;
@@ -17,6 +16,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public interface DitchFactory
 {
+	/**
+	 * Return <code>true</code> to let this factory handle
+	 * material type.
+	 * @param material
+	 * @return
+	 */
 	boolean access(Mat material);
 	
 	FluidTankN apply(IDitchTile tile);

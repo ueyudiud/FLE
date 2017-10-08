@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.item;
 
 import java.util.HashMap;
@@ -5,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 
 import farcore.FarCore;
@@ -125,7 +127,6 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		EMPTY_PROP.filterTie = Judgable.FALSE;
 		EMPTY_PROP.customToolInformation = null;
 		EMPTY_PROP.condition = MC.LATTICE;
-		EMPTY_PROP.toolTypes = ImmutableList.of();
 	}
 	
 	public static class ToolProp
@@ -138,7 +139,6 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		Judgable<? super Mat> filterHead;
 		Judgable<? super Mat> filterTie;
 		Judgable<? super Mat> filterHandle;
-		List<EnumToolType> toolTypes;
 		String customToolInformation;
 		public ISkill skillEfficiency;
 		public ISkill skillAttack;
@@ -161,8 +161,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
 			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
 			Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie,
-			Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes,
-			IBehavior... behaviors)
+			Judgable<? super Mat> filterHandle, IBehavior... behaviors)
 	{
 		super.addSubItem(id, name, localName, stat, behaviors);
 		if (this.modelFlag)
@@ -179,7 +178,6 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		prop.filterHandle = filterHandle;
 		prop.filterTie = filterTie;
 		prop.customToolInformation = customToolInformation;
-		prop.toolTypes = toolTypes;
 		this.toolPropMap.put(id, prop);
 		if (customToolInformation != null)
 		{
@@ -208,7 +206,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	@Override
 	public List<EnumToolType> getToolTypes(ItemStack stack)
 	{
-		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).toolTypes;
+		return this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP).stat.getToolTypes(stack);
 	}
 	
 	@Override
@@ -217,8 +215,8 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		int level = prop.stat.getToolHarvestLevel(stack, type.name, getMaterial(stack, "head"));
 		return level == -1 ?
-				prop.toolTypes.contains(type) ? getMaterial(stack, "head").toolHarvestLevel : -1 :
-					level;
+				prop.stat.getToolTypes(stack).contains(type) ?
+						getMaterial(stack, "head").toolHarvestLevel : -1 : level;
 	}
 	
 	@Override
@@ -308,7 +306,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 		EnumActionResult result = super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-		if(result == EnumActionResult.PASS)
+		if (result == EnumActionResult.PASS)
 			return ItemStacks.onUseOnBlock(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ);
 		return result;
 	}
@@ -395,8 +393,6 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{
 		super.createSubItem(meta, subItems);
-		//		for (Mat material : Mat.filt(this.toolPropMap.get(meta).filterHead))
-		//			subItems.add(setMaterialToItem(new ItemStack(this, 1, meta), "head", material));
 	}
 	
 	@Override

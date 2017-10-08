@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.render;
 
 import org.lwjgl.opengl.GL11;
@@ -9,6 +12,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 
+/**
+ * The Tesselator wrapper type.
+ * @author ueyudiud
+ */
 public class RenderHelper
 {
 	public static final RenderHelper instance = new RenderHelper();

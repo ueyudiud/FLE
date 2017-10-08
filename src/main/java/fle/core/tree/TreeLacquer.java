@@ -141,7 +141,7 @@ public class TreeLacquer extends Tree
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world,
+	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
 	{
 		if (!isArt)
@@ -156,7 +156,7 @@ public class TreeLacquer extends Tree
 				}
 			}
 		}
-		return super.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, isArt);
+		return super.onToolClickLog(player, tool, level, stack, world, pos, side, hitX, hitY, hitZ, isArt);
 	}
 	
 	@Override

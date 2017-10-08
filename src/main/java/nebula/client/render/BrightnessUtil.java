@@ -158,7 +158,7 @@ public class BrightnessUtil
 	 */
 	public void caculateBrightness(ICoordableBrightnessProvider provider, int x, int y, int z, Direction direction)
 	{
-		if(!Minecraft.isAmbientOcclusionEnabled())
+		if (!Minecraft.isAmbientOcclusionEnabled())
 		{
 			Arrays.fill(this.brightness, provider.getBrightness(x + direction.x, y + direction.y, z + direction.z));
 			Arrays.fill(this.color, provider.getAmbientOcclusionLightValue(x + direction.x, y + direction.y, z + direction.z));
@@ -173,7 +173,7 @@ public class BrightnessUtil
 			float o = provider.getOpaqueness(x, y, z);
 			int b = provider.getBrightness(x, y, z);
 			float ao = provider.getAmbientOcclusionLightValue(x, y, z);
-			if(o == 1F)
+			if (o == 1F)
 			{
 				Arrays.fill(this.brightness, b);
 				Arrays.fill(this.color, ao);

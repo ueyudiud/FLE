@@ -42,7 +42,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  */
 @SideOnly(Side.CLIENT)
-public class ModelPartVerticalCube implements IRetexturableNebulaModelPart, Cloneable
+public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 {
 	static final JsonDeserializer<ModelPartVerticalCube> LOADER = (json, typeOfT, context) ->
 	{

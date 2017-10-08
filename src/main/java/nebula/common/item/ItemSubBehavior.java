@@ -81,7 +81,7 @@ public class ItemSubBehavior extends ItemBase
 	 */
 	public void addSubItem(int id, String name, @Nullable String localName, @Nullable IItemCapabilityProvider provider, IBehavior...behaviors)
 	{
-		if(this.idMap.containsKey(id) || this.idMap.containsValue(name))
+		if(this.idMap.containsKey(name) || this.idMap.containsValue(id))
 			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
 		this.idMap.put(name, id);
 		this.nameMap.put(id, name);
@@ -266,10 +266,10 @@ public class ItemSubBehavior extends ItemBase
 		try
 		{
 			EnumActionResult result = EnumActionResult.PASS;
-			for(IBehavior behavior : getBehavior(stack))
+			for (IBehavior behavior : getBehavior(stack))
 			{
 				EnumActionResult result2;
-				if((result2 = behavior.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ)) != EnumActionResult.PASS)
+				if ((result2 = behavior.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ)) != EnumActionResult.PASS)
 				{
 					if(result == EnumActionResult.SUCCESS)
 					{

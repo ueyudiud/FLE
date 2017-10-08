@@ -6,6 +6,7 @@
 	"variants": {
 		"normal": {
 			"model": "farcore:plant/flower_cross",
+			"smooth_lighting": false,
 			"textures": { 
 				"layer0": "farcore:blocks/plants/pennycress",
 				"layer1": "farcore:blocks/plants/pennycress_flower"

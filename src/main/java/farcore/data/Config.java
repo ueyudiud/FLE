@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import nebula.common.config.ConfigComment;
@@ -10,7 +9,6 @@ import nebula.common.config.ConfigProperty;
 /**
  * The configuration of Far Core.
  * @author ueyudiud
- *
  */
 @nebula.common.config.Config("farcore")
 public class Config

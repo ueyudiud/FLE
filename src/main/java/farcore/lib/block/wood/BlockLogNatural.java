@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.block.wood;
 
 import java.util.Random;
@@ -203,10 +206,10 @@ public abstract class BlockLogNatural extends BlockLog implements IToolableBlock
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ)
 	{
-		return this.tree.onToolClickLog(player, tool, stack, world, pos, side, hitX, hitY, hitZ, false);
+		return this.tree.onToolClickLog(player, tool, level, stack, world, pos, side, hitX, hitY, hitZ, false);
 	}
 	
 	@Override

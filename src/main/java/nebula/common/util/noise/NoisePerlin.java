@@ -1,7 +1,14 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.util.noise;
 
 import java.util.Random;
 
+/**
+ * The Perlin noise.
+ * @author ueyudiud
+ */
 public class NoisePerlin extends NoiseBase
 {
 	double frequency;

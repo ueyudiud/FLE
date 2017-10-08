@@ -1,6 +1,10 @@
 package farcore.lib.item;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumPhysicalDamageType;
 import farcore.lib.material.Mat;
@@ -110,4 +114,11 @@ public interface IToolStat extends IItemCapabilityProvider
 	 * @return
 	 */
 	boolean isWeapon();
+	
+	default List<EnumToolType> getAllowedToolTypes()
+	{
+		return ImmutableList.of(getToolType());
+	}
+	
+	List<EnumToolType> getToolTypes(ItemStack stack);
 }

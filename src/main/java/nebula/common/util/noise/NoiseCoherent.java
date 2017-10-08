@@ -1,7 +1,17 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.util.noise;
 
 import java.util.Random;
 
+/**
+ * The coherent noise.<p>
+ * Get random value for each lattice and smooth then by
+ * s_curve lerp.
+ * @author ueyudiud
+ * @see #s_curve(double)
+ */
 public class NoiseCoherent extends NoiseBase
 {
 	@FunctionalInterface

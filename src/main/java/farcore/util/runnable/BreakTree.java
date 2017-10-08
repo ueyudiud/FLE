@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.util.runnable;
 
 import java.util.ArrayList;
@@ -30,9 +33,8 @@ public class BreakTree implements Runnable
 	@Override
 	public void run()
 	{
-		boolean[][][] cacheArray;
-		scanLog(this.world, cacheArray = new boolean[2 * V.treeScanRange + 1][256][2 * V.treeScanRange + 1], (byte) 0, (byte) 0, (byte) 0);
-		if(this.cacheDrop > 0)
+		scanLog(this.world, new boolean[2 * V.treeScanRange + 1][256][2 * V.treeScanRange + 1], (byte) 0, (byte) 0, (byte) 0);
+		if (this.cacheDrop > 0)
 		{
 			ItemStack stack = new ItemStack(EnumItem.log.item, 1, this.block.tree.material.id);
 			ItemTreeLog.setLogSize(stack, this.cacheDrop);

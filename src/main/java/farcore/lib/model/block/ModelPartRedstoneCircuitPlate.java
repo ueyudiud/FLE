@@ -22,8 +22,7 @@ import farcore.instances.MaterialTextureLoader;
 import farcore.lib.material.Mat;
 import nebula.Log;
 import nebula.client.model.flexible.INebulaBakedModelPart;
-import nebula.client.model.flexible.INebulaDirectResourcesModelPart;
-import nebula.client.model.flexible.IRetexturableNebulaModelPart;
+import nebula.client.model.flexible.INebulaModelPart;
 import nebula.client.model.flexible.ModelModifierByCoordTransformer;
 import nebula.client.util.BakedQuadBuilder;
 import nebula.client.util.IIconCollection;
@@ -40,7 +39,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 /**
  * @author ueyudiud
  */
-public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPart, INebulaDirectResourcesModelPart
+public class ModelPartRedstoneCircuitPlate implements INebulaModelPart
 {
 	public static final JsonDeserializer<ModelPartRedstoneCircuitPlate> DESERIALIZER = (json, typeOfT, context)->
 	new ModelPartRedstoneCircuitPlate();
@@ -120,9 +119,9 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 	
 	private List<BakedQuad> buildQuads(TextureAtlasSprite texture, TextureAtlasSprite layer, VertexFormat format, TRSRTransformation transformation)
 	{
-		if(texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
+		if (texture.getIconWidth() != layer.getIconWidth() || texture.getIconHeight() != layer.getIconHeight())
 		{
-			Log.warn("The icon {%s, %s} pixel size is not same, plase use same size icon for uses, because it need take height render.", texture.getIconName(), layer.getIconName());
+			Log.warn("The icon {}, {} pixel size is not same, plase use same size icon for uses, because it need take height render.", texture.getIconName(), layer.getIconName());
 			return ImmutableList.of();
 		}
 		int u = texture.getIconWidth();
@@ -135,7 +134,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 		builder.switchTextureScale();//Switch to 1 pixel scale.
 		
 		int[] pixels = layer.getFrameTextureData(0)[0];//Only provide first frame for height.
-		for(int v1 = 0; v1 < v; v1++)
+		for (int v1 = 0; v1 < v; v1++)
 		{
 			for(int u1 = 0; u1 < u; u1++)
 			{
@@ -143,14 +142,14 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 				height[idx] = (byte) (pixels[idx] >> 24);
 			}
 		}
-		for(int f = 0; f < layer.getFrameCount(); ++f)
+		for (int f = 0; f < layer.getFrameCount(); ++f)
 		{
-			for(int v1 = 0; v1 < v; v1++)
+			for (int v1 = 0; v1 < v; v1++)
 			{
-				for(int u1 = 0; u1 < u; u1++)
+				for (int u1 = 0; u1 < u; u1++)
 				{
 					int idx = (u1 + v1 * u);
-					if(height[idx] == 0)
+					if (height[idx] == 0)
 					{
 						continue;
 					}
@@ -160,7 +159,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 					float maxZ = (float) (v1 + 1) / (float) v;
 					float minY;
 					float maxY = (L.uint(height[idx]) + 1) * this.plateHeight / 256F;
-					if(u1 == 0 || L.minusUbyte(height[idx - 1], height[idx]) > 0)
+					if (u1 == 0 || L.minusUbyte(height[idx - 1], height[idx]) > 0)
 					{
 						minY = u1 == 0 ? 0 : value(height[idx - 1]) * this.plateHeight / 256F;
 						builder.startQuad(u1 == 0 ? EnumFacing.WEST : null, -1, texture);
@@ -171,7 +170,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 						builder.pos(minX, maxY, minZ, minZ, maxY);
 						builder.endQuad();
 					}
-					if(u1 == u - 1 || L.minusUbyte(height[idx + 1], height[idx]) > 0)
+					if (u1 == u - 1 || L.minusUbyte(height[idx + 1], height[idx]) > 0)
 					{
 						minY = u1 == u - 1 ? 0 : value(height[idx + 1]) * this.plateHeight / 256F;
 						builder.startQuad(u1 == u-1 ? EnumFacing.EAST : null, -1, texture);
@@ -182,7 +181,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 						builder.pos(maxX, maxY, maxZ, minZ, maxY);
 						builder.endQuad();
 					}
-					if(v1 == 0 || L.minusUbyte(height[idx - u], height[idx]) > 0)
+					if (v1 == 0 || L.minusUbyte(height[idx - u], height[idx]) > 0)
 					{
 						minY = v1 == 0 ? 0 : value(height[idx - u]) * this.plateHeight / 256F;
 						builder.startQuad(v1 == 0 ? EnumFacing.NORTH : null, -1, texture);
@@ -193,7 +192,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 						builder.pos(maxX, minY, minZ, maxX, minY);
 						builder.endQuad();
 					}
-					if(v1 == v - 1 || L.minusUbyte(height[idx + u], height[idx]) > 0)
+					if (v1 == v - 1 || L.minusUbyte(height[idx + u], height[idx]) > 0)
 					{
 						minY = v1 == v - 1 ? 0 : value(height[idx + u]) * this.plateHeight / 256F;
 						builder.startQuad(v1 == v - 1 ? EnumFacing.SOUTH : null, -1, texture);
@@ -243,7 +242,7 @@ public class ModelPartRedstoneCircuitPlate implements IRetexturableNebulaModelPa
 		{
 			if (facing != null) return ImmutableList.of();
 			String[] split = key.split(",");
-			TextureAtlasSprite icon = textures.get(split[1]);
+			TextureAtlasSprite icon = textures.get(Mat.material(split[1]));
 			List<BakedQuad> list = this.quads[EnumFacing.valueOf(split[0]).getHorizontalIndex()];
 			return icon == null ? list : Lists.transform(list, quad->new BakedQuadRetextured(quad, icon));
 		}

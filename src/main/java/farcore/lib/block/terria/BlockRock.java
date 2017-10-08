@@ -8,7 +8,6 @@ import java.util.List;
 import farcore.data.CT;
 import farcore.data.EnumRockType;
 import farcore.data.MC;
-import farcore.lib.block.IThermalCustomBehaviorBlock;
 import farcore.lib.material.Mat;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
@@ -16,7 +15,6 @@ import nebula.common.LanguageManager;
 import nebula.common.block.BlockSubBehavior;
 import nebula.common.block.IBlockBehavior;
 import nebula.common.block.ISmartFallableBlock;
-import nebula.common.block.IToolableBlock;
 import nebula.common.util.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -37,8 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author ueyudiud
  */
-public class BlockRock extends BlockSubBehavior
-implements ISmartFallableBlock, IThermalCustomBehaviorBlock, IToolableBlock
+public class BlockRock extends BlockSubBehavior implements ISmartFallableBlock
 {
 	public static final PropertyBool				HEATED = PropertyBool.create("heated");
 	public static final PropertyEnum<EnumRockType>	TYPE = Properties.get(EnumRockType.class);

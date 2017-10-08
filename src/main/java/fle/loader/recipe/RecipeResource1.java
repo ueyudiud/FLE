@@ -36,7 +36,7 @@ public class RecipeResource1
 		addShapelessRecipe(IBF.iResources.getSubItem("crushed_bone"), Items.BONE, toolUse(EnumToolTypes.HAMMER_DIGABLE, 0.2F));
 		addShapelessRecipe(IBF.iResources.getSubItem("tinder"), IBF.iResources.getSubItem("dry_broadleaf"), 3, toolUse(EnumToolTypes.FIRESTARTER, 0.5F));
 		
-		for (RockBehavior<?> rock : Mat.filtAndGet(SubTags.ROCK, MP.property_rock))
+		for (RockBehavior<?> rock : Mat.filtAndGet(MC.fragment, MP.property_rock))
 		{
 			addShapelessRecipe(ItemMulti.createStack(rock.material, MC.chip_rock, 2), toolUse(EnumToolTypes.HAMMER_DIGABLE, 0.25F + 0.125F * rock.hardness), ItemMulti.createStack(rock.material, MC.fragment));
 			addShapelessRecipe(ItemMulti.createStack(rock.material, MC.chip_rock, 2), toolUse(EnumToolTypes.PICKAXE, 0.25F + 0.125F * rock.hardness), ItemMulti.createStack(rock.material, MC.fragment));

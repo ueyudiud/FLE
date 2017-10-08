@@ -6,6 +6,7 @@
 	"variants": {
 		"normal": {
 			"model": "farcore:cross",
+			"smooth_lighting": false,
 			"textures": { "all": "farcore:blocks/plants/halogroot_bush" }
 		},
 		"inventory": {

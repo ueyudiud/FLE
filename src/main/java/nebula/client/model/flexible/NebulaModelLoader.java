@@ -79,7 +79,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * make more convenient model
  * file writing rules for resource pack maker.<p>
  * @author ueyudiud
- * @version 0.5
+ * @version 0.6
  */
 @SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader
@@ -430,7 +430,6 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 * @param location
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")//It is safe.
 	public static Function<ItemStack, String> loadItemMetaGenerator(String location)
 	{
 		return ITEM_META_GENERATOR.getOrDefault(new ResourceLocation(location), (Function<ItemStack, String>) NORMAL_METAGENERATOR);
@@ -441,7 +440,6 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 * @param location
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")//It is safe.
 	public static Function<IBlockState, String> loadBlockMetaGenerator(String location)
 	{
 		return BLOCK_META_GENERATOR.getOrDefault(new ResourceLocation(location), (Function<IBlockState, String>) NORMAL_METAGENERATOR);
@@ -465,7 +463,6 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	 * @param location
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public static ToIntFunction<ItemStack> loadItemColorMultiplier(String location)
 	{
 		return BUILTIN_ITEM_COLORMULTIPLIER.getOrDefault(new ResourceLocation(location), (ToIntFunction<ItemStack>) NORMAL_MULTIPLIER);

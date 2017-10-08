@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.cover;
 
 import farcore.lib.tile.IPlateCoverableTile;

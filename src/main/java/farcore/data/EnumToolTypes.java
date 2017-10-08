@@ -60,6 +60,8 @@ public class EnumToolTypes
 	DECORTICATING_STICK = new EnumToolType("decorticating_stick", "DecorticatingStick"),
 	
 	CHISEL = new EnumToolType("chisel", "Chisel"),
+	CHISEL_CARVE = new EnumToolType("chiselCarving", "Chisel(Carving)"),
+	CHISEL_POLISH = new EnumToolType("chiselPolish", "Chisel(Polishing)"),
 	
 	EXPLOSIVE = new EnumToolType("explosive", "Explosive"),
 	

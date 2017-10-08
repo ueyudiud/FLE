@@ -1,6 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.render;
-
-import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
@@ -39,7 +40,6 @@ public class RenderProjectileItem extends Render<EntityProjectileItem>
 	}
 	
 	private Minecraft minecraft = Minecraft.getMinecraft();
-	private final Random random = new Random();
 	private RenderItem render;
 	
 	protected RenderProjectileItem(RenderManager renderManager)

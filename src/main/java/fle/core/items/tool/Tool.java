@@ -1,5 +1,7 @@
 package fle.core.items.tool;
 
+import java.util.List;
+
 import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
@@ -173,5 +175,11 @@ public abstract class Tool implements IToolStat
 		case 2 : if(this.hasHandleColor) return ItemTool.getMaterial(stack, "handle").RGB;
 		default: return 0xFFFFFFFF;
 		}
+	}
+	
+	@Override
+	public List<EnumToolType> getToolTypes(ItemStack stack)
+	{
+		return getAllowedToolTypes();
 	}
 }

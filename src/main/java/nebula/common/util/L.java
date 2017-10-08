@@ -13,6 +13,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -30,6 +34,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Table;
 
 import nebula.base.Judgable;
+import nebula.base.function.Applicable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
@@ -874,5 +879,30 @@ public class L
 			consumer.accept(t, set);
 		}
 		return set;
+	}
+	
+	public static OptionalInt or(OptionalInt opt1, OptionalInt opt2)
+	{
+		return opt1.isPresent() ? opt1 : opt2;
+	}
+	
+	public static OptionalLong or(OptionalLong opt1, OptionalLong opt2)
+	{
+		return opt1.isPresent() ? opt1 : opt2;
+	}
+	
+	public static OptionalDouble or(OptionalDouble opt1, OptionalDouble opt2)
+	{
+		return opt1.isPresent() ? opt1 : opt2;
+	}
+	
+	public static <E> Optional<E> or(Optional<E> opt1, Optional<E> opt2)
+	{
+		return opt1.isPresent() ? opt1 : opt2;
+	}
+	
+	public static <E> Optional<E> or(Optional<E> opt1, Applicable<? extends E> supplier)
+	{
+		return opt1.isPresent() ? opt1 : supplier.applyOptional();
 	}
 }

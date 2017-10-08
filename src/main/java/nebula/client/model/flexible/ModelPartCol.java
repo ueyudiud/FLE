@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -20,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -100,7 +101,7 @@ public class ModelPartCol implements INebulaModelPart
 				Variant variant = loadVariant(json1, context);
 				
 				//If no model data exist, used default model.
-				variant.parts = variant.parts.or(Optional.of(ImmutableList.of(new ModelPartVerticalCube())));
+				variant.parts = L.or(variant.parts, ()->ImmutableList.of(new ModelPartVerticalCube()));
 				
 				int weight = json1.isJsonObject() ? Jsons.getOrDefault(json1.getAsJsonObject(), "weight", 1) : 1;
 				map.put(variant, weight);
@@ -155,9 +156,9 @@ public class ModelPartCol implements INebulaModelPart
 	private static Variant defaultVariant()
 	{
 		Variant variant = new Variant();
-		variant.enable = Optional.absent();
-		variant.parts = Optional.absent();
-		variant.x = variant.y = Optional.absent();
+		variant.enable = Optional.empty();
+		variant.parts = Optional.empty();
+		variant.x = variant.y = OptionalInt.empty();
 		variant.retextures = Retextures.TOP;
 		return variant;
 	}
@@ -169,10 +170,10 @@ public class ModelPartCol implements INebulaModelPart
 		{
 			variant = new Variant();
 			JsonObject object = json.getAsJsonObject();
-			variant.x = !object.has("x") ? Optional.absent() : Optional.of(object.get("x").getAsInt());
-			variant.y = !object.has("y") ? Optional.absent() : Optional.of(object.get("y").getAsInt());
-			variant.enable = !object.has("enable") ? Optional.absent() : Optional.of(object.get("enable").getAsBoolean());
-			variant.parts = Optional.fromNullable(loadParts(object, context));
+			variant.x = Jsons.getInt(object, "x");
+			variant.y = Jsons.getInt(object, "y");
+			variant.enable = Jsons.getBoolean(object, "enable");
+			variant.parts = Optional.ofNullable(loadParts(object, context));
 			variant.retextures = !object.has("textures") ? Retextures.TOP : new Retextures(Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString), null);
 		}
 		else if (json.isJsonArray())
@@ -288,8 +289,8 @@ public class ModelPartCol implements INebulaModelPart
 	
 	static class Variant
 	{
-		Optional<Integer> x;
-		Optional<Integer> y;
+		OptionalInt x;
+		OptionalInt y;
 		Optional<Boolean> enable;
 		Optional<List<INebulaModelPart>> parts;
 		Retextures retextures;
@@ -308,10 +309,10 @@ public class ModelPartCol implements INebulaModelPart
 		
 		void or(Variant base, Variant def)
 		{
-			this.x = base.x.or(def.x);
-			this.y = base.y.or(def.y);
-			this.enable = base.enable.or(def.enable);
-			this.parts = base.parts.or(def.parts);
+			this.x = L.or(base.x, def.x);
+			this.y = L.or(base.y, def.y);
+			this.enable = L.or(base.enable, def.enable);
+			this.parts = L.or(base.parts, def.parts);
 			this.retextures = new Retextures(base.retextures.map, def.retextures);
 		}
 		
@@ -373,8 +374,8 @@ public class ModelPartCol implements INebulaModelPart
 	private <E> Collection<E> collect(BiConsumer<INebulaModelPart, Collection<E>> consumer)
 	{
 		Set<E> set = L.collect(this.function.values(),
-				(map, c)->c.addAll(L.collect(map, (e, c1)->e.getKey().parts.or(ImmutableList.of()).forEach(p->consumer.accept(p, c1)))));
-		this.def.forEach(e->set.addAll(L.collect(e.getKey().parts.or(ImmutableList.of()), consumer)));
+				(map, c)->c.addAll(L.collect(map, (e, c1)->e.getKey().parts.orElse(ImmutableList.of()).forEach(p->consumer.accept(p, c1)))));
+		this.def.forEach(e->set.addAll(L.collect(e.getKey().parts.orElse(ImmutableList.of()), consumer)));
 		return set;
 	}
 	
@@ -458,11 +459,11 @@ public class ModelPartCol implements INebulaModelPart
 	private static List<INebulaBakedModelPart> bakeVariant(Variant variant, VertexFormat format, Function<String, IIconCollection> iconHandlerGetter,
 			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, TRSRTransformation transformation)
 	{
-		if (variant.enable.or(true) && variant.parts.isPresent())
+		if (variant.enable.orElse(true) && variant.parts.isPresent())
 		{
 			TRSRTransformation t = ModelRotation
-					.getModelRotation(variant.x.or(0), variant.y.or(0))
-					.apply(Optional.absent())
+					.getModelRotation(variant.x.orElse(0), variant.y.orElse(0))
+					.apply(com.google.common.base.Optional.absent())
 					.or(TRSRTransformation.identity());
 			if (transformation != TRSRTransformation.identity())
 			{

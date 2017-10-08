@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.block.behavior;
 
 import static farcore.lib.block.terria.BlockRock.HEATED;
@@ -37,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -334,21 +334,33 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	}
 	
 	public ActionResult<Float> onToolClick(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player,
-			EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
+			EnumToolType tool, int level, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
-		if(tool == EnumToolTypes.CHISEL)
+		if (tool == EnumToolTypes.CHISEL_CARVE && this.harvestLevel <= level)
 		{
-			if(player.canPlayerEdit(pos, side.of(), stack))
+			if (player.canPlayerEdit(pos, side.of(), stack))
 			{
 				EnumRockType type = state.getValue(TYPE);
-				if(world.setBlockState(pos, EnumBlock.carved_rock.block.getDefaultState(), 2))
+				if (world.setBlockState(pos, EnumBlock.carved_rock.block.getDefaultState(), 2))
 				{
 					TileEntity tile = world.getTileEntity(pos);
-					if(tile instanceof TECustomCarvedStone)
+					if (tile instanceof TECustomCarvedStone)
 					{
 						((TECustomCarvedStone) tile).setRock(this.material, type);
 						return ((TECustomCarvedStone) tile).carveRock(player, hitX, hitY, hitZ);
 					}
+				}
+			}
+		}
+		else if (tool == EnumToolTypes.CHISEL_POLISH && this.harvestLevel <= level)
+		{
+			if (player.canPlayerEdit(pos, side.of(), stack))
+			{
+				EnumRockType type = state.getValue(TYPE);
+				if (type == EnumRockType.resource)
+				{
+					world.setBlockState(pos, state.withProperty(TYPE, EnumRockType.smoothed));
+					return new ActionResult<>(EnumActionResult.SUCCESS, this.hardness / 3.0F);
 				}
 			}
 		}

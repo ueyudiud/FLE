@@ -18,6 +18,10 @@ public class NebulaTextureHandler implements IIconRegister
 {
 	private static final List<IIconLoader> LIST = new ArrayList<>();
 	
+	/**
+	 * Register Icon Loader to list.
+	 * @param loader
+	 */
 	public static void addIconLoader(IIconLoader loader)
 	{
 		LIST.add(loader);

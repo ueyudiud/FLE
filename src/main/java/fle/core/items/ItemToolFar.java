@@ -10,6 +10,7 @@ import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import farcore.lib.material.MatCondition;
+import farcore.lib.oredict.OreDictExt;
 import farcore.lib.skill.SkillAbstract;
 import fle.api.item.behavior.IPolishableBehavior;
 import fle.api.recipes.instance.interfaces.IPolishableItem;
@@ -54,33 +55,21 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation,
 			MatCondition condition, IToolStat stat, boolean hasTie, boolean hasHandle,
 			Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie,
-			Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes,
-			IBehavior... behaviors)
+			Judgable<? super Mat> filterHandle, IBehavior... behaviors)
 	{
 		ToolProp prop = super.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie,
-				filterHandle, toolTypes, behaviors);
+				filterHandle, behaviors);
 		prop.skillEfficiency = new SkillAbstract(name + ".efficiency", localName + " Efficiency"){}.setExpInfo(30, 10F, 1.5F);
 		prop.skillAttack = new SkillAbstract(name + ".attack", localName + " Attack"){}.setExpInfo(30, 12F, 1.4F);
 		ItemStack stack = new ItemStack(this, 1, id);
-		for (EnumToolType toolType : toolTypes)
+		for (EnumToolType toolType : stat.getAllowedToolTypes())
 		{
-			OreDict.registerValid(toolType.ore(), stack);
+			if (toolType == stat.getToolType())
+				continue;//Exclude main tool type.
+			OreDictExt.registerOreFunction(toolType.ore(), this, s->stat.getToolTypes(s).contains(toolType), ImmutableList.of(stack));
 		}
+		OreDict.registerValid(stat.getToolType().ore(), stack);
 		return prop;
-	}
-	
-	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterTie,
-			Judgable<? super Mat> filterHandle, List<EnumToolType> toolTypes, IBehavior... behaviors)
-	{
-		return addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition.filter, filterTie, filterHandle, toolTypes, behaviors);
-	}
-	
-	public ToolProp addSubItem(int id, String name, String localName, String customToolInformation, MatCondition condition,
-			IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterTie,
-			Judgable<? super Mat> filterHandle, IBehavior... behaviors)
-	{
-		return addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition.filter, filterTie, filterHandle, ImmutableList.of(stat.getToolType()), behaviors);
 	}
 	
 	@Override

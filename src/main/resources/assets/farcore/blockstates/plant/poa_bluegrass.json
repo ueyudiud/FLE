@@ -6,6 +6,7 @@
 	"variants": {
 		"normal": {
 			"model": "farcore:plant/grass_cross",
+			"smooth_lighting": false,
 			"textures": { "all": "farcore:blocks/plants/poa_bluegrass" }
 		},
 		"inventory": {

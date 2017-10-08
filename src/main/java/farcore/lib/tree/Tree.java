@@ -382,14 +382,14 @@ public abstract class Tree extends PropertyWood implements ITree, IRenderRegiste
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world,
+	public ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ, boolean isArt)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world,
+	public ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;

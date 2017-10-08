@@ -10,10 +10,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * The custom renderer for item.
  * Used to rendering item with more flexible option.<p>
- * Register render to item at {@link nebula.client.NebulaRenderHandler#registerRender(net.minecraft.item.Item, IItemCustomRender)},
+ * Register render to item by
+ * <code>NebulaRenderHandler.registerRender(item, render);</code>
  * with item, then item will render in inventory by this method
  * instead of rendering by model.
  * @author ueyudiud
+ * @see nebula.client.NebulaRenderHandler#registerRender(net.minecraft.item.Item, IItemCustomRender)
  */
 @SideOnly(Side.CLIENT)
 public interface IItemCustomRender extends IIconLoader

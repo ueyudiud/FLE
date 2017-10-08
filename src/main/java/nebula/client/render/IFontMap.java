@@ -10,9 +10,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Registered in font render.
+ * Registered in {@link nebula.client.render.FontRenderExtend#addFontMap(IFontMap)}.<p>
+ * Added custom font render.
  * @author ueyudiud
- *
  */
 @SideOnly(Side.CLIENT)
 public interface IFontMap

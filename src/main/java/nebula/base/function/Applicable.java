@@ -73,7 +73,7 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 	 */
 	default void consumeIfPresent(Consumer<? super T> consumer)
 	{
-		applyOptional().ifPresent(consumer);
+		this.<T>applyOptional().ifPresent(consumer);
 	}
 	
 	default <E> Function<E, T> anyTo()
@@ -93,9 +93,9 @@ public interface Applicable<T> extends Callable<T>, Supplier<T>
 		return apply();
 	}
 	
-	default Optional<T> applyOptional()
+	default <T1> Optional<T1> applyOptional()
 	{
-		return this == NULL ? Optional.empty() : Optional.ofNullable(apply());
+		return this == NULL ? Optional.empty() : Optional.ofNullable((T1) apply());
 	}
 	
 	/**

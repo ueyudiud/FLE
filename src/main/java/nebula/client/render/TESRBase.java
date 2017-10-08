@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.render;
 
 import javax.annotation.Nullable;
@@ -186,7 +189,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 		float v1, v2;
 		this.helper.setIcon(null);
 		this.helper.setIconCoordScale(1.0F);
-		if(this.renderUp)
+		if (this.renderUp)
 		{
 			u1 = getU(icon, (float) x1);
 			u2 = getU(icon, (float) x2);
@@ -203,7 +206,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 					u1, v1,
 					u1, v2, this.diffuseLight ? UP_LIGHT_MULTIPLER : 1.0F, util);
 		}
-		if(this.renderDown)
+		if (this.renderDown)
 		{
 			u1 = getU(icon, (float) x1);
 			u2 = getU(icon, (float) x2);
@@ -220,7 +223,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 					u1, v2,
 					u1, v1, this.diffuseLight ? DOWN_LIGHT_MULTIPLER : 1.0F, util);
 		}
-		if(this.renderSouth)
+		if (this.renderSouth)
 		{
 			u1 = getU(icon, (float) x1);
 			u2 = getU(icon, (float) x2);
@@ -237,7 +240,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 					u2, v1,
 					u2, v2, this.diffuseLight ? Z_LIGHT_MULTIPLER : 1.0F, util);
 		}
-		if(this.renderNorth)
+		if (this.renderNorth)
 		{
 			u1 = getU(icon, 1F - (float) x1);
 			u2 = getU(icon, 1F - (float) x2);
@@ -254,7 +257,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 					u1, v1,
 					u1, v2, this.diffuseLight ? Z_LIGHT_MULTIPLER : 1.0F, util);
 		}
-		if(this.renderEast)
+		if (this.renderEast)
 		{
 			u1 = getU(icon, 1F - (float) z1);
 			u2 = getU(icon, 1F - (float) z2);
@@ -271,7 +274,7 @@ public abstract class TESRBase<T extends TileEntity> extends TileEntitySpecialRe
 					u1, v1,
 					u1, v2, this.diffuseLight ? X_LIGHT_MULTIPLER : 1.0F, util);
 		}
-		if(this.renderWest)
+		if (this.renderWest)
 		{
 			u1 = getU(icon, (float) z1);
 			u2 = getU(icon, (float) z2);

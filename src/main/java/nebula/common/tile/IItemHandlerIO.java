@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.tile;
 
 import javax.annotation.Nullable;
@@ -36,5 +39,16 @@ public interface IItemHandlerIO
 	 */
 	int insertItem(ItemStack stack, Direction from, boolean simulate);
 	
+	/**
+	 * Called when player use this IO.
+	 * @param current
+	 * @param player
+	 * @param side
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param isActiveHeld
+	 * @return
+	 */
 	ActionResult<ItemStack> onPlayerTryUseIO(@Nullable ItemStack current, EntityPlayer player, Direction side, float x, float y, float z, boolean isActiveHeld);
 }

@@ -53,13 +53,12 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 		@Override
 		public FlexibleModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 		{
-			return null;//XXX
+			throw new JsonParseException("The general model are not available yet.");//XXX
 		}
 	},
 	ITEM(Nebula.MODID, "item")
 	{
 		@Override
-		@SuppressWarnings("unchecked")
 		public FlexibleModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 		{
 			ImmutableList.Builder<INebulaModelPart> parts = ImmutableList.builder();
@@ -250,10 +249,7 @@ public enum NebulaModelDeserializer implements JsonDeserializer<IModel>
 				INebulaModelPart part = super.deserialize(obj, typeOfT, context);
 				if (obj.has("textures"))
 				{
-					Map<String, String> retextures = Jsons.getAsMap(obj.getAsJsonObject("textures"), JsonElement::getAsString);
-					if (!(part instanceof IRetexturableNebulaModelPart))
-						throw new JsonParseException("The part " + part + " is not retextureable model part, remove 'textures' key please.");
-					part = ((IRetexturableNebulaModelPart) part).retexture(retextures);
+					part = part.retexture(Jsons.getAsMap(obj.getAsJsonObject("textures"), JsonElement::getAsString));
 				}
 				return part;
 			}

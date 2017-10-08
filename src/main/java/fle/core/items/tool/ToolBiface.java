@@ -1,11 +1,15 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.items.tool;
+
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumPhysicalDamageType;
 import farcore.data.EnumToolTypes;
+import nebula.common.tool.EnumToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -40,5 +44,11 @@ public class ToolBiface extends Tool
 	protected String getDeathMessage(Entity target, EntityLivingBase user)
 	{
 		return "(S) has two face because of (M).";
+	}
+	
+	@Override
+	public List<EnumToolType> getAllowedToolTypes()
+	{
+		return ImmutableList.of(EnumToolTypes.BIFACE, EnumToolTypes.ADZ, EnumToolTypes.SICKLE);
 	}
 }

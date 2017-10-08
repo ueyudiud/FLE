@@ -1,10 +1,10 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -23,6 +23,7 @@ import com.google.common.collect.ObjectArrays;
 import com.google.common.reflect.TypeToken;
 
 /**
+ * Array helper methods.
  * @author ueyudiud
  */
 public final class A
@@ -31,9 +32,10 @@ public final class A
 	
 	/**
 	 * Copy array elements to a new array with selected length.
-	 * @param array The source array.
-	 * @param len The length of new array, use old array length if the select length is smaller than old array length.
-	 * @return The copied array.
+	 * @param array the source array.
+	 * @param len the length of new array, use old array length
+	 *            if the select length is smaller than old array length.
+	 * @return the copied array.
 	 */
 	public static int[] copyToLength(int[] array, int len)
 	{
@@ -82,8 +84,8 @@ public final class A
 	/**
 	 * Given action to every element in array.
 	 * @see java.util.Collection#forEach(Consumer)
-	 * @param iterable
-	 * @param consumer
+	 * @param iterable the iterator provider.
+	 * @param consumer the consumer.
 	 */
 	public static <E> void executeAll(@Nonnull E[] iterable, @Nonnull ObjIntConsumer<E> consumer)
 	{
@@ -100,19 +102,19 @@ public final class A
 	 */
 	public static <E> boolean contain(@Nonnull E[] list, @Nullable E arg)
 	{
-		for(E element : list) if(L.equal(element, arg)) return true;
+		for (E element : list) if(L.equal(element, arg)) return true;
 		return false;
 	}
 	
 	public static boolean contain(int[] list, int arg)
 	{
-		for(int element : list) if(element == arg) return true;
+		for (int element : list) if(element == arg) return true;
 		return false;
 	}
 	
 	public static boolean contain(char[] list, char arg)
 	{
-		for(char element : list) if(element == arg) return true;
+		for (char element : list) if(element == arg) return true;
 		return false;
 	}
 	
@@ -125,55 +127,55 @@ public final class A
 	 */
 	public static <E> boolean and(E[] list, Predicate<? super E> checker)
 	{
-		for(E element : list) if (!checker.test(element)) return false;
+		for (E element : list) if (!checker.test(element)) return false;
 		return true;
 	}
 	
 	public static <E> boolean and(int[] list, IntPredicate predicate)
 	{
-		for(int element : list) if (!predicate.test(element)) return false;
+		for (int element : list) if (!predicate.test(element)) return false;
 		return true;
 	}
 	
 	public static <E> boolean and(long[] list, LongPredicate predicate)
 	{
-		for(long element : list) if (!predicate.test(element)) return false;
+		for (long element : list) if (!predicate.test(element)) return false;
 		return true;
 	}
 	
 	public static <E> boolean or(E[] list, Predicate<? super E> checker)
 	{
-		for(E element : list) if (checker.test(element)) return true;
+		for (E element : list) if (checker.test(element)) return true;
 		return false;
 	}
 	
 	public static <E> boolean or(int[] list, IntPredicate predicate)
 	{
-		for(int element : list) if (predicate.test(element)) return true;
+		for (int element : list) if (predicate.test(element)) return true;
 		return false;
 	}
 	
 	public static <E> boolean or(long[] list, LongPredicate predicate)
 	{
-		for(long element : list) if (predicate.test(element)) return true;
+		for (long element : list) if (predicate.test(element)) return true;
 		return false;
 	}
 	
 	/**
-	 * Create new integer array with same elements.
-	 * @param length
-	 * @param value
-	 * @return
+	 * Create new <code>int</code> array with same elements.
+	 * @param length the length of array.
+	 * @param value the filled value.
+	 * @return the array.
 	 */
 	public static int[] fillIntArray(int length, int value)
 	{
-		switch(length)
+		switch (length)
 		{
 		case 0 : return new int[0];
-		case 1 : return new int[]{value};
+		case 1 : return new int[]{ value };
 		default:
 			int[] ret = new int[length];
-			Arrays.fill(ret, value);
+			for (int i = 0; i < ret.length; ret[i++] = value);
 			return ret;
 		}
 	}
@@ -185,10 +187,10 @@ public final class A
 	}
 	
 	/**
-	 * Get first equally {@code int} value position.
-	 * @param list
-	 * @param arg
-	 * @return
+	 * Get first equally <code>int</code> value position.
+	 * @param list the array.
+	 * @param arg the element to match.
+	 * @return the index, or <code>-1</code> if not matched.
 	 */
 	public static int indexOf(int[] list, int arg)
 	{
@@ -198,13 +200,24 @@ public final class A
 	
 	/**
 	 * Get first matched element index in list.
-	 * @param list
-	 * @param arg The matching target.
-	 * @return The index of element, -1 means no element matched.
+	 * @param list the array.
+	 * @param arg the matching target.
+	 * @return the index of element, <code>-1</code> means no element matched.
 	 */
 	public static int indexOfFirst(Object[] list, Object arg)
 	{
-		for(int i = 0; i < list.length; ++i) if(L.equal(list[i], arg)) return i;
+		for(int i = 0; i < list.length; ++i)
+		{
+			try
+			{
+				if(L.equal(list[i], arg))
+					return i;
+			}
+			catch (ClassCastException exception)
+			{
+				;
+			}
+		}
 		return -1;
 	}
 	
@@ -218,7 +231,7 @@ public final class A
 	public static <K, T> T[] transform(K[] array, Class<T> elementClass, Function<? super K, ? extends T> function)
 	{
 		T[] result = ObjectArrays.newArray(elementClass, array.length);
-		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
+		for (int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
 		return result;
 	}
 	
@@ -231,7 +244,7 @@ public final class A
 	public static <K> Object[] transform(K[] array, Function<? super K, ?> function)
 	{
 		Object[] result = new Object[array.length];
-		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
+		for (int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
 		return result;
 	}
 	
@@ -245,7 +258,7 @@ public final class A
 	public static <T> T[] transform(int[] array, Class<T> elementClass, IntFunction<? extends T> function)
 	{
 		T[] result = ObjectArrays.newArray(elementClass, array.length);
-		for(int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
+		for (int i = 0; i < array.length; result[i] = function.apply(array[i]), ++i);
 		return result;
 	}
 	
@@ -265,7 +278,7 @@ public final class A
 	public static int[] rangeIntArray(int from, int to)
 	{
 		int[] array = new int[to - from];
-		for(int i = 0; i < array.length; array[i] = from + i, i++);
+		for (int i = 0; i < array.length; array[i] = from + i, i++);
 		return array;
 	}
 	
@@ -351,15 +364,17 @@ public final class A
 	}
 	
 	/**
-	 * Return if all elements are non-null.
+	 * Return if list and all elements are non-null, or throw an NullPointerException
+	 * otherwise.
 	 * @param <T> type of elements.
 	 * @param array the elements.
 	 * @return the elements.
-	 * @throws java.lang.NullPointerException if any element in array is null.
+	 * @throws NullPointerException if any element in array is null.
 	 */
-	public static <T> T[] allNonNull(@Nonnull T[] array)
+	public static <T> T[] allNonNull(T[] array)
 	{
-		for (Object arg : array) if (arg == null) throw new NullPointerException();
+		Objects.requireNonNull(array);
+		for (Object arg : array) Objects.requireNonNull(arg);
 		return array;
 	}
 	
@@ -370,6 +385,7 @@ public final class A
 	 * @param array2 the last array.
 	 * @return the order result.
 	 * @see Comparable
+	 * @throws ClassCastException if elements can not cast to same comparable type.
 	 */
 	public static int compare(Object[] array1, Object[] array2)
 	{
@@ -378,6 +394,48 @@ public final class A
 		for (int i = 0; i < size; ++i)
 			if ((com = ((Comparable) array1[i]).compareTo(array2[i])) != 0)
 				return com;
+		return Integer.compare(array1.length, array2.length);
+	}
+	
+	/**
+	 * Compare two array with comparable type by compactor.
+	 * @param array1 the first array.
+	 * @param array2 the last array.
+	 * @return the order result.
+	 * @see Comparable
+	 */
+	public static <E1 extends E, E2 extends E, E> int compare(E1[] array1, E2[] array2, Comparator<E> comparator)
+	{
+		int size = Math.min(array1.length, array2.length);
+		int com;
+		for (int i = 0; i < size; ++i)
+			if ((com = comparator.compare(array1[i], array2[i])) != 0)
+				return com;
+		return Integer.compare(array1.length, array2.length);
+	}
+	
+	/**
+	 * Compare two array with comparable type by natural order, and the array
+	 * will be regarded as a comparable type.<p>
+	 * This method is not type safe.
+	 * @param array1 the first array.
+	 * @param array2 the last array.
+	 * @return the order result.
+	 * @see Comparable
+	 * @throws ClassCastException if elements can not cast to same comparable type.
+	 */
+	public static int deepCompare(Object[] array1, Object[] array2)
+	{
+		int size = Math.min(array1.length, array2.length);
+		int com;
+		for (int i = 0; i < size; ++i)
+		{
+			if (array1[i] instanceof Object[] && array2[i] instanceof Object[])
+				if ((com = deepCompare((Object[]) array1[i], (Object[]) array2[i])) != 0)
+					return com;
+			if ((com = ((Comparable) array1[i]).compareTo(array2[i])) != 0)
+				return com;
+		}
 		return -Integer.compare(array1.length, array2.length);
 	}
 }

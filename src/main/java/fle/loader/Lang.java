@@ -5,6 +5,7 @@ package fle.loader;
 
 import fle.api.util.ToolPropertiesModificater;
 import nebula.common.LanguageManager;
+import nebula.common.util.EnumChatFormatting;
 
 /**
  * @author ueyudiud
@@ -30,5 +31,10 @@ public class Lang
 		LanguageManager.registerLocal("info.adobe.drying.notdried", "It isn't dry yet.");
 		LanguageManager.registerLocal("info.adobe.drying.quitedried", "It is quite dry now.");
 		LanguageManager.registerLocal("info.adobe.drying.dried", "It is dry.");
+		
+		LanguageManager.registerLocal("info.mode.type", EnumChatFormatting.WHITE + "Mode: " + EnumChatFormatting.GOLD + "%s");
+		
+		LanguageManager.registerLocal("info.mode.chisel.carve", "Carve");
+		LanguageManager.registerLocal("info.mode.chisel.polish", "Polish");
 	}
 }

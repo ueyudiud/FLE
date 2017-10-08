@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,6 +25,5 @@ public class Capabilities
 	//	public static Capability<IItemHandlerIO> ITEM_HANDLER_IO;
 	
 	public static final Capability<IItemHandler> CAPABILITY_ITEM = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-	
 	public static final Capability<IFluidHandler> CAPABILITY_FLUID = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 }

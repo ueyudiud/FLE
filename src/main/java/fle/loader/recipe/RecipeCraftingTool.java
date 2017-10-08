@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.loader.recipe;
 
 import java.util.ArrayList;
@@ -92,7 +91,14 @@ public class RecipeCraftingTool
 				RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), " ccc  c c",
 						ItemMulti.createStack(material, MC.spear_rock));
 			}
-			if (MC.whetstone.isBelongTo(material))
+			if (MC.chisel_rock.isBelongTo(material))
+			{
+				RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), "pccc cccc",
+						ItemMulti.createStack(material, MC.chisel_rock));
+				RecipeAdder.addPolishRecipe(new OreStack(MC.chip_rock.getOreName(material)), "ccpc cccc",
+						ItemMulti.createStack(material, MC.chisel_rock));
+			}
+			if (MC.whetstone.isBelongTo(material) && MC.fragment.isBelongTo(material))
 			{
 				RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "ppp   ppp",
 						ItemTool.setMaterialToItem(IBF.iTool.getSubItem("whetstone"), "head", material));
@@ -106,6 +112,7 @@ public class RecipeCraftingTool
 		addGeneralToolRecipe("spear.rock", new BaseStack(MC.spear_rock.instance));
 		addGeneralToolRecipe("sickle.rock", new BaseStack(MC.sickle_rock.instance));
 		addGeneralToolRecipe("axe.rock", new BaseStack(MC.axe_rock.instance));
+		addGeneralToolRecipe("chisel.rock", new BaseStack(MC.chisel_rock.instance));
 		addGeneralNoTieToolRecipe("spinning.disk", new BaseStack(MC.spinning_disk.instance));
 		//Firestarter
 		RecipeAdder.addShapedRecipe(new BaseStack(IBF.iTool.getSubItem("firestarter")), " s", "ld",

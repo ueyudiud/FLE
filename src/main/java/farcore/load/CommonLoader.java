@@ -185,6 +185,7 @@ public class CommonLoader
 		registerLocal(EnumPhysicalDamageType.SMASH.getTranslation(), EnumChatFormatting.GOLD + "Smash");
 		registerLocal(EnumPhysicalDamageType.CUT.getTranslation(), EnumChatFormatting.GOLD + "Cut");
 		registerLocal(EnumPhysicalDamageType.HIT.getTranslation(), EnumChatFormatting.GOLD + "Hit");
+		CommandSkill.addCommandInformations();
 		bar.step("Register Key Binding");
 		NebulaKeyHandler.register(Keys.ROTATE, KEY_R, FarCore.ID);
 		NebulaKeyHandler.register(Keys.PLACE, KEY_P, FarCore.ID);
@@ -196,7 +197,7 @@ public class CommonLoader
 		ProgressBar bar = ProgressManager.push("Far Core Post Load", 1);
 		//Reload materials.
 		bar.step("Reload Materials");
-		for(Mat material : Mat.materials())
+		for (Mat material : Mat.materials())
 		{
 			if (material.customDisplayInformation != null)
 			{
@@ -207,7 +208,6 @@ public class CommonLoader
 				registerLocal("info.material.chemical.formula." + material.name, material.chemicalFormula);
 			}
 		}
-		CommandSkill.addCommandInformations();
 		pop(bar);
 	}
 	

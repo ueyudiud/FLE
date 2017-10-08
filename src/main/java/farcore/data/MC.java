@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import farcore.lib.material.MatCondition;
@@ -84,7 +83,8 @@ public class MC
 	public static final MatCondition whetstone = new MatCondition("whetstone", "Whestone", "% Whetstone");
 	public static final MatCondition biface = new MatCondition("biface", "Biface", "% Biface");
 	public static final MatCondition bar_grizzly = new MatCondition("bar_grizzly", "barGrizzly", "Bar Grizzly", "% Bar Grizzly").setFilter(Judgable.and(SubTags.WOOD, SubTags.TOOL));
-	public static final MatCondition spinning_disk = new MatCondition("spinning_disk", "spinningDisk", "Spinning Disk", "% Spinning Disk").setFilter(Judgable.and(SubTags.ROCK, SubTags.TOOL));
+	public static final MatCondition spinning_disk = new MatCondition("spinning_disk", "spinningDisk", "Spinning Disk", "% Spinning Disk");
+	public static final MatCondition chisel_rock = new MatCondition("chisel_rock", "chisel", "Chisel", "% Chisel");
 	
 	static
 	{
@@ -101,6 +101,8 @@ public class MC
 		axe_rock.setFilter(ROCK_OR_FLINT_TOOL);
 		hard_hammer_flint.setFilter(FLINTY_TOOL);
 		biface.setFilter(FLINTY_TOOL);
+		spinning_disk.setFilter(ROCKY_TOOL);
+		chisel_rock.setFilter(ROCKY_TOOL);
 	}
 	
 	public static void init() {}

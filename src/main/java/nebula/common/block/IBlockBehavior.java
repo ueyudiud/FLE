@@ -377,7 +377,7 @@ public interface IBlockBehavior<B>
 	}
 	
 	default ActionResult<Float> onToolClick(B block, IBlockState state, World world, BlockPos pos, EntityPlayer player,
-			EnumToolType tool, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
+			EnumToolType tool, int level, ItemStack stack, Direction side, float hitX, float hitY, float hitZ)
 	{
 		return IToolableTile.DEFAULT_RESULT;
 	}

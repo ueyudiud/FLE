@@ -986,13 +986,13 @@ implements IUpdateDelayBlock, ISmartFallableBlock, IToolableBlock, IThermalCusto
 	}
 	
 	@Override
-	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, ItemStack stack, World world,
+	public ActionResult<Float> onToolClick(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world,
 			BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
 	{
 		try
 		{
 			IBlockState state = world.getBlockState(pos);
-			return getBehavior(state).onToolClick(this, state, world, pos, player, tool, stack, side, hitX, hitY, hitZ);
+			return getBehavior(state).onToolClick(this, state, world, pos, player, tool, level, stack, side, hitX, hitY, hitZ);
 		}
 		catch (Exception exception)
 		{

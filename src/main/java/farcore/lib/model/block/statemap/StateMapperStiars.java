@@ -37,7 +37,7 @@ public class StateMapperStiars extends StateMapperExt
 		EnumHalf half = StateMapperExt.removeAndGetValue(BlockStairV1.HALF, map);
 		EnumShape shape = StateMapperExt.removeAndGetValue(BlockStairV1.SHAPE, map);
 		String shapeName;
-		if(shape == EnumShape.INNER_LEFT || shape == EnumShape.OUTER_LEFT)
+		if (shape == EnumShape.INNER_LEFT || shape == EnumShape.OUTER_LEFT)
 		{
 			facing = facing.rotateYCCW();
 		}

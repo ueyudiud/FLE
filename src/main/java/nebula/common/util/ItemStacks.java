@@ -207,23 +207,23 @@ public final class ItemStacks
 	public static EnumActionResult onUseOnBlock(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		List<EnumToolType> toolTypes;
-		if(stack == null)
+		if (stack == null)
 		{
 			toolTypes = EnumToolType.HAND_USABLE_TOOL;
 		}
-		else if(stack.getItem() instanceof ITool)
+		else if (stack.getItem() instanceof ITool)
 		{
 			toolTypes = ((ITool) stack.getItem()).getToolTypes(stack);
 		}
 		else return EnumActionResult.PASS;
 		Direction direction = Direction.of(side);
 		IBlockState state = world.getBlockState(pos);
-		if(state.getBlock() instanceof IToolableBlock)
+		if (state.getBlock() instanceof IToolableBlock)
 		{
 			IToolableBlock block = (IToolableBlock) state.getBlock();
-			for(EnumToolType toolType : toolTypes)
+			for (EnumToolType toolType : toolTypes)
 			{
-				ActionResult<Float> result = block.onToolClick(player, toolType, stack, world, pos, direction, hitX, hitY, hitZ);
+				ActionResult<Float> result = block.onToolClick(player, toolType, getToolLevel(stack, toolType), stack, world, pos, direction, hitX, hitY, hitZ);
 				if(result.getType() != EnumActionResult.PASS)
 				{
 					if (stack.getItem() instanceof ITool)
@@ -273,11 +273,9 @@ public final class ItemStacks
 	 */
 	public static int getToolLevel(@Nullable ItemStack stack, EnumToolType toolType)
 	{
-		if(stack == null)
-			return -1;
-		if(stack.getItem() instanceof ITool)
-			return ((ITool) stack.getItem()).getToolLevel(stack, toolType);
-		return toolType.match(stack) ? 1 : -1;
+		return stack == null ? (toolType == EnumToolType.HAND ? 0 : -1) :
+			stack.getItem() instanceof ITool ? ((ITool) stack.getItem()).getToolLevel(stack, toolType) :
+				stack.getItem().getHarvestLevel(stack, toolType.name);
 	}
 	
 	public static ItemStack getFromOreDict(String ore)

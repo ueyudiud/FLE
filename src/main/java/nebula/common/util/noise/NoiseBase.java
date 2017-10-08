@@ -1,7 +1,14 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.util.noise;
 
 import java.util.Arrays;
 
+/**
+ * The base noise type.
+ * @author ueyudiud
+ */
 public abstract class NoiseBase
 {
 	protected long seed;

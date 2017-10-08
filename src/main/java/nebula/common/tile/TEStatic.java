@@ -16,10 +16,8 @@ public class TEStatic extends TEBase implements ISynchronizableTile
 	@Override
 	public void onLoad()
 	{
-		if(isServer())
-		{
+		if (isServer())
 			initServer();
-		}
 	}
 	
 	@Override

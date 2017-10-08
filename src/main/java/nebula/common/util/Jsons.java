@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.util.ArrayList;
@@ -9,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -28,16 +31,16 @@ public final class Jsons
 {
 	private Jsons() {}
 	
-	public static String getOrDefault(JsonObject object, String key, String def)
+	public static Optional<String> getString(JsonObject object, String key)
 	{
-		return object.has(key) ? object.get(key).getAsString() : def;
+		return object.has(key) ? Optional.of(object.get(key).getAsString()) : Optional.empty();
 	}
 	
-	public static int getOrDefault(JsonObject object, String key, int def) throws JsonParseException
+	public static OptionalInt getInt(JsonObject object, String key)
 	{
 		try
 		{
-			return object.has(key) ? object.get(key).getAsInt() : def;
+			return object.has(key) ? OptionalInt.of(object.get(key).getAsInt()) : OptionalInt.empty();
 		}
 		catch (UnsupportedOperationException | NumberFormatException exception)
 		{
@@ -45,11 +48,11 @@ public final class Jsons
 		}
 	}
 	
-	public static long getOrDefault(JsonObject object, String key, long def) throws JsonParseException
+	public static OptionalLong getLong(JsonObject object, String key)
 	{
 		try
 		{
-			return object.has(key) ? object.get(key).getAsLong() : def;
+			return object.has(key) ? OptionalLong.of(object.get(key).getAsLong()) : OptionalLong.empty();
 		}
 		catch (UnsupportedOperationException | NumberFormatException exception)
 		{
@@ -57,11 +60,11 @@ public final class Jsons
 		}
 	}
 	
-	public static float getOrDefault(JsonObject object, String key, float def) throws JsonParseException
+	public static OptionalDouble getDouble(JsonObject object, String key)
 	{
 		try
 		{
-			return object.has(key) ? object.get(key).getAsFloat() : def;
+			return object.has(key) ? OptionalDouble.of(object.get(key).getAsDouble()) : OptionalDouble.empty();
 		}
 		catch (UnsupportedOperationException | NumberFormatException exception)
 		{
@@ -69,28 +72,46 @@ public final class Jsons
 		}
 	}
 	
-	public static double getOrDefault(JsonObject object, String key, double def) throws JsonParseException
+	public static Optional<Boolean> getBoolean(JsonObject object, String key)
 	{
 		try
 		{
-			return object.has(key) ? object.get(key).getAsDouble() : def;
-		}
-		catch (UnsupportedOperationException | NumberFormatException exception)
-		{
-			throw new JsonParseException(String.format("The key '%s' is not a number.", key));
-		}
-	}
-	
-	public static boolean getOrDefault(JsonObject object, String key, boolean def) throws JsonParseException
-	{
-		try
-		{
-			return object.has(key) ? object.get(key).getAsBoolean() : def;
+			return object.has(key) ? Optional.of(object.get(key).getAsBoolean()) : Optional.empty();
 		}
 		catch (UnsupportedOperationException exception)
 		{
 			throw new JsonParseException(String.format("The key '%s' is not a boolean value.", key));
 		}
+	}
+	
+	public static String getOrDefault(JsonObject object, String key, String def)
+	{
+		return getString(object, key).orElse(def);
+	}
+	
+	public static int getOrDefault(JsonObject object, String key, int def) throws JsonParseException
+	{
+		return getInt(object, key).orElse(def);
+	}
+	
+	public static long getOrDefault(JsonObject object, String key, long def) throws JsonParseException
+	{
+		return getLong(object, key).orElse(def);
+	}
+	
+	public static float getOrDefault(JsonObject object, String key, float def) throws JsonParseException
+	{
+		return (float) getDouble(object, key).orElse(def);
+	}
+	
+	public static double getOrDefault(JsonObject object, String key, double def) throws JsonParseException
+	{
+		return getDouble(object, key).orElse(def);
+	}
+	
+	public static boolean getOrDefault(JsonObject object, String key, boolean def) throws JsonParseException
+	{
+		return getBoolean(object, key).orElse(def);
 	}
 	
 	public static int[] getIntArray(JsonObject object, String key, int length) throws JsonParseException

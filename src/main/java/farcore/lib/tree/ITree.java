@@ -110,10 +110,10 @@ public interface ITree extends ITreeGenerator, ISpecie<ISaplingAccess>, IRegiste
 	default boolean onLeavesRightClick(EntityPlayer player, World world, BlockPos pos, IBlockState state, Direction side,
 			float xPos, float yPos, float zPos, @Nullable TECoreLeaves tile) { return false; }
 	
-	ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+	ActionResult<Float> onToolClickLog(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ, boolean isArt);
 	
-	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, ItemStack stack, World world, BlockPos pos,
+	ActionResult<Float> onToolClickLeaves(EntityPlayer player, EnumToolType tool, int level, ItemStack stack, World world, BlockPos pos,
 			Direction side, float hitX, float hitY, float hitZ);
 	
 	List<ItemStack> getLogOtherDrop(World world, BlockPos pos, ArrayList<ItemStack> list);
