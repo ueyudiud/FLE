@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.data;
 
 import java.util.function.Function;
@@ -39,6 +38,7 @@ public enum EnumBlock
 	carved_rock,
 	circuit,
 	metalblock,
+	vine,
 	//FLE
 	dirt_mixture;
 	

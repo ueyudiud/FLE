@@ -23,6 +23,7 @@ public class Materials
 	public static final Material LOG = new MaterialLog();
 	public static final Material WOOD = Material.WOOD;
 	public static final Material PLANT = Material.PLANTS;
+	public static final Material VINE = Material.VINE;
 	public static final Material DIRT = Material.GROUND;
 	public static final Material DIRT_GRASSY = Material.GRASS;
 	public static final Material ORE = new MaterialOre();

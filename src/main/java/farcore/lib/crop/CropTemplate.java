@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.crop;
 
 import java.util.ArrayList;
@@ -10,6 +13,10 @@ import nebula.common.util.L;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
 
+/**
+ * The template crop type.
+ * @author ueyudiud
+ */
 public class CropTemplate extends Crop
 {
 	public EnumPlantType type = EnumPlantType.Crop;
@@ -88,7 +95,7 @@ public class CropTemplate extends Crop
 		if(access.stage() == this.maxStage)
 		{
 			ItemStack stack = applyChildSeed(this.seed + L.nextInt(5 + access.info().resistance / 2 + access.info().grain) / 3, access.info());
-			if(stack != null)
+			if (stack != null)
 			{
 				list.add(stack);
 			}

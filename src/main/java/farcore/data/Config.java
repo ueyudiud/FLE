@@ -30,4 +30,7 @@ public class Config
 	@ConfigComment("The leaves will drop items when decaying when enable this option, But make sure you can accept lower fps beacuase large amount of dropped "
 			+ "items from tree leaves.")
 	public static boolean droppingWhenDecay;
+	@ConfigProperty(category = "block", defValue = "true")
+	@ConfigComment("Enable this option and you can 'climb' the vine as a ladder, just like vanilla vine in Minecraft.")
+	public static boolean useVineAsLadder;
 }

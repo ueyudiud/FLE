@@ -30,4 +30,9 @@ public enum EnumItem
 	{
 		this.item = item;
 	}
+	
+	public boolean available()
+	{
+		return this.item != null;
+	}
 }

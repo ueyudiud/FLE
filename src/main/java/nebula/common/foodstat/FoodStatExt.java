@@ -37,10 +37,10 @@ public class FoodStatExt extends FoodStats
 	private static final AttributeModifier THIRSTY_WEAKNESS_I = new AttributeModifier(UUID.fromString("2A2D2C19-F00F-40F4-869D-F07A713E6533"), "waterstat.effect1", -0.2F, 2);
 	private static final AttributeModifier THIRSTY_WEAKNESS_II = new AttributeModifier(UUID.fromString("F6122B44-3B2B-4BB9-9294-B566E39D6AF9"), "waterstat.effect2", -0.2F, 2);
 	
-	private static final int MAX_FOOD_LEVEL = 20;
-	private static final int START_SATURATION_LEVAL = 5;
-	private static final int MAX_NUTRITION_LEVEL = 100;
-	private static final int MAX_WATER_LEVEL = 20;
+	public static final int MAX_FOOD_LEVEL = 20;
+	public static final int START_SATURATION_LEVAL = 5;
+	public static final int MAX_NUTRITION_LEVEL = 100;
+	public static final int MAX_WATER_LEVEL = 20;
 	
 	private int prevDim;
 	private long worldTimer = Long.MIN_VALUE;
@@ -337,10 +337,15 @@ public class FoodStatExt extends FoodStats
 		this.foodSaturationLevel = Math.min(this.foodSaturationLevel + foodSaturationModifier * foodLevelIn, this.foodLevel);
 	}
 	
+	public boolean needWater()
+	{
+		return this.waterLevel < MAX_WATER_LEVEL;
+	}
+	
 	@Override
 	public boolean needFood()
 	{
-		return this.foodDigestionLevel < MAX_FOOD_LEVEL - this.foodLevel;
+		return this.foodDigestionLevel + this.foodLevel < MAX_FOOD_LEVEL;
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ package nebula.base;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -56,6 +57,31 @@ class Cache<E> implements Serializable
 	{
 		return this.element;
 	}
+	
+	//Optional like.
+	
+	public boolean isAbsent()
+	{
+		return this.element == null;
+	}
+	
+	public final void consumeIfPresent(Consumer<? super E> consumer)
+	{
+		if (!isAbsent())
+		{
+			Objects.requireNonNull(consumer).accept(this.element);
+		}
+	}
+	
+	public final void setIfAbsent(E element)
+	{
+		if (isAbsent())
+		{
+			set(element);
+		}
+	}
+	
+	//Optional like end.
 	
 	/**
 	 * Get {@link java.util.Optional} value,

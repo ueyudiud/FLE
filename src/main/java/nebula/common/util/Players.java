@@ -7,6 +7,7 @@ package nebula.common.util;
 import java.util.List;
 
 import nebula.Nebula;
+import nebula.common.foodstat.FoodStatExt;
 import nebula.common.item.ITool;
 import nebula.common.tool.EnumToolType;
 import net.minecraft.entity.Entity;
@@ -30,6 +31,11 @@ public final class Players
 	public static EntityPlayer player()
 	{
 		return Nebula.proxy.playerInstance();
+	}
+	
+	public static FoodStatExt getFoodStat(EntityPlayer player)
+	{
+		return (FoodStatExt) player.getFoodStats();
 	}
 	
 	public static List<EnumToolType> getCurrentToolType(EntityPlayer player)

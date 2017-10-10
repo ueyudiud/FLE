@@ -20,6 +20,7 @@ import static org.lwjgl.input.Keyboard.KEY_R;
 
 import farcore.FarCore;
 import farcore.data.CT;
+import farcore.data.EnumBlock;
 import farcore.data.EnumFluid;
 import farcore.data.EnumItem;
 import farcore.data.EnumPhysicalDamageType;
@@ -41,6 +42,7 @@ import farcore.lib.block.instance.BlockCrop;
 import farcore.lib.block.instance.BlockFire;
 import farcore.lib.block.instance.BlockIce;
 import farcore.lib.block.instance.BlockMetal;
+import farcore.lib.block.instance.BlockPlantVine;
 import farcore.lib.block.instance.BlockRedstoneCircuit;
 import farcore.lib.block.instance.BlockScreen;
 import farcore.lib.block.instance.BlockWater;
@@ -131,6 +133,7 @@ public class CommonLoader
 		new BlockFire();
 		new BlockMetal();
 		new BlockScreen();
+		EnumBlock.vine.set(new BlockPlantVine(M.vine).setCreativeTab(CT.CROP_AND_WILD_PLANTS));
 		//Register tile entities.
 		bar.step("Register Tile Entities");
 		registerTileEntity(TECrop.class, "farcore.crop");

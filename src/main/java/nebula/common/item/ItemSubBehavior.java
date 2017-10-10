@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.item;
 
 import java.util.HashMap;
@@ -81,19 +80,19 @@ public class ItemSubBehavior extends ItemBase
 	 */
 	public void addSubItem(int id, String name, @Nullable String localName, @Nullable IItemCapabilityProvider provider, IBehavior...behaviors)
 	{
-		if(this.idMap.containsKey(name) || this.idMap.containsValue(id))
+		if (this.idMap.containsKey(name) || this.idMap.containsValue(id))
 			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
 		this.idMap.put(name, id);
 		this.nameMap.put(id, name);
-		if(behaviors.length > 0)
+		if (behaviors.length > 0)
 		{
 			this.behaviors.put(id, ImmutableList.copyOf(behaviors));
 		}
-		if(provider != null)
+		if (provider != null)
 		{
 			this.providers.put(id, provider);
 		}
-		if(localName != null)
+		if (localName != null)
 		{
 			LanguageManager.registerLocal(getTranslateName(new ItemStack(this, 1, id)), localName);
 		}
@@ -123,7 +122,7 @@ public class ItemSubBehavior extends ItemBase
 	
 	protected List<IBehavior> getBehavior(ItemStack stack)
 	{
-		return this.behaviors.getOrDefault(getDamage(stack), IBehavior.NONE);
+		return this.behaviors.getOrDefault(getBaseDamage(stack), IBehavior.NONE);
 	}
 	
 	/**
@@ -184,9 +183,9 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem)
 	{
-		if(!isItemUsable(entityItem.getEntityItem()))
+		if (!isItemUsable(entityItem.getEntityItem()))
 			return false;
-		if(this instanceof IUpdatableItem &&
+		if (this instanceof IUpdatableItem &&
 				!entityItem.world.isRemote)
 		{
 			ItemStack stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityItem), entityItem.getEntityItem());
@@ -225,12 +224,12 @@ public class ItemSubBehavior extends ItemBase
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
 	{
-		if(!isItemUsable(itemStackIn))
+		if (!isItemUsable(itemStackIn))
 			return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
 		try
 		{
 			ActionResult<ItemStack> result = new ActionResult<>(EnumActionResult.PASS, itemStackIn);
-			for(IBehavior behavior : getBehavior(itemStackIn))
+			for (IBehavior behavior : getBehavior(itemStackIn))
 			{
 				ActionResult<ItemStack> result2;
 				if((result2 = behavior.onItemRightClick(result.getResult(), worldIn, playerIn, hand)) != null &&

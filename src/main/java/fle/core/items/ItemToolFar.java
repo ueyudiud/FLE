@@ -1,6 +1,7 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fle.core.items;
-
-import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
@@ -17,6 +18,7 @@ import fle.api.recipes.instance.interfaces.IPolishableItem;
 import fle.api.util.ToolPropertiesModificater;
 import fle.api.util.ToolPropertiesModificater.Property;
 import fle.core.FLE;
+import nebula.Log;
 import nebula.base.Judgable;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
@@ -43,7 +45,8 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IProjectileItem, IPolishableItem, IIP_Containerable
+public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui,
+IProjectileItem, IPolishableItem, IIP_Containerable
 {
 	public ItemToolFar()
 	{
@@ -101,7 +104,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	@Override
 	public void onBlockHarvested(ItemStack stack, HarvestDropsEvent event)
 	{
-		if(event.getHarvester() != null)
+		if (event.getHarvester() != null)
 		{
 			getToolProp(stack).skillEfficiency.using(event.getHarvester(), 1.0F);
 		}
@@ -128,7 +131,7 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 		baseAttack = new ToolPropertiesModificater(stack).applyModification(baseAttack, Property.ATTACK_DAMAGE);
 		int lv = prop.skillAttack.level(player);
 		cooldown += lv * 5;
-		if(lv > 1)
+		if (lv > 1)
 		{
 			baseAttack += Math.sqrt(player.getRNG().nextInt(lv)) * 0.2F;
 		}
@@ -155,95 +158,143 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	@Override
 	public void initEntity(EntityProjectileItem entity)
 	{
-		List<IBehavior> list = getBehavior(entity.currentItem);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IProjectileItem)
-			{
-				((IProjectileItem) behavior).initEntity(entity);
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(entity.currentItem))
+				if(behavior instanceof IProjectileItem)
+				{
+					((IProjectileItem) behavior).initEntity(entity);
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 	}
 	
 	@Override
 	public void onEntityTick(EntityProjectileItem entity)
 	{
-		List<IBehavior> list = getBehavior(entity.currentItem);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IProjectileItem)
-			{
-				((IProjectileItem) behavior).onEntityTick(entity);
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(entity.currentItem))
+				if (behavior instanceof IProjectileItem)
+				{
+					((IProjectileItem) behavior).onEntityTick(entity);
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 	}
 	
 	@Override
 	public boolean onHitGround(World world, BlockPos pos, EntityProjectileItem entity, Direction direction)
 	{
-		List<IBehavior> list = getBehavior(entity.currentItem);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IProjectileItem)
-			{
-				if(((IProjectileItem) behavior).onHitGround(world, pos, entity, direction))
-					return true;
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(entity.currentItem))
+				if (behavior instanceof IProjectileItem)
+				{
+					if (((IProjectileItem) behavior).onHitGround(world, pos, entity, direction))
+						return true;
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 		return false;
 	}
 	
 	@Override
 	public boolean onHitEntity(World world, Entity target, EntityProjectileItem entity)
 	{
-		List<IBehavior> list = getBehavior(entity.currentItem);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IProjectileItem)
-			{
-				if(((IProjectileItem) behavior).onHitEntity(world, target, entity))
-					return true;
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(entity.currentItem))
+				if (behavior instanceof IProjectileItem)
+				{
+					if (((IProjectileItem) behavior).onHitEntity(world, target, entity))
+						return true;
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 		return false;
 	}
 	
 	@Override
 	public int getPolishLevel(ItemStack stack)
 	{
-		List<IBehavior> list = getBehavior(stack);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IPolishableBehavior)
-			{
-				return ((IPolishableBehavior) behavior).getPolishLevel(stack);
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(stack))
+				if (behavior instanceof IPolishableBehavior)
+				{
+					return ((IPolishableBehavior) behavior).getPolishLevel(stack);
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 		return -1;
 	}
 	
 	@Override
 	public char getPolishResult(ItemStack stack, char base)
 	{
-		List<IBehavior> list = getBehavior(stack);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IPolishableBehavior)
-			{
-				return ((IPolishableBehavior) behavior).getPolishResult(stack, base);
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(stack))
+				if (behavior instanceof IPolishableBehavior)
+				{
+					return ((IPolishableBehavior) behavior).getPolishResult(stack, base);
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 		return base;
 	}
 	
 	@Override
 	public void onPolished(EntityPlayer player, ItemStack stack)
 	{
-		List<IBehavior> list = getBehavior(stack);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IPolishableBehavior)
-			{
-				((IPolishableBehavior) behavior).onPolished(player, stack);
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(stack))
+				if (behavior instanceof IPolishableBehavior)
+				{
+					((IPolishableBehavior) behavior).onPolished(player, stack);
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 	}
 	
 	@Override
 	public Container openContainer(World world, BlockPos pos, EntityPlayer player, ItemStack stack)
 	{
-		List<IBehavior> list = getBehavior(stack);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IIP_Containerable)
-			{
-				return ((IIP_Containerable) behavior).openContainer(world, pos, player, stack);
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(stack))
+				if (behavior instanceof IIP_Containerable)
+				{
+					return ((IIP_Containerable) behavior).openContainer(world, pos, player, stack);
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 		return null;
 	}
 	
@@ -251,12 +302,18 @@ public class ItemToolFar extends ItemTool implements IIP_CustomOverlayInGui, IPr
 	@SideOnly(Side.CLIENT)
 	public GuiContainer openGui(World world, BlockPos pos, EntityPlayer player, ItemStack stack)
 	{
-		List<IBehavior> list = getBehavior(stack);
-		for(IBehavior behavior : list)
-			if(behavior instanceof IIP_Containerable)
-			{
-				return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
-			}
+		try
+		{
+			for (IBehavior behavior : getBehavior(stack))
+				if (behavior instanceof IIP_Containerable)
+				{
+					return ((IIP_Containerable) behavior).openGui(world, pos, player, stack);
+				}
+		}
+		catch (Throwable exception)
+		{
+			Log.catching(exception);
+		}
 		return null;
 	}
 	

@@ -53,6 +53,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 	private List<INebulaModelPart> parts;
 	private boolean gui3D;
 	private boolean builtIn;
+	private boolean ao;
 	private Item item;
 	ImmutableMap<TransformType, TRSRTransformation> transforms;
 	java.util.function.Function<ItemStack, String>[] itemDataGen;
@@ -74,16 +75,18 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		this.transforms = ModelHelper.ITEM_STANDARD_TRANSFORMS;
 		this.parts = ImmutableList.of(new ModelPartItemLayer(0, collection));
 		this.gui3D = false;
+		this.ao = true;
 		this.builtIn = false;
 	}
 	
 	public FlexibleModel(Item item, ImmutableMap<TransformType, TRSRTransformation> transforms,
-			List<INebulaModelPart> parts, boolean gui3D, boolean builtIn)
+			List<INebulaModelPart> parts, boolean gui3D, boolean ao, boolean builtIn)
 	{
 		this.item = item;
 		this.transforms = transforms;
 		this.parts = parts;
 		this.gui3D = gui3D;
+		this.ao = ao;
 		this.builtIn = builtIn;
 	}
 	
@@ -177,7 +180,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 			IIconCollection particleSource = getIconHandler("#particle");
 			TextureAtlasSprite particle = bakedTextureGetter.apply(particleSource.build().getOrDefault(NebulaModelLoader.NORMAL, TextureMap.LOCATION_MISSING_TEXTURE));
 			return new FlexibleBakedModel(this.transforms, builder.build(), particle,
-					this.gui3D, this.builtIn, this.itemDataGen, this.blockDataGen,
+					this.gui3D, this.ao, this.builtIn, this.itemDataGen, this.blockDataGen,
 					this.itemLoadingData, this.blockLoadingData);
 		}
 		catch (Exception exception)
@@ -195,7 +198,7 @@ public class FlexibleModel implements ModelBase, IRetexturableModel, IRecolorabl
 		if (this.retextures != null)
 			builder.putAll(this.retextures);
 		builder.putAll(textures);
-		FlexibleModel model = new FlexibleModel(this.item, this.transforms, this.parts, this.gui3D, this.builtIn);
+		FlexibleModel model = new FlexibleModel(this.item, this.transforms, this.parts, this.ao, this.gui3D, this.builtIn);
 		model.blockColors = this.blockColors;
 		model.itemColors = this.itemColors;
 		model.blockDataGen = this.blockDataGen;

@@ -168,13 +168,26 @@ public class ModelPartCol implements INebulaModelPart
 		Variant variant;
 		if (json.isJsonObject())
 		{
-			variant = new Variant();
 			JsonObject object = json.getAsJsonObject();
-			variant.x = Jsons.getInt(object, "x");
-			variant.y = Jsons.getInt(object, "y");
-			variant.enable = Jsons.getBoolean(object, "enable");
-			variant.parts = Optional.ofNullable(loadParts(object, context));
-			variant.retextures = !object.has("textures") ? Retextures.TOP : new Retextures(Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString), null);
+			if (object.has("type"))//Regard as a direct a sub model.
+			{
+				variant = defaultVariant();
+				INebulaModelPart part = deserialize(json, context);
+				if (object.has("textures"))
+				{
+					part = part.retexture(Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString));
+				}
+				variant.parts = Optional.of(ImmutableList.of(part));
+			}
+			else
+			{
+				variant = new Variant();
+				variant.x = Jsons.getInt(object, "x");
+				variant.y = Jsons.getInt(object, "y");
+				variant.enable = Jsons.getBoolean(object, "enable");
+				variant.parts = Optional.ofNullable(loadParts(object, context));
+				variant.retextures = !object.has("textures") ? Retextures.TOP : new Retextures(Jsons.getAsMap(object.getAsJsonObject("textures"), JsonElement::getAsString), null);
+			}
 		}
 		else if (json.isJsonArray())
 		{

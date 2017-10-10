@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.crop;
 
 import java.util.Random;
@@ -9,6 +12,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+/**
+ * The simulated crop access, use to predicate could
+ * crop plant at specific position.
+ * @author ueyudiud
+ */
 public class CropAccessSimulated implements ICropAccess
 {
 	World world;

@@ -11,4 +11,7 @@ Please report at [here](https://github.com/ueyudiud/FLE/issues).
 您可以不经过ueyudiud的许可发布任何和FLE相关的材质包/教程/本地化文本等mod相关的拓展内容，同时我很支持您对FLE相关拓展内容的贡献，
 You can create resource pack/guide/localization file without ueyudiud's permission. I am willing to see your contribution related to FLE.
 ## License ##
-ueyudiud 版权所有，此mod下所有内容（代码，材质资源，功能实现等）可以供参考，禁止对其中任何内容用于商业用途。
+ueyudiud 版权所有；
+此项目下（包含且可能不仅包括Nebula，Far Core，Far Generation， Far Land Era）下所有内容（代码，材质资源，功能实现等）可以供参考；
+禁止以任何形式对项目种的任何内容修改后进行发布；
+禁止对其中任何内容用于商业用途。

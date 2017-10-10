@@ -287,7 +287,7 @@ public enum NebulaModelLoader implements ICustomModelLoader
 				int l = 0;
 				while ((line = reader.readLine()) != null)
 				{
-					if(line.length() != 0 && line.charAt(0) != '#')
+					if (line.length() != 0 && line.charAt(0) != '#')
 					{
 						String[] split = Strings.split(line, ',');
 						if (split.length <= 1 || split.length >= 4) throw new RuntimeException();
@@ -414,15 +414,12 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		//		if (modelLocation instanceof ModelResourceLocation)
-		//		{
-		//			ResourceLocation location = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
-		//			if (this.models.containsKey(location))
-		//				return true;
-		//			return this.models.containsKey(modelLocation);//TODO
-		//		}
-		//		else
-		return this.models.containsKey(modelLocation);
+		if (modelLocation instanceof ModelResourceLocation)
+		{
+			return this.models.containsKey(modelLocation) || this.models.containsKey(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath()));
+		}
+		else
+			return this.models.containsKey(modelLocation);
 	}
 	
 	/**
@@ -612,7 +609,19 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
-		IModel model = this.models.remove(modelLocation);
+		IModel model;
+		if (modelLocation instanceof ModelResourceLocation)
+		{
+			model = this.models.remove(modelLocation);
+			if (model == null)
+			{
+				model = this.models.get(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath()));
+			}
+		}
+		else
+		{
+			model = this.models.get(modelLocation);
+		}
 		if (this.models.isEmpty())
 			this.models = null;//Clean cache.
 		if (model == null)//If model is null, it means the loader of location shoudn't be this loader.

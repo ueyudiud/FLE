@@ -8,6 +8,7 @@ import fle.core.handler.FleEntityHandler;
 import fle.core.tile.ditchs.DefaultDitchFactory;
 import fle.loader.Configs;
 import fle.loader.Entities;
+import fle.loader.FW;
 import fle.loader.Fuels;
 import fle.loader.IBF;
 import fle.loader.Lang;
@@ -39,6 +40,7 @@ public class CommonLoader
 	public void init(FMLInitializationEvent event)
 	{
 		Fuels.init();
+		FW.init();
 		Recipes.init();
 		Lang.init();
 	}

@@ -1,0 +1,25 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block",
+		"model": "farcore:vine/vine"
+	},
+	"variants": {
+		"north": {
+			"true": {},
+			"false": {}
+		},
+		"south": {
+			"true": {},
+			"false": {}
+		},
+		"east": {
+			"true": {},
+			"false": {}
+		},
+		"west": {
+			"true": {},
+			"false": {}
+		}
+	}
+}

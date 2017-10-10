@@ -14,6 +14,7 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumRockType;
 import farcore.data.EnumToolTypes;
 import farcore.data.MC;
+import farcore.energy.thermal.ThermalNet;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.material.Mat;
@@ -32,6 +33,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -39,6 +41,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -106,7 +109,7 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 			int fortune, boolean silkTouch)
 	{
 		List<ItemStack> ret = new ArrayList();
-		if(silkTouch)
+		if (silkTouch)
 		{
 			ret.add(new ItemStack(block, 1, state.getValue(TYPE).ordinal()));
 		}
@@ -162,28 +165,33 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 		switch (type)
 		{
 		case resource :
-			//			if(ThermalNet.getTemperature(worldIn, pos, false) > minTemperatureForExplosion)
-			//			{
-			//				if(!state.getValue(HEATED) && random.nextInt(3) == 0)
-			//				{
-			//					worldIn.setBlockState(pos, state.withProperty(HEATED, true), 6);
-			//				}
-			//				else if(Worlds.isBlockNearby(worldIn, pos, EnumBlock.water.block, true))
-			//				{
-			//					worldIn.setBlockState(pos, state.withProperty(TYPE, EnumRockType.cobble), 3);
-			//					worldIn.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS,
-			//							.5F, 2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F, true);
-			//					for (int k = 0; k < 8; ++k)
-			//					{
-			//						worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + Math.random(), pos.getY() + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D, new int[0]);
-			//					}
-			//					return;
-			//				}
-			//			}
-			//			else if(state.getValue(HEATED) && random.nextInt(4) == 0)
-			//			{
-			//				worldIn.setBlockState(pos, state.withProperty(HEATED, false), 6);
-			//			}
+			boolean flag = Worlds.isBlockNearby(world, pos, EnumBlock.water.block, true);
+			boolean flag2 = state.getValue(HEATED);
+			if (flag2)
+			{
+				world.setBlockState(pos, state.withProperty(TYPE, EnumRockType.cobble), 3);
+				world.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS,
+						.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F, true);
+				for (int k = 0; k < 8; ++k)
+				{
+					world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + Math.random(), pos.getY() + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D, new int[0]);
+				}
+				return;
+			}
+			if (ThermalNet.getTemperature(world, pos, false) > 400)
+			{
+				if (!flag && !flag2)
+				{
+					if (random.nextInt(3) == 0)
+					{
+						world.setBlockState(pos, state.withProperty(HEATED, true), 6);
+					}
+				}
+			}
+			else if (flag2 && random.nextInt(4) == 0)
+			{
+				world.setBlockState(pos, state.withProperty(HEATED, false), 6);
+			}
 		default:
 			break;
 		}
@@ -243,6 +251,14 @@ public class RockBehavior<B extends BlockRock> extends PropertyBlockable<B> impl
 	public int getFireSpreadSpeed(B block, IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face)
 	{
 		return isFlammable(block, state, world, pos, face) ? 40 : 0;
+	}
+	
+	public void onBlockExploded(B block, IBlockState state, World world, BlockPos pos, Explosion explosion)
+	{
+		if (state.getValue(TYPE) == EnumRockType.resource)
+		{
+			world.setBlockState(pos, state.withProperty(TYPE, EnumRockType.cobble));
+		}
 	}
 	
 	public boolean onBurn(B block, IBlockState state, IModifiableCoord coord, float burnHardness, Direction direction)

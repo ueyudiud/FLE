@@ -1,0 +1,81 @@
+{
+	"smooth_lighting": true,
+	"textures": {
+		"all": "farcore:blocks/plants/vine_common",
+		"particle": "#all"
+	},
+	"part": [
+		{
+			"type": "multi",
+			"default": {
+				"type": "nebula:quad",
+				"pos": "attach_east"
+			},
+			"variants": {
+				"t": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "t=%s",
+				"formats": [ "east" ],
+				"default": [ "false" ]
+			}
+		},
+		{
+			"type": "multi",
+			"default": {
+				"type": "nebula:quad",
+				"pos": "attach_west"
+			},
+			"variants": {
+				"t": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "t=%s",
+				"formats": [ "west" ],
+				"default": [ "false" ]
+			}
+		},
+		{
+			"type": "multi",
+			"default": {
+				"type": "nebula:quad",
+				"pos": "attach_south"
+			},
+			"variants": {
+				"t": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "t=%s",
+				"formats": [ "south" ],
+				"default": [ "false" ]
+			}
+		},
+		{
+			"type": "multi",
+			"default": {
+				"type": "nebula:quad",
+				"pos": "attach_north"
+			},
+			"variants": {
+				"t": {
+					"true": { "enable": true },
+					"false": { "enable": false }
+				}
+			},
+			"blockmeta": {
+				"key": "t=%s",
+				"formats": [ "north" ],
+				"default": [ "false" ]
+			}
+		}
+	]
+}

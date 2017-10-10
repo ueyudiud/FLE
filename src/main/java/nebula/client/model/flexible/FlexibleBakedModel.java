@@ -43,6 +43,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	private final int[] itemLoadingData;
 	private final int[] blockLoadingData;
 	private final ImmutableMap<TransformType, TRSRTransformation> transforms;
+	private final boolean ao;
 	/**
 	 * The model state marked, if model has crashed during
 	 * loading quad, the model will be marked as problem model.
@@ -52,12 +53,13 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	private boolean errored = false;
 	
 	public FlexibleBakedModel(ImmutableMap<TransformType, TRSRTransformation> transforms, ImmutableList<INebulaBakedModelPart> parts,
-			TextureAtlasSprite particle, boolean gui3d, boolean builtIn,
+			TextureAtlasSprite particle, boolean gui3d, boolean ao, boolean builtIn,
 			Function<ItemStack, String>[] itemDataGen, Function<IBlockState, String>[] blockDataGen,
 			int[] itemLoadingData, int[] blockLoadingData)
 	{
 		this.transforms = transforms;
 		this.gui3d = gui3d;
+		this.ao = ao;
 		this.builtIn = builtIn;
 		this.parts = L.cast(parts, INebulaBakedModelPart.class);
 		this.particle = particle;
@@ -134,7 +136,7 @@ public class FlexibleBakedModel implements BakedModelBase, ICustomItemRenderMode
 	@Override
 	public boolean isAmbientOcclusion()
 	{
-		return true;
+		return this.ao;
 	}
 	
 	@Override
