@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
@@ -125,9 +126,13 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	{
 		return REGISTER.get(id, def);
 	}
+	public static <V> V propertyOf(String name, IPropertyMap.IProperty<V> property)
+	{
+		return material(name).getProperty(property);
+	}
 	public static Mat material(String name)
 	{
-		return REGISTER.get(name, Mat.VOID);
+		return REGISTER.get(name, VOID);
 	}
 	public static Mat material(String name, Mat def)
 	{
@@ -522,6 +527,11 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 	public <V> V getProperty(IProperty<V> property)
 	{
 		return getProperty(property, property.defValue());
+	}
+	
+	public <V> Optional<? extends V> getPropertyOptional(IProperty<V> property)
+	{
+		return this.propertyMap.getOptional(property);
 	}
 	
 	public <V> V getProperty(IProperty<V> property, V def)

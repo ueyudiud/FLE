@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.tree;
 
 import java.util.Random;
@@ -5,10 +8,12 @@ import java.util.Random;
 import farcore.FarCore;
 import farcore.data.EnumBlock;
 import farcore.data.V;
+import farcore.lib.block.instance.BlockPlantVine;
 import farcore.lib.tile.instance.TECoreLeaves;
 import farcore.lib.tree.ITree.BlockType;
 import nebula.common.util.Worlds;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -49,22 +54,35 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 				(block = world.getBlockState(pos)).getBlock().canBeReplacedByLeaves(block, world, pos);
 	}
 	
+	protected boolean isAirOrVine(World world, int x, int y, int z)
+	{
+		BlockPos pos = new BlockPos(x, y, z);
+		IBlockState state;
+		return (state = world.getBlockState(pos)).getBlock().isAir(state, world, pos) ||
+				state.getBlock() == EnumBlock.vine.block;
+	}
+	
+	protected void generateVine(World world, int x, int y, int z, EnumFacing facing)
+	{
+		BlockPlantVine.addVineBlock(world, new BlockPos(x, y, z), facing);
+	}
+	
 	protected boolean checkLeavesGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
-		if(!FarCore.worldGenerationFlag && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
+		if (!FarCore.worldGenerationFlag && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
 			return false;
-		for(int i = x - l; i <= x + l; ++i)
+		for (int i = x - l; i <= x + l; ++i)
 		{
-			for(int j = y; j <= y + w; ++j)
+			for (int j = y; j <= y + w; ++j)
 			{
-				for(int k = z - h; k <= z + h; ++k)
+				for (int k = z - h; k <= z + h; ++k)
 				{
-					if(!matchLocal && i == x && j == y && k == z)
+					if (!matchLocal && i == x && j == y && k == z)
 					{
 						continue;
 					}
-					if(isLeavesReplaceable(world, i, j, k))
+					if (isLeavesReplaceable(world, i, j, k))
 					{
 						continue;
 					}
@@ -78,7 +96,7 @@ public abstract class TreeGenAbstract implements ITreeGenerator
 	protected boolean checkLogGrow(World world, int x, int y, int z, int l, int w, int h, boolean matchLocal)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
-		if(!V.generateState && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
+		if (!V.generateState && !world.isAreaLoaded(pos.add(-l, -w, -h), pos.add(l, w, h)))
 			return false;
 		for(int i = x - l; i <= x + l; ++i)
 		{

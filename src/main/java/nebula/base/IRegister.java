@@ -8,11 +8,11 @@ import javax.annotation.Nullable;
 
 /**
  * Register type, contain a register list with a integer id
- * and a string id for each element.<p>
+ * and a string id (or 'name') for each element.<p>
  * This target collection is implements {@link java.lang.Iterable},
  * for you can use it in for-each loop directly.
  * @author ueyudiud
- * @param <T> the element type in regiser.
+ * @param <T> the element type in register.
  * @see java.lang.Iterable
  * @see nebula.base.Register
  */
@@ -20,17 +20,17 @@ public interface IRegister<T> extends Iterable<T>
 {
 	/**
 	 * Register a new element.
-	 * @param name
-	 * @param arg
-	 * @return
+	 * @param name the registered name.
+	 * @param arg the registered argument.
+	 * @return the id of registered argument.
 	 */
 	int register(@Nonnull String name, @Nonnull T arg);
 	
 	/**
 	 * Register a new element with selected id.
-	 * @param id
-	 * @param name
-	 * @param arg
+	 * @param id the id of registered argument.
+	 * @param name the registered name.
+	 * @param arg the registered argument.
 	 */
 	void register(int id, @Nonnull String name, @Nonnull T arg);
 	
@@ -152,5 +152,9 @@ public interface IRegister<T> extends Iterable<T>
 	 */
 	int hashCode();
 	
+	/**
+	 * Return the register is same to another register (or just an object).
+	 * @see Object#equals(Object)
+	 */
 	boolean equals(Object obj);
 }

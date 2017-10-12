@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.tree;
 
 import java.util.Random;
@@ -25,7 +24,7 @@ public class TreeWillow extends Tree
 	@Override
 	public boolean generateTreeAt(World world, int x, int y, int z, Random random, TreeInfo info)
 	{
-		if(info != null)
+		if (info != null)
 		{
 			this.generator1.setTreeLogShape(4 + info.height / 3, 4 + info.height / 3);
 		}

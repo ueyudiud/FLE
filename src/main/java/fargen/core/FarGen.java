@@ -25,11 +25,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = FarGen.ID, version = FarGen.VERSION, name = FarGen.NAME,
-dependencies = "required-after:farcore")
+dependencies = "required-after:farcore; required-after:fle")
 public class FarGen
 {
 	public static final String ID = "fg";
-	public static final String VERSION = "0.3";
+	public static final String VERSION = "0.4";
 	public static final String NAME = "Far Generation";
 	
 	public static final DimensionType FAR_OVERWORLD;

@@ -305,12 +305,14 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 		MutableBlockPos pos = new MutableBlockPos(x << 4, 0, z << 4);
 		BiomeBase biome = (BiomeBase) chunk.getBiome(pos.add(16, 0, 16), this.biomeProvider);
 		IWorldPropProvider provider = WorldPropHandler.getWorldProperty(this.world);
-		float temp = (provider.getAverageTemperature(this.world, pos) + 5.0F) / 9.0F;
+		float temp = provider.getAverageTemperature(this.world, pos) - V.WATER_FREEZE_POINT_F;
 		float rainfall = provider.getAverageHumidity(this.world, pos) / 4.0F;
 		
 		//MinX & MinZ coordinate.
 		final int x1 = x << 4;
 		final int z1 = z << 4;
+		
+		switchState(true);
 		
 		//Tree generation.
 		if (!MinecraftForge.TERRAIN_GEN_BUS.post(new FarGenerationEvent(TREE, this.world, x, z, this)))
@@ -321,19 +323,17 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			
 			if (treeGenerationSelector.weight() > 0 && biome.treePerChunkBase >= 0)
 			{
-				int count = (biome.treePerChunkBase + MathHelper.log2DeBruijn(treeGenerationSelector.weight()) / 4) / biome.treePerChunkDiv;
+				int count = (biome.treePerChunkBase + MathHelper.log2DeBruijn(treeGenerationSelector.weight())) / biome.treePerChunkDiv;
 				for (int i = 0; i < count; ++i)
 				{
 					int x2 = x1 + this.random.nextInt(16) + 8;
 					int z2 = z1 + this.random.nextInt(16) + 8;
 					int y2 = this.world.getHeight(x2, z2);
 					ITreeGenerator generator = treeGenerationSelector.next(this.random);
-					switchState(true);
 					if (generator.generateTreeAt(this.world, x2, y2, z2, this.random, null))
 					{
 						count --;
 					}
-					switchState(false);
 				}
 			}
 		}
@@ -346,7 +346,6 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			
 			if (cropGenerationSelector.weight() > 0 && biome.cropPerChunkBase > 0)
 			{
-				switchState(true);
 				int count = 1 + biome.cropPerChunkBase + L.nextInt(biome.cropPerChunkRand, this.random) + MathHelper.log2DeBruijn(cropGenerationSelector.weight());
 				ICrop crop;
 				do
@@ -354,7 +353,7 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 					crop = cropGenerationSelector.next(this.random);
 					count--;
 				}
-				while((crop == null || crop == ICrop.VOID) && count > 0);
+				while ((crop == null || crop == ICrop.VOID) && count > 0);
 				for (int i = 0; i < count; ++i)
 				{
 					int x2 = x1 + this.random.nextInt(16);
@@ -367,7 +366,6 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 						this.world.setBlockState(pos, CROP);
 					}
 				}
-				switchState(false);
 			}
 		}
 		
@@ -377,6 +375,8 @@ public class FarSurfaceChunkGenerator implements IChunkGenerator
 			biome.decorator.decorate(this.world, this.random, pos, this);
 		}
 		MinecraftForge.TERRAIN_GEN_BUS.post(new DecorateBiomeEvent.Post(this.world, this.random, pos));
+		
+		switchState(false);
 	}
 	
 	@Override

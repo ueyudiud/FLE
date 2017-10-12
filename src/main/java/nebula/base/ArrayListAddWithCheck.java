@@ -36,6 +36,7 @@ public class ArrayListAddWithCheck<E> extends ArrayList<E>
 	{
 		this.checker = checker;
 	}
+	
 	public ArrayListAddWithCheck(Predicate<? super E> checker, int initicalCapacity)
 	{
 		super(initicalCapacity);

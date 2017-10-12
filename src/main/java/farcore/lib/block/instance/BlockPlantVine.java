@@ -11,8 +11,10 @@ import javax.annotation.Nullable;
 
 import farcore.FarCoreRegistry;
 import farcore.data.Config;
+import farcore.data.EnumBlock;
 import farcore.data.EnumItem;
 import farcore.data.Materials;
+import farcore.data.V;
 import farcore.lib.material.Mat;
 import nebula.base.function.Applicable;
 import nebula.client.model.StateMapperExt;
@@ -57,6 +59,20 @@ public class BlockPlantVine extends BlockBase
 	
 	private static final Applicable<ItemStack> DROP = ()->
 	EnumItem.crop_related.available() ? ((ItemSubBehavior) EnumItem.crop_related.item).getSubItem("vine") : null;
+	
+	public static void addVineBlock(World world, BlockPos pos, EnumFacing facing)
+	{
+		assert facing.getHorizontalIndex() >= 0;
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() == EnumBlock.vine.block && !state.getValue(Misc.PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()]))
+		{
+			world.setBlockState(pos, state.withProperty(Misc.PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], true), V.generateState ? 2 : 3);
+		}
+		else if (state.getBlock().isAir(state, world, pos))
+		{
+			world.setBlockState(pos, EnumBlock.vine.apply().withProperty(Misc.PROPS_SIDE_HORIZONTALS[facing.getHorizontalIndex()], true), V.generateState ? 2 : 3);
+		}
+	}
 	
 	private Mat material;
 	private @Nullable Block baseBlock;
@@ -223,7 +239,7 @@ public class BlockPlantVine extends BlockBase
 	{
 		if (!worldIn.isRemote)
 		{
-			if (worldIn.rand.nextBoolean())
+			if (random.nextInt(4) == 0)
 			{
 				int j = 20;
 				label:

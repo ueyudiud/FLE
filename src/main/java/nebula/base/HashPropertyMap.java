@@ -1,11 +1,11 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 public
@@ -36,6 +36,12 @@ class HashPropertyMap implements IPropertyMap
 	public <V> V get(IProperty<V> property)
 	{
 		return (V) this.map.get(property);
+	}
+	
+	@Override
+	public <V> Optional<? extends V> getOptional(IProperty<V> property)
+	{
+		return (Optional<? extends V>) Optional.ofNullable(this.map.get(property));
 	}
 	
 	@Override

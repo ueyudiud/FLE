@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fle.core.tree;
 
 import java.util.Random;
@@ -23,6 +26,7 @@ public class TreeGenClassic extends TreeGenAbstract
 		super(tree, generateCoreLeavesChance);
 	}
 	
+	@Override
 	public void setHeight(int minHeight, int randHeight)
 	{
 		this.minHeight = minHeight;
@@ -55,9 +59,8 @@ public class TreeGenClassic extends TreeGenAbstract
 			for (k1 = y - b0 + l; k1 <= y + l; ++k1)
 			{
 				i3 = k1 - (y + l);
-				l1 = b1 + 1 - i3 / 2;
 				
-				for (i2 = x - l1; i2 <= x + l1; ++i2)
+				for (i2 = x - (l1 = b1 + 1 - i3 / 2); i2 <= x + l1; ++i2)
 				{
 					j2 = i2 - x;
 					
@@ -74,13 +77,16 @@ public class TreeGenClassic extends TreeGenAbstract
 			}
 			
 			for (k1 = 0; k1 < l; ++k1)
+			{
 				if (isLogReplaceable(world, x, y + k1, z))
 				{
 					generateLog(world, x, y + k1, z, 1);
 				}
+			}
 			
 			return true;
-		} else
+		}
+		else
 			return false;
 	}
 }

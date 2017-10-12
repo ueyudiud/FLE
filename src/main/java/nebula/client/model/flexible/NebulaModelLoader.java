@@ -403,6 +403,8 @@ public enum NebulaModelLoader implements ICustomModelLoader
 				((FlexibleModel) model).loadResources();
 			}
 		}
+		
+		this.models = null;
 		this.parts = null;
 	}
 	
@@ -609,18 +611,10 @@ public enum NebulaModelLoader implements ICustomModelLoader
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
-		IModel model;
-		if (modelLocation instanceof ModelResourceLocation)
+		IModel model = this.models.get(modelLocation);
+		if (model == null && modelLocation instanceof ModelResourceLocation)
 		{
-			model = this.models.remove(modelLocation);
-			if (model == null)
-			{
-				model = this.models.get(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath()));
-			}
-		}
-		else
-		{
-			model = this.models.get(modelLocation);
+			model = this.models.get(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath()));
 		}
 		if (this.models.isEmpty())
 			this.models = null;//Clean cache.

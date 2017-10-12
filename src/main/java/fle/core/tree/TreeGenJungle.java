@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fle.core.tree;
 
 import java.util.Random;
@@ -5,14 +8,23 @@ import java.util.Random;
 import farcore.lib.tree.ITree;
 import farcore.lib.tree.TreeInfo;
 import nebula.common.util.L;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class TreeGenJungle extends TreeGenHuge
 {
+	private boolean vineGen = false;
+	
 	public TreeGenJungle(ITree tree, float generateCoreLeavesChance)
 	{
 		super(tree, generateCoreLeavesChance);
+	}
+	
+	public TreeGenJungle enableVineGen()
+	{
+		this.vineGen = true;
+		return this;
 	}
 	
 	@Override
@@ -56,70 +68,71 @@ public class TreeGenJungle extends TreeGenHuge
 				{
 					generateLog(world, x, y + l2, z, 1);
 				}
-				//                    if (l2 > 0)
-				//                    {
-				//                        if (random.nextInt(3) > 0 && world.isAirBlock(x - 1, y + l2, z))
-				//                        {
-				//                            this.setBlockAndNotifyAdequately(world, x - 1, y + l2, z, Blocks.vine, 8);
-				//                        }
-				//
-				//                        if (random.nextInt(3) > 0 && world.isAirBlock(x, y + l2, z - 1))
-				//                        {
-				//                            this.setBlockAndNotifyAdequately(world, x, y + l2, z - 1, Blocks.vine, 1);
-				//                        }
-				//                    }
+				
+				if (l2 > 0 && this.vineGen)
+				{
+					if (random.nextInt(3) > 0 && isAirOrVine(world, x - 1, y + l2, z))
+					{
+						generateVine(world, x - 1, y + l2, z, EnumFacing.EAST);
+					}
+					
+					if (random.nextInt(3) > 0 && isAirOrVine(world, x, y + l2, z - 1))
+					{
+						generateVine(world, x, y + l2, z - 1, EnumFacing.SOUTH);
+					}
+				}
 				
 				if (l2 < l - 1)
 				{
 					if (isLogReplaceable(world, x + 1, y + l2, z))
 					{
 						generateLog(world, x + 1, y + l2, z, 1);
-						//                        if (l2 > 0)
-						//                        {
-						//                            if (random.nextInt(3) > 0 && world.isAirBlock(x + 2, y + l2, z))
-						//                            {
-						//                                this.setBlockAndNotifyAdequately(world, x + 2, y + l2, z, Blocks.vine, 2);
-						//                            }
-						//
-						//                            if (random.nextInt(3) > 0 && world.isAirBlock(x + 1, y + l2, z - 1))
-						//                            {
-						//                                this.setBlockAndNotifyAdequately(world, x + 1, y + l2, z - 1, Blocks.vine, 1);
-						//                            }
-						//                        }
+						if (l2 > 0 && this.vineGen)
+						{
+							if (random.nextInt(3) > 0 && isAirOrVine(world, x + 2, y + l2, z))
+							{
+								generateVine(world, x + 2, y + l2, z, EnumFacing.WEST);
+							}
+							
+							if (random.nextInt(3) > 0 && isAirOrVine(world, x + 1, y + l2, z - 1))
+							{
+								generateVine(world, x + 1, y + l2, z - 1, EnumFacing.SOUTH);
+							}
+						}
 					}
 					
 					if (isLogReplaceable(world, x + 1, y + l2, z + 1))
 					{
 						generateLog(world, x + 1, y + l2, z + 1, 1);
-						//                        if (l2 > 0)
-						//                        {
-						//                            if (random.nextInt(3) > 0 && world.isAirBlock(x + 2, y + l2, z + 1))
-						//                            {
-						//                                this.setBlockAndNotifyAdequately(world, x + 2, y + l2, z + 1, Blocks.vine, 2);
-						//                            }
-						//
-						//                            if (random.nextInt(3) > 0 && world.isAirBlock(x + 1, y + l2, z + 2))
-						//                            {
-						//                                this.setBlockAndNotifyAdequately(world, x + 1, y + l2, z + 2, Blocks.vine, 4);
-						//                            }
-						//                        }
+						if (l2 > 0 && this.vineGen)
+						{
+							if (random.nextInt(3) > 0 && isAirOrVine(world, x + 2, y + l2, z + 1))
+							{
+								generateVine(world, x + 2, y + l2, z + 1, EnumFacing.WEST);
+							}
+							
+							if (random.nextInt(3) > 0 && isAirOrVine(world, x + 1, y + l2, z + 2))
+							{
+								generateVine(world, x + 1, y + l2, z + 2, EnumFacing.NORTH);
+							}
+						}
 					}
 					
 					if (isLogReplaceable(world, x, y + l2, z + 1))
 					{
 						generateLog(world, x, y + l2, z + 1, 1);
-						//                        if (l2 > 0)
-						//                        {
-						//                            if (random.nextInt(3) > 0 && p_76484_1_.isAirBlock(x - 1, y + l2, z + 1))
-						//                            {
-						//                                this.setBlockAndNotifyAdequately(p_76484_1_, x - 1, y + l2, z + 1, Blocks.vine, 8);
-						//                            }
-						//
-						//                            if (random.nextInt(3) > 0 && p_76484_1_.isAirBlock(p_76484_3_, y + l2, z + 2))
-						//                            {
-						//                                this.setBlockAndNotifyAdequately(p_76484_1_, p_76484_3_, y + l2, z + 2, Blocks.vine, 4);
-						//                            }
-						//                        }
+						if (l2 > 0 && this.vineGen)
+						{
+							if (random.nextInt(3) > 0 && isAirOrVine(world, x - 1, y + l2, z + 1))
+							{
+								generateVine(world, x - 1, y + l2, z + 1, EnumFacing.EAST);
+							}
+							
+							if (random.nextInt(3) > 0 && isAirOrVine(world, x, y + l2, z + 2))
+							{
+								generateVine(world, x, y + l2, z + 2, EnumFacing.NORTH);
+							}
+						}
 					}
 				}
 			}

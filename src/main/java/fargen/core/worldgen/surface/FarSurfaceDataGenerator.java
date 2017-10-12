@@ -18,6 +18,7 @@ import farcore.lib.crop.ICrop;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITreeGenerator;
 import farcore.lib.tree.TreeGenAbstract;
+import fargen.api.util.SelectorEntryListProvider;
 import fargen.core.biome.BiomeBase;
 import fargen.core.util.DataCacheCoord;
 import fle.core.tree.TreeGenAcacia;
@@ -25,6 +26,7 @@ import fle.core.tree.TreeGenClassic;
 import fle.core.tree.TreeGenJungle;
 import fle.core.tree.TreeGenPine;
 import fle.core.tree.TreeGenShrub;
+import fle.core.tree.TreeGenSimple;
 import nebula.base.IRegister;
 import nebula.base.Register;
 import nebula.base.function.WeightedRandomSelector;
@@ -41,132 +43,32 @@ import net.minecraft.world.World;
 public class FarSurfaceDataGenerator
 {
 	static final TreeGenAbstract
-	CEIBA1 = new TreeGenJungle(M.ceiba.getProperty(MP.property_tree), 0.01F),
+	CEIBA1 = new TreeGenJungle(M.ceiba.getProperty(MP.property_tree), 0.01F).enableVineGen(),
 	OAK1 = new TreeGenClassic(M.oak.getProperty(MP.property_tree), 0.03F),
 	OAK2 = new TreeGenShrub(M.oak.getProperty(MP.property_tree), 0.025F),
 	BIRCH = new TreeGenClassic(M.birch.getProperty(MP.property_tree), 0.03F),
 	ACACIA = new TreeGenAcacia(M.acacia.getProperty(MP.property_tree), 0.03F),
-	SPRUCE1 = new TreeGenPine(M.spruce.getProperty(MP.property_tree), 0.03F);
+	SPRUCE1 = new TreeGenPine(M.spruce.getProperty(MP.property_tree), 0.03F),
+	WILLOW = new TreeGenSimple(M.willow.getProperty(MP.property_tree), 0.08F, true).setTreeLeavesShape(1, 6, 2, 3.6F);
+	
+	static final SelectorEntryListProvider<ITreeGenerator> TREE_GEN_PROVIDER;
 	
 	static void addVanillaTrees(BiomeBase biome, World world, int x, int z, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ITreeGenerator> selector)
 	{
-		double d1, d2;
-		int value;
-		if (temp > 0.7F && rain > 0.7F)
-		{
-			d2 = noise.noise(x, 38274.0, z);
-			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
-			d1 *= rain > 0.8F ? 1.0F : (rain - 0.7F) * 10.0F;
-			value = (int) (d1 * d2 * d2 * 128);
-			if (value > 0)
-				selector.add(CEIBA1, value);
-		}
-		if (temp > 0.4F && rain > 0.4F && rain < 0.95F)
-		{
-			d2 = noise.noise(x, 17274.0, z);
-			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.5F ? 1.0F : (temp - 0.4F) * 10.0F;
-			d1 *= rain > 0.9F ? (1.0F - rain) * 20.0F : rain > 0.5F ? 1.0F : (rain - 0.5F) * 10.0F;
-			value = (int) (d1 * d2 * d2 * 256);
-			if (value > 0)
-				selector.add(OAK1, value);
-		}
-		if (temp > 0.5F && rain < 0.45F * temp)
-		{
-			d2 = noise.noise(x, 15628.0, z);
-			d1 = temp > 0.6F ? 1.0F : (temp - 0.5F) * 10.0F;
-			d1 *= rain > 0.35F * temp ? (rain - 0.35F * temp) * 10.0F / temp : 1.0F;
-			value = (int) (d1 * d2 * d2 * 96);
-			if (value > 0)
-				selector.add(OAK2, value);
-		}
-		if (temp > 0.7F && rain > 0.05F && rain < 0.45F)
-		{
-			d2 = noise.noise(x, 23841.0, z);
-			d1 = temp > 0.8F ? 1.0F : (temp - 0.7F) * 10.0F;
-			d1 *= rain < 0.15F ? (rain - 0.05F) * 10.0F : rain > 0.35F ? (0.45F - rain) * 10.0F : 1.0F;
-			value = (int) (d1 * d2 * d2 * 384);
-			if (value > 0)
-				selector.add(ACACIA, value);
-		}
-		if (temp < 0.9F && temp > 0.3F && rain > 0.4F && rain < 0.8F)
-		{
-			d2 = noise.noise(x, 47247.0, z);
-			d1 = temp > 0.9F ? (1.0F - temp) * 10.0F : temp > 0.4F ? 1.0F : (temp - 0.3F) * 10.0F;
-			d1 *= rain > 0.7F ? (1.0F - rain) * 10.0F : rain > 0.5F ? 1.0F : (rain - 0.4F) * 10.0F;
-			value = (int) (d1 * d2 * d2 * 192);
-			if (value > 0)
-				selector.add(BIRCH, value);
-		}
-		if (temp < 0.3F && temp > -0.4F && rain > 0.5F)
-		{
-			d2 = noise.noise(x, 47247.0, z);
-			d1 = temp > 0.2F ? (0.3F - temp) * 10.0F : temp > -0.3F ? 1.0F : (temp + 0.3F) * 10.0F;
-			d1 *= rain > 0.7F ? 1.0F : (rain - 0.5F) * 5.0F;
-			value = (int) (d1 * d2 * d2 * 64);
-			if (value > 0)
-				selector.add(SPRUCE1, value);
-		}
+		TREE_GEN_PROVIDER.addToSelector(x, z, temp, rain, noise, selector);
 	}
 	
 	static final ICrop
-	WHEAT = Mat.material("wheat").getProperty(MP.property_crop),
-	SOYBEAN = Mat.material("soybean").getProperty(MP.property_crop),
-	POTATO = Mat.material("potato").getProperty(MP.property_crop),
-	SWEET_POTATO = Mat.material("sweetpotato").getProperty(MP.property_crop),
-	REED = Mat.material("reed").getProperty(MP.property_crop),
-	WILD_CABBAGE = Mat.material("wild_cabbage").getProperty(MP.property_crop);
+	WHEAT = Mat.propertyOf("wheat", MP.property_crop);
+	
+	static final SelectorEntryListProvider<ICrop> CROP_PROVIDER;
 	
 	static void addVanillaCrops(int x, int z, Random rand, NoiseBase noise, float temp, float rain, WeightedRandomSelector<ICrop> selector)
 	{
 		if (WHEAT != ICrop.VOID && rand.nextInt(31) == 0)
 		{
-			int weight;
-			weight = c(16, x, z, 29371.0, noise, temp, 30.0F, 8.0F, rain, 1.4F, 1.2F);
-			if (weight > 0)
-			{
-				selector.add(WHEAT, weight);
-			}
-			weight = c(24, x, z, 26382.0, noise, temp, 25.0F, 12.0F, rain, 0.9F, 1.5F);
-			if (weight > 0)
-			{
-				selector.add(SOYBEAN, weight);
-			}
-			weight = c(16, x, z, 183723.0, noise, temp, 22.0F, 18.0F, rain, 0.7F, 1.4F);
-			if (weight > 0)
-			{
-				selector.add(POTATO, weight);
-			}
-			weight = c(16, x, z, 174837.0, noise, temp, 24.0F, 14.0F, rain, 0.7F, 1.4F);
-			if (weight > 0)
-			{
-				selector.add(SWEET_POTATO, weight);
-			}
-			if (rain > 0.7F && temp > 0.64F)
-			{
-				weight = c(64, x, z, 164834.0, noise, temp, 32.0F, 6.0F, rain, 1.0F, 0.9F);
-				if (weight > 0)
-				{
-					selector.add(REED, weight);
-				}
-			}
-			weight = c(12, x, z, 164837.0, noise, temp, 32.0F, 8.0F, rain, 0.6F, 0.9F);
-			if (weight > 0)
-			{
-				selector.add(WILD_CABBAGE, weight);
-			}
+			CROP_PROVIDER.addToSelector(x, z, temp, rain, noise, selector);
 		}
-	}
-	
-	private static int c(int baseMultiplier, int x, int z, final double yNoise, NoiseBase noise,
-			float temp, final float tempArange, final float tempSigma,
-			float rain, final float rainArange, final float rainSigma)
-	{
-		double result = baseMultiplier * noise.noise(x, yNoise, z);
-		temp -= tempArange;
-		result *= tempSigma / (tempSigma + temp * temp);
-		rain -= rainArange;
-		result *= rainSigma / (rainSigma + rain * rain);
-		return (int) result;
 	}
 	
 	private static IBlockState[] getRockLayer(int id)
@@ -307,5 +209,27 @@ public class FarSurfaceDataGenerator
 		ACACIA.setHeight(5, 7);
 		BIRCH.setHeight(4, 3);
 		SPRUCE1.setHeight(7, 5);
+		WILLOW.setHeight(4, 4);
+		
+		SelectorEntryListProvider.Builder
+		
+		builder = SelectorEntryListProvider.builder();
+		builder.add2(WHEAT, 29371, 16, 30.0F, 8.0F, 1.4F, 1.2F);
+		builder.add2(Mat.propertyOf("soybean", MP.property_crop), 26382, 24, 25.0F, 12.0F, 0.9F, 1.5F);
+		builder.add2(Mat.propertyOf("potato", MP.property_crop), 183723, 16, 22.0F, 18.0F, 0.7F, 1.4F);
+		builder.add2(Mat.propertyOf("sweetpotato", MP.property_crop), 174837, 16, 24.0F, 14.0F, 0.7F, 1.4F);
+		builder.add2(Mat.propertyOf("reed", MP.property_crop), 164834, 64, 32.0F, 6.0F, 1.0F, 0.9F);
+		builder.add2(Mat.propertyOf("wild_cabbage", MP.property_crop), 47374, 12, 32.0F, 8.0F, 0.6F, 0.9F);
+		CROP_PROVIDER = builder.build();
+		
+		builder = SelectorEntryListProvider.builder();
+		builder.add1(CEIBA1, 38274, 128, 32.0F, 39.0F, 0.7F, 1.2F);
+		builder.add1(OAK1, 17274, 256, 18.0F, 32.0F, 0.4F, 0.95F);
+		builder.add1(OAK2, 15628, 96, 27.0F, 36.0F, 0.3F, 0.5F);
+		builder.add1(ACACIA, 23841, 384, 26.0F, 35.0F, 0.05F, 0.45F);
+		builder.add1(BIRCH, 47247, 192, 12.0F, 29.0F, 0.4F, 0.8F);
+		builder.add1(SPRUCE1, 56628, 64, -3.0F, 19.0F, 0.5F, 1.2F);
+		builder.add1(WILLOW, 31537, 128, 20.0F, 40.0F, 0.025F, 0.6F);
+		TREE_GEN_PROVIDER = builder.build();
 	}
 }

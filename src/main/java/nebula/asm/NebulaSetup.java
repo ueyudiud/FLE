@@ -108,10 +108,8 @@ import net.minecraftforge.fml.relauncher.IFMLCallHook;
  */
 public class NebulaSetup implements IFMLCallHook
 {
-	/**
-	 * The ASM file version, uses to determine if it need replaced ASM files.
-	 */
-	private static final int VERSION = 10;
+	/** The ASM file version, uses to determine if it need replaced ASM files. */
+	private static final int VERSION = 11;
 	
 	final JsonDeserializer<OpInformation> DESERIALIZER1 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
@@ -459,16 +457,15 @@ public class NebulaSetup implements IFMLCallHook
 				if (version != VERSION)
 				{
 					stream1.close();
-					OutputStream stream2 = new BufferedOutputStream(new FileOutputStream(file));
-					stream2.write(VERSION);
-					stream2.close();
-					return true;
+					NebulaASMLogHelper.LOG.warn("The Nebula ASM version and your config ASM version are not same, "
+							+ "there may cause some bug, it is suggested that you should clean your ./asm file if "
+							+ "you don't known what is happening and your game got crashed.");
 				}
 				else
 				{
 					stream1.close();
-					return false;
 				}
+				return false;
 			}
 			catch (Exception exception)
 			{
