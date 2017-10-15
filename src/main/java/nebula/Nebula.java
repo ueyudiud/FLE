@@ -75,6 +75,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -322,7 +323,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 			NBTTagCompound compound2 = list.getCompoundTagAt(l);
 			int i1 = compound2.getByte("Y");
 			ExtendedBlockStorage storage = new ExtendedBlockStorage(i1 << 4, flag);
-			if(flag1)
+			if (flag1)
 			{
 				int[] stores = compound2.getIntArray("BlockStates");
 				((BlockStateContainerExt) storage.getData()).setDataFromNBT(stores);
@@ -413,7 +414,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 					}
 					catch (Exception e)
 					{
-						net.minecraftforge.fml.common.FMLLog.log(org.apache.logging.log4j.Level.ERROR, e,
+						FMLLog.log(org.apache.logging.log4j.Level.ERROR, e,
 								"An Entity type %s has thrown an exception trying to write state. It will not persist. Report this to the mod author",
 								entity.getClass().getName());
 					}

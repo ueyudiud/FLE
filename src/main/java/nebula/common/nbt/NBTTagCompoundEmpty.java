@@ -1,9 +1,11 @@
 package nebula.common.nbt;
 
 import java.util.Set;
+import java.util.UUID;
 
 import com.google.common.collect.ImmutableSet;
 
+import nebula.common.data.Misc;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -35,9 +37,9 @@ public class NBTTagCompoundEmpty extends NBTTagCompound
 	@Override
 	public double getDouble(String tag){return 0D;}
 	@Override
-	public byte[] getByteArray(String tag){return new byte[0];}
+	public byte[] getByteArray(String tag){return Misc.BYTES_EMPTY;}
 	@Override
-	public int[] getIntArray(String tag){return new int[0];}
+	public int[] getIntArray(String tag){return Misc.INTS_EMPTY;}
 	@Override
 	public String getString(String tag){return "";}
 	@Override
@@ -80,6 +82,27 @@ public class NBTTagCompoundEmpty extends NBTTagCompound
 	public void removeTag(String key) {}
 	@Override
 	public int hashCode() { return hashcode; }
+	
+	@Override
+	public void merge(NBTTagCompound other)
+	{
+		throw new UnsupportedOperationException("This is only a immutable NBTTagCompound, you can't take any operation on it!");
+	}
+	
+	@Override
+	public int getSize()
+	{
+		return 0;
+	}
+	
+	@Override
+	public boolean hasUniqueId(String key) { return false; }
+	
+	@Override
+	public UUID getUniqueId(String key) { return new UUID(0L, 0L); }
+	
+	@Override
+	public byte getTagId(String key) { return 0; }
 	
 	@Override
 	public boolean equals(Object object)

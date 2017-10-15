@@ -1,10 +1,11 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.block.terria;
 
 import java.util.List;
+
+import com.google.common.collect.ImmutableMap;
 
 import farcore.FarCore;
 import farcore.data.EnumBlock;
@@ -13,17 +14,20 @@ import farcore.data.EnumRockType;
 import farcore.data.M;
 import farcore.data.Materials;
 import farcore.data.SubTags;
+import farcore.instances.MaterialTextureLoader;
 import farcore.lib.block.instance.ItemOre;
 import farcore.lib.material.Mat;
-import farcore.lib.model.block.ModelOre;
 import farcore.lib.tile.instance.TEOre;
 import nebula.client.blockstate.BlockStateWrapper;
-import nebula.client.util.Renders;
+import nebula.client.model.flexible.NebulaModelDeserializer;
+import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
 import nebula.common.block.BlockSingleTE;
 import nebula.common.tool.EnumToolType;
+import nebula.common.util.ItemStacks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -31,11 +35,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -94,15 +98,46 @@ public class BlockOre extends BlockSingleTE
 	public void registerRender()
 	{
 		super.registerRender();
-		ModelLoaderRegistry.registerLoader(ModelOre.INSTANCE);
-		ModelLoader.setCustomStateMapper(this, ModelOre.INSTANCE);
-		Renders.registerCustomItemModelSelector(this, ModelOre.INSTANCE);
+		ResourceLocation location = getRegistryName();
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/ore"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).ore.name : null);
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rock"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).rock.name : null);
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rocktype"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).type.getName() : null);
+		NebulaModelLoader.registerBlockMetaGenerator(new ResourceLocation(FarCore.ID, "ore/amount"), state->state instanceof OreStateWrapper ? ((OreStateWrapper) state).amount.name() : null);
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/ore"), stack->ItemOre.getOre(stack).name);
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rock"), stack->ItemOre.getRockMaterial(ItemStacks.getOrSetupNBT(stack, false)).name);
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/rocktype"), stack->ItemOre.getRockType(ItemStacks.getOrSetupNBT(stack, false)).getName());
+		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FarCore.ID, "ore/amount"), stack->ItemOre.getAmount(ItemStacks.getOrSetupNBT(stack, false)).name());
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "ore/ore"), ()-> {
+			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
+			for (Mat material : Mat.filt(SubTags.ORE))
+			{
+				for (EnumOreAmount amount : EnumOreAmount.values())
+				{
+					builder.put(material.name + "_" + amount.name(), new ResourceLocation(material.modid, "blocks/ore/" + amount.name() + "/" + material.name));
+				}
+			}
+			return builder.build();
+		});
+		NebulaModelLoader.registerTextureSet(new ResourceLocation(FarCore.ID, "ore/rock"), ()-> {
+			ImmutableMap.Builder<String, ResourceLocation> builder = ImmutableMap.builder();
+			for (Mat material : Mat.filt(SubTags.ROCK))
+			{
+				for (EnumRockType type : EnumRockType.values())
+				{
+					builder.put(material.name + "_" + type.name(), MaterialTextureLoader.getResource(material, type.condition, type.variant));
+				}
+			}
+			return builder.build();
+		});
+		ModelResourceLocation location2 = new ModelResourceLocation(location, "inventory");
+		ModelLoader.setCustomMeshDefinition(this.item, stack-> location2);
+		NebulaModelLoader.registerModel(location, new ResourceLocation(FarCore.ID, "models/block1/ore.json"), NebulaModelDeserializer.BLOCK);
 	}
 	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
-		if(FarCore.worldGenerationFlag && ORE_ELEMENT_THREAD.get() != null)
+		if (FarCore.worldGenerationFlag && ORE_ELEMENT_THREAD.get() != null)
 		{
 			Object[] elements = ORE_ELEMENT_THREAD.get();
 			worldIn.setTileEntity(pos, new TEOre((Mat) elements[0], (EnumOreAmount) elements[1], (Mat) elements[2], (EnumRockType) elements[3]));
@@ -164,7 +199,7 @@ public class BlockOre extends BlockSingleTE
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TEOre)
+		if (tile instanceof TEOre)
 			return new OreStateWrapper(state, (TEOre) tile);
 		return state;
 	}

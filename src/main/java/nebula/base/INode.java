@@ -166,33 +166,49 @@ public interface INode<T> extends Iterable<T>
 	}
 	
 	/**
+	 * Take <tt>cut</tt> action.<p>
+	 * Split the node chain to two chain, which one is started from next node at the position
+	 * called <tt>cutNext</tt> method.
+	 * @return the second node chain which contain the <tt>next</tt> node before, it will start
+	 *         with <tt>next</tt> node first.
+	 */
+	INode<T> cutNext();
+	
+	/**
+	 * Take <tt>cut</tt> action.<p>
+	 * Split the node chain to two chain, which one is ended from last node at the position
+	 * called <tt>cutLast</tt> method.
+	 * @return the second node chain which contain the <tt>last</tt> node before, it will at the
+	 *         ending with <tt>last</tt> node.
+	 */
+	INode<T> cutLast();
+	
+	/**
 	 * Return first matched element by {@link java.util.function.Predicate#test(Object)}
 	 * in this node chain.
 	 * @param p the matching function.
 	 * @return the matched target.
 	 */
-	default T find(Predicate<T> p)
+	default INode<T> find(Predicate<T> p)
 	{
-		T result;
-		return p.test(value()) ? value() :
+		INode<T> result;
+		return p.test(value()) ? this :
 			(result = findBefore(p)) != null ? result :
 				findAfter(p);
 	}
 	
-	default T findAfter(Predicate<T> judgable)
+	default INode<T> findAfter(Predicate<T> judgable)
 	{
 		if (!hasNext()) return null;
 		INode<T> node = next();
-		T result;
-		return judgable.test(result = node.value()) ? result : node.findAfter(judgable);
+		return judgable.test(node.value()) ? node : node.findAfter(judgable);
 	}
 	
-	default T findBefore(Predicate<T> judgable)
+	default INode<T> findBefore(Predicate<T> judgable)
 	{
 		if (!hasLast()) return null;
 		INode<T> node = last();
-		T result;
-		return judgable.test(result = node.value()) ? result : node.findBefore(judgable);
+		return judgable.test(node.value()) ? node : node.findBefore(judgable);
 	}
 	
 	/**

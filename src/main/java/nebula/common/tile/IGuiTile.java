@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.tile;
 
 import net.minecraft.client.gui.inventory.GuiContainer;

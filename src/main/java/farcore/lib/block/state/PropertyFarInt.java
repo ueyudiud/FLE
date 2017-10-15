@@ -6,6 +6,7 @@ package farcore.lib.block.state;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 import nebula.base.range.RangeInt;
@@ -76,5 +77,26 @@ public class PropertyFarInt implements IFarProperty<Integer>
 	public Integer instance()
 	{
 		return this.instance;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return Objects.toStringHelper(this).add("name", this.name).add("clazz", int.class).add("values", getAllowedValues()).toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		return this == obj || ((obj instanceof PropertyFarInt) &&
+				((PropertyFarInt) obj).name == this.name &&
+				((PropertyFarInt) obj).max == this.max &&
+				((PropertyFarInt) obj).min == this.min);
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return 31 * int.class.hashCode() + this.name.hashCode();
 	}
 }

@@ -1,10 +1,10 @@
 package nebula.common.gui;
 
 import nebula.client.gui.GuiContainerBase;
-import nebula.common.fluid.FluidTankN;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -13,9 +13,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  *
  */
-public class FluidSlot
+public abstract class FluidSlot<T extends IFluidTank>
 {
-	public FluidTankN tank;
+	public T tank;
 	protected boolean shouldRender = true;
 	public int x;
 	public int y;
@@ -24,7 +24,7 @@ public class FluidSlot
 	public int slotNumber;
 	public boolean renderHorizontal;
 	
-	public FluidSlot(FluidTankN tank, int x, int y, int u, int v)
+	public FluidSlot(T tank, int x, int y, int u, int v)
 	{
 		this.tank = tank;
 		this.x = x;
@@ -67,10 +67,7 @@ public class FluidSlot
 	 * Set stack to slot.
 	 * @param stack
 	 */
-	public void putStack(FluidStack stack)
-	{
-		this.tank.setFluid(stack);
-	}
+	public abstract void putStack(FluidStack stack);
 	
 	/**
 	 * Called when player clicked slot.

@@ -39,7 +39,6 @@ class ArrayListArgument<E> extends AbstractList<E>
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public E get(int index)
 	{
 		if (index >= this.array.length || index < 0)

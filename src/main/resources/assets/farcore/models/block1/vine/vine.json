@@ -1,5 +1,5 @@
 {
-	"smooth_lighting": true,
+	"smooth_lighting": false,
 	"textures": {
 		"all": "farcore:blocks/plants/vine_common",
 		"particle": "#all"

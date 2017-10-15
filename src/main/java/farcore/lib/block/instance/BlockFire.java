@@ -32,7 +32,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -54,7 +53,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockFire extends BlockBase implements IExtendedDataBlock
 {
-	public static final PropertyInteger STATE = Properties.create("state", 0, 15);
+	public static final IProperty<Integer> STATE = Properties.create("state", 0, 15);
 	public static final PropertyBool NORTH = Misc.PROP_NORTH;
 	public static final PropertyBool EAST = Misc.PROP_EAST;
 	public static final PropertyBool SOUTH = Misc.PROP_SOUTH;

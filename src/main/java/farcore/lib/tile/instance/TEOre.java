@@ -111,7 +111,7 @@ ITP_Drops, IToolableTile
 	
 	public Mat getOre()
 	{
-		if(this.world.isRemote && !this.initialized)
+		if (this.world.isRemote && !this.initialized)
 		{
 			sendToServer(new PacketTEAsk(this.world, this.pos));
 		}

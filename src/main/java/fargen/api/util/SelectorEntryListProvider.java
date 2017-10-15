@@ -54,7 +54,7 @@ public class SelectorEntryListProvider<T>
 		
 		public void add1(T value, int layer, int base, float minT, float maxT, float minR, float maxR)
 		{
-			float m1 = 1.0F / (MathHelper.sqrt(base) - 1);
+			float m1 = 0.25F / (MathHelper.sqrt(base) - 1);
 			add2(value, layer, base, (minT + maxT) / 2.0F, Maths.sq(maxT - minT) * m1, (minR + maxR) / 2.0F, Maths.sq(maxR - minR) * m1);
 		}
 		

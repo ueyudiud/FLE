@@ -23,7 +23,7 @@ import nebula.common.util.Properties;
 import nebula.common.util.Worlds;
 import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -43,8 +43,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PlantDandelion implements IPlant<BlockPlant>, IRenderRegister
 {
-	public static final PropertyInteger AGE = Properties.create("age", 0, 3);
-	public static final PropertyInteger PROGRESS = Properties.create("progress", 0, 7);
+	public static final IProperty<Integer> AGE = Properties.create("age", 0, 3);
+	public static final IProperty<Integer> PROGRESS = Properties.create("progress", 0, 7);
 	
 	private Block block;
 	

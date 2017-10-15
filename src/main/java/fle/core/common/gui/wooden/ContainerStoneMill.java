@@ -6,7 +6,7 @@ package fle.core.common.gui.wooden;
 import fle.api.recipes.instance.RecipeMaps;
 import fle.core.tile.wooden.TEStoneMill;
 import nebula.common.gui.ContainerTileInventory;
-import nebula.common.gui.FluidSlot;
+import nebula.common.gui.FluidSlotN;
 import nebula.common.gui.SlotBase;
 import nebula.common.gui.SlotOutput;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +24,7 @@ public class ContainerStoneMill extends ContainerTileInventory<TEStoneMill>
 		addSlotToContainer(new SlotBase(tile, 0, 65, 20));
 		addSlotToContainer(new SlotBase(tile, 1, 55, 52));
 		addSlotToContainer(new SlotOutput(tile, 2, 91, 52));
-		addSlotToContainer(new FluidSlot(tile.tank2, 117, 48, 8, 20).setRenderHorizontal());
+		addSlotToContainer(new FluidSlotN(tile.tank2, 117, 48, 8, 20).setRenderHorizontal());
 		TL
 		input = new TL(id)
 		{

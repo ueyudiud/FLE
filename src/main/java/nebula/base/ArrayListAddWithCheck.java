@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base;
 
 import static nebula.base.Judgable.NOT_NULL;
@@ -16,7 +15,8 @@ import javax.annotation.Nullable;
 /**
  * @author ueyudiud
  */
-public class ArrayListAddWithCheck<E> extends ArrayList<E>
+public
+class ArrayListAddWithCheck<E> extends ArrayList<E>
 {
 	private static final long serialVersionUID = -5656965564696895076L;
 	

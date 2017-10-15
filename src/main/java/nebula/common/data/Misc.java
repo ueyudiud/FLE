@@ -9,9 +9,9 @@ import java.util.function.Function;
 import nebula.base.function.Applicable;
 import nebula.common.util.Direction;
 import nebula.common.util.Properties;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -47,7 +47,7 @@ public class Misc
 	public static final PropertyEnum<EnumFacing> PROP_FACING_HORIZONTALS = PropertyEnum.create("facing", EnumFacing.class, EnumFacing.HORIZONTALS);
 	public static final PropertyEnum<Direction> PROP_DIRECTION_ALL = PropertyEnum.create("direction", Direction.class, Direction.DIRECTIONS_3D);
 	public static final PropertyEnum<Direction> PROP_DIRECTION_HORIZONTALS = PropertyEnum.create("direction", Direction.class, Direction.DIRECTIONS_2D);
-	public static final PropertyInteger PROP_CUSTOM_DATA = Properties.create("data", 0, 16);
+	public static final IProperty<Integer> PROP_CUSTOM_DATA = Properties.create("data", 0, 16);
 	
 	public static final IAttribute PROJECTILE_DAMAGE = (new RangedAttribute((IAttribute) null, "nebula.projectile.damage", 0.0D, 0, Double.MAX_VALUE)).setShouldWatch(true);
 	

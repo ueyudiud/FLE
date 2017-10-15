@@ -49,12 +49,12 @@ public interface IPropertyMap
 			{
 				return null;
 			}
-			
 		}
 		
 		static <V> IProperty<V> to(Class<? extends V> constructor)
 		{
-			return ()-> {
+			return ()->
+			{
 				try
 				{
 					return constructor.newInstance();

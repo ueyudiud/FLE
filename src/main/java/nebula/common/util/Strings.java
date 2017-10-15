@@ -58,7 +58,7 @@ public final class Strings
 	@Nonnull
 	public static String validate(@Nullable String string)
 	{
-		if(string == null) return "";
+		if (string == null) return "";
 		return string.trim();
 	}
 	
@@ -176,11 +176,27 @@ public final class Strings
 	 */
 	public static String[] split(@Nullable String str, char split)
 	{
-		if(str == null) return new String[0];
-		else if(str.indexOf(split) != -1)
+		if (str == null) return new String[0];
+		else if (str.indexOf(split) != -1)
 			return str.split(Character.toString(split));
 		else
-			return new String[]{str};
+			return new String[]{ str };
+	}
+	
+	/**
+	 * Split first character.
+	 * @param str the split string.
+	 * @param split the split character.
+	 * @return
+	 */
+	public static String[] splitFirst(@Nullable String str, char split)
+	{
+		int idx;
+		if (str == null) return new String[0];
+		else if ((idx = str.indexOf(split)) != -1)
+			return new String[]{ str.substring(0, idx), str.substring(idx + 1) };
+		else
+			return new String[]{ str };
 	}
 	
 	/**

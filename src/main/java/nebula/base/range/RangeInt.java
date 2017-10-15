@@ -17,7 +17,8 @@ import nebula.common.util.A;
 /**
  * @author ueyudiud
  */
-public class RangeInt extends AbstractList<Integer>
+public
+class RangeInt extends AbstractList<Integer>
 {
 	private final int min, max;
 	

@@ -79,7 +79,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * make more convenient model
  * file writing rules for resource pack maker.<p>
  * @author ueyudiud
- * @version 0.6
+ * @version 0.7
  */
 @SideOnly(Side.CLIENT)
 public enum NebulaModelLoader implements ICustomModelLoader

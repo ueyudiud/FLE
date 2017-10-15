@@ -33,7 +33,7 @@ import nebula.common.util.Properties;
 import nebula.common.util.Worlds;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -115,7 +115,7 @@ public class BlockSand extends BlockMaterial implements ISmartFallableBlock
 	}
 	
 	public static final int MAX_HEIGHT = 16;
-	public static final PropertyInteger LAYER = Properties.create("layer", 1, MAX_HEIGHT);
+	public static final IProperty<Integer> LAYER = Properties.create("layer", 1, MAX_HEIGHT);
 	
 	public BlockSand(String modid, String name, Mat mat, PropertyBlockable sand)
 	{

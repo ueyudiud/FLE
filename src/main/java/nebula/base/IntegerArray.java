@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base;
 
 import java.util.Arrays;
@@ -13,9 +12,9 @@ import java.util.function.IntConsumer;
  * array to collection.<p>
  * 
  * @author ueyudiud
- *
  */
-public class IntegerArray
+public
+class IntegerArray
 {
 	public final int[] array;
 	

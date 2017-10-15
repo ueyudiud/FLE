@@ -192,6 +192,28 @@ public class Node<T> implements INode<T>
 	}
 	
 	@Override
+	public INode<T> cutNext()
+	{
+		if (this.next == null)
+			return null;
+		this.next.last = null;
+		INode<T> result = this.next;
+		this.next = null;
+		return result;
+	}
+	
+	@Override
+	public INode<T> cutLast()
+	{
+		if (this.last == null)
+			return null;
+		this.last.next = null;
+		INode<T> result = this.last;
+		this.last = null;
+		return result;
+	}
+	
+	@Override
 	public int hashCode()
 	{
 		int hash = Objects.hashCode(this.target);

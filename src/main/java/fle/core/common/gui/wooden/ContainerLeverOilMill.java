@@ -6,7 +6,7 @@ package fle.core.common.gui.wooden;
 import fle.api.recipes.instance.RecipeMaps;
 import fle.core.tile.wooden.TELeverOilMill;
 import nebula.common.gui.ContainerTileInventory;
-import nebula.common.gui.FluidSlot;
+import nebula.common.gui.FluidSlotN;
 import nebula.common.gui.IGuiActionListener;
 import nebula.common.gui.SlotBase;
 import nebula.common.gui.SlotOutput;
@@ -24,7 +24,7 @@ public class ContainerLeverOilMill extends ContainerTileInventory<TELeverOilMill
 		int id = this.inventorySlots.size();
 		addSlotToContainer(new SlotBase(tile, 0, 61, 21));
 		addSlotToContainer(new SlotOutput(tile, 1, 98, 21));
-		addSlotToContainer(new FluidSlot(tile.tank, 60, 56, 20, 8).setRenderHorizontal());
+		addSlotToContainer(new FluidSlotN(tile.tank, 60, 56, 20, 8).setRenderHorizontal());
 		TL
 		input = new TL(id)
 		{

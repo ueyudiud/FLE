@@ -23,7 +23,7 @@ import nebula.common.block.IBlockBehavior;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
 import nebula.common.world.chunk.IBlockStateRegister;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -37,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockMetal extends BlockSubBehavior implements IExtendedDataBlock
 {
-	public static final PropertyInteger CUSTOM_DATA = Misc.PROP_CUSTOM_DATA;
+	public static final IProperty<Integer> CUSTOM_DATA = Misc.PROP_CUSTOM_DATA;
 	public static final PropertyMaterial METALS = PropertyMaterial.create("type", SubTags.METAL);
 	
 	public BlockMetal()

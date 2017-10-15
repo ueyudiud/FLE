@@ -75,6 +75,16 @@ public class ModelPartVerticalCube implements INebulaModelPart, Cloneable
 			if (flag)
 				part.renderFlag = 0;
 		}
+		if (object.has("layer"))//For normal layer offset, expand cube size to make sure the new layer cover will on.
+		{
+			int layer = object.get("layer").getAsInt();
+			part.xyzPos[0] -= 1.6E-3F * layer;
+			part.xyzPos[1] -= 1.6E-3F * layer;
+			part.xyzPos[2] -= 1.6E-3F * layer;
+			part.xyzPos[3] += 1.6E-3F * layer;
+			part.xyzPos[4] += 1.6E-3F * layer;
+			part.xyzPos[5] += 1.6E-3F * layer;
+		}
 		if (flag)
 		{
 			if (object.has("face"))

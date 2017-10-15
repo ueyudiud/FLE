@@ -180,6 +180,25 @@ public final class A
 		}
 	}
 	
+	/**
+	 * Create new <code>char</code> array with same elements.
+	 * @param length the length of array.
+	 * @param value the filled value.
+	 * @return the array.
+	 */
+	public static char[] fillCharArray(int length, char value)
+	{
+		switch (length)
+		{
+		case 0 : return new char[0];
+		case 1 : return new char[]{ value };
+		default:
+			char[] ret = new char[length];
+			for (int i = 0; i < ret.length; ret[i++] = value);
+			return ret;
+		}
+	}
+	
 	public static <E> E[] fill(E[] array, IntFunction<E> function)
 	{
 		for (int i = 0; i < array.length; array[i] = function.apply(i), ++i);

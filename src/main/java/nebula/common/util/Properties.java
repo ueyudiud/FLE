@@ -11,9 +11,10 @@ import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
 
+import farcore.lib.block.state.PropertyFarInt;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.util.IStringSerializable;
 
 /**
@@ -46,9 +47,9 @@ public class Properties
 	 * @return the property.
 	 * @see net.minecraft.block.properties.PropertyInteger
 	 */
-	public static PropertyInteger create(String name, int min, int max)
+	public static IProperty<Integer> create(String name, int min, int max)
 	{
-		return PropertyInteger.create(name, min, max);
+		return new PropertyFarInt(name, min, max);
 	}
 	
 	public static PropertyBool create(String name)

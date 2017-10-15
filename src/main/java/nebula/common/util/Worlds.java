@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.lang.reflect.Method;
@@ -36,6 +35,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
@@ -61,11 +61,12 @@ import net.minecraft.world.chunk.Chunk.EnumCreateEntityType;
 import net.minecraftforge.fluids.BlockFluidBase;
 
 /**
+ * The world method helper.
  * @author ueyudiud
  */
 public final class Worlds
 {
-	private static final int[][] rotateFix = {
+	private static final int[][] ROTATE_FIX = {
 			{3, 2, 5, 4},
 			{1, 0, 5, 4},
 			{1, 0, 3, 2}};
@@ -88,6 +89,12 @@ public final class Worlds
 		return state.isSideSolid(world, pos, side);
 	}
 	
+	/**
+	 * Match block at position is air or is replaceable.
+	 * @param world the world.
+	 * @param pos the position.
+	 * @return return <code>true</code> if block is air or replaceable.
+	 */
 	public static boolean isAirOrReplacable(IBlockAccess world, BlockPos pos)
 	{
 		IBlockState state = world.getBlockState(pos);
@@ -171,9 +178,9 @@ public final class Worlds
 	 */
 	public static void breakBlockWithoutSource(World world, BlockPos pos, boolean harvestBlock)
 	{
-		if(!world.isRemote) //This method have not effect in client world, it will send a packet to client.
+		if (!world.isRemote) //This method have not effect in client world, it will send a packet to client.
 		{
-			if(!world.isAreaLoaded(pos, 64))
+			if (!world.isAreaLoaded(pos, 64))
 			{
 				world.setBlockToAir(pos);
 			}
@@ -183,7 +190,7 @@ public final class Worlds
 			block.breakBlock(world, pos, state);
 			Nebula.network.sendToNearBy(new PacketBreakBlock(world, pos), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 5);
-			if(harvestBlock)
+			if (harvestBlock)
 			{
 				block.dropBlockAsItem(world, pos, state, 0);
 			}
@@ -194,9 +201,9 @@ public final class Worlds
 	{
 		Integer dim = world.provider.getDimension();
 		List<E> list = map.get(dim);
-		if(list == null)
+		if (list == null)
 		{
-			if(createEntry)
+			if (createEntry)
 			{
 				map.put(dim, list = new ArrayList<>());
 				return list;
@@ -213,44 +220,51 @@ public final class Worlds
 	
 	/**
 	 * Fixed 6 direction side of facing, for change to another face when that face is not exposed.
-	 * @param side
-	 * @param hitX
-	 * @param hitY
-	 * @param hitZ
-	 * @return
+	 * @param side the side of hitting.
+	 * @param hitX the hit x coord.
+	 * @param hitY the hit y coord.
+	 * @param hitZ the hit z coord.
+	 * @return the refacing side.
 	 */
 	public static int fixSide(int side, float hitX, float hitY, float hitZ)
 	{
 		float u, v;
-		if(side == 0 || side == 1)
+		switch (side)
 		{
+		case 0 :
+		case 1 :
 			u = hitX;
 			v = hitZ;
-		}
-		else if(side == 2 || side == 3)
-		{
+			break;
+		case 2 :
+		case 3 :
 			u = hitX;
 			v = hitY;
-		}
-		else if(side == 4 || side == 5)
-		{
+			break;
+		case 4 :
+		case 5 :
 			u = hitZ;
 			v = hitY;
-		}
-		else
-		{
+			break;
+		default :
 			u = 0.5F;
 			v = 0.5F;
+			break;
 		}
 		int id;
 		boolean b1 = u >= 0.25F, b2 = v >= 0.25F, b3 = u <= 0.75F, b4 = v <= 0.75F;
-		return b1 && b2 && b3 && b4 ?
-				side : (id = (b1 && b3 ? (!b4 ? 1 : 0) :
-					(b2 && b4) ? (!b3 ? 3 : 2) : -1)) == -1 ?
-							Direction.OPPISITE[side] :
-								rotateFix[side / 2][id];
+		return b1 && b2 && b3 && b4 ? side :
+			(id = (b1 && b3 ? (!b4 ? 1 : 0) : (b2 && b4) ? (!b3 ? 3 : 2) : -1)) == -1 ?
+					Direction.OPPISITE[side] : ROTATE_FIX[side >> 1][id];
 	}
 	
+	/**
+	 * Spawn dropping item in world.
+	 * @param world the world.
+	 * @param pos the position to spawn dropping item, and give a random offset to set the dropping
+	 *            item location.
+	 * @param drop the dropping item.
+	 */
 	public static void spawnDropInWorld(World world, BlockPos pos, ItemStack drop)
 	{
 		if(world.isRemote ||
@@ -267,6 +281,15 @@ public final class Worlds
 		world.spawnEntity(entityitem);
 	}
 	
+	/**
+	 * Spawn dropping item in world.<p>
+	 * The item will move by a catapult.
+	 * @param world the world.
+	 * @param pos the position to spawn dropping item, and give a random offset to set the dropping
+	 *            item location.
+	 * @param direction the direction which will give a catapult.
+	 * @param drop the dropping item.
+	 */
 	public static void spawnDropInWorld(World world, BlockPos pos, Direction direction, ItemStack drop)
 	{
 		if(world.isRemote ||
@@ -456,22 +479,28 @@ public final class Worlds
 		return Nebula.proxy.worldInstance(dimID);
 	}
 	
+	/**
+	 * Calculate the square of distance of a object to position.
+	 * @param object the object in world.
+	 * @param pos the position.
+	 * @return the distance square.
+	 */
 	public static double distanceSqTo(IObjectInWorld object, BlockPos pos)
 	{
 		double[] cache = object.position();
-		return distanceSqTo(cache[0] - pos.getX() + .5, cache[1] - pos.getY() + .5, cache[2] - pos.getZ() + .5);
+		return absSq(cache[0] - pos.getX() + .5, cache[1] - pos.getY() + .5, cache[2] - pos.getZ() + .5);
 	}
 	
 	public static double distanceSqTo(IObjectInWorld object1, IObjectInWorld object2)
 	{
 		double[] cache1 = object1.position();
 		double[] cache2 = object2.position();
-		return distanceSqTo(cache1[0] - cache2[0], cache1[1] - cache2[1], cache1[2] - cache2[2]);
+		return absSq(cache1[0] - cache2[0], cache1[1] - cache2[1], cache1[2] - cache2[2]);
 	}
 	
 	public static double distanceSqTo(BlockPos pos1, BlockPos pos2)
 	{
-		return distanceSqTo(pos1.getX() - pos2.getX(), pos1.getY() - pos2.getY(), pos1.getZ() - pos2.getZ());
+		return absSq(pos1.getX() - pos2.getX(), pos1.getY() - pos2.getY(), pos1.getZ() - pos2.getZ());
 	}
 	
 	public static double distanceSqTo(Entity entity, BlockPos pos)
@@ -479,7 +508,7 @@ public final class Worlds
 		return entity.getDistanceSq(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5);
 	}
 	
-	public static double distanceSqTo(double x, double y, double z)
+	public static double absSq(double x, double y, double z)
 	{
 		return x * x + y * y + z * z;
 	}
@@ -487,7 +516,7 @@ public final class Worlds
 	public static <T extends Comparable<T>> boolean switchProp(World world, BlockPos pos, IProperty<T> property, T value, int updateFlag)
 	{
 		IBlockState state = world.getBlockState(pos);
-		if(state.getValue(property) == value) return false;
+		if (state.getValue(property) == value) return false;
 		return world.setBlockState(pos, state.withProperty(property, value), updateFlag);
 	}
 	
@@ -619,7 +648,7 @@ public final class Worlds
 	
 	public static Direction getCollideSide(AxisAlignedBB aabb, double[] pre, double[] post)
 	{
-		if(aabb.maxX < post[0] || aabb.minX > post[0] ||
+		if (aabb.maxX < post[0] || aabb.minX > post[0] ||
 				aabb.maxY < post[1] || aabb.minY > post[1] ||
 				aabb.maxZ < post[2] || aabb.minZ > post[2])
 			return null;
@@ -648,9 +677,9 @@ public final class Worlds
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
 		double d3 = 5.0D;
-		if (entity instanceof net.minecraft.entity.player.EntityPlayerMP)
+		if (entity instanceof EntityPlayerMP)
 		{
-			d3 = ((net.minecraft.entity.player.EntityPlayerMP)entity).interactionManager.getBlockReachDistance();
+			d3 = ((EntityPlayerMP) entity).interactionManager.getBlockReachDistance();
 		}
 		Vec3d vec3d1 = vec3d.addVector(f6 * d3, f5 * d3, f7 * d3);
 		return world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
@@ -658,14 +687,28 @@ public final class Worlds
 	
 	private static Method isChunkLoaded;
 	
+	/**
+	 * Return <code>true</code> if redstone is checking the power for update.
+	 * @return <code>true</code> if redstone is checking the power for update,
+	 *         and <code>false</code> for otherwise.
+	 */
 	public static boolean isRedstoneChecking()
 	{
 		return !Blocks.REDSTONE_WIRE.canProvidePower(null);
 	}
 	
+	/**
+	 * Check is the specific chunk is loaded.
+	 * @param world the world.
+	 * @param x the chunk x coord.
+	 * @param z the chunk z coord.
+	 * @param allowEmpty if it is <code>true</code>, the result will be <code>true</code>
+	 *                   if the world does not synch the specific chunk.
+	 * @return <code>true</code> if chunk is loaded or <code>false</code> for otherwise.
+	 */
 	public static boolean isChunkLoaded(World world, int x, int z, boolean allowEmpty)
 	{
-		if(isChunkLoaded == null)
+		if (isChunkLoaded == null)
 		{
 			isChunkLoaded = R.getMethod(World.class, "isChunkLoaded", "func_175680_a", int.class, int.class, boolean.class);
 		}
@@ -679,6 +722,19 @@ public final class Worlds
 		}
 	}
 	
+	/**
+	 * Spawn a particle with position gave a random offset.
+	 * @param world the world.
+	 * @param types the type of particle.
+	 * @param xCoord the particle x coordinate.
+	 * @param yCoord the particle y coordinate.
+	 * @param zCoord the particle z coordinate.
+	 * @param motionX the particle x motion.
+	 * @param motionY the particle y motion.
+	 * @param motionZ the particle z motion.
+	 * @param randScale the random coordinate offset scale.
+	 * @param datas the particle custom data.
+	 */
 	public static void spawnParticleWithRandomOffset(World world, EnumParticleTypes types, double xCoord,
 			double yCoord, double zCoord, double motionX, double motionY, double motionZ, double randScale, int...datas)
 	{

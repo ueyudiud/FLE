@@ -16,7 +16,7 @@ public class TECustomName extends TEBase
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		if(nbt.hasKey("customName"))
+		if (nbt.hasKey("customName"))
 		{
 			this.customName = nbt.getString("customName");
 		}
@@ -27,7 +27,7 @@ public class TECustomName extends TEBase
 	{
 		super.writeToNBT(nbt);
 		
-		if(this.customName != null)
+		if (this.customName != null)
 		{
 			nbt.setString("customName", this.customName);
 		}

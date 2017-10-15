@@ -5,7 +5,7 @@ package fle.core.common.gui.rocky;
 
 import fle.core.tile.rocky.TECeramicPot;
 import nebula.common.gui.ContainerTileInventory;
-import nebula.common.gui.FluidSlot;
+import nebula.common.gui.FluidSlotN;
 import nebula.common.gui.SlotBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -24,7 +24,7 @@ public class ContainerCeramicPot extends ContainerTileInventory<TECeramicPot>
 		addSlotToContainer(new SlotBase(tile, 3, 38, 44));
 		addSlotToContainer(new SlotBase(tile, 4, 117, 19));
 		addSlotToContainer(new SlotBase(tile, 5, 117, 44));
-		addSlotToContainer(new FluidSlot(tile.tank(), 66, 15, 8, 20));
+		addSlotToContainer(new FluidSlotN(tile.tank(), 66, 15, 8, 20));
 		TL
 		tl1 = new TL(id).appendTransferLocate(this.locationPlayer).addToList(),
 		tl2 = new TL(id + 1).appendTransferLocate(this.locationPlayer).addToList(),

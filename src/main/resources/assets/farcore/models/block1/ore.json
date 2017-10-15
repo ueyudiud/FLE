@@ -1,0 +1,38 @@
+{
+	"textures": {
+		"particle": "minecraft:block/stone"
+	},
+	"part": [
+		{
+			"textures": {
+				"all": "[farcore:ore/rock"
+			},
+			"blockmeta": {
+				"key": "%s_%s",
+				"formats": [ "#farcore:ore/rock", "#farcore:ore/rocktype" ],
+				"default": [ "stone", "resource" ]
+			},
+			"itemmeta": {
+				"key": "%s_%s",
+				"formats": [ "#farcore:ore/rock", "#farcore:ore/rocktype" ],
+				"default": [ "stone", "resource" ]
+			}
+		},
+		{
+			"layer": 1,
+			"textures": {
+				"all": "[farcore:ore/ore"
+			},
+			"blockmeta": {
+				"key": "%s_%s",
+				"formats": [ "#farcore:ore/ore", "#farcore:ore/amount" ],
+				"default": [ "copper", "normal" ]
+			},
+			"itemmeta": {
+				"key": "%s_%s",
+				"formats": [ "#farcore:ore/ore", "#farcore:ore/amount" ],
+				"default": [ "copper", "normal" ]
+			}
+		}
+	]
+}

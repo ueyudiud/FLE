@@ -8,13 +8,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import nebula.base.Ety;
 import nebula.base.INode;
 import nebula.base.Judgable;
 import nebula.base.Node;
-
-import java.util.Set;
 
 /**
  * @author ueyudiud
@@ -77,9 +76,9 @@ public class FamilyTemplate<T extends ISpecie<H>, H extends IBiology> implements
 	@Override
 	public T getSpecieFromGM(GeneticMaterial gm)
 	{
-		Entry<Judgable<GeneticMaterial>, T> entry;
+		INode<Entry<Judgable<GeneticMaterial>, T>> entry;
 		return this.judgables == null ? this.baseType :
-			(entry = this.judgables.find(ety->ety.getKey().isTrue(gm))) != null ? entry.getValue() :
+			(entry = this.judgables.find(ety->ety.getKey().isTrue(gm))) != null ? entry.value().getValue() :
 				this.baseType;
 	}
 }

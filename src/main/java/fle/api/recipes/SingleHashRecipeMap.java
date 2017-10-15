@@ -75,10 +75,10 @@ public abstract class SingleHashRecipeMap<R, O, H> implements IRecipeMap<R, O, H
 			if (this.entries.containsKey(hash))
 			{
 				INode<R> node = this.entries.get(hash);
-				R r = node.find(recipe->match(recipe, handler));
+				INode<R> r = node.find(recipe->match(recipe, handler));
 				if (r != null)
 				{
-					return getOutput(r);
+					return getOutput(r.value());
 				}
 			}
 		}

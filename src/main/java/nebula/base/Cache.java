@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -19,15 +20,30 @@ class Cache<E> implements Serializable
 {
 	private static final long serialVersionUID = -3454337834646888382L;
 	
+	private static final Object NULL = new Object() {
+		@Override
+		public int hashCode()
+		{
+			return Objects.hashCode(null);
+		}
+		
+		@Override
+		public String toString()
+		{
+			return "null";
+		}
+	};
+	
 	/** The stored element. */
 	@Nullable
-	E element;
+	Object element;
 	
 	/**
 	 * Create a new cache with <tt>null</tt> element.
 	 */
 	public Cache()
 	{
+		this.element = NULL;
 	}
 	
 	/**
@@ -55,21 +71,21 @@ class Cache<E> implements Serializable
 	@Nullable
 	public E get()
 	{
-		return this.element;
+		return this.element == NULL ? null : (E) this.element;
 	}
 	
 	//Optional like.
 	
 	public boolean isAbsent()
 	{
-		return this.element == null;
+		return this.element == NULL;
 	}
 	
 	public final void consumeIfPresent(Consumer<? super E> consumer)
 	{
 		if (!isAbsent())
 		{
-			Objects.requireNonNull(consumer).accept(this.element);
+			Objects.requireNonNull(consumer).accept(get());
 		}
 	}
 	
@@ -78,6 +94,14 @@ class Cache<E> implements Serializable
 		if (isAbsent())
 		{
 			set(element);
+		}
+	}
+	
+	public final void setIfAbsent(Supplier<? extends E> supplier)
+	{
+		if (isAbsent())
+		{
+			set(supplier.get());
 		}
 	}
 	
@@ -90,7 +114,7 @@ class Cache<E> implements Serializable
 	 */
 	public Optional<E> optional()
 	{
-		return Optional.ofNullable(this.element);
+		return isAbsent() ? Optional.empty() : Optional.ofNullable((E) this.element);
 	}
 	
 	/**

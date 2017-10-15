@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import nebula.base.Cache;
 import nebula.common.util.A;
 import nebula.common.util.Jsons;
 import nebula.common.util.L;
@@ -66,26 +67,39 @@ public enum SubmetaLoader implements JsonDeserializer<Function<? extends Object,
 	static class BlockSubmetaGetter implements Function<IBlockState, String>
 	{
 		String key;
-		String[] formats;
+		Function<IBlockState, String>[] formats;
 		String[] def;
 		
-		BlockSubmetaGetter(String key, String[] formats, String[] def)
+		BlockSubmetaGetter(String key, String[] formats, final String[] def)
 		{
 			if (formats.length != def.length)
 				throw new IllegalArgumentException("The formats and default values length are not same.");
 			this.key = key;
-			this.formats = formats;
+			this.formats = new Function[formats.length];
+			for (int i = 0; i < formats.length; ++i)
+			{
+				if (formats[i].length() == 0)
+					throw new JsonParseException("Unsupported format. got:''");
+				if (formats[i].charAt(0) == '#')
+					this.formats[i] = NebulaModelLoader.loadBlockMetaGenerator(formats[i].substring(1));
+				else
+				{
+					final String str = formats[i];
+					final Cache<IProperty<?>> property = new Cache<>();
+					this.formats[i] = state-> {
+						property.setIfAbsent(()-> state.getBlock().getBlockState().getProperty(str));
+						IProperty<?> p = property.get();
+						return p == null ? "missing" : p.getName(L.castAny(state.getValue(p)));
+					};
+				}
+			}
 			this.def = def;
 		}
 		
 		@Override
 		public String apply(IBlockState state)
 		{
-			return state == null ? String.format(this.key, (Object[]) this.def) : String.format(this.key, A.transform(this.formats, p-> {
-				IProperty<?> property = state.getBlock().getBlockState().getProperty(p);
-				if (property == null) return "missing";
-				return property.getName(L.castAny(state.getValue(property)));
-			}));
+			return state == null ? String.format(this.key, (Object[]) this.def) : String.format(this.key, A.transform(this.formats, p-> p.apply(state)));
 		}
 	}
 	

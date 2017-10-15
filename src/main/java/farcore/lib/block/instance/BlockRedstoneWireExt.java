@@ -16,8 +16,8 @@ import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.BlockRedstoneRepeater;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -46,7 +46,7 @@ public class BlockRedstoneWireExt extends BlockBase implements IExtendedDataBloc
 	public static final PropertyEnum<ConnectType> R90 = PropertyEnum.create("r90", ConnectType.class);
 	public static final PropertyEnum<ConnectType> R180 = PropertyEnum.create("r180", ConnectType.class);
 	public static final PropertyEnum<ConnectType> R270 = PropertyEnum.create("r270", ConnectType.class);
-	public static final PropertyInteger POWER = Properties.create("power", 0, 15);
+	public static final IProperty<Integer> POWER = Properties.create("power", 0, 15);
 	public static final PropertyEnum<MaterialType> MATERIAL = PropertyEnum.create("material", MaterialType.class);
 	
 	private static final AxisAlignedBB[] AABBS = {

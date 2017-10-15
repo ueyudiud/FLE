@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.instances;
 
 import java.util.HashMap;
@@ -58,13 +57,13 @@ public class MaterialTextureLoader implements IIconLoader
 	public static void addIconLocationApplier(MatCondition condition, String variant, Function<Mat, ResourceLocation> function)
 	{
 		String key = condition.name + ":" + variant;
-		if(function instanceof MTFBuilder)
+		if (function instanceof MTFBuilder)
 		{
 			SPECIAL_MATERIAL_LOCATION.put(key, (MTFBuilder) function);
 			return;
 		}
 		MTFBuilder builder;
-		if(SPECIAL_MATERIAL_LOCATION.containsKey(key))
+		if (SPECIAL_MATERIAL_LOCATION.containsKey(key))
 		{
 			builder = SPECIAL_MATERIAL_LOCATION.get(key);
 		}
@@ -73,6 +72,16 @@ public class MaterialTextureLoader implements IIconLoader
 			SPECIAL_MATERIAL_LOCATION.put(condition.name, builder = new MTFBuilder(condition, variant));
 		}
 		builder.parent = function;
+	}
+	
+	public static ResourceLocation getResource(Mat material, MatCondition condition, String variant)
+	{
+		Function<Mat, ResourceLocation> function = SPECIAL_MATERIAL_LOCATION.get(condition.name + ":" + variant);
+		if (function == null)
+		{
+			return new ResourceLocation(getPrefix(condition, variant) + material.name);
+		}
+		else return function.apply(material);
 	}
 	
 	public static TextureAtlasSprite getIcon(Mat material, MatCondition condition)
@@ -93,30 +102,35 @@ public class MaterialTextureLoader implements IIconLoader
 	public void registerIcon(IIconRegister register)
 	{
 		ICONS.clear();
-		for(MatCondition condition : MatCondition.register)
+		for (MatCondition condition : MatCondition.register)
 		{
-			if(VARIANTS.containsKey(condition.name))
+			if (VARIANTS.containsKey(condition.name))
 			{
-				for(String variant : VARIANTS.get(condition.name))
+				for (String variant : VARIANTS.get(condition.name))
 				{
-					Function<Mat, ResourceLocation> function = SPECIAL_MATERIAL_LOCATION.get(condition.name + ":" + variant);
-					if(function == null)
+					String compute = condition.name + ":" + variant;
+					Function<Mat, ResourceLocation> function = SPECIAL_MATERIAL_LOCATION.get(compute);
+					if (function == null)
 					{
 						function = getDefaultFunction(condition, variant);
 					}
-					for(Mat material : Mat.filt(condition))
+					for (Mat material : Mat.filt(condition))
 					{
-						ResourceLocation location = function.apply(material);
-						ICONS.put(condition.name + ":" + variant + ":" + material.name, register.registerIcon(location));
+						ICONS.put(compute + ":" + material.name, register.registerIcon(function.apply(material)));
 					}
 				}
 			}
 		}
 	}
 	
-	public static Function<Mat, ResourceLocation> getDefaultFunction(MatCondition condition, String variant)
+	private static String getPrefix(MatCondition condition, String variant)
 	{
-		String prefix = "iconsets/" + condition.name + (Strings.validate(variant).length() == 0 ? "" : "/" + variant) + "/";
+		return "iconsets/" + condition.name + (Strings.validate(variant).length() == 0 ? "" : "/" + variant) + "/";
+	}
+	
+	private static Function<Mat, ResourceLocation> getDefaultFunction(MatCondition condition, String variant)
+	{
+		String prefix = getPrefix(condition, variant);
 		return material -> new ResourceLocation(material.modid, prefix + material.name);
 	}
 	
@@ -141,7 +155,7 @@ public class MaterialTextureLoader implements IIconLoader
 		
 		public void put(String prefix, String postfix)
 		{
-			put(material -> new ResourceLocation(material.modid, prefix + material.name + postfix));
+			put(material-> new ResourceLocation(material.modid, prefix + material.name + postfix));
 		}
 		
 		public void put(Function<Mat, ResourceLocation> function)
@@ -157,10 +171,8 @@ public class MaterialTextureLoader implements IIconLoader
 		@Override
 		public ResourceLocation apply(Mat material)
 		{
-			if(this.parent == null)
-			{
+			if (this.parent == null)
 				this.parent = getDefaultFunction(this.condition, this.variant);
-			}
 			return this.map.containsKey(material) ? this.map.get(material) : this.parent.apply(material);
 		}
 	}
@@ -178,9 +190,9 @@ public class MaterialTextureLoader implements IIconLoader
 		builder.put(M.oak_black, new ResourceLocation("minecraft", "blocks/planks_big_oak"));
 		builder.build();
 		
-		for(EnumRockType type : EnumRockType.values())
+		for (EnumRockType type : EnumRockType.values())
 		{
-			if(type == EnumRockType.cobble_art) continue;
+			if (type == EnumRockType.cobble_art) continue;
 			builder = new MTFBuilder(type.condition, type.variant);
 			builder.put("blocks/rock/", "/" + type.name());
 			switch (type)
