@@ -3,6 +3,7 @@
  */
 package nebula.base;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.IntConsumer;
@@ -14,8 +15,10 @@ import java.util.function.IntConsumer;
  * @author ueyudiud
  */
 public
-class IntegerArray
+class IntegerArray implements Serializable
 {
+	private static final long serialVersionUID = 6088198770700632654L;
+	
 	public final int[] array;
 	
 	public IntegerArray(int length)

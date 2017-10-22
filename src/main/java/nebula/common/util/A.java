@@ -218,6 +218,18 @@ public final class A
 	}
 	
 	/**
+	 * Get first equally <code>char</code> value position.
+	 * @param list the array.
+	 * @param arg the element to match.
+	 * @return the index, or <code>-1</code> if not matched.
+	 */
+	public static int indexOf(char[] list, char arg)
+	{
+		for(int i = 0; i < list.length; ++i) if(list[i] == arg) return i;
+		return -1;
+	}
+	
+	/**
 	 * Get first matched element index in list.
 	 * @param list the array.
 	 * @param arg the matching target.

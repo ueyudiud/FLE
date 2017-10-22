@@ -8,6 +8,7 @@ import java.util.Random;
 import farcore.lib.block.instance.BlockPlant;
 import farcore.lib.block.instance.BlockPlantVine;
 import farcore.lib.material.Mat;
+import nebula.common.LanguageManager;
 import nebula.common.data.Misc;
 import nebula.common.util.Direction;
 import nebula.common.util.L;
@@ -29,6 +30,7 @@ public class PlantVineLike extends PlantNormal
 	{
 		super(material);
 		this.vine = createVineBlock(material);
+		LanguageManager.registerLocal(this.vine.getTranslateNameForItemStack(0), "Vine");
 	}
 	
 	protected BlockPlantVine createVineBlock(Mat material)

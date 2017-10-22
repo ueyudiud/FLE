@@ -17,11 +17,22 @@ import net.minecraft.block.state.IBlockState;
 public interface IExtendedDataBlock
 {
 	/**
-	 * Get 20 bit data of state.
+	 * Get 20 bits data of state.
 	 * @param state the state to get meta.
 	 * @return the meta.
 	 */
 	int getDataFromState(IBlockState state);
+	
+	/**
+	 * Get 4 bits data from state, called when 20 bits
+	 * data are missing.
+	 * @param state the state to get meta.
+	 * @return the meta.
+	 */
+	default int getUnfixableDataFromState(IBlockState state)
+	{
+		return getDataFromState(state) & 0xF;
+	}
 	
 	/**
 	 * Get state from 20 bit data(meta).
