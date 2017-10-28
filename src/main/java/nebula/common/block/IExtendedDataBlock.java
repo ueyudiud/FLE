@@ -3,7 +3,6 @@
  */
 package nebula.common.block;
 
-import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.state.IBlockState;
 
 /**
@@ -12,7 +11,7 @@ import net.minecraft.block.state.IBlockState;
  * The data provide a 20bit length integer value to save.
  * 
  * @author ueyudiud
- * @see nebula.common.world.chunk.ExtendedBlockStateRegister
+ * @see ed.chunk.ExtendedBlockStateRegister
  */
 public interface IExtendedDataBlock
 {
@@ -44,9 +43,9 @@ public interface IExtendedDataBlock
 	/**
 	 * Register all state can be exist to register.
 	 * @param register the state register.
-	 * @see nebula.common.world.chunk.IBlockStateRegister#registerState(IBlockState)
-	 * @see nebula.common.world.chunk.IBlockStateRegister#registerStateMap(IBlockState, java.util.Collection)
-	 * @see nebula.common.world.chunk.IBlockStateRegister#registerStates(net.minecraft.block.Block, net.minecraft.block.properties.IProperty...)
+	 * @see nebula.common.block.IBlockStateRegister#registerState(IBlockState)
+	 * @see nebula.common.block.IBlockStateRegister#registerStateMap(IBlockState, java.util.Collection)
+	 * @see nebula.common.block.IBlockStateRegister#registerStates(net.minecraft.block.Block, net.minecraft.block.properties.IProperty...)
 	 */
 	void registerStateToRegister(IBlockStateRegister register);
 }

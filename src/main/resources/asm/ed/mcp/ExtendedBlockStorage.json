@@ -13,7 +13,7 @@
 					"nodes": [
 						{
 							"opcode": 187,
-							"desc": "nebula/common/world/chunk/BlockStateContainerExt"
+							"desc": "ed/chunk/BlockStateContainerExt"
 						}
 					]
 				},
@@ -27,7 +27,7 @@
 					"nodes": [
 						{
 							"opcode": 183,
-							"owner": "nebula/common/world/chunk/BlockStateContainerExt",
+							"owner": "ed/chunk/BlockStateContainerExt",
 							"name": "<init>",
 							"desc": "()V",
 							"itf": false

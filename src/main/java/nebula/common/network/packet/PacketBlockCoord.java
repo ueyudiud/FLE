@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.network.packet;
 
 import java.io.IOException;
@@ -24,13 +27,13 @@ public abstract class PacketBlockCoord extends PacketWorld
 	protected void encode(PacketBufferExt output) throws IOException
 	{
 		super.encode(output);
-		output.writeBlockPos(pos);
+		output.writeBlockPos(this.pos);
 	}
 	
 	@Override
 	protected void decode(PacketBufferExt input) throws IOException
 	{
 		super.decode(input);
-		pos = input.readBlockPos();
+		this.pos = input.readBlockPos();
 	}
 }

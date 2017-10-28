@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import nebula.common.gui.IGuiDataReciever;
+import nebula.common.network.Encoder;
 import nebula.common.network.IPacket;
 import nebula.common.network.Network;
 import nebula.common.network.PacketAbstract;
@@ -16,6 +17,9 @@ import nebula.common.network.PacketBufferExt;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
+ * The ClientToServer packet.<p>
+ * The custom coding sending packet from player opening
+ * container.
  * @author ueyudiud
  */
 public class PacketGuiSyncData extends PacketAbstract

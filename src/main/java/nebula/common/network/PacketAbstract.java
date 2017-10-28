@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.network;
 
 import java.io.IOException;
@@ -9,13 +12,12 @@ import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * The template packet.
+ * @author ueyudiud
+ */
 public abstract class PacketAbstract implements IPacket
 {
-	public static interface Encoder
-	{
-		void encode(PacketBufferExt output) throws IOException;
-	}
-	
 	protected Side side;
 	protected INetHandler handler;
 	

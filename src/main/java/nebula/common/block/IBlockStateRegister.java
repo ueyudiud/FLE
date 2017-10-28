@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.common.world.chunk;
+package nebula.common.block;
 
 import java.util.Collection;
 

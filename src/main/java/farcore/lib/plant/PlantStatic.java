@@ -12,7 +12,7 @@ import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.Renders;
 import nebula.common.LanguageManager;
-import nebula.common.world.chunk.IBlockStateRegister;
+import nebula.common.block.IBlockStateRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;

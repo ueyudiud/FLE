@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package nebula.common.world.chunk;
+package ed.chunk;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.network.PacketBuffer;
@@ -57,7 +57,7 @@ public class BlockStatePaletteMap implements IBlockStatePalette
 		
 		for (int j = 0; j < i; ++j)
 		{
-			this.map.add(ExtendedBlockStateRegister.getCachedState(buf.readVarInt()));
+			this.map.add(ExtendedBlockStateRegister.INSTANCE.getStateFromNetworkID(buf.readVarInt()));
 		}
 	}
 	
@@ -68,7 +68,7 @@ public class BlockStatePaletteMap implements IBlockStatePalette
 		
 		for (int j = 0; j < i; ++j)
 		{
-			buf.writeVarInt(ExtendedBlockStateRegister.getCachedID(this.map.get(j)));
+			buf.writeVarInt(ExtendedBlockStateRegister.INSTANCE.getNetworkID(this.map.get(j)));
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class BlockStatePaletteMap implements IBlockStatePalette
 		
 		for (int j = 0; j < this.map.size(); ++j)
 		{
-			i += PacketBuffer.getVarIntSize(ExtendedBlockStateRegister.getCachedID(this.map.get(j)));
+			i += PacketBuffer.getVarIntSize(ExtendedBlockStateRegister.INSTANCE.getNetworkID(this.map.get(j)));
 		}
 		
 		return i;

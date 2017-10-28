@@ -123,6 +123,7 @@ public class CommonLoader
 		new ItemMulti(MC.nugget).setCreativeTab(CT.MATERIAL);
 		new ItemIngot().setCreativeTab(CT.MATERIAL);
 		new ItemPile().setCreativeTab(CT.MATERIAL);
+		new ItemMulti(MC.pile_purified).setCreativeTab(CT.MATERIAL);
 		new ItemMulti(MC.brick).setCreativeTab(CT.RESOURCE_ITEM);
 		new ItemMulti(MC.roofshingle).setCreativeTab(CT.RESOURCE_ITEM);
 		new ItemMulti(MC.rooftile).setCreativeTab(CT.RESOURCE_ITEM);

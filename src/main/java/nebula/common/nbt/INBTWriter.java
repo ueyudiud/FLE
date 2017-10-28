@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.nbt;
 
 import javax.annotation.Nullable;
@@ -29,7 +28,6 @@ public interface INBTWriter<T, N extends NBTBase>
 		return nbt;
 	}
 	
-	@SuppressWarnings("unchecked")
 	default N writeToNBT()
 	{
 		return writeToNBT((T) this);

@@ -9,7 +9,7 @@ import fle.core.research.ResearchGraph;
 import nebula.Nebula;
 import nebula.common.gui.ContainerBlockPosition;
 import nebula.common.gui.IGuiDataReciever;
-import nebula.common.network.PacketAbstract.Encoder;
+import nebula.common.network.Encoder;
 import nebula.common.network.PacketBufferExt;
 import nebula.common.network.packet.PacketGuiSyncData;
 import net.minecraft.entity.player.EntityPlayer;

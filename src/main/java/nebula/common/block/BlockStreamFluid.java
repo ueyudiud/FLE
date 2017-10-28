@@ -10,7 +10,6 @@ import java.util.function.Function;
 import farcore.lib.block.state.PropertyFarInt;
 import nebula.common.fluid.FluidBase;
 import nebula.common.util.L;
-import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;

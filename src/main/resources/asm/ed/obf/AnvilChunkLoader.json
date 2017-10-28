@@ -20,7 +20,7 @@
 					"nodes": [
 						{
 							"opcode": 184,
-							"owner": "nebula/Nebula",
+							"owner": "ed/ED",
 							"name": "loadChunkData",
 							"desc": "(Laid;Ldr;)Lasv;",
 							"itf": false
@@ -43,7 +43,7 @@
 					"nodes": [
 						{
 							"opcode": 184,
-							"owner": "nebula/Nebula",
+							"owner": "ed/ED",
 							"name": "loadChunkData",
 							"desc": "(Laid;Ldr;)Lasv;",
 							"itf": false
@@ -71,7 +71,7 @@
 					"nodes": [
 						{
 							"opcode": 184,
-							"owner": "nebula/Nebula",
+							"owner": "ed/ED",
 							"name": "saveChunkData",
 							"desc": "(Lasv;Laid;Ldr;)V",
 							"itf": false

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.google.common.collect.ObjectArrays;
 
+import farcore.lib.oredict.OreStackExt;
 import nebula.base.ObjArrayParseHelper;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
@@ -46,10 +47,12 @@ public class ShapedFleRecipe implements IRecipe
 		}
 		else if (object instanceof String)
 		{
-			return new SingleInputMatch(new OreStack((String) object));
+			return new SingleInputMatch(new OreStackExt((String) object));
 		}
 		else if (object instanceof AbstractStack)
 		{
+			if (object instanceof OreStack)
+				object = new OreStackExt((OreStack) object);//Extended wrapper.
 			return new SingleInputMatch((AbstractStack) object);
 		}
 		else if (object instanceof SingleInputMatch)
@@ -95,7 +98,7 @@ public class ShapedFleRecipe implements IRecipe
 			}
 			
 			Map<Character, SingleInputMatch> matchs = new HashMap<>();
-			helper.readToEnd((Character chr, Object obj)-> matchs.put(chr, castAsInputMatch(obj)));
+			helper.<Character, Object>readToEnd((chr, obj)-> matchs.put(chr, castAsInputMatch(obj)));
 			
 			this.inputs = new SingleInputMatch[this.height][this.width];
 			for (i = 0; i < this.height; ++i)
@@ -120,9 +123,7 @@ public class ShapedFleRecipe implements IRecipe
 	{
 		//The player argument get.
 		EntityPlayer player = ForgeHooks.getCraftingPlayer();
-		if (this.forcePlayerContain && player == null)
-			return false;
-		else if (!matchPlayerCondition(worldIn, player))
+		if ((this.forcePlayerContain && player == null) || !matchPlayerCondition(worldIn, player))
 			return false;
 		if (inv.getHeight() < this.height || inv.getWidth() < this.width) return false;
 		return getOffset(inv) != null;

@@ -3,7 +3,6 @@
  */
 package nebula.common.block;
 
-import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.Block;
 
 /**

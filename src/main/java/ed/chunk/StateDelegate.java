@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.common.world.chunk;
+package ed.chunk;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,11 +12,12 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableList;
 
+import ed.EDConfig;
 import nebula.Log;
 import nebula.base.ArrayListAddWithCheck;
 import nebula.base.IntegerEntry;
 import nebula.base.IntegerMap;
-import nebula.common.NebulaConfig;
+import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.util.A;
 import nebula.common.util.L;
@@ -36,7 +37,7 @@ abstract class StateDelegate
 	{
 		return block == Blocks.AIR ? AIR :
 			block.getBlockState().getProperties().isEmpty() ? new StateDegegateSingle(block) :
-				(NebulaConfig.buildStateIn || (block instanceof IExtendedDataBlock)) ? new StateDelegateExt(block) :
+				(EDConfig.buildStateIn || (block instanceof IExtendedDataBlock)) ? new StateDelegateExt(block) :
 					new StateDegegateNormal(block);
 	}
 	

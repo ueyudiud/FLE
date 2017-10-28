@@ -52,12 +52,6 @@ import static org.objectweb.asm.Opcodes.PUTSTATIC;
 import static org.objectweb.asm.Opcodes.RET;
 import static org.objectweb.asm.Opcodes.SIPUSH;
 import static org.objectweb.asm.Opcodes.TABLESWITCH;
-import static org.objectweb.asm.tree.AbstractInsnNode.FIELD_INSN;
-import static org.objectweb.asm.tree.AbstractInsnNode.INT_INSN;
-import static org.objectweb.asm.tree.AbstractInsnNode.METHOD_INSN;
-import static org.objectweb.asm.tree.AbstractInsnNode.MULTIANEWARRAY_INSN;
-import static org.objectweb.asm.tree.AbstractInsnNode.TYPE_INSN;
-import static org.objectweb.asm.tree.AbstractInsnNode.VAR_INSN;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -74,7 +68,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -85,6 +78,7 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -98,7 +92,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializer;
 
 import nebula.common.util.Jsons;
 import net.minecraftforge.fml.relauncher.IFMLCallHook;
@@ -109,7 +102,7 @@ import net.minecraftforge.fml.relauncher.IFMLCallHook;
 public class NebulaSetup implements IFMLCallHook
 {
 	/** The ASM file version, uses to determine if it need replaced ASM files. */
-	private static final int VERSION = 11;
+	private static final int VERSION = 12;
 	
 	final JsonDeserializer<OpInformation> DESERIALIZER1 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
@@ -134,21 +127,15 @@ public class NebulaSetup implements IFMLCallHook
 				{
 					JsonObject object1 = json1.getAsJsonObject();
 					String name = object1.get("name").getAsString();
-					if (object1.has("remove"))
+					if (Jsons.getOrDefault(object1, "remove", false))
 					{
-						if (object1.get("remove").getAsBoolean())
-						{
-							information.modifies.put(name, ImmutableList.of());
-							continue;
-						}
+						information.modifies.put(name, ImmutableList.of());
+						continue;
 					}
 					
 					{
-						List<OpLabel> list = new ArrayList<>();
-						for (JsonElement json2 : object1.getAsJsonArray("labels"))
-						{
-							list.add(context.deserialize(json2, OpLabel.class));
-						}
+						List<OpLabel> list = Jsons.getAsList(object1.getAsJsonArray("labels"),
+								json2->context.deserialize(json2, OpLabel.class));
 						if (!list.isEmpty())
 						{
 							information.modifies.put(name, list);
@@ -162,25 +149,6 @@ public class NebulaSetup implements IFMLCallHook
 			throw new JsonParseException("Can not parse asm config of " + information.mcpname, exception);
 		}
 		return information;
-	};
-	final JsonSerializer<OpInformation> SERIALIZER1 = (src, typeOfSrc, context) -> {
-		JsonObject object = new JsonObject();
-		object.addProperty("name", src.mcpname);
-		JsonArray array = new JsonArray();
-		for (Entry<String, List<OpLabel>> entry : src.modifies.entrySet())
-		{
-			JsonObject object1 = new JsonObject();
-			object1.addProperty("name", entry.getKey());
-			JsonArray array1 = new JsonArray();
-			for (OpLabel label : entry.getValue())
-			{
-				array1.add(context.serialize(label, OpLabel.class));
-			}
-			object1.add("labels", array1);
-			array.add(object1);
-		}
-		object.add("modification", array);
-		return object;
 	};
 	final JsonDeserializer<OpLabel> DESERIALIZER2 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject()) throw new JsonParseException("The json should be an object.");
@@ -220,37 +188,6 @@ public class NebulaSetup implements IFMLCallHook
 		}
 		return label;
 	};
-	final JsonSerializer<OpLabel> SERIALIZER2 = (src, typeOfSrc, context) -> {
-		JsonObject object = new JsonObject();
-		object.addProperty("type", src.type.name);
-		if (src instanceof OpLabel.OpLabelLineNumber)
-		{
-			object.addProperty("line", ((OpLabel.OpLabelLineNumber) src).line);
-		}
-		else if (src instanceof OpLabel.OpLabelBegining)
-		{
-			object.addProperty("marker", 1);
-		}
-		else
-		{
-			object.addProperty("count", ((OpLabel.OpLabelMethodAsTag) src).count);
-			object.addProperty("owner", ((OpLabel.OpLabelMethodAsTag) src).owner);
-			object.addProperty("name", ((OpLabel.OpLabelMethodAsTag) src).name);
-			object.addProperty("desc", ((OpLabel.OpLabelMethodAsTag) src).desc);
-		}
-		object.addProperty("off", src.off);
-		object.addProperty("len", src.len);
-		if (src.nodes != null)
-		{
-			JsonArray array = new JsonArray();
-			for (AbstractInsnNode node : src.nodes)
-			{
-				array.add(context.serialize(node, AbstractInsnNode.class));
-			}
-			object.add("nodes", array);
-		}
-		return object;
-	};
 	final JsonDeserializer<AbstractInsnNode> DESERIALIZER3 = (json, typeOfT, context) -> {
 		if (!json.isJsonObject())
 		{
@@ -266,7 +203,18 @@ public class NebulaSetup implements IFMLCallHook
 			int operand = object.get("operand").getAsInt();
 			return new IntInsnNode(val, operand);
 		case LDC :
-			throw new RuntimeException("This node can not used, sorry.");
+			Object value;
+			switch (Jsons.getOrDefault(object, "type", "string"))
+			{
+			case "int" : value = object.get("cst").getAsInt(); break;
+			case "long" : value = object.get("cst").getAsLong(); break;
+			case "float" : value = object.get("cst").getAsFloat(); break;
+			case "double" : value = object.get("cst").getAsDouble(); break;
+			case "string" : value = object.get("cst").getAsString(); break;
+			default :
+				throw new RuntimeException("Unknown type LDC node got, type: " + object.get("type").getAsString());
+			}
+			return new LdcInsnNode(value);
 		case ILOAD :
 		case LLOAD :
 		case FLOAD :
@@ -340,54 +288,57 @@ public class NebulaSetup implements IFMLCallHook
 			return new InsnNode(val);
 		}
 	};
-	final JsonSerializer<AbstractInsnNode> SERIALIZER3 = (src, typeOfSrc, context) -> {
-		JsonObject object = new JsonObject();
-		object.addProperty("opcode", src.getOpcode());
-		switch (src.getType())
-		{
-		case INT_INSN :
-			object.addProperty("operand", ((IntInsnNode) src).operand);
-			break;
-		case VAR_INSN :
-			object.addProperty("var", ((VarInsnNode) src).var);
-			break;
-		case FIELD_INSN :
-			object.addProperty("owner", ((FieldInsnNode) src).owner);
-			object.addProperty("name", ((FieldInsnNode) src).name);
-			object.addProperty("desc", ((FieldInsnNode) src).desc);
-			break;
-		case METHOD_INSN :
-			object.addProperty("owner", ((MethodInsnNode) src).owner);
-			object.addProperty("name", ((MethodInsnNode) src).name);
-			object.addProperty("desc", ((MethodInsnNode) src).desc);
-			object.addProperty("itf", ((MethodInsnNode) src).itf);
-			break;
-		case TYPE_INSN :
-			object.addProperty("desc", ((TypeInsnNode) src).desc);
-			break;
-		case MULTIANEWARRAY_INSN :
-			object.addProperty("dims", ((MultiANewArrayInsnNode) src).dims);
-			object.addProperty("desc", ((MultiANewArrayInsnNode) src).desc);
-			break;
-		default :
-			throw new RuntimeException("Can not extract node.");
-		}
-		return object;
-	};
 	
 	private final Gson gson = new GsonBuilder()
 			.registerTypeAdapter(OpInformation.class, this.DESERIALIZER1)
 			.registerTypeAdapter(OpLabel.class, this.DESERIALIZER2)
 			.registerTypeAdapter(AbstractInsnNode.class, this.DESERIALIZER3)
-			.registerTypeAdapter(OpInformation.class, this.SERIALIZER1)
-			.registerTypeAdapter(OpLabel.class, this.SERIALIZER2)
-			.registerTypeAdapter(AbstractInsnNode.class, this.SERIALIZER3)
 			.create();
 	
 	private File mcPath;
 	private boolean runtimeDeobf;
 	
-	public void searchAndPut(File file)
+	private void extractASMFile(File file, String location, File destination) throws IOException
+	{
+		if (file.getName().endsWith(".jar"))
+		{
+			JarFile jarFile = new JarFile(file);
+			location += "/";
+			if (jarFile.getEntry(location) == null)
+			{
+				NebulaASMLogHelper.LOG.warn("Asm file does not exist or invalid!");
+			}
+			else
+			{
+				Enumeration<JarEntry> enumeration = jarFile.entries();
+				while (enumeration.hasMoreElements())
+				{
+					JarEntry entry = enumeration.nextElement();
+					if (!entry.isDirectory() && entry.getName().startsWith(location))
+					{
+						NebulaASMLogHelper.LOG.info("Copy asm data from " + entry.getName());
+						FileUtils.copyInputStreamToFile(jarFile.getInputStream(entry), new File(destination, entry.getName().substring(location.length())));
+					}
+				}
+			}
+			jarFile.close();
+		}
+		else
+		{
+			file = new File(file, location);
+			if (file.exists())
+			{
+				NebulaASMLogHelper.LOG.info("Copy asm data from :" + file.getPath());
+				FileUtils.copyDirectory(file, destination);
+			}
+			else
+			{
+				NebulaASMLogHelper.LOG.warn("Asm file does not exist or invalid!");
+			}
+		}
+	}
+	
+	private void searchASMFileFromOptional(File file)
 	{
 		try
 		{
@@ -401,9 +352,9 @@ public class NebulaSetup implements IFMLCallHook
 		{
 			for (File file2 : file.listFiles(name -> name.getName().endsWith(".json")))
 			{
-				try
+				try (BufferedReader reader = new BufferedReader(new FileReader(file2)))
 				{
-					OpInformation information = this.gson.fromJson(new BufferedReader(new FileReader(file2)), OpInformation.class);
+					OpInformation information = this.gson.fromJson(reader, OpInformation.class);
 					information.put();
 					NebulaASMLogHelper.LOG.info("Loaded {} modifications.", information.mcpname);
 				}
@@ -450,21 +401,16 @@ public class NebulaSetup implements IFMLCallHook
 		}
 		else
 		{
-			try
+			try (InputStream stream1 = new BufferedInputStream(new FileInputStream(file)))
 			{
-				InputStream stream1 = new BufferedInputStream(new FileInputStream(file));
 				int version = stream1.read();
 				if (version != VERSION)
 				{
-					stream1.close();
 					NebulaASMLogHelper.LOG.warn("The Nebula ASM version and your config ASM version are not same, "
 							+ "there may cause some bug, it is suggested that you should clean your ./asm file if "
 							+ "you don't known what is happening and your game got crashed.");
 				}
-				else
-				{
-					stream1.close();
-				}
+				stream1.close();
 				return false;
 			}
 			catch (Exception exception)
@@ -478,7 +424,7 @@ public class NebulaSetup implements IFMLCallHook
 	@Override
 	public Void call() throws Exception
 	{
-		File destination = new File(new File(this.mcPath, "asm"), this.runtimeDeobf ? "obf" : "mcp");
+		File destination = new File(this.mcPath, "asm/" + (this.runtimeDeobf ? "obf" : "mcp"));
 		File file;
 		
 		if (!destination.exists())
@@ -494,58 +440,23 @@ public class NebulaSetup implements IFMLCallHook
 		}
 		if (markVersion(destination))
 		{
-			try //Insert Operation Files source to location.
+			final String suffix = this.runtimeDeobf ? "obf" : "mcp";
+			final URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
+			file = new File(url.toURI());
+			for (String str : NebulaCoreAPI.ASM_SEARCHING_DIRECTION)
 			{
-				URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
-				file = new File(url.toURI());
-				String n = this.runtimeDeobf ? "obf" : "mcp";
-				if (file.getName().endsWith(".jar"))
+				String targetLocation = "asm/" + str + "/" + suffix;
+				try //Insert Operation Files source to location.
 				{
-					JarFile jarFile = new JarFile(file);
-					String targetLocation = "asm/" + n + "/";
-					if (jarFile.getEntry(targetLocation) == null)
-					{
-						NebulaASMLogHelper.LOG.warn("Asm file does not exist or invalid!");
-					}
-					else
-					{
-						Enumeration<JarEntry> enumeration = jarFile.entries();
-						while (enumeration.hasMoreElements())
-						{
-							JarEntry entry = enumeration.nextElement();
-							if (!entry.isDirectory() && entry.getName().startsWith(targetLocation))
-							{
-								NebulaASMLogHelper.LOG.info("Copy asm data from :" + entry.getName());
-								FileUtils.copyInputStreamToFile(jarFile.getInputStream(entry), new File(destination, entry.getName().substring(targetLocation.length())));
-							}
-						}
-					}
-					jarFile.close();
+					extractASMFile(file, targetLocation, destination);
 				}
-				else
+				catch (IOException exception)
 				{
-					//for (int i = getClass().getPackage().getName().replaceAll("[^\\.]", "").length() + 1; i >= 0; i--)
-					//{
-					//	file = file.getParentFile();
-					//}
-					File[] files = new File(file, "asm").listFiles((dir, name) -> name.equals(n));
-					if (files == null || files.length != 1)
-					{
-						NebulaASMLogHelper.LOG.warn("Asm file does not exist or invalid!");
-					}
-					else
-					{
-						NebulaASMLogHelper.LOG.info("Copy asm data from :" + files[0].getPath());
-						FileUtils.copyDirectory(files[0], destination);
-					}
+					throw new RuntimeException("Fail to extract source files.", exception);
 				}
-			}
-			catch (Exception exception)
-			{
-				throw new RuntimeException("Fail to extract source files.", exception);
 			}
 		}
-		searchAndPut(destination);
+		searchASMFileFromOptional(destination);
 		return null;
 	}
 	

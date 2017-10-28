@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.network.packet;
 
 import nebula.common.gui.ContainerBase;
@@ -5,6 +8,11 @@ import nebula.common.network.IPacket;
 import nebula.common.network.Network;
 import net.minecraft.util.ITickable;
 
+/**
+ * The ClientToServer packet.<p>
+ * Sent when GUI ticking each tick in client.
+ * @author ueyudiud
+ */
 public class PacketGuiTickUpdate extends PacketGui
 {
 	ContainerBase container;

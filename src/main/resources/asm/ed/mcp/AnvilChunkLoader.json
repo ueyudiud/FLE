@@ -20,7 +20,7 @@
 					"nodes": [
 						{
 							"opcode": 184,
-							"owner": "nebula/Nebula",
+							"owner": "ed/ED",
 							"name": "loadChunkData",
 							"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
 							"itf": false
@@ -43,7 +43,7 @@
 					"nodes": [
 						{
 							"opcode": 184,
-							"owner": "nebula/Nebula",
+							"owner": "ed/ED",
 							"name": "loadChunkData",
 							"desc": "(Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)Lnet/minecraft/world/chunk/Chunk;",
 							"itf": false
@@ -71,7 +71,7 @@
 					"nodes": [
 						{
 							"opcode": 184,
-							"owner": "nebula/Nebula",
+							"owner": "ed/ED",
 							"name": "saveChunkData",
 							"desc": "(Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/world/World;Lnet/minecraft/nbt/NBTTagCompound;)V",
 							"itf": false

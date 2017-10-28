@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.nbt;
 
 import javax.annotation.Nullable;
@@ -21,7 +20,6 @@ public interface INBTReader<T, N extends NBTBase>
 	 * @param key
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	default @Nullable T readFromNBT(NBTTagCompound nbt, String key)
 	{
 		return nbt.hasKey(key) ? readFromNBT((N) nbt.getTag(key)) : null;
@@ -32,7 +30,6 @@ public interface INBTReader<T, N extends NBTBase>
 	 * @param nbt
 	 * @param key
 	 */
-	@SuppressWarnings("unchecked")
 	default void readFromNBT1(NBTTagCompound nbt, String key)
 	{
 		readFromNBT1((N) nbt.getTag(key));

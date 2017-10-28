@@ -9,7 +9,7 @@ import static net.minecraft.network.datasync.DataSerializers.registerSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
+import nebula.Nebula;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
@@ -46,22 +46,24 @@ public class DataSerializers
 			return new DataParameter<>(id, this);
 		}
 	};
+	
 	public static final DataSerializer<Integer> VARINT = net.minecraft.network.datasync.DataSerializers.VARINT;
 	public static final DataSerializer<String> STRING = net.minecraft.network.datasync.DataSerializers.STRING;
 	public static final DataSerializer<BlockPos> BLOCK_POS = net.minecraft.network.datasync.DataSerializers.BLOCK_POS;
 	public static final DataSerializer<EnumFacing> FACING = net.minecraft.network.datasync.DataSerializers.FACING;
+	
 	public static final DataSerializer<IBlockState> BLOCK_STATE = new DataSerializer<IBlockState>()
 	{
 		@Override
 		public void write(PacketBuffer buf, IBlockState value)
 		{
-			buf.writeInt(ExtendedBlockStateRegister.getCachedID(value));
+			buf.writeInt(Nebula.blockDataProvider.getNetworkID(value));
 		}
 		
 		@Override
 		public IBlockState read(PacketBuffer buf)
 		{
-			return ExtendedBlockStateRegister.getCachedState(buf.readInt());
+			return Nebula.blockDataProvider.getStateFromNetworkID(buf.readInt());
 		}
 		
 		@Override
@@ -104,6 +106,6 @@ public class DataSerializers
 		MAP.put(EnumFacing.class, FACING);
 		
 		registerSerializer(SHORT);
-		registerSerializer(BLOCK_STATE);
+		registerSerializer(DataSerializers.BLOCK_STATE);
 	}
 }

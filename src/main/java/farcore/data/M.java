@@ -4,8 +4,13 @@
 package farcore.data;
 
 import static farcore.FarCoreRegistry.MATERIAL_REGISTERS;
+import static farcore.data.MC.axe_rock;
+import static farcore.data.MC.block;
 import static farcore.data.MC.brick;
 import static farcore.data.MC.brickBlock;
+import static farcore.data.MC.chip_rock;
+import static farcore.data.MC.fragment;
+import static farcore.data.MC.pile_purified;
 
 import farcore.FarCore;
 import farcore.lib.block.behavior.RockBehaviorFlammable;
@@ -117,16 +122,16 @@ public class M
 	public static final Mat rattan			= new Mat(9203, FarCore.ID , "rattan"			, "Rattan"			, "Rattan"				).builder().setRGBa(0x867C50FF).build();
 	public static final Mat ramie_dry		= new Mat(9205, FarCore.ID , "ramie_dry"		, "RamieDry"		, "Ramie"				).builder().setRGBa(0xCFC898FF).build();
 	
-	public static final Mat dandelion		= new Mat(9301, FarCore.ID, "dandelion"			, "Dandelion"		, "Dandelion"			);
-	public static final Mat bristlegrass	= new Mat(9302, FarCore.ID, "bristlegrass"		, "Bristlegrass"	, "Bristlegrass"		);
-	public static final Mat halogroot_bush	= new Mat(9303, FarCore.ID, "halogroot_bush"	, "HalogrootBush"	, "Halogroot Bush"		);
-	public static final Mat short_grass		= new Mat(9304, FarCore.ID, "short_grass"		, "ShortGrass"		, "Grass"				);
-	public static final Mat foxtail			= new Mat(9305, FarCore.ID, "foxtail"			, "Foxtail"			, "Foxtail"				);
-	public static final Mat goosefoots		= new Mat(9306, FarCore.ID, "goosefoots"		, "Goosefoots"		, "Goosefoots"			);
-	public static final Mat knotgrass		= new Mat(9307, FarCore.ID, "knotgrass"			, "Knotgrass"		, "Knotgrass"			);
-	public static final Mat pennycress		= new Mat(9308, FarCore.ID, "pennycress"		, "Pennycress"		, "Pennycress"			);
-	public static final Mat inula			= new Mat(9309, FarCore.ID, "inula"				, "Inula"			, "Inula"				);
-	public static final Mat poa_bluegrass	= new Mat(9310, FarCore.ID, "poa_bluegrass"		, "PoaBluegrass"	, "Poa Bluegrass"		);
+	public static final Mat dandelion		= new Mat(9301, FarCore.ID , "dandelion"		, "Dandelion"		, "Dandelion"			);
+	public static final Mat bristlegrass	= new Mat(9302, FarCore.ID , "bristlegrass"		, "Bristlegrass"	, "Bristlegrass"		);
+	public static final Mat halogroot_bush	= new Mat(9303, FarCore.ID , "halogroot_bush"	, "HalogrootBush"	, "Halogroot Bush"		);
+	public static final Mat short_grass		= new Mat(9304, FarCore.ID , "short_grass"		, "ShortGrass"		, "Grass"				);
+	public static final Mat foxtail			= new Mat(9305, FarCore.ID , "foxtail"			, "Foxtail"			, "Foxtail"				);
+	public static final Mat goosefoots		= new Mat(9306, FarCore.ID , "goosefoots"		, "Goosefoots"		, "Goosefoots"			);
+	public static final Mat knotgrass		= new Mat(9307, FarCore.ID , "knotgrass"		, "Knotgrass"		, "Knotgrass"			);
+	public static final Mat pennycress		= new Mat(9308, FarCore.ID , "pennycress"		, "Pennycress"		, "Pennycress"			);
+	public static final Mat inula			= new Mat(9309, FarCore.ID , "inula"			, "Inula"			, "Inula"				);
+	public static final Mat poa_bluegrass	= new Mat(9310, FarCore.ID , "poa_bluegrass"	, "PoaBluegrass"	, "Poa Bluegrass"		);
 	
 	//Ores
 	public static final Mat native_copper	= new Mat(10001, FarCore.ID, "nativeCopper"	, "NativeCopper", "Native Copper"	).builder().setChemicalFormula("Cu"					).setRGBa(0xFF834CFF).setOreProperty( 7,  8.0F,  9.0F).build();
@@ -170,16 +175,16 @@ public class M
 	
 	static
 	{
-		MC.block.setNames(
+		block.setNames(
 				sand, "Sand",
 				redsand, "Red Sand");
 		MC.stone.setNames(
 				sand, "Brown Sandstone",
 				redsand, "Ocherous Sandstone");
-		MC.chip_rock.setNames(
+		chip_rock.setNames(
 				sand, "Brown Sandstone Chip",
 				redsand, "Ocherous Sandstone Chip");
-		MC.fragment.setNames(
+		fragment.setNames(
 				sand, "Brown Sandstone Fragment",
 				redsand, "Ocherous Sandstone Fragment");
 		
@@ -192,8 +197,9 @@ public class M
 		SubTags.FLINT.addTo(flint, obsidian, quartz);
 		SubTags.PILEABLE.addTo(gravel);
 		
-		MC.fragment.addToBlackList(obsidian);
-		MC.axe_rock.addToWhiteList(quartz);
+		fragment.addToBlackList(obsidian);
+		pile_purified.addToBlackList(gravel);
+		axe_rock.addToWhiteList(quartz);
 		
 		dandelion		.builder().setPlant(new PlantDandelion());
 		bristlegrass	.builder().setPlant(new PlantBristlegrass());

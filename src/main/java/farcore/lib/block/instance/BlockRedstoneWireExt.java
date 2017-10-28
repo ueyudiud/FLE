@@ -8,11 +8,11 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import nebula.common.block.BlockBase;
+import nebula.common.block.IBlockStateRegister;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.util.Direction;
 import nebula.common.util.Facing;
 import nebula.common.util.Properties;
-import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.BlockRedstoneRepeater;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;

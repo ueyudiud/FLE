@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.nbt;
 
 import javax.annotation.Nullable;
@@ -32,7 +31,6 @@ public interface INBTCompoundWriter<T> extends INBTWriter<T, NBTTagCompound>
 	 * @param nbt
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	default NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		writeToNBT((T) this, nbt);
@@ -44,7 +42,6 @@ public interface INBTCompoundWriter<T> extends INBTWriter<T, NBTTagCompound>
 	 * @param nbt
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	default NBTTagCompound writeToNBT(NBTTagCompound nbt, String key)
 	{
 		writeToNBT((T) this, nbt, key);

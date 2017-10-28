@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.network.packet;
 
 import java.io.IOException;
@@ -25,15 +28,15 @@ public abstract class PacketChunkCoord extends PacketWorld
 	protected void encode(PacketBufferExt output) throws IOException
 	{
 		super.encode(output);
-		output.writeInt(x);
-		output.writeInt(z);
+		output.writeInt(this.x);
+		output.writeInt(this.z);
 	}
 	
 	@Override
 	protected void decode(PacketBufferExt input) throws IOException
 	{
 		super.decode(input);
-		x = input.readInt();
-		z = input.readInt();
+		this.x = input.readInt();
+		this.z = input.readInt();
 	}
 }

@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.network;
 
 import java.io.IOException;
@@ -15,6 +14,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 /**
+ * The improved packet buffer provided more helper
+ * methods.
  * @author ueyudiud
  */
 public class PacketBufferExt extends PacketBuffer

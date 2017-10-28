@@ -2,7 +2,7 @@
  * copyright© 2016-2017 ueyudiud
  */
 
-package nebula.common.world.chunk;
+package ed.chunk;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.network.PacketBuffer;
@@ -20,13 +20,13 @@ public class BlockStatePaletteRegistry implements IBlockStatePalette
 	@Override
 	public int idFor(IBlockState state)
 	{
-		return ExtendedBlockStateRegister.getCachedID(state);
+		return ExtendedBlockStateRegister.INSTANCE.getNetworkID(state);
 	}
 	
 	@Override
 	public IBlockState getBlockState(int indexKey)
 	{
-		return ExtendedBlockStateRegister.getCachedState(indexKey);
+		return ExtendedBlockStateRegister.INSTANCE.getStateFromNetworkID(indexKey);
 	}
 	
 	@SideOnly(Side.CLIENT)

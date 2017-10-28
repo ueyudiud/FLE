@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.client.gui;
 
 import java.io.IOException;
@@ -58,6 +61,13 @@ public abstract class GuiContainerBase extends GuiContainer
 		this.location = location;
 	}
 	
+	/**
+	 * Send GUI action to both client and server side container.
+	 * @param type the type of action.
+	 * @param code the action code.
+	 * @param processOnClient if it is <code>true</code>, the action will also handle on client.
+	 * @see nebula.common.gui.IGuiActionListener
+	 */
 	protected void sendGuiData(int type, long code, boolean processOnClient)
 	{
 		Nebula.network.sendToServer(new PacketGuiAction((byte) type, code, this.container));
@@ -116,7 +126,7 @@ public abstract class GuiContainerBase extends GuiContainer
 	/**
 	 * Check is key press down.
 	 * This method will be used only if {@link net.minecraft.client.gui.GuiScreen#allowUserInput} is enabled.<p>
-	 * The key checking is using for {{@link #keyTyped(char, int)} method to use, checking
+	 * The key checking is using for {@link #keyTyped(char, int)} method to use, checking
 	 * the key registered at {@link nebula.common.NebulaKeyHandler} is pressed down.
 	 * @param key the key register name.
 	 * @param keycode the typed keycode.

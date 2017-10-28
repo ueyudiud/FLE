@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.common.world.chunk;
+package ed.chunk;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import nebula.Log;
 import nebula.common.block.IExtendedDataBlock;
 import nebula.common.data.Misc;
+import nebula.common.world.IBlockDataProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 
@@ -19,7 +20,7 @@ import net.minecraft.block.state.IBlockState;
  * The block state register.
  * @author ueyudiud
  */
-public enum ExtendedBlockStateRegister
+public enum ExtendedBlockStateRegister implements IBlockDataProvider
 {
 	INSTANCE;
 	
@@ -43,7 +44,7 @@ public enum ExtendedBlockStateRegister
 	 * @param state the block state.
 	 * @return the data of block state.
 	 */
-	public static int getStateData(IBlockState state)
+	public int getStateData(IBlockState state)
 	{
 		if (state == null) state = Misc.AIR;
 		Block block = state.getBlock();
@@ -68,7 +69,7 @@ public enum ExtendedBlockStateRegister
 	 * @param data the block data.
 	 * @return the state of data.
 	 */
-	public static @Nonnull IBlockState getStateFromData(int data)
+	public @Nonnull IBlockState getStateFromData(int data)
 	{
 		Block block = Block.REGISTRY.getObjectById((data >> 20) & 0xFFF);
 		if (block == null) return Misc.AIR;
@@ -90,7 +91,7 @@ public enum ExtendedBlockStateRegister
 	 * @param state the state.
 	 * @return the cached network id.
 	 */
-	public static int getCachedID(IBlockState state)
+	public int getNetworkID(IBlockState state)
 	{
 		StateDelegate delegate = DELEGATES.get(state.getBlock());
 		return delegate.id + delegate.getMeta(state);
@@ -101,7 +102,7 @@ public enum ExtendedBlockStateRegister
 	 * @param id the network id.
 	 * @return the block state.
 	 */
-	public static IBlockState getCachedState(int id)
+	public IBlockState getStateFromNetworkID(int id)
 	{
 		StateDelegate delegate = INT_TO_DELEGATE.floorEntry(id).getValue();
 		return delegate.get(id - delegate.id);

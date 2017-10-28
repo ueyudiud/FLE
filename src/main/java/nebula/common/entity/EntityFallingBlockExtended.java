@@ -6,12 +6,12 @@ package nebula.common.entity;
 import java.util.ArrayList;
 
 import nebula.Log;
+import nebula.Nebula;
 import nebula.common.block.IHitByFallenBehaviorBlock;
 import nebula.common.block.ISmartFallableBlock;
 import nebula.common.data.DataSerializers;
 import nebula.common.data.Misc;
 import nebula.common.util.Worlds;
-import nebula.common.world.chunk.ExtendedBlockStateRegister;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
@@ -278,7 +278,7 @@ public class EntityFallingBlockExtended extends Entity
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt)
 	{
-		nbt.setInteger("data", ExtendedBlockStateRegister.getStateData(this.state));
+		nbt.setInteger("data", Nebula.blockDataProvider.getStateData(this.state));
 		nbt.setByte("time", (byte) this.lifeTime);
 		nbt.setBoolean("drop", this.shouldDropItem);
 		nbt.setBoolean("hit", this.hitEntity);
@@ -297,7 +297,7 @@ public class EntityFallingBlockExtended extends Entity
 	{
 		if (nbt.hasKey("data", 99))
 		{
-			this.state = ExtendedBlockStateRegister.getStateFromData(nbt.getInteger("data"));
+			this.state = Nebula.blockDataProvider.getStateFromData(nbt.getInteger("data"));
 			if (this.state == Misc.AIR)
 			{
 				setDead();

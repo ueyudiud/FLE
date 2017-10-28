@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.item.instance;
 
 import java.util.List;
@@ -22,6 +25,7 @@ public class ItemTreeLog extends ItemMulti
 	public ItemTreeLog()
 	{
 		super(FarCore.ID, MC.log_cutted);
+		setDisableRegisterToOreDict();
 		this.enableChemicalFormula = false;
 		EnumItem.log.set(this);
 	}

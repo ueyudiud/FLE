@@ -22,7 +22,6 @@ import net.minecraft.launchwrapper.IClassTransformer;
 /**
  * The class transformer.
  * @author ueyudiud
- *
  */
 public class ClassTransformer implements IClassTransformer
 {
@@ -38,7 +37,7 @@ public class ClassTransformer implements IClassTransformer
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
-		if (transformedName.startsWith("com.google.gson."))
+		if (transformedName.startsWith("com.google."))
 			return basicClass;//Gson uses do not modify.
 		NebulaASMLogHelper.outputInit();
 		if (transformedName.startsWith("net.minecraft."))

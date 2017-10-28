@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.oredict;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class OreDictExt
 	private static final List<String>									ID_TO_NAME = new ArrayList<>();
 	private static final Map<String, Integer>							NAME_TO_ID = new HashMap<>(128);
 	private static final List<
-	Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>>>FUNCTION_MAP = new ArrayList<>();
+	Map<Item, Entry<Judgable<ItemStack>, List<Judgable<ItemStack>>>>>	FUNCTION_MAP = new ArrayList<>();
 	private static final Map<Long, List<Integer>>						STACK_TO_IDS = new HashMap<>();
 	private static final List<Entry<List<ItemStack>, List<ItemStack>>>	ID_TO_STACK = new ArrayList<>();
 	public static final Function<ItemStack, Long>						STACK_SERIALIZER = stack ->
@@ -247,7 +246,7 @@ public class OreDictExt
 		registerOre("chestTrapped",   Blocks.TRAPPED_CHEST);
 		
 		// dyes
-		for(int i = 0; i < 16; ++i)
+		for (int i = 0; i < 16; ++i)
 		{
 			registerOre("dye"          + dyes[i], new ItemStack(Items.DYE, 1, i));
 			registerOre("blockGlass"   + dyes[i], new ItemStack(Blocks.STAINED_GLASS, 1, 15 - i));
@@ -496,7 +495,7 @@ public class OreDictExt
 	@SubscribeEvent
 	public void onOreRegistered(OreDictionary.OreRegisterEvent event)
 	{
-		if(event.getOre().getItemDamage() == OreDictionary.WILDCARD_VALUE)
+		if (event.getOre().getItemDamage() == OreDictionary.WILDCARD_VALUE)
 		{
 			registerOre(event.getName(), event.getOre().getItem());
 		}

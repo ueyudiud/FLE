@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package nebula.common.world.chunk;
+package ed.chunk;
 
 import javax.annotation.Nullable;
 
@@ -114,7 +114,7 @@ public class BlockStateContainerExt extends BlockStateContainer
 		int[] list = new int[BLOCK_COUNT];
 		for (int id = 0; id < BLOCK_COUNT; ++id)
 		{
-			list[id] = ExtendedBlockStateRegister.getStateData(get(id));
+			list[id] = ExtendedBlockStateRegister.INSTANCE.getStateData(get(id));
 		}
 		return list;
 	}
@@ -128,7 +128,7 @@ public class BlockStateContainerExt extends BlockStateContainer
 				{
 					try
 					{
-						set(k, i, j, datas == null ? Misc.AIR : ExtendedBlockStateRegister.getStateFromData(datas[id]));
+						set(k, i, j, datas == null ? Misc.AIR : ExtendedBlockStateRegister.INSTANCE.getStateFromData(datas[id]));
 					}
 					catch (Exception exception)
 					{

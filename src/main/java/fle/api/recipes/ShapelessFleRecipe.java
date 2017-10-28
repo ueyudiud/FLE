@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.api.recipes;
 
 import java.util.ArrayList;
@@ -59,9 +58,7 @@ public class ShapelessFleRecipe implements IRecipe
 	public boolean matches(InventoryCrafting inv, World worldIn)
 	{
 		EntityPlayer player = ForgeHooks.getCraftingPlayer();
-		if (this.forcePlayerContain && player == null)
-			return false;
-		else if (!matchPlayerCondition(worldIn, player))
+		if ((this.forcePlayerContain && player == null) || !matchPlayerCondition(worldIn, player))
 			return false;
 		return matchInventory(inv);
 	}

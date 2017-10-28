@@ -79,7 +79,7 @@ public final class Strings
 		return new StringBuilder(source.length() + insert.length() - 1)
 				.append(source, 0, i)
 				.append(insert)
-				.append(source, i + 1, source.length() - i).toString();
+				.append(source, i + 1, source.length()).toString();
 	}
 	
 	public static String validateProperty(@Nullable String string)

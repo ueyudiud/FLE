@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.block;
 
 import java.util.ArrayList;
@@ -11,7 +14,6 @@ import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.common.block.property.PropertyTE;
 import nebula.common.block.property.PropertyTE.TETag;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITP_Drops;
-import nebula.common.world.chunk.IBlockStateRegister;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -31,7 +33,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * The block with multi tile entity.
+ * The block with multi tile entity.<p>
+ * If you added ED(Extra Data) mod, there will be 20 bits to store
+ * tile entity data, or only 4 bit instead.
  * @author ueyudiud
  * @see net.minecraft.tileentity.TileEntity
  */
@@ -139,6 +143,18 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 	}
 	
 	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getStateFromData(meta);
+	}
+	
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return getDataFromState(state) & 0xF;
+	}
+	
+	@Override
 	public IBlockState getStateFromData(int meta)
 	{
 		return this.property_TE.withProperty(getDefaultState(), meta);
@@ -155,12 +171,6 @@ public abstract class BlockTE extends BlockSingleTE implements IExtendedDataBloc
 			float hitZ, ItemStack stackIn, EntityLivingBase placer)
 	{
 		return this.property_TE.withProperty(getDefaultState(), stackIn.getMetadata());
-	}
-	
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return 0;
 	}
 	
 	@Override
