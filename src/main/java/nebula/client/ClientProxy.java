@@ -88,7 +88,6 @@ public class ClientProxy extends CommonProxy implements IResourceManagerReloadLi
 	public static Map<IItemColor, List<Item>> itemColorMap = new HashMap<>();
 	public static List<Block> buildInRender = new ArrayList<>();
 	
-	
 	@Override
 	public void loadClient()
 	{

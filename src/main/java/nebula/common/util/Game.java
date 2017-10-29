@@ -6,6 +6,7 @@ package nebula.common.util;
 import java.io.File;
 
 import nebula.Nebula;
+import nebula.asm.NebulaSetup;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -59,7 +60,7 @@ public final class Game
 	 */
 	public static File getMCFile()
 	{
-		return Nebula.proxy.fileDir();
+		return NebulaSetup.getMcPath();
 	}
 	
 	/**

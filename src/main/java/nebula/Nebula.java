@@ -63,12 +63,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.WorldAccessContainer;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -128,10 +129,16 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public static IBlockDataProvider blockDataProvider = new IBlockDataProvider.Template();
 	
 	/**
-	 * The mod proxy.
+	 * The mod sided proxy.
 	 */
-	@SidedProxy(serverSide = "nebula.common.CommonProxy", clientSide = "nebula.client.ClientProxy")
+	@SidedProxy(modId = MODID, serverSide = "nebula.common.CommonProxy", clientSide = "nebula.client.ClientProxy")
 	public static CommonProxy proxy;
+	
+	static
+	{
+		//For bootstrap takes too long time to initialize...
+		new Thread(()-> { try { new Bootstrap().clone(); } catch (Throwable t) {} }, "Bootstrap Initalizer").start();
+	}
 	
 	private LanguageManager lang;
 	private Configuration configuration;
@@ -171,8 +178,20 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	}
 	
 	@Subscribe
-	public void check(FMLFingerprintViolationEvent event)
+	public void check(FMLConstructionEvent event)
 	{
+		Log.info("Injecting Nebula proxy...");
+		try
+		{
+			SidedProxy proxy = getClass().getField("proxy").getAnnotation(SidedProxy.class);
+			Nebula.proxy = (CommonProxy)
+					Class.forName(FMLCommonHandler.instance().getSide().isClient() ? proxy.clientSide() : proxy.serverSide()).newInstance();
+		}
+		catch (Exception exception)
+		{
+			throw new RuntimeException("Fail to inject proxy!");
+		}
+		
 		/**
 		 * The Nebula and its child mod use Java8. There are method
 		 * is added in Java8, so it is checked by a type
@@ -206,8 +225,6 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Subscribe
 	public void load(FMLPreInitializationEvent event)
 	{
-		//For bootstrap takes too long time to initialize...
-		new Thread(()-> { try { new Bootstrap().clone(); } catch (Throwable t) {} }, "Bootstrap Initalizer").start();
 		this.lang = new LanguageManager(new File(Game.getMCFile(), "lang"));
 		this.configuration = NebulaConfiguration.loadStaticConfig(NebulaConfig.class);
 		

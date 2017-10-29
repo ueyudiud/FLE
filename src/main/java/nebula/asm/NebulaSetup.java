@@ -295,8 +295,13 @@ public class NebulaSetup implements IFMLCallHook
 			.registerTypeAdapter(AbstractInsnNode.class, this.DESERIALIZER3)
 			.create();
 	
-	private File mcPath;
-	private boolean runtimeDeobf;
+	private static File mcPath;
+	private static boolean runtimeDeobf;
+	
+	public static File getMcPath()
+	{
+		return mcPath;
+	}
 	
 	private void extractASMFile(File file, String location, File destination) throws IOException
 	{
@@ -463,7 +468,7 @@ public class NebulaSetup implements IFMLCallHook
 	@Override
 	public void injectData(Map<String, Object> data)
 	{
-		this.mcPath = (File) data.get("mcLocation");
-		this.runtimeDeobf = ((Boolean) data.get("runtimeDeobfuscationEnabled")).booleanValue();
+		mcPath = (File) data.get("mcLocation");
+		runtimeDeobf = ((Boolean) data.get("runtimeDeobfuscationEnabled")).booleanValue();
 	}
 }

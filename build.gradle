@@ -89,8 +89,8 @@ task deobfJar(type: Jar) {
     }
     classifier = 'dev'
     manifest {
-        //attributes 'FMLCorePlugin': 'WhateverLoaderClass'
-        //attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': 'nebula.NebulaLoadingPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
 
@@ -101,23 +101,15 @@ task nebula(type: Jar, dependsOn: 'jar') {
 	}
 }
 
-task coreJar(type: Jar, dependsOn: 'jar') {
-    classifier = 'core'
-    from (sourceSets.main.output) {
-        exclude "**/debug/**" //Some debug texting, needn't present in obf jar.
-        include "**/farcore/**"
-    }
-}
-
 jar {
     exclude "**/debug/**"
     manifest {
-        attributes 'FMLCorePlugin': 'nebula.NebulaLoadingPlugin', // NebulaLoadingPlugin defaulty path.
-        'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': 'nebula.NebulaLoadingPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
 
 artifacts {
 	archives deobfJar
-	archives coreJar
+	archives nebula
 }

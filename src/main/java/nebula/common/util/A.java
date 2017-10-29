@@ -6,6 +6,7 @@ package nebula.common.util;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -128,6 +129,24 @@ public final class A
 	public static <E> boolean and(E[] list, Predicate<? super E> checker)
 	{
 		for (E element : list) if (!checker.test(element)) return false;
+		return true;
+	}
+	
+	/**
+	 * Check all elements can be matched.
+	 * @param list1 the first list.
+	 * @param list2 the second list.
+	 * @param checker
+	 * @param <E1> the first list element type.
+	 * @param <E2> the second list element type.
+	 * @return
+	 * @throws IllegalArgumentException if two list length are not same.
+	 */
+	public static <E1, E2> boolean and(E1[] list1, E2[] list2, BiPredicate<? super E1, ? super E2> checker)
+	{
+		if (list1.length != list2.length)
+			throw new IllegalArgumentException();
+		for (int i = 0; i < list1.length; ++i) if (!checker.test(list1[i], list2[i])) return false;
 		return true;
 	}
 	

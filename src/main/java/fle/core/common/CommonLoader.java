@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.common;
 
 import fle.core.handler.FleEntityHandler;
@@ -20,7 +19,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
- * 
  * @author ueyudiud
  */
 public class CommonLoader
