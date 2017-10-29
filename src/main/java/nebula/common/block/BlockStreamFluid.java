@@ -7,7 +7,7 @@ import static nebula.base.ObjArrayParseHelper.create;
 
 import java.util.function.Function;
 
-import farcore.lib.block.state.PropertyFarInt;
+import nebula.common.block.property.PropertyInt;
 import nebula.common.fluid.FluidBase;
 import nebula.common.util.L;
 import net.minecraft.block.material.Material;
@@ -25,7 +25,7 @@ public class BlockStreamFluid extends BlockStandardFluid implements IExtendedDat
 {
 	private static final int MAX_QUANTA_VALUE = 100;
 	
-	public static final PropertyFarInt LEVEL = new PropertyFarInt("level", 0, MAX_QUANTA_VALUE - 1);
+	public static final PropertyInt LEVEL = new PropertyInt("level", 0, MAX_QUANTA_VALUE - 1);
 	
 	protected static Function<Object[], IBlockState> createFunctionApplier(BlockStreamFluid block)
 	{

@@ -1,7 +1,7 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-package farcore.lib.block.state;
+package nebula.common.block.property;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.google.common.base.Optional;
 import nebula.base.range.RangeInt;
 import nebula.common.util.L;
 
-public class PropertyFarInt implements IFarProperty<Integer>
+public class PropertyInt implements IStandardProperty<Integer>
 {
 	private final String name;
 	private final int min;
@@ -20,7 +20,7 @@ public class PropertyFarInt implements IFarProperty<Integer>
 	private Integer instance;
 	private final List<Integer> list;
 	
-	public PropertyFarInt(String name, int min, int max)
+	public PropertyInt(String name, int min, int max)
 	{
 		this.name = name;
 		this.min = min;
@@ -29,7 +29,7 @@ public class PropertyFarInt implements IFarProperty<Integer>
 		this.list = RangeInt.range(min, max);
 	}
 	
-	public PropertyFarInt setInstance(int instance)
+	public PropertyInt setInstance(int instance)
 	{
 		this.instance = instance;
 		return this;
@@ -88,10 +88,10 @@ public class PropertyFarInt implements IFarProperty<Integer>
 	@Override
 	public boolean equals(Object obj)
 	{
-		return this == obj || ((obj instanceof PropertyFarInt) &&
-				((PropertyFarInt) obj).name == this.name &&
-				((PropertyFarInt) obj).max == this.max &&
-				((PropertyFarInt) obj).min == this.min);
+		return this == obj || ((obj instanceof PropertyInt) &&
+				((PropertyInt) obj).name == this.name &&
+				((PropertyInt) obj).max == this.max &&
+				((PropertyInt) obj).min == this.min);
 	}
 	
 	@Override

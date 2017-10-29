@@ -1,17 +1,18 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import farcore.lib.block.state.PropertyFarInt;
+import nebula.common.block.property.PropertyInt;
+import nebula.common.block.property.PropertyString;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
@@ -49,12 +50,22 @@ public class Properties
 	 */
 	public static IProperty<Integer> create(String name, int min, int max)
 	{
-		return new PropertyFarInt(name, min, max);
+		return new PropertyInt(name, min, max);
 	}
 	
 	public static PropertyBool create(String name)
 	{
 		return PropertyBool.create(name);
+	}
+	
+	public static PropertyString create(String name, String...values)
+	{
+		return new PropertyString(name, values);
+	}
+	
+	public static PropertyString create(String name, Collection<String> values)
+	{
+		return new PropertyString(name, values);
 	}
 	
 	/**

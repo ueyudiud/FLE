@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package nebula.common.block.property;
 
 import java.util.Collection;
@@ -20,21 +23,21 @@ public class PropertyString extends PropertyHelper<String>
 	public PropertyString(String name, Collection<String> strings)
 	{
 		super(name, String.class);
-		allowedValues = ImmutableList.copyOf(strings);
+		this.allowedValues = ImmutableList.copyOf(strings);
 	}
-
+	
 	@Override
 	public Collection<String> getAllowedValues()
 	{
-		return allowedValues;
+		return this.allowedValues;
 	}
-
+	
 	@Override
 	public Optional<String> parseValue(String value)
 	{
 		return Optional.of(value);
 	}
-
+	
 	@Override
 	public String getName(String value)
 	{
