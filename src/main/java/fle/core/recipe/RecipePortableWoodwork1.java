@@ -24,7 +24,7 @@ public class RecipePortableWoodwork1 implements PortableWoodworkRecipe
 		if (inventory.hasStackInSlot(2))
 		{
 			ItemStack stack = inventory.getStack(2);
-			if(stack.getItem() instanceof ItemTreeLog)
+			if (stack.getItem() instanceof ItemTreeLog)
 			{
 				int length = ItemTreeLog.getLogSize(stack);
 				if (length <= 1) return false;

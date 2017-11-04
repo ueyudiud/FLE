@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.util;
 
 import java.lang.reflect.Array;
@@ -364,17 +363,17 @@ public final class NBTs
 	
 	public static <E> E[] getArrayOrDefault(NBTTagCompound nbt, String key, E[] container, INBTCompoundReader<E> reader)
 	{
-		if(nbt.hasKey(key, NBT.TAG_LIST))
+		if (nbt.hasKey(key, NBT.TAG_LIST))
 		{
 			NBTTagList list = nbt.getTagList(key, NBT.TAG_COMPOUND);
-			if(list.tagCount() >= container.length)
+			if (list.tagCount() > container.length)
 				throw new IndexOutOfBoundsException();
 			Arrays.fill(container, null);
-			for(int i = 0; i < list.tagCount(); ++i)
+			for (int i = 0; i < list.tagCount(); ++i)
 			{
 				NBTTagCompound nbt1 = list.getCompoundTagAt(i);
 				short id = nbt1.getShort("idx");
-				if(id >= container.length)
+				if (id >= container.length)
 					throw new IndexOutOfBoundsException();
 				try
 				{

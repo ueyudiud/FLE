@@ -73,32 +73,37 @@ public class M
 	public static final Mat diorite_p			= new Mat(7031, FarCore.ID , "diorite_p"			, "DioritePegmatite"	, "Diorite Pegmatite"	).builder().setRGBa(0xBEC6C1FF).setToolProp(  44, 10, 2.7F, 0.8F,  5.6F, -0.6F).setRock( 9, 6.8F, 23.7F).build();
 	public static final Mat lapis_lazuli		= new Mat(7032, FarCore.ID , "lapis_lazuli"			, "LapisLazuli"			, "Lapis Lazuli"			).builder().setRGBa(0x272D82FF).setToolProp(  31,  8, 2.6F, 0.8F,  6.0F, -0.5F).setRock( 9, 7.0F, 19.6F).build();
 	//Soils
-	public static final Mat latrosol			= new Mat(7101, FarCore.ID , "latrosol"				, "Latrosol"			, "Latrosol"			).builder().setRGBa(0x652A1FFF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat latroaluminosol		= new Mat(7102, FarCore.ID , "latroaluminosol"		, "Latroaluminosol"		, "Latroaluminosol"		).builder().setRGBa(0x77412FFF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat ruboloam			= new Mat(7103, FarCore.ID , "ruboloam"				, "Ruboloam"			, "Ruboloam"			).builder().setRGBa(0x773E22FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat ruboaluminoloam		= new Mat(7104, FarCore.ID , "ruboaluminoloam"		, "Ruboaluminoloam"		, "Ruboaluminoloam"		).builder().setRGBa(0x8E5938FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat flavoloam			= new Mat(7105, FarCore.ID , "flavoloam"			, "Flavoloam"			, "Flavoloam"			).builder().setRGBa(0x907451FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat peatsol				= new Mat(7106, FarCore.ID , "peatsol"				, "Peatsol"				, "Peatsol"				).builder().setRGBa(0x1B1715FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat aterosol			= new Mat(7107, FarCore.ID , "aterosol"				, "Aterosol"			, "Aterosol"			).builder().setRGBa(0x1A110EFF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat podzol				= new Mat(7108, FarCore.ID , "podzol"				, "Podzol"				, "Podzol"				).builder().setRGBa(0x281812FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat pheosol				= new Mat(7109, FarCore.ID , "pheosol"				, "Pheosol"				, "Pheosol"				).builder().setRGBa(0x6C4626FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat aterocalcosol		= new Mat(7110, FarCore.ID , "aterocalcosol"		, "Aterocalcosol"		, "Aterocalcosol"		).builder().setRGBa(0x25211EFF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat spaticocalcosol		= new Mat(7111, FarCore.ID , "spaticocalcosol"		, "Spaticocalcosol"		, "Spaticocalcosol"		).builder().setRGBa(0x3C3123FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat brunnocalcosol		= new Mat(7112, FarCore.ID , "brunnocalcosol"		, "Brunnocalcosol"		, "Brunnocalcosol"		).builder().setRGBa(0xAA9770FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat brunnodesertosol	= new Mat(7113, FarCore.ID , "brunnodesertosol"		, "Brunnodesertosol"	, "Brunnodesertosol"	).builder().setRGBa(0xACA495FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat cinerodesertosol	= new Mat(7114, FarCore.ID , "cinerodesertosol"		, "Cinerodesertosol"	, "Cinerodesertosol"	).builder().setRGBa(0xA3A098FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat tundrosol			= new Mat(7115, FarCore.ID , "tundrosol"			, "Tundrosol"			, "Tundrosol"			).builder().setRGBa(0x97948FFF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat moraine				= new Mat(7116, FarCore.ID , "moraine"				, "Moraine"				, "Moraine"				).builder().setRGBa(0x959391FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat flavobrunnoloam		= new Mat(7117, FarCore.ID , "flavobrunnoloam"		, "Flavobrunnoloam"		, "Flavobrunnoloam"		).builder().setRGBa(0x7C6242FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat brunnoloam			= new Mat(7118, FarCore.ID , "brunnoloam"			, "Brunnoloam"			, "Brunnoloam"			).builder().setRGBa(0x765F43FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat aterobrunnoloam		= new Mat(7119, FarCore.ID , "aterobrunnoloam"		, "Aterobrunnoloam"		, "Aterobrunnoloam"		).builder().setRGBa(0x433B30FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
-	public static final Mat palosol				= new Mat(7120, FarCore.ID , "palosol"				, "Palosol"				, "Palosol"				).builder().setRGBa(0x948863FF).setSoil(0.6F, 3.0F, Materials.DIRT).build();
+	public static final Mat latrosol			= new Mat(7101, FarCore.ID , "latrosol"				, "Latrosol"			, "Latrosol"			).builder().setRGBa(0x652A1FFF).setSoil(0.6F, 3.0F).build();
+	public static final Mat latroaluminosol		= new Mat(7102, FarCore.ID , "latroaluminosol"		, "Latroaluminosol"		, "Latroaluminosol"		).builder().setRGBa(0x77412FFF).setSoil(0.6F, 3.0F).build();
+	public static final Mat ruboloam			= new Mat(7103, FarCore.ID , "ruboloam"				, "Ruboloam"			, "Ruboloam"			).builder().setRGBa(0x773E22FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat ruboaluminoloam		= new Mat(7104, FarCore.ID , "ruboaluminoloam"		, "Ruboaluminoloam"		, "Ruboaluminoloam"		).builder().setRGBa(0x8E5938FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat flavoloam			= new Mat(7105, FarCore.ID , "flavoloam"			, "Flavoloam"			, "Flavoloam"			).builder().setRGBa(0x907451FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat peatsol				= new Mat(7106, FarCore.ID , "peatsol"				, "Peatsol"				, "Peatsol"				).builder().setRGBa(0x1B1715FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat aterosol			= new Mat(7107, FarCore.ID , "aterosol"				, "Aterosol"			, "Aterosol"			).builder().setRGBa(0x1A110EFF).setSoil(0.6F, 3.0F).build();
+	public static final Mat podzol				= new Mat(7108, FarCore.ID , "podzol"				, "Podzol"				, "Podzol"				).builder().setRGBa(0x281812FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat pheosol				= new Mat(7109, FarCore.ID , "pheosol"				, "Pheosol"				, "Pheosol"				).builder().setRGBa(0x6C4626FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat aterocalcosol		= new Mat(7110, FarCore.ID , "aterocalcosol"		, "Aterocalcosol"		, "Aterocalcosol"		).builder().setRGBa(0x25211EFF).setSoil(0.6F, 3.0F).build();
+	public static final Mat spaticocalcosol		= new Mat(7111, FarCore.ID , "spaticocalcosol"		, "Spaticocalcosol"		, "Spaticocalcosol"		).builder().setRGBa(0x3C3123FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat brunnocalcosol		= new Mat(7112, FarCore.ID , "brunnocalcosol"		, "Brunnocalcosol"		, "Brunnocalcosol"		).builder().setRGBa(0xAA9770FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat brunnodesertosol	= new Mat(7113, FarCore.ID , "brunnodesertosol"		, "Brunnodesertosol"	, "Brunnodesertosol"	).builder().setRGBa(0xACA495FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat cinerodesertosol	= new Mat(7114, FarCore.ID , "cinerodesertosol"		, "Cinerodesertosol"	, "Cinerodesertosol"	).builder().setRGBa(0xA3A098FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat tundrosol			= new Mat(7115, FarCore.ID , "tundrosol"			, "Tundrosol"			, "Tundrosol"			).builder().setRGBa(0x97948FFF).setSoil(0.6F, 3.0F).build();
+	public static final Mat moraine				= new Mat(7116, FarCore.ID , "moraine"				, "Moraine"				, "Moraine"				).builder().setRGBa(0x959391FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat flavobrunnoloam		= new Mat(7117, FarCore.ID , "flavobrunnoloam"		, "Flavobrunnoloam"		, "Flavobrunnoloam"		).builder().setRGBa(0x7C6242FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat brunnoloam			= new Mat(7118, FarCore.ID , "brunnoloam"			, "Brunnoloam"			, "Brunnoloam"			).builder().setRGBa(0x765F43FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat aterobrunnoloam		= new Mat(7119, FarCore.ID , "aterobrunnoloam"		, "Aterobrunnoloam"		, "Aterobrunnoloam"		).builder().setRGBa(0x433B30FF).setSoil(0.6F, 3.0F).build();
+	public static final Mat palosol				= new Mat(7120, FarCore.ID , "palosol"				, "Palosol"				, "Palosol"				).builder().setRGBa(0x948863FF).setSoil(0.6F, 3.0F).build();
 	//Sand
-	public static final Mat sand			= new Mat(7201, "minecraft", "sand"				, "Sand"			, "Sand"				).builder().setRGBa(0xE8DCB1FF).setSand(0.8F, 1.3F).build();
-	public static final Mat redsand			= new Mat(7202, "minecraft", "redsand"			, "Red Sand"		, "Red Sand"			).builder().setRGBa(0xE8DCB1FF).setSand(0.9F, 1.3F).build();
+	public static final Mat sand				= new Mat(7201, "minecraft", "sand"					, "Sand"				, "Sand"				).builder().setRGBa(0xE8DCB1FF).setSand(0.8F, 1.3F).build();
+	public static final Mat redsand				= new Mat(7202, "minecraft", "redsand"				, "Red Sand"			, "Red Sand"			).builder().setRGBa(0xE8DCB1FF).setSand(0.9F, 1.3F).build();
 	//TODO the color still needed be checked.
 	//	public static final Mat white_sand		= new Mat(7203, FarCore.ID , "white_sand"		, "WhiteSand"		, "White Sand"			).builder().setRGBa(0xE8DCB1FF).setSand(0.8F, 1.4F).build();
 	//	public static final Mat salty_sand		= new Mat(7204, FarCore.ID , "salty_sand"		, "SaltySand"		, "Salty Sand"			).builder().setRGBa(0xE8DCB1FF).setSand(0.8F, 1.2F).build();
+	//Clay
+	public static final Mat chlorite			= new Mat(7301, FarCore.ID , "chlorite"				, "Chlorite"			, "Chlorite"			).builder().setRGBa(0x939691FF).setClay(1.0F, 2.3F).build();
+	public static final Mat illite				= new Mat(7302, FarCore.ID , "illite"				, "Illite"				, "Illite"				).builder().setRGBa(0x96958BFF).setClay(1.0F, 2.3F).build();
+	public static final Mat kaolinite			= new Mat(7303, FarCore.ID , "kaolinite"			, "Kaolinite"			, "Kaolinite"			).builder().setRGBa(0xAFABA5FF).setClay(1.0F, 2.3F).build();
+	public static final Mat smectite			= new Mat(7304, FarCore.ID , "smectite"				, "Smectite"			, "Smectite"			).builder().setRGBa(0x86898AFF).setClay(1.0F, 2.3F).build();
 	//Miscellaneous terria
 	public static final Mat flint			= new Mat(7601, "minecraft", "flint"			, "Flint"			, "Flint"				).builder().setRGBa(0x2D2D2DFF).setToolProp(  10,  8, 1.1F, 1.0F,  5.0F, -0.4F).build();
 	public static final Mat gravel			= new Mat(7602, "minecraft", "gravel"			, "Gravel"			, "Gravel"				).builder().setRGBa(0xAEB1BFFF).build();

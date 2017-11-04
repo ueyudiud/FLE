@@ -4,6 +4,7 @@
 package farcore.lib.material;
 
 import static farcore.data.SubTags.BRICK;
+import static farcore.data.SubTags.CLAY;
 import static farcore.data.SubTags.CROP;
 import static farcore.data.SubTags.DIRT;
 import static farcore.data.SubTags.HANDLE;
@@ -22,7 +23,6 @@ import farcore.lib.material.ore.IOreProperty;
 import farcore.lib.plant.IPlant;
 import farcore.lib.tree.Tree;
 import nebula.common.util.SubTag;
-import net.minecraft.block.material.Material;
 
 /**
  * Only for testing.
@@ -61,7 +61,10 @@ class MatBuilderTest extends Mat.Builder
 	public Builder setTree(Tree tree, boolean createBlock) { return setTag(TREE); }
 	
 	@Override
-	public Builder setSoil(float hardness, float resistance, Material material) { return setTag(DIRT); }
+	public Builder setSoil(float hardness, float resistance) { return setTag(DIRT); }
+	
+	@Override
+	public Builder setClay(float hardness, float resistance) { return setTag(CLAY); }
 	
 	@Override
 	public Builder setSand(float hardness, float resistance) { return setTag(SAND); }

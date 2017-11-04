@@ -4,6 +4,7 @@
 package farcore.data;
 
 import farcore.lib.block.terria.BlockSoil;
+import farcore.lib.block.terria.EnumCoverType;
 import farcore.lib.item.ItemMulti;
 import farcore.lib.item.ItemTool;
 import nebula.client.ClientProxy;
@@ -49,7 +50,7 @@ public class ColorMultiplier
 	public static final IBlockColor SOIL_COLOR = (state, worldIn, pos, tintIndex) ->
 	{
 		if(tintIndex != 0) return 0xFFFFFFFF;
-		BlockSoil.EnumCoverType type = state.getValue(BlockSoil.COVER_TYPE);
+		EnumCoverType type = state.getValue(BlockSoil.COVER_TYPE);
 		switch (type.getNoCover())
 		{
 		case GRASS : return worldIn == null || pos == null ? ColorizerGrass.getGrassColor(0.7F, 0.7F) : worldIn.getBiome(pos).getGrassColorAtPos(pos);
@@ -60,7 +61,7 @@ public class ColorMultiplier
 	public static final IItemColor ITEM_SOIL_COLOR = (stack, tintIndex) ->
 	{
 		if(tintIndex != 0) return 0xFFFFFFFF;
-		BlockSoil.EnumCoverType type = BlockSoil.EnumCoverType.VALUES[stack.getItemDamage()];
+		EnumCoverType type = EnumCoverType.VALUES[stack.getItemDamage()];
 		switch (type.getNoCover())
 		{
 		case GRASS : return ColorizerGrass.getGrassColor(0.7F, 0.7F);

@@ -41,7 +41,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author ueyudiud
  * @see farcore.FarCore
  */
-@Mod(modid = FarCore.ID, version = FarCoreSetup.VERSION, name = "Far Core", dependencies = "required-after:nebula")
+@Mod(modid = FarCore.ID, version = FarCoreSetup.VERSION, name = "Far Core", dependencies = "required-after:nebula; required-after:ed")
 public class FarCoreSetup
 {
 	/**

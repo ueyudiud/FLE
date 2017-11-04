@@ -7,12 +7,12 @@ import static nebula.common.LanguageManager.registerLocal;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerModEntity;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -50,6 +50,7 @@ import nebula.common.network.packet.PacketTESAsk;
 import nebula.common.network.packet.PacketTESync;
 import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.Game;
+import nebula.common.util.Sides;
 import nebula.common.world.IBlockDataProvider;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -63,7 +64,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.DummyModContainer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -148,12 +148,13 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	public Nebula()
 	{
 		super(new ModMetadata());
+		instance = this;
 		ModMetadata meta = getMetadata();
 		meta.modId = MODID;
 		meta.name = NAME;
 		meta.version = VERSION;
 		meta.credits = "ueyudiud";
-		meta.authorList = Arrays.asList("ueyudiud");
+		meta.authorList = ImmutableList.of("ueyudiud");
 		meta.description = "Nebula core.";
 		meta.logoFile = "/assets/nebula/textures/logo.png";
 		Log.logger = LogManager.getLogger(Nebula.NAME);
@@ -180,12 +181,12 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Subscribe
 	public void check(FMLConstructionEvent event)
 	{
-		Log.info("Injecting Nebula proxy...");
+		Log.info("Injecting Nebula proxy...");//Forge does not let Dummy Mod Container auto inject proxy.
 		try
 		{
 			SidedProxy proxy = getClass().getField("proxy").getAnnotation(SidedProxy.class);
 			Nebula.proxy = (CommonProxy)
-					Class.forName(FMLCommonHandler.instance().getSide().isClient() ? proxy.clientSide() : proxy.serverSide()).newInstance();
+					Class.forName(Sides.isClient() ? proxy.clientSide() : proxy.serverSide()).newInstance();
 		}
 		catch (Exception exception)
 		{
@@ -234,7 +235,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		MinecraftForge.EVENT_BUS.register(new NebulaItemHandler());
 		MinecraftForge.EVENT_BUS.register(new NebulaSynchronizationHandler());
 		
-		if(NebulaConfig.displayFluidInTab)
+		if (NebulaConfig.displayFluidInTab)
 		{
 			tabFluids = new CreativeTabBase("nebula.fluids", "Fluids[Nebula]", () -> new ItemStack(Items.WATER_BUCKET));
 		}
@@ -303,5 +304,6 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	@Override
 	public void readData(SaveHandler handler, WorldInfo info, Map<String, NBTBase> propertyMap, NBTTagCompound tag)
 	{
+		
 	}
 }

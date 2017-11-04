@@ -37,6 +37,8 @@ public class RecipeCraftingTool
 		LIST.add(new Ety<>(new BaseStack(IBF.iResources.getSubItem("vine_rope")), M.vine));
 		LIST.add(new Ety<>(new BaseStack(IBF.iResources.getSubItem("ramie_rope")), M.ramie_dry));
 		
+		LIST.trimToSize();
+		
 		addSpecialToolRecipe1("adz.rock", M.flint, IBF.iResources.getSubItem("flint_sharp"), TIE_MATCH1, "branch");
 		addSpecialToolRecipe1("adz.rock", M.quartz, IBF.iResources.getSubItem("quartz_chip"), TIE_MATCH1, "branch");
 		addSpecialToolRecipe1("biface", M.flint, IBF.iResources.getSubItem("flint_sharp"), IBF.iResources.getSubItem("flint_small"));
@@ -133,7 +135,7 @@ public class RecipeCraftingTool
 				}, null));
 	}
 	
-	private static final List<Entry<AbstractStack, Mat>> LIST = new ArrayList<>();
+	private static final ArrayList<Entry<AbstractStack, Mat>> LIST = new ArrayList<>();
 	private static final BiConsumer<ItemStack, ItemStack> CONSUMER1 = (input, output) -> {
 		Mat material = ItemMulti.getMaterial(input);
 		ItemTool.setMaterialToItem(output, "head", material);
@@ -146,7 +148,7 @@ public class RecipeCraftingTool
 	private static final SingleInputMatch TIE_MATCH1
 	= new SingleInputMatch(new AbstractStack()
 	{
-		List<ItemStack> list;
+		ArrayList<ItemStack> list;
 		
 		public boolean similar(ItemStack stack) { return L.contain(LIST, entry->entry.getKey().similar(stack)); }
 		
@@ -159,6 +161,7 @@ public class RecipeCraftingTool
 			{
 				this.list = new ArrayList<>();
 				LIST.forEach(entry->this.list.addAll(entry.getKey().display()));
+				this.list.trimToSize();
 			}
 			return this.list;
 		}

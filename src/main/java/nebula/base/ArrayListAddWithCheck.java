@@ -15,8 +15,7 @@ import javax.annotation.Nullable;
 /**
  * @author ueyudiud
  */
-public
-class ArrayListAddWithCheck<E> extends ArrayList<E>
+public class ArrayListAddWithCheck<E> extends ArrayList<E>
 {
 	private static final long serialVersionUID = -5656965564696895076L;
 	
@@ -56,11 +55,34 @@ class ArrayListAddWithCheck<E> extends ArrayList<E>
 	@Override
 	public void add(int index, @Nullable E element)
 	{
-		if (this.checker.test(element))
+		testElement(element);
+		super.add(index, element);
+	}
+	
+	@Override
+	public E set(int index, E element)
+	{
+		testElement(element);
+		return super.set(index, element);
+	}
+	
+	@Override
+	public boolean remove(Object o)
+	{
+		try
 		{
-			super.add(index, element);
+			return this.checker.test((E) o) && super.remove(o);
 		}
-		else throw new IllegalArgumentException("The element can not match from checker, Checkeer: " + this.checker);
+		catch (ClassCastException exception)
+		{
+			return false;
+		}
+	}
+	
+	void testElement(E element)
+	{
+		if (!this.checker.test(element))
+			throw new IllegalArgumentException("The element can not match from checker, Checkeer: " + this.checker);
 	}
 	
 	@Override

@@ -26,6 +26,7 @@ public class Materials
 	public static final Material VINE = Material.VINE;
 	public static final Material DIRT = Material.GROUND;
 	public static final Material DIRT_GRASSY = Material.GRASS;
+	public static final Material CLAY = Material.CLAY;
 	public static final Material ORE = new MaterialOre();
 	
 	public static final Material GLASS = Material.GLASS;

@@ -8,6 +8,7 @@ import java.util.List;
 import ed.chunk.BlockStateContainerExt;
 import ed.chunk.ExtendedBlockStateRegister;
 import nebula.Nebula;
+import nebula.common.block.IExtendedDataBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,6 +30,24 @@ import net.minecraftforge.fml.common.event.FMLModIdMappingEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
+ * Extra Data mod, use to let Minecraft world can store
+ * 2<sup>20</sup> size of meta instead of 16 only.<p>
+ * 
+ * <b>Important information:
+ * If you used this mod, the world may unable to loaded in another game
+ * without this mod loaded. So I suggested creators added this information
+ * to players for preventing the world data broken incident happened.</b><p>
+ * 
+ * Block Data information:<p>
+ * The block data is number id to find each block state.<p>
+ * 
+ * It contains block id and meta id combine to a <code>int</code> id.<p>
+ * 
+ * The first 12 bits (0 to 4095) is block id, which is determined by Forge.
+ * The last 20 bits (0 to 1048575 (2<sup>20</sup>-1)) is meta id, which is
+ * expanded by Nebula, but for most block, it only has 4 bits (0 to 15) to
+ * store meta, to get more meta slots, you should let block implements
+ * {@link IExtendedDataBlock}.<p>
  * @author ueyudiud
  */
 @Mod(modid = "ed", name = "Extra Data", version = "0.1", dependencies = "required-after:nebula")

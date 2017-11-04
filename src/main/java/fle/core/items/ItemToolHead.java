@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.items;
 
 import farcore.lib.item.ItemMulti;
@@ -29,7 +28,7 @@ public class ItemToolHead extends ItemMulti
 		super(FLE.MODID, mc);
 		if (Configs.createAllToolCreativeTabs)
 		{
-			setCreativeTab(new CreativeTabBase(mc.name, mc.localName, ()->new ItemStack(this)));
+			setCreativeTab(new CreativeTabBase(mc.name, mc.localName, ()-> new ItemStack(this)));
 		}
 		this.maxStackSize = 1;
 	}

@@ -5,9 +5,11 @@ package ed.chunk;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import nebula.Log;
 import nebula.common.block.IExtendedDataBlock;
@@ -25,26 +27,22 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	INSTANCE;
 	
 	static final Map<Block, StateDelegate> DELEGATES = new HashMap<>(4096);
-	static final TreeMap<Integer, StateDelegate> INT_TO_DELEGATE = new TreeMap<>();
-	
-	/*
-	 * Block Data information:
-	 * The block data is number id to find each block state.<p>
-	 * 
-	 * It contains block id and meta id combine to a <code>int</code> id.<p>
-	 * 
-	 * The first 12 bits (0 to 4095) is block id, which is determined by Forge.
-	 * The last 20 bits (0 to 1048575) is meta id, which is expanded by Nebula,
-	 * but for most block, it only has 4 bits (0 to 15) to store meta, to get
-	 * more meta slots, you should let block implements IExtendedDataBlock.<p>
+	/**
+	 * The tree map can use to search floor id from object.
+	 * the delegates used <code>blockNetworkId + stateMeta</code>
+	 * to allocate each networkid-blockstate mapping. Use <code>
+	 * INT_TO_DELEGATE.floorEntry(id)<code> to get delegate by
+	 * state id.
 	 */
+	static final TreeMap<Integer, StateDelegate> INT_TO_DELEGATE = new TreeMap<>();
 	
 	/**
 	 * Get block data (meta) by block state.
 	 * @param state the block state.
-	 * @return the data of block state.
+	 * @return the data of block state. If <tt>state</tt> is
+	 *         <code>null</code>, air block id will return.
 	 */
-	public int getStateData(IBlockState state)
+	public int getStateData(@Nullable IBlockState state)
 	{
 		if (state == null) state = Misc.AIR;
 		Block block = state.getBlock();
@@ -91,7 +89,7 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	 * @param state the state.
 	 * @return the cached network id.
 	 */
-	public int getNetworkID(IBlockState state)
+	public int getNetworkID(@Nonnull IBlockState state)
 	{
 		StateDelegate delegate = DELEGATES.get(state.getBlock());
 		return delegate.id + delegate.getMeta(state);
@@ -100,17 +98,21 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	/**
 	 * Get cached block state by network id.
 	 * @param id the network id.
-	 * @return the block state.
+	 * @return the block state, if no state found, the air
+	 *         block state will return.
 	 */
-	public IBlockState getStateFromNetworkID(int id)
+	public @Nonnull IBlockState getStateFromNetworkID(int id)
 	{
-		StateDelegate delegate = INT_TO_DELEGATE.floorEntry(id).getValue();
+		Entry<Integer, StateDelegate> entry = INT_TO_DELEGATE.floorEntry(id);
+		if (entry == null)
+			return Misc.AIR;
+		StateDelegate delegate = entry.getValue();
 		return delegate.get(id - delegate.id);
 	}
 	
 	/**
 	 * Get cached network id count.
-	 * @return the id size.
+	 * @return the cached id size.
 	 */
 	public static int idCapacity()
 	{
@@ -120,6 +122,10 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 	//Internal method and fields, do not use.
 	private int capacity;
 	
+	/**
+	 * INTERNAL METHOD, DO NOT USE!<p>
+	 * Build state map by setting up block-delegate mapping.
+	 */
 	public void buildStateMap()
 	{
 		Log.info("Mapping state map.");
@@ -137,6 +143,11 @@ public enum ExtendedBlockStateRegister implements IBlockDataProvider
 		Log.info("Remapping finished.");
 	}
 	
+	/**
+	 * INTERNAL METHOD, DO NOT USE!<p>
+	 * Allocate blockNetworkID to each block state,
+	 * the id used tessellation method.
+	 */
 	public void remapping()
 	{
 		Log.info("Remapping state map.");

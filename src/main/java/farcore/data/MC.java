@@ -33,6 +33,7 @@ public class MC
 	public static final MatCondition slabBrick = new MatCondition("slab_brick", "slabBrick", "Slab Brick", "% Brick Slab").setSize(2592L, 1296L, 1.5F).setFilter(SubTags.ROCK);
 	
 	public static final MatCondition soil = new MatCondition("soil", "Soil", "%").setSize(5184L).setFilter(SubTags.DIRT);
+	public static final MatCondition clay = new MatCondition("clay", "clayBlock", "Clay", "%").setSize(5184L).setFilter(SubTags.CLAY);
 	public static final MatCondition seed = new MatCondition("seed", "Seed", "% Seed").setSize(72L, 24L).setFilter(SubTags.CROP);
 	public static final MatCondition chip_rock = new MatCondition("chip", "Chip", "% Chip").setSize(576L, 576L, 4.0F).setFilter(SubTags.ROCK);
 	public static final MatCondition chip_ore = new MatCondition("chip_ore", "chip", "Ore Chip", "% Chip").setSize(576L, 576L, 4.0F).setFilter(SubTags.ORE);
@@ -41,6 +42,7 @@ public class MC
 	
 	public static final MatCondition pile = new MatCondition("pile", "Pile", "% Pile").setSize(576L, 16L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
 	public static final MatCondition pile_purified = new MatCondition("pile_purified", "Purified Pile", "Purified % Pile").setSize(576L, 12L).setFilter(Judgable.or(SubTags.DIRT, SubTags.PILEABLE, SubTags.SAND));
+	public static final MatCondition clayball = new MatCondition("clayball", "clay", "Clay", "% Ball").setSize(576L, 8L).setFilter(SubTags.CLAY);
 	
 	public static final MatCondition block = new MatCondition("block", "Block", "% Block").setSize(1296L, 1296L, 0.1F).setFilter(SubTags.METAL);
 	public static final MatCondition ingot = new MatCondition("ingot", "Ingot", "% Ingot").setSize(144L, 144L, 1.0F).setFilter(SubTags.METAL);

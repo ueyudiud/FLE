@@ -13,7 +13,7 @@ import farcore.data.MP;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.block.terria.BlockSand;
 import farcore.lib.block.terria.BlockSoil;
-import farcore.lib.block.terria.BlockSoil.EnumCoverType;
+import farcore.lib.block.terria.EnumCoverType;
 import farcore.lib.crop.ICrop;
 import farcore.lib.material.Mat;
 import farcore.lib.tree.ITreeGenerator;
@@ -151,11 +151,11 @@ public class FarSurfaceDataGenerator
 		{
 			if (temp < 0.6F)
 			{
-				state = state.withProperty(BlockSoil.COVER_TYPE, BlockSoil.EnumCoverType.TUNDRA);
+				state = state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.TUNDRA);
 			}
 			else
 			{
-				state = state.withProperty(BlockSoil.COVER_TYPE, BlockSoil.EnumCoverType.GRASS);
+				state = state.withProperty(BlockSoil.COVER_TYPE, EnumCoverType.GRASS);
 			}
 		}
 		return state;

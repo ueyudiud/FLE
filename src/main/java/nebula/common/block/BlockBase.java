@@ -217,7 +217,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 		
 		if (this.canSilkHarvest(worldIn, pos, state, player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0)
 		{
-			if(!onBlockHarvest(worldIn, pos, state, player, true))
+			if (!onBlockHarvest(worldIn, pos, state, player, true))
 			{
 				List<ItemStack> items = L.castToArrayListOrWrap(getDrops(worldIn, pos, state, te, 0, true));
 				
@@ -232,7 +232,7 @@ public class BlockBase extends Block implements IRegisteredNameable, IRenderRegi
 				
 			}
 		}
-		else if(!onBlockHarvest(worldIn, pos, state, player, false))
+		else if (!onBlockHarvest(worldIn, pos, state, player, false))
 		{
 			this.thread1.set(te);
 			this.harvesters.set(player);

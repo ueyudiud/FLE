@@ -18,10 +18,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 import farcore.data.MP;
+import farcore.data.Materials;
 import farcore.data.SubTags;
 import farcore.lib.block.behavior.MetalBlockBehavior;
 import farcore.lib.block.behavior.RockBehavior;
 import farcore.lib.block.instance.BlockBrick;
+import farcore.lib.block.terria.BlockClay;
 import farcore.lib.block.terria.BlockRock;
 import farcore.lib.block.terria.BlockSand;
 import farcore.lib.block.terria.BlockSoil;
@@ -56,7 +58,6 @@ import nebula.common.util.IRegisteredNameable;
 import nebula.common.util.ISubTagContainer;
 import nebula.common.util.ItemStacks;
 import nebula.common.util.SubTag;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
@@ -424,15 +425,27 @@ public class Mat implements ISubTagContainer, IRegisteredNameable, Comparable<Ma
 			return addProperty(MP.property_brick, property);
 		}
 		
-		public Builder setSoil(float hardness, float resistance, Material material)
+		public Builder setSoil(float hardness, float resistance)
 		{
 			PropertyBlockable property = new PropertyBlockable(
 					Mat.this,
 					-1,//It seems no soil need use tool to harvest.
 					hardness,
 					resistance);
-			property.block = new BlockSoil(Mat.this.modid, "soil." + Mat.this.name, material, Mat.this, property);
+			property.block = new BlockSoil(Mat.this.modid, "soil." + Mat.this.name, Materials.DIRT, Mat.this, property);
 			add(SubTags.DIRT);
+			return addProperty(MP.property_soil, property);
+		}
+		
+		public Builder setClay(float hardness, float resistance)
+		{
+			PropertyBlockable property = new PropertyBlockable(
+					Mat.this,
+					-1,//It seems no soil need use tool to harvest.
+					hardness,
+					resistance);
+			property.block = new BlockClay(Mat.this.modid, "soil." + Mat.this.name, Materials.CLAY, Mat.this, property);
+			add(SubTags.CLAY);
 			return addProperty(MP.property_soil, property);
 		}
 		

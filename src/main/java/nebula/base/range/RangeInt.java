@@ -3,12 +3,14 @@
  */
 package nebula.base.range;
 
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
 
@@ -17,11 +19,19 @@ import nebula.common.util.A;
 /**
  * @author ueyudiud
  */
-public
-class RangeInt extends AbstractList<Integer>
+public class RangeInt extends AbstractList<Integer> implements Serializable
 {
+	private static final long serialVersionUID = 5277973178659886150L;
+	
+	/** The <code>int</code> range. */
 	private final int min, max;
 	
+	/**
+	 * Create a ranged collection.
+	 * @param min the minimum value in range (include itself).
+	 * @param max the max value in range (exclude itself).
+	 * @return the range.
+	 */
 	public static List<Integer> to(int min, int max)
 	{
 		return min >= max ? ImmutableList.of() : new RangeInt(min, max);
@@ -29,9 +39,9 @@ class RangeInt extends AbstractList<Integer>
 	
 	/**
 	 * Create a ranged collection.
-	 * @param min
-	 * @param max
-	 * @return
+	 * @param min the minimum value in range (include itself).
+	 * @param max the max value in range (include itself).
+	 * @return the range.
 	 */
 	public static List<Integer> range(int min, int max)
 	{
@@ -50,7 +60,7 @@ class RangeInt extends AbstractList<Integer>
 	public Integer get(int index)
 	{
 		int i = index + this.min;
-		if (i >= this.max)
+		if (i >= this.max || i < 0)
 			throw new ArrayIndexOutOfBoundsException(index);
 		return i;
 	}
@@ -62,9 +72,9 @@ class RangeInt extends AbstractList<Integer>
 	}
 	
 	@Override
-	public boolean isEmpty()//The range will always not empty, with initializer checking.
+	public boolean isEmpty()
 	{
-		return false;
+		return false;//The range will always not empty, with initializer checking.
 	}
 	
 	@Override
@@ -176,21 +186,17 @@ class RangeInt extends AbstractList<Integer>
 	}
 	
 	@Override
-	public Object[] toArray()
+	public Integer[] toArray()
 	{
-		Integer[] array = new Integer[size()];
-		return A.fill(array, i->i + this.min);
+		return A.fill(new Integer[size()], i->i + this.min);
 	}
 	
 	@Override
 	public <T> T[] toArray(T[] a)
 	{
-		int size = size();
-		if (a.length < size)
-		{
-			a = ObjectArrays.newArray(a, size);
-		}
-		return A.<T>fill(a, i->(T) Integer.valueOf(i + this.min));
+		int size;
+		return A.<T>fill(a.length < (size = size()) ?
+				ObjectArrays.newArray(a, size) : a, i->(T) Integer.valueOf(i + this.min));
 	}
 	
 	@Override
@@ -208,10 +214,12 @@ class RangeInt extends AbstractList<Integer>
 	@Override
 	public boolean containsAll(Collection<?> collection)
 	{
-		if (collection.isEmpty()) return true;
+		if (collection.isEmpty())
+			return true;
 		if (collection instanceof RangeInt)
 		{
-			return ((RangeInt) collection).min >= this.min && ((RangeInt) collection).max >= this.max;
+			return ((RangeInt) collection).min >= this.min &&
+					((RangeInt) collection).max >= this.max;
 		}
 		else
 		{
@@ -241,5 +249,48 @@ class RangeInt extends AbstractList<Integer>
 	public void clear()
 	{
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hashCode = 1;
+		for (int i = this.min; i < this.max; ++i)
+			hashCode = 31 * hashCode + Integer.hashCode(i);
+		return hashCode;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o == this)
+			return true;
+		if (o instanceof RangeInt)
+			return ((RangeInt) o).min == this.min && ((RangeInt) o).max == this.max;
+		if (!(o instanceof List))
+			return false;
+		
+		Iterator<Integer> iterator1 = iterator();
+		ListIterator<?> iterator2 = ((List<?>) o).listIterator();
+		while (iterator1.hasNext() && iterator2.hasNext())
+		{
+			if (!Objects.equal(iterator1.next(), iterator2.next()))
+				return false;
+		}
+		return !(iterator1.hasNext() || iterator2.hasNext());
+	}
+	
+	@Override
+	public String toString()
+	{
+		Iterator<Integer> itr = iterator();
+		StringBuilder sb = new StringBuilder().append('[');
+		while (true)
+		{
+			sb.append(itr.next());
+			if (!itr.hasNext())
+				return sb.append(']').toString();
+			sb.append(',').append(' ');
+		}
 	}
 }

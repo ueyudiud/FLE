@@ -17,6 +17,7 @@ public class SubTags
 	public static final SubTag METAL	= getNewSubTag("METAL");
 	public static final SubTag WOOD		= getNewSubTag("WOOD");
 	public static final SubTag DIRT		= getNewSubTag("DIRT");
+	public static final SubTag CLAY		= getNewSubTag("CLAY");
 	public static final SubTag SAND		= getNewSubTag("SAND");
 	public static final SubTag ROCK		= getNewSubTag("ROCK");
 	public static final SubTag TOOL		= getNewSubTag("TOOL");
