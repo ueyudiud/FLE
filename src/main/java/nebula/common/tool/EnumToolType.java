@@ -45,7 +45,7 @@ public class EnumToolType
 	}
 	
 	public final String name;
-	Set<String> toolClass;
+	protected Set<String> toolClass;
 	final String dictName;
 	final AbstractStack stack;
 	

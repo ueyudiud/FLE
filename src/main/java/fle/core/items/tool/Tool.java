@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package fle.core.items.tool;
 
 import java.util.List;
@@ -6,6 +9,7 @@ import farcore.lib.item.IToolStat;
 import farcore.lib.item.ItemTool;
 import farcore.lib.material.Mat;
 import farcore.lib.util.DamageSourceEntityAttack;
+import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.tool.EnumToolType;
 import nebula.common.tool.ToolHooks;
 import nebula.common.util.EnumChatFormatting;
@@ -14,12 +18,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,12 +40,6 @@ public abstract class Tool implements IToolStat
 	protected Tool(EnumToolType type)
 	{
 		this.type = type;
-	}
-	
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
-	{
-		return null;
 	}
 	
 	@Override
@@ -181,5 +177,11 @@ public abstract class Tool implements IToolStat
 	public List<EnumToolType> getToolTypes(ItemStack stack)
 	{
 		return getAllowedToolTypes();
+	}
+	
+	@Override
+	public CapabilityProviderItem createProvider()
+	{
+		return null;
 	}
 }

@@ -11,7 +11,7 @@ import farcore.lib.material.Mat;
 import farcore.lib.tree.Tree;
 import farcore.lib.tree.TreeInfo;
 import fle.api.tile.ILogProductionCollector;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.client.model.StateMapperExt;
 import nebula.client.util.Renders;
 import nebula.common.block.IBlockStateRegister;
@@ -136,7 +136,7 @@ public class TreeLacquer extends Tree
 		if (tile instanceof ILogProductionCollector)
 		{
 			ILogProductionCollector collector = (ILogProductionCollector) tile;
-			collector.collectLogProductFrom(direction.getOpposite(), new FluidStack(IBF.fLacquer, 75));
+			collector.collectLogProductFrom(direction.getOpposite(), new FluidStack(IBFS.fLacquer, 75));
 		}
 	}
 	

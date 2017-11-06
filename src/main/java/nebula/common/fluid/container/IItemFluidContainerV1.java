@@ -6,6 +6,7 @@ package nebula.common.fluid.container;
 
 import javax.annotation.Nullable;
 
+import farcore.data.Capabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -23,11 +24,20 @@ public interface IItemFluidContainerV1 extends IItemFluidContainer
 	
 	void setFluidInContainer(ItemStack stack, @Nullable FluidStack fluid);
 	
-	int fill(ItemStack stack, FluidStack resource, boolean doFill);
+	default int fill(ItemStack stack, FluidStack resource, boolean doFill)
+	{
+		return stack.getCapability(Capabilities.CAPABILITY_FLUID, null).fill(resource, doFill);
+	}
 	
-	FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain);
+	default FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
+	{
+		return stack.getCapability(Capabilities.CAPABILITY_FLUID, null).drain(maxDrain, doDrain);
+	}
 	
-	FluidStack drain(ItemStack stack, FluidStack resource, boolean doDrain);
+	default FluidStack drain(ItemStack stack, FluidStack resource, boolean doDrain)
+	{
+		return stack.getCapability(Capabilities.CAPABILITY_FLUID, null).drain(resource, doDrain);
+	}
 	
 	@Override
 	default IFluidHandler createFluidHandlerWrapper(ItemStack stack)

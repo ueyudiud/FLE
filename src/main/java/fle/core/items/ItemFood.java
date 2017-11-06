@@ -27,9 +27,10 @@ public class ItemFood extends ItemSubEdible
 		addSubItem(1001, "salad1", "Salad", new FoodStatBase(7.0F, 2.0F, 3.0F));
 	}
 	
+	@Override
 	public void addSubItem(int id, String name, String localName, IFoodStat stat, IBehavior... behaviors)
 	{
-		super.addSubItem(id, name, localName, null, stat, behaviors);
+		super.addSubItem(id, name, localName, stat, behaviors);
 	}
 	
 	@Override

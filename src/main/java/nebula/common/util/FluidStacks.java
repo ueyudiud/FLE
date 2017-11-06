@@ -60,9 +60,9 @@ public final class FluidStacks
 					stack != null ? stack.getFluid().getTemperature(stack) : def;
 	}
 	
-	public static int getColor(@Nonnull FluidStack stack)
+	public static int getColor(@Nullable FluidStack stack)
 	{
-		return stack.getFluid().getColor(stack);
+		return stack == null ? 0xFFFFFFFF : stack.getFluid().getColor(stack);
 	}
 	
 	public static int getViscosity(@Nonnull FluidStack stack)
@@ -77,53 +77,53 @@ public final class FluidStacks
 	
 	public static FluidStack fillFluidFromWorld(World world, @Nullable RayTraceResult result, int maxFill, @Nullable Fluid requiredFluid, boolean doFill)
 	{
-		if(result == null || result.typeOfHit != RayTraceResult.Type.BLOCK) return null;
+		if (result == null || result.typeOfHit != RayTraceResult.Type.BLOCK) return null;
 		return fillFluidFromWorld(world, result.getBlockPos(), maxFill, requiredFluid, doFill);
 	}
 	
 	public static FluidStack fillFluidFromWorld(World world, BlockPos pos, int maxFill, @Nullable Fluid requiredFluid, boolean doFill)
 	{
-		if(maxFill == 0) return null;
+		if (maxFill == 0) return null;
 		IBlockState state = world.getBlockState(pos);
-		if(doFill)
+		if (doFill)
 		{
 			FluidFillFromWorldEvent event = new FluidFillFromWorldEvent(world, pos, requiredFluid, maxFill);
-			if(MinecraftForge.EVENT_BUS.post(event)) return null;
+			if (MinecraftForge.EVENT_BUS.post(event)) return null;
 			
-			if(event.getRet() != null)
+			if (event.getRet() != null)
 			{
 				return event.getRet().copy();
 			}
 		}
-		if(state.getBlock() instanceof ISmartFluidBlock)
+		if (state.getBlock() instanceof ISmartFluidBlock)
 		{
 			ISmartFluidBlock block = (ISmartFluidBlock) state.getBlock();
-			if(requiredFluid == null || block.getFluid() == requiredFluid)
+			if (requiredFluid == null || block.getFluid() == requiredFluid)
 			{
 				return ((ISmartFluidBlock) state.getBlock()).drain(world, pos, maxFill, doFill);
 			}
 		}
-		else if(state.getBlock() instanceof IFluidBlock)
+		else if (state.getBlock() instanceof IFluidBlock)
 		{
 			IFluidBlock block = (IFluidBlock) state.getBlock();
-			if((requiredFluid == null || block.getFluid() == requiredFluid) && block.canDrain(world, pos))
+			if ((requiredFluid == null || block.getFluid() == requiredFluid) && block.canDrain(world, pos))
 			{
 				return block.drain(world, pos, doFill);
 			}
 		}
-		else if(state.getBlock() instanceof BlockLiquid && state.getValue(BlockLiquid.LEVEL) == 0)
+		else if (state.getBlock() instanceof BlockLiquid && state.getValue(BlockLiquid.LEVEL) == 0)
 		{
-			if((requiredFluid == null || requiredFluid == FluidRegistry.WATER) && state.getMaterial() == Material.WATER)
+			if ((requiredFluid == null || requiredFluid == FluidRegistry.WATER) && state.getMaterial() == Material.WATER)
 			{
-				if(doFill)
+				if (doFill)
 				{
 					world.setBlockToAir(pos);
 				}
 				return new FluidStack(FluidRegistry.WATER, 1000);
 			}
-			else if((requiredFluid == null || requiredFluid == FluidRegistry.LAVA) && state.getMaterial() == Material.LAVA)
+			else if ((requiredFluid == null || requiredFluid == FluidRegistry.LAVA) && state.getMaterial() == Material.LAVA)
 			{
-				if(doFill)
+				if (doFill)
 				{
 					world.setBlockToAir(pos);
 				}
@@ -145,37 +145,37 @@ public final class FluidStacks
 	{
 		if(stack == null || !stack.getFluid().canBePlacedInWorld()) return 0;
 		Block blockRaw = stack.getFluid().getBlock();
-		if(doDrain)
+		if (doDrain)
 		{
 			FluidBlockEvent.FluidDrainToWorldEvent event = new FluidDrainToWorldEvent(world, pos, blockRaw, stack);
-			if(MinecraftForge.EVENT_BUS.post(event)) return 0;
+			if (MinecraftForge.EVENT_BUS.post(event)) return 0;
 			
-			if(event.getUsed() > 0)
+			if (event.getUsed() > 0)
 			{
 				return event.getUsed();
 			}
 		}
-		if(blockRaw instanceof ISmartFluidBlock)
+		if (blockRaw instanceof ISmartFluidBlock)
 		{
 			ISmartFluidBlock block = (ISmartFluidBlock) blockRaw;
 			return block.fill(world, pos, stack, doDrain);
 		}
-		else if(blockRaw instanceof BlockFluidBase)
+		else if (blockRaw instanceof BlockFluidBase)
 		{
-			if(stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAirOrReplacable(world, pos))
+			if (stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAirOrReplacable(world, pos))
 			{
-				if(doDrain)
+				if (doDrain)
 				{
 					world.setBlockState(pos, blockRaw.getDefaultState());
 				}
 				return Misc.BUCKET_CAPACITY;
 			}
 		}
-		else if(blockRaw instanceof BlockLiquid)//Use for vanilla water and lava.
+		else if (blockRaw instanceof BlockLiquid)//Use for vanilla water and lava.
 		{
-			if(stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAirOrReplacable(world, pos))
+			if (stack.amount >= Misc.BUCKET_CAPACITY && Worlds.isAirOrReplacable(world, pos))
 			{
-				if(doDrain)
+				if (doDrain)
 				{
 					world.setBlockState(pos, blockRaw.getDefaultState());
 				}

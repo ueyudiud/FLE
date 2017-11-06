@@ -5,7 +5,7 @@ package fle.core.tile.tools;
 
 import java.util.List;
 
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.base.ObjArrayParseHelper;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockActived;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
@@ -125,9 +125,9 @@ implements ITP_BoundingBox, ITB_BlockPlacedBy, ITP_Drops, ITB_BlockActived
 	{
 		if (this.duration == 10)
 		{
-			return ObjArrayParseHelper.newArrayList(IBF.iResources.getSubItem("dried_filled_wooden_brick_mold"));
+			return ObjArrayParseHelper.newArrayList(IBFS.iResources.getSubItem("dried_filled_wooden_brick_mold"));
 		}
-		ItemStack stack = IBF.iResources.getSubItem("filled_wooden_brick_mold");
+		ItemStack stack = IBFS.iResources.getSubItem("filled_wooden_brick_mold");
 		if (this.duration > 0 || this.wetness > 0)
 		{
 			NBTTagCompound compound = ItemStacks.getOrSetupNBT(stack, true);

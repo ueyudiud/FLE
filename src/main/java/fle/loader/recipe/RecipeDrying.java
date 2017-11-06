@@ -11,7 +11,7 @@ import fle.api.recipes.TemplateRecipeMap.TemplateRecipe;
 import fle.api.recipes.instance.RecipeMaps;
 import fle.core.items.ItemSimpleFluidContainer;
 import fle.loader.Crops;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.common.data.Misc;
 import nebula.common.fluid.container.IItemFluidContainer;
 import nebula.common.fluid.container.IItemFluidContainerV1;
@@ -30,12 +30,12 @@ public class RecipeDrying
 {
 	public static void init()
 	{
-		addDringRecipe(new OreStack(MC.crop.getOreName(Crops.ramie)), 250000, 10.0F, IBF.iResources.getSubItem("dry_ramie_fiber"));
-		addDringRecipe(new BaseStack(IBF.iCropRelated.getSubItem("grass")), 150000, 10.0F, IBF.iResources.getSubItem("hay"));
-		addDringRecipe(new BaseStack(IBF.iCropRelated.getSubItem("broadleaf")), 250000, 20.0F, IBF.iResources.getSubItem("dry_broadleaf"));
-		addDringRecipe(new BaseStack(IBF.iCropRelated.getSubItem("coniferous")), 250000, 20.0F, IBF.iResources.getSubItem("dry_coniferous"));
+		addDringRecipe(new OreStack(MC.crop.getOreName(Crops.ramie)), 250000, 10.0F, IBFS.iResources.getSubItem("dry_ramie_fiber"));
+		addDringRecipe(new BaseStack(IBFS.iCropRelated.getSubItem("grass")), 150000, 10.0F, IBFS.iResources.getSubItem("hay"));
+		addDringRecipe(new BaseStack(IBFS.iCropRelated.getSubItem("broadleaf")), 250000, 20.0F, IBFS.iResources.getSubItem("dry_broadleaf"));
+		addDringRecipe(new BaseStack(IBFS.iCropRelated.getSubItem("coniferous")), 250000, 20.0F, IBFS.iResources.getSubItem("dry_coniferous"));
 		
-		addFluidContainerDryingRecipe(new FluidStack(IBF.fLacquer, 15), 5000, 10.0F, new FluidStack(IBF.fLacquerDried, 10));
+		addFluidContainerDryingRecipe(new FluidStack(IBFS.fLacquer, 15), 5000, 10.0F, new FluidStack(IBFS.fLacquerDried, 10));
 	}
 	
 	private static void addFluidContainerDryingRecipe(FluidStack input, int durationMul, float rainfall, FluidStack output)

@@ -31,7 +31,7 @@ import net.minecraftforge.common.ForgeHooks;
  */
 public class ShapedFleRecipe implements IRecipe
 {
-	static SingleInputMatch castAsInputMatch(Object object)
+	public static SingleInputMatch castAsInputMatch(Object object)
 	{
 		if (object instanceof Item)
 		{

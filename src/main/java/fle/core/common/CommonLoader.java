@@ -9,7 +9,7 @@ import fle.loader.Configs;
 import fle.loader.Entities;
 import fle.loader.FW;
 import fle.loader.Fuels;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import fle.loader.Lang;
 import fle.loader.Materials;
 import fle.loader.Recipes;
@@ -28,9 +28,9 @@ public class CommonLoader
 		Configs.init();
 		new DefaultDitchFactory();
 		Materials.preinit();
-		IBF.registerItemsAndBlocks();
+		IBFS.registerItemsAndBlocks();
 		Tools.initalizeTools();
-		IBF.setBlocksItemsProperties();
+		IBFS.setBlocksItemsProperties();
 		MinecraftForge.EVENT_BUS.register(new FleEntityHandler());
 		Entities.commonInit();
 	}

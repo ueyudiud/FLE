@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.item;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 
 import farcore.data.EnumPhysicalDamageType;
 import farcore.lib.material.Mat;
-import nebula.common.item.IItemCapabilityProvider;
+import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.tool.EnumToolType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -21,7 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IToolStat extends IItemCapabilityProvider
+public interface IToolStat
 {
 	EnumToolType getToolType();
 	
@@ -121,4 +124,6 @@ public interface IToolStat extends IItemCapabilityProvider
 	}
 	
 	List<EnumToolType> getToolTypes(ItemStack stack);
+	
+	CapabilityProviderItem createProvider();
 }

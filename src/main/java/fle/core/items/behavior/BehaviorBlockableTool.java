@@ -4,7 +4,7 @@
 package fle.core.items.behavior;
 
 import fle.core.blocks.BlockTools;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.item.BehaviorBase;
 import nebula.common.tile.ITilePropertiesAndBehavior.ITB_BlockPlacedBy;
@@ -49,13 +49,13 @@ public class BehaviorBlockableTool extends BehaviorBase
 			pos = pos.offset(facing);
 		}
 		
-		if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(IBF.bTool, pos, false, facing, (Entity) null, stack))
+		if (stack.stackSize != 0 && player.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(IBFS.bTool, pos, false, facing, (Entity) null, stack))
 		{
-			IBlockState state = ((BlockTools) IBF.bTool).property_TE.withProperty(IBF.bTool.getDefaultState(), this.meta);
+			IBlockState state = ((BlockTools) IBFS.bTool).property_TE.withProperty(IBFS.bTool.getDefaultState(), this.meta);
 			
 			if (placeBlockAt(stack, player, world, pos, facing, hitX, hitY, hitZ, state))
 			{
-				SoundType soundtype = IBF.bTool.getSoundType();
+				SoundType soundtype = IBFS.bTool.getSoundType();
 				world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 				stack.stackSize --;
 			}
@@ -79,7 +79,7 @@ public class BehaviorBlockableTool extends BehaviorBase
 		if (!world.setBlockState(pos, newState, 3)) return false;
 		
 		IBlockState state = world.getBlockState(pos);
-		if (state.getBlock() == IBF.bTool)
+		if (state.getBlock() == IBFS.bTool)
 		{
 			TileEntity tile = world.getTileEntity(pos);
 			if (tile instanceof ITB_BlockPlacedBy)

@@ -17,7 +17,7 @@ import fle.api.recipes.SingleInputMatch;
 import fle.api.recipes.instance.RecipeAdder;
 import fle.core.items.ItemSimpleFluidContainer;
 import fle.core.items.ItemToolFar;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.base.Ety;
 import nebula.common.stack.AbstractStack;
 import nebula.common.stack.BaseStack;
@@ -34,20 +34,20 @@ public class RecipeCraftingTool
 	public static void init()
 	{
 		LIST.add(new Ety<>(new BaseStack(Items.STRING), M.spider_silk));
-		LIST.add(new Ety<>(new BaseStack(IBF.iResources.getSubItem("vine_rope")), M.vine));
-		LIST.add(new Ety<>(new BaseStack(IBF.iResources.getSubItem("ramie_rope")), M.ramie_dry));
+		LIST.add(new Ety<>(new BaseStack(IBFS.iResources.getSubItem("vine_rope")), M.vine));
+		LIST.add(new Ety<>(new BaseStack(IBFS.iResources.getSubItem("ramie_rope")), M.ramie_dry));
 		
 		LIST.trimToSize();
 		
-		addSpecialToolRecipe1("adz.rock", M.flint, IBF.iResources.getSubItem("flint_sharp"), TIE_MATCH1, "branch");
-		addSpecialToolRecipe1("adz.rock", M.quartz, IBF.iResources.getSubItem("quartz_chip"), TIE_MATCH1, "branch");
-		addSpecialToolRecipe1("biface", M.flint, IBF.iResources.getSubItem("flint_sharp"), IBF.iResources.getSubItem("flint_small"));
+		addSpecialToolRecipe1("adz.rock", M.flint, IBFS.iResources.getSubItem("flint_sharp"), TIE_MATCH1, "branch");
+		addSpecialToolRecipe1("adz.rock", M.quartz, IBFS.iResources.getSubItem("quartz_chip"), TIE_MATCH1, "branch");
+		addSpecialToolRecipe1("biface", M.flint, IBFS.iResources.getSubItem("flint_sharp"), IBFS.iResources.getSubItem("flint_small"));
 		addSpecialToolRecipe1("biface", M.obsidian, ItemMulti.createStack(M.obsidian, MC.chip_rock), ItemMulti.createStack(M.obsidian, MC.chip_rock));
 		
 		for (Mat material : Mat.filt(MC.FLINTY_TOOL))
 		{
 			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "   c cc c",
-					ItemTool.setMaterialToItem(IBF.iTool.getSubItem("awl"), "head", material));
+					ItemTool.setMaterialToItem(IBFS.iTool.getSubItem("awl"), "head", material));
 			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "  c ccccc",
 					ItemMulti.createStack(material, MC.axe_rock));
 			RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "c ccccccc",
@@ -103,7 +103,7 @@ public class RecipeCraftingTool
 			if (MC.whetstone.isBelongTo(material) && MC.fragment.isBelongTo(material))
 			{
 				RecipeAdder.addPolishRecipe(new OreStack(MC.fragment.getOreName(material)), "ppp   ppp",
-						ItemTool.setMaterialToItem(IBF.iTool.getSubItem("whetstone"), "head", material));
+						ItemTool.setMaterialToItem(IBFS.iTool.getSubItem("whetstone"), "head", material));
 			}
 		}
 		
@@ -117,20 +117,20 @@ public class RecipeCraftingTool
 		addGeneralToolRecipe("chisel.rock", new BaseStack(MC.chisel_rock.instance));
 		addGeneralNoTieToolRecipe("spinning.disk", new BaseStack(MC.spinning_disk.instance));
 		//Firestarter
-		RecipeAdder.addShapedRecipe(new BaseStack(IBF.iTool.getSubItem("firestarter")), " s", "ld",
+		RecipeAdder.addShapedRecipe(new BaseStack(IBFS.iTool.getSubItem("firestarter")), " s", "ld",
 				's', "stickWood", 'l', matchOfMaterial(new OreStack(MC.firewood.orePrefix), "head"),
-				'd', IBF.iResources.getSubItem("dry_broadleaf"));
+				'd', IBFS.iResources.getSubItem("dry_broadleaf"));
 		//Bar Grizzly
-		RecipeAdder.addShapedRecipe(new BaseStack(IBF.iTool.getSubItem("bar.grizzly")), true, "rb", "br",
-				'r', IBF.iResources.getSubItem("vine_rope"),
+		RecipeAdder.addShapedRecipe(new BaseStack(IBFS.iTool.getSubItem("bar.grizzly")), true, "rb", "br",
+				'r', IBFS.iResources.getSubItem("vine_rope"),
 				'b', matchOfMaterial(new OreStack(MC.branch.orePrefix), "head"));
 		
 		//Drain all fluids from fluid container.
-		RecipeAdder.addShapelessRecipe(new ItemStack(IBF.iFluidContainer),
-				new SingleInputMatch(new BaseStack(IBF.iFluidContainer), (i, o)-> {
+		RecipeAdder.addShapelessRecipe(new ItemStack(IBFS.iFluidContainer),
+				new SingleInputMatch(new BaseStack(IBFS.iFluidContainer), (i, o)-> {
 					o.setItemDamage(i.getItemDamage());
 					ItemSimpleFluidContainer.setCustomDamage(o,
-							Math.min(IBF.iFluidContainer.getMaxCustomDamage(i) - 1,
+							Math.min(IBFS.iFluidContainer.getMaxCustomDamage(i) - 1,
 									ItemSimpleFluidContainer.getCustomDamage(i) + ItemSimpleFluidContainer.getFluidAmount(i)));
 				}, null));
 	}
@@ -176,20 +176,20 @@ public class RecipeCraftingTool
 	
 	private static void addSpecialToolRecipe1(String key, Mat head, Object...inputs)
 	{
-		ItemStack output = IBF.iTool.getSubItem(key);
+		ItemStack output = IBFS.iTool.getSubItem(key);
 		ItemToolFar.setMaterialToItem(output, "head", head);
 		RecipeAdder.addShapelessRecipe(output, inputs);
 	}
 	
 	private static void addGeneralToolRecipe(String key, AbstractStack input)
 	{
-		RecipeAdder.addShapelessRecipe(IBF.iTool.getSubItem(key),
+		RecipeAdder.addShapelessRecipe(IBFS.iTool.getSubItem(key),
 				new SingleInputMatch(input, CONSUMER1, null), TIE_MATCH1, HANDLE_MATCH);
 	}
 	
 	private static void addGeneralNoTieToolRecipe(String key, AbstractStack input)
 	{
-		RecipeAdder.addShapelessRecipe(IBF.iTool.getSubItem(key),
+		RecipeAdder.addShapelessRecipe(IBFS.iTool.getSubItem(key),
 				new SingleInputMatch(input, CONSUMER1, null), HANDLE_MATCH);
 	}
 }

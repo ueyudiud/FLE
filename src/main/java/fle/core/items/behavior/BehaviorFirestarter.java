@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package fle.core.items.behavior;
 
 import java.util.List;
@@ -10,8 +9,8 @@ import farcore.data.EnumBlock;
 import farcore.data.EnumToolTypes;
 import farcore.lib.block.instance.BlockFire;
 import fle.api.recipes.instance.FlamableRecipes;
-import nebula.Log;
 import nebula.base.IntegerMap;
+import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.item.ITool;
 import nebula.common.util.Worlds;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,6 +37,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 public class BehaviorFirestarter extends BehaviorTool
 {
 	public static final FirestarterStorage STORAGE;
+	
 	@CapabilityInject(FirestarterCache.class)
 	public static Capability<FirestarterCache> capability;
 	
@@ -62,7 +62,7 @@ public class BehaviorFirestarter extends BehaviorTool
 		}
 	}
 	
-	public static class FirestarterCache
+	public static class FirestarterCache extends CapabilityProviderItem
 	{
 		IntegerMap<EntityItem> map = new IntegerMap<>();
 	}
@@ -119,7 +119,6 @@ public class BehaviorFirestarter extends BehaviorTool
 						else
 						{
 							cache.map.put(item, tick + 1);
-							Log.info("" + tick);
 						}
 					}
 				}

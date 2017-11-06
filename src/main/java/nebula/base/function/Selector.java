@@ -1,11 +1,14 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.base.function;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import nebula.base.IntegerMap;
 import nebula.common.util.L;
@@ -25,14 +28,15 @@ public interface Selector<E> extends Function<Random, E>
 {
 	//The selector provide methods.
 	
-	static <E> Selector<E> forChance(E def, E spe, int chance)
+	static <E> Selector<E> forChance(@Nullable E def, @Nullable E spe, int chance)
 	{
-		return random -> random.nextInt(10000) < chance ? spe : def;
+		return chance == 0 ? single(def) : random -> random.nextInt(10000) < chance ? spe : def;
 	}
 	
-	static <E> Selector<E> forChance(E def, Selector<E> parent, int chance)
+	static <E> Selector<E> forChance(@Nullable E def, @Nonnull Selector<E> parent, int chance)
 	{
-		return random -> random.nextInt(10000) < chance ? parent.next(random) : def;
+		Objects.requireNonNull(parent);
+		return chance == 0 ? single(def) : random -> random.nextInt(10000) < chance ? parent.next(random) : def;
 	}
 	
 	/**
@@ -40,7 +44,7 @@ public interface Selector<E> extends Function<Random, E>
 	 * @param element the constant to return.
 	 * @return the selector.
 	 */
-	static <E> Selector<E> single(E element)
+	static <E> Selector<E> single(@Nullable E element)
 	{
 		return new Selector<E>()
 		{

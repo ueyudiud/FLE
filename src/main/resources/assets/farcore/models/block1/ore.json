@@ -14,7 +14,7 @@
 			},
 			"itemmeta": {
 				"key": "%s_%s",
-				"formats": [ "#farcore:ore/rock", "#farcore:ore/rocktype" ],
+				"formats": [ "farcore:ore/rock", "farcore:ore/rocktype" ],
 				"default": [ "stone", "resource" ]
 			}
 		},
@@ -30,7 +30,7 @@
 			},
 			"itemmeta": {
 				"key": "%s_%s",
-				"formats": [ "#farcore:ore/ore", "#farcore:ore/amount" ],
+				"formats": [ "farcore:ore/ore", "farcore:ore/amount" ],
 				"default": [ "copper", "normal" ]
 			}
 		}

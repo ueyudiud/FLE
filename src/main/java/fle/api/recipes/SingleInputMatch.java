@@ -6,7 +6,6 @@ package fle.api.recipes;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
@@ -48,11 +47,11 @@ public class SingleInputMatch
 	{
 		this(input, null);
 	}
-	public SingleInputMatch(AbstractStack input, UnaryOperator<ItemStack> result)
+	public SingleInputMatch(AbstractStack input, Function<ItemStack, ItemStack> result)
 	{
 		this(input, null, result);
 	}
-	public SingleInputMatch(AbstractStack input, BiConsumer<ItemStack, ItemStack> consumer, UnaryOperator<ItemStack> result)
+	public SingleInputMatch(AbstractStack input, BiConsumer<ItemStack, ItemStack> consumer, Function<ItemStack, ItemStack> result)
 	{
 		this.input = input;
 		this.consumer = consumer;

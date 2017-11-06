@@ -1,23 +1,33 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.item;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import nebula.Log;
 import nebula.client.util.Client;
 import nebula.client.util.IRenderRegister;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
+import nebula.common.capability.CapabilityProviderItem;
+import nebula.common.nbt.INBTCompoundReader;
+import nebula.common.nbt.INBTCompoundWriter;
 import nebula.common.util.Game;
 import nebula.common.util.IRegisteredNameable;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +35,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Base item type provider by Nebula.<p>
  * Contains some useful method for application.
  * @author ueyudiud
- *
  */
 public class ItemBase extends Item implements IRegisteredNameable, IRenderRegister
 {
@@ -214,5 +223,93 @@ public class ItemBase extends Item implements IRegisteredNameable, IRenderRegist
 	public FontRenderer getFontRenderer(ItemStack stack)
 	{
 		return Client.getFontRender();
+	}
+	
+	class CapabilityProvider implements ICapabilityProvider, INBTSerializable<NBTTagCompound>
+	{
+		ItemStack stack;
+		ICapabilityProvider provider;
+		NBTTagCompound nbt;
+		
+		CapabilityProvider(ItemStack stack)
+		{
+			this.stack = stack;
+		}
+		
+		private void initalize()
+		{
+			if (this.provider == null)
+			{
+				if ((this.provider = createProvider(this.stack)) != null)
+				{
+					if (this.nbt != null)
+					{
+						deserializeNBT(this.nbt);
+						this.nbt = null;
+					}
+				}
+				else
+				{
+					this.provider = this;
+				}
+				
+			}
+		}
+		
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			if (this.provider instanceof INBTCompoundWriter<?>)
+				return ((INBTCompoundWriter) this.provider).writeToNBT(new NBTTagCompound());
+			else
+				return this.nbt != null ? this.nbt : new NBTTagCompound();
+		}
+		
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			if (this.provider instanceof INBTCompoundReader<?>)
+				((INBTCompoundReader) this.provider).readFromNBT(nbt);
+			else
+				this.nbt = nbt;
+		}
+		
+		@Override
+		public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+		{
+			initalize();
+			return this.provider == this ? false : this.provider.hasCapability(capability, facing);
+		}
+		
+		@Override
+		public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+		{
+			initalize();
+			return this.provider == this ? null : this.provider.getCapability(capability, facing);
+		}
+	}
+	
+	/**
+	 * The ** forge, the meta data is initialized after capabilities initialized! These
+	 * cause I can only make provider with lazy loading.<p>
+	 * The item capability to provide a holder to contain extra data during the life of ItemStack,
+	 * and it needed to be initialize BEFORE item stack being used.<p>
+	 * @see net.minecraftforge.common.capabilities.ICapabilityProvider
+	 * @see net.minecraft.item.Item#initCapabilities(ItemStack, NBTTagCompound)
+	 */
+	@Override
+	public final ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable NBTTagCompound nbt)
+	{
+		return !hasCapability() ? null : new CapabilityProvider(stack);
+	}
+	
+	protected boolean hasCapability()
+	{
+		return false;
+	}
+	
+	protected CapabilityProviderItem createProvider(ItemStack stack)
+	{
+		return null;
 	}
 }

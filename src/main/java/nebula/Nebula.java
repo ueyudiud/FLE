@@ -92,7 +92,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	
 	public static final String MODID = "nebula";
 	public static final String NAME = "Nebula";
-	public static final String VERSION = "2.0.0";
+	public static final String VERSION = "2.1.0";
 	
 	/**
 	 * The built-in render id, for prevent has location collide when
@@ -127,6 +127,8 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 	 * store 20 bits meta.
 	 */
 	public static IBlockDataProvider blockDataProvider = new IBlockDataProvider.Template();
+	
+	public static ItemFluidDisplay fluid_displayment;
 	
 	/**
 	 * The mod sided proxy.
@@ -239,7 +241,7 @@ public class Nebula extends DummyModContainer implements WorldAccessContainer
 		{
 			tabFluids = new CreativeTabBase("nebula.fluids", "Fluids[Nebula]", () -> new ItemStack(Items.WATER_BUCKET));
 		}
-		new ItemFluidDisplay().setCreativeTab(tabFluids);
+		fluid_displayment = (ItemFluidDisplay) new ItemFluidDisplay().setCreativeTab(tabFluids);
 		int id = 0;
 		registerModEntity(EntityFallingBlockExtended.class, "FallingBlockExtended", id++, "nebula", 32, 20, true);
 		registerModEntity(EntityProjectileItem.class, "ProjectileItem", id++, "nebula", 32, 20, true);

@@ -42,32 +42,38 @@ public class ItemMiscResources extends ItemSubBehavior implements IPolishableIte
 	
 	protected void initalize()
 	{
-		addSubItem(1, "flint_fragment", "Flint Fragment", null);
-		addSubItem(2, "flint_sharp", "Sharp Flint Chip", null);
-		addSubItem(3, "flint_small", "Small Flint", null);
-		addSubItem(11, "quartz_large", "Quartz", null);
-		addSubItem(12, "quartz_chip", "Quartz Chip", null);
-		addSubItem(21, "opal", "Opal", null);
+		addSubItem(1, "flint_fragment", "Flint Fragment");
+		addSubItem(2, "flint_sharp", "Sharp Flint Chip");
+		addSubItem(3, "flint_small", "Small Flint");
+		addSubItem(11, "quartz_large", "Quartz");
+		addSubItem(12, "quartz_chip", "Quartz Chip");
+		addSubItem(21, "opal", "Opal");
 		
-		addSubItem(1001, "vine_rope", "Vine Rope", null);
-		addSubItem(1002, "dry_ramie_fiber", "Dried Ramie Fiber", null);
-		addSubItem(1003, "hay", "Hay", null);
-		addSubItem(1004, "dry_broadleaf", "Dried Broadleaf", null);
-		addSubItem(1005, "dry_coniferous", "Dried Coniferous", null);
-		addSubItem(1006, "tinder", "Tinder", null);
+		addSubItem(1001, "vine_rope", "Vine Rope");
+		addSubItem(1002, "dry_ramie_fiber", "Dried Ramie Fiber");
+		addSubItem(1003, "hay", "Hay");
+		addSubItem(1004, "dry_broadleaf", "Dried Broadleaf");
+		addSubItem(1005, "dry_coniferous", "Dried Coniferous");
+		addSubItem(1006, "tinder", "Tinder");
 		
-		addSubItem(2001, "ramie_rope", "Ramie Rope", null);
-		addSubItem(2002, "ramie_rope_bundle", "Ramie Rope Bundle", null);
-		addSubItem(2003, "crushed_bone", "Crushed Bone", null);
-		addSubItem(2004, "defatted_crushed_bone", "Defatted Crushed Bone", null);
+		addSubItem(2001, "ramie_rope", "Ramie Rope");
+		addSubItem(2002, "ramie_rope_bundle", "Ramie Rope Bundle");
+		addSubItem(2003, "crushed_bone", "Crushed Bone");
+		addSubItem(2004, "defatted_crushed_bone", "Defatted Crushed Bone");
 		
-		addSubItem(3001, "researchitem1", "Research Item", null, new BehaviorResearchItems1());
+		addSubItem(3001, "researchitem1", "Research Item", new BehaviorResearchItems1());
 		
-		addSubItem(3101, "plant_ash_soap", "Plant Ash Soap", null);
+		addSubItem(3101, "plant_ash_soap", "Plant Ash Soap");
 		
-		addSubItem(4001, "wooden_brick_mold", "Brick Mold", null);
-		addSubItem(4002, "filled_wooden_brick_mold", "Brick Mold", null, new BehaviorBlockableTool(2));
-		addSubItem(4003, "dried_filled_wooden_brick_mold", "Brick Mold", null);
+		addSubItem(4001, "wooden_brick_mold", "Brick Mold");
+		addSubItem(4002, "filled_wooden_brick_mold", "Brick Mold", new BehaviorBlockableTool(2));
+		addSubItem(4003, "dried_filled_wooden_brick_mold", "Brick Mold");
+		
+		addSubItem(5001, "black_pepper_powder", "Black Pepper");
+		addSubItem(5002, "prickly_ash_powder", "Prickly Ash");
+		addSubItem(5003, "turmeric_powder", "Turmeric");
+		addSubItem(5004, "ginger_slice", "Sliced Ginger");
+		addSubItem(5005, "cinnamon_power", "Cinnamon");
 	}
 	
 	@Override

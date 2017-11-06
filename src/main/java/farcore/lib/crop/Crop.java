@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.crop;
 
 import static nebula.common.util.EnumChatFormatting.GOLD;

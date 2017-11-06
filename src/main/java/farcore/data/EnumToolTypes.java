@@ -80,9 +80,18 @@ public class EnumToolTypes
 	
 	private static class EnumToolTypeFC extends EnumToolType
 	{
+		private String className;
+		
 		EnumToolTypeFC(String name, String dictName)
 		{
 			super("farcore." + name, name, "craftingTool" + dictName, new OreStackExt("craftingTool" + dictName));
+			this.className = name;
+		}
+		
+		@Override
+		public boolean isToolClass(String tool)
+		{
+			return this.className.equals(tool);
 		}
 	}
 }

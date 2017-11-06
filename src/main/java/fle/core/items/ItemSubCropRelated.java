@@ -75,12 +75,28 @@ public class ItemSubCropRelated extends ItemSubEdible
 		addSubItem(1017, "lime", "Lime", new FoodStatBase(1.0F, 0.5F, 2.0F).setNutrition(EnumNutrition.FRUIT, 4.0F));
 		addSubItem(1018, "orange", "Orange", new FoodStatBase(1.0F, 0.5F, 3.0F).setNutrition(EnumNutrition.FRUIT, 4.5F));
 		addSubItem(1019, "grapefruit", "Grapefruit", new FoodStatBase(1.0F, 0.5F, 2.5F).setNutrition(EnumNutrition.FRUIT, 4.5F));
+		addSubItem(1501, "parsley", "Parsley", NFS);
+		addSubItem(1502, "sage", "Sage", NFS);
+		addSubItem(1503, "rosemary", "Rosemary", NFS);
+		addSubItem(1504, "thyme", "Thyme", NFS);
+		addSubItem(1505, "star_anise", "Star Anise", NFS);
+		addSubItem(1506, "clove", "Clove", NFS);
+		addSubItem(1507, "black_pepper", "Black Pepper", NFS);
+		addSubItem(1508, "green_pepper", "Green Pepper", NFS);
+		addSubItem(1509, "ginger", "Ginger", NFS);
+		addSubItem(1510, "turmeric_rhizome", "Turmeric Rhizome", NFS);
+		addSubItem(1511, "nutmeg", "Nutmeg", NFS);
+		addSubItem(1512, "cinnamon", "Cinnamon", NFS);
+		addSubItem(1513, "fennel_seed", "Fennel Seed", NFS);
+		addSubItem(1514, "cumin_seed", "Cumin Seed", NFS);
+		addSubItem(1515, "prickly_ash", "Prickly Ash", NFS);
 		addSubItem(2001, "plant_waste", "Plant Waste", NFS);
 	}
 	
+	@Override
 	public void addSubItem(int id, String name, String localName, IFoodStat stat, IBehavior... behaviors)
 	{
-		super.addSubItem(id, name, localName, null, stat, behaviors);
+		super.addSubItem(id, name, localName, stat, behaviors);
 	}
 	
 	@Override

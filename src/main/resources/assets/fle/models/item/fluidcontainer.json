@@ -17,7 +17,7 @@
 					"fle:fluidcontainer"
 				]
 			},
-			"colorMultiplier": "fle:fluidcontainer_getfluid"
+			"colorMultiplier": "fle:fluidcontainer/fluidcolor"
 		}
 	]
 }

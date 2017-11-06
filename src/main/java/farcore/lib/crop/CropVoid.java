@@ -1,11 +1,14 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.crop;
 
 import farcore.lib.bio.GeneticMaterial;
 import farcore.lib.material.Mat;
 
-public class CropVoid extends Crop
+class CropVoid extends Crop
 {
-	public CropVoid()
+	CropVoid()
 	{
 		this.maxStage = 1;
 	}

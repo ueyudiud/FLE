@@ -24,10 +24,10 @@ import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 
+ * Item, Block, Fluid, Soild.s
  * @author ueyudiud
  */
-public class IBF
+public class IBFS
 {
 	public static void registerItemsAndBlocks()
 	{

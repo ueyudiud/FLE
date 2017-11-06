@@ -88,14 +88,14 @@ public class FoodStatExt extends FoodStats
 	private void addStatsUncheck(Item item, ItemStack stack)
 	{
 		FoodEatenEvent event = new FoodEatenEvent(this, item, stack);
-		if(MinecraftForge.EVENT_BUS.post(event)) return;
-		if(event.getResult() != Result.DEFAULT) return;
-		if(item instanceof ItemFood)
+		if (MinecraftForge.EVENT_BUS.post(event)) return;
+		if (event.getResult() != Result.DEFAULT) return;
+		if (item instanceof ItemFood)
 		{
 			int amt = ((ItemFood) item).getHealAmount(stack);
 			addStats(amt, ((ItemFood) item).getSaturationModifier(stack));
 		}
-		else if(item instanceof IFoodStat)
+		else if (item instanceof IFoodStat)
 		{
 			addFoodStats((IFoodStat) item, stack);
 		}
@@ -108,9 +108,9 @@ public class FoodStatExt extends FoodStats
 		this.foodSaturationLevel = Math.min(this.foodLevel, this.foodSaturationLevel + stat.getSaturation(stack));
 		this.waterLevel = Math.min(MAX_WATER_LEVEL, this.waterLevel + stat.getDrinkAmount(stack));
 		float[] nutr = stat.getNutritionAmount(stack);
-		if(nutr != null)
+		if (nutr != null)
 		{
-			for(int i = 0; i < 6; ++i)
+			for (int i = 0; i < 6; ++i)
 			{
 				this.nutrition[i] = Math.min(MAX_NUTRITION_LEVEL, this.nutrition[i] + nutr[i]);
 			}
@@ -125,7 +125,7 @@ public class FoodStatExt extends FoodStats
 	@Override
 	public void onUpdate(EntityPlayer player)
 	{
-		if(player.capabilities.isCreativeMode) return;
+		if (player.capabilities.isCreativeMode) return;
 		EnumDifficulty difficulty = player.world.getDifficulty();
 		boolean flag = player.world.getGameRules().getBoolean("naturalRegeneration");
 		int dim = player.world.provider.getDimension();
@@ -133,12 +133,12 @@ public class FoodStatExt extends FoodStats
 		this.prevFoodLevel = (int) this.foodLevel;
 		this.prevWaterLevel = (int) this.waterLevel;
 		updateStat(player);
-		if(this.prevDim != dim || this.worldTimer < 0)
+		if (this.prevDim != dim || this.worldTimer < 0)
 		{
 			this.prevDim = dim;
 			this.worldTimer = player.world.getWorldTime() + 1L;
 		}
-		else if(time >= this.worldTimer)
+		else if (time >= this.worldTimer)
 		{
 			this.worldTimer += 100L;
 			++this.foodTimer;

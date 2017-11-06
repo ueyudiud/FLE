@@ -21,4 +21,9 @@ public class SolidContainerHelper
 	{
 		return false;//TODO when solid container system finished.
 	}
+	
+	public static boolean drainOrFillTank(IBasicInventory inventory, ISolidHandlerIO io, int in, int out, byte fdType)
+	{
+		return false;//TODO when solid container system finished.
+	}
 }

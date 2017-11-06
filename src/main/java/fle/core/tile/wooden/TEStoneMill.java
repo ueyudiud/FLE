@@ -149,7 +149,6 @@ implements ITB_BlockActived, IGuiTile, INetworkedSyncTile, ITP_BlockHardness, IT
 		this.buffer = buf.readInt();
 	}
 	
-	
 	public void onRotateMill(EntityPlayer player)
 	{
 		this.buffer = 10;

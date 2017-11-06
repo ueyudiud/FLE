@@ -159,7 +159,7 @@ public class ClientOverride
 		try
 		{
 			if (model instanceof ICustomItemRenderModel)
-				return ((ICustomItemRenderModel) model).getQuads(stack.copy(), facing, rand);
+				return ((ICustomItemRenderModel) model).getQuads(stack, facing, rand);
 			return model.getQuads(null, facing, rand);
 		}
 		catch (RuntimeException exception)

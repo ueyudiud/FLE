@@ -31,8 +31,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -49,7 +47,6 @@ public class ItemSubBehavior extends ItemBase
 	protected final Map<Integer, String> nameMap = new HashMap<>();
 	/** The name to number ID map. */
 	protected final Map<String, Integer> idMap = new HashMap<>();
-	private final Map<Integer, IItemCapabilityProvider> providers = new HashMap<>();
 	/**
 	 * The map contain behaviors of sub items.
 	 * Use {@link #getBehavior(ItemStack)} to get behaviors.<p>
@@ -78,7 +75,7 @@ public class ItemSubBehavior extends ItemBase
 	 * @param provider the item capability provider. See {@link #initCapabilities(ItemStack, NBTTagCompound)}
 	 * @param behaviors the behaviors list of sub item.
 	 */
-	public void addSubItem(int id, String name, @Nullable String localName, @Nullable IItemCapabilityProvider provider, IBehavior...behaviors)
+	public void addSubItem(int id, String name, @Nullable String localName, IBehavior...behaviors)
 	{
 		if (this.idMap.containsKey(name) || this.idMap.containsValue(id))
 			throw new RuntimeException("The id " + id + " or name '" + name + "' are already registered!");
@@ -87,10 +84,6 @@ public class ItemSubBehavior extends ItemBase
 		if (behaviors.length > 0)
 		{
 			this.behaviors.put(id, ImmutableList.copyOf(behaviors));
-		}
-		if (provider != null)
-		{
-			this.providers.put(id, provider);
 		}
 		if (localName != null)
 		{
@@ -155,6 +148,7 @@ public class ItemSubBehavior extends ItemBase
 		}
 		catch(Exception exception)
 		{
+			Log.catchingIfDebug(exception);
 			return false;
 		}
 	}
@@ -162,20 +156,21 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)
 	{
-		if(!isItemUsable(item))
+		if (!isItemUsable(item))
 			return true;
 		try
 		{
 			boolean flag = true;
-			for(IBehavior behavior : getBehavior(item))
-				if(!behavior.onDroppedByPlayer(item, player))
+			for (IBehavior behavior : getBehavior(item))
+				if (!behavior.onDroppedByPlayer(item, player))
 				{
 					flag = false;
 				}
 			return flag;
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
+			Log.catchingIfDebug(exception);
 			return true;
 		}
 	}
@@ -189,31 +184,31 @@ public class ItemSubBehavior extends ItemBase
 				!entityItem.world.isRemote)
 		{
 			ItemStack stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityItem), entityItem.getEntityItem());
-			if(stack == null)
+			if (stack == null)
 			{
 				entityItem.setDead();
 			}
-			else if(stack != entityItem.getEntityItem())
+			else if (stack != entityItem.getEntityItem())
 			{
 				entityItem.setEntityItemStack(stack);
 			}
-			if(stack.getItem() != this)
+			if (stack.getItem() != this)
 				return true;
 		}
 		try
 		{
 			boolean flag = false;
-			for(IBehavior behavior : getBehavior(entityItem.getEntityItem()))
+			for (IBehavior behavior : getBehavior(entityItem.getEntityItem()))
 			{
-				if(behavior.onEntityItemUpdate(entityItem))
+				if (behavior.onEntityItemUpdate(entityItem))
 				{
 					flag = true;
 				}
-				if(entityItem.isDead) return false;
+				if (entityItem.isDead) return false;
 			}
 			return flag;
 		}
-		catch(Exception exception)
+		catch (Exception exception)
 		{
 			Log.catchingIfDebug(exception);
 			return false;
@@ -364,50 +359,49 @@ public class ItemSubBehavior extends ItemBase
 		if(!isItemUsable(stack))
 			return;
 		ItemStack stack2 = stack;
-		if(this instanceof IUpdatableItem &&
-				!entityIn.world.isRemote)
+		if (this instanceof IUpdatableItem && !entityIn.world.isRemote)
 		{
 			try
 			{
 				stack = ((IUpdatableItem) this).updateItem(new EnviornmentEntity(entityIn), stack);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.catchingIfDebug(exception);
 			}
-			if(entityIn instanceof EntityPlayer)
+			if (entityIn instanceof EntityPlayer)
 			{
-				if(stack == null)
+				if (stack == null)
 				{
 					((EntityPlayer) entityIn).inventory.removeStackFromSlot(itemSlot);
 					return;
 				}
 			}
-			if(stack.getItem() != this)
+			if (stack.getItem() != this)
 				return;
 		}
-		for(IBehavior behavior : getBehavior(stack))
+		for (IBehavior behavior : getBehavior(stack))
 		{
 			try
 			{
 				stack = behavior.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				Log.catchingIfDebug(exception);
 			}
-			if(entityIn instanceof EntityPlayer)
+			if (entityIn instanceof EntityPlayer)
 			{
-				if(stack == null)
+				if (stack == null)
 				{
 					((EntityPlayer) entityIn).inventory.removeStackFromSlot(itemSlot);
 					return;
 				}
-				else if(stack != stack2)
+				else if (stack != stack2)
 				{
 					((EntityPlayer) entityIn).inventory.setInventorySlotContents(itemSlot, stack);
 				}
-				if(stack.getItem() != this)
+				if (stack.getItem() != this)
 					return;
 			}
 		}
@@ -416,9 +410,9 @@ public class ItemSubBehavior extends ItemBase
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
 	{
-		if(!isItemUsable(stack))
+		if (!isItemUsable(stack))
 			return;
-		for(IBehavior behavior : getBehavior(stack))
+		for (IBehavior behavior : getBehavior(stack))
 		{
 			try
 			{
@@ -435,14 +429,14 @@ public class ItemSubBehavior extends ItemBase
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target,
 			EnumHand hand)
 	{
-		if(!isItemUsable(stack))
+		if (!isItemUsable(stack))
 			return false;
 		boolean flag = false;
-		for(IBehavior behavior : getBehavior(stack))
+		for (IBehavior behavior : getBehavior(stack))
 		{
 			try
 			{
-				if(behavior.onRightClickEntity(stack, playerIn, target, hand))
+				if (behavior.onRightClickEntity(stack, playerIn, target, hand))
 				{
 					flag = true;
 				}
@@ -454,48 +448,6 @@ public class ItemSubBehavior extends ItemBase
 			}
 		}
 		return flag;
-	}
-	
-	/**
-	 * The ** forge, the meta data is initialized after capabilities initialized! These
-	 * cause I can only make provider with lazy loading.<p>
-	 * The item capability to provide a holder to contain extra data during the life of ItemStack,
-	 * and it needed to be initialize BEFORE item stack being used.<p>
-	 * @see net.minecraftforge.common.capabilities.ICapabilityProvider
-	 * @see net.minecraft.item.Item#initCapabilities(ItemStack, NBTTagCompound)
-	 */
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
-	{
-		return new ICapabilityProvider()
-		{
-			ICapabilityProvider provider;
-			
-			private ICapabilityProvider getProvider()
-			{
-				if (this.provider == null)
-				{
-					this.provider = ItemSubBehavior.this.providers.getOrDefault(getBaseDamage(stack), IItemCapabilityProvider.NONE).initCapabilities(stack, nbt);
-					if (this.provider == null)
-					{
-						this.provider = IItemCapabilityProvider.PROVIDER;
-					}
-				}
-				return this.provider;
-			}
-			
-			@Override
-			public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-			{
-				return getProvider().hasCapability(capability, facing);
-			}
-			
-			@Override
-			public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-			{
-				return getProvider().getCapability(capability, facing);
-			}
-		};
 	}
 	
 	@Override

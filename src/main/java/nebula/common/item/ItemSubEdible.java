@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.item;
 
 import java.text.DecimalFormat;
@@ -40,11 +39,11 @@ public class ItemSubEdible extends ItemSubBehavior implements IFoodStat
 		super(modid, name);
 	}
 	
-	public void addSubItem(int id, String name, String localName, @Nullable IItemCapabilityProvider provider, @Nullable IFoodStat stat,
+	public void addSubItem(int id, String name, String localName, @Nullable IFoodStat stat,
 			IBehavior... behaviors)
 	{
-		super.addSubItem(id, name, localName, provider, behaviors);
-		if(stat == null)
+		super.addSubItem(id, name, localName, behaviors);
+		if (stat == null)
 		{
 			stat = IFoodStat.NO_EATABLE;
 		}

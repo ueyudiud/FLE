@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package nebula.common.item;
 
 import java.util.List;
@@ -17,6 +16,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -58,6 +58,17 @@ public class ItemFluidDisplay extends ItemBase
 		return FluidRegistry.getFluid(stack.getItemDamage());
 	}
 	
+	public static ItemStack createFluidDisplay(FluidStack stack, boolean useAmount)
+	{
+		ItemStack result = new ItemStack(Nebula.fluid_displayment, 1, FluidRegistry.getFluidID(stack.getFluid()));
+		if (useAmount)
+		{
+			result.setTagCompound(new NBTTagCompound());
+			result.getTagCompound().setInteger("amount", stack.amount);
+		}
+		return result;
+	}
+	
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
@@ -92,11 +103,11 @@ public class ItemFluidDisplay extends ItemBase
 	{
 		Fluid fluid = FluidRegistry.getFluid(getDamage(stack));
 		int amount = stack.hasTagCompound() ? stack.getTagCompound().getInteger("amount") : 0;
-		if(fluid != null)
+		if (fluid != null)
 		{
 			list.add(EnumChatFormatting.WHITE + "Name : " + fluid.getLocalizedName(new FluidStack(fluid, 1)));
 		}
-		if(amount > 0)
+		if (amount > 0)
 		{
 			list.add(EnumChatFormatting.BLUE + "Amount : " + amount + "L");
 		}

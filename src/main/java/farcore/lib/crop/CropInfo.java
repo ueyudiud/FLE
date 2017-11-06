@@ -1,3 +1,6 @@
+/*
+ * copyright© 2016-2017 ueyudiud
+ */
 package farcore.lib.crop;
 
 import farcore.lib.bio.GeneticMaterial;
@@ -12,9 +15,6 @@ public class CropInfo
 {
 	public GeneticMaterial geneticMaterial;
 	
-	/**
-	 * The genertic material already contain this prop.
-	 */
 	public int grain;
 	public int growth;
 	public int resistance;

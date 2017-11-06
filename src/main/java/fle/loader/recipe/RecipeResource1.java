@@ -18,7 +18,7 @@ import farcore.lib.material.prop.PropertyWood;
 import fle.api.recipes.instance.RecipeMaps;
 import fle.core.recipe.RecipePortableWoodwork1;
 import fle.core.recipe.RecipePortableWoodwork2;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.common.stack.BaseStack;
 import net.minecraft.init.Items;
 
@@ -29,12 +29,12 @@ public class RecipeResource1
 {
 	public static void init()
 	{
-		addShapelessRecipe(IBF.iResources.getSubItem("vine_rope"), IBF.iCropRelated.getSubItem("vine"), 4);
-		addShapelessRecipe(IBF.iResources.getSubItem("ramie_rope"), IBF.iResources.getSubItem("dry_ramie_fiber"), 4);
-		addShapelessRecipe(IBF.iResources.getSubItem("ramie_rope_bundle"), IBF.iResources.getSubItem("ramie_rope"), 4);
-		addShapelessRecipe(IBF.iResources.getSubItem("ramie_rope", 4), IBF.iResources.getSubItem("ramie_rope_bundle"));
-		addShapelessRecipe(IBF.iResources.getSubItem("crushed_bone"), Items.BONE, toolUse(EnumToolTypes.HAMMER_DIGABLE, 0.2F));
-		addShapelessRecipe(IBF.iResources.getSubItem("tinder"), IBF.iResources.getSubItem("dry_broadleaf"), 3, toolUse(EnumToolTypes.FIRESTARTER, 0.5F));
+		addShapelessRecipe(IBFS.iResources.getSubItem("vine_rope"), IBFS.iCropRelated.getSubItem("vine"), 4);
+		addShapelessRecipe(IBFS.iResources.getSubItem("ramie_rope"), IBFS.iResources.getSubItem("dry_ramie_fiber"), 4);
+		addShapelessRecipe(IBFS.iResources.getSubItem("ramie_rope_bundle"), IBFS.iResources.getSubItem("ramie_rope"), 4);
+		addShapelessRecipe(IBFS.iResources.getSubItem("ramie_rope", 4), IBFS.iResources.getSubItem("ramie_rope_bundle"));
+		addShapelessRecipe(IBFS.iResources.getSubItem("crushed_bone"), Items.BONE, toolUse(EnumToolTypes.HAMMER_DIGABLE, 0.2F));
+		addShapelessRecipe(IBFS.iResources.getSubItem("tinder"), IBFS.iResources.getSubItem("dry_broadleaf"), 3, toolUse(EnumToolTypes.FIRESTARTER, 0.5F));
 		
 		for (RockBehavior<?> rock : Mat.filtAndGet(MC.fragment, MP.property_rock))
 		{

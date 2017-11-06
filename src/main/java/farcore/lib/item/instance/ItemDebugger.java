@@ -1,7 +1,6 @@
 /*
  * copyright© 2016-2017 ueyudiud
  */
-
 package farcore.lib.item.instance;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class ItemDebugger extends ItemBase
 		{
 			try
 			{
-				if(player.isSneaking())
+				if (player.isSneaking())
 				{
 					pos = pos.offset(side);
 				}
@@ -83,7 +82,7 @@ public class ItemDebugger extends ItemBase
 				list.add("================World Info==================");
 				list.add("Block Type : " + block.getClass().getSimpleName());
 				list.add("State : ");
-				for(Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet())
+				for (Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet())
 				{
 					list.add(entry.getKey().getName() + " : " + ((IProperty) entry.getKey()).getName(entry.getValue()));
 				}

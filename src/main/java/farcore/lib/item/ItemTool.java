@@ -20,6 +20,7 @@ import fle.loader.Configs;
 import nebula.base.Judgable;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
+import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.enviornment.IEnvironment;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIB_BlockHarvested;
@@ -163,7 +164,7 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 			Judgable<? super Mat> filterHead, Judgable<? super Mat> filterTie,
 			Judgable<? super Mat> filterHandle, IBehavior... behaviors)
 	{
-		super.addSubItem(id, name, localName, stat, behaviors);
+		super.addSubItem(id, name, localName, behaviors);
 		if (this.modelFlag)
 		{
 			Game.registerItemModel(this, id, this.modid, this.textureFileName + name);
@@ -573,36 +574,49 @@ implements ITool, IUpdatableItem, IIB_BlockHarvested, IIP_DigSpeed
 		float now = getDurability(stack);
 		ToolProp prop = this.toolPropMap.getOrDefault(getBaseDamage(stack), EMPTY_PROP);
 		unlocalizedList.addToolTip(getBaseTranslateInformation(stack));
-		if(stack.hasTagCompound())
+		if (stack.hasTagCompound())
 		{
 			Localization.addDamageInformation((int) (now * 100), max * 100, unlocalizedList);
 			Mat material = getMaterialFromItem(stack, "head");
 			Localization.addToolMaterialInformation(material, prop.stat, unlocalizedList);
-			if(material.itemProp != null)
+			if (material.itemProp != null)
 			{
 				material.itemProp.addInformation(stack, material, prop.condition, unlocalizedList, "head");
 			}
-			if(prop.hasHandle)
+			if (prop.hasHandle)
 			{
 				material = getMaterialFromItem(stack, "handle");
 				unlocalizedList.add("info.tool.handle.name", material.getLocalName());
 				unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
-				if(material.itemProp != null)
+				if (material.itemProp != null)
 				{
 					material.itemProp.addInformation(stack, material, MC.handle, unlocalizedList, "handle");
 				}
 			}
-			if(prop.hasTie)
+			if (prop.hasTie)
 			{
 				material = getMaterialFromItem(stack, "tie");
 				unlocalizedList.add("info.tool.tie.name", material.getLocalName());
 				unlocalizedList.addToolTip("info.material.custom." + material.getLocalName());
-				if(material.itemProp != null)
+				if (material.itemProp != null)
 				{
 					material.itemProp.addInformation(stack, material, MC.tie, unlocalizedList, "tie");
 				}
 			}
 		}
 		unlocalizedList.add(prop.stat.getPhysicalDamageType().getTranslation());
+	}
+	
+	@Override
+	protected boolean hasCapability()
+	{
+		return true;
+	}
+	
+	@Override
+	protected CapabilityProviderItem createProvider(ItemStack stack)
+	{
+		ToolProp prop = this.toolPropMap.get(getBaseDamage(stack));
+		return prop == null ? null : prop.stat.createProvider();
 	}
 }

@@ -15,43 +15,38 @@ import farcore.data.Capabilities;
 import farcore.util.Localization;
 import fle.core.FLE;
 import fle.core.items.behavior.BehaviorBlockableTool;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.client.model.flexible.NebulaModelLoader;
 import nebula.client.render.IProgressBarStyle;
 import nebula.client.util.Client;
 import nebula.client.util.UnlocalizedList;
 import nebula.common.LanguageManager;
+import nebula.common.capability.CapabilityProviderItem;
 import nebula.common.fluid.container.IItemFluidContainerV1;
 import nebula.common.item.IBehavior;
 import nebula.common.item.IItemBehaviorsAndProperties.IIP_CustomOverlayInGui;
 import nebula.common.item.ItemSubBehavior;
 import nebula.common.util.EnumChatFormatting;
 import nebula.common.util.FluidStacks;
-import nebula.common.util.ItemStacks;
-import nebula.common.util.NBTs;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author ueyudiud
  */
-public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_CustomOverlayInGui, IItemFluidContainerV1
+public class ItemSimpleFluidContainer extends ItemSubBehavior
+implements IIP_CustomOverlayInGui, IItemFluidContainerV1
 {
 	public static class FluidContainerProperty
 	{
@@ -75,7 +70,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	
 	public static ItemStack createItemStack(String name, FluidStack stack)
 	{
-		ItemStack stack2 = IBF.iFluidContainer.getSubItem(name);
+		ItemStack stack2 = IBFS.iFluidContainer.getSubItem(name);
 		setFluid(stack2, stack);
 		return stack2;
 	}
@@ -108,22 +103,7 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	public void addSubItem(int id, String name, String localName, FluidContainerProperty property,
 			IBehavior... behaviors)
 	{
-		super.addSubItem(id, name, localName, (stack, nbt) -> new ICapabilityProvider()
-		{
-			private IFluidHandler handler = createFluidHandlerWrapper(stack);
-			
-			@Override
-			public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-			{
-				return capability == Capabilities.CAPABILITY_FLUID && facing == null;
-			}
-			
-			@Override
-			public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-			{
-				return hasCapability(capability, facing) ? Capabilities.CAPABILITY_FLUID.cast(this.handler) : null;
-			}
-		}, behaviors);
+		super.addSubItem(id, name, localName, behaviors);
 		this.propertyMap.put(id, property);
 	}
 	
@@ -137,8 +117,8 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 		NebulaModelLoader.registerTextureSet(new ResourceLocation(FLE.MODID, "fluidcontainer/convert"), () -> Maps.toMap(this.nameMap.values(), key -> new ResourceLocation(FLE.MODID, "items/tool/tank/" + key + "_overlay")));
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FLE.MODID, "fluidcontainer"), stack -> this.nameMap.getOrDefault(getBaseDamage(stack), "error"));
 		NebulaModelLoader.registerItemMetaGenerator(new ResourceLocation(FLE.MODID, "fluidcontainer_getfluid"), stack -> {
-			NBTTagCompound nbt = ItemStacks.getSubOrSetupNBT(stack, "tank", false);
-			return nbt.hasKey("FluidName") ? nbt.getString("FluidName") : "empty";
+			FluidStack f;
+			return (f = getFluid(stack)) != null ? f.getFluid().getName() : "empty";
 		});
 		NebulaModelLoader.registerItemColorMultiplier(new ResourceLocation(FLE.MODID, "fluidcontainer/fluidcolor"), stack -> FluidStacks.getColor(getFluid(stack)));
 		this.style = new IProgressBarStyle()
@@ -153,9 +133,8 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 			@Override
 			public int[] getProgressColor(ItemStack stack, double progress)
 			{
-				FluidStack fluid = getFluid(stack);
-				int color = (fluid == null ? 0xFFFFFFFF : fluid.getFluid().getColor(fluid));
-				return new int[]{(color >> 16) & 0xFF, (color >> 8) & 0xFF, (color) & 0xFF};
+				int color = FluidStacks.getColor(getFluid(stack));
+				return new int[] { color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF };
 			}
 		};
 	}
@@ -172,51 +151,40 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stackIn, World worldIn, EntityPlayer playerIn,
 			EnumHand hand)
 	{
-		ActionResult<ItemStack> result = super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+		ActionResult<ItemStack> result = super.onItemRightClick(stackIn, worldIn, playerIn, hand);
 		if (result.getType() != EnumActionResult.PASS) return result;
-		itemStackIn = result.getResult();
-		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(itemStackIn));
+		stackIn = result.getResult();
+		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(stackIn));
 		if (property != null)
 		{
-			FluidStack fluid = getFluid(itemStackIn);
+			CapabilityProviderSimpleFluidContainer capability = (CapabilityProviderSimpleFluidContainer) stackIn.getCapability(Capabilities.CAPABILITY_FLUID, null);
+			FluidStack fluid = capability.getFluid();
 			if (property.enableToDrain && !playerIn.isSneaking() && fluid != null)
 			{
 				RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, false);
-				if (raytraceresult == null || !playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, itemStackIn)) return result;
+				if (raytraceresult == null || !playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, stackIn)) return result;
 				int amount = FluidStacks.drainFluidToWorld(worldIn, raytraceresult, fluid, !worldIn.isRemote);
 				if (amount > 0)
 				{
-					itemStackIn = itemStackIn.copy();
-					drain(itemStackIn, amount, true);
-					return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+					capability.drain(amount, true);
+					return new ActionResult<>(EnumActionResult.SUCCESS, stackIn);
 				}
 			}
-			if (property.enableToFill && isItemUsable(itemStackIn))
+			if (property.enableToFill && capability.canUse())
 			{
 				RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, true);
 				if (raytraceresult == null ||
-						!playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, itemStackIn) ||
+						!playerIn.canPlayerEdit(raytraceresult.getBlockPos(), raytraceresult.sideHit, stackIn) ||
 						!worldIn.canMineBlockBody(playerIn, raytraceresult.getBlockPos())) return result;
 				FluidStack stack = FluidStacks.fillFluidFromWorld(worldIn, raytraceresult, property.capacity - FluidStacks.getAmount(fluid), FluidStacks.getFluid(fluid), !worldIn.isRemote);
 				
 				if (stack != null)
 				{
-					itemStackIn = itemStackIn.copy();
-					if (fluid == null)
-					{
-						stack.amount = Math.min(property.capacity, stack.amount);
-						setFluid(itemStackIn, stack);
-					}
-					else
-					{
-						stack.amount = Math.min(property.capacity - fluid.amount, stack.amount);
-						fluid.amount += stack.amount;
-						setFluid(itemStackIn, fluid);
-					}
-					return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+					capability.fill(stack, true);
+					return new ActionResult<>(EnumActionResult.SUCCESS, stackIn);
 				}
 			}
 		}
@@ -225,12 +193,14 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	
 	public static FluidStack getFluid(ItemStack stack)
 	{
-		return stack.hasTagCompound() ? FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tank")) : null;
+		return ((CapabilityProviderSimpleFluidContainer)
+				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).getFluid();
 	}
 	
 	public static int getCustomDamage(ItemStack stack)
 	{
-		return ItemStacks.getOrSetupNBT(stack, false).getInteger("damage");
+		return ((CapabilityProviderSimpleFluidContainer)
+				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).getDamage();
 	}
 	
 	public int getMaxCustomDamage(ItemStack stack)
@@ -240,7 +210,8 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	
 	public static void setCustomDamage(ItemStack stack, int damage)
 	{
-		NBTs.setRemovableNumber(ItemStacks.getOrSetupNBT(stack, true), "damage", damage);
+		((CapabilityProviderSimpleFluidContainer)
+				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).setDamage(damage);
 	}
 	
 	public static int getFluidAmount(ItemStack stack)
@@ -251,14 +222,8 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	
 	public static void setFluid(ItemStack stack, @Nullable FluidStack contain)
 	{
-		if(contain == null || contain.amount == 0)
-		{
-			ItemStacks.getOrSetupNBT(stack, false).removeTag("tank");
-		}
-		else
-		{
-			contain.writeToNBT(ItemStacks.getSubOrSetupNBT(stack, "tank", true));
-		}
+		((CapabilityProviderSimpleFluidContainer)
+				stack.getCapability(Capabilities.CAPABILITY_FLUID, null)).setFluid(contain);
 	}
 	
 	@Override
@@ -294,69 +259,6 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 	}
 	
 	@Override
-	protected boolean isItemUsable(ItemStack stack)
-	{
-		return getCustomDamage(stack) < getMaxCustomDamage(stack);
-	}
-	
-	@Override
-	public int fill(ItemStack stack, FluidStack resource, boolean doFill)
-	{
-		if (resource == null || !isItemUsable(stack)) return 0;
-		FluidStack contain = getFluid(stack);
-		FluidContainerProperty property = this.propertyMap.get(getBaseDamage(stack));
-		if (contain == null)
-		{
-			int amount = Math.min(resource.amount, property.capacity);
-			if (doFill)
-			{
-				setFluid(stack, FluidStacks.sizeOf(resource, amount));
-			}
-			return amount;
-		}
-		else if(!contain.isFluidEqual(resource)) return 0;
-		else if(contain.amount == property.capacity) return 0;
-		int result = Math.min(property.capacity - contain.amount, resource.amount);
-		if(doFill)
-		{
-			contain.amount += result;
-			setFluid(stack, contain);
-		}
-		return result;
-	}
-	
-	@Override
-	public FluidStack drain(ItemStack stack, int maxDrain, boolean doDrain)
-	{
-		if (maxDrain == 0) return null;
-		FluidStack contain = getFluid(stack);
-		if (contain == null) return null;
-		int amount = Math.min(maxDrain, contain.amount);
-		if (doDrain)
-		{
-			contain.amount -= amount;
-			setFluid(stack, contain.amount == 0 ? null : contain);
-			int max = getMaxCustomDamage(stack);
-			if (NBTs.plusRemovableNumber(stack.getTagCompound(), "damage", amount, max) == max && contain.amount == 0)
-			{
-				stack.stackSize--;
-			}
-		}
-		contain.amount = amount;
-		return contain;
-	}
-	
-	@Override
-	public FluidStack drain(ItemStack stack, FluidStack resource, boolean doDrain)
-	{
-		if(resource == null) return null;
-		FluidStack fluid = getFluid(stack);
-		if(fluid != null && fluid.isFluidEqual(resource))
-			return drain(stack, resource.amount, doDrain);
-		return null;
-	}
-	
-	@Override
 	@SideOnly(Side.CLIENT)
 	protected void createSubItem(int meta, List<ItemStack> subItems)
 	{
@@ -379,5 +281,17 @@ public class ItemSimpleFluidContainer extends ItemSubBehavior implements IIP_Cus
 			else
 				unlocalizedList.add("info.fluidcontainer.completely.damaged");
 		}
+	}
+	
+	@Override
+	protected boolean hasCapability()
+	{
+		return true;
+	}
+	
+	@Override
+	protected CapabilityProviderItem createProvider(ItemStack stack)
+	{
+		return new CapabilityProviderSimpleFluidContainer(this.propertyMap.get(getBaseDamage(stack)));
 	}
 }

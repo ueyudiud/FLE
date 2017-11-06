@@ -81,13 +81,13 @@ public class Tools
 			IToolStat stat, boolean hasTie, boolean hasHandle, Judgable<? super Mat> filterHead,
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior... behaviors)
 	{
-		return IBF.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, behaviors);
+		return IBFS.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, filterHead, filterTie, filterHandle, behaviors);
 	}
 	
 	public static ToolProp addTool(int id, String name, String localName, String customToolInformation, MatCondition condition,
 			IToolStat stat, boolean hasTie, boolean hasHandle,
 			Judgable<? super Mat> filterTie, Judgable<? super Mat> filterHandle, IBehavior... behaviors)
 	{
-		return IBF.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition, filterTie, filterHandle, behaviors);
+		return IBFS.iTool.addSubItem(id, name, localName, customToolInformation, condition, stat, hasTie, hasHandle, condition, filterTie, filterHandle, behaviors);
 	}
 }

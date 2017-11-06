@@ -13,7 +13,7 @@ import fle.api.tile.ILogProductionCollector;
 import fle.api.util.DrinkableFluidHandler;
 import fle.api.util.DrinkableFluidHandler.DrinkableFluidEntry;
 import fle.core.items.ItemSimpleFluidContainer;
-import fle.loader.IBF;
+import fle.loader.IBFS;
 import nebula.base.ObjArrayParseHelper;
 import nebula.common.fluid.FluidTankN;
 import nebula.common.foodstat.FoodStatExt;
@@ -118,7 +118,7 @@ ITP_BoundingBox, ITB_BlockActived
 	@Override
 	public List<ItemStack> getDrops(IBlockState state, int fortune, boolean silkTouch)
 	{
-		ItemStack stack = IBF.iFluidContainer.getSubItem("bowl_wooden");
+		ItemStack stack = IBFS.iFluidContainer.getSubItem("bowl_wooden");
 		ItemSimpleFluidContainer.setFluid(stack, this.tank.getFluid());
 		ItemSimpleFluidContainer.setCustomDamage(stack, this.damage);
 		return ObjArrayParseHelper.newArrayList(stack);

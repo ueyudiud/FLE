@@ -14,13 +14,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
+import nebula.client.model.ItemTextureQuadConverterExt;
 import nebula.client.util.IIconCollection;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ItemTextureQuadConverter;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -60,13 +60,12 @@ public class ModelPartItemLayerConvert extends ModelPartItemLayer
 			return INebulaBakedModelPart.EMPTY;
 		case 1 :
 			convertIcon = bakedTextureGetter.apply(Iterables.getOnlyElement(collection2.build().values()));
-			Map<String, ResourceLocation> map = collection1.build();
 			ImmutableMap.Builder<String, List<BakedQuad>> builder = ImmutableMap.builder();
-			for (Entry<String, ResourceLocation> entry : map.entrySet())
+			for (Entry<String, ResourceLocation> entry : collection1.build().entrySet())
 			{
 				ImmutableList.Builder<BakedQuad> builder1 = ImmutableList.builder();
-				builder1.addAll(ItemTextureQuadConverter.convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF));
-				builder1.addAll(ItemTextureQuadConverter.convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF));
+				builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF, this.index));
+				builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, bakedTextureGetter.apply(entry.getValue()), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF, this.index));
 				builder.put(entry.getKey(), builder1.build());
 			}
 			return new INebulaBakedModelPart.BakedModelPart(builder.build());
@@ -80,8 +79,8 @@ public class ModelPartItemLayerConvert extends ModelPartItemLayer
 				for (Entry<String, TextureAtlasSprite> entry2 : map1.entrySet())
 				{
 					ImmutableList.Builder<BakedQuad> builder1 = ImmutableList.builder();
-					builder1.addAll(ItemTextureQuadConverter.convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF));
-					builder1.addAll(ItemTextureQuadConverter.convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF));
+					builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F - this.zOffset - 1E-3F * this.index) / 16, EnumFacing.NORTH, 0xFFFFFFFF, this.index));
+					builder1.addAll(ItemTextureQuadConverterExt.convertTexture(format, transformation, convertIcon, entry2.getValue(), (8.0F + this.zOffset + 1E-3F * this.index) / 16, EnumFacing.SOUTH, 0xFFFFFFFF, this.index));
 					builder.put(entry2.getKey() + "," + entry1.getKey(), builder1.build());
 				}
 			}
